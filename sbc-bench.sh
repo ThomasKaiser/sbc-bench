@@ -25,6 +25,7 @@ Main() {
 			TestNEON=yes
 		fi
 		CheckRelease
+		CheckLoad
 		SwitchToPerformance >/dev/null 2>&1
 		InstallPrerequisits
 		InitialMonitoring
@@ -175,10 +176,22 @@ CheckRelease() {
 			:
 			;;
 		*)
-			echo -e "${BOLD}WARNING: this tool is meant to run only on Debian Stretch or Ubuntu Bionic.${NC}"
+			echo -e "${LRED}${BOLD}WARNING: this tool is meant to run only on Debian Stretch or Ubuntu Bionic.${NC}"
+			echo -e "When running on other distros results are partially meaningless or won't be collected.\nPress [ctrl]-[c] to stop or [enter] to continue."
+			read
 			;;
 	esac
 } # CheckRelease
+
+CheckLoad() {
+	AvgLoad1Min=$(awk -F" " '{print $1*100}' < /proc/loadavg)
+	while [ $AvgLoad1Min -ge 10 ]; do
+		echo -e "System too busy for benchmarking:$(uptime)"
+		sleep 5
+		AvgLoad1Min=$(awk -F" " '{print $1*100}' < /proc/loadavg)
+	done
+	echo ""
+} # CheckLoad
 
 SwitchToPerformance() {
 	CPUCores=$(grep -c '^processor' /proc/cpuinfo)
@@ -352,14 +365,14 @@ RunOpenSSLBenchmark() {
 } # RunOpenSSLBenchmark
 
 RunCpuminerBenchmark() {
-	echo -e " Done.\nExecuting cpuminer. This will take 3 minutes...\c"
+	echo -e " Done.\nExecuting cpuminer. This will take 5 minutes...\c"
 	echo -e "\nSystem health while running cpuminer:\n" >>${MonitorLog}
 	"${0}" m 10 >>${MonitorLog} &
 	MonitoringPID=$!
 	sleep 10
-	"${InstallLocation}"/cpuminer-multi/cpuminer --benchmark --cpu-priority=5 >${TempLog} &
+	"${InstallLocation}"/cpuminer-multi/cpuminer --benchmark --cpu-priority=2 >${TempLog} &
 	MinerPID=$!
-	sleep 170
+	sleep 290
 	kill ${MinerPID} ${MonitoringPID}
 	echo -e "\n##########################################################################\n" >>${ResultLog}
 	sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" <${TempLog} >>${ResultLog}

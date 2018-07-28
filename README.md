@@ -97,6 +97,68 @@ ARMv8 Crypto Extensions make the difference here. Even at almost half the CPU cl
     aes-192-cbc        512.39k     1794.01k     6375.59k    25382.23k   118693.89k
     aes-256-cbc        508.30k     1795.05k     6339.93k    25042.60k   112943.10k
 
+## Ensuring proper benchmark execution
+
+Benchmarking a system that is otherwise busy will result in numbers without meaning. Therefore it's important to ensure the system is as idle as possible. That's the reason `sbc-bench` won't start as long as '1 min average load' is reported as 0.1 or above:
+
+![](pics/system-too-busy.gif)
+
+Of course this is not sufficient since background tasks might become active later or cron jobs result in some peak activity in between. As much as such services should be stopped prior to benchmark execution or in best case a rather minimal image should be used for testing. On the other hand `sbc-bench` can also easily be used to compare 'desktop' and 'minimal' images.
+
+But comparisons only make some sense if execution of the benchmark can be observed. That's what the background monitoring `sbc-bench` does is for that will be appended to detailed result list. See [this example for Rock64](http://ix.io/1izV). We can there look for the following problems:
+
+### Swapping
+
+The 7-zip benchmark when running on all cores can result in the system starting to swap when running low on memory. A good example for an affected board is the inexpensive NanoPi Fire3 with 8 A53 cores but just 1 GB DRAM. When we search in the detailed result output for Swap we'll find 2 occurences. One check prior to the benchmarks and one afterwards. With a Fire3 this might look like:
+
+    Swap:          495M          0B        495M
+    Swap:          495M         34M        460M
+
+So we know swapping has happened which negatively affected performance to some degree based on how swap is implemented. If swapping to SD card is configured performance will be severely impacted but in this case since it's a recent Armbian image the effects are negligible sind Armbian implements zram based swap in the meantime (that's why kind of swap is also recorded in detailed result list).
+
+While executing the multi-core 7-zip benchmark monitoring looked like this:
+
+    System health while running 7-zip multi core benchmark:
+
+    Time       big.LITTLE   load %cpu %sys %usr %nice %io %irq   Temp
+    10:50:25: 1400/1400MHz  6.23   9%   0%   8%   0%   0%   0%  44.0°C
+    10:50:58: 1400/1400MHz  5.16  50%   0%  50%   0%   0%   0%  54.0°C
+    10:51:29: 1400/1400MHz  5.63  74%   0%  73%   0%   0%   0%  58.0°C
+    10:52:00: 1400/1400MHz  6.23  80%   0%  79%   0%   0%   0%  59.0°C
+    10:52:31: 1400/1400MHz  6.39  72%   0%  71%   0%   0%   0%  56.0°C
+
+Always 0% in the `%io` column reported so not a big deal. With swap on SD card we would've seen high occurences of *%iowait* activity and way lower performance numbers.
+
+### Background activity
+
+We have 3 benchmark executions that run completely single threaded: tinymembench, the first 7-zip run limited to a single CPU core and the openssl test. In all these cases the overall `%cpu` percentage has to match count of CPU cores (the first two lines can be ignored). So on an octa-core board like NanoPi Fire3 it has to show exactly *12%* and nothing more:
+
+    Time       big.LITTLE   load %cpu %sys %usr %nice %io %irq   Temp
+    10:40:05: 1400/1400MHz  0.18   2%   0%   0%   0%   1%   0%  40.0°C
+    10:41:05: 1400/1400MHz  0.63  10%   0%  10%   0%   0%   0%  44.0°C
+    10:42:05: 1400/1400MHz  0.94  12%   0%  12%   0%   0%   0%  44.0°C
+    10:43:05: 1400/1400MHz  0.98  12%   0%  12%   0%   0%   0%  40.0°C
+    10:44:05: 1400/1400MHz  0.99  12%   0%  12%   0%   0%   0%  40.0°C
+    10:45:05: 1400/1400MHz  1.00  12%   0%  12%   0%   0%   0%  40.0°C
+    10:46:06: 1400/1400MHz  1.04  12%   0%  12%   0%   0%   0%  40.0°C
+
+On a dual-core board we're talking about 50% max, on hexa-cores it's 16% and on a quad-core board it must not exceed 25% (100 / 4):
+
+    Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+    10:18:10: 1392MHz  1.05  17%   2%  15%   0%   0%   0%  59.5°C
+    10:19:10: 1392MHz  0.95  21%   0%  21%   0%   0%   0%  62.5°C
+    10:20:10: 1392MHz  1.02  25%   0%  25%   0%   0%   0%  61.7°C
+    10:21:10: 1392MHz  1.13  27%   1%  26%   0%   0%   0%  59.5°C
+    10:22:10: 1392MHz  1.05  25%   0%  25%   0%   0%   0%  60.0°C
+    10:23:10: 1392MHz  1.09  25%   0%  25%   0%   0%   0%  61.2°C
+    10:24:10: 1392MHz  1.03  25%   0%  25%   0%   0%   0%  61.7°C
+
+In this case we were able to spot some background activity in this line:
+
+    10:21:10: 1392MHz  1.13  27%   1%  26%   0%   0%   0%  59.5°C
+
+*$something* happened in parallel which will slightly lower the generated benchmark score. While 2% CPU utilization for other stuff won't hurt that much at least we need to have an eye on this since when there are higher utilization numbers reported when running the single threaded stuff the system shows way too much background activity to report reasonable benchmark scores. Then we simply generated numbers without meaning.
+
 ## Interpreting results
 
 *(coming soon)*

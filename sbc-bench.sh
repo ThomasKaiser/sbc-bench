@@ -1,5 +1,7 @@
 #!/bin/bash
 
+Version=0.1
+
 Main() {
 	export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
@@ -205,7 +207,7 @@ InstallCpuminer() {
 	# get/build cpuminer if not already there
 	if [ ! -x /tmp/cpuminer-multi/cpuminer ]; then
 		cd /tmp
-		apt -f -qq -y install automake autoconf pkg-config libcurl4-openssl-dev libjansson-dev libssl-dev libgmp-dev make g++ >/dev/null 2>&1
+		apt -f -qq -y install automake autoconf pkg-config libcurl4-openssl-dev libjansson-dev libssl-dev libgmp-dev make g++ zlib1g-dev >/dev/null 2>&1
 		git clone https://github.com/tkinjo1985/cpuminer-multi.git
 		cd cpuminer-multi/
 		./build.sh
@@ -213,6 +215,8 @@ InstallCpuminer() {
 } # InstallCpuminer
 
 InitialMonitoring() {
+	# Show version info
+	echo -e "sbc-bench v${Version} -- $(date -R)\n"
 	# Create temporary files
 	TempDir="$(mktemp -d /tmp/${0##*/}.XXXXXX)"
 	TempLog="${TempDir}/temp.log"
@@ -237,7 +241,7 @@ InitialMonitoring() {
 	# the RPi since RPi Trading people are cheating. Cpufreq support via sysfs is bogus and
 	# with latest ThreadX (firmware) update they even cheat wrt 'vcgencmd get_throttled'
 	# https://www.raspberrypi.org/forums/viewtopic.php?f=63&t=217056#p1334921
-	find /sys -name time_in_state | while read ; do
+	find /sys -type f -name time_in_state | grep 'cpufreq' | while read ; do
 		Number=$(echo ${REPLY} | tr -c -d '[:digit:]')
 		Entries=$(wc -l ${REPLY} | awk -F" " '{print $1}')
 		head -n $(( ${Entries} - 1 )) ${REPLY} >${TempDir}/time_in_state_before_${Number}
@@ -342,7 +346,7 @@ DisplayResults() {
 	echo -e "\007\007\007 Done.\n"
 
 	# Check for throttling on normal ARM SBC
-	find /sys -name time_in_state | while read ; do
+	find /sys -type f -name time_in_state | grep 'cpufreq' | while read ; do
 		Number=$(echo ${REPLY} | tr -c -d '[:digit:]')
 		Entries=$(wc -l ${REPLY} | awk -F" " '{print $1}')
 		head -n $(( ${Entries} - 1 )) ${REPLY} >${TempDir}/time_in_state_after_${Number}

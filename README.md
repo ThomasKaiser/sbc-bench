@@ -58,7 +58,7 @@ A typical result (Rock64 with Armbian/Stretch) will look like this:
 
     Cpuminer total scores (5 minutes execution): 3.87,3.86,3.85,3.84,3.83,3.82,3.81,3.80 kH/s
 
-*(sample standard deviation in this case is ok since all results are more or less the same. If the board would've started throttling the later numbers are much lower than the first ones)*
+*(result variation in this case is ok since all results are more or less the same. If the board would've started throttling or heavy background activitiy would've happened the later numbers would be much lower than the first ones)*
 
 ### [7-zip](https://www.7-cpu.com)
 
@@ -74,7 +74,7 @@ On big.LITTLE systems we start with one run pinned to a little core followed by 
 
 ### [OpenSSL](https://www.openssl.org)
 
-This test solely focuses on AES performance (VPN use case, full disk encryption). The test tries to quickly confirm whether an ARM SoC can make use of special encryption engines. Some SoC vendors don't care, some add proprietary crypto engines to their SoCs (Marvell's CESA for example), some vendors chose to license ARM's 'ARMv8 Crypto Extensions'. So in case a board runs with an 64-bit ARM SoC this simple test shows the presence of a crypto engine or not.
+This test solely focuses on AES performance (VPN use case, full disk encryption). The test tries to quickly confirm whether an ARM SoC can make use of special crypto engines. Some SoC vendors don't care, some add proprietary engines to their SoCs (Marvell's CESA as an example), some vendors chose to license ARM's 'ARMv8 Crypto Extensions'. So in case a board runs with an 64-bit ARM SoC this simple test shows the presence of a crypto engine or not.
 
 Results might look like this on an *overclocked* Raspberry Pi 3 B+ at 1570 MHz [lacking any crypto acceleration](https://www.raspberrypi.org/forums/viewtopic.php?t=207888#p1333029):
 
@@ -103,9 +103,9 @@ Benchmarking a system that is otherwise busy will result in numbers without mean
 
 ![](pics/system-too-busy.gif)
 
-Of course this is not sufficient since background tasks might become active later or cron jobs result in some peak activity in between. As much as such services should be stopped prior to benchmark execution or in best case a rather minimal image should be used for testing. On the other hand `sbc-bench` can also easily be used to compare 'desktop' and 'minimal' images.
+Of course this is not sufficient since background tasks might become active later or cron jobs result in some peak activity in between. As much such services as possible should be stopped prior to benchmark execution or in best case a rather minimal image should be used for testing. On the other hand `sbc-bench` can also easily be used to compare 'desktop' and 'minimal' images.
 
-But comparisons only make some sense if execution of the benchmark can be observed. That's what the background monitoring `sbc-bench` does is for that will be appended to detailed result list. See [this example for Rock64](http://ix.io/1izV). We can there look for the following problems:
+But comparisons only make some sense if execution of the benchmark can be observed. That's what `sbc-bench`'s background monitoring is for that will be appended to detailed result list. See [this example for Rock64](http://ix.io/1izV). We can there look for the following problems:
 
 ### Swapping
 

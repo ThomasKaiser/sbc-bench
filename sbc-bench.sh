@@ -1,6 +1,7 @@
 #!/bin/bash
 
-Version=0.1
+Version=0.2
+InstallLocation=/tmp # change to /usr/local/src if you want tools to persist reboots
 
 Main() {
 	export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
@@ -20,11 +21,17 @@ Main() {
 				LRED='\e[0;91m'
 			fi
 		fi
+		if [ "X$1" = "Xneon" ]; then
+			TestNEON=yes
+		fi
 		CheckRelease
 		SwitchToPerformance >/dev/null 2>&1
 		InstallPrerequisits
 		InitialMonitoring
 		RunTinyMemBench
+		if [ "${TestNEON}" = "yes" -a -x "${InstallLocation}"/cpuminer-multi/cpuminer ]; then
+			RunCpuminerBenchmark
+		fi
 		Run7ZipBenchmark
 		RunOpenSSLBenchmark
 		DisplayResults
@@ -181,7 +188,7 @@ SwitchToPerformance() {
 } # SwitchToPerformance
 
 InstallPrerequisits() {
-	echo -e "\nInstalling needed tools. This may take some time...\c"
+	echo -e "sbc-bench v${Version}\n\nInstalling needed tools. This may take some time...\c"
 	SevenZip=$(which 7za || which 7zr)
 	[ -z "${SevenZip}" ] && apt -f -qq -y install p7zip >/dev/null 2>&1 && SevenZip=/usr/bin/7zr
 	[ -z "${SevenZip}" ] && (echo "No 7-zip binary found and could not be installed. Aborting" >&2 ; exit 1)
@@ -192,41 +199,47 @@ InstallPrerequisits() {
 	which curl >/dev/null 2>&1 || apt -f -qq -y install curl >/dev/null 2>&1
 
 	# get/build tinymembench if not already there
-	if [ ! -x /tmp/tinymembench/tinymembench ]; then
-		cd /tmp
+	if [ ! -x "${InstallLocation}"/tinymembench/tinymembench ]; then
+		cd "${InstallLocation}"
 		git clone https://github.com/ssvb/tinymembench >/dev/null 2>&1
 		cd tinymembench
 		make >/dev/null 2>&1
 	fi
 	
-	# get/build cpuminer if not already there
-	# InstallCpuminer >/dev/null 2>&1
+	# if called as 'sbc-bench neon' we also use cpuminer
+	if [ "${TestNEON}" = "yes" ]; then
+		InstallCpuminer >/dev/null 2>&1
+	fi
 } # InstallPrerequisits
 
 InstallCpuminer() {
 	# get/build cpuminer if not already there
-	if [ ! -x /tmp/cpuminer-multi/cpuminer ]; then
-		cd /tmp
+	if [ ! -x "${InstallLocation}"/cpuminer-multi/cpuminer ]; then
+		cd "${InstallLocation}"
 		apt -f -qq -y install automake autoconf pkg-config libcurl4-openssl-dev libjansson-dev libssl-dev libgmp-dev make g++ zlib1g-dev >/dev/null 2>&1
 		git clone https://github.com/tkinjo1985/cpuminer-multi.git
 		cd cpuminer-multi/
 		./build.sh
 	fi
+	if [ ! -x "${InstallLocation}"/cpuminer-multi/cpuminer ]; then
+		echo -e " (can't build cpuminer)\c"
+	fi
 } # InstallCpuminer
 
 InitialMonitoring() {
-	# Show version info
-	echo -e "sbc-bench v${Version} -- $(date -R)\n"
 	# Create temporary files
 	TempDir="$(mktemp -d /tmp/${0##*/}.XXXXXX)"
 	TempLog="${TempDir}/temp.log"
 	ResultLog="${TempDir}/results.log"
 	MonitorLog="${TempDir}/monitor.log"
 	trap "rm -rf \"${TempDir}\" ; exit 0" 0 1 2 3 15
+
+	# Log version info
+	echo -e "sbc-bench v${Version} -- $(date -R)\n" >${ResultLog}
 	
 	# Log distribution info
 	[ -f /etc/armbian-release ] && . /etc/armbian-release
-	[ -n "${BOARDFAMILY}" ] && (grep -v "#" /etc/armbian-release ; echo "") >${ResultLog}
+	[ -n "${BOARDFAMILY}" ] && (grep -v "#" /etc/armbian-release ; echo "") >>${ResultLog}
 	which lsb_release >/dev/null 2>&1 && (lsb_release -a 2>/dev/null) >>${ResultLog}
 	[ -n "${BOARDFAMILY}" ] || echo -e "Architecture:\t$(dpkg --print-architecture)" >>${ResultLog}
 	
@@ -237,9 +250,10 @@ InitialMonitoring() {
 	# Some basic system info needed to interpret system health later
 	echo -e "\nUptime:$(uptime)\n\n$(iostat)\n\n$(free -h)\n\n$(swapon -s)" \
 		>>${ResultLog}
-	# Check cpufreq statistics prior and after benchmark to detect throttling (won't work on
-	# the RPi since RPi Trading people are cheating. Cpufreq support via sysfs is bogus and
-	# with latest ThreadX (firmware) update they even cheat wrt 'vcgencmd get_throttled'
+	# Check cpufreq statistics prior and after benchmark to detect throttling (won't work 
+	# with all kernels and especially not on the RPi since RPi Trading people are cheating.
+	# Cpufreq support via sysfs is bogus and with latest ThreadX (firmware) update they 
+	# even cheat wrt querying the 'firmware' via 'vcgencmd get_throttled':
 	# https://www.raspberrypi.org/forums/viewtopic.php?f=63&t=217056#p1334921
 	find /sys -type f -name time_in_state | grep 'cpufreq' | while read ; do
 		Number=$(echo ${REPLY} | tr -c -d '[:digit:]')
@@ -257,16 +271,16 @@ RunTinyMemBench() {
 	if [ ${CPUCores} -gt 4 ]; then
 		if [ "X${BOARDFAMILY}" = "Xs5p6818" ]; then
 			# S5P6816 octa-core SoC is not a big.LITTLE design
-			/tmp/tinymembench/tinymembench >${TempLog} 2>&1
+			"${InstallLocation}"/tinymembench/tinymembench >${TempLog} 2>&1
 		else
 			# big.LITTLE SoC, we execute one time on a little and one time on a big core
 			echo -e "Executing tinymembench on a little core:\n" >${TempLog}
-			taskset -c 0 /tmp/tinymembench/tinymembench >>${TempLog} 2>&1
+			taskset -c 0 "${InstallLocation}"/tinymembench/tinymembench >>${TempLog} 2>&1
 			echo -e "\nExecuting tinymembench on a big core:\n" >>${TempLog}
-			taskset -c $(( ${CPUCores} -1 )) /tmp/tinymembench/tinymembench >>${TempLog} 2>&1
+			taskset -c $(( ${CPUCores} -1 )) "${InstallLocation}"/tinymembench/tinymembench >>${TempLog} 2>&1
 		fi
 	else
-		/tmp/tinymembench/tinymembench >${TempLog} 2>&1
+		"${InstallLocation}"/tinymembench/tinymembench >${TempLog} 2>&1
 	fi
 	kill ${MonitoringPID}
 	echo -e "\n##########################################################################\n" >>${ResultLog}
@@ -316,7 +330,7 @@ Run7ZipBenchmark() {
 } # Run7ZipBenchmark
 
 RunOpenSSLBenchmark() {
-	echo -e " Done.\nExecuting OpenSSL benchmark. This will take a long time...\c"
+	echo -e " Done.\nExecuting OpenSSL benchmark. This will take 3 minutes...\c"
 	echo -e "\nSystem health while running OpenSSL benchmark:\n" >>${MonitorLog}
 	"${0}" m 10 >>${MonitorLog} &
 	MonitoringPID=$!
@@ -338,12 +352,24 @@ RunOpenSSLBenchmark() {
 } # RunOpenSSLBenchmark
 
 RunCpuminerBenchmark() {
-	:
-	# /tmp/cpuminer-multi/cpuminer --benchmark
+	echo -e " Done.\nExecuting cpuminer. This will take 3 minutes...\c"
+	echo -e "\nSystem health while running cpuminer:\n" >>${MonitorLog}
+	"${0}" m 10 >>${MonitorLog} &
+	MonitoringPID=$!
+	sleep 10
+	"${InstallLocation}"/cpuminer-multi/cpuminer --benchmark --cpu-priority=5 >${TempLog} &
+	MinerPID=$!
+	sleep 170
+	kill ${MinerPID} ${MonitoringPID}
+	echo -e "\n##########################################################################\n" >>${ResultLog}
+	sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" <${TempLog} >>${ResultLog}
+	# Summarized 'Total:' scores
+	TotalScores="$(awk -F" " '/Total:/ {print $4}' ${TempLog} | sort -r -n | uniq | tr '\n' ', ' | sed 's/,$//')"
+	echo -e "\nTotal Scores: ${TotalScores}" >>${ResultLog}
 } # RunCpuminerBenchmark
 
 DisplayResults() {
-	echo -e "\007\007\007 Done.\n"
+	echo -e " Done.\n\007\007\007"
 
 	# Check for throttling on normal ARM SBC
 	find /sys -type f -name time_in_state | grep 'cpufreq' | while read ; do
@@ -380,14 +406,15 @@ DisplayResults() {
 	echo -e "\n##########################################################################\n" >>${ResultLog}
 	cat ${MonitorLog} >>${ResultLog}
 	echo -e "\n##########################################################################\n" >>${ResultLog}
-	echo -e "$(iostat)\n\n$(free -h)\n\n$(cat /proc/swaps 2>/dev/null)" >>${ResultLog}
+	echo -e "$(iostat)\n\n$(free -h)\n\n$(swapon -s)" >>${ResultLog}
 	UploadURL=$(curl -s -F 'f:1=<-' ix.io <${ResultLog} 2>/dev/null || curl -s -F 'f:1=<-' ix.io <${ResultLog})
 	
 	# Display benchmark results
 	[ ${CPUCores} -gt 4 ] && BigLittle=" (big.LITTLE cores measured individually)"
 	echo -e "${BOLD}Memory performance${NC}${BigLittle}:"
 	awk -F" " '/^ standard/ {print $2": "$4" "$5" "$6}' <${ResultLog}
-	echo -e "\n${BOLD}7-zip total scores${NC} (three consecutive runs): $(awk -F" " '/^Total:/ {print $2}' ${ResultLog})"
+	echo -e "\n${BOLD}Cpuminer total scores${NC} (3 minutes execution): $(awk -F"Total Scores: " '/^Total Scores: / {print $2}' ${ResultLog}) kH/s"
+	echo -e "\n${BOLD}7-zip total scores${NC} (3 consecutive runs): $(awk -F" " '/^Total:/ {print $2}' ${ResultLog})"
 	echo -e "\n${BOLD}OpenSSL results${NC}${BigLittle}:\n$(grep '^type' ${TempLog} | head -n1)"
 	grep '^aes-' ${TempLog}
 	if [ "X${UploadURL}" = "X" ]; then

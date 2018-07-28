@@ -177,7 +177,7 @@ CheckRelease() {
 			;;
 		*)
 			echo -e "${LRED}${BOLD}WARNING: this tool is meant to run only on Debian Stretch or Ubuntu Bionic.${NC}"
-			echo -e "When running on other distros results are partially meaningless or won't be collected.\nPress [ctrl]-[c] to stop or [enter] to continue."
+			echo -e "When running on other distros results are partially meaningless or can't be collected.\nPress [ctrl]-[c] to stop or [enter] to continue."
 			read
 			;;
 	esac
@@ -249,17 +249,17 @@ InitialMonitoring() {
 
 	# Log version info
 	echo -e "sbc-bench v${Version} -- $(date -R)\n" >${ResultLog}
-	
+
 	# Log distribution info
 	[ -f /etc/armbian-release ] && . /etc/armbian-release
 	[ -n "${BOARDFAMILY}" ] && (grep -v "#" /etc/armbian-release ; echo "") >>${ResultLog}
 	which lsb_release >/dev/null 2>&1 && (lsb_release -a 2>/dev/null) >>${ResultLog}
 	[ -n "${BOARDFAMILY}" ] || echo -e "Architecture:\t$(dpkg --print-architecture)" >>${ResultLog}
-	
+
 	# On Raspberries we also collect 'firmware' information:
 	[ -f /usr/bin/vcgencmd ] && (echo -e "\nRaspberry Pi ThreadX version:\n$(/usr/bin/vcgencmd version)") >>${ResultLog}
 	[ -f /boot/config.txt ] && echo -e "\nThreadX configuration (/boot/config.txt):\n$(grep -v '#' /boot/config.txt | sed '/^\s*$/d')" >>${ResultLog}
-	
+
 	# Some basic system info needed to interpret system health later
 	echo -e "\nUptime:$(uptime)\n\n$(iostat)\n\n$(free -h)\n\n$(swapon -s)" \
 		>>${ResultLog}
@@ -389,9 +389,37 @@ DisplayResults() {
 		Number=$(echo ${REPLY} | tr -c -d '[:digit:]')
 		Entries=$(wc -l ${REPLY} | awk -F" " '{print $1}')
 		head -n $(( ${Entries} - 1 )) ${REPLY} >${TempDir}/time_in_state_after_${Number}
-		diff ${TempDir}/time_in_state_after_${Number} ${TempDir}/time_in_state_before_${Number} >/dev/null 2>&1 \
-			|| echo -e "${LRED}${BOLD}ATTENTION: Throttling occured on CPU cluster ${Number}. Check the uploaded log for details.${NC}\n"
+		diff ${TempDir}/time_in_state_after_${Number} ${TempDir}/time_in_state_before_${Number} >/dev/null 2>&1
+		if [ $? -ne 0 ]; then
+			case ${CPUCores} in
+				1|2|3|4)
+					echo -e "${LRED}${BOLD}ATTENTION: Throttling occured. Check the uploaded log for details.${NC}\n"
+					;;
+				6)
+					if [ ${Number} -eq 0 ]; then
+						echo -e "${LRED}${BOLD}ATTENTION: Throttling occured on CPUs 0-3. Check the uploaded log for details.${NC}\n"
+					else
+						echo -e "${LRED}${BOLD}ATTENTION: Throttling occured on CPUs 4-5. Check the uploaded log for details.${NC}\n"
+					fi
+					;;
+				8)
+					if [ "X${BOARDFAMILY}" = "Xs5p6818" ]; then
+						echo -e "${LRED}${BOLD}ATTENTION: Throttling occured. Check the uploaded log for details.${NC}\n"
+					elif [ ${Number} -eq 0 ]; then
+						echo -e "${LRED}${BOLD}ATTENTION: Throttling occured on CPUs 0-3. Check the uploaded log for details.${NC}\n"
+					else
+						echo -e "${LRED}${BOLD}ATTENTION: Throttling occured on CPUs 4-7. Check the uploaded log for details.${NC}\n"
+					fi
+					;;
+			esac
+		fi
 	done
+
+	# Check for killed CPU cores. Some unfortunate users might still use Allwinner BSP kernels
+	CPUCoresNow=$(grep -c '^processor' /proc/cpuinfo)
+	if [ ${CPUCoresNow} -lt ${CPUCores} ]; then
+		echo -e "${LRED}${BOLD}ATTENTION: Due to throttling $(( ${CPUCores} - ${CPUCoresNow} )) CPU cores have been killed. Check dmesg output and the uploaded log for details.${NC}\n"
+	fi
 
 	# Check for throttling/undervoltage on Raspberry Pi
 	grep -q '/1200MHz' ${MonitorLog} && Warning="ATTENTION: Throttling has occured. Check the uploaded log for details."
@@ -414,19 +442,19 @@ DisplayResults() {
 			echo -e "${LRED}${BOLD}${Warning}${NC}\n"
 		fi
 	fi
-	
+
 	# Prepare benchmark results
 	echo -e "\n##########################################################################\n" >>${ResultLog}
 	cat ${MonitorLog} >>${ResultLog}
 	echo -e "\n##########################################################################\n" >>${ResultLog}
-	echo -e "$(iostat)\n\n$(free -h)\n\n$(swapon -s)" >>${ResultLog}
+	echo -e "$(iostat)\n\n$(free -h)\n\n$(swapon -s)\n\n$(lscpu)" >>${ResultLog}
 	UploadURL=$(curl -s -F 'f:1=<-' ix.io <${ResultLog} 2>/dev/null || curl -s -F 'f:1=<-' ix.io <${ResultLog})
-	
+
 	# Display benchmark results
 	[ ${CPUCores} -gt 4 ] && BigLittle=" (big.LITTLE cores measured individually)"
 	echo -e "${BOLD}Memory performance${NC}${BigLittle}:"
 	awk -F" " '/^ standard/ {print $2": "$4" "$5" "$6}' <${ResultLog}
-	echo -e "\n${BOLD}Cpuminer total scores${NC} (3 minutes execution): $(awk -F"Total Scores: " '/^Total Scores: / {print $2}' ${ResultLog}) kH/s"
+	echo -e "\n${BOLD}Cpuminer total scores${NC} (5 minutes execution): $(awk -F"Total Scores: " '/^Total Scores: / {print $2}' ${ResultLog}) kH/s"
 	echo -e "\n${BOLD}7-zip total scores${NC} (3 consecutive runs): $(awk -F" " '/^Total:/ {print $2}' ${ResultLog})"
 	echo -e "\n${BOLD}OpenSSL results${NC}${BigLittle}:\n$(grep '^type' ${TempLog} | head -n1)"
 	grep '^aes-' ${TempLog}

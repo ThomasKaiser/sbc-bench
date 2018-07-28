@@ -1,10 +1,10 @@
 # sbc-bench
 
-![](pic/rock64-no-throttling.png)
+![](pics/rock64-no-throttling.png)
 
 This small set of different CPU performance tests focuses on 'headless' operation only (no GPU/display stuff, no floating point number crunching). Unlike many other 'kitchen-sink benchmarks' it tries to produce insights instead of fancy graphs.
 
-It has two different usage modes:
+It has two **entirely different** usage modes:
 
 * Generate a rough CPU performance assessment for a specific SBC *in general* (under ideal conditions)
 * Show whether an *individual* SBC is able to perform the same and if not hopefully answering the question 'why?'
@@ -50,7 +50,7 @@ On ARM SoCs CPU and GPU/VPU usually share memory access so it's worth a try to e
 
 ### [cpuminer](https://github.com/tkinjo1985/cpuminer-multi.git)
 
-This is the most demanding benchmark of all and pretty efficient to check for appropriate heat dissipation and even instabilities under load. It makes heavy use of NEON optimizations therefore generating more heat than unoptimized 'standard' code.
+This is the most demanding benchmark of the four and pretty efficient to check for appropriate heat dissipation and even instabilities under load. It makes heavy use of NEON optimizations therefore generating more heat than unoptimized 'standard' code.
 
 Heavy NEON optimizations aren't really common and therefore this test is optional. Unless you execute `sbc-bench neon` it will be skipped since results can be misleading. So consider this being a load generator to check whether your board will start to throttle or becomes unstable but take the benchmark numbers with a grain of salt unless you're a programmer and know what [NEON](https://en.wikipedia.org/wiki/ARM_architecture#Advanced_SIMD_(NEON)) really is and whether your application can make use of.
 
@@ -76,7 +76,7 @@ On big.LITTLE systems we start with one run pinned to a little core followed by 
 
 This test solely focuses on AES performance (VPN use case, full disk encryption). The test tries to quickly confirm whether an ARM SoC can make use of special encryption engines. Some SoC vendors don't care, some add proprietary crypto engines to their SoCs (Marvell's CESA for example), some vendors chose to license ARM's 'ARMv8 Crypto Extensions'. So in case a board runs with an 64-bit ARM SoC this simple test shows the presence of a crypto engine or not.
 
-Results might look like this on an *overclocked* Raspberry Pi 3 B+ at 1570 MHz but without crypto acceleration:
+Results might look like this on an *overclocked* Raspberry Pi 3 B+ at 1570 MHz [lacking any crypto acceleration](https://www.raspberrypi.org/forums/viewtopic.php?t=207888#p1333029):
 
     type             16 bytes     64 bytes    256 bytes   1024 bytes   8192 bytes
     aes-128-cbc      39393.73k    54173.16k    60220.67k    61720.92k    62518.61k
@@ -90,7 +90,7 @@ Vs. an Orange Pi Zero Plus based on Allwinner H5 heavily *underclocked* at just 
     aes-192-cbc      95781.66k   235775.72k   366295.72k   435745.79k   461294.25k
     aes-256-cbc      91725.44k   211677.08k   313433.77k   362907.31k   380482.90k
 
-ARMv8 Crypto Extensions make the difference here. Even at almost half the CPU clockspeed with small data chunks at least 2.5 times faster and up to 9 times faster with larger chunks. Looking at different chunk sizes makes a lot of sense since some proprietary crypto engines suffer from high initialization overhead. See these numbers for a Banana Pi R2 based on a MediaTek MT7623 with proprietary crypto engine ([sources](https://forum.armbian.com/topic/4583-rock64/?do=findComment&comment=37829)):
+ARMv8 Crypto Extensions make the difference here. Even at almost half the CPU clockspeed with small data chunks at least 2.5 times faster and up to 9 times faster with larger chunks. Looking at different chunk sizes makes a lot of sense since some proprietary crypto engines suffer from high initialization overhead. See these numbers for a Banana Pi R2 based on a MediaTek MT7623 with proprietary crypto engine after compiling own kernel and OpenSSL ([sources](https://forum.armbian.com/topic/4583-rock64/?do=findComment&comment=37829)):
 
     type             16 bytes     64 bytes    256 bytes   1024 bytes   8192 bytes
     aes-128-cbc        519.15k     1784.13k     6315.78k    25199.27k   124499.22k

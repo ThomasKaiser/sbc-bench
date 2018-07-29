@@ -24,6 +24,7 @@ Main() {
 		if [ "X$1" = "Xneon" ]; then
 			TestNEON=yes
 		fi
+		PathToMe="$( cd "$(dirname "$0")" ; pwd -P )/${0##*/}"
 		CheckRelease
 		CheckLoad
 		SwitchToPerformance >/dev/null 2>&1
@@ -236,7 +237,7 @@ InstallPrerequisits() {
 		cd mhz
 		make >/dev/null 2>&1
 	fi
-	
+
 	# if called as 'sbc-bench neon' we also use cpuminer
 	if [ "${TestNEON}" = "yes" ]; then
 		InstallCpuminer >/dev/null 2>&1
@@ -343,14 +344,14 @@ CheckCPUCluster() {
 	else
 		# no cpufreq support
 		RealSpeed=$(taskset -c $(( $1 + 1 )) "${InstallLocation}"/mhz/mhz 3 1000 | awk -F" cpu_MHz=" '{print $2}' | awk -F" " '{print $1}' | tr '\n' '/' | sed 's|/$||')
-		echo -e "No cpufreq support available. Measured clockspeed on cpu$(( $1 + 1 )): ${RealSpeed}"
+		echo -e "No cpufreq support available. Measured on cpu$(( $1 + 1 )): ${RealSpeed}"
 	fi
 } # CheckCPUCluster
 
 RunTinyMemBench() {
 	echo -e " Done.\nExecuting tinymembench. This will take a long time...\c"
 	echo -e "System health while running tinymembench:\n" >${MonitorLog}
-	"${0}" m 60 >>${MonitorLog} &
+	/bin/bash "${PathToMe}" m 60 >>${MonitorLog} &
 	MonitoringPID=$!
 	if [ ${CPUCores} -gt 4 ]; then
 		if [ "X${BOARDFAMILY}" = "Xs5p6818" ]; then
@@ -375,7 +376,7 @@ Run7ZipBenchmark() {
 	echo -e " Done.\nExecuting 7-zip benchmark. This will take a long time...\c"
 	echo -e "\nSystem health while running 7-zip single core benchmark:\n" >>${MonitorLog}
 	echo -e "\c" >${TempLog}
-	"${0}" m 15 >>${MonitorLog} &
+	/bin/bash "${PathToMe}" m 15 >>${MonitorLog} &
 	MonitoringPID=$!
 	if [ ${CPUCores} -gt 4 ]; then
 		if [ "X${BOARDFAMILY}" = "Xs5p6818" ]; then
@@ -394,7 +395,7 @@ Run7ZipBenchmark() {
 	cat ${TempLog} >>${ResultLog}
 	echo -e "\nSystem health while running 7-zip multi core benchmark:\n" >>${MonitorLog}
 	echo -e "\c" >${TempLog}
-	"${0}" m 30 >>${MonitorLog} &
+	/bin/bash "${PathToMe}" m 30 >>${MonitorLog} &
 	MonitoringPID=$!
 	RunHowManyTimes=3
 	for ((i=1;i<=RunHowManyTimes;i++)); do
@@ -415,7 +416,7 @@ Run7ZipBenchmark() {
 RunOpenSSLBenchmark() {
 	echo -e " Done.\nExecuting OpenSSL benchmark. This will take 3 minutes...\c"
 	echo -e "\nSystem health while running OpenSSL benchmark:\n" >>${MonitorLog}
-	"${0}" m 10 >>${MonitorLog} &
+	/bin/bash "${PathToMe}" m 10 >>${MonitorLog} &
 	MonitoringPID=$!
 	OpenSSLLog="${TempDir}/openssl.log"
 	for i in 128 192 256 ; do
@@ -437,7 +438,7 @@ RunOpenSSLBenchmark() {
 RunCpuminerBenchmark() {
 	echo -e " Done.\nExecuting cpuminer. This will take 5 minutes...\c"
 	echo -e "\nSystem health while running cpuminer:\n" >>${MonitorLog}
-	"${0}" m 10 >>${MonitorLog} &
+	/bin/bash "${PathToMe}" m 10 >>${MonitorLog} &
 	MonitoringPID=$!
 	"${InstallLocation}"/cpuminer-multi/cpuminer --benchmark --cpu-priority=2 >${TempLog} &
 	MinerPID=$!

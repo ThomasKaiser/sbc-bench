@@ -288,23 +288,22 @@ InitialMonitoring() {
 
 CheckClockspeeds() {
 	echo -e " Done.\nChecking cpufreq OPP...\c"
+	echo -e "\n##########################################################################" >>${ResultLog}
 	if [ -f ${MonitorLog} ]; then
-		grep 'Time' ${MonitorLog} | tail -n 1 >"${TempDir}/systemhealth.now"
-		grep ':' ${MonitorLog} | tail -n 1 >>"${TempDir}/systemhealth.now"
+		echo -e "\nTesting clockspeeds again. System health now:\n" >>${ResultLog}
+		grep 'Time' ${MonitorLog} | tail -n 1 >"${TempDir}/systemhealth.now" >>${ResultLog}
+		grep ':' ${MonitorLog} | tail -n 1 >>"${TempDir}/systemhealth.now" >>${ResultLog}
 	fi
 	if [ "X${BOARDFAMILY}" = "Xs5p6818" -o ${CPUCores} -le 4 ]; then
-		# no big.LITTLE, checking cluster 0 is enough
-		echo -e "\n##########################################################################\n\nChecking cpufreq OPP:\n" >>${ResultLog}
+		# no big.LITTLE, checking cluster 0 is sufficient
+		echo -e "\nChecking cpufreq OPP:\n" >>${ResultLog}
 		CheckCPUCluster 0 >>${ResultLog}
 	else
 		# big.LITTLE or something else (Amlogic S912)
-		echo -e "\n##########################################################################\n\nChecking cpufreq OPP for cpu0-cpu3:\n" >>${ResultLog}
+		echo -e "\nChecking cpufreq OPP for cpu0-cpu3:\n" >>${ResultLog}
 		CheckCPUCluster 0 >>${ResultLog}
 		echo -e "\nChecking cpufreq OPP for cpu4-cpu$(( ${CPUCores} - 1 )):\n" >>${ResultLog}
 		CheckCPUCluster 4 >>${ResultLog}
-	fi
-	if [ -f "${TempDir}/systemhealth.now" ]; then
-		echo -e "\nSystem health now:\n\n$(cat "${TempDir}/systemhealth.now")" >>${ResultLog}
 	fi
 } # CheckClockspeeds
 

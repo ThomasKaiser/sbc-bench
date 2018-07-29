@@ -11,7 +11,7 @@ It has two **entirely different** usage modes:
 
 The SoCs (system-on-chip) used on today's SBC are that performant that heat dissipation when running full load for some time becomes an issue. The strategies to deal with the problem differ by platform and kernel. We've seen CPU cores being shut down when overheating (Allwinner boards running with original Allwinner software), we know platforms where throttling works pretty well but by switching to a different kernel performance is trashed on exactly the same hardware. Sometimes it's pretty easy to spot what's going on, sometimes vendors cheat on us and it takes some efforts to get a clue what's really happening.
 
-This tool therefore focuses on a controlled environment and intensive monitoring running in the background and being added to results output. The tool returns with a brief performance overview (see screenshot above) but the real information will be uploaded to an online pasteboard service ([RockPro64 example](http://ix.io/1iA6)). Without checking this detailed output numbers are worthless (since we always need to check what really happened).
+This tool therefore focuses on a controlled environment and intensive monitoring running in the background and being added to results output. The tool returns with a brief performance overview (see screenshot above) but the real information will be uploaded to an online pasteboard service ([RockPro64 example](http://ix.io/1iEb)). Without checking this detailed output numbers are worthless (since we always need to check what really happened).
 
 ## Execution
 
@@ -24,7 +24,18 @@ Unfortunately to adjust the cpufreq governor and to collect monitoring data exec
 
 ## Which tools are used and why?
 
-I chose [tinymembench](https://github.com/ssvb/tinymembench), [cpuminer](https://github.com/tkinjo1985/cpuminer-multi.git), [7-zip](https://www.7-cpu.com) and [OpenSSL](https://www.openssl.org)'s AES benchmarks for the following reasons:
+I chose [mhz](http://git.1wt.eu/web?p=mhz.git), [tinymembench](https://github.com/ssvb/tinymembench), [cpuminer](https://github.com/tkinjo1985/cpuminer-multi.git), [7-zip](https://www.7-cpu.com) and [OpenSSL](https://www.openssl.org)'s AES benchmarks for the following reasons:
+
+### [mhz](http://git.1wt.eu/web?p=mhz.git)
+
+This tool is not a benchmark but instead calculates real CPU clockspeeds. This is helpful on platforms where cpufreq support is not available yet or we can not rely on the clockspeed values returned by the kernel. This applies to platforms where vendors are cheating (RPi, Amlogic) or where actual clockspeeds are set via jumpers while the clockspeeds available to the kernel are derived from device-tree (DT) entries. On a Clearfog Pro routerboard it will look like this for example (DT defines 666/1332 MHz while I configured 800/1600 MHz via jumper):
+
+    Checking cpufreq OPP:
+
+    Cpufreq OPP:  666    Measured: 799.502/798.295/799.115
+    Cpufreq OPP: 1332    Measured: 1598.621/1598.759/1598.324
+
+We call `mhz` twice. At the begin of the benchmark with an idle and cold system and directly after the most demanding benchmark has finished to see whether behaviour changes when SoC is overheated.
 
 ### [tinymembench](https://github.com/ssvb/tinymembench)
 

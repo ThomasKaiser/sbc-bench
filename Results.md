@@ -1,3 +1,9 @@
+# Results
+
+Below some results collected. Please keep in mind that these are **not** hardware performance numbers but partially depend on software/settings (see the differences kernel version makes for RockPro64 for example).
+
+## Table with results
+
 | Board | Clockspeed | Kernel | Distro | 7-zip | AES-128 (16 byte) | AES-256 (16 KB) | memcpy | memset | kH/s | URL |
 | ----- | :--------: | :----: | :----: | ----: | ------: | ------: | -----: | -----: | ---: | --- |
 | [Clearfog Pro](https://www.armbian.com/clearfog/) | 1600 MHz | 4.14 | Stretch armhf | 2185 | 44500 | 43900 | 935 | 4940 | - | [http://ix.io/1iFa](http://ix.io/1iFa) |
@@ -10,8 +16,19 @@
 | [Renegade](https://www.armbian.com/renegade/) | 1400 MHz | 4.4 | Debian Stretch | 3710 | 95030 | 644200 | 1565 | 7435 | 3.92 | [http://ix.io/1iFx](http://ix.io/1iFx) |
 | Raspberry Pi 2 B+ | 900 MHz | 4.14 | **Debian** Stretch | 2070 | 14350 | 17450 | 615 | 1175 | - | [http://ix.io/1iFf](http://ix.io/1iFf) |
 | Raspberry Pi 2 B+ | 900 MHz | 4.14 | Raspbian Stretch | 2130 | 14000 | 16300 | 1010 | 1170 | - | [http://ix.io/1ivw](http://ix.io/1ivw) |
+| Raspberry Pi 3 B+ | normal | 4.14 | Raspbian Stretch | 3240 | 30500 | 36600 | 1130 | 1530 | - | [http://ix.io/1ism.](http://ix.io/1ism.) |
+| Raspberry Pi 3 B+ | with fan | 4.14 | Raspbian Stretch | 3670 | 35800 | 42600 | 1120 | 1600 | - | [http://ix.io/1isD](http://ix.io/1isD) |
 | [Rock64](https://www.armbian.com/rock64/) | 1400 MHz | 4.4 | Stretch arm64 | 3610 | 95000 | 644250 | 1330 | 5700 | 3.80 | [http://ix.io/1iFm](http://ix.io/1iFm) |
 | [Rock64](https://www.armbian.com/rock64/) | 1400 MHz | 4.4 | Stretch **armhf** | 3620 | 99400 | 624000 | 1430 | 3620 | - | [http://ix.io/1iwz](http://ix.io/1iwz) |
 | [RockPro64](http://wiki.pine64.org/index.php/ROCKPro64_Main_Page) | 1800/1400 MHz | 4.4 | Stretch arm64 | 6140 | 236800 | 1016050 | 2790 | 4850 | - | [http://ix.io/1ivR](http://ix.io/1ivR) |
 | [RockPro64](http://wiki.pine64.org/index.php/ROCKPro64_Main_Page) | 1800/1400 MHz | 4.4 | Stretch **armhf** | 6250 | 275000 | 1000150 | 2000 | 4835 | - | [http://ix.io/1iFZ](http://ix.io/1iFZ) |
 | [RockPro64](http://wiki.pine64.org/index.php/ROCKPro64_Main_Page) | 1800/1400 MHz | 4.18 | Stretch arm64 | 6300 | 237700 | 1021500 | 3650 | 8450 | 8.20 | [http://ix.io/1iFp](http://ix.io/1iFp) |
+
+## Explanations
+
+* *7-zip* number is an averaged **multi threaded** score from 3 consecutive `7z b` runs. Only relevant for server workloads where stuff happens in parallel. Check the links for single threaded results (on big.LITTLE SoCs individually) to get an idea how most typical (single threaded) workloads perform
+* *AES-128 (16 byte)* is a **single threaded** encryption score with very small chunks of data (useful to get an idea how initialization overhead influences crypto performance with small packets). On big.LITTLE SoCs numbers show big core performance
+* *AES-256 (16 KB)* is a **single threaded** encryption score with rather huge chunks of data. On big.LITTLE SoCs numbers show big core performance
+* *memcpy* and *memset* are tinymembench measurements for memory bandwidth. On big.LITTLE SoCs numbers show big core performance
+* *kH/s* is a **multi threaded** cpuminer score showing the board's performance when executing NEON optimized code. To get the performance difference between big and little cores check the links in the right column
+* RPi 3 B+ performance numbers are shown as *normal* (no or just a heatsink) vs. *with fan*. RPi Trading people decided to trash performance on every RPi 3 B+ to masquerade instability issues on a fraction of boards ([details](https://www.raspberrypi.org/forums/viewtopic.php?f=63&t=217056#p1334921))

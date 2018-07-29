@@ -195,6 +195,7 @@ CheckRelease() {
 CheckLoad() {
 	# Only continue if average load is less than 0.1
 	AvgLoad1Min=$(awk -F" " '{print $1*100}' < /proc/loadavg)
+	[ $AvgLoad1Min -ge 10 ] && echo -e "\nAverage load is above 0.1. Way too much background activity.\n"
 	while [ $AvgLoad1Min -ge 10 ]; do
 		echo -e "System too busy for benchmarking:$(uptime)"
 		sleep 5

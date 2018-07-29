@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.2
+Version=0.3
 InstallLocation=/tmp # change to /usr/local/src if you want tools to persist reboots
 
 Main() {
@@ -29,11 +29,14 @@ Main() {
 		SwitchToPerformance >/dev/null 2>&1
 		InstallPrerequisits
 		InitialMonitoring
+		CheckClockspeeds
 		RunTinyMemBench
 		if [ "${TestNEON}" = "yes" -a -x "${InstallLocation}"/cpuminer-multi/cpuminer ]; then
 			RunCpuminerBenchmark
+			CheckClockspeeds # again after heating the SoC to the max
 		fi
 		Run7ZipBenchmark
+		[ "${TestNEON}" = "yes" ] || CheckClockspeeds # again after heating the SoC to the max
 		RunOpenSSLBenchmark
 		DisplayResults
 	fi
@@ -218,6 +221,14 @@ InstallPrerequisits() {
 		cd tinymembench
 		make >/dev/null 2>&1
 	fi
+
+	# get/build mhz if not already there
+	if [ ! -x "${InstallLocation}"/mhz/mhz ]; then
+		cd "${InstallLocation}"
+		git clone http://git.1wt.eu/git/mhz.git/ >/dev/null 2>&1
+		cd mhz
+		make >/dev/null 2>&1
+	fi
 	
 	# if called as 'sbc-bench neon' we also use cpuminer
 	if [ "${TestNEON}" = "yes" ]; then
@@ -274,6 +285,40 @@ InitialMonitoring() {
 		head -n $(( ${Entries} - 1 )) ${REPLY} >${TempDir}/time_in_state_before_${Number}
 	done
 } # InitialMonitoring
+
+CheckClockspeeds() {
+	echo -e " Done.\nChecking cpufreq OPP...\c"
+	if [ "X${BOARDFAMILY}" = "Xs5p6818" -o ${CPUCores} -le 4 ]; then
+		# no big.LITTLE, checking cluster 0 is enough
+		echo -e "\n##########################################################################\n\nChecking cpufreq OPP:\n" >>${ResultLog}
+		CheckCPUCluster 0 >>${ResultLog}
+	else
+		# big.LITTLE or something else (Amlogic S912)
+		echo -e "\n##########################################################################\n\nChecking cpufreq OPP for cpu0-cpu3:\n" >>${ResultLog}
+		CheckCPUCluster 0 >>${ResultLog}
+		echo -e "\nChecking cpufreq OPP for cpu4-cpu$(( ${CPUCores} - 1 )):\n" >>${ResultLog}
+		CheckCPUCluster 4 >>${ResultLog}
+	fi
+} # CheckClockspeeds
+
+CheckCPUCluster() {
+	read MaxSpeed </sys/devices/system/cpu/cpu${1}/cpufreq/cpuinfo_max_freq
+	read MinSpeed </sys/devices/system/cpu/cpu${1}/cpufreq/cpuinfo_min_freq
+	echo ${MinSpeed} >/sys/devices/system/cpu/cpu${1}/cpufreq/scaling_min_freq
+	for i in $(cat /sys/devices/system/cpu/cpu${1}/cpufreq/scaling_available_frequencies) ; do
+		echo ${i} >/sys/devices/system/cpu/cpu${1}/cpufreq/scaling_max_freq
+		sleep 0.1
+		RealSpeed=$(taskset -c $(( $1 + 1 )) "${InstallLocation}"/mhz/mhz 3 1000 | awk -F" cpu_MHz=" '{print $2}' | awk -F" " '{print $1}' | tr '\n' '/' | sed 's|/$||')
+		SysfsSpeed=$(( $i / 1000 ))
+		if [ -f /usr/bin/vcgencmd ]; then
+			# On RPi we query ThreadX about clockspeeds too
+			ThreadXFreq=$(/usr/bin/vcgencmd measure_clock arm | awk -F"=" '{printf ("%0.0f",$2/1000000); }' )
+			echo -e "Cpufreq OPP: $(printf "%4s" ${SysfsSpeed})    ThreadX: $(printf "%4s" ${ThreadXFreq})    Measured: ${RealSpeed}"
+		else
+			echo -e "Cpufreq OPP: $(printf "%4s" ${SysfsSpeed})    Measured: ${RealSpeed}"
+		fi
+	done
+} # CheckCPUCluster
 
 RunTinyMemBench() {
 	echo -e " Done.\nExecuting tinymembench. This will take a long time...\c"

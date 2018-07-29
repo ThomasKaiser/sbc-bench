@@ -288,6 +288,10 @@ InitialMonitoring() {
 
 CheckClockspeeds() {
 	echo -e " Done.\nChecking cpufreq OPP...\c"
+	if [ -f ${MonitorLog} ]; then
+		grep 'Time' ${MonitorLog} | tail -n 1 >"${TempDir}/systemhealth.now"
+		grep ':' ${MonitorLog} | tail -n 1 >>"${TempDir}/systemhealth.now"
+	fi
 	if [ "X${BOARDFAMILY}" = "Xs5p6818" -o ${CPUCores} -le 4 ]; then
 		# no big.LITTLE, checking cluster 0 is enough
 		echo -e "\n##########################################################################\n\nChecking cpufreq OPP:\n" >>${ResultLog}
@@ -298,6 +302,9 @@ CheckClockspeeds() {
 		CheckCPUCluster 0 >>${ResultLog}
 		echo -e "\nChecking cpufreq OPP for cpu4-cpu$(( ${CPUCores} - 1 )):\n" >>${ResultLog}
 		CheckCPUCluster 4 >>${ResultLog}
+	fi
+	if [ -f "${TempDir}/systemhealth.now" ]; then
+		echo -e "\nSystem health now:\n\n$(cat "${TempDir}/systemhealth.now")" >>${ResultLog}
 	fi
 } # CheckClockspeeds
 
@@ -499,7 +506,9 @@ DisplayResults() {
 	[ ${CPUCores} -gt 4 ] && BigLittle=" (big.LITTLE cores measured individually)"
 	echo -e "${BOLD}Memory performance${NC}${BigLittle}:"
 	awk -F" " '/^ standard/ {print $2": "$4" "$5" "$6}' <${ResultLog}
-	echo -e "\n${BOLD}Cpuminer total scores${NC} (5 minutes execution): $(awk -F"Total Scores: " '/^Total Scores: / {print $2}' ${ResultLog}) kH/s"
+	if [ "${TestNEON}" = "yes" -a -x "${InstallLocation}"/cpuminer-multi/cpuminer ]; then
+		echo -e "\n${BOLD}Cpuminer total scores${NC} (5 minutes execution): $(awk -F"Total Scores: " '/^Total Scores: / {print $2}' ${ResultLog}) kH/s"
+	fi
 	echo -e "\n${BOLD}7-zip total scores${NC} (3 consecutive runs): $(awk -F" " '/^Total:/ {print $2}' ${ResultLog})"
 	echo -e "\n${BOLD}OpenSSL results${NC}${BigLittle}:\n$(grep '^type' ${TempLog} | head -n1)"
 	grep '^aes-' ${TempLog}

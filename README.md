@@ -125,7 +125,7 @@ The 7-zip benchmark when running on all cores can result in the system starting 
     Swap:          495M          0B        495M
     Swap:          495M         34M        460M
 
-So we know swapping has happened which negatively affected performance to some degree based on how swap is implemented. If swapping to SD card is configured performance will be severely impacted but in this case since it's a recent Armbian image the effects are negligible sind Armbian implements zram based swap in the meantime (that's why kind of swap is also recorded in detailed result list).
+So we know swapping has happened which negatively affected performance to some degree based on how swap is implemented. If swapping to SD card is configured performance will be severely impacted but in this case since it's a recent Armbian image the effects are negligible since Armbian implements zram based swap in the meantime (that's why kind of swap is also recorded in detailed result list).
 
 While executing the multi-core 7-zip benchmark monitoring looked like this:
 
@@ -138,7 +138,7 @@ While executing the multi-core 7-zip benchmark monitoring looked like this:
     10:52:00: 1400/1400MHz  6.23  80%   0%  79%   0%   0%   0%  59.0°C
     10:52:31: 1400/1400MHz  6.39  72%   0%  71%   0%   0%   0%  56.0°C
 
-Always 0% in the `%io` column reported so not a big deal. With swap on SD card we would've seen high occurences of *%iowait* activity and way lower performance numbers.
+Always 0% in the `%io` column reported so not a big deal. With swap on SD card especially when using [cards with low random IO performance](https://forum.armbian.com/topic/954-sd-card-performance/) we would've seen high occurences of *%iowait* activity and way lower performance numbers.
 
 ### Background activity
 
@@ -170,6 +170,34 @@ In this case we were able to spot some background activity in this line:
 
 *$something* happened in parallel which will slightly lower the generated benchmark score. While 2% CPU utilization for other stuff won't hurt that much at least we need to have an eye on this since when there are higher utilization numbers reported when running the single threaded stuff the system shows way too much background activity to report reasonable benchmark scores. Then we simply generated numbers without meaning.
 
+### Throttling
+
+Depending on settings (kernel or some 'firmware' controlling the hardware) the clockspeeds might be dynamically reduced when the SoC starts to overheat. When clockspeeds are reduced then this obviously slows down operation.
+
+`sbc-bench` continually monitors the clockspeeds but since we can only query every few seconds we might not catch short clockspeed decreases. That's why we check whether the kernel's cpufreq driver supports statistics. If true we record contents of `stats/time_in_state` prior to and after benchmark execution and compare afterwards. This way we are able to detect even short amounts of downclocking which will result in a warning like this: **ATTENTION: Throttling occured. Check the uploaded log for details.**
+
+The detailed log then will contain information how much time (in milliseconds) has been spent on which clockspeed while executing the benchmarks. Might look like this on a NanoPC T4 without fan (only vendor's heatsink) after running the full set (NEON test included which resulted in the big cluster clocking down to even 408 MHz):
+
+    Cpufreq driver statistics (time in state) for CPUs 0-3:
+
+     408 MHz:	16602	16602	0
+     600 MHz:	428	428	0
+     816 MHz:	257	257	0
+    1008 MHz:	190	190	0
+    1200 MHz:	137	137	0
+    1416 MHz:	34225	248835	214610
+
+    Cpufreq driver statistics (time in state) for CPUs 4-5:
+
+     408 MHz:	25078	41220	16142
+     600 MHz:	561	13931	13370
+     816 MHz:	214	14917	14703
+    1008 MHz:	137	7204	7067
+    1200 MHz:	98	2050	1952
+    1416 MHz:	91	2412	2321
+    1608 MHz:	76	15107	15031
+    1800 MHz:	25583	169897	144314
+
 ## Interpreting results
 
 *(coming soon)*
@@ -177,3 +205,7 @@ In this case we were able to spot some background activity in this line:
 ## Spotting problems
 
 *(coming soon)*
+
+## Discussion about tool and results
+
+Should happen in [this thread](https://forum.armbian.com/topic/7819-sbc-bench/) over at Armbian forum.

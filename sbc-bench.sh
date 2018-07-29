@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.3
+Version=0.4
 InstallLocation=/tmp # change to /usr/local/src if you want tools to persist reboots
 
 Main() {
@@ -30,19 +30,22 @@ Main() {
 		InstallPrerequisits
 		InitialMonitoring
 		CheckClockspeeds
+		CheckTimeInState before
 		RunTinyMemBench
+		RunOpenSSLBenchmark
+		Run7ZipBenchmark
 		if [ "${TestNEON}" = "yes" -a -x "${InstallLocation}"/cpuminer-multi/cpuminer ]; then
 			RunCpuminerBenchmark
-			CheckClockspeeds # again after heating the SoC to the max
 		fi
-		Run7ZipBenchmark
-		[ "${TestNEON}" = "yes" ] || CheckClockspeeds # again after heating the SoC to the max
-		RunOpenSSLBenchmark
+		CheckTimeInState after
+		CheckClockspeeds # again after heating the SoC to the max
 		DisplayResults
 	fi
 } # Main
 
 MonitorBoard() {
+	# Background monitoring
+
 	# In Armbian we can rely on /etc/armbianmonitor/datasources/soctemp
 	if [ -f /etc/armbianmonitor/datasources/soctemp ]; then
 		TempSource=/etc/armbianmonitor/datasources/soctemp
@@ -129,6 +132,7 @@ MonitorBoard() {
 } # MonitorBoard
 
 ProcessStats() {
+	# Generate detailed usage statistics based on /proc/stat
 	procStatLine=(`sed -n 's/^cpu\s//p' /proc/stat`)
 	UserStat=${procStatLine[0]}
 	NiceStat=${procStatLine[1]}
@@ -149,7 +153,7 @@ ProcessStats() {
 	IOWaitDiff=$(( ${IOWaitStat} - ${LastIOWaitStat} ))
 	IrqDiff=$(( ${IrqStat} - ${LastIrqStat} ))
 	SoftIrqDiff=$(( ${SoftIrqStat} - ${LastSoftIrqStat} ))
-	
+
 	diffIdle=$(( ${IdleStat} - ${LastIdleStat} ))
 	diffTotal=$(( ${Total} - ${LastTotal} ))
 	diffX=$(( ${diffTotal} - ${diffIdle} ))
@@ -173,6 +177,7 @@ ProcessStats() {
 } # ProcessStats
 
 CheckRelease() {
+	# Display warning when not executing on Debian Stretch or Ubuntu Bionic
 	Distro=$(lsb_release -c | awk -F" " '{print $2}' | tr '[:upper:]' '[:lower:]')
 	case ${Distro} in
 		stretch|bionic)
@@ -187,6 +192,7 @@ CheckRelease() {
 } # CheckRelease
 
 CheckLoad() {
+	# Only continue if average load is less than 0.1
 	AvgLoad1Min=$(awk -F" " '{print $1*100}' < /proc/loadavg)
 	while [ $AvgLoad1Min -ge 10 ]; do
 		echo -e "System too busy for benchmarking:$(uptime)"
@@ -197,6 +203,7 @@ CheckLoad() {
 } # CheckLoad
 
 SwitchToPerformance() {
+	# Try to switch to performance cpufreq governor with all CPU cores
 	CPUCores=$(grep -c '^processor' /proc/cpuinfo)
 	for ((i=0;i<CPUCores;i++)); do
 		echo performance >/sys/devices/system/cpu/cpu${i}/cpufreq/scaling_governor
@@ -263,27 +270,19 @@ InitialMonitoring() {
 
 	# Log distribution info
 	[ -f /etc/armbian-release ] && . /etc/armbian-release
-	[ -n "${BOARDFAMILY}" ] && (grep -v "#" /etc/armbian-release ; echo "") >>${ResultLog}
 	which lsb_release >/dev/null 2>&1 && (lsb_release -a 2>/dev/null) >>${ResultLog}
-	[ -n "${BOARDFAMILY}" ] || echo -e "Architecture:\t$(dpkg --print-architecture)" >>${ResultLog}
+	if [ -n "${BOARDFAMILY}" ]; then
+		echo -e "\nArmbian release info:\n$(grep -v "#" /etc/armbian-release)" >>${ResultLog}
+	else
+		echo -e "Architecture:\t$(dpkg --print-architecture)" >>${ResultLog}
+	fi
 
 	# On Raspberries we also collect 'firmware' information:
 	[ -f /usr/bin/vcgencmd ] && (echo -e "\nRaspberry Pi ThreadX version:\n$(/usr/bin/vcgencmd version)") >>${ResultLog}
 	[ -f /boot/config.txt ] && echo -e "\nThreadX configuration (/boot/config.txt):\n$(grep -v '#' /boot/config.txt | sed '/^\s*$/d')" >>${ResultLog}
 
 	# Some basic system info needed to interpret system health later
-	echo -e "\nUptime:$(uptime)\n\n$(iostat)\n\n$(free -h)\n\n$(swapon -s)" \
-		>>${ResultLog}
-	# Check cpufreq statistics prior and after benchmark to detect throttling (won't work 
-	# with all kernels and especially not on the RPi since RPi Trading people are cheating.
-	# Cpufreq support via sysfs is bogus and with latest ThreadX (firmware) update they 
-	# even cheat wrt querying the 'firmware' via 'vcgencmd get_throttled':
-	# https://www.raspberrypi.org/forums/viewtopic.php?f=63&t=217056#p1334921
-	find /sys -type f -name time_in_state | grep 'cpufreq' | while read ; do
-		Number=$(echo ${REPLY} | tr -c -d '[:digit:]')
-		Entries=$(wc -l ${REPLY} | awk -F" " '{print $1}')
-		head -n $(( ${Entries} - 1 )) ${REPLY} >${TempDir}/time_in_state_before_${Number}
-	done
+	echo -e "\nUptime:$(uptime)\n\n$(iostat)\n\n$(free -h)\n\n$(swapon -s)" >>${ResultLog}
 } # InitialMonitoring
 
 CheckClockspeeds() {
@@ -307,23 +306,45 @@ CheckClockspeeds() {
 	fi
 } # CheckClockspeeds
 
-CheckCPUCluster() {
-	read MaxSpeed </sys/devices/system/cpu/cpu${1}/cpufreq/cpuinfo_max_freq
-	read MinSpeed </sys/devices/system/cpu/cpu${1}/cpufreq/cpuinfo_min_freq
-	echo ${MinSpeed} >/sys/devices/system/cpu/cpu${1}/cpufreq/scaling_min_freq
-	for i in $(cat /sys/devices/system/cpu/cpu${1}/cpufreq/scaling_available_frequencies) ; do
-		echo ${i} >/sys/devices/system/cpu/cpu${1}/cpufreq/scaling_max_freq
-		sleep 0.1
-		RealSpeed=$(taskset -c $(( $1 + 1 )) "${InstallLocation}"/mhz/mhz 3 1000 | awk -F" cpu_MHz=" '{print $2}' | awk -F" " '{print $1}' | tr '\n' '/' | sed 's|/$||')
-		SysfsSpeed=$(( $i / 1000 ))
-		if [ -f /usr/bin/vcgencmd ]; then
-			# On RPi we query ThreadX about clockspeeds too
-			ThreadXFreq=$(/usr/bin/vcgencmd measure_clock arm | awk -F"=" '{printf ("%0.0f",$2/1000000); }' )
-			echo -e "Cpufreq OPP: $(printf "%4s" ${SysfsSpeed})    ThreadX: $(printf "%4s" ${ThreadXFreq})    Measured: ${RealSpeed}"
-		else
-			echo -e "Cpufreq OPP: $(printf "%4s" ${SysfsSpeed})    Measured: ${RealSpeed}"
-		fi
+CheckTimeInState() {
+	# Check cpufreq statistics prior and after benchmark to detect throttling (won't work
+	# with all kernels and especially not on the RPi since RPi Trading people are cheating.
+	# Cpufreq support via sysfs is bogus and with latest ThreadX (firmware) update they
+	# even cheat wrt querying the 'firmware' via 'vcgencmd get_throttled':
+	# https://www.raspberrypi.org/forums/viewtopic.php?f=63&t=217056#p1334921
+	find /sys -type f -name time_in_state | sort | grep 'cpufreq' | while read ; do
+		Number=$(echo ${REPLY} | tr -c -d '[:digit:]')
+		Entries=$(wc -l ${REPLY} | awk -F" " '{print $1}')
+		head -n $(( ${Entries} - 1 )) ${REPLY} >${TempDir}/time_in_state_${1}_${Number}
+		cat ${REPLY} >${TempDir}/full_time_in_state_${1}_${Number}
 	done
+} # CheckTimeInState
+
+CheckCPUCluster() {
+	# check whether there's cpufreq support or not
+	if [ -d /sys/devices/system/cpu/cpu${1}/cpufreq ]; then
+		# walk through all cpufreq OPP and report clockspeeds (kernel vs. measured)
+		read MaxSpeed </sys/devices/system/cpu/cpu${1}/cpufreq/cpuinfo_max_freq
+		read MinSpeed </sys/devices/system/cpu/cpu${1}/cpufreq/cpuinfo_min_freq
+		echo ${MinSpeed} >/sys/devices/system/cpu/cpu${1}/cpufreq/scaling_min_freq
+		for i in $(cat /sys/devices/system/cpu/cpu${1}/cpufreq/scaling_available_frequencies) ; do
+			echo ${i} >/sys/devices/system/cpu/cpu${1}/cpufreq/scaling_max_freq
+			sleep 0.1
+			RealSpeed=$(taskset -c $(( $1 + 1 )) "${InstallLocation}"/mhz/mhz 3 1000 | awk -F" cpu_MHz=" '{print $2}' | awk -F" " '{print $1}' | tr '\n' '/' | sed 's|/$||')
+			SysfsSpeed=$(( $i / 1000 ))
+			if [ -f /usr/bin/vcgencmd ]; then
+				# On RPi we query ThreadX about clockspeeds too
+				ThreadXFreq=$(/usr/bin/vcgencmd measure_clock arm | awk -F"=" '{printf ("%0.0f",$2/1000000); }' )
+				echo -e "Cpufreq OPP: $(printf "%4s" ${SysfsSpeed})    ThreadX: $(printf "%4s" ${ThreadXFreq})    Measured: ${RealSpeed}"
+			else
+				echo -e "Cpufreq OPP: $(printf "%4s" ${SysfsSpeed})    Measured: ${RealSpeed}"
+			fi
+		done
+	else
+		# no cpufreq support
+		RealSpeed=$(taskset -c $(( $1 + 1 )) "${InstallLocation}"/mhz/mhz 3 1000 | awk -F" cpu_MHz=" '{print $2}' | awk -F" " '{print $1}' | tr '\n' '/' | sed 's|/$||')
+		echo -e "No cpufreq support available. Measured clockspeed on cpu$(( $1 + 1 )): ${RealSpeed}"
+	fi
 } # CheckCPUCluster
 
 RunTinyMemBench() {
@@ -331,7 +352,6 @@ RunTinyMemBench() {
 	echo -e "System health while running tinymembench:\n" >${MonitorLog}
 	"${0}" m 60 >>${MonitorLog} &
 	MonitoringPID=$!
-	sleep 10
 	if [ ${CPUCores} -gt 4 ]; then
 		if [ "X${BOARDFAMILY}" = "Xs5p6818" ]; then
 			# S5P6816 octa-core SoC is not a big.LITTLE design
@@ -377,7 +397,6 @@ Run7ZipBenchmark() {
 	"${0}" m 30 >>${MonitorLog} &
 	MonitoringPID=$!
 	RunHowManyTimes=3
-	sleep 10
 	for ((i=1;i<=RunHowManyTimes;i++)); do
 		"${SevenZip}" b >>${TempLog}
 	done
@@ -398,7 +417,7 @@ RunOpenSSLBenchmark() {
 	echo -e "\nSystem health while running OpenSSL benchmark:\n" >>${MonitorLog}
 	"${0}" m 10 >>${MonitorLog} &
 	MonitoringPID=$!
-	sleep 10
+	OpenSSLLog="${TempDir}/openssl.log"
 	for i in 128 192 256 ; do
 		if [ ${CPUCores} -gt 4 ]; then
 			# big.LITTLE SoC, we execute one time on a little and one time on a big core
@@ -408,11 +427,11 @@ RunOpenSSLBenchmark() {
 			openssl speed -elapsed -evp aes-${i}-cbc 2>/dev/null
 			openssl speed -elapsed -evp aes-${i}-cbc 2>/dev/null
 		fi
-	done >${TempLog}
+	done >${OpenSSLLog}
 	kill ${MonitoringPID}
 	echo -e "\n##########################################################################\n" >>${ResultLog}
-	echo -e "$(openssl version)\n$(grep '^type' ${TempLog} | head -n1)" >>${ResultLog}
-	grep '^aes-' ${TempLog} >>${ResultLog}
+	echo -e "$(openssl version | awk -F" " '{print $1" (version "$2", built on "$3" "$4" "$5")"}')\n$(grep '^type' ${OpenSSLLog} | head -n1)" >>${ResultLog}
+	grep '^aes-' ${OpenSSLLog} >>${ResultLog}
 } # RunOpenSSLBenchmark
 
 RunCpuminerBenchmark() {
@@ -420,10 +439,9 @@ RunCpuminerBenchmark() {
 	echo -e "\nSystem health while running cpuminer:\n" >>${MonitorLog}
 	"${0}" m 10 >>${MonitorLog} &
 	MonitoringPID=$!
-	sleep 10
 	"${InstallLocation}"/cpuminer-multi/cpuminer --benchmark --cpu-priority=2 >${TempLog} &
 	MinerPID=$!
-	sleep 290
+	sleep 300
 	kill ${MinerPID} ${MonitoringPID}
 	echo -e "\n##########################################################################\n" >>${ResultLog}
 	sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" <${TempLog} >>${ResultLog}
@@ -436,29 +454,33 @@ DisplayResults() {
 	echo -e " Done.\n\007\007\007"
 
 	# Check for throttling on normal ARM SBC
-	find /sys -type f -name time_in_state | grep 'cpufreq' | while read ; do
+	find /sys -type f -name time_in_state | sort | grep 'cpufreq' | while read ; do
 		Number=$(echo ${REPLY} | tr -c -d '[:digit:]')
-		Entries=$(wc -l ${REPLY} | awk -F" " '{print $1}')
-		head -n $(( ${Entries} - 1 )) ${REPLY} >${TempDir}/time_in_state_after_${Number}
 		diff ${TempDir}/time_in_state_after_${Number} ${TempDir}/time_in_state_before_${Number} >/dev/null 2>&1
 		if [ $? -ne 0 ]; then
 			case ${CPUCores} in
 				1|2|3|4)
+					ReportCpufreqStatistics ${Number}
 					echo -e "${LRED}${BOLD}ATTENTION: Throttling occured. Check the uploaded log for details.${NC}\n"
 					;;
 				6)
 					if [ ${Number} -eq 0 ]; then
+						ReportCpufreqStatistics ${Number} " for CPUs 0-3"
 						echo -e "${LRED}${BOLD}ATTENTION: Throttling occured on CPUs 0-3. Check the uploaded log for details.${NC}\n"
 					else
+						ReportCpufreqStatistics ${Number} " for CPUs 4-5"
 						echo -e "${LRED}${BOLD}ATTENTION: Throttling occured on CPUs 4-5. Check the uploaded log for details.${NC}\n"
 					fi
 					;;
 				8)
 					if [ "X${BOARDFAMILY}" = "Xs5p6818" ]; then
+						ReportCpufreqStatistics ${Number}
 						echo -e "${LRED}${BOLD}ATTENTION: Throttling occured. Check the uploaded log for details.${NC}\n"
 					elif [ ${Number} -eq 0 ]; then
+						ReportCpufreqStatistics ${Number} " for CPUs 0-3"
 						echo -e "${LRED}${BOLD}ATTENTION: Throttling occured on CPUs 0-3. Check the uploaded log for details.${NC}\n"
 					else
+						ReportCpufreqStatistics ${Number} " for CPUs 4-7"
 						echo -e "${LRED}${BOLD}ATTENTION: Throttling occured on CPUs 4-7. Check the uploaded log for details.${NC}\n"
 					fi
 					;;
@@ -473,18 +495,21 @@ DisplayResults() {
 	fi
 
 	# Check for throttling/undervoltage on Raspberry Pi
-	grep -q '/1200MHz' ${MonitorLog} && Warning="ATTENTION: Throttling has occured. Check the uploaded log for details."
+	grep -q '/1200MHz' ${MonitorLog} && Warning="ATTENTION: Silent throttling has occured. Check the uploaded log for details."
 	if [ -f /usr/bin/vcgencmd ]; then
 		Health=$(perl -e "printf \"%19b\n\", $(/usr/bin/vcgencmd get_throttled | cut -f2 -d=)" | tr -d '[:blank:]')
 		case ${Health} in
 			10*)
 				Warning="ATTENTION: Frequency capping to 600 MHz has occured. Check the uploaded log for details."
+				ReportRPiHealth ${Health} >>${TempDir}/throttling_info.txt
 				;;
 			01*)
 				Warning="ATTENTION: Throttling has occured. Check the uploaded log for details."
+				ReportRPiHealth ${Health} >>${TempDir}/throttling_info.txt
 				;;
 			11*)
 				Warning="ATTENTION: Throttling and frequency capping has occured. Check the uploaded log for details."
+				ReportRPiHealth ${Health} >>${TempDir}/throttling_info.txt
 				;;
 		esac
 		if [ "X${Warning}" = "X" ]; then
@@ -497,6 +522,7 @@ DisplayResults() {
 	# Prepare benchmark results
 	echo -e "\n##########################################################################\n" >>${ResultLog}
 	cat ${MonitorLog} >>${ResultLog}
+	[ -f ${TempDir}/throttling_info.txt ] && cat ${TempDir}/throttling_info.txt >>${ResultLog}
 	echo -e "\n##########################################################################\n" >>${ResultLog}
 	echo -e "$(iostat)\n\n$(free -h)\n\n$(swapon -s)\n\n$(lscpu)" >>${ResultLog}
 	UploadURL=$(curl -s -F 'f:1=<-' ix.io <${ResultLog} 2>/dev/null || curl -s -F 'f:1=<-' ix.io <${ResultLog})
@@ -509,8 +535,8 @@ DisplayResults() {
 		echo -e "\n${BOLD}Cpuminer total scores${NC} (5 minutes execution): $(awk -F"Total Scores: " '/^Total Scores: / {print $2}' ${ResultLog}) kH/s"
 	fi
 	echo -e "\n${BOLD}7-zip total scores${NC} (3 consecutive runs): $(awk -F" " '/^Total:/ {print $2}' ${ResultLog})"
-	echo -e "\n${BOLD}OpenSSL results${NC}${BigLittle}:\n$(grep '^type' ${TempLog} | head -n1)"
-	grep '^aes-' ${TempLog}
+	echo -e "\n${BOLD}OpenSSL results${NC}${BigLittle}:\n$(grep '^type' ${OpenSSLLog} | head -n1)"
+	grep '^aes-' ${OpenSSLLog}
 	if [ "X${UploadURL}" = "X" ]; then
 		echo -e "\nUnable to upload full test results. Please copy&paste the below stuff to pastebin.com and\nprovide the URL. Check the output for throttling and swapping please.\n\n"
 		cat ${ResultLog}
@@ -519,5 +545,28 @@ DisplayResults() {
 		echo -e "\nFull results uploaded to ${UploadURL}. Please check the log for anomalies (e.g. swapping\nor throttling happenend) and otherwise share this URL.\n"
 	fi
 } # DisplayResults
+
+ReportCpufreqStatistics() {
+	# Displays cpufreq driver statistics from before and after the benchmark as comparison
+	echo -e "\nThrottling occured. Cpufreq statistics (time in state)${2}:\n" >>${TempDir}/throttling_info.txt
+	awk -F" " '{print $1}' <${TempDir}/full_time_in_state_before_${1} | while read ; do
+		BeforeValue=$(awk -F" " "/^${REPLY}/ {print \$2}" <${TempDir}/full_time_in_state_before_${1})
+		AfterValue=$(awk -F" " "/^${REPLY}/ {print \$2}" <${TempDir}/full_time_in_state_after_${1})
+		echo -e "$(printf "%4s" $(( ${REPLY} / 1000 )) ) MHz:\t${BeforeValue}\t${AfterValue}\t$(( ${AfterValue} - ${BeforeValue} ))" >>${TempDir}/throttling_info.txt
+	done
+} # ReportCpufreqStatistics
+
+ReportRPiHealth() {
+	# Displaying the 'vcgencmd get_throttled' output in an understandable way
+	echo -e "\nQuerying ThreadX on RPi for thermal or undervoltage issues:\n\n${1}"
+	cat <<-EOF
+	|||             |||_ under-voltage
+	|||             ||_ currently throttled
+	|||             |_ arm frequency capped
+	|||_ under-voltage has occurred since last reboot
+	||_ throttling has occurred since last reboot
+	|_ arm frequency capped has occurred since last reboot
+	EOF
+} # ReportRPiHealth
 
 Main "$@"

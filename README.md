@@ -178,25 +178,16 @@ Depending on settings (kernel or some 'firmware' controlling the hardware) the c
 
 The detailed log then will contain information how much time (in milliseconds) has been spent on which clockspeed while executing the benchmarks. Might look like this on a NanoPC T4 without fan (only vendor's heatsink) after running the full set (NEON test included which resulted in the big cluster clocking down to even 408 MHz):
 
-    Cpufreq driver statistics (time in state) for CPUs 0-3:
+    Throttling occured. Cpufreq statistics (time in milliseconds) for CPUs 4-5:
 
-     408 MHz:	16602	16602	0
-     600 MHz:	428	428	0
-     816 MHz:	257	257	0
-    1008 MHz:	190	190	0
-    1200 MHz:	137	137	0
-    1416 MHz:	34225	248835	214610
-
-    Cpufreq driver statistics (time in state) for CPUs 4-5:
-
-     408 MHz:	25078	41220	16142
-     600 MHz:	561	13931	13370
-     816 MHz:	214	14917	14703
-    1008 MHz:	137	7204	7067
-    1200 MHz:	98	2050	1952
-    1416 MHz:	91	2412	2321
-    1608 MHz:	76	15107	15031
-    1800 MHz:	25583	169897	144314
+    1800 MHz:	144314
+    1608 MHz:	15031
+    1416 MHz:	2321
+    1200 MHz:	1952
+    1008 MHz:	7067
+     816 MHz:	14703
+     600 MHz:	13370
+     408 MHz:	16142
 
 ## Interpreting results
 

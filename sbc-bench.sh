@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.4.2
+Version=0.4.3
 InstallLocation=/tmp # change to /usr/local/src if you want tools to persist reboots
 
 Main() {
@@ -86,7 +86,13 @@ MonitorBoard() {
 		CPUs=raspberrypi
 	elif [ -f /sys/devices/system/cpu/cpu4/cpufreq/cpuinfo_cur_freq ]; then
 		DisplayHeader="Time       big.LITTLE   load %cpu %sys %usr %nice %io %irq   Temp"
-		CPUs=biglittle
+		read MaxSpeed0 </sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq
+		read MaxSpeed4 </sys/devices/system/cpu/cpu4/cpufreq/cpuinfo_max_freq
+		if [ ${MaxSpeed4} -ge ${MaxSpeed0} ]; then
+			CPUs=biglittle
+		else
+			CPUs=littlebig
+		fi
 	elif [ -f /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq ]; then
 		DisplayHeader="Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp"
 		CPUs=normal
@@ -104,27 +110,31 @@ MonitorBoard() {
 				SocTemp=$(awk '{printf ("%0.1f",$1/1000); }' <<<${SocTemp})
 			fi
 		fi
+
+		ProcessStats
+
 		case ${CPUs} in
 			raspberrypi)
 				FakeFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq) 2>/dev/null
 				RealFreq=$(/usr/bin/vcgencmd measure_clock arm | awk -F"=" '{printf ("%0.0f",$2/1000000); }' )
 				CoreVoltage=$(/usr/bin/vcgencmd measure_volts | cut -f2 -d= | sed 's/000//')
-				ProcessStats
 				echo -e "$(date "+%H:%M:%S"): $(printf "%4s" ${FakeFreq})/$(printf "%4s" ${RealFreq})MHz $(printf "%5s" ${LoadAvg}) ${procStats}  $(printf "%4s" ${SocTemp})°C  ${CoreVoltage}"
 				;;
 			biglittle)
 				BigFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpu4/cpufreq/cpuinfo_cur_freq) 2>/dev/null
 				LittleFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq) 2>/dev/null
-				ProcessStats
+				echo -e "$(date "+%H:%M:%S"): $(printf "%4s" ${BigFreq})/$(printf "%4s" ${LittleFreq})MHz $(printf "%5s" ${LoadAvg}) ${procStats}  $(printf "%4s" ${SocTemp})°C"
+				;;
+			littlebig)
+				BigFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq) 2>/dev/null
+				LittleFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpu4/cpufreq/cpuinfo_cur_freq) 2>/dev/null
 				echo -e "$(date "+%H:%M:%S"): $(printf "%4s" ${BigFreq})/$(printf "%4s" ${LittleFreq})MHz $(printf "%5s" ${LoadAvg}) ${procStats}  $(printf "%4s" ${SocTemp})°C"
 				;;
 			normal)
 				CpuFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq) 2>/dev/null
-				ProcessStats
 				echo -e "$(date "+%H:%M:%S"): $(printf "%4s" ${CpuFreq})MHz $(printf "%5s" ${LoadAvg}) ${procStats}  $(printf "%4s" ${SocTemp})°C"
 				;;
 			notavailable)
-				ProcessStats
 				echo -e "$(date "+%H:%M:%S"):   ---     $(printf "%5s" ${LoadAvg}) ${procStats}  $(printf "%4s" ${SocTemp})°C"
 				;;
 		esac
@@ -282,9 +292,9 @@ InitialMonitoring() {
 
 	# On Raspberries we also collect 'firmware' information:
 	if [ -f /usr/bin/vcgencmd ]; then
-		echo -e "\nRaspberry Pi ThreadX version:\n$(/usr/bin/vcgencmd version)") >>${ResultLog}
+		echo -e "\nRaspberry Pi ThreadX version:\n$(/usr/bin/vcgencmd version)" >>${ResultLog}
 		[ -f /boot/config.txt ] && echo -e "\nThreadX configuration (/boot/config.txt):\n$(grep -v '#' /boot/config.txt | sed '/^\s*$/d')" >>${ResultLog}
-		echo -e "\nActual ThreadX settings:\n$(vcgencmd get_config int )" >>${ResultLog}
+		echo -e "\nActual ThreadX settings:\n$(vcgencmd get_config int)" >>${ResultLog}
 	fi
 
 	# Some basic system info needed to interpret system health later
@@ -330,7 +340,6 @@ CheckCPUCluster() {
 	# check whether there's cpufreq support or not
 	if [ -d /sys/devices/system/cpu/cpu${1}/cpufreq ]; then
 		# walk through all cpufreq OPP and report clockspeeds (kernel vs. measured)
-		read MaxSpeed </sys/devices/system/cpu/cpu${1}/cpufreq/cpuinfo_max_freq
 		read MinSpeed </sys/devices/system/cpu/cpu${1}/cpufreq/cpuinfo_min_freq
 		echo ${MinSpeed} >/sys/devices/system/cpu/cpu${1}/cpufreq/scaling_min_freq
 		for i in $(cat /sys/devices/system/cpu/cpu${1}/cpufreq/scaling_available_frequencies) ; do

@@ -32,6 +32,7 @@ Below some results collected. Please keep in mind that these are **not** hardwar
 | [RockPro64](http://wiki.pine64.org/index.php/ROCKPro64_Main_Page) | 1800/1400 MHz | 4.4 | Stretch arm64 | 6140 | 236800 | 1016050 | 2790 | 4850 | - | [http://ix.io/1ivR](http://ix.io/1ivR) |
 | [RockPro64](http://wiki.pine64.org/index.php/ROCKPro64_Main_Page) | 1800/1400 MHz | 4.4 | Stretch **armhf** | 6250 | 275000 | 1000150 | 2000 | 4835 | - | [http://ix.io/1iFZ](http://ix.io/1iFZ) |
 | [RockPro64](http://wiki.pine64.org/index.php/ROCKPro64_Main_Page) | 1800/1400 MHz | 4.18 | Stretch arm64 | 6300 | 237700 | 1021500 | 3650 | 8450 | 8.20 | [http://ix.io/1iFp](http://ix.io/1iFp) |
+| [Vim2](https://www.khadas.com/vim) | 1400/1000 MHz | 4.17 | Bionic arm64 | 5450 | 126770 | 659600 | 1920 | 5920 | 8.59 | [http://ix.io/1iJ7](http://ix.io/1iJ7) |
 
 ## Explanations
 
@@ -44,6 +45,7 @@ Below some results collected. Please keep in mind that these are **not** hardwar
 * RPi 3 B+ performance numbers shown as *normal* were made with no or just a heatsink (in contrast to *with fan*)
 * RPi 3 B+ marked as 'UV/normal' means: normal settings and average Micro USB cable resulting in **UV** (undervoltage). Once the demanding 7-zip benchmark started voltage dropped below 4.63V and 'frequency capping' (downclocking to 600 MHz) happened destroying performance. See the [detailed log](http://ix.io/1iH0): 1400 MHz are reported by the kernel while it's 600 MHz in reality. Is this just highly misleading or already cheating?
 * RPi 3 B+ marked as 'OC/normal' means: **OC** (overclocked) settings, stable voltage but no fan used. Since SoC temperature exceeds 60°C the 'firmware' starts to cheat and downclocks to 1200 MHz while the kernel reports running at 1570 MHz. At least memory overclocking is somewhat effective.
+* Vim2 is somewhat special: not a real big.LITTLE design but 2 A53 clusters controlled by a firmware BLOB that allows cluster 0 to clock up to 1414 MHz (reported falsely as 1512 MHz) and cluster 1 able to reach 1 GHz ([details](https://forum.khadas.com/t/cpu-frequency-up-to-2ghz/2010/23?u=tkaiser))
 
 ## Insights
 
@@ -54,6 +56,7 @@ Below some results collected. Please keep in mind that these are **not** hardwar
 * Bionic vs. Stretch doesn't seem to make a difference with `7-zip` scores. Applies to both *armhf* and *arm64* too -- see Rock64 numbers above
 * `7-zip` scores benefit slightly from memory performance. See RK3328 equipped Renegade at 1.4 GHz with 4.4 kernel and Rock64 with same setup
 * `openssl` numbers are not affected by memory performance and are the same with same CPU cores and same clockspeeds. At least with Cortex-A53 running at 1.4 GHz with arm64 binary: NanoPi Fire3, Renegade, Rock64 and [RockPro64 with openssl pinned to an A53 core](http://ix.io/1ivR): ~96000k with AES-128/16bit and ~648000k with AES-256/16KB
+* It seems the combination arm64 Bionic with very recent kernel improves AES encryption results with small data chunks (less than 1KB -- see [Rock64 with 4.18 at 1.3GHz](http://ix.io/1iH4) and [Vim2 with 4.17 at 1.4GHz](http://ix.io/1iJ7) vs. [Rock64 with 4.4 at 1.3GHz](http://ix.io/1iGW)). Status: Needs further investigations (most probably related to GCC version)
 * It makes a huge difference whether ARMv8 Crypto Extensions can be used or not. See the many 64-bit SBC results above and compare with RPi 3B+ or ODROID-C2 (both 64-bit ARMv8 but no crypto engine licensed/available)
 * Bionic vs. Stretch makes a big difference with `cpuminer`. GCC version might matter (7.3 on Bionic vs. 6.3 on Stretch -- [some benchmarks heavily depend on compiler versions](https://forum.armbian.com/topic/7763-benchmarking-cpus/?do=findComment&comment=58530)). Status: needs further investigation and confirmation
 * *(more to come soon)*

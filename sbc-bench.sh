@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.4.1
+Version=0.4.2
 InstallLocation=/tmp # change to /usr/local/src if you want tools to persist reboots
 
 Main() {
@@ -267,8 +267,9 @@ InitialMonitoring() {
 	MonitorLog="${TempDir}/monitor.log"
 	trap "rm -rf \"${TempDir}\" ; exit 0" 0 1 2 3 15
 
-	# Log version info
-	echo -e "sbc-bench v${Version} -- $(date -R)\n" >${ResultLog}
+	# Log version and device info
+	[ -f /proc/device-tree/model ] && read DeviceName </proc/device-tree/model
+	echo -e "sbc-bench v${Version} ${DeviceName} ($(date -R))\n" >${ResultLog}
 
 	# Log distribution info
 	[ -f /etc/armbian-release ] && . /etc/armbian-release

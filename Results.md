@@ -32,6 +32,7 @@ Below some results collected. Please keep in mind that these are **not** hardwar
 | [RockPro64](http://wiki.pine64.org/index.php/ROCKPro64_Main_Page) | 1800/1400 MHz | 4.4 | Stretch arm64 | 6140 | 236800 | 1016050 | 2790 | 4850 | - | [http://ix.io/1ivR](http://ix.io/1ivR) |
 | [RockPro64](http://wiki.pine64.org/index.php/ROCKPro64_Main_Page) | 1800/1400 MHz | 4.4 | Stretch **armhf** | 6250 | 275000 | 1000150 | 2000 | 4835 | - | [http://ix.io/1iFZ](http://ix.io/1iFZ) |
 | [RockPro64](http://wiki.pine64.org/index.php/ROCKPro64_Main_Page) | 1800/1400 MHz | 4.18 | Stretch arm64 | 6300 | 237700 | 1021500 | 3650 | 8450 | 8.20 | [http://ix.io/1iFp](http://ix.io/1iFp) |
+| [Vim2](https://www.khadas.com/vim) | 1400/1000 MHz | 4.9 | **Xenial** arm64 | 4800 | 177600 | 659000 | 1690 | 5610 | - | [http://ix.io/1ixi](http://ix.io/1ixi) |
 | [Vim2](https://www.khadas.com/vim) | 1400/1000 MHz | 4.17 | Bionic arm64 | 5450 | 126770 | 659600 | 1920 | 5920 | 8.59 | [http://ix.io/1iJ7](http://ix.io/1iJ7) |
 
 ## Explanations
@@ -57,6 +58,8 @@ Below some results collected. Please keep in mind that these are **not** hardwar
 * `7-zip` scores benefit slightly from memory performance. See RK3328 equipped Renegade at 1.4 GHz with 4.4 kernel and Rock64 with same setup
 * `openssl` numbers are not affected by memory performance and are the same with same CPU cores and same clockspeeds. At least with Cortex-A53 running at 1.4 GHz with arm64 binary: NanoPi Fire3, Renegade, Rock64 and [RockPro64 with openssl pinned to an A53 core](http://ix.io/1ivR): ~96000k with AES-128/16bit and ~648000k with AES-256/16KB
 * It seems the combination arm64 Bionic with very recent kernel improves AES encryption results with small data chunks (less than 1KB -- see [Rock64 with 4.18 at 1.3GHz](http://ix.io/1iH4) and [Vim2 with 4.17 at 1.4GHz](http://ix.io/1iJ7) vs. [Rock64 with 4.4 at 1.3GHz](http://ix.io/1iGW)). Status: Needs further investigations (most probably related to GCC version)
+* It seems running an *armhf* userland on 64-bit SoCs also improves AES encryption results with small data chunks (see *armhf* entries for NanoPC T3+, Rock64, RockPro64 and Vim2). Status: very interesting, needs further investigations
+* It seems running Xenial binaries even further improves AES/SSL performance when ARMv8 Crypto Extensions are available. Status: while interesting irrelevant, we should get rid of Xenial and Jessie numbers.
 * It makes a huge difference whether ARMv8 Crypto Extensions can be used or not. See the many 64-bit SBC results above and compare with RPi 3B+ or ODROID-C2 (both 64-bit ARMv8 but no crypto engine licensed/available)
 * Bionic vs. Stretch makes a big difference with `cpuminer`. GCC version might matter (7.3 on Bionic vs. 6.3 on Stretch -- [some benchmarks heavily depend on compiler versions](https://forum.armbian.com/topic/7763-benchmarking-cpus/?do=findComment&comment=58530)). Status: needs further investigation and confirmation
 * *(more to come soon)*

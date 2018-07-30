@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.4
+Version=0.4.1
 InstallLocation=/tmp # change to /usr/local/src if you want tools to persist reboots
 
 Main() {
@@ -280,8 +280,11 @@ InitialMonitoring() {
 	fi
 
 	# On Raspberries we also collect 'firmware' information:
-	[ -f /usr/bin/vcgencmd ] && (echo -e "\nRaspberry Pi ThreadX version:\n$(/usr/bin/vcgencmd version)") >>${ResultLog}
-	[ -f /boot/config.txt ] && echo -e "\nThreadX configuration (/boot/config.txt):\n$(grep -v '#' /boot/config.txt | sed '/^\s*$/d')" >>${ResultLog}
+	if [ -f /usr/bin/vcgencmd ]; then
+		echo -e "\nRaspberry Pi ThreadX version:\n$(/usr/bin/vcgencmd version)") >>${ResultLog}
+		[ -f /boot/config.txt ] && echo -e "\nThreadX configuration (/boot/config.txt):\n$(grep -v '#' /boot/config.txt | sed '/^\s*$/d')" >>${ResultLog}
+		echo -e "\nActual ThreadX settings:\n$(vcgencmd get_config int )" >>${ResultLog}
+	fi
 
 	# Some basic system info needed to interpret system health later
 	echo -e "\nUptime:$(uptime)\n\n$(iostat)\n\n$(free -h)\n\n$(swapon -s)" >>${ResultLog}
@@ -499,7 +502,10 @@ DisplayResults() {
 	# Check for throttling/undervoltage on Raspberry Pi
 	grep -q '/1200MHz' ${MonitorLog} && Warning="ATTENTION: Silent throttling has occured. Check the uploaded log for details."
 	if [ -f /usr/bin/vcgencmd ]; then
-		Health=$(perl -e "printf \"%19b\n\", $(/usr/bin/vcgencmd get_throttled | cut -f2 -d=)" | tr -d '[:blank:]')
+		Health="$(perl -e "printf \"%19b\n\", $(/usr/bin/vcgencmd get_throttled | cut -f2 -d=)" | tr -d '[:blank:]')"
+		# https://forum.armbian.com/topic/7763-benchmarking-cpus/?do=findComment&comment=59042
+		HealthLength=$(wc -c <<<"${Health}")
+		[ ${HealthLength} -eq 19 ] && Health="0${Health}"
 		case ${Health} in
 			10*)
 				Warning="ATTENTION: Frequency capping to 600 MHz has occured. Check the uploaded log for details."

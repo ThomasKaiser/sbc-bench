@@ -13,6 +13,7 @@ Below some results collected. Please keep in mind that these are **not** hardwar
 | [NanoPC T4](http://wiki.friendlyarm.com/wiki/index.php/NanoPC-T4) | 1800/1400 MHz | 4.17 | Stretch arm64 | 6250 | 307200 | 1022500 | 4100 | 9000 | 8.24 | [http://ix.io/1iFz](http://ix.io/1iFz) |
 | [ODROID-C2](https://www.armbian.com/odroid-c2/) | 1750 MHz | 3.14 | **Xenial** arm64 | 4070 | 50500 | 48500 | 1750 | 3100 | - | [http://ix.io/1ixI](http://ix.io/1ixI) |
 | [ODROID-XU4](https://www.armbian.com/odroid-xu4/) | 1900/1400 MHz | 3.10 | **Jessie** armhf | 6750 | 74100 | 68200 | 2200 | 4800 | - | [http://ix.io/1ixL](http://ix.io/1ixL) |
+| [ODROID-XU4](https://www.armbian.com/odroid-xu4/) | 2000/1500 MHz | 4.14 | Bionic armhf | 7100 | 74700 | 71500 | 2240 | 4880 | - | [http://ix.io/1iLy](http://ix.io/1iLy) |
 | [PineH64](https://www.armbian.com/pine-h64/) | 900 **(!)** MHz | 4.17 | Stretch arm64 | 2550 | 62200 | 421000 | 1600 | 4840 | 2.84 | [http://ix.io/1iFT](http://ix.io/1iFT) |
 | [Renegade](https://www.armbian.com/renegade/) | 1400 MHz | 4.4 | Stretch arm64 | 3710 | 95030 | 644200 | 1565 | 7435 | 3.92 | [http://ix.io/1iFx](http://ix.io/1iFx) |
 | Raspberry Pi 2 B+ | 900 MHz | 4.14 | **Debian** Stretch | 2070 | 14350 | 17450 | 615 | 1175 | - | [http://ix.io/1iFf](http://ix.io/1iFf) |

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.4.3
+Version=0.4.4
 InstallLocation=/tmp # change to /usr/local/src if you want tools to persist reboots
 
 Main() {
@@ -270,6 +270,9 @@ InstallCpuminer() {
 } # InstallCpuminer
 
 InitialMonitoring() {
+	# log benchmark start in dmesg output
+	echo "sbc-bench started" >/dev/kmsg
+
 	# Create temporary files
 	TempDir="$(mktemp -d /tmp/${0##*/}.XXXXXX)"
 	TempLog="${TempDir}/temp.log"
@@ -541,6 +544,14 @@ DisplayResults() {
 	echo -e "\n##########################################################################\n" >>${ResultLog}
 	cat ${MonitorLog} >>${ResultLog}
 	[ -f ${TempDir}/throttling_info.txt ] && cat ${TempDir}/throttling_info.txt >>${ResultLog}
+
+	# add dmesg output since start of the benchmark if something relevant is there
+	dmesg | sed '/sbc-bench\ started$/,$!d' | grep -v 'sbc-bench started' >"${TempDir}/dmesg"
+	if [ -f "${TempDir}/dmesg" ]; then
+		echo -e "\n##########################################################################\n\ndmesg since benchmark start:\n" >>${ResultLog}
+		cat "${TempDir}/dmesg" >>${ResultLog}
+	fi
+
 	echo -e "\n##########################################################################\n" >>${ResultLog}
 	echo -e "$(iostat)\n\n$(free -h)\n\n$(swapon -s)\n\n$(lscpu)" >>${ResultLog}
 	UploadURL=$(curl -s -F 'f:1=<-' ix.io <${ResultLog} 2>/dev/null || curl -s -F 'f:1=<-' ix.io <${ResultLog})

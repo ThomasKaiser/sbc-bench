@@ -1,7 +1,7 @@
 #!/bin/bash
 
-Version=0.4.4
-InstallLocation=/tmp # change to /usr/local/src if you want tools to persist reboots
+Version=0.4.5
+InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
 	export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
@@ -234,6 +234,7 @@ InstallPrerequisits() {
 	which curl >/dev/null 2>&1 || apt -f -qq -y install curl >/dev/null 2>&1
 
 	# get/build tinymembench if not already there
+	[ -d "${InstallLocation}" ] || mkdir -p "${InstallLocation}"
 	if [ ! -x "${InstallLocation}"/tinymembench/tinymembench ]; then
 		cd "${InstallLocation}"
 		git clone https://github.com/ssvb/tinymembench >/dev/null 2>&1
@@ -547,8 +548,8 @@ DisplayResults() {
 
 	# add dmesg output since start of the benchmark if something relevant is there
 	dmesg | sed '/sbc-bench\ started$/,$!d' | grep -v 'sbc-bench started' >"${TempDir}/dmesg"
-	if [ -f "${TempDir}/dmesg" ]; then
-		echo -e "\n##########################################################################\n\ndmesg since benchmark start:\n" >>${ResultLog}
+	if [ -s "${TempDir}/dmesg" ]; then
+		echo -e "\n##########################################################################\n\ndmesg output while running the benchmarks:\n" >>${ResultLog}
 		cat "${TempDir}/dmesg" >>${ResultLog}
 	fi
 

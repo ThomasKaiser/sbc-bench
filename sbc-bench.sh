@@ -346,7 +346,7 @@ CheckCPUCluster() {
 		# walk through all cpufreq OPP and report clockspeeds (kernel vs. measured)
 		read MinSpeed </sys/devices/system/cpu/cpu${1}/cpufreq/cpuinfo_min_freq
 		echo ${MinSpeed} >/sys/devices/system/cpu/cpu${1}/cpufreq/scaling_min_freq
-		for i in $(cat /sys/devices/system/cpu/cpu${1}/cpufreq/scaling_available_frequencies) ; do
+		for i in $(tr " " "\n" </sys/devices/system/cpu/cpu0/cpufreq/scaling_available_frequencies | sort -n) ; do
 			echo ${i} >/sys/devices/system/cpu/cpu${1}/cpufreq/scaling_max_freq
 			sleep 0.1
 			RealSpeed=$(taskset -c $(( $1 + 1 )) "${InstallLocation}"/mhz/mhz 3 1000 | awk -F" cpu_MHz=" '{print $2}' | awk -F" " '{print $1}' | tr '\n' '/' | sed 's|/$||')

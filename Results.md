@@ -8,11 +8,14 @@ Below some results collected. Please keep in mind that these are **not** hardwar
 | ----- | :--------: | :----: | :----: | ----: | ------: | ------: | -----: | -----: | ---: | --- |
 | BPi R2 | 1300 MHz | 4.4 | **Xenial** armhf | 2600 | 27550 | 25350 | 1500 | 3800 | - | [http://ix.io/1iGV](http://ix.io/1iGV) |
 | [Clearfog Pro](https://www.armbian.com/clearfog/) | 1600 MHz | 4.14 | Stretch armhf | 2185 | 44500 | 43900 | 935 | 4940 | - | [http://ix.io/1iFa](http://ix.io/1iFa) |
-| [NanoPi Fire3](https://www.armbian.com/nanopi-fire3/) | 1400 MHz | 4.14 | Bionic arm64 | 7400 | 95900 | 647500 | 1540 | 4575 | - | [http://ix.io/1ivC](http://ix.io/1ivC) |
+| [Le Potato](https://www.armbian.com/lepotato/) | 1400 MHz | 4.18 | Stretch arm64 | 3780 | 96680 | 657200 | 1810 | 5730 | 3.92 | [http://ix.io/1iSQ](http://ix.io/1iSQ) |
 | [NanoPC T3+](https://www.armbian.com/nanopc-t3-plus/) | 1400 MHz | 4.4 | **Xenial armhf** | 6400 | 143800 | 651000 | 1650 | 3700 | - | [http://ix.io/1iyp](http://ix.io/1iyp) |
 | [NanoPC T3+](https://www.armbian.com/nanopc-t3-plus/) | 1400 MHz | 4.14 | Bionic arm64 | 7480 | 126000 | 652600 | 1440 | 4540 | 10.99 | [http://ix.io/1iRJ](http://ix.io/1iRJ) |
 | [NanoPC T4](http://wiki.friendlyarm.com/wiki/index.php/NanoPC-T4) | 1800/1400 MHz | 4.17 | Stretch arm64 | 6250 | 307200 | 1022500 | 4100 | 9000 | 8.24 | [http://ix.io/1iFz](http://ix.io/1iFz) |
+| [NanoPi Fire3](https://www.armbian.com/nanopi-fire3/) | 1400 MHz | 4.14 | Bionic arm64 | 7400 | 95900 | 647500 | 1540 | 4575 | - | [http://ix.io/1ivC](http://ix.io/1ivC) |
+| [NanoPi K2](https://www.armbian.com/nanopi-k2/) | 1480 MHz | 4.14 | Stretch arm64 | 3850 | 43020 | 50370 | 1660 | 3870 | 4.61 | [http://ix.io/1iT1](http://ix.io/1iT1) |
 | [ODROID-C2](https://www.armbian.com/odroid-c2/) | 1750 MHz | 3.14 | **Xenial** arm64 | 4070 | 50500 | 48500 | 1750 | 3100 | - | [http://ix.io/1ixI](http://ix.io/1ixI) |
+| [ODROID-C2](https://www.armbian.com/odroid-c2/) | 1500 MHz | 4.17 | Stretch arm64 | 3870 | 43800 | 51280 | 1420 | 2600 | 4.63 | [http://ix.io/1iSh](http://ix.io/1iSh) |
 | [ODROID-XU4](https://www.armbian.com/odroid-xu4/) | 1900/1400 MHz | 3.10 | **Jessie** armhf | 6750 | 74100 | 68200 | 2200 | 4800 | - | [http://ix.io/1ixL](http://ix.io/1ixL) |
 | [ODROID-XU4](https://www.armbian.com/odroid-xu4/) | 2000/1500 MHz | 4.14 | Bionic armhf | 7100 | 74700 | 71500 | 2240 | 4880 | - | [http://ix.io/1iLy](http://ix.io/1iLy) |
 | [PineH64](https://www.armbian.com/pine-h64/) | 900 **(!)** MHz | 4.17 | Stretch arm64 | 2550 | 62200 | 421000 | 1600 | 4840 | 2.84 | [http://ix.io/1iFT](http://ix.io/1iFT) |
@@ -34,6 +37,7 @@ Below some results collected. Please keep in mind that these are **not** hardwar
 | [RockPro64](http://wiki.pine64.org/index.php/ROCKPro64_Main_Page) | 1800/1400 MHz | 4.4 | Stretch arm64 | 6140 | 236800 | 1016050 | 2790 | 4850 | - | [http://ix.io/1ivR](http://ix.io/1ivR) |
 | [RockPro64](http://wiki.pine64.org/index.php/ROCKPro64_Main_Page) | 1800/1400 MHz | 4.4 | Stretch **armhf** | 6250 | 275000 | 1000150 | 2000 | 4835 | - | [http://ix.io/1iFZ](http://ix.io/1iFZ) |
 | [RockPro64](http://wiki.pine64.org/index.php/ROCKPro64_Main_Page) | 1800/1400 MHz | 4.18 | Stretch arm64 | 6300 | 237700 | 1021500 | 3650 | 8450 | 8.20 | [http://ix.io/1iFp](http://ix.io/1iFp) |
+| [Tinkerboard](https://www.armbian.com/tinkerboard/) | 1730 MHz | 4.14 | Stretch armhf | 5350 | 63150 | 66600 | 1480 | 3900 | - | [http://ix.io/1iSX](http://ix.io/1iSX) |
 | [Vim2](https://www.khadas.com/vim) | 1400/1000 MHz | 4.9 | **Xenial** arm64 | 4800 | 177600 | 659000 | 1690 | 5610 | - | [http://ix.io/1ixi](http://ix.io/1ixi) |
 | [Vim2](https://www.khadas.com/vim) | 1400/1000 MHz | 4.17 | Bionic arm64 | 5450 | 126770 | 659600 | 1920 | 5920 | 8.59 | [http://ix.io/1iJ7](http://ix.io/1iJ7) |
 

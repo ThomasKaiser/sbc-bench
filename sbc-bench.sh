@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.4.6
+Version=0.4.7
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -332,11 +332,20 @@ CheckTimeInState() {
 	# Cpufreq support via sysfs is bogus and with latest ThreadX (firmware) update they
 	# even cheat wrt querying the 'firmware' via 'vcgencmd get_throttled':
 	# https://www.raspberrypi.org/forums/viewtopic.php?f=63&t=217056#p1334921
+
 	find /sys -type f -name time_in_state | sort | grep 'cpufreq' | while read ; do
-		Number=$(echo ${REPLY} | tr -c -d '[:digit:]')
-		Entries=$(wc -l ${REPLY} | awk -F" " '{print $1}')
-		head -n $(( ${Entries} - 1 )) ${REPLY} >${TempDir}/time_in_state_${1}_${Number}
-		cat ${REPLY} >${TempDir}/full_time_in_state_${1}_${Number}
+		StatFile="${REPLY}"
+		Number=$(echo ${StatFile} | tr -c -d '[:digit:]')
+		read MaxSpeed </sys/devices/system/cpu/cpu${Number}/cpufreq/cpuinfo_max_freq
+		sort -n <${StatFile} | while read ; do
+			Cpufreq=$(awk '{print $1}' <<<${REPLY})
+			if [ ${Cpufreq} -lt ${MaxSpeed} ]; then
+				echo ${REPLY} >>${TempDir}/time_in_state_${1}_${Number}
+				echo ${REPLY} >>${TempDir}/full_time_in_state_${1}_${Number}
+			elif [ ${Cpufreq} -le ${MaxSpeed} ]; then
+				echo ${REPLY} >>${TempDir}/full_time_in_state_${1}_${Number}
+			fi
+		done
 	done
 } # CheckTimeInState
 
@@ -578,12 +587,14 @@ DisplayResults() {
 
 ReportCpufreqStatistics() {
 	# Displays cpufreq driver statistics from before and after the benchmark as comparison
-	echo -e "\nThrottling occured. Cpufreq statistics (time in milliseconds)${2}:\n" >>${TempDir}/throttling_info.txt
-	awk -F" " '{print $1}' <${TempDir}/full_time_in_state_before_${1} | sort -r -n | while read ; do
-		BeforeValue=$(awk -F" " "/^${REPLY}/ {print \$2}" <${TempDir}/full_time_in_state_before_${1})
-		AfterValue=$(awk -F" " "/^${REPLY}/ {print \$2}" <${TempDir}/full_time_in_state_after_${1})
-		echo -e "$(printf "%4s" $(( ${REPLY} / 1000 )) ) MHz:\t$(( ${AfterValue} - ${BeforeValue} ))" >>${TempDir}/throttling_info.txt
-	done
+	if [ -f ${TempDir}/full_time_in_state_before_${1} ]; then
+		echo -e "\nCpufreq statistics (time in milliseconds)${2}:\n" >>${TempDir}/throttling_info.txt
+		awk -F" " '{print $1}' <${TempDir}/full_time_in_state_before_${1} | sort -r -n | while read ; do
+			BeforeValue=$(awk -F" " "/^${REPLY}/ {print \$2}" <${TempDir}/full_time_in_state_before_${1})
+			AfterValue=$(awk -F" " "/^${REPLY}/ {print \$2}" <${TempDir}/full_time_in_state_after_${1})
+			echo -e "$(printf "%4s" $(( ${REPLY} / 1000 )) ) MHz:\t$(( ${AfterValue} - ${BeforeValue} ))" >>${TempDir}/throttling_info.txt
+		done
+	fi
 } # ReportCpufreqStatistics
 
 ReportRPiHealth() {

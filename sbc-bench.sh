@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.4.7
+Version=0.4.8
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -556,7 +556,8 @@ DisplayResults() {
 	[ -f ${TempDir}/throttling_info.txt ] && cat ${TempDir}/throttling_info.txt >>${ResultLog}
 
 	# add dmesg output since start of the benchmark if something relevant is there
-	dmesg | sed '/sbc-bench\ started$/,$!d' | grep -v 'sbc-bench started' >"${TempDir}/dmesg"
+	TimeStamp="$(dmesg | awk -F" " '/sbc-bench started/ {print $1}' | tr -d '[' | tr -d ']' | tail -n1)"
+	dmesg | sed "/${TimeStamp}/,\$!d" | grep -v 'sbc-bench started' >"${TempDir}/dmesg"
 	if [ -s "${TempDir}/dmesg" ]; then
 		echo -e "\n##########################################################################\n\ndmesg output while running the benchmarks:\n" >>${ResultLog}
 		cat "${TempDir}/dmesg" >>${ResultLog}

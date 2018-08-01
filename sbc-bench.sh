@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.4.8
+Version=0.5
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -565,6 +565,7 @@ DisplayResults() {
 
 	echo -e "\n##########################################################################\n" >>${ResultLog}
 	echo -e "$(iostat)\n\n$(free -h)\n\n$(swapon -s)\n\n$(lscpu)" >>${ResultLog}
+	ReportCacheSizes >>${ResultLog}
 	UploadURL=$(curl -s -F 'f:1=<-' ix.io <${ResultLog} 2>/dev/null || curl -s -F 'f:1=<-' ix.io <${ResultLog})
 
 	# Display benchmark results
@@ -610,5 +611,15 @@ ReportRPiHealth() {
 	|_ arm frequency capped has occurred since last reboot
 	EOF
 } # ReportRPiHealth
+
+ReportCacheSizes() {
+	find /sys/devices/system/cpu -name "cache" -type d | while read ; do
+		find "${REPLY}" -name size -type f | while read ; do
+			echo -e "\n${REPLY}: $(cat ${REPLY})\c"
+			[ -f ${REPLY%/*}/level ] && echo -e ", level: $(cat ${REPLY%/*}/level)\c"
+			[ -f ${REPLY%/*}/type ] && echo -e ", type: $(cat ${REPLY%/*}/type)\c"
+		done
+	done
+} # ReportCacheSizes
 
 Main "$@"

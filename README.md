@@ -18,7 +18,7 @@ This tool therefore focuses on a controlled environment and intensive monitoring
 You need an armhf or arm64 Debian Stretch or Ubuntu Bionic install. Older variants are not supported (due to distro packages being way too outdated). Then it's
 
     wget https://raw.githubusercontent.com/ThomasKaiser/sbc-bench/master/sbc-bench.sh
-	sudo /bin/bash ./sbc-bench.sh neon
+    sudo /bin/bash ./sbc-bench.sh neon
 
 Unfortunately to adjust the cpufreq governor and to collect monitoring data execution as root is needed. So do **not** run this on productive systems or if you don't understand what the script is doing.
 
@@ -178,16 +178,18 @@ Depending on settings (kernel or some 'firmware' controlling the hardware) the c
 
 The detailed log then will contain information how much time (in milliseconds) has been spent on which clockspeed while executing the benchmarks. Might look like this on a NanoPC T4 without fan (only vendor's heatsink) after running the full set (NEON test included which resulted in the big cluster clocking down to even 408 MHz):
 
-    Throttling occured. Cpufreq statistics (time in milliseconds) for CPUs 4-5:
+    Throttling statistics (time spent on each cpufreq OPP) for CPUs 4-5:
 
-    1800 MHz:	144314
-    1608 MHz:	15031
-    1416 MHz:	2321
-    1200 MHz:	1952
-    1008 MHz:	7067
-     816 MHz:	14703
-     600 MHz:	13370
-     408 MHz:	16142
+    1800 MHz: 1344.39 sec
+    1608 MHz:  372.95 sec
+    1416 MHz:  117.69 sec
+    1200 MHz:   48.28 sec
+    1008 MHz:   41.58 sec
+     816 MHz:   55.24 sec
+     600 MHz:  127.08 sec
+     408 MHz:  352.72 sec
+
+**Important:** to get throttling notifications running a kernel with `CONFIG_CPU_FREQ_STAT=y` is needed since otherwise cpufreq statistics are not available. And this will not work on Raspberries since there [cpufreq driver has not the slightest idea what's going on](https://github.com/raspberrypi/linux/issues/2512#issuecomment-382703153).
 
 ## Interpreting results
 

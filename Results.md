@@ -12,6 +12,7 @@ Below some results collected. Please keep in mind that these are **not** hardwar
 | [NanoPC T3+](https://www.armbian.com/nanopc-t3-plus/) | 1400 MHz | 4.4 | **Xenial armhf** | 6400 | 143800 | 651000 | 1650 | 3700 | - | [http://ix.io/1iyp](http://ix.io/1iyp) |
 | [NanoPC T3+](https://www.armbian.com/nanopc-t3-plus/) | 1400 MHz | 4.14 | Bionic arm64 | 7480 | 126000 | 652600 | 1440 | 4540 | 10.99 | [http://ix.io/1iRJ](http://ix.io/1iRJ) |
 | [NanoPC T4](http://wiki.friendlyarm.com/wiki/index.php/NanoPC-T4) | 1800/1400 MHz | 4.17 | Stretch arm64 | 6250 | 307200 | 1022500 | 4100 | 9000 | 8.24 | [http://ix.io/1iFz](http://ix.io/1iFz) |
+| [NanoPC T4](http://wiki.friendlyarm.com/wiki/index.php/NanoPC-T4) | 1800/1400 MHz | 4.17 | Stretch arm64 | 6230 | 299600 | 1023600 | 4100 | 9060 | 10.30 | [http://ix.io/1iWU](http://ix.io/1iWU) |
 | [NanoPi Fire3](https://www.armbian.com/nanopi-fire3/) | 1400 MHz | 4.14 | Bionic arm64 | 7400 | 95900 | 647500 | 1540 | 4575 | - | [http://ix.io/1ivC](http://ix.io/1ivC) |
 | [NanoPi K2](https://www.armbian.com/nanopi-k2/) | 1480 MHz | 4.14 | Stretch arm64 | 3850 | 43020 | 50370 | 1660 | 3870 | 4.61 | [http://ix.io/1iT1](http://ix.io/1iT1) |
 | [ODROID-C2](https://www.armbian.com/odroid-c2/) | 1750 MHz | 3.14 | **Xenial** arm64 | 4070 | 50500 | 48500 | 1750 | 3100 | - | [http://ix.io/1ixI](http://ix.io/1ixI) |
@@ -67,5 +68,5 @@ Below some results collected. Please keep in mind that these are **not** hardwar
 * It seems running an *armhf* userland on 64-bit SoCs also improves AES encryption results with small data chunks (see *armhf* entries for NanoPC T3+, Rock64, RockPro64 and Vim2). Status: very interesting, needs further investigations
 * It seems running Xenial binaries even further improves AES/SSL performance when ARMv8 Crypto Extensions are available. Status: while interesting irrelevant, we should get rid of Xenial and Jessie numbers.
 * It makes a huge difference whether ARMv8 Crypto Extensions can be used or not. See the many 64-bit SBC results above and compare with 32-bit SoCs or RPi 3B+, ODROID-C2 and NanoPi K2 (the latter 3 basing on 64-bit ARMv8 SoCs without crypto engine licensed/available)
-* Bionic vs. Stretch makes a big difference with `cpuminer`. GCC version might matter (7.3 on Bionic vs. 6.3 on Stretch -- [some benchmarks heavily depend on compiler versions](https://forum.armbian.com/topic/7763-benchmarking-cpus/?do=findComment&comment=58530)). Status: needs further investigation and confirmation
+* Bionic vs. Stretch makes a big difference with `cpuminer`. GCC version matters (7.3 on Bionic vs. 6.3 on Stretch -- [some benchmarks heavily depend on compiler versions](https://forum.armbian.com/topic/7763-benchmarking-cpus/?do=findComment&comment=58530)). Confirmed: Stretch + GCC 8.2 provides a 25% performance increase with cpuminer (see NanoPC T4 numbers above)
 * *(more to come soon)*

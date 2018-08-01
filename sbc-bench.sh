@@ -205,7 +205,7 @@ CheckRelease() {
 CheckLoad() {
 	# Only continue if average load is less than 0.1
 	AvgLoad1Min=$(awk -F" " '{print $1*100}' < /proc/loadavg)
-	[ $AvgLoad1Min -ge 10 ] && echo -e "\nAverage load is above 0.1. Way too much background activity.\n"
+	[ $AvgLoad1Min -ge 10 ] && echo -e "\nAverage load is 0.1 or higher (way too much background activity). Waiting...\n"
 	while [ $AvgLoad1Min -ge 10 ]; do
 		echo -e "System too busy for benchmarking:$(uptime)"
 		sleep 5
@@ -300,6 +300,9 @@ InitialMonitoring() {
 		[ -f /boot/config.txt ] && echo -e "\nThreadX configuration (/boot/config.txt):\n$(grep -v '#' /boot/config.txt | sed '/^\s*$/d')" >>${ResultLog}
 		echo -e "\nActual ThreadX settings:\n$(vcgencmd get_config int)" >>${ResultLog}
 	fi
+
+	# Log gcc version
+	echo -e "\n$(which gcc) $(gcc --version | sed 's/gcc\ //' | head -n1)" >>${ResultLog}
 
 	# Some basic system info needed to interpret system health later
 	echo -e "\nUptime:$(uptime)\n\n$(iostat)\n\n$(free -h)\n\n$(swapon -s)" >>${ResultLog}

@@ -590,11 +590,12 @@ DisplayResults() {
 ReportCpufreqStatistics() {
 	# Displays cpufreq driver statistics from before and after the benchmark as comparison
 	if [ -f ${TempDir}/full_time_in_state_before_${1} ]; then
-		echo -e "\nCpufreq statistics (time in milliseconds)${2}:\n" >>${TempDir}/throttling_info.txt
+		echo -e "\nStatistics (time spent on each cpufreq OPP)${2}:\n" >>${TempDir}/throttling_info.txt
 		awk -F" " '{print $1}' <${TempDir}/full_time_in_state_before_${1} | sort -r -n | while read ; do
 			BeforeValue=$(awk -F" " "/^${REPLY}/ {print \$2}" <${TempDir}/full_time_in_state_before_${1})
 			AfterValue=$(awk -F" " "/^${REPLY}/ {print \$2}" <${TempDir}/full_time_in_state_after_${1})
-			echo -e "$(printf "%4s" $(( ${REPLY} / 1000 )) ) MHz:\t$(( ${AfterValue} - ${BeforeValue} ))" >>${TempDir}/throttling_info.txt
+			Duration=$(awk '{printf ("%0.2f",$1/100); }' <<<$(( ${AfterValue} - ${BeforeValue} )) )
+			echo -e "$(printf "%4s" $(( ${REPLY} / 1000 )) ) MHz: ${Duration} sec" >>${TempDir}/throttling_info.txt
 		done
 	fi
 } # ReportCpufreqStatistics

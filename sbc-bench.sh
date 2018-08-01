@@ -480,27 +480,27 @@ DisplayResults() {
 			case ${CPUCores} in
 				1|2|3|4)
 					ReportCpufreqStatistics ${Number}
-					echo -e "${LRED}${BOLD}ATTENTION: Throttling occured. Check the uploaded log for details.${NC}\n"
+					echo -e "${LRED}${BOLD}ATTENTION: Throttling might have occured. Check the uploaded log for details.${NC}\n"
 					;;
 				6)
 					if [ ${Number} -eq 0 ]; then
 						ReportCpufreqStatistics ${Number} " for CPUs 0-3"
-						echo -e "${LRED}${BOLD}ATTENTION: Throttling occured on CPUs 0-3. Check the uploaded log for details.${NC}\n"
+						echo -e "${LRED}${BOLD}ATTENTION: Throttling might have occured on CPUs 0-3. Check the uploaded log for details.${NC}\n"
 					else
 						ReportCpufreqStatistics ${Number} " for CPUs 4-5"
-						echo -e "${LRED}${BOLD}ATTENTION: Throttling occured on CPUs 4-5. Check the uploaded log for details.${NC}\n"
+						echo -e "${LRED}${BOLD}ATTENTION: Throttling might have occured on CPUs 4-5. Check the uploaded log for details.${NC}\n"
 					fi
 					;;
 				8)
 					if [ "X${BOARDFAMILY}" = "Xs5p6818" ]; then
 						ReportCpufreqStatistics ${Number}
-						echo -e "${LRED}${BOLD}ATTENTION: Throttling occured. Check the uploaded log for details.${NC}\n"
+						echo -e "${LRED}${BOLD}ATTENTION: Throttling might have occured. Check the uploaded log for details.${NC}\n"
 					elif [ ${Number} -eq 0 ]; then
 						ReportCpufreqStatistics ${Number} " for CPUs 0-3"
-						echo -e "${LRED}${BOLD}ATTENTION: Throttling occured on CPUs 0-3. Check the uploaded log for details.${NC}\n"
+						echo -e "${LRED}${BOLD}ATTENTION: Throttling might have occured on CPUs 0-3. Check the uploaded log for details.${NC}\n"
 					else
 						ReportCpufreqStatistics ${Number} " for CPUs 4-7"
-						echo -e "${LRED}${BOLD}ATTENTION: Throttling occured on CPUs 4-7. Check the uploaded log for details.${NC}\n"
+						echo -e "${LRED}${BOLD}ATTENTION: Throttling might have occured on CPUs 4-7. Check the uploaded log for details.${NC}\n"
 					fi
 					;;
 			esac
@@ -510,7 +510,7 @@ DisplayResults() {
 	# Check for killed CPU cores. Some unfortunate users might still use Allwinner BSP kernels
 	CPUCoresNow=$(grep -c '^processor' /proc/cpuinfo)
 	if [ ${CPUCoresNow} -lt ${CPUCores} ]; then
-		echo -e "${LRED}${BOLD}ATTENTION: Due to throttling $(( ${CPUCores} - ${CPUCoresNow} )) CPU cores have been killed. Check dmesg output and the uploaded log for details.${NC}\n"
+		echo -e "${LRED}${BOLD}ATTENTION: Due to overheating prevention $(( ${CPUCores} - ${CPUCoresNow} )) CPU cores have been killed. Check the uploaded log for details.${NC}\n"
 	fi
 
 	# Check for throttling/undervoltage on Raspberry Pi

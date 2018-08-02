@@ -1,8 +1,12 @@
 # Results
 
-Below some results collected. Please keep in mind that these are **not** hardware performance numbers but partially depend on software/settings (see the differences kernel version makes for RockPro64 for example). The purpose of `sbc-bench` is to generate insights and not numbers or graphs.
+Below some results collected. Please keep in mind that these are **NOT** hardware performance numbers but depend on software/settings (see the differences kernel version makes for RockPro64 for example). The purpose of `sbc-bench` is to generate insights and not numbers or graphs. It's perfectly fine for the same hardware appearing multiple times with different numbers since those differ for a reason (software/settings).
 
-## Table with results
+Especially *openssl* numbers should be taken with a huge grain of salt since the benchmark numbers depend on kernel features and performance with other use cases (e.g. disk/filesystem encryption) [might look  differently](https://forum.armbian.com/topic/7763-benchmarking-cpus/?do=findComment&comment=59235).
+
+So do **not** rely on collected numbers unless you carefully read through all the explanations and insights below and be prepared to conduct your own benchmarks if you really want to choose appropriate hardware for **your** use case.
+
+## Some numbers
 
 | Board | Clockspeed | Kernel | Distro | 7-zip | AES-128 (16 byte) | AES-256 (16 KB) | memcpy | memset | kH/s | URL |
 | ----- | :--------: | :----: | :----: | ----: | ------: | ------: | -----: | -----: | ---: | --- |
@@ -18,7 +22,9 @@ Below some results collected. Please keep in mind that these are **not** hardwar
 | [ODROID-C2](https://www.armbian.com/odroid-c2/) | 1750 MHz | 3.14 | **Xenial** arm64 | 4070 | 50500 | 48500 | 1750 | 3100 | - | [http://ix.io/1ixI](http://ix.io/1ixI) |
 | [ODROID-C2](https://www.armbian.com/odroid-c2/) | 1530 MHz | 4.17 | Stretch arm64 | 3870 | 43800 | 51280 | 1420 | 2600 | 4.63 | [http://ix.io/1iSh](http://ix.io/1iSh) |
 | [ODROID-XU4](https://www.armbian.com/odroid-xu4/) | 1900/1400 MHz | 3.10 | **Jessie** armhf | 6750 | 74100 | 68200 | 2200 | 4800 | - | [http://ix.io/1ixL](http://ix.io/1ixL) |
+| [ODROID-XU4](https://www.armbian.com/odroid-xu4/) | 2000/1400 MHz | 4.9 | Stretch armhf | 6400 | 73350 | 72075 | 2230 | 4850 | - | [http://ix.io/1iWL](http://ix.io/1iWL) |
 | [ODROID-XU4](https://www.armbian.com/odroid-xu4/) | 2000/1500 MHz | 4.14 | Bionic armhf | 7100 | 74700 | 71500 | 2240 | 4880 | - | [http://ix.io/1iLy](http://ix.io/1iLy) |
+| [Orange Pi Plus 2](https://www.armbian.com/orange-pi-plus-2/) | 1300 MHz | 4.14 | Stretch armhf | 2.890 | 21480 | 25250 | 830 | 3240 | - | [http://ix.io/1iX4](http://ix.io/1iX4) |
 | [PineH64](https://www.armbian.com/pine-h64/) | 900 **(!)** MHz | 4.17 | Stretch arm64 | 2550 | 62200 | 421000 | 1600 | 4840 | 2.84 | [http://ix.io/1iFT](http://ix.io/1iFT) |
 | [Renegade](https://www.armbian.com/renegade/) | 1400 MHz | 4.4 | Stretch arm64 | 3710 | 95030 | 644200 | 1565 | 7435 | 3.92 | [http://ix.io/1iFx](http://ix.io/1iFx) |
 | Raspberry Pi 2 B+ | 900 MHz | 4.14 | **Debian** Stretch | 2070 | 14350 | 17450 | 615 | 1175 | - | [http://ix.io/1iFf](http://ix.io/1iFf) |
@@ -34,6 +40,7 @@ Below some results collected. Please keep in mind that these are **not** hardwar
 | [Rock64](https://www.armbian.com/rock64/) | 1300 MHz | 4.4 | Stretch arm64 | 3430 | 88600 | 601000 | 1350 | 5680 | 3.64 | [http://ix.io/1iHo](http://ix.io/1iHo) |
 | [Rock64](https://www.armbian.com/rock64/) | 1300 MHz | 4.18 | Stretch arm64 | 3560 | 89070 | 603800 | 1340 | 5770 | 3.80 | [http://ix.io/1iHB](http://ix.io/1iHB) |
 | [Rock64](https://www.armbian.com/rock64/) | 1400 MHz | 4.4 | Stretch arm64 | 3610 | 95000 | 644250 | 1330 | 5700 | 3.85 | [http://ix.io/1iFm](http://ix.io/1iFm) |
+| [Rock64](https://www.armbian.com/rock64/) | 1400 MHz | 4.4 | Stretch arm64 | 3580 | 94800 | 644380 | 1330 | 5680 | 4.63 | [http://ix.io/1iYK](http://ix.io/1iYK) |
 | [Rock64](https://www.armbian.com/rock64/) | 1400 MHz | 4.4 | Stretch **armhf** | 3620 | 99400 | 624000 | 1430 | 3620 | - | [http://ix.io/1iwz](http://ix.io/1iwz) |
 | [RockPro64](http://wiki.pine64.org/index.php/ROCKPro64_Main_Page) | 1800/1400 MHz | 4.4 | Stretch arm64 | 6140 | 236800 | 1016050 | 2790 | 4850 | - | [http://ix.io/1ivR](http://ix.io/1ivR) |
 | [RockPro64](http://wiki.pine64.org/index.php/ROCKPro64_Main_Page) | 1800/1400 MHz | 4.4 | Stretch **armhf** | 6250 | 275000 | 1000150 | 2000 | 4835 | - | [http://ix.io/1iFZ](http://ix.io/1iFZ) |
@@ -49,6 +56,7 @@ Below some results collected. Please keep in mind that these are **not** hardwar
 * *AES-256 (16 KB)* is a **single threaded** encryption score with rather huge chunks of data. On big.LITTLE SoCs numbers show big core performance
 * *memcpy* and *memset* are tinymembench measurements for memory bandwidth. On big.LITTLE SoCs numbers show big core performance
 * *kH/s* is a **multi threaded** cpuminer score showing the board's performance when executing NEON optimized code. To get the performance difference between big and little cores check the links in the right column
+* PineH64 numbers are preliminary -- with mainline kernel no cpufreq scaling is working yet. Afterwards numbers will be almost twice as high.
 * RPi 3 B+ performance shown as *original* was measured with an older ThreadX release (6e08617e7767b09ef97b3d6cee8b75eba6d7ee0b from Mar 13 2018). Back then the 3B+ was faster than the 3B. This changed with a newer ThreadX release (4800f08a139d6ca1c5ecbee345ea6682e2160881 from Jun 7 2018) since RPi Trading people decided to trash performance on every RPi 3 B+ to masquerade instability issues on a fraction of boards ([details](https://www.raspberrypi.org/forums/viewtopic.php?f=63&t=217056#p1334921))
 * RPi 3 B+ performance numbers shown as *normal* were made with no or just a heatsink (in contrast to *with fan*)
 * RPi 3 B+ marked as 'UV/normal' means: normal settings and average Micro USB cable resulting in **UV** (undervoltage). Once the demanding 7-zip benchmark started voltage dropped below 4.63V and 'frequency capping' (downclocking to 600 MHz) happened destroying performance. See the [detailed log](http://ix.io/1iH0): 1400 MHz are reported by the kernel while it's 600 MHz in reality. Is this just highly misleading or already cheating?
@@ -68,5 +76,5 @@ Below some results collected. Please keep in mind that these are **not** hardwar
 * It seems running an *armhf* userland on 64-bit SoCs also improves AES encryption results with small data chunks (see *armhf* entries for NanoPC T3+, Rock64, RockPro64 and Vim2). Status: very interesting, needs further investigations
 * It seems running Xenial binaries even further improves AES/SSL performance when ARMv8 Crypto Extensions are available. Status: while interesting irrelevant, we should get rid of Xenial and Jessie numbers.
 * It makes a huge difference whether ARMv8 Crypto Extensions can be used or not. See the many 64-bit SBC results above and compare with 32-bit SoCs or RPi 3B+, ODROID-C2 and NanoPi K2 (the latter 3 basing on 64-bit ARMv8 SoCs without crypto engine licensed/available)
-* Bionic vs. Stretch makes a big difference with `cpuminer`. GCC version matters (7.3 on Bionic vs. 6.3 on Stretch -- [some benchmarks heavily depend on compiler versions](https://forum.armbian.com/topic/7763-benchmarking-cpus/?do=findComment&comment=58530)). Confirmed: Stretch + GCC 8.2 provides a 25% performance increase with cpuminer (see NanoPC T4 numbers above)
+* Bionic vs. Stretch makes a big difference with `cpuminer`. GCC version matters (7.3 on Bionic vs. 6.3 on Stretch -- [some benchmarks heavily depend on compiler versions](https://forum.armbian.com/topic/7763-benchmarking-cpus/?do=findComment&comment=58530)). Stretch + GCC 8.2 provides a 20% performance increase with cpuminer on RK3328 (see Rock64 numbers above) and even 25% with RK3399 (see NanoPC T4 and there the logs to compare performance of big and little cores).
 * *(more to come soon)*

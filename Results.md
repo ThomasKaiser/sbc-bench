@@ -1,6 +1,6 @@
 # Results
 
-Below some results collected. Please keep in mind that these are **NOT** hardware performance numbers but depend on software/settings (see the differences kernel version makes for RockPro64 for example). The purpose of `sbc-bench` is to generate insights and not numbers or graphs. It's perfectly fine for the same hardware appearing multiple times with different numbers since those differ for a reason (software/settings).
+Below some results collected. Please keep in mind that these are **NOT** hardware performance numbers but depend on software/settings (see the differences kernel version makes for RockPro64 for example). The purpose of `sbc-bench` is to generate insights and not colorful graphs representing numbers without meaning. It's perfectly fine for the same hardware appearing multiple times with different numbers since those differ for a reason (software/settings).
 
 Especially *openssl* numbers should be taken with a huge grain of salt since the benchmark numbers depend on kernel features and performance with other use cases (e.g. disk/filesystem encryption) [might look  differently](https://forum.armbian.com/topic/7763-benchmarking-cpus/?do=findComment&comment=59235).
 
@@ -16,6 +16,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [NanoPC T3+](https://www.armbian.com/nanopc-t3-plus/) | 1400 MHz | 4.4 | **Xenial armhf** | 6400 | 143800 | 651000 | 1650 | 3700 | - | [http://ix.io/1iyp](http://ix.io/1iyp) |
 | [NanoPC T3+](https://www.armbian.com/nanopc-t3-plus/) | 1400 MHz | 4.14 | Bionic arm64 | 7480 | 126000 | 652600 | 1440 | 4540 | 10.99 | [http://ix.io/1iRJ](http://ix.io/1iRJ) |
 | [NanoPC T4](http://wiki.friendlyarm.com/wiki/index.php/NanoPC-T4) | 1800/1400 MHz | 4.17 | Stretch arm64 | 6250 | 307200 | 1022500 | 4100 | 9000 | 8.24 | [http://ix.io/1iFz](http://ix.io/1iFz) |
+| [NanoPC T4](http://wiki.friendlyarm.com/wiki/index.php/NanoPC-T4) | 1800/1400 MHz | 4.17 | Stretch arm64 | 6380 | 230280 | 1022600 | 4160 | 9000 | 9.36 | [http://ix.io/1iZq](http://ix.io/1iZq) |
 | [NanoPC T4](http://wiki.friendlyarm.com/wiki/index.php/NanoPC-T4) | 1800/1400 MHz | 4.17 | Stretch arm64 | 6230 | 299600 | 1023600 | 4100 | 9060 | 10.30 | [http://ix.io/1iWU](http://ix.io/1iWU) |
 | [NanoPi Fire3](https://www.armbian.com/nanopi-fire3/) | 1400 MHz | 4.14 | Bionic arm64 | 7400 | 95900 | 647500 | 1540 | 4575 | - | [http://ix.io/1ivC](http://ix.io/1ivC) |
 | [NanoPi K2](https://www.armbian.com/nanopi-k2/) | 1480 MHz | 4.14 | Stretch arm64 | 3850 | 43020 | 50370 | 1660 | 3870 | 4.61 | [http://ix.io/1iT1](http://ix.io/1iT1) |
@@ -40,6 +41,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Rock64](https://www.armbian.com/rock64/) | 1300 MHz | 4.4 | Stretch arm64 | 3430 | 88600 | 601000 | 1350 | 5680 | 3.64 | [http://ix.io/1iHo](http://ix.io/1iHo) |
 | [Rock64](https://www.armbian.com/rock64/) | 1300 MHz | 4.18 | Stretch arm64 | 3560 | 89070 | 603800 | 1340 | 5770 | 3.80 | [http://ix.io/1iHB](http://ix.io/1iHB) |
 | [Rock64](https://www.armbian.com/rock64/) | 1400 MHz | 4.4 | Stretch arm64 | 3610 | 95000 | 644250 | 1330 | 5700 | 3.85 | [http://ix.io/1iFm](http://ix.io/1iFm) |
+| [Rock64](https://www.armbian.com/rock64/) | 1400 MHz | 4.4 | Stretch arm64 | 3590 | 95000 | 643700 | 1320 | 5640 | 4.40 | [http://ix.io/1iZj](http://ix.io/1iZj) |
 | [Rock64](https://www.armbian.com/rock64/) | 1400 MHz | 4.4 | Stretch arm64 | 3580 | 94800 | 644380 | 1330 | 5680 | 4.63 | [http://ix.io/1iYK](http://ix.io/1iYK) |
 | [Rock64](https://www.armbian.com/rock64/) | 1400 MHz | 4.4 | Stretch **armhf** | 3620 | 99400 | 624000 | 1430 | 3620 | - | [http://ix.io/1iwz](http://ix.io/1iwz) |
 | [RockPro64](http://wiki.pine64.org/index.php/ROCKPro64_Main_Page) | 1800/1400 MHz | 4.4 | Stretch arm64 | 6140 | 236800 | 1016050 | 2790 | 4850 | - | [http://ix.io/1ivR](http://ix.io/1ivR) |
@@ -76,5 +78,13 @@ So do **not** rely on collected numbers unless you carefully read through all th
 * It seems running an *armhf* userland on 64-bit SoCs also improves AES encryption results with small data chunks (see *armhf* entries for NanoPC T3+, Rock64, RockPro64 and Vim2). Status: very interesting, needs further investigations
 * It seems running Xenial binaries even further improves AES/SSL performance when ARMv8 Crypto Extensions are available. Status: while interesting irrelevant, we should get rid of Xenial and Jessie numbers.
 * It makes a huge difference whether ARMv8 Crypto Extensions can be used or not. See the many 64-bit SBC results above and compare with 32-bit SoCs or RPi 3B+, ODROID-C2 and NanoPi K2 (the latter 3 basing on 64-bit ARMv8 SoCs without crypto engine licensed/available)
-* Bionic vs. Stretch makes a big difference with `cpuminer`. GCC version matters (7.3 on Bionic vs. 6.3 on Stretch -- [some benchmarks heavily depend on compiler versions](https://forum.armbian.com/topic/7763-benchmarking-cpus/?do=findComment&comment=58530)). Stretch + GCC 8.2 provides a 20% performance increase with cpuminer on RK3328 (see Rock64 numbers above) and even 25% with RK3399 (see NanoPC T4 and there the logs to compare performance of big and little cores).
+* Bionic vs. Stretch makes a big difference with `cpuminer`. Libs and GCC versions obviously matter (GCC 7.3 on Bionic vs. 6.3 on Stretch -- [some benchmarks heavily depend on compiler versions](https://forum.armbian.com/topic/7763-benchmarking-cpus/?do=findComment&comment=58530)). Stretch with GCC 7.3 provides a 15% performance increase with cpuminer on RK3328 and RK3399 (see Rock64 and NanoPC T4 numbers above and there the logs to compare performance of big and little cores). With GCC 8.2 and Stretch it's 20% with RK3328 and even 25% with RK3399 (the A72 performance increasing more compared to the A53 cores -- check individual kH/s numbers in the logs)
 * *(more to come soon)*
+
+## The bigger picture
+
+* 7-zip's benchmark still looks like a nice indicator for a 'server workloads' performance index (multi threaded tasks that do not rely on floating point arithmetics but partially on memory performance). Though these scores are totally irrelevant when it's about SBC use cases that focus on something different (e.g. a 'Desktop Linux' needing high single threaded CPU performance, HW accelerated GPU and VPU and also fast random IO on the rootfs)
+
+## TODO
+
+* On SoCs that contain an own crypto engine the *openssl* numbers above don't tell the whole truth ([userspace vs. in-kernel crypto](https://forum.armbian.com/topic/7763-benchmarking-cpus/?do=findComment&comment=59235)). It needs additional benchmarks to get an idea how CESA ([Clearfog/Helios4 with Armada 38x](https://forum.armbian.com/topic/2138-armbian-for-amlogic-s912/?do=findComment&comment=20949)), sun4i-ss ([Allwinner SoCs](http://sunxi.montjoie.ovh)), Samsung's Slim SSS ([ODROID XU4/HC1/HC2](https://wiki.odroid.com/odroid-xu4/software/disk_encryption)) or MediaTek's crypto accelerator ([BPi R2 / MT7623](https://forum.armbian.com/topic/5004-bpi-r2-board-bring-up/?do=findComment&comment=59037)) perform with real-world workloads like disk encryption.

@@ -361,7 +361,12 @@ CheckCPUCluster() {
 		for i in $(tr " " "\n" </sys/devices/system/cpu/cpu${1}/cpufreq/scaling_available_frequencies | sort -n) ; do
 			echo ${i} >/sys/devices/system/cpu/cpu${1}/cpufreq/scaling_max_freq
 			sleep 0.1
-			RealSpeed=$(taskset -c $(( $1 + 1 )) "${InstallLocation}"/mhz/mhz 3 1000 | awk -F" cpu_MHz=" '{print $2}' | awk -F" " '{print $1}' | tr '\n' '/' | sed 's|/$||')
+			if [ ${CPUCores} -gt 1 ]; then
+				# measure on 2nd CPU core when more than one core is available
+				RealSpeed=$(taskset -c $(( $1 + 1 )) "${InstallLocation}"/mhz/mhz 3 1000 | awk -F" cpu_MHz=" '{print $2}' | awk -F" " '{print $1}' | tr '\n' '/' | sed 's|/$||')
+			else
+				RealSpeed=$(taskset -c $1 "${InstallLocation}"/mhz/mhz 3 1000 | awk -F" cpu_MHz=" '{print $2}' | awk -F" " '{print $1}' | tr '\n' '/' | sed 's|/$||')
+			fi
 			SysfsSpeed=$(( $i / 1000 ))
 			if [ -f /usr/bin/vcgencmd ]; then
 				# On RPi we query ThreadX about clockspeeds too
@@ -408,7 +413,10 @@ Run7ZipBenchmark() {
 	echo -e "\c" >${TempLog}
 	/bin/bash "${PathToMe}" m 15 >>${MonitorLog} &
 	MonitoringPID=$!
-	if [ ${CPUCores} -gt 4 ]; then
+	if [ ${CPUCores} -eq 1 ]; then
+		# Do not measure single threaded result since useless
+		:
+	elif [ ${CPUCores} -gt 4 ]; then
 		if [ "X${BOARDFAMILY}" = "Xs5p6818" ]; then
 			# S5P6816 octa-core SoC is not a big.LITTLE design
 			taskset -c 0 "${SevenZip}" b >>${TempLog}

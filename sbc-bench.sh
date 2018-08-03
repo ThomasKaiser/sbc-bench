@@ -229,7 +229,7 @@ BasicSetup() {
 			# Define CPUCores as 2 to prevent big.LITTLE handling
 			CPUCores=2
 			# Try to get device name from CPU entry
-			DeviceName="$(lscpu | awk -F" " '/^Model name/ {print $2}')"
+			DeviceName="$(lscpu | sed 's/  */ /gp' | awk -F": " '/^Model name/ {print $2}')"
 			;;
 		*)
 			echo "${CPUArchitecture} not supported. Aborting." >&2

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.5
+Version=0.5.1
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -312,6 +312,7 @@ CheckClockspeeds() {
 	echo -e " Done.\nChecking cpufreq OPP...\c"
 	echo -e "\n##########################################################################" >>${ResultLog}
 	if [ -f ${MonitorLog} ]; then
+		# 2nd check after most demanding benchmark has been run.
 		echo -e "\nTesting clockspeeds again. System health now:\n" >>${ResultLog}
 		grep 'Time' ${MonitorLog} | tail -n 1 >"${TempDir}/systemhealth.now" >>${ResultLog}
 		grep ':' ${MonitorLog} | tail -n 1 >>"${TempDir}/systemhealth.now" >>${ResultLog}
@@ -357,15 +358,16 @@ CheckCPUCluster() {
 	if [ -d /sys/devices/system/cpu/cpu${1}/cpufreq ]; then
 		# walk through all cpufreq OPP and report clockspeeds (kernel vs. measured)
 		read MinSpeed </sys/devices/system/cpu/cpu${1}/cpufreq/cpuinfo_min_freq
+		read MaxSpeed </sys/devices/system/cpu/cpu${1}/cpufreq/cpuinfo_max_freq
 		echo ${MinSpeed} >/sys/devices/system/cpu/cpu${1}/cpufreq/scaling_min_freq
-		for i in $(tr " " "\n" </sys/devices/system/cpu/cpu${1}/cpufreq/scaling_available_frequencies | sort -n) ; do
+		for i in $(tr " " "\n" </sys/devices/system/cpu/cpu${1}/cpufreq/scaling_available_frequencies | sort -n -r) ; do
 			echo ${i} >/sys/devices/system/cpu/cpu${1}/cpufreq/scaling_max_freq
 			sleep 0.1
 			if [ ${CPUCores} -gt 1 ]; then
 				# measure on 2nd CPU core when more than one core is available
-				RealSpeed=$(taskset -c $(( $1 + 1 )) "${InstallLocation}"/mhz/mhz 3 1000 | awk -F" cpu_MHz=" '{print $2}' | awk -F" " '{print $1}' | tr '\n' '/' | sed 's|/$||')
+				RealSpeed=$(taskset -c $(( $1 + 1 )) "${InstallLocation}"/mhz/mhz 3 100000 | awk -F" cpu_MHz=" '{print $2}' | awk -F" " '{print $1}' | tr '\n' '/' | sed 's|/$||')
 			else
-				RealSpeed=$(taskset -c $1 "${InstallLocation}"/mhz/mhz 3 1000 | awk -F" cpu_MHz=" '{print $2}' | awk -F" " '{print $1}' | tr '\n' '/' | sed 's|/$||')
+				RealSpeed=$(taskset -c $1 "${InstallLocation}"/mhz/mhz 3 100000 | awk -F" cpu_MHz=" '{print $2}' | awk -F" " '{print $1}' | tr '\n' '/' | sed 's|/$||')
 			fi
 			SysfsSpeed=$(( $i / 1000 ))
 			if [ -f /usr/bin/vcgencmd ]; then
@@ -376,9 +378,10 @@ CheckCPUCluster() {
 				echo -e "Cpufreq OPP: $(printf "%4s" ${SysfsSpeed})    Measured: ${RealSpeed}"
 			fi
 		done
+		echo ${MaxSpeed} >/sys/devices/system/cpu/cpu${1}/cpufreq/scaling_max_freq
 	else
 		# no cpufreq support
-		RealSpeed=$(taskset -c $(( $1 + 1 )) "${InstallLocation}"/mhz/mhz 3 1000 | awk -F" cpu_MHz=" '{print $2}' | awk -F" " '{print $1}' | tr '\n' '/' | sed 's|/$||')
+		RealSpeed=$(taskset -c $(( $1 + 1 )) "${InstallLocation}"/mhz/mhz 3 100000 | awk -F" cpu_MHz=" '{print $2}' | awk -F" " '{print $1}' | tr '\n' '/' | sed 's|/$||')
 		echo -e "No cpufreq support available. Measured on cpu$(( $1 + 1 )): ${RealSpeed}"
 	fi
 } # CheckCPUCluster

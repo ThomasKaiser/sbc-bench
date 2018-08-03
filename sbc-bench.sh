@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.5.2
+Version=0.5.3
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -69,6 +69,13 @@ MonitorBoard() {
 	# Try to renice to 19 to not interfere with benchmark behaviour
 	renice 19 $BASHPID >/dev/null 2>&1
 
+	# check platform
+	case $(lscpu | awk -F" " '/^Architecture/ {print $2}') in
+		x86*|i686)
+			IsIntel="yes"
+			;;
+	esac
+
 	LastUserStat=0
 	LastNiceStat=0
 	LastSystemStat=0
@@ -93,7 +100,7 @@ MonitorBoard() {
 		else
 			CPUs=littlebig
 		fi
-	elif [ -f /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq ]; then
+	elif [ -f /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq -o "${IsIntel}" = "yes"  ]; then
 		DisplayHeader="Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp"
 		CPUs=normal
 	else
@@ -226,10 +233,10 @@ BasicSetup() {
 			done
 			;;
 		x86*|i686)
-			# Define CPUCores as 2 to prevent big.LITTLE handling
-			CPUCores=2
+			# Define CPUCores as 3 to prevent big.LITTLE handling and throttling reporting
+			CPUCores=3
 			# Try to get device name from CPU entry
-			DeviceName="$(lscpu | sed 's/  */ /gp' | awk -F": " '/^Model name/ {print $2}')"
+			DeviceName="$(lscpu | sed 's/ \{1,\}/ /g' | awk -F": " '/^Model name/ {print $2}')"
 			;;
 		*)
 			echo "${CPUArchitecture} not supported. Aborting." >&2
@@ -378,12 +385,7 @@ CheckCPUCluster() {
 		for i in $(tr " " "\n" </sys/devices/system/cpu/cpu${1}/cpufreq/scaling_available_frequencies | sort -n -r) ; do
 			echo ${i} >/sys/devices/system/cpu/cpu${1}/cpufreq/scaling_max_freq
 			sleep 0.1
-			if [ ${CPUCores} -gt 1 ]; then
-				# measure on 2nd CPU core when more than one core is available
-				RealSpeed=$(taskset -c $(( $1 + 1 )) "${InstallLocation}"/mhz/mhz 3 100000 | awk -F" cpu_MHz=" '{print $2}' | awk -F" " '{print $1}' | tr '\n' '/' | sed 's|/$||')
-			else
-				RealSpeed=$(taskset -c $1 "${InstallLocation}"/mhz/mhz 3 100000 | awk -F" cpu_MHz=" '{print $2}' | awk -F" " '{print $1}' | tr '\n' '/' | sed 's|/$||')
-			fi
+			RealSpeed=$(taskset -c $1 "${InstallLocation}"/mhz/mhz 3 100000 | awk -F" cpu_MHz=" '{print $2}' | awk -F" " '{print $1}' | tr '\n' '/' | sed 's|/$||')
 			SysfsSpeed=$(( $i / 1000 ))
 			if [ -f /usr/bin/vcgencmd ]; then
 				# On RPi we query ThreadX about clockspeeds too
@@ -429,7 +431,7 @@ Run7ZipBenchmark() {
 	echo -e " Done.\nExecuting 7-zip benchmark. This will take a long time...\c"
 	echo -e "\nSystem health while running 7-zip single core benchmark:\n" >>${MonitorLog}
 	echo -e "\c" >${TempLog}
-	/bin/bash "${PathToMe}" m 15 >>${MonitorLog} &
+	/bin/bash "${PathToMe}" m 30 >>${MonitorLog} &
 	MonitoringPID=$!
 	if [ ${CPUCores} -eq 1 ]; then
 		# Do not measure single threaded result since useless
@@ -516,7 +518,7 @@ DisplayResults() {
 		diff ${TempDir}/time_in_state_after_${Number} ${TempDir}/time_in_state_before_${Number} >/dev/null 2>&1
 		if [ $? -ne 0 ]; then
 			case ${CPUCores} in
-				1|2|3|4)
+				1|2|4)
 					ReportCpufreqStatistics ${Number}
 					echo -e "${LRED}${BOLD}ATTENTION: Throttling might have occured. Check the uploaded log for details.${NC}\n"
 					;;

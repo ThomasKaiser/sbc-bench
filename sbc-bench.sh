@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.5.1
+Version=0.5.2
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -27,7 +27,7 @@ Main() {
 		PathToMe="$( cd "$(dirname "$0")" ; pwd -P )/${0##*/}"
 		CheckRelease
 		CheckLoad
-		SwitchToPerformance >/dev/null 2>&1
+		BasicSetup >/dev/null 2>&1
 		InstallPrerequisits
 		InitialMonitoring
 		CheckClockspeeds
@@ -214,13 +214,29 @@ CheckLoad() {
 	echo ""
 } # CheckLoad
 
-SwitchToPerformance() {
-	# Try to switch to performance cpufreq governor with all CPU cores
-	CPUCores=$(grep -c '^processor' /proc/cpuinfo)
-	for ((i=0;i<CPUCores;i++)); do
-		echo performance >/sys/devices/system/cpu/cpu${i}/cpufreq/scaling_governor
-	done
-} # SwitchToPerformance
+BasicSetup() {
+	CPUArchitecture="$(lscpu | awk -F" " '/^Architecture/ {print $2}')"
+	case ${CPUArchitecture} in
+		arm*|aarch*)
+			[ -f /proc/device-tree/model ] && read DeviceName </proc/device-tree/model
+			# Try to switch to performance cpufreq governor on ARM with all CPU cores
+			CPUCores=$(grep -c '^processor' /proc/cpuinfo)
+				for ((i=0;i<CPUCores;i++)); do
+				echo performance >/sys/devices/system/cpu/cpu${i}/cpufreq/scaling_governor
+			done
+			;;
+		x86*|i686)
+			# Define CPUCores as 2 to prevent big.LITTLE handling
+			CPUCores=2
+			# Try to get device name from CPU entry
+			DeviceName="$(lscpu | awk -F" " '/^Model name/ {print $2}')"
+			;;
+		*)
+			echo "${CPUArchitecture} not supported. Aborting." >&2
+			exit 1
+			;;
+	esac
+} # BasicSetup
 
 InstallPrerequisits() {
 	echo -e "sbc-bench v${Version}\n\nInstalling needed tools. This may take some time...\c"
@@ -282,7 +298,6 @@ InitialMonitoring() {
 	trap "rm -rf \"${TempDir}\" ; exit 0" 0 1 2 3 15
 
 	# Log version and device info
-	[ -f /proc/device-tree/model ] && read DeviceName </proc/device-tree/model
 	echo -e "sbc-bench v${Version} ${DeviceName} ($(date -R))\n" >${ResultLog}
 
 	# Log distribution info
@@ -422,14 +437,14 @@ Run7ZipBenchmark() {
 	elif [ ${CPUCores} -gt 4 ]; then
 		if [ "X${BOARDFAMILY}" = "Xs5p6818" ]; then
 			# S5P6816 octa-core SoC is not a big.LITTLE design
-			taskset -c 0 "${SevenZip}" b >>${TempLog}
+			taskset -c 0 "${SevenZip}" b -mmt 1 >>${TempLog}
 		else
 			# big.LITTLE SoC, we execute one time on a little and one time on a big core
-			taskset -c 0 "${SevenZip}" b >>${TempLog}
-			taskset -c $(( ${CPUCores} - 1 )) "${SevenZip}" b >>${TempLog}
+			taskset -c 0 "${SevenZip}" b -mmt 1 >>${TempLog}
+			taskset -c $(( ${CPUCores} - 1 )) "${SevenZip}" b -mmt 1 >>${TempLog}
 		fi
 	else
-		taskset -c 0 "${SevenZip}" b >>${TempLog}
+		taskset -c 0 "${SevenZip}" b -mmt 1 >>${TempLog}
 	fi
 	kill ${MonitoringPID}
 	echo -e "\n##########################################################################" >>${ResultLog}

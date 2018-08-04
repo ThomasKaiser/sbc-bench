@@ -91,6 +91,9 @@ MonitorBoard() {
 	if [ -f /usr/bin/vcgencmd ]; then
 		DisplayHeader="Time        fake/real   load %cpu %sys %usr %nice %io %irq   Temp   VCore"
 		CPUs=raspberrypi
+	elif [ "${IsIntel}" = "yes" ] ; then
+		DisplayHeader="Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp"
+		CPUs=normal
 	elif [ -f /sys/devices/system/cpu/cpu4/cpufreq/cpuinfo_cur_freq ]; then
 		DisplayHeader="Time       big.LITTLE   load %cpu %sys %usr %nice %io %irq   Temp"
 		read MaxSpeed0 </sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq
@@ -100,7 +103,7 @@ MonitorBoard() {
 		else
 			CPUs=littlebig
 		fi
-	elif [ -f /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq -o "${IsIntel}" = "yes"  ]; then
+	elif [ -f /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq ]; then
 		DisplayHeader="Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp"
 		CPUs=normal
 	else
@@ -587,7 +590,7 @@ DisplayResults() {
 	[ -f ${TempDir}/throttling_info.txt ] && cat ${TempDir}/throttling_info.txt >>${ResultLog}
 
 	# add dmesg output since start of the benchmark if something relevant is there
-	TimeStamp="$(dmesg | awk -F" " '/sbc-bench started/ {print $1}' | tr -d '[' | tr -d ']' | tail -n1)"
+	TimeStamp="$(dmesg | tr -d '[' | tr -d ']' | awk -F" " '/sbc-bench started/ {print $1}' | tail -n1)"
 	dmesg | sed "/${TimeStamp}/,\$!d" | grep -v 'sbc-bench started' >"${TempDir}/dmesg"
 	if [ -s "${TempDir}/dmesg" ]; then
 		echo -e "\n##########################################################################\n\ndmesg output while running the benchmarks:\n" >>${ResultLog}
@@ -649,7 +652,7 @@ ReportRPiHealth() {
 } # ReportRPiHealth
 
 ReportCacheSizes() {
-	find /sys/devices/system/cpu -name "cache" -type d | while read ; do
+	find /sys/devices/system/cpu -name "cache" -type d | sort -n | while read ; do
 		find "${REPLY}" -name size -type f | while read ; do
 			echo -e "\n${REPLY}: $(cat ${REPLY})\c"
 			[ -f ${REPLY%/*}/level ] && echo -e ", level: $(cat ${REPLY%/*}/level)\c"

@@ -492,7 +492,7 @@ RunOpenSSLBenchmark() {
 	done >${OpenSSLLog}
 	kill ${MonitoringPID}
 	echo -e "\n##########################################################################\n" >>${ResultLog}
-	echo -e "$(openssl version | awk -F" " '{print $1" (version "$2", built on "$3" "$4" "$5")"}')\n$(grep '^type' ${OpenSSLLog} | head -n1)" >>${ResultLog}
+	echo -e "$(openssl version | awk -F" " '{print $1" "$2", built on "$3" "$4" "$5" "$6" "$7" "$8" "$9" "$10" "$11" "$12" "$13" "$14" "$15}' | sed 's/ *$//')\n$(grep '^type' ${OpenSSLLog} | head -n1)" >>${ResultLog}
 	grep '^aes-' ${OpenSSLLog} >>${ResultLog}
 } # RunOpenSSLBenchmark
 

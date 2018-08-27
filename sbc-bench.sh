@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.5.4
+Version=0.5.5
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -409,7 +409,7 @@ CheckCPUCluster() {
 RunTinyMemBench() {
 	echo -e " Done.\nExecuting tinymembench. This will take a long time...\c"
 	echo -e "System health while running tinymembench:\n" >${MonitorLog}
-	/bin/bash "${PathToMe}" m 60 >>${MonitorLog} &
+	/bin/bash "${PathToMe}" m 120 >>${MonitorLog} &
 	MonitoringPID=$!
 	if [ ${CPUCores} -gt 4 ]; then
 		if [ "X${BOARDFAMILY}" = "Xs5p6818" ]; then
@@ -434,7 +434,7 @@ Run7ZipBenchmark() {
 	echo -e " Done.\nExecuting 7-zip benchmark. This will take a long time...\c"
 	echo -e "\nSystem health while running 7-zip single core benchmark:\n" >>${MonitorLog}
 	echo -e "\c" >${TempLog}
-	/bin/bash "${PathToMe}" m 30 >>${MonitorLog} &
+	/bin/bash "${PathToMe}" m 60 >>${MonitorLog} &
 	MonitoringPID=$!
 	if [ ${CPUCores} -eq 1 ]; then
 		# Do not measure single threaded result since useless
@@ -456,7 +456,7 @@ Run7ZipBenchmark() {
 	cat ${TempLog} >>${ResultLog}
 	echo -e "\nSystem health while running 7-zip multi core benchmark:\n" >>${MonitorLog}
 	echo -e "\c" >${TempLog}
-	/bin/bash "${PathToMe}" m 30 >>${MonitorLog} &
+	/bin/bash "${PathToMe}" m 20 >>${MonitorLog} &
 	MonitoringPID=$!
 	RunHowManyTimes=3
 	for ((i=1;i<=RunHowManyTimes;i++)); do

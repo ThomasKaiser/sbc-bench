@@ -1,47 +1,70 @@
 #!/bin/bash
 
-Version=0.5.6
+Version=0.6
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
 	export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+	PathToMe="$( cd "$(dirname "$0")" ; pwd -P )/${0##*/}"
+
+	# Check if we're outputting to a terminal. If yes try to use bold and colors for messages
+	if test -t 1; then
+		ncolors=$(tput colors)
+		if test -n "$ncolors" && test $ncolors -ge 8; then
+			BOLD="$(tput bold)"
+			NC='\033[0m' # No Color
+			LGREEN='\033[1;32m'
+			LRED='\e[0;91m'
+		fi
+	fi
 
 	# check whether we're running in monitoring or benchmark mode
-	if [ "X$1" = "Xm" ]; then
-		interval=$2
-		MonitorBoard
-	else
-		# Check if we're outputting to a terminal. If yes try to use bold and colors for messages
-		if test -t 1; then
-			ncolors=$(tput colors)
-			if test -n "$ncolors" && test $ncolors -ge 8; then
-				BOLD="$(tput bold)"
-				NC='\033[0m' # No Color
-				LGREEN='\033[1;32m'
-				LRED='\e[0;91m'
-			fi
-		fi
-		if [ "X$1" = "Xneon" ]; then
-			TestNEON=yes
-		fi
-		PathToMe="$( cd "$(dirname "$0")" ; pwd -P )/${0##*/}"
-		CheckRelease
-		CheckLoad
-		BasicSetup >/dev/null 2>&1
-		InstallPrerequisits
-		InitialMonitoring
-		CheckClockspeeds
-		CheckTimeInState before
-		RunTinyMemBench
-		RunOpenSSLBenchmark
-		Run7ZipBenchmark
-		if [ "${TestNEON}" = "yes" -a -x "${InstallLocation}"/cpuminer-multi/cpuminer ]; then
-			RunCpuminerBenchmark
-		fi
-		CheckTimeInState after
-		CheckClockspeeds # again after heating the SoC to the max
-		DisplayResults
+	# Backwards compatibility: if 1st argument is 'neon' run cpuminer test
+	[ "X$1" = "Xneon" ] && ExecuteCpuminer=yes
+	while getopts 'hmntT' c ; do
+		case ${c} in
+			m)
+				# monitoring mode
+				interval=$2
+				MonitorBoard
+				exit 0
+				;;
+			c)
+				# Run Cpuminer test (NEON/SSE)
+				ExecuteCpuminer=yes
+				;;
+			h)
+				# print help
+				DisplayUsage
+				exit 0
+				;;
+			t|T)
+				# temperature tests sufficient for heatsink/fan and throttling settings testing
+				# 2nd argument (integer in degree C) is the value we wait for the board to cool
+				# down prior to next test
+				TargetTemp=${2:-50}
+				TempTest
+				exit 0
+				;;
+		esac
+	done
+
+	CheckRelease
+	CheckLoad
+	BasicSetup >/dev/null 2>&1
+	InstallPrerequisits
+	InitialMonitoring
+	CheckClockspeeds
+	CheckTimeInState before
+	RunTinyMemBench
+	RunOpenSSLBenchmark
+	Run7ZipBenchmark
+	if [ "${ExecuteCpuminer}" = "yes" -a -x "${InstallLocation}"/cpuminer-multi/cpuminer ]; then
+		RunCpuminerBenchmark
 	fi
+	CheckTimeInState after
+	CheckClockspeeds # again after heating the SoC to the max
+	DisplayResults
 } # Main
 
 MonitorBoard() {
@@ -115,10 +138,7 @@ MonitorBoard() {
 	while true ; do
 		LoadAvg=$(cut -f1 -d" " </proc/loadavg)
 		if [ "X${SocTemp}" != "Xn/a" ]; then
-			read SocTemp <"${TempSource}"
-			if [ ${SocTemp} -ge 1000 ]; then
-				SocTemp=$(awk '{printf ("%0.1f",$1/1000); }' <<<${SocTemp})
-			fi
+			SocTemp=$(ReadSoCTemp)
 		fi
 
 		ProcessStats
@@ -151,6 +171,104 @@ MonitorBoard() {
 		sleep ${SleepInterval}
 	done
 } # MonitorBoard
+
+TempTest() {
+	# First check whether SoC temperature is available
+	# In Armbian we can rely on /etc/armbianmonitor/datasources/soctemp
+	if [ -f /etc/armbianmonitor/datasources/soctemp ]; then
+		TempSource=/etc/armbianmonitor/datasources/soctemp
+	else
+		TempSource="$(mktemp /tmp/soctemp.XXXXXX)"
+		if [[ -d "/sys/devices/platform/a20-tp-hwmon" ]]; then
+			# Allwinner A20 with old 3.4 kernel
+			ln -fs /sys/devices/platform/a20-tp-hwmon/temp1_input ${TempSource}
+		elif [[ -f /sys/class/hwmon/hwmon0/temp1_input ]]; then
+			# usual convention with modern kernels
+			ln -fs /sys/class/hwmon/hwmon0/temp1_input ${TempSource}
+		else
+			# all other boards/kernels use the same sysfs node except of Actions Semi S500
+			# so on LeMaker Guitar, Roseapple Pi or Allo Sparky it must read "thermal_zone1"
+			ln -fs /sys/devices/virtual/thermal/thermal_zone0/temp ${TempSource}
+		fi
+	fi
+
+	SocTemp=$(ReadSoCTemp 2>/dev/null | cut -f1 -d'.')
+	[ "X${SocTemp}" = "X" ] && \
+		(echo -e "${LRED}${BOLD}WARNING: No temperature source found. Aborting.${NC}" >&2 ; exit 1)
+	[ ${SocTemp} -lt 20 ] && \
+		echo -e "${LRED}${BOLD}WARNING: sysfs thermal readout is ominously low: ${SocTemp}°C.${NC}\n" >&2
+	[ -x "${InstallLocation}"/cpuminer-multi/cpuminer ] || \
+		(echo -e "${LRED}${BOLD}WARNING: Not able to execute cpuminer. Aborting.${NC}" >&2 ; exit 1)
+
+	BasicSetup
+	InitialMonitoring
+	echo -e "Thermal efficiency test using $(readlink "${TempSource}")"
+	echo -e "\nInstalling needed tools. This may take some time...\c"
+	InstallCpuminer >/dev/null 2>&1
+	CheckClockspeeds
+	SocTemp=$(ReadSoCTemp | cut -f1 -d'.')
+	echo " Done"
+	case $c in
+		T)
+			if [ ${SocTemp} -lt ${TargetTemp} ]; then
+				echo -e "System health while heating up the SoC:\n" >>${MonitorLog}
+				/bin/bash "${PathToMe}" -m 10 >>${MonitorLog} &
+				MonitoringPID=$!
+				"${InstallLocation}"/cpuminer-multi/cpuminer --benchmark --cpu-priority=2 >/dev/null &
+				MinerPID=$!
+				while [ ${SocTemp} -le ${TargetTemp} ]; do
+					echo "Heating SoC from current ${SocTemp}°C to ${TargetTemp}°C. This may take some time..."
+					printf "\x1b[1A"
+					sleep 2
+					SocTemp=$(ReadSoCTemp | cut -f1 -d'.')
+				done
+				echo -e "Heating SoC from current ${TargetTemp}°C to ${TargetTemp}°C. This may take some time...\c"
+				kill ${MinerPID} ${MonitoringPID}
+			else
+				echo -e "Skipping heating up the SoC since already at ${SocTemp}°C\n" >>${MonitorLog}
+				echo -e "No need to heat the SoC to ${TargetTemp}°C since already at ${SocTemp}°C...\c"
+			fi
+			;;
+		t)
+			if [ ${SocTemp} -gt ${TargetTemp} ]; then
+				echo -e "System health while waiting for the SoC to cool down:\n" >>${MonitorLog}
+				/bin/bash "${PathToMe}" -m 10 >>${MonitorLog} &
+				MonitoringPID=$!
+				while [ ${SocTemp} -ge ${TargetTemp} ]; do
+					echo "Waiting for the SoC cooling down from current ${SocTemp}°C to ${TargetTemp}°C. This may take some time..."
+					printf "\x1b[1A"
+					sleep 2
+					SocTemp=$(ReadSoCTemp | cut -f1 -d'.')
+				done
+				echo -e "Waiting for the SoC cooling down from current ${SocTemp}°C to ${TargetTemp}°C. This may take some time...\c"
+				kill ${MonitoringPID}
+			else
+				echo -e "No need to wait for the SoC chilling since already at ${SocTemp}°C\n" >>${MonitorLog}
+				echo -e "No need to wait for the SoC chilling since already at ${SocTemp}°C...\c"
+			fi
+			;;
+	esac
+	CheckTimeInState before
+	RunCpuminerBenchmark
+	CheckTimeInState after
+	echo -e " Done.\n\007\007\007"
+
+	# Prepare test results
+	CheckForThrottling
+	echo -e "\n##########################################################################\n" >>${ResultLog}
+	cat ${MonitorLog} >>${ResultLog}
+	[ -f ${TempDir}/throttling_info.txt ] && cat ${TempDir}/throttling_info.txt >>${ResultLog}
+
+	cat ${ResultLog}
+} # TempTest
+
+ReadSoCTemp() {
+	read RawTemp <"${TempSource}"
+	if [ ${RawTemp} -ge 1000 ]; then
+		RawTemp=$(awk '{printf ("%0.1f",$1/1000); }' <<<${RawTemp})
+	fi
+	echo -e ${RawTemp}
+} # ReadSoCTemp
 
 ProcessStats() {
 	# Generate detailed usage statistics based on /proc/stat
@@ -276,8 +394,8 @@ InstallPrerequisits() {
 		make >/dev/null 2>&1
 	fi
 
-	# if called as 'sbc-bench neon' we also use cpuminer
-	if [ "${TestNEON}" = "yes" ]; then
+	# if called with -c or as 'sbc-bench neon' we also use cpuminer
+	if [ "${ExecuteCpuminer}" = "yes" ]; then
 		InstallCpuminer >/dev/null 2>&1
 	fi
 } # InstallPrerequisits
@@ -412,7 +530,7 @@ CheckCPUCluster() {
 RunTinyMemBench() {
 	echo -e " Done.\nExecuting tinymembench. This will take a long time...\c"
 	echo -e "System health while running tinymembench:\n" >${MonitorLog}
-	/bin/bash "${PathToMe}" m 120 >>${MonitorLog} &
+	/bin/bash "${PathToMe}" -m 120 >>${MonitorLog} &
 	MonitoringPID=$!
 	if [ ${CPUCores} -gt 4 ]; then
 		if [ "X${BOARDFAMILY}" = "Xs5p6818" ]; then
@@ -437,7 +555,7 @@ Run7ZipBenchmark() {
 	echo -e " Done.\nExecuting 7-zip benchmark. This will take a long time...\c"
 	echo -e "\nSystem health while running 7-zip single core benchmark:\n" >>${MonitorLog}
 	echo -e "\c" >${TempLog}
-	/bin/bash "${PathToMe}" m 60 >>${MonitorLog} &
+	/bin/bash "${PathToMe}" -m 60 >>${MonitorLog} &
 	MonitoringPID=$!
 	if [ ${CPUCores} -eq 1 ]; then
 		# Do not measure single threaded result since useless
@@ -459,7 +577,7 @@ Run7ZipBenchmark() {
 	cat ${TempLog} >>${ResultLog}
 	echo -e "\nSystem health while running 7-zip multi core benchmark:\n" >>${MonitorLog}
 	echo -e "\c" >${TempLog}
-	/bin/bash "${PathToMe}" m 20 >>${MonitorLog} &
+	/bin/bash "${PathToMe}" -m 20 >>${MonitorLog} &
 	MonitoringPID=$!
 	RunHowManyTimes=3
 	for ((i=1;i<=RunHowManyTimes;i++)); do
@@ -480,7 +598,7 @@ Run7ZipBenchmark() {
 RunOpenSSLBenchmark() {
 	echo -e " Done.\nExecuting OpenSSL benchmark. This will take 3 minutes...\c"
 	echo -e "\nSystem health while running OpenSSL benchmark:\n" >>${MonitorLog}
-	/bin/bash "${PathToMe}" m 10 >>${MonitorLog} &
+	/bin/bash "${PathToMe}" -m 10 >>${MonitorLog} &
 	MonitoringPID=$!
 	OpenSSLLog="${TempDir}/openssl.log"
 	for i in 128 192 256 ; do
@@ -502,7 +620,7 @@ RunOpenSSLBenchmark() {
 RunCpuminerBenchmark() {
 	echo -e " Done.\nExecuting cpuminer. This will take 5 minutes...\c"
 	echo -e "\nSystem health while running cpuminer:\n" >>${MonitorLog}
-	/bin/bash "${PathToMe}" m 10 >>${MonitorLog} &
+	/bin/bash "${PathToMe}" -m 10 >>${MonitorLog} &
 	MonitoringPID=$!
 	"${InstallLocation}"/cpuminer-multi/cpuminer --benchmark --cpu-priority=2 >${TempLog} &
 	MinerPID=$!
@@ -518,74 +636,7 @@ RunCpuminerBenchmark() {
 DisplayResults() {
 	echo -e " Done.\n\007\007\007"
 
-	# Check for throttling on normal ARM SBC
-	find /sys -type f -name time_in_state | sort | grep 'cpufreq' | while read ; do
-		Number=$(echo ${REPLY} | tr -c -d '[:digit:]')
-		diff ${TempDir}/time_in_state_after_${Number} ${TempDir}/time_in_state_before_${Number} >/dev/null 2>&1
-		if [ $? -ne 0 ]; then
-			case ${CPUCores} in
-				1|2|4)
-					ReportCpufreqStatistics ${Number}
-					echo -e "${LRED}${BOLD}ATTENTION: Throttling might have occured. Check the uploaded log for details.${NC}\n"
-					;;
-				6)
-					if [ ${Number} -eq 0 ]; then
-						ReportCpufreqStatistics ${Number} " for CPUs 0-3"
-						echo -e "${LRED}${BOLD}ATTENTION: Throttling might have occured on CPUs 0-3. Check the uploaded log for details.${NC}\n"
-					else
-						ReportCpufreqStatistics ${Number} " for CPUs 4-5"
-						echo -e "${LRED}${BOLD}ATTENTION: Throttling might have occured on CPUs 4-5. Check the uploaded log for details.${NC}\n"
-					fi
-					;;
-				8)
-					if [ "X${BOARDFAMILY}" = "Xs5p6818" ]; then
-						ReportCpufreqStatistics ${Number}
-						echo -e "${LRED}${BOLD}ATTENTION: Throttling might have occured. Check the uploaded log for details.${NC}\n"
-					elif [ ${Number} -eq 0 ]; then
-						ReportCpufreqStatistics ${Number} " for CPUs 0-3"
-						echo -e "${LRED}${BOLD}ATTENTION: Throttling might have occured on CPUs 0-3. Check the uploaded log for details.${NC}\n"
-					else
-						ReportCpufreqStatistics ${Number} " for CPUs 4-7"
-						echo -e "${LRED}${BOLD}ATTENTION: Throttling might have occured on CPUs 4-7. Check the uploaded log for details.${NC}\n"
-					fi
-					;;
-			esac
-		fi
-	done
-
-	# Check for killed CPU cores. Some unfortunate users might still use Allwinner BSP kernels
-	CPUCoresNow=$(grep -c '^processor' /proc/cpuinfo)
-	if [ ${CPUCoresNow} -lt ${CPUCores} ]; then
-		echo -e "${LRED}${BOLD}ATTENTION: Due to overheating prevention $(( ${CPUCores} - ${CPUCoresNow} )) CPU cores have been killed. Check the uploaded log for details.${NC}\n"
-	fi
-
-	# Check for throttling/undervoltage on Raspberry Pi
-	grep -q '/1200MHz' ${MonitorLog} && Warning="ATTENTION: Silent throttling has occured. Check the uploaded log for details."
-	if [ -f /usr/bin/vcgencmd ]; then
-		Health="$(perl -e "printf \"%19b\n\", $(/usr/bin/vcgencmd get_throttled | cut -f2 -d=)" | tr -d '[:blank:]')"
-		# https://forum.armbian.com/topic/7763-benchmarking-cpus/?do=findComment&comment=59042
-		HealthLength=$(wc -c <<<"${Health}")
-		[ ${HealthLength} -eq 19 ] && Health="0${Health}"
-		case ${Health} in
-			10*)
-				Warning="ATTENTION: Frequency capping to 600 MHz has occured. Check the uploaded log for details."
-				ReportRPiHealth ${Health} >>${TempDir}/throttling_info.txt
-				;;
-			01*)
-				Warning="ATTENTION: Throttling has occured. Check the uploaded log for details."
-				ReportRPiHealth ${Health} >>${TempDir}/throttling_info.txt
-				;;
-			11*)
-				Warning="ATTENTION: Throttling and frequency capping has occured. Check the uploaded log for details."
-				ReportRPiHealth ${Health} >>${TempDir}/throttling_info.txt
-				;;
-		esac
-		if [ "X${Warning}" = "X" ]; then
-			echo -e "${LGREEN}It seems neither throttling nor frequency capping has occured.${NC}\n"
-		else
-			echo -e "${LRED}${BOLD}${Warning}${NC}\n"
-		fi
-	fi
+	CheckForThrottling
 
 	# Prepare benchmark results
 	echo -e "\n##########################################################################\n" >>${ResultLog}
@@ -609,7 +660,7 @@ DisplayResults() {
 	[ ${CPUCores} -gt 4 ] && BigLittle=" (big.LITTLE cores measured individually)"
 	echo -e "${BOLD}Memory performance${NC}${BigLittle}:"
 	awk -F" " '/^ standard/ {print $2": "$4" "$5" "$6}' <${ResultLog}
-	if [ "${TestNEON}" = "yes" -a -x "${InstallLocation}"/cpuminer-multi/cpuminer ]; then
+	if [ "${ExecuteCpuminer}" = "yes" -a -x "${InstallLocation}"/cpuminer-multi/cpuminer ]; then
 		echo -e "\n${BOLD}Cpuminer total scores${NC} (5 minutes execution): $(awk -F"Total Scores: " '/^Total Scores: / {print $2}' ${ResultLog}) kH/s"
 	fi
 	echo -e "\n${BOLD}7-zip total scores${NC} (3 consecutive runs): $(awk -F" " '/^Total:/ {print $2}' ${ResultLog})"
@@ -623,6 +674,77 @@ DisplayResults() {
 		echo -e "\nFull results uploaded to ${UploadURL}. Please check the log for anomalies (e.g. swapping\nor throttling happenend) and otherwise share this URL.\n"
 	fi
 } # DisplayResults
+
+CheckForThrottling() {
+	# Check for throttling on normal ARM SBC
+	find /sys -type f -name time_in_state | sort | grep 'cpufreq' | while read ; do
+		Number=$(echo ${REPLY} | tr -c -d '[:digit:]')
+		diff ${TempDir}/time_in_state_after_${Number} ${TempDir}/time_in_state_before_${Number} >/dev/null 2>&1
+		if [ $? -ne 0 ]; then
+			case ${CPUCores} in
+				1|2|4)
+					ReportCpufreqStatistics ${Number}
+					echo -e "${LRED}${BOLD}ATTENTION: Throttling might have occured. Check the log for details.${NC}\n"
+					;;
+				6)
+					if [ ${Number} -eq 0 ]; then
+						ReportCpufreqStatistics ${Number} " for CPUs 0-3"
+						echo -e "${LRED}${BOLD}ATTENTION: Throttling might have occured on CPUs 0-3. Check the log for details.${NC}\n"
+					else
+						ReportCpufreqStatistics ${Number} " for CPUs 4-5"
+						echo -e "${LRED}${BOLD}ATTENTION: Throttling might have occured on CPUs 4-5. Check the log for details.${NC}\n"
+					fi
+					;;
+				8)
+					if [ "X${BOARDFAMILY}" = "Xs5p6818" ]; then
+						ReportCpufreqStatistics ${Number}
+						echo -e "${LRED}${BOLD}ATTENTION: Throttling might have occured. Check the log for details.${NC}\n"
+					elif [ ${Number} -eq 0 ]; then
+						ReportCpufreqStatistics ${Number} " for CPUs 0-3"
+						echo -e "${LRED}${BOLD}ATTENTION: Throttling might have occured on CPUs 0-3. Check the log for details.${NC}\n"
+					else
+						ReportCpufreqStatistics ${Number} " for CPUs 4-7"
+						echo -e "${LRED}${BOLD}ATTENTION: Throttling might have occured on CPUs 4-7. Check the log for details.${NC}\n"
+					fi
+					;;
+			esac
+		fi
+	done
+
+	# Check for killed CPU cores. Some unfortunate users might still use Allwinner BSP kernels
+	CPUCoresNow=$(grep -c '^processor' /proc/cpuinfo)
+	if [ ${CPUCoresNow} -lt ${CPUCores} ]; then
+		echo -e "${LRED}${BOLD}ATTENTION: Due to overheating prevention $(( ${CPUCores} - ${CPUCoresNow} )) CPU cores have been killed. Check the log for details.${NC}\n"
+	fi
+
+	# Check for throttling/undervoltage on Raspberry Pi
+	grep -q '/1200MHz' ${MonitorLog} && Warning="ATTENTION: Silent throttling has occured. Check the log for details."
+	if [ -f /usr/bin/vcgencmd ]; then
+		Health="$(perl -e "printf \"%19b\n\", $(/usr/bin/vcgencmd get_throttled | cut -f2 -d=)" | tr -d '[:blank:]')"
+		# https://forum.armbian.com/topic/7763-benchmarking-cpus/?do=findComment&comment=59042
+		HealthLength=$(wc -c <<<"${Health}")
+		[ ${HealthLength} -eq 19 ] && Health="0${Health}"
+		case ${Health} in
+			10*)
+				Warning="ATTENTION: Frequency capping to 600 MHz has occured. Check the log for details."
+				ReportRPiHealth ${Health} >>${TempDir}/throttling_info.txt
+				;;
+			01*)
+				Warning="ATTENTION: Throttling has occured. Check the log for details."
+				ReportRPiHealth ${Health} >>${TempDir}/throttling_info.txt
+				;;
+			11*)
+				Warning="ATTENTION: Throttling and frequency capping has occured. Check the log for details."
+				ReportRPiHealth ${Health} >>${TempDir}/throttling_info.txt
+				;;
+		esac
+		if [ "X${Warning}" = "X" ]; then
+			echo -e "${LGREEN}It seems neither throttling nor frequency capping has occured.${NC}\n"
+		else
+			echo -e "${LRED}${BOLD}${Warning}${NC}\n"
+		fi
+	fi
+} # CheckForThrottling
 
 ReportCpufreqStatistics() {
 	# Displays cpufreq driver statistics from before and after the benchmark as comparison
@@ -663,5 +785,18 @@ ReportCacheSizes() {
 		done
 	done
 } # ReportCacheSizes
+
+DisplayUsage() {
+	echo -e "Usage: ${BOLD}${0##*/} [-c] [-h] [-m] [-t \$degree] [-T \$degree]${NC}\n"
+	echo -e "############################################################################"
+	echo -e "\n Use ${BOLD}${0##*/}${NC} for the following tasks:\n"
+	echo -e " ${0##*/} invoked without arguments runs a standard benchmark"
+	echo -e " ${0##*/} ${BOLD}-c${NC} also executes cpuminer test (NEON/SSE)"
+	echo -e " ${0##*/} ${BOLD}-h${NC} displays this help text"
+	echo -e " ${0##*/} ${BOLD}-m${NC} [\$seconds] provides CLI monitoring (5 sec default interval)"
+	echo -e " ${0##*/} ${BOLD}-t${NC} [\$degree] runs thermal test waiting to cool down to this value"
+	echo -e " ${0##*/} ${BOLD}-T${NC} [\$degree] runs thermal test heating up to this value\n"
+	echo -e "############################################################################\n"
+} # DisplayUsage
 
 Main "$@"

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.5.5
+Version=0.5.6
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -125,23 +125,23 @@ MonitorBoard() {
 
 		case ${CPUs} in
 			raspberrypi)
-				FakeFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq) 2>/dev/null
+				FakeFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq 2>/dev/null)
 				RealFreq=$(/usr/bin/vcgencmd measure_clock arm | awk -F"=" '{printf ("%0.0f",$2/1000000); }' )
 				CoreVoltage=$(/usr/bin/vcgencmd measure_volts | cut -f2 -d= | sed 's/000//')
 				echo -e "$(date "+%H:%M:%S"): $(printf "%4s" ${FakeFreq})/$(printf "%4s" ${RealFreq})MHz $(printf "%5s" ${LoadAvg}) ${procStats}  $(printf "%4s" ${SocTemp})°C  ${CoreVoltage}"
 				;;
 			biglittle)
-				BigFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpu4/cpufreq/cpuinfo_cur_freq) 2>/dev/null
-				LittleFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq) 2>/dev/null
+				BigFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpu4/cpufreq/cpuinfo_cur_freq 2>/dev/null)
+				LittleFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq 2>/dev/null)
 				echo -e "$(date "+%H:%M:%S"): $(printf "%4s" ${BigFreq})/$(printf "%4s" ${LittleFreq})MHz $(printf "%5s" ${LoadAvg}) ${procStats}  $(printf "%4s" ${SocTemp})°C"
 				;;
 			littlebig)
-				BigFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq) 2>/dev/null
-				LittleFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpu4/cpufreq/cpuinfo_cur_freq) 2>/dev/null
+				BigFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq 2>/dev/null)
+				LittleFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpu4/cpufreq/cpuinfo_cur_freq 2>/dev/null)
 				echo -e "$(date "+%H:%M:%S"): $(printf "%4s" ${BigFreq})/$(printf "%4s" ${LittleFreq})MHz $(printf "%5s" ${LoadAvg}) ${procStats}  $(printf "%4s" ${SocTemp})°C"
 				;;
 			normal)
-				CpuFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq) 2>/dev/null
+				CpuFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq 2>/dev/null)
 				echo -e "$(date "+%H:%M:%S"): $(printf "%4s" ${CpuFreq})MHz $(printf "%5s" ${LoadAvg}) ${procStats}  $(printf "%4s" ${SocTemp})°C"
 				;;
 			notavailable)
@@ -225,7 +225,7 @@ CheckLoad() {
 } # CheckLoad
 
 BasicSetup() {
-	CPUArchitecture="$(lscpu | awk -F" " '/^Architecture/ {print $2}')"
+	CPUArchitecture="$(LANG=C lscpu | awk -F" " '/^Architecture/ {print $2}')"
 	case ${CPUArchitecture} in
 		arm*|aarch*)
 			[ -f /proc/device-tree/model ] && read DeviceName </proc/device-tree/model
@@ -316,7 +316,10 @@ InitialMonitoring() {
 	if [ -n "${BOARDFAMILY}" ]; then
 		echo -e "\nArmbian release info:\n$(grep -v "#" /etc/armbian-release)" >>${ResultLog}
 	else
-		echo -e "Architecture:\t$(dpkg --print-architecture)" >>${ResultLog}
+		ARCH=$(dpkg --print-architecture 2>/dev/null) || \
+			ARCH=$(awk -F"=" '/^CARCH/ {print $2}' /etc/makepkg.conf 2>/dev/null) || \
+			ARCH="unknown/$(uname -m)"
+		echo -e "Architecture:\t${ARCH}" >>${ResultLog}
 	fi
 
 	# On Raspberries we also collect 'firmware' information:
@@ -330,7 +333,7 @@ InitialMonitoring() {
 	echo -e "\n$(which gcc) $(gcc --version | sed 's/gcc\ //' | head -n1)" >>${ResultLog}
 
 	# Some basic system info needed to interpret system health later
-	echo -e "\nUptime:$(uptime)\n\n$(iostat)\n\n$(free -h)\n\n$(swapon -s)" >>${ResultLog}
+	echo -e "\nUptime:$(LANG=C uptime)\n\n$(LANG=C iostat)\n\n$(LANG=C free -h)\n\n$(swapon -s)" >>${ResultLog}
 } # InitialMonitoring
 
 CheckClockspeeds() {
@@ -380,7 +383,7 @@ CheckTimeInState() {
 
 CheckCPUCluster() {
 	# check whether there's cpufreq support or not
-	if [ -d /sys/devices/system/cpu/cpu${1}/cpufreq ]; then
+	if [ -f /sys/devices/system/cpu/cpu${1}/cpufreq/scaling_available_frequencies ]; then
 		# walk through all cpufreq OPP and report clockspeeds (kernel vs. measured)
 		read MinSpeed </sys/devices/system/cpu/cpu${1}/cpufreq/cpuinfo_min_freq
 		read MaxSpeed </sys/devices/system/cpu/cpu${1}/cpufreq/cpuinfo_max_freq
@@ -401,7 +404,7 @@ CheckCPUCluster() {
 		echo ${MaxSpeed} >/sys/devices/system/cpu/cpu${1}/cpufreq/scaling_max_freq
 	else
 		# no cpufreq support
-		RealSpeed=$(taskset -c $(( $1 + 1 )) "${InstallLocation}"/mhz/mhz 3 100000 | awk -F" cpu_MHz=" '{print $2}' | awk -F" " '{print $1}' | tr '\n' '/' | sed 's|/$||')
+		RealSpeed=$(taskset -c $(( $1 + 1 )) "${InstallLocation}"/mhz/mhz 3 1000000 | awk -F" cpu_MHz=" '{print $2}' | awk -F" " '{print $1}' | tr '\n' '/' | sed 's|/$||')
 		echo -e "No cpufreq support available. Measured on cpu$(( $1 + 1 )): ${RealSpeed}"
 	fi
 } # CheckCPUCluster
@@ -598,7 +601,7 @@ DisplayResults() {
 	fi
 
 	echo -e "\n##########################################################################\n" >>${ResultLog}
-	echo -e "$(iostat)\n\n$(free -h)\n\n$(swapon -s)\n\n$(lscpu)" >>${ResultLog}
+	echo -e "$(LANG=C iostat)\n\n$(LANG=C free -h)\n\n$(LANG=C swapon -s)\n\n$(LANG=C lscpu)" >>${ResultLog}
 	ReportCacheSizes >>${ResultLog}
 	UploadURL=$(curl -s -F 'f:1=<-' ix.io <${ResultLog} 2>/dev/null || curl -s -F 'f:1=<-' ix.io <${ResultLog})
 

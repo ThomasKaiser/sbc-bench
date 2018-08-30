@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.6
+Version=0.6.1
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -21,7 +21,7 @@ Main() {
 	# check whether we're running in monitoring or benchmark mode
 	# Backwards compatibility: if 1st argument is 'neon' run cpuminer test
 	[ "X$1" = "Xneon" ] && ExecuteCpuminer=yes
-	while getopts 'hmntT' c ; do
+	while getopts 'chmtT' c ; do
 		case ${c} in
 			m)
 				# monitoring mode
@@ -461,7 +461,7 @@ InitialMonitoring() {
 	echo -e "\n$(which gcc) $(gcc --version | sed 's/gcc\ //' | head -n1)" >>${ResultLog}
 
 	# Some basic system info needed to interpret system health later
-	echo -e "\nUptime:$(LANG=C uptime)\n\n$(LANG=C iostat)\n\n$(LANG=C free -h)\n\n$(swapon -s)" >>${ResultLog}
+	echo -e "\nUptime:$(LANG=C uptime)\n\n$(LANG=C iostat)\n\n$(LANG=C free -h)\n\n$(LANG=C swapon -s)" >>${ResultLog}
 } # InitialMonitoring
 
 CheckClockspeeds() {

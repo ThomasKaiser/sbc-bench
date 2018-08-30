@@ -1,13 +1,15 @@
 # sbc-bench
 
-![](pics/rock64-no-throttling.png)
+![](pics/rockpro64-no-throttling.png)
 
 This small set of different CPU performance tests focuses on 'headless' operation only (no GPU/display stuff, no floating point number crunching). Unlike many other 'kitchen-sink benchmarks' it tries to produce insights instead of fancy graphs.
 
-It has two **entirely different** usage modes:
+It has four **entirely different** usage modes:
 
 * Generate a rough CPU performance assessment for a specific SBC *in general* (under ideal conditions)
 * Show whether an *individual* SBC is able to perform the same and if not hopefully answering the question 'why?'
+* Help software developers and hardware designers to improve 'thermal performance' when using the `-t` and/or `-T` switches ([details/discussion](https://forum.armbian.com/topic/7819-sbc-bench/?do=findComment&comment=60873))
+* Provide basic CLI monitoring functionality through the `-m` switch
 
 The SoCs (system-on-chip) used on today's SBC are that performant that heat dissipation when running full load for some time becomes an issue. The strategies to deal with the problem differ by platform and kernel. We've seen CPU cores being shut down when overheating (Allwinner boards running with original Allwinner software), we know platforms where throttling works pretty well but by switching to a different kernel performance is trashed on exactly the same hardware. Sometimes it's pretty easy to spot what's going on, sometimes vendors cheat on us and it takes some efforts to get a clue what's really happening.
 
@@ -18,7 +20,7 @@ This tool therefore focuses on a controlled environment and intensive monitoring
 You need an armhf or arm64 Debian Stretch or Ubuntu Bionic install. Older variants are not supported (due to distro packages being way too outdated). Then it's
 
     wget https://raw.githubusercontent.com/ThomasKaiser/sbc-bench/master/sbc-bench.sh
-    sudo /bin/bash ./sbc-bench.sh neon
+    sudo /bin/bash ./sbc-bench.sh -c
 
 Unfortunately to adjust the cpufreq governor and to collect monitoring data execution as root is needed. So do **not** run this on productive systems or if you don't understand what the script is doing.
 
@@ -61,9 +63,9 @@ On ARM SoCs CPU and GPU/VPU usually share memory access so it's worth a try to e
 
 ### [cpuminer](https://github.com/tkinjo1985/cpuminer-multi.git)
 
-This is the most demanding benchmark of the four and pretty efficient to check for appropriate heat dissipation and even instabilities under load. It makes heavy use of NEON optimizations therefore generating more heat than unoptimized 'standard' code.
+This is the most demanding benchmark of the four and pretty efficient to check for appropriate heat dissipation and even instabilities under load. It makes heavy use of [SIMD optimizations](https://en.wikipedia.org/wiki/SIMD) (NEON on ARM and SSE on x86) therefore generating more heat than unoptimized 'standard' code.
 
-Heavy NEON optimizations aren't really common and therefore this test is optional. Unless you execute `sbc-bench neon` it will be skipped since results can be misleading. So consider this being a load generator to check whether your board will start to throttle or becomes unstable but take the benchmark numbers with a grain of salt unless you're a programmer and know what [NEON](https://en.wikipedia.org/wiki/ARM_architecture#Advanced_SIMD_(NEON)) really is and whether your application can make use of.
+Heavy SIMD optimizations aren't really common and therefore this test is optional. Unless you execute `sbc-bench -c` it will be skipped since results can be misleading. So consider this being a load generator to check whether your board will start to throttle or becomes unstable but take the benchmark numbers with a grain of salt unless you're a programmer and know what [NEON](https://en.wikipedia.org/wiki/ARM_architecture#Advanced_SIMD_(NEON)) or [SSE](https://en.wikipedia.org/wiki/Streaming_SIMD_Extensions) really are and whether your application can make use of.
 
 A typical result (Rock64 with Armbian/Stretch) will look like this:
 
@@ -73,7 +75,7 @@ A typical result (Rock64 with Armbian/Stretch) will look like this:
 
 ### [7-zip](https://www.7-cpu.com)
 
-7-zip's internal benchmark mode is a pretty good representation of 'server workloads in general'. It doesn't utilize CPU cores fully (at least not on ARM, on Intel with Hyperthreading it's a different story) and it depends somewhat on memory performance and amount of available memory. When running fully parallel on systems that have many cores but are low on memory we see just as in reality the kernel either killing processes due to 'out of memory' or starting to swap if configured.
+7-zip's internal benchmark mode is a pretty good representation of 'server workloads in general'. It doesn't utilize CPU cores fully (at least not on ARM, on Intel with Hyperthreading it's a different story) and it depends somewhat on memory performance (low latency more important than high bandwidth) and amount of available memory. When running fully parallel on systems that have many cores but are low on memory we see just as in reality the kernel either killing processes due to 'out of memory' or starting to swap if configured.
 
 On big.LITTLE systems we start with one run pinned to a little core followed by one pinned to a big core. Then follow 3 consecutive runs using all available cores. The results might look like this:
 
@@ -174,7 +176,7 @@ In this case we were able to spot some background activity in this line:
 
 Depending on settings (kernel or some 'firmware' controlling the hardware) the clockspeeds might be dynamically reduced when the SoC starts to overheat. When clockspeeds are reduced then this obviously slows down operation.
 
-`sbc-bench` continually monitors the clockspeeds but since we can only query every few seconds we might not catch short clockspeed decreases. That's why we check whether the kernel's cpufreq driver supports statistics. If true we record contents of `stats/time_in_state` prior to and after benchmark execution and compare afterwards. This way we are able to detect even short amounts of downclocking which will result in a warning like this: **ATTENTION: Throttling occured. Check the uploaded log for details.**
+`sbc-bench` continually monitors the clockspeeds but since we can only query every few seconds we might not catch short clockspeed decreases. That's why we check whether the kernel's cpufreq driver supports statistics. If true we record contents of `stats/time_in_state` prior to and after benchmark execution and compare afterwards. This way we are able to detect even short amounts of downclocking which will result in a warning like this: **ATTENTION: Throttling occured. Check the log for details.**
 
 The detailed log then will contain information how much time (in milliseconds) has been spent on which clockspeed while executing the benchmarks. Might look like this on a NanoPC T4 without fan (only vendor's heatsink) after running the full set (NEON test included which resulted in the big cluster clocking down to even 408 MHz):
 

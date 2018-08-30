@@ -204,7 +204,17 @@ TempTest() {
 	InitialMonitoring
 	echo -e "Thermal efficiency test using $(readlink "${TempSource}")"
 	echo -e "\nInstalling needed tools. This may take some time...\c"
+
+	# get/build mhz and cpuminer if not already there
+	if [ ! -x "${InstallLocation}"/mhz/mhz ]; then
+		cd "${InstallLocation}"
+		git clone http://git.1wt.eu/git/mhz.git/ >/dev/null 2>&1
+		cd mhz
+		make >/dev/null 2>&1
+	fi
 	InstallCpuminer >/dev/null 2>&1
+
+	# Start with testing
 	CheckClockspeeds
 	SocTemp=$(ReadSoCTemp | cut -f1 -d'.')
 	echo " Done"

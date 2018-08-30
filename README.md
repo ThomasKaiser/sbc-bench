@@ -13,7 +13,7 @@ It has four **entirely different** usage modes:
 
 The SoCs (system-on-chip) used on today's SBC are that performant that heat dissipation when running full load for some time becomes an issue. The strategies to deal with the problem differ by platform and kernel. We've seen CPU cores being shut down when overheating (Allwinner boards running with original Allwinner software), we know platforms where throttling works pretty well but by switching to a different kernel performance is trashed on exactly the same hardware. Sometimes it's pretty easy to spot what's going on, sometimes vendors cheat on us and it takes some efforts to get a clue what's really happening.
 
-This tool therefore focuses on a controlled environment and intensive monitoring running in the background and being added to results output. The tool returns with a brief performance overview (see screenshot above) but the real information will be uploaded to an online pasteboard service ([RockPro64 example](http://ix.io/1iEb)). Without checking this detailed output numbers are worthless (since we always need to check what really happened).
+This tool therefore focuses on a controlled environment and intensive monitoring running in the background and being added to results output. The tool returns with a brief performance overview (see screenshot above) but the real information will be uploaded to an online pasteboard service ([RockPro64 example](http://ix.io/1lBC)). Without checking this detailed output numbers are worthless (since we always need to check what really happened).
 
 ## Execution
 

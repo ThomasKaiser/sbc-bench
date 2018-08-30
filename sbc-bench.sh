@@ -447,7 +447,7 @@ InitialMonitoring() {
 		ARCH=$(dpkg --print-architecture 2>/dev/null) || \
 			ARCH=$(awk -F"=" '/^CARCH/ {print $2}' /etc/makepkg.conf 2>/dev/null) || \
 			ARCH="unknown/$(uname -m)"
-		echo -e "Architecture:\t${ARCH}" >>${ResultLog}
+		echo -e "Architecture:\t$(tr -d '"' <<<${ARCH})" >>${ResultLog}
 	fi
 
 	# On Raspberries we also collect 'firmware' information:
@@ -630,7 +630,7 @@ RunOpenSSLBenchmark() {
 RunCpuminerBenchmark() {
 	echo -e " Done.\nExecuting cpuminer. This will take 5 minutes...\c"
 	echo -e "\nSystem health while running cpuminer:\n" >>${MonitorLog}
-	/bin/bash "${PathToMe}" -m 10 >>${MonitorLog} &
+	/bin/bash "${PathToMe}" -m 20 >>${MonitorLog} &
 	MonitoringPID=$!
 	"${InstallLocation}"/cpuminer-multi/cpuminer --benchmark --cpu-priority=2 >${TempLog} &
 	MinerPID=$!

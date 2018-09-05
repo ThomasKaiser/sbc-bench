@@ -211,6 +211,10 @@ TempTest() {
 		git clone http://git.1wt.eu/git/mhz.git/ >/dev/null 2>&1
 		cd mhz
 		make >/dev/null 2>&1
+		if [ ! -x "${InstallLocation}"/mhz/mhz ]; then
+			echo -e "${LRED}${BOLD}Not able to build necessary tools. Aborting.${NC}\nMost probably gcc and make packages are missing." >&2
+			exit 1
+		fi
 	fi
 	InstallCpuminer >/dev/null 2>&1
 
@@ -394,6 +398,10 @@ InstallPrerequisits() {
 		git clone https://github.com/ssvb/tinymembench >/dev/null 2>&1
 		cd tinymembench
 		make >/dev/null 2>&1
+		if [ ! -x "${InstallLocation}"/tinymembench/tinymembench ]; then
+			echo -e "${LRED}${BOLD}Not able to build necessary tools. Aborting.${NC}\nMost probably gcc and make packages are missing." >&2
+			exit 1
+		fi
 	fi
 
 	# get/build mhz if not already there

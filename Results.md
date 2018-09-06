@@ -16,7 +16,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [EspressoBin](https://www.armbian.com/espressobin/) | 800 MHz | 4.17 | Stretch arm64 | 1138 | 54290 | 368330 | 1040 | 2490 | 1.23 | [http://ix.io/1kt2](http://ix.io/1kt2) |
 | [EspressoBin](https://www.armbian.com/espressobin/) | 1200 MHz | 4.18 | Stretch arm64 | 1630 | 81900 | 555840 | 1000 | 2400 | 1.82 | [http://ix.io/1lCe](http://ix.io/1lCe) |
 | [Le Potato](https://www.armbian.com/lepotato/) | 1410 MHz | 4.18 | Stretch arm64 | 3780 | 96680 | 657200 | 1810 | 5730 | 3.92 | [http://ix.io/1iSQ](http://ix.io/1iSQ) |
-| [Lime A10](https://www.armbian.com/olimex-lime-a10/) | 910 MHz | 4.14 | Stretch arm64 | 550 | 25200 | 28250 | 440 | 1300 | - | [http://ix.io/1j1L](http://ix.io/1j1L) |
+| [Lime A10](https://www.armbian.com/olimex-lime-a10/) | 910 MHz | 4.14 | Stretch armhf | 550 | 25200 | 28250 | 440 | 1300 | - | [http://ix.io/1j1L](http://ix.io/1j1L) |
 | [NanoPC T3+](https://www.armbian.com/nanopc-t3-plus/) | 1400 MHz | 4.4 | **Xenial armhf** | 6400 | 143800 | 651000 | 1650 | 3700 | - | [http://ix.io/1iyp](http://ix.io/1iyp) |
 | [NanoPC T3+](https://www.armbian.com/nanopc-t3-plus/) | 1400 MHz | 4.14 | Bionic arm64 | 7480 | 126000 | 652600 | 1440 | 4540 | 10.99 | [http://ix.io/1iRJ](http://ix.io/1iRJ) |
 | [NanoPC T4](http://wiki.friendlyarm.com/wiki/index.php/NanoPC-T4) | 1800/1400 MHz | 4.17 | Stretch arm64 | 6250 | 307200 | 1022500 | 4100 | 9000 | 8.24 | [http://ix.io/1iFz](http://ix.io/1iFz) |
@@ -58,9 +58,12 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [RockPro64](http://wiki.pine64.org/index.php/ROCKPro64_Main_Page) | 1800/1400 MHz | 4.4 | Stretch **armhf** | 6250 | 275000 | 1000150 | 2000 | 4835 | - | [http://ix.io/1iFZ](http://ix.io/1iFZ) |
 | [RockPro64](http://wiki.pine64.org/index.php/ROCKPro64_Main_Page) | 1800/1400 MHz | 4.18 | Stretch arm64 | 6300 | 237700 | 1021500 | 3650 | 8450 | 8.20 | [http://ix.io/1iFp](http://ix.io/1iFp) |
 | [Tinkerboard](https://www.armbian.com/tinkerboard/) | 1730 MHz | 4.14 | Stretch armhf | 5350 | 63150 | 66600 | 1480 | 3900 | - | [http://ix.io/1iSX](http://ix.io/1iSX) |
-| [UP Board](https://wiki.up-community.org/Hardware_Specification) | 1440 MHz | 4.9 | Stretch amd64 | 3900 | 101580 | 178010 | 2380 | 2380 | 7.81 | [http://ix.io/1lgD](http://ix.io/1lgD) |
 | [Vim2](https://www.khadas.com/vim) | 1400/1000 MHz | 4.9 | **Xenial** arm64 | 4800 | 177600 | 659000 | 1690 | 5610 | - | [http://ix.io/1ixi](http://ix.io/1ixi) |
 | [Vim2](https://www.khadas.com/vim) | 1400/1000 MHz | 4.17 | Bionic arm64 | 5450 | 126770 | 659600 | 1920 | 5920 | 8.59 | [http://ix.io/1iJ7](http://ix.io/1iJ7) |
+| x5-Z8300 | 1420 MHz | 4.9 | Stretch amd64 | 3900 | 101580 | 178010 | 2380 | 2380 | 7.81 | [http://ix.io/1lgD](http://ix.io/1lgD) |
+| x5-Z8350 | 1920/1420 MHz | 4.17 | Manjaro aarch64 | 4540 | 137900 | 237130 | 1970 | 1670 | 9.32 | [http://ix.io/1lBy](http://ix.io/1lBy) |
+| Celeron J3455 | 2300/1500 MHz | 4.17 | Stretch amd64 | 7000 | 316480 | 429660 | 4090 | 4050 | 17.26 | [http://ix.io/1m5p](http://ix.io/1m5p) |
+| Pentium J4205 | 2560/1500 MHz | 4.17 | Stretch amd64 | 7570 | 355540 | 480640 | 5070 | 5170 | 17.26 | [http://ix.io/1m5t](http://ix.io/1m5t) |
 
 &ast; Number obtained with cryptodev (Marvell's CESA).
 
@@ -81,6 +84,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 * RPi 3 B+ marked as 'OC/normal' means: **OC** (overclocked) settings, stable voltage but no fan used. Since SoC temperature exceeds 60°C the 'firmware' starts to cheat and downclocks to 1200 MHz while the kernel reports running at 1570 MHz. At least memory overclocking is somewhat effective.
 * UP Board is running Ubilinux 4 (based on Debian Stretch)
 * Vim2 is somewhat special: not a real big.LITTLE design but 2 A53 clusters controlled by a firmware BLOB that allows cluster 0 to clock up to 1414 MHz (reported falsely as 1512 MHz) and cluster 1 able to reach 1 GHz ([details](https://forum.khadas.com/t/cpu-frequency-up-to-2ghz/2010/23?u=tkaiser))
+* x86 numbers are meant as comparison. x5-Z8300 numbers were made with [UP Board](https://wiki.up-community.org/Hardware_Specification), x5-Z8350 with [Alfawise X5 Mini](https://forum.armbian.com/topic/7819-sbc-bench/?do=findComment&comment=60891), Celeron J3455 with an [ASRock J3455-ITX mainboard](https://forum.openmediavault.org/index.php/Thread/24093), Pentium J4205 on an [ASRock J4205-ITX mainboard](https://forum.openmediavault.org/index.php/Thread/24093-Efficient-low-cost-home-made-NAS/?postID=182578#post182578)
 
 ## Insights
 

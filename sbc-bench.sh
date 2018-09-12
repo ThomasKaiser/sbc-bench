@@ -197,12 +197,10 @@ TempTest() {
 		(echo -e "${LRED}${BOLD}WARNING: No temperature source found. Aborting.${NC}" >&2 ; exit 1)
 	[ ${SocTemp} -lt 20 ] && \
 		echo -e "${LRED}${BOLD}WARNING: sysfs thermal readout is ominously low: ${SocTemp}°C.${NC}\n" >&2
-	[ -x "${InstallLocation}"/cpuminer-multi/cpuminer ] || \
-		(echo -e "${LRED}${BOLD}WARNING: Not able to execute cpuminer. Aborting.${NC}" >&2 ; exit 1)
 
 	BasicSetup
 	InitialMonitoring
-	echo -e "Thermal efficiency test using $(readlink "${TempSource}")"
+	echo -e "\n${BOLD}Thermal efficiency test using $(readlink "${TempSource}")${NC}"
 	echo -e "\nInstalling needed tools. This may take some time...\c"
 
 	# get/build mhz and cpuminer if not already there
@@ -217,6 +215,10 @@ TempTest() {
 		fi
 	fi
 	InstallCpuminer >/dev/null 2>&1
+	if [ ! -x "${InstallLocation}"/cpuminer-multi/cpuminer ]; then
+		echo -e "${LRED}${BOLD}WARNING: Not able to execute cpuminer. Aborting.${NC}" >&2
+		exit 1
+	fi
 
 	# Start with testing
 	CheckClockspeeds
@@ -224,7 +226,7 @@ TempTest() {
 	echo " Done"
 	case $c in
 		T)
-			if [ ${SocTemp} -lt ${TargetTemp} ]; then
+			if [ ${SocTemp} -le ${TargetTemp} ]; then
 				echo -e "System health while heating up the SoC:\n" >>${MonitorLog}
 				/bin/bash "${PathToMe}" -m 10 >>${MonitorLog} &
 				MonitoringPID=$!
@@ -248,7 +250,7 @@ TempTest() {
 				echo -e "System health while waiting for the SoC to cool down:\n" >>${MonitorLog}
 				/bin/bash "${PathToMe}" -m 10 >>${MonitorLog} &
 				MonitoringPID=$!
-				while [ ${SocTemp} -ge ${TargetTemp} ]; do
+				while [ ${SocTemp} -gt ${TargetTemp} ]; do
 					echo "Waiting for the SoC cooling down from current ${SocTemp}°C to ${TargetTemp}°C. This may take some time..."
 					printf "\x1b[1A"
 					sleep 2
@@ -422,7 +424,7 @@ InstallCpuminer() {
 	# get/build cpuminer if not already there
 	if [ ! -x "${InstallLocation}"/cpuminer-multi/cpuminer ]; then
 		cd "${InstallLocation}"
-		apt -f -qq -y install automake autoconf pkg-config libcurl4-openssl-dev libjansson-dev libssl-dev libgmp-dev make g++ zlib1g-dev >/dev/null 2>&1
+		apt-get -f -qq -y install automake autoconf pkg-config libcurl4-openssl-dev libjansson-dev libssl-dev libgmp-dev make g++ zlib1g-dev >/dev/null 2>&1
 		git clone https://github.com/tkinjo1985/cpuminer-multi.git
 		cd cpuminer-multi/
 		./build.sh

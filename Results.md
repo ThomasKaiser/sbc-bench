@@ -63,6 +63,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | x5-Z8300 | 1420 MHz | 4.9 | Stretch amd64 | 3900 | 101580 | 178010 | 2380 | 2380 | 7.81 | [http://ix.io/1lgD](http://ix.io/1lgD) |
 | x5-Z8350 | 1920/1420 MHz | 4.17 | Manjaro amd64 | 4540 | 137900 | 237130 | 1970 | 1670 | 9.32 | [http://ix.io/1lBy](http://ix.io/1lBy) |
 | Celeron J3455 | 2300/1500 MHz | 4.17 | Stretch amd64 | 7000 | 316480 | 429660 | 4090 | 4050 | 17.26 | [http://ix.io/1m5p](http://ix.io/1m5p) |
+| Pentium N4200 | 2560/1100 MHz | 4.14 | Bionic amd64 | 7469 | 354328 | 468008 | 4682 | 4997 | 18.75 | [http://ix.io/1ngq](http://ix.io/1ngq) |
 | Pentium J4205 | 2560/1500 MHz | 4.17 | Stretch amd64 | 7570 | 355540 | 480640 | 5070 | 5170 | 18.82 | [http://ix.io/1m5t](http://ix.io/1m5t) |
 
 &ast; Number obtained with cryptodev (Marvell's CESA).
@@ -83,7 +84,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 * RPi 3 B+ marked as 'UV/normal' means: normal settings and average Micro USB cable resulting in **UV** (undervoltage). Once the demanding 7-zip benchmark started voltage dropped below 4.63V and 'frequency capping' (downclocking to 600 MHz) happened destroying performance. See the [detailed log](http://ix.io/1iH0): 1400 MHz are reported by the kernel while it's 600 MHz in reality. Is this just highly misleading or already cheating?
 * RPi 3 B+ marked as 'OC/normal' means: **OC** (overclocked) settings, stable voltage but no fan used. Since SoC temperature exceeds 60°C the 'firmware' starts to cheat and downclocks to 1200 MHz while the kernel reports running at 1570 MHz. At least memory overclocking is somewhat effective.
 * Vim2 is somewhat special: not a real big.LITTLE design but 2 A53 clusters controlled by a firmware BLOB that allows cluster 0 to clock up to 1414 MHz (reported falsely as 1512 MHz) and cluster 1 able to reach 1 GHz ([details](https://forum.khadas.com/t/cpu-frequency-up-to-2ghz/2010/23?u=tkaiser))
-* x86 numbers are meant as comparison. x5-Z8300 numbers were made with [UP Board](https://wiki.up-community.org/Hardware_Specification), x5-Z8350 with [Alfawise X5 Mini](https://forum.armbian.com/topic/7819-sbc-bench/?do=findComment&comment=60891), Celeron J3455 with an [ASRock J3455-ITX mainboard](https://forum.openmediavault.org/index.php/Thread/24093), Pentium J4205 on an [ASRock J4205-ITX](https://forum.openmediavault.org/index.php/Thread/24093-Efficient-low-cost-home-made-NAS/?postID=182578#post182578).
+* x86 numbers are meant as comparison. x5-Z8300 numbers were made with [UP Board](https://wiki.up-community.org/Hardware_Specification), x5-Z8350 with [Alfawise X5 Mini](https://forum.armbian.com/topic/7819-sbc-bench/?do=findComment&comment=60891), Celeron J3455 with an [ASRock J3455-ITX mainboard](https://forum.openmediavault.org/index.php/Thread/24093), Pentium N4200 on [UP2 Board](https://wiki.up-community.org/Hardware_Specification_UP2), Pentium J4205 on an [ASRock J4205-ITX](https://forum.openmediavault.org/index.php/Thread/24093-Efficient-low-cost-home-made-NAS/?postID=182578#post182578).
 
 ## Insights
 

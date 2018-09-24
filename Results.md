@@ -46,6 +46,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | Raspberry Pi 3 B+ | UV/normal | 4.14 | Raspbian Stretch | 2100 | 29500 | 36400 | 1040 | 1460 | - | [http://ix.io/1iH0](http://ix.io/1iH0) |
 | Raspberry Pi 3 B+ | OC/normal | 4.14 | Raspbian Stretch | 3130 | 30500 | 36620 | 1230 | 1780 | - | [http://ix.io/1iGz](http://ix.io/1iGz) |
 | Raspberry Pi 3 B+ | with fan | 4.14 | Raspbian Stretch | 3670 | 35800 | 42600 | 1120 | 1600 | - | [http://ix.io/1isD](http://ix.io/1isD) |
+| Raspberry Pi Zero | 1000 MHz | 4.14 | Raspbian Stretch | 450 | 13400 | 16820 | 400 | 1590 | - | [http://ix.io/1niO](http://ix.io/1niO) |
 | [Rock64](https://www.armbian.com/rock64/) | 1300 MHz | 4.4 | Bionic arm64 | 3410 | 89060 | 601200 | 1310 | 5680 | 4.46 | [http://ix.io/1iGW](http://ix.io/1iGW) |
 | [Rock64](https://www.armbian.com/rock64/) | 1300 MHz | 4.18 | Bionic arm64 | 3530 | 116100 | 605250 | 1340 | 5770 | 4.65 | [http://ix.io/1iH4](http://ix.io/1iH4) |
 | [Rock64](https://www.armbian.com/rock64/) | 1300 MHz | 4.4 | Stretch arm64 | 3430 | 88600 | 601000 | 1350 | 5680 | 3.64 | [http://ix.io/1iHo](http://ix.io/1iHo) |

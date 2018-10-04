@@ -28,6 +28,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [NanoPi K1 Plus](https://www.armbian.com/nanopi-k1-plus/) | 1152 MHz | 4.14 | Stretch arm64 | 3030 | 78740 | 533380 | 1040 | 3070 | 3.32 | [http://ix.io/1m3x](http://ix.io/1m3x) |
 | [NanoPi K2](https://www.armbian.com/nanopi-k2/) | 1480 MHz | 4.14 | Stretch arm64 | 3850 | 43020 | 50370 | 1660 | 3870 | 4.61 | [http://ix.io/1iT1](http://ix.io/1iT1) |
 | [NanoPi M4](https://www.armbian.com/nanopi-m4/) | 2000/1500 MHz | 4.19 | Stretch arm64 | 6400 | 334650 | 1128330 | 4080 | 8270 | 8.86 | [http://ix.io/1lzP](http://ix.io/1lzP) |
+| [NanoPi NEO4](https://www.armbian.com/nanopi-neo4/) | 2000/1500 MHz | 4.4| Stretch arm64 | 6510 | 320600 | 1128860 | 1340 | 4630 | 8.71 | [http://ix.io/1ohp](http://ix.io/1ohp) |
 | [ODROID-C2](https://www.armbian.com/odroid-c2/) | 1750 MHz | 3.14 | **Xenial** arm64 | 4070 | 50500 | 48500 | 1750 | 3100 | - | [http://ix.io/1ixI](http://ix.io/1ixI) |
 | [ODROID-C2](https://www.armbian.com/odroid-c2/) | 1530 MHz | 4.17 | Stretch arm64 | 3870 | 43800 | 51280 | 1420 | 2600 | 4.63 | [http://ix.io/1iSh](http://ix.io/1iSh) |
 | [ODROID-XU4](https://www.armbian.com/odroid-xu4/) | 1900/1400 MHz | 3.10 | **Jessie** armhf | 6750 | 74100 | 68200 | 2200 | 4800 | - | [http://ix.io/1ixL](http://ix.io/1ixL) |

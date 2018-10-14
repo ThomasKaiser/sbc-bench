@@ -85,7 +85,7 @@ elif [ ${RebootCount} -eq 3 ]; then
 	# create report using averages values from the individual tests
 
 	# uptime average:
-	AvgUptime=$(awk '{ sum += $1 } END { if (NR > 0) print sum / NR }' </root/uptime)
+	AvgUptime=$(tail -n 3 /root/uptime | awk '{ sum += $1 } END { if (NR > 0) print sum / NR }')
 	echo -e "Average time until /etc/rc.local execution: ${AvgUptime} sec ($(tr '\n' ', ' </root/uptime | sed 's/,$//'))" >/root/storage-report.txt
 	
 	# IOPS values
@@ -111,5 +111,10 @@ elif [ ${RebootCount} -eq 3 ]; then
 	AutoremoveSyncTime=$(awk -F"time: " '/Autoremove sync time/ {print $2}' </root/desktop-install.txt)
 	echo "First desktop install: $(bc <<<"${Install1stTime}+${Sync1stTime}" | cut -f1 -d.) sec" >>/root/storage-report.txt
 	echo "Desktop removal time: $(bc <<<"${AutoremoveTime}+${AutoremoveSyncTime}" | cut -f1 -d.) sec" >>/root/storage-report.txt
-	echo "Second desktop install: $(bc <<<"${Install2ndTime}+${Sync2ndTime}" | cut -f1 -d.) sec" >>/root/storage-report.txt	
+	echo "Second desktop install: $(bc <<<"${Install2ndTime}+${Sync2ndTime}" | cut -f1 -d.) sec\n\n\n" >>/root/storage-report.txt
+	cat /root/iozone.txt >>/root/storage-report.txt
+	echo -e "\n\n\n" >>/root/storage-report.txt
+	cat /root/desktop-install.txt >>/root/storage-report.txt
+	echo -e "\n\n\n" >>/root/storage-report.txt
+	armbianmonitor -U >>/root/storage-report.txt
 fi

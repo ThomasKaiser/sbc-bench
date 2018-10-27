@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.6.1
+Version=0.6.2
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -92,10 +92,16 @@ MonitorBoard() {
 	# Try to renice to 19 to not interfere with benchmark behaviour
 	renice 19 $BASHPID >/dev/null 2>&1
 
+	CpuFreqToQuery=cpuinfo_cur_freq
+
 	# check platform
 	case $(lscpu | awk -F" " '/^Architecture/ {print $2}') in
 		x86*|i686)
 			IsIntel="yes"
+			ln -fs /sys/devices/virtual/thermal/thermal_zone1/temp ${TempSource}
+			if [ ! -f /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq} ]; then
+				CpuFreqToQuery=scaling_cur_freq
+			fi
 			;;
 	esac
 
@@ -117,7 +123,7 @@ MonitorBoard() {
 	elif [ "${IsIntel}" = "yes" ] ; then
 		DisplayHeader="Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp"
 		CPUs=normal
-	elif [ -f /sys/devices/system/cpu/cpu4/cpufreq/cpuinfo_cur_freq ]; then
+	elif [ -f /sys/devices/system/cpu/cpu4/cpufreq/${CpuFreqToQuery} ]; then
 		DisplayHeader="Time       big.LITTLE   load %cpu %sys %usr %nice %io %irq   Temp"
 		read MaxSpeed0 </sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq
 		read MaxSpeed4 </sys/devices/system/cpu/cpu4/cpufreq/cpuinfo_max_freq
@@ -126,7 +132,7 @@ MonitorBoard() {
 		else
 			CPUs=littlebig
 		fi
-	elif [ -f /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq ]; then
+	elif [ -f /sys/devices/system/cpu/cpu0/cpufreq/${CpuFreqToQuery} ]; then
 		DisplayHeader="Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp"
 		CPUs=normal
 	else
@@ -145,23 +151,23 @@ MonitorBoard() {
 
 		case ${CPUs} in
 			raspberrypi)
-				FakeFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq 2>/dev/null)
+				FakeFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpu0/cpufreq/${CpuFreqToQuery} 2>/dev/null)
 				RealFreq=$(/usr/bin/vcgencmd measure_clock arm | awk -F"=" '{printf ("%0.0f",$2/1000000); }' )
 				CoreVoltage=$(/usr/bin/vcgencmd measure_volts | cut -f2 -d= | sed 's/000//')
 				echo -e "$(date "+%H:%M:%S"): $(printf "%4s" ${FakeFreq})/$(printf "%4s" ${RealFreq})MHz $(printf "%5s" ${LoadAvg}) ${procStats}  $(printf "%4s" ${SocTemp})°C  ${CoreVoltage}"
 				;;
 			biglittle)
-				BigFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpu4/cpufreq/cpuinfo_cur_freq 2>/dev/null)
-				LittleFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq 2>/dev/null)
+				BigFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpu4/cpufreq/${CpuFreqToQuery} 2>/dev/null)
+				LittleFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpu0/cpufreq/${CpuFreqToQuery} 2>/dev/null)
 				echo -e "$(date "+%H:%M:%S"): $(printf "%4s" ${BigFreq})/$(printf "%4s" ${LittleFreq})MHz $(printf "%5s" ${LoadAvg}) ${procStats}  $(printf "%4s" ${SocTemp})°C"
 				;;
 			littlebig)
-				BigFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq 2>/dev/null)
-				LittleFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpu4/cpufreq/cpuinfo_cur_freq 2>/dev/null)
+				BigFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpu0/cpufreq/${CpuFreqToQuery} 2>/dev/null)
+				LittleFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpu4/cpufreq/${CpuFreqToQuery} 2>/dev/null)
 				echo -e "$(date "+%H:%M:%S"): $(printf "%4s" ${BigFreq})/$(printf "%4s" ${LittleFreq})MHz $(printf "%5s" ${LoadAvg}) ${procStats}  $(printf "%4s" ${SocTemp})°C"
 				;;
 			normal)
-				CpuFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq 2>/dev/null)
+				CpuFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpu0/cpufreq/${CpuFreqToQuery} 2>/dev/null)
 				echo -e "$(date "+%H:%M:%S"): $(printf "%4s" ${CpuFreq})MHz $(printf "%5s" ${LoadAvg}) ${procStats}  $(printf "%4s" ${SocTemp})°C"
 				;;
 			notavailable)
@@ -385,7 +391,7 @@ BasicSetup() {
 InstallPrerequisits() {
 	echo -e "sbc-bench v${Version}\n\nInstalling needed tools. This may take some time...\c"
 	SevenZip=$(which 7za || which 7zr)
-	[ -z "${SevenZip}" ] && apt -f -qq -y install p7zip >/dev/null 2>&1 && SevenZip=/usr/bin/7zr
+	[ -z "${SevenZip}" ] && add-apt-repository universe >/dev/null 2>&1 ; apt -f -qq -y install p7zip >/dev/null 2>&1 && SevenZip=/usr/bin/7zr
 	[ -z "${SevenZip}" ] && (echo "No 7-zip binary found and could not be installed. Aborting" >&2 ; exit 1)
 
 	which iostat >/dev/null 2>&1 || apt -f -qq -y install sysstat >/dev/null 2>&1
@@ -396,6 +402,7 @@ InstallPrerequisits() {
 	# get/build tinymembench if not already there
 	[ -d "${InstallLocation}" ] || mkdir -p "${InstallLocation}"
 	if [ ! -x "${InstallLocation}"/tinymembench/tinymembench ]; then
+		apt -f -qq -y install gcc make build-essential >/dev/null 2>&1
 		cd "${InstallLocation}"
 		git clone https://github.com/ssvb/tinymembench >/dev/null 2>&1
 		cd tinymembench

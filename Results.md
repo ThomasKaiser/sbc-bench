@@ -71,6 +71,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | Celeron J3455 | 2300/1500 MHz | 4.17 | Stretch amd64 | 7000 | 316480 | 429660 | 4090 | 4050 | 17.26 | [http://ix.io/1m5p](http://ix.io/1m5p) |
 | Pentium N4200 | 2560/1100 MHz | 4.14 | Bionic amd64 | 7469 | 354328 | 468008 | 4682 | 4997 | 18.75 | [http://ix.io/1ngq](http://ix.io/1ngq) |
 | Pentium J4205 | 2560/1500 MHz | 4.17 | Stretch amd64 | 7570 | 355540 | 480640 | 5070 | 5170 | 18.82 | [http://ix.io/1m5t](http://ix.io/1m5t) |
+| Celeron J4105 | 2490/1500 MHz | 4.15 | Bionic amd64 | 9020 | 458670 | 697100 | 5500 | 7410 | 19.07 | [http://ix.io/1qal](http://ix.io/1qal) |
 
 &ast; Number obtained with cryptodev (Marvell's CESA).
 
@@ -92,7 +93,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 * RPi 3 B+ marked as 'OC/normal' means: **OC** (overclocked) settings, stable voltage but no fan used. Since SoC temperature exceeds 60°C the 'firmware' starts to cheat and downclocks to 1200 MHz while the kernel reports running at 1570 MHz. At least memory overclocking is somewhat effective.
 * Rock Pi 4B numbers are preliminary. Board has been tested *without* heatsink so throttling occured as expected. Memory performance seems rather low but that's due to testing with vendor's **armhf** Linaro image -- see other RK3399 devices running same software stack, e.g. RockPro64 numbers above with kernel 4.4, armhf and also being limited to 1.8/1.4GHz.
 * Vim2 is somewhat special: not a real big.LITTLE design but 2 A53 clusters controlled by a firmware BLOB that allows cluster 0 to clock up to 1414 MHz (reported falsely as 1512 MHz) and cluster 1 able to reach 1 GHz ([details](https://forum.khadas.com/t/cpu-frequency-up-to-2ghz/2010/23?u=tkaiser))
-* x86 numbers are meant as comparison. x5-Z8300 numbers were made with [UP Board](https://wiki.up-community.org/Hardware_Specification), x5-Z8350 with [Alfawise X5 Mini](https://forum.armbian.com/topic/7819-sbc-bench/?do=findComment&comment=60891), Celeron J3455 with an [ASRock J3455-ITX mainboard](https://forum.openmediavault.org/index.php/Thread/24093), Pentium N4200 on [UP2 Board](https://wiki.up-community.org/Hardware_Specification_UP2), Pentium J4205 on an [ASRock J4205-ITX](https://forum.openmediavault.org/index.php/Thread/24093-Efficient-low-cost-home-made-NAS/?postID=182578#post182578).
+* x86 numbers are meant as comparison. x5-Z8300 numbers were made with [UP Board](https://wiki.up-community.org/Hardware_Specification), x5-Z8350 with [Alfawise X5 Mini](https://forum.armbian.com/topic/7819-sbc-bench/?do=findComment&comment=60891), Celeron J3455 with an [ASRock J3455-ITX mainboard](https://forum.openmediavault.org/index.php/Thread/24093), Pentium N4200 on [UP2 Board](https://wiki.up-community.org/Hardware_Specification_UP2), Pentium J4205 on an [ASRock J4205-ITX](https://forum.openmediavault.org/index.php/Thread/24093-Efficient-low-cost-home-made-NAS/?postID=182578#post182578) and Celeron J4105 on an ODROID-H2 (remotely accessed via maze.odroid.com)
 
 ## Insights
 

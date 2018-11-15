@@ -13,6 +13,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | BPi R2 | 1300 MHz | 4.4 | **Xenial** armhf | 2600 | 27550 | 25350 | 1500 | 3800 | - | [http://ix.io/1iGV](http://ix.io/1iGV) |
 | [Clearfog Pro](https://www.armbian.com/clearfog/) | 1600 MHz | 4.14 | Stretch armhf | 2185 | 44500 | 43900 | 935 | 4940 | - | [http://ix.io/1iFa](http://ix.io/1iFa) |
 | [Helios4](https://www.armbian.com/helios4/) | 1600 MHz | 4.14 | Stretch armhf | 2210 | 44785 &ast;1280 | 42500 &ast;98560 | 910 | 4840 | - | [http://ix.io/1jCy](http://ix.io/1jCy) |
+| [Edge/Captain](https://www.khadas.com/edge) | 2000/1500 MHz | 4.4 | Bionic arm64 | 6550 | 402150 | 1130400 | 2810 | 4860 | 10.50 | [http://ix.io/1rYm](http://ix.io/1rYm) |
 | [EspressoBin](https://www.armbian.com/espressobin/) | 800 MHz | 4.17 | Stretch arm64 | 1138 | 54290 | 368330 | 1040 | 2490 | 1.23 | [http://ix.io/1kt2](http://ix.io/1kt2) |
 | [EspressoBin](https://www.armbian.com/espressobin/) | 1200 MHz | 4.18 | Stretch arm64 | 1630 | 81900 | 555840 | 1000 | 2400 | 1.82 | [http://ix.io/1lCe](http://ix.io/1lCe) |
 | [Le Potato](https://www.armbian.com/lepotato/) | 1410 MHz | 4.18 | Stretch arm64 | 3780 | 96680 | 657200 | 1810 | 5730 | 3.92 | [http://ix.io/1iSQ](http://ix.io/1iSQ) |

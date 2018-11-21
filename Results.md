@@ -12,6 +12,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | ----- | :--------: | :----: | :----: | ----: | ------: | ------: | -----: | -----: | ---: | --- |
 | BPi R2 | 1300 MHz | 4.4 | **Xenial** armhf | 2600 | 27550 | 25350 | 1500 | 3800 | - | [http://ix.io/1iGV](http://ix.io/1iGV) |
 | [Clearfog Pro](https://www.armbian.com/clearfog/) | 1600 MHz | 4.14 | Stretch armhf | 2185 | 44500 | 43900 | 935 | 4940 | - | [http://ix.io/1iFa](http://ix.io/1iFa) |
+| [Cubietruck](https://www.armbian.com/cubietruck/) | 960 MHz | 4.19 | Stretch armhf | 985 | 15260 | 18590 | 380 | 1380 | - | [http://ix.io/1u3W](http://ix.io/1u3W) |
 | [Helios4](https://www.armbian.com/helios4/) | 1600 MHz | 4.14 | Stretch armhf | 2210 | 44785 &ast;1280 | 42500 &ast;98560 | 910 | 4840 | - | [http://ix.io/1jCy](http://ix.io/1jCy) |
 | [Edge/Captain](https://www.khadas.com/edge) | 2000/1500 MHz | 4.4 | Bionic arm64 | 6550 | 402150 | 1130400 | 2810 | 4860 | 10.50 | [http://ix.io/1rYm](http://ix.io/1rYm) |
 | [EspressoBin](https://www.armbian.com/espressobin/) | 800 MHz | 4.17 | Stretch arm64 | 1138 | 54290 | 368330 | 1040 | 2490 | 1.23 | [http://ix.io/1kt2](http://ix.io/1kt2) |
@@ -65,6 +66,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [RockPro64](http://wiki.pine64.org/index.php/ROCKPro64_Main_Page) | 1800/1400 MHz | 4.4 | Stretch arm64 | 6140 | 298800 | 1015600 | 2770 | 4850 | 8.14 | [http://ix.io/1lBC](http://ix.io/1lBC) |
 | [RockPro64](http://wiki.pine64.org/index.php/ROCKPro64_Main_Page) | 1800/1400 MHz | 4.4 | Stretch **armhf** | 6250 | 275000 | 1000150 | 2000 | 4835 | - | [http://ix.io/1iFZ](http://ix.io/1iFZ) |
 | [RockPro64](http://wiki.pine64.org/index.php/ROCKPro64_Main_Page) | 1800/1400 MHz | 4.18 | Stretch arm64 | 6300 | 237700 | 1021500 | 3650 | 8450 | 8.20 | [http://ix.io/1iFp](http://ix.io/1iFp) |
+| [Teres-I](https://www.armbian.com/olimex-teres-a64/) | 1050 MHz | 4.19 | Stretch arm64 | 2785 | 72261 | 491590 | 1080 | 2820 | - | [http://ix.io/1tJg](http://ix.io/1tJg) |
 | [Tinkerboard](https://www.armbian.com/tinkerboard/) | 1730 MHz | 4.14 | Stretch armhf | 5350 | 63150 | 66600 | 1480 | 3900 | - | [http://ix.io/1iSX](http://ix.io/1iSX) |
 | [Vim2](https://www.khadas.com/vim) | 1400/1000 MHz | 4.9 | **Xenial** arm64 | 4800 | 177600 | 659000 | 1690 | 5610 | - | [http://ix.io/1ixi](http://ix.io/1ixi) |
 | [Vim2](https://www.khadas.com/vim) | 1400/1000 MHz | 4.17 | Bionic arm64 | 5450 | 126770 | 659600 | 1920 | 5920 | 8.59 | [http://ix.io/1iJ7](http://ix.io/1iJ7) |
@@ -85,6 +87,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 * *AES-256 (16 KB)* is a **single threaded** encryption score with rather huge chunks of data. On big.LITTLE SoCs numbers show big core performance
 * *memcpy* and *memset* are tinymembench measurements for memory bandwidth. On big.LITTLE SoCs numbers show big core performance
 * *kH/s* is a **multi threaded** cpuminer score showing the board's performance when executing NEON optimized code. To get the performance difference between big and little cores check the links in the right column
+* Cubietruck numbers are more or less representative for all other Allwinner A20 devices, same with Lime for Allwinner A10 and Olimex Teres-I for A64
 * Clearfog Pro and Helios4 use exactly same SoC (Armada 385), kernel and clockspeeds and the only reason why OpenSSL numbers differ is since Helios4 numbers were made using [Marvell's CESA crypto accelerator via cryptodev](https://forum.armbian.com/topic/7763-benchmarking-cpus/?do=findComment&comment=59569) which provides nice speed improvements with larger block sizes but also some initialization overhead with tiny block sizes. Also CPU utilization is way lower so the SoC is free for other stuff while performing better at the same time.
 * EspressoBin's boot BLOB claims to run at up to 1GHz while real clockspeeds are lower maxing out with this setting at 790MHz (obviously a kernel bug -- see [details](https://forum.armbian.com/topic/4089-espressobin-support-development-efforts/?do=findComment&comment=60082))
 * NanoPi K1 Plus numbers are preliminary. Currently in Armbian highest cpufreq OPP is 1152 MHz and throttling tresholds are way too low, once this is unlocked (SoC capable of almost 1.4GHz) numbers will improve further

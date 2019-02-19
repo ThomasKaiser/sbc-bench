@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.6.3
+Version=0.6.4
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -123,20 +123,16 @@ MonitorBoard() {
 	elif [ "${IsIntel}" = "yes" ] ; then
 		DisplayHeader="Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp"
 		CPUs=normal
-	elif [ -f /sys/devices/system/cpu/cpufreq/policy2/scaling_available_frequencies ]; then
-		# Amlogic Mesong12b running BSP kernel (e.g. ODROID N2)
+	elif [ -f /sys/devices/system/cpu/cpufreq/policy4/${CpuFreqToQuery} ]; then
 		DisplayHeader="Time       big.LITTLE   load %cpu %sys %usr %nice %io %irq   Temp"
-		CPUs=mesong12b_bsp
-	elif [ -f /sys/devices/system/cpu/cpu4/cpufreq/${CpuFreqToQuery} ]; then
-		DisplayHeader="Time       big.LITTLE   load %cpu %sys %usr %nice %io %irq   Temp"
-		read MaxSpeed0 </sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq
-		read MaxSpeed4 </sys/devices/system/cpu/cpu4/cpufreq/cpuinfo_max_freq
+		read MaxSpeed0 </sys/devices/system/cpu/cpufreq/policy0/cpuinfo_max_freq
+		read MaxSpeed4 </sys/devices/system/cpu/cpufreq/policy4/cpuinfo_max_freq
 		if [ ${MaxSpeed4} -ge ${MaxSpeed0} ]; then
 			CPUs=biglittle
 		else
 			CPUs=littlebig
 		fi
-	elif [ -f /sys/devices/system/cpu/cpu0/cpufreq/${CpuFreqToQuery} ]; then
+	elif [ -f /sys/devices/system/cpu/cpufreq/policy0/${CpuFreqToQuery} ]; then
 		DisplayHeader="Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp"
 		CPUs=normal
 	else
@@ -161,22 +157,17 @@ MonitorBoard() {
 				echo -e "$(date "+%H:%M:%S"): $(printf "%4s" ${FakeFreq})/$(printf "%4s" ${RealFreq})MHz $(printf "%5s" ${LoadAvg}) ${procStats}  $(printf "%4s" ${SocTemp})°C  ${CoreVoltage}"
 				;;
 			biglittle)
-				BigFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpu4/cpufreq/${CpuFreqToQuery} 2>/dev/null)
-				LittleFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpu0/cpufreq/${CpuFreqToQuery} 2>/dev/null)
-				echo -e "$(date "+%H:%M:%S"): $(printf "%4s" ${BigFreq})/$(printf "%4s" ${LittleFreq})MHz $(printf "%5s" ${LoadAvg}) ${procStats}  $(printf "%4s" ${SocTemp})°C"
-				;;
-			littlebig)
-				BigFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpu0/cpufreq/${CpuFreqToQuery} 2>/dev/null)
-				LittleFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpu4/cpufreq/${CpuFreqToQuery} 2>/dev/null)
-				echo -e "$(date "+%H:%M:%S"): $(printf "%4s" ${BigFreq})/$(printf "%4s" ${LittleFreq})MHz $(printf "%5s" ${LoadAvg}) ${procStats}  $(printf "%4s" ${SocTemp})°C"
-				;;
-			mesong12b_bsp)
-				BigFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpufreq/policy2/${CpuFreqToQuery} 2>/dev/null)
+				BigFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpufreq/policy4/${CpuFreqToQuery} 2>/dev/null)
 				LittleFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpufreq/policy0/${CpuFreqToQuery} 2>/dev/null)
 				echo -e "$(date "+%H:%M:%S"): $(printf "%4s" ${BigFreq})/$(printf "%4s" ${LittleFreq})MHz $(printf "%5s" ${LoadAvg}) ${procStats}  $(printf "%4s" ${SocTemp})°C"
 				;;
+			littlebig)
+				BigFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpufreq/policy0/${CpuFreqToQuery} 2>/dev/null)
+				LittleFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpufreq/policy4/${CpuFreqToQuery} 2>/dev/null)
+				echo -e "$(date "+%H:%M:%S"): $(printf "%4s" ${BigFreq})/$(printf "%4s" ${LittleFreq})MHz $(printf "%5s" ${LoadAvg}) ${procStats}  $(printf "%4s" ${SocTemp})°C"
+				;;
 			normal)
-				CpuFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpu0/cpufreq/${CpuFreqToQuery} 2>/dev/null)
+				CpuFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpufreq/policy0/cpufreq/${CpuFreqToQuery} 2>/dev/null)
 				echo -e "$(date "+%H:%M:%S"): $(printf "%4s" ${CpuFreq})MHz $(printf "%5s" ${LoadAvg}) ${procStats}  $(printf "%4s" ${SocTemp})°C"
 				;;
 			notavailable)
@@ -381,7 +372,7 @@ BasicSetup() {
 			# Try to switch to performance cpufreq governor on ARM with all CPU cores
 			CPUCores=$(grep -c '^processor' /proc/cpuinfo)
 				for ((i=0;i<CPUCores;i++)); do
-				echo performance >/sys/devices/system/cpu/cpu${i}/cpufreq/scaling_governor
+				echo performance >/sys/devices/system/cpu/cpufreq/policy${i}/scaling_governor
 			done
 			;;
 		x86*|i686)
@@ -502,19 +493,13 @@ CheckClockspeeds() {
 	if [ "X${BOARDFAMILY}" = "Xs5p6818" -o ${CPUCores} -le 4 ]; then
 		# no big.LITTLE, checking cluster 0 is sufficient
 		echo -e "\nChecking cpufreq OPP:\n" >>${ResultLog}
-		CheckCPUCluster /sys/devices/system/cpu/cpu0/cpufreq 0 >>${ResultLog}
-	elif [ -f /sys/devices/system/cpu/cpufreq/policy2/scaling_available_frequencies ]; then
-		# S922X/A311D BSP kernel
-		echo -e "\nTrying to check cpufreq OPP for A53 cluster (cpu0-cpu1):\n" >>${ResultLog}
-		CheckCPUCluster /sys/devices/system/cpu/cpufreq/policy0 0 >>${ResultLog}
-		echo -e "\nTrying to check cpufreq OPP for A73 cluster (cpu2-cpu5):\n" >>${ResultLog}
-		CheckCPUCluster /sys/devices/system/cpu/cpufreq/policy2 2 >>${ResultLog}
+		CheckCPUCluster 0 >>${ResultLog}
 	else
 		# big.LITTLE or something else (Amlogic S912)
-		echo -e "\nChecking cpufreq OPP for cpu0-cpu3:\n" >>${ResultLog}
-		CheckCPUCluster /sys/devices/system/cpu/cpu0/cpufreq 0 >>${ResultLog}
-		echo -e "\nChecking cpufreq OPP for cpu4-cpu$(( ${CPUCores} - 1 )):\n" >>${ResultLog}
-		CheckCPUCluster /sys/devices/system/cpu/cpu4/cpufreq 4 >>${ResultLog}
+		echo -e "\nChecking cpufreq OPP for cluster 0:\n" >>${ResultLog}
+		CheckCPUCluster 0 >>${ResultLog}
+		echo -e "\nChecking cpufreq OPP for cluster 1:\n" >>${ResultLog}
+		CheckCPUCluster 4 >>${ResultLog}
 	fi
 } # CheckClockspeeds
 
@@ -528,7 +513,7 @@ CheckTimeInState() {
 	find /sys -type f -name time_in_state | sort | grep 'cpufreq' | while read ; do
 		StatFile="${REPLY}"
 		Number=$(echo ${StatFile} | tr -c -d '[:digit:]')
-		read MaxSpeed </sys/devices/system/cpu/cpu${Number}/cpufreq/cpuinfo_max_freq
+		read MaxSpeed </sys/devices/system/cpu/cpufreq/policy${Number}/cpuinfo_max_freq
 		sort -n <${StatFile} | while read ; do
 			Cpufreq=$(awk '{print $1}' <<<${REPLY})
 			if [ ${Cpufreq} -lt ${MaxSpeed} ]; then
@@ -542,17 +527,16 @@ CheckTimeInState() {
 } # CheckTimeInState
 
 CheckCPUCluster() {
-	# check whether there's cpufreq support or not, $1 is the path to cpufreq
-	# node, $2 CPU number for taskset pinning
-	if [ -f ${1}/scaling_available_frequencies ]; then
+	# check whether there's cpufreq support or not
+	if [ -f /sys/devices/system/cpu/cpufreq/policy${1}/scaling_available_frequencies ]; then
 		# walk through all cpufreq OPP and report clockspeeds (kernel vs. measured)
-		read MinSpeed <${1}/cpuinfo_min_freq
-		read MaxSpeed <${1}/cpuinfo_max_freq
-		echo ${MinSpeed} >${1}/scaling_min_freq
-		for i in $(tr " " "\n" <${1}/scaling_available_frequencies | sort -n -r) ; do
-			echo ${i} >${1}/scaling_max_freq
+		read MinSpeed </sys/devices/system/cpu/cpufreq/policy${1}/cpuinfo_min_freq
+		read MaxSpeed </sys/devices/system/cpu/cpufreq/policy${1}/cpuinfo_max_freq
+		echo ${MinSpeed} >/sys/devices/system/cpu/cpufreq/policy${1}/scaling_min_freq
+		for i in $(tr " " "\n" </sys/devices/system/cpu/cpufreq/policy${1}/scaling_available_frequencies | sort -n -r) ; do
+			echo ${i} >/sys/devices/system/cpu/cpufreq/policy${1}/scaling_max_freq
 			sleep 0.1
-			RealSpeed=$(taskset -c $2 "${InstallLocation}"/mhz/mhz 3 100000 | awk -F" cpu_MHz=" '{print $2}' | awk -F" " '{print $1}' | tr '\n' '/' | sed 's|/$||')
+			RealSpeed=$(taskset -c $1 "${InstallLocation}"/mhz/mhz 3 100000 | awk -F" cpu_MHz=" '{print $2}' | awk -F" " '{print $1}' | tr '\n' '/' | sed 's|/$||')
 			SysfsSpeed=$(( $i / 1000 ))
 			if [ -f /usr/bin/vcgencmd ]; then
 				# On RPi we query ThreadX about clockspeeds too
@@ -562,11 +546,11 @@ CheckCPUCluster() {
 				echo -e "Cpufreq OPP: $(printf "%4s" ${SysfsSpeed})    Measured: ${RealSpeed}"
 			fi
 		done
-		echo ${MaxSpeed} >${1}/scaling_max_freq
+		echo ${MaxSpeed} >/sys/devices/system/cpu/cpufreq/policy${1}/scaling_max_freq
 	else
 		# no cpufreq support
-		RealSpeed=$(taskset -c $(( $2 + 1 )) "${InstallLocation}"/mhz/mhz 3 1000000 | awk -F" cpu_MHz=" '{print $2}' | awk -F" " '{print $1}' | tr '\n' '/' | sed 's|/$||')
-		echo -e "No cpufreq support available. Measured on cpu$(( $2 + 1 )): ${RealSpeed}"
+		RealSpeed=$(taskset -c $(( $1 + 1 )) "${InstallLocation}"/mhz/mhz 3 1000000 | awk -F" cpu_MHz=" '{print $2}' | awk -F" " '{print $1}' | tr '\n' '/' | sed 's|/$||')
+		echo -e "No cpufreq support available. Measured on cpu$(( $1 + 1 )): ${RealSpeed}"
 	fi
 } # CheckCPUCluster
 

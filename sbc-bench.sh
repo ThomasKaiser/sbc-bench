@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.6.4
+Version=0.6.5
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -63,7 +63,8 @@ Main() {
 		RunCpuminerBenchmark
 	fi
 	CheckTimeInState after
-	CheckClockspeeds # again after heating the SoC to the max
+	"${SevenZip}" b >/dev/null 2>&1 & # run 7-zip bench in the background
+	CheckClockspeeds # test again loaded system after heating the SoC to the max
 	DisplayResults
 } # Main
 

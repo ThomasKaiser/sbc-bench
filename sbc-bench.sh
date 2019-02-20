@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.6.5
+Version=0.6.6
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -133,6 +133,10 @@ MonitorBoard() {
 		else
 			CPUs=littlebig
 		fi
+	elif [ -f /sys/devices/system/cpu/cpufreq/policy2/${CpuFreqToQuery} ]; then
+		# On S922X/A311D cpu0-cpu1 are littles ones, cpu2-cpu4 the big ones
+		DisplayHeader="Time       big.LITTLE   load %cpu %sys %usr %nice %io %irq   Temp"
+		CPUs=mesong12b
 	elif [ -f /sys/devices/system/cpu/cpufreq/policy0/${CpuFreqToQuery} ]; then
 		DisplayHeader="Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp"
 		CPUs=normal
@@ -165,6 +169,11 @@ MonitorBoard() {
 			littlebig)
 				BigFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpufreq/policy0/${CpuFreqToQuery} 2>/dev/null)
 				LittleFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpufreq/policy4/${CpuFreqToQuery} 2>/dev/null)
+				echo -e "$(date "+%H:%M:%S"): $(printf "%4s" ${BigFreq})/$(printf "%4s" ${LittleFreq})MHz $(printf "%5s" ${LoadAvg}) ${procStats}  $(printf "%4s" ${SocTemp})°C"
+				;;
+			mesong12b)
+				BigFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpufreq/policy2/${CpuFreqToQuery} 2>/dev/null)
+				LittleFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpufreq/policy0/${CpuFreqToQuery} 2>/dev/null)
 				echo -e "$(date "+%H:%M:%S"): $(printf "%4s" ${BigFreq})/$(printf "%4s" ${LittleFreq})MHz $(printf "%5s" ${LoadAvg}) ${procStats}  $(printf "%4s" ${SocTemp})°C"
 				;;
 			normal)
@@ -497,10 +506,18 @@ CheckClockspeeds() {
 		CheckCPUCluster 0 >>${ResultLog}
 	else
 		# big.LITTLE or something else (Amlogic S912)
-		echo -e "\nChecking cpufreq OPP for cluster 0:\n" >>${ResultLog}
-		CheckCPUCluster 0 >>${ResultLog}
-		echo -e "\nChecking cpufreq OPP for cluster 1:\n" >>${ResultLog}
-		CheckCPUCluster 4 >>${ResultLog}
+		if [ -f /sys/devices/system/cpu/cpufreq/policy4/scaling_available_frequencies ]; then
+			echo -e "\nChecking cpufreq OPP for cpu0-cpu3:\n" >>${ResultLog}
+			CheckCPUCluster 0 >>${ResultLog}
+			echo -e "\nChecking cpufreq OPP for cpu4-cpu$(( ${CPUCores} - 1 )):\n" >>${ResultLog}
+			CheckCPUCluster 4 >>${ResultLog}
+		elif [ -f /sys/devices/system/cpu/cpufreq/policy2/scaling_available_frequencies ]; then
+			# Amlogic S922X/A311D
+			echo -e "\nChecking cpufreq OPP for cpu0-cpu1:\n" >>${ResultLog}
+			CheckCPUCluster 0 >>${ResultLog}
+			echo -e "\nChecking cpufreq OPP for cpu2-cpu$(( ${CPUCores} - 1 )):\n" >>${ResultLog}
+			CheckCPUCluster 2 >>${ResultLog}
+		fi
 	fi
 } # CheckClockspeeds
 

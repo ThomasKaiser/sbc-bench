@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.6.6
+Version=0.6.7
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -349,6 +349,7 @@ ProcessStats() {
 
 CheckRelease() {
 	# Display warning when not executing on Debian Stretch or Ubuntu Bionic
+	apt -f -qq -y install lsb-release >/dev/null 2>&1
 	Distro=$(lsb_release -c | awk -F" " '{print $2}' | tr '[:upper:]' '[:lower:]')
 	case ${Distro} in
 		stretch|bionic)

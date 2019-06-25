@@ -13,12 +13,15 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | BPi R2 | 1300 MHz | 4.4 | **Xenial** armhf | 2600 | 27550 | 25350 | 1500 | 3800 | - | [http://ix.io/1iGV](http://ix.io/1iGV) |
 | [Clearfog Pro](https://www.armbian.com/clearfog/) | 1600 MHz | 4.14 | Stretch armhf | 2185 | 44500 | 43900 | 935 | 4940 | - | [http://ix.io/1iFa](http://ix.io/1iFa) |
 | [Cubietruck](https://www.armbian.com/cubietruck/) | 960 MHz | 4.19 | Stretch armhf | 985 | 15260 | 18590 | 380 | 1380 | - | [http://ix.io/1u3W](http://ix.io/1u3W) |
-| [Edge/Captain](https://www.khadas.com/edge) | 2000/1500 MHz | 4.4 | Bionic arm64 | 6550 | 402150 | 1130400 | 2810 | 4860 | 10.50 | [http://ix.io/1rYm](http://ix.io/1rYm) |
-| [Edge/Captain](https://www.khadas.com/edge) | 2000/1500 MHz | 4.4 | Stretch arm64 | 6600 | 269485 | 1127780 | 2860 | 4880 | 8.85 | [http://ix.io/1uar](http://ix.io/1uar) |
 | [EspressoBin](https://www.armbian.com/espressobin/) | 800 MHz | 4.17 | Stretch arm64 | 1138 | 54290 | 368330 | 1040 | 2490 | 1.23 | [http://ix.io/1kt2](http://ix.io/1kt2) |
 | [EspressoBin](https://www.armbian.com/espressobin/) | 1200 MHz | 4.18 | Stretch arm64 | 1630 | 81900 | 544240 | 1000 | 2400 | 1.82 | [http://ix.io/1lCe](http://ix.io/1lCe) |
 | [Helios4](https://www.armbian.com/helios4/) | 1600 MHz | 4.14 | Stretch armhf | 2210 | 44785 &ast;1280 | 42500 &ast;98560 | 910 | 4840 | - | [http://ix.io/1jCy](http://ix.io/1jCy) |
 | [Jetson Nano](https://developer.nvidia.com/embedded/buy/jetson-nano-devkit) | 1430 MHz | 4.9 | Bionic arm64 | 5060 | 276890 | 513700 | 3680 | 8560 | 6.64 | [http://ix.io/1I4j](http://ix.io/1I4j) |
+| [Khadas Edge/Captain](https://www.khadas.com/edge) | 2000/1500 MHz | 4.4 | Bionic arm64 | 6550 | 402150 | 1130400 | 2810 | 4860 | 10.50 | [http://ix.io/1rYm](http://ix.io/1rYm) |
+| [Khadas Edge/Captain](https://www.khadas.com/edge) | 2000/1500 MHz | 4.4 | Stretch arm64 | 6600 | 269485 | 1127780 | 2860 | 4880 | 8.85 | [http://ix.io/1uar](http://ix.io/1uar) |
+| [Khadas VIM2](https://www.khadas.com/vim2) | 1400/1000 MHz | 4.9 | **Xenial** arm64 | 4800 | 177600 | 659000 | 1690 | 5610 | - | [http://ix.io/1ixi](http://ix.io/1ixi) |
+| [Khadas VIM2](https://www.khadas.com/vim2) | 1400/1000 MHz | 4.17 | Bionic arm64 | 5450 | 126770 | 659600 | 1920 | 5920 | 8.59 | [http://ix.io/1iJ7](http://ix.io/1iJ7) |
+| [Khadas VIM3](https://www.khadas.com/vim3) | 2200/1800 MHz | 4.9 | Bionic arm64 | 8600 | 398370 | 1256910 | 4980 | 9300 | 13.12 | [http://ix.io/1MFD](http://ix.io/1MFD) |
 | [Le Potato](https://www.armbian.com/lepotato/) | 1410 MHz | 4.18 | Stretch arm64 | 3780 | 96680 | 657200 | 1810 | 5730 | 3.92 | [http://ix.io/1iSQ](http://ix.io/1iSQ) |
 | [Lime A10](https://www.armbian.com/olimex-lime-a10/) | 910 MHz | 4.14 | Stretch armhf | 550 | 25200 | 28250 | 440 | 1300 | - | [http://ix.io/1j1L](http://ix.io/1j1L) |
 | [NanoPC T3+](https://www.armbian.com/nanopc-t3-plus/) | 1400 MHz | 4.4 | **Xenial armhf** | 6400 | 143800 | 651000 | 1650 | 3700 | - | [http://ix.io/1iyp](http://ix.io/1iyp) |
@@ -74,9 +77,6 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [RockPro64](http://wiki.pine64.org/index.php/ROCKPro64_Main_Page) | 1800/1400 MHz | 4.4 | Stretch arm64 | 6420 | 312690 | 1018480 | 3720 | 8400 | 8.24 | [http://ix.io/1ub9](http://ix.io/1ub9) |
 | [Teres-I](https://www.armbian.com/olimex-teres-a64/) | 1050 MHz | 4.19 | Stretch arm64 | 2785 | 72261 | 491590 | 1080 | 2820 | - | [http://ix.io/1tJg](http://ix.io/1tJg) |
 | [Tinkerboard](https://www.armbian.com/tinkerboard/) | 1730 MHz | 4.14 | Stretch armhf | 5350 | 63150 | 66600 | 1480 | 3900 | - | [http://ix.io/1iSX](http://ix.io/1iSX) |
-| [Vim2](https://www.khadas.com/vim2) | 1400/1000 MHz | 4.9 | **Xenial** arm64 | 4800 | 177600 | 659000 | 1690 | 5610 | - | [http://ix.io/1ixi](http://ix.io/1ixi) |
-| [Vim2](https://www.khadas.com/vim2) | 1400/1000 MHz | 4.17 | Bionic arm64 | 5450 | 126770 | 659600 | 1920 | 5920 | 8.59 | [http://ix.io/1iJ7](http://ix.io/1iJ7) |
-| [Vim3](https://www.khadas.com/vim3) | 2200/1800 MHz | 4.9 | Bionic arm64 | 8600 | 398370 | 1256910 | 4980 | 9300 | 13.12 | [http://ix.io/1MFD](http://ix.io/1MFD) |
 | x5-Z8300 | 1420 MHz | 4.9 | Stretch amd64 | 3900 | 101580 | 178010 | 2380 | 2380 | 7.81 | [http://ix.io/1lgD](http://ix.io/1lgD) |
 | x5-Z8350 | 1920/1420 MHz | 4.17 | Manjaro amd64 | 4540 | 137900 | 237130 | 1970 | 1670 | 9.32 | [http://ix.io/1lBy](http://ix.io/1lBy) |
 | x5-Z8350 | 1672 MHz | 4.15 | Bionic amd64 | 4710 | 120300 | 207640 | 2740 | 3140 | - | [http://ix.io/1HnC](http://ix.io/1HnC) |

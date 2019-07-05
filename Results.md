@@ -10,7 +10,8 @@ So do **not** rely on collected numbers unless you carefully read through all th
 
 | Board | Clockspeed | Kernel | Distro | 7-zip | AES-128 (16 byte) | AES-256 (16 KB) | memcpy | memset | kH/s | URL |
 | ----- | :--------: | :----: | :----: | ----: | ------: | ------: | -----: | -----: | ---: | --- |
-| BPi R2 | 1300 MHz | 4.4 | **Xenial** armhf | 2600 | 27550 | 25350 | 1500 | 3800 | - | [http://ix.io/1iGV](http://ix.io/1iGV) |
+| BPi M4 | 1400 MHz | 4.9 | Bionic arm64 | 3500 | 125430 | 651460 | 1010 | 4360 | 5.48 | [http://ix.io/1Dt1](http://ix.io/1Dt1) |
+| [BPi R2](https://www.armbian.com/bananapi-r2/) | 1300 MHz | 4.4 | **Xenial** armhf | 2600 | 27550 | 25350 | 1500 | 3800 | - | [http://ix.io/1iGV](http://ix.io/1iGV) |
 | [Clearfog Pro](https://www.armbian.com/clearfog/) | 1600 MHz | 4.14 | Stretch armhf | 2185 | 44500 | 43900 | 935 | 4940 | - | [http://ix.io/1iFa](http://ix.io/1iFa) |
 | [Cubietruck](https://www.armbian.com/cubietruck/) | 960 MHz | 4.19 | Stretch armhf | 985 | 15260 | 18590 | 380 | 1380 | - | [http://ix.io/1u3W](http://ix.io/1u3W) |
 | [EspressoBin](https://www.armbian.com/espressobin/) | 800 MHz | 4.17 | Stretch arm64 | 1138 | 54290 | 368330 | 1040 | 2490 | 1.23 | [http://ix.io/1kt2](http://ix.io/1kt2) |

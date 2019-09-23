@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.6.8
+Version=0.6.9
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {

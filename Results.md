@@ -70,6 +70,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Rock64](https://www.armbian.com/rock64/) | 1400 MHz | 4.4 | Stretch arm64 | 3590 | 95000 | 643700 | 1320 | 5640 | 4.40 | [http://ix.io/1iZj](http://ix.io/1iZj) |
 | [Rock64](https://www.armbian.com/rock64/) | 1400 MHz | 4.4 | Stretch arm64 | 3580 | 94800 | 644380 | 1330 | 5680 | 4.63 | [http://ix.io/1iYK](http://ix.io/1iYK) |
 | [Rock64](https://www.armbian.com/rock64/) | 1400 MHz | 4.4 | Stretch **armhf** | 3620 | 99400 | 624000 | 1430 | 3620 | - | [http://ix.io/1iwz](http://ix.io/1iwz) |
+| [Rock Pi 4A](http://rockpi.org) | 2000/1500 MHz | 5.3 | Bionic arm64 | 6910 | 402750 | 1147370 | 3660 | 8310 | 10.71 | [http://ix.io/21fX](http://ix.io/21fX) |
 | [Rock Pi 4B](http://rockpi.org) | 1800/1400 MHz | 4.4 | Stretch **armhf** | ~6250 | 261960 | 1007500 | 1900 | 4850 | - | [http://ix.io/1pJi](http://ix.io/1pJi) |
 | [Rock Pi 4B](http://rockpi.org) | 2000/1500 MHz | 4.4 | Stretch **armhf** | ~6450 | 301470 | 1113900 | 1870 | 4860 | - | [http://ix.io/1rrO](http://ix.io/1rrO) |
 | [RockPro64](http://wiki.pine64.org/index.php/ROCKPro64_Main_Page) | 1800/1400 MHz | 4.4 | Stretch arm64 | 6140 | 298800 | 1015600 | 2770 | 4850 | 8.14 | [http://ix.io/1lBC](http://ix.io/1lBC) |

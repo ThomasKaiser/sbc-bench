@@ -62,6 +62,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | Raspberry Pi Zero | 1000 MHz | 4.14 | Raspbian Stretch | 450 | 13400 | 16820 | 400 | 1590 | - | [http://ix.io/1niO](http://ix.io/1niO) |
 | Raspberry Pi 4 B | 1500 MHz | 4.19 | Raspbian Buster | 5500 | 62350 | 64860 | 2460 | 3170 | - | [http://ix.io/1MFf](http://ix.io/1MFf) |
 | Raspberry Pi 4 B | 1850 MHz | 4.19 | Raspbian Buster | 6700 | 77230 | 80050 | 2610 | 3610 | - | [http://ix.io/26Pr](http://ix.io/26Pr) |
+| Raspberry Pi 4 B | 1850 MHz | 5.3 | Ubuntu Eoan **arm64** | - | 47450 | 37250 | 2640 | 3620 | 9.95 | [http://ix.io/26Q0](http://ix.io/26Q0) |
 | [Rock64](https://www.armbian.com/rock64/) | 1300 MHz | 4.4 | Bionic arm64 | 3410 | 89060 | 601200 | 1310 | 5680 | 4.46 | [http://ix.io/1iGW](http://ix.io/1iGW) |
 | [Rock64](https://www.armbian.com/rock64/) | 1300 MHz | 4.18 | Bionic arm64 | 3530 | 116100 | 605250 | 1340 | 5770 | 4.65 | [http://ix.io/1iH4](http://ix.io/1iH4) |
 | [Rock64](https://www.armbian.com/rock64/) | 1300 MHz | 4.4 | Stretch arm64 | 3430 | 88600 | 601000 | 1350 | 5680 | 3.64 | [http://ix.io/1iHo](http://ix.io/1iHo) |

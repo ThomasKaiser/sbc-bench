@@ -23,6 +23,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Khadas VIM2](https://www.khadas.com/vim2) | 1400/1000 MHz | 4.9 | **Xenial** arm64 | 4800 | 177600 | 659000 | 1690 | 5610 | - | [http://ix.io/1ixi](http://ix.io/1ixi) |
 | [Khadas VIM2](https://www.khadas.com/vim2) | 1400/1000 MHz | 4.17 | Bionic arm64 | 5450 | 126770 | 659600 | 1920 | 5920 | 8.59 | [http://ix.io/1iJ7](http://ix.io/1iJ7) |
 | [Khadas VIM3](https://www.khadas.com/vim3) | 2200/1800 MHz | 4.9 | Bionic arm64 | 8600 | 398370 | 1256910 | 4980 | 9300 | 13.12 | [http://ix.io/1MFD](http://ix.io/1MFD) |
+| [Khadas VIM3L](https://www.khadas.com/vim3l) | 1908 MHz | 4.9 | Bionic arm64 | 5172 | 194363 | 1440224 | 3675 | 6363 | 7.29 | [http://ix.io/26Wy](http://ix.io/26Wy) |
 | [Le Potato](https://www.armbian.com/lepotato/) | 1410 MHz | 4.18 | Stretch arm64 | 3780 | 96680 | 657200 | 1810 | 5730 | 3.92 | [http://ix.io/1iSQ](http://ix.io/1iSQ) |
 | [Lime A10](https://www.armbian.com/olimex-lime-a10/) | 910 MHz | 4.14 | Stretch armhf | 550 | 25200 | 28250 | 440 | 1300 | - | [http://ix.io/1j1L](http://ix.io/1j1L) |
 | [NanoPC T3+](https://www.armbian.com/nanopc-t3-plus/) | 1400 MHz | 4.4 | **Xenial armhf** | 6400 | 143800 | 651000 | 1650 | 3700 | - | [http://ix.io/1iyp](http://ix.io/1iyp) |

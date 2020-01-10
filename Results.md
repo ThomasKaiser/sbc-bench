@@ -23,7 +23,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Khadas VIM2](https://www.khadas.com/vim2) | 1400/1000 MHz | 4.9 | **Xenial** arm64 | 4800 | 177600 | 659000 | 1690 | 5610 | - | [http://ix.io/1ixi](http://ix.io/1ixi) |
 | [Khadas VIM2](https://www.khadas.com/vim2) | 1400/1000 MHz | 4.17 | Bionic arm64 | 5450 | 126770 | 659600 | 1920 | 5920 | 8.59 | [http://ix.io/1iJ7](http://ix.io/1iJ7) |
 | [Khadas VIM3](https://www.khadas.com/vim3) | 2200/1800 MHz | 4.9 | Bionic arm64 | 8600 | 398370 | 1256910 | 4980 | 9300 | 13.12 | [http://ix.io/1MFD](http://ix.io/1MFD) |
-| [Khadas VIM3L](https://www.khadas.com/vim3l) | 1908 MHz | 4.9 | Bionic arm64 | 5172 | 194363 | 1440224 | 3675 | 6363 | 7.29 | [http://ix.io/26Wy](http://ix.io/26Wy) |
+| [Khadas VIM3L](https://www.khadas.com/vim3l) | 1908 MHz | 4.9 | Bionic arm64 | 5170 | 194360 | 1440220 | 3670 | 6360 | 7.29 | [http://ix.io/26Wy](http://ix.io/26Wy) |
 | [Le Potato](https://www.armbian.com/lepotato/) | 1410 MHz | 4.18 | Stretch arm64 | 3780 | 96680 | 657200 | 1810 | 5730 | 3.92 | [http://ix.io/1iSQ](http://ix.io/1iSQ) |
 | [Lime A10](https://www.armbian.com/olimex-lime-a10/) | 910 MHz | 4.14 | Stretch armhf | 550 | 25200 | 28250 | 440 | 1300 | - | [http://ix.io/1j1L](http://ix.io/1j1L) |
 | [NanoPC T3+](https://www.armbian.com/nanopc-t3-plus/) | 1400 MHz | 4.4 | **Xenial armhf** | 6400 | 143800 | 651000 | 1650 | 3700 | - | [http://ix.io/1iyp](http://ix.io/1iyp) |
@@ -64,7 +64,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | Raspberry Pi 4 B | 1500 MHz | 4.19 | Raspbian Buster | 5500 | 62350 | 64860 | 2460 | 3170 | - | [http://ix.io/1MFf](http://ix.io/1MFf) |
 | Raspberry Pi 4 B | 1850 MHz | 4.19 | Raspbian Buster | 6700 | 77230 | 80050 | 2610 | 3610 | - | [http://ix.io/26Pr](http://ix.io/26Pr) |
 | Raspberry Pi 4 B | 1850 MHz | 5.3 | Ubuntu Eoan **arm64** | - | 47450 | 37250 | 2640 | 3620 | 9.95 | [http://ix.io/26Q0](http://ix.io/26Q0) |
-| Raspberry Pi 4 B | 1850 MHz | 4.19| Debian Buster **arm64** | - | 47030 | 37240 | 2640 | 3620 | 9.76 | [http://ix.io/271V](http://ix.io/271V) |
+| Raspberry Pi 4 B | 1850 MHz | 4.19| Debian Buster **arm64** | - | 47030 | 37240 | 2650 | 3610 | 9.76 | [http://ix.io/271V](http://ix.io/271V) |
 | [Rock64](https://www.armbian.com/rock64/) | 1300 MHz | 4.4 | Bionic arm64 | 3410 | 89060 | 601200 | 1310 | 5680 | 4.46 | [http://ix.io/1iGW](http://ix.io/1iGW) |
 | [Rock64](https://www.armbian.com/rock64/) | 1300 MHz | 4.18 | Bionic arm64 | 3530 | 116100 | 605250 | 1340 | 5770 | 4.65 | [http://ix.io/1iH4](http://ix.io/1iH4) |
 | [Rock64](https://www.armbian.com/rock64/) | 1300 MHz | 4.4 | Stretch arm64 | 3430 | 88600 | 601000 | 1350 | 5680 | 3.64 | [http://ix.io/1iHo](http://ix.io/1iHo) |

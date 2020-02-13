@@ -3,6 +3,11 @@
 Version=0.6.9
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
+if [ -z "${USE_VCGENCMD}" -a -f /usr/bin/vcgencmd ]; then
+    # this is a Raspberry Pi
+    USE_VCGENCMD=true
+fi
+
 Main() {
 	export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 	PathToMe="$( cd "$(dirname "$0")" ; pwd -P )/${0##*/}"
@@ -118,7 +123,7 @@ MonitorBoard() {
 
 	SleepInterval=${interval:-5}
 
-	if [ -f /usr/bin/vcgencmd ]; then
+	if [ ${USE_VCGENCMD} = true ] ; then
 		DisplayHeader="Time        fake/real   load %cpu %sys %usr %nice %io %irq   Temp   VCore"
 		CPUs=raspberrypi
 	elif [ "${IsIntel}" = "yes" ] ; then
@@ -479,7 +484,7 @@ InitialMonitoring() {
 	fi
 
 	# On Raspberries we also collect 'firmware' information:
-	if [ -f /usr/bin/vcgencmd ]; then
+	if [ ${USE_VCGENCMD} = true ] ; then
 		echo -e "\nRaspberry Pi ThreadX version:\n$(/usr/bin/vcgencmd version)" >>${ResultLog}
 		[ -f /boot/config.txt ] && echo -e "\nThreadX configuration (/boot/config.txt):\n$(grep -v '#' /boot/config.txt | sed '/^\s*$/d')" >>${ResultLog}
 		echo -e "\nActual ThreadX settings:\n$(vcgencmd get_config int)" >>${ResultLog}
@@ -557,7 +562,7 @@ CheckCPUCluster() {
 			sleep 0.1
 			RealSpeed=$(taskset -c $1 "${InstallLocation}"/mhz/mhz 3 100000 | awk -F" cpu_MHz=" '{print $2}' | awk -F" " '{print $1}' | tr '\n' '/' | sed 's|/$||')
 			SysfsSpeed=$(( $i / 1000 ))
-			if [ -f /usr/bin/vcgencmd ]; then
+			if [ ${USE_VCGENCMD} = true ] ; then
 				# On RPi we query ThreadX about clockspeeds too
 				ThreadXFreq=$(/usr/bin/vcgencmd measure_clock arm | awk -F"=" '{printf ("%0.0f",$2/1000000); }' )
 				echo -e "Cpufreq OPP: $(printf "%4s" ${SysfsSpeed})    ThreadX: $(printf "%4s" ${ThreadXFreq})    Measured: ${RealSpeed}"
@@ -765,7 +770,7 @@ CheckForThrottling() {
 
 	# Check for throttling/undervoltage on Raspberry Pi
 	grep -q '/1200MHz' ${MonitorLog} && Warning="ATTENTION: Silent throttling has occured. Check the log for details."
-	if [ -f /usr/bin/vcgencmd ]; then
+	if [ ${USE_VCGENCMD} = true ] ; then
 		Health="$(perl -e "printf \"%19b\n\", $(/usr/bin/vcgencmd get_throttled | cut -f2 -d=)" | tr -d '[:blank:]')"
 		# https://forum.armbian.com/topic/7763-benchmarking-cpus/?do=findComment&comment=59042
 		HealthLength=$(wc -c <<<"${Health}")

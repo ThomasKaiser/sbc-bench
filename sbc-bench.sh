@@ -1,12 +1,7 @@
 #!/bin/bash
 
-Version=0.6.9
+Version=0.7.0
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
-
-if [ -z "${USE_VCGENCMD}" -a -f /usr/bin/vcgencmd ]; then
-    # this is a Raspberry Pi
-    USE_VCGENCMD=true
-fi
 
 Main() {
 	export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
@@ -23,6 +18,15 @@ Main() {
 		fi
 	fi
 
+	# The following allows to use sbc-bench on real ARM devices where for
+	# whatever reasons a fake /usr/bin/vcgencmd is lying around -- see for
+	# an example here: https://github.com/ThomasKaiser/sbc-bench/pull/13
+	if [ -z "${USE_VCGENCMD}" -a -f /usr/bin/vcgencmd ]; then
+		# this seems to be a Raspberry Pi where we need to query
+		# ThreadX on the VC via vcgencmd to get real information
+		USE_VCGENCMD=true
+	fi
+	
 	# check whether we're running in monitoring or benchmark mode
 	# Backwards compatibility: if 1st argument is 'neon' run cpuminer test
 	[ "X$1" = "Xneon" ] && ExecuteCpuminer=yes

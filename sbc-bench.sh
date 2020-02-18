@@ -25,6 +25,8 @@ Main() {
 		# this seems to be a Raspberry Pi where we need to query
 		# ThreadX on the VC via vcgencmd to get real information
 		USE_VCGENCMD=true
+	else
+		USE_VCGENCMD=false
 	fi
 	
 	# check whether we're running in monitoring or benchmark mode

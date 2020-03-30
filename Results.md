@@ -17,6 +17,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [EspressoBin](https://www.armbian.com/espressobin/) | 800 MHz | 4.17 | Stretch arm64 | 1138 | 54290 | 368330 | 1040 | 2490 | 1.23 | [http://ix.io/1kt2](http://ix.io/1kt2) |
 | [EspressoBin](https://www.armbian.com/espressobin/) | 1200 MHz | 4.18 | Stretch arm64 | 1630 | 81900 | 544240 | 1000 | 2400 | 1.82 | [http://ix.io/1lCe](http://ix.io/1lCe) |
 | [Helios4](https://www.armbian.com/helios4/) | 1600 MHz | 4.14 | Stretch armhf | 2210 | 44785 &ast;1280 | 42500 &ast;98560 | 910 | 4840 | - | [http://ix.io/1jCy](http://ix.io/1jCy) |
+| [HummingBoard Pulse i.MX8M Quad](https://www.solid-run.com/nxp-i-mx8m-family/hummingboard-m/) | 1500 MHz | 4.19 | Buster arm64 | 4330 | 97380 | 695540 | 2230 | 9900 | - | [http://ix.io/27FC](http://ix.io/27FC) |
 | [Jetson Nano](https://developer.nvidia.com/embedded/buy/jetson-nano-devkit) | 1430 MHz | 4.9 | Bionic arm64 | 5060 | 276890 | 513700 | 3680 | 8560 | 6.64 | [http://ix.io/1I4j](http://ix.io/1I4j) |
 | [Khadas Edge/Captain](https://www.khadas.com/edge) | 2000/1500 MHz | 4.4 | Bionic arm64 | 6550 | 402150 | 1130400 | 2810 | 4860 | 10.50 | [http://ix.io/1rYm](http://ix.io/1rYm) |
 | [Khadas Edge/Captain](https://www.khadas.com/edge) | 2000/1500 MHz | 4.4 | Stretch arm64 | 6600 | 269485 | 1127780 | 2860 | 4880 | 8.85 | [http://ix.io/1uar](http://ix.io/1uar) |

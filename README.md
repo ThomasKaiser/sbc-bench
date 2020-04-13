@@ -26,9 +26,9 @@ Unfortunately to adjust the cpufreq governor and to collect monitoring data exec
 
 ## Which tools are used and why?
 
-I chose [mhz](http://git.1wt.eu/web?p=mhz.git), [tinymembench](https://github.com/ssvb/tinymembench), [cpuminer](https://github.com/tkinjo1985/cpuminer-multi.git), [7-zip](https://www.7-cpu.com) and [OpenSSL](https://www.openssl.org)'s AES benchmarks for the following reasons:
+I chose [mhz](https://github.com/wtarreau/mhz), [tinymembench](https://github.com/ssvb/tinymembench), [cpuminer](https://github.com/tkinjo1985/cpuminer-multi.git), [7-zip](https://www.7-cpu.com) and [OpenSSL](https://www.openssl.org)'s AES benchmarks for the following reasons:
 
-### [mhz](http://git.1wt.eu/web?p=mhz.git)
+### [mhz](https://github.com/wtarreau/mhz)
 
 This tool is not a benchmark but instead calculates real CPU clockspeeds. This is helpful on platforms where cpufreq support is not available yet or we can not rely on the clockspeed values returned by the kernel. This applies to platforms where vendors are cheating (RPi, Amlogic) or where actual clockspeeds are set via jumpers while the clockspeeds available to the kernel are derived from device-tree (DT) entries. On a Clearfog Pro routerboard it will look like this for example (DT defines 666/1332 MHz while I configured 800/1600 MHz via jumper):
 

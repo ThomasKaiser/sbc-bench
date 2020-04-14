@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.7.0
+Version=0.7.1
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -233,7 +233,7 @@ TempTest() {
 	# get/build mhz and cpuminer if not already there
 	if [ ! -x "${InstallLocation}"/mhz/mhz ]; then
 		cd "${InstallLocation}"
-		git clone http://git.1wt.eu/git/mhz.git/ >/dev/null 2>&1
+		git clone https://github.com/wtarreau/mhz >/dev/null 2>&1
 		cd mhz
 		make >/dev/null 2>&1
 		if [ ! -x "${InstallLocation}"/mhz/mhz ]; then
@@ -438,7 +438,7 @@ InstallPrerequisits() {
 	# get/build mhz if not already there
 	if [ ! -x "${InstallLocation}"/mhz/mhz ]; then
 		cd "${InstallLocation}"
-		git clone http://git.1wt.eu/git/mhz.git/ >/dev/null 2>&1
+		git clone https://github.com/wtarreau/mhz >/dev/null 2>&1
 		cd mhz
 		make >/dev/null 2>&1
 	fi

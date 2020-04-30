@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.7.1
+Version=0.7.2
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -359,15 +359,15 @@ ProcessStats() {
 } # ProcessStats
 
 CheckRelease() {
-	# Display warning when not executing on Debian Stretch or Ubuntu Bionic
+	# Display warning when not executing on Debian Stretch/Buster or Ubuntu Bionic/Focal
 	apt -f -qq -y install lsb-release >/dev/null 2>&1
 	Distro=$(lsb_release -c | awk -F" " '{print $2}' | tr '[:upper:]' '[:lower:]')
 	case ${Distro} in
-		stretch|bionic|buster)
+		stretch|bionic|buster|focal)
 			:
 			;;
 		*)
-			echo -e "${LRED}${BOLD}WARNING: this tool is meant to run only on Debian Stretch, Buster or Ubuntu Bionic.${NC}"
+			echo -e "${LRED}${BOLD}WARNING: this tool is meant to run only on Debian Stretch, Buster or Ubuntu Bionic, Focal.${NC}"
 			echo -e "When running on other distros results are partially meaningless or can't be collected.\nPress [ctrl]-[c] to stop or [enter] to continue."
 			read
 			;;

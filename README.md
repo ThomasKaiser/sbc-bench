@@ -19,7 +19,7 @@ This tool therefore focuses on a controlled environment and intensive monitoring
 
 ## Execution
 
-You need an armhf or arm64 Debian Stretch or Ubuntu Bionic install. Older variants are not supported (due to distro packages being way too outdated). Then it's
+You need an armhf or arm64 Debian Stretch/Buster or Ubuntu Bionic/Focal install. Older variants are not supported (due to distro packages being way too outdated). Then it's
 
     wget https://raw.githubusercontent.com/ThomasKaiser/sbc-bench/master/sbc-bench.sh
     sudo /bin/bash ./sbc-bench.sh -c
@@ -194,15 +194,3 @@ The detailed log then will contain information how much time (in milliseconds) h
      408 MHz:  352.72 sec
 
 **Important:** to get throttling notifications running a kernel with `CONFIG_CPU_FREQ_STAT=y` is needed since otherwise cpufreq statistics are not available. And this will not work on Raspberries since there [cpufreq driver has not the slightest idea what's going on](https://github.com/raspberrypi/linux/issues/2512#issuecomment-382703153).
-
-## Interpreting results
-
-*(coming soon)*
-
-## Spotting problems
-
-*(coming soon)*
-
-## Discussion about tool and results
-
-Should happen in [this thread](https://forum.armbian.com/topic/7819-sbc-bench/) over at Armbian forum.

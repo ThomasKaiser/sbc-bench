@@ -83,6 +83,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [RockPro64](https://www.armbian.com/rockpro64/) | 1800/1400 MHz | 4.4 | Stretch arm64 | 6420 | 312690 | 1018480 | 3720 | 8400 | 8.24 | [http://ix.io/1ub9](http://ix.io/1ub9) |
 | [RockPro64](https://www.armbian.com/rockpro64/) | 1800/1400 MHz | 4.18 | Stretch arm64 | 6300 | 237700 | 1021500 | 3650 | 8450 | 8.20 | [http://ix.io/1iFp](http://ix.io/1iFp) |
 | [RockPro64](https://www.armbian.com/rockpro64/) | 2010/1510 MHz | 5.4 | Focal arm64 | 6920 | 397740 | 1145300 | 3700 | 8430 | 11.55 | [http://ix.io/2sZH](http://ix.io/2sZH) |
+| [RockPro64](https://www.armbian.com/rockpro64/) | 2010/1510 MHz | 5.8 | Bullseye arm64 | 7000 | 369820 | 1144950 | 3690 | 8360 | 11.08 | [http://ix.io/2yIx](http://ix.io/2yIx) |
 | [Teres-I](https://www.armbian.com/olimex-teres-a64/) | 1050 MHz | 4.19 | Stretch arm64 | 2785 | 72261 | 491590 | 1080 | 2820 | - | [http://ix.io/1tJg](http://ix.io/1tJg) |
 | [Tinkerboard](https://www.armbian.com/tinkerboard/) | 1730 MHz | 4.14 | Stretch armhf | 5350 | 63150 | 66600 | 1480 | 3900 | - | [http://ix.io/1iSX](http://ix.io/1iSX) |
 | x5-Z8300 | 1420 MHz | 4.9 | Stretch amd64 | 3900 | 101580 | 178010 | 2380 | 2380 | 7.81 | [http://ix.io/1lgD](http://ix.io/1lgD) |

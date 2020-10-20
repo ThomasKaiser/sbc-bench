@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.7.3
+Version=0.7.4
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -62,7 +62,8 @@ Main() {
 
 	CheckRelease
 	CheckLoad
-	BasicSetup >/dev/null 2>&1
+	read OriginalCPUFreqGovernor </sys/devices/system/cpu/cpufreq/policy0/scaling_governor
+	BasicSetup performance >/dev/null 2>&1
 	InstallPrerequisits
 	InitialMonitoring
 	CheckClockspeeds
@@ -77,6 +78,7 @@ Main() {
 	"${SevenZip}" b >/dev/null 2>&1 & # run 7-zip bench in the background
 	CheckClockspeeds # test again loaded system after heating the SoC to the max
 	DisplayResults
+	BasicSetup ${OriginalCPUFreqGovernor} >/dev/null 2>&1
 } # Main
 
 MonitorBoard() {
@@ -387,6 +389,7 @@ CheckLoad() {
 } # CheckLoad
 
 BasicSetup() {
+	# On ARM set cpufreq governor based on $1 (defaults to ondemand if not provided)
 	CPUArchitecture="$(LANG=C lscpu | awk -F" " '/^Architecture/ {print $2}')"
 	case ${CPUArchitecture} in
 		arm*|aarch*)
@@ -394,7 +397,7 @@ BasicSetup() {
 			# Try to switch to performance cpufreq governor on ARM with all CPU cores
 			CPUCores=$(grep -c '^processor' /proc/cpuinfo)
 				for ((i=0;i<CPUCores;i++)); do
-				echo performance >/sys/devices/system/cpu/cpufreq/policy${i}/scaling_governor
+				echo ${1:-ondemand} >/sys/devices/system/cpu/cpufreq/policy${i}/scaling_governor
 			done
 			;;
 		x86*|i686)

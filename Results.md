@@ -11,6 +11,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | Board | Clockspeed | Kernel | Distro | 7-zip | AES-128 (16 byte) | AES-256 (16 KB) | memcpy | memset | kH/s | URL |
 | ----- | :--------: | :----: | :----: | ----: | ------: | ------: | -----: | -----: | ---: | --- |
 | Amazon a1.xlarge | 2300 MHz | 4.15 | Bionic arm64 | 8610 | 458500 | 1297960 | 4280 | 14220 | - | [http://ix.io/2iFY](http://ix.io/2iFY) |
+| Amazon m6g.8xlarge | 2500 MHz | 5.4 | Focal arm64 | 109000 | 745740 | 1424770 | 17340 | 39950 | 154.22 | [http://ix.io/2FrG](http://ix.io/2FrG) |
 | BPi M4 | 1400 MHz | 4.9 | Bionic arm64 | 3500 | 125430 | 651460 | 1010 | 4360 | 5.48 | [http://ix.io/1Dt1](http://ix.io/1Dt1) |
 | [BPi R2](https://www.armbian.com/bananapi-r2/) | 1300 MHz | 4.4 | **Xenial** armhf | 2600 | 27550 | 25350 | 1500 | 3800 | - | [http://ix.io/1iGV](http://ix.io/1iGV) |
 | [Clearfog Pro](https://www.armbian.com/clearfog/) | 1600 MHz | 4.14 | Stretch armhf | 2185 | 44500 | 43900 | 935 | 4940 | - | [http://ix.io/1iFa](http://ix.io/1iFa) |
@@ -110,6 +111,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 * *memcpy* and *memset* are tinymembench measurements for memory bandwidth. On big.LITTLE SoCs numbers show big core performance
 * *kH/s* is a **multi threaded** cpuminer score showing the board's performance when executing NEON optimized code. To get the performance difference between big and little cores check the links in the right column
 * The Amazon a1.xlarge numbers represent a 1st gen Graviton CPU (64-bit 'ARM Neoverse') limited to four A72 cores and 8GB memory.
+* The Amazon m6g.8xlarge numbers represent a 2nd gen Graviton2 (64-bit Neoverse-N1) limited to 32 N1 cores clocked at 2.5GHz. This setup is roughly [3.5 times faster than an Apple M1 SoC](https://github.com/ThomasKaiser/Knowledge/blob/master/articles/Exploring_Apple_Silicon_on_MacBookAir10.md#cpu-performance-assessment) with just 4 power and 4 efficiency cores each. Really impressive.
 * Cubietruck numbers are more or less representative for all other Allwinner A20 devices, same with Lime for Allwinner A10 and Olimex Teres-I for A64
 * Clearfog Pro and Helios4 use exactly same SoC (Armada 385), kernel and clockspeeds and the only reason why OpenSSL numbers differ is since Helios4 numbers were made using [Marvell's CESA crypto accelerator via cryptodev](https://forum.armbian.com/topic/7763-benchmarking-cpus/?do=findComment&comment=59569) which provides nice speed improvements with larger block sizes but also some initialization overhead with tiny block sizes. Also CPU utilization is way lower so the SoC is free for other stuff while performing better at the same time.
 * EspressoBin's boot BLOB claims to run at up to 1GHz while real clockspeeds are lower maxing out with this setting at 790MHz (obviously a kernel bug -- see [details](https://forum.armbian.com/topic/4089-espressobin-support-development-efforts/?do=findComment&comment=60082))

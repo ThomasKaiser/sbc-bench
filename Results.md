@@ -48,6 +48,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [ODROID-C2](https://www.armbian.com/odroid-c2/) | 1530 MHz | 4.17 | Stretch arm64 | 3870 | 43800 | 51280 | 1420 | 2600 | 4.63 | [http://ix.io/1iSh](http://ix.io/1iSh) |
 | [ODROID-C4](https://www.armbian.com/odroid-c4/) | 2010 MHz | 4.9 | Focal arm64 | 5450 | 195130 | 941590 | 3310 | 6270 | 7.71 | [http://ix.io/2kaS](http://ix.io/2kaS) |
 | [ODROID-N2](https://www.armbian.com/odroid-n2/) | 1800/1900 MHz | 4.9 | Bionic arm64 | 8140 | 324900 | 1024680 | 4120 | 8610 | 11.39 | [http://ix.io/1BsF](http://ix.io/1BsF) |
+| [ODROID-N2+](https://www.armbian.com/odroid-n2/) | 2400/2000 MHz | 5.9 | Focal arm64 | 9660 | 412670 | 1366600 | 4020 | 7350 | - | [http://ix.io/2Gcl](http://ix.io/2Gcl) |
 | [ODROID-XU4](https://www.armbian.com/odroid-xu4/) | 1900/1400 MHz | 3.10 | **Jessie** armhf | 6750 | 74100 | 68200 | 2200 | 4800 | - | [http://ix.io/1ixL](http://ix.io/1ixL) |
 | [ODROID-XU4](https://www.armbian.com/odroid-xu4/) | 2000/1400 MHz | 4.9 | Stretch armhf | 6400 | 73350 | 72075 | 2230 | 4850 | - | [http://ix.io/1iWL](http://ix.io/1iWL) |
 | [ODROID-XU4](https://www.armbian.com/odroid-xu4/) | 2000/1500 MHz | 4.14 | Bionic armhf | 7100 | 74700 | 71500 | 2240 | 4880 | - | [http://ix.io/1iLy](http://ix.io/1iLy) |

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.7.4
+Version=0.7.5
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -581,9 +581,18 @@ CheckCPUCluster() {
 		done
 		echo ${MaxSpeed} >/sys/devices/system/cpu/cpufreq/policy${1}/scaling_max_freq
 	else
-		# no cpufreq support
-		RealSpeed=$(taskset -c $(( $1 + 1 )) "${InstallLocation}"/mhz/mhz 3 1000000 | awk -F" cpu_MHz=" '{print $2}' | awk -F" " '{print $1}' | tr '\n' '/' | sed 's|/$||')
-		echo -e "No cpufreq support available. Measured on cpu$(( $1 + 1 )): ${RealSpeed}"
+		# no cpufreq support: measure speeds on cpu0 on single core machines, otherwise on
+		# next cpu core to not interfere with probable bad IRQ/SMP affinitiy settings.
+		case $(grep -c '^processor' /proc/cpuinfo) in
+			1)
+				CpuToCheck=0
+				;;
+			*)
+				CpuToCheck=$(( $1 + 1 ))
+				;;
+		esac
+		RealSpeed=$(taskset -c ${CpuToCheck} "${InstallLocation}"/mhz/mhz 3 1000000 | awk -F" cpu_MHz=" '{print $2}' | awk -F" " '{print $1}' | tr '\n' '/' | sed 's|/$||')
+		echo -e "No cpufreq support available. Measured on cpu${CpuToCheck}: ${RealSpeed}"
 	fi
 } # CheckCPUCluster
 

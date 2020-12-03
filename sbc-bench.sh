@@ -735,13 +735,16 @@ DisplayResults() {
 	echo -e "\n${BOLD}7-zip total scores${NC} (3 consecutive runs): $(awk -F" " '/^Total:/ {print $2}' ${ResultLog})"
 	echo -e "\n${BOLD}OpenSSL results${NC}${BigLittle}:\n$(grep '^type' ${OpenSSLLog} | head -n1)"
 	grep '^aes-' ${OpenSSLLog}
-	if [ "X${UploadURL}" = "X" ]; then
-		echo -e "\nUnable to upload full test results. Please copy&paste the below stuff to pastebin.com and\nprovide the URL. Check the output for throttling and swapping please.\n\n"
-		cat ${ResultLog}
-		echo -e "\n"
-	else
-		echo -e "\nFull results uploaded to ${UploadURL}. Please check the log for anomalies (e.g. swapping\nor throttling happenend) and otherwise share this URL.\n"
-	fi
+	case ${UploadURL} in
+		http*)
+			echo -e "\nFull results uploaded to ${UploadURL}. Please check the log for anomalies (e.g. swapping\nor throttling happenend) and otherwise share this URL.\n"
+			;;
+		*)
+			echo -e "\nUnable to upload full test results. Please copy&paste the below stuff to pastebin.com and\nprovide the URL. Check the output for throttling and swapping please.\n\n"
+			cat ${ResultLog}
+			echo -e "\n"
+			;;
+	esac
 } # DisplayResults
 
 CheckForThrottling() {

@@ -12,7 +12,8 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | ----- | :--------: | :----: | :----: | ----: | ------: | ------: | -----: | -----: | ---: | --- |
 | Amazon a1.xlarge | 2300 MHz | 4.15 | Bionic arm64 | 8610 | 458500 | 1297960 | 4280 | 14220 | - | [http://ix.io/2iFY](http://ix.io/2iFY) |
 | Amazon m6g.8xlarge | 2500 MHz | 5.4 | Focal arm64 | 109000 | 745740 | 1424770 | 17340 | 39950 | 154.22 | [http://ix.io/2FrG](http://ix.io/2FrG) |
-| Apple M1 VM | 3200 MHz | 5.8 | Groovy arm64 | 5100 | 638810 | 1119670 | 27960 | 63950 | 5.30 | [http://ix.io/2Gjg](http://ix.io/2Gjg) |
+| Apple M1 power core | 3200 MHz | 5.8 | Groovy arm64 | 5100 | 638810 | 1119670 | 27960 | 63950 | 5.30 | [http://ix.io/2Gjg](http://ix.io/2Gjg) |
+| Apple M1 efficiency | *600* MHz | 5.8 | Groovy arm64 | 650 | 150340 | 224520 | 5130 | 7640 | 0.76 | [http://ix.io/2Gtf](http://ix.io/2Gtf) |
 | BPi M4 | 1400 MHz | 4.9 | Bionic arm64 | 3500 | 125430 | 651460 | 1010 | 4360 | 5.48 | [http://ix.io/1Dt1](http://ix.io/1Dt1) |
 | [BPi R2](https://www.armbian.com/bananapi-r2/) | 1300 MHz | 4.4 | **Xenial** armhf | 2600 | 27550 | 25350 | 1500 | 3800 | - | [http://ix.io/1iGV](http://ix.io/1iGV) |
 | [Clearfog Pro](https://www.armbian.com/clearfog/) | 1600 MHz | 4.14 | Stretch armhf | 2185 | 44500 | 43900 | 935 | 4940 | - | [http://ix.io/1iFa](http://ix.io/1iFa) |
@@ -114,7 +115,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 * *kH/s* is a **multi threaded** cpuminer score showing the board's performance when executing NEON optimized code. To get the performance difference between big and little cores check the links in the right column
 * The Amazon a1.xlarge numbers represent a 1st gen Graviton CPU (64-bit 'ARM Neoverse') limited to four A72 cores and 8GB memory.
 * The Amazon m6g.8xlarge numbers represent a 2nd gen Graviton2 (64-bit Neoverse-N1) limited to 32 N1 cores clocked at 2.5GHz.
-* Apple M1 numbers represent a *single core* Ubuntu 20.10 VM running on an MacBook Air with the VM executed most of the time on one of [Apple's ARMv8.4 power cores](https://github.com/ThomasKaiser/Knowledge/blob/master/articles/Exploring_Apple_Silicon_on_MacBookAir10.md#virtualization).
+* The 1st Apple M1 number represents a *single core* Ubuntu 20.10 VM running on an MacBook Air with the VM executed almost all the time on one of [Apple's ARMv8.4 power cores](https://github.com/ThomasKaiser/Knowledge/blob/master/articles/Exploring_Apple_Silicon_on_MacBookAir10.md#virtualization). The 2nd number is the same VM setup this time sent to an efficiency core clocking in at just 600 MHz instead of the usual 2064 MHz. Running natively and not inside a VM performance numbers are 5% to 10% higher.
 * Cubietruck numbers are more or less representative for all other Allwinner A20 devices, same with Lime for Allwinner A10 and Olimex Teres-I for A64
 * Clearfog Pro and Helios4 use exactly same SoC (Armada 385), kernel and clockspeeds and the only reason why OpenSSL numbers differ is since Helios4 numbers were made using [Marvell's CESA crypto accelerator via cryptodev](https://forum.armbian.com/topic/7763-benchmarking-cpus/?do=findComment&comment=59569) which provides nice speed improvements with larger block sizes but also some initialization overhead with tiny block sizes. Also CPU utilization is way lower so the SoC is free for other stuff while performing better at the same time.
 * EspressoBin's boot BLOB claims to run at up to 1GHz while real clockspeeds are lower maxing out with this setting at 790MHz (obviously a kernel bug -- see [details](https://forum.armbian.com/topic/4089-espressobin-support-development-efforts/?do=findComment&comment=60082))

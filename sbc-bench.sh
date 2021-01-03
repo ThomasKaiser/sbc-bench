@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.7.5
+Version=0.7.6
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -112,8 +112,10 @@ MonitorBoard() {
 	case $(lscpu | awk -F" " '/^Architecture/ {print $2}') in
 		x86*|i686)
 			IsIntel="yes"
-			ln -fs /sys/devices/virtual/thermal/thermal_zone1/temp ${TempSource}
-			if [ ! -f /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq} ]; then
+			if [ -f /sys/devices/virtual/thermal/thermal_zone1/temp ]; then
+				ln -fs /sys/devices/virtual/thermal/thermal_zone1/temp ${TempSource}
+			fi
+			if [ ! -f /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq ]; then
 				CpuFreqToQuery=scaling_cur_freq
 			fi
 			;;
@@ -423,6 +425,7 @@ InstallPrerequisits() {
 	which git >/dev/null 2>&1 || apt -f -qq -y install git >/dev/null 2>&1
 	which openssl >/dev/null 2>&1 || apt -f -qq -y install openssl >/dev/null 2>&1
 	which curl >/dev/null 2>&1 || apt -f -qq -y install curl >/dev/null 2>&1
+	which dmidecode >/dev/null 2>&1 || ( [ ${CPUCores} -eq 3 ] && apt -f -qq -y install dmidecode >/dev/null 2>&1 )
 
 	# get/build tinymembench if not already there
 	[ -d "${InstallLocation}" ] || mkdir -p "${InstallLocation}"
@@ -490,6 +493,12 @@ InitialMonitoring() {
 			ARCH=$(awk -F"=" '/^CARCH/ {print $2}' /etc/makepkg.conf 2>/dev/null) || \
 			ARCH="unknown/$(uname -m)"
 		echo -e "Architecture:\t$(tr -d '"' <<<${ARCH})" >>${ResultLog}
+	fi
+	
+	# Log BIOS/UEFI info on x86:
+	if [ ${CPUCores} -eq 3 ]; then
+		echo -e "\nBIOS/UEFI:" >>${ResultLog}
+		dmidecode -t bios | egrep "Vendor:|Version:|Release Date:|Revision:" >>${ResultLog}
 	fi
 
 	# On Raspberries we also collect 'firmware' information:

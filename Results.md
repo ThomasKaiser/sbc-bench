@@ -47,6 +47,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [NanoPi NEO4](https://www.armbian.com/nanopi-neo4/) | 2000/1500 MHz | 4.4| Stretch arm64 | 6030 | 342620 | 1121380 | 2230 | 4770 | 8.57 | [http://ix.io/1oib](http://ix.io/1oib) |
 | [NanoPi NEO4](https://www.armbian.com/nanopi-neo4/) | 2000/1500 MHz | 4.4| Stretch arm64 | 6520 | 268720 | 1123190 | 2280 | 4770 | 8.83 | [http://ix.io/1oim](http://ix.io/1oim) |
 | [NanoPi NEO4](https://www.armbian.com/nanopi-neo4/) | 2000/1500 MHz | 4.19 | Stretch arm64 | 6750 | 278200 | 1139850 | 2370 | 6110 | 8.84 | [http://ix.io/1p3T](http://ix.io/1p3T) |
+| Nintendo Switch | 1780 MHz | 4.9 | **Fedora 30 arm-64** | 6170 | 346340 | 642670 | 2500 | 3570 | - | [http://ix.io/1Rnj](http://ix.io/1Rnj) |
 | [ODROID-C2](https://www.armbian.com/odroid-c2/) | 1750 MHz | 3.14 | **Xenial** arm64 | 4070 | 50500 | 48500 | 1750 | 3100 | - | [http://ix.io/1ixI](http://ix.io/1ixI) |
 | [ODROID-C2](https://www.armbian.com/odroid-c2/) | 1530 MHz | 4.17 | Stretch arm64 | 3870 | 43800 | 51280 | 1420 | 2600 | 4.63 | [http://ix.io/1iSh](http://ix.io/1iSh) |
 | [ODROID-C4](https://www.armbian.com/odroid-c4/) | 2010 MHz | 4.9 | Focal arm64 | 5450 | 195130 | 941590 | 3310 | 6270 | 7.71 | [http://ix.io/2kaS](http://ix.io/2kaS) |

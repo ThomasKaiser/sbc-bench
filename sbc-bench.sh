@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.7.6
+Version=0.7.7
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -99,7 +99,11 @@ MonitorBoard() {
 		else
 			# all other boards/kernels use the same sysfs node except of Actions Semi S500
 			# so on LeMaker Guitar, Roseapple Pi or Allo Sparky it must read "thermal_zone1"
-			ln -fs /sys/devices/virtual/thermal/thermal_zone0/temp ${TempSource}
+			if [ -f /sys/devices/virtual/thermal/thermal_zone0/temp ]; then
+				ln -fs /sys/devices/virtual/thermal/thermal_zone0/temp ${TempSource}
+			else
+				echo 0 >${TempSource}
+			fi
 		fi
 	fi
 
@@ -391,12 +395,13 @@ CheckLoad() {
 } # CheckLoad
 
 BasicSetup() {
-	# On ARM set cpufreq governor based on $1 (defaults to ondemand if not provided)
+	# On ARM and RISC-V set cpufreq governor based on $1 (defaults to ondemand if not provided)
 	CPUArchitecture="$(LANG=C lscpu | awk -F" " '/^Architecture/ {print $2}')"
 	case ${CPUArchitecture} in
-		arm*|aarch*)
+		arm*|aarch*|riscv*)
 			[ -f /proc/device-tree/model ] && read DeviceName </proc/device-tree/model
-			# Try to switch to performance cpufreq governor on ARM with all CPU cores
+			[ "X${DeviceName}" = "Xsun20iw1p1" ] && DeviceName="Allwinner D1"
+			# Try to switch to performance cpufreq governor on ARM and RISC-V with all CPU cores
 			CPUCores=$(grep -c '^processor' /proc/cpuinfo)
 				for ((i=0;i<CPUCores;i++)); do
 				echo ${1:-ondemand} >/sys/devices/system/cpu/cpufreq/policy${i}/scaling_governor

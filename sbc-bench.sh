@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.7.7
+Version=0.7.8
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -116,9 +116,22 @@ MonitorBoard() {
 	case $(lscpu | awk -F" " '/^Architecture/ {print $2}') in
 		x86*|i686)
 			IsIntel="yes"
-			if [ -f /sys/devices/virtual/thermal/thermal_zone1/temp ]; then
-				ln -fs /sys/devices/virtual/thermal/thermal_zone1/temp ${TempSource}
-			fi
+			cat /sys/devices/virtual/thermal/thermal_zone?/type 2>/dev/null | grep -q x86_pkg_temp
+			case $? in
+				0)
+					# use x86_pkg_temp sensor if available
+					ThermalZone="$(GetThermalZone x86_pkg_temp)"
+					ln -fs ${ThermalZone}/temp ${TempSource}
+					;;
+				*)
+					# if there is at least one 'CPU' sensor use this instead
+					CPUSensor="$(cat /sys/devices/virtual/thermal/thermal_zone?/type 2>/dev/null | grep -i cpu | head -n1)"
+					if [ "X${CPUSensor}" != "X" ]; then
+						ThermalZone="$(GetThermalZone "${CPUSensor}")"
+						ln -fs ${ThermalZone}/temp ${TempSource}
+					fi
+					;;
+			esac
 			if [ ! -f /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq ]; then
 				CpuFreqToQuery=scaling_cur_freq
 			fi
@@ -206,6 +219,19 @@ MonitorBoard() {
 		sleep ${SleepInterval}
 	done
 } # MonitorBoard
+
+GetThermalZone() {
+	# get thermal zone for specific type string ($1)
+	for zone in /sys/devices/virtual/thermal/thermal_zone* ; do
+		grep -q "${1}" <"${zone}/type"
+		case $? in
+			0)
+				echo ${zone}
+				return
+				;;
+		esac
+	done
+} # GetThermalZone
 
 TempTest() {
 	# First check whether SoC temperature is available

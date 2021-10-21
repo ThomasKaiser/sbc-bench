@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.7.8
+Version=0.7.9
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -66,7 +66,7 @@ Main() {
 	BasicSetup performance >/dev/null 2>&1
 	InstallPrerequisits
 	InitialMonitoring
-	CheckClockspeeds
+	CheckClockspeedsAndSensors
 	CheckTimeInState before
 	RunTinyMemBench
 	RunOpenSSLBenchmark
@@ -76,7 +76,7 @@ Main() {
 	fi
 	CheckTimeInState after
 	"${SevenZip}" b >/dev/null 2>&1 & # run 7-zip bench in the background
-	CheckClockspeeds # test again loaded system after heating the SoC to the max
+	CheckClockspeedsAndSensors # test again loaded system after heating the SoC to the max
 	DisplayResults
 	BasicSetup ${OriginalCPUFreqGovernor} >/dev/null 2>&1
 } # Main
@@ -282,7 +282,7 @@ TempTest() {
 	fi
 
 	# Start with testing
-	CheckClockspeeds
+	CheckClockspeedsAndSensors
 	SocTemp=$(ReadSoCTemp | cut -f1 -d'.')
 	echo " Done"
 	case $c in
@@ -543,10 +543,10 @@ InitialMonitoring() {
 	echo -e "\n$(which gcc) $(gcc --version | sed 's/gcc\ //' | head -n1)" >>${ResultLog}
 
 	# Some basic system info needed to interpret system health later
-	echo -e "\nUptime:$(LANG=C uptime)\n\n$(LANG=C iostat)\n\n$(LANG=C free -h)\n\n$(LANG=C swapon -s)" >>${ResultLog}
+	echo -e "\nUptime:$(LANG=C uptime)\n\n$(LANG=C iostat | grep -v "^loop")\n\n$(LANG=C free -h)\n\n$(LANG=C swapon -s)" >>${ResultLog}
 } # InitialMonitoring
 
-CheckClockspeeds() {
+CheckClockspeedsAndSensors() {
 	echo -e " Done.\nChecking cpufreq OPP...\c"
 	echo -e "\n##########################################################################" >>${ResultLog}
 	if [ -f ${MonitorLog} ]; then
@@ -574,7 +574,31 @@ CheckClockspeeds() {
 			CheckCPUCluster 2 >>${ResultLog}
 		fi
 	fi
-} # CheckClockspeeds
+
+	# if lm-sensors is present and reports anything add this to results.log
+	LMSensorsOutput="$(sensors -A 2>/dev/null)"
+	if [ "X${LMSensorsOutput}" != "X" ]; then
+		echo -e "\n##########################################################################\n" >>${ResultLog}
+		echo -e "Hardware sensors:\n\n${LMSensorsOutput}" >>${ResultLog}
+	
+		# if temperature sensors can be read from disks, report them
+		SmartCtl="$(which smartctl 2>/dev/null)"
+		Disks="$(ls /dev/sd? 2>/dev/null ; ls /dev/nvme?n1 2>/dev/null)"
+		if [ "X${SmartCtl}" != "X" -a "X${Disks}" != "X" ]; then
+			echo "" >>${ResultLog}
+			for Disk in ${Disks} ; do
+				case ${Disk} in
+					/dev/sd*)
+						echo -e "${Disk}:\t$(smartctl -a ${Disk} | awk -F" " '/Temperature/ {print $10" "$2}' | head -n1 | sed 's/_/ /g')"
+						;;
+					/dev/nvme*)
+						echo -e "${Disk}:\t$(smartctl -a ${Disk} | awk -F" " '/Temperature:/ {print $2" "$3}' | head -n1)" 
+						;;
+				esac
+			done | sed -e 's/ Airflow//' -e 's/ Temperature//' -e 's/ Celsius$/°C/' -e 's/ Cel$/°C/' >>${ResultLog}
+		fi
+	fi
+} # CheckClockspeedsAndSensors
 
 CheckTimeInState() {
 	# Check cpufreq statistics prior and after benchmark to detect throttling (won't work

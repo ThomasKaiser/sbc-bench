@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.8.0
+Version=0.8.1
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -636,9 +636,10 @@ CheckCPUCluster() {
 			RealSpeed=$(taskset -c $1 "${InstallLocation}"/mhz/mhz 3 100000 | awk -F" cpu_MHz=" '{print $2}' | awk -F" " '{print $1}' | tr '\n' '/' | sed 's|/$||')
 			SysfsSpeed=$(( $i / 1000 ))
 			if [ ${USE_VCGENCMD} = true ] ; then
-				# On RPi we query ThreadX about clockspeeds too
+				# On RPi we query ThreadX about clockspeeds and Vcore voltage too
 				ThreadXFreq=$(/usr/bin/vcgencmd measure_clock arm | awk -F"=" '{printf ("%0.0f",$2/1000000); }' )
-				echo -e "Cpufreq OPP: $(printf "%4s" ${SysfsSpeed})    ThreadX: $(printf "%4s" ${ThreadXFreq})    Measured: ${RealSpeed}"
+				CoreVoltage=$(/usr/bin/vcgencmd measure_volts | cut -f2 -d= | sed 's/000//')
+				echo -e "Cpufreq OPP: $(printf "%4s" ${SysfsSpeed})  ThreadX: $(printf "%4s" ${ThreadXFreq})  Measured: ${RealSpeed} @ ${CoreVoltage}"
 			else
 				echo -e "Cpufreq OPP: $(printf "%4s" ${SysfsSpeed})    Measured: ${RealSpeed}"
 			fi

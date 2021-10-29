@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.7.9
+Version=0.8.0
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -62,7 +62,7 @@ Main() {
 
 	CheckRelease
 	CheckLoad
-	read OriginalCPUFreqGovernor </sys/devices/system/cpu/cpufreq/policy0/scaling_governor
+	read OriginalCPUFreqGovernor </sys/devices/system/cpu/cpufreq/policy0/scaling_governor 2>/dev/null
 	BasicSetup performance >/dev/null 2>&1
 	InstallPrerequisits
 	InitialMonitoring
@@ -153,7 +153,7 @@ MonitorBoard() {
 	if [ ${USE_VCGENCMD} = true ] ; then
 		DisplayHeader="Time        fake/real   load %cpu %sys %usr %nice %io %irq   Temp   VCore"
 		CPUs=raspberrypi
-	elif [ "${IsIntel}" = "yes" ] ; then
+	elif [ "${IsIntel}" = "yes" -a -f /sys/devices/system/cpu/cpufreq/policy0/${CpuFreqToQuery} ] ; then
 		DisplayHeader="Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp"
 		CPUs=normal
 	elif [ -f /sys/devices/system/cpu/cpufreq/policy4/${CpuFreqToQuery} ]; then
@@ -854,7 +854,7 @@ CheckForThrottling() {
 	fi
 
 	# Check for throttling/undervoltage on Raspberry Pi
-	grep -q '/1200MHz' ${MonitorLog} && Warning="ATTENTION: Silent throttling has occured. Check the log for details."
+	grep -q '1400/1200MHz' ${MonitorLog} && Warning="ATTENTION: Silent throttling has occured. Check the log for details."
 	if [ ${USE_VCGENCMD} = true ] ; then
 		Health="$(perl -e "printf \"%19b\n\", $(/usr/bin/vcgencmd get_throttled | cut -f2 -d=)" | tr -d '[:blank:]')"
 		# https://forum.armbian.com/topic/7763-benchmarking-cpus/?do=findComment&comment=59042

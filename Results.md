@@ -80,6 +80,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | Raspberry Pi 4 B | 1500 MHz | 5.4 | Raspbian Buster **arm64** | 5080 | 38070 | 30170 | 2500 | 3360 | - | [http://ix.io/2paq](http://ix.io/2paq) |
 | Raspberry Pi 4 B | 1850 MHz | 4.19 | Raspbian Buster | 6700 | 77230 | 80050 | 2610 | 3610 | - | [http://ix.io/26Pr](http://ix.io/26Pr) |
 | Raspberry Pi 400 | 1800 MHz | 5.4 | Raspberry Pi OS Buster | 6550 | 75050 | 77890 | 2680 | 3110 | - | [http://ix.io/2Cyi](http://ix.io/2Cyi) |
+| [Radxa Zero](https://wiki.radxa.com/Zero) | 1800 MHz | 5.10 | DietPi v7.7  | 4331 | 104896 | 838243 | 1590 | 5452 | 7.21 | [http://ix.io/3Dgy](http://ix.io/3Dgy) |
 | [Rock64](https://www.armbian.com/rock64/) | 1300 MHz | 4.4 | Bionic arm64 | 3410 | 89060 | 601200 | 1310 | 5680 | 4.46 | [http://ix.io/1iGW](http://ix.io/1iGW) |
 | [Rock64](https://www.armbian.com/rock64/) | 1300 MHz | 4.18 | Bionic arm64 | 3530 | 116100 | 605250 | 1340 | 5770 | 4.65 | [http://ix.io/1iH4](http://ix.io/1iH4) |
 | [Rock64](https://www.armbian.com/rock64/) | 1300 MHz | 4.4 | Stretch arm64 | 3430 | 88600 | 601000 | 1350 | 5680 | 3.64 | [http://ix.io/1iHo](http://ix.io/1iHo) |

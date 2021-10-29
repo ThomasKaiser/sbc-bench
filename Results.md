@@ -63,6 +63,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [PineH64](https://www.armbian.com/pine-h64/) | 1800 MHz | 4.18 | Stretch arm64 | 4650 | 123400 | 836900 | 1380 | 5530 | 5.62 | [http://ix.io/1jEr](http://ix.io/1jEr) |
 | [PineH64](https://www.armbian.com/pine-h64/) | 1800 MHz | 5.4 | Buster arm64 | 4710 | 116900 | 839870 | 1420 | 5560 | 7.10 | [http://ix.io/26Ph](http://ix.io/26Ph) |
 | [Quartz64](https://wiki.pine64.org/wiki/Quartz64/) | 1800 MHz | 5.13 | Buster arm64 | 4840 | 165250 | 845490 | 2980 | 7650| - | [http://ix.io/3rUb](http://ix.io/3rUb) |
+| [Radxa Zero](https://wiki.radxa.com/Zero) | 1800 MHz | 5.10 | Focal arm64 | 4610 | 151370 | 840080 | 1600 | 5370 | - | [http://ix.io/3wZn](http://ix.io/3wZn) |
 | [Renegade](https://www.armbian.com/renegade/) | 1400 MHz | 4.4 | Stretch arm64 | 3710 | 95030 | 644200 | 1565 | 7435 | 3.92 | [http://ix.io/1iFx](http://ix.io/1iFx) |
 | Raspberry Pi 2 B+ | 900 MHz | 4.14 | **Debian** Stretch | 2070 | 14350 | 17450 | 615 | 1175 | - | [http://ix.io/1iFf](http://ix.io/1iFf) |
 | Raspberry Pi 2 B+ | 900 MHz | 4.14 | Raspbian Stretch | 2130 | 14000 | 16300 | 1010 | 1170 | - | [http://ix.io/1ivw](http://ix.io/1ivw) |

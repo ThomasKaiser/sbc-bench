@@ -72,6 +72,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | Raspberry Pi 3 B+ | OC/normal | 4.14 | Raspbian Stretch | 3130 | 30500 | 36620 | 1230 | 1780 | - | [http://ix.io/1iGz](http://ix.io/1iGz) |
 | Raspberry Pi 3 B+ | with fan | 4.14 | Raspbian Stretch | 3670 | 35800 | 42600 | 1120 | 1600 | - | [http://ix.io/1isD](http://ix.io/1isD) |
 | Raspberry Pi Zero | 1000 MHz | 4.14 | Raspbian Stretch | 450 | 13400 | 16820 | 400 | 1590 | - | [http://ix.io/1niO](http://ix.io/1niO) |
+| Raspberry Pi Zero 2 | 1200 MHz | 5.10 | Raspbian Buster | 3640 | 29120 | 36300 | 1320 | 1790 | - | [http://ix.io/3DeL](http://ix.io/3DeL) |
 | Raspberry Pi 4 B | 1500 MHz | 4.19 | Raspbian Buster | 5500 | 62350 | 64860 | 2460 | 3170 | - | [http://ix.io/1MFf](http://ix.io/1MFf) |
 | Raspberry Pi 4 B | 1500 MHz | 5.4 | Raspbian Buster **arm64** | 5080 | 38070 | 30170 | 2500 | 3360 | - | [http://ix.io/2paq](http://ix.io/2paq) |
 | Raspberry Pi 4 B | 1850 MHz | 4.19 | Raspbian Buster | 6700 | 77230 | 80050 | 2610 | 3610 | - | [http://ix.io/26Pr](http://ix.io/26Pr) |

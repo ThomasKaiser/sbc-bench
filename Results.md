@@ -49,6 +49,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [NanoPi NEO4](https://www.armbian.com/nanopi-neo4/) | 2000/1500 MHz | 4.4| Stretch arm64 | 6520 | 268720 | 1123190 | 2280 | 4770 | 8.83 | [http://ix.io/1oim](http://ix.io/1oim) |
 | [NanoPi NEO4](https://www.armbian.com/nanopi-neo4/) | 2000/1500 MHz | 4.19 | Stretch arm64 | 6750 | 278200 | 1139850 | 2370 | 6110 | 8.84 | [http://ix.io/1p3T](http://ix.io/1p3T) |
 | Nintendo Switch | 1780 MHz | 4.9 | **Fedora 30 arm-64** | 6170 | 346340 | 642670 | 2500 | 3570 | - | [http://ix.io/1Rnj](http://ix.io/1Rnj) |
+| Nintendo Switch | 2090 MHz | 4.9 | Bionic arm64 | 6720 | 389030 | 746680 | 2370 | 3670 | 9.25 | [http://ix.io/3Di2](http://ix.io/3Di2) |
 | [ODROID-C2](https://www.armbian.com/odroid-c2/) | 1750 MHz | 3.14 | **Xenial** arm64 | 4070 | 50500 | 48500 | 1750 | 3100 | - | [http://ix.io/1ixI](http://ix.io/1ixI) |
 | [ODROID-C2](https://www.armbian.com/odroid-c2/) | 1530 MHz | 4.17 | Stretch arm64 | 3870 | 43800 | 51280 | 1420 | 2600 | 4.63 | [http://ix.io/1iSh](http://ix.io/1iSh) |
 | [ODROID-C4](https://www.armbian.com/odroid-c4/) | 2010 MHz | 4.9 | Focal arm64 | 5450 | 195130 | 941590 | 3310 | 6270 | 7.71 | [http://ix.io/2kaS](http://ix.io/2kaS) |
@@ -62,7 +63,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Orange Pi Prime](https://www.armbian.com/orange-pi-prime/) | 1360 MHz | 5.4 | Buster | 3590 | 89210 | 637980 | 1180 | 3540 | - | [http://ix.io/2kTH](http://ix.io/2kTH) |
 | [PineH64](https://www.armbian.com/pine-h64/) | 1800 MHz | 4.18 | Stretch arm64 | 4650 | 123400 | 836900 | 1380 | 5530 | 5.62 | [http://ix.io/1jEr](http://ix.io/1jEr) |
 | [PineH64](https://www.armbian.com/pine-h64/) | 1800 MHz | 5.4 | Buster arm64 | 4710 | 116900 | 839870 | 1420 | 5560 | 7.10 | [http://ix.io/26Ph](http://ix.io/26Ph) |
-| [Quartz64](https://wiki.pine64.org/wiki/Quartz64) | 1800 MHz | 5.13 | Buster arm64 | 4840 | 165250 | 845490 | 2980 | 7650| - | [http://ix.io/3rUb](http://ix.io/3rUb) |
+| [Quartz64](https://wiki.pine64.org/wiki/Quartz64/) | 1800 MHz | 5.13 | Buster arm64 | 4840 | 165250 | 845490 | 2980 | 7650| - | [http://ix.io/3rUb](http://ix.io/3rUb) |
 | [Radxa Zero](https://wiki.radxa.com/Zero) | 1800 MHz | 5.10 | Focal arm64 | 4610 | 151370 | 840080 | 1600 | 5370 | - | [http://ix.io/3wZn](http://ix.io/3wZn) |
 | [Renegade](https://www.armbian.com/renegade/) | 1400 MHz | 4.4 | Stretch arm64 | 3710 | 95030 | 644200 | 1565 | 7435 | 3.92 | [http://ix.io/1iFx](http://ix.io/1iFx) |
 | Raspberry Pi 2 B+ | 900 MHz | 4.14 | **Debian** Stretch | 2070 | 14350 | 17450 | 615 | 1175 | - | [http://ix.io/1iFf](http://ix.io/1iFf) |

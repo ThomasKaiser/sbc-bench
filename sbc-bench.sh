@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.8.1
+Version=0.8.2
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -32,7 +32,7 @@ Main() {
 	# check whether we're running in monitoring or benchmark mode
 	# Backwards compatibility: if 1st argument is 'neon' run cpuminer test
 	[ "X$1" = "Xneon" ] && ExecuteCpuminer=yes
-	while getopts 'chmtT' c ; do
+	while getopts 'chmtTp' c ; do
 		case ${c} in
 			m)
 				# monitoring mode
@@ -57,6 +57,25 @@ Main() {
 				TempTest
 				exit 0
 				;;
+			p)
+				# plot performance chart instead of doing standard 7-zip benchmarks, thereby
+				# walking through different cpufreq OPP. An additional parameter in taskset's
+				# --cpu-list format can be provided, eg. '-p 0' to graph only cpu0 or '-p 4'
+				# to graph only cpu4 (which might be an A72 on big.LITTLE systems). Mixing
+				# CPUs from different clusters (e.g. '-p 0,4' on a RK3399) will most probably
+				# result in garbage results since big and little cores have other cpufreq OPP.
+				# 3 special modes are (not yet) implemented: cores, clusters and all.
+				PlotCpufreqOPPs=yes
+				CPUList=${2}
+				# [ "X${CPUList}" = "X" ] || taskset -c ${CPUList} echo "foo" >/dev/null 2>&1
+				[ "X${CPUList}" = "X" -o "X${CPUList}" = "Xall" -o "X${CPUList}" = "Xcores" -o "X${CPUList}" = "Xclusters" ] \
+					|| taskset -c ${CPUList} echo "foo" >/dev/null 2>&1
+				if [ $? -ne 0 ]; then
+					echo -e "Invalid option \"-p ${CPUList}\". Please check taskset manual page for --cpu-list format\n" >&2
+					DisplayUsage
+					exit 1
+				fi
+				;;
 		esac
 	done
 
@@ -68,70 +87,324 @@ Main() {
 	InitialMonitoring
 	CheckClockspeedsAndSensors
 	CheckTimeInState before
-	RunTinyMemBench
-	RunOpenSSLBenchmark
-	Run7ZipBenchmark
+	if [ "${PlotCpufreqOPPs}" = "yes" ]; then
+		PlotPerformanceGraph
+	else
+		RunTinyMemBench
+		RunOpenSSLBenchmark
+		Run7ZipBenchmark
+	fi
 	if [ "${ExecuteCpuminer}" = "yes" -a -x "${InstallLocation}"/cpuminer-multi/cpuminer ]; then
 		RunCpuminerBenchmark
 	fi
 	CheckTimeInState after
 	"${SevenZip}" b >/dev/null 2>&1 & # run 7-zip bench in the background
 	CheckClockspeedsAndSensors # test again loaded system after heating the SoC to the max
-	DisplayResults
+	SummarizeResults
+	UploadResults
 	BasicSetup ${OriginalCPUFreqGovernor} >/dev/null 2>&1
 } # Main
 
-MonitorBoard() {
-	# Background monitoring
+PlotPerformanceGraph() {
+	# function that walks through all cpufreq OPP and plots a performance graph using
+	# 7-ZIP MIPS. Needs gnuplot and htmldoc (Debian/Ubuntu: gnuplot-nox htmldoc packages)
 
+	# check if cpulist parameter has been provided as well:
+	if [ "X${CPUList}" = "X" ]; then
+		# -p has been used without further restrictions, we run performance test on all cores
+		CheckPerformance "all CPU cores" ${ClusterConfig}
+		PlotGraph "all CPU cores" ${ClusterConfig}
+		RenderPDF
+	else
+		# -p with additional options has been called
+		case ${CPUList} in
+			cores)
+				# check each core of every cluster, on RK3399 for example 0 and 4
+				CheckPerformance "CPU 0" "0" "taskset -c 0 "
+				PlotGraph "CPU 0" "0"
+				CheckPerformance "CPU 4" "4" "taskset -c 4 "
+				PlotGraph "CPU 4" "4"
+				RenderPDF
+				;;
+			clusters)
+				# check all cores of every cluster, on RK3399 for example 0-3 and 4-5
+				CheckPerformance "CPU 0-3" "0" "taskset -c 0-3 "
+				PlotGraph "CPU 0-3" "0"
+				CheckPerformance "CPU 4-5" "4" "taskset -c 4-5 "
+				PlotGraph "CPU 4-5" "4"
+				RenderPDF
+				;;
+			all)
+				# check each core of every cluster individually, check cores of each cluster
+				# and check all cores
+				CheckPerformance "CPU 0" "0" "taskset -c 0 "
+				PlotGraph "CPU 0" "0"
+				CheckPerformance "CPU 4" "4" "taskset -c 4 "
+				PlotGraph "CPU 4" "4"
+				CheckPerformance "CPU 0-3" "0" "taskset -c 0-3 "
+				PlotGraph "CPU 0-3" "0"
+				CheckPerformance "CPU 4-5" "4" "taskset -c 4-5 "
+				PlotGraph "CPU 4-5" "4"
+				CheckPerformance "all CPU cores" ${ClusterConfig}
+				PlotGraph "all CPU cores" ${ClusterConfig}
+				RenderPDF
+				;;
+			*)
+				# individual taskset options have been provided, e.g. 0-2
+				CheckPerformance "CPU core(s) ${CPUList}" "$(cut -c-1 <<<"${CPUList}")" "taskset -c ${CPUList} "
+				PlotGraph "core(s) ${CPUList}" "$(cut -c-1 <<<"${CPUList}")"
+				RenderPDF
+				;;
+		esac
+	fi
+	exit 0
+} # PlotPerformanceGraph
+
+CheckPerformance() {
+	# function that gets provided with two or three arguments:
+	# * $1 test focus to be displayed
+	# * $2 policy cores: the cores that need to be adjusted when measuring, e.g. "0" for
+	#   cpu0, "4" for cpu4 or for example on an RK3399 "04" to handle both cpu clusters
+	#   at the same time
+	# * $3 taskset options as provided via the -p switch when calling sbc-bench
+	
+	Clusters="$(ls -d /sys/devices/system/cpu/cpufreq/policy[${2}])"
+	if [ "X${Clusters}" = "X" ]; then
+		# no cpufreq support -> no way to test through different clockspeeds. Stop
+		echo -e " Done.\nNo cpufreq support available. Skipping performance graph."
+		exit 1
+	fi
+
+	echo -e "\x08\x08 Done.\nChecking ${1}: \c"
+	echo -e "System health while testing through ${1}:\n" >>${MonitorLog}
+	/bin/bash "${PathToMe}" -m 90 >>${MonitorLog} &
+	MonitoringPID=$!
+
+	CpufreqDat="${TempDir}/cpufreq${2}.dat"
+	CpufreqLog="${TempDir}/cpufreq${2}.log"
+	if [ ${USE_VCGENCMD} = true ] ; then
+		echo -e "Testing through ${1}:\n\nSysfs/ThreadX/Tested:  MIPS / Temp" >>"${CpufreqLog}"
+	else
+		echo -e "Testing through ${1}:\n\nSysfs/Tested:  MIPS / Temp" >>"${CpufreqLog}"
+	fi
+
+	# adjust min and max speeds (set max speeds on unaffected clusters to min speed)
+	for Cluster in $(ls -d /sys/devices/system/cpu/cpufreq/policy?); do
+		read MinSpeed <${Cluster}/cpuinfo_min_freq
+		read MaxSpeed <${Cluster}/cpuinfo_max_freq
+		echo ${MinSpeed} >${Cluster}/scaling_max_freq
+	done
+	for Cluster in ${Clusters}; do
+		read MinSpeed <${Cluster}/cpuinfo_min_freq
+		read MaxSpeed <${Cluster}/cpuinfo_max_freq
+		echo ${MinSpeed} >${Cluster}/scaling_min_freq
+	done
+	
+	# thermal monitoring
+	GetTempSensor
+	
+	# now walk through higher cluster since this is supposed to provide more cpufreq OPP.
+	# On ARM usually little cores are the cores with lower numbers. 
+	BiggestCluster="$(sort -n -r <<<${Clusters} | head -n1)"
+	for i in $(tr " " "\n" <${BiggestCluster}/scaling_available_frequencies | sort -n | sed '/^[[:space:]]*$/d') ; do
+		# try to set this speed on all clusters
+		for Cluster in ${Clusters}; do
+			echo ${i} >${Cluster}/scaling_max_freq
+		done
+		sleep 0.1
+		
+		# if TasksetOptions is not provided measure clockspeed on highest core:
+		if [ "X${3}" = "X" ]; then
+			MeasureCore=$(awk '{print substr($0,length,1)}' <<<"${BiggestCluster}")
+			MeasuredSpeed=$(( $(taskset -c ${MeasureCore} "${InstallLocation}"/mhz/mhz 3 100000 | awk -F" cpu_MHz=" '{s+=$2} END {printf "%.0f", s}') / 3 ))
+		else
+			MeasuredSpeed=$(( $(${3} "${InstallLocation}"/mhz/mhz 3 100000 | awk -F" cpu_MHz=" '{s+=$2} END {printf "%.0f", s}') / 3 ))
+		fi
+
+		RoundedSpeed=$(( $(awk '{printf ("%0.0f",$1/10+0.5); }' <<<"${MeasuredSpeed}") * 10 ))
+		SysfsSpeed=$(( $i / 1000 ))
+		if [ ${USE_VCGENCMD} = true ] ; then
+			# On RPi we query ThreadX about clockspeeds too
+			ThreadXFreq=$(/usr/bin/vcgencmd measure_clock arm | awk -F"=" '{printf ("%0.0f",$2/1000000); }' )
+			CoreVoltage=$(/usr/bin/vcgencmd measure_volts | cut -f2 -d= | sed 's/000//')
+			echo -e "$(printf "%4s" ${SysfsSpeed}) /  $(printf "%4s" ${ThreadXFreq}) /$(printf "%6s" ${RoundedSpeed}):\c" >>"${CpufreqLog}"
+			echo -e "${ThreadXFreq}\t\c" >>"${CpufreqDat}"
+			echo -e "${ThreadXFreq}MHz, \c"
+		else
+			echo -e "$(printf "%4s" ${SysfsSpeed}) / $(printf "%4s" ${RoundedSpeed}) :\c" >>"${CpufreqLog}"
+			echo -e "${SysfsSpeed}\t\c" >>"${CpufreqDat}"
+			echo -e "${SysfsSpeed}MHz, \c"
+		fi
+
+		# run 7-zip benchmark
+		${3} "${SevenZip}" b -mmt 1 >${TempLog}
+		SocTemp=$(ReadSoCTemp)
+		MIPS="$(awk -F" " '/^Tot:/ {print $4}' <${TempLog})"
+		echo "$(printf "%6s" ${MIPS}) $(printf "%5s" ${SocTemp})°C" >>"${CpufreqLog}"
+		echo -e "${MIPS}\t${SocTemp}" >>"${CpufreqDat}"
+	done
+	kill ${MonitoringPID}
+} # CheckPerformance
+
+PlotGraph() {
+	# function that gets two arguments provided two graph the performance results:
+	# * $1 test focus to be displayed
+	# * $2 policy cores: the cores that need to be adjusted when measuring, e.g. "0" for
+	#   cpu0, "4" for cpu4 or for example on an RK3399 "04" to handle both cpu clusters
+	#   at the same time
+	
+	# adjust y axis range by highest value
+	MaxMIPS=$(awk '{print $2}' <"${CpufreqDat}" | sort -n | tail -n1)
+	YRange=$(bc <<<"${MaxMIPS} * 1.05" | cut -d '.' -f1)
+	MaxTemp=$(awk '{print $3}' <"${CpufreqDat}" | sort -n | tail -n1)
+	Y2Range=$(bc <<<"${MaxTemp} * 1.2" | cut -d '.' -f1)
+
+	# add individual results and ASCII graph to results log
+	echo -e "\n##########################################################################\n\n$(cat ${TempDir}/cpufreq${2}.log)" >>${ResultLog}
+	gnuplot-nox -p -e \
+		"set terminal dumb size 75, 30; set autoscale; set yrange [0:${YRange}]; plot '${CpufreqDat}' using 1:2  with lines notitle" \
+		>>${ResultLog}
+
+	# plot PNG with gnuplot
+	PNGWidth=900
+	PNGHeight=450
+	
+	cat <<- EOF | gnuplot-nox
+	set title '${DeviceName}: ${1}'
+	set ylabel '7-Zip MIPS'
+	set ytics nomirror
+	set y2tics 0,10
+	set y2label 'degree celsius'
+	set xlabel 'CPU clockspeed in MHz'
+	set datafile sep '\t'
+	set key top left autotitle columnheader
+	set grid
+	set autoscale
+	set yrange [0:${YRange}]
+	set y2range [0:${Y2Range}]
+	set terminal png size ${PNGWidth},${PNGHeight}
+	set output '${TempDir}/auswertung${2}.png'
+	plot '${CpufreqDat}' using 1:2 lt rgb 'blue' w l title '7-Zip MIPS (${1})' axis x1y1, '' using 1:3 lt rgb 'green' w l title 'SoC temperature' axis x1y2
+	EOF
+} # PlotGraph
+
+RenderPDF() {
+	# fire up monitoring tasks to get device's health after executing the benchmark
+	# CheckTimeInState after
+	"${SevenZip}" b >/dev/null 2>&1 & # run 7-zip bench in the background
+	CheckClockspeedsAndSensors # test again loaded system after heating the SoC to the max
+	SummarizeResults >/dev/null
+
+	# use HTMLdoc to combine graph and text
+	cat <<- EOF >${TempDir}/report.html
+	<html>
+	<head>
+		<title>sbc-bench performance graph</title>
+	</head>
+	<body>
+		<h3>sbc-bench v${Version} - ${DeviceName} - $(LANG=C date)</h3>
+		sbc-bench has been called with <code>-p ${CPUList}</code>
+	EOF
+	
+	ls -r --time=atime "${TempDir}"/*.png | while read Graph ; do
+		echo -e "<img src=\"${Graph}\">" >>${TempDir}/report.html
+	done
+
+	cat <<- EOF >>${TempDir}/report.html
+		 
+		<pre>$(cat ${ResultLog})</pre>
+	</body>
+	</html>
+	EOF
+
+	htmldoc --charset utf-8 --headfootfont helvetica-oblique --headfootsize 7 --header ..c --tocheader . --firstpage c1 --quiet --browserwidth 900 --pagemode outline --fontsize 8 --format pdf14 --bodyfont helvetica --bottom 1cm --pagelayout single --left 2.5cm --right 2cm --top 1.7cm --linkstyle plain --linkcolor blue --textcolor black --bodycolor white --links --size 210x297mm --portrait --compression=9 --jpeg=95 --webpage -f "${TempDir}/report.pdf" "${TempDir}/report.html"
+	
+	if [ -s "${TempDir}/report.pdf" ]; then
+		FinalPDF="$(mktemp /tmp/sbc-bench.XXXXXX)"
+		cat "${TempDir}/report.pdf" >"${FinalPDF}"
+		mv "${FinalPDF}" "${FinalPDF}.pdf"
+		chmod 644 "${FinalPDF}.pdf"
+		echo -e "\x08\x08 Done.\n\nPlease check ${FinalPDF}.pdf"
+	else
+		echo -e "\x08\x08 Done.\n\nSomething went wrong"
+	fi
+} # RenderPDF
+
+GetTempSensor() {
 	# In Armbian we can rely on /etc/armbianmonitor/datasources/soctemp
 	if [ -f /etc/armbianmonitor/datasources/soctemp ]; then
 		TempSource=/etc/armbianmonitor/datasources/soctemp
 	else
 		TempSource="$(mktemp /tmp/soctemp.XXXXXX)"
 		trap "rm -f \"${TempSource}\" ; exit 0" 0 1 2 3 15
-		if [[ -d "/sys/devices/platform/a20-tp-hwmon" ]]; then
-			# Allwinner A20 with old 3.4 kernel
-			ln -fs /sys/devices/platform/a20-tp-hwmon/temp1_input ${TempSource}
-		elif [[ -f /sys/class/hwmon/hwmon0/temp1_input ]]; then
-			# usual convention with modern kernels
-			ln -fs /sys/class/hwmon/hwmon0/temp1_input ${TempSource}
-		else
-			# all other boards/kernels use the same sysfs node except of Actions Semi S500
-			# so on LeMaker Guitar, Roseapple Pi or Allo Sparky it must read "thermal_zone1"
-			if [ -f /sys/devices/virtual/thermal/thermal_zone0/temp ]; then
-				ln -fs /sys/devices/virtual/thermal/thermal_zone0/temp ${TempSource}
-			else
-				echo 0 >${TempSource}
-			fi
-		fi
+
+		# check platform
+		case $(lscpu | awk -F" " '/^Architecture/ {print $2}') in
+			x86*|i686)
+				cat /sys/devices/virtual/thermal/thermal_zone?/type 2>/dev/null | grep -q x86_pkg_temp
+				case $? in
+					0)
+						# use x86_pkg_temp sensor if available
+						ThermalZone="$(GetThermalZone x86_pkg_temp)"
+						ln -fs ${ThermalZone}/temp ${TempSource}
+						;;
+					*)
+						# if there is at least one 'CPU' sensor use this instead
+						CPUSensor="$(cat /sys/devices/virtual/thermal/thermal_zone?/type 2>/dev/null | grep -i cpu | head -n1)"
+						if [ "X${CPUSensor}" != "X" ]; then
+							ThermalZone="$(GetThermalZone "${CPUSensor}")"
+							ln -fs ${ThermalZone}/temp ${TempSource}
+						fi
+						;;
+				esac
+				;;
+			*)
+				if [[ -d "/sys/devices/platform/a20-tp-hwmon" ]]; then
+					# Allwinner A20 with old 3.4 kernel
+					ln -fs /sys/devices/platform/a20-tp-hwmon/temp1_input ${TempSource}
+				elif [[ -f /sys/class/hwmon/hwmon0/temp1_input ]]; then
+					# usual convention with modern kernels
+					ln -fs /sys/class/hwmon/hwmon0/temp1_input ${TempSource}
+				else
+					# all other boards/kernels use the same sysfs node except of Actions Semi S500
+					# so on LeMaker Guitar, Roseapple Pi or Allo Sparky it must read "thermal_zone1"
+					if [ -f /sys/devices/virtual/thermal/thermal_zone0/temp ]; then
+						ln -fs /sys/devices/virtual/thermal/thermal_zone0/temp ${TempSource}
+					else
+						echo 0 >${TempSource}
+					fi
+				fi
+				;;				
+		esac
 	fi
+} # GetTempSensor
+
+GetThermalZone() {
+	# get thermal zone for specific type string ($1)
+	for zone in /sys/devices/virtual/thermal/thermal_zone* ; do
+		grep -q "${1}" <"${zone}/type"
+		case $? in
+			0)
+				echo ${zone}
+				return
+				;;
+		esac
+	done
+} # GetThermalZone
+
+MonitorBoard() {
+	# Background monitoring
 
 	# Try to renice to 19 to not interfere with benchmark behaviour
 	renice 19 $BASHPID >/dev/null 2>&1
 
+	GetTempSensor
 	CpuFreqToQuery=cpuinfo_cur_freq
 
 	# check platform
 	case $(lscpu | awk -F" " '/^Architecture/ {print $2}') in
 		x86*|i686)
 			IsIntel="yes"
-			cat /sys/devices/virtual/thermal/thermal_zone?/type 2>/dev/null | grep -q x86_pkg_temp
-			case $? in
-				0)
-					# use x86_pkg_temp sensor if available
-					ThermalZone="$(GetThermalZone x86_pkg_temp)"
-					ln -fs ${ThermalZone}/temp ${TempSource}
-					;;
-				*)
-					# if there is at least one 'CPU' sensor use this instead
-					CPUSensor="$(cat /sys/devices/virtual/thermal/thermal_zone?/type 2>/dev/null | grep -i cpu | head -n1)"
-					if [ "X${CPUSensor}" != "X" ]; then
-						ThermalZone="$(GetThermalZone "${CPUSensor}")"
-						ln -fs ${ThermalZone}/temp ${TempSource}
-					fi
-					;;
-			esac
 			if [ ! -f /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq ]; then
 				CpuFreqToQuery=scaling_cur_freq
 			fi
@@ -220,38 +493,8 @@ MonitorBoard() {
 	done
 } # MonitorBoard
 
-GetThermalZone() {
-	# get thermal zone for specific type string ($1)
-	for zone in /sys/devices/virtual/thermal/thermal_zone* ; do
-		grep -q "${1}" <"${zone}/type"
-		case $? in
-			0)
-				echo ${zone}
-				return
-				;;
-		esac
-	done
-} # GetThermalZone
-
 TempTest() {
-	# First check whether SoC temperature is available
-	# In Armbian we can rely on /etc/armbianmonitor/datasources/soctemp
-	if [ -f /etc/armbianmonitor/datasources/soctemp ]; then
-		TempSource=/etc/armbianmonitor/datasources/soctemp
-	else
-		TempSource="$(mktemp /tmp/soctemp.XXXXXX)"
-		if [[ -d "/sys/devices/platform/a20-tp-hwmon" ]]; then
-			# Allwinner A20 with old 3.4 kernel
-			ln -fs /sys/devices/platform/a20-tp-hwmon/temp1_input ${TempSource}
-		elif [[ -f /sys/class/hwmon/hwmon0/temp1_input ]]; then
-			# usual convention with modern kernels
-			ln -fs /sys/class/hwmon/hwmon0/temp1_input ${TempSource}
-		else
-			# all other boards/kernels use the same sysfs node except of Actions Semi S500
-			# so on LeMaker Guitar, Roseapple Pi or Allo Sparky it must read "thermal_zone1"
-			ln -fs /sys/devices/virtual/thermal/thermal_zone0/temp ${TempSource}
-		fi
-	fi
+	GetTempSensor
 
 	SocTemp=$(ReadSoCTemp 2>/dev/null | cut -f1 -d'.')
 	[ "X${SocTemp}" = "X" ] && \
@@ -259,7 +502,7 @@ TempTest() {
 	[ ${SocTemp} -lt 20 ] && \
 		echo -e "${LRED}${BOLD}WARNING: sysfs thermal readout is ominously low: ${SocTemp}°C.${NC}\n" >&2
 
-	BasicSetup
+	BasicSetup >/dev/null 2>&1
 	InitialMonitoring
 	echo -e "\n${BOLD}Thermal efficiency test using $(readlink "${TempSource}")${NC}"
 	echo -e "\nInstalling needed tools. This may take some time...\c"
@@ -421,23 +664,25 @@ CheckLoad() {
 } # CheckLoad
 
 BasicSetup() {
-	# On ARM and RISC-V set cpufreq governor based on $1 (defaults to ondemand if not provided)
+	# set cpufreq governor based on $1 (defaults to ondemand if not provided)			
+	for Cluster in $(ls -d /sys/devices/system/cpu/cpufreq/policy?); do
+		echo ${1:-ondemand} >${Cluster}/scaling_governor
+	done
+	ClusterConfig="$(ls -d /sys/devices/system/cpu/cpufreq/policy? | tr -d -c '[:digit:]')"
+	CPUCores=$(grep -c '^processor' /proc/cpuinfo)
+
 	CPUArchitecture="$(LANG=C lscpu | awk -F" " '/^Architecture/ {print $2}')"
 	case ${CPUArchitecture} in
 		arm*|aarch*|riscv*)
 			[ -f /proc/device-tree/model ] && read DeviceName </proc/device-tree/model
 			[ "X${DeviceName}" = "Xsun20iw1p1" ] && DeviceName="Allwinner D1"
-			# Try to switch to performance cpufreq governor on ARM and RISC-V with all CPU cores
-			CPUCores=$(grep -c '^processor' /proc/cpuinfo)
-				for ((i=0;i<CPUCores;i++)); do
-				echo ${1:-ondemand} >/sys/devices/system/cpu/cpufreq/policy${i}/scaling_governor
-			done
 			;;
 		x86*|i686)
 			# Define CPUCores as 3 to prevent big.LITTLE handling and throttling reporting
 			CPUCores=3
 			# Try to get device name from CPU entry
 			DeviceName="$(lscpu | sed 's/ \{1,\}/ /g' | awk -F": " '/^Model name/ {print $2}')"
+			# ClusterConfig="0"
 			;;
 		*)
 			echo "${CPUArchitecture} not supported. Aborting." >&2
@@ -457,6 +702,11 @@ InstallPrerequisits() {
 	which openssl >/dev/null 2>&1 || apt -f -qq -y install openssl >/dev/null 2>&1
 	which curl >/dev/null 2>&1 || apt -f -qq -y install curl >/dev/null 2>&1
 	which dmidecode >/dev/null 2>&1 || ( [ ${CPUCores} -eq 3 ] && apt -f -qq -y install dmidecode >/dev/null 2>&1 )
+	
+	if [ "${PlotCpufreqOPPs}" = "yes" ]; then
+		which htmldoc >/dev/null 2>&1 || apt -f -qq -y --no-install-recommends install htmldoc >/dev/null 2>&1
+		which gnuplot >/dev/null 2>&1 || apt -f -qq -y --no-install-recommends install gnuplot-nox >/dev/null 2>&1
+	fi
 
 	# get/build tinymembench if not already there
 	[ -d "${InstallLocation}" ] || mkdir -p "${InstallLocation}"
@@ -547,7 +797,7 @@ InitialMonitoring() {
 } # InitialMonitoring
 
 CheckClockspeedsAndSensors() {
-	echo -e " Done.\nChecking cpufreq OPP...\c"
+	echo -e "\x08\x08 Done.\nChecking cpufreq OPP...\c"
 	echo -e "\n##########################################################################" >>${ResultLog}
 	if [ -f ${MonitorLog} ]; then
 		# 2nd check after most demanding benchmark has been run.
@@ -607,9 +857,8 @@ CheckTimeInState() {
 	# even cheat wrt querying the 'firmware' via 'vcgencmd get_throttled':
 	# https://www.raspberrypi.org/forums/viewtopic.php?f=63&t=217056#p1334921
 
-	find /sys -type f -name time_in_state | sort | grep 'cpufreq' | while read ; do
-		StatFile="${REPLY}"
-		Number=$(echo ${StatFile} | tr -c -d '[:digit:]')
+	for StatFile in $(ls /sys/devices/system/cpu/cpufreq/policy?/stats/time_in_state) ; do
+		Number=$(tr -c -d '[:digit:]' <<<${StatFile})
 		read MaxSpeed </sys/devices/system/cpu/cpufreq/policy${Number}/cpuinfo_max_freq
 		sort -n <${StatFile} | while read ; do
 			Cpufreq=$(awk '{print $1}' <<<${REPLY})
@@ -633,15 +882,16 @@ CheckCPUCluster() {
 		for i in $(tr " " "\n" </sys/devices/system/cpu/cpufreq/policy${1}/scaling_available_frequencies | sort -n -r) ; do
 			echo ${i} >/sys/devices/system/cpu/cpufreq/policy${1}/scaling_max_freq
 			sleep 0.1
-			RealSpeed=$(taskset -c $1 "${InstallLocation}"/mhz/mhz 3 100000 | awk -F" cpu_MHz=" '{print $2}' | awk -F" " '{print $1}' | tr '\n' '/' | sed 's|/$||')
+			MeasuredSpeed=$(taskset -c $1 "${InstallLocation}"/mhz/mhz 3 100000 | awk -F" cpu_MHz=" '{print $2}' | awk -F" " '{print $1}' | tr '\n' '/' | sed 's|/$||')
+			RoundedSpeed=$(( $(awk '{printf ("%0.0f",$1/5+0.5); }' <<<"${MeasuredSpeed}") * 5 ))
 			SysfsSpeed=$(( $i / 1000 ))
 			if [ ${USE_VCGENCMD} = true ] ; then
 				# On RPi we query ThreadX about clockspeeds and Vcore voltage too
 				ThreadXFreq=$(/usr/bin/vcgencmd measure_clock arm | awk -F"=" '{printf ("%0.0f",$2/1000000); }' )
 				CoreVoltage=$(/usr/bin/vcgencmd measure_volts | cut -f2 -d= | sed 's/000//')
-				echo -e "Cpufreq OPP: $(printf "%4s" ${SysfsSpeed})  ThreadX: $(printf "%4s" ${ThreadXFreq})  Measured: ${RealSpeed} @ ${CoreVoltage}"
+				echo -e "Cpufreq OPP: $(printf "%4s" ${SysfsSpeed})  ThreadX: $(printf "%4s" ${ThreadXFreq})  Measured: $(printf "%4s" ${RoundedSpeed}) @ ${CoreVoltage}"
 			else
-				echo -e "Cpufreq OPP: $(printf "%4s" ${SysfsSpeed})    Measured: ${RealSpeed}"
+				echo -e "Cpufreq OPP: $(printf "%4s" ${SysfsSpeed})    Measured: $(printf "%4s" ${RoundedSpeed}) (${MeasuredSpeed})"
 			fi
 		done
 		echo ${MaxSpeed} >/sys/devices/system/cpu/cpufreq/policy${1}/scaling_max_freq
@@ -656,13 +906,14 @@ CheckCPUCluster() {
 				CpuToCheck=$(( $1 + 1 ))
 				;;
 		esac
-		RealSpeed=$(taskset -c ${CpuToCheck} "${InstallLocation}"/mhz/mhz 3 1000000 | awk -F" cpu_MHz=" '{print $2}' | awk -F" " '{print $1}' | tr '\n' '/' | sed 's|/$||')
-		echo -e "No cpufreq support available. Measured on cpu${CpuToCheck}: ${RealSpeed}"
+		MeasuredSpeed=$(taskset -c ${CpuToCheck} "${InstallLocation}"/mhz/mhz 3 1000000 | awk -F" cpu_MHz=" '{print $2}' | awk -F" " '{print $1}' | tr '\n' '/' | sed 's|/$||')
+		RoundedSpeed=$(( $(awk '{printf ("%0.0f",$1/5+0.5); }' <<<"${MeasuredSpeed}") * 5 ))
+		echo -e "No cpufreq support available. Measured on cpu${CpuToCheck}: ${RoundedSpeed} Mhz (${MeasuredSpeed})"
 	fi
 } # CheckCPUCluster
 
 RunTinyMemBench() {
-	echo -e " Done.\nExecuting tinymembench. This will take a long time...\c"
+	echo -e "\x08\x08 Done.\nExecuting tinymembench. This will take a long time...\c"
 	echo -e "System health while running tinymembench:\n" >${MonitorLog}
 	/bin/bash "${PathToMe}" -m 120 >>${MonitorLog} &
 	MonitoringPID=$!
@@ -686,7 +937,7 @@ RunTinyMemBench() {
 } # RunTinyMemBench
 
 Run7ZipBenchmark() {
-	echo -e " Done.\nExecuting 7-zip benchmark. This will take a long time...\c"
+	echo -e "\x08\x08 Done.\nExecuting 7-zip benchmark. This will take a long time...\c"
 	echo -e "\nSystem health while running 7-zip single core benchmark:\n" >>${MonitorLog}
 	echo -e "\c" >${TempLog}
 	/bin/bash "${PathToMe}" -m 60 >>${MonitorLog} &
@@ -730,7 +981,7 @@ Run7ZipBenchmark() {
 } # Run7ZipBenchmark
 
 RunOpenSSLBenchmark() {
-	echo -e " Done.\nExecuting OpenSSL benchmark. This will take 3 minutes...\c"
+	echo -e "\x08\x08 Done.\nExecuting OpenSSL benchmark. This will take 3 minutes...\c"
 	echo -e "\nSystem health while running OpenSSL benchmark:\n" >>${MonitorLog}
 	/bin/bash "${PathToMe}" -m 10 >>${MonitorLog} &
 	MonitoringPID=$!
@@ -752,7 +1003,7 @@ RunOpenSSLBenchmark() {
 } # RunOpenSSLBenchmark
 
 RunCpuminerBenchmark() {
-	echo -e " Done.\nExecuting cpuminer. This will take 5 minutes...\c"
+	echo -e "\x08\x08 Done.\nExecuting cpuminer. This will take 5 minutes...\c"
 	echo -e "\nSystem health while running cpuminer:\n" >>${MonitorLog}
 	/bin/bash "${PathToMe}" -m 20 >>${MonitorLog} &
 	MonitoringPID=$!
@@ -767,10 +1018,11 @@ RunCpuminerBenchmark() {
 	echo -e "\nTotal Scores: ${TotalScores}" >>${ResultLog}
 } # RunCpuminerBenchmark
 
-DisplayResults() {
+SummarizeResults() {
 	echo -e " Done.\n\007\007\007"
 
-	CheckForThrottling
+	# only check for throttling in normal mode and not when plotting performance/mhz graphs
+	[ "X${PlotCpufreqOPPs}" = "Xyes" ] || CheckForThrottling
 
 	# Prepare benchmark results
 	echo -e "\n##########################################################################\n" >>${ResultLog}
@@ -786,8 +1038,11 @@ DisplayResults() {
 	fi
 
 	echo -e "\n##########################################################################\n" >>${ResultLog}
-	echo -e "$(LANG=C iostat)\n\n$(LANG=C free -h)\n\n$(LANG=C swapon -s)\n\n$(LANG=C lscpu)" >>${ResultLog}
+	echo -e "$(LANG=C iostat | grep -v "^loop")\n\n$(LANG=C free -h)\n\n$(LANG=C swapon -s)\n\n$(LANG=C lscpu)" >>${ResultLog}
 	ReportCacheSizes >>${ResultLog}
+} # SummarizeResults
+
+UploadResults() {
 	UploadURL=$(curl -s -F 'f:1=<-' ix.io <${ResultLog} 2>/dev/null || curl -s -F 'f:1=<-' ix.io <${ResultLog})
 
 	# Display benchmark results
@@ -798,8 +1053,10 @@ DisplayResults() {
 		echo -e "\n${BOLD}Cpuminer total scores${NC} (5 minutes execution): $(awk -F"Total Scores: " '/^Total Scores: / {print $2}' ${ResultLog}) kH/s"
 	fi
 	echo -e "\n${BOLD}7-zip total scores${NC} (3 consecutive runs): $(awk -F" " '/^Total:/ {print $2}' ${ResultLog})"
-	echo -e "\n${BOLD}OpenSSL results${NC}${BigLittle}:\n$(grep '^type' ${OpenSSLLog} | head -n1)"
-	grep '^aes-' ${OpenSSLLog}
+	if [ -f ${OpenSSLLog} ]; then
+		echo -e "\n${BOLD}OpenSSL results${NC}${BigLittle}:\n$(grep '^type' ${OpenSSLLog} | head -n1)"
+		grep '^aes-' ${OpenSSLLog}
+	fi
 	case ${UploadURL} in
 		http*)
 			echo -e "\nFull results uploaded to ${UploadURL}. Please check the log for anomalies (e.g. swapping\nor throttling happenend) and otherwise share this URL.\n"
@@ -810,11 +1067,11 @@ DisplayResults() {
 			echo -e "\n"
 			;;
 	esac
-} # DisplayResults
+} # UploadResults
 
 CheckForThrottling() {
 	# Check for throttling on normal ARM SBC
-	find /sys -type f -name time_in_state | sort | grep 'cpufreq' | while read ; do
+	ls /sys/devices/system/cpu/cpufreq/policy?/stats/time_in_state | sort | while read ; do
 		Number=$(echo ${REPLY} | tr -c -d '[:digit:]')
 		diff ${TempDir}/time_in_state_after_${Number} ${TempDir}/time_in_state_before_${Number} >/dev/null 2>&1
 		if [ $? -ne 0 ]; then
@@ -924,11 +1181,12 @@ ReportCacheSizes() {
 } # ReportCacheSizes
 
 DisplayUsage() {
-	echo -e "Usage: ${BOLD}${0##*/} [-c] [-h] [-m] [-t \$degree] [-T \$degree]${NC}\n"
+	echo -e "Usage: ${BOLD}${0##*/} [-c] [-p] [-h] [-m] [-t \$degree] [-T \$degree]${NC}\n"
 	echo -e "############################################################################"
 	echo -e "\n Use ${BOLD}${0##*/}${NC} for the following tasks:\n"
 	echo -e " ${0##*/} invoked without arguments runs a standard benchmark"
 	echo -e " ${0##*/} ${BOLD}-c${NC} also executes cpuminer test (NEON/SSE)"
+	echo -e " ${0##*/} ${BOLD}-p${NC} plots 7-zip MIPS graph for every cpufreq OPP"
 	echo -e " ${0##*/} ${BOLD}-h${NC} displays this help text"
 	echo -e " ${0##*/} ${BOLD}-m${NC} [\$seconds] provides CLI monitoring (5 sec default interval)"
 	echo -e " ${0##*/} ${BOLD}-t${NC} [\$degree] runs thermal test waiting to cool down to this value"

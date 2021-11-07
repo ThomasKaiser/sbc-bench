@@ -39,8 +39,9 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [NanoPC T4](https://www.armbian.com/nanopc-t4/) | 1800/1400 MHz | 4.17 | Stretch arm64 | 6380 | 230280 | 1022600 | 4160 | 9000 | 9.36 | [http://ix.io/1iZq](http://ix.io/1iZq) |
 | [NanoPC T4](https://www.armbian.com/nanopc-t4/) | 1800/1400 MHz | 4.17 | Stretch arm64 | 6230 | 299600 | 1023600 | 4100 | 9060 | 10.30 | [http://ix.io/1iWU](http://ix.io/1iWU) |
 | [NanoPC T4](https://www.armbian.com/nanopc-t4/) | 2000/1500 MHz | 4.4 | Stretch arm64 | 5870 | 308370 | 1124040 | 2810 | 4890 | 8.70 | [http://ix.io/1lkG](http://ix.io/1lkG) |
-| [NanoPi Fire3](https://www.armbian.com/nanopi-fire3/) | 1380 MHz | 4.14 | Bionic arm64 | 7440 | 126050 | 653000 | 1560 | 4600 | 10.96 | [http://ix.io/1jjm](http://ix.io/1jjm) |
 | [NanoPi Fire3](https://www.armbian.com/nanopi-fire3/) | 1380 MHz | 4.14 | Stretch arm64 | 7420 | 95700 | 645400 | 1520 | 4570 | 8.53 | [http://ix.io/1jiU](http://ix.io/1jiU) |
+| [NanoPi Fire3](https://www.armbian.com/nanopi-fire3/) | 1400 MHz | 4.14 | Bionic arm64 | 7440 | 126050 | 653000 | 1560 | 4600 | 10.96 | [http://ix.io/1jjm](http://ix.io/1jjm) |
+| [NanoPi Fire3](https://www.armbian.com/nanopi-fire3/) | 1400 MHz | 4.14 | Focal arm64 | 7350 | 118350 | 652940 | 1550 | 4590 | 11.21 | [http://ix.io/3Ebd](http://ix.io/3Ebd) |
 | [NanoPi K1 Plus](https://www.armbian.com/nanopi-k1-plus/) | 1152 MHz | 4.14 | Stretch arm64 | 3030 | 78740 | 533380 | 1040 | 3070 | 3.32 | [http://ix.io/1m3x](http://ix.io/1m3x) |
 | [NanoPi K2](https://www.armbian.com/nanopi-k2/) | 1480 MHz | 4.14 | Stretch arm64 | 3850 | 43020 | 50370 | 1660 | 3870 | 4.61 | [http://ix.io/1iT1](http://ix.io/1iT1) |
 | [NanoPi M4](https://www.armbian.com/nanopi-m4/) | 2000/1500 MHz | 4.19 | Stretch arm64 | 6400 | 334650 | 1128330 | 4080 | 8270 | 8.86 | [http://ix.io/1lzP](http://ix.io/1lzP) |
@@ -63,9 +64,10 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Orange Pi Prime](https://www.armbian.com/orange-pi-prime/) | 1360 MHz | 5.4 | Buster | 3590 | 89210 | 637980 | 1180 | 3540 | - | [http://ix.io/2kTH](http://ix.io/2kTH) |
 | [PineH64](https://www.armbian.com/pine-h64/) | 1800 MHz | 4.18 | Stretch arm64 | 4650 | 123400 | 836900 | 1380 | 5530 | 5.62 | [http://ix.io/1jEr](http://ix.io/1jEr) |
 | [PineH64](https://www.armbian.com/pine-h64/) | 1800 MHz | 5.4 | Buster arm64 | 4710 | 116900 | 839870 | 1420 | 5560 | 7.10 | [http://ix.io/26Ph](http://ix.io/26Ph) |
-| [Quartz64](https://wiki.pine64.org/wiki/Quartz64/) | 1800 MHz | 5.13 | Buster arm64 | 4840 | 165250 | 845490 | 2980 | 7650| - | [http://ix.io/3rUb](http://ix.io/3rUb) |
+| [Quartz64](https://wiki.pine64.org/wiki/Quartz64) | 1800 MHz | 5.13 | Buster arm64 | 4840 | 165250 | 845490 | 2980 | 7650| - | [http://ix.io/3rUb](http://ix.io/3rUb) |
 | [Radxa Zero](https://wiki.radxa.com/Zero) | 1800 MHz | 5.10 | Focal arm64 | 4610 | 151370 | 840080 | 1600 | 5370 | - | [http://ix.io/3wZn](http://ix.io/3wZn) |
 | [Renegade](https://www.armbian.com/renegade/) | 1400 MHz | 4.4 | Stretch arm64 | 3710 | 95030 | 644200 | 1565 | 7435 | 3.92 | [http://ix.io/1iFx](http://ix.io/1iFx) |
+| Raspberry Pi B | 700 MHz | 5.10 | Raspberry Pi OS Buster | 310 | 5900 | 11310 | 340 | 1400 | - | [http://ix.io/3E7U](http://ix.io/3E7U) |
 | Raspberry Pi 2 B+ | 900 MHz | 4.14 | **Debian** Stretch | 2070 | 14350 | 17450 | 615 | 1175 | - | [http://ix.io/1iFf](http://ix.io/1iFf) |
 | Raspberry Pi 2 B+ | 900 MHz | 4.14 | Raspbian Stretch | 2130 | 14000 | 16300 | 1010 | 1170 | - | [http://ix.io/1ivw](http://ix.io/1ivw) |
 | Raspberry Pi 3 B+ | original | 4.9 | Raspbian Stretch | 3600 | 35500 | 42700 | 1230 | 1640 | - | [http://ix.io/1iI5](http://ix.io/1iI5) |
@@ -75,12 +77,13 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | Raspberry Pi 3 B+ | OC/normal | 4.14 | Raspbian Stretch | 3130 | 30500 | 36620 | 1230 | 1780 | - | [http://ix.io/1iGz](http://ix.io/1iGz) |
 | Raspberry Pi 3 B+ | with fan | 4.14 | Raspbian Stretch | 3670 | 35800 | 42600 | 1120 | 1600 | - | [http://ix.io/1isD](http://ix.io/1isD) |
 | Raspberry Pi Zero | 1000 MHz | 4.14 | Raspbian Stretch | 450 | 13400 | 16820 | 400 | 1590 | - | [http://ix.io/1niO](http://ix.io/1niO) |
-| Raspberry Pi Zero 2 | 600 MHz | 5.10 | Raspbian Buster | 1900 | 14470 | 18150 | 1040 | 1130 | - | [http://ix.io/3Dfo](http://ix.io/3Dfo) |
-| Raspberry Pi Zero 2 | 1000 MHz | 5.10 | Raspbian Buster | 3020 | 24170 | 30230 | 1300 | 1635 | - | [http://ix.io/3DdQ](http://ix.io/3DdQ) |
-| Raspberry Pi Zero 2 | 1200 MHz | 5.10 | Raspbian Buster | 3640 | 29120 | 36300 | 1320 | 1790 | - | [http://ix.io/3DeL](http://ix.io/3DeL) |
+| Raspberry Pi Zero 2 | 600 MHz | 5.10 | Raspberry Pi OS Buster | 1900 | 14470 | 18150 | 1040 | 1130 | - | [http://ix.io/3Dfo](http://ix.io/3Dfo) |
+| Raspberry Pi Zero 2 | 1000 MHz | 5.10 | Raspberry Pi OS Buster | 3030 | 23860 | 29860 | 1300 | 1570 | - | [http://ix.io/3E85](http://ix.io/3E85) |
+| Raspberry Pi Zero 2 | 1200 MHz | 5.10 | Raspberry Pi OS Buster | 3640 | 29120 | 36300 | 1320 | 1790 | - | [http://ix.io/3DeL](http://ix.io/3DeL) |
 | Raspberry Pi 4 B | 1500 MHz | 4.19 | Raspbian Buster | 5500 | 62350 | 64860 | 2460 | 3170 | - | [http://ix.io/1MFf](http://ix.io/1MFf) |
-| Raspberry Pi 4 B | 1500 MHz | 5.4 | Raspbian Buster **arm64** | 5080 | 38070 | 30170 | 2500 | 3360 | - | [http://ix.io/2paq](http://ix.io/2paq) |
-| Raspberry Pi 4 B | 1850 MHz | 4.19 | Raspbian Buster | 6700 | 77230 | 80050 | 2610 | 3610 | - | [http://ix.io/26Pr](http://ix.io/26Pr) |
+| Raspberry Pi 4 B | 1500 MHz | 5.10 | Raspberry Pi OS Buster | 5750 | 62310 | 64930 | 2550 | 3430 | - | [http://ix.io/3EgS](http://ix.io/3EgS) |
+| Raspberry Pi 4 B | 1800 MHz | 5.10 | Raspberry Pi OS Buster | 6640 | 74930 | 77850 | 2550 | 3090 | - | [http://ix.io/3Eh3](http://ix.io/3Eh3) |
+| Raspberry Pi 4 B | 1800 MHz | 5.10 | Raspberry Pi OS Buster **arm64** | 5440 | 45540 | 36240 | 2820 | 3120 | 9.48 | [http://ix.io/3EhG](http://ix.io/3EhG) |
 | Raspberry Pi 400 | 1800 MHz | 5.4 | Raspberry Pi OS Buster | 6550 | 75050 | 77890 | 2680 | 3110 | - | [http://ix.io/2Cyi](http://ix.io/2Cyi) |
 | [Rock64](https://www.armbian.com/rock64/) | 1300 MHz | 4.4 | Bionic arm64 | 3410 | 89060 | 601200 | 1310 | 5680 | 4.46 | [http://ix.io/1iGW](http://ix.io/1iGW) |
 | [Rock64](https://www.armbian.com/rock64/) | 1300 MHz | 4.18 | Bionic arm64 | 3530 | 116100 | 605250 | 1340 | 5770 | 4.65 | [http://ix.io/1iH4](http://ix.io/1iH4) |
@@ -143,7 +146,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 * RPi 3 B+ performance numbers shown as *normal* were made with no or just a heatsink (in contrast to *with fan*)
 * RPi 3 B+ marked as 'UV/normal' means: normal settings and average Micro USB cable resulting in **UV** (undervoltage). Once the demanding 7-zip benchmark started voltage dropped below 4.63V and 'frequency capping' (downclocking to 600 MHz) happened destroying performance. See the [detailed log](http://ix.io/1iH0): 1400 MHz are reported by the kernel while it's 600 MHz in reality. Is this just highly misleading or already cheating?
 * RPi 3 B+ marked as 'OC/normal' means: **OC** (overclocked) settings, stable voltage but no fan used. Since SoC temperature exceeds 60°C the 'firmware' starts to cheat and downclocks to 1200 MHz while the kernel reports running at 1570 MHz. At least memory overclocking is somewhat effective.
-* The 64-bit (arm64) RPi 4 B numbers lack 7-zip results due to me owning just a 1GB board and less free memory available with the [two arm64 variants tested](https://github.com/ThomasKaiser/sbc-bench/commit/89c4a2a901fcecf8ba26a138dcc4e8146bd6189a#comments) and therefore the benchmarks being aborted by the `oom-killer`. But it's obvious that 64-bit performance numbers are lower than 32-bit Raspbian.
+* RPi 4 B numbers improved over time partly due to 'firmware' optimisations resulting in faster memory access (lower latency). Using a 64-bit kernel (`arm_64bit=1`) just takes away 50MB of RAM, the worst choice is to combine 64-bit kernel and 64-bit userland since everything relevant get slower, same tasks require much more memory and the device will start to swap if low on memory or even kill processes due to out of memory. As a rule of thumb you need almost twice as much RAM with a 64-bit userland compared to 32-bit with the same programs/services running.
 * Rock Pi 4B numbers are preliminary. Board has been tested *without* heatsink first so throttling occured as expected. Second time with higher cpufreq OPPs just a fan was added (fan without heatsink == pretty inefficient). Memory performance seems rather low but that's due to testing with vendor's **armhf** Linaro images -- see other RK3399 devices running same software stack, e.g. RockPro64 numbers above with kernel 4.4, armhf and also being limited to 1.8/1.4GHz.
 * Last RockPro64 entry has been made after ayufan solved memory performance problem with Rockchip's 4.4 kernel on his images (see [discussion](https://forum.khadas.com/t/painlessly-usable-linux-distro/3124/24?u=tkaiser))
 * Vim2 is somewhat special: not a real big.LITTLE design but 2 A53 clusters controlled by a firmware BLOB that allows cluster 0 to clock up to 1414 MHz (reported falsely as 1512 MHz) and cluster 1 able to reach 1 GHz ([details](https://forum.khadas.com/t/cpu-frequency-up-to-2ghz/2010/23?u=tkaiser))
@@ -163,7 +166,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 * It seems running an *armhf* userland on 64-bit SoCs also improves AES encryption results with small data chunks (see *armhf* entries for NanoPC T3+, Rock64, RockPro64 and Vim2). Status: very interesting, needs further investigations
 * It seems running Xenial binaries even further improves AES/SSL performance when ARMv8 Crypto Extensions are available. Status: while interesting irrelevant, we should get rid of Xenial and Jessie numbers.
 * It makes a huge difference whether ARMv8 Crypto Extensions can be used or not. See the many 64-bit SBC results above and compare with 32-bit SoCs or RPi 3B+, ODROID-C2 and NanoPi K2 (the latter 3 basing on 64-bit ARMv8 SoCs without crypto engine licensed/available)
-* The used distribution makes a big difference with `cpuminer`. Libs and GCC versions obviously matter (GCC 9.3 on Focal vs. 8.3 on Buster vs. 7.3 on Bionic vs. 6.3 on Stretch -- [some benchmarks heavily depend on compiler versions](https://forum.armbian.com/topic/7763-benchmarking-cpus/?do=findComment&comment=58530)). Stretch with GCC 7.3 provides a 15% performance increase with cpuminer on RK3328 and RK3399 (see Rock64 and NanoPC T4 numbers above and there the logs to compare performance of big and little cores). With GCC 8.2 and Stretch it's 20% with RK3328 and even 25% with RK3399 (the A72 performance increasing more compared to the A53 cores -- check individual kH/s numbers in the logs). With Focal (GCC 9.3) it's even more, compare Rock Pi 4A with last RockPro64 entry.
+* The used distribution makes a big difference with `cpuminer`. Libs and GCC versions obviously matter (GCC 9.3 on Focal vs. 8.3 on Buster vs. 7.3 on Bionic vs. 6.3 on Stretch -- [some benchmarks heavily depend on compiler versions](https://forum.armbian.com/topic/7763-benchmarking-cpus/?do=findComment&comment=58530)). Stretch with GCC 7.3 provides a 15% performance increase with cpuminer on RK3328 and RK3399 (see Rock64 and NanoPC T4 numbers above and there the logs to compare performance of big and little cores). With GCC 8.2 and Stretch it's 20% with RK3328 and even 25% with RK3399 (the A72 performance increasing more compared to the A53 cores -- check individual kH/s numbers in the logs). With Focal (GCC 9.3) it's even more, compare Rock Pi 4A with last RockPro64 entry or NanoPi Fire3 results.
 * *(more to come soon)*
 
 ## The bigger picture

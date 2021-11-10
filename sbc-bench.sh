@@ -1,11 +1,12 @@
 #!/bin/bash
 
-Version=0.8.3
+Version=0.8.4
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
 	export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 	PathToMe="$( cd "$(dirname "$0")" ; pwd -P )/${0##*/}"
+	export LC_ALL=C # prevent localication of decimal points and other stuff
 
 	# Check if we're outputting to a terminal. If yes try to use bold and colors for messages
 	if test -t 1; then
@@ -84,7 +85,12 @@ Main() {
 				# your Netio device is accessible as powerbox-1.local, this device is 
 				# plugged into its 2nd socket and you want consumption to be written to
 				# /tmp/my-consumption where it can be picked up by tools like RPi Monitor.
-				MonitorNetio "$2" "$3" "$4"
+				# The last 2 arguments are optional: sleep time (defaults to 0.8) and
+				# count of samples (defaults to 30). The defaults already put significant
+				# load on the device (compare http://ix.io/3E91 and http://ix.io/3Ebd) so
+				# to monitor idle consumption better choose 5 and 30 and deal with a 150
+				# seconds average value.
+				MonitorNetio "$2" "$3" "$4" "$5" "$6"
 				exit 0
 				;;
 			esac
@@ -101,12 +107,13 @@ Main() {
 	if [ "${PlotCpufreqOPPs}" = "yes" ]; then
 		PlotPerformanceGraph
 	else
+		CheckNetio
 		RunTinyMemBench
 		RunOpenSSLBenchmark
 		Run7ZipBenchmark
-	fi
-	if [ "${ExecuteCpuminer}" = "yes" -a -x "${InstallLocation}"/cpuminer-multi/cpuminer ]; then
-		RunCpuminerBenchmark
+		if [ "${ExecuteCpuminer}" = "yes" -a -x "${InstallLocation}"/cpuminer-multi/cpuminer ]; then
+			RunCpuminerBenchmark
+		fi
 	fi
 	CheckTimeInState after
 	"${SevenZip}" b >/dev/null 2>&1 & # run 7-zip bench in the background
@@ -119,6 +126,42 @@ Main() {
 PlotPerformanceGraph() {
 	# function that walks through all cpufreq OPP and plots a performance graph using
 	# 7-ZIP MIPS. Needs gnuplot and htmldoc (Debian/Ubuntu: gnuplot-nox htmldoc packages)
+
+	# repeat every measurement this many times and do not measure any cpufreq below
+	Repetitions=3 # how many times should each measurement be repeated
+	SkipBelow=400 # minimum cpufreq in MHz to measure
+
+	# measure idle consumption first, set CPUs to lowest clockspeed
+	for i in $(ls /sys/devices/system/cpu/cpufreq/policy?/scaling_governor); do
+		echo powersave >${i}
+	done
+
+	NetioConsumptionFile="${TempDir}/netio.current"
+	echo -n $(( $(awk '{printf ("%0.0f",$1/10); }' <<<"${OutputCurrent[$(( ${NetioSocket} - 1 ))]}" ) * 10 )) >"${NetioConsumptionFile}"
+	export NetioConsumptionFile
+	/bin/bash "${PathToMe}" -N ${NetioDevice} ${NetioSocket} ${NetioConsumptionFile} "4.8" "30" >/dev/null 2>&1 &
+	NetioMonitoringPID=$!
+
+	echo -e "\x08\x08 Done.\nTrying to determine idle consumption...\c"
+	echo -e "System health while idling for 4 minutes:\n" >>${MonitorLog}
+	/bin/bash "${PathToMe}" -m 30 >>${MonitorLog} &
+	MonitoringPID=$!
+
+	sleep 240
+	read IdleConsumption <${NetioConsumptionFile}
+	kill ${NetioMonitoringPID} ${MonitoringPID}
+
+	# thermal monitoring
+	GetTempSensor
+	IdleTemp=$(ReadSoCTemp)
+
+	echo -e "\n##########################################################################\n\nIdle temperature: ${IdleTemp}°C, idle consumption: $(( $(awk '{printf ("%0.0f",$1/10); }' <<<"${IdleConsumption}" ) * 10 ))mW" >>${ResultLog}
+
+	# ramp up CPU clockspeeds and continue with normal consumption monitoring
+	for i in $(ls /sys/devices/system/cpu/cpufreq/policy?/scaling_governor); do
+		echo performance >${i}
+	done
+	CheckNetio
 
 	# check if cpulist parameter has been provided as well:
 	if [ "X${CPUList}" = "X" ]; then
@@ -182,14 +225,22 @@ CheckPerformance() {
 
 	echo -e "\x08\x08 Done.\nChecking ${1}: \c"
 	echo -e "\nSystem health while testing through ${1}:\n" >>${MonitorLog}
-	/bin/bash "${PathToMe}" -m 60 >>${MonitorLog} &
+	/bin/bash "${PathToMe}" -m $(( 30 * ${Repetitions} )) >>${MonitorLog} &
 	MonitoringPID=$!
 
+	SocTemp=$(ReadSoCTemp)
+
 	CpufreqDat="${TempDir}/cpufreq${2}.dat"
-	echo -n "" >"${CpufreqDat}"
 	CpufreqLog="${TempDir}/cpufreq${2}.log"
-	
-	[ -s "${NetioConsumptionFile}" ] && NetioHeader=" /  Watt"
+
+	if [ -s "${NetioConsumptionFile}" ]; then
+		NetioHeader=" /  Watt"
+		echo -e "0\t0\t${IdleTemp}\t${IdleConsumption}" >"${CpufreqDat}"
+		echo -n "" >"${CpufreqDat}"
+	else
+		echo -n "" >"${CpufreqDat}"
+	fi
+
 	if [ ${USE_VCGENCMD} = true ] ; then
 		echo -e "Testing through ${1}:\n\nSysfs/ThreadX/Tested:  MIPS / Temp${NetioHeader}" >"${CpufreqLog}"
 	else
@@ -208,13 +259,14 @@ CheckPerformance() {
 		echo ${MinSpeed} >${Cluster}/scaling_min_freq
 	done
 	
-	# thermal monitoring
-	GetTempSensor
-	
 	# now walk through higher cluster since this is supposed to provide more cpufreq OPP.
 	# On ARM usually little cores are the cores with lower numbers. 
 	BiggestCluster="$(sort -n -r <<<${Clusters} | head -n1)"
 	for i in $(tr " " "\n" <${BiggestCluster}/scaling_available_frequencies | sort -n | sed '/^[[:space:]]*$/d') ; do
+		# skip measuring cpufreq OPPs below $SkipBelow MHz
+		if [ $i -lt ${SkipBelow}000 ]; then
+			continue
+		fi
 		# try to set this speed on all clusters
 		for Cluster in ${Clusters}; do
 			echo ${i} >${Cluster}/scaling_max_freq
@@ -244,22 +296,34 @@ CheckPerformance() {
 			echo -e "${SysfsSpeed}MHz, \c"
 		fi
 
-		# run 7-zip benchmark
-		${3} "${SevenZip}" b -mmt 1 >${TempLog}
+		echo -n "" >"${TempDir}/plotvalues"
+		for check in $(seq 1 ${Repetitions}) ; do
+			# run 7-zip benchmark
+			${3} "${SevenZip}" b -mmt 1 >${TempLog}
+			if [ -s "${NetioConsumptionFile}" ]; then
+				read ConsumptionNow <"${NetioConsumptionFile}"
+			fi
+			SocTemp=$(ReadSoCTemp)
+			MIPS="$(awk -F" " '/^Tot:/ {print $4}' <${TempLog})"
+			echo -e "${MIPS} ${SocTemp} ${ConsumptionNow}" >>"${TempDir}/plotvalues"
+		done
+
+		AveragedMIPS=$(( $(awk -F" " '{s+=$1} END {printf "%.0f", s}' <"${TempDir}/plotvalues") / ${Repetitions} ))
+		TempSum=$(awk -F" " '{s+=$2} END {printf "%.1f", s}' <"${TempDir}/plotvalues")
+		AveragedTemp=$(awk "{printf (\"%0.1f\",\$1/${Repetitions}); }" <<<"${TempSum}")
 		if [ -s "${NetioConsumptionFile}" ]; then
-			read ConsumptionNow <"${NetioConsumptionFile}"
-			ConsumptionInfo="$(printf "%6s" ${ConsumptionNow})mW"
+			AveragedWatts=$(( $(awk -F" " '{s+=$3} END {printf "%.0f", s}' <"${TempDir}/plotvalues") / ${Repetitions} ))
+			ConsumptionInfo="$(printf "%6s" ${AveragedWatts})mW"
 		fi
-		SocTemp=$(ReadSoCTemp)
-		MIPS="$(awk -F" " '/^Tot:/ {print $4}' <${TempLog})"
-		echo "$(printf "%6s" ${MIPS}) $(printf "%5s" ${SocTemp})°C${ConsumptionInfo}" >>"${CpufreqLog}"
-		echo -e "${MIPS}\t${SocTemp}\t${ConsumptionNow}" >>"${CpufreqDat}"
+
+		echo "$(printf "%6s" ${AveragedMIPS}) $(printf "%5s" ${AveragedTemp})°C${ConsumptionInfo}" >>"${CpufreqLog}"
+		echo -e "${AveragedMIPS}\t${AveragedTemp}\t${AveragedWatts}" >>"${CpufreqDat}"
 	done
 	kill ${MonitoringPID} >/dev/null 2>&1
 } # CheckPerformance
 
 PlotGraph() {
-	# function that gets two arguments provided two graph the performance results:
+	# function that gets two arguments provided to graph the performance results:
 	# * $1 test focus to be displayed
 	# * $2 policy cores: the cores that need to be adjusted when measuring, e.g. "0" for
 	#   cpu0, "4" for cpu4 or for example on an RK3399 "04" to handle both cpu clusters
@@ -280,15 +344,15 @@ PlotGraph() {
 		3)
 			# no consumption numbers, only plot MIPS and temp
 			YLabel="7-Zip MIPS"
-			YRange=$(awk '{printf ("%0.0f",$1*1.05); }' <<<"${MaxMIPS}")
+			YRange=$(awk '{printf ("%0.0f",$1*1.2); }' <<<"${MaxMIPS}")
 			PlotCommand="plot '${CpufreqDat}' using 1:2 lt rgb 'blue' w l title '7-Zip MIPS (${1})' axis x1y1, '' using 1:3 lt rgb 'green' w l title 'SoC temp' axis x1y2"
 			;;			
 		4)
 			# also consumption numbers so include them in the graph too
 			YLabel="7-Zip MIPS / mW"
 			MaxWatt=$(awk '{print $4}' <"${CpufreqDat}" | sort -n | tail -n1)
-			YRangeWatt=$(awk '{printf ("%0.0f",$1*1.05); }' <<<"${MaxWatt}")
-			YRangeMIPS=$(awk '{printf ("%0.0f",$1*1.05); }' <<<"${MaxMIPS}")
+			YRangeWatt=$(awk '{printf ("%0.0f",$1*1.2); }' <<<"${MaxWatt}")
+			YRangeMIPS=$(awk '{printf ("%0.0f",$1*1.2); }' <<<"${MaxMIPS}")
 			if [ ${MaxWatt} -gt ${MaxMIPS} ]; then
 				YRange=${YRangeWatt}
 			else
@@ -376,7 +440,6 @@ GetTempSensor() {
 		TempSource=/etc/armbianmonitor/datasources/soctemp
 	else
 		TempSource="$(mktemp /tmp/soctemp.XXXXXX)"
-		# trap "rm -f \"${TempSource}\" ; exit 0" 0 1 2 3 15
 
 		# check platform
 		case $(lscpu | awk -F" " '/^Architecture/ {print $2}') in
@@ -433,24 +496,29 @@ GetThermalZone() {
 } # GetThermalZone
 
 CheckNetio() {
-	# Function that checks connection with a Netio powermeter and if successful spawns
-	# another execution of this script with -N (Netio monitor mode.). Try to fetch XML
-	XMLOutput="$(curl -q --connect-timeout 1 "http://${NetioDevice}/netio.xml" 2>/dev/null | tr '\015' '\012')"
-	if [ "X${XMLOutput}" = "X" ]; then
-		echo -e "\nError: not able to fetch \"http://${NetioDevice}/netio.xml\" within a second.\nPlease check parameters and connection manually." >&2
-		DisplayUsage
-		exit 1
-	else
-		OutputCurrent=($(grep '^<Current>' <<<"${XMLOutput}" | sed -e 's/\(<[^<][^<]*>\)//g' | tr '\n' ' '))
-		if [ ${OutputCurrent[$(( ${NetioSocket} - 1 ))]} -eq 0 ]; then
-			echo -e "\nWarning: socket ${NetioSocket} of Netio device ${NetioDevice} provides zero current.\n"
+	# Function that checks connection with a Netio powermeter if $Netio is set and if
+	# successful spawns another execution of this script with -N (Netio monitor mode.).
+
+	if [ "X${Netio}" != "X" ]; then
+		# Try to fetch XML
+		XMLOutput="$(curl -q --connect-timeout 1 "http://${NetioDevice}/netio.xml" 2>/dev/null | tr '\015' '\012')"
+		if [ "X${XMLOutput}" = "X" ]; then
+			echo -e "\nError: not able to fetch \"http://${NetioDevice}/netio.xml\" within a second.\nPlease check parameters and connection manually." >&2
+			DisplayUsage
+			exit 1
+		else
+			# check current reading of the socket we're supposed to be plugged into
+			OutputCurrent=($(grep '^<Current>' <<<"${XMLOutput}" | sed -e 's/\(<[^<][^<]*>\)//g' | tr '\n' ' '))
+			if [ ${OutputCurrent[$(( ${NetioSocket} - 1 ))]} -eq 0 ]; then
+				echo -e "\nWarning: socket ${NetioSocket} of Netio device ${NetioDevice} provides zero current.\n"
+			fi
+			NetioConsumptionFile="${TempDir}/netio.current"
+			[ -f "${NetioConsumptionFile}" ] || echo -n 0 >"${NetioConsumptionFile}"
+			export NetioConsumptionFile
+			/bin/bash "${PathToMe}" -N ${NetioDevice} ${NetioSocket} ${NetioConsumptionFile} >/dev/null 2>&1 &
+			NetioMonitoringPID=$!
+			trap "kill ${NetioMonitoringPID} ; rm -rf \"${TempDir}\" ; exit 0" 0 1 2 3 15
 		fi
-		NetioConsumptionFile="${TempDir}/netio.current"
-		echo -n 0 >"${NetioConsumptionFile}"
-		export TempDir NetioConsumptionFile
-		/bin/bash "${PathToMe}" -N ${NetioDevice} ${NetioSocket} ${NetioConsumptionFile} >/dev/null 2>&1 &
-		NetioMonitoringPID=$!
-		trap "kill ${NetioMonitoringPID} ; rm -rf \"${TempDir}\" ; exit 0" 0 1 2 3 15
 	fi
 } # CheckNetio
 
@@ -458,10 +526,13 @@ MonitorNetio() {
 	# Poll Netio powermeter accessible at $1 every ~1 second, extract current and 
 	# powerfactor readouts for socket $2, write most recent 30 readouts to a file
 	# and generate an average number from this to be written to $3
+	# By also providing $4 and $5 you can adjust poll interval and sample count.
 
 	NetioDevice="$1"
 	NetioSocket="$2"
 	ConsumptionFile="$3"
+	SleepInterval=${4:-0.8}
+	CountofSamples=${5:-30}
 
 	# Try to renice to 19 to not interfere with benchmark behaviour
 	renice 19 $BASHPID >/dev/null 2>&1
@@ -473,16 +544,16 @@ MonitorNetio() {
 		OutputPowerFactor=($(grep '^<PowerFactor>' <<<"${XMLOutput}" | sed -e 's/\(<[^<][^<]*>\)//g' | tr '\n' ' '))
 		Consumption=$(bc <<<"${InputVoltage} * ${OutputCurrent[$(( ${NetioSocket} - 1 ))]} * ${OutputPowerFactor[$(( ${NetioSocket} - 1 ))]}" | awk '{printf ("%0.0f",$1); }')
 
-		# create a file consisting of 29 entries with last consumption readouts so we
+		# create a file consisting of $CountofSamples entries with last consumption readouts so we
 		# can generate a 30 second average
 		touch ${TempDir}/netio-socket-${NetioSocket}
-		PriorValues="$(tail -n29 ${TempDir}/netio-socket-${NetioSocket})"
+		PriorValues="$(tail -n${CountofSamples} ${TempDir}/netio-socket-${NetioSocket})"
 		echo -e "${PriorValues}\n${Consumption}" | sed '/^[[:space:]]*$/d' >${TempDir}/netio-socket-${NetioSocket}
 		CountOfEntries="$(wc -l <${TempDir}/netio-socket-${NetioSocket})"
 		SumOfEntries=$(awk '{s+=$1} END {printf "%.0f", s}' <${TempDir}/netio-socket-${NetioSocket})
 		AverageConsumption=$(( ${SumOfEntries} / ${CountOfEntries} ))
-		echo -n "${AverageConsumption}" >"${ConsumptionFile}"
-		sleep 0.8
+		echo -n $(( $(awk '{printf ("%0.0f",$1/10); }' <<<"${AverageConsumption}" ) * 10 )) >"${ConsumptionFile}"
+		sleep ${SleepInterval}
 	done
 } # MonitorNetio
 
@@ -739,7 +810,7 @@ ProcessStats() {
 
 CheckRelease() {
 	# Display warning when not executing on Debian Stretch/Buster/Bullseye or Ubuntu Bionic/Focal
-	apt -f -qq -y install lsb-release >/dev/null 2>&1
+	which lsb_release >/dev/null 2>&1 || apt -f -qq -y install lsb-release >/dev/null 2>&1
 	Distro=$(lsb_release -c | awk -F" " '{print $2}' | tr '[:upper:]' '[:lower:]')
 	case ${Distro} in
 		stretch|bionic|buster|focal|bullseye)
@@ -858,6 +929,7 @@ InitialMonitoring() {
 
 	# Create temporary files
 	TempDir="$(mktemp -d /tmp/${0##*/}.XXXXXX)"
+	export TempDir
 	TempLog="${TempDir}/temp.log"
 	ResultLog="${TempDir}/results.log"
 	MonitorLog="${TempDir}/monitor.log"
@@ -869,12 +941,12 @@ InitialMonitoring() {
 	# Log distribution info
 	[ -f /etc/armbian-release ] && . /etc/armbian-release
 	which lsb_release >/dev/null 2>&1 && (lsb_release -a 2>/dev/null) >>${ResultLog}
+	ARCH=$(dpkg --print-architecture 2>/dev/null) || \
+		ARCH=$(awk -F"=" '/^CARCH/ {print $2}' /etc/makepkg.conf 2>/dev/null) || \
+		ARCH="unknown/$(uname -m)"
 	if [ -n "${BOARDFAMILY}" ]; then
 		echo -e "\nArmbian release info:\n$(grep -v "#" /etc/armbian-release)" >>${ResultLog}
 	else
-		ARCH=$(dpkg --print-architecture 2>/dev/null) || \
-			ARCH=$(awk -F"=" '/^CARCH/ {print $2}' /etc/makepkg.conf 2>/dev/null) || \
-			ARCH="unknown/$(uname -m)"
 		echo -e "Architecture:\t$(tr -d '"' <<<${ARCH})" >>${ResultLog}
 	fi
 	
@@ -902,7 +974,8 @@ InitialMonitoring() {
 	if [ "X${Netio}" != "X" ]; then
 		NetioDevice="$(cut -f1 -d/ <<<"${Netio}")"
 		NetioSocket="$(cut -f2 -d/ <<<"${Netio}")"
-		CheckNetio
+		XMLOutput="$(curl -q --connect-timeout 1 "http://${NetioDevice}/netio.xml" 2>/dev/null | tr '\015' '\012')"
+		OutputCurrent=($(grep '^<Current>' <<<"${XMLOutput}" | sed -e 's/\(<[^<][^<]*>\)//g' | tr '\n' ' '))
 		InputVoltage=$(grep '^<Voltage>' <<<"${XMLOutput}" | sed -e 's/\(<[^<][^<]*>\)//g')
 		Frequency=$(grep '^<Frequency>' <<<"${XMLOutput}" | sed -e 's/\(<[^<][^<]*>\)//g')
 		NetioModel=$(grep '^<Model>' <<<"${XMLOutput}" | sed -e 's/\(<[^<][^<]*>\)//g')
@@ -1032,7 +1105,7 @@ CheckCPUCluster() {
 RunTinyMemBench() {
 	echo -e "\x08\x08 Done.\nExecuting tinymembench. This will take a long time...\c"
 	echo -e "System health while running tinymembench:\n" >${MonitorLog}
-	/bin/bash "${PathToMe}" -m 120 >>${MonitorLog} &
+	/bin/bash "${PathToMe}" -m 60 >>${MonitorLog} &
 	MonitoringPID=$!
 	if [ ${CPUCores} -gt 4 ]; then
 		if [ "X${BOARDFAMILY}" = "Xs5p6818" ]; then
@@ -1052,6 +1125,9 @@ RunTinyMemBench() {
 	kill ${MonitoringPID}
 	echo -e "\n##########################################################################\n" >>${ResultLog}
 	cat ${TempLog} >>${ResultLog}
+	MemCpyScore="$(awk -F" " '/^ standard memcpy/ {print $4}' <${TempLog})"
+	MemSetScore="$(awk -F" " '/^ standard memset/ {print $4}' <${TempLog})"
+	MemBenchScore="$(( $(awk '{printf ("%0.0f",$1/10); }' <<<"${MemCpyScore}" ) * 10 )) | $(( $(awk '{printf ("%0.0f",$1/10); }' <<<"${MemSetScore}" ) * 10 ))"
 } # RunTinyMemBench
 
 Run7ZipBenchmark() {
@@ -1098,12 +1174,14 @@ Run7ZipBenchmark() {
 	echo -e "\nCompression: ${CompScore}" >>${ResultLog}
 	echo -e "Decompression: ${DecompScore}" >>${ResultLog}
 	echo -e "Total: ${TotScore}" >>${ResultLog}
+	CombinedScore=$(( $(awk -F" " '/^Tot:/ {s+=$4} END {printf "%.0f", s}' <${TempLog}) / 3 ))
+	ZipScore="$(( $(awk '{printf ("%0.0f",$1/10); }' <<<"${CombinedScore}" ) * 10 ))"
 } # Run7ZipBenchmark
 
 RunOpenSSLBenchmark() {
 	echo -e "\x08\x08 Done.\nExecuting OpenSSL benchmark. This will take 3 minutes...\c"
 	echo -e "\nSystem health while running OpenSSL benchmark:\n" >>${MonitorLog}
-	/bin/bash "${PathToMe}" -m 10 >>${MonitorLog} &
+	/bin/bash "${PathToMe}" -m 20 >>${MonitorLog} &
 	MonitoringPID=$!
 	OpenSSLLog="${TempDir}/openssl.log"
 	for i in 128 192 256 ; do
@@ -1120,12 +1198,15 @@ RunOpenSSLBenchmark() {
 	echo -e "\n##########################################################################\n" >>${ResultLog}
 	echo -e "$(openssl version | awk -F" " '{print $1" "$2", built on "$3" "$4" "$5" "$6" "$7" "$8" "$9" "$10" "$11" "$12" "$13" "$14" "$15}' | sed 's/ *$//')\n$(grep '^type' ${OpenSSLLog} | head -n1)" >>${ResultLog}
 	grep '^aes-' ${OpenSSLLog} >>${ResultLog}
+	AES128=$(( $(awk '/^aes-128-cbc/ {print $2}' <"${OpenSSLLog}" | awk -F"." '{s+=$1} END {printf "%.0f", s}') / 2 ))
+	AES256=$(( $(awk '/^aes-256-cbc/ {print $7}' <"${OpenSSLLog}" | awk -F"." '{s+=$1} END {printf "%.0f", s}') / 2 ))
+	OpenSSLScore="$(( $(awk '{printf ("%0.0f",$1/10); }' <<<"${AES128}") * 10 )) | $(( $(awk '{printf ("%0.0f",$1/10); }' <<<"${AES256}") * 10 ))"
 } # RunOpenSSLBenchmark
 
 RunCpuminerBenchmark() {
 	echo -e "\x08\x08 Done.\nExecuting cpuminer. This will take 5 minutes...\c"
 	echo -e "\nSystem health while running cpuminer:\n" >>${MonitorLog}
-	/bin/bash "${PathToMe}" -m 20 >>${MonitorLog} &
+	/bin/bash "${PathToMe}" -m 40 >>${MonitorLog} &
 	MonitoringPID=$!
 	"${InstallLocation}"/cpuminer-multi/cpuminer --benchmark --cpu-priority=2 >${TempLog} &
 	MinerPID=$!
@@ -1136,6 +1217,7 @@ RunCpuminerBenchmark() {
 	# Summarized 'Total:' scores
 	TotalScores="$(awk -F" " '/Total:/ {print $4}' ${TempLog} | sort -r -n | uniq | tr '\n' ', ' | sed 's/,$//')"
 	echo -e "\nTotal Scores: ${TotalScores}" >>${ResultLog}
+	CpuminerScore="$(awk -F"," '{print $2}' <<<"${TotalScores}")"
 } # RunCpuminerBenchmark
 
 SummarizeResults() {
@@ -1143,6 +1225,9 @@ SummarizeResults() {
 
 	# only check for throttling in normal mode and not when plotting performance/mhz graphs
 	[ "X${PlotCpufreqOPPs}" = "Xyes" ] || CheckForThrottling
+
+	# Check %iowait percentage as an indication of swapping happened
+	IOWait=$(CheckIOWait)
 
 	# Prepare benchmark results
 	echo -e "\n##########################################################################\n" >>${ResultLog}
@@ -1160,6 +1245,19 @@ SummarizeResults() {
 	echo -e "\n##########################################################################\n" >>${ResultLog}
 	echo -e "$(LANG=C iostat | grep -v "^loop")\n\n$(LANG=C free -h)\n\n$(LANG=C swapon -s)\n\n$(LANG=C lscpu)" >>${ResultLog}
 	ReportCacheSizes >>${ResultLog}
+
+	# Add a line suitable for Results.md on Github if not in efficiency plotting mode
+	if [ "X${PlotCpufreqOPPs}" != "Xyes" ]; then
+		MHz="$(sort -n -r /sys/devices/system/cpu/cpufreq/policy?/cpuinfo_max_freq | tr '\n' '/' | sed -e 's|000/|/|g' -e 's|/$||')"
+		KernelVersion="$(uname -r | awk -F"." '{print $1"."$2}')"
+		KernelArch="$(uname -m | sed -e 's/armv7l/armhf/' -e 's/aarch64/arm64/')"
+		if [ "X${KernelArch}" = "X" -o "X${KernelArch}" = "X${ARCH}" ]; then
+			DistroInfo="$(cut -c-1 <<<"${Distro##*/}" | tr '[:lower:]' '[:upper:]')$(cut -c2- <<<"${Distro##*/}") ${ARCH}"
+		else
+			DistroInfo="$(cut -c-1 <<<"${Distro##*/}" | tr '[:lower:]' '[:upper:]')$(cut -c2- <<<"${Distro##*/}") ${KernelArch}/${ARCH}"
+		fi
+		echo -e "\n| ${DeviceName} | ${MHz} MHz | ${KernelVersion} | ${DistroInfo} | ${ZipScore} | ${OpenSSLScore} | ${MemBenchScore} | ${CpuminerScore:-"-"} | [${UploadURL}](${UploadURL}) |" >>${ResultLog}
+	fi
 } # SummarizeResults
 
 UploadResults() {
@@ -1180,6 +1278,12 @@ UploadResults() {
 	case ${UploadURL} in
 		http*)
 			echo -e "\nFull results uploaded to ${UploadURL}. Please check the log for anomalies (e.g. swapping\nor throttling happenend) and otherwise share this URL.\n"
+			# check whether benchmark ran into a sane environment (no throttling and no swapping)
+			if [ ${IOWait:-0} -le 5 -a ! -f ${TempDir}/throttling_info.txt -a "X${IsIntel}" != "Xyes" ]; then
+				echo -e "In case this device is not already represented in official sbc-bench results list then please"
+				echo -e "consider submitting it at https://github.com/ThomasKaiser/sbc-bench/issues with this line:"
+				echo -e "| ${DeviceName} | ${MHz} MHz | ${KernelVersion} | ${DistroInfo} | ${ZipScore} | ${OpenSSLScore} | ${MemBenchScore} | ${CpuminerScore:-"-"} | [${UploadURL}](${UploadURL}) |\n"
+			fi
 			;;
 		*)
 			echo -e "\nUnable to upload full test results. Please copy&paste the below stuff to pastebin.com and\nprovide the URL. Check the output for throttling and swapping please.\n\n"
@@ -1188,6 +1292,13 @@ UploadResults() {
 			;;
 	esac
 } # UploadResults
+
+CheckIOWait() {
+	IOWait="$(awk -F" " '/^[0-9]/ {print $8}' <"${MonitorLog}" | sed 's/%//')"
+	LogLength=$(wc -l <<<"${IOWait}")
+	IOWaitSum="$(awk '{s+=$1} END {printf "%.0f", s}' <<<"${IOWait}")"
+	echo $(( ${IOWaitSum} * 10 / ${LogLength} ))
+} # CheckIOWait
 
 CheckForThrottling() {
 	# Check for throttling on normal ARM SBC
@@ -1313,7 +1424,8 @@ DisplayUsage() {
 	echo -e " ${0##*/} ${BOLD}-T${NC} [\$degree] runs thermal test heating up to this value\n"
 	echo -e " With a Netio powermeter accessible you can export ${BOLD}Netio=address/socket${NC}" to
 	echo -e " sbc-bench defining address and socket this device is plugged into. Requires"
-	echo -e " XML API enabled and read-only access without password."
+	echo -e " XML API enabled and read-only access w/o password. Use this ${BOLD}only{NC} with -p to"
+	echo -e " draw efficiency graphs since results will be slightly tampered by this mode."
 	echo -e "\n############################################################################\n"
 } # DisplayUsage
 

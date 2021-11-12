@@ -1,0 +1,445 @@
+sbc-bench v0.6.8 icosa (Mon, 12 Aug 2019 01:12:39 -0400)
+
+Architecture:	unknown/aarch64
+
+/usr/bin/gcc (GCC) 9.1.1 20190503 (Red Hat 9.1.1-1)
+
+Uptime: 01:12:39 up 22 min,  3 users,  load average: 0.55, 1.16, 1.13
+
+Linux 4.9.109+ (switch.local) 	08/12/19 	_aarch64_	(4 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+          15.53    0.48    5.71    9.19    0.00   69.10
+
+Device             tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn
+mmcblk0          96.84      1182.21      2800.02    1603074    3796824
+
+              total        used        free      shared  buff/cache   available
+Mem:          3.4Gi       446Mi       500Mi       5.0Mi       2.5Gi       2.6Gi
+Swap:            0B          0B          0B
+
+
+
+##########################################################################
+
+Checking cpufreq OPP:
+
+Cpufreq OPP: 2091    Measured: 1782.105/1782.676/1782.853
+Cpufreq OPP: 1989    Measured: 1783.424/1783.345/1779.178
+Cpufreq OPP: 1887    Measured: 1781.967/1782.636/1782.538
+Cpufreq OPP: 1785    Measured: 1782.755/1782.538/1782.518
+Cpufreq OPP: 1683    Measured: 1680.730/1680.538/1680.363
+Cpufreq OPP: 1581    Measured: 1578.956/1576.604/1578.435
+Cpufreq OPP: 1428    Measured: 1425.512/1425.182/1424.899
+Cpufreq OPP: 1326    Measured: 1323.649/1322.334/1323.066
+Cpufreq OPP: 1224    Measured: 1221.986/1221.307/1222.072
+Cpufreq OPP: 1122    Measured: 1119.306/1119.852/1118.252
+Cpufreq OPP: 1020    Measured: 1017.262/1017.413/1017.688
+Cpufreq OPP:  918    Measured: 914.398/914.661/914.823
+Cpufreq OPP:  816    Measured: 812.701/814.814/813.480
+Cpufreq OPP:  714    Measured: 713.342/701.817/706.588
+Cpufreq OPP:  612    Measured: 616.404/617.037/616.347
+Cpufreq OPP:  510    Measured: 514.194/513.526/514.131
+Cpufreq OPP:  408    Measured: 409.365/411.185/410.881
+Cpufreq OPP:  306    Measured: 308.240/307.575/308.341
+Cpufreq OPP:  204    Measured: 205.663/205.120/205.516
+
+##########################################################################
+
+tinymembench v0.4.9 (simple benchmark for memory throughput and latency)
+
+==========================================================================
+== Memory bandwidth tests                                               ==
+==                                                                      ==
+== Note 1: 1MB = 1000000 bytes                                          ==
+== Note 2: Results for 'copy' tests show how many bytes can be          ==
+==         copied per second (adding together read and writen           ==
+==         bytes would have provided twice higher numbers)              ==
+== Note 3: 2-pass copy means that we are using a small temporary buffer ==
+==         to first fetch data into it, and only then write it to the   ==
+==         destination (source -> L1 cache, L1 cache -> destination)    ==
+== Note 4: If sample standard deviation exceeds 0.1%, it is shown in    ==
+==         brackets                                                     ==
+==========================================================================
+
+ C copy backwards                                     :   2367.9 MB/s (0.2%)
+ C copy backwards (32 byte blocks)                    :   2375.3 MB/s
+ C copy backwards (64 byte blocks)                    :   2377.5 MB/s
+ C copy                                               :   2517.9 MB/s (0.2%)
+ C copy prefetched (32 bytes step)                    :   2545.0 MB/s
+ C copy prefetched (64 bytes step)                    :   2555.5 MB/s
+ C 2-pass copy                                        :   2268.2 MB/s
+ C 2-pass copy prefetched (32 bytes step)             :   2321.5 MB/s
+ C 2-pass copy prefetched (64 bytes step)             :   2326.7 MB/s
+ C fill                                               :   3572.0 MB/s
+ C fill (shuffle within 16 byte blocks)               :   3573.0 MB/s
+ C fill (shuffle within 32 byte blocks)               :   3572.2 MB/s
+ C fill (shuffle within 64 byte blocks)               :   3570.7 MB/s
+ ---
+ standard memcpy                                      :   2503.6 MB/s (0.1%)
+ standard memset                                      :   3573.5 MB/s
+ ---
+ NEON LDP/STP copy                                    :   2523.5 MB/s
+ NEON LDP/STP copy pldl2strm (32 bytes step)          :   1533.9 MB/s
+ NEON LDP/STP copy pldl2strm (64 bytes step)          :   1534.1 MB/s
+ NEON LDP/STP copy pldl1keep (32 bytes step)          :   2586.3 MB/s
+ NEON LDP/STP copy pldl1keep (64 bytes step)          :   2591.9 MB/s (0.1%)
+ NEON LD1/ST1 copy                                    :   2534.6 MB/s
+ NEON STP fill                                        :   3569.7 MB/s
+ NEON STNP fill                                       :   3571.8 MB/s
+ ARM LDP/STP copy                                     :   2526.0 MB/s (0.1%)
+ ARM STP fill                                         :   3573.1 MB/s
+ ARM STNP fill                                        :   3573.5 MB/s
+
+==========================================================================
+== Memory latency test                                                  ==
+==                                                                      ==
+== Average time is measured for random memory accesses in the buffers   ==
+== of different sizes. The larger is the buffer, the more significant   ==
+== are relative contributions of TLB, L1/L2 cache misses and SDRAM      ==
+== accesses. For extremely large buffer sizes we are expecting to see   ==
+== page table walk with several requests to SDRAM for almost every      ==
+== memory access (though 64MiB is not nearly large enough to experience ==
+== this effect to its fullest).                                         ==
+==                                                                      ==
+== Note 1: All the numbers are representing extra time, which needs to  ==
+==         be added to L1 cache latency. The cycle timings for L1 cache ==
+==         latency can be usually found in the processor documentation. ==
+== Note 2: Dual random read means that we are simultaneously performing ==
+==         two independent memory accesses at a time. In the case if    ==
+==         the memory subsystem can't handle multiple outstanding       ==
+==         requests, dual random read has the same timings as two       ==
+==         single reads performed one after another.                    ==
+==========================================================================
+
+block size : single random read / dual random read, [MADV_NOHUGEPAGE]
+      1024 :    0.0 ns          /     0.0 ns 
+      2048 :    0.0 ns          /     0.0 ns 
+      4096 :    0.0 ns          /     0.0 ns 
+      8192 :    0.0 ns          /     0.0 ns 
+     16384 :    0.0 ns          /     0.0 ns 
+     32768 :    0.0 ns          /     0.0 ns 
+     65536 :    5.1 ns          /     7.9 ns 
+    131072 :    7.6 ns          /    10.4 ns 
+    262144 :   10.9 ns          /    13.8 ns 
+    524288 :   12.6 ns          /    15.8 ns 
+   1048576 :   13.6 ns          /    16.9 ns 
+   2097152 :   23.2 ns          /    34.2 ns 
+   4194304 :   77.0 ns          /   111.0 ns 
+   8388608 :  115.1 ns          /   153.3 ns 
+  16777216 :  134.5 ns          /   174.7 ns 
+  33554432 :  145.3 ns          /   188.6 ns 
+  67108864 :  160.0 ns          /   214.6 ns 
+
+block size : single random read / dual random read, [MADV_HUGEPAGE]
+      1024 :    0.0 ns          /     0.0 ns 
+      2048 :    0.0 ns          /     0.0 ns 
+      4096 :    0.0 ns          /     0.0 ns 
+      8192 :    0.0 ns          /     0.0 ns 
+     16384 :    0.0 ns          /     0.0 ns 
+     32768 :    0.0 ns          /     0.0 ns 
+     65536 :    5.1 ns          /     7.9 ns 
+    131072 :    7.6 ns          /    10.4 ns 
+    262144 :    8.9 ns          /    11.3 ns 
+    524288 :    9.6 ns          /    11.6 ns 
+   1048576 :   10.2 ns          /    11.8 ns 
+   2097152 :   18.5 ns          /    24.4 ns 
+   4194304 :   72.4 ns          /   105.1 ns 
+   8388608 :  100.7 ns          /   128.6 ns 
+  16777216 :  114.3 ns          /   136.2 ns 
+  33554432 :  121.2 ns          /   138.5 ns 
+  67108864 :  125.6 ns          /   141.4 ns 
+
+##########################################################################
+
+OpenSSL 1.1.1c, built on FIPS 28 May 2019
+type             16 bytes     64 bytes    256 bytes   1024 bytes   8192 bytes  16384 bytes
+aes-128-cbc     344890.77k   650216.19k   782165.16k   878335.66k   910849.37k   912414.04k
+aes-128-cbc     347783.93k   650389.63k   796279.64k   882764.12k   908178.77k   912053.59k
+aes-192-cbc     297037.22k   483321.62k   662218.50k   732235.09k   754911.91k   755848.53k
+aes-192-cbc     324104.04k   565363.63k   680246.70k   737460.57k   755982.34k   756946.26k
+aes-256-cbc     303250.97k   502769.92k   579411.97k   626466.82k   641660.25k   642553.17k
+aes-256-cbc     303417.64k   502926.89k   577929.98k   625599.15k   641499.14k   642777.09k
+
+##########################################################################
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=en_US.UTF-8,Utf16=on,HugeFiles=on,64 bits,4 CPUs LE)
+
+LE
+CPU Freq: 64000000 - - - - - - - -
+
+RAM size:    3483 MB,  # CPU hardware threads:   4
+RAM usage:    882 MB,  # Benchmark threads:      4
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       1741   100   1695   1695  |      20503   100   1750   1749
+23:       1668   100   1700   1700  |      20097   100   1739   1739
+24:       1578   100   1697   1697  |      19726   100   1732   1732
+25:       1482   100   1694   1693  |      19602   100   1745   1745
+----------------------------------  | ------------------------------
+Avr:             100   1697   1696  |              100   1742   1741
+Tot:             100   1719   1719
+
+##########################################################################
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=en_US.UTF-8,Utf16=on,HugeFiles=on,64 bits,4 CPUs LE)
+
+LE
+CPU Freq: - - - - - - - - -
+
+RAM size:    3483 MB,  # CPU hardware threads:   4
+RAM usage:    882 MB,  # Benchmark threads:      4
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       5241   313   1627   5099  |      82309   395   1776   7022
+23:       5169   314   1679   5267  |      81132   395   1778   7020
+24:       5097   324   1693   5481  |      80298   396   1779   7049
+25:       4938   344   1640   5639  |      79046   395   1781   7035
+----------------------------------  | ------------------------------
+Avr:             324   1660   5371  |              395   1779   7032
+Tot:             359   1719   6202
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=en_US.UTF-8,Utf16=on,HugeFiles=on,64 bits,4 CPUs LE)
+
+LE
+CPU Freq: - - - - - - - - -
+
+RAM size:    3483 MB,  # CPU hardware threads:   4
+RAM usage:    882 MB,  # Benchmark threads:      4
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       5187   311   1625   5047  |      81442   394   1764   6948
+23:       5115   312   1669   5212  |      80089   393   1764   6930
+24:       5044   319   1700   5424  |      79066   393   1765   6941
+25:       4862   338   1641   5551  |      78795   396   1769   7013
+----------------------------------  | ------------------------------
+Avr:             320   1658   5308  |              394   1765   6958
+Tot:             357   1712   6133
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=en_US.UTF-8,Utf16=on,HugeFiles=on,64 bits,4 CPUs LE)
+
+LE
+CPU Freq: - - - - - - - - -
+
+RAM size:    3483 MB,  # CPU hardware threads:   4
+RAM usage:    882 MB,  # Benchmark threads:      4
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       5248   312   1638   5106  |      82252   397   1768   7017
+23:       5161   314   1673   5259  |      80301   393   1770   6948
+24:       5071   314   1737   5453  |      79809   396   1771   7006
+25:       4934   334   1687   5634  |      78443   394   1771   6981
+----------------------------------  | ------------------------------
+Avr:             319   1684   5363  |              395   1770   6988
+Tot:             357   1727   6176
+
+Compression: 5371,5308,5363
+Decompression: 7032,6958,6988
+Total: 6202,6133,6176
+
+##########################################################################
+
+Testing clockspeeds again. System health now:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+01:28:56: 1785MHz  3.56  87%   1%  85%   0%   0%   0%  51.5°C
+
+Checking cpufreq OPP:
+
+Cpufreq OPP: 2091    Measured: 1782.361/1780.061/1780.022
+Cpufreq OPP: 1989    Measured: 1551.635/1602.271/1383.733
+Cpufreq OPP: 1887    Measured: 1539.812/1645.160/1825.526
+Cpufreq OPP: 1785    Measured: 1591.836/1562.557/1609.487
+Cpufreq OPP: 1683    Measured: 1278.640/1221.409/1762.800
+Cpufreq OPP: 1581    Measured: 1255.857/1265.518/1243.566
+Cpufreq OPP: 1428    Measured: 1116.065/1130.329/1175.849
+Cpufreq OPP: 1326    Measured: 1316.819/1322.199/1324.219
+Cpufreq OPP: 1224    Measured: 720.687/1055.108/1213.415
+Cpufreq OPP: 1122    Measured: 1045.715/560.075/1115.680
+Cpufreq OPP: 1020    Measured: 416.180/484.706/1017.170
+Cpufreq OPP:  918    Measured: 417.411/722.388/911.967
+Cpufreq OPP:  816    Measured: 828.412/667.807/450.684
+Cpufreq OPP:  714    Measured: 481.021/358.752/601.870
+Cpufreq OPP:  612    Measured: 616.634/574.611/616.218
+Cpufreq OPP:  510    Measured: 513.059/383.169/595.053
+Cpufreq OPP:  408    Measured: 201.509/163.090/456.599
+Cpufreq OPP:  306    Measured: 162.791/307.320/311.104
+Cpufreq OPP:  204    Measured: 200.974/201.014/201.946
+
+##########################################################################
+
+System health while running tinymembench:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+01:12:53: 1785MHz  0.59  30%   5%  15%   0%   9%   0%  41.5°C
+01:14:53: 1785MHz  0.98  25%   0%  25%   0%   0%   0%  43.0°C
+01:16:53: 1785MHz  1.03  25%   0%  25%   0%   0%   0%  40.5°C
+01:18:53: 1785MHz  1.02  25%   0%  25%   0%   0%   0%  40.5°C
+
+System health while running OpenSSL benchmark:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+01:19:56: 1785MHz  1.00  29%   4%  17%   0%   6%   0%  40.0°C
+01:20:06: 1785MHz  1.00  31%   0%  25%   0%   5%   0%  44.0°C
+01:20:16: 1785MHz  1.00  25%   0%  25%   0%   0%   0%  42.0°C
+01:20:26: 1785MHz  1.00  25%   0%  25%   0%   0%   0%  41.5°C
+01:20:37: 1785MHz  1.00  25%   0%  25%   0%   0%   0%  45.0°C
+01:20:47: 1785MHz  1.00  25%   0%  25%   0%   0%   0%  44.5°C
+01:20:57: 1785MHz  1.00  25%   0%  25%   0%   0%   0%  42.0°C
+01:21:07: 1785MHz  1.00  25%   0%  25%   0%   0%   0%  42.0°C
+01:21:17: 1785MHz  1.00  25%   0%  25%   0%   0%   0%  44.0°C
+01:21:27: 1785MHz  1.00  25%   0%  25%   0%   0%   0%  42.5°C
+01:21:37: 1785MHz  1.00  25%   0%  25%   0%   0%   0%  41.5°C
+
+System health while running 7-zip single core benchmark:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+01:21:44: 1785MHz  1.00  29%   3%  18%   0%   6%   0%  42.0°C
+01:22:45: 1785MHz  2.57  25%   0%  24%   0%   0%   0%  43.5°C
+01:23:45: 1785MHz  3.27  25%   0%  24%   0%   0%   0%  43.5°C
+01:24:45: 1785MHz  3.30  25%   0%  24%   0%   0%   0%  43.5°C
+
+System health while running 7-zip multi core benchmark:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+01:25:44: 1785MHz  3.64  28%   3%  19%   0%   5%   0%  43.0°C
+01:26:05: 1785MHz  3.52  90%   0%  89%   0%   0%   0%  49.0°C
+01:26:27: 1785MHz  3.89  92%   0%  92%   0%   0%   0%  50.5°C
+01:26:49: 1785MHz  3.79  88%   1%  87%   0%   0%   0%  50.5°C
+01:27:10: 1785MHz  3.54  90%   0%  89%   0%   0%   0%  50.5°C
+01:27:32: 1785MHz  3.61  92%   0%  91%   0%   0%   0%  51.5°C
+01:27:53: 1785MHz  3.53  87%   1%  86%   0%   0%   0%  51.0°C
+01:28:13: 1785MHz  3.53  91%   0%  90%   0%   0%   0%  50.0°C
+01:28:35: 1785MHz  3.44  90%   0%  89%   0%   0%   0%  51.5°C
+01:28:56: 1785MHz  3.56  87%   1%  85%   0%   0%   0%  51.5°C
+
+Throttling statistics (time spent on each cpufreq OPP):
+
+2091 MHz:       0 sec
+1989 MHz:       0 sec
+1887 MHz:       0 sec
+1785 MHz:  970.03 sec
+1683 MHz:       0 sec
+1581 MHz:       0 sec
+1428 MHz:       0 sec
+1326 MHz:       0 sec
+1224 MHz:       0 sec
+1122 MHz:       0 sec
+1020 MHz:       0 sec
+ 918 MHz:       0 sec
+ 816 MHz:       0 sec
+ 714 MHz:       0 sec
+ 612 MHz:       0 sec
+ 510 MHz:       0 sec
+ 408 MHz:       0 sec
+ 306 MHz:       0 sec
+ 204 MHz:       0 sec
+
+##########################################################################
+
+dmesg output while running the benchmarks:
+
+[ 1358.931406] cpu freq(kHz):1683000 emc_freq(KHz) 1600000
+[ 1359.692512] cpu freq(kHz):1581000 emc_freq(KHz) 1600000
+[ 1360.375709] cpu freq(kHz):1428000 emc_freq(KHz) 1600000
+[ 1361.109290] cpu freq(kHz):1326000 emc_freq(KHz) 1600000
+[ 1361.883814] cpu freq(kHz):1224000 emc_freq(KHz) 1600000
+[ 1362.584220] cpu freq(kHz):1122000 emc_freq(KHz) 800000
+[ 1363.329378] cpu freq(kHz):1020000 emc_freq(KHz) 800000
+[ 1364.009840] cpu freq(kHz):918000 emc_freq(KHz) 665600
+[ 1364.747598] cpu freq(kHz):816000 emc_freq(KHz) 665600
+[ 1365.435266] cpu freq(kHz):714000 emc_freq(KHz) 408000
+[ 1366.189651] cpu freq(kHz):612000 emc_freq(KHz) 408000
+[ 1366.909641] cpu freq(kHz):510000 emc_freq(KHz) 408000
+[ 1367.607500] cpu freq(kHz):408000 emc_freq(KHz) 408000
+[ 1368.317110] cpu freq(kHz):306000 emc_freq(KHz) 204000
+[ 1369.067239] cpu freq(kHz):204000 emc_freq(KHz) 102000
+[ 1369.826440] cpu freq(kHz):1785000 emc_freq(KHz) 1600000
+[ 1891.277920] bq2419x 0-006b: Battery temp 42
+[ 1911.757641] bq2419x 0-006b: Battery temp 43
+[ 1932.237450] bq2419x 0-006b: Battery temp 42
+[ 1973.196989] bq2419x 0-006b: Battery temp 43
+[ 2075.596133] bq2419x 0-006b: Battery temp 42
+[ 2096.075994] bq2419x 0-006b: Battery temp 43
+[ 2116.555744] bq2419x 0-006b: Battery temp 42
+[ 2137.035617] bq2419x 0-006b: Battery temp 43
+[ 2343.466471] cpu freq(kHz):1683000 emc_freq(KHz) 1600000
+[ 2344.231021] cpu freq(kHz):1581000 emc_freq(KHz) 1600000
+[ 2344.955746] cpu freq(kHz):1428000 emc_freq(KHz) 1600000
+[ 2345.691740] cpu freq(kHz):1326000 emc_freq(KHz) 1600000
+[ 2346.494816] cpu freq(kHz):1224000 emc_freq(KHz) 1600000
+[ 2347.007244] cpu freq(kHz):1122000 emc_freq(KHz) 800000
+[ 2347.881952] cpu freq(kHz):1020000 emc_freq(KHz) 800000
+[ 2348.463539] cpu freq(kHz):918000 emc_freq(KHz) 665600
+[ 2349.075451] cpu freq(kHz):816000 emc_freq(KHz) 665600
+[ 2350.095585] cpu freq(kHz):714000 emc_freq(KHz) 408000
+[ 2350.847802] cpu freq(kHz):612000 emc_freq(KHz) 408000
+[ 2351.616380] cpu freq(kHz):510000 emc_freq(KHz) 408000
+[ 2352.434429] cpu freq(kHz):408000 emc_freq(KHz) 408000
+[ 2353.141670] cpu freq(kHz):306000 emc_freq(KHz) 204000
+[ 2353.775302] cpu freq(kHz):204000 emc_freq(KHz) 102000
+[ 2354.402348] cpu freq(kHz):1785000 emc_freq(KHz) 1600000
+
+##########################################################################
+
+Linux 4.9.109+ (switch.local) 	08/12/19 	_aarch64_	(4 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+          25.46    0.28    3.48    5.31    0.00   65.48
+
+Device             tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn
+mmcblk0          56.45       681.09      1616.94    1604550    3809268
+
+              total        used        free      shared  buff/cache   available
+Mem:          3.4Gi       481Mi       1.5Gi       5.0Mi       1.4Gi       2.6Gi
+Swap:            0B          0B          0B
+
+
+
+Architecture:        aarch64
+Byte Order:          Little Endian
+CPU(s):              4
+On-line CPU(s) list: 0-3
+Thread(s) per core:  1
+Core(s) per socket:  4
+Socket(s):           1
+Vendor ID:           ARM
+Model:               1
+Model name:          Cortex-A57
+Stepping:            r1p1
+CPU max MHz:         2091.0000
+CPU min MHz:         204.0000
+BogoMIPS:            38.40
+L1d cache:           32K
+L1i cache:           48K
+L2 cache:            2048K
+Flags:               fp asimd evtstrm aes pmull sha1 sha2 crc32
+
+/sys/devices/system/cpu/cpu0/cache/index0/size: 32K, level: 1, type: Data
+/sys/devices/system/cpu/cpu0/cache/index1/size: 48K, level: 1, type: Instruction
+/sys/devices/system/cpu/cpu0/cache/index2/size: 2048K, level: 2, type: Unified
+/sys/devices/system/cpu/cpu1/cache/index0/size: 32K, level: 1, type: Data
+/sys/devices/system/cpu/cpu1/cache/index1/size: 48K, level: 1, type: Instruction
+/sys/devices/system/cpu/cpu1/cache/index2/size: 2048K, level: 2, type: Unified
+/sys/devices/system/cpu/cpu2/cache/index0/size: 32K, level: 1, type: Data
+/sys/devices/system/cpu/cpu2/cache/index1/size: 48K, level: 1, type: Instruction
+/sys/devices/system/cpu/cpu2/cache/index2/size: 2048K, level: 2, type: Unified
+/sys/devices/system/cpu/cpu3/cache/index0/size: 32K, level: 1, type: Data
+/sys/devices/system/cpu/cpu3/cache/index1/size: 48K, level: 1, type: Instruction
+/sys/devices/system/cpu/cpu3/cache/index2/size: 2048K, level: 2, type: Unified

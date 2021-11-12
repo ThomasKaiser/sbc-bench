@@ -1,0 +1,368 @@
+sbc-bench v0.6.6 Intel(R) Atom(TM) x5-Z8350 CPU @ 1.44GHz (Sat, 27 Apr 2019 13:46:02 -0500)
+
+Distributor ID:	Ubuntu
+Description:	Ubuntu 18.04.2 LTS
+Release:	18.04
+Codename:	bionic
+Architecture:	amd64
+
+/usr/bin/gcc (Ubuntu 7.3.0-27ubuntu1~18.04) 7.3.0
+
+Uptime: 13:46:02 up 20 min,  2 users,  load average: 0.23, 0.56, 0.49
+
+Linux 4.15.0-48-generic (atomicpi) 	04/27/19 	_x86_64_	(4 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+          11.97    0.28    1.18    0.18    0.00   86.39
+
+Device             tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn
+mmcblk0          16.72       364.44       311.71     454677     388885
+mmcblk0boot1      0.07         0.28         0.00        348          0
+mmcblk0boot0      0.07         0.28         0.00        344          0
+sda               0.12         2.53         0.00       3152          0
+
+              total        used        free      shared  buff/cache   available
+Mem:           1.9G        118M        1.1G        1.1M        667M        1.6G
+Swap:          666M          0B        666M
+
+Filename				Type		Size	Used	Priority
+/swapfile                              	file    	682588	0	-2
+
+##########################################################################
+
+Checking cpufreq OPP:
+
+No cpufreq support available. Measured on cpu1: 1678.127/1676.767/1677.690
+
+##########################################################################
+
+tinymembench v0.4.9 (simple benchmark for memory throughput and latency)
+
+==========================================================================
+== Memory bandwidth tests                                               ==
+==                                                                      ==
+== Note 1: 1MB = 1000000 bytes                                          ==
+== Note 2: Results for 'copy' tests show how many bytes can be          ==
+==         copied per second (adding together read and writen           ==
+==         bytes would have provided twice higher numbers)              ==
+== Note 3: 2-pass copy means that we are using a small temporary buffer ==
+==         to first fetch data into it, and only then write it to the   ==
+==         destination (source -> L1 cache, L1 cache -> destination)    ==
+== Note 4: If sample standard deviation exceeds 0.1%, it is shown in    ==
+==         brackets                                                     ==
+==========================================================================
+
+ C copy backwards                                     :   1951.8 MB/s (0.6%)
+ C copy backwards (32 byte blocks)                    :   1952.6 MB/s
+ C copy backwards (64 byte blocks)                    :   1951.9 MB/s
+ C copy                                               :   1954.4 MB/s
+ C copy prefetched (32 bytes step)                    :   1744.8 MB/s
+ C copy prefetched (64 bytes step)                    :   1748.8 MB/s
+ C 2-pass copy                                        :   1718.7 MB/s
+ C 2-pass copy prefetched (32 bytes step)             :   1378.0 MB/s
+ C 2-pass copy prefetched (64 bytes step)             :   1375.9 MB/s
+ C fill                                               :   3095.5 MB/s
+ C fill (shuffle within 16 byte blocks)               :   3095.6 MB/s
+ C fill (shuffle within 32 byte blocks)               :   3096.2 MB/s
+ C fill (shuffle within 64 byte blocks)               :   3095.6 MB/s
+ ---
+ standard memcpy                                      :   2742.2 MB/s
+ standard memset                                      :   3136.0 MB/s
+ ---
+ MOVSB copy                                           :   1815.2 MB/s
+ MOVSD copy                                           :   1814.7 MB/s
+ SSE2 copy                                            :   1908.8 MB/s
+ SSE2 nontemporal copy                                :   2660.9 MB/s
+ SSE2 copy prefetched (32 bytes step)                 :   1940.4 MB/s
+ SSE2 copy prefetched (64 bytes step)                 :   1941.9 MB/s
+ SSE2 nontemporal copy prefetched (32 bytes step)     :   1969.7 MB/s (0.5%)
+ SSE2 nontemporal copy prefetched (64 bytes step)     :   1989.3 MB/s (0.6%)
+ SSE2 2-pass copy                                     :   1853.1 MB/s
+ SSE2 2-pass copy prefetched (32 bytes step)          :   1561.9 MB/s
+ SSE2 2-pass copy prefetched (64 bytes step)          :   1576.3 MB/s
+ SSE2 2-pass nontemporal copy                         :   1202.0 MB/s
+ SSE2 fill                                            :   3136.6 MB/s
+ SSE2 nontemporal fill                                :   4390.3 MB/s (0.3%)
+
+==========================================================================
+== Memory latency test                                                  ==
+==                                                                      ==
+== Average time is measured for random memory accesses in the buffers   ==
+== of different sizes. The larger is the buffer, the more significant   ==
+== are relative contributions of TLB, L1/L2 cache misses and SDRAM      ==
+== accesses. For extremely large buffer sizes we are expecting to see   ==
+== page table walk with several requests to SDRAM for almost every      ==
+== memory access (though 64MiB is not nearly large enough to experience ==
+== this effect to its fullest).                                         ==
+==                                                                      ==
+== Note 1: All the numbers are representing extra time, which needs to  ==
+==         be added to L1 cache latency. The cycle timings for L1 cache ==
+==         latency can be usually found in the processor documentation. ==
+== Note 2: Dual random read means that we are simultaneously performing ==
+==         two independent memory accesses at a time. In the case if    ==
+==         the memory subsystem can't handle multiple outstanding       ==
+==         requests, dual random read has the same timings as two       ==
+==         single reads performed one after another.                    ==
+==========================================================================
+
+block size : single random read / dual random read, [MADV_NOHUGEPAGE]
+      1024 :    0.0 ns          /     0.0 ns 
+      2048 :    0.0 ns          /     0.0 ns 
+      4096 :    0.0 ns          /     0.0 ns 
+      8192 :    0.0 ns          /     0.0 ns 
+     16384 :    0.0 ns          /     0.0 ns 
+     32768 :    1.8 ns          /     3.3 ns 
+     65536 :    4.5 ns          /     7.4 ns 
+    131072 :    5.8 ns          /     9.2 ns 
+    262144 :    8.6 ns          /    12.7 ns 
+    524288 :   10.0 ns          /    14.5 ns 
+   1048576 :   12.7 ns          /    18.1 ns 
+   2097152 :   93.4 ns          /   143.7 ns 
+   4194304 :  133.6 ns          /   184.0 ns 
+   8388608 :  155.4 ns          /   201.5 ns 
+  16777216 :  167.5 ns          /   210.8 ns 
+  33554432 :  175.2 ns          /   217.8 ns 
+  67108864 :  195.4 ns          /   250.8 ns 
+
+block size : single random read / dual random read, [MADV_HUGEPAGE]
+      1024 :    0.0 ns          /     0.0 ns 
+      2048 :    0.0 ns          /     0.0 ns 
+      4096 :    0.0 ns          /     0.0 ns 
+      8192 :    0.0 ns          /     0.0 ns 
+     16384 :    0.0 ns          /     0.0 ns 
+     32768 :    1.8 ns          /     3.3 ns 
+     65536 :    4.5 ns          /     7.4 ns 
+    131072 :    5.8 ns          /     9.2 ns 
+    262144 :    8.6 ns          /    12.7 ns 
+    524288 :   10.0 ns          /    14.5 ns 
+   1048576 :   12.3 ns          /    17.8 ns 
+   2097152 :   87.9 ns          /   134.9 ns 
+   4194304 :  125.1 ns          /   169.6 ns 
+   8388608 :  143.4 ns          /   180.8 ns 
+  16777216 :  152.5 ns          /   185.0 ns 
+  33554432 :  157.1 ns          /   186.7 ns 
+  67108864 :  169.2 ns          /   204.4 ns 
+
+##########################################################################
+
+OpenSSL 1.1.0g, built on 2 Nov 2017
+type             16 bytes     64 bytes    256 bytes   1024 bytes   8192 bytes  16384 bytes
+aes-128-cbc     120325.22k   207207.55k   262773.93k   281623.21k   287479.13k   287719.42k
+aes-128-cbc     120276.38k   207252.76k   262811.48k   281525.25k   287470.93k   287866.88k
+aes-192-cbc     111361.91k   181952.53k   223428.69k   236926.29k   241003.18k   241276.25k
+aes-192-cbc     111361.86k   181859.67k   223420.67k   236933.80k   241025.02k   241052.33k
+aes-256-cbc     104021.70k   160231.70k   193601.79k   204241.92k   207448.75k   207650.82k
+aes-256-cbc     103558.23k   160237.78k   193614.68k   203827.54k   207440.55k   207634.43k
+
+##########################################################################
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=en_US.UTF-8,Utf16=on,HugeFiles=on,64 bits,4 CPUs Intel(R) Atom(TM) x5-Z8350  CPU @ 1.44GHz (406C4),ASM,AES-NI)
+
+      Intel(R) Atom(TM) x5-Z8350  CPU @ 1.44GHz (406C4)
+CPU Freq:  1660  1672  1670  1673  1672  1673  1674  1672  1673
+
+RAM size:    1907 MB,  # CPU hardware threads:   4
+RAM usage:    882 MB,  # Benchmark threads:      4
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       1113   100   1083   1083  |      16943   100   1446   1446
+23:       1078   100   1098   1098  |      16638   100   1440   1440
+24:       1036   100   1115   1115  |      16306   100   1431   1431
+25:       1008   100   1152   1152  |      15843   100   1410   1410
+----------------------------------  | ------------------------------
+Avr:             100   1112   1112  |              100   1432   1432
+Tot:             100   1272   1272
+
+##########################################################################
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=en_US.UTF-8,Utf16=on,HugeFiles=on,64 bits,4 CPUs Intel(R) Atom(TM) x5-Z8350  CPU @ 1.44GHz (406C4),ASM,AES-NI)
+
+      Intel(R) Atom(TM) x5-Z8350  CPU @ 1.44GHz (406C4)
+CPU Freq:  1666  1673  1671  1673  1673  1674  1673  1673  1673
+
+RAM size:    1907 MB,  # CPU hardware threads:   4
+RAM usage:    882 MB,  # Benchmark threads:      4
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       3482   335   1011   3388  |      68208   399   1457   5819
+23:       3795   367   1053   3867  |      66707   399   1445   5772
+24:       3470   364   1024   3731  |      65147   399   1434   5719
+25:       3365   367   1047   3842  |      63154   399   1408   5621
+----------------------------------  | ------------------------------
+Avr:             358   1034   3707  |              399   1436   5733
+Tot:             379   1235   4720
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=en_US.UTF-8,Utf16=on,HugeFiles=on,64 bits,4 CPUs Intel(R) Atom(TM) x5-Z8350  CPU @ 1.44GHz (406C4),ASM,AES-NI)
+
+      Intel(R) Atom(TM) x5-Z8350  CPU @ 1.44GHz (406C4)
+CPU Freq:  1663  1674  1673  1673  1673  1673  1674  1673  1673
+
+RAM size:    1907 MB,  # CPU hardware threads:   4
+RAM usage:    882 MB,  # Benchmark threads:      4
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       3562   342   1012   3465  |      68153   399   1456   5815
+23:       3535   353   1021   3603  |      66678   399   1446   5769
+24:       3455   364   1022   3716  |      65386   400   1437   5740
+25:       3432   372   1054   3919  |      63174   399   1408   5622
+----------------------------------  | ------------------------------
+Avr:             358   1027   3675  |              399   1437   5737
+Tot:             379   1232   4706
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=en_US.UTF-8,Utf16=on,HugeFiles=on,64 bits,4 CPUs Intel(R) Atom(TM) x5-Z8350  CPU @ 1.44GHz (406C4),ASM,AES-NI)
+
+      Intel(R) Atom(TM) x5-Z8350  CPU @ 1.44GHz (406C4)
+CPU Freq:  1667  1674  1673  1674  1673  1673  1672  1673  1673
+
+RAM size:    1907 MB,  # CPU hardware threads:   4
+RAM usage:    882 MB,  # Benchmark threads:      4
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       3540   340   1012   3444  |      67469   396   1455   5756
+23:       3540   354   1019   3607  |      66789   400   1446   5779
+24:       3449   363   1022   3709  |      65253   399   1435   5728
+25:       3400   370   1049   3883  |      63159   399   1408   5621
+----------------------------------  | ------------------------------
+Avr:             357   1026   3661  |              398   1436   5721
+Tot:             378   1231   4691
+
+Compression: 3707,3675,3661
+Decompression: 5733,5737,5721
+Total: 4720,4706,4691
+
+##########################################################################
+
+Testing clockspeeds again. System health now:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+13:59:20: 1680MHz  3.53  88%   2%  86%   0%   0%   0%  -273200°C
+
+Checking cpufreq OPP:
+
+No cpufreq support available. Measured on cpu1: 1678.301/1677.987/1678.388
+
+##########################################################################
+
+System health while running tinymembench:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+13:46:04: 1188MHz  0.23  13%   1%  11%   0%   0%   0%  -273200°C
+13:48:04:  515MHz  0.92  25%   0%  24%   0%   0%   0%  -273200°C
+13:50:04:  506MHz  0.99  25%   0%  25%   0%   0%   0%  -273200°C
+
+System health while running OpenSSL benchmark:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+13:51:36: 1073MHz  1.00  16%   0%  14%   0%   0%   0%  -273200°C
+13:51:46:  699MHz  1.00  25%   0%  25%   0%   0%   0%  -273200°C
+13:51:56: 1683MHz  1.00  25%   0%  24%   0%   0%   0%  -273200°C
+13:52:06: 1678MHz  1.00  25%   0%  25%   0%   0%   0%  -273200°C
+13:52:16:  619MHz  1.00  25%   0%  25%   0%   0%   0%  -273200°C
+13:52:26:  816MHz  1.00  25%   0%  25%   0%   0%   0%  -273200°C
+13:52:37: 1680MHz  1.00  25%   0%  25%   0%   0%   0%  -273200°C
+13:52:47: 1680MHz  1.00  25%   0%  25%   0%   0%   0%  -273200°C
+13:52:57:  612MHz  1.00  25%   0%  25%   0%   0%   0%  -273200°C
+13:53:07: 1680MHz  1.00  25%   0%  24%   0%   0%   0%  -273200°C
+13:53:17: 1680MHz  1.00  25%   0%  25%   0%   0%   0%  -273200°C
+
+System health while running 7-zip single core benchmark:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+13:53:24: 1680MHz  1.00  16%   0%  15%   0%   0%   0%  -273200°C
+13:54:24: 1680MHz  2.62  25%   0%  24%   0%   0%   0%  -273200°C
+13:55:24: 1680MHz  2.89  25%   0%  24%   0%   0%   0%  -273200°C
+13:56:24: 1680MHz  2.91  25%   0%  24%   0%   0%   0%  -273200°C
+
+System health while running 7-zip multi core benchmark:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+13:56:37: 1065MHz  3.15  17%   0%  16%   0%   0%   0%  -273200°C
+13:56:57: 1680MHz  3.15  82%   1%  81%   0%   0%   0%  -273200°C
+13:57:17: 1680MHz  3.47  86%   2%  84%   0%   0%   0%  -273200°C
+13:57:37: 1680MHz  3.44  87%   1%  85%   0%   0%   0%  -273200°C
+13:57:58: 1680MHz  3.52  89%   1%  88%   0%   0%   0%  -273200°C
+13:58:18: 1680MHz  3.73  88%   2%  86%   0%   0%   0%  -273200°C
+13:58:39: 1680MHz  3.87  87%   1%  85%   0%   0%   0%  -273200°C
+13:59:00: 1680MHz  3.69  90%   1%  89%   0%   0%   0%  -273200°C
+13:59:20: 1680MHz  3.53  88%   2%  86%   0%   0%   0%  -273200°C
+
+##########################################################################
+
+dmesg output while running the benchmarks:
+
+[ 1739.720406] perf: interrupt took too long (3182 > 3155), lowering kernel.perf_event_max_sample_rate to 62750
+[ 1897.106116] perf: interrupt took too long (4004 > 3977), lowering kernel.perf_event_max_sample_rate to 49750
+
+##########################################################################
+
+Linux 4.15.0-48-generic (atomicpi) 	04/27/19 	_x86_64_	(4 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+          22.25    0.17    0.95    0.13    0.00   76.49
+
+Device             tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn
+mmcblk0          10.38       220.98       241.41     454841     496885
+mmcblk0boot1      0.04         0.17         0.00        348          0
+mmcblk0boot0      0.04         0.17         0.00        344          0
+sda               0.07         1.53         0.00       3152          0
+
+              total        used        free      shared  buff/cache   available
+Mem:           1.9G        119M        1.1G        1.1M        668M        1.6G
+Swap:          666M          0B        666M
+
+Filename				Type		Size	Used	Priority
+/swapfile                              	file    	682588	0	-2
+
+Architecture:        x86_64
+CPU op-mode(s):      32-bit, 64-bit
+Byte Order:          Little Endian
+CPU(s):              4
+On-line CPU(s) list: 0-3
+Thread(s) per core:  1
+Core(s) per socket:  4
+Socket(s):           1
+NUMA node(s):        1
+Vendor ID:           GenuineIntel
+CPU family:          6
+Model:               76
+Model name:          Intel(R) Atom(TM) x5-Z8350  CPU @ 1.44GHz
+Stepping:            4
+CPU MHz:             1342.536
+CPU max MHz:         1920.0000
+CPU min MHz:         480.0000
+BogoMIPS:            2880.00
+Virtualization:      VT-x
+L1d cache:           24K
+L1i cache:           32K
+L2 cache:            1024K
+NUMA node0 CPU(s):   0-3
+Flags:               fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx rdtscp lm constant_tsc arch_perfmon pebs bts rep_good nopl xtopology tsc_reliable nonstop_tsc cpuid aperfmperf tsc_known_freq pni pclmulqdq dtes64 monitor ds_cpl vmx est tm2 ssse3 cx16 xtpr pdcm sse4_1 sse4_2 movbe popcnt tsc_deadline_timer aes rdrand lahf_lm 3dnowprefetch epb pti tpr_shadow vnmi flexpriority ept vpid tsc_adjust smep erms dtherm ida arat
+
+/sys/devices/system/cpu/cpu0/cache/index2/size: 1024K, level: 2, type: Unified
+/sys/devices/system/cpu/cpu0/cache/index0/size: 24K, level: 1, type: Data
+/sys/devices/system/cpu/cpu0/cache/index1/size: 32K, level: 1, type: Instruction
+/sys/devices/system/cpu/cpu1/cache/index2/size: 1024K, level: 2, type: Unified
+/sys/devices/system/cpu/cpu1/cache/index0/size: 24K, level: 1, type: Data
+/sys/devices/system/cpu/cpu1/cache/index1/size: 32K, level: 1, type: Instruction
+/sys/devices/system/cpu/cpu2/cache/index2/size: 1024K, level: 2, type: Unified
+/sys/devices/system/cpu/cpu2/cache/index0/size: 24K, level: 1, type: Data
+/sys/devices/system/cpu/cpu2/cache/index1/size: 32K, level: 1, type: Instruction
+/sys/devices/system/cpu/cpu3/cache/index2/size: 1024K, level: 2, type: Unified
+/sys/devices/system/cpu/cpu3/cache/index0/size: 24K, level: 1, type: Data
+/sys/devices/system/cpu/cpu3/cache/index1/size: 32K, level: 1, type: Instruction

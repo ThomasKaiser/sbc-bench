@@ -1,0 +1,843 @@
+sbc-bench v0.6.1 FriendlyElec NanoPi M4 (Thu, 04 Oct 2018 14:34:22 +0000)
+
+Distributor ID:	Debian
+Description:	Debian GNU/Linux 9.5 (stretch)
+Release:	9.5
+Codename:	stretch
+
+Armbian release info:
+BOARD=nanopineo4
+BOARD_NAME="Nanopi NEO4"
+BOARDFAMILY=rk3399
+VERSION=5.60
+LINUXFAMILY=rk3399
+BRANCH=default
+ARCH=arm64
+IMAGE_TYPE=stable
+BOARD_TYPE=conf
+INITRD_ARCH=arm64
+KERNEL_IMAGE_TYPE=Image
+
+/usr/bin/gcc (Debian 6.3.0-18+deb9u1) 6.3.0 20170516
+
+Uptime: 14:34:22 up 15 min,  2 users,  load average: 0.08, 0.34, 0.39
+
+Linux 4.4.156-rk3399 (nanopineo-shim) 	10/04/18 	_aarch64_	(6 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+           9.94    0.12    0.81    0.04    0.00   89.09
+
+Device:            tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn
+mmcblk0           2.95       134.96         0.83     124893        764
+zram0             1.34         0.80         4.55        736       4208
+zram1             0.32         1.29         0.00       1196          4
+zram2             0.32         1.29         0.00       1196          4
+zram3             0.32         1.29         0.00       1196          4
+zram4             0.32         1.29         0.00       1196          4
+
+              total        used        free      shared  buff/cache   available
+Mem:           919M         70M        696M        8.0M        152M        769M
+Swap:          459M          0B        459M
+
+Filename				Type		Size	Used	Priority
+/dev/zram1                             	partition	117744	0	5
+/dev/zram2                             	partition	117744	0	5
+/dev/zram3                             	partition	117744	0	5
+/dev/zram4                             	partition	117744	0	5
+
+##########################################################################
+
+Checking cpufreq OPP for cpu0-cpu3:
+
+Cpufreq OPP: 1512    Measured: 1503.558/1503.191/1503.506
+Cpufreq OPP: 1416    Measured: 1406.967/1407.166/1407.657
+Cpufreq OPP: 1200    Measured: 1191.472/1191.307/1191.183
+Cpufreq OPP: 1008    Measured: 999.014/999.352/999.255
+Cpufreq OPP:  816    Measured: 807.637/807.194/807.677
+Cpufreq OPP:  600    Measured: 591.260/591.360/591.492
+Cpufreq OPP:  408    Measured: 399.636/399.537/399.471
+
+Checking cpufreq OPP for cpu4-cpu5:
+
+Cpufreq OPP: 1992    Measured: 1985.004/1985.614/1985.517
+Cpufreq OPP: 1800    Measured: 1793.710/1793.232/1793.232
+Cpufreq OPP: 1608    Measured: 1601.396/1601.416/1600.047
+Cpufreq OPP: 1416    Measured: 1409.701/1409.747/1409.747
+Cpufreq OPP: 1200    Measured: 1192.889/1192.903/1193.316
+Cpufreq OPP: 1008    Measured: 1001.593/1001.872/1001.508
+Cpufreq OPP:  816    Measured: 809.387/809.427/809.506
+Cpufreq OPP:  600    Measured: 593.230/593.124/592.778
+Cpufreq OPP:  408    Measured: 401.057/401.071/400.601
+
+##########################################################################
+
+Executing tinymembench on a little core:
+
+tinymembench v0.4.9 (simple benchmark for memory throughput and latency)
+
+==========================================================================
+== Memory bandwidth tests                                               ==
+==                                                                      ==
+== Note 1: 1MB = 1000000 bytes                                          ==
+== Note 2: Results for 'copy' tests show how many bytes can be          ==
+==         copied per second (adding together read and writen           ==
+==         bytes would have provided twice higher numbers)              ==
+== Note 3: 2-pass copy means that we are using a small temporary buffer ==
+==         to first fetch data into it, and only then write it to the   ==
+==         destination (source -> L1 cache, L1 cache -> destination)    ==
+== Note 4: If sample standard deviation exceeds 0.1%, it is shown in    ==
+==         brackets                                                     ==
+==========================================================================
+
+ C copy backwards                                     :   1297.1 MB/s (0.6%)
+ C copy backwards (32 byte blocks)                    :   1313.1 MB/s (0.6%)
+ C copy backwards (64 byte blocks)                    :   1306.2 MB/s (0.4%)
+ C copy                                               :   1299.4 MB/s (0.3%)
+ C copy prefetched (32 bytes step)                    :   1010.7 MB/s (0.1%)
+ C copy prefetched (64 bytes step)                    :   1158.3 MB/s
+ C 2-pass copy                                        :   1176.1 MB/s
+ C 2-pass copy prefetched (32 bytes step)             :    851.3 MB/s
+ C 2-pass copy prefetched (64 bytes step)             :    676.6 MB/s (0.2%)
+ C fill                                               :   4637.4 MB/s
+ C fill (shuffle within 16 byte blocks)               :   4637.9 MB/s
+ C fill (shuffle within 32 byte blocks)               :   4635.4 MB/s
+ C fill (shuffle within 64 byte blocks)               :   4636.0 MB/s
+ ---
+ standard memcpy                                      :   1351.7 MB/s
+ standard memset                                      :   4637.1 MB/s
+ ---
+ NEON LDP/STP copy                                    :   1358.3 MB/s
+ NEON LDP/STP copy pldl2strm (32 bytes step)          :    946.5 MB/s (0.5%)
+ NEON LDP/STP copy pldl2strm (64 bytes step)          :   1150.2 MB/s
+ NEON LDP/STP copy pldl1keep (32 bytes step)          :   1527.1 MB/s
+ NEON LDP/STP copy pldl1keep (64 bytes step)          :   1527.8 MB/s
+ NEON LD1/ST1 copy                                    :   1349.4 MB/s (0.2%)
+ NEON STP fill                                        :   4637.6 MB/s
+ NEON STNP fill                                       :   1520.2 MB/s (2.1%)
+ ARM LDP/STP copy                                     :   1361.3 MB/s
+ ARM STP fill                                         :   4639.5 MB/s (0.8%)
+ ARM STNP fill                                        :   1446.3 MB/s (1.5%)
+
+==========================================================================
+== Framebuffer read tests.                                              ==
+==                                                                      ==
+== Many ARM devices use a part of the system memory as the framebuffer, ==
+== typically mapped as uncached but with write-combining enabled.       ==
+== Writes to such framebuffers are quite fast, but reads are much       ==
+== slower and very sensitive to the alignment and the selection of      ==
+== CPU instructions which are used for accessing memory.                ==
+==                                                                      ==
+== Many x86 systems allocate the framebuffer in the GPU memory,         ==
+== accessible for the CPU via a relatively slow PCI-E bus. Moreover,    ==
+== PCI-E is asymmetric and handles reads a lot worse than writes.       ==
+==                                                                      ==
+== If uncached framebuffer reads are reasonably fast (at least 100 MB/s ==
+== or preferably >300 MB/s), then using the shadow framebuffer layer    ==
+== is not necessary in Xorg DDX drivers, resulting in a nice overall    ==
+== performance improvement. For example, the xf86-video-fbturbo DDX     ==
+== uses this trick.                                                     ==
+==========================================================================
+
+ NEON LDP/STP copy (from framebuffer)                 :    202.3 MB/s
+ NEON LDP/STP 2-pass copy (from framebuffer)          :    184.1 MB/s
+ NEON LD1/ST1 copy (from framebuffer)                 :     49.9 MB/s
+ NEON LD1/ST1 2-pass copy (from framebuffer)          :     48.2 MB/s
+ ARM LDP/STP copy (from framebuffer)                  :     99.6 MB/s
+ ARM LDP/STP 2-pass copy (from framebuffer)           :     95.4 MB/s
+
+==========================================================================
+== Memory latency test                                                  ==
+==                                                                      ==
+== Average time is measured for random memory accesses in the buffers   ==
+== of different sizes. The larger is the buffer, the more significant   ==
+== are relative contributions of TLB, L1/L2 cache misses and SDRAM      ==
+== accesses. For extremely large buffer sizes we are expecting to see   ==
+== page table walk with several requests to SDRAM for almost every      ==
+== memory access (though 64MiB is not nearly large enough to experience ==
+== this effect to its fullest).                                         ==
+==                                                                      ==
+== Note 1: All the numbers are representing extra time, which needs to  ==
+==         be added to L1 cache latency. The cycle timings for L1 cache ==
+==         latency can be usually found in the processor documentation. ==
+== Note 2: Dual random read means that we are simultaneously performing ==
+==         two independent memory accesses at a time. In the case if    ==
+==         the memory subsystem can't handle multiple outstanding       ==
+==         requests, dual random read has the same timings as two       ==
+==         single reads performed one after another.                    ==
+==========================================================================
+
+block size : single random read / dual random read, [MADV_NOHUGEPAGE]
+      1024 :    0.0 ns          /     0.0 ns 
+      2048 :    0.0 ns          /     0.0 ns 
+      4096 :    0.0 ns          /     0.0 ns 
+      8192 :    0.0 ns          /     0.0 ns 
+     16384 :    0.0 ns          /     0.0 ns 
+     32768 :    0.1 ns          /     0.1 ns 
+     65536 :    4.6 ns          /     7.7 ns 
+    131072 :    7.0 ns          /    10.7 ns 
+    262144 :    8.3 ns          /    11.9 ns 
+    524288 :   14.9 ns          /    21.1 ns 
+   1048576 :  102.6 ns          /   155.3 ns 
+   2097152 :  147.0 ns          /   192.6 ns 
+   4194304 :  172.6 ns          /   209.9 ns 
+   8388608 :  186.1 ns          /   218.6 ns 
+  16777216 :  194.8 ns          /   224.4 ns 
+  33554432 :  199.0 ns          /   229.1 ns 
+  67108864 :  201.8 ns          /   233.0 ns 
+
+block size : single random read / dual random read, [MADV_HUGEPAGE]
+      1024 :    0.0 ns          /     0.0 ns 
+      2048 :    0.0 ns          /     0.0 ns 
+      4096 :    0.0 ns          /     0.0 ns 
+      8192 :    0.0 ns          /     0.0 ns 
+     16384 :    0.0 ns          /     0.0 ns 
+     32768 :    0.1 ns          /     0.1 ns 
+     65536 :    4.6 ns          /     7.7 ns 
+    131072 :    7.0 ns          /    10.7 ns 
+    262144 :    8.3 ns          /    11.7 ns 
+    524288 :   14.9 ns          /    21.4 ns 
+   1048576 :  102.5 ns          /   155.3 ns 
+   2097152 :  145.8 ns          /   191.4 ns 
+   4194304 :  167.2 ns          /   202.7 ns 
+   8388608 :  178.5 ns          /   206.6 ns 
+  16777216 :  184.2 ns          /   208.2 ns 
+  33554432 :  187.0 ns          /   208.7 ns 
+  67108864 :  188.4 ns          /   209.0 ns 
+
+Executing tinymembench on a big core:
+
+tinymembench v0.4.9 (simple benchmark for memory throughput and latency)
+
+==========================================================================
+== Memory bandwidth tests                                               ==
+==                                                                      ==
+== Note 1: 1MB = 1000000 bytes                                          ==
+== Note 2: Results for 'copy' tests show how many bytes can be          ==
+==         copied per second (adding together read and writen           ==
+==         bytes would have provided twice higher numbers)              ==
+== Note 3: 2-pass copy means that we are using a small temporary buffer ==
+==         to first fetch data into it, and only then write it to the   ==
+==         destination (source -> L1 cache, L1 cache -> destination)    ==
+== Note 4: If sample standard deviation exceeds 0.1%, it is shown in    ==
+==         brackets                                                     ==
+==========================================================================
+
+ C copy backwards                                     :   2270.5 MB/s
+ C copy backwards (32 byte blocks)                    :   2269.8 MB/s
+ C copy backwards (64 byte blocks)                    :   2250.9 MB/s
+ C copy                                               :   2265.7 MB/s
+ C copy prefetched (32 bytes step)                    :   2242.2 MB/s
+ C copy prefetched (64 bytes step)                    :   2240.4 MB/s
+ C 2-pass copy                                        :   2053.5 MB/s
+ C 2-pass copy prefetched (32 bytes step)             :   2068.1 MB/s
+ C 2-pass copy prefetched (64 bytes step)             :   2066.1 MB/s
+ C fill                                               :   4768.0 MB/s (0.3%)
+ C fill (shuffle within 16 byte blocks)               :   4766.4 MB/s
+ C fill (shuffle within 32 byte blocks)               :   4767.2 MB/s
+ C fill (shuffle within 64 byte blocks)               :   4768.6 MB/s
+ ---
+ standard memcpy                                      :   2279.5 MB/s
+ standard memset                                      :   4772.4 MB/s (0.4%)
+ ---
+ NEON LDP/STP copy                                    :   2283.4 MB/s
+ NEON LDP/STP copy pldl2strm (32 bytes step)          :   2273.7 MB/s
+ NEON LDP/STP copy pldl2strm (64 bytes step)          :   2273.8 MB/s
+ NEON LDP/STP copy pldl1keep (32 bytes step)          :   2240.9 MB/s
+ NEON LDP/STP copy pldl1keep (64 bytes step)          :   2240.1 MB/s
+ NEON LD1/ST1 copy                                    :   2282.4 MB/s
+ NEON STP fill                                        :   4778.7 MB/s (0.4%)
+ NEON STNP fill                                       :   4745.1 MB/s
+ ARM LDP/STP copy                                     :   2284.9 MB/s
+ ARM STP fill                                         :   4776.4 MB/s (0.4%)
+ ARM STNP fill                                        :   4744.3 MB/s
+
+==========================================================================
+== Framebuffer read tests.                                              ==
+==                                                                      ==
+== Many ARM devices use a part of the system memory as the framebuffer, ==
+== typically mapped as uncached but with write-combining enabled.       ==
+== Writes to such framebuffers are quite fast, but reads are much       ==
+== slower and very sensitive to the alignment and the selection of      ==
+== CPU instructions which are used for accessing memory.                ==
+==                                                                      ==
+== Many x86 systems allocate the framebuffer in the GPU memory,         ==
+== accessible for the CPU via a relatively slow PCI-E bus. Moreover,    ==
+== PCI-E is asymmetric and handles reads a lot worse than writes.       ==
+==                                                                      ==
+== If uncached framebuffer reads are reasonably fast (at least 100 MB/s ==
+== or preferably >300 MB/s), then using the shadow framebuffer layer    ==
+== is not necessary in Xorg DDX drivers, resulting in a nice overall    ==
+== performance improvement. For example, the xf86-video-fbturbo DDX     ==
+== uses this trick.                                                     ==
+==========================================================================
+
+ NEON LDP/STP copy (from framebuffer)                 :    605.5 MB/s (1.0%)
+ NEON LDP/STP 2-pass copy (from framebuffer)          :    555.5 MB/s (0.8%)
+ NEON LD1/ST1 copy (from framebuffer)                 :    637.9 MB/s (0.2%)
+ NEON LD1/ST1 2-pass copy (from framebuffer)          :    605.3 MB/s
+ ARM LDP/STP copy (from framebuffer)                  :    439.6 MB/s
+ ARM LDP/STP 2-pass copy (from framebuffer)           :    448.6 MB/s
+
+==========================================================================
+== Memory latency test                                                  ==
+==                                                                      ==
+== Average time is measured for random memory accesses in the buffers   ==
+== of different sizes. The larger is the buffer, the more significant   ==
+== are relative contributions of TLB, L1/L2 cache misses and SDRAM      ==
+== accesses. For extremely large buffer sizes we are expecting to see   ==
+== page table walk with several requests to SDRAM for almost every      ==
+== memory access (though 64MiB is not nearly large enough to experience ==
+== this effect to its fullest).                                         ==
+==                                                                      ==
+== Note 1: All the numbers are representing extra time, which needs to  ==
+==         be added to L1 cache latency. The cycle timings for L1 cache ==
+==         latency can be usually found in the processor documentation. ==
+== Note 2: Dual random read means that we are simultaneously performing ==
+==         two independent memory accesses at a time. In the case if    ==
+==         the memory subsystem can't handle multiple outstanding       ==
+==         requests, dual random read has the same timings as two       ==
+==         single reads performed one after another.                    ==
+==========================================================================
+
+block size : single random read / dual random read, [MADV_NOHUGEPAGE]
+      1024 :    0.0 ns          /     0.0 ns 
+      2048 :    0.0 ns          /     0.0 ns 
+      4096 :    0.0 ns          /     0.0 ns 
+      8192 :    0.0 ns          /     0.0 ns 
+     16384 :    0.0 ns          /     0.0 ns 
+     32768 :    0.0 ns          /     0.0 ns 
+     65536 :    4.1 ns          /     6.5 ns 
+    131072 :    6.2 ns          /     8.7 ns 
+    262144 :    8.9 ns          /    11.6 ns 
+    524288 :   10.3 ns          /    13.3 ns 
+   1048576 :   14.7 ns          /    20.8 ns 
+   2097152 :  107.0 ns          /   162.4 ns 
+   4194304 :  151.9 ns          /   203.1 ns 
+   8388608 :  179.1 ns          /   224.4 ns 
+  16777216 :  192.6 ns          /   232.9 ns 
+  33554432 :  199.7 ns          /   239.0 ns 
+  67108864 :  211.1 ns          /   252.4 ns 
+
+block size : single random read / dual random read, [MADV_HUGEPAGE]
+      1024 :    0.0 ns          /     0.0 ns 
+      2048 :    0.0 ns          /     0.0 ns 
+      4096 :    0.0 ns          /     0.0 ns 
+      8192 :    0.0 ns          /     0.0 ns 
+     16384 :    0.0 ns          /     0.0 ns 
+     32768 :    0.0 ns          /     0.0 ns 
+     65536 :    4.1 ns          /     6.5 ns 
+    131072 :    6.1 ns          /     8.7 ns 
+    262144 :    7.2 ns          /     9.5 ns 
+    524288 :    7.7 ns          /     9.9 ns 
+   1048576 :   11.7 ns          /    16.3 ns 
+   2097152 :  105.2 ns          /   159.3 ns 
+   4194304 :  149.9 ns          /   198.8 ns 
+   8388608 :  171.6 ns          /   211.1 ns 
+  16777216 :  182.1 ns          /   215.1 ns 
+  33554432 :  187.6 ns          /   217.1 ns 
+  67108864 :  190.0 ns          /   218.5 ns 
+
+##########################################################################
+
+OpenSSL 1.1.0f, built on 25 May 2017
+type             16 bytes     64 bytes    256 bytes   1024 bytes   8192 bytes  16384 bytes
+aes-128-cbc     103460.35k   326494.59k   684386.22k   980220.93k  1120034.82k  1131380.74k
+aes-128-cbc     268722.33k   700294.93k  1167958.61k  1382921.56k  1478604.12k  1486258.18k
+aes-192-cbc      98851.27k   293918.61k   566187.61k   760497.83k   844106.41k   850684.59k
+aes-192-cbc     298916.12k   765409.28k  1033856.85k  1235272.02k  1302451.54k  1311653.89k
+aes-256-cbc      96438.03k   273362.52k   496064.00k   639209.13k   697117.35k   694889.13k
+aes-256-cbc     296313.37k   709278.38k   986621.70k  1070416.55k  1119472.30k  1123194.20k
+
+##########################################################################
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=en_US.UTF-8,Utf16=on,HugeFiles=on,64 bits,6 CPUs LE)
+
+LE
+CPU Freq:  1500  1503  1503  1503  1503  1503  1503  1503  1503
+
+RAM size:     919 MB,  # CPU hardware threads:   6
+RAM usage:    675 MB,  # Benchmark threads:      6
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:        730   100    711    711  |      16206   100   1382   1382
+23:        704   100    718    718  |      15834   100   1370   1370
+24:        677   100    728    728  |      15457   100   1357   1357
+----------------------------------  | ------------------------------
+Avr:             100    719    719  |              100   1370   1370
+Tot:             100   1044   1044
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=en_US.UTF-8,Utf16=on,HugeFiles=on,64 bits,6 CPUs LE)
+
+LE
+CPU Freq:  1983  1983  1985  1985  1985  1985  1985  1985  1985
+
+RAM size:     919 MB,  # CPU hardware threads:   6
+RAM usage:    675 MB,  # Benchmark threads:      6
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       1477   100   1437   1437  |      23739   100   2025   2025
+23:       1404   100   1431   1431  |      23200   100   2008   2007
+24:       1323   100   1423   1423  |      22623   100   1986   1986
+----------------------------------  | ------------------------------
+Avr:             100   1430   1430  |              100   2006   2006
+Tot:             100   1718   1718
+
+##########################################################################
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=en_US.UTF-8,Utf16=on,HugeFiles=on,64 bits,6 CPUs LE)
+
+LE
+CPU Freq:  1455  1959  1984  1985  1985  1985  1985  1985  1985
+
+RAM size:     919 MB,  # CPU hardware threads:   6
+RAM usage:    675 MB,  # Benchmark threads:      6
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       4641   515    876   4515  |     101586   524   1653   8663
+23:       4323   506    870   4405  |      99030   524   1635   8569
+24:       4236   535    851   4555  |      96395   525   1613   8461
+----------------------------------  | ------------------------------
+Avr:             519    866   4492  |              524   1634   8564
+Tot:             522   1250   6528
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=en_US.UTF-8,Utf16=on,HugeFiles=on,64 bits,6 CPUs LE)
+
+LE
+CPU Freq:  1983  1985  1985  1985  1985  1985  1985  1985  1985
+
+RAM size:     919 MB,  # CPU hardware threads:   6
+RAM usage:    675 MB,  # Benchmark threads:      6
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       4485   487    895   4363  |     101221   524   1648   8632
+23:       4165   485    875   4244  |      98730   524   1630   8543
+24:       4458   560    857   4794  |      96290   524   1611   8452
+----------------------------------  | ------------------------------
+Avr:             511    876   4467  |              524   1630   8542
+Tot:             517   1253   6505
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=en_US.UTF-8,Utf16=on,HugeFiles=on,64 bits,6 CPUs LE)
+
+LE
+CPU Freq:  1982  1985  1985  1985  1984  1985  1985  1985  1985
+
+RAM size:     919 MB,  # CPU hardware threads:   6
+RAM usage:    675 MB,  # Benchmark threads:      6
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       4461   482    901   4340  |     101619   524   1653   8666
+23:       4582   536    871   4669  |      99097   525   1632   8575
+24:       4211   531    854   4529  |      96206   524   1613   8444
+----------------------------------  | ------------------------------
+Avr:             516    875   4512  |              524   1633   8562
+Tot:             520   1254   6537
+
+Compression: 4492,4467,4512
+Decompression: 8564,8542,8562
+Total: 6528,6505,6537
+
+##########################################################################
+
+** cpuminer-multi 1.3.3 by tpruvot@github **
+BTC donation address: 1FhDPLPpw18X4srecguG3MxJYe4a1JsZnd (tpruvot)
+
+[2018-10-04 14:58:09] 6 miner threads started, using 'scrypt' algorithm.
+[2018-10-04 14:58:09] CPU #4: 2.07 kH/s
+[2018-10-04 14:58:09] CPU #5: 2.07 kH/s
+[2018-10-04 14:58:10] CPU #1: 1.17 kH/s
+[2018-10-04 14:58:10] CPU #0: 1.16 kH/s
+[2018-10-04 14:58:10] CPU #2: 1.17 kH/s
+[2018-10-04 14:58:10] CPU #3: 1.17 kH/s
+[2018-10-04 14:58:14] Total: 8.83 kH/s
+[2018-10-04 14:58:19] CPU #0: 1.17 kH/s
+[2018-10-04 14:58:19] CPU #1: 1.17 kH/s
+[2018-10-04 14:58:19] CPU #3: 1.18 kH/s
+[2018-10-04 14:58:19] CPU #2: 1.18 kH/s
+[2018-10-04 14:58:19] CPU #4: 2.07 kH/s
+[2018-10-04 14:58:19] CPU #5: 2.07 kH/s
+[2018-10-04 14:58:19] Total: 8.83 kH/s
+[2018-10-04 14:58:24] Total: 8.83 kH/s
+[2018-10-04 14:58:29] CPU #0: 1.17 kH/s
+[2018-10-04 14:58:29] CPU #1: 1.17 kH/s
+[2018-10-04 14:58:29] CPU #2: 1.18 kH/s
+[2018-10-04 14:58:29] CPU #3: 1.17 kH/s
+[2018-10-04 14:58:29] CPU #4: 2.07 kH/s
+[2018-10-04 14:58:29] CPU #5: 2.07 kH/s
+[2018-10-04 14:58:29] Total: 8.83 kH/s
+[2018-10-04 14:58:34] Total: 8.81 kH/s
+[2018-10-04 14:58:39] CPU #0: 1.17 kH/s
+[2018-10-04 14:58:39] CPU #1: 1.17 kH/s
+[2018-10-04 14:58:39] CPU #3: 1.18 kH/s
+[2018-10-04 14:58:39] CPU #2: 1.18 kH/s
+[2018-10-04 14:58:39] CPU #4: 2.07 kH/s
+[2018-10-04 14:58:39] CPU #5: 2.07 kH/s
+[2018-10-04 14:58:39] Total: 8.83 kH/s
+[2018-10-04 14:58:44] Total: 8.83 kH/s
+[2018-10-04 14:58:49] CPU #0: 1.17 kH/s
+[2018-10-04 14:58:49] CPU #1: 1.17 kH/s
+[2018-10-04 14:58:49] CPU #3: 1.18 kH/s
+[2018-10-04 14:58:49] CPU #2: 1.18 kH/s
+[2018-10-04 14:58:49] CPU #4: 2.07 kH/s
+[2018-10-04 14:58:49] CPU #5: 2.07 kH/s
+[2018-10-04 14:58:49] Total: 8.83 kH/s
+[2018-10-04 14:58:54] Total: 8.82 kH/s
+[2018-10-04 14:58:59] CPU #1: 1.17 kH/s
+[2018-10-04 14:58:59] CPU #0: 1.17 kH/s
+[2018-10-04 14:58:59] CPU #2: 1.18 kH/s
+[2018-10-04 14:58:59] CPU #3: 1.17 kH/s
+[2018-10-04 14:58:59] CPU #4: 2.07 kH/s
+[2018-10-04 14:58:59] CPU #5: 2.07 kH/s
+[2018-10-04 14:58:59] Total: 8.83 kH/s
+[2018-10-04 14:59:04] Total: 8.83 kH/s
+[2018-10-04 14:59:09] CPU #1: 1.17 kH/s
+[2018-10-04 14:59:09] CPU #0: 1.17 kH/s
+[2018-10-04 14:59:09] CPU #3: 1.17 kH/s
+[2018-10-04 14:59:09] CPU #2: 1.18 kH/s
+[2018-10-04 14:59:09] CPU #4: 2.07 kH/s
+[2018-10-04 14:59:09] CPU #5: 2.07 kH/s
+[2018-10-04 14:59:09] Total: 8.83 kH/s
+[2018-10-04 14:59:14] Total: 8.82 kH/s
+[2018-10-04 14:59:19] CPU #1: 1.17 kH/s
+[2018-10-04 14:59:19] CPU #0: 1.17 kH/s
+[2018-10-04 14:59:19] CPU #3: 1.17 kH/s
+[2018-10-04 14:59:19] CPU #2: 1.17 kH/s
+[2018-10-04 14:59:19] CPU #4: 2.07 kH/s
+[2018-10-04 14:59:19] CPU #5: 2.06 kH/s
+[2018-10-04 14:59:19] Total: 8.82 kH/s
+[2018-10-04 14:59:24] Total: 8.83 kH/s
+[2018-10-04 14:59:29] CPU #1: 1.17 kH/s
+[2018-10-04 14:59:29] CPU #3: 1.18 kH/s
+[2018-10-04 14:59:29] CPU #0: 1.17 kH/s
+[2018-10-04 14:59:29] CPU #2: 1.18 kH/s
+[2018-10-04 14:59:29] CPU #4: 2.07 kH/s
+[2018-10-04 14:59:29] CPU #5: 2.07 kH/s
+[2018-10-04 14:59:29] Total: 8.83 kH/s
+[2018-10-04 14:59:34] Total: 8.83 kH/s
+[2018-10-04 14:59:39] CPU #1: 1.17 kH/s
+[2018-10-04 14:59:39] CPU #0: 1.17 kH/s
+[2018-10-04 14:59:39] CPU #2: 1.17 kH/s
+[2018-10-04 14:59:39] CPU #3: 1.17 kH/s
+[2018-10-04 14:59:39] CPU #4: 2.07 kH/s
+[2018-10-04 14:59:39] CPU #5: 2.05 kH/s
+[2018-10-04 14:59:39] Total: 8.80 kH/s
+[2018-10-04 14:59:44] Total: 8.83 kH/s
+[2018-10-04 14:59:49] CPU #1: 1.17 kH/s
+[2018-10-04 14:59:49] CPU #3: 1.18 kH/s
+[2018-10-04 14:59:49] CPU #0: 1.17 kH/s
+[2018-10-04 14:59:49] CPU #2: 1.18 kH/s
+[2018-10-04 14:59:49] CPU #4: 2.07 kH/s
+[2018-10-04 14:59:49] CPU #5: 2.07 kH/s
+[2018-10-04 14:59:49] Total: 8.83 kH/s
+[2018-10-04 14:59:54] Total: 8.83 kH/s
+[2018-10-04 14:59:59] CPU #1: 1.17 kH/s
+[2018-10-04 14:59:59] CPU #3: 1.17 kH/s
+[2018-10-04 14:59:59] CPU #0: 1.17 kH/s
+[2018-10-04 14:59:59] CPU #2: 1.18 kH/s
+[2018-10-04 14:59:59] CPU #4: 2.06 kH/s
+[2018-10-04 14:59:59] CPU #5: 2.06 kH/s
+[2018-10-04 14:59:59] Total: 8.81 kH/s
+[2018-10-04 15:00:04] Total: 8.82 kH/s
+[2018-10-04 15:00:09] CPU #1: 1.17 kH/s
+[2018-10-04 15:00:09] CPU #3: 1.18 kH/s
+[2018-10-04 15:00:09] CPU #0: 1.17 kH/s
+[2018-10-04 15:00:09] CPU #2: 1.18 kH/s
+[2018-10-04 15:00:09] CPU #4: 2.07 kH/s
+[2018-10-04 15:00:09] CPU #5: 2.07 kH/s
+[2018-10-04 15:00:09] Total: 8.83 kH/s
+[2018-10-04 15:00:14] Total: 8.83 kH/s
+[2018-10-04 15:00:19] CPU #1: 1.17 kH/s
+[2018-10-04 15:00:19] CPU #3: 1.18 kH/s
+[2018-10-04 15:00:19] CPU #0: 1.17 kH/s
+[2018-10-04 15:00:19] CPU #2: 1.18 kH/s
+[2018-10-04 15:00:19] CPU #4: 2.07 kH/s
+[2018-10-04 15:00:19] CPU #5: 2.07 kH/s
+[2018-10-04 15:00:19] Total: 8.83 kH/s
+[2018-10-04 15:00:24] Total: 8.81 kH/s
+[2018-10-04 15:00:29] CPU #1: 1.17 kH/s
+[2018-10-04 15:00:29] CPU #3: 1.18 kH/s
+[2018-10-04 15:00:29] CPU #2: 1.18 kH/s
+[2018-10-04 15:00:29] CPU #0: 1.17 kH/s
+[2018-10-04 15:00:29] CPU #4: 2.07 kH/s
+[2018-10-04 15:00:29] CPU #5: 2.07 kH/s
+[2018-10-04 15:00:29] Total: 8.83 kH/s
+[2018-10-04 15:00:34] Total: 8.83 kH/s
+[2018-10-04 15:00:39] CPU #1: 1.17 kH/s
+[2018-10-04 15:00:39] CPU #3: 1.17 kH/s
+[2018-10-04 15:00:39] CPU #2: 1.18 kH/s
+[2018-10-04 15:00:39] CPU #0: 1.17 kH/s
+[2018-10-04 15:00:39] CPU #4: 2.07 kH/s
+[2018-10-04 15:00:39] CPU #5: 2.07 kH/s
+[2018-10-04 15:00:39] Total: 8.83 kH/s
+[2018-10-04 15:00:44] Total: 8.81 kH/s
+[2018-10-04 15:00:49] CPU #1: 1.17 kH/s
+[2018-10-04 15:00:49] CPU #3: 1.17 kH/s
+[2018-10-04 15:00:49] CPU #2: 1.18 kH/s
+[2018-10-04 15:00:49] CPU #0: 1.17 kH/s
+[2018-10-04 15:00:49] CPU #4: 2.07 kH/s
+[2018-10-04 15:00:49] CPU #5: 2.07 kH/s
+[2018-10-04 15:00:49] Total: 8.83 kH/s
+[2018-10-04 15:00:54] Total: 8.83 kH/s
+[2018-10-04 15:00:59] CPU #1: 1.17 kH/s
+[2018-10-04 15:00:59] CPU #3: 1.18 kH/s
+[2018-10-04 15:00:59] CPU #0: 1.17 kH/s
+[2018-10-04 15:00:59] CPU #2: 1.18 kH/s
+[2018-10-04 15:00:59] CPU #4: 2.07 kH/s
+[2018-10-04 15:00:59] CPU #5: 2.07 kH/s
+[2018-10-04 15:00:59] Total: 8.83 kH/s
+[2018-10-04 15:01:04] Total: 8.83 kH/s
+[2018-10-04 15:01:09] CPU #1: 1.17 kH/s
+[2018-10-04 15:01:09] CPU #3: 1.17 kH/s
+[2018-10-04 15:01:09] CPU #2: 1.17 kH/s
+[2018-10-04 15:01:09] CPU #0: 1.17 kH/s
+[2018-10-04 15:01:09] CPU #4: 2.06 kH/s
+[2018-10-04 15:01:09] CPU #5: 2.06 kH/s
+[2018-10-04 15:01:09] Total: 8.81 kH/s
+[2018-10-04 15:01:14] Total: 8.83 kH/s
+[2018-10-04 15:01:19] CPU #1: 1.17 kH/s
+[2018-10-04 15:01:19] CPU #3: 1.17 kH/s
+[2018-10-04 15:01:19] CPU #2: 1.18 kH/s
+[2018-10-04 15:01:19] CPU #0: 1.17 kH/s
+[2018-10-04 15:01:19] CPU #4: 2.07 kH/s
+[2018-10-04 15:01:19] CPU #5: 2.07 kH/s
+[2018-10-04 15:01:19] Total: 8.83 kH/s
+[2018-10-04 15:01:24] Total: 8.83 kH/s
+[2018-10-04 15:01:29] CPU #1: 1.17 kH/s
+[2018-10-04 15:01:29] CPU #3: 1.17 kH/s
+[2018-10-04 15:01:29] CPU #2: 1.17 kH/s
+[2018-10-04 15:01:29] CPU #0: 1.17 kH/s
+[2018-10-04 15:01:29] CPU #5: 2.07 kH/s
+[2018-10-04 15:01:29] Total: 8.83 kH/s
+[2018-10-04 15:01:29] CPU #4: 2.05 kH/s
+[2018-10-04 15:01:34] Total: 8.83 kH/s
+[2018-10-04 15:01:39] CPU #1: 1.17 kH/s
+[2018-10-04 15:01:39] CPU #3: 1.18 kH/s
+[2018-10-04 15:01:39] CPU #2: 1.18 kH/s
+[2018-10-04 15:01:39] CPU #0: 1.17 kH/s
+[2018-10-04 15:01:39] CPU #4: 2.07 kH/s
+[2018-10-04 15:01:39] CPU #5: 2.07 kH/s
+[2018-10-04 15:01:39] Total: 8.83 kH/s
+[2018-10-04 15:01:44] Total: 8.83 kH/s
+[2018-10-04 15:01:49] CPU #1: 1.17 kH/s
+[2018-10-04 15:01:49] CPU #3: 1.17 kH/s
+[2018-10-04 15:01:49] CPU #2: 1.18 kH/s
+[2018-10-04 15:01:49] CPU #0: 1.17 kH/s
+[2018-10-04 15:01:49] CPU #4: 2.07 kH/s
+[2018-10-04 15:01:49] CPU #5: 2.07 kH/s
+[2018-10-04 15:01:49] Total: 8.83 kH/s
+[2018-10-04 15:01:54] Total: 8.81 kH/s
+[2018-10-04 15:01:59] CPU #1: 1.17 kH/s
+[2018-10-04 15:01:59] CPU #3: 1.18 kH/s
+[2018-10-04 15:01:59] CPU #2: 1.18 kH/s
+[2018-10-04 15:01:59] CPU #0: 1.17 kH/s
+[2018-10-04 15:01:59] CPU #4: 2.07 kH/s
+[2018-10-04 15:01:59] CPU #5: 2.07 kH/s
+[2018-10-04 15:01:59] Total: 8.83 kH/s
+[2018-10-04 15:02:04] Total: 8.83 kH/s
+[2018-10-04 15:02:09] CPU #1: 1.17 kH/s
+[2018-10-04 15:02:09] CPU #3: 1.18 kH/s
+[2018-10-04 15:02:09] CPU #2: 1.18 kH/s
+[2018-10-04 15:02:09] CPU #0: 1.17 kH/s
+[2018-10-04 15:02:09] CPU #4: 2.07 kH/s
+[2018-10-04 15:02:09] CPU #5: 2.07 kH/s
+[2018-10-04 15:02:09] Total: 8.83 kH/s
+[2018-10-04 15:02:14] Total: 8.82 kH/s
+[2018-10-04 15:02:19] CPU #1: 1.17 kH/s
+[2018-10-04 15:02:19] CPU #3: 1.18 kH/s
+[2018-10-04 15:02:19] CPU #2: 1.18 kH/s
+[2018-10-04 15:02:19] CPU #0: 1.17 kH/s
+[2018-10-04 15:02:19] CPU #4: 2.07 kH/s
+[2018-10-04 15:02:19] CPU #5: 2.07 kH/s
+[2018-10-04 15:02:19] Total: 8.83 kH/s
+[2018-10-04 15:02:24] Total: 8.83 kH/s
+[2018-10-04 15:02:29] CPU #1: 1.17 kH/s
+[2018-10-04 15:02:29] CPU #3: 1.18 kH/s
+[2018-10-04 15:02:29] CPU #2: 1.18 kH/s
+[2018-10-04 15:02:29] CPU #0: 1.17 kH/s
+[2018-10-04 15:02:29] CPU #4: 2.07 kH/s
+[2018-10-04 15:02:29] CPU #5: 2.07 kH/s
+[2018-10-04 15:02:29] Total: 8.83 kH/s
+[2018-10-04 15:02:34] Total: 8.82 kH/s
+[2018-10-04 15:02:39] CPU #1: 1.17 kH/s
+[2018-10-04 15:02:39] CPU #3: 1.17 kH/s
+[2018-10-04 15:02:39] CPU #2: 1.18 kH/s
+[2018-10-04 15:02:39] CPU #0: 1.17 kH/s
+[2018-10-04 15:02:39] CPU #4: 2.06 kH/s
+[2018-10-04 15:02:39] CPU #5: 2.07 kH/s
+[2018-10-04 15:02:39] Total: 8.82 kH/s
+[2018-10-04 15:02:44] Total: 8.83 kH/s
+[2018-10-04 15:02:49] CPU #1: 1.17 kH/s
+[2018-10-04 15:02:49] CPU #3: 1.18 kH/s
+[2018-10-04 15:02:49] CPU #2: 1.18 kH/s
+[2018-10-04 15:02:49] CPU #0: 1.17 kH/s
+[2018-10-04 15:02:49] CPU #4: 2.07 kH/s
+[2018-10-04 15:02:49] CPU #5: 2.07 kH/s
+[2018-10-04 15:02:49] Total: 8.83 kH/s
+[2018-10-04 15:02:54] Total: 8.83 kH/s
+[2018-10-04 15:02:59] CPU #1: 1.17 kH/s
+[2018-10-04 15:02:59] CPU #3: 1.17 kH/s
+[2018-10-04 15:02:59] CPU #2: 1.17 kH/s
+[2018-10-04 15:02:59] CPU #0: 1.17 kH/s
+[2018-10-04 15:02:59] CPU #4: 2.06 kH/s
+[2018-10-04 15:02:59] CPU #5: 2.06 kH/s
+[2018-10-04 15:02:59] Total: 8.81 kH/s
+[2018-10-04 15:03:04] Total: 8.83 kH/s
+[2018-10-04 15:03:09] CPU #1: 1.17 kH/s
+[2018-10-04 15:03:09] CPU #3: 1.18 kH/s
+[2018-10-04 15:03:09] CPU #2: 1.18 kH/s
+[2018-10-04 15:03:09] CPU #0: 1.17 kH/s
+
+Total Scores: 8.83,8.82,8.81,8.80
+
+##########################################################################
+
+Testing clockspeeds again. System health now:
+
+Time       big.LITTLE   load %cpu %sys %usr %nice %io %irq   Temp
+15:02:57: 1992/1512MHz  6.06 100%   0%  99%   0%   0%   0%  51.7°C
+
+Checking cpufreq OPP for cpu0-cpu3:
+
+Cpufreq OPP: 1512    Measured: 1503.068/1503.016/1503.191
+Cpufreq OPP: 1416    Measured: 1407.289/1407.197/1407.089
+Cpufreq OPP: 1200    Measured: 1191.142/1191.293/1191.019
+Cpufreq OPP: 1008    Measured: 999.424/999.340/999.062
+Cpufreq OPP:  816    Measured: 807.125/807.056/806.977
+Cpufreq OPP:  600    Measured: 591.287/591.379/591.426
+Cpufreq OPP:  408    Measured: 399.184/399.217/399.226
+
+Checking cpufreq OPP for cpu4-cpu5:
+
+Cpufreq OPP: 1992    Measured: 1985.492/1985.566/1986.348
+Cpufreq OPP: 1800    Measured: 1793.611/1793.391/1793.471
+Cpufreq OPP: 1608    Measured: 1601.019/1601.476/1601.496
+Cpufreq OPP: 1416    Measured: 1409.732/1409.193/1409.409
+Cpufreq OPP: 1200    Measured: 1193.468/1193.316/1193.620
+Cpufreq OPP: 1008    Measured: 1001.641/1001.738/1001.714
+Cpufreq OPP:  816    Measured: 809.150/809.288/809.705
+Cpufreq OPP:  600    Measured: 593.011/593.017/592.419
+Cpufreq OPP:  408    Measured: 401.066/400.724/400.929
+
+##########################################################################
+
+System health while running tinymembench:
+
+Time       big.LITTLE   load %cpu %sys %usr %nice %io %irq   Temp
+14:34:34: 1992/1512MHz  0.23  10%   0%   9%   0%   0%   0%  35.6°C
+14:36:35: 1992/1512MHz  0.90  16%   0%  16%   0%   0%   0%  32.2°C
+14:38:35: 1992/1512MHz  0.99  16%   0%  16%   0%   0%   0%  27.5°C
+14:40:35: 1992/1512MHz  1.00  16%   0%  16%   0%   0%   0%  26.2°C
+14:42:35: 1992/1512MHz  1.00  16%   0%  16%   0%   0%   0%  25.6°C
+14:44:35: 1992/1512MHz  1.02  17%   0%  16%   0%   0%   0%  29.4°C
+14:46:35: 1992/1512MHz  1.00  16%   0%  16%   0%   0%   0%  28.1°C
+14:48:35: 1992/1512MHz  1.00  16%   0%  16%   0%   0%   0%  28.1°C
+
+System health while running OpenSSL benchmark:
+
+Time       big.LITTLE   load %cpu %sys %usr %nice %io %irq   Temp
+14:48:44: 1992/1512MHz  1.00  13%   0%  13%   0%   0%   0%  28.8°C
+14:48:54: 1992/1512MHz  1.00  16%   0%  16%   0%   0%   0%  26.2°C
+14:49:04: 1992/1512MHz  1.00  16%   0%  16%   0%   0%   0%  30.0°C
+14:49:14: 1992/1512MHz  1.00  16%   0%  16%   0%   0%   0%  30.0°C
+14:49:24: 1992/1512MHz  1.00  16%   0%  16%   0%   0%   0%  26.9°C
+14:49:34: 1992/1512MHz  1.00  16%   0%  16%   0%   0%   0%  26.9°C
+14:49:44: 1992/1512MHz  1.00  16%   0%  16%   0%   0%   0%  30.0°C
+14:49:54: 1992/1512MHz  1.00  16%   0%  16%   0%   0%   0%  30.6°C
+14:50:04: 1992/1512MHz  1.00  16%   0%  16%   0%   0%   0%  26.9°C
+14:50:14: 1992/1512MHz  1.00  16%   0%  16%   0%   0%   0%  29.4°C
+14:50:24: 1992/1512MHz  1.00  16%   0%  16%   0%   0%   0%  30.6°C
+
+System health while running 7-zip single core benchmark:
+
+Time       big.LITTLE   load %cpu %sys %usr %nice %io %irq   Temp
+14:50:32: 1992/1512MHz  1.00  13%   0%  13%   0%   0%   0%  31.1°C
+14:51:32: 1992/1512MHz  2.87  16%   0%  16%   0%   0%   0%  26.2°C
+14:52:32: 1992/1512MHz  3.89  16%   0%  16%   0%   0%   0%  26.2°C
+14:53:32: 1992/1512MHz  3.74  16%   0%  16%   0%   0%   0%  25.6°C
+14:54:32: 1992/1512MHz  4.45  16%   0%  16%   0%   0%   0%  29.4°C
+14:55:32: 1992/1512MHz  4.54  16%   0%  16%   0%   0%   0%  29.4°C
+
+System health while running 7-zip multi core benchmark:
+
+Time       big.LITTLE   load %cpu %sys %usr %nice %io %irq   Temp
+14:56:12: 1992/1512MHz  4.86  14%   0%  13%   0%   0%   0%  31.7°C
+14:56:32: 1992/1512MHz  4.50  79%   0%  79%   0%   0%   0%  39.4°C
+14:56:52: 1992/1512MHz  4.55  80%   1%  79%   0%   0%   0%  31.1°C
+14:57:12: 1992/1512MHz  4.65  81%   0%  80%   0%   0%   0%  40.0°C
+14:57:32: 1992/1512MHz  4.76  79%   1%  77%   0%   0%   0%  34.4°C
+14:57:52: 1992/1512MHz  4.85  83%   0%  82%   0%   0%   0%  36.9°C
+
+System health while running cpuminer:
+
+Time       big.LITTLE   load %cpu %sys %usr %nice %io %irq   Temp
+14:58:09: 1992/1512MHz  5.38  17%   0%  17%   0%   0%   0%  35.0°C
+14:58:31: 1992/1512MHz  5.56  99%   0%  99%   0%   0%   0%  45.6°C
+14:58:53: 1992/1512MHz  5.68 100%   0%  99%   0%   0%   0%  46.2°C
+14:59:15: 1992/1512MHz  5.85 100%   0%  99%   0%   0%   0%  47.5°C
+14:59:37: 1992/1512MHz  5.89 100%   0%  99%   0%   0%   0%  48.1°C
+14:59:59: 1992/1512MHz  5.99 100%   0%  99%   0%   0%   0%  48.8°C
+15:00:22: 1992/1512MHz  5.99 100%   0%  99%   0%   0%   0%  49.4°C
+15:00:44: 1992/1512MHz  6.05 100%   0%  99%   0%   0%   0%  50.0°C
+15:01:06: 1992/1512MHz  6.04 100%   0%  99%   0%   0%   0%  50.0°C
+15:01:28: 1992/1512MHz  6.02 100%   0%  99%   0%   0%   0%  50.6°C
+15:01:51: 1992/1512MHz  6.07 100%   0%  99%   0%   0%   0%  51.7°C
+15:02:13: 1992/1512MHz  6.05 100%   0%  99%   0%   0%   0%  51.1°C
+15:02:35: 1992/1512MHz  6.09 100%   0%  99%   0%   0%   0%  51.7°C
+15:02:57: 1992/1512MHz  6.06 100%   0%  99%   0%   0%   0%  51.7°C
+
+##########################################################################
+
+Linux 4.4.156-rk3399 (nanopineo-shim) 	10/04/18 	_aarch64_	(6 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+          26.51    0.04    0.43    0.02    0.00   73.00
+
+Device:            tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn
+mmcblk0           1.05        48.39         0.29     128941        764
+zram0             0.47         0.28         1.60        736       4268
+zram1             0.11         0.45         0.00       1196          4
+zram2             0.11         0.45         0.00       1196          4
+zram3             0.11         0.45         0.00       1196          4
+zram4             0.11         0.45         0.00       1196          4
+
+              total        used        free      shared  buff/cache   available
+Mem:           919M         69M        693M        8.1M        156M        769M
+Swap:          459M          0B        459M
+
+Filename				Type		Size	Used	Priority
+/dev/zram1                             	partition	117744	0	5
+/dev/zram2                             	partition	117744	0	5
+/dev/zram3                             	partition	117744	0	5
+/dev/zram4                             	partition	117744	0	5
+
+Architecture:          aarch64
+Byte Order:            Little Endian
+CPU(s):                6
+On-line CPU(s) list:   0-5
+Thread(s) per core:    1
+Core(s) per socket:    3
+Socket(s):             2
+Model:                 4
+CPU max MHz:           1512.0000
+CPU min MHz:           408.0000
+BogoMIPS:              48.00
+Flags:                 fp asimd evtstrm aes pmull sha1 sha2 crc32

@@ -1,0 +1,1848 @@
+sbc-bench v0.6.6 Realtek_Lion_Skin_1GB (Thu, 14 Mar 2019 15:41:49 +0800)
+
+LSB Version:	core-9.20170808ubuntu1-noarch:printing-9.20170808ubuntu1-noarch:security-9.20170808ubuntu1-noarch
+Distributor ID:	Ubuntu
+Description:	Ubuntu 18.04.2 LTS
+Release:	18.04
+Codename:	bionic
+Architecture:	arm64
+
+/usr/bin/gcc (Ubuntu/Linaro 7.3.0-27ubuntu1~18.04) 7.3.0
+
+Uptime: 15:41:50 up 8 min,  1 user,  load average: 1.07, 0.79, 0.43
+
+Linux 4.9.119-BPI-M4-Kernel (bpi-iot-ros-ai) 	03/14/19 	_aarch64_	(4 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+          12.82    0.41    3.03    3.10    0.00   80.64
+
+Device             tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn
+mmcblk0           0.21         4.52         0.00       2325          1
+mmcblk0boot1      0.05         0.21         0.00        108          0
+mmcblk0boot0      0.05         0.21         0.00        108          0
+sda              52.75      1322.76       227.83     680942     117284
+
+              total        used        free      shared  buff/cache   available
+Mem:           570M         93M        213M        776K        263M        381M
+Swap:          255M         11M        244M
+
+Filename				Type		Size	Used	Priority
+/var/swap                              	file    	262140	11456	-1
+
+##########################################################################
+
+Checking cpufreq OPP:
+
+Cpufreq OPP: 1400    Measured: 1397.027/1396.649/1396.906
+Cpufreq OPP: 1300    Measured: 1296.576/1296.706/1296.706
+Cpufreq OPP: 1200    Measured: 1196.467/1197.549/1196.509
+Cpufreq OPP: 1100    Measured: 1097.136/1096.996/1090.430
+Cpufreq OPP: 1000    Measured: 996.496/997.073/996.604
+Cpufreq OPP:  900    Measured: 896.776/897.165/897.584
+Cpufreq OPP:  800    Measured: 796.324/791.728/796.276
+Cpufreq OPP:  700    Measured: 696.509/697.265/697.023
+Cpufreq OPP:  600    Measured: 596.973/596.818/597.054
+Cpufreq OPP:  500    Measured: 506.542/496.882/497.092
+Cpufreq OPP:  400    Measured: 396.709/396.635/396.407
+Cpufreq OPP:  300    Measured: 296.944/297.378/297.502
+
+##########################################################################
+
+tinymembench v0.4.9 (simple benchmark for memory throughput and latency)
+
+==========================================================================
+== Memory bandwidth tests                                               ==
+==                                                                      ==
+== Note 1: 1MB = 1000000 bytes                                          ==
+== Note 2: Results for 'copy' tests show how many bytes can be          ==
+==         copied per second (adding together read and writen           ==
+==         bytes would have provided twice higher numbers)              ==
+== Note 3: 2-pass copy means that we are using a small temporary buffer ==
+==         to first fetch data into it, and only then write it to the   ==
+==         destination (source -> L1 cache, L1 cache -> destination)    ==
+== Note 4: If sample standard deviation exceeds 0.1%, it is shown in    ==
+==         brackets                                                     ==
+==========================================================================
+
+ C copy backwards                                     :   1135.9 MB/s (0.9%)
+ C copy backwards (32 byte blocks)                    :   1136.9 MB/s
+ C copy backwards (64 byte blocks)                    :   1042.6 MB/s (0.3%)
+ C copy                                               :   1005.8 MB/s (0.2%)
+ C copy prefetched (32 bytes step)                    :   1041.2 MB/s
+ C copy prefetched (64 bytes step)                    :   1162.8 MB/s (1.2%)
+ C 2-pass copy                                        :   1319.1 MB/s
+ C 2-pass copy prefetched (32 bytes step)             :    929.5 MB/s (0.1%)
+ C 2-pass copy prefetched (64 bytes step)             :    904.9 MB/s
+ C fill                                               :   4357.4 MB/s
+ C fill (shuffle within 16 byte blocks)               :   4359.4 MB/s
+ C fill (shuffle within 32 byte blocks)               :   4358.9 MB/s
+ C fill (shuffle within 64 byte blocks)               :   4359.1 MB/s
+ ---
+ standard memcpy                                      :   1012.2 MB/s
+ standard memset                                      :   4357.2 MB/s
+ ---
+ NEON LDP/STP copy                                    :   1164.4 MB/s
+ NEON LDP/STP copy pldl2strm (32 bytes step)          :    972.0 MB/s (0.8%)
+ NEON LDP/STP copy pldl2strm (64 bytes step)          :   1101.1 MB/s (0.1%)
+ NEON LDP/STP copy pldl1keep (32 bytes step)          :   1192.1 MB/s (0.3%)
+ NEON LDP/STP copy pldl1keep (64 bytes step)          :   1181.3 MB/s (0.7%)
+ NEON LD1/ST1 copy                                    :   1166.4 MB/s
+ NEON STP fill                                        :   4360.4 MB/s (0.6%)
+ NEON STNP fill                                       :   1447.9 MB/s (3.0%)
+ ARM LDP/STP copy                                     :   1167.1 MB/s (0.2%)
+ ARM STP fill                                         :   4358.9 MB/s
+ ARM STNP fill                                        :   1463.7 MB/s (1.0%)
+
+==========================================================================
+== Framebuffer read tests.                                              ==
+==                                                                      ==
+== Many ARM devices use a part of the system memory as the framebuffer, ==
+== typically mapped as uncached but with write-combining enabled.       ==
+== Writes to such framebuffers are quite fast, but reads are much       ==
+== slower and very sensitive to the alignment and the selection of      ==
+== CPU instructions which are used for accessing memory.                ==
+==                                                                      ==
+== Many x86 systems allocate the framebuffer in the GPU memory,         ==
+== accessible for the CPU via a relatively slow PCI-E bus. Moreover,    ==
+== PCI-E is asymmetric and handles reads a lot worse than writes.       ==
+==                                                                      ==
+== If uncached framebuffer reads are reasonably fast (at least 100 MB/s ==
+== or preferably >300 MB/s), then using the shadow framebuffer layer    ==
+== is not necessary in Xorg DDX drivers, resulting in a nice overall    ==
+== performance improvement. For example, the xf86-video-fbturbo DDX     ==
+== uses this trick.                                                     ==
+==========================================================================
+
+ NEON LDP/STP copy (from framebuffer)                 :    208.7 MB/s
+ NEON LDP/STP 2-pass copy (from framebuffer)          :    202.5 MB/s
+ NEON LD1/ST1 copy (from framebuffer)                 :     54.0 MB/s (0.2%)
+ NEON LD1/ST1 2-pass copy (from framebuffer)          :     53.4 MB/s
+ ARM LDP/STP copy (from framebuffer)                  :    107.1 MB/s
+ ARM LDP/STP 2-pass copy (from framebuffer)           :    104.9 MB/s
+
+==========================================================================
+== Memory latency test                                                  ==
+==                                                                      ==
+== Average time is measured for random memory accesses in the buffers   ==
+== of different sizes. The larger is the buffer, the more significant   ==
+== are relative contributions of TLB, L1/L2 cache misses and SDRAM      ==
+== accesses. For extremely large buffer sizes we are expecting to see   ==
+== page table walk with several requests to SDRAM for almost every      ==
+== memory access (though 64MiB is not nearly large enough to experience ==
+== this effect to its fullest).                                         ==
+==                                                                      ==
+== Note 1: All the numbers are representing extra time, which needs to  ==
+==         be added to L1 cache latency. The cycle timings for L1 cache ==
+==         latency can be usually found in the processor documentation. ==
+== Note 2: Dual random read means that we are simultaneously performing ==
+==         two independent memory accesses at a time. In the case if    ==
+==         the memory subsystem can't handle multiple outstanding       ==
+==         requests, dual random read has the same timings as two       ==
+==         single reads performed one after another.                    ==
+==========================================================================
+
+block size : single random read / dual random read
+      1024 :    0.0 ns          /     0.0 ns 
+      2048 :    0.0 ns          /     0.0 ns 
+      4096 :    0.0 ns          /     0.0 ns 
+      8192 :    0.0 ns          /     0.0 ns 
+     16384 :    0.0 ns          /     0.0 ns 
+     32768 :    0.0 ns          /     0.0 ns 
+     65536 :    4.6 ns          /     7.9 ns 
+    131072 :    7.1 ns          /    11.2 ns 
+    262144 :    8.3 ns          /    12.7 ns 
+    524288 :   11.3 ns          /    16.6 ns 
+   1048576 :   90.1 ns          /   138.4 ns 
+   2097152 :  132.0 ns          /   178.8 ns 
+   4194304 :  157.5 ns          /   197.6 ns 
+   8388608 :  170.9 ns          /   205.1 ns 
+  16777216 :  178.8 ns          /   208.7 ns 
+  33554432 :  183.2 ns          /   211.2 ns 
+  67108864 :  186.2 ns          /   213.2 ns 
+
+##########################################################################
+
+OpenSSL 1.1.0g, built on 2 Nov 2017
+type             16 bytes     64 bytes    256 bytes   1024 bytes   8192 bytes  16384 bytes
+aes-128-cbc     125505.98k   370713.22k   708200.96k   945052.67k  1047546.54k  1053868.03k
+aes-128-cbc     125362.82k   370711.55k   707505.66k   944996.35k  1046855.68k  1053977.26k
+aes-192-cbc     119346.78k   329663.64k   577248.34k   728354.47k   788018.52k   792199.17k
+aes-192-cbc     119476.68k   328368.23k   577490.18k   728446.29k   788551.00k   791997.10k
+aes-256-cbc     115728.62k   302822.55k   499942.49k   608566.27k   650493.95k   649625.60k
+aes-256-cbc     115713.58k   302948.14k   499916.29k   609073.83k   650562.22k   653290.15k
+
+##########################################################################
+
+##########################################################################
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=en_US.UTF-8,Utf16=on,HugeFiles=on,64 bits,4 CPUs LE)
+
+LE
+CPU Freq:  1388  1389  1391  1387  1373  1387  1383  1387  1388
+
+RAM size:     570 MB,  # CPU hardware threads:   4
+RAM usage:    450 MB,  # Benchmark threads:      4
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       2125   324    639   2068  |      60169   398   1291   5133
+23:       2175   340    651   2216  |      57895   392   1276   5009
+24:       2026   334    652   2179  |      50324   353   1250   4418
+----------------------------------  | ------------------------------
+Avr:             333    648   2154  |              381   1273   4854
+Tot:             357    960   3504
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=en_US.UTF-8,Utf16=on,HugeFiles=on,64 bits,4 CPUs LE)
+
+LE
+CPU Freq:  1395  1397  1397  1397  1396  1397  1397  1395  1395
+
+RAM size:     570 MB,  # CPU hardware threads:   4
+RAM usage:    450 MB,  # Benchmark threads:      4
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       2216   332    650   2157  |      60114   397   1291   5129
+23:       2178   340    653   2219  |      57820   394   1270   5003
+24:       2052   338    653   2207  |      51076   357   1254   4484
+----------------------------------  | ------------------------------
+Avr:             336    652   2194  |              383   1272   4872
+Tot:             360    962   3533
+
+Compression: 2154,2194
+Decompression: 4854,4872
+Total: 3504,3533
+
+##########################################################################
+
+** cpuminer-multi 1.3.3 by tpruvot@github **
+BTC donation address: 1FhDPLPpw18X4srecguG3MxJYe4a1JsZnd (tpruvot)
+
+[2019-03-14 15:54:24] 4 miner threads started, using 'scrypt' algorithm.
+[2019-03-14 15:54:24] CPU #1: 1.36 kH/s
+[2019-03-14 15:54:24] CPU #2: 1.37 kH/s
+[2019-03-14 15:54:24] CPU #0: 1.35 kH/s
+[2019-03-14 15:54:24] CPU #3: 1.38 kH/s
+[2019-03-14 15:54:24] Total: 5.45 kH/s
+[2019-03-14 15:54:29] Total: 5.47 kH/s
+[2019-03-14 15:54:34] CPU #0: 1.37 kH/s
+[2019-03-14 15:54:34] CPU #1: 1.37 kH/s
+[2019-03-14 15:54:34] CPU #2: 1.37 kH/s
+[2019-03-14 15:54:34] CPU #3: 1.38 kH/s
+[2019-03-14 15:54:34] Total: 5.49 kH/s
+[2019-03-14 15:54:39] Total: 5.48 kH/s
+[2019-03-14 15:54:44] CPU #0: 1.37 kH/s
+[2019-03-14 15:54:44] CPU #1: 1.37 kH/s
+[2019-03-14 15:54:44] CPU #3: 1.37 kH/s
+[2019-03-14 15:54:44] Total: 5.48 kH/s
+[2019-03-14 15:54:44] CPU #2: 1.36 kH/s
+[2019-03-14 15:54:49] Total: 5.47 kH/s
+[2019-03-14 15:54:54] CPU #0: 1.37 kH/s
+[2019-03-14 15:54:54] CPU #1: 1.37 kH/s
+[2019-03-14 15:54:54] CPU #3: 1.38 kH/s
+[2019-03-14 15:54:54] Total: 5.47 kH/s
+[2019-03-14 15:54:54] CPU #2: 1.37 kH/s
+[2019-03-14 15:54:59] Total: 5.38 kH/s
+[2019-03-14 15:55:04] CPU #1: 1.33 kH/s
+[2019-03-14 15:55:04] CPU #0: 1.32 kH/s
+[2019-03-14 15:55:04] CPU #3: 1.34 kH/s
+[2019-03-14 15:55:04] Total: 5.32 kH/s
+[2019-03-14 15:55:04] CPU #2: 1.33 kH/s
+[2019-03-14 15:55:09] Total: 5.29 kH/s
+[2019-03-14 15:55:10] CPU #2: 1.31 kH/s
+[2019-03-14 15:55:14] CPU #0: 1.37 kH/s
+[2019-03-14 15:55:14] CPU #1: 1.37 kH/s
+[2019-03-14 15:55:14] CPU #3: 1.38 kH/s
+[2019-03-14 15:55:14] Total: 5.48 kH/s
+[2019-03-14 15:55:19] CPU #2: 1.37 kH/s
+[2019-03-14 15:55:19] Total: 5.49 kH/s
+[2019-03-14 15:55:24] CPU #0: 1.37 kH/s
+[2019-03-14 15:55:24] CPU #1: 1.37 kH/s
+[2019-03-14 15:55:24] CPU #3: 1.38 kH/s
+[2019-03-14 15:55:24] Total: 5.49 kH/s
+[2019-03-14 15:55:29] CPU #2: 1.37 kH/s
+[2019-03-14 15:55:29] Total: 5.46 kH/s
+[2019-03-14 15:55:34] CPU #0: 1.37 kH/s
+[2019-03-14 15:55:34] CPU #1: 1.37 kH/s
+[2019-03-14 15:55:34] CPU #3: 1.37 kH/s
+[2019-03-14 15:55:34] Total: 5.47 kH/s
+[2019-03-14 15:55:39] CPU #2: 1.37 kH/s
+[2019-03-14 15:55:39] Total: 5.49 kH/s
+[2019-03-14 15:55:44] CPU #0: 1.37 kH/s
+[2019-03-14 15:55:44] CPU #1: 1.37 kH/s
+[2019-03-14 15:55:44] CPU #3: 1.38 kH/s
+[2019-03-14 15:55:44] Total: 5.49 kH/s
+[2019-03-14 15:55:49] CPU #2: 1.37 kH/s
+[2019-03-14 15:55:49] Total: 5.49 kH/s
+[2019-03-14 15:55:54] CPU #0: 1.37 kH/s
+[2019-03-14 15:55:54] CPU #1: 1.37 kH/s
+[2019-03-14 15:55:54] CPU #3: 1.35 kH/s
+[2019-03-14 15:55:54] Total: 5.45 kH/s
+[2019-03-14 15:55:59] CPU #2: 1.36 kH/s
+[2019-03-14 15:55:59] Total: 5.45 kH/s
+[2019-03-14 15:56:04] CPU #0: 1.34 kH/s
+[2019-03-14 15:56:04] CPU #1: 1.35 kH/s
+[2019-03-14 15:56:04] CPU #3: 1.35 kH/s
+[2019-03-14 15:56:04] Total: 5.39 kH/s
+[2019-03-14 15:56:09] CPU #2: 1.35 kH/s
+[2019-03-14 15:56:09] Total: 5.38 kH/s
+[2019-03-14 15:56:14] CPU #0: 1.30 kH/s
+[2019-03-14 15:56:14] CPU #1: 1.31 kH/s
+[2019-03-14 15:56:15] CPU #3: 1.31 kH/s
+[2019-03-14 15:56:15] Total: 5.24 kH/s
+[2019-03-14 15:56:18] Total: 5.30 kH/s
+[2019-03-14 15:56:19] CPU #2: 1.37 kH/s
+[2019-03-14 15:56:19] Total: 5.49 kH/s
+[2019-03-14 15:56:24] CPU #0: 1.37 kH/s
+[2019-03-14 15:56:24] CPU #1: 1.37 kH/s
+[2019-03-14 15:56:24] CPU #3: 1.38 kH/s
+[2019-03-14 15:56:24] Total: 5.49 kH/s
+[2019-03-14 15:56:29] CPU #2: 1.37 kH/s
+[2019-03-14 15:56:29] Total: 5.49 kH/s
+[2019-03-14 15:56:34] CPU #0: 1.37 kH/s
+[2019-03-14 15:56:34] CPU #1: 1.37 kH/s
+[2019-03-14 15:56:34] CPU #3: 1.37 kH/s
+[2019-03-14 15:56:34] Total: 5.48 kH/s
+[2019-03-14 15:56:39] CPU #2: 1.36 kH/s
+[2019-03-14 15:56:39] Total: 5.45 kH/s
+[2019-03-14 15:56:44] CPU #0: 1.37 kH/s
+[2019-03-14 15:56:44] CPU #1: 1.37 kH/s
+[2019-03-14 15:56:44] CPU #3: 1.38 kH/s
+[2019-03-14 15:56:44] Total: 5.49 kH/s
+[2019-03-14 15:56:49] CPU #2: 1.37 kH/s
+[2019-03-14 15:56:49] Total: 5.49 kH/s
+[2019-03-14 15:56:54] CPU #0: 1.37 kH/s
+[2019-03-14 15:56:54] CPU #1: 1.37 kH/s
+[2019-03-14 15:56:54] CPU #3: 1.38 kH/s
+[2019-03-14 15:56:54] Total: 5.49 kH/s
+[2019-03-14 15:56:59] CPU #2: 1.36 kH/s
+[2019-03-14 15:56:59] Total: 5.45 kH/s
+[2019-03-14 15:57:04] CPU #0: 1.34 kH/s
+[2019-03-14 15:57:04] CPU #1: 1.34 kH/s
+[2019-03-14 15:57:04] CPU #3: 1.35 kH/s
+[2019-03-14 15:57:04] Total: 5.37 kH/s
+[2019-03-14 15:57:09] CPU #2: 1.35 kH/s
+[2019-03-14 15:57:10] CPU #3: 1.31 kH/s
+[2019-03-14 15:57:10] Total: 5.32 kH/s
+[2019-03-14 15:57:13] Total: 5.40 kH/s
+[2019-03-14 15:57:14] CPU #0: 1.37 kH/s
+[2019-03-14 15:57:14] CPU #1: 1.37 kH/s
+[2019-03-14 15:57:14] Total: 5.49 kH/s
+[2019-03-14 15:57:19] CPU #2: 1.37 kH/s
+[2019-03-14 15:57:19] CPU #3: 1.37 kH/s
+[2019-03-14 15:57:19] Total: 5.47 kH/s
+[2019-03-14 15:57:24] CPU #0: 1.37 kH/s
+[2019-03-14 15:57:24] CPU #1: 1.37 kH/s
+[2019-03-14 15:57:24] Total: 5.47 kH/s
+[2019-03-14 15:57:29] CPU #2: 1.37 kH/s
+[2019-03-14 15:57:29] CPU #3: 1.38 kH/s
+[2019-03-14 15:57:29] Total: 5.49 kH/s
+[2019-03-14 15:57:34] CPU #0: 1.37 kH/s
+[2019-03-14 15:57:34] CPU #1: 1.37 kH/s
+[2019-03-14 15:57:34] Total: 5.49 kH/s
+[2019-03-14 15:57:39] CPU #2: 1.37 kH/s
+[2019-03-14 15:57:39] CPU #3: 1.38 kH/s
+[2019-03-14 15:57:39] Total: 5.49 kH/s
+[2019-03-14 15:57:44] CPU #0: 1.37 kH/s
+[2019-03-14 15:57:44] CPU #1: 1.37 kH/s
+[2019-03-14 15:57:44] Total: 5.45 kH/s
+[2019-03-14 15:57:49] CPU #2: 1.37 kH/s
+[2019-03-14 15:57:49] CPU #3: 1.38 kH/s
+[2019-03-14 15:57:49] Total: 5.49 kH/s
+[2019-03-14 15:57:54] CPU #0: 1.37 kH/s
+[2019-03-14 15:57:54] CPU #1: 1.37 kH/s
+[2019-03-14 15:57:54] Total: 5.49 kH/s
+[2019-03-14 15:57:59] CPU #2: 1.37 kH/s
+[2019-03-14 15:57:59] CPU #3: 1.38 kH/s
+[2019-03-14 15:57:59] Total: 5.49 kH/s
+[2019-03-14 15:58:04] CPU #0: 1.36 kH/s
+[2019-03-14 15:58:04] CPU #1: 1.36 kH/s
+[2019-03-14 15:58:04] Total: 5.41 kH/s
+[2019-03-14 15:58:09] CPU #2: 1.30 kH/s
+[2019-03-14 15:58:10] CPU #3: 1.30 kH/s
+[2019-03-14 15:58:10] Total: 5.25 kH/s
+[2019-03-14 15:58:13] Total: 5.33 kH/s
+[2019-03-14 15:58:14] CPU #0: 1.37 kH/s
+[2019-03-14 15:58:14] CPU #1: 1.37 kH/s
+[2019-03-14 15:58:14] Total: 5.48 kH/s
+[2019-03-14 15:58:19] CPU #2: 1.37 kH/s
+[2019-03-14 15:58:19] CPU #3: 1.38 kH/s
+[2019-03-14 15:58:19] Total: 5.49 kH/s
+[2019-03-14 15:58:24] CPU #0: 1.37 kH/s
+[2019-03-14 15:58:24] CPU #1: 1.37 kH/s
+[2019-03-14 15:58:24] Total: 5.49 kH/s
+[2019-03-14 15:58:29] CPU #2: 1.36 kH/s
+[2019-03-14 15:58:30] CPU #3: 1.35 kH/s
+[2019-03-14 15:58:30] Total: 5.45 kH/s
+[2019-03-14 15:58:33] Total: 5.48 kH/s
+[2019-03-14 15:58:34] CPU #0: 1.37 kH/s
+[2019-03-14 15:58:34] CPU #1: 1.37 kH/s
+[2019-03-14 15:58:34] Total: 5.49 kH/s
+[2019-03-14 15:58:39] CPU #2: 1.37 kH/s
+[2019-03-14 15:58:39] CPU #3: 1.38 kH/s
+[2019-03-14 15:58:39] Total: 5.49 kH/s
+[2019-03-14 15:58:44] CPU #0: 1.37 kH/s
+[2019-03-14 15:58:44] CPU #1: 1.37 kH/s
+[2019-03-14 15:58:44] Total: 5.48 kH/s
+[2019-03-14 15:58:49] CPU #2: 1.36 kH/s
+[2019-03-14 15:58:50] CPU #3: 1.35 kH/s
+[2019-03-14 15:58:50] Total: 5.45 kH/s
+[2019-03-14 15:58:53] Total: 5.48 kH/s
+[2019-03-14 15:58:54] CPU #0: 1.37 kH/s
+[2019-03-14 15:58:54] CPU #1: 1.37 kH/s
+[2019-03-14 15:58:54] Total: 5.49 kH/s
+[2019-03-14 15:58:59] CPU #2: 1.37 kH/s
+[2019-03-14 15:58:59] CPU #3: 1.38 kH/s
+[2019-03-14 15:58:59] Total: 5.49 kH/s
+[2019-03-14 15:59:04] CPU #0: 1.37 kH/s
+[2019-03-14 15:59:04] CPU #1: 1.37 kH/s
+[2019-03-14 15:59:04] Total: 5.49 kH/s
+[2019-03-14 15:59:09] CPU #2: 1.34 kH/s
+[2019-03-14 15:59:10] CPU #3: 1.34 kH/s
+[2019-03-14 15:59:10] Total: 5.37 kH/s
+[2019-03-14 15:59:14] Total: 5.32 kH/s
+[2019-03-14 15:59:14] CPU #1: 1.34 kH/s
+[2019-03-14 15:59:14] CPU #0: 1.33 kH/s
+[2019-03-14 15:59:18] CPU #3: 1.38 kH/s
+[2019-03-14 15:59:18] Total: 5.37 kH/s
+[2019-03-14 15:59:19] CPU #2: 1.36 kH/s
+[2019-03-14 15:59:19] Total: 5.49 kH/s
+
+Total Scores: 5.49,5.48,5.47,5.46,5.45,5.41,5.40,5.39,5.38,5.37,5.33,5.32,5.30,5.29,5.25,5.24
+
+##########################################################################
+
+Testing clockspeeds again. System health now:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+15:59:10:     MHz  4.12 100%   0%  99%   0%   0%   0%  103.1°C
+
+Checking cpufreq OPP:
+
+Cpufreq OPP: 1400    Measured: 1396.725/1396.574/1397.586
+Cpufreq OPP: 1300    Measured: 1297.175/1297.006/1297.201
+Cpufreq OPP: 1200    Measured: 1182.728/1196.772/1197.438
+Cpufreq OPP: 1100    Measured: 1097.812/1097.835/1097.450
+Cpufreq OPP: 1000    Measured: 996.820/993.071/989.575
+Cpufreq OPP:  900    Measured: 887.235/900.198/884.643
+Cpufreq OPP:  800    Measured: 790.232/789.157/790.384
+Cpufreq OPP:  700    Measured: 688.781/692.090/690.688
+Cpufreq OPP:  600    Measured: 579.706/593.024/593.356
+Cpufreq OPP:  500    Measured: 571.817/494.390/493.094
+Cpufreq OPP:  400    Measured: 395.781/395.560/395.029
+Cpufreq OPP:  300    Measured: 295.483/296.048/261.084
+
+##########################################################################
+
+System health while running tinymembench:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+15:41:59:     MHz  1.06  19%   2%  12%   0%   3%   0%  66.6°C
+15:44:00:     MHz  1.04  25%   0%  25%   0%   0%   0%  76.5°C
+15:46:00:     MHz  1.00  25%   0%  25%   0%   0%   0%  69.2°C
+15:48:00:     MHz  1.02  25%   0%  25%   0%   0%   0%  68.9°C
+
+System health while running OpenSSL benchmark:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+15:48:32:     MHz  1.01  22%   1%  18%   0%   1%   0%  70.8°C
+15:48:42:     MHz  1.01  25%   0%  25%   0%   0%   0%  70.9°C
+15:48:52:     MHz  1.01  25%   0%  25%   0%   0%   0%  72.9°C
+15:49:02:     MHz  1.01  26%   0%  25%   0%   0%   0%  73.2°C
+15:49:12:     MHz  1.00  25%   0%  24%   0%   0%   0%  70.7°C
+15:49:22:     MHz  1.00  25%   0%  25%   0%   0%   0%  73.7°C
+15:49:32:     MHz  1.00  25%   0%  25%   0%   0%   0%  69.9°C
+15:49:42:     MHz  1.00  25%   0%  25%   0%   0%   0%  70.6°C
+15:49:52:     MHz  1.00  25%   0%  25%   0%   0%   0%  70.2°C
+15:50:02:     MHz  1.00  26%   0%  26%   0%   0%   0%  72.9°C
+15:50:12:     MHz  1.00  25%   0%  25%   0%   0%   0%  73.8°C
+
+System health while running 7-zip single core benchmark:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+15:50:20:     MHz  1.00  22%   1%  19%   0%   1%   0%  72.8°C
+15:51:20:     MHz  2.15  25%   0%  24%   0%   0%   0%  69.7°C
+
+System health while running 7-zip multi core benchmark:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+15:52:16:     MHz  2.85  22%   1%  19%   0%   1%   0%  69.0°C
+15:52:38:     MHz  3.04  85%   2%  81%   0%   1%   0%  86.1°C
+15:53:00:     MHz  3.27  88%   3%  83%   0%   1%   0%  85.0°C
+15:53:21:     MHz  3.20  78%   1%  76%   0%   0%   0%  88.0°C
+15:53:42:     MHz  3.36  80%   2%  75%   0%   2%   0%  75.8°C
+15:54:03:     MHz  3.26  86%   1%  85%   0%   0%   0%  90.2°C
+15:54:23:     MHz  3.48  87%   3%  82%   0%   1%   0%  87.6°C
+
+System health while running cpuminer:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+15:54:24:     MHz  3.48  29%   1%  25%   0%   1%   0%  81.1°C
+15:54:45:     MHz  3.63  99%   0%  98%   0%   0%   0%  97.0°C
+15:55:08:     MHz  4.05 100%   0%  99%   0%   0%   0%  98.4°C
+15:55:30:     MHz  4.09 100%   0%  99%   0%   0%   0%  99.4°C
+15:55:52:     MHz  4.06 100%   0%  99%   0%   0%   0%  100.0°C
+15:56:14:     MHz  4.24 100%   0%  99%   0%   0%   0%  100.7°C
+15:56:36:     MHz  4.17 100%   0%  99%   0%   0%   0%  101.2°C
+15:56:58:     MHz  4.17 100%   0%  99%   0%   0%   0%  101.5°C
+15:57:20:     MHz  4.39 100%   0%  99%   0%   0%   0%  102.0°C
+15:57:42:     MHz  4.28 100%   0%  99%   0%   0%   0%  102.2°C
+15:58:04:     MHz  4.24 100%   0%  99%   0%   0%   0%  102.4°C
+15:58:26:     MHz  4.17 100%   0%  99%   0%   0%   0%  102.8°C
+15:58:48:     MHz  4.17 100%   0%  99%   0%   0%   0%  102.7°C
+15:59:10:     MHz  4.12 100%   0%  99%   0%   0%   0%  103.1°C
+
+##########################################################################
+
+dmesg output while running the benchmarks:
+
+[  516.831051] CPU3: update max cpu_capacity 950
+[  517.546913] CPU3: update max cpu_capacity 877
+[  518.306814] CPU3: update max cpu_capacity 804
+[  518.998758] CPU3: update max cpu_capacity 731
+[  519.746657] CPU3: update max cpu_capacity 658
+[  520.450579] CPU3: update max cpu_capacity 585
+[  521.214489] CPU3: update max cpu_capacity 512
+[  521.954397] CPU3: update max cpu_capacity 438
+[  522.670325] CPU3: update max cpu_capacity 365
+[  523.402235] CPU3: update max cpu_capacity 292
+[  524.158151] CPU3: update max cpu_capacity 219
+[  558.516686] RTW: cfg80211_rtw_scan(wlan1)
+[  558.516719] RTW: _rtw_pwr_wakeup call ips_leave....
+[  558.516731] RTW: ==>ips_leave cnts:10
+[  558.516736] RTW: ===>  rtw_ips_pwr_up..............
+[  558.516762] RTW: ===> ips_netdrv_open.........
+[  558.522742] RTW: [HALMAC][ALWAYS]shall R reg twice!!
+[  558.523113] RTW: SetHwReg: bMacPwrCtrlOn=1
+[  558.525675] RTW: WARN [HALMAC][WARN]H2C/C2H ver is compatible!!
+[  558.567977] RTW: _rtw_hal_set_fw_rsvd_page(wlx203233022d85) Get [ NOR ] RsvdPageNUm  ==>
+[  558.567994] RTW: LocPsPoll: 4
+[  558.568007] RTW: LocNullData: 5
+[  558.568015] RTW: LocQosNull: 6
+[  558.568022] RTW: LocBTQosNull: 7
+[  558.568030] RTW: _rtw_hal_set_fw_rsvd_page(wlx203233022d85) Get [ NOR ] RsvdPageNUm <==
+[  559.421122] RTW: FW Version:20 SubVersion:1
+[  559.421137] RTW: rtl8821c_hal_init_main: successful
+[  559.439372] RTW: rtw_hal_set_default_port_id_cmd (wlx203233022d85) port_id :0, mad_id:0
+[  559.452138] RTW: rtw_hal_set_wifi_btc_port_id_cmd (wlx203233022d85) - hw_port :0
+[  559.452490] RTW: rtl8821cu_hal_init in 936ms
+[  559.452506] RTW: rtw_hal_set_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[  559.452735] RTW: rtw_hal_set_macaddr_port wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[  559.453234] RTW: rtw_hal_get_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[  559.453241] RTW: wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[  559.453485] RTW: rtw_hal_get_macaddr_port wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[  559.453491] RTW: wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[  559.454360] RTW: [HW_VAR_ENABLE_RX_BAR] 0x6A2=0x500
+[  559.465877] RTW: wlx203233022d85: hw_port(0) will set mode to 2
+[  559.465896] RTW: rtw_hal_set_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[  559.466109] RTW: wlx203233022d85: hw_port(0) set mode=2
+[  559.467258] RTW: <===  rtw_ips_pwr_up.............. in 948ms
+[  559.467267] RTW: nolinked power save leave
+[  559.467932] RTW: ==> ips_leave.....LED(0x01288282)...
+[  559.481249] RTW: [HW_VAR_CHECK_TXBUF] Empty in 0 ms
+[  559.481491] RTW: wlan1 sleep m0=0x00000002, ori reg_0x4d4=0x00000000
+[  559.482514] RTW: cfg80211_rtw_scan(wlx203233022d85)
+[  559.482535] RTW: cfg80211_rtw_scan (wlx203233022d85) : scan abort!! buddy_intf under survey
+[  563.492088] RTW: LeaveAllPowerSaveModeDirect.....
+[  563.492115] RTW: rtw_hal_set_macaddr_port wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[  563.492637] RTW: rtw_hal_get_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[  563.492647] RTW: wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[  563.492882] RTW: rtw_hal_get_macaddr_port wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[  563.492889] RTW: wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[  563.510383] RTW: wlan1 wakeup m0=0x00000002, ori reg_0x4d4=0x00000002
+[  563.510523] RTW: survey done event(4e) band:0 for wlan1
+[  563.521807] RTW: rtw_indicate_scan_done(wlan1)
+[  563.522231] RTW: rtw_indicate_scan_done(wlx203233022d85)
+[  563.536029] RTW: ==>rtw_ps_processor .fw_state(8)
+[  563.540401] RTW: ==>ips_enter cnts:11
+[  563.540415] RTW: nolinked power save enter
+[  563.540421] RTW: ===> rtw_ips_pwr_down...................
+[  563.540426] RTW: ====> rtw_ips_dev_unload...
+[  563.541010] RTW: usb_read_port_cancel
+[  563.541130] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[  563.541243] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[  563.541371] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[  563.541491] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[  563.541619] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[  563.541747] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[  563.541872] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[  563.541992] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[  563.542012] RTW: usb_write_port_cancel
+[  563.542130] RTW: ==> rtl8821cu_hal_deinit
+[  563.545444] RTW: SetHwReg: bMacPwrCtrlOn=0
+[  563.545461] RTW: rtl8821cu_hal_deinit <==
+[  563.545852] RTW: <=== rtw_ips_pwr_down..................... in 4ms
+[  621.476236] RTW: cfg80211_rtw_scan(wlan1)
+[  621.476273] RTW: _rtw_pwr_wakeup call ips_leave....
+[  621.476288] RTW: ==>ips_leave cnts:11
+[  621.476293] RTW: ===>  rtw_ips_pwr_up..............
+[  621.476322] RTW: ===> ips_netdrv_open.........
+[  621.482529] RTW: [HALMAC][ALWAYS]shall R reg twice!!
+[  621.482903] RTW: SetHwReg: bMacPwrCtrlOn=1
+[  621.485094] RTW: WARN [HALMAC][WARN]H2C/C2H ver is compatible!!
+[  621.527901] RTW: _rtw_hal_set_fw_rsvd_page(wlx203233022d85) Get [ NOR ] RsvdPageNUm  ==>
+[  621.527923] RTW: LocPsPoll: 4
+[  621.527940] RTW: LocNullData: 5
+[  621.527950] RTW: LocQosNull: 6
+[  621.527958] RTW: LocBTQosNull: 7
+[  621.527967] RTW: _rtw_hal_set_fw_rsvd_page(wlx203233022d85) Get [ NOR ] RsvdPageNUm <==
+[  622.383497] RTW: FW Version:20 SubVersion:1
+[  622.383513] RTW: rtl8821c_hal_init_main: successful
+[  622.401621] RTW: rtw_hal_set_default_port_id_cmd (wlx203233022d85) port_id :0, mad_id:0
+[  622.414257] RTW: rtw_hal_set_wifi_btc_port_id_cmd (wlx203233022d85) - hw_port :0
+[  622.414602] RTW: rtl8821cu_hal_init in 940ms
+[  622.414620] RTW: rtw_hal_set_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[  622.414852] RTW: rtw_hal_set_macaddr_port wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[  622.415352] RTW: rtw_hal_get_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[  622.415360] RTW: wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[  622.415598] RTW: rtw_hal_get_macaddr_port wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[  622.415604] RTW: wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[  622.416474] RTW: [HW_VAR_ENABLE_RX_BAR] 0x6A2=0x500
+[  622.427754] RTW: wlx203233022d85: hw_port(0) will set mode to 2
+[  622.427783] RTW: rtw_hal_set_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[  622.427972] RTW: wlx203233022d85: hw_port(0) set mode=2
+[  622.429124] RTW: <===  rtw_ips_pwr_up.............. in 952ms
+[  622.429139] RTW: nolinked power save leave
+[  622.429524] RTW: ==> ips_leave.....LED(0x01288282)...
+[  622.443020] RTW: [HW_VAR_CHECK_TXBUF] Empty in 0 ms
+[  622.443244] RTW: wlan1 sleep m0=0x00000002, ori reg_0x4d4=0x00000000
+[  622.444706] RTW: cfg80211_rtw_scan(wlx203233022d85)
+[  622.444731] RTW: cfg80211_rtw_scan (wlx203233022d85) : scan abort!! buddy_intf under survey
+[  626.461710] RTW: LeaveAllPowerSaveModeDirect.....
+[  626.461740] RTW: rtw_hal_set_macaddr_port wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[  626.462244] RTW: rtw_hal_get_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[  626.462255] RTW: wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[  626.462491] RTW: rtw_hal_get_macaddr_port wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[  626.462498] RTW: wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[  626.482254] RTW: wlan1 wakeup m0=0x00000002, ori reg_0x4d4=0x00000002
+[  626.482385] RTW: survey done event(41) band:0 for wlan1
+[  626.482730] RTW: rtw_indicate_scan_done(wlan1)
+[  626.483441] RTW: rtw_indicate_scan_done(wlx203233022d85)
+[  626.506778] RTW: ==>rtw_ps_processor .fw_state(8)
+[  626.511646] RTW: ==>ips_enter cnts:12
+[  626.511661] RTW: nolinked power save enter
+[  626.511667] RTW: ===> rtw_ips_pwr_down...................
+[  626.511673] RTW: ====> rtw_ips_dev_unload...
+[  626.512269] RTW: usb_read_port_cancel
+[  626.512360] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[  626.512485] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[  626.512606] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[  626.512734] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[  626.512854] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[  626.512977] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[  626.513100] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[  626.513153] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[  626.513189] RTW: usb_write_port_cancel
+[  626.513373] RTW: ==> rtl8821cu_hal_deinit
+[  626.516826] RTW: SetHwReg: bMacPwrCtrlOn=0
+[  626.516845] RTW: rtl8821cu_hal_deinit <==
+[  626.517254] RTW: <=== rtw_ips_pwr_down..................... in 4ms
+[  684.528048] RTW: cfg80211_rtw_scan(wlan1)
+[  684.528070] RTW: _rtw_pwr_wakeup call ips_leave....
+[  684.528078] RTW: ==>ips_leave cnts:12
+[  684.528083] RTW: ===>  rtw_ips_pwr_up..............
+[  684.528101] RTW: ===> ips_netdrv_open.........
+[  684.533600] RTW: [HALMAC][ALWAYS]shall R reg twice!!
+[  684.533966] RTW: SetHwReg: bMacPwrCtrlOn=1
+[  684.536183] RTW: WARN [HALMAC][WARN]H2C/C2H ver is compatible!!
+[  684.575732] RTW: _rtw_hal_set_fw_rsvd_page(wlx203233022d85) Get [ NOR ] RsvdPageNUm  ==>
+[  684.575743] RTW: LocPsPoll: 4
+[  684.575752] RTW: LocNullData: 5
+[  684.575759] RTW: LocQosNull: 6
+[  684.575765] RTW: LocBTQosNull: 7
+[  684.575773] RTW: _rtw_hal_set_fw_rsvd_page(wlx203233022d85) Get [ NOR ] RsvdPageNUm <==
+[  685.428716] RTW: FW Version:20 SubVersion:1
+[  685.428725] RTW: rtl8821c_hal_init_main: successful
+[  685.447217] RTW: rtw_hal_set_default_port_id_cmd (wlx203233022d85) port_id :0, mad_id:0
+[  685.459721] RTW: rtw_hal_set_wifi_btc_port_id_cmd (wlx203233022d85) - hw_port :0
+[  685.460084] RTW: rtl8821cu_hal_init in 932ms
+[  685.460095] RTW: rtw_hal_set_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[  685.460335] RTW: rtw_hal_set_macaddr_port wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[  685.460837] RTW: rtw_hal_get_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[  685.460844] RTW: wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[  685.461083] RTW: rtw_hal_get_macaddr_port wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[  685.461089] RTW: wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[  685.461956] RTW: [HW_VAR_ENABLE_RX_BAR] 0x6A2=0x500
+[  685.473216] RTW: wlx203233022d85: hw_port(0) will set mode to 2
+[  685.473229] RTW: rtw_hal_set_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[  685.473458] RTW: wlx203233022d85: hw_port(0) set mode=2
+[  685.474590] RTW: <===  rtw_ips_pwr_up.............. in 944ms
+[  685.474596] RTW: nolinked power save leave
+[  685.474831] RTW: ==> ips_leave.....LED(0x01288282)...
+[  685.487975] RTW: [HW_VAR_CHECK_TXBUF] Empty in 0 ms
+[  685.488220] RTW: wlan1 sleep m0=0x00000002, ori reg_0x4d4=0x00000000
+[  685.489067] RTW: cfg80211_rtw_scan(wlx203233022d85)
+[  685.489083] RTW: cfg80211_rtw_scan (wlx203233022d85) : scan abort!! buddy_intf under survey
+[  689.499076] RTW: LeaveAllPowerSaveModeDirect.....
+[  689.499094] RTW: rtw_hal_set_macaddr_port wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[  689.499604] RTW: rtw_hal_get_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[  689.499612] RTW: wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[  689.499853] RTW: rtw_hal_get_macaddr_port wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[  689.499859] RTW: wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[  689.517482] RTW: wlan1 wakeup m0=0x00000002, ori reg_0x4d4=0x00000002
+[  689.517608] RTW: survey done event(47) band:0 for wlan1
+[  689.517839] RTW: rtw_indicate_scan_done(wlan1)
+[  689.518155] RTW: rtw_indicate_scan_done(wlx203233022d85)
+[  689.538247] RTW: ==>rtw_ps_processor .fw_state(8)
+[  689.542612] RTW: ==>ips_enter cnts:13
+[  689.542621] RTW: nolinked power save enter
+[  689.542626] RTW: ===> rtw_ips_pwr_down...................
+[  689.542631] RTW: ====> rtw_ips_dev_unload...
+[  689.543237] RTW: usb_read_port_cancel
+[  689.543349] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[  689.543471] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[  689.543513] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[  689.543591] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[  689.543633] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[  689.543675] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[  689.543718] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[  689.543758] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[  689.543773] RTW: usb_write_port_cancel
+[  689.543864] RTW: ==> rtl8821cu_hal_deinit
+[  689.546940] RTW: SetHwReg: bMacPwrCtrlOn=0
+[  689.546950] RTW: rtl8821cu_hal_deinit <==
+[  689.547392] RTW: <=== rtw_ips_pwr_down..................... in 8ms
+[  747.480821] RTW: cfg80211_rtw_scan(wlan1)
+[  747.480846] RTW: _rtw_pwr_wakeup call ips_leave....
+[  747.480855] RTW: ==>ips_leave cnts:13
+[  747.480859] RTW: ===>  rtw_ips_pwr_up..............
+[  747.480878] RTW: ===> ips_netdrv_open.........
+[  747.486725] RTW: [HALMAC][ALWAYS]shall R reg twice!!
+[  747.487077] RTW: SetHwReg: bMacPwrCtrlOn=1
+[  747.489116] RTW: WARN [HALMAC][WARN]H2C/C2H ver is compatible!!
+[  747.529388] RTW: _rtw_hal_set_fw_rsvd_page(wlx203233022d85) Get [ NOR ] RsvdPageNUm  ==>
+[  747.529400] RTW: LocPsPoll: 4
+[  747.529410] RTW: LocNullData: 5
+[  747.529417] RTW: LocQosNull: 6
+[  747.529423] RTW: LocBTQosNull: 7
+[  747.529430] RTW: _rtw_hal_set_fw_rsvd_page(wlx203233022d85) Get [ NOR ] RsvdPageNUm <==
+[  748.384328] RTW: FW Version:20 SubVersion:1
+[  748.384337] RTW: rtl8821c_hal_init_main: successful
+[  748.402587] RTW: rtw_hal_set_default_port_id_cmd (wlx203233022d85) port_id :0, mad_id:0
+[  748.415211] RTW: rtw_hal_set_wifi_btc_port_id_cmd (wlx203233022d85) - hw_port :0
+[  748.415574] RTW: rtl8821cu_hal_init in 936ms
+[  748.415584] RTW: rtw_hal_set_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[  748.415825] RTW: rtw_hal_set_macaddr_port wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[  748.416324] RTW: rtw_hal_get_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[  748.416330] RTW: wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[  748.416573] RTW: rtw_hal_get_macaddr_port wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[  748.416578] RTW: wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[  748.417446] RTW: [HW_VAR_ENABLE_RX_BAR] 0x6A2=0x500
+[  748.429835] RTW: wlx203233022d85: hw_port(0) will set mode to 2
+[  748.429850] RTW: rtw_hal_set_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[  748.430314] RTW: wlx203233022d85: hw_port(0) set mode=2
+[  748.431462] RTW: <===  rtw_ips_pwr_up.............. in 952ms
+[  748.431470] RTW: nolinked power save leave
+[  748.431695] RTW: ==> ips_leave.....LED(0x01288282)...
+[  748.444727] RTW: [HW_VAR_CHECK_TXBUF] Empty in 0 ms
+[  748.444967] RTW: wlan1 sleep m0=0x00000002, ori reg_0x4d4=0x00000000
+[  748.446327] RTW: cfg80211_rtw_scan(wlx203233022d85)
+[  748.446342] RTW: cfg80211_rtw_scan (wlx203233022d85) : scan abort!! buddy_intf under survey
+[  752.454089] RTW: LeaveAllPowerSaveModeDirect.....
+[  752.454108] RTW: rtw_hal_set_macaddr_port wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[  752.454601] RTW: rtw_hal_get_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[  752.454611] RTW: wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[  752.454845] RTW: rtw_hal_get_macaddr_port wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[  752.454852] RTW: wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[  752.472346] RTW: wlan1 wakeup m0=0x00000002, ori reg_0x4d4=0x00000002
+[  752.472477] RTW: survey done event(51) band:0 for wlan1
+[  752.483732] RTW: rtw_indicate_scan_done(wlan1)
+[  752.484065] RTW: rtw_indicate_scan_done(wlx203233022d85)
+[  752.507115] RTW: ==>rtw_ps_processor .fw_state(8)
+[  752.511487] RTW: ==>ips_enter cnts:14
+[  752.511498] RTW: nolinked power save enter
+[  752.511502] RTW: ===> rtw_ips_pwr_down...................
+[  752.511507] RTW: ====> rtw_ips_dev_unload...
+[  752.512107] RTW: usb_read_port_cancel
+[  752.512213] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[  752.512336] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[  752.512457] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[  752.512579] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[  752.512709] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[  752.512831] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[  752.512871] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[  752.512915] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[  752.512938] RTW: usb_write_port_cancel
+[  752.513035] RTW: ==> rtl8821cu_hal_deinit
+[  752.516191] RTW: SetHwReg: bMacPwrCtrlOn=0
+[  752.516202] RTW: rtl8821cu_hal_deinit <==
+[  752.516558] RTW: <=== rtw_ips_pwr_down..................... in 4ms
+[  810.506421] RTW: cfg80211_rtw_scan(wlan1)
+[  810.506445] RTW: _rtw_pwr_wakeup call ips_leave....
+[  810.506453] RTW: ==>ips_leave cnts:14
+[  810.506458] RTW: ===>  rtw_ips_pwr_up..............
+[  810.506477] RTW: ===> ips_netdrv_open.........
+[  810.512943] RTW: [HALMAC][ALWAYS]shall R reg twice!!
+[  810.513294] RTW: SetHwReg: bMacPwrCtrlOn=1
+[  810.515332] RTW: WARN [HALMAC][WARN]H2C/C2H ver is compatible!!
+[  810.555383] RTW: _rtw_hal_set_fw_rsvd_page(wlx203233022d85) Get [ NOR ] RsvdPageNUm  ==>
+[  810.555395] RTW: LocPsPoll: 4
+[  810.555405] RTW: LocNullData: 5
+[  810.555413] RTW: LocQosNull: 6
+[  810.555419] RTW: LocBTQosNull: 7
+[  810.555427] RTW: _rtw_hal_set_fw_rsvd_page(wlx203233022d85) Get [ NOR ] RsvdPageNUm <==
+[  811.409322] RTW: FW Version:20 SubVersion:1
+[  811.409332] RTW: rtl8821c_hal_init_main: successful
+[  811.427450] RTW: rtw_hal_set_default_port_id_cmd (wlx203233022d85) port_id :0, mad_id:0
+[  811.439957] RTW: rtw_hal_set_wifi_btc_port_id_cmd (wlx203233022d85) - hw_port :0
+[  811.440317] RTW: rtl8821cu_hal_init in 936ms
+[  811.440327] RTW: rtw_hal_set_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[  811.440566] RTW: rtw_hal_set_macaddr_port wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[  811.441066] RTW: rtw_hal_get_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[  811.441073] RTW: wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[  811.441314] RTW: rtw_hal_get_macaddr_port wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[  811.441320] RTW: wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[  811.442186] RTW: [HW_VAR_ENABLE_RX_BAR] 0x6A2=0x500
+[  811.453329] RTW: wlx203233022d85: hw_port(0) will set mode to 2
+[  811.453345] RTW: rtw_hal_set_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[  811.453563] RTW: wlx203233022d85: hw_port(0) set mode=2
+[  811.454700] RTW: <===  rtw_ips_pwr_up.............. in 948ms
+[  811.454706] RTW: nolinked power save leave
+[  811.454937] RTW: ==> ips_leave.....LED(0x01288282)...
+[  811.467949] RTW: [HW_VAR_CHECK_TXBUF] Empty in 4 ms
+[  811.468200] RTW: wlan1 sleep m0=0x00000002, ori reg_0x4d4=0x00000000
+[  811.469149] RTW: cfg80211_rtw_scan(wlx203233022d85)
+[  811.469165] RTW: cfg80211_rtw_scan (wlx203233022d85) : scan abort!! buddy_intf under survey
+[  815.483344] RTW: LeaveAllPowerSaveModeDirect.....
+[  815.483364] RTW: rtw_hal_set_macaddr_port wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[  815.483834] RTW: rtw_hal_get_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[  815.483841] RTW: wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[  815.484086] RTW: rtw_hal_get_macaddr_port wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[  815.484092] RTW: wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[  815.501587] RTW: wlan1 wakeup m0=0x00000002, ori reg_0x4d4=0x00000002
+[  815.501718] RTW: survey done event(4e) band:0 for wlan1
+[  815.501955] RTW: rtw_indicate_scan_done(wlan1)
+[  815.502890] RTW: rtw_indicate_scan_done(wlx203233022d85)
+[  815.519096] RTW: ==>rtw_ps_processor .fw_state(8)
+[  815.523475] RTW: ==>ips_enter cnts:15
+[  815.523484] RTW: nolinked power save enter
+[  815.523489] RTW: ===> rtw_ips_pwr_down...................
+[  815.523493] RTW: ====> rtw_ips_dev_unload...
+[  815.524094] RTW: usb_read_port_cancel
+[  815.524204] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[  815.524321] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[  815.524447] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[  815.524572] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[  815.524698] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[  815.524738] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[  815.524823] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[  815.524865] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[  815.524878] RTW: usb_write_port_cancel
+[  815.524979] RTW: ==> rtl8821cu_hal_deinit
+[  815.528097] RTW: SetHwReg: bMacPwrCtrlOn=0
+[  815.528108] RTW: rtl8821cu_hal_deinit <==
+[  815.528461] RTW: <=== rtw_ips_pwr_down..................... in 4ms
+[  873.479081] RTW: cfg80211_rtw_scan(wlan1)
+[  873.479106] RTW: _rtw_pwr_wakeup call ips_leave....
+[  873.479115] RTW: ==>ips_leave cnts:15
+[  873.479120] RTW: ===>  rtw_ips_pwr_up..............
+[  873.479139] RTW: ===> ips_netdrv_open.........
+[  873.484829] RTW: [HALMAC][ALWAYS]shall R reg twice!!
+[  873.485186] RTW: SetHwReg: bMacPwrCtrlOn=1
+[  873.487235] RTW: WARN [HALMAC][WARN]H2C/C2H ver is compatible!!
+[  873.527372] RTW: _rtw_hal_set_fw_rsvd_page(wlx203233022d85) Get [ NOR ] RsvdPageNUm  ==>
+[  873.527385] RTW: LocPsPoll: 4
+[  873.527396] RTW: LocNullData: 5
+[  873.527404] RTW: LocQosNull: 6
+[  873.527411] RTW: LocBTQosNull: 7
+[  873.527418] RTW: _rtw_hal_set_fw_rsvd_page(wlx203233022d85) Get [ NOR ] RsvdPageNUm <==
+[  874.381685] RTW: FW Version:20 SubVersion:1
+[  874.381695] RTW: rtl8821c_hal_init_main: successful
+[  874.399815] RTW: rtw_hal_set_default_port_id_cmd (wlx203233022d85) port_id :0, mad_id:0
+[  874.412444] RTW: rtw_hal_set_wifi_btc_port_id_cmd (wlx203233022d85) - hw_port :0
+[  874.412806] RTW: rtl8821cu_hal_init in 936ms
+[  874.412816] RTW: rtw_hal_set_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[  874.413056] RTW: rtw_hal_set_macaddr_port wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[  874.413554] RTW: rtw_hal_get_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[  874.413560] RTW: wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[  874.413804] RTW: rtw_hal_get_macaddr_port wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[  874.413809] RTW: wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[  874.414676] RTW: [HW_VAR_ENABLE_RX_BAR] 0x6A2=0x500
+[  874.425943] RTW: wlx203233022d85: hw_port(0) will set mode to 2
+[  874.425958] RTW: rtw_hal_set_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[  874.426178] RTW: wlx203233022d85: hw_port(0) set mode=2
+[  874.427313] RTW: <===  rtw_ips_pwr_up.............. in 948ms
+[  874.427318] RTW: nolinked power save leave
+[  874.427552] RTW: ==> ips_leave.....LED(0x01288282)...
+[  874.440943] RTW: [HW_VAR_CHECK_TXBUF] Empty in 0 ms
+[  874.441188] RTW: wlan1 sleep m0=0x00000002, ori reg_0x4d4=0x00000000
+[  874.441894] RTW: cfg80211_rtw_scan(wlx203233022d85)
+[  874.441909] RTW: cfg80211_rtw_scan (wlx203233022d85) : scan abort!! buddy_intf under survey
+[  878.459790] RTW: LeaveAllPowerSaveModeDirect.....
+[  878.459811] RTW: rtw_hal_set_macaddr_port wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[  878.460327] RTW: rtw_hal_get_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[  878.460337] RTW: wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[  878.460572] RTW: rtw_hal_get_macaddr_port wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[  878.460579] RTW: wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[  878.478327] RTW: wlan1 wakeup m0=0x00000002, ori reg_0x4d4=0x00000002
+[  878.478460] RTW: survey done event(3f) band:0 for wlan1
+[  878.489816] RTW: rtw_indicate_scan_done(wlan1)
+[  878.490591] RTW: rtw_indicate_scan_done(wlx203233022d85)
+[  878.511594] RTW: ==>rtw_ps_processor .fw_state(8)
+[  878.515966] RTW: ==>ips_enter cnts:16
+[  878.515975] RTW: nolinked power save enter
+[  878.515980] RTW: ===> rtw_ips_pwr_down...................
+[  878.515985] RTW: ====> rtw_ips_dev_unload...
+[  878.516587] RTW: usb_read_port_cancel
+[  878.516694] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[  878.516810] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[  878.516936] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[  878.517061] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[  878.517185] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[  878.517317] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[  878.517438] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[  878.517563] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[  878.517578] RTW: usb_write_port_cancel
+[  878.517676] RTW: ==> rtl8821cu_hal_deinit
+[  878.520847] RTW: SetHwReg: bMacPwrCtrlOn=0
+[  878.520858] RTW: rtl8821cu_hal_deinit <==
+[  878.521209] RTW: <=== rtw_ips_pwr_down..................... in 4ms
+[  936.478271] RTW: cfg80211_rtw_scan(wlan1)
+[  936.478294] RTW: _rtw_pwr_wakeup call ips_leave....
+[  936.478303] RTW: ==>ips_leave cnts:16
+[  936.478307] RTW: ===>  rtw_ips_pwr_up..............
+[  936.478325] RTW: ===> ips_netdrv_open.........
+[  936.484066] RTW: [HALMAC][ALWAYS]shall R reg twice!!
+[  936.484418] RTW: SetHwReg: bMacPwrCtrlOn=1
+[  936.486436] RTW: WARN [HALMAC][WARN]H2C/C2H ver is compatible!!
+[  936.525812] RTW: _rtw_hal_set_fw_rsvd_page(wlx203233022d85) Get [ NOR ] RsvdPageNUm  ==>
+[  936.525824] RTW: LocPsPoll: 4
+[  936.525832] RTW: LocNullData: 5
+[  936.525839] RTW: LocQosNull: 6
+[  936.525846] RTW: LocBTQosNull: 7
+[  936.525853] RTW: _rtw_hal_set_fw_rsvd_page(wlx203233022d85) Get [ NOR ] RsvdPageNUm <==
+[  937.377303] RTW: FW Version:20 SubVersion:1
+[  937.377312] RTW: rtl8821c_hal_init_main: successful
+[  937.395306] RTW: rtw_hal_set_default_port_id_cmd (wlx203233022d85) port_id :0, mad_id:0
+[  937.407807] RTW: rtw_hal_set_wifi_btc_port_id_cmd (wlx203233022d85) - hw_port :0
+[  937.408173] RTW: rtl8821cu_hal_init in 932ms
+[  937.408183] RTW: rtw_hal_set_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[  937.408424] RTW: rtw_hal_set_macaddr_port wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[  937.408923] RTW: rtw_hal_get_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[  937.408930] RTW: wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[  937.409174] RTW: rtw_hal_get_macaddr_port wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[  937.409180] RTW: wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[  937.410047] RTW: [HW_VAR_ENABLE_RX_BAR] 0x6A2=0x500
+[  937.422051] RTW: wlx203233022d85: hw_port(0) will set mode to 2
+[  937.422064] RTW: rtw_hal_set_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[  937.422292] RTW: wlx203233022d85: hw_port(0) set mode=2
+[  937.423425] RTW: <===  rtw_ips_pwr_up.............. in 944ms
+[  937.423430] RTW: nolinked power save leave
+[  937.423665] RTW: ==> ips_leave.....LED(0x01288282)...
+[  937.436801] RTW: [HW_VAR_CHECK_TXBUF] Empty in 0 ms
+[  937.437047] RTW: wlan1 sleep m0=0x00000002, ori reg_0x4d4=0x00000000
+[  937.437611] RTW: cfg80211_rtw_scan(wlx203233022d85)
+[  937.437623] RTW: cfg80211_rtw_scan (wlx203233022d85) : scan abort!! buddy_intf under survey
+[  941.447205] RTW: LeaveAllPowerSaveModeDirect.....
+[  941.447219] RTW: rtw_hal_set_macaddr_port wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[  941.447693] RTW: rtw_hal_get_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[  941.447704] RTW: wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[  941.447934] RTW: rtw_hal_get_macaddr_port wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[  941.447940] RTW: wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[  941.465436] RTW: wlan1 wakeup m0=0x00000002, ori reg_0x4d4=0x00000002
+[  941.465565] RTW: survey done event(3e) band:0 for wlan1
+[  941.465794] RTW: rtw_indicate_scan_done(wlan1)
+[  941.466102] RTW: rtw_indicate_scan_done(wlx203233022d85)
+[  941.482447] RTW: ==>rtw_ps_processor .fw_state(8)
+[  941.486974] RTW: ==>ips_enter cnts:17
+[  941.486983] RTW: nolinked power save enter
+[  941.486988] RTW: ===> rtw_ips_pwr_down...................
+[  941.486992] RTW: ====> rtw_ips_dev_unload...
+[  941.487702] RTW: usb_read_port_cancel
+[  941.487807] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[  941.487928] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[  941.488050] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[  941.488175] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[  941.488216] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[  941.488262] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[  941.488301] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[  941.488347] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[  941.488381] RTW: usb_write_port_cancel
+[  941.488472] RTW: ==> rtl8821cu_hal_deinit
+[  941.491596] RTW: SetHwReg: bMacPwrCtrlOn=0
+[  941.491607] RTW: rtl8821cu_hal_deinit <==
+[  941.491947] RTW: <=== rtw_ips_pwr_down..................... in 8ms
+[  999.509891] RTW: cfg80211_rtw_scan(wlan1)
+[  999.509914] RTW: _rtw_pwr_wakeup call ips_leave....
+[  999.509923] RTW: ==>ips_leave cnts:17
+[  999.509927] RTW: ===>  rtw_ips_pwr_up..............
+[  999.509945] RTW: ===> ips_netdrv_open.........
+[  999.515434] RTW: [HALMAC][ALWAYS]shall R reg twice!!
+[  999.515781] RTW: SetHwReg: bMacPwrCtrlOn=1
+[  999.517802] RTW: WARN [HALMAC][WARN]H2C/C2H ver is compatible!!
+[  999.557303] RTW: _rtw_hal_set_fw_rsvd_page(wlx203233022d85) Get [ NOR ] RsvdPageNUm  ==>
+[  999.557314] RTW: LocPsPoll: 4
+[  999.557322] RTW: LocNullData: 5
+[  999.557329] RTW: LocQosNull: 6
+[  999.557335] RTW: LocBTQosNull: 7
+[  999.557342] RTW: _rtw_hal_set_fw_rsvd_page(wlx203233022d85) Get [ NOR ] RsvdPageNUm <==
+[ 1000.408789] RTW: FW Version:20 SubVersion:1
+[ 1000.408798] RTW: rtl8821c_hal_init_main: successful
+[ 1000.426791] RTW: rtw_hal_set_default_port_id_cmd (wlx203233022d85) port_id :0, mad_id:0
+[ 1000.439296] RTW: rtw_hal_set_wifi_btc_port_id_cmd (wlx203233022d85) - hw_port :0
+[ 1000.439659] RTW: rtl8821cu_hal_init in 932ms
+[ 1000.439669] RTW: rtw_hal_set_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1000.439909] RTW: rtw_hal_set_macaddr_port wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[ 1000.440409] RTW: rtw_hal_get_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1000.440416] RTW: wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1000.440658] RTW: rtw_hal_get_macaddr_port wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[ 1000.440664] RTW: wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[ 1000.441531] RTW: [HW_VAR_ENABLE_RX_BAR] 0x6A2=0x500
+[ 1000.452666] RTW: wlx203233022d85: hw_port(0) will set mode to 2
+[ 1000.452679] RTW: rtw_hal_set_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1000.452908] RTW: wlx203233022d85: hw_port(0) set mode=2
+[ 1000.454041] RTW: <===  rtw_ips_pwr_up.............. in 944ms
+[ 1000.454046] RTW: nolinked power save leave
+[ 1000.454281] RTW: ==> ips_leave.....LED(0x01288282)...
+[ 1000.467795] RTW: [HW_VAR_CHECK_TXBUF] Empty in 4 ms
+[ 1000.468048] RTW: wlan1 sleep m0=0x00000002, ori reg_0x4d4=0x00000000
+[ 1000.469196] RTW: cfg80211_rtw_scan(wlx203233022d85)
+[ 1000.469211] RTW: cfg80211_rtw_scan (wlx203233022d85) : scan abort!! buddy_intf under survey
+[ 1004.481569] RTW: LeaveAllPowerSaveModeDirect.....
+[ 1004.481583] RTW: rtw_hal_set_macaddr_port wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[ 1004.482054] RTW: rtw_hal_get_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1004.482061] RTW: wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1004.482302] RTW: rtw_hal_get_macaddr_port wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[ 1004.482307] RTW: wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[ 1004.500181] RTW: wlan1 wakeup m0=0x00000002, ori reg_0x4d4=0x00000002
+[ 1004.500305] RTW: survey done event(3d) band:0 for wlan1
+[ 1004.500529] RTW: rtw_indicate_scan_done(wlan1)
+[ 1004.500838] RTW: rtw_indicate_scan_done(wlx203233022d85)
+[ 1004.516817] RTW: ==>rtw_ps_processor .fw_state(8)
+[ 1004.521191] RTW: ==>ips_enter cnts:18
+[ 1004.521200] RTW: nolinked power save enter
+[ 1004.521204] RTW: ===> rtw_ips_pwr_down...................
+[ 1004.521209] RTW: ====> rtw_ips_dev_unload...
+[ 1004.521817] RTW: usb_read_port_cancel
+[ 1004.521921] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1004.522038] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1004.522163] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1004.522287] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1004.522419] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1004.522538] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1004.522662] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1004.522795] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1004.522816] RTW: usb_write_port_cancel
+[ 1004.522969] RTW: ==> rtl8821cu_hal_deinit
+[ 1004.526024] RTW: SetHwReg: bMacPwrCtrlOn=0
+[ 1004.526033] RTW: rtl8821cu_hal_deinit <==
+[ 1004.526385] RTW: <=== rtw_ips_pwr_down..................... in 4ms
+[ 1062.506328] RTW: cfg80211_rtw_scan(wlan1)
+[ 1062.506351] RTW: _rtw_pwr_wakeup call ips_leave....
+[ 1062.506359] RTW: ==>ips_leave cnts:18
+[ 1062.506364] RTW: ===>  rtw_ips_pwr_up..............
+[ 1062.506383] RTW: ===> ips_netdrv_open.........
+[ 1062.512196] RTW: [HALMAC][ALWAYS]shall R reg twice!!
+[ 1062.512541] RTW: SetHwReg: bMacPwrCtrlOn=1
+[ 1062.514653] RTW: WARN [HALMAC][WARN]H2C/C2H ver is compatible!!
+[ 1062.554683] RTW: _rtw_hal_set_fw_rsvd_page(wlx203233022d85) Get [ NOR ] RsvdPageNUm  ==>
+[ 1062.554695] RTW: LocPsPoll: 4
+[ 1062.554705] RTW: LocNullData: 5
+[ 1062.554712] RTW: LocQosNull: 6
+[ 1062.554719] RTW: LocBTQosNull: 7
+[ 1062.554726] RTW: _rtw_hal_set_fw_rsvd_page(wlx203233022d85) Get [ NOR ] RsvdPageNUm <==
+[ 1063.412286] RTW: FW Version:20 SubVersion:1
+[ 1063.412296] RTW: rtl8821c_hal_init_main: successful
+[ 1063.430411] RTW: rtw_hal_set_default_port_id_cmd (wlx203233022d85) port_id :0, mad_id:0
+[ 1063.442918] RTW: rtw_hal_set_wifi_btc_port_id_cmd (wlx203233022d85) - hw_port :0
+[ 1063.443275] RTW: rtl8821cu_hal_init in 940ms
+[ 1063.443286] RTW: rtw_hal_set_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1063.443525] RTW: rtw_hal_set_macaddr_port wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[ 1063.444024] RTW: rtw_hal_get_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1063.444031] RTW: wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1063.444273] RTW: rtw_hal_get_macaddr_port wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[ 1063.444279] RTW: wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[ 1063.445152] RTW: [HW_VAR_ENABLE_RX_BAR] 0x6A2=0x500
+[ 1063.456410] RTW: wlx203233022d85: hw_port(0) will set mode to 2
+[ 1063.456424] RTW: rtw_hal_set_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1063.456648] RTW: wlx203233022d85: hw_port(0) set mode=2
+[ 1063.457784] RTW: <===  rtw_ips_pwr_up.............. in 952ms
+[ 1063.457790] RTW: nolinked power save leave
+[ 1063.458021] RTW: ==> ips_leave.....LED(0x01288282)...
+[ 1063.470880] RTW: cfg80211_rtw_scan(wlx203233022d85)
+[ 1063.470896] RTW: cfg80211_rtw_scan (wlx203233022d85) : scan abort!! buddy_intf under survey
+[ 1063.471278] RTW: [HW_VAR_CHECK_TXBUF] Empty in 0 ms
+[ 1063.471547] RTW: wlan1 sleep m0=0x00000002, ori reg_0x4d4=0x00000000
+[ 1067.483008] RTW: LeaveAllPowerSaveModeDirect.....
+[ 1067.483028] RTW: rtw_hal_set_macaddr_port wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[ 1067.483543] RTW: rtw_hal_get_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1067.483551] RTW: wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1067.483788] RTW: rtw_hal_get_macaddr_port wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[ 1067.483794] RTW: wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[ 1067.501297] RTW: wlan1 wakeup m0=0x00000002, ori reg_0x4d4=0x00000002
+[ 1067.501430] RTW: survey done event(3b) band:0 for wlan1
+[ 1067.513026] RTW: rtw_indicate_scan_done(wlan1)
+[ 1067.513348] RTW: rtw_indicate_scan_done(wlx203233022d85)
+[ 1067.536443] RTW: ==>rtw_ps_processor .fw_state(8)
+[ 1067.540806] RTW: ==>ips_enter cnts:19
+[ 1067.540816] RTW: nolinked power save enter
+[ 1067.540821] RTW: ===> rtw_ips_pwr_down...................
+[ 1067.540825] RTW: ====> rtw_ips_dev_unload...
+[ 1067.541435] RTW: usb_read_port_cancel
+[ 1067.541538] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1067.541660] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1067.541779] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1067.541905] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1067.542033] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1067.542155] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1067.542280] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1067.542408] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1067.542426] RTW: usb_write_port_cancel
+[ 1067.542520] RTW: ==> rtl8821cu_hal_deinit
+[ 1067.545826] RTW: SetHwReg: bMacPwrCtrlOn=0
+[ 1067.545838] RTW: rtl8821cu_hal_deinit <==
+[ 1067.546183] RTW: <=== rtw_ips_pwr_down..................... in 4ms
+[ 1125.484134] RTW: cfg80211_rtw_scan(wlan1)
+[ 1125.484157] RTW: _rtw_pwr_wakeup call ips_leave....
+[ 1125.484166] RTW: ==>ips_leave cnts:19
+[ 1125.484171] RTW: ===>  rtw_ips_pwr_up..............
+[ 1125.484190] RTW: ===> ips_netdrv_open.........
+[ 1125.490459] RTW: [HALMAC][ALWAYS]shall R reg twice!!
+[ 1125.490805] RTW: SetHwReg: bMacPwrCtrlOn=1
+[ 1125.493064] RTW: WARN [HALMAC][WARN]H2C/C2H ver is compatible!!
+[ 1125.533081] RTW: _rtw_hal_set_fw_rsvd_page(wlx203233022d85) Get [ NOR ] RsvdPageNUm  ==>
+[ 1125.533093] RTW: LocPsPoll: 4
+[ 1125.533104] RTW: LocNullData: 5
+[ 1125.533111] RTW: LocQosNull: 6
+[ 1125.533118] RTW: LocBTQosNull: 7
+[ 1125.533126] RTW: _rtw_hal_set_fw_rsvd_page(wlx203233022d85) Get [ NOR ] RsvdPageNUm <==
+[ 1126.385147] RTW: FW Version:20 SubVersion:1
+[ 1126.385157] RTW: rtl8821c_hal_init_main: successful
+[ 1126.403157] RTW: rtw_hal_set_default_port_id_cmd (wlx203233022d85) port_id :0, mad_id:0
+[ 1126.415658] RTW: rtw_hal_set_wifi_btc_port_id_cmd (wlx203233022d85) - hw_port :0
+[ 1126.416016] RTW: rtl8821cu_hal_init in 932ms
+[ 1126.416027] RTW: rtw_hal_set_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1126.416265] RTW: rtw_hal_set_macaddr_port wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[ 1126.416773] RTW: rtw_hal_get_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1126.416781] RTW: wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1126.417014] RTW: rtw_hal_get_macaddr_port wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[ 1126.417020] RTW: wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[ 1126.417887] RTW: [HW_VAR_ENABLE_RX_BAR] 0x6A2=0x500
+[ 1126.429033] RTW: wlx203233022d85: hw_port(0) will set mode to 2
+[ 1126.429049] RTW: rtw_hal_set_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1126.429268] RTW: wlx203233022d85: hw_port(0) set mode=2
+[ 1126.430399] RTW: <===  rtw_ips_pwr_up.............. in 944ms
+[ 1126.430404] RTW: nolinked power save leave
+[ 1126.430637] RTW: ==> ips_leave.....LED(0x01288282)...
+[ 1126.443454] RTW: cfg80211_rtw_scan(wlx203233022d85)
+[ 1126.443468] RTW: cfg80211_rtw_scan (wlx203233022d85) : scan abort!! buddy_intf under survey
+[ 1126.443898] RTW: [HW_VAR_CHECK_TXBUF] Empty in 0 ms
+[ 1126.444154] RTW: wlan1 sleep m0=0x00000002, ori reg_0x4d4=0x00000000
+[ 1130.451241] RTW: LeaveAllPowerSaveModeDirect.....
+[ 1130.451261] RTW: rtw_hal_set_macaddr_port wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[ 1130.451788] RTW: rtw_hal_get_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1130.451796] RTW: wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1130.452033] RTW: rtw_hal_get_macaddr_port wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[ 1130.452038] RTW: wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[ 1130.470418] RTW: wlan1 wakeup m0=0x00000002, ori reg_0x4d4=0x00000002
+[ 1130.470544] RTW: survey done event(3b) band:0 for wlan1
+[ 1130.481763] RTW: rtw_indicate_scan_done(wlan1)
+[ 1130.482092] RTW: rtw_indicate_scan_done(wlx203233022d85)
+[ 1130.506679] RTW: ==>rtw_ps_processor .fw_state(8)
+[ 1130.511041] RTW: ==>ips_enter cnts:20
+[ 1130.511050] RTW: nolinked power save enter
+[ 1130.511055] RTW: ===> rtw_ips_pwr_down...................
+[ 1130.511060] RTW: ====> rtw_ips_dev_unload...
+[ 1130.511675] RTW: usb_read_port_cancel
+[ 1130.511778] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1130.511895] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1130.512019] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1130.512144] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1130.512269] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1130.512394] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1130.512522] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1130.512645] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1130.512664] RTW: usb_write_port_cancel
+[ 1130.512760] RTW: ==> rtl8821cu_hal_deinit
+[ 1130.516472] RTW: SetHwReg: bMacPwrCtrlOn=0
+[ 1130.516485] RTW: rtl8821cu_hal_deinit <==
+[ 1130.516834] RTW: <=== rtw_ips_pwr_down..................... in 8ms
+[ 1140.028119] lowmemorykiller: Killing '7zr' (7850) (tgid 7850), adj 0,
+                  to free 410736kB on behalf of 'kswapd0' (767) because
+                  cache 5968kB is below limit 6144kB for oom_score_adj 0
+                  Free memory is -3832kB above reserved
+[ 1140.028227] lowmemorykiller: Killing '7zr' (7920) (tgid 7850), adj 0,
+                  to free 410956kB on behalf of 'kswapd0' (767) because
+                  cache 5968kB is below limit 6144kB for oom_score_adj 0
+                  Free memory is -3832kB above reserved
+[ 1140.028367] lowmemorykiller: Killing '7zr' (7921) (tgid 7850), adj 0,
+                  to free 411044kB on behalf of 'kswapd0' (767) because
+                  cache 5968kB is below limit 6144kB for oom_score_adj 0
+                  Free memory is -3832kB above reserved
+[ 1140.028436] lowmemorykiller: Killing 'NetworkManager' (3458) (tgid 3458), adj 0,
+                  to free 4896kB on behalf of 'kswapd0' (767) because
+                  cache 5968kB is below limit 6144kB for oom_score_adj 0
+                  Free memory is -3832kB above reserved
+[ 1142.068196] IPVS: Creating netns size=2104 id=3
+[ 1142.635697] RTW: cfg80211_rtw_get_txpower
+[ 1142.646558] RTW: rtw_ndev_notifier_call(wlan1) state:4
+[ 1142.647710] IPv6: ADDRCONF(NETDEV_UP): wlan1: link is not ready
+[ 1142.648653] RTW: cfg80211_rtw_get_txpower
+[ 1142.653540] RTW: cfg80211_rtw_get_txpower
+[ 1142.662407] RTW: rtw_ndev_notifier_call(wlx203233022d85) state:4
+[ 1142.663114] IPv6: ADDRCONF(NETDEV_UP): wlx203233022d85: link is not ready
+[ 1142.663618] RTW: cfg80211_rtw_get_txpower
+[ 1142.830166] RTW: rtw_ndev_notifier_call(wlx203233022d85) state:4
+[ 1142.830919] IPv6: ADDRCONF(NETDEV_UP): wlx203233022d85: link is not ready
+[ 1142.834398] RTW: rtw_ndev_notifier_call(wlan1) state:4
+[ 1142.835362] IPv6: ADDRCONF(NETDEV_UP): wlan1: link is not ready
+[ 1142.849551] RTW: cfg80211_rtw_scan(wlx203233022d85)
+[ 1142.849573] RTW: _rtw_pwr_wakeup call ips_leave....
+[ 1142.849582] RTW: ==>ips_leave cnts:20
+[ 1142.849586] RTW: ===>  rtw_ips_pwr_up..............
+[ 1142.849601] RTW: ===> ips_netdrv_open.........
+[ 1142.854997] RTW: [HALMAC][ALWAYS]shall R reg twice!!
+[ 1142.855339] RTW: SetHwReg: bMacPwrCtrlOn=1
+[ 1142.857416] RTW: WARN [HALMAC][WARN]H2C/C2H ver is compatible!!
+[ 1142.897390] RTW: _rtw_hal_set_fw_rsvd_page(wlx203233022d85) Get [ NOR ] RsvdPageNUm  ==>
+[ 1142.897402] RTW: LocPsPoll: 4
+[ 1142.897410] RTW: LocNullData: 5
+[ 1142.897417] RTW: LocQosNull: 6
+[ 1142.897424] RTW: LocBTQosNull: 7
+[ 1142.897431] RTW: _rtw_hal_set_fw_rsvd_page(wlx203233022d85) Get [ NOR ] RsvdPageNUm <==
+[ 1143.749462] RTW: FW Version:20 SubVersion:1
+[ 1143.749471] RTW: rtl8821c_hal_init_main: successful
+[ 1143.767587] RTW: rtw_hal_set_default_port_id_cmd (wlx203233022d85) port_id :0, mad_id:0
+[ 1143.780213] RTW: rtw_hal_set_wifi_btc_port_id_cmd (wlx203233022d85) - hw_port :0
+[ 1143.780580] RTW: rtl8821cu_hal_init in 932ms
+[ 1143.780590] RTW: rtw_hal_set_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1143.780830] RTW: rtw_hal_set_macaddr_port wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[ 1143.781330] RTW: rtw_hal_get_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1143.781336] RTW: wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1143.781580] RTW: rtw_hal_get_macaddr_port wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[ 1143.781585] RTW: wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[ 1143.782454] RTW: [HW_VAR_ENABLE_RX_BAR] 0x6A2=0x500
+[ 1143.793586] RTW: wlx203233022d85: hw_port(0) will set mode to 2
+[ 1143.793599] RTW: rtw_hal_set_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1143.793829] RTW: wlx203233022d85: hw_port(0) set mode=2
+[ 1143.794961] RTW: <===  rtw_ips_pwr_up.............. in 944ms
+[ 1143.794967] RTW: nolinked power save leave
+[ 1143.795202] RTW: ==> ips_leave.....LED(0x01288282)...
+[ 1143.808462] RTW: [HW_VAR_CHECK_TXBUF] Empty in 0 ms
+[ 1143.808711] RTW: wlx203233022d85 sleep m0=0x00000002, ori reg_0x4d4=0x00000000
+[ 1143.810155] RTW: cfg80211_rtw_scan(wlan1)
+[ 1143.810171] RTW: cfg80211_rtw_scan (wlan1) : scan abort!! buddy_intf under survey
+[ 1147.820085] RTW: LeaveAllPowerSaveModeDirect.....
+[ 1147.820104] RTW: rtw_hal_set_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1147.820596] RTW: rtw_hal_get_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1147.820603] RTW: wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1147.820845] RTW: rtw_hal_get_macaddr_port wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[ 1147.820851] RTW: wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[ 1147.838850] RTW: wlx203233022d85 wakeup m0=0x00000002, ori reg_0x4d4=0x00000002
+[ 1147.838978] RTW: survey done event(41) band:0 for wlx203233022d85
+[ 1147.839224] RTW: rtw_indicate_scan_done(wlx203233022d85)
+[ 1147.839473] RTW: rtw_indicate_scan_done(wlan1)
+[ 1147.856867] RTW: ==>rtw_ps_processor .fw_state(8)
+[ 1147.861242] RTW: ==>ips_enter cnts:21
+[ 1147.861254] RTW: nolinked power save enter
+[ 1147.861259] RTW: ===> rtw_ips_pwr_down...................
+[ 1147.861264] RTW: ====> rtw_ips_dev_unload...
+[ 1147.862111] RTW: usb_read_port_cancel
+[ 1147.862221] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1147.862337] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1147.862467] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1147.862499] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1147.862589] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1147.862618] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1147.862714] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1147.862836] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1147.862850] RTW: usb_write_port_cancel
+[ 1147.862947] RTW: ==> rtl8821cu_hal_deinit
+[ 1147.866045] RTW: SetHwReg: bMacPwrCtrlOn=0
+[ 1147.866056] RTW: rtl8821cu_hal_deinit <==
+[ 1147.866399] RTW: <=== rtw_ips_pwr_down..................... in 4ms
+[ 1171.477569] RTW: cfg80211_rtw_scan(wlx203233022d85)
+[ 1171.477594] RTW: _rtw_pwr_wakeup call ips_leave....
+[ 1171.477604] RTW: ==>ips_leave cnts:21
+[ 1171.477609] RTW: ===>  rtw_ips_pwr_up..............
+[ 1171.477629] RTW: ===> ips_netdrv_open.........
+[ 1171.487630] RTW: [HALMAC][ALWAYS]shall R reg twice!!
+[ 1171.487987] RTW: SetHwReg: bMacPwrCtrlOn=1
+[ 1171.491096] RTW: WARN [HALMAC][WARN]H2C/C2H ver is compatible!!
+[ 1171.532109] RTW: _rtw_hal_set_fw_rsvd_page(wlx203233022d85) Get [ NOR ] RsvdPageNUm  ==>
+[ 1171.532122] RTW: LocPsPoll: 4
+[ 1171.532133] RTW: LocNullData: 5
+[ 1171.532141] RTW: LocQosNull: 6
+[ 1171.532148] RTW: LocBTQosNull: 7
+[ 1171.532157] RTW: _rtw_hal_set_fw_rsvd_page(wlx203233022d85) Get [ NOR ] RsvdPageNUm <==
+[ 1172.401140] RTW: FW Version:20 SubVersion:1
+[ 1172.401152] RTW: rtl8821c_hal_init_main: successful
+[ 1172.440207] RTW: rtw_hal_set_default_port_id_cmd (wlx203233022d85) port_id :0, mad_id:0
+[ 1172.469181] RTW: rtw_hal_set_wifi_btc_port_id_cmd (wlx203233022d85) - hw_port :0
+[ 1172.471292] RTW: rtl8821cu_hal_init in 992ms
+[ 1172.471314] RTW: rtw_hal_set_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1172.471580] RTW: rtw_hal_set_macaddr_port wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[ 1172.472068] RTW: rtw_hal_get_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1172.472076] RTW: wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1172.472317] RTW: rtw_hal_get_macaddr_port wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[ 1172.472323] RTW: wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[ 1172.473698] RTW: [HW_VAR_ENABLE_RX_BAR] 0x6A2=0x500
+[ 1172.497462] RTW: wlx203233022d85: hw_port(0) will set mode to 2
+[ 1172.497479] RTW: rtw_hal_set_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1172.497692] RTW: wlx203233022d85: hw_port(0) set mode=2
+[ 1172.501726] RTW: <===  rtw_ips_pwr_up.............. in 1024ms
+[ 1172.501736] RTW: nolinked power save leave
+[ 1172.501942] RTW: ==> ips_leave.....LED(0x01288282)...
+[ 1172.529667] RTW: cfg80211_rtw_scan(wlan1)
+[ 1172.529682] RTW: cfg80211_rtw_scan (wlan1) : scan abort!! buddy_intf under survey
+[ 1172.530681] RTW: [HW_VAR_CHECK_TXBUF] Empty in 0 ms
+[ 1172.531287] RTW: wlx203233022d85 sleep m0=0x00000002, ori reg_0x4d4=0x00000000
+[ 1176.541324] RTW: LeaveAllPowerSaveModeDirect.....
+[ 1176.541344] RTW: rtw_hal_set_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1176.541844] RTW: rtw_hal_get_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1176.541855] RTW: wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1176.542089] RTW: rtw_hal_get_macaddr_port wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[ 1176.542095] RTW: wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[ 1176.560092] RTW: wlx203233022d85 wakeup m0=0x00000002, ori reg_0x4d4=0x00000002
+[ 1176.560224] RTW: survey done event(4d) band:0 for wlx203233022d85
+[ 1176.571849] RTW: rtw_indicate_scan_done(wlx203233022d85)
+[ 1176.572174] RTW: rtw_indicate_scan_done(wlan1)
+[ 1176.585599] RTW: ==>rtw_ps_processor .fw_state(8)
+[ 1176.589978] RTW: ==>ips_enter cnts:22
+[ 1176.589987] RTW: nolinked power save enter
+[ 1176.589991] RTW: ===> rtw_ips_pwr_down...................
+[ 1176.589996] RTW: ====> rtw_ips_dev_unload...
+[ 1176.590591] RTW: usb_read_port_cancel
+[ 1176.590705] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1176.590829] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1176.590945] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1176.591070] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1176.591201] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1176.591326] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1176.591447] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1176.591573] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1176.591589] RTW: usb_write_port_cancel
+[ 1176.591690] RTW: ==> rtl8821cu_hal_deinit
+[ 1176.595324] RTW: SetHwReg: bMacPwrCtrlOn=0
+[ 1176.595334] RTW: rtl8821cu_hal_deinit <==
+[ 1176.596146] RTW: <=== rtw_ips_pwr_down..................... in 4ms
+[ 1204.556826] RTW: cfg80211_rtw_scan(wlx203233022d85)
+[ 1204.556849] RTW: _rtw_pwr_wakeup call ips_leave....
+[ 1204.556858] RTW: ==>ips_leave cnts:22
+[ 1204.556863] RTW: ===>  rtw_ips_pwr_up..............
+[ 1204.556880] RTW: ===> ips_netdrv_open.........
+[ 1204.562528] RTW: [HALMAC][ALWAYS]shall R reg twice!!
+[ 1204.562874] RTW: SetHwReg: bMacPwrCtrlOn=1
+[ 1204.565032] RTW: WARN [HALMAC][WARN]H2C/C2H ver is compatible!!
+[ 1204.605340] RTW: _rtw_hal_set_fw_rsvd_page(wlx203233022d85) Get [ NOR ] RsvdPageNUm  ==>
+[ 1204.605352] RTW: LocPsPoll: 4
+[ 1204.605362] RTW: LocNullData: 5
+[ 1204.605370] RTW: LocQosNull: 6
+[ 1204.605376] RTW: LocBTQosNull: 7
+[ 1204.605383] RTW: _rtw_hal_set_fw_rsvd_page(wlx203233022d85) Get [ NOR ] RsvdPageNUm <==
+[ 1208.755710] RTW: FW Version:20 SubVersion:1
+[ 1208.755720] RTW: rtl8821c_hal_init_main: successful
+[ 1208.773969] RTW: rtw_hal_set_default_port_id_cmd (wlx203233022d85) port_id :0, mad_id:0
+[ 1208.786595] RTW: rtw_hal_set_wifi_btc_port_id_cmd (wlx203233022d85) - hw_port :0
+[ 1208.786954] RTW: rtl8821cu_hal_init in 4232ms
+[ 1208.786965] RTW: rtw_hal_set_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1208.787204] RTW: rtw_hal_set_macaddr_port wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[ 1208.787704] RTW: rtw_hal_get_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1208.787710] RTW: wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1208.787953] RTW: rtw_hal_get_macaddr_port wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[ 1208.787958] RTW: wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[ 1208.788825] RTW: [HW_VAR_ENABLE_RX_BAR] 0x6A2=0x500
+[ 1208.800216] RTW: wlx203233022d85: hw_port(0) will set mode to 2
+[ 1208.800231] RTW: rtw_hal_set_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1208.800451] RTW: wlx203233022d85: hw_port(0) set mode=2
+[ 1208.801586] RTW: <===  rtw_ips_pwr_up.............. in 4244ms
+[ 1208.801591] RTW: nolinked power save leave
+[ 1208.801847] RTW: ==> ips_leave.....LED(0x01288282)...
+[ 1208.815344] RTW: [HW_VAR_CHECK_TXBUF] Empty in 0 ms
+[ 1208.815592] RTW: wlx203233022d85 sleep m0=0x00000002, ori reg_0x4d4=0x00000000
+[ 1208.816368] RTW: cfg80211_rtw_scan(wlan1)
+[ 1208.816384] RTW: cfg80211_rtw_scan (wlan1) : scan abort!! buddy_intf under survey
+[ 1212.830273] RTW: LeaveAllPowerSaveModeDirect.....
+[ 1212.830294] RTW: rtw_hal_set_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1212.830857] RTW: rtw_hal_get_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1212.830867] RTW: wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1212.831096] RTW: rtw_hal_get_macaddr_port wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[ 1212.831102] RTW: wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[ 1212.849107] RTW: wlx203233022d85 wakeup m0=0x00000002, ori reg_0x4d4=0x00000002
+[ 1212.849237] RTW: survey done event(3f) band:0 for wlx203233022d85
+[ 1212.861096] RTW: rtw_indicate_scan_done(wlx203233022d85)
+[ 1212.861395] RTW: rtw_indicate_scan_done(wlan1)
+[ 1212.874612] RTW: ==>rtw_ps_processor .fw_state(8)
+[ 1212.879602] RTW: ==>ips_enter cnts:23
+[ 1212.879611] RTW: nolinked power save enter
+[ 1212.879616] RTW: ===> rtw_ips_pwr_down...................
+[ 1212.879620] RTW: ====> rtw_ips_dev_unload...
+[ 1212.880262] RTW: usb_read_port_cancel
+[ 1212.880343] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1212.880459] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1212.880586] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1212.880713] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1212.880838] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1212.880880] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1212.880961] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1212.881003] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1212.881017] RTW: usb_write_port_cancel
+[ 1212.881116] RTW: ==> rtl8821cu_hal_deinit
+[ 1212.884283] RTW: SetHwReg: bMacPwrCtrlOn=0
+[ 1212.884296] RTW: rtl8821cu_hal_deinit <==
+[ 1212.884979] RTW: <=== rtw_ips_pwr_down..................... in 4ms
+[ 1224.445985] lowmemorykiller: Killing '7zr' (8127) (tgid 8127), adj 0,
+                  to free 432232kB on behalf of 'kswapd0' (767) because
+                  cache 5180kB is below limit 6144kB for oom_score_adj 0
+                  Free memory is -3324kB above reserved
+[ 1247.756802] RTW: cfg80211_rtw_scan(wlx203233022d85)
+[ 1247.756826] RTW: _rtw_pwr_wakeup call ips_leave....
+[ 1247.756835] RTW: ==>ips_leave cnts:23
+[ 1247.756839] RTW: ===>  rtw_ips_pwr_up..............
+[ 1247.756858] RTW: ===> ips_netdrv_open.........
+[ 1247.762484] RTW: [HALMAC][ALWAYS]shall R reg twice!!
+[ 1247.762875] RTW: SetHwReg: bMacPwrCtrlOn=1
+[ 1247.764910] RTW: WARN [HALMAC][WARN]H2C/C2H ver is compatible!!
+[ 1247.805105] RTW: _rtw_hal_set_fw_rsvd_page(wlx203233022d85) Get [ NOR ] RsvdPageNUm  ==>
+[ 1247.805117] RTW: LocPsPoll: 4
+[ 1247.805128] RTW: LocNullData: 5
+[ 1247.805135] RTW: LocQosNull: 6
+[ 1247.805142] RTW: LocBTQosNull: 7
+[ 1247.805150] RTW: _rtw_hal_set_fw_rsvd_page(wlx203233022d85) Get [ NOR ] RsvdPageNUm <==
+[ 1248.776816] RTW: FW Version:20 SubVersion:1
+[ 1248.776840] RTW: rtl8821c_hal_init_main: successful
+[ 1248.796790] RTW: rtw_hal_set_default_port_id_cmd (wlx203233022d85) port_id :0, mad_id:0
+[ 1248.811408] RTW: rtw_hal_set_wifi_btc_port_id_cmd (wlx203233022d85) - hw_port :0
+[ 1248.811773] RTW: rtl8821cu_hal_init in 1056ms
+[ 1248.811806] RTW: rtw_hal_set_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1248.811995] RTW: rtw_hal_set_macaddr_port wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[ 1248.812497] RTW: rtw_hal_get_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1248.812508] RTW: wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1248.812746] RTW: rtw_hal_get_macaddr_port wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[ 1248.812754] RTW: wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[ 1248.813624] RTW: [HW_VAR_ENABLE_RX_BAR] 0x6A2=0x500
+[ 1248.835139] RTW: wlx203233022d85: hw_port(0) will set mode to 2
+[ 1248.835155] RTW: rtw_hal_set_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1248.835363] RTW: wlx203233022d85: hw_port(0) set mode=2
+[ 1248.836508] RTW: <===  rtw_ips_pwr_up.............. in 1080ms
+[ 1248.836519] RTW: nolinked power save leave
+[ 1248.836736] RTW: ==> ips_leave.....LED(0x01288282)...
+[ 1248.849866] RTW: [HW_VAR_CHECK_TXBUF] Empty in 0 ms
+[ 1248.850112] RTW: wlx203233022d85 sleep m0=0x00000002, ori reg_0x4d4=0x00000000
+[ 1248.852997] RTW: cfg80211_rtw_scan(wlan1)
+[ 1248.853016] RTW: cfg80211_rtw_scan (wlan1) : scan abort!! buddy_intf under survey
+[ 1252.858893] RTW: LeaveAllPowerSaveModeDirect.....
+[ 1252.858917] RTW: rtw_hal_set_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1252.859382] RTW: rtw_hal_get_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1252.859392] RTW: wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1252.859624] RTW: rtw_hal_get_macaddr_port wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[ 1252.859630] RTW: wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[ 1252.879134] RTW: wlx203233022d85 wakeup m0=0x00000002, ori reg_0x4d4=0x00000002
+[ 1252.879264] RTW: survey done event(42) band:0 for wlx203233022d85
+[ 1252.891491] RTW: rtw_indicate_scan_done(wlx203233022d85)
+[ 1252.891801] RTW: rtw_indicate_scan_done(wlan1)
+[ 1252.906268] RTW: ==>rtw_ps_processor .fw_state(8)
+[ 1252.912139] RTW: ==>ips_enter cnts:24
+[ 1252.912149] RTW: nolinked power save enter
+[ 1252.912154] RTW: ===> rtw_ips_pwr_down...................
+[ 1252.912159] RTW: ====> rtw_ips_dev_unload...
+[ 1252.912759] RTW: usb_read_port_cancel
+[ 1252.912873] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1252.912988] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1252.913112] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1252.913237] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1252.913363] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1252.913486] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1252.913738] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1252.913862] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1252.913881] RTW: usb_write_port_cancel
+[ 1252.913979] RTW: ==> rtl8821cu_hal_deinit
+[ 1252.917956] RTW: SetHwReg: bMacPwrCtrlOn=0
+[ 1252.917966] RTW: rtl8821cu_hal_deinit <==
+[ 1252.918378] RTW: <=== rtw_ips_pwr_down..................... in 4ms
+[ 1300.675706] RTW: cfg80211_rtw_scan(wlx203233022d85)
+[ 1300.675728] RTW: _rtw_pwr_wakeup call ips_leave....
+[ 1300.675737] RTW: ==>ips_leave cnts:24
+[ 1300.675741] RTW: ===>  rtw_ips_pwr_up..............
+[ 1300.675761] RTW: ===> ips_netdrv_open.........
+[ 1300.681687] RTW: [HALMAC][ALWAYS]shall R reg twice!!
+[ 1300.682033] RTW: SetHwReg: bMacPwrCtrlOn=1
+[ 1300.684107] RTW: WARN [HALMAC][WARN]H2C/C2H ver is compatible!!
+[ 1300.724592] RTW: _rtw_hal_set_fw_rsvd_page(wlx203233022d85) Get [ NOR ] RsvdPageNUm  ==>
+[ 1300.724605] RTW: LocPsPoll: 4
+[ 1300.724615] RTW: LocNullData: 5
+[ 1300.724622] RTW: LocQosNull: 6
+[ 1300.724629] RTW: LocBTQosNull: 7
+[ 1300.724636] RTW: _rtw_hal_set_fw_rsvd_page(wlx203233022d85) Get [ NOR ] RsvdPageNUm <==
+[ 1308.560723] RTW: FW Version:20 SubVersion:1
+[ 1308.560733] RTW: rtl8821c_hal_init_main: successful
+[ 1308.842934] RTW: rtw_hal_set_default_port_id_cmd (wlx203233022d85) port_id :0, mad_id:0
+[ 1309.243023] RTW: rtw_hal_set_wifi_btc_port_id_cmd (wlx203233022d85) - hw_port :0
+[ 1309.254953] RTW: rtl8821cu_hal_init in 8580ms
+[ 1309.254971] RTW: rtw_hal_set_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1309.262935] RTW: rtw_hal_set_macaddr_port wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[ 1309.274940] RTW: rtw_hal_get_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1309.274954] RTW: wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1309.282981] RTW: rtw_hal_get_macaddr_port wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[ 1309.282996] RTW: wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[ 1309.306926] RTW: [HW_VAR_ENABLE_RX_BAR] 0x6A2=0x500
+[ 1309.662938] RTW: wlx203233022d85: hw_port(0) will set mode to 2
+[ 1309.662954] RTW: rtw_hal_set_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1309.670958] RTW: wlx203233022d85: hw_port(0) set mode=2
+[ 1309.706943] RTW: <===  rtw_ips_pwr_up.............. in 9032ms
+[ 1309.706953] RTW: nolinked power save leave
+[ 1309.714964] RTW: ==> ips_leave.....LED(0x01288282)...
+[ 1309.715000] RTW: rtw_ps_processor(wlx203233022d85): ps_deny=0x00000002, skip power save!
+[ 1309.766600] RTW: cfg80211_rtw_scan(wlan1)
+[ 1309.766615] RTW: cfg80211_rtw_scan (wlan1) : scan abort!! buddy_intf under survey
+[ 1309.766887] RTW: [HW_VAR_CHECK_TXBUF] Empty in 4 ms
+[ 1309.767096] RTW: wlx203233022d85 sleep m0=0x00000002, ori reg_0x4d4=0x00000000
+[ 1313.774920] RTW: LeaveAllPowerSaveModeDirect.....
+[ 1313.774940] RTW: rtw_hal_set_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1313.775487] RTW: rtw_hal_get_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1313.775498] RTW: wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1313.775740] RTW: rtw_hal_get_macaddr_port wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[ 1313.775746] RTW: wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[ 1313.792986] RTW: wlx203233022d85 wakeup m0=0x00000002, ori reg_0x4d4=0x00000002
+[ 1313.793117] RTW: survey done event(39) band:0 for wlx203233022d85
+[ 1313.793319] RTW: rtw_indicate_scan_done(wlx203233022d85)
+[ 1313.793644] RTW: rtw_indicate_scan_done(wlan1)
+[ 1313.807490] RTW: ==>rtw_ps_processor .fw_state(8)
+[ 1313.812741] RTW: ==>ips_enter cnts:25
+[ 1313.812750] RTW: nolinked power save enter
+[ 1313.812755] RTW: ===> rtw_ips_pwr_down...................
+[ 1313.812759] RTW: ====> rtw_ips_dev_unload...
+[ 1313.813361] RTW: usb_read_port_cancel
+[ 1313.813484] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1313.813594] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1313.813718] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1313.813843] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1313.813966] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1313.814091] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1313.814219] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1313.814260] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1313.814272] RTW: usb_write_port_cancel
+[ 1313.814363] RTW: ==> rtl8821cu_hal_deinit
+[ 1313.817453] RTW: SetHwReg: bMacPwrCtrlOn=0
+[ 1313.817464] RTW: rtl8821cu_hal_deinit <==
+[ 1313.817809] RTW: <=== rtw_ips_pwr_down..................... in 4ms
+[ 1363.509436] RTW: cfg80211_rtw_scan(wlx203233022d85)
+[ 1363.509460] RTW: _rtw_pwr_wakeup call ips_leave....
+[ 1363.509469] RTW: ==>ips_leave cnts:25
+[ 1363.509474] RTW: ===>  rtw_ips_pwr_up..............
+[ 1363.509492] RTW: ===> ips_netdrv_open.........
+[ 1363.515172] RTW: [HALMAC][ALWAYS]shall R reg twice!!
+[ 1363.515521] RTW: SetHwReg: bMacPwrCtrlOn=1
+[ 1363.517535] RTW: WARN [HALMAC][WARN]H2C/C2H ver is compatible!!
+[ 1363.586397] RTW: _rtw_hal_set_fw_rsvd_page(wlx203233022d85) Get [ NOR ] RsvdPageNUm  ==>
+[ 1363.586412] RTW: LocPsPoll: 4
+[ 1363.586422] RTW: LocNullData: 5
+[ 1363.586430] RTW: LocQosNull: 6
+[ 1363.586436] RTW: LocBTQosNull: 7
+[ 1363.586443] RTW: _rtw_hal_set_fw_rsvd_page(wlx203233022d85) Get [ NOR ] RsvdPageNUm <==
+[ 1374.787846] RTW: FW Version:20 SubVersion:1
+[ 1374.787855] RTW: rtl8821c_hal_init_main: successful
+[ 1374.806606] RTW: rtw_hal_set_default_port_id_cmd (wlx203233022d85) port_id :0, mad_id:0
+[ 1374.819730] RTW: rtw_hal_set_wifi_btc_port_id_cmd (wlx203233022d85) - hw_port :0
+[ 1374.820098] RTW: rtl8821cu_hal_init in 11312ms
+[ 1374.820110] RTW: rtw_hal_set_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1374.820343] RTW: rtw_hal_set_macaddr_port wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[ 1374.820848] RTW: rtw_hal_get_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1374.820856] RTW: wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1374.821093] RTW: rtw_hal_get_macaddr_port wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[ 1374.821099] RTW: wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[ 1374.821965] RTW: [HW_VAR_ENABLE_RX_BAR] 0x6A2=0x500
+[ 1374.834234] RTW: wlx203233022d85: hw_port(0) will set mode to 2
+[ 1374.834250] RTW: rtw_hal_set_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1374.834468] RTW: wlx203233022d85: hw_port(0) set mode=2
+[ 1374.835604] RTW: <===  rtw_ips_pwr_up.............. in 11328ms
+[ 1374.835611] RTW: nolinked power save leave
+[ 1374.835837] RTW: ==> ips_leave.....LED(0x01288282)...
+[ 1374.850143] RTW: [HW_VAR_CHECK_TXBUF] Empty in 0 ms
+[ 1374.850344] RTW: wlx203233022d85 sleep m0=0x00000002, ori reg_0x4d4=0x00000000
+[ 1374.855860] RTW: cfg80211_rtw_scan(wlan1)
+[ 1374.855876] RTW: cfg80211_rtw_scan (wlan1) : scan abort!! buddy_intf under survey
+[ 1378.862128] RTW: LeaveAllPowerSaveModeDirect.....
+[ 1378.862149] RTW: rtw_hal_set_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1378.862614] RTW: rtw_hal_get_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1378.862623] RTW: wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1378.862856] RTW: rtw_hal_get_macaddr_port wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[ 1378.862862] RTW: wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[ 1378.880361] RTW: wlx203233022d85 wakeup m0=0x00000002, ori reg_0x4d4=0x00000002
+[ 1378.880490] RTW: survey done event(4e) band:0 for wlx203233022d85
+[ 1378.880719] RTW: rtw_indicate_scan_done(wlx203233022d85)
+[ 1378.881014] RTW: rtw_indicate_scan_done(wlan1)
+[ 1378.895872] RTW: ==>rtw_ps_processor .fw_state(8)
+[ 1378.900610] RTW: ==>ips_enter cnts:26
+[ 1378.900619] RTW: nolinked power save enter
+[ 1378.900623] RTW: ===> rtw_ips_pwr_down...................
+[ 1378.900627] RTW: ====> rtw_ips_dev_unload...
+[ 1378.901233] RTW: usb_read_port_cancel
+[ 1378.901349] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1378.901466] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1378.901591] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1378.901715] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1378.901840] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1378.901968] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1378.902008] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1378.902222] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1378.903645] RTW: usb_write_port_cancel
+[ 1378.903743] RTW: ==> rtl8821cu_hal_deinit
+[ 1378.907510] RTW: SetHwReg: bMacPwrCtrlOn=0
+[ 1378.907520] RTW: rtl8821cu_hal_deinit <==
+[ 1378.907859] RTW: <=== rtw_ips_pwr_down..................... in 8ms
+[ 1426.504150] RTW: cfg80211_rtw_scan(wlx203233022d85)
+[ 1426.504174] RTW: _rtw_pwr_wakeup call ips_leave....
+[ 1426.504183] RTW: ==>ips_leave cnts:26
+[ 1426.504187] RTW: ===>  rtw_ips_pwr_up..............
+[ 1426.504206] RTW: ===> ips_netdrv_open.........
+[ 1426.510996] RTW: [HALMAC][ALWAYS]shall R reg twice!!
+[ 1426.511349] RTW: SetHwReg: bMacPwrCtrlOn=1
+[ 1426.513894] RTW: WARN [HALMAC][WARN]H2C/C2H ver is compatible!!
+[ 1426.554251] RTW: _rtw_hal_set_fw_rsvd_page(wlx203233022d85) Get [ NOR ] RsvdPageNUm  ==>
+[ 1426.554263] RTW: LocPsPoll: 4
+[ 1426.554274] RTW: LocNullData: 5
+[ 1426.554281] RTW: LocQosNull: 6
+[ 1426.554288] RTW: LocBTQosNull: 7
+[ 1426.554295] RTW: _rtw_hal_set_fw_rsvd_page(wlx203233022d85) Get [ NOR ] RsvdPageNUm <==
+[ 1427.406677] RTW: FW Version:20 SubVersion:1
+[ 1427.406687] RTW: rtl8821c_hal_init_main: successful
+[ 1427.425307] RTW: rtw_hal_set_default_port_id_cmd (wlx203233022d85) port_id :0, mad_id:0
+[ 1427.437804] RTW: rtw_hal_set_wifi_btc_port_id_cmd (wlx203233022d85) - hw_port :0
+[ 1427.438167] RTW: rtl8821cu_hal_init in 936ms
+[ 1427.438179] RTW: rtw_hal_set_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1427.438418] RTW: rtw_hal_set_macaddr_port wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[ 1427.438915] RTW: rtw_hal_get_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1427.438922] RTW: wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1427.439166] RTW: rtw_hal_get_macaddr_port wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[ 1427.439171] RTW: wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[ 1427.440039] RTW: [HW_VAR_ENABLE_RX_BAR] 0x6A2=0x500
+[ 1427.451179] RTW: wlx203233022d85: hw_port(0) will set mode to 2
+[ 1427.451194] RTW: rtw_hal_set_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1427.451414] RTW: wlx203233022d85: hw_port(0) set mode=2
+[ 1427.452554] RTW: <===  rtw_ips_pwr_up.............. in 948ms
+[ 1427.452562] RTW: nolinked power save leave
+[ 1427.452788] RTW: ==> ips_leave.....LED(0x01288282)...
+[ 1427.465924] RTW: [HW_VAR_CHECK_TXBUF] Empty in 0 ms
+[ 1427.466170] RTW: wlx203233022d85 sleep m0=0x00000002, ori reg_0x4d4=0x00000000
+[ 1427.467009] RTW: cfg80211_rtw_scan(wlan1)
+[ 1427.467026] RTW: cfg80211_rtw_scan (wlan1) : scan abort!! buddy_intf under survey
+[ 1431.472961] RTW: LeaveAllPowerSaveModeDirect.....
+[ 1431.472983] RTW: rtw_hal_set_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1431.473437] RTW: rtw_hal_get_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1431.473446] RTW: wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1431.473693] RTW: rtw_hal_get_macaddr_port wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[ 1431.473700] RTW: wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[ 1431.491184] RTW: wlx203233022d85 wakeup m0=0x00000002, ori reg_0x4d4=0x00000002
+[ 1431.491316] RTW: survey done event(6a) band:0 for wlx203233022d85
+[ 1431.491552] RTW: rtw_indicate_scan_done(wlx203233022d85)
+[ 1431.491894] RTW: rtw_indicate_scan_done(wlan1)
+[ 1431.507960] RTW: ==>rtw_ps_processor .fw_state(8)
+[ 1431.512683] RTW: ==>ips_enter cnts:27
+[ 1431.512693] RTW: nolinked power save enter
+[ 1431.512698] RTW: ===> rtw_ips_pwr_down...................
+[ 1431.512703] RTW: ====> rtw_ips_dev_unload...
+[ 1431.513821] RTW: usb_read_port_cancel
+[ 1431.513928] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1431.514042] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1431.514170] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1431.514296] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1431.514418] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1431.514460] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1431.514501] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1431.514544] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1431.514563] RTW: usb_write_port_cancel
+[ 1431.514659] RTW: ==> rtl8821cu_hal_deinit
+[ 1431.518317] RTW: SetHwReg: bMacPwrCtrlOn=0
+[ 1431.518327] RTW: rtl8821cu_hal_deinit <==
+[ 1431.518678] RTW: <=== rtw_ips_pwr_down..................... in 8ms
+[ 1489.502102] RTW: cfg80211_rtw_scan(wlx203233022d85)
+[ 1489.502124] RTW: _rtw_pwr_wakeup call ips_leave....
+[ 1489.502133] RTW: ==>ips_leave cnts:27
+[ 1489.502138] RTW: ===>  rtw_ips_pwr_up..............
+[ 1489.502156] RTW: ===> ips_netdrv_open.........
+[ 1489.508362] RTW: [HALMAC][ALWAYS]shall R reg twice!!
+[ 1489.508715] RTW: SetHwReg: bMacPwrCtrlOn=1
+[ 1489.510748] RTW: WARN [HALMAC][WARN]H2C/C2H ver is compatible!!
+[ 1489.551762] RTW: _rtw_hal_set_fw_rsvd_page(wlx203233022d85) Get [ NOR ] RsvdPageNUm  ==>
+[ 1489.551774] RTW: LocPsPoll: 4
+[ 1489.551785] RTW: LocNullData: 5
+[ 1489.551792] RTW: LocQosNull: 6
+[ 1489.551799] RTW: LocBTQosNull: 7
+[ 1489.551807] RTW: _rtw_hal_set_fw_rsvd_page(wlx203233022d85) Get [ NOR ] RsvdPageNUm <==
+[ 1490.404789] RTW: FW Version:20 SubVersion:1
+[ 1490.404799] RTW: rtl8821c_hal_init_main: successful
+[ 1490.422791] RTW: rtw_hal_set_default_port_id_cmd (wlx203233022d85) port_id :0, mad_id:0
+[ 1490.435297] RTW: rtw_hal_set_wifi_btc_port_id_cmd (wlx203233022d85) - hw_port :0
+[ 1490.435657] RTW: rtl8821cu_hal_init in 936ms
+[ 1490.435670] RTW: rtw_hal_set_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1490.435916] RTW: rtw_hal_set_macaddr_port wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[ 1490.436406] RTW: rtw_hal_get_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1490.436414] RTW: wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1490.436654] RTW: rtw_hal_get_macaddr_port wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[ 1490.436660] RTW: wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[ 1490.437532] RTW: [HW_VAR_ENABLE_RX_BAR] 0x6A2=0x500
+[ 1490.448674] RTW: wlx203233022d85: hw_port(0) will set mode to 2
+[ 1490.448690] RTW: rtw_hal_set_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1490.448907] RTW: wlx203233022d85: hw_port(0) set mode=2
+[ 1490.450043] RTW: <===  rtw_ips_pwr_up.............. in 948ms
+[ 1490.450051] RTW: nolinked power save leave
+[ 1490.450284] RTW: ==> ips_leave.....LED(0x01288282)...
+[ 1490.463293] RTW: [HW_VAR_CHECK_TXBUF] Empty in 4 ms
+[ 1490.463536] RTW: wlx203233022d85 sleep m0=0x00000002, ori reg_0x4d4=0x00000000
+[ 1490.465113] RTW: cfg80211_rtw_scan(wlan1)
+[ 1490.465129] RTW: cfg80211_rtw_scan (wlan1) : scan abort!! buddy_intf under survey
+[ 1494.471067] RTW: LeaveAllPowerSaveModeDirect.....
+[ 1494.471087] RTW: rtw_hal_set_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1494.471553] RTW: rtw_hal_get_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1494.471561] RTW: wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1494.471800] RTW: rtw_hal_get_macaddr_port wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[ 1494.471807] RTW: wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[ 1494.489300] RTW: wlx203233022d85 wakeup m0=0x00000002, ori reg_0x4d4=0x00000002
+[ 1494.489429] RTW: survey done event(65) band:0 for wlx203233022d85
+[ 1494.489689] RTW: rtw_indicate_scan_done(wlx203233022d85)
+[ 1494.490020] RTW: rtw_indicate_scan_done(wlan1)
+[ 1494.506558] RTW: ==>rtw_ps_processor .fw_state(8)
+[ 1494.511936] RTW: ==>ips_enter cnts:28
+[ 1494.511946] RTW: nolinked power save enter
+[ 1494.511951] RTW: ===> rtw_ips_pwr_down...................
+[ 1494.511956] RTW: ====> rtw_ips_dev_unload...
+[ 1494.512551] RTW: usb_read_port_cancel
+[ 1494.512667] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1494.512783] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1494.512906] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1494.513030] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1494.513160] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1494.513280] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1494.513408] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1494.513448] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1494.513460] RTW: usb_write_port_cancel
+[ 1494.513554] RTW: ==> rtl8821cu_hal_deinit
+[ 1494.516640] RTW: SetHwReg: bMacPwrCtrlOn=0
+[ 1494.516651] RTW: rtl8821cu_hal_deinit <==
+[ 1494.517016] RTW: <=== rtw_ips_pwr_down..................... in 4ms
+[ 1552.512210] RTW: cfg80211_rtw_scan(wlx203233022d85)
+[ 1552.512235] RTW: _rtw_pwr_wakeup call ips_leave....
+[ 1552.512244] RTW: ==>ips_leave cnts:28
+[ 1552.512248] RTW: ===>  rtw_ips_pwr_up..............
+[ 1552.512269] RTW: ===> ips_netdrv_open.........
+[ 1552.519145] RTW: [HALMAC][ALWAYS]shall R reg twice!!
+[ 1552.519494] RTW: SetHwReg: bMacPwrCtrlOn=1
+[ 1552.522037] RTW: WARN [HALMAC][WARN]H2C/C2H ver is compatible!!
+[ 1552.561875] RTW: _rtw_hal_set_fw_rsvd_page(wlx203233022d85) Get [ NOR ] RsvdPageNUm  ==>
+[ 1552.561888] RTW: LocPsPoll: 4
+[ 1552.561898] RTW: LocNullData: 5
+[ 1552.561905] RTW: LocQosNull: 6
+[ 1552.561912] RTW: LocBTQosNull: 7
+[ 1552.561919] RTW: _rtw_hal_set_fw_rsvd_page(wlx203233022d85) Get [ NOR ] RsvdPageNUm <==
+[ 1553.414527] RTW: FW Version:20 SubVersion:1
+[ 1553.414537] RTW: rtl8821c_hal_init_main: successful
+[ 1553.432530] RTW: rtw_hal_set_default_port_id_cmd (wlx203233022d85) port_id :0, mad_id:0
+[ 1553.445044] RTW: rtw_hal_set_wifi_btc_port_id_cmd (wlx203233022d85) - hw_port :0
+[ 1553.445399] RTW: rtl8821cu_hal_init in 936ms
+[ 1553.445412] RTW: rtw_hal_set_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1553.445647] RTW: rtw_hal_set_macaddr_port wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[ 1553.446145] RTW: rtw_hal_get_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1553.446152] RTW: wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1553.446395] RTW: rtw_hal_get_macaddr_port wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[ 1553.446401] RTW: wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[ 1553.447271] RTW: [HW_VAR_ENABLE_RX_BAR] 0x6A2=0x500
+[ 1553.458410] RTW: wlx203233022d85: hw_port(0) will set mode to 2
+[ 1553.458425] RTW: rtw_hal_set_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1553.458646] RTW: wlx203233022d85: hw_port(0) set mode=2
+[ 1553.459782] RTW: <===  rtw_ips_pwr_up.............. in 948ms
+[ 1553.459788] RTW: nolinked power save leave
+[ 1553.460018] RTW: ==> ips_leave.....LED(0x01288282)...
+[ 1553.473028] RTW: [HW_VAR_CHECK_TXBUF] Empty in 4 ms
+[ 1553.473275] RTW: wlx203233022d85 sleep m0=0x00000002, ori reg_0x4d4=0x00000000
+[ 1553.479147] RTW: cfg80211_rtw_scan(wlan1)
+[ 1553.479163] RTW: cfg80211_rtw_scan (wlan1) : scan abort!! buddy_intf under survey
+[ 1557.480750] RTW: LeaveAllPowerSaveModeDirect.....
+[ 1557.480770] RTW: rtw_hal_set_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1557.481319] RTW: rtw_hal_get_macaddr_port wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1557.481328] RTW: wlx203233022d85- hw port(0) mac_addr =20:32:33:02:2d:85
+[ 1557.481540] RTW: rtw_hal_get_macaddr_port wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[ 1557.481546] RTW: wlan1- hw port(1) mac_addr =22:32:33:02:2d:85
+[ 1557.499320] RTW: wlx203233022d85 wakeup m0=0x00000002, ori reg_0x4d4=0x00000002
+[ 1557.499420] RTW: survey done event(3a) band:0 for wlx203233022d85
+[ 1557.499664] RTW: rtw_indicate_scan_done(wlx203233022d85)
+[ 1557.499973] RTW: rtw_indicate_scan_done(wlan1)
+[ 1557.516046] RTW: ==>rtw_ps_processor .fw_state(8)
+[ 1557.520923] RTW: ==>ips_enter cnts:29
+[ 1557.520934] RTW: nolinked power save enter
+[ 1557.520939] RTW: ===> rtw_ips_pwr_down...................
+[ 1557.520944] RTW: ====> rtw_ips_dev_unload...
+[ 1557.521541] RTW: usb_read_port_cancel
+[ 1557.521656] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1557.521774] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1557.521895] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1557.522023] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1557.522145] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1557.522278] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1557.522395] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1557.522524] RTW: usb_read_port_complete() RX Warning! bDriverStopped(False) OR bSurpriseRemoved(False)
+[ 1557.522547] RTW: usb_write_port_cancel
+[ 1557.522640] RTW: ==> rtl8821cu_hal_deinit
+[ 1557.527555] RTW: SetHwReg: bMacPwrCtrlOn=0
+[ 1557.527566] RTW: rtl8821cu_hal_deinit <==
+[ 1557.527912] RTW: <=== rtw_ips_pwr_down..................... in 4ms
+[ 1569.391152] CPU0: update max cpu_capacity 1024
+[ 1570.944183] CPU0: update max cpu_capacity 950
+[ 1571.660158] CPU0: update max cpu_capacity 877
+[ 1572.416139] CPU0: update max cpu_capacity 804
+[ 1573.240177] CPU0: update max cpu_capacity 731
+[ 1573.411181] CPU0: update max cpu_capacity 658
+[ 1574.133228] CPU0: update max cpu_capacity 585
+[ 1574.992049] CPU0: update max cpu_capacity 512
+[ 1575.670420] CPU0: update max cpu_capacity 438
+[ 1576.367378] CPU0: update max cpu_capacity 365
+[ 1577.116491] CPU0: update max cpu_capacity 292
+[ 1577.909545] CPU0: update max cpu_capacity 219
+
+##########################################################################
+
+Linux 4.9.119-BPI-M4-Kernel (bpi-iot-ros-ai) 	03/14/19 	_aarch64_	(4 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+          40.13    0.14    1.40    1.18    0.00   57.15
+
+Device             tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn
+mmcblk0           0.07         1.47         0.00       2325          1
+mmcblk0boot1      0.02         0.07         0.00        108          0
+mmcblk0boot0      0.02         0.07         0.00        108          0
+sda              23.63       542.23       161.65     855642     255084
+
+              total        used        free      shared  buff/cache   available
+Mem:           570M        173M        342M        264K         55M        313M
+Swap:          255M         31M        224M
+
+Filename				Type		Size	Used	Priority
+/var/swap                              	file    	262140	32016	-1
+
+Architecture:        aarch64
+Byte Order:          Little Endian
+CPU(s):              4
+On-line CPU(s) list: 0-3
+Thread(s) per core:  1
+Core(s) per socket:  4
+Socket(s):           1
+Vendor ID:           ARM
+Model:               4
+Model name:          Cortex-A53
+Stepping:            r0p4
+CPU max MHz:         1400.0000
+CPU min MHz:         300.0000
+BogoMIPS:            54.00
+L1d cache:           32K
+L1i cache:           32K
+L2 cache:            512K
+Flags:               fp asimd evtstrm aes pmull sha1 sha2 crc32
+
+/sys/devices/system/cpu/cpu0/cache/index0/size: 32K, level: 1, type: Data
+/sys/devices/system/cpu/cpu0/cache/index1/size: 32K, level: 1, type: Instruction
+/sys/devices/system/cpu/cpu0/cache/index2/size: 512K, level: 2, type: Unified
+/sys/devices/system/cpu/cpu1/cache/index0/size: 32K, level: 1, type: Data
+/sys/devices/system/cpu/cpu1/cache/index1/size: 32K, level: 1, type: Instruction
+/sys/devices/system/cpu/cpu1/cache/index2/size: 512K, level: 2, type: Unified
+/sys/devices/system/cpu/cpu2/cache/index0/size: 32K, level: 1, type: Data
+/sys/devices/system/cpu/cpu2/cache/index1/size: 32K, level: 1, type: Instruction
+/sys/devices/system/cpu/cpu2/cache/index2/size: 512K, level: 2, type: Unified
+/sys/devices/system/cpu/cpu3/cache/index0/size: 32K, level: 1, type: Data
+/sys/devices/system/cpu/cpu3/cache/index1/size: 32K, level: 1, type: Instruction
+/sys/devices/system/cpu/cpu3/cache/index2/size: 512K, level: 2, type: Unified

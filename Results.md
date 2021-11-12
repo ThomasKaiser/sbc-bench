@@ -42,7 +42,8 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [NanoPi Fire3](https://www.armbian.com/nanopi-fire3/) | 1380 MHz | 4.14 | Stretch arm64 | 7420 | 95700 | 645400 | 1520 | 4570 | 8.53 | [http://ix.io/1jiU](http://ix.io/1jiU) |
 | [NanoPi Fire3](https://www.armbian.com/nanopi-fire3/) | 1400 MHz | 4.14 | Bionic arm64 | 7440 | 126050 | 653000 | 1560 | 4600 | 10.96 | [http://ix.io/1jjm](http://ix.io/1jjm) |
 | [NanoPi Fire3](https://www.armbian.com/nanopi-fire3/) | 1400 MHz | 4.14 | Focal arm64 | 7350 | 118350 | 652940 | 1550 | 4590 | 11.21 | [http://ix.io/3Ebd](http://ix.io/3Ebd) |
-| [NanoPi K1 Plus](https://www.armbian.com/nanopi-k1-plus/) | 1152 MHz | 4.14 | Stretch arm64 | 3030 | 78740 | 533380 | 1040 | 3070 | 3.32 | [http://ix.io/1m3x](http://ix.io/1m3x) |
+| [NanoPi K1 Plus](https://www.armbian.com/nanopi-k1-plus/) | 1150 MHz | 4.14 | Stretch arm64 | 3030 | 78740 | 533380 | 1040 | 3070 | 3.32 | [http://ix.io/1m3x](http://ix.io/1m3x) |
+| [NanoPi K1 Plus](https://www.armbian.com/nanopi-k1-plus/) | 1370 MHz | 5.10 | Focal arm64 | 3520 | 115020 | 639060 | 1060 | 3680 | 5.48 | [http://ix.io/3EA8](http://ix.io/3EA8) |
 | [NanoPi K2](https://www.armbian.com/nanopi-k2/) | 1480 MHz | 4.14 | Stretch arm64 | 3850 | 43020 | 50370 | 1660 | 3870 | 4.61 | [http://ix.io/1iT1](http://ix.io/1iT1) |
 | [NanoPi M4](https://www.armbian.com/nanopi-m4/) | 2000/1500 MHz | 4.19 | Stretch arm64 | 6400 | 334650 | 1128330 | 4080 | 8270 | 8.86 | [http://ix.io/1lzP](http://ix.io/1lzP) |
 | [NanoPi NEO4](https://www.armbian.com/nanopi-neo4/) | 2000/1500 MHz | 4.4| Stretch arm64 | 6510 | 320600 | 1128860 | 2260 | 4770 | 8.71 | [http://ix.io/1oho](http://ix.io/1oho) |
@@ -55,13 +56,14 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [ODROID-C2](https://www.armbian.com/odroid-c2/) | 1530 MHz | 4.17 | Stretch arm64 | 3870 | 43800 | 51280 | 1420 | 2600 | 4.63 | [http://ix.io/1iSh](http://ix.io/1iSh) |
 | [ODROID-C4](https://www.armbian.com/odroid-c4/) | 2010 MHz | 4.9 | Focal arm64 | 5450 | 195130 | 941590 | 3310 | 6270 | 7.71 | [http://ix.io/2kaS](http://ix.io/2kaS) |
 | [ODROID-N2](https://www.armbian.com/odroid-n2/) | 1800/1900 MHz | 4.9 | Bionic arm64 | 8140 | 324900 | 1024680 | 4120 | 8610 | 11.39 | [http://ix.io/1BsF](http://ix.io/1BsF) |
-| [ODROID-N2+](https://www.armbian.com/odroid-n2/) | 2400/2000 MHz | 5.9 | Focal arm64 | 9660 | 412670 | 1366600 | 4020 | 7350 | - | [http://ix.io/2Gcl](http://ix.io/2Gcl) |
+| [ODROID-N2+](https://www.armbian.com/odroid-n2/) | 2400/2000 MHz | 5.14 | Impish arm64 | 9790 | 421730 | 1366930 | 4300 | 7480 | - | [http://ix.io/3DtN](http://ix.io/3DtN) |
 | [ODROID-XU4](https://www.armbian.com/odroid-xu4/) | 1900/1400 MHz | 3.10 | **Jessie** armhf | 6750 | 74100 | 68200 | 2200 | 4800 | - | [http://ix.io/1ixL](http://ix.io/1ixL) |
 | [ODROID-XU4](https://www.armbian.com/odroid-xu4/) | 2000/1400 MHz | 4.9 | Stretch armhf | 6400 | 73350 | 72075 | 2230 | 4850 | - | [http://ix.io/1iWL](http://ix.io/1iWL) |
 | [ODROID-XU4](https://www.armbian.com/odroid-xu4/) | 2000/1500 MHz | 4.14 | Bionic armhf | 7100 | 74700 | 71500 | 2240 | 4880 | - | [http://ix.io/1iLy](http://ix.io/1iLy) |
+| [Olimex A20-Lime2](https://www.armbian.com/olimex-lime-2/) | 960 MHz | 5.10 | Bullseye armhf | 1040 | 15280 | 18670 | 460 | 2020 | - | [http://ix.io/3EOw](http://ix.io/3EOw) |
 | [Orange Pi PC Plus](https://www.armbian.com/orange-pi-pc-plus/) | 1300 MHz | 4.14 | Stretch armhf | 2.880 | 20890 | 25270 | 900 | 3280 | - | [http://ix.io/1j1d](http://ix.io/1j1d) |
 | [Orange Pi Plus 2](https://www.armbian.com/orange-pi-plus-2/) | 1300 MHz | 4.14 | Stretch armhf | 2.890 | 21480 | 25250 | 830 | 3240 | - | [http://ix.io/1iX4](http://ix.io/1iX4) |
-| [Orange Pi Prime](https://www.armbian.com/orange-pi-prime/) | 1360 MHz | 5.4 | Buster | 3590 | 89210 | 637980 | 1180 | 3540 | - | [http://ix.io/2kTH](http://ix.io/2kTH) |
+| [Orange Pi Prime](https://www.armbian.com/orange-pi-prime/) | 1370 MHz | 5.4 | Buster | 3590 | 89210 | 637980 | 1180 | 3540 | - | [http://ix.io/2kTH](http://ix.io/2kTH) |
 | [PineH64](https://www.armbian.com/pine-h64/) | 1800 MHz | 4.18 | Stretch arm64 | 4650 | 123400 | 836900 | 1380 | 5530 | 5.62 | [http://ix.io/1jEr](http://ix.io/1jEr) |
 | [PineH64](https://www.armbian.com/pine-h64/) | 1800 MHz | 5.4 | Buster arm64 | 4710 | 116900 | 839870 | 1420 | 5560 | 7.10 | [http://ix.io/26Ph](http://ix.io/26Ph) |
 | [Quartz64](https://wiki.pine64.org/wiki/Quartz64) | 1800 MHz | 5.13 | Buster arm64 | 4840 | 165250 | 845490 | 2980 | 7650| - | [http://ix.io/3rUb](http://ix.io/3rUb) |

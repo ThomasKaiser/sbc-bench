@@ -1,0 +1,1833 @@
+sbc-bench v0.6.2 Khadas Captain (Thu, 22 Nov 2018 13:52:10 +0000)
+
+Distributor ID:	Debian
+Description:	Debian GNU/Linux 9.6 (stretch)
+Release:	9.6
+Codename:	stretch
+
+Armbian release info:
+BOARD=rk3399
+BOARD_NAME="RK3399 EDGE"
+BOARDFAMILY=rk3399
+VERSION=5.67
+LINUXFAMILY=rk3399
+BRANCH=default
+ARCH=arm64
+IMAGE_TYPE=user-built
+BOARD_TYPE=conf
+INITRD_ARCH=arm64
+KERNEL_IMAGE_TYPE=Image
+
+/usr/bin/gcc (Debian 6.3.0-18+deb9u1) 6.3.0 20170516
+
+Uptime: 13:52:10 up 3 min,  2 users,  load average: 0.09, 0.15, 0.08
+
+Linux 4.4.154-rk3399 (rk3399) 	11/22/18 	_aarch64_	(6 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+           1.00    0.01    0.86    0.56    0.00   97.57
+
+Device:            tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn
+mmcblk0          11.80       565.28         5.78     130066       1329
+mmcblk1           0.38         9.02         0.00       2076          0
+mmcblk1boot1      0.23         0.94         0.00        216          0
+mmcblk1boot0      0.23         0.94         0.00        216          0
+zram0             3.55         3.20        11.00        736       2532
+zram1             1.27         5.08         0.02       1168          4
+zram2             1.27         5.08         0.02       1168          4
+zram3             1.27         5.08         0.02       1168          4
+zram4             1.27         5.08         0.02       1168          4
+
+              total        used        free      shared  buff/cache   available
+Mem:           3.7G         69M        3.5G         11M        154M        3.6G
+Swap:          1.0G          0B        1.0G
+
+Filename				Type		Size	Used	Priority
+/dev/zram1                             	partition	262140	0	5
+/dev/zram2                             	partition	262140	0	5
+/dev/zram3                             	partition	262140	0	5
+/dev/zram4                             	partition	262140	0	5
+
+##########################################################################
+
+Checking cpufreq OPP for cpu0-cpu3:
+
+Cpufreq OPP: 1512    Measured: 1509.940/1507.684/1509.235
+Cpufreq OPP: 1416    Measured: 1412.971/1413.884/1413.806
+Cpufreq OPP: 1200    Measured: 1197.633/1197.188/1197.216
+Cpufreq OPP: 1008    Measured: 1005.749/1004.917/1005.945
+Cpufreq OPP:  816    Measured: 813.631/813.861/813.521
+Cpufreq OPP:  600    Measured: 597.762/597.465/597.762
+Cpufreq OPP:  408    Measured: 405.443/405.948/405.807
+
+Checking cpufreq OPP for cpu4-cpu5:
+
+Cpufreq OPP: 1992    Measured: 1990.340/1990.438/1990.389
+Cpufreq OPP: 1800    Measured: 1798.407/1798.387/1798.367
+Cpufreq OPP: 1608    Measured: 1606.577/1606.497/1606.397
+Cpufreq OPP: 1416    Measured: 1414.457/1414.503/1414.256
+Cpufreq OPP: 1200    Measured: 1198.480/1198.564/1198.536
+Cpufreq OPP: 1008    Measured: 1006.410/1006.472/1006.386
+Cpufreq OPP:  816    Measured: 814.583/814.352/814.463
+Cpufreq OPP:  600    Measured: 598.303/598.222/597.668
+Cpufreq OPP:  408    Measured: 406.245/406.138/406.148
+
+##########################################################################
+
+Executing tinymembench on a little core:
+
+tinymembench v0.4.9 (simple benchmark for memory throughput and latency)
+
+==========================================================================
+== Memory bandwidth tests                                               ==
+==                                                                      ==
+== Note 1: 1MB = 1000000 bytes                                          ==
+== Note 2: Results for 'copy' tests show how many bytes can be          ==
+==         copied per second (adding together read and writen           ==
+==         bytes would have provided twice higher numbers)              ==
+== Note 3: 2-pass copy means that we are using a small temporary buffer ==
+==         to first fetch data into it, and only then write it to the   ==
+==         destination (source -> L1 cache, L1 cache -> destination)    ==
+== Note 4: If sample standard deviation exceeds 0.1%, it is shown in    ==
+==         brackets                                                     ==
+==========================================================================
+
+ C copy backwards                                     :   1346.3 MB/s (0.8%)
+ C copy backwards (32 byte blocks)                    :   1359.1 MB/s (0.4%)
+ C copy backwards (64 byte blocks)                    :   1358.9 MB/s (0.3%)
+ C copy                                               :   1428.7 MB/s (1.0%)
+ C copy prefetched (32 bytes step)                    :   1011.1 MB/s
+ C copy prefetched (64 bytes step)                    :   1151.6 MB/s
+ C 2-pass copy                                        :   1248.1 MB/s (0.2%)
+ C 2-pass copy prefetched (32 bytes step)             :    863.0 MB/s
+ C 2-pass copy prefetched (64 bytes step)             :    599.7 MB/s (0.8%)
+ C fill                                               :   4818.3 MB/s
+ C fill (shuffle within 16 byte blocks)               :   4817.7 MB/s
+ C fill (shuffle within 32 byte blocks)               :   4817.9 MB/s
+ C fill (shuffle within 64 byte blocks)               :   4818.8 MB/s
+ ---
+ standard memcpy                                      :   1391.1 MB/s (0.2%)
+ standard memset                                      :   4821.1 MB/s
+ ---
+ NEON LDP/STP copy                                    :   1440.0 MB/s (0.3%)
+ NEON LDP/STP copy pldl2strm (32 bytes step)          :    955.2 MB/s (0.6%)
+ NEON LDP/STP copy pldl2strm (64 bytes step)          :   1178.9 MB/s
+ NEON LDP/STP copy pldl1keep (32 bytes step)          :   1530.5 MB/s
+ NEON LDP/STP copy pldl1keep (64 bytes step)          :   1532.2 MB/s
+ NEON LD1/ST1 copy                                    :   1426.0 MB/s
+ NEON STP fill                                        :   4822.3 MB/s
+ NEON STNP fill                                       :   2152.7 MB/s (0.6%)
+ ARM LDP/STP copy                                     :   1437.4 MB/s (0.4%)
+ ARM STP fill                                         :   4822.7 MB/s
+ ARM STNP fill                                        :   2162.3 MB/s (0.7%)
+
+==========================================================================
+== Framebuffer read tests.                                              ==
+==                                                                      ==
+== Many ARM devices use a part of the system memory as the framebuffer, ==
+== typically mapped as uncached but with write-combining enabled.       ==
+== Writes to such framebuffers are quite fast, but reads are much       ==
+== slower and very sensitive to the alignment and the selection of      ==
+== CPU instructions which are used for accessing memory.                ==
+==                                                                      ==
+== Many x86 systems allocate the framebuffer in the GPU memory,         ==
+== accessible for the CPU via a relatively slow PCI-E bus. Moreover,    ==
+== PCI-E is asymmetric and handles reads a lot worse than writes.       ==
+==                                                                      ==
+== If uncached framebuffer reads are reasonably fast (at least 100 MB/s ==
+== or preferably >300 MB/s), then using the shadow framebuffer layer    ==
+== is not necessary in Xorg DDX drivers, resulting in a nice overall    ==
+== performance improvement. For example, the xf86-video-fbturbo DDX     ==
+== uses this trick.                                                     ==
+==========================================================================
+
+ NEON LDP/STP copy (from framebuffer)                 :    190.8 MB/s
+ NEON LDP/STP 2-pass copy (from framebuffer)          :    177.4 MB/s
+ NEON LD1/ST1 copy (from framebuffer)                 :     47.2 MB/s
+ NEON LD1/ST1 2-pass copy (from framebuffer)          :     46.6 MB/s
+ ARM LDP/STP copy (from framebuffer)                  :     94.3 MB/s
+ ARM LDP/STP 2-pass copy (from framebuffer)           :     91.9 MB/s
+
+==========================================================================
+== Memory latency test                                                  ==
+==                                                                      ==
+== Average time is measured for random memory accesses in the buffers   ==
+== of different sizes. The larger is the buffer, the more significant   ==
+== are relative contributions of TLB, L1/L2 cache misses and SDRAM      ==
+== accesses. For extremely large buffer sizes we are expecting to see   ==
+== page table walk with several requests to SDRAM for almost every      ==
+== memory access (though 64MiB is not nearly large enough to experience ==
+== this effect to its fullest).                                         ==
+==                                                                      ==
+== Note 1: All the numbers are representing extra time, which needs to  ==
+==         be added to L1 cache latency. The cycle timings for L1 cache ==
+==         latency can be usually found in the processor documentation. ==
+== Note 2: Dual random read means that we are simultaneously performing ==
+==         two independent memory accesses at a time. In the case if    ==
+==         the memory subsystem can't handle multiple outstanding       ==
+==         requests, dual random read has the same timings as two       ==
+==         single reads performed one after another.                    ==
+==========================================================================
+
+block size : single random read / dual random read
+      1024 :    0.0 ns          /     0.0 ns 
+      2048 :    0.0 ns          /     0.0 ns 
+      4096 :    0.0 ns          /     0.0 ns 
+      8192 :    0.0 ns          /     0.0 ns 
+     16384 :    0.0 ns          /     0.0 ns 
+     32768 :    0.0 ns          /     0.0 ns 
+     65536 :    4.5 ns          /     7.6 ns 
+    131072 :    6.9 ns          /    10.6 ns 
+    262144 :    8.2 ns          /    11.7 ns 
+    524288 :   11.8 ns          /    16.1 ns 
+   1048576 :  104.0 ns          /   158.4 ns 
+   2097152 :  153.6 ns          /   203.5 ns 
+   4194304 :  181.5 ns          /   223.9 ns 
+   8388608 :  195.4 ns          /   232.9 ns 
+  16777216 :  202.7 ns          /   239.0 ns 
+  33554432 :  207.3 ns          /   243.5 ns 
+  67108864 :  211.2 ns          /   246.9 ns 
+
+Executing tinymembench on a big core:
+
+tinymembench v0.4.9 (simple benchmark for memory throughput and latency)
+
+==========================================================================
+== Memory bandwidth tests                                               ==
+==                                                                      ==
+== Note 1: 1MB = 1000000 bytes                                          ==
+== Note 2: Results for 'copy' tests show how many bytes can be          ==
+==         copied per second (adding together read and writen           ==
+==         bytes would have provided twice higher numbers)              ==
+== Note 3: 2-pass copy means that we are using a small temporary buffer ==
+==         to first fetch data into it, and only then write it to the   ==
+==         destination (source -> L1 cache, L1 cache -> destination)    ==
+== Note 4: If sample standard deviation exceeds 0.1%, it is shown in    ==
+==         brackets                                                     ==
+==========================================================================
+
+ C copy backwards                                     :   2891.9 MB/s
+ C copy backwards (32 byte blocks)                    :   2888.7 MB/s
+ C copy backwards (64 byte blocks)                    :   2782.2 MB/s
+ C copy                                               :   2802.5 MB/s (0.2%)
+ C copy prefetched (32 bytes step)                    :   2789.6 MB/s
+ C copy prefetched (64 bytes step)                    :   2794.1 MB/s (0.4%)
+ C 2-pass copy                                        :   2539.2 MB/s
+ C 2-pass copy prefetched (32 bytes step)             :   2603.1 MB/s (0.3%)
+ C 2-pass copy prefetched (64 bytes step)             :   2602.4 MB/s
+ C fill                                               :   4889.3 MB/s (0.7%)
+ C fill (shuffle within 16 byte blocks)               :   4892.3 MB/s (0.7%)
+ C fill (shuffle within 32 byte blocks)               :   4893.3 MB/s
+ C fill (shuffle within 64 byte blocks)               :   4892.7 MB/s (0.5%)
+ ---
+ standard memcpy                                      :   2856.5 MB/s (0.3%)
+ standard memset                                      :   4882.2 MB/s (0.6%)
+ ---
+ NEON LDP/STP copy                                    :   2845.1 MB/s (0.4%)
+ NEON LDP/STP copy pldl2strm (32 bytes step)          :   2848.2 MB/s
+ NEON LDP/STP copy pldl2strm (64 bytes step)          :   2848.0 MB/s
+ NEON LDP/STP copy pldl1keep (32 bytes step)          :   2791.8 MB/s
+ NEON LDP/STP copy pldl1keep (64 bytes step)          :   2791.0 MB/s (0.3%)
+ NEON LD1/ST1 copy                                    :   2845.9 MB/s
+ NEON STP fill                                        :   4889.3 MB/s (0.7%)
+ NEON STNP fill                                       :   4881.1 MB/s
+ ARM LDP/STP copy                                     :   2845.8 MB/s (0.4%)
+ ARM STP fill                                         :   4884.2 MB/s (0.6%)
+ ARM STNP fill                                        :   4877.9 MB/s
+
+==========================================================================
+== Framebuffer read tests.                                              ==
+==                                                                      ==
+== Many ARM devices use a part of the system memory as the framebuffer, ==
+== typically mapped as uncached but with write-combining enabled.       ==
+== Writes to such framebuffers are quite fast, but reads are much       ==
+== slower and very sensitive to the alignment and the selection of      ==
+== CPU instructions which are used for accessing memory.                ==
+==                                                                      ==
+== Many x86 systems allocate the framebuffer in the GPU memory,         ==
+== accessible for the CPU via a relatively slow PCI-E bus. Moreover,    ==
+== PCI-E is asymmetric and handles reads a lot worse than writes.       ==
+==                                                                      ==
+== If uncached framebuffer reads are reasonably fast (at least 100 MB/s ==
+== or preferably >300 MB/s), then using the shadow framebuffer layer    ==
+== is not necessary in Xorg DDX drivers, resulting in a nice overall    ==
+== performance improvement. For example, the xf86-video-fbturbo DDX     ==
+== uses this trick.                                                     ==
+==========================================================================
+
+ NEON LDP/STP copy (from framebuffer)                 :    621.5 MB/s (0.2%)
+ NEON LDP/STP 2-pass copy (from framebuffer)          :    574.3 MB/s
+ NEON LD1/ST1 copy (from framebuffer)                 :    685.7 MB/s (0.2%)
+ NEON LD1/ST1 2-pass copy (from framebuffer)          :    626.4 MB/s
+ ARM LDP/STP copy (from framebuffer)                  :    454.0 MB/s (0.4%)
+ ARM LDP/STP 2-pass copy (from framebuffer)           :    437.8 MB/s
+
+==========================================================================
+== Memory latency test                                                  ==
+==                                                                      ==
+== Average time is measured for random memory accesses in the buffers   ==
+== of different sizes. The larger is the buffer, the more significant   ==
+== are relative contributions of TLB, L1/L2 cache misses and SDRAM      ==
+== accesses. For extremely large buffer sizes we are expecting to see   ==
+== page table walk with several requests to SDRAM for almost every      ==
+== memory access (though 64MiB is not nearly large enough to experience ==
+== this effect to its fullest).                                         ==
+==                                                                      ==
+== Note 1: All the numbers are representing extra time, which needs to  ==
+==         be added to L1 cache latency. The cycle timings for L1 cache ==
+==         latency can be usually found in the processor documentation. ==
+== Note 2: Dual random read means that we are simultaneously performing ==
+==         two independent memory accesses at a time. In the case if    ==
+==         the memory subsystem can't handle multiple outstanding       ==
+==         requests, dual random read has the same timings as two       ==
+==         single reads performed one after another.                    ==
+==========================================================================
+
+block size : single random read / dual random read
+      1024 :    0.0 ns          /     0.0 ns 
+      2048 :    0.0 ns          /     0.0 ns 
+      4096 :    0.0 ns          /     0.0 ns 
+      8192 :    0.0 ns          /     0.0 ns 
+     16384 :    0.0 ns          /     0.0 ns 
+     32768 :    0.0 ns          /     0.0 ns 
+     65536 :    4.1 ns          /     6.4 ns 
+    131072 :    6.2 ns          /     8.7 ns 
+    262144 :    8.9 ns          /    11.5 ns 
+    524288 :   10.3 ns          /    13.2 ns 
+   1048576 :   12.9 ns          /    16.9 ns 
+   2097152 :  111.6 ns          /   171.4 ns 
+   4194304 :  159.5 ns          /   216.2 ns 
+   8388608 :  187.9 ns          /   236.6 ns 
+  16777216 :  202.0 ns          /   247.4 ns 
+  33554432 :  209.8 ns          /   254.5 ns 
+  67108864 :  220.4 ns          /   269.7 ns 
+
+##########################################################################
+
+OpenSSL 1.1.0f, built on 25 May 2017
+type             16 bytes     64 bytes    256 bytes   1024 bytes   8192 bytes  16384 bytes
+aes-128-cbc     103839.73k   327794.15k   686807.89k   984407.04k  1124909.06k  1136459.78k
+aes-128-cbc     269485.00k   694446.70k  1263544.75k  1409263.96k  1489431.21k  1491790.51k
+aes-192-cbc      99269.63k   294217.92k   568713.98k   763950.08k   848139.61k   854758.74k
+aes-192-cbc     324731.59k   780737.88k  1056331.86k  1247346.35k  1316656.47k  1320468.48k
+aes-256-cbc      96897.96k   274717.12k   498289.83k   642114.22k   700440.58k   701945.17k
+aes-256-cbc     299728.74k   695537.75k   981446.57k  1073151.66k  1128868.52k  1127776.26k
+
+##########################################################################
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=en_US.UTF-8,Utf16=on,HugeFiles=on,64 bits,6 CPUs LE)
+
+LE
+CPU Freq:  1440  1508  1509  1509  1508  1509  1509  1509  1509
+
+RAM size:    3784 MB,  # CPU hardware threads:   6
+RAM usage:   1323 MB,  # Benchmark threads:      6
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:        718   100    700    699  |      16213   100   1383   1383
+23:        691   100    705    705  |      15833   100   1371   1370
+24:        665   100    715    715  |      15454   100   1357   1356
+25:        637   100    728    728  |      15012   100   1336   1336
+----------------------------------  | ------------------------------
+Avr:             100    712    712  |              100   1362   1361
+Tot:             100   1037   1037
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=en_US.UTF-8,Utf16=on,HugeFiles=on,64 bits,6 CPUs LE)
+
+LE
+CPU Freq:  1985  1989  1990  1989  1990  1990  1990  1990  1990
+
+RAM size:    3784 MB,  # CPU hardware threads:   6
+RAM usage:   1323 MB,  # Benchmark threads:      6
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       1480   100   1441   1441  |      23663   100   2019   2018
+23:       1377   100   1404   1404  |      23131   100   2002   2002
+24:       1306   100   1405   1404  |      22564   100   1981   1981
+25:       1249   100   1427   1427  |      21880   100   1947   1947
+----------------------------------  | ------------------------------
+Avr:             100   1419   1419  |              100   1987   1987
+Tot:             100   1703   1703
+
+##########################################################################
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=en_US.UTF-8,Utf16=on,HugeFiles=on,64 bits,6 CPUs LE)
+
+LE
+CPU Freq:  1448  1974  1989  1990  1990  1990  1990  1990  1990
+
+RAM size:    3784 MB,  # CPU hardware threads:   6
+RAM usage:   1323 MB,  # Benchmark threads:      6
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       4497   471    929   4375  |     101819   524   1656   8683
+23:       4583   520    899   4670  |      98572   521   1637   8529
+24:       4347   531    880   4674  |      96417   524   1616   8463
+25:       4164   539    883   4755  |      92716   523   1579   8251
+----------------------------------  | ------------------------------
+Avr:             515    897   4619  |              523   1622   8482
+Tot:             519   1260   6550
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=en_US.UTF-8,Utf16=on,HugeFiles=on,64 bits,6 CPUs LE)
+
+LE
+CPU Freq:  1985  1990  1990  1990  1990  1990  1990  1990  1990
+
+RAM size:    3784 MB,  # CPU hardware threads:   6
+RAM usage:   1323 MB,  # Benchmark threads:      6
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       4618   486    924   4493  |     101826   524   1658   8684
+23:       4101   459    911   4178  |      99337   525   1637   8596
+24:       4434   539    884   4768  |      96575   524   1616   8477
+25:       4378   571    875   4999  |      93072   523   1584   8283
+----------------------------------  | ------------------------------
+Avr:             514    898   4609  |              524   1623   8510
+Tot:             519   1261   6560
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=en_US.UTF-8,Utf16=on,HugeFiles=on,64 bits,6 CPUs LE)
+
+LE
+CPU Freq:  1987  1990  1990  1990  1990  1990  1989  1990  1990
+
+RAM size:    3784 MB,  # CPU hardware threads:   6
+RAM usage:   1323 MB,  # Benchmark threads:      6
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       5162   555    904   5022  |     101995   525   1656   8698
+23:       4670   538    885   4759  |      99162   524   1638   8580
+24:       4450   537    891   4785  |      96466   524   1617   8467
+25:       4286   557    878   4894  |      93116   523   1583   8287
+----------------------------------  | ------------------------------
+Avr:             547    890   4865  |              524   1623   8508
+Tot:             536   1256   6687
+
+Compression: 4619,4609,4865
+Decompression: 8482,8510,8508
+Total: 6550,6560,6687
+
+##########################################################################
+
+** cpuminer-multi 1.3.3 by tpruvot@github **
+BTC donation address: 1FhDPLPpw18X4srecguG3MxJYe4a1JsZnd (tpruvot)
+
+[2018-11-22 14:19:35] 6 miner threads started, using 'scrypt' algorithm.
+[2018-11-22 14:19:36] CPU #4: 2.04 kH/s
+[2018-11-22 14:19:36] CPU #5: 2.05 kH/s
+[2018-11-22 14:19:36] CPU #0: 1.20 kH/s
+[2018-11-22 14:19:36] CPU #1: 1.19 kH/s
+[2018-11-22 14:19:36] CPU #3: 1.20 kH/s
+[2018-11-22 14:19:36] CPU #2: 1.19 kH/s
+[2018-11-22 14:19:40] Total: 8.87 kH/s
+[2018-11-22 14:19:45] CPU #4: 2.04 kH/s
+[2018-11-22 14:19:45] CPU #5: 2.04 kH/s
+[2018-11-22 14:19:45] Total: 8.88 kH/s
+[2018-11-22 14:19:45] CPU #2: 1.20 kH/s
+[2018-11-22 14:19:45] CPU #1: 1.20 kH/s
+[2018-11-22 14:19:45] CPU #0: 1.20 kH/s
+[2018-11-22 14:19:45] CPU #3: 1.20 kH/s
+[2018-11-22 14:19:50] Total: 8.89 kH/s
+[2018-11-22 14:19:55] CPU #5: 2.04 kH/s
+[2018-11-22 14:19:55] Total: 8.88 kH/s
+[2018-11-22 14:19:55] CPU #4: 2.04 kH/s
+[2018-11-22 14:19:55] CPU #2: 1.20 kH/s
+[2018-11-22 14:19:55] CPU #0: 1.20 kH/s
+[2018-11-22 14:19:55] CPU #1: 1.20 kH/s
+[2018-11-22 14:19:55] CPU #3: 1.20 kH/s
+[2018-11-22 14:20:00] Total: 8.87 kH/s
+[2018-11-22 14:20:05] CPU #5: 2.04 kH/s
+[2018-11-22 14:20:05] Total: 8.87 kH/s
+[2018-11-22 14:20:05] CPU #4: 2.04 kH/s
+[2018-11-22 14:20:05] CPU #2: 1.20 kH/s
+[2018-11-22 14:20:05] CPU #0: 1.20 kH/s
+[2018-11-22 14:20:05] CPU #1: 1.20 kH/s
+[2018-11-22 14:20:05] CPU #3: 1.20 kH/s
+[2018-11-22 14:20:10] Total: 8.89 kH/s
+[2018-11-22 14:20:15] CPU #5: 2.04 kH/s
+[2018-11-22 14:20:15] Total: 8.88 kH/s
+[2018-11-22 14:20:15] CPU #4: 2.04 kH/s
+[2018-11-22 14:20:15] CPU #2: 1.20 kH/s
+[2018-11-22 14:20:15] CPU #0: 1.20 kH/s
+[2018-11-22 14:20:15] CPU #1: 1.20 kH/s
+[2018-11-22 14:20:15] CPU #3: 1.20 kH/s
+[2018-11-22 14:20:20] Total: 8.87 kH/s
+[2018-11-22 14:20:25] CPU #4: 2.04 kH/s
+[2018-11-22 14:20:25] CPU #5: 2.04 kH/s
+[2018-11-22 14:20:25] Total: 8.87 kH/s
+[2018-11-22 14:20:25] CPU #2: 1.20 kH/s
+[2018-11-22 14:20:25] CPU #0: 1.20 kH/s
+[2018-11-22 14:20:25] CPU #1: 1.20 kH/s
+[2018-11-22 14:20:25] CPU #3: 1.20 kH/s
+[2018-11-22 14:20:30] Total: 8.88 kH/s
+[2018-11-22 14:20:35] CPU #4: 2.04 kH/s
+[2018-11-22 14:20:35] CPU #5: 2.04 kH/s
+[2018-11-22 14:20:35] Total: 8.87 kH/s
+[2018-11-22 14:20:35] CPU #2: 1.19 kH/s
+[2018-11-22 14:20:35] CPU #0: 1.20 kH/s
+[2018-11-22 14:20:35] CPU #1: 1.20 kH/s
+[2018-11-22 14:20:35] CPU #3: 1.20 kH/s
+[2018-11-22 14:20:40] Total: 8.86 kH/s
+[2018-11-22 14:20:45] CPU #4: 2.04 kH/s
+[2018-11-22 14:20:45] CPU #5: 2.04 kH/s
+[2018-11-22 14:20:45] Total: 8.87 kH/s
+[2018-11-22 14:20:45] CPU #2: 1.20 kH/s
+[2018-11-22 14:20:45] CPU #0: 1.20 kH/s
+[2018-11-22 14:20:45] CPU #1: 1.20 kH/s
+[2018-11-22 14:20:45] CPU #3: 1.20 kH/s
+[2018-11-22 14:20:50] Total: 8.89 kH/s
+[2018-11-22 14:20:55] CPU #4: 2.04 kH/s
+[2018-11-22 14:20:55] CPU #5: 2.04 kH/s
+[2018-11-22 14:20:55] Total: 8.88 kH/s
+[2018-11-22 14:20:55] CPU #2: 1.20 kH/s
+[2018-11-22 14:20:55] CPU #0: 1.20 kH/s
+[2018-11-22 14:20:55] CPU #1: 1.20 kH/s
+[2018-11-22 14:20:55] CPU #3: 1.20 kH/s
+[2018-11-22 14:21:00] Total: 8.88 kH/s
+[2018-11-22 14:21:05] CPU #4: 2.04 kH/s
+[2018-11-22 14:21:05] CPU #5: 2.03 kH/s
+[2018-11-22 14:21:05] Total: 8.86 kH/s
+[2018-11-22 14:21:05] CPU #2: 1.20 kH/s
+[2018-11-22 14:21:05] CPU #0: 1.20 kH/s
+[2018-11-22 14:21:05] CPU #1: 1.20 kH/s
+[2018-11-22 14:21:05] CPU #3: 1.20 kH/s
+[2018-11-22 14:21:10] Total: 8.88 kH/s
+[2018-11-22 14:21:15] CPU #4: 2.04 kH/s
+[2018-11-22 14:21:15] CPU #5: 2.04 kH/s
+[2018-11-22 14:21:15] Total: 8.88 kH/s
+[2018-11-22 14:21:15] CPU #2: 1.20 kH/s
+[2018-11-22 14:21:15] CPU #0: 1.20 kH/s
+[2018-11-22 14:21:15] CPU #1: 1.20 kH/s
+[2018-11-22 14:21:15] CPU #3: 1.20 kH/s
+[2018-11-22 14:21:20] Total: 8.89 kH/s
+[2018-11-22 14:21:25] CPU #4: 2.03 kH/s
+[2018-11-22 14:21:25] CPU #5: 2.03 kH/s
+[2018-11-22 14:21:25] Total: 8.86 kH/s
+[2018-11-22 14:21:25] CPU #2: 1.20 kH/s
+[2018-11-22 14:21:25] CPU #0: 1.20 kH/s
+[2018-11-22 14:21:25] CPU #1: 1.20 kH/s
+[2018-11-22 14:21:25] CPU #3: 1.20 kH/s
+[2018-11-22 14:21:30] Total: 8.88 kH/s
+[2018-11-22 14:21:35] CPU #4: 2.04 kH/s
+[2018-11-22 14:21:35] CPU #5: 2.03 kH/s
+[2018-11-22 14:21:35] Total: 8.87 kH/s
+[2018-11-22 14:21:35] CPU #2: 1.20 kH/s
+[2018-11-22 14:21:35] CPU #0: 1.20 kH/s
+[2018-11-22 14:21:35] CPU #3: 1.20 kH/s
+[2018-11-22 14:21:35] CPU #1: 1.19 kH/s
+[2018-11-22 14:21:40] Total: 8.88 kH/s
+[2018-11-22 14:21:45] CPU #5: 2.04 kH/s
+[2018-11-22 14:21:45] Total: 8.88 kH/s
+[2018-11-22 14:21:45] CPU #4: 2.02 kH/s
+[2018-11-22 14:21:45] CPU #2: 1.20 kH/s
+[2018-11-22 14:21:45] CPU #0: 1.20 kH/s
+[2018-11-22 14:21:45] CPU #1: 1.20 kH/s
+[2018-11-22 14:21:45] CPU #3: 1.20 kH/s
+[2018-11-22 14:21:50] Total: 8.88 kH/s
+[2018-11-22 14:21:55] CPU #4: 2.04 kH/s
+[2018-11-22 14:21:55] CPU #5: 2.04 kH/s
+[2018-11-22 14:21:55] Total: 8.88 kH/s
+[2018-11-22 14:21:55] CPU #2: 1.20 kH/s
+[2018-11-22 14:21:55] CPU #0: 1.20 kH/s
+[2018-11-22 14:21:55] CPU #1: 1.20 kH/s
+[2018-11-22 14:21:55] CPU #3: 1.20 kH/s
+[2018-11-22 14:22:00] Total: 8.89 kH/s
+[2018-11-22 14:22:05] CPU #5: 2.04 kH/s
+[2018-11-22 14:22:05] Total: 8.88 kH/s
+[2018-11-22 14:22:05] CPU #4: 2.02 kH/s
+[2018-11-22 14:22:05] CPU #2: 1.20 kH/s
+[2018-11-22 14:22:05] CPU #0: 1.20 kH/s
+[2018-11-22 14:22:05] CPU #1: 1.20 kH/s
+[2018-11-22 14:22:05] CPU #3: 1.20 kH/s
+[2018-11-22 14:22:10] Total: 8.88 kH/s
+[2018-11-22 14:22:15] CPU #4: 2.05 kH/s
+[2018-11-22 14:22:15] CPU #5: 2.05 kH/s
+[2018-11-22 14:22:15] Total: 8.89 kH/s
+[2018-11-22 14:22:15] CPU #2: 1.20 kH/s
+[2018-11-22 14:22:15] CPU #0: 1.20 kH/s
+[2018-11-22 14:22:15] CPU #1: 1.20 kH/s
+[2018-11-22 14:22:15] CPU #3: 1.20 kH/s
+[2018-11-22 14:22:20] Total: 8.88 kH/s
+[2018-11-22 14:22:25] CPU #4: 2.05 kH/s
+[2018-11-22 14:22:25] CPU #5: 2.04 kH/s
+[2018-11-22 14:22:25] Total: 8.88 kH/s
+[2018-11-22 14:22:25] CPU #2: 1.20 kH/s
+[2018-11-22 14:22:25] CPU #0: 1.20 kH/s
+[2018-11-22 14:22:25] CPU #1: 1.20 kH/s
+[2018-11-22 14:22:25] CPU #3: 1.20 kH/s
+[2018-11-22 14:22:30] Total: 8.86 kH/s
+[2018-11-22 14:22:35] CPU #4: 2.05 kH/s
+[2018-11-22 14:22:35] CPU #5: 2.04 kH/s
+[2018-11-22 14:22:35] Total: 8.88 kH/s
+[2018-11-22 14:22:35] CPU #2: 1.20 kH/s
+[2018-11-22 14:22:35] CPU #0: 1.20 kH/s
+[2018-11-22 14:22:35] CPU #1: 1.20 kH/s
+[2018-11-22 14:22:35] CPU #3: 1.20 kH/s
+[2018-11-22 14:22:40] Total: 8.86 kH/s
+[2018-11-22 14:22:45] CPU #4: 2.04 kH/s
+[2018-11-22 14:22:45] CPU #5: 2.03 kH/s
+[2018-11-22 14:22:45] Total: 8.86 kH/s
+[2018-11-22 14:22:45] CPU #2: 1.20 kH/s
+[2018-11-22 14:22:45] CPU #0: 1.20 kH/s
+[2018-11-22 14:22:45] CPU #1: 1.20 kH/s
+[2018-11-22 14:22:45] CPU #3: 1.20 kH/s
+[2018-11-22 14:22:50] Total: 8.83 kH/s
+[2018-11-22 14:22:55] CPU #4: 2.03 kH/s
+[2018-11-22 14:22:55] CPU #5: 2.03 kH/s
+[2018-11-22 14:22:55] Total: 8.85 kH/s
+[2018-11-22 14:22:55] CPU #2: 1.20 kH/s
+[2018-11-22 14:22:55] CPU #0: 1.20 kH/s
+[2018-11-22 14:22:55] CPU #1: 1.19 kH/s
+[2018-11-22 14:22:55] CPU #3: 1.20 kH/s
+[2018-11-22 14:23:00] Total: 8.84 kH/s
+[2018-11-22 14:23:05] CPU #5: 2.03 kH/s
+[2018-11-22 14:23:05] Total: 8.83 kH/s
+[2018-11-22 14:23:05] CPU #4: 2.03 kH/s
+[2018-11-22 14:23:05] CPU #2: 1.20 kH/s
+[2018-11-22 14:23:05] CPU #0: 1.20 kH/s
+[2018-11-22 14:23:05] CPU #3: 1.20 kH/s
+[2018-11-22 14:23:05] CPU #1: 1.19 kH/s
+[2018-11-22 14:23:10] Total: 8.81 kH/s
+[2018-11-22 14:23:15] CPU #4: 2.02 kH/s
+[2018-11-22 14:23:15] CPU #5: 2.02 kH/s
+[2018-11-22 14:23:15] Total: 8.83 kH/s
+[2018-11-22 14:23:15] CPU #2: 1.20 kH/s
+[2018-11-22 14:23:15] CPU #0: 1.20 kH/s
+[2018-11-22 14:23:15] CPU #3: 1.20 kH/s
+[2018-11-22 14:23:15] CPU #1: 1.19 kH/s
+[2018-11-22 14:23:20] Total: 8.83 kH/s
+[2018-11-22 14:23:25] CPU #4: 2.02 kH/s
+[2018-11-22 14:23:25] CPU #5: 2.02 kH/s
+[2018-11-22 14:23:25] Total: 8.83 kH/s
+[2018-11-22 14:23:25] CPU #2: 1.20 kH/s
+[2018-11-22 14:23:25] CPU #0: 1.20 kH/s
+[2018-11-22 14:23:25] CPU #3: 1.20 kH/s
+[2018-11-22 14:23:25] CPU #1: 1.19 kH/s
+[2018-11-22 14:23:30] Total: 8.81 kH/s
+[2018-11-22 14:23:35] CPU #4: 2.02 kH/s
+[2018-11-22 14:23:35] CPU #5: 2.02 kH/s
+[2018-11-22 14:23:35] Total: 8.83 kH/s
+[2018-11-22 14:23:35] CPU #2: 1.20 kH/s
+[2018-11-22 14:23:35] CPU #0: 1.20 kH/s
+[2018-11-22 14:23:35] CPU #3: 1.20 kH/s
+[2018-11-22 14:23:35] CPU #1: 1.19 kH/s
+[2018-11-22 14:23:40] Total: 8.81 kH/s
+[2018-11-22 14:23:45] CPU #4: 2.02 kH/s
+[2018-11-22 14:23:45] CPU #5: 2.02 kH/s
+[2018-11-22 14:23:45] Total: 8.82 kH/s
+[2018-11-22 14:23:45] CPU #2: 1.20 kH/s
+[2018-11-22 14:23:45] CPU #0: 1.20 kH/s
+[2018-11-22 14:23:45] CPU #3: 1.20 kH/s
+[2018-11-22 14:23:45] CPU #1: 1.19 kH/s
+[2018-11-22 14:23:50] Total: 8.80 kH/s
+[2018-11-22 14:23:55] CPU #4: 2.02 kH/s
+[2018-11-22 14:23:55] CPU #5: 2.01 kH/s
+[2018-11-22 14:23:55] Total: 8.81 kH/s
+[2018-11-22 14:23:55] CPU #2: 1.20 kH/s
+[2018-11-22 14:23:55] CPU #0: 1.20 kH/s
+[2018-11-22 14:23:55] CPU #3: 1.20 kH/s
+[2018-11-22 14:23:55] CPU #1: 1.19 kH/s
+[2018-11-22 14:24:00] Total: 8.81 kH/s
+[2018-11-22 14:24:05] CPU #4: 2.02 kH/s
+[2018-11-22 14:24:05] CPU #5: 2.02 kH/s
+[2018-11-22 14:24:05] Total: 8.82 kH/s
+[2018-11-22 14:24:05] CPU #2: 1.20 kH/s
+[2018-11-22 14:24:05] CPU #0: 1.20 kH/s
+[2018-11-22 14:24:05] CPU #3: 1.20 kH/s
+[2018-11-22 14:24:05] CPU #1: 1.19 kH/s
+[2018-11-22 14:24:10] Total: 8.82 kH/s
+[2018-11-22 14:24:15] CPU #4: 2.02 kH/s
+[2018-11-22 14:24:15] CPU #2: 1.20 kH/s
+[2018-11-22 14:24:15] CPU #5: 2.00 kH/s
+[2018-11-22 14:24:15] Total: 8.81 kH/s
+[2018-11-22 14:24:15] CPU #0: 1.20 kH/s
+[2018-11-22 14:24:15] CPU #3: 1.20 kH/s
+[2018-11-22 14:24:15] CPU #1: 1.19 kH/s
+[2018-11-22 14:24:20] Total: 8.81 kH/s
+[2018-11-22 14:24:25] CPU #4: 2.01 kH/s
+[2018-11-22 14:24:25] CPU #5: 2.01 kH/s
+[2018-11-22 14:24:25] Total: 8.81 kH/s
+[2018-11-22 14:24:25] CPU #2: 1.20 kH/s
+[2018-11-22 14:24:25] CPU #0: 1.20 kH/s
+[2018-11-22 14:24:25] CPU #3: 1.20 kH/s
+[2018-11-22 14:24:25] CPU #1: 1.19 kH/s
+[2018-11-22 14:24:30] Total: 8.81 kH/s
+[2018-11-22 14:24:35] CPU #5: 2.01 kH/s
+[2018-11-22 14:24:35] Total: 8.81 kH/s
+[2018-11-22 14:24:35] CPU #2: 1.20 kH/s
+[2018-11-22 14:24:35] CPU #4: 2.00 kH/s
+[2018-11-22 14:24:35] CPU #0: 1.20 kH/s
+[2018-11-22 14:24:35] CPU #3: 1.20 kH/s
+[2018-11-22 14:24:35] CPU #1: 1.19 kH/s
+
+Total Scores: 8.89,8.88,8.87,8.86,8.85,8.84,8.83,8.82,8.81,8.80
+
+##########################################################################
+
+Testing clockspeeds again. System health now:
+
+Time       big.LITTLE   load %cpu %sys %usr %nice %io %irq   Temp
+14:24:33: 1992/1512MHz  6.02 100%   0%  99%   0%   0%   0%  81.7°C
+
+Checking cpufreq OPP for cpu0-cpu3:
+
+Cpufreq OPP: 1512    Measured: 1509.658/1509.217/1509.993
+Cpufreq OPP: 1416    Measured: 1413.745/1414.070/1413.791
+Cpufreq OPP: 1200    Measured: 1197.272/1197.299/1197.591
+Cpufreq OPP: 1008    Measured: 1005.296/1004.759/1005.823
+Cpufreq OPP:  816    Measured: 813.791/814.011/813.801
+Cpufreq OPP:  600    Measured: 597.783/597.458/597.688
+Cpufreq OPP:  408    Measured: 405.613/405.720/404.948
+
+Checking cpufreq OPP for cpu4-cpu5:
+
+Cpufreq OPP: 1992    Measured: 1990.119/1990.365/1990.168
+Cpufreq OPP: 1800    Measured: 1798.427/1798.988/1798.467
+Cpufreq OPP: 1608    Measured: 1606.537/1606.637/1606.497
+Cpufreq OPP: 1416    Measured: 1414.379/1414.286/1414.457
+Cpufreq OPP: 1200    Measured: 1198.536/1198.466/1198.425
+Cpufreq OPP: 1008    Measured: 1006.080/1006.398/1006.423
+Cpufreq OPP:  816    Measured: 814.493/814.593/814.463
+Cpufreq OPP:  600    Measured: 598.019/598.100/597.992
+Cpufreq OPP:  408    Measured: 406.226/406.245/406.304
+
+##########################################################################
+
+System health while running tinymembench:
+
+Time       big.LITTLE   load %cpu %sys %usr %nice %io %irq   Temp
+13:52:22: 1992/1512MHz  0.23   3%   0%   1%   0%   0%   0%  33.9°C
+13:54:22: 1992/1512MHz  0.90  17%   0%  16%   0%   0%   0%  33.9°C
+13:56:22: 1992/1512MHz  0.99  17%   0%  16%   0%   0%   0%  32.8°C
+13:58:22: 1992/1512MHz  1.00  16%   0%  16%   0%   0%   0%  42.2°C
+14:00:22: 1992/1512MHz  1.00  16%   0%  16%   0%   0%   0%  38.8°C
+14:02:22: 1992/1512MHz  1.01  16%   0%  16%   0%   0%   0%  38.1°C
+
+System health while running OpenSSL benchmark:
+
+Time       big.LITTLE   load %cpu %sys %usr %nice %io %irq   Temp
+14:04:02: 1992/1512MHz  1.00  13%   0%  12%   0%   0%   0%  38.1°C
+14:04:12: 1992/1512MHz  1.00  17%   0%  16%   0%   0%   0%  34.4°C
+14:04:22: 1992/1512MHz  1.00  17%   0%  16%   0%   0%   0%  39.4°C
+14:04:32: 1992/1512MHz  1.00  16%   0%  16%   0%   0%   0%  40.6°C
+14:04:42: 1992/1512MHz  1.00  16%   0%  16%   0%   0%   0%  36.2°C
+14:04:52: 1992/1512MHz  1.00  17%   0%  16%   0%   0%   0%  35.0°C
+14:05:02: 1992/1512MHz  1.00  16%   0%  16%   0%   0%   0%  41.1°C
+14:05:12: 1992/1512MHz  1.00  16%   0%  16%   0%   0%   0%  42.2°C
+14:05:22: 1992/1512MHz  1.00  17%   0%  16%   0%   0%   0%  35.6°C
+14:05:32: 1992/1512MHz  1.00  17%   0%  16%   0%   0%   0%  38.1°C
+14:05:42: 1992/1512MHz  1.00  16%   0%  16%   0%   0%   0%  42.2°C
+
+System health while running 7-zip single core benchmark:
+
+Time       big.LITTLE   load %cpu %sys %usr %nice %io %irq   Temp
+14:05:50: 1992/1512MHz  1.00  13%   0%  13%   0%   0%   0%  43.3°C
+14:06:50: 1992/1512MHz  3.52  17%   0%  16%   0%   0%   0%  33.9°C
+14:07:50: 1992/1512MHz  4.19  17%   0%  16%   0%   0%   0%  33.3°C
+14:08:50: 1992/1512MHz  3.93  17%   0%  16%   0%   0%   0%  32.8°C
+14:09:50: 1992/1512MHz  4.18  17%   0%  16%   0%   0%   0%  32.2°C
+14:10:50: 1992/1512MHz  3.60  17%   0%  16%   0%   0%   0%  32.2°C
+14:11:50: 1992/1512MHz  3.65  17%   0%  16%   0%   0%   0%  32.8°C
+14:12:50: 1992/1512MHz  4.66  17%   0%  16%   0%   0%   0%  40.0°C
+14:13:50: 1992/1512MHz  4.52  16%   0%  16%   0%   0%   0%  40.6°C
+14:14:50: 1992/1512MHz  4.28  16%   0%  16%   0%   0%   0%  41.1°C
+14:15:50: 1992/1512MHz  4.11  16%   0%  16%   0%   0%   0%  40.6°C
+
+System health while running 7-zip multi core benchmark:
+
+Time       big.LITTLE   load %cpu %sys %usr %nice %io %irq   Temp
+14:16:14: 1992/1512MHz  4.64  14%   0%  14%   0%   0%   0%  42.8°C
+14:16:34: 1992/1512MHz  5.02  79%   0%  78%   0%   0%   0%  57.8°C
+14:16:54: 1992/1512MHz  5.47  79%   1%  77%   0%   0%   0%  52.8°C
+14:17:14: 1992/1512MHz  5.81  95%   1%  93%   0%   0%   0%  56.1°C
+14:17:34: 1992/1512MHz  4.96  72%   0%  71%   0%   0%   0%  58.3°C
+14:17:55: 1992/1512MHz  5.21  85%   1%  83%   0%   0%   0%  56.7°C
+14:18:15: 1992/1512MHz  5.18  86%   1%  84%   0%   0%   0%  58.3°C
+14:18:37: 1992/1512MHz  5.43  86%   1%  84%   0%   0%   0%  63.8°C
+14:18:57: 1992/1512MHz  5.75  84%   1%  83%   0%   0%   0%  58.9°C
+14:19:18: 1992/1512MHz  5.41  84%   1%  83%   0%   0%   0%  60.6°C
+
+System health while running cpuminer:
+
+Time       big.LITTLE   load %cpu %sys %usr %nice %io %irq   Temp
+14:19:35: 1992/1512MHz  5.68  22%   0%  21%   0%   0%   0%  57.2°C
+14:19:56: 1992/1512MHz  5.77  99%   0%  99%   0%   0%   0%  73.9°C
+14:20:17: 1992/1512MHz  5.84 100%   0%  99%   0%   0%   0%  76.2°C
+14:20:39: 1992/1512MHz  5.95 100%   0%  99%   0%   0%   0%  78.8°C
+14:21:00: 1992/1512MHz  5.97 100%   0%  99%   0%   0%   0%  80.0°C
+14:21:21: 1992/1512MHz  5.98 100%   0%  99%   0%   0%   0%  81.1°C
+14:21:43: 1992/1512MHz  5.98 100%   0%  99%   0%   0%   0%  82.8°C
+14:22:04: 1992/1512MHz  6.05 100%   0%  99%   0%   0%   0%  83.3°C
+14:22:25: 1992/1512MHz  6.03 100%   0%  99%   0%   0%   0%  83.9°C
+14:22:46: 1992/1512MHz  6.02 100%   0%  99%   0%   0%   0%  84.4°C
+14:23:08: 1992/1512MHz  6.02 100%   0%  99%   0%   0%   0%  84.4°C
+14:23:29: 1992/1512MHz  6.07 100%   0%  99%   0%   0%   0%  84.4°C
+14:23:50: 1992/1512MHz  6.05 100%   0%  99%   0%   0%   0%  84.4°C
+14:24:11: 1992/1512MHz  6.03 100%   0%  99%   0%   0%   0%  84.4°C
+14:24:33: 1992/1512MHz  6.02 100%   0%  99%   0%   0%   0%  81.7°C
+
+Throttling statistics (time spent on each cpufreq OPP) for CPUs 4-5:
+
+1992 MHz: 1926.76 sec
+1800 MHz:       0 sec
+1608 MHz:    5.85 sec
+1416 MHz:    0.95 sec
+1200 MHz:       0 sec
+1008 MHz:       0 sec
+ 816 MHz:       0 sec
+ 600 MHz:       0 sec
+ 408 MHz:       0 sec
+
+##########################################################################
+
+dmesg output while running the benchmarks:
+
+[  230.427365] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  230.427474] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  230.655575] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  230.655657] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  230.658989] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  240.660740] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  240.660854] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  240.905954] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  240.906125] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  240.910899] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  250.913052] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  250.913195] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  251.157101] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  251.157186] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  251.160948] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  261.163913] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  261.164054] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  261.407350] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  261.407439] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  261.411998] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  271.414329] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  271.414395] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  271.656518] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  271.656600] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  271.661339] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  281.663875] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  281.663939] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  281.906096] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  281.906188] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  281.910021] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  290.092966] wl_run_escan: LEGACY_SCAN sync ID: 7, bssidx: 0
+[  291.912422] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  291.912485] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  292.154924] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  292.155024] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  292.158312] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  302.159989] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  302.160050] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  302.406213] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  302.406305] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  302.410830] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  312.412347] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  312.412405] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  312.656656] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  312.656737] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  312.661276] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  322.663999] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  322.664065] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  322.906375] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  322.906554] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  322.910330] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  332.914864] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  332.914928] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  333.157685] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  333.157770] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  333.161978] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  343.167298] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  343.167362] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  343.411068] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  343.411154] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  343.414864] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  353.143340] wl_run_escan: LEGACY_SCAN sync ID: 8, bssidx: 0
+[  353.420462] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  353.420550] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  353.669608] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  353.670365] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  353.679175] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  363.683904] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  363.683972] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  363.915970] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  363.916059] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  363.920459] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  373.924682] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  373.924767] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  374.173993] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  374.174111] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  374.183819] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  384.188200] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  384.188257] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  384.417537] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  384.417613] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  384.421523] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  394.424642] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  394.424699] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  394.667681] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  394.667761] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  394.670803] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  404.673641] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  404.673696] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  404.918664] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  404.918737] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  404.922453] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  414.925032] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  414.925094] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  415.168876] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  415.168953] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  415.172365] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  416.150383] wl_run_escan: LEGACY_SCAN sync ID: 9, bssidx: 0
+[  425.175409] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  425.175469] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  425.420167] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  425.420246] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  425.424092] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  435.426891] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  435.426956] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  435.669684] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  435.669761] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  435.673083] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  445.675116] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  445.675187] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  445.920896] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  445.920984] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  445.925235] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  455.927944] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  455.928007] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  456.171377] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  456.171466] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  456.175518] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  466.178016] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  466.178080] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  466.421652] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  466.421739] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  466.425047] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  476.426782] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  476.426849] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  476.671680] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  476.671769] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  476.676169] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  479.167154] wl_run_escan: LEGACY_SCAN sync ID: 10, bssidx: 0
+[  486.678455] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  486.678519] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  486.922579] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  486.922661] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  486.925867] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  496.927580] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  496.927644] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  497.172467] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  497.172569] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  497.176844] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  507.179374] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  507.179439] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  507.423496] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  507.423575] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  507.427140] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  517.429585] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  517.429649] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  517.673580] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  517.673664] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  517.678022] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  527.680715] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  527.680870] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  527.927696] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  527.927898] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  527.935038] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  537.938072] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  537.938230] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  538.183218] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  538.183413] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  538.189685] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  542.172434] wl_run_escan: LEGACY_SCAN sync ID: 11, bssidx: 0
+[  548.193350] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  548.193503] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  548.430363] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  548.430528] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  548.437202] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  558.439454] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  558.439528] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  558.677725] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  558.677839] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  558.682664] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  568.686092] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  568.686229] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  568.927637] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  568.927750] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  568.933668] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  578.937145] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  578.937233] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  579.177560] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  579.177757] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  579.183314] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  589.186496] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  589.186634] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  589.431582] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  589.431794] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  589.437920] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  599.440586] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  599.440686] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  599.678499] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  599.678731] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  599.684662] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  605.174653] wl_run_escan: LEGACY_SCAN sync ID: 12, bssidx: 0
+[  609.688070] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  609.688248] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  609.932758] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  609.932941] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  609.939113] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  619.942246] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  619.942368] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  620.181949] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  620.182118] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  620.188873] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  630.192134] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  630.192211] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  630.429761] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  630.429938] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  630.435871] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  640.439111] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  640.439239] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  640.682016] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  640.682211] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  640.689972] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  650.693268] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  650.693378] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  650.931412] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  650.931574] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  650.937499] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  660.940398] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  660.940460] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  661.179039] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  661.179175] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  661.183164] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  668.160387] wl_run_escan: LEGACY_SCAN sync ID: 13, bssidx: 0
+[  671.185507] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  671.185569] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  671.430909] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  671.430989] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  671.434917] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  681.437272] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  681.437335] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  681.679832] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  681.679965] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  681.684092] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  691.686764] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  691.686879] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  691.931311] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  691.931389] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  691.934637] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  701.937027] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  701.937102] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  702.180261] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  702.180338] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  702.183577] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  712.186291] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  712.186367] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  712.431270] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  712.431485] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  712.435581] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  722.438203] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  722.438270] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  722.681388] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  722.681469] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  722.685094] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  731.177585] wl_run_escan: LEGACY_SCAN sync ID: 14, bssidx: 0
+[  732.687385] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  732.687471] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  732.931970] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  732.932058] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  732.935617] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  742.938148] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  742.938242] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  743.184439] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  743.184543] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  743.189102] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  753.191841] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  753.191910] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  753.434415] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  753.434504] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  753.438671] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  763.441110] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  763.441186] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  763.683272] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  763.683365] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  763.687067] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  773.689553] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  773.689629] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  773.933631] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  773.933729] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  773.938071] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  783.940441] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  783.940502] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  784.183757] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  784.183839] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  784.187590] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  794.180127] wl_run_escan: LEGACY_SCAN sync ID: 15, bssidx: 0
+[  794.190240] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  794.190377] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  794.437171] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  794.437289] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  794.441163] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  795.337961] EVENT_LOG_HDR[0x1]: Set: 0x00000000 length = 1028
+[  804.443938] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  804.444059] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  804.685165] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  804.685259] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  804.688861] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  814.691507] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  814.691596] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  814.938828] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  814.938932] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  814.944055] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  824.946456] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  824.946535] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  825.186090] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  825.186171] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  825.189942] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  835.192531] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  835.192604] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  835.435838] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  835.435926] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  835.439398] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  845.442392] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  845.442503] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  845.686199] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  845.686394] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  845.691534] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  855.693713] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  855.693779] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  855.936802] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  855.936895] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  855.940359] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  857.171584] wl_run_escan: LEGACY_SCAN sync ID: 16, bssidx: 0
+[  865.942842] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  865.942920] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  866.186920] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  866.187108] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  866.191244] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  876.193722] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  876.193793] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  876.437172] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  876.437335] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  876.440552] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  886.442925] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  886.442992] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  886.687514] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  886.687595] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  886.690915] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  896.692860] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  896.692998] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  896.939826] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  896.939912] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  896.944155] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  906.951815] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  906.951893] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  907.190130] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  907.190217] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  907.194180] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  917.196517] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  917.196597] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  917.438579] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  917.438703] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  917.442072] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  920.134208] wl_run_escan: LEGACY_SCAN sync ID: 17, bssidx: 0
+[  927.444476] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  927.444565] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  927.691830] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  927.691942] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  927.695930] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  937.698534] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  937.698601] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  937.939519] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  937.939608] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  937.943012] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  947.945153] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  947.945212] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  948.189321] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  948.189400] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  948.192373] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  958.193884] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  958.193938] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  958.439672] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  958.439747] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  958.443552] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  968.445789] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  968.445847] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  968.690085] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  968.690161] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  968.692955] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  978.695111] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  978.695172] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  978.940620] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  978.940703] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  978.944382] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  983.171871] wl_run_escan: LEGACY_SCAN sync ID: 18, bssidx: 0
+[  988.946569] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  988.946623] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  989.190554] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  989.190632] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  989.193984] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  999.196515] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  999.196575] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  999.441126] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  999.441202] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[  999.444473] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1009.446494] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1009.446552] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1009.691533] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1009.691606] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1009.694599] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1019.697045] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1019.697151] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1019.941799] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1019.941881] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1019.945066] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1029.946543] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1029.946606] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1030.191821] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1030.191896] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1030.194950] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1040.196335] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1040.196388] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1040.444218] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1040.444291] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1040.447622] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1046.185784] wl_run_escan: LEGACY_SCAN sync ID: 19, bssidx: 0
+[ 1050.449866] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1050.449928] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1050.692917] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1050.692991] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1050.696047] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1060.698502] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1060.698565] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1060.943529] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1060.943610] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1060.947101] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1070.948749] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1070.948819] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1071.195496] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1071.195573] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1071.199156] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1081.200779] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1081.200850] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1081.446200] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1081.446278] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1081.449560] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1091.451356] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1091.451420] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1091.694920] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1091.695005] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1091.698672] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1101.700936] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1101.700993] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1101.944867] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1101.944950] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1101.947938] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1109.160263] wl_run_escan: LEGACY_SCAN sync ID: 20, bssidx: 0
+[ 1111.949817] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1111.949931] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1112.196391] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1112.196511] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1112.200398] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1122.202703] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1122.202830] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1122.447664] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1122.447746] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1122.451111] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1132.452758] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1132.452813] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1132.695988] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1132.696072] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1132.700111] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1142.701686] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1142.701742] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1142.946495] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1142.946571] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1142.950226] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1152.951880] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1152.951942] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1153.197041] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1153.197125] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1153.200658] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1163.202194] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1163.202257] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1163.447987] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1163.448066] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1163.451902] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1172.178822] wl_run_escan: LEGACY_SCAN sync ID: 21, bssidx: 0
+[ 1173.453671] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1173.453734] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1173.697731] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1173.697819] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1173.701640] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1183.704051] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1183.704114] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1183.949307] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1183.949381] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1183.952479] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1193.955291] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1193.955359] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1194.197933] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1194.198021] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1194.200979] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1204.202666] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1204.202723] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1204.449953] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1204.450029] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1204.453871] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1214.455562] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1214.455620] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1214.698625] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1214.698710] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1214.702132] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1224.703693] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1224.703749] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1224.949250] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1224.949327] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1224.952611] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1234.954161] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1234.954239] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1235.149062] wl_run_escan: LEGACY_SCAN sync ID: 22, bssidx: 0
+[ 1235.201664] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1235.201740] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1235.205427] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1245.207121] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1245.207185] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1245.450649] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1245.450725] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1245.454211] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1255.456540] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1255.456596] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1255.699979] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1255.700061] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1255.704232] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1265.706061] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1265.706119] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1265.950489] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1265.950564] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1265.953795] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1275.956147] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1275.956209] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1276.200728] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1276.200802] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1276.203544] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1286.205432] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1286.205545] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1286.452268] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1286.452567] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1286.456523] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1296.458097] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1296.458159] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1296.701325] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1296.701404] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1296.704269] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1298.187401] wl_run_escan: LEGACY_SCAN sync ID: 23, bssidx: 0
+[ 1306.705885] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1306.705948] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1306.951913] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1306.951989] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1306.955752] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1316.957440] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1316.957502] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1317.202204] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1317.202287] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1317.205236] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1327.207025] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1327.207081] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1327.454004] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1327.454079] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1327.457118] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1337.458709] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1337.458778] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1337.705513] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1337.705592] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1337.709245] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1347.711972] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1347.712036] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1347.954406] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1347.954638] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1347.957921] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1357.960456] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1357.960518] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1358.204026] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1358.204102] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1358.207125] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1361.198676] wl_run_escan: LEGACY_SCAN sync ID: 24, bssidx: 0
+[ 1368.208809] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1368.208872] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1368.454240] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1368.454317] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1368.457987] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1378.460487] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1378.460545] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1378.704892] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1378.704978] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1378.708465] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1388.710793] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1388.710849] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1388.954812] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1388.954898] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1388.958143] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1398.960457] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1398.960512] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1399.205651] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1399.205736] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1399.209080] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1409.211363] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1409.211420] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1409.455449] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1409.455533] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1409.458931] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1419.461166] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1419.461229] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1419.706257] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1419.706345] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1419.709815] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1424.183348] wl_run_escan: LEGACY_SCAN sync ID: 25, bssidx: 0
+[ 1429.712077] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1429.712142] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1429.956359] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1429.956439] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1429.959756] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1439.961335] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1439.961392] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1440.206222] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1440.206348] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1440.209341] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1450.211809] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1450.211870] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1450.457929] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1450.458006] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1450.461593] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1460.463969] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1460.464031] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1460.708270] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1460.708354] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1460.711785] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1470.713260] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1470.713319] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1470.959080] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1470.959156] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1470.965344] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1480.967505] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1480.967577] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1481.208666] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1481.208755] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1481.212211] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1487.204112] wl_run_escan: LEGACY_SCAN sync ID: 26, bssidx: 0
+[ 1487.206450] EVENT_LOG_HDR[0x2]: Set: 0x00000000 length = 1028
+[ 1491.213809] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1491.213872] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1491.458414] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1491.458492] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1491.461606] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1501.463496] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1501.463606] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1501.709552] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1501.709631] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1501.713015] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1511.714941] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1511.715047] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1511.959232] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1511.959309] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1511.962625] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1521.964379] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1521.964442] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1522.211608] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1522.211692] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1522.216120] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1532.218714] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1532.218793] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1532.461843] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1532.461942] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1532.466021] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1542.467979] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1542.468056] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1542.712226] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1542.712328] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1542.716643] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1550.148925] wl_run_escan: LEGACY_SCAN sync ID: 27, bssidx: 0
+[ 1552.719414] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1552.719485] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1552.962808] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1552.962899] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1552.967160] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1562.969623] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1562.969684] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1563.212202] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1563.212289] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1563.215857] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1573.217533] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1573.217595] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1573.461305] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1573.461379] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1573.464885] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1583.466675] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1583.466791] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1583.712013] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1583.712090] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1583.715791] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1593.717369] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1593.717441] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1593.962463] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1593.962543] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1593.965826] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1603.967886] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1603.968002] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1604.213359] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1604.213456] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1604.216916] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1613.186094] wl_run_escan: LEGACY_SCAN sync ID: 28, bssidx: 0
+[ 1614.218724] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1614.218867] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1614.465964] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1614.466033] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1614.470348] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1624.472494] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1624.472612] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1624.714610] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1624.714698] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1624.718240] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1634.719937] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1634.720029] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1634.965589] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1634.965692] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1634.970954] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1644.973192] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1644.973264] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1645.214884] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1645.214989] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1645.218390] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1655.220541] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1655.220605] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1655.466888] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1655.466994] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1655.471564] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1665.474038] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1665.474095] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1665.715950] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1665.716039] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1665.719766] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1675.721292] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1675.721357] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1675.966918] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1675.967013] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1675.983881] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1676.207726] wl_run_escan: LEGACY_SCAN sync ID: 29, bssidx: 0
+[ 1685.990844] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1685.990909] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1686.222123] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1686.222294] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1686.237374] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1696.240891] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1696.240968] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1696.467363] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1696.467558] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1696.474212] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1706.480497] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1706.480637] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1706.717543] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1706.717742] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1706.723259] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1716.725802] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1716.725940] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1716.972863] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1716.975850] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1716.983041] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1726.989791] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1726.989857] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1727.220750] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1727.220844] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1727.224605] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1737.229685] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1737.229747] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1737.480926] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1737.481015] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1737.485099] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1739.209541] wl_run_escan: LEGACY_SCAN sync ID: 30, bssidx: 0
+[ 1747.487250] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1747.487310] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1747.729360] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1747.729448] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1747.733661] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1757.735887] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1757.735950] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1757.968835] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1757.969083] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1757.972877] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1767.975774] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1767.975846] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1768.226270] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1768.228160] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1768.236911] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1778.242626] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1778.242687] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1778.482402] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1778.482487] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1778.486407] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1788.488910] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1788.488977] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1788.724011] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1788.727049] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1788.739482] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1798.741130] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1798.741196] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1798.983288] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1798.983392] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1798.988232] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1802.212937] wl_run_escan: LEGACY_SCAN sync ID: 31, bssidx: 0
+[ 1808.990530] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1808.990582] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1809.219148] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1809.219223] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1809.222056] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1819.224580] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1819.224648] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1819.471685] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1819.471778] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1819.478643] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1829.481632] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1829.481757] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1829.720905] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1829.720986] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1829.734576] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1839.736294] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1839.736363] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1839.984952] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1839.985058] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1839.989584] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1849.991182] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1849.991247] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1850.224377] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1850.224459] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1850.232712] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1860.235055] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1860.235118] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1860.479009] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1860.479111] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1860.487999] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1865.210018] wl_run_escan: LEGACY_SCAN sync ID: 32, bssidx: 0
+[ 1870.490090] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1870.490159] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1870.721578] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1870.721658] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1870.724775] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1880.726385] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1880.726445] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1880.986021] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1880.986108] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1880.990005] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1890.992042] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1890.992102] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1891.234387] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1891.234488] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1891.238269] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1901.240333] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1901.240393] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1901.486759] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1901.486843] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1901.490611] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1911.492629] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1911.492690] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1911.735133] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1911.735217] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1911.738971] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1921.741020] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1921.741080] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1921.987509] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1921.987612] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1921.991337] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1928.216534] wl_run_escan: LEGACY_SCAN sync ID: 33, bssidx: 0
+[ 1931.993363] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1931.993422] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1932.223960] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1932.224044] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1932.229835] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1942.231247] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1942.231307] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1942.484271] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1942.484358] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1942.487546] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1952.489200] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1952.489261] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1952.732735] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1952.732818] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1952.735939] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1962.737634] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1962.737695] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1962.989047] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1962.989131] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1962.993091] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1972.995203] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1972.995265] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1973.241379] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1973.241463] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1973.244567] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1983.246218] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1983.246279] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1983.485770] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1983.485872] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1983.488947] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1991.218556] wl_run_escan: LEGACY_SCAN sync ID: 34, bssidx: 0
+[ 1993.490641] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1993.490704] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1993.742127] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1993.742212] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 1993.746066] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2003.748154] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2003.748213] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2003.990514] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2003.990600] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2003.993738] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2013.996283] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2013.996350] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2014.230893] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2014.234345] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2014.237548] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2024.238959] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2024.239020] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2024.495179] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2024.495262] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2024.498245] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2034.499850] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2034.499912] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2034.731555] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2034.735149] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2034.738254] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2044.744079] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2044.744140] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2044.991879] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2044.991962] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2044.995794] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2054.220709] wl_run_escan: LEGACY_SCAN sync ID: 35, bssidx: 0
+[ 2054.997805] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2054.997866] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2055.240202] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2055.240285] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2055.243489] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2065.245152] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2065.245212] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2065.484593] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2065.484677] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2065.489568] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2075.490942] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2075.491003] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2075.740879] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2075.740964] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2075.743823] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2085.745187] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2085.745247] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2085.993209] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2085.993294] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2085.997049] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2095.999042] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2095.999103] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2096.241564] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2096.241648] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2096.245400] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2106.247413] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2106.247473] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2106.493909] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2106.493997] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2106.497833] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2116.499846] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2116.499907] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2116.742255] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2116.742338] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2116.745312] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2117.171060] wl_run_escan: LEGACY_SCAN sync ID: 36, bssidx: 0
+[ 2118.337777] EVENT_LOG_HDR[0x3]: Set: 0x00000000 length = 1028
+[ 2126.746925] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2126.746986] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2126.994610] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2126.994694] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2126.998630] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2137.000681] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2137.000740] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2137.234976] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2137.246334] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2137.249475] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2147.250939] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2147.250999] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2147.495267] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2147.495351] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2147.499102] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2157.501117] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2157.501177] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2157.743628] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2157.743711] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2157.746763] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2167.748395] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2167.748456] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2167.995953] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2167.996038] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2167.999788] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2178.001941] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2178.002001] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2178.233774] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2178.233855] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2178.237579] genirq: Flags mismatch irq 35. 00000080 (serial) vs. 00004000 (debug)
+[ 2180.214097] wl_run_escan: LEGACY_SCAN sync ID: 37, bssidx: 0
+
+##########################################################################
+
+Linux 4.4.154-rk3399 (rk3399) 	11/22/18 	_aarch64_	(6 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+          32.46    0.00    0.49    0.06    0.00   66.99
+
+Device:            tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn
+mmcblk0           1.33        61.56         0.69     134614       1505
+mmcblk1           0.04         0.95         0.00       2076          0
+mmcblk1boot1      0.02         0.10         0.00        216          0
+mmcblk1boot0      0.02         0.10         0.00        216          0
+zram0             0.74         0.34         2.61        736       5708
+zram1             0.13         0.53         0.00       1168          4
+zram2             0.13         0.53         0.00       1168          4
+zram3             0.13         0.53         0.00       1168          4
+zram4             0.13         0.53         0.00       1168          4
+
+              total        used        free      shared  buff/cache   available
+Mem:           3.7G         70M        3.5G         11M        160M        3.6G
+Swap:          1.0G          0B        1.0G
+
+Filename				Type		Size	Used	Priority
+/dev/zram1                             	partition	262140	0	5
+/dev/zram2                             	partition	262140	0	5
+/dev/zram3                             	partition	262140	0	5
+/dev/zram4                             	partition	262140	0	5
+
+Architecture:          aarch64
+Byte Order:            Little Endian
+CPU(s):                6
+On-line CPU(s) list:   0-5
+Thread(s) per core:    1
+Core(s) per socket:    3
+Socket(s):             2
+Model:                 4
+CPU max MHz:           1512.0000
+CPU min MHz:           408.0000
+BogoMIPS:              48.00
+Flags:                 fp asimd evtstrm aes pmull sha1 sha2 crc32

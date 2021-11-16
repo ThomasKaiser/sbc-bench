@@ -6,7 +6,7 @@ InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted 
 Main() {
 	export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 	PathToMe="$( cd "$(dirname "$0")" ; pwd -P )/${0##*/}"
-	export LC_ALL=C # prevent localication of decimal points and other stuff
+	unset LC_ALL # prevent localication of decimal points and other stuff
 
 	# Check if we're outputting to a terminal. If yes try to use bold and colors for messages
 	if test -t 1; then

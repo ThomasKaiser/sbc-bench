@@ -86,6 +86,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | Raspberry Pi 4 B | 1500 MHz | 5.10 | Raspberry Pi OS Buster | 5750 | 62310 | 64930 | 2550 | 3430 | - | [http://ix.io/3EgS](http://ix.io/3EgS) |
 | Raspberry Pi 4 B | 1800 MHz | 5.10 | Raspberry Pi OS Buster | 6640 | 74930 | 77850 | 2550 | 3090 | - | [http://ix.io/3Eh3](http://ix.io/3Eh3) |
 | Raspberry Pi 4 B | 1800 MHz | 5.10 | Raspberry Pi OS Buster **arm64** | 5760 | 45570 | 36240 | 2240 | 3120 | 9.46 | [http://ix.io/3F9C](http://ix.io/3F9C) |
+| Raspberry Pi 4 B | 1800 MHz | 5.10 | **Jammy arm64** | 5770 | 46050 | 36260 | 2770 | 3120 | - | [http://ix.io/3FlD](http://ix.io/3FlD) |
 | Raspberry Pi 400 | 1800 MHz | 5.4 | Raspberry Pi OS Buster | 6550 | 75050 | 77890 | 2680 | 3110 | - | [http://ix.io/2Cyi](http://ix.io/2Cyi) |
 | [Rock64](https://www.armbian.com/rock64/) | 1300 MHz | 4.4 | Bionic arm64 | 3410 | 89060 | 601200 | 1310 | 5680 | 4.46 | [http://ix.io/1iGW](http://ix.io/1iGW) |
 | [Rock64](https://www.armbian.com/rock64/) | 1300 MHz | 4.18 | Bionic arm64 | 3530 | 116100 | 605250 | 1340 | 5770 | 4.65 | [http://ix.io/1iH4](http://ix.io/1iH4) |

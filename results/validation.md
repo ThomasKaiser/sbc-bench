@@ -2,13 +2,13 @@
 
   * Standard deviation reported by tinymembench when repeating the individual tests multiple times
   * RAM total/avail according to `free -h`
-  * 22/23/24/25 are the available dictionaries 7-zip's internal benchmark is testing through. On system running low on memory the benchmark decides to skip certain dictionaries
-  * high `%sys` values while benchmarking are an indication of background activity that might render benchmark results useless
-  * high `%io` values while benchmarking are a clear sign of something going wrong, most probaly swapping happening which might render benchmark results useless
-  * throttling needs to be checked in the log
+  * 22/23/24/25 are dictionary sizes 7-zip's internal benchmark is testing through. On systems low on memory the larger ones will be skipped (2^22 = 4 MB, 2^23 = 8 MB, 2^24 = 16 MB, 2^25 = 32 MB)
+  * high `%system` values while benchmarking are an indication of background activity that might render benchmark results useless
+  * high `%iowait` values while benchmarking are an indication of something going wrong, most probaly swapping happening which will render benchmark results partially useless
+  * if mentioned throttling needs to be checked in the log
 
-| Result | Version / board | Standard deviation | RAM total/avail | 22 | 23 | 24 | 25 | %sys | %io | throttling |
-| ---- | :---: | :---: | :---: | ----: | ----: | ----: | ----: | ----: | ----: | ----: |
+| Result | Version / device | Standard deviation | RAM total/avail | 22 | 23 | 24 | 25 | %system | %iowait | throttling |
+| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | ----: | ----: | :---: |
 | [1BsF](1BsF.txt) | v0.6.2 Hardkernel ODROID-N2  | 0%/0.1% | 3.6G/3.5G | X | X | X | X |  2% |  0% |  |
 | [1Dt1](1Dt1.txt) | v0.6.6 Realtek\_Lion\_Skin\_1GB  | 0%/0% | 570M/313M | X | X | X |    |  3% |  3% |  |
 | [1ET3](1ET3.txt) | v0.6.6 SolidRun LX2160A COM express type | 0%/0% | 60G/57G | X | X | X | X |  0% |  2% |  |
@@ -116,5 +116,6 @@
 | [3Eh3](3Eh3.txt) | v0.8.4 Raspberry Pi 4 Model B Rev 1.1  | 0%/0.4% | 857Mi/718Mi | X | X | X |    |  2% |  0% |  |
 | <del>[3EhG](3EhG.txt)</del> | <del>v0.8.4 Raspberry Pi 4 Model B Rev 1.1 </del> | <del>0%/0.6%</del> | <del>909Mi/754Mi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del><span style=color:red> 8%</span></del> | <del><span style=color:red>**54%**</span></del> |  |
 | [3F9C](3F9C.txt) | v0.8.4 Raspberry Pi 4 Model B Rev 1.1  | 0%/0.6% | 959Mi/815Mi | X | X | X | X | <span style=color:red>**12%**</span> |  0% |  |
+| [3FlD](3FlD.txt) | v0.8.4 Raspberry Pi 4 Model B Rev 1.1  | 0%/0.6% | 959Mi/839Mi | X | X | X | X | <span style=color:red> 9%</span> |  0% |  |
 | [3rUb](3rUb.txt) | v0.7.7 Pine64 RK3566 Quartz64-A Board  | 0%/0% | 3.8Gi/3.5Gi | X | X | X | X |  3% |  1% |  |
 | [3wZn](3wZn.txt) | v0.7.7 Radxa Zero  | 0.3%/0% | 3.7Gi/3.4Gi | X | X | X | X |  2% |  1% |  |

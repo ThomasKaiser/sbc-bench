@@ -15,32 +15,33 @@ grep "| \[http://ix.io" ../Results.md | awk -F"http://" '{print $2}' | sed 's/](
 	fi
 done
 
+# contain all results files in compressed archive:
+tar jcf results.tar.bz2 *.txt
+
 # check results files for anomalies and create a table
 cat <<EOF >validation.md
 # Result validation
 
   * Standard deviation reported by tinymembench when repeating the individual tests multiple times
   * RAM total/avail according to \`free -h\`
-  * 22/23/24/25 are the available dictionaries 7-zip's internal benchmark is testing through. On system running low on memory the benchmark decides to skip certain dictionaries
-  * high \`%sys\` values while benchmarking are an indication of background activity that might render benchmark results useless
-  * high \`%io\` values while benchmarking are a clear sign of something going wrong, most probaly swapping happening which might render benchmark results useless
-  * throttling needs to be checked in the log
+  * 22/23/24/25 are dictionary sizes 7-zip's internal benchmark is testing through. On systems low on memory the larger ones will be skipped (2^22 = 4 MB, 2^23 = 8 MB, 2^24 = 16 MB, 2^25 = 32 MB)
+  * high \`%system\` values while benchmarking are an indication of background activity that might render benchmark results useless
+  * high \`%iowait\` values while benchmarking are an indication of something going wrong, most probaly swapping happening which will render benchmark results partially useless
+  * if mentioned throttling needs to be checked in the log
 
-| Result | Version / board | Standard deviation | RAM total/avail | 22 | 23 | 24 | 25 | %sys | %io | throttling |
-| ---- | :---: | :---: | :---: | ----: | ----: | ----: | ----: | ----: | ----: | ----: |
+| Result | Version / device | Standard deviation | RAM total/avail | 22 | 23 | 24 | 25 | %system | %iowait | throttling |
+| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | ----: | ----: | :---: |
 EOF
 
 for file in *.txt ; do
 	BoardName="$(head -n1 "${file}" | grep "sbc-bench" | cut -f1 -d'(' | awk -F" -- " '{print $1}' | sed -e 's/sbc-bench //' -e 's/_/\\_/g' | cut -c-40)"
 	PrettyBoardName="$(grep "/${file%.*})" ../Results.md | head -n1 | cut -f2 -d'|' | cut -f2 -d'[' | cut -f1 -d']')"
 	if [ "X${PrettyBoardName}" = "X" ]; then
-		# reference not in results list any more. Mark like accordingly
+		# reference not in results list any more. Strike through result line
 		Prefix="<del>"
 		Suffix="</del>"
 	else
 		unset Prefix Suffix
-		# if [ "X${BoardName}" = "X" -o "X${BoardName}" = "Xv0.4" -o "X${BoardName}" = "Xv0.4.6" -o "X${BoardName}" = "X" -o  ]; then
-
 		case ${BoardName} in
 			""|"v0.4"|"v0.4.6  "|"v0.6.2  "|"v0.7.1  "|"v0.7.4  "|"v0.7.5  ")
 				DisplayName="${BoardName} ${PrettyBoardName}"
@@ -53,9 +54,6 @@ for file in *.txt ; do
 				;;
 		esac
 	fi
-
-	# check whether file is still in results list
-	# grep -q "/${file%.*})" ../Results.md || (Prefix="<del>" ; Suffix="</del>") && unset Prefix Suffix
 	echo -e "| ${Prefix}[${file%.*}](${file})${Suffix} | ${Prefix}${DisplayName}${Suffix} | \c"
 	TotalMem="$(awk -F" " '/^Mem:   / {print $2}' "${file}" | tail -n1)"
 	FreeMem="$(awk -F" " '/^Mem:   / {print $7}' "${file}" | tail -n1)"

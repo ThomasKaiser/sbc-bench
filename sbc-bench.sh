@@ -809,11 +809,11 @@ ProcessStats() {
 } # ProcessStats
 
 CheckRelease() {
-	# Display warning when not executing on Debian Stretch/Buster/Bullseye or Ubuntu Bionic/Focal
-	which lsb_release >/dev/null 2>&1 || apt -f -qq -y install lsb-release >/dev/null 2>&1
+	# Display warning when not executing on Debian Stretch/Buster/Bullseye or Ubuntu Bionic/Focal/Jammy
+	command -v lsb_release >/dev/null 2>&1 || apt -f -qq -y install lsb-release >/dev/null 2>&1
 	Distro=$(lsb_release -c | awk -F" " '{print $2}' | tr '[:upper:]' '[:lower:]')
 	case ${Distro} in
-		stretch|bionic|buster|focal|bullseye)
+		stretch|bionic|buster|focal|bullseye|jammy)
 			:
 			;;
 		*)
@@ -866,19 +866,19 @@ BasicSetup() {
 
 InstallPrerequisits() {
 	echo -e "sbc-bench v${Version}\n\nInstalling needed tools. This may take some time...\c"
-	SevenZip=$(which 7za || which 7zr)
+	SevenZip=$(command -v 7za || command -v 7zr)
 	[ -z "${SevenZip}" ] && add-apt-repository universe >/dev/null 2>&1 ; apt -f -qq -y install p7zip >/dev/null 2>&1 && SevenZip=/usr/bin/7zr
 	[ -z "${SevenZip}" ] && (echo "No 7-zip binary found and could not be installed. Aborting" >&2 ; exit 1)
 
-	which iostat >/dev/null 2>&1 || apt -f -qq -y install sysstat >/dev/null 2>&1
-	which git >/dev/null 2>&1 || apt -f -qq -y install git >/dev/null 2>&1
-	which openssl >/dev/null 2>&1 || apt -f -qq -y install openssl >/dev/null 2>&1
-	which curl >/dev/null 2>&1 || apt -f -qq -y install curl >/dev/null 2>&1
-	which dmidecode >/dev/null 2>&1 || ( [ ${CPUCores} -eq 3 ] && apt -f -qq -y install dmidecode >/dev/null 2>&1 )
+	command -v iostat >/dev/null 2>&1 || apt -f -qq -y install sysstat >/dev/null 2>&1
+	command -v git >/dev/null 2>&1 || apt -f -qq -y install git >/dev/null 2>&1
+	command -v openssl >/dev/null 2>&1 || apt -f -qq -y install openssl >/dev/null 2>&1
+	command -v curl >/dev/null 2>&1 || apt -f -qq -y install curl >/dev/null 2>&1
+	command -v dmidecode >/dev/null 2>&1 || ( [ ${CPUCores} -eq 3 ] && apt -f -qq -y install dmidecode >/dev/null 2>&1 )
 	
 	if [ "${PlotCpufreqOPPs}" = "yes" ]; then
-		which htmldoc >/dev/null 2>&1 || apt -f -qq -y --no-install-recommends install htmldoc >/dev/null 2>&1
-		which gnuplot >/dev/null 2>&1 || apt -f -qq -y --no-install-recommends install gnuplot-nox >/dev/null 2>&1
+		command -v htmldoc >/dev/null 2>&1 || apt -f -qq -y --no-install-recommends install htmldoc >/dev/null 2>&1
+		command -v gnuplot >/dev/null 2>&1 || apt -f -qq -y --no-install-recommends install gnuplot-nox >/dev/null 2>&1
 	fi
 
 	# get/build tinymembench if not already there
@@ -940,7 +940,7 @@ InitialMonitoring() {
 
 	# Log distribution info
 	[ -f /etc/armbian-release ] && . /etc/armbian-release
-	which lsb_release >/dev/null 2>&1 && (lsb_release -a 2>/dev/null) >>${ResultLog}
+	command -v lsb_release >/dev/null 2>&1 && (lsb_release -a 2>/dev/null) >>${ResultLog}
 	ARCH=$(dpkg --print-architecture 2>/dev/null) || \
 		ARCH=$(awk -F"=" '/^CARCH/ {print $2}' /etc/makepkg.conf 2>/dev/null) || \
 		ARCH="unknown/$(uname -m)"
@@ -959,12 +959,13 @@ InitialMonitoring() {
 	# On Raspberries we also collect 'firmware' information:
 	if [ ${USE_VCGENCMD} = true ] ; then
 		echo -e "\nRaspberry Pi ThreadX version:\n$(/usr/bin/vcgencmd version)" >>${ResultLog}
-		[ -f /boot/config.txt ] && echo -e "\nThreadX configuration (/boot/config.txt):\n$(grep -v '#' /boot/config.txt | sed '/^\s*$/d')" >>${ResultLog}
+		[ -f /boot/config.txt ] && ThreadXConfig=/boot/config.txt || ThreadXConfig=/boot/firmware/config.txt
+		[ -f ${ThreadXConfig} ] && echo -e "\nThreadX configuration (${ThreadXConfig}):\n$(grep -v '#' ${ThreadXConfig} | sed '/^\s*$/d')" >>${ResultLog}
 		echo -e "\nActual ThreadX settings:\n$(vcgencmd get_config int)" >>${ResultLog}
 	fi
 
 	# Log gcc version
-	echo -e "\n$(which gcc) $(gcc --version | sed 's/gcc\ //' | head -n1)" >>${ResultLog}
+	echo -e "\n$(command -v gcc) $(gcc --version | sed 's/gcc\ //' | head -n1)" >>${ResultLog}
 
 	# Some basic system info needed to interpret system health later
 	echo -e "\nUptime:$(LANG=C uptime)\n\n$(LANG=C iostat | grep -v "^loop")\n\n$(LANG=C free -h)\n\n$(LANG=C swapon -s)" >>${ResultLog}
@@ -1022,7 +1023,7 @@ CheckClockspeedsAndSensors() {
 		echo -e "Hardware sensors:\n\n${LMSensorsOutput}" >>${ResultLog}
 	
 		# if temperature sensors can be read from disks, report them
-		SmartCtl="$(which smartctl 2>/dev/null)"
+		SmartCtl="$(command -v smartctl 2>/dev/null)"
 		Disks="$(ls /dev/sd? 2>/dev/null ; ls /dev/nvme?n1 2>/dev/null)"
 		if [ "X${SmartCtl}" != "X" -a "X${Disks}" != "X" ]; then
 			echo "" >>${ResultLog}
@@ -1131,6 +1132,7 @@ RunTinyMemBench() {
 } # RunTinyMemBench
 
 Run7ZipBenchmark() {
+	echo 3 >/proc/sys/vm/drop_caches
 	echo -e "\x08\x08 Done.\nExecuting 7-zip benchmark. This will take a long time...\c"
 	echo -e "\nSystem health while running 7-zip single core benchmark:\n" >>${MonitorLog}
 	echo -e "\c" >${TempLog}

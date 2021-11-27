@@ -6,7 +6,7 @@ InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted 
 Main() {
 	export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 	PathToMe="$( cd "$(dirname "$0")" ; pwd -P )/${0##*/}"
-	unset LC_ALL # prevent localication of decimal points and other stuff
+	unset LC_ALL LC_MESSAGES LANGUAGE LANG # prevent localisation of decimal points and other stuff
 
 	# Check if we're outputting to a terminal. If yes try to use bold and colors for messages
 	if test -t 1; then
@@ -1010,13 +1010,17 @@ CheckLoad() {
 } # CheckLoad
 
 GetCPUClusters() {
-	# check for different CPU types not based on cpufreq/policy? any more but on
-	# package ids. This allows to test through different cores even on systems
-	# with no cpufreq support.
-	SYS=/sys/devices/system/cpu
-	for PKG_ID in $(cat "${SYS}"/cpu*[0-9]/topology/physical_package_id | sort | uniq); do
-	    dirname $(dirname $(grep "^${PKG_ID}$" "${SYS}"/cpu*[0-9]/topology/physical_package_id | head -n1)) | tr -d -c '[:digit:]'
-	done
+	if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
+		# cpufreq support exists, we rely on this
+		ls -d /sys/devices/system/cpu/cpufreq/policy? | tr -d -c '[:digit:]'
+	else
+		# check for different CPU types based on package ids. This allows to test through
+		# different cores even on systems with no cpufreq support.
+		SYS=/sys/devices/system/cpu
+		for PKG_ID in $(cat "${SYS}"/cpu*[0-9]/topology/physical_package_id | sort | uniq); do
+	 	   dirname $(dirname $(grep "^${PKG_ID}$" "${SYS}"/cpu*[0-9]/topology/physical_package_id | head -n1)) | tr -d -c '[:digit:]'
+		done
+	fi
 } # GetCPUClusters
 
 BasicSetup() {
@@ -1317,7 +1321,7 @@ Run7ZipBenchmark() {
 	echo -e "\x08\x08 Done.\nExecuting 7-zip benchmark. This will take a long time...\c"
 	echo -e "\nSystem health while running 7-zip single core benchmark:\n" >>${MonitorLog}
 	echo -e "\c" >${TempLog}
-	/bin/bash "${PathToMe}" -m 60 >>${MonitorLog} &
+	/bin/bash "${PathToMe}" -m 45 >>${MonitorLog} &
 	MonitoringPID=$!
 	if [ "${ClusterConfig}" = "0" ]; then
 		# all CPU cores have same package id

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.8.5
+Version=0.8.6
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -254,11 +254,30 @@ GetARMCore() {
 	69/b11:Intel SA1110
 	69/c12:Intel IPX1200
 	70:Phytium
-	70/662:Phytium FT2000PLUS
-	70/663:Phytium S2500
-	70/???:Phytium D2000
-	c0:Ampere"
+	70/662:Phytium FTC662
+	70/663:Phytium FTC663
+	c0:Ampere" | cut -f2 -d:
 } # GetARMCore
+
+GetCPUType() {
+	# function that returns name of ARM cores
+	# $1 is the CPU in question, 1st CPU is always cpu0
+	if [ -n "${ARMTypes}" ]; then
+		GetARMCore "${ARMTypes[$(( $1 * 2 ))]}" "${ARMTypes[$(( $(( $1 * 2 )) + 1 ))]}"
+	fi
+} # GetCPUType
+
+GetCPUInfo() {
+	# function that returns ARM core type in brackets if possible otherwise empty string
+	ARMCore="$(GetCPUType $1)"
+	[ -n "${ARMCore}" ] && echo -n " (${ARMCore})"
+} # GetCPUInfo
+
+GetLastClusterCore() {
+	NextCore=${ClusterConfig:$1:1}
+	[ "${NextCore}" = "" ] && NextCore=${CPUCores}
+	echo -n $(( ${NextCore} - 1 ))
+} # GetLastClusterCore
 
 PlotPerformanceGraph() {
 	# function that walks through all cpufreq OPP and plots a performance graph using
@@ -316,7 +335,8 @@ PlotPerformanceGraph() {
 				for i in $(seq 0 $(( ${#ClusterConfig} -1 )) ) ; do
 					FirstCore=${ClusterConfig:$i:1}
 					CheckPerformance "CPU ${FirstCore}" "${FirstCore}" "${FirstCore}"
-					PlotGraph "CPU ${FirstCore}" "${FirstCore}"
+					CPUInfo="$(GetCPUInfo ${FirstCore})"
+					PlotGraph "CPU ${FirstCore}${CPUInfo}" "${FirstCore}"
 				done
 				RenderPDF
 				;;
@@ -324,10 +344,10 @@ PlotPerformanceGraph() {
 				# check all cores of every cluster, on RK3399 for example 0-3 and 4-5
 				for i in $(seq 0 $(( ${#ClusterConfig} -1 )) ) ; do
 					FirstCore=${ClusterConfig:$i:1}
-					NextCore=${ClusterConfig:$(( $i + 1 )):1}
-					[ "${NextCore}" = "" ] && NextCore=${CPUCores}
-					CheckPerformance "CPU ${FirstCore}-${NextCore}" "${FirstCore}" "${FirstCore}-${NextCore}"
-					PlotGraph "CPU ${FirstCore}-${NextCore}" "${FirstCore}"
+					LastCore=$(GetLastClusterCore $(( $i + 1 )))
+					CheckPerformance "CPU ${FirstCore}-${LastCore}" "${FirstCore}" "${FirstCore}-${LastCore}"
+					CPUInfo="$(GetCPUInfo ${FirstCore})"
+					PlotGraph "CPU ${FirstCore}-${LastCore}${CPUInfo}" "${FirstCore}"
 				done
 				RenderPDF
 				;;
@@ -337,14 +357,15 @@ PlotPerformanceGraph() {
 				for i in $(seq 0 $(( ${#ClusterConfig} -1 )) ) ; do
 					FirstCore=${ClusterConfig:$i:1}
 					CheckPerformance "CPU ${FirstCore}" "${FirstCore}" "${FirstCore}"
-					PlotGraph "CPU ${FirstCore}" "${FirstCore}"
+					CPUInfo="$(GetCPUInfo ${FirstCore})"
+					PlotGraph "CPU ${FirstCore}${CPUInfo}" "${FirstCore}"
 				done
 				for i in $(seq 0 $(( ${#ClusterConfig} -1 )) ) ; do
 					FirstCore=${ClusterConfig:$i:1}
-					NextCore=${ClusterConfig:$(( $i + 1 )):1}
-					[ "${NextCore}" = "" ] && NextCore=${CPUCores}
-					CheckPerformance "CPU ${FirstCore}-${NextCore}" "${FirstCore}" "${FirstCore}-${NextCore}"
-					PlotGraph "CPU ${FirstCore}-${NextCore}" "${FirstCore}"
+					LastCore=$(GetLastClusterCore $(( $i + 1 )))
+					CheckPerformance "CPU ${FirstCore}-${LastCore}" "${FirstCore}" "${FirstCore}-${LastCore}"
+					CPUInfo="$(GetCPUInfo ${FirstCore})"
+					PlotGraph "CPU ${FirstCore}-${LastCore}${CPUInfo}" "${FirstCore}"
 				done
 				if [ "${ClusterConfig}" != "0" ]; then
 					# more than one CPU cluster, we test using all cores simultaneously
@@ -359,11 +380,11 @@ PlotPerformanceGraph() {
 					# single core to be tested, we need to determine correct policy node
 					for i in $(seq 0 $(( ${#ClusterConfig} -1 )) ) ; do
 						FirstCore=${ClusterConfig:$i:1}
-						NextCore=${ClusterConfig:$(( $i + 1 )):1}
-						[ "${NextCore}" = "" ] && NextCore=${CPUCores}
-						if [ ${CPUList} -lt ${NextCore} ]; then
+						LastCore=$(GetLastClusterCore $(( $i + 1 )))
+						if [ ${CPUList} -le ${LastCore} ]; then
 							CheckPerformance "CPU core(s) ${CPUList}" "${FirstCore}" "${CPUList}"
-							PlotGraph "core ${CPUList}" "${FirstCore}"
+							CPUInfo="$(GetCPUInfo ${FirstCore})"
+							PlotGraph "core ${CPUList}${CPUInfo}" "${FirstCore}"
 							break
 						fi
 					done	
@@ -590,7 +611,7 @@ RenderPDF() {
 		<title>sbc-bench performance graph</title>
 	</head>
 	<body>
-		<h3>sbc-bench v${Version} - ${DeviceName} - $(LANG=C date)</h3>
+		<h3>sbc-bench v${Version} - ${DeviceName} - $(date)</h3>
 		sbc-bench has been called with <code>-p ${CPUList}</code>
 	EOF
 	
@@ -1010,8 +1031,8 @@ CheckLoad() {
 } # CheckLoad
 
 GetCPUClusters() {
-	if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
-		# cpufreq support exists, we rely on this
+	if [ -d /sys/devices/system/cpu/cpufreq/policy0  -a "${CPUArchitecture}" != "x86_64" ]; then
+		# cpufreq support exists on ARM, we rely on this
 		ls -d /sys/devices/system/cpu/cpufreq/policy? | tr -d -c '[:digit:]'
 	else
 		# check for different CPU types based on package ids. This allows to test through
@@ -1028,14 +1049,13 @@ BasicSetup() {
 	for Cluster in $(ls -d /sys/devices/system/cpu/cpufreq/policy?); do
 		echo ${1:-ondemand} >${Cluster}/scaling_governor
 	done
-	ClusterConfig=$(GetCPUClusters)
-	CPUCores=$(grep -c '^processor' /proc/cpuinfo)
 
-	CPUArchitecture="$(LANG=C lscpu | awk -F" " '/^Architecture/ {print $2}')"
+	CPUArchitecture="$(lscpu | awk -F" " '/^Architecture/ {print $2}')"
 	case ${CPUArchitecture} in
 		arm*|aarch*|riscv*)
 			[ -f /proc/device-tree/model ] && read DeviceName </proc/device-tree/model
 			[ "X${DeviceName}" = "Xsun20iw1p1" ] && DeviceName="Allwinner D1"
+			ARMTypes=($(awk -F"0x" '/^CPU implementer|^CPU part/ {print $2}' /proc/cpuinfo))
 			;;
 		x86*|i686)
 			# Try to get device name from CPU entry
@@ -1046,6 +1066,9 @@ BasicSetup() {
 			exit 1
 			;;
 	esac
+
+	ClusterConfig=$(GetCPUClusters)
+	CPUCores=$(grep -c '^processor' /proc/cpuinfo)
 } # BasicSetup
 
 InstallPrerequisits() {
@@ -1058,7 +1081,7 @@ InstallPrerequisits() {
 	command -v git >/dev/null 2>&1 || apt -f -qq -y install git >/dev/null 2>&1
 	command -v openssl >/dev/null 2>&1 || apt -f -qq -y install openssl >/dev/null 2>&1
 	command -v curl >/dev/null 2>&1 || apt -f -qq -y install curl >/dev/null 2>&1
-	command -v dmidecode >/dev/null 2>&1 || ( [ ${CPUCores} -eq 3 ] && apt -f -qq -y install dmidecode >/dev/null 2>&1 )
+	command -v dmidecode >/dev/null 2>&1 || apt -f -qq -y install dmidecode >/dev/null 2>&1
 	
 	if [ "${PlotCpufreqOPPs}" = "yes" ]; then
 		command -v htmldoc >/dev/null 2>&1 || apt -f -qq -y --no-install-recommends install htmldoc >/dev/null 2>&1
@@ -1137,10 +1160,10 @@ InitialMonitoring() {
 		echo -e "Architecture:\t$(tr -d '"' <<<${ARCH})" >>${ResultLog}
 	fi
 	
-	# Log BIOS/UEFI info on x86:
-	if [ ${CPUCores} -eq 3 ]; then
-		echo -e "\nBIOS/UEFI:" >>${ResultLog}
-		dmidecode -t bios | egrep "Vendor:|Version:|Release Date:|Revision:" >>${ResultLog}
+	# Log BIOS/UEFI info if present:
+	UEFIInfo="$(dmidecode -t bios | egrep "Vendor:|Version:|Release Date:|Revision:")"
+	if [ "X${UEFIInfo}" != "X" ]; then
+		echo -e "\nBIOS/UEFI:\n${UEFIInfo}" >>${ResultLog}
 	fi
 
 	# On Raspberries we also collect 'firmware' information:
@@ -1155,7 +1178,7 @@ InitialMonitoring() {
 	echo -e "\n$(command -v gcc) $(gcc --version | sed 's/gcc\ //' | head -n1)" >>${ResultLog}
 
 	# Some basic system info needed to interpret system health later
-	echo -e "\nUptime:$(LANG=C uptime)\n\n$(LANG=C iostat | grep -v "^loop")\n\n$(LANG=C free -h)\n\n$(LANG=C swapon -s)" >>${ResultLog}
+	echo -e "\nUptime:$(uptime)\n\n$(iostat | grep -v "^loop")\n\n$(free -h)\n\n$(swapon -s)" >>${ResultLog}
 	
 	# set up Netio consumption monitoring if requested. Device address and socket
 	# need to be available as Netio (environment) variable.
@@ -1185,27 +1208,16 @@ CheckClockspeedsAndSensors() {
 	fi
 	if [ "${ClusterConfig}" = "0" ]; then
 		# all CPU cores have same package id, we only need to test one core
-		IMPL=$(awk -F"0x" '/^CPU implementer/ {print $2}' /proc/cpuinfo | head -n1)
-		MODEL=$(awk -F"0x" '/^CPU part/ {print $2}' /proc/cpuinfo | head -n1)
-		ARMCore="$(GetARMCore "${IMPL}" "${MODEL}")"
-		[ -n "${ARMCore}" ] && CPUInfo=" (${ARMCore##*:})"
+		CPUInfo="$(GetCPUInfo 0)"
 		echo -e "\nChecking cpufreq OPP${CPUInfo}:\n" >>${ResultLog}
 		CheckCPUCluster 0 >>${ResultLog}
 	else
 		# different package ids, we walk through all clusters
 		for i in $(seq 0 $(( ${#ClusterConfig} -1 )) ) ; do
 			FirstCore=${ClusterConfig:$i:1}
-			NextCore=${ClusterConfig:$(( $i + 1 )):1}
-			[ "${NextCore}" = "" ] && NextCore=${CPUCores}
-			if [ -f /sys/devices/system/cpu/cpu${FirstCore}/regs/identification/midr_el1 ]; then
-				# try to get type of ARM core
-				read MIDR </sys/devices/system/cpu/cpu${FirstCore}/regs/identification/midr_el1
-				IMPL=${MIDR:10:2}
-				MODEL=${MIDR:14:3}
-				ARMCore="$(GetARMCore "${IMPL}" "${MODEL}")"
-				[ -n "${ARMCore}" ] && CPUInfo=" (${ARMCore##*:})"
-			fi
-			echo -e "\nChecking cpufreq OPP for cpu${FirstCore}-cpu$(( ${NextCore} - 1 ))${CPUInfo}:\n" >>${ResultLog}
+			LastCore=$(GetLastClusterCore $(( $i + 1 )))
+			CPUInfo="$(GetCPUInfo ${ClusterConfig:$i:1})"
+			echo -e "\nChecking cpufreq OPP for cpu${FirstCore}-cpu${LastCore}${CPUInfo}:\n" >>${ResultLog}
 			CheckCPUCluster ${FirstCore} >>${ResultLog}
 		done
 	fi
@@ -1304,10 +1316,10 @@ RunTinyMemBench() {
 	MonitoringPID=$!
 	echo -n "" >${TempLog}
 	for i in $(seq 0 $(( ${#ClusterConfig} -1 )) ) ; do
-		FirstCore=${ClusterConfig:$i:1}
-		echo -e "\nExecuting benchmark on cpu${FirstCore}:\n" >>${TempLog}
+		CPUInfo="$(GetCPUInfo ${ClusterConfig:$i:1})"
+		echo -e "\nExecuting benchmark on cpu${ClusterConfig:$i:1}${CPUInfo}:\n" >>${TempLog}
 		[ -s "${NetioConsumptionFile}" ] && sleep 10
-		taskset -c ${FirstCore} "${InstallLocation}"/tinymembench/tinymembench >>${TempLog} 2>&1
+		taskset -c ${ClusterConfig:$i:1} "${InstallLocation}"/tinymembench/tinymembench >>${TempLog} 2>&1
 	done
 	kill ${MonitoringPID}
 	echo -e "\n##########################################################################" >>${ResultLog}
@@ -1325,12 +1337,14 @@ Run7ZipBenchmark() {
 	MonitoringPID=$!
 	if [ "${ClusterConfig}" = "0" ]; then
 		# all CPU cores have same package id
-		echo -e "\nExecuting benchmark single-threaded on cpu0" >>${TempLog}
+		CPUInfo="$(GetCPUInfo 0)"
+		echo -e "\nExecuting benchmark single-threaded on cpu0${CPUInfo}" >>${TempLog}
 		[ -s "${NetioConsumptionFile}" ] && sleep 10
 		taskset -c 0 "${SevenZip}" b -mmt=1 >>${TempLog}
 	else
 		for i in $(seq 0 $(( ${#ClusterConfig} -1 )) ) ; do
-			echo -e "\nExecuting benchmark single-threaded on cpu${ClusterConfig:$i:1}" >>${TempLog}
+			CPUInfo="$(GetCPUInfo ${ClusterConfig:$i:1})"
+			echo -e "\nExecuting benchmark single-threaded on cpu${ClusterConfig:$i:1}${CPUInfo}" >>${TempLog}
 			[ -s "${NetioConsumptionFile}" ] && sleep 10
 			taskset -c ${ClusterConfig:$i:1} "${SevenZip}" b -mmt=1 >>${TempLog}
 		done
@@ -1370,7 +1384,8 @@ RunOpenSSLBenchmark() {
 	OpenSSLLog="${TempDir}/openssl.log"
 	if [ "${ClusterConfig}" = "0" ]; then
 		# all CPU cores have same package id, we execute openssl twice
-		echo -e "Executing benchmark twice on cluster 0\n" >>${ResultLog}
+		CPUInfo="$(GetCPUInfo 0)"
+		echo -e "Executing benchmark twice on cluster 0${CPUInfo}\n" >>${ResultLog}
 		for bytelength in 128 192 256 ; do
 			openssl speed -elapsed -evp aes-${bytelength}-cbc 2>/dev/null
 			openssl speed -elapsed -evp aes-${bytelength}-cbc 2>/dev/null
@@ -1409,6 +1424,27 @@ RunCpuminerBenchmark() {
 	CpuminerScore="$(awk -F"," '{print $2}' <<<"${TotalScores}")"
 } # RunCpuminerBenchmark
 
+PrintCPUTopology() {
+	# prints list of CPU cores, clusters and cpufreq policy nodes
+	echo "CPU topology (clusters, cpufreq members, clockspeeds)"
+	echo "                 cpufreq   min    max"
+	echo "CPU     cluster  policy   speed  speed   core type"
+	for i in $(seq 0 $(( ${CPUCores} - 1 )) ); do
+		CoreName="$(GetCPUType $i)"
+		read CPUCluster </sys/devices/system/cpu/cpu${i}/topology/physical_package_id
+		if [ -d /sys/devices/system/cpu/cpufreq/policy${i} ]; then
+			CPUFreqPolicy=${i}
+			CPUSpeedMin=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpufreq/policy${i}/scaling_min_freq)
+			CPUSpeedMax=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpufreq/policy${i}/scaling_max_freq)
+		fi
+		if [ -n ${CPUFreqPolicy} ]; then
+			echo  "$(printf "%3s" ${i})$(printf "%9s" ${CPUCluster})$(printf "%9s" ${CPUFreqPolicy})$(printf "%9s" ${CPUSpeedMin})$(printf "%8s" ${CPUSpeedMax})   ${CoreName:-"    -"}"
+		else
+			echo "$(printf "%3s" ${i})$(printf "%9s" ${CPUCluster})        -       -      -     ${CoreName:-"    -"}"
+		fi
+	done
+} # PrintCPUTopology
+
 SummarizeResults() {
 	echo -e " Done.\n\007\007\007"
 
@@ -1432,7 +1468,9 @@ SummarizeResults() {
 	fi
 
 	echo -e "\n##########################################################################\n" >>${ResultLog}
-	echo -e "$(LANG=C iostat | grep -v "^loop")\n\n$(LANG=C free -h)\n\n$(LANG=C swapon -s)\n\n$(LANG=C lscpu)" >>${ResultLog}
+	echo -e "$(iostat | grep -v "^loop")\n\n$(free -h)\n\n$(swapon -s)\n" >>${ResultLog}
+	PrintCPUTopology >>${ResultLog}
+	echo -e "\n$(lscpu)" >>${ResultLog}
 	ReportCacheSizes >>${ResultLog}
 
 	# Add a line suitable for Results.md on Github if not in efficiency plotting mode
@@ -1591,13 +1629,13 @@ ReportRPiHealth() {
 } # ReportRPiHealth
 
 ReportCacheSizes() {
-	find /sys/devices/system/cpu -name "cache" -type d | sort -n | while read ; do
+	find /sys/devices/system/cpu -name "cache" -type d | sort -V | while read ; do
 		find "${REPLY}" -name size -type f | while read ; do
 			echo -e "\n${REPLY}: $(cat ${REPLY})\c"
 			[ -f ${REPLY%/*}/level ] && echo -e ", level: $(cat ${REPLY%/*}/level)\c"
 			[ -f ${REPLY%/*}/type ] && echo -e ", type: $(cat ${REPLY%/*}/type)\c"
 		done
-	done
+	done | sed -e 's|/sys/devices/system/cpu/||' -e 's|cache/||' -e 's|/size||'
 	echo ""
 } # ReportCacheSizes
 

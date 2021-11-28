@@ -6,14 +6,17 @@ SBC means [single-board computer](https://en.wikipedia.org/wiki/Single-board_com
 
 This small set of different CPU performance tests focuses on 'headless' operation only (no GPU/display stuff, no floating point number crunching). Unlike many other 'kitchen-sink benchmarks' it tries to produce insights instead of fancy graphs.
 
-It has four **entirely different** usage modes:
+It has five **entirely different** usage modes:
 
 * Generate a rough CPU performance assessment for a specific SBC *in general* (under ideal conditions)
 * Show whether an *individual* SBC is able to perform the same and if not hopefully answering the question 'why?'
 * Help software developers and hardware designers to improve 'thermal performance' when using the `-t` and/or `-T` switches ([details/discussion](https://forum.armbian.com/topic/7819-sbc-bench/?do=findComment&comment=60873), [another example](https://forum.armbian.com/topic/8125-quick-review-of-nanopi-k1-plus/?do=findComment&comment=61300))
-* Provide basic CLI monitoring functionality through the `-m` switch also collecting some SoC and CPU core information:
+* Plot thermal/consumption charts with `-p` to [measure efficiency of settings/devices](Efficiency_Graphing.md)
+* Provide basic CLI monitoring functionality through the `-m` switch
 
-    tk@odroidxu4::~$ sbc-bench -m
+The monitoring now also displays some SoC and CPU core information when starting:
+
+    tk@odroidxu4:~$ sbc-bench -m
     Samsung Exynos EXYNOS5800 rev 1, Kernel: armv7l, Userland: armhf
     CPU topology (clusters, cpufreq members, clockspeeds)
                      cpufreq   min    max

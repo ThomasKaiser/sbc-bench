@@ -1472,7 +1472,10 @@ SummarizeResults() {
 	# Prepare benchmark results
 	echo -e "\n##########################################################################\n" >>${ResultLog}
 	cat ${MonitorLog} >>${ResultLog}
-	[ -f ${TempDir}/throttling_info.txt ] && cat ${TempDir}/throttling_info.txt >>${ResultLog}
+	if [ -f ${TempDir}/throttling_info.txt ]; then
+		echo -e "\n##########################################################################" >>${ResultLog}
+		cat ${TempDir}/throttling_info.txt >>${ResultLog}
+	fi
 
 	# add dmesg output since start of the benchmark if something relevant is there
 	TimeStamp="$(dmesg | tr -d '[' | tr -d ']' | awk -F" " '/sbc-bench started/ {print $1}' | tail -n1)"

@@ -11,7 +11,6 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | Board | Clockspeed | Kernel | Distro | 7-zip | AES-128 (16 byte) | AES-256 (16 KB) | memcpy | memset | kH/s | URL |
 | ----- | :--------: | :----: | :----: | ----: | ------: | ------: | -----: | -----: | ---: | --- |
 | Amazon a1.xlarge | 2300 MHz | 4.15 | Bionic arm64 | 8610 | 458500 | 1297960 | 4280 | 14220 | - | [http://ix.io/2iFY](http://ix.io/2iFY) |
-| Amazon m6g.8xlarge | 2500 MHz | 5.4 | Focal arm64 | 109000 | 745740 | 1424770 | 17340 | 39950 | 154.22 | [http://ix.io/2FrG](http://ix.io/2FrG) |
 | Apple M1 power core | 3200 MHz | 5.8 | Groovy arm64 | 5100 | 638810 | 1119670 | 27960 | 63950 | 5.30 | [http://ix.io/2Gjg](http://ix.io/2Gjg) |
 | Apple M1 efficiency | *600* MHz | 5.8 | Groovy arm64 | 650 | 150340 | 224520 | 5130 | 7640 | 0.76 | [http://ix.io/2Gtf](http://ix.io/2Gtf) |
 | BPi M4 | 1400 MHz | 4.9 | Bionic arm64 | 3500 | 125430 | 651460 | 1010 | 4360 | 5.48 | [http://ix.io/1Dt1](http://ix.io/1Dt1) |
@@ -21,7 +20,6 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [EspressoBin](https://www.armbian.com/espressobin/) | 800 MHz | 4.17 | Stretch arm64 | 1138 | 54290 | 368330 | 1040 | 2490 | 1.23 | [http://ix.io/1kt2](http://ix.io/1kt2) |
 | [EspressoBin](https://www.armbian.com/espressobin/) | 1200 MHz | 4.18 | Stretch arm64 | 1630 | 81900 | 544240 | 1000 | 2400 | 1.82 | [http://ix.io/1lCe](http://ix.io/1lCe) |
 | [Helios4](https://www.armbian.com/helios4/) | 1600 MHz | 4.14 | Stretch armhf | 2210 | 44785 &ast;1280 | 42500 &ast;98560 | 910 | 4840 | - | [http://ix.io/1jCy](http://ix.io/1jCy) |
-| [HoneyComb LX2](https://shop.solid-run.com/product/SRLX216S00D00GE064H08CH/) | 1900 MHz | 4.14 | Ubuntu arm64 | 27610 | 394180 | 1079480 | 4240 | 14020 | 35.88 | [http://ix.io/1ET3](http://ix.io/1ET3) |
 | Hugsun X99 | 2088/1800 MHz | 5.9 | Focal arm64 | 7710 | 412105 | 1184306 | 2270 | 5970 | - | [http://ix.io/2ICt](http://ix.io/2ICt) |
 | [HummingBoard Pulse i.MX8M Quad](https://www.solid-run.com/nxp-i-mx8m-family/hummingboard-m/) | 1500 MHz | 4.19 | Buster arm64 | 4330 | 97380 | 695540 | 2230 | 9900 | - | [http://ix.io/27FC](http://ix.io/27FC) |
 | [Jetson Nano](https://developer.nvidia.com/embedded/buy/jetson-nano-devkit) | 1430 MHz | 4.9 | Bionic arm64 | 5060 | 276890 | 513700 | 3680 | 8560 | 6.64 | [http://ix.io/1I4j](http://ix.io/1I4j) |
@@ -41,15 +39,16 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [NanoPC T4](https://www.armbian.com/nanopc-t4/) | 2000/1500 MHz | 4.4 | Stretch arm64 | 5870 | 308370 | 1124040 | 2810 | 4890 | 8.70 | [http://ix.io/1lkG](http://ix.io/1lkG) |
 | [NanoPi Fire3](https://www.armbian.com/nanopi-fire3/) | 1380 MHz | 4.14 | Stretch arm64 | 7420 | 95700 | 645400 | 1520 | 4570 | 8.53 | [http://ix.io/1jiU](http://ix.io/1jiU) |
 | [NanoPi Fire3](https://www.armbian.com/nanopi-fire3/) | 1400 MHz | 4.14 | Bionic arm64 | 7440 | 126050 | 653000 | 1560 | 4600 | 10.96 | [http://ix.io/1jjm](http://ix.io/1jjm) |
-| [NanoPi Fire3](https://www.armbian.com/nanopi-fire3/) | 1400 MHz | 4.14 | Focal arm64 | 7350 | 118350 | 652940 | 1550 | 4590 | 11.21 | [http://ix.io/3Ebd](http://ix.io/3Ebd) |
-| [NanoPi K1 Plus](https://www.armbian.com/nanopi-k1-plus/) | 1150 MHz | 4.14 | Stretch arm64 | 3030 | 78740 | 533380 | 1040 | 3070 | 3.32 | [http://ix.io/1m3x](http://ix.io/1m3x) |
+| [NanoPi Fire3](https://www.armbian.com/nanopi-fire3/) | 1400 MHz | 4.14 | Focal arm64 | 7360 | 118460 | 653770 | 1530 | 4590 | 11.27 | [http://ix.io/3GmP](http://ix.io/3GmP) |
 | [NanoPi K1 Plus](https://www.armbian.com/nanopi-k1-plus/) | 1370 MHz | 5.10 | Focal arm64 | 3520 | 115020 | 639060 | 1060 | 3680 | 5.48 | [http://ix.io/3EA8](http://ix.io/3EA8) |
 | [NanoPi K2](https://www.armbian.com/nanopi-k2/) | 1480 MHz | 4.14 | Stretch arm64 | 3850 | 43020 | 50370 | 1660 | 3870 | 4.61 | [http://ix.io/1iT1](http://ix.io/1iT1) |
+| [NanoPi M1 Plus](https://www.armbian.com/nanopi-m1-plus/) | 1370 MHz | 4.19 | Bionic armhf | 3030 | 26040 | 26580 | 830 | 3450 | - | [http://ix.io/3GnV](http://ix.io/3GnV) |
 | [NanoPi M4](https://www.armbian.com/nanopi-m4/) | 2000/1500 MHz | 4.19 | Stretch arm64 | 6400 | 334650 | 1128330 | 4080 | 8270 | 8.86 | [http://ix.io/1lzP](http://ix.io/1lzP) |
 | [NanoPi NEO4](https://www.armbian.com/nanopi-neo4/) | 2000/1500 MHz | 4.4| Stretch arm64 | 6510 | 320600 | 1128860 | 2260 | 4770 | 8.71 | [http://ix.io/1oho](http://ix.io/1oho) |
 | [NanoPi NEO4](https://www.armbian.com/nanopi-neo4/) | 2000/1500 MHz | 4.4| Stretch arm64 | 6030 | 342620 | 1121380 | 2230 | 4770 | 8.57 | [http://ix.io/1oib](http://ix.io/1oib) |
 | [NanoPi NEO4](https://www.armbian.com/nanopi-neo4/) | 2000/1500 MHz | 4.4| Stretch arm64 | 6520 | 268720 | 1123190 | 2280 | 4770 | 8.83 | [http://ix.io/1oim](http://ix.io/1oim) |
 | [NanoPi NEO4](https://www.armbian.com/nanopi-neo4/) | 2000/1500 MHz | 4.19 | Stretch arm64 | 6750 | 278200 | 1139850 | 2370 | 6110 | 8.84 | [http://ix.io/1p3T](http://ix.io/1p3T) |
+| [NanoPi NEO4](https://www.armbian.com/nanopi-neo4/) | 2016/1512 MHz | 5.10 | Focal arm64 | 6970 | 255390 | 924310 | 2450 | 6190 | 11.36 | [http://ix.io/3GmR](http://ix.io/3GmR) |
 | Nintendo Switch | 1780 MHz | 4.9 | **Fedora 30 arm-64** | 6170 | 346340 | 642670 | 2500 | 3570 | - | [http://ix.io/1Rnj](http://ix.io/1Rnj) |
 | Nintendo Switch | 2090 MHz | 4.9 | Bionic arm64 | 6720 | 389030 | 746680 | 2370 | 3670 | 9.25 | [http://ix.io/3Di2](http://ix.io/3Di2) |
 | [ODROID-C2](https://www.armbian.com/odroid-c2/) | 1750 MHz | 3.14 | **Xenial** arm64 | 4070 | 50500 | 48500 | 1750 | 3100 | - | [http://ix.io/1ixI](http://ix.io/1ixI) |
@@ -59,12 +58,12 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [ODROID-N2+](https://www.armbian.com/odroid-n2/) | 2400/2000 MHz | 5.14 | Impish arm64 | 9790 | 421730 | 1366930 | 4300 | 7480 | - | [http://ix.io/3DtN](http://ix.io/3DtN) |
 | [ODROID-XU4](https://www.armbian.com/odroid-xu4/) | 1900/1400 MHz | 3.10 | **Jessie** armhf | 6750 | 74100 | 68200 | 2200 | 4800 | - | [http://ix.io/1ixL](http://ix.io/1ixL) |
 | [ODROID-XU4](https://www.armbian.com/odroid-xu4/) | 2000/1400 MHz | 4.9 | Stretch armhf | 6400 | 73350 | 72075 | 2230 | 4850 | - | [http://ix.io/1iWL](http://ix.io/1iWL) |
-| [ODROID-XU4](https://www.armbian.com/odroid-xu4/) | 2000/1500 MHz | 4.14 | Bionic armhf | 7100 | 74700 | 71500 | 2240 | 4880 | - | [http://ix.io/1iLy](http://ix.io/1iLy) |
+| [ODROID-XU4](https://www.armbian.com/odroid-xu4/) | 2000/1400 MHz | 5.4 | Focal armhf | 8980 | 49350 | 49590 | 2280 | 4910 | - | [http://ix.io/3GnC](http://ix.io/3GnC) |
 | [Olimex A20-Lime2](https://www.armbian.com/olimex-lime-2/) | 960 MHz | 5.10 | Bullseye armhf | 1040 | 15280 | 18670 | 460 | 2020 | - | [http://ix.io/3EOw](http://ix.io/3EOw) |
 | [Orange Pi PC Plus](https://www.armbian.com/orange-pi-pc-plus/) | 1300 MHz | 4.14 | Stretch armhf | 2.880 | 20890 | 25270 | 900 | 3280 | - | [http://ix.io/1j1d](http://ix.io/1j1d) |
 | [Orange Pi Plus 2](https://www.armbian.com/orange-pi-plus-2/) | 1300 MHz | 4.14 | Stretch armhf | 2.890 | 21480 | 25250 | 830 | 3240 | - | [http://ix.io/1iX4](http://ix.io/1iX4) |
 | [Orange Pi Prime](https://www.armbian.com/orange-pi-prime/) | 1370 MHz | 5.4 | Buster | 3590 | 89210 | 637980 | 1180 | 3540 | - | [http://ix.io/2kTH](http://ix.io/2kTH) |
-| Phytium D2000 | ? | 5.13 | Impish arm64 | 16720 | 448270 | 828340 | 2970 | 8090 | - | [http://ix.io/3FTK](http://ix.io/3FTK) |
+| Phytium D2000 | 2300 MHz | 5.13 | Impish arm64 | 16720 | 448270 | 828340 | 2970 | 8090 | - | [http://ix.io/3FTK](http://ix.io/3FTK) |
 | [PineH64](https://www.armbian.com/pine-h64/) | 1800 MHz | 4.18 | Stretch arm64 | 4650 | 123400 | 836900 | 1380 | 5530 | 5.62 | [http://ix.io/1jEr](http://ix.io/1jEr) |
 | [PineH64](https://www.armbian.com/pine-h64/) | 1800 MHz | 5.4 | Buster arm64 | 4710 | 116900 | 839870 | 1420 | 5560 | 7.10 | [http://ix.io/26Ph](http://ix.io/26Ph) |
 | [Quartz64](https://wiki.pine64.org/wiki/Quartz64) | 1800 MHz | 5.13 | Buster arm64 | 4840 | 165250 | 845490 | 2980 | 7650| - | [http://ix.io/3rUb](http://ix.io/3rUb) |
@@ -85,7 +84,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | Raspberry Pi Zero 2 | 1200 MHz | 5.10 | Raspberry Pi OS Buster | 3640 | 29120 | 36300 | 1320 | 1790 | - | [http://ix.io/3DeL](http://ix.io/3DeL) |
 | Raspberry Pi 4 B | 1500 MHz | 4.19 | Raspbian Buster | 5500 | 62350 | 64860 | 2460 | 3170 | - | [http://ix.io/1MFf](http://ix.io/1MFf) |
 | Raspberry Pi 4 B | 1500 MHz | 5.10 | Raspberry Pi OS Buster | 5750 | 62310 | 64930 | 2550 | 3430 | - | [http://ix.io/3EgS](http://ix.io/3EgS) |
-| Raspberry Pi 4 B | 1800 MHz | 5.10 | Raspberry Pi OS Buster | 6640 | 74930 | 77850 | 2550 | 3090 | - | [http://ix.io/3Eh3](http://ix.io/3Eh3) |
+| Raspberry Pi 4 B | 1800 MHz | 5.10 | Raspberry Pi OS Buster | 6550 | 75040 | 77830 | 2780 | 3080 | - | [http://ix.io/3Gia](http://ix.io/3Gia) |
 | Raspberry Pi 4 B | 1800 MHz | 5.10 | Raspberry Pi OS Buster **arm64** | 5760 | 45570 | 36240 | 2240 | 3120 | 9.46 | [http://ix.io/3F9C](http://ix.io/3F9C) |
 | Raspberry Pi 4 B | 1800 MHz | 5.10 | **Jammy arm64** | 5770 | 46050 | 36260 | 2770 | 3120 | - | [http://ix.io/3FlD](http://ix.io/3FlD) |
 | Raspberry Pi 400 | 1800 MHz | 5.4 | Raspberry Pi OS Buster | 6550 | 75050 | 77890 | 2680 | 3110 | - | [http://ix.io/2Cyi](http://ix.io/2Cyi) |
@@ -127,7 +126,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 
 ## Explanations
 
-* *7-zip* number is an averaged **multi threaded** score from 3 consecutive `7z b` runs. Only relevant for server workloads where stuff happens in parallel. Check the links for single threaded results (on big.LITTLE SoCs individually) to get an idea how most typical (single threaded) workloads perform
+* *7-zip* number is an averaged **multi threaded** score from 3 consecutive `7z b` runs. Only relevant for server workloads where stuff happens in parallel. Check the links for single threaded results (on big.LITTLE SoCs individually) to get an idea how most typical (single threaded) workloads perform. **Attention:** all single-threaded 7-zip results made prior to v0.8.5 are somewhat flawed since execution happened pinned to a single core but with as much threads as cores available. With up to 4 cores the effect is negligible but with 6 or 8 cores the difference in scores is up to 7%. That's why all sbc-bench results made with CPUs featuring more than 8 cores have been removed in Nov 2021 and need to be resubmitted.
 * *AES-128 (16 byte)* is a **single threaded** encryption score with very small chunks of data (useful to get an idea how initialization overhead influences crypto performance with small packets). On big.LITTLE SoCs numbers show big core performance
 * *AES-256 (16 KB)* is a **single threaded** encryption score with rather huge chunks of data. On big.LITTLE SoCs numbers show big core performance
 * *memcpy* and *memset* are tinymembench measurements for memory bandwidth. On big.LITTLE SoCs numbers show big core performance
@@ -142,7 +141,6 @@ So do **not** rely on collected numbers unless you carefully read through all th
 * Hugsun X99 is an [overclocked RK3399 TV box](https://github.com/ThomasKaiser/sbc-bench/issues/20), just to show the effect of overclocking the A53 cores to 1.8 GHz and the A72 to 2.1 GHz on an RK3399.
 * Jetson Nano was [properly powered with 5V/5A via barrel plug](https://forum.armbian.com/topic/9921-nvidia-jetson-nano/?do=findComment&comment=78467) (when powering through Micro USB the board enters a lower consumption/performance profile)
 * Phytium D2000 consists of 8 [custom 64-bit ARMv8-compatible FTC663 cores](https://en.wikipedia.org/wiki/FeiTeng_(processor))
-* NanoPi K1 Plus numbers are preliminary. Currently in Armbian highest cpufreq OPP is 1152 MHz and throttling tresholds are way too low, once this is unlocked (SoC capable of almost 1.4GHz) numbers will improve further
 * NanoPi NEO4 numbers: 1st result is from my NEO4 N°1 running with a [NanoPi M4 image](https://github.com/armbian/build/blob/1c00822819f7fdfeac57bff8f991be526ca1add7/config/sources/rk3399.conf#L91). This NEO uses the vendor supplied thermal pad between SoC and heatsink. 2nd number from my 2nd NEO4 this time using NEO4 settings (`rk3399-nanopi4-rev04.dtb` loaded) with a copper shim between heatsink and SoC which as usual improves 'thermal performance' a lot. Since memory bandwidth and especially latency is too low another test needed with my NEO4 N°2, this time again with M4 settings (`rk3399-nanopi4-rev01.dtb` loaded) and an additional fan. Memory performance restored, slightly better performance due to colder SoC. 4th result made with 4.19.0-rc4. Please be aware that RK3399 memory performance numbers differ alot between 4.4 and mainline kernel for yet unknown reasons!
 * ODROID-N2 number should be taken with a grain of salt since made with a [pretty early software stack](https://forum.armbian.com/topic/9619-announcement-odroid-n2/?do=findComment&comment=72764). Most probably scores will slightly improve over time. 'Overclocked' executions with both CPU clusters set to 2.0 GHz showed reliability issues most probably due to DVFS undervoltage (cpuminer quit almost immediately [here](http://ix.io/1BrG) while it ran only 50 seconds [there](http://ix.io/1Bsz) -- this tool since being a load generator checking for data corruption can also be used for reliability testing but I would prefer our [StabilityTester](https://github.com/ThomasKaiser/StabilityTester) instead)
 * Quartz64 numbers are preliminary since software support situation for RK3566/RK3568 is still in a very early stage

@@ -34,9 +34,11 @@ cat <<EOF >validation.md
 EOF
 
 for file in *.txt ; do
+	unset BoardName PrettyBoardName
 	BoardName="$(head -n1 "${file}" | grep "sbc-bench" | cut -f1 -d'(' | awk -F" -- " '{print $1}' | sed -e 's/sbc-bench //' -e 's/_/\\_/g' | cut -c-40)"
 	PrettyBoardName="$(grep "/${file%.*})" ../Results.md | head -n1 | cut -f2 -d'|' | cut -f2 -d'[' | cut -f1 -d']')"
 	if [ "X${PrettyBoardName}" = "X" ]; then
+		DisplayName="$(sed 's/nexell soc/NanoPi Fire3/' <<<"${BoardName}")"
 		# reference not in results list any more. Strike through result line
 		Prefix="<del>"
 		Suffix="</del>"
@@ -79,5 +81,18 @@ for file in *.txt ; do
 	else
 		echo -e "${Prefix}${IOBusy}%${Suffix} | \c"
 	fi
-	grep -q -i throttling "${file}" && echo " ${Prefix}[check log](${file})${Suffix} |" || echo " |"
+	case ${BoardName} in
+		*icosa*|*"Tinker Board"*|*"Orange Pi Prime"*|"v0.7.9 Raspberry Pi Zero 2 Rev 1.0"*|"v0.8.3 Raspberry Pi Model B Rev 2"*)
+			# ignore since not really throttling
+			:
+			;;
+		*)
+			grep -q -i throttling "${file}" && echo " ${Prefix}[check log](${file})${Suffix} |" || echo " |"
+			;;
+	esac
 done >>validation.md
+
+# check whether new ARM Core IDs appeared
+curl -O https://raw.githubusercontent.com/util-linux/util-linux/master/sys-utils/lscpu-arm.c
+[ -f lscpu-arm.old ] && diff lscpu-arm.c lscpu-arm.old
+mv -f lscpu-arm.c lscpu-arm.old

@@ -383,7 +383,7 @@ PlotPerformanceGraph() {
 						LastCore=$(GetLastClusterCore $(( $i + 1 )))
 						if [ ${CPUList} -le ${LastCore} ]; then
 							CheckPerformance "CPU core(s) ${CPUList}" "${FirstCore}" "${CPUList}"
-							CPUInfo="$(GetCPUInfo ${FirstCore})"
+							CPUInfo="$(GetCPUInfo ${CPUList})"
 							PlotGraph "core ${CPUList}${CPUInfo}" "${FirstCore}"
 							break
 						fi
@@ -550,7 +550,7 @@ PlotGraph() {
 			# no consumption numbers, only plot MIPS and temp
 			YLabel="7-Zip MIPS"
 			YRange=$(awk '{printf ("%0.0f",$1*1.2); }' <<<"${MaxMIPS}")
-			PlotCommand="plot '${CpufreqDat}' using 1:2 lt rgb 'blue' w l title '7-Zip MIPS (${1})' axis x1y1, '' using 1:3 lt rgb 'green' w l title 'SoC temp' axis x1y2"
+			PlotCommand="plot '${CpufreqDat}' using 1:2 lt rgb 'blue' w l title '7-Zip MIPS ${1}' axis x1y1, '' using 1:3 lt rgb 'green' w l title 'SoC temp' axis x1y2"
 			;;			
 		4)
 			# also consumption numbers so include them in the graph too
@@ -563,7 +563,7 @@ PlotGraph() {
 			else
 				YRange=${YRangeMIPS}
 			fi
-			PlotCommand="plot '${CpufreqDat}' using 1:2 lt rgb 'blue' w l title '7-Zip MIPS (${1})' axis x1y1, '' using 1:4 lt rgb 'black' w l title 'Consumption in mW' axis x1y1, '' using 1:3 lt rgb 'green' w l title 'SoC temp' axis x1y2"
+			PlotCommand="plot '${CpufreqDat}' using 1:2 lt rgb 'blue' w l title '7-Zip MIPS ${1}' axis x1y1, '' using 1:4 lt rgb 'black' w l title 'Consumption in mW' axis x1y1, '' using 1:3 lt rgb 'green' w l title 'SoC temp' axis x1y2"
 			;;
 	esac
 
@@ -593,7 +593,7 @@ PlotGraph() {
 	set terminal png size ${PNGWidth},${PNGHeight}
 	set output '${GraphPNG}.png'
 	${PlotCommand}
-	plot '${CpufreqDat}' using 1:2 lt rgb 'blue' w l title '7-Zip MIPS (${1})' axis x1y1, '' using 1:3 lt rgb 'green' w l title 'SoC temp' axis x1y2
+	plot '${CpufreqDat}' using 1:2 lt rgb 'blue' w l title '7-Zip MIPS ${1}' axis x1y1, '' using 1:3 lt rgb 'green' w l title 'SoC temp' axis x1y2
 	EOF
 } # PlotGraph
 
@@ -763,6 +763,20 @@ MonitorNetio() {
 } # MonitorNetio
 
 MonitorBoard() {
+	if test -t 1; then
+		# when called from a terminal we print some system information first
+		[ -f /sys/devices/soc0/family ] && read SoC_Family </sys/devices/soc0/family
+		[ -f /sys/devices/soc0/soc_id ] && read SoC_ID </sys/devices/soc0/soc_id
+		[ -f /sys/devices/soc0/revision ] && read SoC_Revision </sys/devices/soc0/revision
+		if [ -n "${SoC_Revision}" ]; then
+			echo -e "${SoC_Family} ${SoC_ID} rev ${SoC_Revision}, \c"
+		fi
+		BasicSetup
+		command -v dpkg >/dev/null 2>&1 && Userland=", Userland: $(dpkg --print-architecture 2>/dev/null)"
+		echo "Kernel: ${CPUArchitecture}${Userland}"
+		PrintCPUTopology
+	fi
+
 	# Background monitoring
 
 	# Try to renice to 19 to not interfere with benchmark behaviour
@@ -1047,7 +1061,7 @@ GetCPUClusters() {
 BasicSetup() {
 	# set cpufreq governor based on $1 (defaults to ondemand if not provided)			
 	for Cluster in $(ls -d /sys/devices/system/cpu/cpufreq/policy?); do
-		echo ${1:-ondemand} >${Cluster}/scaling_governor
+		[ -w ${Cluster}/scaling_governor ] && echo ${1:-ondemand} >${Cluster}/scaling_governor
 	done
 
 	CPUArchitecture="$(lscpu | awk -F" " '/^Architecture/ {print $2}')"
@@ -1134,9 +1148,6 @@ InitialMonitoring() {
 	# empty caches
 	echo 3 >/proc/sys/vm/drop_caches
 
-	# log benchmark start in dmesg output
-	echo "sbc-bench started" >/dev/kmsg
-
 	# Create temporary files
 	TempDir="$(mktemp -d /tmp/${0##*/}.XXXXXX)"
 	export TempDir
@@ -1161,7 +1172,7 @@ InitialMonitoring() {
 	fi
 	
 	# Log BIOS/UEFI info if present:
-	UEFIInfo="$(dmidecode -t bios | egrep "Vendor:|Version:|Release Date:|Revision:")"
+	UEFIInfo="$(dmidecode -t bios 2>/dev/null | egrep "Vendor:|Version:|Release Date:|Revision:")"
 	if [ "X${UEFIInfo}" != "X" ]; then
 		echo -e "\nBIOS/UEFI:\n${UEFIInfo}" >>${ResultLog}
 	fi
@@ -1195,6 +1206,9 @@ InitialMonitoring() {
 		XmlVer=$(grep '^<XmlVer>' <<<"${XMLOutput}" | sed -e 's/\(<[^<][^<]*>\)//g')
 		echo -e "\nPower monitoring on socket ${NetioSocket} of ${NetioName} (Netio ${NetioModel}, FW v${Firmware}, XML API v${XmlVer}, ${InputVoltage}V @ ${Frequency}Hz) " >>${ResultLog}
 	fi
+
+	# log benchmark start in dmesg output
+	echo "sbc-bench started" >/dev/kmsg
 } # InitialMonitoring
 
 CheckClockspeedsAndSensors() {
@@ -1428,7 +1442,7 @@ PrintCPUTopology() {
 	# prints list of CPU cores, clusters and cpufreq policy nodes
 	echo "CPU topology (clusters, cpufreq members, clockspeeds)"
 	echo "                 cpufreq   min    max"
-	echo "CPU     cluster  policy   speed  speed   core type"
+	echo " CPU    cluster  policy   speed  speed   core type"
 	for i in $(seq 0 $(( ${CPUCores} - 1 )) ); do
 		CoreName="$(GetCPUType $i)"
 		read CPUCluster </sys/devices/system/cpu/cpu${i}/topology/physical_package_id
@@ -1443,6 +1457,7 @@ PrintCPUTopology() {
 			echo "$(printf "%3s" ${i})$(printf "%9s" ${CPUCluster})        -       -      -     ${CoreName:-"    -"}"
 		fi
 	done
+	echo ""
 } # PrintCPUTopology
 
 SummarizeResults() {
@@ -1470,7 +1485,7 @@ SummarizeResults() {
 	echo -e "\n##########################################################################\n" >>${ResultLog}
 	echo -e "$(iostat | grep -v "^loop")\n\n$(free -h)\n\n$(swapon -s)\n" >>${ResultLog}
 	PrintCPUTopology >>${ResultLog}
-	echo -e "\n$(lscpu)" >>${ResultLog}
+	lscpu >>${ResultLog}
 	ReportCacheSizes >>${ResultLog}
 
 	# Add a line suitable for Results.md on Github if not in efficiency plotting mode
@@ -1533,33 +1548,22 @@ CheckForThrottling() {
 		Number=$(echo ${REPLY} | tr -c -d '[:digit:]')
 		diff ${TempDir}/time_in_state_after_${Number} ${TempDir}/time_in_state_before_${Number} >/dev/null 2>&1
 		if [ $? -ne 0 ]; then
-			case ${CPUCores} in
-				1|2|4)
-					ReportCpufreqStatistics ${Number}
-					echo -e "${LRED}${BOLD}ATTENTION: Throttling might have occured. Check the log for details.${NC}\n"
-					;;
-				6)
-					if [ ${Number} -eq 0 ]; then
-						ReportCpufreqStatistics ${Number} " for CPUs 0-3"
-						echo -e "${LRED}${BOLD}ATTENTION: Throttling might have occured on CPUs 0-3. Check the log for details.${NC}\n"
-					else
-						ReportCpufreqStatistics ${Number} " for CPUs 4-5"
-						echo -e "${LRED}${BOLD}ATTENTION: Throttling might have occured on CPUs 4-5. Check the log for details.${NC}\n"
+			if [ "${ClusterConfig}" = "0" ]; then
+				# all CPU cores have same cpufreq policies, we report globally
+				ReportCpufreqStatistics ${Number}
+				echo -e "${LRED}${BOLD}ATTENTION: Throttling might have occured. Check the log for details.${NC}\n"
+			else
+				# report affected cluster
+				for i in $(seq 0 $(( ${#ClusterConfig} -1 )) ) ; do
+					if [ ${ClusterConfig:$i:1} -eq ${Number} ]; then
+						FirstCore=${Number}
+						LastCore=$(GetLastClusterCore $(( ${i} + 1 )))
+						CPUInfo="$(GetCPUInfo ${Number})"
+						ReportCpufreqStatistics ${Number} " for CPUs ${FirstCore}-${LastCore}${CPUInfo}"
+						echo -e "${LRED}${BOLD}ATTENTION: Throttling might have occured on CPUs ${FirstCore}-${LastCore}${CPUInfo}. Check the log for details.${NC}\n"
 					fi
-					;;
-				8)
-					if [ "X${BOARDFAMILY}" = "Xs5p6818" ]; then
-						ReportCpufreqStatistics ${Number}
-						echo -e "${LRED}${BOLD}ATTENTION: Throttling might have occured. Check the log for details.${NC}\n"
-					elif [ ${Number} -eq 0 ]; then
-						ReportCpufreqStatistics ${Number} " for CPUs 0-3"
-						echo -e "${LRED}${BOLD}ATTENTION: Throttling might have occured on CPUs 0-3. Check the log for details.${NC}\n"
-					else
-						ReportCpufreqStatistics ${Number} " for CPUs 4-7"
-						echo -e "${LRED}${BOLD}ATTENTION: Throttling might have occured on CPUs 4-7. Check the log for details.${NC}\n"
-					fi
-					;;
-			esac
+				done
+			fi
 		fi
 	done
 
@@ -1603,8 +1607,8 @@ ReportCpufreqStatistics() {
 	if [ -f ${TempDir}/full_time_in_state_before_${1} ]; then
 		echo -e "\nThrottling statistics (time spent on each cpufreq OPP)${2}:\n" >>${TempDir}/throttling_info.txt
 		awk -F" " '{print $1}' <${TempDir}/full_time_in_state_before_${1} | sort -r -n | while read ; do
-			BeforeValue=$(awk -F" " "/^${REPLY}/ {print \$2}" <${TempDir}/full_time_in_state_before_${1})
-			AfterValue=$(awk -F" " "/^${REPLY}/ {print \$2}" <${TempDir}/full_time_in_state_after_${1})
+			BeforeValue=$(awk -F" " "/^${REPLY} / {print \$2}" <${TempDir}/full_time_in_state_before_${1})
+			AfterValue=$(awk -F" " "/^${REPLY} / {print \$2}" <${TempDir}/full_time_in_state_after_${1})
 			if [ ${AfterValue} -eq ${BeforeValue} ]; then
 				Duration=0
 			else

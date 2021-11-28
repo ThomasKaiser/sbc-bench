@@ -11,7 +11,28 @@ It has four **entirely different** usage modes:
 * Generate a rough CPU performance assessment for a specific SBC *in general* (under ideal conditions)
 * Show whether an *individual* SBC is able to perform the same and if not hopefully answering the question 'why?'
 * Help software developers and hardware designers to improve 'thermal performance' when using the `-t` and/or `-T` switches ([details/discussion](https://forum.armbian.com/topic/7819-sbc-bench/?do=findComment&comment=60873), [another example](https://forum.armbian.com/topic/8125-quick-review-of-nanopi-k1-plus/?do=findComment&comment=61300))
-* Provide basic CLI monitoring functionality through the `-m` switch
+* Provide basic CLI monitoring functionality through the `-m` switch also collecting some SoC and CPU core information:
+
+    tk@odroidxu4::~$ sbc-bench -m
+    Samsung Exynos EXYNOS5800 rev 1, Kernel: armv7l, Userland: armhf
+    CPU topology (clusters, cpufreq members, clockspeeds)
+                     cpufreq   min    max
+     CPU    cluster  policy   speed  speed   core type
+      0        1        0      200    1400   Cortex-A7
+      1        1        0      200    1400   Cortex-A7
+      2        1        0      200    1400   Cortex-A7
+      3        1        0      200    1400   Cortex-A7
+      4        0        4      200    2000   Cortex-A15
+      5        0        4      200    2000   Cortex-A15
+      6        0        4      200    2000   Cortex-A15
+      7        0        4      200    2000   Cortex-A15
+    
+    Time       big.LITTLE   load %cpu %sys %usr %nice %io %irq   Temp
+    18:18:33:  800/ 500MHz  0.00  18%   0%  17%   0%   0%   0%  25.0°C
+    18:18:38:  800/ 600MHz  0.00   0%   0%   0%   0%   0%   0%  24.0°C
+    18:18:43:  700/ 500MHz  0.07   0%   0%   0%   0%   0%   0%  24.0°C
+    18:18:48:  800/ 600MHz  0.07   0%   0%   0%   0%   0%   0%  24.0°C
+    ^C
 
 The SoCs (system-on-chip) used on today's SBC are that performant that heat dissipation when running full load for some time becomes an issue. The strategies to deal with the problem differ by platform and kernel. We've seen CPU cores being shut down when overheating (Allwinner boards running with original Allwinner software), we know platforms where throttling works pretty well but by switching to a different kernel performance is trashed on exactly the same hardware. Sometimes it's pretty easy to spot what's going on, sometimes vendors cheat on us and it takes some efforts to get a clue what's really happening.
 
@@ -19,7 +40,7 @@ This tool therefore focuses on a controlled environment and intensive monitoring
 
 ## Execution
 
-You need an armhf or arm64 Debian Stretch/Buster or Ubuntu Bionic/Focal install. Older variants are not supported (due to distro packages being way too outdated). Then it's
+You need an armhf or arm64 Debian Stretch/Buster/Bullseye or Ubuntu Bionic/Focal/Jammy install. Older variants are not supported (due to distro packages being way too outdated). Then it's
 
     wget https://raw.githubusercontent.com/ThomasKaiser/sbc-bench/master/sbc-bench.sh
     sudo /bin/bash ./sbc-bench.sh -c

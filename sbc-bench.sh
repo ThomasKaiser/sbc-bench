@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.8.6
+Version=0.8.7
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -254,6 +254,8 @@ GetARMCore() {
 	69/b11:Intel SA1110
 	69/c12:Intel IPX1200
 	70:Phytium
+	70/660:Phytium FTC660
+	70/661:Phytium FTC661
 	70/662:Phytium FTC662
 	70/663:Phytium FTC663
 	c0:Ampere" | cut -f2 -d:
@@ -745,12 +747,14 @@ MonitorNetio() {
 	while true ; do
 		XMLOutput="$(curl -q --connect-timeout 1 "http://${NetioDevice}/netio.xml" 2>/dev/null | tr '\015' '\012')"
 		InputVoltage=$(grep '^<Voltage>' <<<"${XMLOutput}" | sed -e 's/\(<[^<][^<]*>\)//g')
-		OutputCurrent=($(grep '^<Current>' <<<"${XMLOutput}" | sed -e 's/\(<[^<][^<]*>\)//g' | tr '\n' ' '))
-		OutputPowerFactor=($(grep '^<PowerFactor>' <<<"${XMLOutput}" | sed -e 's/\(<[^<][^<]*>\)//g' | tr '\n' ' '))
-		Consumption=$(bc <<<"${InputVoltage} * ${OutputCurrent[$(( ${NetioSocket} - 1 ))]} * ${OutputPowerFactor[$(( ${NetioSocket} - 1 ))]}" | awk '{printf ("%0.0f",$1); }')
-
+		OutputCurrents=($(grep '^<Current>' <<<"${XMLOutput}" | sed -e 's/\(<[^<][^<]*>\)//g' | tr '\n' ' '))
+		OutputCurrent=${OutputCurrents[$(( ${NetioSocket} - 1 ))]}
+		OutputPowerFactors=($(grep '^<PowerFactor>' <<<"${XMLOutput}" | sed -e 's/\(<[^<][^<]*>\)//g' | tr '\n' ' '))
+		OutputPowerFactor=${OutputPowerFactors[$(( ${NetioSocket} - 1 ))]}
+		Consumption=$(awk -F" " '{printf ("%0.0f",$1*$2*$3); }' <<<"${InputVoltage} ${OutputCurrent} ${OutputPowerFactor}")
+		
 		# create a file consisting of $CountofSamples entries with last consumption readouts so we
-		# can generate a 30 second average
+		# can generate an average value based this and $SleepInterval
 		touch ${TempDir}/netio-socket-${NetioSocket}
 		PriorValues="$(tail -n${CountofSamples} ${TempDir}/netio-socket-${NetioSocket})"
 		echo -e "${PriorValues}\n${Consumption}" | sed '/^[[:space:]]*$/d' >${TempDir}/netio-socket-${NetioSocket}
@@ -1366,18 +1370,23 @@ Run7ZipBenchmark() {
 	kill ${MonitoringPID}
 	echo -e "\n##########################################################################" >>${ResultLog}
 	cat ${TempLog} >>${ResultLog}
-	echo -e "\nSystem health while running 7-zip multi core benchmark:\n" >>${MonitorLog}
-	echo -e "\c" >${TempLog}
-	/bin/bash "${PathToMe}" -m 20 >>${MonitorLog} &
-	MonitoringPID=$!
-	RunHowManyTimes=3
-	echo -e "Executing benchmark ${RunHowManyTimes} times multi-threaded" >>${TempLog}
-	for ((i=1;i<=RunHowManyTimes;i++)); do
-		"${SevenZip}" b >>${TempLog}
-	done
-	kill ${MonitoringPID}
-	echo -e "\n##########################################################################\n" >>${ResultLog}
-	cat ${TempLog} >>${ResultLog}
+	
+	if [ ${CPUCores} -gt 1 ]; then
+		# run multi-threaded test only if there's more than one CPU core
+		echo -e "\nSystem health while running 7-zip multi core benchmark:\n" >>${MonitorLog}
+		echo -e "\c" >${TempLog}
+		/bin/bash "${PathToMe}" -m 20 >>${MonitorLog} &
+		MonitoringPID=$!
+		RunHowManyTimes=3
+		echo -e "Executing benchmark ${RunHowManyTimes} times multi-threaded" >>${TempLog}
+		for ((i=1;i<=RunHowManyTimes;i++)); do
+			"${SevenZip}" b -mmt=${CPUCores} >>${TempLog}
+		done
+		kill ${MonitoringPID}
+		echo -e "\n##########################################################################\n" >>${ResultLog}
+		cat ${TempLog} >>${ResultLog}
+	fi
+
 	sed -i 's/|//' ${TempLog}
 	CompScore=$(awk -F" " '/^Avr:/ {print $4}' <${TempLog} | tr '\n' ', ' | sed 's/,$//')
 	DecompScore=$(awk -F" " '/^Avr:/ {print $7}' <${TempLog} | tr '\n' ', ' | sed 's/,$//')
@@ -1659,7 +1668,7 @@ DisplayUsage() {
 	echo -e " ${0##*/} ${BOLD}-T${NC} [\$degree] runs thermal test heating up to this value\n"
 	echo -e " With a Netio powermeter accessible you can export ${BOLD}Netio=address/socket${NC}" to
 	echo -e " sbc-bench defining address and socket this device is plugged into. Requires"
-	echo -e " XML API enabled and read-only access w/o password. Use this ${BOLD}only{NC} with -p to"
+	echo -e " XML API enabled and read-only access w/o password. Use this ${BOLD}only${NC} with -p to"
 	echo -e " draw efficiency graphs since results will be slightly tampered by this mode."
 	echo -e "\n############################################################################\n"
 } # DisplayUsage

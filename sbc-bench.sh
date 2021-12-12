@@ -1273,7 +1273,7 @@ CheckClockspeedsAndSensors() {
 		grep ':' ${MonitorLog} | tail -n 1 >>"${TempDir}/systemhealth.now" >>${ResultLog}
 	else
 		# 1st check, try to get info about Intel P-States
-		PStateStatus="$(journalctl -b 2>/dev/null | awk -F": " '/intel_pstate:/ {print $3}')"
+		PStateStatus="$(journalctl -b 2>/dev/null | awk -F": " '/intel_pstate:/ {print $3}' | sed ':a;N;$!ba;s/\n/, /g')"
 		if [ "X${PStateStatus}" != "X" ]; then
 			echo -e "\nIntel P-States: ${PStateStatus}" >>${ResultLog}
 		fi
@@ -1389,7 +1389,7 @@ CheckCPUCluster() {
 } # CheckCPUCluster
 
 RunTinyMemBench() {
-	echo -e "\x08\x08 Done (results will be available in approximately $(( ${EstimatedDuration} * 120 / 100 )) minutes)"
+	echo -e "\x08\x08 Done (results will be available in ${EstimatedDuration}-$(( ${EstimatedDuration} * 135 / 100 )) minutes)."
 	echo -e "Executing tinymembench...\c"
 	echo -e "System health while running tinymembench:\n" >${MonitorLog}
 	/bin/bash "${PathToMe}" -m $(( 40 * ${#ClusterConfig} )) >>${MonitorLog} &
@@ -1533,8 +1533,9 @@ PrintCPUTopology() {
 } # PrintCPUTopology
 
 SummarizeResults() {
+	# report rounded up benchmark duration
 	BenchmarkFinishedTime=$(date +"%s")
-	BenchmarkDuration=$(( $(( ${BenchmarkFinishedTime} - ${BenchmarkStartTime} )) / 60 ))
+	BenchmarkDuration=$(( $(( ${BenchmarkFinishedTime} - ${BenchmarkStartTime} +59 )) / 60 ))
 	echo -e "\x08\x08 Done (${BenchmarkDuration} minutes elapsed).\n\007\007\007"
 
 	# only check for throttling in normal mode and not when plotting performance/mhz graphs
@@ -1563,12 +1564,12 @@ SummarizeResults() {
 	echo -e "$(iostat | grep -v "^loop")\n\n$(free -h)\n\n$(swapon -s)\n" >>${ResultLog}
 	PrintCPUTopology >>${ResultLog}
 	lscpu >>${ResultLog}
-	ReportCacheSizes >>${ResultLog}
+	CacheAndDIMMDetails >>${ResultLog}
 
 	# Add a line suitable for Results.md on Github if not in efficiency plotting mode
 	if [ "X${PlotCpufreqOPPs}" != "Xyes" ]; then
 		if [ -f /sys/devices/system/cpu/cpufreq/policy0/cpuinfo_max_freq ]; then
-			MHz="$(sort -n -r /sys/devices/system/cpu/cpufreq/policy?/cpuinfo_max_freq | tr '\n' '/' | sed -e 's|000/|/|g' -e 's|/$||') MHz"
+			MHz="$(sort -n -r /sys/devices/system/cpu/cpufreq/policy?/cpuinfo_max_freq | head -n 2 | tr '\n' '/' | sed -e 's|000/|/|g' -e 's|/$||') MHz"
 		else
 			MHz="no cpufreq support"
 		fi
@@ -1579,7 +1580,7 @@ SummarizeResults() {
 		else
 			DistroInfo="$(cut -c-1 <<<"${Distro##*/}" | tr '[:lower:]' '[:upper:]')$(cut -c2- <<<"${Distro##*/}") ${KernelArch}/${ARCH}"
 		fi
-		echo -e "\n| ${DeviceName} | ${MHz} | ${KernelVersion} | ${DistroInfo} | ${ZipScore} | ${OpenSSLScore} | ${MemBenchScore} | ${CpuminerScore:-"-"} | [${UploadURL}](${UploadURL}) |" >>${ResultLog}
+		echo -e "\n| ${DeviceName:-$HostName} | ${MHz} | ${KernelVersion} | ${DistroInfo} | ${ZipScore} | ${OpenSSLScore} | ${MemBenchScore} | ${CpuminerScore:-"-"} | [${UploadURL}](${UploadURL}) |" >>${ResultLog}
 	fi
 } # SummarizeResults
 
@@ -1605,7 +1606,7 @@ UploadResults() {
 			if [ ${IOWait:-0} -le 5 -a ! -f ${TempDir}/throttling_info.txt -a "X${IsIntel}" != "Xyes" ]; then
 				echo -e "In case this device is not already represented in official sbc-bench results list then please"
 				echo -e "consider submitting it at https://github.com/ThomasKaiser/sbc-bench/issues with this line:"
-				echo -e "| ${DeviceName} | ${MHz} MHz | ${KernelVersion} | ${DistroInfo} | ${ZipScore} | ${OpenSSLScore} | ${MemBenchScore} | ${CpuminerScore:-"-"} | [${UploadURL}](${UploadURL}) |\n"
+				echo -e "| ${DeviceName:-$HostName} | ${MHz} | ${KernelVersion} | ${DistroInfo} | ${ZipScore} | ${OpenSSLScore} | ${MemBenchScore} | ${CpuminerScore:-"-"} | [${UploadURL}](${UploadURL}) |\n"
 			fi
 			;;
 		*)
@@ -1715,7 +1716,13 @@ ReportRPiHealth() {
 	EOF
 } # ReportRPiHealth
 
-ReportCacheSizes() {
+CacheAndDIMMDetails() {
+	DIMMDetails="$(dmidecode -t memory  2>/dev/null | grep "Speed:")"
+	if [ "X${DIMMDetails}" != "X" ]; then
+		echo -e "\nDIMM configuration:"
+		DIMMFilter="$(echo -e "Locator:|\tVolatile Size:|\tType:|Speed:")"
+		dmidecode -t memory 2>/dev/null | egrep "${DIMMFilter}"
+	fi
 	find /sys/devices/system/cpu -name "cache" -type d | sort -V | while read ; do
 		find "${REPLY}" -name size -type f | while read ; do
 			echo -e "\n${REPLY}: $(cat ${REPLY})\c"
@@ -1724,7 +1731,7 @@ ReportCacheSizes() {
 		done
 	done | sed -e 's|/sys/devices/system/cpu/||' -e 's|cache/||' -e 's|/size||'
 	echo ""
-} # ReportCacheSizes
+} # CacheAndDIMMDetails
 
 DisplayUsage() {
 	echo -e "\nUsage: ${BOLD}${0##*/} [-c] [-p] [-h] [-m] [-t \$degree] [-T \$degree]${NC}\n"

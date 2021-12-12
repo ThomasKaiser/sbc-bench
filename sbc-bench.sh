@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.8.7
+Version=0.8.8
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -104,7 +104,8 @@ Main() {
 
 	CheckRelease
 	CheckLoad
-	read OriginalCPUFreqGovernor </sys/devices/system/cpu/cpufreq/policy0/scaling_governor 2>/dev/null
+	[ -f /sys/devices/system/cpu/cpufreq/policy0/scaling_governor ] && \
+		read OriginalCPUFreqGovernor </sys/devices/system/cpu/cpufreq/policy0/scaling_governor 2>/dev/null
 	BasicSetup performance >/dev/null 2>&1
 	InstallPrerequisits
 	InitialMonitoring
@@ -281,9 +282,45 @@ GetLastClusterCore() {
 	echo -n $(( ${NextCore} - 1 ))
 } # GetLastClusterCore
 
+BashBench(){
+	# quick integer performance assessment using a simple bash loop.
+	# Depends not only on CPU performance but also on bash version.
+	#
+	# 5.0.17 / E5-2665 @ 2.40GHz:          147485025
+	# 4.4.20 / Xeon Silver 4110 @ 3.00GHz:  64434988
+	# 5.0.3  / Xeon Silver 4110 @ 3.00GHz:  38958875
+	# 5.0.17 / N5100 @ 2.8GHz:              56864747
+	# 4.4.20 / Allwinner H3:               566944214
+	# 5.0.3  / BCM2711:                    152325522
+	# 5.0.17 / Apple Firestorm:             28319838
+	StartTime=$(date +"%s%N")
+	i=0
+	while [ $i -lt 10000 ]
+	do
+		((i++))
+	done
+	FinishedTime=$(date +"%s%N")
+	RawTime=$(( ${FinishedTime} - ${StartTime} ))
+	case ${BASH_VERSION} in
+		5.*)
+			# multiply by 1.2 since this version seems faster
+			awk '{printf ("%0.0f",$1*1.2); }' <<<${RawTime}
+			;;
+		*)
+			echo -n ${RawTime}
+			;;
+	esac
+} # BashBench
+
 PlotPerformanceGraph() {
 	# function that walks through all cpufreq OPP and plots a performance graph using
 	# 7-ZIP MIPS. Needs gnuplot and htmldoc (Debian/Ubuntu: gnuplot-nox htmldoc packages)
+
+	if [ ! -f /sys/devices/system/cpu/cpufreq/policy0/scaling_governor ]; then
+		# no cpufreq support -> no way to test through different clockspeeds. Stop
+		echo -e " Done.\nNo cpufreq support available. Not able to draw performance graph(s)."
+		exit 1
+	fi
 
 	# repeat every measurement this many times and do not measure any cpufreq below
 	Repetitions=3 # how many times should each measurement be repeated
@@ -424,11 +461,6 @@ CheckPerformance() {
 	fi
 	
 	Clusters="$(ls -d /sys/devices/system/cpu/cpufreq/policy[${2}])"
-	if [ "X${Clusters}" = "X" ]; then
-		# no cpufreq support -> no way to test through different clockspeeds. Stop
-		echo -e " Done.\nNo cpufreq support available. Skipping performance graph."
-		exit 1
-	fi
 
 	echo -e "\x08\x08 Done.\nChecking ${1}: \c"
 	echo -e "\nSystem health while testing through ${1}:\n" >>${MonitorLog}
@@ -788,10 +820,11 @@ MonitorBoard() {
 
 	GetTempSensor
 	CpuFreqToQuery=cpuinfo_cur_freq
+	CPUArchitecture="$(lscpu | awk -F" " '/^Architecture/ {print $2}')"
 	ClusterConfig=$(GetCPUClusters)
 
 	# check platform
-	case $(lscpu | awk -F" " '/^Architecture/ {print $2}') in
+	case ${CPUArchitecture} in
 		x86*|i686)
 			IsIntel="yes"
 			if [ ! -f /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq ]; then
@@ -1149,8 +1182,22 @@ InstallCpuminer() {
 } # InstallCpuminer
 
 InitialMonitoring() {
+	# record start time
+	BenchmarkStartTime=$(date +"%s")
 	# empty caches
 	echo 3 >/proc/sys/vm/drop_caches
+	
+	# q&d performance assessment to estimate duration
+	QuickAndDirtyPerformance="$(BashBench)"
+	TinymembenchDuration=$(( $(( 5 + $(( ${QuickAndDirtyPerformance} / 150000000 )) )) * ${#ClusterConfig} ))
+	RunHowManyTimes=3 # how many times should the multi-threaded 7-zip test be repeated
+	SingleThreadedDuration=$(( 20 + $(( ${QuickAndDirtyPerformance} * ${#ClusterConfig} / 5000000 )) ))
+	MultiThreadedDuration=$(( ${RunHowManyTimes} * $(( 20 + $(( ${QuickAndDirtyPerformance} / 5000000 )) )) / ${CPUCores} ))
+	if [ "${ExecuteCpuminer}" = "yes" -a -x "${InstallLocation}"/cpuminer-multi/cpuminer ]; then
+		EstimatedDuration=$(( ${TinymembenchDuration} + $(( $(( ${SingleThreadedDuration} + ${MultiThreadedDuration} )) / 60 )) + 8 ))
+	else
+		EstimatedDuration=$(( ${TinymembenchDuration} + $(( $(( ${SingleThreadedDuration} + ${MultiThreadedDuration} )) / 60 )) + 3 ))
+	fi
 
 	# Create temporary files
 	TempDir="$(mktemp -d /tmp/${0##*/}.XXXXXX)"
@@ -1161,7 +1208,8 @@ InitialMonitoring() {
 	trap "rm -rf \"${TempDir}\" ; exit 0" 0 1 2 3 15
 
 	# Log version and device info
-	echo -e "sbc-bench v${Version} ${DeviceName} ($(date -R))\n" >${ResultLog}
+	read HostName </etc/hostname
+	echo -e "sbc-bench v${Version} ${DeviceName:-$HostName} ($(date -R))\n" >${ResultLog}
 
 	# Log distribution info
 	[ -f /etc/armbian-release ] && . /etc/armbian-release
@@ -1223,6 +1271,12 @@ CheckClockspeedsAndSensors() {
 		echo -e "\nTesting clockspeeds again. System health now:\n" >>${ResultLog}
 		grep 'Time' ${MonitorLog} | tail -n 1 >"${TempDir}/systemhealth.now" >>${ResultLog}
 		grep ':' ${MonitorLog} | tail -n 1 >>"${TempDir}/systemhealth.now" >>${ResultLog}
+	else
+		# 1st check, try to get info about Intel P-States
+		PStateStatus="$(journalctl -b 2>/dev/null | awk -F": " '/intel_pstate:/ {print $3}')"
+		if [ "X${PStateStatus}" != "X" ]; then
+			echo -e "\nIntel P-States: ${PStateStatus}" >>${ResultLog}
+		fi
 	fi
 	if [ "${ClusterConfig}" = "0" ]; then
 		# all CPU cores have same package id, we only need to test one core
@@ -1272,29 +1326,36 @@ CheckTimeInState() {
 	# even cheat wrt querying the 'firmware' via 'vcgencmd get_throttled':
 	# https://www.raspberrypi.org/forums/viewtopic.php?f=63&t=217056#p1334921
 
-	for StatFile in $(ls /sys/devices/system/cpu/cpufreq/policy?/stats/time_in_state) ; do
-		Number=$(tr -c -d '[:digit:]' <<<${StatFile})
-		read MaxSpeed </sys/devices/system/cpu/cpufreq/policy${Number}/cpuinfo_max_freq
-		sort -n <${StatFile} | while read ; do
-			Cpufreq=$(awk '{print $1}' <<<${REPLY})
-			if [ ${Cpufreq} -lt ${MaxSpeed} ]; then
-				echo ${REPLY} >>${TempDir}/time_in_state_${1}_${Number}
-				echo ${REPLY} >>${TempDir}/full_time_in_state_${1}_${Number}
-			elif [ ${Cpufreq} -le ${MaxSpeed} ]; then
-				echo ${REPLY} >>${TempDir}/full_time_in_state_${1}_${Number}
-			fi
+	if [ -f /sys/devices/system/cpu/cpufreq/policy0/stats/time_in_state ]; then
+		for StatFile in $(ls /sys/devices/system/cpu/cpufreq/policy?/stats/time_in_state) ; do
+			Number=$(tr -c -d '[:digit:]' <<<${StatFile})
+			read MaxSpeed </sys/devices/system/cpu/cpufreq/policy${Number}/cpuinfo_max_freq
+			sort -n <${StatFile} | while read ; do
+				Cpufreq=$(awk '{print $1}' <<<${REPLY})
+				if [ ${Cpufreq} -lt ${MaxSpeed} ]; then
+					echo ${REPLY} >>${TempDir}/time_in_state_${1}_${Number}
+					echo ${REPLY} >>${TempDir}/full_time_in_state_${1}_${Number}
+				elif [ ${Cpufreq} -le ${MaxSpeed} ]; then
+					echo ${REPLY} >>${TempDir}/full_time_in_state_${1}_${Number}
+				fi
+			done
 		done
-	done
+	fi
 } # CheckTimeInState
 
 CheckCPUCluster() {
 	# check whether there's cpufreq support or not
-	if [ -f /sys/devices/system/cpu/cpufreq/policy${1}/scaling_available_frequencies ]; then
+	if [ -d /sys/devices/system/cpu/cpufreq/policy${1} ]; then
 		# walk through all cpufreq OPP and report clockspeeds (kernel vs. measured)
 		read MinSpeed </sys/devices/system/cpu/cpufreq/policy${1}/cpuinfo_min_freq
 		read MaxSpeed </sys/devices/system/cpu/cpufreq/policy${1}/cpuinfo_max_freq
 		echo ${MinSpeed} >/sys/devices/system/cpu/cpufreq/policy${1}/scaling_min_freq
-		for i in $(tr " " "\n" </sys/devices/system/cpu/cpufreq/policy${1}/scaling_available_frequencies | sort -n -r) ; do
+		if [ -f /sys/devices/system/cpu/cpufreq/policy${1}/scaling_available_frequencies ]; then
+			OPPtoCheck=$(tr " " "\n" </sys/devices/system/cpu/cpufreq/policy${1}/scaling_available_frequencies | sort -n -r)
+		else
+			OPPtoCheck="${MaxSpeed} ${MinSpeed}"
+		fi
+		for i in ${OPPtoCheck} ; do
 			echo ${i} >/sys/devices/system/cpu/cpufreq/policy${1}/scaling_max_freq
 			sleep 0.1
 			MeasuredSpeed=$(taskset -c $1 "${InstallLocation}"/mhz/mhz 3 100000 | awk -F" cpu_MHz=" '{print $2}' | awk -F" " '{print $1}' | tr '\n' '/' | sed 's|/$||')
@@ -1328,9 +1389,10 @@ CheckCPUCluster() {
 } # CheckCPUCluster
 
 RunTinyMemBench() {
-	echo -e "\x08\x08 Done.\nExecuting tinymembench. This will take a long time...\c"
+	echo -e "\x08\x08 Done (results will be available in approximately $(( ${EstimatedDuration} * 120 / 100 )) minutes)"
+	echo -e "Executing tinymembench...\c"
 	echo -e "System health while running tinymembench:\n" >${MonitorLog}
-	/bin/bash "${PathToMe}" -m 90 >>${MonitorLog} &
+	/bin/bash "${PathToMe}" -m $(( 40 * ${#ClusterConfig} )) >>${MonitorLog} &
 	MonitoringPID=$!
 	echo -n "" >${TempLog}
 	for i in $(seq 0 $(( ${#ClusterConfig} -1 )) ) ; do
@@ -1348,10 +1410,10 @@ RunTinyMemBench() {
 } # RunTinyMemBench
 
 Run7ZipBenchmark() {
-	echo -e "\x08\x08 Done.\nExecuting 7-zip benchmark. This will take a long time...\c"
+	echo -e "\x08\x08 Done.\nExecuting 7-zip benchmark...\c"
 	echo -e "\nSystem health while running 7-zip single core benchmark:\n" >>${MonitorLog}
 	echo -e "\c" >${TempLog}
-	/bin/bash "${PathToMe}" -m 45 >>${MonitorLog} &
+	/bin/bash "${PathToMe}" -m $(( ${SingleThreadedDuration} / 8 )) >>${MonitorLog} &
 	MonitoringPID=$!
 	if [ "${ClusterConfig}" = "0" ]; then
 		# all CPU cores have same package id
@@ -1375,7 +1437,7 @@ Run7ZipBenchmark() {
 		# run multi-threaded test only if there's more than one CPU core
 		echo -e "\nSystem health while running 7-zip multi core benchmark:\n" >>${MonitorLog}
 		echo -e "\c" >${TempLog}
-		/bin/bash "${PathToMe}" -m 20 >>${MonitorLog} &
+		/bin/bash "${PathToMe}" -m $(( ${MultiThreadedDuration} / 3 )) >>${MonitorLog} &
 		MonitoringPID=$!
 		RunHowManyTimes=3
 		echo -e "Executing benchmark ${RunHowManyTimes} times multi-threaded" >>${TempLog}
@@ -1399,10 +1461,10 @@ Run7ZipBenchmark() {
 } # Run7ZipBenchmark
 
 RunOpenSSLBenchmark() {
-	echo -e "\x08\x08 Done.\nExecuting OpenSSL benchmark. This will take 3 minutes...\c"
+	echo -e "\x08\x08 Done.\nExecuting OpenSSL benchmark...\c"
 	echo -e "\nSystem health while running OpenSSL benchmark:\n" >>${MonitorLog}
 	echo -e "\n##########################################################################\n" >>${ResultLog}
-	/bin/bash "${PathToMe}" -m 20 >>${MonitorLog} &
+	/bin/bash "${PathToMe}" -m 16 >>${MonitorLog} &
 	MonitoringPID=$!
 	OpenSSLLog="${TempDir}/openssl.log"
 	if [ "${ClusterConfig}" = "0" ]; then
@@ -1431,7 +1493,7 @@ RunOpenSSLBenchmark() {
 } # RunOpenSSLBenchmark
 
 RunCpuminerBenchmark() {
-	echo -e "\x08\x08 Done.\nExecuting cpuminer. This will take 5 minutes...\c"
+	echo -e "\x08\x08 Done.\nExecuting cpuminer. 5 more minutes to wait...\c"
 	echo -e "\nSystem health while running cpuminer:\n" >>${MonitorLog}
 	/bin/bash "${PathToMe}" -m 40 >>${MonitorLog} &
 	MonitoringPID=$!
@@ -1449,7 +1511,8 @@ RunCpuminerBenchmark() {
 
 PrintCPUTopology() {
 	# prints list of CPU cores, clusters and cpufreq policy nodes
-	echo "CPU topology (clusters, cpufreq members, clockspeeds)"
+	echo -e "##########################################################################\n"
+	echo "CPU sysfs topology (clusters, cpufreq members, clockspeeds)"
 	echo "                 cpufreq   min    max"
 	echo " CPU    cluster  policy   speed  speed   core type"
 	for i in $(seq 0 $(( ${CPUCores} - 1 )) ); do
@@ -1470,7 +1533,9 @@ PrintCPUTopology() {
 } # PrintCPUTopology
 
 SummarizeResults() {
-	echo -e " Done.\n\007\007\007"
+	BenchmarkFinishedTime=$(date +"%s")
+	BenchmarkDuration=$(( $(( ${BenchmarkFinishedTime} - ${BenchmarkStartTime} )) / 60 ))
+	echo -e "\x08\x08 Done (${BenchmarkDuration} minutes elapsed).\n\007\007\007"
 
 	# only check for throttling in normal mode and not when plotting performance/mhz graphs
 	[ "X${PlotCpufreqOPPs}" = "Xyes" ] || CheckForThrottling
@@ -1502,7 +1567,11 @@ SummarizeResults() {
 
 	# Add a line suitable for Results.md on Github if not in efficiency plotting mode
 	if [ "X${PlotCpufreqOPPs}" != "Xyes" ]; then
-		MHz="$(sort -n -r /sys/devices/system/cpu/cpufreq/policy?/cpuinfo_max_freq | tr '\n' '/' | sed -e 's|000/|/|g' -e 's|/$||')"
+		if [ -f /sys/devices/system/cpu/cpufreq/policy0/cpuinfo_max_freq ]; then
+			MHz="$(sort -n -r /sys/devices/system/cpu/cpufreq/policy?/cpuinfo_max_freq | tr '\n' '/' | sed -e 's|000/|/|g' -e 's|/$||') MHz"
+		else
+			MHz="no cpufreq support"
+		fi
 		KernelVersion="$(uname -r | awk -F"." '{print $1"."$2}')"
 		KernelArch="$(uname -m | sed -e 's/armv7l/armhf/' -e 's/aarch64/arm64/')"
 		if [ "X${KernelArch}" = "X" -o "X${KernelArch}" = "X${ARCH}" ]; then
@@ -1510,7 +1579,7 @@ SummarizeResults() {
 		else
 			DistroInfo="$(cut -c-1 <<<"${Distro##*/}" | tr '[:lower:]' '[:upper:]')$(cut -c2- <<<"${Distro##*/}") ${KernelArch}/${ARCH}"
 		fi
-		echo -e "\n| ${DeviceName} | ${MHz} MHz | ${KernelVersion} | ${DistroInfo} | ${ZipScore} | ${OpenSSLScore} | ${MemBenchScore} | ${CpuminerScore:-"-"} | [${UploadURL}](${UploadURL}) |" >>${ResultLog}
+		echo -e "\n| ${DeviceName} | ${MHz} | ${KernelVersion} | ${DistroInfo} | ${ZipScore} | ${OpenSSLScore} | ${MemBenchScore} | ${CpuminerScore:-"-"} | [${UploadURL}](${UploadURL}) |" >>${ResultLog}
 	fi
 } # SummarizeResults
 
@@ -1556,28 +1625,30 @@ CheckIOWait() {
 
 CheckForThrottling() {
 	# Check for throttling on normal ARM SBC
-	ls /sys/devices/system/cpu/cpufreq/policy?/stats/time_in_state | sort | while read ; do
-		Number=$(echo ${REPLY} | tr -c -d '[:digit:]')
-		diff ${TempDir}/time_in_state_after_${Number} ${TempDir}/time_in_state_before_${Number} >/dev/null 2>&1
-		if [ $? -ne 0 ]; then
-			if [ "${ClusterConfig}" = "0" ]; then
-				# all CPU cores have same cpufreq policies, we report globally
-				ReportCpufreqStatistics ${Number}
-				echo -e "${LRED}${BOLD}ATTENTION: Throttling might have occured. Check the log for details.${NC}\n"
-			else
-				# report affected cluster
-				for i in $(seq 0 $(( ${#ClusterConfig} -1 )) ) ; do
-					if [ ${ClusterConfig:$i:1} -eq ${Number} ]; then
-						FirstCore=${Number}
-						LastCore=$(GetLastClusterCore $(( ${i} + 1 )))
-						CPUInfo="$(GetCPUInfo ${Number})"
-						ReportCpufreqStatistics ${Number} " for CPUs ${FirstCore}-${LastCore}${CPUInfo}"
-						echo -e "${LRED}${BOLD}ATTENTION: Throttling might have occured on CPUs ${FirstCore}-${LastCore}${CPUInfo}. Check the log for details.${NC}\n"
-					fi
-				done
+	if [ -f /sys/devices/system/cpu/cpufreq/policy0/stats/time_in_state ]; then
+		ls /sys/devices/system/cpu/cpufreq/policy?/stats/time_in_state | sort | while read ; do
+			Number=$(echo ${REPLY} | tr -c -d '[:digit:]')
+			diff ${TempDir}/time_in_state_after_${Number} ${TempDir}/time_in_state_before_${Number} >/dev/null 2>&1
+			if [ $? -ne 0 ]; then
+				if [ "${ClusterConfig}" = "0" ]; then
+					# all CPU cores have same cpufreq policies, we report globally
+					ReportCpufreqStatistics ${Number}
+					echo -e "${LRED}${BOLD}ATTENTION: Throttling might have occured. Check the log for details.${NC}\n"
+				else
+					# report affected cluster
+					for i in $(seq 0 $(( ${#ClusterConfig} -1 )) ) ; do
+						if [ ${ClusterConfig:$i:1} -eq ${Number} ]; then
+							FirstCore=${Number}
+							LastCore=$(GetLastClusterCore $(( ${i} + 1 )))
+							CPUInfo="$(GetCPUInfo ${Number})"
+							ReportCpufreqStatistics ${Number} " for CPUs ${FirstCore}-${LastCore}${CPUInfo}"
+							echo -e "${LRED}${BOLD}ATTENTION: Throttling might have occured on CPUs ${FirstCore}-${LastCore}${CPUInfo}. Check the log for details.${NC}\n"
+						fi
+					done
+				fi
 			fi
-		fi
-	done
+		done
+	fi
 
 	# Check for killed CPU cores. Some unfortunate users might still use Allwinner BSP kernels
 	CPUCoresNow=$(grep -c '^processor' /proc/cpuinfo)

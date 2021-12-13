@@ -98,7 +98,6 @@
 | [2sZH](2sZH.txt) | v0.7.2 Pine64 RockPro64  | 0%/0.6% | 3.8Gi/3.5Gi | X | X | X | X | <span style=color:red> 5%</span> |  1% |  [check log](2sZH.txt) |
 | [2tQQ](2tQQ.txt) | v0.7.2 AMD Ryzen Embedded R1606G with Ra | 0.5%/0.2% | 3.3Gi/1.9Gi | X | X | X | X |  1% |  0% |  |
 | [2yIx](2yIx.txt) | v0.7.2 Pine64 RockPro64 v2.1  | 0%/0.4% | 3.7Gi/3.3Gi | X | X | X | X |  2% |  1% |  |
-| [3CcZ](3CcZ.txt) | v0.7.8  Celeron N5100  | 0.1%/0% | 7.6Gi/7.1Gi | X | X | X | X |  2% |  0% |  |
 | [3DeL](3DeL.txt) | v0.7.9 Raspberry Pi Zero 2 Rev 1.0  | 0.5%/0.2% | 427Mi/219Mi | X | X |    |    |  3% |  1% | | [3Dfo](3Dfo.txt) | v0.7.9 Raspberry Pi Zero 2 Rev 1.0  | 0.6%/0.3% | 427Mi/277Mi | X | X |    |    |  2% |  0% | | [3Di2](3Di2.txt) | v0.8.1 Nintendo Switch  | 0%/0% | 3.9G/3.5G | X | X | X | X |  2% |  0% |  |
 | [3DtN](3DtN.txt) | v0.8.1 Hardkernel ODROID-N2Plus  | 0%/0% | 3.6Gi/2.7Gi | X | X | X | X |  0% |  0% |  |
 | [3E7U](3E7U.txt) | v0.8.3 Raspberry Pi Model B Rev 2  | 1.2%/1.5% | 430Mi/344Mi | X | X | X |    |  3% |  0% | | [3E85](3E85.txt) | v0.8.3 Raspberry Pi Zero 2 Rev 1.0  | 2.6%/0.9% | 427Mi/267Mi | X | X |    |    |  3% |  0% |  |
@@ -107,12 +106,14 @@
 | [3EgS](3EgS.txt) | v0.8.4 Raspberry Pi 4 Model B Rev 1.1  | 0.5%/0.4% | 857Mi/695Mi | X | X | X |    |  2% |  0% |  |
 | <del>[3EhG](3EhG.txt)</del> | <del>v0.8.4 Raspberry Pi 4 Model B Rev 1.1 </del> | <del>0%/0.6%</del> | <del>909Mi/754Mi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del><span style=color:red> 8%</span></del> | <del><span style=color:red>**54%**</span></del> |  |
 | [3F9C](3F9C.txt) | v0.8.4 Raspberry Pi 4 Model B Rev 1.1  | 0%/0.6% | 959Mi/815Mi | X | X | X | X | <span style=color:red>**12%**</span> |  0% |  |
-| [3FTK](3FTK.txt) | v0.8.4   | 0%/4.8% | 15Gi/15Gi | X | X | X | X |  2% |  0% |  |
 | [3FlD](3FlD.txt) | v0.8.4 Raspberry Pi 4 Model B Rev 1.1  | 0%/0.6% | 959Mi/839Mi | X | X | X | X | <span style=color:red> 9%</span> |  0% |  |
 | [3Gia](3Gia.txt) | v0.8.5 Raspberry Pi 4 Model B Rev 1.1  | 2.0%/1.0% | 857Mi/696Mi | X | X | X | X |  3% |  0% |  |
 | [3GmP](3GmP.txt) | v0.8.6 NanoPi Fire3  | 0%/0% | 994Mi/671Mi | X | X | X | X |  4% |  0% |  |
 | [3GmR](3GmR.txt) | v0.8.6 FriendlyARM NanoPi NEO4  | 0%/0.7% | 977Mi/714Mi | X | X | X | X |  1% |  0% |  |
 | [3GnC](3GnC.txt) | v0.8.6 Hardkernel Odroid XU4  | 0%/0.9% | 1.9Gi/1.7Gi | X | X | X | X |  4% |  0% |  [check log](3GnC.txt) |
 | [3GnV](3GnV.txt) | v0.8.6 FriendlyArm NanoPi M1 Plus  | 0%/3.0% | 999M/847M | X | X | X | X |  3% |  4% |  |
+| [3GrW](3GrW.txt) | v0.8.6   | 0%/4.0% | 15Gi/14Gi | X | X | X | X |  1% |  0% |  |
+| [3HUU](3HUU.txt) | v0.8.8  Celeron N4500  | 0.2%/0% | 7,5Gi/6,4Gi | X | X | X | X |  1% |  0% |  |
+| [3HUd](3HUd.txt) | v0.8.8  Celeron N5100  | 0%/0% | 7.6Gi/7.1Gi | X | X | X | X |  3% |  0% |  |
 | [3rUb](3rUb.txt) | v0.7.7 Pine64 RK3566 Quartz64-A Board  | 0%/0% | 3.8Gi/3.5Gi | X | X | X | X |  3% |  1% |  |
 | [3wZn](3wZn.txt) | v0.7.7 Radxa Zero  | 0.3%/0% | 3.7Gi/3.4Gi | X | X | X | X |  2% |  1% |  |

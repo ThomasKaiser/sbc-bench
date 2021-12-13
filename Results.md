@@ -63,7 +63,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Orange Pi PC Plus](https://www.armbian.com/orange-pi-pc-plus/) | 1300 MHz | 4.14 | Stretch armhf | 2.880 | 20890 | 25270 | 900 | 3280 | - | [http://ix.io/1j1d](http://ix.io/1j1d) |
 | [Orange Pi Plus 2](https://www.armbian.com/orange-pi-plus-2/) | 1300 MHz | 4.14 | Stretch armhf | 2.890 | 21480 | 25250 | 830 | 3240 | - | [http://ix.io/1iX4](http://ix.io/1iX4) |
 | [Orange Pi Prime](https://www.armbian.com/orange-pi-prime/) | 1370 MHz | 5.4 | Buster | 3590 | 89210 | 637980 | 1180 | 3540 | - | [http://ix.io/2kTH](http://ix.io/2kTH) |
-| Phytium D2000 | 2300 MHz | 5.13 | Impish arm64 | 16720 | 448270 | 828340 | 2970 | 8090 | - | [http://ix.io/3FTK](http://ix.io/3FTK) |
+| Phytium D2000 | 2300 MHz | 5.13 | Impish arm64 | 16680 | 448610 | 828450 | 2920 | 7310 | - | [http://ix.io/3GrW](http://ix.io/3GrW) |
 | [PineH64](https://www.armbian.com/pine-h64/) | 1800 MHz | 4.18 | Stretch arm64 | 4650 | 123400 | 836900 | 1380 | 5530 | 5.62 | [http://ix.io/1jEr](http://ix.io/1jEr) |
 | [PineH64](https://www.armbian.com/pine-h64/) | 1800 MHz | 5.4 | Buster arm64 | 4710 | 116900 | 839870 | 1420 | 5560 | 7.10 | [http://ix.io/26Ph](http://ix.io/26Ph) |
 | [Quartz64](https://wiki.pine64.org/wiki/Quartz64) | 1800 MHz | 5.13 | Buster arm64 | 4840 | 165250 | 845490 | 2980 | 7650| - | [http://ix.io/3rUb](http://ix.io/3rUb) |
@@ -119,7 +119,8 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | Celeron J4105 | 2400/1500 MHz | 4.15 | Bionic amd64 | 9020 | 458670 | 697100 | 5500 | 7410 | 19.07 | [http://ix.io/1qal](http://ix.io/1qal) |
 | Celeron J4105 | 2400/1500 MHz | 4.15 | Bionic amd64 | 8960 | 453860 | 697080 | 5620 | 7650 | 19.13 | [http://ix.io/1qb0](http://ix.io/1qb0) |
 | Pentium J5005 | 2700/1500 MHz | 5.0 | Bionic amd64 | 9230 | 379740 | 778360 | 5530 | 7130 | 20.74 | [http://ix.io/21rE](http://ix.io/21rE) |
-| Celeron N5100 | 2800/1100 MHz | 5.11 | Focal amd64 | 9830 | 654690 | 776090 | 7580 | 7890 | 18.10 | [http://ix.io/3CcZ](http://ix.io/3CcZ) |
+| Celeron N4500 | 2800/1100 MHz | 5.13 | Impish amd64 | 6300 | 663550 | 783840 | 8100 | 8350 | - | [http://ix.io/3HUU](http://ix.io/3HUU) |
+| Celeron N5100 | 2800/1100 MHz | 5.13 | Focal amd64 | 9810 | 661940 | 783640 | 7760 | 8120 | - | [http://ix.io/3HUd](http://ix.io/3HUd) |
 | Pentium G4600 | 3600 MHz | 4.19 | Buster amd64 | 11810 | 878790 | 984820 | 15120 | 33380 | 21.88 | [http://ix.io/2jVw](http://ix.io/2jVw) |
 
 &ast; Number obtained with cryptodev (Marvell's CESA).
@@ -154,7 +155,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 * Last RockPro64 entry has been made after ayufan solved memory performance problem with Rockchip's 4.4 kernel on his images (see [discussion](https://forum.khadas.com/t/painlessly-usable-linux-distro/3124/24?u=tkaiser))
 * Vim2 is somewhat special: not a real big.LITTLE design but 2 A53 clusters controlled by a firmware BLOB that allows cluster 0 to clock up to 1414 MHz (reported falsely as 1512 MHz) and cluster 1 able to reach 1 GHz ([details](https://forum.khadas.com/t/cpu-frequency-up-to-2ghz/2010/23?u=tkaiser))
 * x86 numbers are meant as comparison. x5-Z8300 numbers were made with an [UP Board](https://wiki.up-community.org/Hardware_Specification), 1st x5-Z8350 is an Atomic Pi and the 2nd a RockPi X, Celeron J3455 with an [ASRock J3455-ITX mainboard](https://forum.openmediavault.org/index.php/Thread/24093), Pentium N4200 on [UP2 Board](https://wiki.up-community.org/Hardware_Specification_UP2), Pentium J4205 on an [ASRock J4205-ITX](https://forum.openmediavault.org/index.php/Thread/24093-Efficient-low-cost-home-made-NAS/?postID=182578#post182578), Ryzen Embedded R1606G on [DFI GHF51 SBC](https://www.cnx-software.com/2020/08/10/amd-ryzen-embedded-sbc-review-with-ubuntu-20-04/), Celeron J4105 on two ODROID-H2 with different DDR4-PC19200 (2400MT/s) SO-DIMMs (remotely accessed via maze.odroid.com) and Celeron N4100 tested on an [ODROID-H2 engineering sample](https://forum.odroid.com/viewtopic.php?f=168&t=32911&p=239613#p239581) with single channel DRAM config, Pentium J5005 is in an [MINIX NEO J50C-4](https://www.cnx-software.com/2019/12/12/a-look-at-ubuntu-on-minix-neo-g41v-4-and-j50c-4-mini-pcs/), Pentium G4600 is inside a [TK Microserver MI106+](https://www.thomas-krenn.com/de/produkte/tower-systeme/silent-tower-server/microserver-mi106-plus.html).
-* The Celeron N5100 numbers were obtained using a passively cooled Asus PN41-BBC053MVN Mini PC with single channel DRAM config at 25°C ambient temp. With better cooling and dual channel memory some scores might be significantly higher.
+* Both Jasper Lake numbers (N4500/N5100) were obtained using passively cooled Mini PC with only one DIMM. With dual channel memory (and better cooling in N5100's case) some scores might be significantly higher.
 
 ## Insights
 

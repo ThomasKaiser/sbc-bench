@@ -1125,7 +1125,7 @@ BasicSetup() {
 InstallPrerequisits() {
 	echo -e "sbc-bench v${Version}\n\nInstalling needed tools. This may take some time...\c"
 	SevenZip=$(command -v 7za || command -v 7zr)
-	[ -z "${SevenZip}" ] && add-apt-repository universe >/dev/null 2>&1 ; apt -f -qq -y install p7zip >/dev/null 2>&1 && SevenZip=/usr/bin/7zr
+	[ -z "${SevenZip}" ] && add-apt-repository -y universe >/dev/null 2>&1 ; apt -f -qq -y install p7zip >/dev/null 2>&1 && SevenZip=/usr/bin/7zr
 	[ -z "${SevenZip}" ] && (echo "No 7-zip binary found and could not be installed. Aborting" >&2 ; exit 1)
 
 	command -v iostat >/dev/null 2>&1 || apt -f -qq -y install sysstat >/dev/null 2>&1
@@ -1474,7 +1474,7 @@ RunOpenSSLBenchmark() {
 		for bytelength in 128 192 256 ; do
 			openssl speed -elapsed -evp aes-${bytelength}-cbc 2>/dev/null
 			openssl speed -elapsed -evp aes-${bytelength}-cbc 2>/dev/null
-		done >${OpenSSLLog}
+		done | tr '[:upper:]' '[:lower:]' >${OpenSSLLog}
 	else
 		# different package ids, we walk through all clusters
 		echo -e "Executing benchmark on each cluster individually\n" >>${ResultLog}
@@ -1482,7 +1482,7 @@ RunOpenSSLBenchmark() {
 			for i in $(seq 0 $(( ${#ClusterConfig} -1 )) ) ; do
 				taskset -c ${ClusterConfig:$i:1} openssl speed -elapsed -evp aes-${bytelength}-cbc 2>/dev/null
 			done
-		done >${OpenSSLLog}
+		done | tr '[:upper:]' '[:lower:]' >${OpenSSLLog}
 	fi
 	kill ${MonitoringPID}
 	echo -e "$(openssl version | awk -F" " '{print $1" "$2", built on "$3" "$4" "$5" "$6" "$7" "$8" "$9" "$10" "$11" "$12" "$13" "$14" "$15}' | sed 's/ *$//')\n$(grep '^type' ${OpenSSLLog} | head -n1)" >>${ResultLog}
@@ -1511,7 +1511,6 @@ RunCpuminerBenchmark() {
 
 PrintCPUTopology() {
 	# prints list of CPU cores, clusters and cpufreq policy nodes
-	echo -e "##########################################################################\n"
 	echo "CPU sysfs topology (clusters, cpufreq members, clockspeeds)"
 	echo "                 cpufreq   min    max"
 	echo " CPU    cluster  policy   speed  speed   core type"

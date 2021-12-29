@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.8.8
+Version=0.8.9
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -696,6 +696,8 @@ GetTempSensor() {
 						if [ "X${CPUSensor}" != "X" ]; then
 							ThermalZone="$(GetThermalZone "${CPUSensor}")"
 							ln -fs ${ThermalZone}/temp ${TempSource}
+						else
+							echo 0 >${TempSource}
 						fi
 						;;
 				esac
@@ -1082,7 +1084,7 @@ CheckLoad() {
 } # CheckLoad
 
 GetCPUClusters() {
-	if [ -d /sys/devices/system/cpu/cpufreq/policy0  -a "${CPUArchitecture}" != "x86_64" ]; then
+	if [ -d /sys/devices/system/cpu/cpufreq/policy0 -a "${CPUArchitecture}" != "x86_64" ]; then
 		# cpufreq support exists on ARM, we rely on this
 		ls -d /sys/devices/system/cpu/cpufreq/policy? | tr -d -c '[:digit:]'
 	else
@@ -1096,10 +1098,12 @@ GetCPUClusters() {
 } # GetCPUClusters
 
 BasicSetup() {
-	# set cpufreq governor based on $1 (defaults to ondemand if not provided)			
-	for Cluster in $(ls -d /sys/devices/system/cpu/cpufreq/policy?); do
-		[ -w ${Cluster}/scaling_governor ] && echo ${1:-ondemand} >${Cluster}/scaling_governor
-	done
+	# set cpufreq governor based on $1 (defaults to ondemand if not provided)
+	if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
+		for Cluster in $(ls -d /sys/devices/system/cpu/cpufreq/policy?); do
+			[ -w ${Cluster}/scaling_governor ] && echo ${1:-ondemand} >${Cluster}/scaling_governor 2>/dev/null
+		done
+	fi
 
 	CPUArchitecture="$(lscpu | awk -F" " '/^Architecture/ {print $2}')"
 	case ${CPUArchitecture} in
@@ -1716,11 +1720,18 @@ ReportRPiHealth() {
 } # ReportRPiHealth
 
 CacheAndDIMMDetails() {
-	DIMMDetails="$(dmidecode -t memory  2>/dev/null | grep "Speed:")"
+	DIMMFilter="$(echo -e "Locator:|\tVolatile Size:|\tType:|Speed:")"
+	DIMMDetails="$(dmidecode -t memory 2>/dev/null | egrep "${DIMMFilter}")"
 	if [ "X${DIMMDetails}" != "X" ]; then
-		echo -e "\nDIMM configuration:"
-		DIMMFilter="$(echo -e "Locator:|\tVolatile Size:|\tType:|Speed:")"
-		dmidecode -t memory 2>/dev/null | egrep "${DIMMFilter}"
+		echo -e "\nDIMM configuration:\n${DIMMDetails}"
+		# check wether there's detailed DIMM info available via i2c
+		unset DIMMDetails
+		command -v decode-dimms >/dev/null 2>&1 || apt -f -qq -y install i2c-tools >/dev/null 2>&1
+		command -v decode-dimms >/dev/null 2>&1 && \
+			DIMMDetails="$(decode-dimms 2>/dev/null | sed -ne '/Decoding EEPROM/,$ p' | grep -v Serial)"
+		if [ "X${DIMMDetails}" != "X" ]; then
+			echo -e "\n${DIMMDetails}"
+		fi
 	fi
 	find /sys/devices/system/cpu -name "cache" -type d | sort -V | while read ; do
 		find "${REPLY}" -name size -type f | while read ; do

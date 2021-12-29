@@ -1720,15 +1720,15 @@ ReportRPiHealth() {
 } # ReportRPiHealth
 
 CacheAndDIMMDetails() {
-	DIMMFilter="$(echo -e "Locator:|\tVolatile Size:|\tType:|Speed:")"
-	DIMMDetails="$(dmidecode -t memory 2>/dev/null | egrep "${DIMMFilter}")"
+	DIMMFilter="$(echo -e "Locator:|\tVolatile Size:|\tType:|Speed:|\tRank:")"
+	DIMMDetails="$(dmidecode -t memory 2>/dev/null | egrep "${DIMMFilter}" | sed "/\tLocator:/i \ ")"
 	if [ "X${DIMMDetails}" != "X" ]; then
-		echo -e "\nDIMM configuration:\n${DIMMDetails}"
+		echo -e "\nDIMM configuration:${DIMMDetails}"
 		# check wether there's detailed DIMM info available via i2c
 		unset DIMMDetails
 		command -v decode-dimms >/dev/null 2>&1 || apt -f -qq -y install i2c-tools >/dev/null 2>&1
 		command -v decode-dimms >/dev/null 2>&1 && \
-			DIMMDetails="$(decode-dimms 2>/dev/null | sed -ne '/Decoding EEPROM/,$ p' | grep -v Serial)"
+			DIMMDetails="$(decode-dimms 2>/dev/null | sed -ne '/Decoding EEPROM/,$ p' | sed '/^$/N;/^\n$/D' | grep -v Serial)"
 		if [ "X${DIMMDetails}" != "X" ]; then
 			echo -e "\n${DIMMDetails}"
 		fi

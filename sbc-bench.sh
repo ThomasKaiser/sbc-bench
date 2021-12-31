@@ -811,7 +811,9 @@ MonitorBoard() {
 		fi
 		BasicSetup
 		command -v dpkg >/dev/null 2>&1 && Userland=", Userland: $(dpkg --print-architecture 2>/dev/null)"
-		echo "Kernel: ${CPUArchitecture}${Userland}"
+		VirtWhat="$(virt-what 2>/dev/null)"
+		[ "X${VirtWhat}" != "X" ] && VirtOrContainer=" / ${BOLD}${VirtWhat}${NC}"
+		echo -e "Kernel: ${CPUArchitecture}${VirtOrContainer}${Userland}"
 		PrintCPUTopology
 	fi
 
@@ -1064,7 +1066,7 @@ CheckRelease() {
 			:
 			;;
 		*)
-			echo -e "${LRED}${BOLD}WARNING: this tool is meant to run only on Debian Stretch, Buster, Bullseye or Ubuntu Bionic, Focal.${NC}"
+			echo -e "${LRED}${BOLD}WARNING: this tool is meant to run only on Debian Stretch, Buster, Bullseye or Ubuntu Bionic, Focal, Jammy.${NC}"
 			echo -e "When running on other distros results are partially meaningless or can't be collected.\nPress [ctrl]-[c] to stop or [enter] to continue."
 			read
 			;;
@@ -1137,6 +1139,7 @@ InstallPrerequisits() {
 	command -v openssl >/dev/null 2>&1 || apt -f -qq -y install openssl >/dev/null 2>&1
 	command -v curl >/dev/null 2>&1 || apt -f -qq -y install curl >/dev/null 2>&1
 	command -v dmidecode >/dev/null 2>&1 || apt -f -qq -y install dmidecode >/dev/null 2>&1
+	command -v virt-what >/dev/null 2>&1 || apt -f -qq -y install virt-what >/dev/null 2>&1
 	
 	if [ "${PlotCpufreqOPPs}" = "yes" ]; then
 		command -v htmldoc >/dev/null 2>&1 || apt -f -qq -y --no-install-recommends install htmldoc >/dev/null 2>&1
@@ -1245,7 +1248,7 @@ InitialMonitoring() {
 	echo -e "\n$(command -v gcc) $(gcc --version | sed 's/gcc\ //' | head -n1)" >>${ResultLog}
 
 	# Some basic system info needed to interpret system health later
-	echo -e "\nUptime:$(uptime)\n\n$(iostat | grep -v "^loop")\n\n$(free -h)\n\n$(swapon -s)" >>${ResultLog}
+	echo -e "\nUptime:$(uptime)\n\n$(iostat | grep -v "^loop")\n\n$(free -h)\n\n$(swapon -s)" | sed '/^$/N;/^\n$/D' >>${ResultLog}
 	
 	# set up Netio consumption monitoring if requested. Device address and socket
 	# need to be available as Netio (environment) variable.
@@ -1393,7 +1396,7 @@ CheckCPUCluster() {
 } # CheckCPUCluster
 
 RunTinyMemBench() {
-	echo -e "\x08\x08 Done (results will be available in ${EstimatedDuration}-$(( ${EstimatedDuration} * 135 / 100 )) minutes)."
+	echo -e "\x08\x08 Done (results will be available in ${EstimatedDuration}-$(( ${EstimatedDuration} * 140 / 100 )) minutes)."
 	echo -e "Executing tinymembench...\c"
 	echo -e "System health while running tinymembench:\n" >${MonitorLog}
 	/bin/bash "${PathToMe}" -m $(( 40 * ${#ClusterConfig} )) >>${MonitorLog} &
@@ -1520,6 +1523,12 @@ PrintCPUTopology() {
 	echo " CPU    cluster  policy   speed  speed   core type"
 	for i in $(seq 0 $(( ${CPUCores} - 1 )) ); do
 		CoreName="$(GetCPUType $i)"
+		# check if CoreName is empty
+		if [ "X${CoreName}" = "X" -a "X${DeviceName}" != "X" ]; then
+			# try to return CPU type instead of core type on x86 if available
+			[[ ${CPUArchitecture} == *86* ]] && \
+				CoreName="$(sed -e 's/ Processor//' -e 's/Intel(R) Xeon(R) CPU //' -e 's/Intel(R) //' -e 's/(R)//' -e 's/CPU //' -e 's/ 0 @/ @/' <<<"${DeviceName}")"
+		fi
 		read CPUCluster </sys/devices/system/cpu/cpu${i}/topology/physical_package_id
 		if [ -d /sys/devices/system/cpu/cpufreq/policy${i} ]; then
 			CPUFreqPolicy=${i}
@@ -1564,7 +1573,7 @@ SummarizeResults() {
 	fi
 
 	echo -e "\n##########################################################################\n" >>${ResultLog}
-	echo -e "$(iostat | grep -v "^loop")\n\n$(free -h)\n\n$(swapon -s)\n" >>${ResultLog}
+	echo -e "$(iostat | grep -v "^loop")\n\n$(free -h)\n\n$(swapon -s)\n" | sed '/^$/N;/^\n$/D' >>${ResultLog}
 	PrintCPUTopology >>${ResultLog}
 	lscpu >>${ResultLog}
 	CacheAndDIMMDetails >>${ResultLog}
@@ -1583,7 +1592,7 @@ SummarizeResults() {
 		else
 			DistroInfo="$(cut -c-1 <<<"${Distro##*/}" | tr '[:lower:]' '[:upper:]')$(cut -c2- <<<"${Distro##*/}") ${KernelArch}/${ARCH}"
 		fi
-		echo -e "\n| ${DeviceName:-$HostName} | ${MHz} | ${KernelVersion} | ${DistroInfo} | ${ZipScore} | ${OpenSSLScore} | ${MemBenchScore} | ${CpuminerScore:-"-"} | [${UploadURL}](${UploadURL}) |" >>${ResultLog}
+		echo -e "\n| ${DeviceName:-$HostName} | ${MHz} | ${KernelVersion} | ${DistroInfo} | ${ZipScore} | ${OpenSSLScore} | ${MemBenchScore} | ${CpuminerScore:-"-"} |\c" >>${ResultLog}
 	fi
 } # SummarizeResults
 
@@ -1604,20 +1613,64 @@ UploadResults() {
 	fi
 	case ${UploadURL} in
 		http*)
-			echo -e "\nFull results uploaded to ${UploadURL}. Please check the log for anomalies (e.g. swapping\nor throttling happenend) and otherwise share this URL.\n"
+			# uploading results worked, check sanity of results and environment
+			echo " [${UploadURL}](${UploadURL}) |" >>${ResultLog}
+			echo -e "\nFull results uploaded to ${UploadURL}. \c"
 			# check whether benchmark ran into a sane environment (no throttling and no swapping)
-			if [ ${IOWait:-0} -le 5 -a ! -f ${TempDir}/throttling_info.txt -a "X${IsIntel}" != "Xyes" ]; then
-				echo -e "In case this device is not already represented in official sbc-bench results list then please"
-				echo -e "consider submitting it at https://github.com/ThomasKaiser/sbc-bench/issues with this line:"
-				echo -e "| ${DeviceName:-$HostName} | ${MHz} | ${KernelVersion} | ${DistroInfo} | ${ZipScore} | ${OpenSSLScore} | ${MemBenchScore} | ${CpuminerScore:-"-"} | [${UploadURL}](${UploadURL}) |\n"
+			if [ ${IOWait:-0} -le 5 -a ! -f ${TempDir}/throttling_info.txt ]; then
+				# in case it's not x86/x64 then also suggest adding results to official list
+				case ${CPUArchitecture} in
+					x86*|i686)
+						# Collecting x86 results is somewhat pointless. At least inform
+						# about environment the benchmark was running in
+						Manufacturer="$(dmidecode -t system 2>/dev/null | awk -F": " '/Manufacturer:/ {print $2}')"
+						case "${Manufacturer}" in
+							"")
+								# No dmidecode output as such check where we're running
+								VirtWhat="$(virt-what)"
+								if [ "X${VirtWhat}" = "X" ]; then
+									echo "\n\n"
+								else
+									echo "Please be aware that benchmark was running inside ${VirtWhat}\n"
+								fi
+								;;
+							*)
+								# Check whether virtualization flags are present
+								grep -q ^flags.*\ hypervisor /proc/cpuinfo
+								case $? in
+									0)
+										echo "Please be aware that benchmark was running inside a ${Manufacturer} VM\n"
+										;;
+									*)
+										echo "\n\n"
+										;;
+								esac
+								;;
+						esac
+						;;
+					*)
+						echo -e "\nIn case this device is not already represented in official sbc-bench results list then please"
+						echo -e "consider submitting it at https://github.com/ThomasKaiser/sbc-bench/issues with this line:"
+						tail -n 1 "${ResultLog}"
+						echo
+						;;
+				esac
+			else
+				echo -e "Please check the log for anomalies (e.g. swapping\nor throttling happenend).\n"
 			fi
 			;;
 		*)
 			echo -e "\nUnable to upload full test results. Please copy&paste the below stuff to pastebin.com and\nprovide the URL. Check the output for throttling and swapping please.\n\n"
 			cat ${ResultLog}
-			echo -e "\n"
+			echo -e "\n\n"
 			;;
 	esac
+
+	# write continous log, see
+	# Skip log writing if log is a symlink to somewhere else
+	[ -h /var/log/sbc-bench.log ] && return 1
+	[ -s /var/log/sbc-bench.log ] && echo -e "\n\n\n" >>/var/log/sbc-bench.log
+	cat ${ResultLog} >>/var/log/sbc-bench.log
 } # UploadResults
 
 CheckIOWait() {
@@ -1723,8 +1776,14 @@ CacheAndDIMMDetails() {
 	DIMMFilter="$(echo -e "Locator:|\tVolatile Size:|\tType:|Speed:|\tRank:")"
 	DIMMDetails="$(dmidecode -t memory 2>/dev/null | egrep "${DIMMFilter}" | sed "/\tLocator:/i \ ")"
 	if [ "X${DIMMDetails}" != "X" ]; then
-		echo -e "\nDIMM configuration:${DIMMDetails}"
-		# check wether there's detailed DIMM info available via i2c
+		echo -e "\nDIMM configuration:\c"
+		# check whether 'Volatile Size' is contained and if not include full command output
+		grep -q "Volatile Size:" <<<"${DIMMDetails}" && \
+			echo -e "${DIMMDetails}" | egrep -v ": Unknown|: None" || \
+			(echo ; dmidecode -t memory 2>/dev/null | \
+			egrep -v "^Handle |^# dmidecode |^Getting SMBIOS data|^SMBIOS |Serial Number:" \
+			| sed '/^$/N;/^\n$/D')
+		# check wether there's even more detailed DIMM info available via i2c
 		unset DIMMDetails
 		command -v decode-dimms >/dev/null 2>&1 || apt -f -qq -y install i2c-tools >/dev/null 2>&1
 		command -v decode-dimms >/dev/null 2>&1 && \

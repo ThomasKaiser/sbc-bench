@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.8.9
+Version=0.9.0
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -1229,6 +1229,12 @@ InitialMonitoring() {
 	else
 		echo -e "Architecture:\t$(tr -d '"' <<<${ARCH})" >>${ResultLog}
 	fi
+
+	# Log system info if present:
+	SystemInfo="$(dmidecode -t system | egrep "Manufacturer: |Product Name: |Version: |Family: |SKU Number: " | egrep -v ":  $|O.E.M.|123456789")"
+	if [ "X${SystemInfo}" != "X" ]; then
+		echo -e "\nDevice Info:\n${SystemInfo}" >>${ResultLog}
+	fi
 	
 	# Log BIOS/UEFI info if present:
 	UEFIInfo="$(dmidecode -t bios 2>/dev/null | egrep "Vendor:|Version:|Release Date:|Revision:")"
@@ -1238,14 +1244,17 @@ InitialMonitoring() {
 
 	# On Raspberries we also collect 'firmware' information:
 	if [ ${USE_VCGENCMD} = true ] ; then
-		echo -e "\nRaspberry Pi ThreadX version:\n$(/usr/bin/vcgencmd version)" >>${ResultLog}
+		ThreadXVersion="$(/usr/bin/vcgencmd version)"
+		echo -e "\nRaspberry Pi ThreadX version:\n${ThreadXVersion}" >>${ResultLog}
 		[ -f /boot/config.txt ] && ThreadXConfig=/boot/config.txt || ThreadXConfig=/boot/firmware/config.txt
 		[ -f ${ThreadXConfig} ] && echo -e "\nThreadX configuration (${ThreadXConfig}):\n$(grep -v '#' ${ThreadXConfig} | sed '/^\s*$/d')" >>${ResultLog}
 		echo -e "\nActual ThreadX settings:\n$(vcgencmd get_config int)" >>${ResultLog}
 	fi
 
 	# Log gcc version
-	echo -e "\n$(command -v gcc) $(gcc --version | sed 's/gcc\ //' | head -n1)" >>${ResultLog}
+	GCC="$(command -v gcc)"
+	GCC_Version="$(${GCC} --version | sed 's/gcc\ //' | head -n1)"
+	echo -e "\n${GCC} ${GCC_Version}" >>${ResultLog}
 
 	# Some basic system info needed to interpret system health later
 	echo -e "\nUptime:$(uptime)\n\n$(iostat | grep -v "^loop")\n\n$(free -h)\n\n$(swapon -s)" | sed '/^$/N;/^\n$/D' >>${ResultLog}
@@ -1576,6 +1585,7 @@ SummarizeResults() {
 	echo -e "$(iostat | grep -v "^loop")\n\n$(free -h)\n\n$(swapon -s)\n" | sed '/^$/N;/^\n$/D' >>${ResultLog}
 	PrintCPUTopology >>${ResultLog}
 	lscpu >>${ResultLog}
+	LogEnvironment >>${ResultLog}
 	CacheAndDIMMDetails >>${ResultLog}
 
 	# Add a line suitable for Results.md on Github if not in efficiency plotting mode
@@ -1585,7 +1595,7 @@ SummarizeResults() {
 		else
 			MHz="no cpufreq support"
 		fi
-		KernelVersion="$(uname -r | awk -F"." '{print $1"."$2}')"
+		KernelVersion="$(awk -F"." '{print $1"."$2}' <<<"${KernelVersion}")"
 		KernelArch="$(uname -m | sed -e 's/armv7l/armhf/' -e 's/aarch64/arm64/')"
 		if [ "X${KernelArch}" = "X" -o "X${KernelArch}" = "X${ARCH}" ]; then
 			DistroInfo="$(cut -c-1 <<<"${Distro##*/}" | tr '[:lower:]' '[:upper:]')$(cut -c2- <<<"${Distro##*/}") ${ARCH}"
@@ -1595,6 +1605,33 @@ SummarizeResults() {
 		echo -e "\n| ${DeviceName:-$HostName} | ${MHz} | ${KernelVersion} | ${DistroInfo} | ${ZipScore} | ${OpenSSLScore} | ${MemBenchScore} | ${CpuminerScore:-"-"} |\c" >>${ResultLog}
 	fi
 } # SummarizeResults
+
+LogEnvironment() {
+	# Log compiler version
+	GCC_Info="$(${GCC} -v 2>&1 | egrep "^Target|^Configured")"
+	echo -e "\nCompiler: ${GCC} $(cut -f1 -d')' <<<${GCC_Version})/$(awk -F": " '/^Target/ {print $2}' <<< "${GCC_Info}"))"
+	# awk -F": " '/^Configured/ {print $2}' <<< "${GCC_Info}"
+	# Log userland architecture if available
+	[ "X${ARCH}" != "X" ] && echo "Userland: ${ARCH}"
+	# Log ThreadX version if available
+	[ "X${ThreadXVersion}" != "X" ] && echo -e \
+		" ThreadX: $(awk '/^version/ {print $2}' <<<"${ThreadXVersion}") / $(head -n1 <<<"${ThreadXVersion}")"
+	# check for VM/container mode to add this to kernel info
+	VirtWhat="$(virt-what 2>/dev/null)"
+	[ "X${VirtWhat}" != "X" ] && VirtOrContainer=" (${VirtWhat})"
+	# kernel info
+	KernelVersion="$(uname -r)"
+	echo -e "  Kernel: ${KernelVersion}/${CPUArchitecture}${VirtOrContainer}"
+	# kernel config
+	KernelConfig="/boot/config-${KernelVersion}"
+	if [ -f "${KernelConfig}" ] ; then
+		grep -E "^CONFIG_HZ|^CONFIG_PREEMPT" "${KernelConfig}" | while read ; do echo "          ${REPLY}"; done | sort -V
+	else
+		modprobe configs 2>/dev/null
+		[ -f /proc/config.gz ] && zgrep -E "^CONFIG_HZ|^CONFIG_PREEMPT" /proc/config.gz | \
+			while read ; do echo "          ${REPLY}"; done | sort -V
+	fi
+} # LogEnvironment
 
 UploadResults() {
 	UploadURL=$(curl -s -F 'f:1=<-' ix.io <${ResultLog} 2>/dev/null || curl -s -F 'f:1=<-' ix.io <${ResultLog})
@@ -1629,7 +1666,7 @@ UploadResults() {
 								# No dmidecode output as such check where we're running
 								VirtWhat="$(virt-what)"
 								if [ "X${VirtWhat}" = "X" ]; then
-									echo "\n\n"
+									echo -e "\n"
 								else
 									echo "Please be aware that benchmark was running inside ${VirtWhat}\n"
 								fi
@@ -1642,7 +1679,7 @@ UploadResults() {
 										echo "Please be aware that benchmark was running inside a ${Manufacturer} VM\n"
 										;;
 									*)
-										echo "\n\n"
+										echo -e "\n"
 										;;
 								esac
 								;;
@@ -1785,6 +1822,7 @@ CacheAndDIMMDetails() {
 			| sed '/^$/N;/^\n$/D')
 		# check wether there's even more detailed DIMM info available via i2c
 		unset DIMMDetails
+		modprobe eeprom >/dev/null 2>&1
 		command -v decode-dimms >/dev/null 2>&1 || apt -f -qq -y install i2c-tools >/dev/null 2>&1
 		command -v decode-dimms >/dev/null 2>&1 && \
 			DIMMDetails="$(decode-dimms 2>/dev/null | sed -ne '/Decoding EEPROM/,$ p' | sed '/^$/N;/^\n$/D' | grep -v Serial)"

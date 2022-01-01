@@ -35,7 +35,7 @@ EOF
 
 for file in *.txt ; do
 	unset BoardName PrettyBoardName
-	BoardName="$(head -n1 "${file}" | grep "sbc-bench" | cut -f1 -d'(' | awk -F" -- " '{print $1}' | sed -e 's/sbc-bench //' -e 's/_/\\_/g' | cut -c-40)"
+	BoardName="$(head -n1 "${file}" | grep "sbc-bench" | sed 's/(R)//g' | cut -f1 -d'(' | awk -F" -- " '{print $1}' | sed -e 's/sbc-bench //' -e 's/_/\\_/g' | cut -c-40)"
 	PrettyBoardName="$(grep "/${file%.*})" ../Results.md | head -n1 | cut -f2 -d'|' | cut -f2 -d'[' | cut -f1 -d']')"
 	if [ "X${PrettyBoardName}" = "X" ]; then
 		DisplayName="$(sed 's/nexell soc/NanoPi Fire3/' <<<"${BoardName}")"

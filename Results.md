@@ -68,6 +68,8 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [PineH64](https://www.armbian.com/pine-h64/) | 1800 MHz | 5.4 | Buster arm64 | 4710 | 116900 | 839870 | 1420 | 5560 | 7.10 | [http://ix.io/26Ph](http://ix.io/26Ph) |
 | [Quartz64](https://wiki.pine64.org/wiki/Quartz64) | 1800 MHz | 5.13 | Buster arm64 | 4840 | 165250 | 845490 | 2980 | 7650| - | [http://ix.io/3rUb](http://ix.io/3rUb) |
 | [Radxa Zero](https://wiki.radxa.com/Zero) | 1800 MHz | 5.10 | Focal arm64 | 4610 | 151370 | 840080 | 1600 | 5370 | - | [http://ix.io/3wZn](http://ix.io/3wZn) |
+| [Radxa Zero](https://wiki.radxa.com/Zero) | 1800 MHz | 5.10 | Buster arm64 | 4640 | 114680 | 838990 | 1580 | 4870 | - | [http://ix.io/3Krm](http://ix.io/3Krm) |
+| [Radxa Zero](https://wiki.radxa.com/Zero) | 1800 MHz | 5.10 | Bullseye arm64 | 4580 | 105170 | 838360 | 1600 | 5360 | 7.13 | [http://ix.io/3JCm](http://ix.io/3JCm) |
 | [Renegade](https://www.armbian.com/renegade/) | 1400 MHz | 4.4 | Stretch arm64 | 3710 | 95030 | 644200 | 1565 | 7435 | 3.92 | [http://ix.io/1iFx](http://ix.io/1iFx) |
 | Raspberry Pi B | 700 MHz | 5.10 | Raspberry Pi OS Buster | 310 | 5900 | 11310 | 340 | 1400 | - | [http://ix.io/3E7U](http://ix.io/3E7U) |
 | Raspberry Pi 2 B+ | 900 MHz | 4.14 | **Debian** Stretch | 2070 | 14350 | 17450 | 615 | 1175 | - | [http://ix.io/1iFf](http://ix.io/1iFf) |
@@ -86,7 +88,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | Raspberry Pi 4 B | 1500 MHz | 5.10 | Raspberry Pi OS Buster | 5750 | 62310 | 64930 | 2550 | 3430 | - | [http://ix.io/3EgS](http://ix.io/3EgS) |
 | Raspberry Pi 4 B | 1800 MHz | 5.10 | Raspberry Pi OS Buster | 6550 | 75040 | 77830 | 2780 | 3080 | - | [http://ix.io/3Gia](http://ix.io/3Gia) |
 | Raspberry Pi 4 B | 1800 MHz | 5.10 | Raspberry Pi OS Buster **arm64** | 5760 | 45570 | 36240 | 2240 | 3120 | 9.46 | [http://ix.io/3F9C](http://ix.io/3F9C) |
-| Raspberry Pi 4 B | 1800 MHz | 5.10 | **Jammy arm64** | 5770 | 46050 | 36260 | 2770 | 3120 | - | [http://ix.io/3FlD](http://ix.io/3FlD) |
+| Raspberry Pi 4 B | 1800 MHz | 5.15 | **Jammy arm64** | 5640 | 45210 | 36260 | 2580 | 3110 | - | [http://ix.io/3InF](http://ix.io/3InF) |
 | Raspberry Pi 400 | 1800 MHz | 5.4 | Raspberry Pi OS Buster | 6550 | 75050 | 77890 | 2680 | 3110 | - | [http://ix.io/2Cyi](http://ix.io/2Cyi) |
 | [Rock64](https://www.armbian.com/rock64/) | 1300 MHz | 4.4 | Bionic arm64 | 3410 | 89060 | 601200 | 1310 | 5680 | 4.46 | [http://ix.io/1iGW](http://ix.io/1iGW) |
 | [Rock64](https://www.armbian.com/rock64/) | 1300 MHz | 4.18 | Bionic arm64 | 3530 | 116100 | 605250 | 1340 | 5770 | 4.65 | [http://ix.io/1iH4](http://ix.io/1iH4) |
@@ -120,7 +122,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | Celeron J4105 | 2400/1500 MHz | 4.15 | Bionic amd64 | 8960 | 453860 | 697080 | 5620 | 7650 | 19.13 | [http://ix.io/1qb0](http://ix.io/1qb0) |
 | Pentium J5005 | 2700/1500 MHz | 5.0 | Bionic amd64 | 9230 | 379740 | 778360 | 5530 | 7130 | 20.74 | [http://ix.io/21rE](http://ix.io/21rE) |
 | Celeron N4500 | 2800/1100 MHz | 5.13 | Impish amd64 | 6300 | 663550 | 783840 | 8100 | 8350 | - | [http://ix.io/3HUU](http://ix.io/3HUU) |
-| Celeron N5100 | 2800/1100 MHz | 5.13 | Focal amd64 | 9810 | 661940 | 783640 | 7760 | 8120 | - | [http://ix.io/3HUd](http://ix.io/3HUd) |
+| Celeron N5100 | 2800/1100 MHz | 5.13 | Focal amd64 | 10550 | 661820 | 783800 | 7750 | 8090 | 19.22 | [http://ix.io/3IlQ](http://ix.io/3IlQ) |
 | Pentium G4600 | 3600 MHz | 4.19 | Buster amd64 | 11810 | 878790 | 984820 | 15120 | 33380 | 21.88 | [http://ix.io/2jVw](http://ix.io/2jVw) |
 
 &ast; Number obtained with cryptodev (Marvell's CESA).

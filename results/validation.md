@@ -106,7 +106,7 @@
 | [3EgS](3EgS.txt) | v0.8.4 Raspberry Pi 4 Model B Rev 1.1  | 0.5%/0.4% | 857Mi/695Mi | X | X | X |    |  2% |  0% |  |
 | <del>[3EhG](3EhG.txt)</del> | <del>v0.8.4 Raspberry Pi 4 Model B Rev 1.1 </del> | <del>0%/0.6%</del> | <del>909Mi/754Mi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del><span style=color:red> 8%</span></del> | <del><span style=color:red>**54%**</span></del> |  |
 | [3F9C](3F9C.txt) | v0.8.4 Raspberry Pi 4 Model B Rev 1.1  | 0%/0.6% | 959Mi/815Mi | X | X | X | X | <span style=color:red>**12%**</span> |  0% |  |
-| [3FlD](3FlD.txt) | v0.8.4 Raspberry Pi 4 Model B Rev 1.1  | 0%/0.6% | 959Mi/839Mi | X | X | X | X | <span style=color:red> 9%</span> |  0% |  |
+| <del>[3FlD](3FlD.txt)</del> | <del>v0.8.4 Raspberry Pi 4 Model B Rev 1.1 </del> | <del>0%/0.6%</del> | <del>959Mi/839Mi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del><span style=color:red> 9%</span></del> | <del> 0%</del> |  |
 | [3Gia](3Gia.txt) | v0.8.5 Raspberry Pi 4 Model B Rev 1.1  | 2.0%/1.0% | 857Mi/696Mi | X | X | X | X |  3% |  0% |  |
 | [3GmP](3GmP.txt) | v0.8.6 NanoPi Fire3  | 0%/0% | 994Mi/671Mi | X | X | X | X |  4% |  0% |  |
 | [3GmR](3GmR.txt) | v0.8.6 FriendlyARM NanoPi NEO4  | 0%/0.7% | 977Mi/714Mi | X | X | X | X |  1% |  0% |  |
@@ -114,6 +114,10 @@
 | [3GnV](3GnV.txt) | v0.8.6 FriendlyArm NanoPi M1 Plus  | 0%/3.0% | 999M/847M | X | X | X | X |  3% |  4% |  |
 | [3GrW](3GrW.txt) | v0.8.6   | 0%/4.0% | 15Gi/14Gi | X | X | X | X |  1% |  0% |  |
 | [3HUU](3HUU.txt) | v0.8.8  Celeron N4500  | 0.2%/0% | 7,5Gi/6,4Gi | X | X | X | X |  1% |  0% |  |
-| [3HUd](3HUd.txt) | v0.8.8  Celeron N5100  | 0%/0% | 7.6Gi/7.1Gi | X | X | X | X |  3% |  0% |  |
+| <del>[3HUd](3HUd.txt)</del> | <del>v0.8.8 Intel Celeron N5100 @ 1.10GHz </del> | <del>0%/0%</del> | <del>7.6Gi/7.1Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 3%</del> | <del> 0%</del> |  |
+| [3IlQ](3IlQ.txt) | v0.8.8  Celeron N5100  | 0%/0% | 7.6Gi/7.2Gi | X | X | X | X |  3% |  0% |  |
+| [3InF](3InF.txt) | v0.8.8 Raspberry Pi 4 Model B Rev 1.1  | 0%/0.5% | 958Mi/747Mi | X | X | X | X | <span style=color:red>**33%**</span> |  0% |  |
+| [3JCm](3JCm.txt) | v0.8.8 Radxa Zero  | 0.3%/0.8% | 3.7Gi/3.4Gi | X | X | X | X |  1% |  0% |  |
+| [3Krm](3Krm.txt) | v0.9.0 Radxa Zero  | 0.6%/1.3% | 3.7Gi/3.2Gi | X | X | X | X |  1% |  0% |  |
 | [3rUb](3rUb.txt) | v0.7.7 Pine64 RK3566 Quartz64-A Board  | 0%/0% | 3.8Gi/3.5Gi | X | X | X | X |  3% |  1% |  |
 | [3wZn](3wZn.txt) | v0.7.7 Radxa Zero  | 0.3%/0% | 3.7Gi/3.4Gi | X | X | X | X |  2% |  1% |  |

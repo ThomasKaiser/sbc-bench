@@ -811,8 +811,8 @@ MonitorBoard() {
 		fi
 		BasicSetup
 		command -v dpkg >/dev/null 2>&1 && Userland=", Userland: $(dpkg --print-architecture 2>/dev/null)"
-		VirtWhat="$(virt-what 2>/dev/null)"
-		[ "X${VirtWhat}" != "X" ] && VirtOrContainer=" / ${BOLD}${VirtWhat}${NC}"
+		VirtWhat="$(systemd-detect-virt 2>/dev/null)"
+		[ "X${VirtWhat}" != "X" -a "X${VirtWhat}" != "Xnone" ] && VirtOrContainer=" / ${BOLD}${VirtWhat}${NC}"
 		echo -e "Kernel: ${CPUArchitecture}${VirtOrContainer}${Userland}"
 		PrintCPUTopology
 	fi
@@ -1139,7 +1139,6 @@ InstallPrerequisits() {
 	command -v openssl >/dev/null 2>&1 || apt -f -qq -y install openssl >/dev/null 2>&1
 	command -v curl >/dev/null 2>&1 || apt -f -qq -y install curl >/dev/null 2>&1
 	command -v dmidecode >/dev/null 2>&1 || apt -f -qq -y install dmidecode >/dev/null 2>&1
-	command -v virt-what >/dev/null 2>&1 || apt -f -qq -y install virt-what >/dev/null 2>&1
 	
 	if [ "${PlotCpufreqOPPs}" = "yes" ]; then
 		command -v htmldoc >/dev/null 2>&1 || apt -f -qq -y --no-install-recommends install htmldoc >/dev/null 2>&1
@@ -1617,8 +1616,8 @@ LogEnvironment() {
 	[ "X${ThreadXVersion}" != "X" ] && echo -e \
 		" ThreadX: $(awk '/^version/ {print $2}' <<<"${ThreadXVersion}") / $(head -n1 <<<"${ThreadXVersion}")"
 	# check for VM/container mode to add this to kernel info
-	VirtWhat="$(virt-what 2>/dev/null)"
-	[ "X${VirtWhat}" != "X" ] && VirtOrContainer=" (${VirtWhat})"
+	VirtWhat="$(systemd-detect-virt 2>/dev/null)"
+	[ "X${VirtWhat}" != "X" -a "X${VirtWhat}" != "Xnone" ] && VirtOrContainer=" (${VirtWhat})"
 	# kernel info
 	KernelVersion="$(uname -r)"
 	echo -e "  Kernel: ${KernelVersion}/${CPUArchitecture}${VirtOrContainer}"
@@ -1660,15 +1659,15 @@ UploadResults() {
 					x86*|i686)
 						# Collecting x86 results is somewhat pointless. At least inform
 						# about environment the benchmark was running in
+						VirtWhat="$(systemd-detect-virt 2>/dev/null)"
 						Manufacturer="$(dmidecode -t system 2>/dev/null | awk -F": " '/Manufacturer:/ {print $2}')"
 						case "${Manufacturer}" in
 							"")
 								# No dmidecode output as such check where we're running
-								VirtWhat="$(virt-what)"
-								if [ "X${VirtWhat}" = "X" ]; then
+								if [ "X${VirtWhat}" = "X" -o "X${VirtWhat}" = "Xnone" ]; then
 									echo -e "\n"
 								else
-									echo "Please be aware that benchmark was running inside ${VirtWhat}\n"
+									echo -e "Please be aware that benchmark was running inside a ${VirtWhat} instance\n"
 								fi
 								;;
 							*)
@@ -1676,7 +1675,7 @@ UploadResults() {
 								grep -q ^flags.*\ hypervisor /proc/cpuinfo
 								case $? in
 									0)
-										echo "Please be aware that benchmark was running inside a ${Manufacturer} VM\n"
+										echo -e "Please be aware that benchmark was running inside a ${Manufacturer}/${VirtWhat} instance\n"
 										;;
 									*)
 										echo -e "\n"

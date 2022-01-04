@@ -691,13 +691,27 @@ GetTempSensor() {
 						ln -fs ${ThermalZone}/temp ${TempSource}
 						;;
 					*)
-						# if there is at least one 'CPU' sensor use this instead
-						CPUSensor="$(cat /sys/devices/virtual/thermal/thermal_zone?/type 2>/dev/null | grep -i cpu | head -n1)"
-						if [ "X${CPUSensor}" != "X" ]; then
-							ThermalZone="$(GetThermalZone "${CPUSensor}")"
-							ln -fs ${ThermalZone}/temp ${TempSource}
-						else
-							echo 0 >${TempSource}
+						# try to get hwmon node based on thermal driver loaded (idea/feedback courtesy
+						# @linuxium and @dan-and: https://github.com/ThomasKaiser/sbc-bench/issues/33)
+						find /sys -name temp1_input -type f 2>/dev/null | while read ; do
+							read NodeName <"${REPLY%/*}/name"
+							case "${NodeName}" in
+								k10temp|k8temp|coretemp)
+									ln -fs "${REPLY}" ${TempSource}
+									break
+									;;
+							esac
+						done
+						if [ ! -h "${TempSource}" ]; then
+							# still no thermal source found. If there is at least one thermal_zone
+							# with 'cpu' in its name then use it
+							CPUSensor="$(cat /sys/devices/virtual/thermal/thermal_zone?/type 2>/dev/null | grep -i cpu | head -n1)"
+							if [ "X${CPUSensor}" != "X" ]; then
+								ThermalZone="$(GetThermalZone "${CPUSensor}")"
+								ln -fs ${ThermalZone}/temp ${TempSource}
+							else
+								echo 0 >${TempSource}
+							fi
 						fi
 						;;
 				esac
@@ -823,6 +837,15 @@ MonitorBoard() {
 	renice 19 $BASHPID >/dev/null 2>&1
 
 	GetTempSensor
+
+	if test -t 1; then
+		# display temp source when running interactively
+		ThermalSensor="$(readlink ${TempSource})"
+		if [ "X${ThermalSensor}" != "X" ]; then
+			echo -e "Thermal source: ${ThermalSensor%/*}\n"
+		fi
+	fi
+
 	CpuFreqToQuery=cpuinfo_cur_freq
 	CPUArchitecture="$(lscpu | awk -F" " '/^Architecture/ {print $2}')"
 	ClusterConfig=$(GetCPUClusters)
@@ -1526,6 +1549,7 @@ RunCpuminerBenchmark() {
 
 PrintCPUTopology() {
 	# prints list of CPU cores, clusters and cpufreq policy nodes
+	X86CPUName="$(sed -e 's/ Processor//' -e 's/Intel(R) Xeon(R) CPU //' -e 's/Intel(R) //' -e 's/(R)//' -e 's/CPU //' -e 's/ 0 @/ @/' -e 's/AMD //' -e 's/Authentic //' -e 's/ with .*//' <<<"${DeviceName}")"
 	echo "CPU sysfs topology (clusters, cpufreq members, clockspeeds)"
 	echo "                 cpufreq   min    max"
 	echo " CPU    cluster  policy   speed  speed   core type"
@@ -1535,7 +1559,7 @@ PrintCPUTopology() {
 		if [ "X${CoreName}" = "X" -a "X${DeviceName}" != "X" ]; then
 			# try to return CPU type instead of core type on x86 if available
 			[[ ${CPUArchitecture} == *86* ]] && \
-				CoreName="$(sed -e 's/ Processor//' -e 's/Intel(R) Xeon(R) CPU //' -e 's/Intel(R) //' -e 's/(R)//' -e 's/CPU //' -e 's/ 0 @/ @/' <<<"${DeviceName}")"
+				CoreName="${X86CPUName}"
 		fi
 		read CPUCluster </sys/devices/system/cpu/cpu${i}/topology/physical_package_id
 		if [ -d /sys/devices/system/cpu/cpufreq/policy${i} ]; then
@@ -1685,7 +1709,7 @@ UploadResults() {
 						esac
 						;;
 					*)
-						echo -e "\nIn case this device is not already represented in official sbc-bench results list then please"
+						echo -e "\n\nIn case this device is not already represented in official sbc-bench results list then please"
 						echo -e "consider submitting it at https://github.com/ThomasKaiser/sbc-bench/issues with this line:"
 						tail -n 1 "${ResultLog}"
 						echo
@@ -1857,4 +1881,5 @@ DisplayUsage() {
 	echo -e "\n############################################################################\n"
 } # DisplayUsage
 
-Main "$@"
+# Allows the script to be sourced
+[[ "${BASH_SOURCE}" = "$0" ]] && Main "$@"

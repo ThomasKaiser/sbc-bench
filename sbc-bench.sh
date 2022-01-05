@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.9.0
+Version=0.9.1
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -107,6 +107,7 @@ Main() {
 	[ -f /sys/devices/system/cpu/cpufreq/policy0/scaling_governor ] && \
 		read OriginalCPUFreqGovernor </sys/devices/system/cpu/cpufreq/policy0/scaling_governor 2>/dev/null
 	BasicSetup performance >/dev/null 2>&1
+	GetTempSensor
 	InstallPrerequisits
 	InitialMonitoring
 	CheckClockspeedsAndSensors
@@ -325,9 +326,6 @@ PlotPerformanceGraph() {
 	# repeat every measurement this many times and do not measure any cpufreq below
 	Repetitions=3 # how many times should each measurement be repeated
 	SkipBelow=400 # minimum cpufreq in MHz to measure
-
-	# thermal monitoring
-	GetTempSensor
 
 	if [ -n "${OutputCurrent}" ]; then
 		# We are in Netio monitoring mode, so measure idle consumption first,
@@ -674,9 +672,17 @@ RenderPDF() {
 } # RenderPDF
 
 GetTempSensor() {
-	# In Armbian we can rely on /etc/armbianmonitor/datasources/soctemp
+	# In Armbian we might rely on /etc/armbianmonitor/datasources/soctemp
 	if [ -f /etc/armbianmonitor/datasources/soctemp ]; then
 		TempSource=/etc/armbianmonitor/datasources/soctemp
+		ThermalNode="$(readlink /etc/armbianmonitor/datasources/soctemp)"
+		if [ -f "${ThermalNode%/*}/name" ]; then
+			read ThermalSource <"${ThermalNode%/*}/name" 2>/dev/null && \
+				TempInfo="Thermal source: ${ThermalNode%/*}/ (${ThermalSource})"
+		elif [ -f "${ThermalNode%/*}/type" ]; then
+			read ThermalSource <"${ThermalNode%/*}/type" 2>/dev/null && \
+				TempInfo="Thermal source: ${ThermalNode%/*}/ (${ThermalSource})"
+		fi
 	else
 		TempSource="$(mktemp /tmp/soctemp.XXXXXX)"
 
@@ -689,6 +695,7 @@ GetTempSensor() {
 						# use x86_pkg_temp sensor if available
 						ThermalZone="$(GetThermalZone x86_pkg_temp)"
 						ln -fs ${ThermalZone}/temp ${TempSource}
+						TempInfo="Thermal source: ${ThermalZone}/ (x86_pkg_temp)"
 						;;
 					*)
 						# try to get hwmon node based on thermal driver loaded (idea/feedback courtesy
@@ -698,6 +705,7 @@ GetTempSensor() {
 							case "${NodeName}" in
 								k10temp|k8temp|coretemp)
 									ln -fs "${REPLY}" ${TempSource}
+									TempInfo="Thermal source: ${REPLY%/*}/ (${NodeName})"
 									break
 									;;
 							esac
@@ -709,6 +717,7 @@ GetTempSensor() {
 							if [ "X${CPUSensor}" != "X" ]; then
 								ThermalZone="$(GetThermalZone "${CPUSensor}")"
 								ln -fs ${ThermalZone}/temp ${TempSource}
+								TempInfo="Thermal source: ${ThermalZone}/ (${CPUSensor})"
 							else
 								echo 0 >${TempSource}
 							fi
@@ -720,14 +729,20 @@ GetTempSensor() {
 				if [[ -d "/sys/devices/platform/a20-tp-hwmon" ]]; then
 					# Allwinner A20 with old 3.4 kernel
 					ln -fs /sys/devices/platform/a20-tp-hwmon/temp1_input ${TempSource}
+					read ThermalSource </sys/devices/platform/a20-tp-hwmon/name 2>/dev/null && \
+						TempInfo="Thermal source: /sys/devices/platform/a20-tp-hwmon/ (${ThermalSource})"
 				elif [[ -f /sys/class/hwmon/hwmon0/temp1_input ]]; then
 					# usual convention with modern kernels
 					ln -fs /sys/class/hwmon/hwmon0/temp1_input ${TempSource}
+					read ThermalSource </sys/class/hwmon/hwmon0/name 2>/dev/null && \
+						TempInfo="Thermal source: /sys/class/hwmon/hwmon0/ (${ThermalSource})"
 				else
 					# all other boards/kernels use the same sysfs node except of Actions Semi S500
 					# so on LeMaker Guitar, Roseapple Pi or Allo Sparky it must read "thermal_zone1"
 					if [ -f /sys/devices/virtual/thermal/thermal_zone0/temp ]; then
 						ln -fs /sys/devices/virtual/thermal/thermal_zone0/temp ${TempSource}
+						read ThermalSource </sys/devices/virtual/thermal/thermal_zone0/type 2>/dev/null && \
+							TempInfo="Thermal source: /sys/devices/virtual/thermal/thermal_zone0/ (${ThermalSource})"
 					else
 						echo 0 >${TempSource}
 					fi
@@ -735,6 +750,7 @@ GetTempSensor() {
 				;;				
 		esac
 	fi
+	export TempSource TempInfo
 } # GetTempSensor
 
 GetThermalZone() {
@@ -815,6 +831,8 @@ MonitorNetio() {
 } # MonitorNetio
 
 MonitorBoard() {
+	[ "X${TempSource}" = "X" ] && GetTempSensor
+
 	if test -t 1; then
 		# when called from a terminal we print some system information first
 		[ -f /sys/devices/soc0/family ] && read SoC_Family </sys/devices/soc0/family
@@ -829,22 +847,15 @@ MonitorBoard() {
 		[ "X${VirtWhat}" != "X" -a "X${VirtWhat}" != "Xnone" ] && VirtOrContainer=" / ${BOLD}${VirtWhat}${NC}"
 		echo -e "Kernel: ${CPUArchitecture}${VirtOrContainer}${Userland}"
 		PrintCPUTopology
+		if [ "X${TempInfo}" != "X" ]; then
+			echo -e "${TempInfo}\n"
+		fi
 	fi
 
 	# Background monitoring
 
 	# Try to renice to 19 to not interfere with benchmark behaviour
 	renice 19 $BASHPID >/dev/null 2>&1
-
-	GetTempSensor
-
-	if test -t 1; then
-		# display temp source when running interactively
-		ThermalSensor="$(readlink ${TempSource})"
-		if [ "X${ThermalSensor}" != "X" ]; then
-			echo -e "Thermal source: ${ThermalSensor%/*}\n"
-		fi
-	fi
 
 	CpuFreqToQuery=cpuinfo_cur_freq
 	CPUArchitecture="$(lscpu | awk -F" " '/^Architecture/ {print $2}')"
@@ -939,7 +950,7 @@ MonitorBoard() {
 } # MonitorBoard
 
 TempTest() {
-	GetTempSensor
+	[ "X${TempSource}" = "X" ] && GetTempSensor
 
 	SocTemp=$(ReadSoCTemp 2>/dev/null | cut -f1 -d'.')
 	[ "X${SocTemp}" = "X" ] && \
@@ -1253,7 +1264,7 @@ InitialMonitoring() {
 	fi
 
 	# Log system info if present:
-	SystemInfo="$(dmidecode -t system | egrep "Manufacturer: |Product Name: |Version: |Family: |SKU Number: " | egrep -v ":  $|O.E.M.|123456789")"
+	SystemInfo="$(dmidecode -t system 2>/dev/null | egrep "Manufacturer: |Product Name: |Version: |Family: |SKU Number: " | egrep -v ":  $|O.E.M.|123456789")"
 	if [ "X${SystemInfo}" != "X" ]; then
 		echo -e "\nDevice Info:\n${SystemInfo}" >>${ResultLog}
 	fi
@@ -1549,7 +1560,7 @@ RunCpuminerBenchmark() {
 
 PrintCPUTopology() {
 	# prints list of CPU cores, clusters and cpufreq policy nodes
-	X86CPUName="$(sed -e 's/ Processor//' -e 's/Intel(R) Xeon(R) CPU //' -e 's/Intel(R) //' -e 's/(R)//' -e 's/CPU //' -e 's/ 0 @/ @/' -e 's/AMD //' -e 's/Authentic //' -e 's/ with .*//' <<<"${DeviceName}")"
+	X86CPUName="$(sed -e 's/1.th Gen //' -e 's/.th Gen //' -e 's/Core(TM) //' -e 's/ Processor//' -e 's/Intel(R) Xeon(R) CPU //' -e 's/Intel(R) //' -e 's/(R)//' -e 's/CPU //' -e 's/ 0 @/ @/' -e 's/AMD //' -e 's/Authentic //' -e 's/ with .*//' <<<"${DeviceName}")"
 	echo "CPU sysfs topology (clusters, cpufreq members, clockspeeds)"
 	echo "                 cpufreq   min    max"
 	echo " CPU    cluster  policy   speed  speed   core type"
@@ -1590,7 +1601,16 @@ SummarizeResults() {
 
 	# Prepare benchmark results
 	echo -e "\n##########################################################################\n" >>${ResultLog}
-	cat ${MonitorLog} >>${ResultLog}
+	
+	# add thermal info if available
+	if [ "X${TempInfo}" != "X" ]; then
+		echo -e "${TempInfo}\n" >>${ResultLog}
+	fi
+
+	# include monitoring (filter out broken thermal readouts)
+	sed 's/  0°C$/ --/' <${MonitorLog} >>${ResultLog}
+	
+	# add throttling info if available
 	if [ -f ${TempDir}/throttling_info.txt ]; then
 		echo -e "\n##########################################################################" >>${ResultLog}
 		cat ${TempDir}/throttling_info.txt >>${ResultLog}
@@ -1709,7 +1729,7 @@ UploadResults() {
 						esac
 						;;
 					*)
-						echo -e "\n\nIn case this device is not already represented in official sbc-bench results list then please"
+						echo -e "\n\nIn case this device ${BOLD}is not already represented${NC} in official sbc-bench results list then please"
 						echo -e "consider submitting it at https://github.com/ThomasKaiser/sbc-bench/issues with this line:"
 						tail -n 1 "${ResultLog}"
 						echo

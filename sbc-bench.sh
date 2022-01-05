@@ -842,6 +842,7 @@ MonitorBoard() {
 			echo -e "${SoC_Family} ${SoC_ID} rev ${SoC_Revision}, \c"
 		fi
 		BasicSetup
+		grep -q "BCM2711" <<<"${DeviceName}" && echo -e "${DeviceName}, \c"
 		command -v dpkg >/dev/null 2>&1 && Userland=", Userland: $(dpkg --print-architecture 2>/dev/null)"
 		VirtWhat="$(systemd-detect-virt 2>/dev/null)"
 		[ "X${VirtWhat}" != "X" -a "X${VirtWhat}" != "Xnone" ] && VirtOrContainer=" / ${BOLD}${VirtWhat}${NC}"
@@ -1147,6 +1148,15 @@ BasicSetup() {
 			[ -f /proc/device-tree/model ] && read DeviceName </proc/device-tree/model
 			[ "X${DeviceName}" = "Xsun20iw1p1" ] && DeviceName="Allwinner D1"
 			ARMTypes=($(awk -F"0x" '/^CPU implementer|^CPU part/ {print $2}' /proc/cpuinfo))
+			case ${DeviceName} in
+				"Raspberry Pi 4"*)
+					# https://github.com/raspberrypi/linux/issues/3210#issuecomment-680035201
+					# get SoC revision based on mmc controller's bus location
+					od -An -tx1 /proc/device-tree/emmc2bus/dma-ranges 2>/dev/null | tr -d '[:space:]' | \
+						grep -q 'c0000000000000000000000040' && BCM2711="B0" || BCM2711="C0 or later"
+					DeviceName="$(sed 's/Raspberry Pi/RPi/' <<<"${DeviceName}") / BCM2711 rev ${BCM2711}"
+					;;
+			esac		
 			;;
 		x86*|i686)
 			# Try to get device name from CPU entry
@@ -1275,11 +1285,14 @@ InitialMonitoring() {
 		echo -e "\nBIOS/UEFI:\n${UEFIInfo}" >>${ResultLog}
 	fi
 
-	# On Raspberries we also collect 'firmware' information:
+	# On Raspberries we also collect 'firmware' information and on RPi 4 check SoC revision
+	# against config.txt contents:
 	if [ ${USE_VCGENCMD} = true ] ; then
 		ThreadXVersion="$(/usr/bin/vcgencmd version)"
-		echo -e "\nRaspberry Pi ThreadX version:\n${ThreadXVersion}" >>${ResultLog}
 		[ -f /boot/config.txt ] && ThreadXConfig=/boot/config.txt || ThreadXConfig=/boot/firmware/config.txt
+		grep -q "arm_boost=1" ${ThreadXConfig} 2>/dev/null || grep -q "C0 or later" <<<"${DeviceName}" && \
+			echo -e "\nWarning: your Raspberry Pi is powered by BCM2711 rev. ${BCM2711} but arm_boost=1\nis not set in ${ThreadXConfig}. Some (mis)information about what you are missing:\nhttps://www.raspberrypi.com/news/bullseye-bonus-1-8ghz-raspberry-pi-4/" >>${ResultLog}
+		echo -e "\nRaspberry Pi ThreadX version:\n${ThreadXVersion}" >>${ResultLog}
 		[ -f ${ThreadXConfig} ] && echo -e "\nThreadX configuration (${ThreadXConfig}):\n$(grep -v '#' ${ThreadXConfig} | sed '/^\s*$/d')" >>${ResultLog}
 		echo -e "\nActual ThreadX settings:\n$(vcgencmd get_config int)" >>${ResultLog}
 	fi

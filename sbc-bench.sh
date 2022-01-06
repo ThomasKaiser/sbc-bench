@@ -1257,6 +1257,9 @@ InitialMonitoring() {
 	MonitorLog="${TempDir}/monitor.log"
 	trap "rm -rf \"${TempDir}\" ; exit 0" 0 1 2 3 15
 
+	# collect CPU topology
+	PrintCPUTopology >"${TempDir}/cpu-topology.log" &
+	
 	# Log version and device info
 	read HostName </etc/hostname
 	echo -e "sbc-bench v${Version} ${DeviceName:-$HostName} ($(date -R))\n" >${ResultLog}
@@ -1639,7 +1642,7 @@ SummarizeResults() {
 
 	echo -e "\n##########################################################################\n" >>${ResultLog}
 	echo -e "$(iostat | grep -v "^loop")\n\n$(free -h)\n\n$(swapon -s)\n" | sed '/^$/N;/^\n$/D' >>${ResultLog}
-	PrintCPUTopology >>${ResultLog}
+	cat "${TempDir}/cpu-topology.log" >>${ResultLog}
 	lscpu >>${ResultLog}
 	LogEnvironment >>${ResultLog}
 	CacheAndDIMMDetails >>${ResultLog}

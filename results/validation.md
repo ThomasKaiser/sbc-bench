@@ -118,6 +118,11 @@
 | [3IlQ](3IlQ.txt) | v0.8.8  Celeron N5100  | 0%/0% | 7.6Gi/7.2Gi | X | X | X | X |  3% |  0% |  |
 | [3InF](3InF.txt) | v0.8.8 Raspberry Pi 4 Model B Rev 1.1  | 0%/0.5% | 958Mi/747Mi | X | X | X | X | <span style=color:red>**33%**</span> |  0% |  |
 | [3JCm](3JCm.txt) | v0.8.8 Radxa Zero  | 0.3%/0.8% | 3.7Gi/3.4Gi | X | X | X | X |  1% |  0% |  |
+| [3KVs](3KVs.txt) | v0.9.0 Raspberry Pi 4 Model B Rev 1.4  | 1.9%/0.7% | 3.7Gi/3.4Gi | X | X | X | X |  4% |  0% |  |
 | [3Krm](3Krm.txt) | v0.9.0 Radxa Zero  | 0.6%/1.3% | 3.7Gi/3.2Gi | X | X | X | X |  1% |  0% |  |
+| [3L37](3L37.txt) | v0.9.0 Raspberry Pi 4 Model B Rev 1.4  | 0.3%/0.6% | 3.7Gi/3.3Gi | X | X | X | X |  4% |  0% |  |
+| [3Lir](3Lir.txt) | v0.9.1 ASUS Tinker Board  | 0.5%/0% | 2.0Gi/1.5Gi | X | X | X | X |  4% |  0% | | [3Llk](3Llk.txt) | v0.8.7 Raspberry Pi 4 Model B Rev 1.4  | 1.7%/0.4% | 3.7Gi/2.5Gi | X | X | X | X | <span style=color:red> 9%</span> |  0% |  [check log](3Llk.txt) |
+| [3LoH](3LoH.txt) | v0.9.1 Hardkernel ODROID-N2Plus  | 0%/0% | 3.6Gi/3.1Gi | X | X | X | X |  1% |  0% |  |
+| [3Lpf](3Lpf.txt) | v0.8.8 NVIDIA Jetson Nano Developer Kit  | 0.2%/0% | 3,9G/3,4G | X | X | X | X |  2% | <span style=color:red> 7%</span> |  |
 | [3rUb](3rUb.txt) | v0.7.7 Pine64 RK3566 Quartz64-A Board  | 0%/0% | 3.8Gi/3.5Gi | X | X | X | X |  3% |  1% |  |
 | [3wZn](3wZn.txt) | v0.7.7 Radxa Zero  | 0.3%/0% | 3.7Gi/3.4Gi | X | X | X | X |  2% |  1% |  |

@@ -180,8 +180,14 @@ GetARMCore() {
 	41/d20:Cortex-M23
 	41/d21:Cortex-M33
 	41/d22:Cortex-M55
+	41/d40:Neoverse-V1
 	41/d41:Cortex-A78
 	41/d42:Cortex-A78AE
+	41/d44:Cortex-X1
+	41/d46:Cortex-510
+	41/d47:Cortex-710
+	41/d48:Cortex-X2
+	41/d49:Neoverse-N2
 	41/d4a:Neoverse-E1
 	41/d4b:Cortex-A78C
 	42:Broadcom

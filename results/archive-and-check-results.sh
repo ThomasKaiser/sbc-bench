@@ -65,7 +65,7 @@ for file in *.txt ; do
 	for dict in 22 23 24 25 ; do
 		grep -q "^${dict}: " "${file}" && echo -e "${Prefix}X${Suffix} | \c" || echo -e "   | \c"
 	done
-	SysBusy="$(egrep "MHz  |---  " "${file}" | awk -F"%" '{print $2}' | sort -n -r | head -n1 | sed 's/  //')"
+	SysBusy="$(egrep "MHz  |---  " "${file}" | awk -F"%" '{print $2}' | sed '/^[[:space:]]*$/d' | sed -e '1,2d' | sort -n -r | head -n1 | sed 's/  //')"
 	if [ ${SysBusy:-0} -ge 10 ]; then
 		echo -e "${Prefix}<span style="color:red">**${SysBusy}%**</span>${Suffix} | \c"
 	elif [ ${SysBusy:-0} -ge 5 ]; then
@@ -73,7 +73,7 @@ for file in *.txt ; do
 	else
 		echo -e "${Prefix}${SysBusy}%${Suffix} | \c"
 	fi
-	IOBusy="$(egrep "MHz  |---  " "${file}" | awk -F"%" '{print $5}' | sort -n -r | head -n1 | sed 's/  //')"
+	IOBusy="$(egrep "MHz  |---  " "${file}" | awk -F"%" '{print $5}' | sed '/^[[:space:]]*$/d' | sed -e '1,2d' | sort -n -r | head -n1 | sed 's/  //')"
 	if [ ${IOBusy:-0} -ge 10 ]; then
 		echo -e "${Prefix}<span style="color:red">**${IOBusy}%**</span>${Suffix} | \c"
 	elif [ ${IOBusy:-0} -ge 5 ]; then
@@ -84,7 +84,7 @@ for file in *.txt ; do
 	case ${BoardName} in
 		*icosa*|*"Tinker Board"*|*"Orange Pi Prime"*|"v0.7.9 Raspberry Pi Zero 2 Rev 1.0"*|"v0.8.3 Raspberry Pi Model B Rev 2"*)
 			# ignore since not really throttling
-			:
+			echo " |"
 			;;
 		*)
 			grep -q -i throttling "${file}" && echo " ${Prefix}[check log](${file})${Suffix} |" || echo " |"

@@ -857,6 +857,8 @@ MonitorBoard() {
 			echo -e "${SoC_Family} ${SoC_ID} rev ${SoC_Revision}, \c"
 		fi
 		BasicSetup
+		GuessedSoC="$(GuessARMSoC)"
+		[ "X${GuessedSoC}" != "X" ] && echo -e "${GuessedSoC}, \c"
 		grep -q "BCM2711" <<<"${DeviceName}" && echo -e "${DeviceName}, \c"
 		command -v dpkg >/dev/null 2>&1 && Userland=", Userland: $(dpkg --print-architecture 2>/dev/null)"
 		VirtWhat="$(systemd-detect-virt 2>/dev/null)"
@@ -1264,6 +1266,9 @@ InitialMonitoring() {
 	else
 		EstimatedDuration=$(( ${TinymembenchDuration} + $(( $(( ${SingleThreadedDuration} + ${MultiThreadedDuration} )) / 60 )) + 3 ))
 	fi
+
+	# upload raw /proc/cpuinfo contents
+	(echo -e "/proc/cpuinfo\n" ; uname -a ; echo ; cat /proc/cpuinfo) | curl -s -F 'f:1=<-' ix.io >/dev/null 2>&1 &
 
 	# Create temporary files
 	TempDir="$(mktemp -d /tmp/${0##*/}.XXXXXX)"
@@ -1687,29 +1692,31 @@ SummarizeResults() {
 } # SummarizeResults
 
 LogEnvironment() {
+	# try to guess the SoC and report if successful
+	GuessedSoC="$(GuessARMSoC)"
+	[ "X${GuessedSoC}" != "X" ] && echo -e "\nSoC guess: ${GuessedSoC}\c"
 	# Log compiler version
 	GCC_Info="$(${GCC} -v 2>&1 | egrep "^Target|^Configured")"
-	echo -e "\nCompiler: ${GCC} $(cut -f1 -d')' <<<${GCC_Version})/$(awk -F": " '/^Target/ {print $2}' <<< "${GCC_Info}"))"
-	# awk -F": " '/^Configured/ {print $2}' <<< "${GCC_Info}"
+	echo -e "\n Compiler: ${GCC} $(cut -f1 -d')' <<<${GCC_Version})/$(awk -F": " '/^Target/ {print $2}' <<< "${GCC_Info}"))"
 	# Log userland architecture if available
-	[ "X${ARCH}" != "X" ] && echo "Userland: ${ARCH}"
+	[ "X${ARCH}" != "X" ] && echo " Userland: ${ARCH}"
 	# Log ThreadX version if available
 	[ "X${ThreadXVersion}" != "X" ] && echo -e \
-		" ThreadX: $(awk '/^version/ {print $2}' <<<"${ThreadXVersion}") / $(head -n1 <<<"${ThreadXVersion}")"
+		"  ThreadX: $(awk '/^version/ {print $2}' <<<"${ThreadXVersion}") / $(head -n1 <<<"${ThreadXVersion}")"
 	# check for VM/container mode to add this to kernel info
 	VirtWhat="$(systemd-detect-virt 2>/dev/null)"
 	[ "X${VirtWhat}" != "X" -a "X${VirtWhat}" != "Xnone" ] && VirtOrContainer=" (${VirtWhat})"
 	# kernel info
 	KernelVersion="$(uname -r)"
-	echo -e "  Kernel: ${KernelVersion}/${CPUArchitecture}${VirtOrContainer}"
+	echo -e "   Kernel: ${KernelVersion}/${CPUArchitecture}${VirtOrContainer}"
 	# kernel config
 	KernelConfig="/boot/config-${KernelVersion}"
 	if [ -f "${KernelConfig}" ] ; then
-		grep -E "^CONFIG_HZ|^CONFIG_PREEMPT" "${KernelConfig}" | while read ; do echo "          ${REPLY}"; done | sort -V
+		grep -E "^CONFIG_HZ|^CONFIG_PREEMPT" "${KernelConfig}" | while read ; do echo "           ${REPLY}"; done | sort -V
 	else
 		modprobe configs 2>/dev/null
 		[ -f /proc/config.gz ] && zgrep -E "^CONFIG_HZ|^CONFIG_PREEMPT" /proc/config.gz | \
-			while read ; do echo "          ${REPLY}"; done | sort -V
+			while read ; do echo "           ${REPLY}"; done | sort -V
 	fi
 } # LogEnvironment
 
@@ -1923,38 +1930,128 @@ CacheAndDIMMDetails() {
 GuessARMSoC() {
 	# function that might guess SoC names sometimes in the future
 	#
-	# Allwinner H3 | 4 x Cortex-A7 / r0p5
-	# RK3399 | 4 x Cortex-A53 / r0p4 + 2 x Cortex-A72 / r0p2
+	# Allwinner A64/H5 | 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
+	# Allwinner H3 | 4 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
+	# Allwinner H6 | 4 x Cortex-A53 / r0p4 / fp asimd aes pmull sha1 sha2 crc32 cpuid
+	# AnnapurnaLabs Alpine | 2 x Cortex-A15 / r2p4 / swp half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt
+	# Armada 370/XP | 1 x Marvell PJ4 / r1p1 / half thumb fastmult vfp edsp vfpv3 vfpv3d16 tls idivt
+	# Armada 375 | 2 x Cortex-A9 / r4p1 / swp half thumb fastmult vfp edsp neon vfpv3 tls
+	# BCM2709 | 4 x Cortex-A53 / r0p4 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm crc32
+	# BCM2711 | 4 x Cortex-A72 / r0p3 / fp asimd evtstrm crc32 cpuid (running 32-bit: half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm crc32)
+	# Comcerto 2000 EVM (FreeScale/NXP QorIQ LS1024A) | 2 x Cortex-A9 / r2p1 / swp half thumb fastmult vfp edsp thumbee neon vfpv3 tls
+	# Exynos 5422 | 4 x Cortex-A7 / r0p3 + 4 x Cortex-A15 / r2p3 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
+	# Feroceon 88F6281 | 1 x Marvell Feroceon 88FR131 / r2p1 / swp half thumb fastmult edsp
+	# HiSilicon Kirin 930 | 8 x Cortex-A53 / r0p3 / fp asimd evtstrm aes pmull sha1 sha2 crc32
+	# Marvell PJ4Bv7 | 4 x Marvell PJ4B-MP / r2p2 / swp half thumb fastmult vfp edsp vfpv3 tls
+	# RK3328 | 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
+	# RK3399 | 4 x Cortex-A53 / r0p4 + 2 x Cortex-A72 / r0p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
 	# RK3566/RK3568 | 4 x Cortex-A55 / r2p0
-	# S905X | 4 x Cortex-A53 / r0p4
-	# S905X3 | 4 x Cortex-A55 / r1p0 
+	# S905 | 4 x Cortex-A53 / r0p4 / fp asimd evtstrm crc32 (running 32-bit: fp asimd evtstrm crc32 wp half thumb fastmult vfp edsp neon vfpv3 tlsi vfpv4 idiva idivt)
+	# S905X | 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32 wp half thumb fastmult vfp edsp neon vfpv3 tlsi vfpv4 idiva idivt
+	# S912 | 8 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32 wp half thumb fastmult vfp edsp neon vfpv3 tlsi vfpv4 idiva idivt
+	# S905X3 | 4 x Cortex-A55 / r1p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp
 	# S905X4 | 4 x Cortex-A55 / r2p0
+	# S922X | 2 x Cortex-A53 / r0p4 + 4 x Cortex-A73 / r0p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 	#
 	# Recent Rockchip BSP include something like this in dmesg output:
 	# rockchip-cpuinfo cpuinfo: SoC            : 35661000
 	#
 	# If /proc/cpuinfo Hardware field is 'Amlogic' then 1st chars of 'AmLogic Serial'
 	# and if not present 'Serial' might have special meaning:
-	# https://androidpctv.com/h96-max-x4-fake-s905x4/
 	# 
-	# * 21 --> S905X
-	# * 2b --> S905X3
-	# * 32 --> S905X4 
-	# 
-	# Hardware : Amlogic
-	# Serial : 210a8200411aa50fcd1667a69bfc9906
-	# 
-	# CPU variant     : 0x1
-	# CPU part        : 0xd05
-	# CPU revision    : 0
-	# 
-	# Serial          : 2b0c10000113120000183339574b5250
-	# model name      : Amlogic S905X3 rev c
-	# Hardware        : Amlogic
-	# Revision        : 0400
+	# * 1f --> S905    https://forum.odroid.com/viewtopic.php?p=155548#p155548
+	# * 20 --> S912    https://forum.doozan.com/read.php?3,62704,62709#msg-62709
+	# * 21 --> S905X   https://blog.lvu.kr/amlogic-s905x-set-top-box-t95n-m8s-2g8g-2/
+	# * 2b --> S905X3  https://discourse.coreelec.org/t/proc-cpuinfo-is-missing-a-core-for-s950x3/14081
+	# * 32 --> S905X4  https://androidpctv.com/h96-max-x4-fake-s905x4/
 	#
-	# Some more /proc/cpuinfo collected: # https://github.com/shirou/gopsutil/issues/881
-	:
+	# Amlogic chip ids: https://github.com/CoreELEC/linux-amlogic/blob/d4296d10296794ae00a72c845411e1e41efb14ba/arch/arm64/kernel/cpuinfo.c#L124-L146
+	# More cpuinfo: http://tessy.org/wiki/index.php?Arm#ae54e1d6 (archived at https://archive.md/nf6kL)
+
+	CPUInfo="$(cat /proc/cpuinfo)"
+	HardwareInfo="$(awk -F': ' '/^Hardware/ {print $2}' <<< "${CPUInfo}" | tail -n1)"
+	RockchipGuess="$(dmesg | awk -F': ' '/rockchip-cpuinfo cpuinfo: SoC/ {print $3}' | cut -c-4)"
+	
+	if [ "X${RockchipGuess}" != "X" ]; then
+		echo "Rockchip RK${RockchipGuess}"
+	else
+		case ${HardwareInfo} in
+			Amlogic)
+				ModelName="$(awk -F': ' '/^model name/ {print $2}' <<< "${CPUInfo}" | tail -n1)"
+				case "${ModelName}" in
+					Amlogic*)
+						echo "${ModelName}"
+						;;
+					*)
+						AmLogicSerial="$(awk -F': ' '/^AmLogic Serial/ {print $2}' <<< "${CPUInfo}" | tail -n1)"
+						if [ "X${AmLogicSerial}" = "X" ]; then
+							AmLogicSerial="$(awk -F': ' '/^Serial/ {print $2}' <<< "${CPUInfo}" | tail -n1)"
+						fi
+						case "${AmLogicSerial}" in
+							1f*)
+								echo "Amlogic S905"
+								;;
+							20*)
+								echo "Amlogic S912"
+								;;
+							21*)
+								echo "Amlogic S905X"
+								;;
+							2b*)
+								echo "Amlogic S905X3"
+								;;
+							32*)
+								echo "Amlogic S905X4"
+								;;
+							*)
+								echo "Amlogic"
+								;;
+						esac
+						;;
+				esac
+				;;
+			sun20iw1*)
+				echo "Allwinner D1 (1 x C906 RISC-V)"
+				;;
+			sun8iw2p1)
+				echo "Allwinner A20 (Dual A7)"
+				;;
+			sun8iw7p1)
+				echo "Allwinner H3/H2+ (Quad A7)"
+				;;
+			sun8iw11p1)
+				echo "Allwinner R40/V40/T3/A40i (Quad A7)"
+				;;
+			sun50iw1p*)
+				# H5 identifies itself also like this
+				echo "Allwinner Quad A53 (A64/H64/R18/H5)"
+				;;
+			sun50iw2*)
+				echo "Allwinner H5 (Quad A53)"
+				;;
+			sun50iw3*)
+				echo "Allwinner A63 (Quad A53)"
+				;;
+			sun50iw6*)
+				echo "Allwinner H6 (Quad A53)"
+				;;
+			sun50iw9*)
+				echo "Allwinner H616/H313 (Quad A53)"
+				;;
+			sun50iw10*)
+				echo "Allwinner A100/A133/A53/T509 (Quad A53)"
+				;;
+			sun50iw11*)
+				echo "Allwinner R329 (Dual A53)"
+				;;
+			sun*|Allwinner*)
+				echo "${HardwareInfo}"
+				;;
+			Hardkernel*)
+				sed 's/Hardkernel //' <<<"${HardwareInfo}"
+				;;
+		esac
+	fi
 } # GuessARMSoC
 
 DisplayUsage() {

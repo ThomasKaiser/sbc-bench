@@ -277,6 +277,15 @@ GetCPUType() {
 	fi
 } # GetCPUType
 
+GetARMStepping() {
+	# Parse '^CPU variant|^CPU revision' fields from /proc/cpuinfo and transform them
+	# into 'Stepping' like lscpu does (the latter only showing info for cpu0 so partially
+	# useless on systems with different CPU clusters)
+	if [ -n "${ARMStepping}" ]; then
+		echo "r$(sed 's/^0x//' <<<${ARMStepping[$(( $1 * 2 ))]})p${ARMStepping[$(( $(( $1 * 2 )) + 1 ))]}"
+	fi
+} # GetARMStepping
+
 GetCPUInfo() {
 	# function that returns ARM core type in brackets if possible otherwise empty string
 	ARMCore="$(GetCPUType $1)"
@@ -1154,6 +1163,7 @@ BasicSetup() {
 			[ -f /proc/device-tree/model ] && read DeviceName </proc/device-tree/model
 			[ "X${DeviceName}" = "Xsun20iw1p1" ] && DeviceName="Allwinner D1"
 			ARMTypes=($(awk -F"0x" '/^CPU implementer|^CPU part/ {print $2}' /proc/cpuinfo))
+			ARMStepping=($(awk -F": " '/^CPU variant|^CPU revision/ {print $2}' /proc/cpuinfo))
 			case ${DeviceName} in
 				"Raspberry Pi 4"*)
 					# https://github.com/raspberrypi/linux/issues/3210#issuecomment-680035201
@@ -1589,10 +1599,15 @@ PrintCPUTopology() {
 	for i in $(seq 0 $(( ${CPUCores} - 1 )) ); do
 		CoreName="$(GetCPUType $i)"
 		# check if CoreName is empty
-		if [ "X${CoreName}" = "X" -a "X${DeviceName}" != "X" ]; then
+		if [ "X${CoreName}" = "X" ]; then
 			# try to return CPU type instead of core type on x86 if available
 			[[ ${CPUArchitecture} == *86* ]] && \
 				CoreName="${X86CPUName}"
+		else
+			CoreStepping="$(GetARMStepping $i)"
+			if [ "X${CoreStepping}" != "X" ]; then
+				CoreName="${CoreName} / ${CoreStepping}"
+			fi
 		fi
 		read CPUCluster </sys/devices/system/cpu/cpu${i}/topology/physical_package_id
 		if [ -d /sys/devices/system/cpu/cpufreq/policy${i} ]; then
@@ -1904,6 +1919,43 @@ CacheAndDIMMDetails() {
 	done | sed -e 's|/sys/devices/system/cpu/||' -e 's|cache/||' -e 's|/size||'
 	echo ""
 } # CacheAndDIMMDetails
+
+GuessARMSoC() {
+	# function that might guess SoC names sometimes in the future
+	#
+	# Allwinner H3 | 4 x Cortex-A7 / r0p5
+	# RK3399 | 4 x Cortex-A53 / r0p4 + 2 x Cortex-A72 / r0p2
+	# RK3566/RK3568 | 4 x Cortex-A55 / r2p0
+	# S905X | 4 x Cortex-A53 / r0p4
+	# S905X3 | 4 x Cortex-A55 / r1p0 
+	# S905X4 | 4 x Cortex-A55 / r2p0
+	#
+	# Recent Rockchip BSP include something like this in dmesg output:
+	# rockchip-cpuinfo cpuinfo: SoC            : 35661000
+	#
+	# If /proc/cpuinfo Hardware field is 'Amlogic' then 1st chars of 'AmLogic Serial'
+	# and if not present 'Serial' might have special meaning:
+	# https://androidpctv.com/h96-max-x4-fake-s905x4/
+	# 
+	# * 21 --> S905X
+	# * 2b --> S905X3
+	# * 32 --> S905X4 
+	# 
+	# Hardware : Amlogic
+	# Serial : 210a8200411aa50fcd1667a69bfc9906
+	# 
+	# CPU variant     : 0x1
+	# CPU part        : 0xd05
+	# CPU revision    : 0
+	# 
+	# Serial          : 2b0c10000113120000183339574b5250
+	# model name      : Amlogic S905X3 rev c
+	# Hardware        : Amlogic
+	# Revision        : 0400
+	#
+	# Some more /proc/cpuinfo collected: # https://github.com/shirou/gopsutil/issues/881
+	:
+} # GuessARMSoC
 
 DisplayUsage() {
 	echo -e "\nUsage: ${BOLD}${0##*/} [-c] [-p] [-h] [-m] [-t \$degree] [-T \$degree]${NC}\n"

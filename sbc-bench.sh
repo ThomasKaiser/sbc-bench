@@ -1930,6 +1930,7 @@ CacheAndDIMMDetails() {
 GuessARMSoC() {
 	# function that might guess SoC names sometimes in the future
 	#
+	# Allwinner A83T | 8 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
 	# Allwinner A64/H5 | 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
 	# Allwinner H3 | 4 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
 	# Allwinner H6 | 4 x Cortex-A53 / r0p4 / fp asimd aes pmull sha1 sha2 crc32 cpuid
@@ -1942,38 +1943,52 @@ GuessARMSoC() {
 	# Exynos 5422 | 4 x Cortex-A7 / r0p3 + 4 x Cortex-A15 / r2p3 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
 	# Feroceon 88F6281 | 1 x Marvell Feroceon 88FR131 / r2p1 / swp half thumb fastmult edsp
 	# HiSilicon Kirin 930 | 8 x Cortex-A53 / r0p3 / fp asimd evtstrm aes pmull sha1 sha2 crc32
+	# Jetson Nano | 4 x Cortex-A57 / r1p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 	# Marvell PJ4Bv7 | 4 x Marvell PJ4B-MP / r2p2 / swp half thumb fastmult vfp edsp vfpv3 tls
+	# RK3228A | 4 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
 	# RK3328 | 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 	# RK3399 | 4 x Cortex-A53 / r0p4 + 2 x Cortex-A72 / r0p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
-	# RK3566/RK3568 | 4 x Cortex-A55 / r2p0
-	# S905 | 4 x Cortex-A53 / r0p4 / fp asimd evtstrm crc32 (running 32-bit: fp asimd evtstrm crc32 wp half thumb fastmult vfp edsp neon vfpv3 tlsi vfpv4 idiva idivt)
-	# S905X | 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32 wp half thumb fastmult vfp edsp neon vfpv3 tlsi vfpv4 idiva idivt
-	# S912 | 8 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32 wp half thumb fastmult vfp edsp neon vfpv3 tlsi vfpv4 idiva idivt
-	# S905X3 | 4 x Cortex-A55 / r1p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp
-	# S905X4 | 4 x Cortex-A55 / r2p0
-	# S922X | 2 x Cortex-A53 / r0p4 + 4 x Cortex-A73 / r0p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32
+	# RK3566/RK3568 | 4 x Cortex-A55 / r2p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp
+	# Amlogic A113D | 4 x Cortex-A53
+	# Amlogic S905 | 4 x Cortex-A53 / r0p4 / fp asimd evtstrm crc32 (running 32-bit: fp asimd evtstrm crc32 wp half thumb fastmult vfp edsp neon vfpv3 tlsi vfpv4 idiva idivt)
+	# Amlogic S905X | 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32 wp half thumb fastmult vfp edsp neon vfpv3 tlsi vfpv4 idiva idivt
+	# Amlogic S912 | 8 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid (running 32-bit: fp asimd evtstrm aes pmull sha1 sha2 crc32 wp half thumb fastmult vfp edsp neon vfpv3 tlsi vfpv4 idiva idivt)
+	# Amlogic S905X2/S905Y2/T962X2 | 4 x Cortex-A53
+	# Amlogic S905X3 | 4 x Cortex-A55 / r1p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp
+	# Amlogic S905X4 | 4 x Cortex-A55 / r2p0
+	# Amlogic S922X/A311D | 2 x Cortex-A53 / r0p4 + 4 x Cortex-A73 / r0p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 	#
 	# Recent Rockchip BSP include something like this in dmesg output:
-	# rockchip-cpuinfo cpuinfo: SoC            : 35661000
+	# rockchip-cpuinfo cpuinfo: SoC            : 35661000 --> https://forum.pine64.org/showthread.php?tid=14457&pid=101319#pid101319
+	# rockchip-cpuinfo cpuinfo: SoC            : 35681000 --> https://dev.t-firefly.com/forum.php?mod=redirect&goto=findpost&ptid=104549&pid=280260
 	#
 	# If /proc/cpuinfo Hardware field is 'Amlogic' then 1st chars of 'AmLogic Serial'
-	# and if not present 'Serial' might have special meaning:
+	# and if not present 'Serial' might have special meaning as it's the 'chip id'
+	# https://github.com/CoreELEC/bl301/blob/1b435f3e20160d50fc01c3ef616f1dbd9ff26be8/arch/arm/include/asm/cpu_id.h#L21-L42
+	# https://www.kernel.org/doc/Documentation/devicetree/bindings/arm/amlogic.txt
 	# 
-	# * 1f --> S905    https://forum.odroid.com/viewtopic.php?p=155548#p155548
-	# * 20 --> S912    https://forum.doozan.com/read.php?3,62704,62709#msg-62709
-	# * 21 --> S905X   https://blog.lvu.kr/amlogic-s905x-set-top-box-t95n-m8s-2g8g-2/
-	# * 2b --> S905X3  https://discourse.coreelec.org/t/proc-cpuinfo-is-missing-a-core-for-s950x3/14081
-	# * 32 --> S905X4  https://androidpctv.com/h96-max-x4-fake-s905x4/
+	# * 1b --> S805
+	# * 1f --> S905          https://forum.odroid.com/viewtopic.php?p=155548#p155548
+	# * 20 --> S912          https://forum.doozan.com/read.php?3,62704,62709#msg-62709 but in conflict with https://github.com/LibreELEC/linux-amlogic/blob/amlogic-3.14.y/arch/arm64/boot/dts/amlogic/mesongxtvbb.dtsi (quad A53)
+	# * 21 --> S905X         https://blog.lvu.kr/amlogic-s905x-set-top-box-t95n-m8s-2g8g-2/
+	# * 22 --> S912          https://github.com/CoreELEC/bl301/blob/coreelec-bl301/arch/arm/include/asm/cpu_id.h
+	# * 25 --> A113D (AXG)   https://tinyurl.com/y76bj6ky
+	# * 28 --> S905X2        https://discourse.coreelec.org/t/coreelec-bl301-wake-up-feature-inject-bl301/6321
+	# * 2b --> S905X3        https://discourse.coreelec.org/t/proc-cpuinfo-is-missing-a-core-for-s950x3/14081
+	# * 29 --> S922X/A311D   https://longervision.github.io/2020/04/18/AI/EdgeComputing/khadas-vim3-amlogic-a311d/
+	# * 2e --> T962X2
+	# * 32 --> S905X4        https://androidpctv.com/h96-max-x4-fake-s905x4/
 	#
 	# Amlogic chip ids: https://github.com/CoreELEC/linux-amlogic/blob/d4296d10296794ae00a72c845411e1e41efb14ba/arch/arm64/kernel/cpuinfo.c#L124-L146
 	# More cpuinfo: http://tessy.org/wiki/index.php?Arm#ae54e1d6 (archived at https://archive.md/nf6kL)
+	# https://github.com/pytorch/cpuinfo/tree/master/src/arm/linux/
 
 	CPUInfo="$(cat /proc/cpuinfo)"
 	HardwareInfo="$(awk -F': ' '/^Hardware/ {print $2}' <<< "${CPUInfo}" | tail -n1)"
-	RockchipGuess="$(dmesg | awk -F': ' '/rockchip-cpuinfo cpuinfo: SoC/ {print $3}' | cut -c-4)"
+	RockchipGuess="$(dmesg | awk -F': ' '/rockchip-cpuinfo cpuinfo: SoC/ {print $3}')"
 	
 	if [ "X${RockchipGuess}" != "X" ]; then
-		echo "Rockchip RK${RockchipGuess}"
+		echo "Rockchip RK$(cut -c-4 <<<"${RockchipGuess}") (${RockchipGuess})"
 	else
 		case ${HardwareInfo} in
 			Amlogic)
@@ -1988,17 +2003,41 @@ GuessARMSoC() {
 							AmLogicSerial="$(awk -F': ' '/^Serial/ {print $2}' <<< "${CPUInfo}" | tail -n1)"
 						fi
 						case "${AmLogicSerial}" in
+							1b*)
+								# Meson8B
+								echo "Amlogic S805"
+								;;
 							1f*)
+								# GXBB
 								echo "Amlogic S905"
 								;;
-							20*)
-								echo "Amlogic S912"
-								;;
 							21*)
+								# GXL: S805X, S805Y, S905X, S905D, S905W, S905L, S905M2
 								echo "Amlogic S905X"
 								;;
+							22*)
+								# GXM
+								echo "Amlogic S912"
+								;;
+							25*)
+								# AXG
+								echo "Amlogic A113D"
+								;;
+							28*)
+								# G12A: S905X2, S905D2, S905Y2
+								echo "Amlogic S905X2"
+								;;
+							29*)
+								# S922X, A311D
+								echo "Amlogic S922X/A311D"
+								;;
 							2b*)
+								# SM1: S905X3, S905D3
 								echo "Amlogic S905X3"
+								;;
+							2e*)
+								# TL1
+								echo "Amlogic T962X2"
 								;;
 							32*)
 								echo "Amlogic S905X4"
@@ -2011,20 +2050,22 @@ GuessARMSoC() {
 				esac
 				;;
 			sun20iw1*)
-				echo "Allwinner D1 (1 x C906 RISC-V)"
+				echo "Allwinner D1 (1xC906 RISC-V)"
 				;;
-			sun8iw2p1)
+			sun7iw2*)
 				echo "Allwinner A20 (Dual A7)"
 				;;
-			sun8iw7p1)
+			sun8iw7*)
 				echo "Allwinner H3/H2+ (Quad A7)"
 				;;
-			sun8iw11p1)
+			sun8iw11*)
 				echo "Allwinner R40/V40/T3/A40i (Quad A7)"
 				;;
 			sun50iw1p*)
-				# H5 identifies itself also like this
-				echo "Allwinner Quad A53 (A64/H64/R18/H5)"
+				# Since Armbian patched arch/arm64/kernel/cpuinfo.c since Aug 2016 every
+				# other Allwinner ARMv8 SoC (H5/H6) will identify itself as sun50iw1p1
+				# https://github.com/armbian/build/issues/3400 / https://archive.md/VxK14
+				echo "Allwinner A64 or https://tinyurl.com/yyf3d7fg"
 				;;
 			sun50iw2*)
 				echo "Allwinner H5 (Quad A53)"
@@ -2045,10 +2086,32 @@ GuessARMSoC() {
 				echo "Allwinner R329 (Dual A53)"
 				;;
 			sun*|Allwinner*)
-				echo "${HardwareInfo}"
+				sed -e 's/ board//' -e 's/ Family//' <<<"${HardwareInfo}"
 				;;
 			Hardkernel*)
-				sed 's/Hardkernel //' <<<"${HardwareInfo}"
+				case ${HardwareInfo} in
+					*XU4|*HC1|*HC2|*MC1|*XU4Q)
+						echo "Exynos 5422"
+						;;
+					*C1*)
+						echo "Amlogic S805"
+						;;
+					*C2)
+						echo "Amlogic S905"
+						;;
+					*C4)
+						echo "Amlogic S905X3"
+						;;
+					*N1)
+						echo "RK3399"
+						;;
+					*N2*)
+						echo "Amlogic S922X"
+						;;
+					*)
+						sed 's/Hardkernel //' <<<"${HardwareInfo}"
+						;;
+				esac
 				;;
 		esac
 	fi

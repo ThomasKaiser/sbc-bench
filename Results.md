@@ -92,6 +92,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | Raspberry Pi 4 B | 1800 MHz | 5.10 | Raspberry Pi OS Buster **arm64** | 5760 | 45570 | 36240 | 2240 | 3120 | 9.46 | [http://ix.io/3F9C](http://ix.io/3F9C) |
 | Raspberry Pi 4 B | 1800 MHz | 5.15 | **Jammy arm64** | 5640 | 45210 | 36260 | 2580 | 3110 | - | [http://ix.io/3InF](http://ix.io/3InF) |
 | Raspberry Pi 400 | 1800 MHz | 5.4 | Raspberry Pi OS Buster | 6550 | 75050 | 77890 | 2680 | 3110 | - | [http://ix.io/2Cyi](http://ix.io/2Cyi) |
+| RK3228A TV Box | 1200 MHz | 4.4 | Buster armhf | 2310 | 18520 | 23070 | 410 | 1230 | - | [http://ix.io/3M9F](http://ix.io/3M9F) |
 | [Rock64](https://www.armbian.com/rock64/) | 1300 MHz | 4.4 | Bionic arm64 | 3410 | 89060 | 601200 | 1310 | 5680 | 4.46 | [http://ix.io/1iGW](http://ix.io/1iGW) |
 | [Rock64](https://www.armbian.com/rock64/) | 1300 MHz | 4.18 | Bionic arm64 | 3530 | 116100 | 605250 | 1340 | 5770 | 4.65 | [http://ix.io/1iH4](http://ix.io/1iH4) |
 | [Rock64](https://www.armbian.com/rock64/) | 1300 MHz | 4.4 | Stretch arm64 | 3430 | 88600 | 601000 | 1350 | 5680 | 3.64 | [http://ix.io/1iHo](http://ix.io/1iHo) |

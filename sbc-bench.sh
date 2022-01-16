@@ -687,17 +687,41 @@ RenderPDF() {
 } # RenderPDF
 
 GetTempSensor() {
-	# In Armbian we might rely on /etc/armbianmonitor/datasources/soctemp
+	# In Armbian we can not really rely on /etc/armbianmonitor/datasources/soctemp
+	# since nobody is left there who cares about /usr/lib/armbian/armbian-hardware-monitor
 	if [ -f /etc/armbianmonitor/datasources/soctemp ]; then
 		TempSource=/etc/armbianmonitor/datasources/soctemp
 		ThermalNode="$(readlink /etc/armbianmonitor/datasources/soctemp)"
 		if [ -f "${ThermalNode%/*}/name" ]; then
-			read ThermalSource <"${ThermalNode%/*}/name" 2>/dev/null && \
-				TempInfo="Thermal source: ${ThermalNode%/*}/ (${ThermalSource})"
+			read ThermalSource <"${ThermalNode%/*}/name" 2>/dev/null
 		elif [ -f "${ThermalNode%/*}/type" ]; then
-			read ThermalSource <"${ThermalNode%/*}/type" 2>/dev/null && \
-				TempInfo="Thermal source: ${ThermalNode%/*}/ (${ThermalSource})"
+			read ThermalSource <"${ThermalNode%/*}/type" 2>/dev/null
 		fi
+		case ${ThermalSource} in
+			# check name/type of thermal node Armbian 'has chosen' (it's an unmaintained
+			# mess since 2018)
+			cpu|cpu_thermal|cpu-thermal|cpu0-thermal|soc_thermal|soc-thermal)
+				# Seems like a good find
+				TempInfo="Thermal source: ${ThermalNode%/*}/ (${ThermalSource})"
+				;;
+			*)
+				# Quick results check within one week showed the following types which
+				# smell all not that good if it's about CPU or SoC temperatures:
+				# scpi_sensors, w1_slave_temp, thermal-fan-est, iio_hwmon
+				NodeGuess=$(cat /sys/devices/virtual/thermal/thermal_zone?/type 2>/dev/null | egrep "cpu|soc" | tail -n1)
+				if [ "X${NodeGuess}" != "X" ]; then
+					# let's use this thermal node instead
+					TempSource="$(mktemp /tmp/soctemp.XXXXXX)"
+					ThermalZone="$(GetThermalZone "${NodeGuess}")"
+					ln -fs ${ThermalZone}/temp ${TempSource}
+					# TempInfo="Thermal source: ${ThermalZone}/ (${NodeGuess} / Armbian would have chosen ${ThermalSource} instead)"
+					TempInfo="Thermal source: ${ThermalZone}/ (${NodeGuess})\n                Armbian prefers ${ThermalNode%/*}/${ThermalSource} instead,\n                please file a bug here: https://github.com/armbian/build/issues"
+				else
+					# use Armbian's 'choice' since no better match was found
+					TempInfo="Thermal source: ${ThermalNode%/*}/ (${ThermalSource})\n                (other sensors found: $(cat /sys/devices/virtual/thermal/thermal_zone?/type | tr '\n' ',' | sed -e 's/,/, /g' -e 's/, $//'))"
+				fi
+				;;
+		esac
 	else
 		TempSource="$(mktemp /tmp/soctemp.XXXXXX)"
 
@@ -746,18 +770,13 @@ GetTempSensor() {
 					ln -fs /sys/devices/platform/a20-tp-hwmon/temp1_input ${TempSource}
 					read ThermalSource </sys/devices/platform/a20-tp-hwmon/name 2>/dev/null && \
 						TempInfo="Thermal source: /sys/devices/platform/a20-tp-hwmon/ (${ThermalSource})"
-				elif [[ -f /sys/class/hwmon/hwmon0/temp1_input ]]; then
-					# usual convention with modern kernels
-					ln -fs /sys/class/hwmon/hwmon0/temp1_input ${TempSource}
-					read ThermalSource </sys/class/hwmon/hwmon0/name 2>/dev/null && \
-						TempInfo="Thermal source: /sys/class/hwmon/hwmon0/ (${ThermalSource})"
 				else
-					# all other boards/kernels use the same sysfs node except of Actions Semi S500
-					# so on LeMaker Guitar, Roseapple Pi or Allo Sparky it must read "thermal_zone1"
-					if [ -f /sys/devices/virtual/thermal/thermal_zone0/temp ]; then
-						ln -fs /sys/devices/virtual/thermal/thermal_zone0/temp ${TempSource}
-						read ThermalSource </sys/devices/virtual/thermal/thermal_zone0/type 2>/dev/null && \
-							TempInfo="Thermal source: /sys/devices/virtual/thermal/thermal_zone0/ (${ThermalSource})"
+					NodeGuess=$(cat /sys/devices/virtual/thermal/thermal_zone?/type 2>/dev/null | egrep "cpu|soc" | tail -n1)
+					if [ "X${NodeGuess}" != "X" ]; then
+						# let's use this thermal node
+						ThermalZone="$(GetThermalZone "${NodeGuess}")"
+						ln -fs ${ThermalZone}/temp ${TempSource}
+						TempInfo="Thermal source: ${ThermalZone}/ (${NodeGuess})"
 					else
 						echo 0 >${TempSource}
 					fi
@@ -1950,11 +1969,12 @@ GuessARMSoC() {
 	# RK3399 | 4 x Cortex-A53 / r0p4 + 2 x Cortex-A72 / r0p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
 	# RK3566/RK3568 | 4 x Cortex-A55 / r2p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp
 	# Amlogic A113D | 4 x Cortex-A53
+	# Amlogic S805 | 4 x Cortex-A5 / r0p1 / half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpv4 vfpd32
 	# Amlogic S905 | 4 x Cortex-A53 / r0p4 / fp asimd evtstrm crc32 (running 32-bit: fp asimd evtstrm crc32 wp half thumb fastmult vfp edsp neon vfpv3 tlsi vfpv4 idiva idivt)
-	# Amlogic S905X | 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32 wp half thumb fastmult vfp edsp neon vfpv3 tlsi vfpv4 idiva idivt
+	# Amlogic S905X | 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid (running 32-bit: fp asimd evtstrm aes pmull sha1 sha2 crc32 wp half thumb fastmult vfp edsp neon vfpv3 tlsi vfpv4 idiva idivt)
 	# Amlogic S912 | 8 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid (running 32-bit: fp asimd evtstrm aes pmull sha1 sha2 crc32 wp half thumb fastmult vfp edsp neon vfpv3 tlsi vfpv4 idiva idivt)
 	# Amlogic S905X2/S905Y2/T962X2 | 4 x Cortex-A53
-	# Amlogic S905X3 | 4 x Cortex-A55 / r1p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp
+	# Amlogic S905X3 | 4 x Cortex-A55 / r1p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp (with 5.10+ also 'asimddp asimdrdm cpuid dcpop lrcpc')
 	# Amlogic S905X4 | 4 x Cortex-A55 / r2p0
 	# Amlogic S922X/A311D | 2 x Cortex-A53 / r0p4 + 4 x Cortex-A73 / r0p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 	#

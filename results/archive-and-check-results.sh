@@ -4,7 +4,7 @@
 # To be executed from results dir. It also does some quick
 # validation of collected results afterwards.
 
-grep "| \[http://ix.io" ../Results.md | awk -F"http://" '{print $2}' | sed 's/](//' | while read ; do
+grep "http://ix.io" ../Results.md | awk -F"http://" '{print $2}' | cut -f1 -d')' | while read ; do
 	ResultFile="${REPLY##*/}.txt"
 	if [ -f "${ResultFile}" ]; then
 		grep -q "^tinymembench" "${ResultFile}" || (wget -q -O "${ResultFile}" "http://${REPLY}" ; sleep 5)
@@ -90,7 +90,7 @@ for file in *.txt ; do
 			grep -q -i throttling "${file}" && echo " ${Prefix}[check log](${file})${Suffix} |" || echo " |"
 			;;
 	esac
-done >>validation.md
+done | sed -e 's/ \{2,\}/ /g' >>validation.md
 
 # check whether new ARM Core IDs appeared
 curl -O https://raw.githubusercontent.com/util-linux/util-linux/master/sys-utils/lscpu-arm.c

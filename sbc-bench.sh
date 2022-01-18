@@ -700,7 +700,7 @@ GetTempSensor() {
 		case ${ThermalSource} in
 			# check name/type of thermal node Armbian 'has chosen' (it's an unmaintained
 			# mess since 2018)
-			cpu|cpu_thermal|cpu-thermal|cpu0-thermal|soc_thermal|soc-thermal)
+			cpu|cpu_thermal|cpu-thermal|cpu0-thermal|cpu0_thermal|soc_thermal|soc-thermal)
 				# Seems like a good find
 				TempInfo="Thermal source: ${ThermalNode%/*}/ (${ThermalSource})"
 				;;
@@ -715,7 +715,7 @@ GetTempSensor() {
 					ThermalZone="$(GetThermalZone "${NodeGuess}")"
 					ln -fs ${ThermalZone}/temp ${TempSource}
 					# TempInfo="Thermal source: ${ThermalZone}/ (${NodeGuess} / Armbian would have chosen ${ThermalSource} instead)"
-					TempInfo="Thermal source: ${ThermalZone}/ (${NodeGuess})\n                Armbian prefers ${ThermalNode%/*}/${ThermalSource} instead,\n                please file a bug here: https://github.com/armbian/build/issues"
+					TempInfo="Thermal source: ${ThermalZone}/ (${NodeGuess})\n                (Armbian wants to use ${ThermalNode%/*} instead, that\n                zone is named ${ThermalSource}. Please check and if wrong\n                file a bug here: https://github.com/armbian/build/issues/)"
 				else
 					# use Armbian's 'choice' since no better match was found
 					TempInfo="Thermal source: ${ThermalNode%/*}/ (${ThermalSource})\n                (other sensors found: $(cat /sys/devices/virtual/thermal/thermal_zone?/type | tr '\n' ',' | sed -e 's/,/, /g' -e 's/, $//'))"
@@ -876,6 +876,8 @@ MonitorBoard() {
 			echo -e "${SoC_Family} ${SoC_ID} rev ${SoC_Revision}, \c"
 		fi
 		BasicSetup
+		CPUTopology="$(PrintCPUTopology)"
+		CPUSignature="$(GetCPUSignature)"
 		GuessedSoC="$(GuessARMSoC)"
 		[ "X${GuessedSoC}" != "X" ] && echo -e "${GuessedSoC}, \c"
 		grep -q "BCM2711" <<<"${DeviceName}" && echo -e "${DeviceName}, \c"
@@ -883,7 +885,7 @@ MonitorBoard() {
 		VirtWhat="$(systemd-detect-virt 2>/dev/null)"
 		[ "X${VirtWhat}" != "X" -a "X${VirtWhat}" != "Xnone" ] && VirtOrContainer=" / ${BOLD}${VirtWhat}${NC}"
 		echo -e "Kernel: ${CPUArchitecture}${VirtOrContainer}${Userland}"
-		PrintCPUTopology
+		echo -e "${CPUTopology}\n"
 		if [ "X${TempInfo}" != "X" ]; then
 			echo -e "${TempInfo}\n"
 		fi
@@ -1298,7 +1300,9 @@ InitialMonitoring() {
 	trap "rm -rf \"${TempDir}\" ; exit 0" 0 1 2 3 15
 
 	# collect CPU topology
-	PrintCPUTopology >"${TempDir}/cpu-topology.log" &
+	CPUTopology="$(PrintCPUTopology)"
+	echo -e "${CPUTopology}\n" >"${TempDir}/cpu-topology.log" &
+	CPUSignature="$(GetCPUSignature)"
 	
 	# Log version and device info
 	read HostName </etc/hostname
@@ -1713,7 +1717,11 @@ SummarizeResults() {
 LogEnvironment() {
 	# try to guess the SoC and report if successful
 	GuessedSoC="$(GuessARMSoC)"
-	[ "X${GuessedSoC}" != "X" ] && echo -e "\nSoC guess: ${GuessedSoC}\c"
+	if [ "X${GuessedSoC}" != "X" ]; then
+		echo -e "\nSoC guess: ${GuessedSoC}\c"
+	elif [ "X${CPUSignature}" != "X" ]; then
+		echo -e "\nSignature: ${CPUSignature}\c"
+	fi
 	# Log compiler version
 	GCC_Info="$(${GCC} -v 2>&1 | egrep "^Target|^Configured")"
 	echo -e "\n Compiler: ${GCC} $(cut -f1 -d')' <<<${GCC_Version})/$(awk -F": " '/^Target/ {print $2}' <<< "${GCC_Info}"))"
@@ -1950,37 +1958,28 @@ GuessARMSoC() {
 	# function that might guess SoC names sometimes in the future
 	#
 	# Allwinner A83T | 8 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
-	# Allwinner A64/H5 | 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
-	# Allwinner H3 | 4 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
-	# Allwinner H6 | 4 x Cortex-A53 / r0p4 / fp asimd aes pmull sha1 sha2 crc32 cpuid
+	# x Allwinner A64/H5 | 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
+	# x Allwinner H6 | 4 x Cortex-A53 / r0p4 / fp asimd aes pmull sha1 sha2 crc32 cpuid
+	# Amlogic A113D | 4 x Cortex-A53
+	# x Amlogic S905 | 4 x Cortex-A53 / r0p4 / fp asimd evtstrm crc32 (running 32-bit: fp asimd evtstrm crc32 wp half thumb fastmult vfp edsp neon vfpv3 tlsi vfpv4 idiva idivt)
+	# x Amlogic S905X | 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid (running 32-bit: fp asimd evtstrm aes pmull sha1 sha2 crc32 wp half thumb fastmult vfp edsp neon vfpv3 tlsi vfpv4 idiva idivt)
+	# x Amlogic S905X2/S905Y2/T962X2 | 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
+	# x Amlogic S905X4 | 4 x Cortex-A55 / r2p0
 	# AnnapurnaLabs Alpine | 2 x Cortex-A15 / r2p4 / swp half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt
 	# Armada 370/XP | 1 x Marvell PJ4 / r1p1 / half thumb fastmult vfp edsp vfpv3 vfpv3d16 tls idivt
-	# Armada 375 | 2 x Cortex-A9 / r4p1 / swp half thumb fastmult vfp edsp neon vfpv3 tls
-	# BCM2709 | 4 x Cortex-A53 / r0p4 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm crc32
-	# BCM2711 | 4 x Cortex-A72 / r0p3 / fp asimd evtstrm crc32 cpuid (running 32-bit: half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm crc32)
 	# Comcerto 2000 EVM (FreeScale/NXP QorIQ LS1024A) | 2 x Cortex-A9 / r2p1 / swp half thumb fastmult vfp edsp thumbee neon vfpv3 tls
-	# Exynos 5422 | 4 x Cortex-A7 / r0p3 + 4 x Cortex-A15 / r2p3 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
 	# Feroceon 88F6281 | 1 x Marvell Feroceon 88FR131 / r2p1 / swp half thumb fastmult edsp
 	# HiSilicon Kirin 930 | 8 x Cortex-A53 / r0p3 / fp asimd evtstrm aes pmull sha1 sha2 crc32
-	# Jetson Nano | 4 x Cortex-A57 / r1p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32
+	# x i.MX8 M | 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
 	# Marvell PJ4Bv7 | 4 x Marvell PJ4B-MP / r2p2 / swp half thumb fastmult vfp edsp vfpv3 tls
-	# RK3228A | 4 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
-	# RK3328 | 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
-	# RK3399 | 4 x Cortex-A53 / r0p4 + 2 x Cortex-A72 / r0p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
-	# RK3566/RK3568 | 4 x Cortex-A55 / r2p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp
-	# Amlogic A113D | 4 x Cortex-A53
-	# Amlogic S805 | 4 x Cortex-A5 / r0p1 / half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpv4 vfpd32
-	# Amlogic S905 | 4 x Cortex-A53 / r0p4 / fp asimd evtstrm crc32 (running 32-bit: fp asimd evtstrm crc32 wp half thumb fastmult vfp edsp neon vfpv3 tlsi vfpv4 idiva idivt)
-	# Amlogic S905X | 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid (running 32-bit: fp asimd evtstrm aes pmull sha1 sha2 crc32 wp half thumb fastmult vfp edsp neon vfpv3 tlsi vfpv4 idiva idivt)
-	# Amlogic S912 | 8 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid (running 32-bit: fp asimd evtstrm aes pmull sha1 sha2 crc32 wp half thumb fastmult vfp edsp neon vfpv3 tlsi vfpv4 idiva idivt)
-	# Amlogic S905X2/S905Y2/T962X2 | 4 x Cortex-A53
-	# Amlogic S905X3 | 4 x Cortex-A55 / r1p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp (with 5.10+ also 'asimddp asimdrdm cpuid dcpop lrcpc')
-	# Amlogic S905X4 | 4 x Cortex-A55 / r2p0
-	# Amlogic S922X/A311D | 2 x Cortex-A53 / r0p4 + 4 x Cortex-A73 / r0p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32
+	# x RK3328 | 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
+	# x RK3566/RK3568 | 4 x Cortex-A55 / r2p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp
+	# x RTD129x/RTD139x | 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 	#
 	# Recent Rockchip BSP include something like this in dmesg output:
 	# rockchip-cpuinfo cpuinfo: SoC            : 35661000 --> https://forum.pine64.org/showthread.php?tid=14457&pid=101319#pid101319
 	# rockchip-cpuinfo cpuinfo: SoC            : 35681000 --> https://dev.t-firefly.com/forum.php?mod=redirect&goto=findpost&ptid=104549&pid=280260
+	# rockchip-cpuinfo cpuinfo: SoC            : 35682000 --> https://forum.banana-pi.org/t/banana-pi-bpi-r2-pro-open-soruce-router-board-with-rockchip-rk3568-run-debian-linux/
 	#
 	# If /proc/cpuinfo Hardware field is 'Amlogic' then 1st chars of 'AmLogic Serial'
 	# and if not present 'Serial' might have special meaning as it's the 'chip id'
@@ -2106,7 +2105,8 @@ GuessARMSoC() {
 				echo "Allwinner R329 (Dual A53)"
 				;;
 			sun*|Allwinner*)
-				sed -e 's/ board//' -e 's/ Family//' <<<"${HardwareInfo}"
+				SoCGuess="$(GuessSoCbySignature)"
+				[ "X${SoCGuess}" = "X" ] && sed -e 's/ board//' -e 's/ Family//' <<<"${HardwareInfo}" || echo "${SoCGuess}"
 				;;
 			Hardkernel*)
 				case ${HardwareInfo} in
@@ -2133,9 +2133,154 @@ GuessARMSoC() {
 						;;
 				esac
 				;;
+			*)
+				# guess SoC based on CPU topology
+				SoCGuess="$(GuessSoCbySignature)"
+				[ "X${SoCGuess}" = "X" ] || echo "${SoCGuess}"
+				;;
 		esac
 	fi
 } # GuessARMSoC
+
+GuessSoCbySignature() {
+	case ${CPUSignature} in
+		??A8r3p2)
+			# Allwinner A10, 1 x Cortex-A8 / r3p2 / half thumb fastmult vfp edsp neon vfpv3 tls vfpd32
+			echo "Allwinner A10"
+			;;
+		00A7r0p400A7r0p4)
+			# Allwinner A20, 2 x Cortex-A7 / r0p4 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
+			echo "Allwinner A20"
+			;;
+		00A7r0p500A7r0p500A7r0p500A7r0p5)
+			grep -q 'ahci-sunxi' /proc/interrupts
+			case $? in
+				0)
+					# SATA is present, so we're talking about R40/V40, 4 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
+					echo "Allwinner R40/V40"
+					;;
+				*)
+					# Allwinner H3/H2+, 4 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
+					echo "Allwinner H3/H2+"
+					;;
+			esac
+			;;
+		20A5r0p120A5r0p120A5r0p120A5r0p1)
+			# S805, 4 x Cortex-A5 / r0p1 / half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpv4 vfpd32
+			echo "Amlogic S805"
+			;;
+		00A53r0p400A53r0p400A53r0p400A53r0p4)
+			# Allwinner A64/H5/H6, BCM2837/BCM2709, RK3328, i.MX8 M, S905, S905X/S805X, S805Y, S905X/S905D/S905W/S905L/S905M2, S905X2/S905Y2/T962X2, RealTek RTD129x/RTD139x
+			case "${DeviceName}" in
+				"Raspberry Pi 2"*)
+					echo "BCM2837/BCM2709"
+					;;
+				"Raspberry Pi 3"*)
+					echo "BCM2710"
+					;;
+				*)
+					# No Raspberry, check for AES capabilities first
+					grep 'Features' /proc/cpuinfo | grep -q aes
+					if [ $? -ne 0 ]; then
+						# no ARMv8 Crypto Extensions then it's S905
+						echo "Amlogic S905"
+					else
+						ModulesLoaded=$(lsmod | cut -f1 -d' ' | tr '\n' ' ')
+						case ${ModulesLoaded} in
+							*sun?i*)
+								echo "Allwinner A64/H5/H6"
+								;;
+							*meson*)
+								echo "Amlogic S805X, S805Y, S905X/S905D/S905W/S905L/S905M2, S905X2/S905Y2/T962X2"
+								;;
+							*imx8*)
+								echo "NXP i.MX8 M"
+								;;
+						esac
+					fi
+					;;
+			esac
+			;;
+		00A53r0p400A53r0p412A73r0p212A73r0p212A73r0p212A73r0p2)
+			# S922X/A311D, 2 x Cortex-A53 / r0p4 + 4 x Cortex-A73 / r0p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32
+			echo "Amlogic S922X/A311D"
+			;;
+		0A9r4p10A9r4p1|00A9r4p100A9r4p1)
+			# Armada 375/38x, 2 x Cortex-A9 / r4p1 / swp half thumb fastmult vfp edsp neon vfpv3 tls
+			echo "Armada 375/38x"
+			;;
+		??A53r0p4??A53r0p4)
+			# Armada 3700, 2 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
+			echo "Armada 37x0"
+			;;
+		10ARM1176r0p7)
+			# BCM2835, 1 x ARM1176 / r0p7 / half thumb fastmult vfp edsp java tls
+			echo "BCM2835"
+			;;
+		00A72r0p300A72r0p300A72r0p300A72r0p3)
+			# BCM2711, 4 x Cortex-A72 / r0p3 / fp asimd evtstrm crc32 cpuid (running 32-bit: half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm crc32)
+			echo "BCM2711"
+			;;
+		10A7r0p310A7r0p310A7r0p310A7r0p304A15r2p304A15r2p304A15r2p304A15r2p3)
+			# Exynos 5422, 4 x Cortex-A7 / r0p3 + 4 x Cortex-A15 / r2p3 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae (with 5.x also evtstrm)
+			echo "Exynos 5422"
+			;;
+		00A35r0p200A35r0p200A35r0p200A35r0p2)
+			# RK3308, 4 x Cortex-A35 / r0p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
+			echo "RK3308"
+			;;
+		00A55r1p000A55r1p000A55r1p000A55r1p0)
+			# Amlogic S905X3, 4 x Cortex-A55 / r1p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp (with 5.4+ also 'asimddp asimdrdm cpuid dcpop lrcpc')
+			echo "Amlogic S905X3"
+			;;
+		00A55r2p000A55r2p000A55r2p000A55r2p0)
+			# Amlogic S905X4, RK3566/RK3568
+			lsmod | grep -i meson && echo "Amlogic S905X4" || echo "RK356x"
+			;;
+		00A53r0p400A53r0p400A53r0p400A53r0p414A72r0p214A72r0p2)
+			# RK3399, 4 x Cortex-A53 / r0p4 + 2 x Cortex-A72 / r0p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
+			echo "RK3399"
+			;;
+		150A7r0p5150A7r0p5150A7r0p5150A7r0p5)
+			case "${DeviceName}" in
+				"Raspberry Pi 2"*)
+					# BCM2836, 4 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
+					echo "BCM2836/BCM2709"
+					;;
+				*)
+					# RK3228A, 4 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
+					echo "RK3228A"
+					;;
+			esac
+			;;
+		00A57r1p100A57r1p100A57r1p100A57r1p1)
+			# Jetson Nano, 4 x Cortex-A57 / r1p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32
+			echo "Jetson Nano"
+			;;
+		?0A17r0p1?0A17r0p1?0A17r0p1?0A17r0p1)
+			# RK3288, 4 x Cortex-A17 / r0p1 / half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
+			echo "RK3288"
+			;;
+		?0A7r0p3?0A7r0p3?0A7r0p3?0A7r0p3)
+			# MT7623, 4 x Cortex-A7 / r0p3 / half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
+			echo "Mediatek MT7623"
+			;;
+		00A53r0p300A53r0p300A53r0p300A53r0p310A53r0p310A53r0p310A53r0p310A53r0p3)
+			# Samsung/Nexell S5P6818, 8 x Cortex-A53 / r0p3 / fp asimd aes pmull sha1 sha2 crc32 cpuid
+			echo "S5P6818"
+			;;
+	esac
+}
+
+GetCPUSignature() {
+	case ${CPUArchitecture} in
+		arm*|aarch*)
+			sed -e '1,/^ CPU/ d' -e 's/Cortex-//' -e 's/-//g' <<<"${CPUTopology}" | while read ; do
+				echo -e "$(awk -F" " '{print $2$3$6$8}' <<<"${REPLY}")\c"
+			done
+			;;
+	esac
+} # GetCPUSignature
 
 DisplayUsage() {
 	echo -e "\nUsage: ${BOLD}${0##*/} [-c] [-p] [-h] [-m] [-t \$degree] [-T \$degree]${NC}\n"

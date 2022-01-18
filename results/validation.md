@@ -50,7 +50,7 @@
 | [1isD](1isD.txt) | Raspberry Pi 3 B+ | 0.8%/0.2% | 927M/810M | X | X | X | X | 1% | 0% | |
 | [1ism](1ism.txt) | Raspberry Pi 3 B+ | 0.1%/0.2% | 927M/816M | X | X | X | X | 1% | 0% | |
 | [1ivR](1ivR.txt) | RockPro64 arm64 | 0%/0.4% | 3.8G/3.7G | X | X | X | X | 1% | 1% | |
-| [1ivw](1ivw.txt) | Raspberry Pi 2 B+ | 0%/0% | 927M/834M | X | X | X | X | 2% | 0% | |
+| <del>[1ivw](1ivw.txt)</del> | <del></del> | <del>0%/0%</del> | <del>927M/834M</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 2%</del> | <del> 0%</del> | |
 | [1iwz](1iwz.txt) | Rock64 | 0%/0.3% | 1.9G/1.7G | X | X | X | X | 2% | 0% | |
 | [1ixL](1ixL.txt) | ODROID-XU4 | 0%/3.5% | 1.9G/513M | X | X | X | X | <span style=color:red>**12%**</span> | <span style=color:red>**39%**</span> | |
 | [1ixi](1ixi.txt) | Khadas VIM2 | 0.4%/0% | 1.7G/1.3G | X | X | X | X | 1% | 0% | |
@@ -134,7 +134,12 @@
 | [3LoH](3LoH.txt) | v0.9.1 Hardkernel ODROID-N2Plus | 0%/0% | 3.6Gi/3.1Gi | X | X | X | X | 1% | 0% | |
 | [3Lpf](3Lpf.txt) | v0.8.8 NVIDIA Jetson Nano Developer Kit | 0.2%/0% | 3,9G/3,4G | X | X | X | X | 2% | <span style=color:red> 6%</span> | |
 | [3M9F](3M9F.txt) | v0.9.1 Generic RK322x TV Box board | 1.6%/0.5% | 1.9Gi/1.7Gi | X | X | X | X | <span style=color:red> 5%</span> | 0% | |
+| [3MAK](3MAK.txt) | v0.9.1 FriendlyElec NanoPi M4 Ver2.0 | 0.3%/0.3% | 3.8Gi/3.4Gi | X | X | X | X | 2% | 1% | |
+| [3MGN](3MGN.txt) | v0.9.1 Raspberry Pi Model B Rev 2 | 1.4%/1.1% | 429Mi/347Mi | X | X | X | | 2% | 0% | [check log](3MGN.txt) |
+| [3MGs](3MGs.txt) | v0.9.1 Raspberry Pi 2 Model B Rev 1.1 | 0.8%/0.2% | 922Mi/835Mi | X | X | X | X | 2% | 0% | |
 | [3MhQ](3MhQ.txt) | v0.9.1 Hardkernel ODROID-HC4 | 0%/0% | 3.7Gi/3.3Gi | X | X | X | X | 1% | 0% | |
 | [3MiR](3MiR.txt) | v0.9.1 TRONFY MXQ S805 | 1.1%/0% | 987Mi/794Mi | X | X | X | X | 2% | 0% | |
+| [3MuT](3MuT.txt) | v0.9.1 Hardkernel ODROID-N2 | 0%/0.2% | 3.6Gi/3.3Gi | X | X | X | X | 1% | 0% | |
+| [3MzQ](3MzQ.txt) | v0.9.1 Khadas VIM | 0.5%/0% | 1.9Gi/1.5Gi | X | X | X | X | 1% | 0% | |
 | [3rUb](3rUb.txt) | v0.7.7 Pine64 RK3566 Quartz64-A Board | 0%/0% | 3.8Gi/3.5Gi | X | X | X | X | 1% | 0% | |
 | [3wZn](3wZn.txt) | v0.7.7 Radxa Zero | 0.3%/0% | 3.7Gi/3.4Gi | X | X | X | X | 1% | 0% | |

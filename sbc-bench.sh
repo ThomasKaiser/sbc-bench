@@ -1955,7 +1955,9 @@ CacheAndDIMMDetails() {
 } # CacheAndDIMMDetails
 
 GuessARMSoC() {
-	# function that might guess SoC names sometimes in the future
+	# function that might guess ARM SoC names correctly sometimes in the future
+	#
+	# For a rough performance estimate wrt different ARMv8 cores see: https://www.cnx-software.com/2021/12/10/starfive-dubhe-64-bit-risc-v-core-12nm-2-ghz-processors/#comment-588823
 	#
 	# Allwinner A83T | 8 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
 	# x Allwinner A64/H5 | 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
@@ -2173,10 +2175,13 @@ GuessSoCbySignature() {
 			# Allwinner A64/H5/H6, BCM2837/BCM2709, RK3328, i.MX8 M, S905, S905X/S805X, S805Y, S905X/S905D/S905W/S905L/S905M2, S905X2/S905Y2/T962X2, RealTek RTD129x/RTD139x
 			case "${DeviceName}" in
 				"Raspberry Pi 2"*)
-					echo "BCM2837/BCM2709"
+					echo "BCM2837 (BCM2709)"
 					;;
 				"Raspberry Pi 3"*)
 					echo "BCM2710"
+					;;
+				"Raspberry Pi Zero 2"*)
+					echo "RP3A0-AU (BCM2710A1)"
 					;;
 				*)
 					# No Raspberry, check for AES capabilities first
@@ -2219,7 +2224,7 @@ GuessSoCbySignature() {
 			;;
 		00A72r0p300A72r0p300A72r0p300A72r0p3)
 			# BCM2711, 4 x Cortex-A72 / r0p3 / fp asimd evtstrm crc32 cpuid (running 32-bit: half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm crc32)
-			echo "BCM2711"
+			echo "BCM2711${BCM2711}"
 			;;
 		10A7r0p310A7r0p310A7r0p310A7r0p304A15r2p304A15r2p304A15r2p304A15r2p3)
 			# Exynos 5422, 4 x Cortex-A7 / r0p3 + 4 x Cortex-A15 / r2p3 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae (with 5.x also evtstrm)
@@ -2235,7 +2240,7 @@ GuessSoCbySignature() {
 			;;
 		00A55r2p000A55r2p000A55r2p000A55r2p0)
 			# Amlogic S905X4, RK3566/RK3568
-			lsmod | grep -i meson && echo "Amlogic S905X4" || echo "RK356x"
+			lsmod | grep -i meson && echo "Amlogic S905X4" || echo "RK3566 or RK3568"
 			;;
 		00A53r0p400A53r0p400A53r0p400A53r0p414A72r0p214A72r0p2)
 			# RK3399, 4 x Cortex-A53 / r0p4 + 2 x Cortex-A72 / r0p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
@@ -2245,7 +2250,7 @@ GuessSoCbySignature() {
 			case "${DeviceName}" in
 				"Raspberry Pi 2"*)
 					# BCM2836, 4 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
-					echo "BCM2836/BCM2709"
+					echo "BCM2836 (BCM2709)"
 					;;
 				*)
 					# RK3228A, 4 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm

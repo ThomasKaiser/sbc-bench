@@ -1867,7 +1867,7 @@ CheckForThrottling() {
 	# Check for throttling/undervoltage on Raspberry Pi
 	grep -q '1400/1200MHz' ${MonitorLog} && Warning="ATTENTION: Silent throttling has occured. Check the log for details."
 	if [ ${USE_VCGENCMD} = true ] ; then
-		Health="$(perl -e "printf \"%19b\n\", $(/usr/bin/vcgencmd get_throttled | cut -f2 -d=)" | tr -d '[:blank:]')"
+		Health="$(LC_ALL=C perl -e "printf \"%19b\n\", $(/usr/bin/vcgencmd get_throttled | cut -f2 -d=)" 2>/dev/null | tr -d '[:blank:]')"
 		# https://forum.armbian.com/topic/7763-benchmarking-cpus/?do=findComment&comment=59042
 		HealthLength=$(wc -c <<<"${Health}")
 		[ ${HealthLength} -eq 19 ] && Health="0${Health}"

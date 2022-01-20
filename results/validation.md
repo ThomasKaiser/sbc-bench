@@ -56,7 +56,7 @@
 | [1ixi](1ixi.txt) | Khadas VIM2 | 0.4%/0% | 1.7G/1.3G | X | X | X | X | 1% | 0% | |
 | [1iyp](1iyp.txt) | NanoPC T3+ | 0.5%/0% | 1.9G/1.6G | X | X | X | X | 1% | 0% | |
 | [1j1L](1j1L.txt) | v0.5 Olimex A10-OLinuXino-LIME | 8.3%/5.3% | 493M/430M | X | X | X | X | <span style=color:red> 9%</span> | 0% | |
-| [1j1d](1j1d.txt) | v0.5 Xunlong Orange Pi PC Plus | 0.4%/0% | 1.0G/868M | X | X | X | X | 3% | 0% | |
+| <del>[1j1d](1j1d.txt)</del> | <del>v0.5 Xunlong Orange Pi PC Plus </del> | <del>0.4%/0%</del> | <del>1.0G/868M</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 3%</del> | <del> 0%</del> | |
 | [1jCy](1jCy.txt) | v0.5.3 Helios4 | 0.3%/0.3% | 2.0G/1.8G | X | X | X | X | <span style=color:red>**33%**</span> | 0% | |
 | [1jEr](1jEr.txt) | v0.5.4 Pine H64 | 0%/0% | 2.0G/1.8G | X | X | X | X | 1% | 0% | [check log](1jEr.txt) |
 | [1jiU](1jiU.txt) | v0.5.3 NanoPi Fire3 | 0%/0% | 990M/878M | X | X | X | | 0% | 0% | |
@@ -137,6 +137,8 @@
 | [3MAK](3MAK.txt) | v0.9.1 FriendlyElec NanoPi M4 Ver2.0 | 0.3%/0.3% | 3.8Gi/3.4Gi | X | X | X | X | 2% | 1% | |
 | [3MGN](3MGN.txt) | v0.9.1 Raspberry Pi Model B Rev 2 | 1.4%/1.1% | 429Mi/347Mi | X | X | X | | 2% | 0% | [check log](3MGN.txt) |
 | [3MGs](3MGs.txt) | v0.9.1 Raspberry Pi 2 Model B Rev 1.1 | 0.8%/0.2% | 922Mi/835Mi | X | X | X | X | 2% | 0% | |
+| [3MQJ](3MQJ.txt) | v0.9.1 Xunlong Orange Pi PC 2 | 0%/0% | 985Mi/753Mi | X | X | X | X | <span style=color:red>**13%**</span> | 0% | |
+| [3MQV](3MQV.txt) | v0.9.1 Xunlong Orange Pi PC Plus | 0%/0% | 999Mi/779Mi | X | X | X | X | 2% | 0% | |
 | [3MhQ](3MhQ.txt) | v0.9.1 Hardkernel ODROID-HC4 | 0%/0% | 3.7Gi/3.3Gi | X | X | X | X | 1% | 0% | |
 | [3MiR](3MiR.txt) | v0.9.1 TRONFY MXQ S805 | 1.1%/0% | 987Mi/794Mi | X | X | X | X | 2% | 0% | |
 | [3MuT](3MuT.txt) | v0.9.1 Hardkernel ODROID-N2 | 0%/0.2% | 3.6Gi/3.3Gi | X | X | X | X | 1% | 0% | |

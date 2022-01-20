@@ -2034,7 +2034,7 @@ GuessARMSoC() {
 								;;
 							21*)
 								# GXL: S805X, S805Y, S905X, S905D, S905W, S905L, S905M2
-								echo "Amlogic S905X"
+								echo "Amlogic S805X, S805Y, S905X/S905D/S905W/S905L/S905M2"
 								;;
 							22*)
 								# GXM
@@ -2046,7 +2046,7 @@ GuessARMSoC() {
 								;;
 							28*)
 								# G12A: S905X2, S905D2, S905Y2
-								echo "Amlogic S905X2"
+								echo "Amlogic S905X2/S905D2/S905Y2"
 								;;
 							29*)
 								# S922X, A311D
@@ -2086,6 +2086,7 @@ GuessARMSoC() {
 				# Since Armbian patched arch/arm64/kernel/cpuinfo.c since Aug 2016 every
 				# other Allwinner ARMv8 SoC (H5/H6) will identify itself as sun50iw1p1
 				# https://github.com/armbian/build/issues/3400 / https://archive.md/VxK14
+				# TODO: check for PMIC type and PCIe to differentiate between A64, H5 and H6
 				echo "Allwinner A64 or https://tinyurl.com/yyf3d7fg"
 				;;
 			sun50iw2*)
@@ -2125,7 +2126,7 @@ GuessARMSoC() {
 						echo "Amlogic S905X3"
 						;;
 					*N1)
-						echo "RK3399"
+						echo "Rockchip RK3399"
 						;;
 					*N2*)
 						echo "Amlogic S922X"
@@ -2172,6 +2173,7 @@ GuessSoCbySignature() {
 			echo "Amlogic S805"
 			;;
 		00A53r0p400A53r0p400A53r0p400A53r0p4)
+			# The boring quad Cortex-A53 done by every SoC vendor
 			# Allwinner A64/H5/H6, BCM2837/BCM2709, RK3328, i.MX8 M, S905, S905X/S805X, S805Y, S905X/S905D/S905W/S905L/S905M2, S905X2/S905Y2/T962X2, RealTek RTD129x/RTD139x
 			case "${DeviceName}" in
 				"Raspberry Pi 2"*)
@@ -2193,13 +2195,35 @@ GuessSoCbySignature() {
 						ModulesLoaded=$(lsmod | cut -f1 -d' ' | tr '\n' ' ')
 						case ${ModulesLoaded} in
 							*sun?i*)
+								# TODO: check for PMIC type and PCIe to differentiate between A64, H5 and H6
 								echo "Allwinner A64/H5/H6"
 								;;
+							*rockchip*)
+								echo "Rockchip RK3328"
+								;;
 							*meson*)
-								echo "Amlogic S805X, S805Y, S905X/S905D/S905W/S905L/S905M2, S905X2/S905Y2/T962X2"
+								IdentifyGXLG12A
 								;;
 							*imx8*)
-								echo "NXP i.MX8 M"
+								echo "NXP i.MX8M"
+								;;
+							*)
+								# no significant module names found, guess by kernel
+								case "$(uname -a)" in
+									*sunxi*)
+										# TODO: check for PMIC type and PCIe to differentiate between A64, H5 and H6
+										echo "Allwinner A64/H5/H6"
+										;;
+									*rockchip*)
+										echo "Rockchip RK3328"
+										;;
+									*meson*)
+										IdentifyGXLG12A
+										;;
+									*BPI-M4*)
+										echo "RealTek RTD1395"
+										;;
+								esac
 								;;
 						esac
 					fi
@@ -2232,7 +2256,7 @@ GuessSoCbySignature() {
 			;;
 		00A35r0p200A35r0p200A35r0p200A35r0p2)
 			# RK3308, 4 x Cortex-A35 / r0p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
-			echo "RK3308"
+			echo "Rockchip RK3308"
 			;;
 		00A55r1p000A55r1p000A55r1p000A55r1p0)
 			# Amlogic S905X3, 4 x Cortex-A55 / r1p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp (with 5.4+ also 'asimddp asimdrdm cpuid dcpop lrcpc')
@@ -2240,11 +2264,11 @@ GuessSoCbySignature() {
 			;;
 		00A55r2p000A55r2p000A55r2p000A55r2p0)
 			# Amlogic S905X4, RK3566/RK3568
-			lsmod | grep -i meson && echo "Amlogic S905X4" || echo "RK3566 or RK3568"
+			lsmod | grep -i meson && echo "Amlogic S905X4" || echo "Rockchip RK3566 or RK3568"
 			;;
 		00A53r0p400A53r0p400A53r0p400A53r0p414A72r0p214A72r0p2)
 			# RK3399, 4 x Cortex-A53 / r0p4 + 2 x Cortex-A72 / r0p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
-			echo "RK3399"
+			echo "Rockchip RK3399"
 			;;
 		150A7r0p5150A7r0p5150A7r0p5150A7r0p5)
 			case "${DeviceName}" in
@@ -2254,7 +2278,7 @@ GuessSoCbySignature() {
 					;;
 				*)
 					# RK3228A, 4 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
-					echo "RK3228A"
+					echo "Rockchip RK3228A"
 					;;
 			esac
 			;;
@@ -2264,7 +2288,7 @@ GuessSoCbySignature() {
 			;;
 		?0A17r0p1?0A17r0p1?0A17r0p1?0A17r0p1)
 			# RK3288, 4 x Cortex-A17 / r0p1 / half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
-			echo "RK3288"
+			echo "Rockchip RK3288"
 			;;
 		?0A7r0p3?0A7r0p3?0A7r0p3?0A7r0p3)
 			# MT7623, 4 x Cortex-A7 / r0p3 / half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
@@ -2272,7 +2296,7 @@ GuessSoCbySignature() {
 			;;
 		00A53r0p300A53r0p300A53r0p300A53r0p310A53r0p310A53r0p310A53r0p310A53r0p3)
 			# Samsung/Nexell S5P6818, 8 x Cortex-A53 / r0p3 / fp asimd aes pmull sha1 sha2 crc32 cpuid
-			echo "S5P6818"
+			echo "Samsung/Nexell S5P6818"
 			;;
 	esac
 }
@@ -2286,6 +2310,23 @@ GetCPUSignature() {
 			;;
 	esac
 } # GetCPUSignature
+
+IdentifyGXLG12A() {
+	# Amlogic GXL and G12A SoC families share same cluster details (quad A53 / r0p4).
+	# They differ in speed though: GXL fakes 1.5 GHz while being limited to 1.4 GHz
+	# but G12A (S905X2, S905D2, S905Y2) clocks higher and doesn't fake clockspeeds
+	MaxSpeed="$(sed -e '1,/^ CPU/ d' <<<"${CPUTopology}" | tail -n1 | awk -F" " '{print $5}')"
+	case ${MaxSpeed} in
+		15??)
+			# GXL
+			echo "Amlogic S805X, S805Y, S905X/S905D/S905W/S905L/S905M2"
+			;;
+		*)
+			# G12A/TL1
+			echo "Amlogic S905X2/S905Y2/S905D2/T962X2"
+			;;
+	esac
+} # IdentifyGXLG12A
 
 DisplayUsage() {
 	echo -e "\nUsage: ${BOLD}${0##*/} [-c] [-p] [-h] [-m] [-t \$degree] [-T \$degree]${NC}\n"

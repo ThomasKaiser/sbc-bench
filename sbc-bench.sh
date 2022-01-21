@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.9.1
+Version=0.9.2
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -514,7 +514,7 @@ CheckPerformance() {
 	# now walk through higher cluster since this is supposed to provide more cpufreq OPP.
 	# On ARM usually little cores are the cores with lower numbers. 
 	BiggestCluster="$(sort -n -r <<<${Clusters} | head -n1)"
-	for i in $(tr " " "\n" <${BiggestCluster}/scaling_available_frequencies | sort -n | sed '/^[[:space:]]*$/d') ; do
+	for i in $((tr " " "\n" <${BiggestCluster}/scaling_available_frequencies ; tr " " "\n" <${BiggestCluster}/scaling_boost_frequencies) 2>/dev/null | sort -n | uniq | sed '/^[[:space:]]*$/d') ; do
 		# skip measuring cpufreq OPPs below $SkipBelow MHz
 		if [ $i -lt ${SkipBelow}000 ]; then
 			continue
@@ -1296,7 +1296,8 @@ InitialMonitoring() {
 	fi
 
 	# upload raw /proc/cpuinfo contents
-	(echo -e "/proc/cpuinfo\n" ; uname -a ; echo ; cat /proc/cpuinfo) | curl -s -F 'f:1=<-' ix.io >/dev/null 2>&1 &
+	(echo -e "/proc/cpuinfo\n\n$(uname -a) / $(cat /proc/device-tree/model)\n" ; cat /proc/cpuinfo) 2>/dev/null \
+		| curl -s -F 'f:1=<-' ix.io >/dev/null 2>&1 &
 
 	# Create temporary files
 	TempDir="$(mktemp -d /tmp/${0##*/}.XXXXXX)"
@@ -1467,7 +1468,7 @@ CheckCPUCluster() {
 		read MaxSpeed </sys/devices/system/cpu/cpufreq/policy${1}/cpuinfo_max_freq
 		echo ${MinSpeed} >/sys/devices/system/cpu/cpufreq/policy${1}/scaling_min_freq
 		if [ -f /sys/devices/system/cpu/cpufreq/policy${1}/scaling_available_frequencies ]; then
-			OPPtoCheck=$(tr " " "\n" </sys/devices/system/cpu/cpufreq/policy${1}/scaling_available_frequencies | sort -n -r)
+			OPPtoCheck=$((tr " " "\n" </sys/devices/system/cpu/cpufreq/policy${1}/scaling_available_frequencies ; tr " " "\n" </sys/devices/system/cpu/cpufreq/policy${1}/scaling_boost_frequencies) 2>/dev/null | sort -n -r | uniq | sed '/^[[:space:]]*$/d')
 		else
 			OPPtoCheck="${MaxSpeed} ${MinSpeed}"
 		fi
@@ -1553,7 +1554,9 @@ Run7ZipBenchmark() {
 		# run multi-threaded test only if there's more than one CPU core
 		echo -e "\nSystem health while running 7-zip multi core benchmark:\n" >>${MonitorLog}
 		echo -e "\c" >${TempLog}
-		/bin/bash "${PathToMe}" -m $(( ${MultiThreadedDuration} / 3 )) >>${MonitorLog} &
+		MonInterval=$(( ${MultiThreadedDuration} / 3 ))
+		[ ${MonInterval:-0} -lt 10 ] && MonInterval=10
+		/bin/bash "${PathToMe}" -m ${MonInterval} >>${MonitorLog} &
 		MonitoringPID=$!
 		RunHowManyTimes=3
 		echo -e "Executing benchmark ${RunHowManyTimes} times multi-threaded" >>${TempLog}
@@ -1628,6 +1631,7 @@ RunCpuminerBenchmark() {
 PrintCPUTopology() {
 	# prints list of CPU cores, clusters and cpufreq policy nodes
 	X86CPUName="$(sed -e 's/1.th Gen //' -e 's/.th Gen //' -e 's/Core(TM) //' -e 's/ Processor//' -e 's/Intel(R) Xeon(R) CPU //' -e 's/Intel(R) //' -e 's/(R)//' -e 's/CPU //' -e 's/ 0 @/ @/' -e 's/AMD //' -e 's/Authentic //' -e 's/ with .*//' <<<"${DeviceName}")"
+	CPUFreqPolicy="none"
 	echo "CPU sysfs topology (clusters, cpufreq members, clockspeeds)"
 	echo "                 cpufreq   min    max"
 	echo " CPU    cluster  policy   speed  speed   core type"
@@ -1650,10 +1654,10 @@ PrintCPUTopology() {
 			CPUSpeedMin=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpufreq/policy${i}/scaling_min_freq)
 			CPUSpeedMax=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpufreq/policy${i}/scaling_max_freq)
 		fi
-		if [ -n ${CPUFreqPolicy} ]; then
-			echo  "$(printf "%3s" ${i})$(printf "%9s" ${CPUCluster})$(printf "%9s" ${CPUFreqPolicy})$(printf "%9s" ${CPUSpeedMin})$(printf "%8s" ${CPUSpeedMax})   ${CoreName:-"    -"}"
+		if [ -z ${CPUFreqPolicy} -o "${CPUFreqPolicy}" = "none" ]; then
+			echo "$(printf "%3s" ${i})$(printf "%9s" ${CPUCluster})        -       -       -    ${CoreName:-"    -"}"
 		else
-			echo "$(printf "%3s" ${i})$(printf "%9s" ${CPUCluster})        -       -      -     ${CoreName:-"    -"}"
+			echo "$(printf "%3s" ${i})$(printf "%9s" ${CPUCluster})$(printf "%9s" ${CPUFreqPolicy})$(printf "%9s" ${CPUSpeedMin})$(printf "%8s" ${CPUSpeedMax})   ${CoreName:-"    -"}"
 		fi
 	done
 	echo ""
@@ -1937,9 +1941,9 @@ CacheAndDIMMDetails() {
 		echo -e "\nDIMM configuration:\c"
 		# check whether 'Volatile Size' is contained and if not include full command output
 		grep -q "Volatile Size:" <<<"${DIMMDetails}" && \
-			echo -e "${DIMMDetails}" | egrep -v ": Unknown|: None" || \
+			echo -e "${DIMMDetails}" | egrep -v -i ": Unknown|: None" || \
 			(echo ; dmidecode -t memory 2>/dev/null | \
-			egrep -v "^Handle |^# dmidecode |^Getting SMBIOS data|^SMBIOS |Serial Number:" \
+			egrep -i -v "^Handle |^# dmidecode |^Getting SMBIOS data|^SMBIOS |Serial Number:|Not Provided|No Module Installed|Unknown|NO DIMM" \
 			| sed '/^$/N;/^\n$/D')
 		# check wether there's even more detailed DIMM info available via i2c
 		unset DIMMDetails
@@ -2319,14 +2323,18 @@ GuessSoCbySignature() {
 			# Samsung/Nexell S5P6818, 8 x Cortex-A53 / r0p3 / fp asimd aes pmull sha1 sha2 crc32 cpuid
 			echo "Samsung/Nexell S5P6818"
 			;;
+		0Cavium88XXr1p10*)
+			# ThunderX CN8890, 48 x ThunderX 88XX / r1p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
+			echo "$(( ${CPUCores} / 48 )) x ThunderX CN8890"
+			;;
 	esac
 }
 
 GetCPUSignature() {
 	case ${CPUArchitecture} in
 		arm*|aarch*)
-			sed -e '1,/^ CPU/ d' -e 's/Cortex-//' -e 's/-//g' <<<"${CPUTopology}" | while read ; do
-				echo -e "$(awk -F" " '{print $2$3$6$8}' <<<"${REPLY}")\c"
+			sed -e '1,/^ CPU/ d' -e 's/Cortex-//' <<<"${CPUTopology}" | while read ; do
+				echo -e "$(awk -F" " '{print $2$3$6$8$9$10}' <<<"${REPLY}" | sed -e 's/-//g' -e 's/\///g')\c"
 			done
 			;;
 	esac

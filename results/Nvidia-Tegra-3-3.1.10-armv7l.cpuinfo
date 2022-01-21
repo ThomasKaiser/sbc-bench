@@ -1,0 +1,23 @@
+Processor	: ARMv7 Processor rev 9 (v7l)
+processor	: 0
+BogoMIPS	: 1987.37
+
+processor	: 1
+BogoMIPS	: 1987.37
+
+processor	: 2
+BogoMIPS	: 1987.37
+
+processor	: 3
+BogoMIPS	: 1987.37
+
+Features	: swp half thumb fastmult vfp edsp neon vfpv3 tls 
+CPU implementer	: 0x41
+CPU architecture: 7
+CPU variant	: 0x2
+CPU part	: 0xc09
+CPU revision	: 9
+
+Hardware	: cardhu
+Revision	: 0000
+Serial		: 0c5b0b0104430300

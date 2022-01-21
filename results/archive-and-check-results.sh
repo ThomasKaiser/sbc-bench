@@ -15,8 +15,8 @@ grep "http://ix.io" ../Results.md | awk -F"http://" '{print $2}' | cut -f1 -d')'
 	fi
 done
 
-# contain all results files in compressed archive:
-tar jcf results.tar.bz2 *.txt
+# create compressed archive with benchmark results and cpuinfo:
+tar jcf results.tar.bz2 *.txt *.cpuinfo
 
 # check results files for anomalies and create a table
 cat <<EOF >validation.md

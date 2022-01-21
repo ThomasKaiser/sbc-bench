@@ -127,7 +127,6 @@
 | [3InF](3InF.txt) | v0.8.8 Raspberry Pi 4 Model B Rev 1.1 | 0%/0.5% | 958Mi/747Mi | X | X | X | X | <span style=color:red>**33%**</span> | 0% | |
 | [3JCm](3JCm.txt) | v0.8.8 Radxa Zero | 0.3%/0.8% | 3.7Gi/3.4Gi | X | X | X | X | 1% | 0% | |
 | [3KVs](3KVs.txt) | v0.9.0 Raspberry Pi 4 Model B Rev 1.4 | 1.9%/0.7% | 3.7Gi/3.4Gi | X | X | X | X | 4% | 0% | |
-| [3Krm](3Krm.txt) | v0.9.0 Radxa Zero | 0.6%/1.3% | 3.7Gi/3.2Gi | X | X | X | X | 1% | 0% | |
 | [3L37](3L37.txt) | v0.9.0 Raspberry Pi 4 Model B Rev 1.4 | 0.3%/0.6% | 3.7Gi/3.3Gi | X | X | X | X | 4% | 0% | |
 | [3Lir](3Lir.txt) | v0.9.1 ASUS Tinker Board | 0.5%/0% | 2.0Gi/1.5Gi | X | X | X | X | 2% | 0% | |
 | [3Llk](3Llk.txt) | v0.8.7 Raspberry Pi 4 Model B Rev 1.4 | 1.7%/0.4% | 3.7Gi/2.5Gi | X | X | X | X | <span style=color:red> 8%</span> | 0% | [check log](3Llk.txt) |
@@ -139,6 +138,8 @@
 | [3MGs](3MGs.txt) | v0.9.1 Raspberry Pi 2 Model B Rev 1.1 | 0.8%/0.2% | 922Mi/835Mi | X | X | X | X | 2% | 0% | |
 | [3MQJ](3MQJ.txt) | v0.9.1 Xunlong Orange Pi PC 2 | 0%/0% | 985Mi/753Mi | X | X | X | X | <span style=color:red>**13%**</span> | 0% | |
 | [3MQV](3MQV.txt) | v0.9.1 Xunlong Orange Pi PC Plus | 0%/0% | 999Mi/779Mi | X | X | X | X | 2% | 0% | |
+| [3MX1](3MX1.txt) | v0.9.1 Radxa Zero | 0%/0% | 1.9Gi/1.6Gi | X | X | X | X | 1% | 0% | |
+| [3MZF](3MZF.txt) | v0.9.1 SBC2D70 | 1.8%/0% | 113Mi/81Mi | X | | | | 0% | 2% | |
 | [3MhQ](3MhQ.txt) | v0.9.1 Hardkernel ODROID-HC4 | 0%/0% | 3.7Gi/3.3Gi | X | X | X | X | 1% | 0% | |
 | [3MiR](3MiR.txt) | v0.9.1 TRONFY MXQ S805 | 1.1%/0% | 987Mi/794Mi | X | X | X | X | 2% | 0% | |
 | [3MuT](3MuT.txt) | v0.9.1 Hardkernel ODROID-N2 | 0%/0.2% | 3.6Gi/3.3Gi | X | X | X | X | 1% | 0% | |

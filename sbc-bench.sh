@@ -700,7 +700,7 @@ GetTempSensor() {
 		case ${ThermalSource} in
 			# check name/type of thermal node Armbian 'has chosen' (it's an unmaintained
 			# mess since 2018)
-			cpu|cpu_thermal|cpu-thermal|cpu0-thermal|cpu0_thermal|soc_thermal|soc-thermal)
+			aml_thermal|cpu|cpu_thermal|cpu-thermal|cpu0-thermal|cpu0_thermal|soc_thermal|soc-thermal)
 				# Seems like a good find
 				TempInfo="Thermal source: ${ThermalNode%/*}/ (${ThermalSource})"
 				;;
@@ -718,7 +718,14 @@ GetTempSensor() {
 					TempInfo="Thermal source: ${ThermalZone}/ (${NodeGuess})\n                (Armbian wants to use ${ThermalNode%/*} instead, that\n                zone is named ${ThermalSource}. Please check and if wrong\n                file a bug here: https://github.com/armbian/build/issues/)"
 				else
 					# use Armbian's 'choice' since no better match was found
-					TempInfo="Thermal source: ${ThermalNode%/*}/ (${ThermalSource})\n                (other sensors found: $(cat /sys/devices/virtual/thermal/thermal_zone?/type | tr '\n' ',' | sed -e 's/,/, /g' -e 's/, $//'))"
+					OtherTempZones="$(cat /sys/devices/virtual/thermal/thermal_zone?/type | grep -v "${ThermalSource}" | tr '\n' ',' | sed -e 's/,/, /g' -e 's/, $//')"
+					if [ "X${OtherTempZones}" = "X" ]; then
+						# no other thermal zones available
+						TempInfo="Thermal source: ${ThermalNode%/*}/ (${ThermalSource})"
+					else
+						# report other thermal zones as well
+						TempInfo="Thermal source: ${ThermalNode%/*}/ (${ThermalSource})\n                (other sensors found: ${OtherTempZones})"
+					fi
 				fi
 				;;
 		esac
@@ -771,7 +778,7 @@ GetTempSensor() {
 					read ThermalSource </sys/devices/platform/a20-tp-hwmon/name 2>/dev/null && \
 						TempInfo="Thermal source: /sys/devices/platform/a20-tp-hwmon/ (${ThermalSource})"
 				else
-					NodeGuess=$(cat /sys/devices/virtual/thermal/thermal_zone?/type 2>/dev/null | egrep "cpu|soc" | tail -n1)
+					NodeGuess=$(cat /sys/devices/virtual/thermal/thermal_zone?/type 2>/dev/null | egrep "aml_thermal|cpu|soc" | tail -n1)
 					if [ "X${NodeGuess}" != "X" ]; then
 						# let's use this thermal node
 						ThermalZone="$(GetThermalZone "${NodeGuess}")"
@@ -1963,20 +1970,12 @@ GuessARMSoC() {
 	# x Allwinner A64/H5 | 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
 	# x Allwinner H6 | 4 x Cortex-A53 / r0p4 / fp asimd aes pmull sha1 sha2 crc32 cpuid
 	# Amlogic A113D | 4 x Cortex-A53
-	# x Amlogic S905 | 4 x Cortex-A53 / r0p4 / fp asimd evtstrm crc32 (running 32-bit: fp asimd evtstrm crc32 wp half thumb fastmult vfp edsp neon vfpv3 tlsi vfpv4 idiva idivt)
-	# x Amlogic S905X | 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid (running 32-bit: fp asimd evtstrm aes pmull sha1 sha2 crc32 wp half thumb fastmult vfp edsp neon vfpv3 tlsi vfpv4 idiva idivt)
-	# x Amlogic S905X2/S905Y2/T962X2 | 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
-	# x Amlogic S905X4 | 4 x Cortex-A55 / r2p0
 	# AnnapurnaLabs Alpine | 2 x Cortex-A15 / r2p4 / swp half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt
 	# Armada 370/XP | 1 x Marvell PJ4 / r1p1 / half thumb fastmult vfp edsp vfpv3 vfpv3d16 tls idivt
 	# Comcerto 2000 EVM (FreeScale/NXP QorIQ LS1024A) | 2 x Cortex-A9 / r2p1 / swp half thumb fastmult vfp edsp thumbee neon vfpv3 tls
 	# Feroceon 88F6281 | 1 x Marvell Feroceon 88FR131 / r2p1 / swp half thumb fastmult edsp
 	# HiSilicon Kirin 930 | 8 x Cortex-A53 / r0p3 / fp asimd evtstrm aes pmull sha1 sha2 crc32
-	# x i.MX8 M | 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
 	# Marvell PJ4Bv7 | 4 x Marvell PJ4B-MP / r2p2 / swp half thumb fastmult vfp edsp vfpv3 tls
-	# x RK3328 | 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
-	# x RK3566/RK3568 | 4 x Cortex-A55 / r2p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp
-	# x RTD129x/RTD139x | 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 	#
 	# Recent Rockchip BSP include something like this in dmesg output:
 	# rockchip-cpuinfo cpuinfo: SoC            : 35661000 --> https://forum.pine64.org/showthread.php?tid=14457&pid=101319#pid101319
@@ -2011,8 +2010,10 @@ GuessARMSoC() {
 	if [ "X${RockchipGuess}" != "X" ]; then
 		echo "Rockchip RK$(cut -c-4 <<<"${RockchipGuess}") (${RockchipGuess})"
 	else
+		# Guessing by 'Hardware :' in /proc/cpuinfo is something that only reliably works
+		# with vendor's BSP kernels. With mainline kernel it's impossible to rely on this
 		case ${HardwareInfo} in
-			Amlogic)
+			Amlogic*)
 				ModelName="$(awk -F': ' '/^model name/ {print $2}' <<< "${CPUInfo}" | tail -n1)"
 				case "${ModelName}" in
 					Amlogic*)
@@ -2155,6 +2156,10 @@ GuessSoCbySignature() {
 			# Allwinner A20, 2 x Cortex-A7 / r0p4 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
 			echo "Allwinner A20"
 			;;
+		00A7r0p500A7r0p5)
+			# SigmaStar SSD201/SSD202D | 2 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
+			echo "SigmaStar SSD201/SSD202D"
+			;;
 		00A7r0p500A7r0p500A7r0p500A7r0p5)
 			grep -q 'ahci-sunxi' /proc/interrupts
 			case $? in
@@ -2168,8 +2173,8 @@ GuessSoCbySignature() {
 					;;
 			esac
 			;;
-		20A5r0p120A5r0p120A5r0p120A5r0p1)
-			# S805, 4 x Cortex-A5 / r0p1 / half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpv4 vfpd32
+		20A5r0p120A5r0p120A5r0p120A5r0p1|2A5222)
+			# S805, 4 x Cortex-A5 / r0p1 / half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpv4 vfpd32 (3.10: swp half thumb fastmult vfp edsp neon vfpv3 tls vfpv4)
 			echo "Amlogic S805"
 			;;
 		00A53r0p400A53r0p400A53r0p400A53r0p4)
@@ -2277,14 +2282,30 @@ GuessSoCbySignature() {
 					echo "BCM2836 (BCM2709)"
 					;;
 				*)
-					# RK3228A, 4 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
-					echo "Rockchip RK3228A"
+					# RK3229/RK3228A, 4 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
+					echo "Rockchip RK3229/RK3228A"
 					;;
 			esac
 			;;
+		??A9r1p0??A9r1p0)
+			# Nvidia Tegra 2, 2 x Cortex-A9 / r1p0 / swp half thumb fastmult vfp edsp thumbee vfpv3 vfpv3d16 (no neon)
+			echo "Nvidia Tegra 2"
+			;;
+		??A9r2p9??A9r2p9??A9r2p9??A9r2p9)
+			# Nvidia Tegra 3, 4 x Cortex-A9 / r2p9 / swp half thumb fastmult vfp edsp neon vfpv3 tls
+			echo "Nvidia Tegra 3"
+			;;
 		00A57r1p100A57r1p100A57r1p100A57r1p1)
 			# Jetson Nano, 4 x Cortex-A57 / r1p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32
-			echo "Jetson Nano"
+			echo "Nvidia Jetson Nano"
+			;;
+		*A57r1p3*)
+			# Jetson TX2, 1-4 x Cortex-A57 / r1p3 + 0-2 x Denver2 / r0p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32
+			echo "Nvidia Jetson TX2"
+			;;
+		*NVidiaCarmelr0p0*)
+			# Nvidia Xavier | 4-8 x NVidia Carmel / r0p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp
+			echo "Nvidia Xavier"
 			;;
 		?0A17r0p1?0A17r0p1?0A17r0p1?0A17r0p1)
 			# RK3288, 4 x Cortex-A17 / r0p1 / half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
@@ -2318,11 +2339,11 @@ IdentifyGXLG12A() {
 	MaxSpeed="$(sed -e '1,/^ CPU/ d' <<<"${CPUTopology}" | tail -n1 | awk -F" " '{print $5}')"
 	case ${MaxSpeed} in
 		15??)
-			# GXL
+			# GXL: 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid (running 32-bit: fp asimd evtstrm aes pmull sha1 sha2 crc32 wp half thumb fastmult vfp edsp neon vfpv3 tlsi vfpv4 idiva idivt)
 			echo "Amlogic S805X, S805Y, S905X/S905D/S905W/S905L/S905M2"
 			;;
 		*)
-			# G12A/TL1
+			# G12A/TL1: 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
 			echo "Amlogic S905X2/S905Y2/S905D2/T962X2"
 			;;
 	esac

@@ -293,7 +293,7 @@ GetCPUInfo() {
 } # GetCPUInfo
 
 GetLastClusterCore() {
-	NextCore=${ClusterConfig:$1:1}
+	NextCore=${ClusterConfig[$1]}
 	[ "${NextCore}" = "" ] && NextCore=${CPUCores}
 	echo -n $(( ${NextCore} - 1 ))
 } # GetLastClusterCore
@@ -384,8 +384,8 @@ PlotPerformanceGraph() {
 		case ${CPUList} in
 			cores)
 				# check each core of every cluster, on RK3399 for example 0 and 4
-				for i in $(seq 0 $(( ${#ClusterConfig} -1 )) ) ; do
-					FirstCore=${ClusterConfig:$i:1}
+				for i in $(seq 0 $(( ${#ClusterConfig[@]} -1 )) ) ; do
+					FirstCore=${ClusterConfig[$i]}
 					CheckPerformance "CPU ${FirstCore}" "${FirstCore}" "${FirstCore}"
 					CPUInfo="$(GetCPUInfo ${FirstCore})"
 					PlotGraph "CPU ${FirstCore}${CPUInfo}" "${FirstCore}"
@@ -394,8 +394,8 @@ PlotPerformanceGraph() {
 				;;
 			clusters)
 				# check all cores of every cluster, on RK3399 for example 0-3 and 4-5
-				for i in $(seq 0 $(( ${#ClusterConfig} -1 )) ) ; do
-					FirstCore=${ClusterConfig:$i:1}
+				for i in $(seq 0 $(( ${#ClusterConfig[@]} -1 )) ) ; do
+					FirstCore=${ClusterConfig[$i]}
 					LastCore=$(GetLastClusterCore $(( $i + 1 )))
 					CheckPerformance "CPU ${FirstCore}-${LastCore}" "${FirstCore}" "${FirstCore}-${LastCore}"
 					CPUInfo="$(GetCPUInfo ${FirstCore})"
@@ -406,20 +406,20 @@ PlotPerformanceGraph() {
 			all)
 				# check each core of every cluster individually, check cores of each cluster
 				# and check all cores
-				for i in $(seq 0 $(( ${#ClusterConfig} -1 )) ) ; do
-					FirstCore=${ClusterConfig:$i:1}
+				for i in $(seq 0 $(( ${#ClusterConfig[@]} -1 )) ) ; do
+					FirstCore=${ClusterConfig[$i]}
 					CheckPerformance "CPU ${FirstCore}" "${FirstCore}" "${FirstCore}"
 					CPUInfo="$(GetCPUInfo ${FirstCore})"
 					PlotGraph "CPU ${FirstCore}${CPUInfo}" "${FirstCore}"
 				done
-				for i in $(seq 0 $(( ${#ClusterConfig} -1 )) ) ; do
-					FirstCore=${ClusterConfig:$i:1}
+				for i in $(seq 0 $(( ${#ClusterConfig[@]} -1 )) ) ; do
+					FirstCore=${ClusterConfig[$i]}
 					LastCore=$(GetLastClusterCore $(( $i + 1 )))
 					CheckPerformance "CPU ${FirstCore}-${LastCore}" "${FirstCore}" "${FirstCore}-${LastCore}"
 					CPUInfo="$(GetCPUInfo ${FirstCore})"
 					PlotGraph "CPU ${FirstCore}-${LastCore}${CPUInfo}" "${FirstCore}"
 				done
-				if [ "${ClusterConfig}" != "0" ]; then
+				if [ ${#ClusterConfig[@]} -gt 1 ]; then
 					# more than one CPU cluster, we test using all cores simultaneously
 					CheckPerformance "all CPU cores" ${ClusterConfig}
 					PlotGraph "all CPU cores" ${ClusterConfig}
@@ -430,8 +430,8 @@ PlotPerformanceGraph() {
 				# individual taskset options have been provided, e.g. 0-2 or 3
 				if [ ${#CPUList} -eq 1 ]; then
 					# single core to be tested, we need to determine correct policy node
-					for i in $(seq 0 $(( ${#ClusterConfig} -1 )) ) ; do
-						FirstCore=${ClusterConfig:$i:1}
+					for i in $(seq 0 $(( ${#ClusterConfig[@]} -1 )) ) ; do
+						FirstCore=${ClusterConfig[$i]}
 						LastCore=$(GetLastClusterCore $(( $i + 1 )))
 						if [ ${CPUList} -le ${LastCore} ]; then
 							CheckPerformance "CPU core(s) ${CPUList}" "${FirstCore}" "${CPUList}"
@@ -905,7 +905,7 @@ MonitorBoard() {
 
 	CpuFreqToQuery=cpuinfo_cur_freq
 	CPUArchitecture="$(lscpu | awk -F" " '/^Architecture/ {print $2}')"
-	ClusterConfig=$(GetCPUClusters)
+	ClusterConfig=($(GetCPUClusters))
 
 	# check platform
 	case ${CPUArchitecture} in
@@ -935,13 +935,13 @@ MonitorBoard() {
 	if [ ${USE_VCGENCMD} = true ] ; then
 		DisplayHeader="Time        fake/real   load %cpu %sys %usr %nice %io %irq   Temp    VCore${NetioHeader}"
 		CPUs=raspberrypi
-	elif [ "${ClusterConfig}" = "0" -a -f /sys/devices/system/cpu/cpufreq/policy0/${CpuFreqToQuery} ] ; then
+	elif [ ${#ClusterConfig[@]} -eq 1 -a -f /sys/devices/system/cpu/cpufreq/policy0/${CpuFreqToQuery} ] ; then
 		DisplayHeader="Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp${NetioHeader}"
 		CPUs=singlecluster
-	elif [ -f /sys/devices/system/cpu/cpufreq/policy${ClusterConfig:1:1}/${CpuFreqToQuery} ]; then
+	elif [ -f /sys/devices/system/cpu/cpufreq/policy${ClusterConfig[1]}/${CpuFreqToQuery} ]; then
 		DisplayHeader="Time       big.LITTLE   load %cpu %sys %usr %nice %io %irq   Temp${NetioHeader}"
-		read FirstCluster </sys/devices/system/cpu/cpufreq/policy${ClusterConfig:0:1}/cpuinfo_max_freq
-		read SecondCluster </sys/devices/system/cpu/cpufreq/policy${ClusterConfig:1:1}/cpuinfo_max_freq
+		read FirstCluster </sys/devices/system/cpu/cpufreq/policy${ClusterConfig[0]}/cpuinfo_max_freq
+		read SecondCluster </sys/devices/system/cpu/cpufreq/policy${ClusterConfig[1]}/cpuinfo_max_freq
 		if [ ${SecondCluster} -ge ${FirstCluster} ]; then
 			CPUs=biglittle
 		else
@@ -974,13 +974,13 @@ MonitorBoard() {
 				echo -e "$(date "+%H:%M:%S"): $(printf "%4s" ${FakeFreq})/$(printf "%4s" ${RealFreq})MHz $(printf "%5s" ${LoadAvg}) ${procStats}  $(printf "%4s" ${SocTemp})°C  $(printf "%7s" ${CoreVoltage})${NetioColumn}"
 				;;
 			biglittle)
-				BigFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpufreq/policy${ClusterConfig:1:1}/${CpuFreqToQuery} 2>/dev/null)
-				LittleFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpufreq/policy${ClusterConfig:0:1}/${CpuFreqToQuery} 2>/dev/null)
+				BigFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpufreq/policy${ClusterConfig[1]}/${CpuFreqToQuery} 2>/dev/null)
+				LittleFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpufreq/policy${ClusterConfig[0]}/${CpuFreqToQuery} 2>/dev/null)
 				echo -e "$(date "+%H:%M:%S"): $(printf "%4s" ${BigFreq})/$(printf "%4s" ${LittleFreq})MHz $(printf "%5s" ${LoadAvg}) ${procStats}  $(printf "%4s" ${SocTemp})°C${NetioColumn}"
 				;;
 			littlebig)
-				BigFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpufreq/policy${ClusterConfig:0:1}/${CpuFreqToQuery} 2>/dev/null)
-				LittleFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpufreq/policy${ClusterConfig:1:1}/${CpuFreqToQuery} 2>/dev/null)
+				BigFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpufreq/policy${ClusterConfig[0]}/${CpuFreqToQuery} 2>/dev/null)
+				LittleFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpufreq/policy${ClusterConfig[1]}/${CpuFreqToQuery} 2>/dev/null)
 				echo -e "$(date "+%H:%M:%S"): $(printf "%4s" ${BigFreq})/$(printf "%4s" ${LittleFreq})MHz $(printf "%5s" ${LoadAvg}) ${procStats}  $(printf "%4s" ${SocTemp})°C${NetioColumn}"
 				;;
 			singlecluster)
@@ -1168,13 +1168,14 @@ CheckLoad() {
 GetCPUClusters() {
 	if [ -d /sys/devices/system/cpu/cpufreq/policy0 -a "${CPUArchitecture}" != "x86_64" ]; then
 		# cpufreq support exists on ARM, we rely on this
-		ls -d /sys/devices/system/cpu/cpufreq/policy? | tr -d -c '[:digit:]'
+		ls -ld /sys/devices/system/cpu/cpufreq/policy? | awk -F"policy" '{print $2}'
 	else
 		# check for different CPU types based on package ids. This allows to test through
 		# different cores even on systems with no cpufreq support.
 		SYS=/sys/devices/system/cpu
-		for PKG_ID in $(cat "${SYS}"/cpu*[0-9]/topology/physical_package_id | sort | uniq); do
-	 	   dirname $(dirname $(grep "^${PKG_ID}$" "${SYS}"/cpu*[0-9]/topology/physical_package_id | head -n1)) | tr -d -c '[:digit:]'
+		for PKG_ID in $(cat "${SYS}"/cpu*/topology/physical_package_id | sort | uniq); do
+	 	   dirname $(dirname $(grep "^${PKG_ID}$" "${SYS}"/cpu*/topology/physical_package_id | head -n1)) | tr -d -c '[:digit:]'
+	 	   echo " "
 		done
 	fi
 } # GetCPUClusters
@@ -1214,7 +1215,7 @@ BasicSetup() {
 			;;
 	esac
 
-	ClusterConfig=$(GetCPUClusters)
+	ClusterConfig=($(GetCPUClusters))
 	CPUCores=$(grep -c '^processor' /proc/cpuinfo)
 } # BasicSetup
 
@@ -1285,9 +1286,9 @@ InitialMonitoring() {
 	
 	# q&d performance assessment to estimate duration
 	QuickAndDirtyPerformance="$(BashBench)"
-	TinymembenchDuration=$(( $(( 5 + $(( ${QuickAndDirtyPerformance} / 150000000 )) )) * ${#ClusterConfig} ))
+	TinymembenchDuration=$(( $(( 5 + $(( ${QuickAndDirtyPerformance} / 150000000 )) )) * ${#ClusterConfig[@]} ))
 	RunHowManyTimes=3 # how many times should the multi-threaded 7-zip test be repeated
-	SingleThreadedDuration=$(( 20 + $(( ${QuickAndDirtyPerformance} * ${#ClusterConfig} / 5000000 )) ))
+	SingleThreadedDuration=$(( 20 + $(( ${QuickAndDirtyPerformance} * ${#ClusterConfig[@]} / 5000000 )) ))
 	MultiThreadedDuration=$(( ${RunHowManyTimes} * $(( 20 + $(( ${QuickAndDirtyPerformance} / 5000000 )) )) / ${CPUCores} ))
 	if [ "${ExecuteCpuminer}" = "yes" -a -x "${InstallLocation}"/cpuminer-multi/cpuminer ]; then
 		EstimatedDuration=$(( ${TinymembenchDuration} + $(( $(( ${SingleThreadedDuration} + ${MultiThreadedDuration} )) / 60 )) + 8 ))
@@ -1395,17 +1396,17 @@ CheckClockspeedsAndSensors() {
 			echo -e "\nIntel P-States: ${PStateStatus}" >>${ResultLog}
 		fi
 	fi
-	if [ "${ClusterConfig}" = "0" ]; then
+	if [ ${#ClusterConfig[@]} -eq 1 ]; then
 		# all CPU cores have same package id, we only need to test one core
 		CPUInfo="$(GetCPUInfo 0)"
 		echo -e "\nChecking cpufreq OPP${CPUInfo}:\n" >>${ResultLog}
 		CheckCPUCluster 0 >>${ResultLog}
 	else
 		# different package ids, we walk through all clusters
-		for i in $(seq 0 $(( ${#ClusterConfig} -1 )) ) ; do
-			FirstCore=${ClusterConfig:$i:1}
+		for i in $(seq 0 $(( ${#ClusterConfig[@]} -1 )) ) ; do
+			FirstCore=${ClusterConfig[$i]}
 			LastCore=$(GetLastClusterCore $(( $i + 1 )))
-			CPUInfo="$(GetCPUInfo ${ClusterConfig:$i:1})"
+			CPUInfo="$(GetCPUInfo ${ClusterConfig[$i]})"
 			echo -e "\nChecking cpufreq OPP for cpu${FirstCore}-cpu${LastCore}${CPUInfo}:\n" >>${ResultLog}
 			CheckCPUCluster ${FirstCore} >>${ResultLog}
 		done
@@ -1509,14 +1510,14 @@ RunTinyMemBench() {
 	echo -e "\x08\x08 Done (results will be available in ${EstimatedDuration}-$(( ${EstimatedDuration} * 140 / 100 )) minutes)."
 	echo -e "Executing tinymembench...\c"
 	echo -e "System health while running tinymembench:\n" >${MonitorLog}
-	/bin/bash "${PathToMe}" -m $(( 40 * ${#ClusterConfig} )) >>${MonitorLog} &
+	/bin/bash "${PathToMe}" -m $(( 40 * ${#ClusterConfig[@]} )) >>${MonitorLog} &
 	MonitoringPID=$!
 	echo -n "" >${TempLog}
-	for i in $(seq 0 $(( ${#ClusterConfig} -1 )) ) ; do
-		CPUInfo="$(GetCPUInfo ${ClusterConfig:$i:1})"
-		echo -e "\nExecuting benchmark on cpu${ClusterConfig:$i:1}${CPUInfo}:\n" >>${TempLog}
+	for i in $(seq 0 $(( ${#ClusterConfig[@]} -1 )) ) ; do
+		CPUInfo="$(GetCPUInfo ${ClusterConfig[$i]})"
+		echo -e "\nExecuting benchmark on cpu${ClusterConfig[$i]}${CPUInfo}:\n" >>${TempLog}
 		[ -s "${NetioConsumptionFile}" ] && sleep 10
-		taskset -c ${ClusterConfig:$i:1} "${InstallLocation}"/tinymembench/tinymembench >>${TempLog} 2>&1
+		taskset -c ${ClusterConfig[$i]} "${InstallLocation}"/tinymembench/tinymembench >>${TempLog} 2>&1
 	done
 	kill ${MonitoringPID}
 	echo -e "\n##########################################################################" >>${ResultLog}
@@ -1530,20 +1531,29 @@ Run7ZipBenchmark() {
 	echo -e "\x08\x08 Done.\nExecuting 7-zip benchmark...\c"
 	echo -e "\nSystem health while running 7-zip single core benchmark:\n" >>${MonitorLog}
 	echo -e "\c" >${TempLog}
-	/bin/bash "${PathToMe}" -m $(( ${SingleThreadedDuration} / 8 )) >>${MonitorLog} &
+	TotalMem=$(free | awk -F" " '/^Mem:   / {print $7}' | tail -n1)
+	MemAdjustment=$(( $(( 1250000 / ${TotalMem} )) / 3 ))
+	if [ ${MemAdjustment} = 0 ]; then
+		MonInterval=$(( ${SingleThreadedDuration} / 8 ))
+	else
+		MonInterval=$(( ${SingleThreadedDuration} / $(( 8 * ${MemAdjustment} )) ))
+	fi
+	[ ${MonInterval:-0} -lt 5 ] && MonInterval=5
+	[ ${MonInterval:-0} -gt 15 ] && MonInterval=15
+	/bin/bash "${PathToMe}" -m ${MonInterval} >>${MonitorLog} &
 	MonitoringPID=$!
-	if [ "${ClusterConfig}" = "0" ]; then
+	if [ ${#ClusterConfig[@]} -eq 1 ]; then
 		# all CPU cores have same package id
 		CPUInfo="$(GetCPUInfo 0)"
 		echo -e "\nExecuting benchmark single-threaded on cpu0${CPUInfo}" >>${TempLog}
 		[ -s "${NetioConsumptionFile}" ] && sleep 10
 		taskset -c 0 "${SevenZip}" b -mmt=1 >>${TempLog}
 	else
-		for i in $(seq 0 $(( ${#ClusterConfig} -1 )) ) ; do
-			CPUInfo="$(GetCPUInfo ${ClusterConfig:$i:1})"
-			echo -e "\nExecuting benchmark single-threaded on cpu${ClusterConfig:$i:1}${CPUInfo}" >>${TempLog}
+		for i in $(seq 0 $(( ${#ClusterConfig[@]} -1 )) ) ; do
+			CPUInfo="$(GetCPUInfo ${ClusterConfig[$i]})"
+			echo -e "\nExecuting benchmark single-threaded on cpu${ClusterConfig[$i]}${CPUInfo}" >>${TempLog}
 			[ -s "${NetioConsumptionFile}" ] && sleep 10
-			taskset -c ${ClusterConfig:$i:1} "${SevenZip}" b -mmt=1 >>${TempLog}
+			taskset -c ${ClusterConfig[$i]} "${SevenZip}" b -mmt=1 >>${TempLog}
 		done
 	fi	
 	kill ${MonitoringPID}
@@ -1554,8 +1564,13 @@ Run7ZipBenchmark() {
 		# run multi-threaded test only if there's more than one CPU core
 		echo -e "\nSystem health while running 7-zip multi core benchmark:\n" >>${MonitorLog}
 		echo -e "\c" >${TempLog}
-		MonInterval=$(( ${MultiThreadedDuration} / 3 ))
+		if [ ${MemAdjustment} = 0 ]; then
+			MonInterval=$(( ${MultiThreadedDuration} / 3 ))
+		else
+			MonInterval=$(( ${MultiThreadedDuration} / $(( 3 * ${MemAdjustment} )) ))
+		fi
 		[ ${MonInterval:-0} -lt 10 ] && MonInterval=10
+		[ ${MonInterval:-0} -gt 30 ] && MonInterval=30
 		/bin/bash "${PathToMe}" -m ${MonInterval} >>${MonitorLog} &
 		MonitoringPID=$!
 		RunHowManyTimes=3
@@ -1586,7 +1601,7 @@ RunOpenSSLBenchmark() {
 	/bin/bash "${PathToMe}" -m 16 >>${MonitorLog} &
 	MonitoringPID=$!
 	OpenSSLLog="${TempDir}/openssl.log"
-	if [ "${ClusterConfig}" = "0" ]; then
+	if [ ${#ClusterConfig[@]} -eq 1 ]; then
 		# all CPU cores have same package id, we execute openssl twice
 		CPUInfo="$(GetCPUInfo 0)"
 		echo -e "Executing benchmark twice on cluster 0${CPUInfo}\n" >>${ResultLog}
@@ -1598,8 +1613,8 @@ RunOpenSSLBenchmark() {
 		# different package ids, we walk through all clusters
 		echo -e "Executing benchmark on each cluster individually\n" >>${ResultLog}
 		for bytelength in 128 192 256 ; do
-			for i in $(seq 0 $(( ${#ClusterConfig} -1 )) ) ; do
-				taskset -c ${ClusterConfig:$i:1} openssl speed -elapsed -evp aes-${bytelength}-cbc 2>/dev/null
+			for i in $(seq 0 $(( ${#ClusterConfig[@]} -1 )) ) ; do
+				taskset -c ${ClusterConfig[$i]} openssl speed -elapsed -evp aes-${bytelength}-cbc 2>/dev/null
 			done
 		done | tr '[:upper:]' '[:lower:]' >${OpenSSLLog}
 	fi
@@ -1655,7 +1670,7 @@ PrintCPUTopology() {
 			CPUSpeedMax=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpufreq/policy${i}/scaling_max_freq)
 		fi
 		if [ -z ${CPUFreqPolicy} -o "${CPUFreqPolicy}" = "none" ]; then
-			echo "$(printf "%3s" ${i})$(printf "%9s" ${CPUCluster})        -       -       -    ${CoreName:-"    -"}"
+			echo "$(printf "%3s" ${i})$(printf "%9s" ${CPUCluster})        0       -      -     ${CoreName:-"    -"}"
 		else
 			echo "$(printf "%3s" ${i})$(printf "%9s" ${CPUCluster})$(printf "%9s" ${CPUFreqPolicy})$(printf "%9s" ${CPUSpeedMin})$(printf "%8s" ${CPUSpeedMax})   ${CoreName:-"    -"}"
 		fi
@@ -1762,7 +1777,7 @@ UploadResults() {
 	UploadURL=$(curl -s -F 'f:1=<-' ix.io <${ResultLog} 2>/dev/null || curl -s -F 'f:1=<-' ix.io <${ResultLog})
 
 	# Display benchmark results
-	[ "${ClusterConfig}" = "0" ] || ClusterInfo=" (different CPU cores measured individually)"
+	[ ${#ClusterConfig[@]} -gt 1 ] && ClusterInfo=" (different CPU cores measured individually)"
 	echo -e "${BOLD}Memory performance${NC}${ClusterInfo}:"
 	awk -F" " '/^ standard/ {print $2": "$4" "$5" "$6}' <${ResultLog}
 	if [ "${ExecuteCpuminer}" = "yes" -a -x "${InstallLocation}"/cpuminer-multi/cpuminer ]; then
@@ -1849,14 +1864,14 @@ CheckForThrottling() {
 			Number=$(echo ${REPLY} | tr -c -d '[:digit:]')
 			diff ${TempDir}/time_in_state_after_${Number} ${TempDir}/time_in_state_before_${Number} >/dev/null 2>&1
 			if [ $? -ne 0 ]; then
-				if [ "${ClusterConfig}" = "0" ]; then
+				if [ ${#ClusterConfig[@]} -eq 1 ]; then
 					# all CPU cores have same cpufreq policies, we report globally
 					ReportCpufreqStatistics ${Number}
 					echo -e "${LRED}${BOLD}ATTENTION: Throttling might have occured. Check the log for details.${NC}\n"
 				else
 					# report affected cluster
-					for i in $(seq 0 $(( ${#ClusterConfig} -1 )) ) ; do
-						if [ ${ClusterConfig:$i:1} -eq ${Number} ]; then
+					for i in $(seq 0 $(( ${#ClusterConfig[@]} -1 )) ) ; do
+						if [ ${ClusterConfig[$i]} -eq ${Number} ]; then
 							FirstCore=${Number}
 							LastCore=$(GetLastClusterCore $(( ${i} + 1 )))
 							CPUInfo="$(GetCPUInfo ${Number})"
@@ -2323,7 +2338,7 @@ GuessSoCbySignature() {
 			# Samsung/Nexell S5P6818, 8 x Cortex-A53 / r0p3 / fp asimd aes pmull sha1 sha2 crc32 cpuid
 			echo "Samsung/Nexell S5P6818"
 			;;
-		0Cavium88XXr1p10*)
+		00Cavium88XXr1p10*)
 			# ThunderX CN8890, 48 x ThunderX 88XX / r1p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
 			echo "$(( ${CPUCores} / 48 )) x ThunderX CN8890"
 			;;

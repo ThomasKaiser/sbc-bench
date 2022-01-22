@@ -1,0 +1,438 @@
+sbc-bench v0.9.2 FriendlyArm NanoPi M1 Plus (Fri, 21 Jan 2022 18:19:12 +0100)
+
+Distributor ID:	Ubuntu
+Description:	Ubuntu 18.04.6 LTS
+Release:	18.04
+Codename:	bionic
+
+Armbian release info:
+BOARD=nanopim1plus
+BOARD_NAME="NanoPi M1 Plus"
+BOARDFAMILY=sun8i
+VERSION=5.65
+LINUXFAMILY=sunxi
+BRANCH=next
+ARCH=arm
+IMAGE_TYPE=stable
+BOARD_TYPE=conf
+INITRD_ARCH=arm
+KERNEL_IMAGE_TYPE=zImage
+
+/usr/bin/gcc (Ubuntu/Linaro 7.5.0-3ubuntu1~18.04) 7.5.0
+
+Uptime: 18:19:12 up 5 days, 15:08,  1 user,  load average: 0.17, 0.15, 0.13
+
+Linux 4.19.62-sunxi (monit) 	01/21/22 	_armv7l_	(4 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+           0.85    0.00    1.41    0.01    0.00   97.72
+
+Device             tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn
+mmcblk1           0.20         2.83        34.24    1375621   16659724
+mmcblk1boot1      0.00         0.00         0.00        216          0
+mmcblk1boot0      0.00         0.00         0.00        216          0
+zram0             0.15         0.45         0.15     219628      73628
+zram1             0.00         0.00         0.00       1292       1788
+zram2             0.00         0.00         0.00       1192       1608
+zram3             0.00         0.00         0.00       1192       1796
+zram4             0.00         0.00         0.00       1192       1704
+
+              total        used        free      shared  buff/cache   available
+Mem:           999M         96M        841M        7.2M         60M        872M
+Swap:          499M        7.0M        492M
+
+Filename				Type		Size	Used	Priority
+/dev/zram1                             	partition	127880	1792	5
+/dev/zram2                             	partition	127880	1792	5
+/dev/zram3                             	partition	127880	1792	5
+/dev/zram4                             	partition	127880	1792	5
+
+##########################################################################
+
+Checking cpufreq OPP (Cortex-A7):
+
+Cpufreq OPP: 1368    Measured: 1370 (1365.848/1365.530/1365.746)
+Cpufreq OPP: 1344    Measured: 1345 (1340.579/1341.317/1340.969)
+Cpufreq OPP: 1296    Measured: 1295 (1293.681/1294.329/1291.885)
+Cpufreq OPP: 1248    Measured: 1245 (1244.225/1245.500/1245.425)
+Cpufreq OPP: 1224    Measured: 1225 (1221.942/1220.571/1221.668)
+Cpufreq OPP: 1200    Measured: 1200 (1197.397/1195.664/1197.480)
+Cpufreq OPP: 1152    Measured: 1150 (1149.267/1149.510/1150.099)
+Cpufreq OPP: 1104    Measured: 1105 (1101.241/1101.358/1101.300)
+Cpufreq OPP: 1056    Measured: 1055 (1053.400/1052.836/1053.937)
+Cpufreq OPP: 1008    Measured: 1010 (1005.590/1005.345/1003.990)
+Cpufreq OPP:  960    Measured:  960 (957.673/958.573/957.429)
+Cpufreq OPP:  816    Measured:  815 (813.370/813.591/813.110)
+Cpufreq OPP:  648    Measured:  650 (645.274/643.798/644.614)
+Cpufreq OPP:  480    Measured:  480 (478.091/477.875/477.919)
+Cpufreq OPP:  240    Measured:  240 (237.634/237.932/237.569)
+Cpufreq OPP:  120    Measured:  120 (117.876/117.343/117.400)
+
+##########################################################################
+
+Executing benchmark on cpu0 (Cortex-A7):
+
+tinymembench v0.4.9 (simple benchmark for memory throughput and latency)
+
+==========================================================================
+== Memory bandwidth tests                                               ==
+==                                                                      ==
+== Note 1: 1MB = 1000000 bytes                                          ==
+== Note 2: Results for 'copy' tests show how many bytes can be          ==
+==         copied per second (adding together read and writen           ==
+==         bytes would have provided twice higher numbers)              ==
+== Note 3: 2-pass copy means that we are using a small temporary buffer ==
+==         to first fetch data into it, and only then write it to the   ==
+==         destination (source -> L1 cache, L1 cache -> destination)    ==
+== Note 4: If sample standard deviation exceeds 0.1%, it is shown in    ==
+==         brackets                                                     ==
+==========================================================================
+
+ C copy backwards                                     :    263.4 MB/s (1.4%)
+ C copy backwards (32 byte blocks)                    :   1008.4 MB/s
+ C copy backwards (64 byte blocks)                    :   1024.2 MB/s
+ C copy                                               :   1024.2 MB/s
+ C copy prefetched (32 bytes step)                    :    975.3 MB/s
+ C copy prefetched (64 bytes step)                    :   1061.7 MB/s
+ C 2-pass copy                                        :    830.0 MB/s
+ C 2-pass copy prefetched (32 bytes step)             :    894.7 MB/s
+ C 2-pass copy prefetched (64 bytes step)             :    966.5 MB/s
+ C fill                                               :   4309.7 MB/s
+ C fill (shuffle within 16 byte blocks)               :   4305.4 MB/s
+ C fill (shuffle within 32 byte blocks)               :    333.7 MB/s
+ C fill (shuffle within 64 byte blocks)               :    341.3 MB/s (0.4%)
+ ---
+ standard memcpy                                      :    826.2 MB/s (0.7%)
+ standard memset                                      :   3449.0 MB/s
+ ---
+ NEON read                                            :   1244.7 MB/s
+ NEON read prefetched (32 bytes step)                 :   1405.7 MB/s
+ NEON read prefetched (64 bytes step)                 :   1440.2 MB/s
+ NEON read 2 data streams                             :    358.3 MB/s
+ NEON read 2 data streams prefetched (32 bytes step)  :    683.5 MB/s (1.3%)
+ NEON read 2 data streams prefetched (64 bytes step)  :    723.7 MB/s
+ NEON copy                                            :   1025.6 MB/s
+ NEON copy prefetched (32 bytes step)                 :   1021.0 MB/s (0.6%)
+ NEON copy prefetched (64 bytes step)                 :   1124.4 MB/s
+ NEON unrolled copy                                   :   1014.2 MB/s
+ NEON unrolled copy prefetched (32 bytes step)        :    985.9 MB/s
+ NEON unrolled copy prefetched (64 bytes step)        :   1055.9 MB/s
+ NEON copy backwards                                  :   1009.2 MB/s
+ NEON copy backwards prefetched (32 bytes step)       :    965.6 MB/s
+ NEON copy backwards prefetched (64 bytes step)       :   1039.5 MB/s
+ NEON 2-pass copy                                     :    897.2 MB/s
+ NEON 2-pass copy prefetched (32 bytes step)          :    964.0 MB/s (0.5%)
+ NEON 2-pass copy prefetched (64 bytes step)          :   1000.8 MB/s
+ NEON unrolled 2-pass copy                            :    785.3 MB/s
+ NEON unrolled 2-pass copy prefetched (32 bytes step) :    772.4 MB/s
+ NEON unrolled 2-pass copy prefetched (64 bytes step) :    812.0 MB/s (0.3%)
+ NEON fill                                            :   4278.5 MB/s (5.0%)
+ NEON fill backwards                                  :   4264.0 MB/s
+ VFP copy                                             :   1017.0 MB/s
+ VFP 2-pass copy                                      :    780.5 MB/s
+ ARM fill (STRD)                                      :   3452.2 MB/s
+ ARM fill (STM with 8 registers)                      :   4277.1 MB/s
+ ARM fill (STM with 4 registers)                      :   4090.8 MB/s
+ ARM copy prefetched (incr pld)                       :   1034.5 MB/s
+ ARM copy prefetched (wrap pld)                       :   1047.6 MB/s
+ ARM 2-pass copy prefetched (incr pld)                :    902.1 MB/s
+ ARM 2-pass copy prefetched (wrap pld)                :    838.5 MB/s
+
+==========================================================================
+== Memory latency test                                                  ==
+==                                                                      ==
+== Average time is measured for random memory accesses in the buffers   ==
+== of different sizes. The larger is the buffer, the more significant   ==
+== are relative contributions of TLB, L1/L2 cache misses and SDRAM      ==
+== accesses. For extremely large buffer sizes we are expecting to see   ==
+== page table walk with several requests to SDRAM for almost every      ==
+== memory access (though 64MiB is not nearly large enough to experience ==
+== this effect to its fullest).                                         ==
+==                                                                      ==
+== Note 1: All the numbers are representing extra time, which needs to  ==
+==         be added to L1 cache latency. The cycle timings for L1 cache ==
+==         latency can be usually found in the processor documentation. ==
+== Note 2: Dual random read means that we are simultaneously performing ==
+==         two independent memory accesses at a time. In the case if    ==
+==         the memory subsystem can't handle multiple outstanding       ==
+==         requests, dual random read has the same timings as two       ==
+==         single reads performed one after another.                    ==
+==========================================================================
+
+block size : single random read / dual random read
+      1024 :    0.0 ns          /     0.0 ns 
+      2048 :    0.0 ns          /     0.0 ns 
+      4096 :    0.0 ns          /     0.0 ns 
+      8192 :    0.0 ns          /     0.0 ns 
+     16384 :    0.0 ns          /     0.0 ns 
+     32768 :    0.0 ns          /     0.0 ns 
+     65536 :    4.6 ns          /     7.9 ns 
+    131072 :    7.1 ns          /    11.1 ns 
+    262144 :    8.4 ns          /    12.4 ns 
+    524288 :   12.0 ns          /    17.2 ns 
+   1048576 :   91.9 ns          /   141.6 ns 
+   2097152 :  137.3 ns          /   185.5 ns 
+   4194304 :  160.7 ns          /   200.9 ns 
+   8388608 :  173.8 ns          /   209.0 ns 
+  16777216 :  183.6 ns          /   217.6 ns 
+  33554432 :  193.3 ns          /   231.2 ns 
+  67108864 :  207.4 ns          /   256.8 ns 
+
+##########################################################################
+
+Executing benchmark twice on cluster 0 (Cortex-A7)
+
+OpenSSL 1.1.1, built on 11 Sep 2018
+type             16 bytes     64 bytes    256 bytes   1024 bytes   8192 bytes  16384 bytes
+aes-128-cbc      25917.73k    32491.84k    34756.10k    35376.47k    35558.74k    35375.29k
+aes-128-cbc      25529.38k    32479.32k    34745.86k    35363.50k    35471.36k    35558.74k
+aes-192-cbc      22833.88k    27934.59k    29680.04k    30145.19k    30223.02k    30283.09k
+aes-192-cbc      22921.55k    27967.66k    29676.12k    30074.54k    30274.90k    30272.17k
+aes-256-cbc      20782.14k    24814.59k    25714.94k    26520.92k    26664.96k    26651.31k
+aes-256-cbc      20758.17k    24857.66k    26148.61k    26557.44k    26664.96k    26662.23k
+
+##########################################################################
+
+Executing benchmark single-threaded on cpu0 (Cortex-A7)
+
+7-Zip (a) [32] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,32 bits,4 CPUs LE)
+
+LE
+CPU Freq:  1349  1262  1264  1352  1354  1354  1354  1354  1354
+
+RAM size:     999 MB,  # CPU hardware threads:   4
+RAM usage:    435 MB,  # Benchmark threads:      1
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:        643   100    627    626  |      13338   100   1140   1139
+23:        621   100    634    633  |      13062   100   1132   1131
+24:        598   100    644    644  |      12791   100   1124   1123
+25:        573   100    656    655  |      12290   100   1095   1094
+----------------------------------  | ------------------------------
+Avr:             100    640    639  |              100   1123   1122
+Tot:             100    881    881
+
+##########################################################################
+
+Executing benchmark 3 times multi-threaded
+
+7-Zip (a) [32] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,32 bits,4 CPUs LE)
+
+LE
+CPU Freq:  1353  1291  1263  1323  1354  1355  1355  1355  1355
+
+RAM size:     999 MB,  # CPU hardware threads:   4
+RAM usage:    882 MB,  # Benchmark threads:      4
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       1767   324    530   1719  |      51316   396   1107   4378
+23:       1727   327    539   1760  |      49594   391   1098   4291
+24:       1707   336    547   1836  |      49000   396   1085   4302
+25:       1692   347    558   1933  |      40860   352   1034   3637
+----------------------------------  | ------------------------------
+Avr:             333    543   1812  |              384   1081   4152
+Tot:             358    812   2982
+
+7-Zip (a) [32] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,32 bits,4 CPUs LE)
+
+LE
+CPU Freq:  1351  1354  1353  1354  1354  1354  1343  1354  1354
+
+RAM size:     999 MB,  # CPU hardware threads:   4
+RAM usage:    882 MB,  # Benchmark threads:      4
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       1767   325    530   1719  |      51401   396   1107   4385
+23:       1745   330    539   1778  |      50240   396   1099   4347
+24:       1701   335    546   1830  |      49098   398   1084   4310
+25:       1691   346    558   1932  |      46615   394   1053   4149
+----------------------------------  | ------------------------------
+Avr:             334    543   1815  |              396   1086   4298
+Tot:             365    814   3056
+
+7-Zip (a) [32] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,32 bits,4 CPUs LE)
+
+LE
+CPU Freq:  1351  1355  1354  1355  1354  1354  1354  1354  1354
+
+RAM size:     999 MB,  # CPU hardware threads:   4
+RAM usage:    882 MB,  # Benchmark threads:      4
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       1748   322    529   1701  |      51397   396   1106   4385
+23:       1724   328    536   1757  |      49460   390   1097   4280
+24:       1706   336    547   1835  |      48943   396   1084   4297
+25:       1673   344    556   1911  |      46992   397   1053   4182
+----------------------------------  | ------------------------------
+Avr:             332    542   1801  |              395   1085   4286
+Tot:             364    813   3043
+
+Compression: 1812,1815,1801
+Decompression: 4152,4298,4286
+Total: 2982,3056,3043
+
+##########################################################################
+
+Testing clockspeeds again. System health now:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+18:34:57: 1368MHz  3.87  90%   2%  88%   0%   0%   0%  65.0°C
+
+Checking cpufreq OPP (Cortex-A7):
+
+Cpufreq OPP: 1368    Measured: 1370 (1365.284/1367.149/1365.746)
+Cpufreq OPP: 1344    Measured: 1345 (1341.805/1341.136/1340.788)
+Cpufreq OPP: 1296    Measured: 1295 (1294.037/1293.859/1293.373)
+Cpufreq OPP: 1248    Measured: 1250 (1246.552/1245.905/1246.341)
+Cpufreq OPP: 1224    Measured: 1220 (1215.844/1211.225/1214.144)
+Cpufreq OPP: 1200    Measured: 1010 (1009.151/850.091/965.279)
+Cpufreq OPP: 1152    Measured:  945 (944.366/944.528/945.295)
+Cpufreq OPP: 1104    Measured:  975 (970.446/1095.600/1096.030)
+Cpufreq OPP: 1056    Measured:  805 (802.190/1048.708/1050.201)
+Cpufreq OPP: 1008    Measured: 1005 (1000.404/997.976/1001.872)
+Cpufreq OPP:  960    Measured:  850 (845.761/842.893/849.980)
+Cpufreq OPP:  816    Measured:  815 (811.075/812.760/811.563)
+Cpufreq OPP:  648    Measured:  645 (644.056/644.017/642.640)
+Cpufreq OPP:  480    Measured:  295 (290.627/478.183/460.424)
+Cpufreq OPP:  240    Measured:  235 (234.847/235.081/237.421)
+Cpufreq OPP:  120    Measured:  120 (115.897/71.221/92.912)
+
+##########################################################################
+
+Thermal source: /sys/devices/virtual/thermal/thermal_zone0/ (cpu-thermal)
+                (Armbian wants to use /sys/class/hwmon/hwmon0 instead, that
+                zone is named w1_slave_temp. Please check and if wrong
+                file a bug here: https://github.com/armbian/build/issues/)
+
+System health while running tinymembench:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+18:19:26: 1368MHz  0.35   2%   1%   0%   0%   0%   0%  43.4°C
+18:20:06: 1368MHz  0.67  25%   0%  25%   0%   0%   0%  46.0°C
+18:20:46: 1368MHz  0.83  26%   0%  25%   0%   0%   0%  49.0°C
+18:21:26: 1368MHz  0.92  25%   0%  25%   0%   0%   0%  50.5°C
+18:22:06: 1368MHz  0.96  26%   1%  25%   0%   0%   0%  49.4°C
+18:22:46: 1368MHz  1.05  25%   0%  25%   0%   0%   0%  47.6°C
+18:23:26: 1368MHz  1.02  25%   0%  25%   0%   0%   0%  47.4°C
+18:24:06: 1368MHz  1.01  25%   0%  25%   0%   0%   0%  47.3°C
+18:24:46: 1368MHz  1.00  25%   0%  25%   0%   0%   0%  47.1°C
+18:25:26: 1368MHz  1.00  25%   0%  25%   0%   0%   0%  46.8°C
+18:26:07: 1368MHz  1.10  25%   0%  25%   0%   0%   0%  46.9°C
+
+System health while running OpenSSL benchmark:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+18:26:22: 1368MHz  1.08   2%   1%   0%   0%   0%   0%  47.9°C
+18:26:38: 1368MHz  1.06  25%   0%  25%   0%   0%   0%  48.6°C
+18:26:54: 1368MHz  1.05  26%   1%  25%   0%   0%   0%  47.9°C
+18:27:10: 1368MHz  1.03  25%   0%  24%   0%   0%   0%  48.9°C
+18:27:26: 1368MHz  1.02  25%   0%  24%   0%   0%   0%  48.0°C
+18:27:42: 1368MHz  1.02  26%   0%  25%   0%   0%   0%  50.3°C
+18:27:59: 1368MHz  1.01  25%   0%  25%   0%   0%   0%  49.1°C
+
+System health while running 7-zip single core benchmark:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+18:28:10: 1368MHz  1.01   2%   1%   0%   0%   0%   0%  48.9°C
+18:28:24: 1368MHz  1.01  25%   0%  24%   0%   0%   0%  47.8°C
+18:28:38: 1368MHz  1.01  25%   0%  24%   0%   0%   0%  47.7°C
+18:28:53: 1368MHz  1.07  26%   1%  25%   0%   0%   0%  48.0°C
+18:29:07: 1368MHz  1.06  25%   0%  24%   0%   0%   0%  47.8°C
+18:29:21: 1368MHz  1.04  25%   0%  24%   0%   0%   0%  47.7°C
+18:29:35: 1368MHz  1.04  25%   0%  24%   0%   0%   0%  47.7°C
+18:29:49: 1368MHz  1.03  27%   1%  25%   0%   0%   0%  47.3°C
+18:30:03: 1368MHz  1.02  25%   0%  24%   0%   0%   0%  47.3°C
+
+System health while running 7-zip multi core benchmark:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+18:30:15: 1368MHz  1.02   2%   1%   0%   0%   0%   0%  48.0°C
+18:30:43: 1368MHz  1.96  79%   1%  77%   0%   0%   0%  53.7°C
+18:31:11: 1368MHz  2.50  82%   2%  80%   0%   0%   0%  58.7°C
+18:31:39: 1368MHz  3.13  86%   1%  84%   0%   0%   0%  61.5°C
+18:32:08: 1368MHz  3.45  81%   2%  78%   0%   0%   0%  61.5°C
+18:32:36: 1368MHz  3.85  85%   1%  83%   0%   0%   0%  63.0°C
+18:33:04: 1368MHz  3.76  82%   2%  80%   0%   0%   0%  62.7°C
+18:33:32: 1368MHz  3.74  83%   2%  81%   0%   0%   0%  62.9°C
+18:34:00: 1368MHz  3.63  85%   2%  82%   0%   0%   0%  63.8°C
+18:34:28: 1368MHz  3.55  82%   2%  80%   0%   0%   0%  63.4°C
+18:34:57: 1368MHz  3.87  90%   2%  88%   0%   0%   0%  65.0°C
+
+##########################################################################
+
+Linux 4.19.62-sunxi (monit) 	01/21/22 	_armv7l_	(4 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+           0.94    0.00    1.41    0.01    0.00   97.63
+
+Device             tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn
+mmcblk1           0.20         2.83        34.17    1381753   16660000
+mmcblk1boot1      0.00         0.00         0.00        216          0
+mmcblk1boot0      0.00         0.00         0.00        216          0
+zram0             0.15         0.45         0.15     219640      73700
+zram1             0.00         0.00         0.00       1960       1788
+zram2             0.00         0.00         0.00       1872       1608
+zram3             0.00         0.00         0.00       2108       1796
+zram4             0.00         0.00         0.00       1980       1704
+
+              total        used        free      shared  buff/cache   available
+Mem:           999M        129M        799M         10M         69M        836M
+Swap:          499M        4.2M        495M
+
+Filename				Type		Size	Used	Priority
+/dev/zram1                             	partition	127880	1140	5
+/dev/zram2                             	partition	127880	1112	5
+/dev/zram3                             	partition	127880	896	5
+/dev/zram4                             	partition	127880	1204	5
+
+CPU sysfs topology (clusters, cpufreq members, clockspeeds)
+                 cpufreq   min    max
+ CPU    cluster  policy   speed  speed   core type
+  0        0        0      120    1368   Cortex-A7 / r0p5
+  1        0        0      120    1368   Cortex-A7 / r0p5
+  2        0        0      120    1368   Cortex-A7 / r0p5
+  3        0        0      120    1368   Cortex-A7 / r0p5
+
+Architecture:        armv7l
+Byte Order:          Little Endian
+CPU(s):              4
+On-line CPU(s) list: 0-3
+Thread(s) per core:  1
+Core(s) per socket:  4
+Socket(s):           1
+Vendor ID:           ARM
+Model:               5
+Model name:          Cortex-A7
+Stepping:            r0p5
+CPU max MHz:         1368.0000
+CPU min MHz:         120.0000
+BogoMIPS:            65.14
+Flags:               half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
+
+SoC guess: Allwinner H3/H2+
+ Compiler: /usr/bin/gcc (Ubuntu/Linaro 7.5.0-3ubuntu1~18.04/arm-linux-gnueabihf)
+ Userland: armhf
+   Kernel: 4.19.62-sunxi/armv7l
+           CONFIG_HZ=250
+           CONFIG_HZ_250=y
+           CONFIG_HZ_FIXED=0
+           CONFIG_PREEMPT_NONE=y
+
+
+| FriendlyArm NanoPi M1 Plus | 1368 MHz | 4.19 | Bionic armhf | 3030 | 25720 | 26660 | 830 | 3450 | - |

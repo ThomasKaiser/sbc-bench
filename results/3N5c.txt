@@ -1,0 +1,889 @@
+sbc-bench v0.9.2 bigboy (Sat, 22 Jan 2022 11:40:12 +0900)
+
+Distributor ID:	Debian
+Description:	Debian GNU/Linux bookworm/sid
+Release:	unstable
+Codename:	sid
+Architecture:	arm64
+
+Device Info:
+	Manufacturer: GIGABYTE
+	Product Name: H270-T70-D5
+	Version: 0100
+	Family: Server
+
+BIOS/UEFI:
+	Vendor: GIGABYTE
+	Version: F02
+	Release Date: 08/06/2019
+	BIOS Revision: 5.11
+
+/usr/bin/gcc (Debian 11.2.0-13) 11.2.0
+
+Uptime: 11:40:14 up 23 days, 21:10,  3 users,  load average: 1.22, 0.86, 0.77
+
+Linux 5.16.0-rc2-00344-gc5c17547b778 (bigboy) 	01/22/22 	_aarch64_	(96 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+           0.07    0.00    0.08    0.00    0.00   99.84
+
+Device             tps    kB_read/s    kB_wrtn/s    kB_dscd/s    kB_read    kB_wrtn    kB_dscd
+sda               5.41         3.72        33.54         0.00    7678516   69215857          0
+
+               total        used        free      shared  buff/cache   available
+Mem:            31Gi       1.0Gi        29Gi       1.0Mi       375Mi        29Gi
+Swap:           36Gi       1.0Mi        36Gi
+
+Filename				Type		Size		Used		Priority
+/dev/sda3                               partition	38736892	1032		-2
+
+##########################################################################
+
+Checking cpufreq OPP for cpu0-cpu47 (Cavium ThunderX 88XX):
+
+No cpufreq support available. Measured on cpu1: 2000 Mhz (1998.126/1998.151/1997.854)
+
+Checking cpufreq OPP for cpu48-cpu95 (Cavium ThunderX 88XX):
+
+No cpufreq support available. Measured on cpu49: 2000 Mhz (1998.052/1998.423/1997.903)
+
+##########################################################################
+
+Executing benchmark on cpu0 (Cavium ThunderX 88XX):
+
+tinymembench v0.4.9 (simple benchmark for memory throughput and latency)
+
+==========================================================================
+== Memory bandwidth tests                                               ==
+==                                                                      ==
+== Note 1: 1MB = 1000000 bytes                                          ==
+== Note 2: Results for 'copy' tests show how many bytes can be          ==
+==         copied per second (adding together read and writen           ==
+==         bytes would have provided twice higher numbers)              ==
+== Note 3: 2-pass copy means that we are using a small temporary buffer ==
+==         to first fetch data into it, and only then write it to the   ==
+==         destination (source -> L1 cache, L1 cache -> destination)    ==
+== Note 4: If sample standard deviation exceeds 0.1%, it is shown in    ==
+==         brackets                                                     ==
+==========================================================================
+
+ C copy backwards                                     :    954.1 MB/s (0.1%)
+ C copy backwards (32 byte blocks)                    :    975.1 MB/s (0.1%)
+ C copy backwards (64 byte blocks)                    :    975.0 MB/s
+ C copy                                               :    998.3 MB/s
+ C copy prefetched (32 bytes step)                    :   2537.1 MB/s (0.1%)
+ C copy prefetched (64 bytes step)                    :   2538.2 MB/s
+ C 2-pass copy                                        :    804.1 MB/s
+ C 2-pass copy prefetched (32 bytes step)             :   1426.7 MB/s
+ C 2-pass copy prefetched (64 bytes step)             :   1507.1 MB/s (0.1%)
+ C fill                                               :  12382.1 MB/s (0.1%)
+ C fill (shuffle within 16 byte blocks)               :  12218.6 MB/s (0.1%)
+ C fill (shuffle within 32 byte blocks)               :  12610.9 MB/s (0.1%)
+ C fill (shuffle within 64 byte blocks)               :  12595.5 MB/s (0.1%)
+ ---
+ standard memcpy                                      :   4087.6 MB/s
+ standard memset                                      :  16919.4 MB/s
+ ---
+ NEON LDP/STP copy                                    :   1199.4 MB/s
+ NEON LDP/STP copy pldl2strm (32 bytes step)          :   2491.7 MB/s
+ NEON LDP/STP copy pldl2strm (64 bytes step)          :   2859.3 MB/s (0.1%)
+ NEON LDP/STP copy pldl1keep (32 bytes step)          :   3279.9 MB/s
+ NEON LDP/STP copy pldl1keep (64 bytes step)          :   3349.9 MB/s
+ NEON LD1/ST1 copy                                    :    887.2 MB/s (0.1%)
+ NEON STP fill                                        :  16337.4 MB/s
+ NEON STNP fill                                       :  16406.0 MB/s (0.1%)
+ ARM LDP/STP copy                                     :   1209.4 MB/s
+ ARM STP fill                                         :  16481.4 MB/s
+ ARM STNP fill                                        :  16377.0 MB/s (0.1%)
+
+==========================================================================
+== Framebuffer read tests.                                              ==
+==                                                                      ==
+== Many ARM devices use a part of the system memory as the framebuffer, ==
+== typically mapped as uncached but with write-combining enabled.       ==
+== Writes to such framebuffers are quite fast, but reads are much       ==
+== slower and very sensitive to the alignment and the selection of      ==
+== CPU instructions which are used for accessing memory.                ==
+==                                                                      ==
+== Many x86 systems allocate the framebuffer in the GPU memory,         ==
+== accessible for the CPU via a relatively slow PCI-E bus. Moreover,    ==
+== PCI-E is asymmetric and handles reads a lot worse than writes.       ==
+==                                                                      ==
+== If uncached framebuffer reads are reasonably fast (at least 100 MB/s ==
+== or preferably >300 MB/s), then using the shadow framebuffer layer    ==
+== is not necessary in Xorg DDX drivers, resulting in a nice overall    ==
+== performance improvement. For example, the xf86-video-fbturbo DDX     ==
+== uses this trick.                                                     ==
+==========================================================================
+
+ NEON LDP/STP copy (from framebuffer)                 :   3939.6 MB/s
+ NEON LDP/STP 2-pass copy (from framebuffer)          :   2874.3 MB/s (0.1%)
+ NEON LD1/ST1 copy (from framebuffer)                 :   1927.1 MB/s
+ NEON LD1/ST1 2-pass copy (from framebuffer)          :   1142.4 MB/s (0.1%)
+ ARM LDP/STP copy (from framebuffer)                  :   4065.4 MB/s
+ ARM LDP/STP 2-pass copy (from framebuffer)           :   3043.0 MB/s (0.1%)
+
+==========================================================================
+== Memory latency test                                                  ==
+==                                                                      ==
+== Average time is measured for random memory accesses in the buffers   ==
+== of different sizes. The larger is the buffer, the more significant   ==
+== are relative contributions of TLB, L1/L2 cache misses and SDRAM      ==
+== accesses. For extremely large buffer sizes we are expecting to see   ==
+== page table walk with several requests to SDRAM for almost every      ==
+== memory access (though 64MiB is not nearly large enough to experience ==
+== this effect to its fullest).                                         ==
+==                                                                      ==
+== Note 1: All the numbers are representing extra time, which needs to  ==
+==         be added to L1 cache latency. The cycle timings for L1 cache ==
+==         latency can be usually found in the processor documentation. ==
+== Note 2: Dual random read means that we are simultaneously performing ==
+==         two independent memory accesses at a time. In the case if    ==
+==         the memory subsystem can't handle multiple outstanding       ==
+==         requests, dual random read has the same timings as two       ==
+==         single reads performed one after another.                    ==
+==========================================================================
+
+block size : single random read / dual random read, [MADV_NOHUGEPAGE]
+      1024 :    0.0 ns          /     0.0 ns 
+      2048 :    0.0 ns          /     0.0 ns 
+      4096 :    0.0 ns          /     0.0 ns 
+      8192 :    0.2 ns          /     0.0 ns 
+     16384 :    0.0 ns          /     0.0 ns 
+     32768 :    0.0 ns          /     0.0 ns 
+     65536 :    9.7 ns          /    19.9 ns 
+    131072 :   14.6 ns          /    29.6 ns 
+    262144 :   21.2 ns          /    43.1 ns 
+    524288 :   24.6 ns          /    50.0 ns 
+   1048576 :   26.4 ns          /    53.6 ns 
+   2097152 :   40.1 ns          /    80.5 ns 
+   4194304 :   46.6 ns          /    94.0 ns 
+   8388608 :   50.1 ns          /   100.8 ns 
+  16777216 :   59.3 ns          /   119.0 ns 
+  33554432 :   90.7 ns          /   181.5 ns 
+  67108864 :  109.5 ns          /   219.6 ns 
+
+block size : single random read / dual random read, [MADV_HUGEPAGE]
+      1024 :    0.0 ns          /     0.0 ns 
+      2048 :    0.0 ns          /     0.0 ns 
+      4096 :    0.0 ns          /     0.0 ns 
+      8192 :    0.0 ns          /     0.0 ns 
+     16384 :    0.0 ns          /     0.0 ns 
+     32768 :    0.0 ns          /     0.0 ns 
+     65536 :    9.7 ns          /    19.9 ns 
+    131072 :   14.6 ns          /    29.6 ns 
+    262144 :   17.0 ns          /    34.7 ns 
+    524288 :   18.2 ns          /    37.1 ns 
+   1048576 :   18.8 ns          /    38.3 ns 
+   2097152 :   19.1 ns          /    38.9 ns 
+   4194304 :   19.2 ns          /    39.2 ns 
+   8388608 :   19.3 ns          /    39.4 ns 
+  16777216 :   19.4 ns          /    39.7 ns 
+  33554432 :   56.9 ns          /   114.0 ns 
+  67108864 :   75.1 ns          /   150.7 ns 
+
+Executing benchmark on cpu48 (Cavium ThunderX 88XX):
+
+tinymembench v0.4.9 (simple benchmark for memory throughput and latency)
+
+==========================================================================
+== Memory bandwidth tests                                               ==
+==                                                                      ==
+== Note 1: 1MB = 1000000 bytes                                          ==
+== Note 2: Results for 'copy' tests show how many bytes can be          ==
+==         copied per second (adding together read and writen           ==
+==         bytes would have provided twice higher numbers)              ==
+== Note 3: 2-pass copy means that we are using a small temporary buffer ==
+==         to first fetch data into it, and only then write it to the   ==
+==         destination (source -> L1 cache, L1 cache -> destination)    ==
+== Note 4: If sample standard deviation exceeds 0.1%, it is shown in    ==
+==         brackets                                                     ==
+==========================================================================
+
+ C copy backwards                                     :    963.5 MB/s
+ C copy backwards (32 byte blocks)                    :    980.5 MB/s
+ C copy backwards (64 byte blocks)                    :    980.5 MB/s
+ C copy                                               :   1005.8 MB/s
+ C copy prefetched (32 bytes step)                    :   2566.1 MB/s
+ C copy prefetched (64 bytes step)                    :   2569.0 MB/s
+ C 2-pass copy                                        :    806.5 MB/s
+ C 2-pass copy prefetched (32 bytes step)             :   1454.1 MB/s
+ C 2-pass copy prefetched (64 bytes step)             :   1564.4 MB/s
+ C fill                                               :  12530.9 MB/s
+ C fill (shuffle within 16 byte blocks)               :  12364.6 MB/s
+ C fill (shuffle within 32 byte blocks)               :  12765.4 MB/s
+ C fill (shuffle within 64 byte blocks)               :  12750.9 MB/s
+ ---
+ standard memcpy                                      :   4184.6 MB/s
+ standard memset                                      :  17134.4 MB/s
+ ---
+ NEON LDP/STP copy                                    :   1211.8 MB/s
+ NEON LDP/STP copy pldl2strm (32 bytes step)          :   2529.3 MB/s
+ NEON LDP/STP copy pldl2strm (64 bytes step)          :   2891.0 MB/s
+ NEON LDP/STP copy pldl1keep (32 bytes step)          :   3318.6 MB/s
+ NEON LDP/STP copy pldl1keep (64 bytes step)          :   3390.6 MB/s
+ NEON LD1/ST1 copy                                    :    895.4 MB/s
+ NEON STP fill                                        :  16543.5 MB/s
+ NEON STNP fill                                       :  16613.4 MB/s
+ ARM LDP/STP copy                                     :   1226.5 MB/s
+ ARM STP fill                                         :  16688.6 MB/s
+ ARM STNP fill                                        :  16579.2 MB/s
+
+==========================================================================
+== Framebuffer read tests.                                              ==
+==                                                                      ==
+== Many ARM devices use a part of the system memory as the framebuffer, ==
+== typically mapped as uncached but with write-combining enabled.       ==
+== Writes to such framebuffers are quite fast, but reads are much       ==
+== slower and very sensitive to the alignment and the selection of      ==
+== CPU instructions which are used for accessing memory.                ==
+==                                                                      ==
+== Many x86 systems allocate the framebuffer in the GPU memory,         ==
+== accessible for the CPU via a relatively slow PCI-E bus. Moreover,    ==
+== PCI-E is asymmetric and handles reads a lot worse than writes.       ==
+==                                                                      ==
+== If uncached framebuffer reads are reasonably fast (at least 100 MB/s ==
+== or preferably >300 MB/s), then using the shadow framebuffer layer    ==
+== is not necessary in Xorg DDX drivers, resulting in a nice overall    ==
+== performance improvement. For example, the xf86-video-fbturbo DDX     ==
+== uses this trick.                                                     ==
+==========================================================================
+
+ NEON LDP/STP copy (from framebuffer)                 :   3984.8 MB/s
+ NEON LDP/STP 2-pass copy (from framebuffer)          :   2905.6 MB/s
+ NEON LD1/ST1 copy (from framebuffer)                 :   1948.8 MB/s
+ NEON LD1/ST1 2-pass copy (from framebuffer)          :   1155.0 MB/s
+ ARM LDP/STP copy (from framebuffer)                  :   4113.1 MB/s
+ ARM LDP/STP 2-pass copy (from framebuffer)           :   3078.6 MB/s
+
+==========================================================================
+== Memory latency test                                                  ==
+==                                                                      ==
+== Average time is measured for random memory accesses in the buffers   ==
+== of different sizes. The larger is the buffer, the more significant   ==
+== are relative contributions of TLB, L1/L2 cache misses and SDRAM      ==
+== accesses. For extremely large buffer sizes we are expecting to see   ==
+== page table walk with several requests to SDRAM for almost every      ==
+== memory access (though 64MiB is not nearly large enough to experience ==
+== this effect to its fullest).                                         ==
+==                                                                      ==
+== Note 1: All the numbers are representing extra time, which needs to  ==
+==         be added to L1 cache latency. The cycle timings for L1 cache ==
+==         latency can be usually found in the processor documentation. ==
+== Note 2: Dual random read means that we are simultaneously performing ==
+==         two independent memory accesses at a time. In the case if    ==
+==         the memory subsystem can't handle multiple outstanding       ==
+==         requests, dual random read has the same timings as two       ==
+==         single reads performed one after another.                    ==
+==========================================================================
+
+block size : single random read / dual random read, [MADV_NOHUGEPAGE]
+      1024 :    0.0 ns          /     0.0 ns 
+      2048 :    0.0 ns          /     0.0 ns 
+      4096 :    0.0 ns          /     0.0 ns 
+      8192 :    0.0 ns          /     0.0 ns 
+     16384 :    0.0 ns          /     0.0 ns 
+     32768 :    0.0 ns          /     0.0 ns 
+     65536 :    9.5 ns          /    19.5 ns 
+    131072 :   14.3 ns          /    29.3 ns 
+    262144 :   20.9 ns          /    42.6 ns 
+    524288 :   24.3 ns          /    49.3 ns 
+   1048576 :   26.0 ns          /    52.9 ns 
+   2097152 :   39.4 ns          /    79.6 ns 
+   4194304 :   46.2 ns          /    92.9 ns 
+   8388608 :   49.3 ns          /    99.6 ns 
+  16777216 :   57.8 ns          /   116.4 ns 
+  33554432 :   89.9 ns          /   179.6 ns 
+  67108864 :  108.2 ns          /   217.0 ns 
+
+block size : single random read / dual random read, [MADV_HUGEPAGE]
+      1024 :    0.0 ns          /     0.0 ns 
+      2048 :    0.0 ns          /     0.0 ns 
+      4096 :    0.0 ns          /     0.0 ns 
+      8192 :    0.0 ns          /     0.0 ns 
+     16384 :    0.0 ns          /     0.0 ns 
+     32768 :    0.0 ns          /     0.0 ns 
+     65536 :    9.5 ns          /    19.5 ns 
+    131072 :   14.3 ns          /    29.3 ns 
+    262144 :   16.7 ns          /    34.2 ns 
+    524288 :   17.9 ns          /    36.6 ns 
+   1048576 :   18.5 ns          /    37.9 ns 
+   2097152 :   18.7 ns          /    38.5 ns 
+   4194304 :   18.9 ns          /    38.8 ns 
+   8388608 :   19.4 ns          /    38.9 ns 
+  16777216 :   19.3 ns          /    39.5 ns 
+  33554432 :   56.1 ns          /   112.7 ns 
+  67108864 :   74.1 ns          /   148.8 ns 
+
+##########################################################################
+
+Executing benchmark on each cluster individually
+
+OpenSSL 1.1.1m, built on 14 Dec 2021
+type             16 bytes     64 bytes    256 bytes   1024 bytes   8192 bytes  16384 bytes
+aes-128-cbc     109442.11k   263598.74k   402706.94k   467301.03k   489802.41k   491099.48k
+aes-128-cbc     111241.82k   266976.13k   407744.43k   472879.79k   495599.62k   497593.00k
+aes-192-cbc     103664.94k   233911.25k   337777.07k   382145.19k   397295.62k   398387.88k
+aes-192-cbc     105183.79k   236794.39k   342018.99k   386633.73k   402284.54k   403363.16k
+aes-256-cbc      99493.91k   211848.00k   293728.26k   326776.49k   337810.77k   338717.35k
+aes-256-cbc     102179.71k   215342.04k   297357.82k   330880.00k   342021.46k   342780.59k
+
+##########################################################################
+
+Executing benchmark single-threaded on cpu0 (Cavium ThunderX 88XX)
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,96 CPUs LE)
+
+LE
+CPU Freq: - - - - - - - - -
+
+RAM size:   32039 MB,  # CPU hardware threads:  96
+RAM usage:    435 MB,  # Benchmark threads:      1
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       1572   100   1533   1530  |      23622   100   2021   2017
+23:       1506   100   1538   1535  |      23370   100   2027   2023
+24:       1477   100   1592   1589  |      22843   100   2010   2005
+25:       1423   100   1629   1626  |      22727   100   2027   2023
+----------------------------------  | ------------------------------
+Avr:             100   1573   1570  |              100   2021   2017
+Tot:             100   1797   1793
+
+Executing benchmark single-threaded on cpu48 (Cavium ThunderX 88XX)
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,96 CPUs LE)
+
+LE
+CPU Freq: 64000000 - - - - - - - -
+
+RAM size:   32039 MB,  # CPU hardware threads:  96
+RAM usage:    435 MB,  # Benchmark threads:      1
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       1660   100   1618   1615  |      23953   100   2049   2045
+23:       1563   100   1596   1593  |      23545   100   2042   2038
+24:       1492   100   1608   1605  |      23002   100   2023   2019
+25:       1441   100   1649   1646  |      22997   100   2050   2047
+----------------------------------  | ------------------------------
+Avr:             100   1618   1615  |              100   2041   2037
+Tot:             100   1829   1826
+
+##########################################################################
+
+Executing benchmark 3 times multi-threaded
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,96 CPUs LE)
+
+LE
+CPU Freq: 64000000 - - - 128000000 - - - -
+
+RAM size:   32039 MB,  # CPU hardware threads:  96
+RAM usage:  21180 MB,  # Benchmark threads:     96
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:      47295  8623    534  46009  |    1725241  7922   1858 147117
+23:      50731  8770    590  51689  |    1880588  8977   1814 162723
+24:      53915  8929    650  57970  |    1873709  9103   1808 164448
+25:      50004  8346    684  57093  |    1786328  8625   1844 158956
+----------------------------------  | ------------------------------
+Avr:            8667    614  53190  |             8656   1831 158311
+Tot:            8662   1223 105751
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,96 CPUs LE)
+
+LE
+CPU Freq: - - - - - - - - -
+
+RAM size:   32039 MB,  # CPU hardware threads:  96
+RAM usage:  21180 MB,  # Benchmark threads:     96
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:      45469  8552    517  44232  |    1822278  8363   1859 155392
+23:      40468  8762    471  41233  |    1839016  8767   1816 159126
+24:      52615  8710    650  56572  |    1829039  8938   1797 160527
+25:      53304  8845    688  60860  |    1912438  9155   1860 170178
+----------------------------------  | ------------------------------
+Avr:            8717    582  50724  |             8806   1833 161306
+Tot:            8762   1207 106015
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,96 CPUs LE)
+
+LE
+CPU Freq: - - - - - - - - -
+
+RAM size:   32039 MB,  # CPU hardware threads:  96
+RAM usage:  21180 MB,  # Benchmark threads:     96
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:      51725  8686    580  50319  |    1905804  8725   1864 162515
+23:      52447  8624    620  53438  |    1862970  8900   1812 161198
+24:      54708  8691    677  58822  |    1851752  8976   1812 162521
+25:      51843  8769    675  59193  |    1912189  9147   1861 170156
+----------------------------------  | ------------------------------
+Avr:            8692    638  55443  |             8937   1837 164097
+Tot:            8815   1238 109770
+
+Compression: 53190,50724,55443
+Decompression: 158311,161306,164097
+Total: 105751,106015,109770
+
+##########################################################################
+
+Testing clockspeeds again. System health now:
+
+Time      CPU n/a    load %cpu %sys %usr %nice %io %irq   Temp
+12:04:05:   ---     80.26  80%   0%  79%   0%   0%   0%     0°C
+
+Checking cpufreq OPP for cpu0-cpu47 (Cavium ThunderX 88XX):
+
+No cpufreq support available. Measured on cpu1: 2000 Mhz (1998.571/1998.720/1997.878)
+
+Checking cpufreq OPP for cpu48-cpu95 (Cavium ThunderX 88XX):
+
+No cpufreq support available. Measured on cpu49: 2000 Mhz (1998.274/1998.819/1998.373)
+
+##########################################################################
+
+System health while running tinymembench:
+
+Time      CPU n/a    load %cpu %sys %usr %nice %io %irq   Temp
+11:40:56:   ---      1.57   0%   0%   0%   0%   0%   0%    --
+11:42:16:   ---      1.61   1%   0%   1%   0%   0%   0%    --
+11:43:36:   ---      1.59   1%   0%   1%   0%   0%   0%    --
+11:44:56:   ---      1.68   1%   0%   1%   0%   0%   0%    --
+11:46:16:   ---      1.68   1%   0%   1%   0%   0%   0%    --
+11:47:36:   ---      1.62   1%   0%   1%   0%   0%   0%    --
+11:48:56:   ---      1.61   1%   0%   1%   0%   0%   0%    --
+11:50:16:   ---      1.60   1%   0%   1%   0%   0%   0%    --
+11:51:36:   ---      1.64   1%   0%   1%   0%   0%   0%    --
+
+System health while running OpenSSL benchmark:
+
+Time      CPU n/a    load %cpu %sys %usr %nice %io %irq   Temp
+11:52:32:   ---      1.79   0%   0%   0%   0%   0%   0%    --
+11:52:48:   ---      1.69   1%   0%   1%   0%   0%   0%    --
+11:53:04:   ---      1.75   1%   0%   1%   0%   0%   0%    --
+11:53:20:   ---      1.89   1%   0%   1%   0%   0%   0%    --
+11:53:36:   ---      1.84   1%   0%   1%   0%   0%   0%    --
+11:53:52:   ---      1.74   1%   0%   1%   0%   0%   0%    --
+11:54:08:   ---      1.73   1%   0%   1%   0%   0%   0%    --
+
+System health while running 7-zip single core benchmark:
+
+Time      CPU n/a    load %cpu %sys %usr %nice %io %irq   Temp
+11:54:20:   ---      1.77   0%   0%   0%   0%   0%   0%    --
+11:54:34:   ---      1.90   1%   0%   1%   0%   0%   0%    --
+11:54:48:   ---      1.85   1%   0%   1%   0%   0%   0%    --
+11:55:02:   ---      1.81   1%   0%   1%   0%   0%   0%    --
+11:55:16:   ---      1.76   1%   0%   1%   0%   0%   0%    --
+11:55:30:   ---      1.90   1%   0%   1%   0%   0%   0%    --
+11:55:44:   ---      1.85   1%   0%   1%   0%   0%   0%    --
+11:55:58:   ---      1.88   1%   0%   1%   0%   0%   0%    --
+11:56:12:   ---      1.76   1%   0%   1%   0%   0%   0%    --
+11:56:26:   ---      1.72   1%   0%   1%   0%   0%   0%    --
+11:56:40:   ---      1.71   1%   0%   1%   0%   0%   0%    --
+11:56:54:   ---      1.77   1%   0%   1%   0%   0%   0%    --
+
+System health while running 7-zip multi core benchmark:
+
+Time      CPU n/a    load %cpu %sys %usr %nice %io %irq   Temp
+11:56:59:   ---      1.79   0%   0%   0%   0%   0%   0%    --
+11:57:10:   ---     10.70  76%   0%  75%   0%   0%   0%    --
+11:57:23:   ---     24.41  87%   0%  86%   0%   0%   0%    --
+11:57:33:   ---     34.85  44%   0%  44%   0%   0%   0%    --
+11:57:45:   ---     45.51  95%   0%  93%   0%   0%   0%    --
+11:57:55:   ---     45.89  33%   0%  33%   0%   0%   0%    --
+11:58:07:   ---     46.83  73%   1%  71%   0%   0%   0%    --
+11:58:20:   ---     60.32  94%   0%  92%   0%   0%   0%    --
+11:58:31:   ---     58.21  25%   0%  24%   0%   0%   0%    --
+11:58:41:   ---     49.56   1%   0%   1%   0%   0%   0%    --
+11:58:51:   ---     50.50  86%   1%  83%   0%   0%   0%    --
+11:59:01:   ---     60.27  98%   1%  96%   0%   0%   0%    --
+11:59:11:   ---     68.51  87%   0%  85%   0%   0%   0%    --
+11:59:21:   ---     70.01  79%   0%  78%   0%   0%   0%    --
+11:59:32:   ---     77.85  65%   0%  64%   0%   0%   0%    --
+11:59:43:   ---     79.25  87%   0%  86%   0%   0%   0%    --
+11:59:53:   ---     74.29  47%   0%  47%   0%   0%   0%    --
+12:00:03:   ---     80.52  89%   1%  88%   0%   0%   0%    --
+12:00:13:   ---     82.90  94%   0%  93%   0%   0%   0%    --
+12:00:24:   ---     70.54   1%   0%   1%   0%   0%   0%    --
+12:00:34:   ---     76.34  99%   1%  96%   0%   0%   0%    --
+12:00:44:   ---     79.45  89%   0%  87%   0%   0%   0%    --
+12:00:54:   ---     74.54  29%   0%  28%   0%   0%   0%    --
+12:01:04:   ---     63.38   1%   0%   1%   0%   0%   0%    --
+12:01:14:   ---     61.00  63%   1%  61%   0%   0%   0%    --
+12:01:25:   ---     68.86  99%   1%  97%   0%   0%   0%    --
+12:01:36:   ---     76.09  96%   1%  94%   0%   0%   0%    --
+12:01:46:   ---     73.85  82%   0%  82%   0%   0%   0%    --
+12:01:56:   ---     71.78  74%   0%  73%   0%   0%   0%    --
+12:02:09:   ---     75.89  91%   0%  90%   0%   0%   0%    --
+12:02:19:   ---     74.93  52%   0%  51%   0%   0%   0%    --
+12:02:30:   ---     75.89  93%   0%  92%   0%   0%   0%    --
+12:02:40:   ---     71.45  15%   0%  15%   0%   0%   0%    --
+12:02:51:   ---     68.46  81%   1%  79%   0%   0%   0%    --
+12:03:03:   ---     72.26  90%   0%  89%   0%   0%   0%    --
+12:03:14:   ---     63.13  28%   0%  27%   0%   0%   0%    --
+12:03:24:   ---     53.73   1%   0%   1%   0%   0%   0%    --
+12:03:34:   ---     62.23  80%   1%  78%   0%   0%   0%    --
+12:03:44:   ---     71.29  99%   1%  97%   0%   0%   0%    --
+12:03:54:   ---     77.30  94%   1%  92%   0%   0%   0%    --
+12:04:05:   ---     80.26  80%   0%  79%   0%   0%   0%    --
+
+##########################################################################
+
+Linux 5.16.0-rc2-00344-gc5c17547b778 (bigboy) 	01/22/22 	_aarch64_	(96 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+           0.09    0.00    0.08    0.00    0.00   99.83
+
+Device             tps    kB_read/s    kB_wrtn/s    kB_dscd/s    kB_read    kB_wrtn    kB_dscd
+sda               5.41         3.94        33.52         0.00    8134476   69222277          0
+
+               total        used        free      shared  buff/cache   available
+Mem:            31Gi       1.2Gi        29Gi       1.0Mi       843Mi        29Gi
+Swap:           36Gi       1.0Mi        36Gi
+
+Filename				Type		Size		Used		Priority
+/dev/sda3                               partition	38736892	1032		-2
+
+CPU sysfs topology (clusters, cpufreq members, clockspeeds)
+                 cpufreq   min    max
+ CPU    cluster  policy   speed  speed   core type
+  0        0        0       -      -     Cavium ThunderX 88XX / r1p1
+  1        0        0       -      -     Cavium ThunderX 88XX / r1p1
+  2        0        0       -      -     Cavium ThunderX 88XX / r1p1
+  3        0        0       -      -     Cavium ThunderX 88XX / r1p1
+  4        0        0       -      -     Cavium ThunderX 88XX / r1p1
+  5        0        0       -      -     Cavium ThunderX 88XX / r1p1
+  6        0        0       -      -     Cavium ThunderX 88XX / r1p1
+  7        0        0       -      -     Cavium ThunderX 88XX / r1p1
+  8        0        0       -      -     Cavium ThunderX 88XX / r1p1
+  9        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 10        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 11        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 12        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 13        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 14        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 15        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 16        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 17        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 18        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 19        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 20        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 21        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 22        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 23        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 24        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 25        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 26        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 27        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 28        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 29        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 30        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 31        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 32        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 33        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 34        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 35        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 36        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 37        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 38        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 39        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 40        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 41        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 42        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 43        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 44        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 45        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 46        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 47        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 48        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 49        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 50        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 51        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 52        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 53        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 54        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 55        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 56        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 57        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 58        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 59        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 60        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 61        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 62        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 63        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 64        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 65        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 66        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 67        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 68        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 69        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 70        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 71        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 72        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 73        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 74        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 75        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 76        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 77        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 78        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 79        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 80        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 81        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 82        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 83        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 84        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 85        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 86        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 87        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 88        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 89        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 90        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 91        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 92        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 93        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 94        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 95        1        0       -      -     Cavium ThunderX 88XX / r1p1
+
+Architecture:                    aarch64
+CPU op-mode(s):                  64-bit
+Byte Order:                      Little Endian
+CPU(s):                          96
+On-line CPU(s) list:             0-95
+Vendor ID:                       Cavium
+Model name:                      ThunderX 88XX
+Model:                           1
+Thread(s) per core:              1
+Core(s) per cluster:             48
+Socket(s):                       2
+Cluster(s):                      2
+Stepping:                        0x1
+BogoMIPS:                        200.00
+Flags:                           fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
+NUMA node(s):                    2
+NUMA node0 CPU(s):               0-47
+NUMA node1 CPU(s):               48-95
+Vulnerability Itlb multihit:     Not affected
+Vulnerability L1tf:              Not affected
+Vulnerability Mds:               Not affected
+Vulnerability Meltdown:          Vulnerable
+Vulnerability Spec store bypass: Vulnerable
+Vulnerability Spectre v1:        Mitigation; __user pointer sanitization
+Vulnerability Spectre v2:        Vulnerable
+Vulnerability Srbds:             Not affected
+Vulnerability Tsx async abort:   Not affected
+
+SoC guess: 2 x ThunderX CN8890
+ Compiler: /usr/bin/gcc (Debian 11.2.0-13/aarch64-linux-gnu)
+ Userland: arm64
+   Kernel: 5.16.0-rc2-00344-gc5c17547b778/aarch64
+           CONFIG_HZ=250
+           CONFIG_HZ_250=y
+           CONFIG_PREEMPT_NONE=y
+           CONFIG_PREEMPT_NONE_BUILD=y
+           CONFIG_PREEMPT_NOTIFIERS=y
+
+DIMM configuration:
+
+Physical Memory Array
+	Location: System Board Or Motherboard
+	Use: System Memory
+	Error Correction Type: None
+	Maximum Capacity: 1 TB
+	Number Of Devices: 8
+
+Memory Device
+	Array Handle: 0x0032
+	Total Width: 72 bits
+	Data Width: 64 bits
+	Size: 8 GB
+	Form Factor: DIMM
+	Locator: DIMM_P0_A0
+	Bank Locator: P0_Node0_Channel0_Dimm0
+	Type: DDR4
+	Type Detail: Registered (Buffered)
+	Speed: 2400 MT/s
+	Manufacturer: SK Hynix
+	Asset Tag: DIMM_P0_A0_AssetTag
+	Part Number: HMA81GR7AFR8N-UH    
+	Rank: 1
+	Configured Memory Speed: 2100 MT/s
+
+Memory Device
+	Array Handle: 0x0032
+	Total Width: 72 bits
+	Data Width: 64 bits
+	Locator: DIMM_P0_A1
+	Bank Locator: P0_Node0_Channel0_Dimm1
+	Type: DDR4
+
+Memory Device
+	Array Handle: 0x0032
+	Total Width: 72 bits
+	Data Width: 64 bits
+	Size: 8 GB
+	Form Factor: DIMM
+	Locator: DIMM_P0_B0
+	Bank Locator: P0_Node0_Channel1_Dimm0
+	Type: DDR4
+	Type Detail: Registered (Buffered)
+	Speed: 2400 MT/s
+	Manufacturer: SK Hynix
+	Asset Tag: DIMM_P0_B0_AssetTag
+	Part Number: HMA81GR7AFR8N-UH    
+	Rank: 1
+	Configured Memory Speed: 2100 MT/s
+
+Memory Device
+	Array Handle: 0x0032
+	Total Width: 72 bits
+	Data Width: 64 bits
+	Locator: DIMM_P0_B1
+	Bank Locator: P0_Node0_Channel1_Dimm1
+	Type: DDR4
+
+Memory Device
+	Array Handle: 0x0032
+	Total Width: 72 bits
+	Data Width: 64 bits
+	Locator: DIMM_P0_C0
+	Bank Locator: P0_Node0_Channel2_Dimm0
+	Type: DDR4
+
+Memory Device
+	Array Handle: 0x0032
+	Total Width: 72 bits
+	Data Width: 64 bits
+	Locator: DIMM_P0_C1
+	Bank Locator: P0_Node0_Channel2_Dimm1
+	Type: DDR4
+
+Memory Device
+	Array Handle: 0x0032
+	Total Width: 72 bits
+	Data Width: 64 bits
+	Locator: DIMM_P0_D0
+	Bank Locator: P0_Node0_Channel3_Dimm0
+	Type: DDR4
+
+Memory Device
+	Array Handle: 0x0032
+	Total Width: 72 bits
+	Data Width: 64 bits
+	Locator: DIMM_P0_D1
+	Bank Locator: P0_Node0_Channel3_Dimm1
+	Type: DDR4
+
+Physical Memory Array
+	Location: System Board Or Motherboard
+	Use: System Memory
+	Error Correction Type: None
+	Maximum Capacity: 1 TB
+	Number Of Devices: 8
+
+Memory Device
+	Array Handle: 0x0042
+	Total Width: 72 bits
+	Data Width: 64 bits
+	Size: 8 GB
+	Form Factor: DIMM
+	Locator: DIMM_P1_E0
+	Bank Locator: P1_Node1_Channel0_Dimm0
+	Type: DDR4
+	Type Detail: Registered (Buffered)
+	Speed: 2400 MT/s
+	Manufacturer: SK Hynix
+	Asset Tag: DIMM_P1_E0_AssetTag
+	Part Number: HMA81GR7AFR8N-UH    
+	Rank: 1
+	Configured Memory Speed: 2100 MT/s
+
+Memory Device
+	Array Handle: 0x0042
+	Total Width: 72 bits
+	Data Width: 64 bits
+	Locator: DIMM_P1_E1
+	Bank Locator: P1_Node1_Channel0_Dimm1
+	Type: DDR4
+
+Memory Device
+	Array Handle: 0x0042
+	Total Width: 72 bits
+	Data Width: 64 bits
+	Size: 8 GB
+	Form Factor: DIMM
+	Locator: DIMM_P1_F0
+	Bank Locator: P1_Node1_Channel1_Dimm0
+	Type: DDR4
+	Type Detail: Registered (Buffered)
+	Speed: 2400 MT/s
+	Manufacturer: SK Hynix
+	Asset Tag: DIMM_P1_F0_AssetTag
+	Part Number: HMA81GR7AFR8N-UH    
+	Rank: 1
+	Configured Memory Speed: 2100 MT/s
+
+Memory Device
+	Array Handle: 0x0042
+	Total Width: 72 bits
+	Data Width: 64 bits
+	Locator: DIMM_P1_F1
+	Bank Locator: P1_Node1_Channel1_Dimm1
+	Type: DDR4
+
+Memory Device
+	Array Handle: 0x0042
+	Total Width: 72 bits
+	Data Width: 64 bits
+	Locator: DIMM_P1_G0
+	Bank Locator: P1_Node1_Channel2_Dimm0
+	Type: DDR4
+
+Memory Device
+	Array Handle: 0x0042
+	Total Width: 72 bits
+	Data Width: 64 bits
+	Locator: DIMM_P1_G1
+	Bank Locator: P1_Node1_Channel2_Dimm1
+	Type: DDR4
+
+Memory Device
+	Array Handle: 0x0042
+	Total Width: 72 bits
+	Data Width: 64 bits
+	Locator: DIMM_P1_H0
+	Bank Locator: P1_Node1_Channel3_Dimm0
+	Type: DDR4
+
+Memory Device
+	Array Handle: 0x0042
+	Total Width: 72 bits
+	Data Width: 64 bits
+	Locator: DIMM_P1_H1
+	Bank Locator: P1_Node1_Channel3_Dimm1
+	Type: DDR4
+
+
+
+| bigboy | no cpufreq support | 5.16 | Sid arm64 | 107180 | 110340 | 340750 | 4180 | 17130 | - |

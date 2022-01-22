@@ -1992,7 +1992,6 @@ GuessARMSoC() {
 	# AnnapurnaLabs Alpine | 2 x Cortex-A15 / r2p4 / swp half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt
 	# Armada 370/XP | 1 x Marvell PJ4 / r1p1 / half thumb fastmult vfp edsp vfpv3 vfpv3d16 tls idivt
 	# Comcerto 2000 EVM (FreeScale/NXP QorIQ LS1024A) | 2 x Cortex-A9 / r2p1 / swp half thumb fastmult vfp edsp thumbee neon vfpv3 tls
-	# Feroceon 88F6281 | 1 x Marvell Feroceon 88FR131 / r2p1 / swp half thumb fastmult edsp
 	# HiSilicon Kirin 930 | 8 x Cortex-A53 / r0p3 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 	# Marvell PJ4Bv7 | 4 x Marvell PJ4B-MP / r2p2 / swp half thumb fastmult vfp edsp vfpv3 tls
 	#
@@ -2168,8 +2167,8 @@ GuessARMSoC() {
 GuessSoCbySignature() {
 	case ${CPUSignature} in
 		??A8r3p2)
-			# Allwinner A10, 1 x Cortex-A8 / r3p2 / half thumb fastmult vfp edsp neon vfpv3 tls vfpd32
-			echo "Allwinner A10"
+			# TI AM3358 or Allwinner A10, 1 x Cortex-A8 / r3p2 / half thumb fastmult vfp edsp neon vfpv3 tls vfpd32
+			lsmod | grep -i sun4i && echo "Allwinner A10" || echo "TI AM3358"
 			;;
 		00A7r0p400A7r0p4)
 			# Allwinner A20, 2 x Cortex-A7 / r0p4 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
@@ -2338,9 +2337,29 @@ GuessSoCbySignature() {
 			# Samsung/Nexell S5P6818, 8 x Cortex-A53 / r0p3 / fp asimd aes pmull sha1 sha2 crc32 cpuid
 			echo "Samsung/Nexell S5P6818"
 			;;
-		00Cavium88XXr1p10*)
+		00Cavium88XXr1p1*)
 			# ThunderX CN8890, 48 x ThunderX 88XX / r1p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
 			echo "$(( ${CPUCores} / 48 )) x ThunderX CN8890"
+			;;
+		??A9r2p10??A9r2p10??A9r2p10??A9r2p10)
+			# NXP i.MX6 Quad | 4 x Cortex-A9 / r2p10 / swp half thumb fastmult vfp edsp thumbee neon vfpv3
+			echo " NXP i.MX6 Quad"
+			;;
+		??A9r2p10??A9r2p10)
+			# NXP i.MX6 Quad | 2 x Cortex-A9 / r2p10 / swp half thumb fastmult vfp edsp thumbee neon vfpv3
+			echo " NXP i.MX6 Dual"
+			;;
+		??MarvellPJ4PJ4br0p5)
+			# Marvell Armada 510, 1 x Marvell PJ4 / r0p5 / swp half thumb fastmult vfp edsp iwmmxt thumbee
+			echo "Marvell Armada 510"
+			;;
+		??MarvellFeroceon88FR131r2p1)
+			# Marvell Kirkwood 88F6281: 1 x Marvell Feroceon 88FR131 / r2p1 / swp half thumb fastmult edsp
+			echo "Marvell Kirkwood 88F6281"
+			;;
+		??ARM11MPCorer0p5??ARM11MPCorer0p5)
+			# PLX NAS7820: 2 x ARM11 MPCore / r0p5 / swp half thumb fastmult edsp java
+			echo "PLX NAS7820"
 			;;
 	esac
 }

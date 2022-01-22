@@ -119,7 +119,6 @@
 | [3GmP](3GmP.txt) | v0.8.6 NanoPi Fire3 | 0%/0% | 994Mi/671Mi | X | X | X | X | 4% | 0% | |
 | [3GmR](3GmR.txt) | v0.8.6 FriendlyARM NanoPi NEO4 | 0%/0.7% | 977Mi/714Mi | X | X | X | X | 1% | 0% | |
 | [3GnC](3GnC.txt) | v0.8.6 Hardkernel Odroid XU4 | 0%/0.9% | 1.9Gi/1.7Gi | X | X | X | X | 4% | 0% | [check log](3GnC.txt) |
-| [3GnV](3GnV.txt) | v0.8.6 FriendlyArm NanoPi M1 Plus | 0%/3.0% | 999M/847M | X | X | X | X | 3% | 4% | |
 | [3GrW](3GrW.txt) | v0.8.6 | 0%/4.0% | 15Gi/14Gi | X | X | X | X | 1% | 0% | |
 | [3HUU](3HUU.txt) | v0.8.8 Celeron N4500 | 0.2%/0% | 7,5Gi/6,4Gi | X | X | X | X | 1% | 0% | |
 | <del>[3HUd](3HUd.txt)</del> | <del>v0.8.8 Intel Celeron N5100 @ 1.10GHz </del> | <del>0%/0%</del> | <del>7.6Gi/7.1Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 3%</del> | <del> 0%</del> | |
@@ -139,10 +138,13 @@
 | [3MQJ](3MQJ.txt) | v0.9.1 Xunlong Orange Pi PC 2 | 0%/0% | 985Mi/753Mi | X | X | X | X | <span style=color:red>**13%**</span> | 0% | |
 | [3MQV](3MQV.txt) | v0.9.1 Xunlong Orange Pi PC Plus | 0%/0% | 999Mi/779Mi | X | X | X | X | 2% | 0% | |
 | [3MX1](3MX1.txt) | v0.9.1 Radxa Zero | 0%/0% | 1.9Gi/1.6Gi | X | X | X | X | 1% | 0% | |
-| [3MZF](3MZF.txt) | v0.9.1 SBC2D70 | 1.8%/0% | 113Mi/81Mi | X | | | | 0% | 2% | |
+| <del>[3MZF](3MZF.txt)</del> | <del>v0.9.1 SBC2D70 </del> | <del>1.8%/0%</del> | <del>113Mi/81Mi</del> | <del>X</del> | | | | <del> 0%</del> | <del> 2%</del> | |
 | [3MhQ](3MhQ.txt) | v0.9.1 Hardkernel ODROID-HC4 | 0%/0% | 3.7Gi/3.3Gi | X | X | X | X | 1% | 0% | |
 | [3MiR](3MiR.txt) | v0.9.1 TRONFY MXQ S805 | 1.1%/0% | 987Mi/794Mi | X | X | X | X | 2% | 0% | |
 | [3MuT](3MuT.txt) | v0.9.1 Hardkernel ODROID-N2 | 0%/0.2% | 3.6Gi/3.3Gi | X | X | X | X | 1% | 0% | |
 | [3MzQ](3MzQ.txt) | v0.9.1 Khadas VIM | 0.5%/0% | 1.9Gi/1.5Gi | X | X | X | X | 1% | 0% | |
+| [3N1U](3N1U.txt) | v0.9.2 SBC2D70 | 1.1%/0% | 113Mi/32Mi | X | | | | 0% | 0% | |
+| [3N2z](3N2z.txt) | v0.9.2 FriendlyArm NanoPi M1 Plus | 0.7%/0% | 999M/836M | X | X | X | X | 2% | 0% | |
+| [3N5c](3N5c.txt) | v0.9.2 bigboy | 0%/0% | 31Gi/29Gi | X | X | X | X | 1% | 0% | |
 | [3rUb](3rUb.txt) | v0.7.7 Pine64 RK3566 Quartz64-A Board | 0%/0% | 3.8Gi/3.5Gi | X | X | X | X | 1% | 0% | |
 | [3wZn](3wZn.txt) | v0.7.7 Radxa Zero | 0.3%/0% | 3.7Gi/3.4Gi | X | X | X | X | 1% | 0% | |

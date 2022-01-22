@@ -1,0 +1,11 @@
+Processor       : Marvell PJ4 v7 Processor-wmmx rev 5 (v7l)
+BogoMIPS        : 794.62
+Features        : swp half thumb fastmult vfp edsp iwmmxt thumbee 
+CPU implementer : 0x56
+CPU architecture: 7
+CPU variant     : 0x0
+CPU part        : 0x581
+CPU revision    : 5
+
+Hardware        : SolidRun CuBox Platform
+Revision        : 0000

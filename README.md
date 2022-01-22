@@ -14,21 +14,23 @@ It has five **entirely different** usage modes:
 * Plot thermal/consumption charts with `-p` to [measure efficiency of settings/devices](Efficiency_Graphing.md)
 * Provide basic CLI monitoring functionality through the `-m` switch
 
-The monitoring now also displays some SoC and CPU core information when starting:
+The monitoring now also displays some hardware information when starting:
 
     tk@odroidxu4:~$ sbc-bench -m
-    Samsung Exynos EXYNOS5800 rev 1, Kernel: armv7l, Userland: armhf
-    CPU topology (clusters, cpufreq members, clockspeeds)
+    Samsung Exynos EXYNOS5800 rev 1, Exynos 5422, Kernel: armv7l, Userland: armhf
+    CPU sysfs topology (clusters, cpufreq members, clockspeeds)
                      cpufreq   min    max
      CPU    cluster  policy   speed  speed   core type
-      0        1        0      200    1400   Cortex-A7
-      1        1        0      200    1400   Cortex-A7
-      2        1        0      200    1400   Cortex-A7
-      3        1        0      200    1400   Cortex-A7
-      4        0        4      200    2000   Cortex-A15
-      5        0        4      200    2000   Cortex-A15
-      6        0        4      200    2000   Cortex-A15
-      7        0        4      200    2000   Cortex-A15
+      0        1        0      200    1400   Cortex-A7 / r0p3
+      1        1        0      200    1400   Cortex-A7 / r0p3
+      2        1        0      200    1400   Cortex-A7 / r0p3
+      3        1        0      200    1400   Cortex-A7 / r0p3
+      4        0        4      200    2000   Cortex-A15 / r2p3
+      5        0        4      200    2000   Cortex-A15 / r2p3
+      6        0        4      200    2000   Cortex-A15 / r2p3
+      7        0        4      200    2000   Cortex-A15 / r2p3
+    
+    Thermal source: /sys/devices/virtual/thermal/thermal_zone0/ (cpu0-thermal)
     
     Time       big.LITTLE   load %cpu %sys %usr %nice %io %irq   Temp
     18:18:33:  800/ 500MHz  0.00  18%   0%  17%   0%   0%   0%  25.0°C

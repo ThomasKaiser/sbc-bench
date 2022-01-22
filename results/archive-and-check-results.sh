@@ -82,7 +82,7 @@ for file in *.txt ; do
 		echo -e "${Prefix}${IOBusy}%${Suffix} | \c"
 	fi
 	case ${BoardName} in
-		*icosa*|*"Tinker Board"*|*"Orange Pi Prime"*|"v0.7.9 Raspberry Pi Zero 2 Rev 1.0"*|"v0.8.3 Raspberry Pi Model B Rev 2"*)
+		*icosa*|*"Tinker Board"*|*"Orange Pi Prime"*|"v0.7.9 Raspberry Pi Zero 2 Rev 1.0"*|"v0.8.3 Raspberry Pi Model B Rev 2"*|*"NanoPi K1 Plus"*)
 			# ignore since not really throttling
 			echo " |"
 			;;

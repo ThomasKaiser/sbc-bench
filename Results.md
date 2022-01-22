@@ -43,7 +43,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [NanoPi Fire3](http://ix.io/1jiU) | 1380 MHz | 4.14 | Stretch arm64 | 7420 | 95700 | 645400 | 1520 | 4570 | 8.53 |
 | [NanoPi Fire3](http://ix.io/1jjm) | 1400 MHz | 4.14 | Bionic arm64 | 7440 | 126050 | 653000 | 1560 | 4600 | 10.96 |
 | [NanoPi Fire3](http://ix.io/3GmP) | 1400 MHz | 4.14 | Focal arm64 | 7360 | 118460 | 653770 | 1530 | 4590 | 11.27 |
-| [NanoPi K1 Plus](http://ix.io/3EA8) | 1370 MHz | 5.10 | Focal arm64 | 3520 | 115020 | 639060 | 1060 | 3680 | 5.48 |
+| [NanoPi K1 Plus](http://ix.io/3N7H) | 1370 MHz | 5.10 | Focal arm64 | 3520 | 115020 | 638880 | 1070 | 3680 | 5.50 |
 | [NanoPi K2](http://ix.io/1iT1) | 1480 MHz | 4.14 | Stretch arm64 | 3850 | 43020 | 50370 | 1660 | 3870 | 4.61 |
 | [NanoPi M1 Plus](http://ix.io/3N2z) | 1370 MHz | 4.19 | Bionic armhf | 3030 | 25720 | 26660 | 830 | 3450 | - |
 | [NanoPi M4](http://ix.io/1lzP) | 2000/1500 MHz | 4.19 | Stretch arm64 | 6400 | 334650 | 1128330 | 4080 | 8270 | 8.86 |
@@ -56,7 +56,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Nintendo Switch](http://ix.io/1Rnj) | 1780 MHz | 4.9 | **Fedora 30 arm-64** | 6170 | 346340 | 642670 | 2500 | 3570 | - |
 | [Nintendo Switch](http://ix.io/3Di2) | 2090 MHz | 4.9 | Bionic arm64 | 6720 | 389030 | 746680 | 2370 | 3670 | 9.25 |
 | [ODROID-C2](http://ix.io/1ixI) | 1750 MHz | 3.14 | **Xenial** arm64 | 4070 | 50500 | 48500 | 1750 | 3100 | - |
-| [ODROID-C2](http://ix.io/1iSh) | 1530 MHz | 4.17 | Stretch arm64 | 3870 | 43800 | 51280 | 1420 | 2600 | 4.63 |
+| [ODROID-C2](http://ix.io/3N6Q) | 1530 MHz | 5.10 | Bullseye arm64 | 4010 | 44090 | 51490 | 1600 | 2730 | - |
 | [ODROID-C4](http://ix.io/2kaS) | 2010 MHz | 4.9 | Focal arm64 | 5450 | 195130 | 941590 | 3310 | 6270 | 7.71 |
 | [ODROID-HC4](http://ix.io/3MhQ) | 2100 MHz | 5.10 | Bullseye arm64 | 5510 | 192130 | 981430 | 2990 | 5060 | - |
 | [ODROID-N2](http://ix.io/1BsF) | 1800/1900 MHz | 4.9 | Bionic arm64 | 8140 | 324900 | 1024680 | 4120 | 8610 | 11.39 |
@@ -149,7 +149,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 * *kH/s* is a **multi threaded** cpuminer score showing the board's performance when executing NEON optimized code. To get the performance difference between big and little cores click the links in the left column
 * The Amazon a1.xlarge numbers represent a 1st gen Graviton CPU (64-bit 'ARM Neoverse') limited to four A72 cores and 8GB memory.
 * The 1st Apple M1 number represents a *single core* Ubuntu 20.10 VM running on an MacBook Air with the VM executed almost all the time on one of [Apple's ARMv8.4 power cores](https://github.com/ThomasKaiser/Knowledge/blob/master/articles/Exploring_Apple_Silicon_on_MacBookAir10.md#virtualization). The 2nd number is the same VM setup this time sent to an efficiency core clocking in at just 600 MHz instead of the usual 2064 MHz. Running natively and not inside a VM performance numbers are 5% to 10% higher.
-* Cubietruck numbers are more or less representative for all other Allwinner A20 devices, same with Lime for Allwinner A10, Olimex Teres-I for Allwinner A64, Orange Pi "PC Plus" and "Plus 2" for Allwinner H2+/H3 and Orange Pi "PC 2" and Prime for Allwinner H5.
+* Cubietruck numbers are more or less representative for all other Allwinner A20 devices, same with Lime for Allwinner A10, Olimex Teres-I for Allwinner A64, Orange Pi "PC Plus" and "Plus 2" for Allwinner H2+/H3 and NanoPi K1 Plus, Orange Pi "PC 2" and Prime for Allwinner H5.
 * Clearfog Pro and Helios4 use exactly same SoC (Armada 385), kernel and clockspeeds and the only reason why OpenSSL numbers differ is since Helios4 numbers were made using [Marvell's CESA crypto accelerator via cryptodev](https://forum.armbian.com/topic/7763-benchmarking-cpus/?do=findComment&comment=59569) which provides nice speed improvements with larger block sizes but also some initialization overhead with tiny block sizes. Also CPU utilization is way lower so the SoC is free for other stuff while performing better at the same time.
 * EspressoBin's boot BLOB claims to run at up to 1GHz while real clockspeeds are lower maxing out with this setting at 790MHz (obviously a kernel bug -- see [details](https://forum.armbian.com/topic/4089-espressobin-support-development-efforts/?do=findComment&comment=60082))
 * Gigabyte H270-T70 numbers are for one [blade module equipped with two Cavium ThunderX CN8890 (48 cores each)](https://twitter.com/linux_chenxing/status/1449603003057532930).

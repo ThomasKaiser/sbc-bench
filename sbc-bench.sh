@@ -1983,11 +1983,15 @@ CacheAndDIMMDetails() {
 GuessARMSoC() {
 	# function that might guess ARM SoC names correctly sometimes in the future
 	#
-	# For a rough performance estimate wrt different ARMv8 cores see: https://www.cnx-software.com/2021/12/10/starfive-dubhe-64-bit-risc-v-core-12nm-2-ghz-processors/#comment-588823
+	# For a rough performance estimate wrt different Cortex ARMv8 cores see:
+	# https://www.cnx-software.com/2021/12/10/starfive-dubhe-64-bit-risc-v-core-12nm-2-ghz-processors/#comment-588823
+	#
+	# The cpuid flags seems to appear on all ARMv8 cores starting with kernel 5
 	#
 	# Allwinner A83T | 8 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
 	# x Allwinner A64/H5 | 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
-	# x Allwinner H6 | 4 x Cortex-A53 / r0p4 / fp asimd aes pmull sha1 sha2 crc32 cpuid
+	# x Allwinner H6 | 4 x Cortex-A53 / r0p4 / fp asimd aes pmull sha1 sha2 crc32 cpuid (kernel 5.x)
+	# Allwinner H616 | 4 x Cortex-A53 / r0p4 / fp asimd aes pmull sha1 sha2 crc32 (kernel 4.9)
 	# Amlogic A113D | 4 x Cortex-A53
 	# AnnapurnaLabs Alpine | 2 x Cortex-A15 / r2p4 / swp half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt
 	# Armada 370/XP | 1 x Marvell PJ4 / r1p1 / half thumb fastmult vfp edsp vfpv3 vfpv3d16 tls idivt
@@ -2103,10 +2107,18 @@ GuessARMSoC() {
 				;;
 			sun50iw1p*)
 				# Since Armbian patched arch/arm64/kernel/cpuinfo.c since Aug 2016 every
-				# other Allwinner ARMv8 SoC (H5/H6) will identify itself as sun50iw1p1
+				# other Allwinner ARMv8 SoC (H5/H6/H616) will identify itself as sun50iw1p1
+				# when kernel has been tampered with by Armbian.
 				# https://github.com/armbian/build/issues/3400 / https://archive.md/VxK14
-				# TODO: check for PMIC type and PCIe to differentiate between A64, H5 and H6
-				echo "Allwinner A64 or https://tinyurl.com/yyf3d7fg"
+				AllwinnerGuess="$(IdentifyAllwinnerARMv8 | head -n1)"
+				case ${AllwinnerGuess} in
+					*unidentified*)
+						echo "Allwinner A64 or https://tinyurl.com/yyf3d7fg"
+						;;
+					*)
+						echo "${AllwinnerGuess}"
+						;;
+				esac
 				;;
 			sun50iw2*)
 				echo "Allwinner H5 (Quad A53)"
@@ -2165,6 +2177,8 @@ GuessARMSoC() {
 } # GuessARMSoC
 
 GuessSoCbySignature() {
+	# Guess by CPU topology (core types and revision, clusters and cpufreq policies) and by
+	# specific features/flags
 	case ${CPUSignature} in
 		??A8r3p2)
 			# TI AM3358 or Allwinner A10, 1 x Cortex-A8 / r3p2 / half thumb fastmult vfp edsp neon vfpv3 tls vfpd32
@@ -2196,35 +2210,41 @@ GuessSoCbySignature() {
 			echo "Amlogic S805"
 			;;
 		00A53r0p400A53r0p400A53r0p400A53r0p4)
-			# The boring quad Cortex-A53 done by every SoC vendor
+			# The boring quad Cortex-A53 done by every SoC vendor: 4 x Cortex-A53 / r0p4
 			# Allwinner A64/H5/H6, BCM2837/BCM2709, RK3328, i.MX8 M, S905, S905X/S805X, S805Y, S905X/S905D/S905W/S905L/S905M2, S905X2/S905Y2/T962X2, RealTek RTD129x/RTD139x
 			case "${DeviceName}" in
 				"Raspberry Pi 2"*)
+					# 4 x Cortex-A53 / r0p4 / fp asimd evtstrm crc32
 					echo "BCM2837 (BCM2709)"
 					;;
 				"Raspberry Pi 3"*)
+					# 4 x Cortex-A53 / r0p4 / fp asimd evtstrm crc32
 					echo "BCM2710"
 					;;
 				"Raspberry Pi Zero 2"*)
+					# 4 x Cortex-A53 / r0p4 / fp asimd evtstrm crc32
 					echo "RP3A0-AU (BCM2710A1)"
 					;;
 				*)
 					# No Raspberry, check for AES capabilities first
 					grep 'Features' /proc/cpuinfo | grep -q aes
 					if [ $? -ne 0 ]; then
-						# no ARMv8 Crypto Extensions then it's S905
+						# no ARMv8 Crypto Extensions licensed like RPi ARMv8 cores... then it's
+						# S905: 4 x Cortex-A53 / r0p4 / fp asimd evtstrm crc32
 						echo "Amlogic S905"
 					else
 						ModulesLoaded=$(lsmod | cut -f1 -d' ' | tr '\n' ' ')
 						case ${ModulesLoaded} in
 							*sun?i*)
-								# TODO: check for PMIC type and PCIe to differentiate between A64, H5 and H6
-								echo "Allwinner A64/H5/H6"
+								# 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
+								IdentifyAllwinnerARMv8 | head -n1
 								;;
 							*rockchip*)
+								# RK3328, 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 								echo "Rockchip RK3328"
 								;;
 							*meson*)
+								# GXL or G12A: 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 								IdentifyGXLG12A
 								;;
 							*imx8*)
@@ -2234,8 +2254,7 @@ GuessSoCbySignature() {
 								# no significant module names found, guess by kernel
 								case "$(uname -a)" in
 									*sunxi*)
-										# TODO: check for PMIC type and PCIe to differentiate between A64, H5 and H6
-										echo "Allwinner A64/H5/H6"
+										IdentifyAllwinnerARMv8 | head -n1
 										;;
 									*rockchip*)
 										echo "Rockchip RK3328"
@@ -2262,7 +2281,7 @@ GuessSoCbySignature() {
 			echo "Armada 375/38x"
 			;;
 		??A53r0p4??A53r0p4)
-			# Armada 3700, 2 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
+			# Armada 3700, 2 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			echo "Armada 37x0"
 			;;
 		10ARM1176r0p7)
@@ -2270,7 +2289,7 @@ GuessSoCbySignature() {
 			echo "BCM2835"
 			;;
 		00A72r0p300A72r0p300A72r0p300A72r0p3)
-			# BCM2711, 4 x Cortex-A72 / r0p3 / fp asimd evtstrm crc32 cpuid (running 32-bit: half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm crc32)
+			# BCM2711, 4 x Cortex-A72 / r0p3 / fp asimd evtstrm crc32 (running 32-bit: half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm crc32)
 			echo "BCM2711${BCM2711}"
 			;;
 		10A7r0p310A7r0p310A7r0p310A7r0p304A15r2p304A15r2p304A15r2p304A15r2p3)
@@ -2278,7 +2297,7 @@ GuessSoCbySignature() {
 			echo "Exynos 5422"
 			;;
 		00A35r0p200A35r0p200A35r0p200A35r0p2)
-			# RK3308, 4 x Cortex-A35 / r0p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
+			# RK3308, 4 x Cortex-A35 / r0p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			echo "Rockchip RK3308"
 			;;
 		00A55r1p000A55r1p000A55r1p000A55r1p0)
@@ -2287,10 +2306,11 @@ GuessSoCbySignature() {
 			;;
 		00A55r2p000A55r2p000A55r2p000A55r2p0)
 			# Amlogic S905X4, RK3566/RK3568
+			# 4 x Cortex-A55 / r2p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp asimdrdm lrcpc dcpop asimddp
 			lsmod | grep -i meson && echo "Amlogic S905X4" || echo "Rockchip RK3566 or RK3568"
 			;;
 		00A53r0p400A53r0p400A53r0p400A53r0p414A72r0p214A72r0p2)
-			# RK3399, 4 x Cortex-A53 / r0p4 + 2 x Cortex-A72 / r0p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
+			# RK3399, 4 x Cortex-A53 / r0p4 + 2 x Cortex-A72 / r0p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			echo "Rockchip RK3399"
 			;;
 		150A7r0p5150A7r0p5150A7r0p5150A7r0p5)
@@ -2334,11 +2354,11 @@ GuessSoCbySignature() {
 			echo "Mediatek MT7623"
 			;;
 		00A53r0p300A53r0p300A53r0p300A53r0p310A53r0p310A53r0p310A53r0p310A53r0p3)
-			# Samsung/Nexell S5P6818, 8 x Cortex-A53 / r0p3 / fp asimd aes pmull sha1 sha2 crc32 cpuid
+			# Samsung/Nexell S5P6818, 8 x Cortex-A53 / r0p3 / fp asimd aes pmull sha1 sha2 crc32
 			echo "Samsung/Nexell S5P6818"
 			;;
 		00Cavium88XXr1p1*)
-			# ThunderX CN8890, 48 x ThunderX 88XX / r1p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
+			# ThunderX CN8890, 48 x ThunderX 88XX / r1p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			echo "$(( ${CPUCores} / 48 )) x ThunderX CN8890"
 			;;
 		??A9r2p10??A9r2p10??A9r2p10??A9r2p10)
@@ -2390,6 +2410,70 @@ IdentifyGXLG12A() {
 			;;
 	esac
 } # IdentifyGXLG12A
+
+IdentifyAllwinnerARMv8() {
+	# Allwinner sun50iw* except sun50iw11 are all quad A53 / r0p4. Today sun50iw1p
+	# (A64/H64), sun50iw2 (H5), sun50iw6 (H6) and sun50iw9 (H616/H313) seem to exist
+	# in the wild.
+	#
+	# Allwinner SoCs feature a Security/Chip ID (SID): https://linux-sunxi.org/SID_Register_Guide
+	#
+	# Allwinner H5, 5.10.60-sunxi64
+	# /sys/devices/platform/soc/1c14000.eeprom/sunxi-sid0/nvmem
+	# 00000000  01 00 80 82 04 47 00 64  04 c3 36 50 0e 09 37 64
+	# 00000010  42 02 00 00 00 00 00 00  00 00 00 00 00 00 00 00
+	# 00000020  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
+	# 00000030  00 00 00 00 cd 07 ed 07  00 00 00 00 00 00 00 00
+	# 00000040  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
+	#
+	# Allwinner H6, 5.4.20-sunxi64
+	# /sys/devices/platform/soc/3006000.efuse/sunxi-sid0/nvmem
+	# 00000000  01 00 c0 82 08 47 00 0c  3e 04 41 01 4b 22 74 54
+	# 00000010  00 00 00 00 f7 10 21 09  29 09 01 00 40 00 00 00
+	# 00000020  00 00 00 00 79 00 00 00  47 8f 00 00 01 00 e0 02
+	# 00000030  2e 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
+	# 00000040  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
+	#
+	# H616/H313 is usually combined with AXP806 PMIC, lacks USB3 but should be
+	# equipped with 2 GMAC according to http://ix.io/2cGy and http://ix.io/2MBN
+	# According to https://irclog.whitequark.org/linux-sunxi/2021-01-19#28890526;
+	# AXP1530 and AXP305 (compatible to AXP805) are also mentioned but won't show
+	# up in /proc/interrupts
+	#
+	# Since no access to A64 and H616/H313 right now, try to identify the different
+	# quad core SoCs based on presence of PMIC, USB3 and maybe clockspeeds
+
+	# Check for USB3 first, mainline kernel:
+	grep -q "xhci" /proc/interrupts && echo "Allwinner H6"
+
+	# No idea about H6 BSP kernel but we simply play safe
+	lsusb -t | grep -q xhci && echo "Allwinner H6"
+
+	# Now check for PMIC. Both H616 and H6 use AXP806 but the latter has USB3.
+	# Checking with mainline seemed to work for axp806: http://ix.io/2GH3
+	# but with later kernels it's gone: http://ix.io/3woR. Reasons why:
+	# https://github.com/jernejsk/linux-1/commit/50b9a4612a8cc6e2131b83f498d7c5d4cb6ea74f
+	grep -q axp806 /proc/interrupts && echo "Allwinner H616/H313"
+
+	# Maybe there's something in kernel ring buffer identifying the SoC
+	dmesg | grep -q sun50i-h616 && echo "Allwinner H616/H313"
+
+	# A64 is accompanied by AXP803 PMIC:
+	grep -q axp803 /proc/interrupts && echo "Allwinner A64"
+
+	# With A64 BSP kernel we can try to rely on a sysfs node
+	[ -d /sys/devices/platform/axp81x_board/axp81x-supplyer.47 ] \
+		 && echo "Allwinner A64"
+
+	# H5 is usually combined with an I2C attached Silergy SY8106A voltage regulator
+	lsmod | grep -i -q sy8106a && echo "Allwinner H5"
+
+	# Maybe there's something in kernel ring buffer identifying the SoC
+	dmesg | grep -q sun50i-h5 && echo "Allwinner H5"
+
+	# if we end up here then print some generic BS
+	echo "Allwinner unidentified SoC"
+} # IdentifyAllwinnerARMv8
 
 DisplayUsage() {
 	echo -e "\nUsage: ${BOLD}${0##*/} [-c] [-p] [-h] [-m] [-t \$degree] [-T \$degree]${NC}\n"

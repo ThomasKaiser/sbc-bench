@@ -376,8 +376,8 @@ PlotPerformanceGraph() {
 	# check if cpulist parameter has been provided as well:
 	if [ "X${CPUList}" = "X" ]; then
 		# -p has been used without further restrictions, we run performance test on all cores
-		CheckPerformance "all CPU cores" ${ClusterConfig}
-		PlotGraph "all CPU cores" ${ClusterConfig}
+		CheckPerformance "all CPU cores" $(tr -d '[:space:]' <<<${ClusterConfig[@]})
+		PlotGraph "all CPU cores" $(tr -d '[:space:]' <<<${ClusterConfig[@]})
 		RenderPDF
 	else
 		# -p with additional options has been called
@@ -421,8 +421,8 @@ PlotPerformanceGraph() {
 				done
 				if [ ${#ClusterConfig[@]} -gt 1 ]; then
 					# more than one CPU cluster, we test using all cores simultaneously
-					CheckPerformance "all CPU cores" ${ClusterConfig}
-					PlotGraph "all CPU cores" ${ClusterConfig}
+					CheckPerformance "all CPU cores" $(tr -d '[:space:]' <<<${ClusterConfig[@]})
+					PlotGraph "all CPU cores" $(tr -d '[:space:]' <<<${ClusterConfig[@]})
 				fi
 				RenderPDF
 				;;
@@ -2004,6 +2004,10 @@ GuessARMSoC() {
 	# rockchip-cpuinfo cpuinfo: SoC            : 35681000 --> https://dev.t-firefly.com/forum.php?mod=redirect&goto=findpost&ptid=104549&pid=280260
 	# rockchip-cpuinfo cpuinfo: SoC            : 35682000 --> https://forum.banana-pi.org/t/banana-pi-bpi-r2-pro-open-soruce-router-board-with-rockchip-rk3568-run-debian-linux/
 	#
+	# dmesg | grep 'soc soc0:'
+	# soc soc0: Amlogic Meson G12B (S922X) Revision 29:c (40:2) Detected
+	# soc soc0: Amlogic Meson SM1 (S905X3) Revision 2b:c (10:2) Detected
+	#
 	# If /proc/cpuinfo Hardware field is 'Amlogic' then 1st chars of 'AmLogic Serial'
 	# and if not present 'Serial' might have special meaning as it's the 'chip id'
 	# https://github.com/CoreELEC/bl301/blob/1b435f3e20160d50fc01c3ef616f1dbd9ff26be8/arch/arm/include/asm/cpu_id.h#L21-L42
@@ -2014,14 +2018,15 @@ GuessARMSoC() {
 	# * 20 --> S912          https://forum.doozan.com/read.php?3,62704,62709#msg-62709 but in conflict with https://github.com/LibreELEC/linux-amlogic/blob/amlogic-3.14.y/arch/arm64/boot/dts/amlogic/mesongxtvbb.dtsi (quad A53)
 	# * 21 --> S905X         https://blog.lvu.kr/amlogic-s905x-set-top-box-t95n-m8s-2g8g-2/
 	# * 22 --> S912          https://github.com/CoreELEC/bl301/blob/coreelec-bl301/arch/arm/include/asm/cpu_id.h
+	# * 24 --> T962X/T962E
 	# * 25 --> A113D (AXG)   https://tinyurl.com/y76bj6ky
 	# * 28 --> S905X2        https://discourse.coreelec.org/t/coreelec-bl301-wake-up-feature-inject-bl301/6321
-	# * 2b --> S905X3        https://discourse.coreelec.org/t/proc-cpuinfo-is-missing-a-core-for-s950x3/14081
+	# * 2b --> S905X3/S905D3 https://discourse.coreelec.org/t/proc-cpuinfo-is-missing-a-core-for-s950x3/14081
 	# * 29 --> S922X/A311D   https://longervision.github.io/2020/04/18/AI/EdgeComputing/khadas-vim3-amlogic-a311d/
 	# * 2e --> T962X2
 	# * 32 --> S905X4        https://androidpctv.com/h96-max-x4-fake-s905x4/
 	#
-	# Amlogic chip ids: https://github.com/CoreELEC/linux-amlogic/blob/d4296d10296794ae00a72c845411e1e41efb14ba/arch/arm64/kernel/cpuinfo.c#L124-L146
+	# Amlogic chip ids: https://github.com/CoreELEC/linux-amlogic/blob/ab1ab097d1a7b01d644d09625c9e4c7e31e35fb4/arch/arm64/kernel/cpuinfo.c#L135-L158
 	# More cpuinfo: http://tessy.org/wiki/index.php?Arm#ae54e1d6 (archived at https://archive.md/nf6kL)
 	# https://github.com/pytorch/cpuinfo/tree/master/src/arm/linux/
 
@@ -2063,6 +2068,10 @@ GuessARMSoC() {
 								# GXM
 								echo "Amlogic S912"
 								;;
+							24*)
+								# TXLX
+								echo "Amlogic T962X/T962E"
+								;;
 							25*)
 								# AXG
 								echo "Amlogic A113D"
@@ -2077,13 +2086,14 @@ GuessARMSoC() {
 								;;
 							2b*)
 								# SM1: S905X3, S905D3
-								echo "Amlogic S905X3"
+								echo "Amlogic S905X3/S905D3"
 								;;
 							2e*)
-								# TL1
+								# TL1: T962X2
 								echo "Amlogic T962X2"
 								;;
 							32*)
+								# SC2: S905X4
 								echo "Amlogic S905X4"
 								;;
 							*)
@@ -2097,13 +2107,13 @@ GuessARMSoC() {
 				echo "Allwinner D1 (1xC906 RISC-V)"
 				;;
 			sun7iw2*)
-				echo "Allwinner A20 (Dual A7)"
+				echo "Allwinner A20"
 				;;
 			sun8iw7*)
-				echo "Allwinner H3/H2+ (Quad A7)"
+				echo "Allwinner H3/H2+"
 				;;
 			sun8iw11*)
-				echo "Allwinner R40/V40/T3/A40i (Quad A7)"
+				echo "Allwinner R40/V40/T3/A40i"
 				;;
 			sun50iw1p*)
 				# Since Armbian patched arch/arm64/kernel/cpuinfo.c since Aug 2016 every
@@ -2113,7 +2123,28 @@ GuessARMSoC() {
 				AllwinnerGuess="$(IdentifyAllwinnerARMv8 | head -n1)"
 				case ${AllwinnerGuess} in
 					*unidentified*)
-						echo "Allwinner A64 or https://tinyurl.com/yyf3d7fg"
+						if [ -f /etc/armbian-release ]; then
+							BoardFamily="$(awk -F'=' '/^BOARDFAMILY/ {print $2}' </etc/armbian-release)"
+							case ${BoardFamily} in
+								sun50iw1)
+									echo "Allwinner A64"
+									;;
+								sun50iw2)
+									echo "Allwinner H5"
+									;;
+								sun50iw6)
+									echo "Allwinner H6"
+									;;
+								sun50iw9)
+									echo "Allwinner H616/H313"
+									;;
+								*)
+									echo "Allwinner A64 or https://tinyurl.com/yyf3d7fg"
+									;;
+							esac
+						else
+							echo "Allwinner A64 or https://tinyurl.com/yyf3d7fg"
+						fi
 						;;
 					*)
 						echo "${AllwinnerGuess}"
@@ -2121,22 +2152,22 @@ GuessARMSoC() {
 				esac
 				;;
 			sun50iw2*)
-				echo "Allwinner H5 (Quad A53)"
+				echo "Allwinner H5"
 				;;
 			sun50iw3*)
-				echo "Allwinner A63 (Quad A53)"
+				echo "Allwinner A63"
 				;;
 			sun50iw6*)
-				echo "Allwinner H6 (Quad A53)"
+				echo "Allwinner H6"
 				;;
 			sun50iw9*)
-				echo "Allwinner H616/H313 (Quad A53)"
+				echo "Allwinner H616/H313"
 				;;
 			sun50iw10*)
-				echo "Allwinner A100/A133/A53/T509 (Quad A53)"
+				echo "Allwinner A100/A133/A53/T509"
 				;;
 			sun50iw11*)
-				echo "Allwinner R329 (Dual A53)"
+				echo "Allwinner R329"
 				;;
 			sun*|Allwinner*)
 				SoCGuess="$(GuessSoCbySignature)"
@@ -2239,7 +2270,7 @@ GuessSoCbySignature() {
 								# 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 								IdentifyAllwinnerARMv8 | head -n1
 								;;
-							*rockchip*)
+							*rockchip*|*dwmac_rk*)
 								# RK3328, 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 								echo "Rockchip RK3328"
 								;;
@@ -2248,6 +2279,7 @@ GuessSoCbySignature() {
 								IdentifyGXLG12A
 								;;
 							*imx8*)
+								# i.MX8M, 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 								echo "NXP i.MX8M"
 								;;
 							*)
@@ -2264,6 +2296,10 @@ GuessSoCbySignature() {
 										;;
 									*BPI-M4*)
 										echo "RealTek RTD1395"
+										;;
+									*)
+										# no kernel name match, guess by /proc/interrupts
+										grep -q "rockchip" /proc/interrupts && echo "Rockchip RK3328"
 										;;
 								esac
 								;;
@@ -2396,11 +2432,12 @@ GetCPUSignature() {
 
 IdentifyGXLG12A() {
 	# Amlogic GXL and G12A SoC families share same cluster details (quad A53 / r0p4).
-	# They differ in speed though: GXL fakes 1.5 GHz while being limited to 1.4 GHz
+	# They differ in speed though: GXL usually fakes 1.5 GHz while being limited to
+	# 1.4 GHz (LibreComputer's La Frite being the exception reporting true 1416 MHz)
 	# but G12A (S905X2, S905D2, S905Y2) clocks higher and doesn't fake clockspeeds
 	MaxSpeed="$(sed -e '1,/^ CPU/ d' <<<"${CPUTopology}" | tail -n1 | awk -F" " '{print $5}')"
 	case ${MaxSpeed} in
-		15??)
+		15??|14??)
 			# GXL: 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid (running 32-bit: fp asimd evtstrm aes pmull sha1 sha2 crc32 wp half thumb fastmult vfp edsp neon vfpv3 tlsi vfpv4 idiva idivt)
 			echo "Amlogic S805X, S805Y, S905X/S905D/S905W/S905L/S905M2"
 			;;
@@ -2456,7 +2493,7 @@ IdentifyAllwinnerARMv8() {
 	grep -q axp806 /proc/interrupts && echo "Allwinner H616/H313"
 
 	# Maybe there's something in kernel ring buffer identifying the SoC
-	dmesg | grep -q sun50i-h616 && echo "Allwinner H616/H313"
+	dmesg | egrep -q "sun50i-h616|sun50iw9" && echo "Allwinner H616/H313"
 
 	# A64 is accompanied by AXP803 PMIC:
 	grep -q axp803 /proc/interrupts && echo "Allwinner A64"
@@ -2465,11 +2502,14 @@ IdentifyAllwinnerARMv8() {
 	[ -d /sys/devices/platform/axp81x_board/axp81x-supplyer.47 ] \
 		 && echo "Allwinner A64"
 
+	# Maybe there's something in kernel ring buffer identifying the SoC
+	dmesg | grep -q sun50i-a64 && echo "Allwinner A64"
+
 	# H5 is usually combined with an I2C attached Silergy SY8106A voltage regulator
 	lsmod | grep -i -q sy8106a && echo "Allwinner H5"
 
 	# Maybe there's something in kernel ring buffer identifying the SoC
-	dmesg | grep -q sun50i-h5 && echo "Allwinner H5"
+	dmesg | egrep -q "sun50i-h5|sun50iw2" && echo "Allwinner H5"
 
 	# if we end up here then print some generic BS
 	echo "Allwinner unidentified SoC"

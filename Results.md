@@ -16,7 +16,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [BPi M4](http://ix.io/1Dt1) | 1400 MHz | 4.9 | Bionic arm64 | 3500 | 125430 | 651460 | 1010 | 4360 | 5.48 |
 | [BPi R2](http://ix.io/1iGV) | 1300 MHz | 4.4 | **Xenial** armhf | 2600 | 27550 | 25350 | 1500 | 3800 | - |
 | [Clearfog Pro](http://ix.io/1iFa) | 1600 MHz | 4.14 | Stretch armhf | 2185 | 44500 | 43900 | 935 | 4940 | - |
-| [Cubietruck](http://ix.io/1u3W) | 960 MHz | 4.19 | Stretch armhf | 985 | 15260 | 18590 | 380 | 1380 | - |
+| [Cubietruck](http://ix.io/3Naw) | 960 MHz | 5.10 | Bullseye armhf | 1030 | 15260 | 18640 | 440 | 2010 | - |
 | [EspressoBin](http://ix.io/1kt2) | 800 MHz | 4.17 | Stretch arm64 | 1138 | 54290 | 368330 | 1040 | 2490 | 1.23 |
 | [EspressoBin](http://ix.io/1lCe) | 1200 MHz | 4.18 | Stretch arm64 | 1630 | 81900 | 544240 | 1000 | 2400 | 1.82 |
 | [Gigabyte H270-T70](http://ix.io/3N5c) | 2000 Mhz | 5.16 | Sid arm64 | 107180 | 110340 | 340750 | 4180 | 17130 | - |
@@ -58,9 +58,10 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [ODROID-C2](http://ix.io/1ixI) | 1750 MHz | 3.14 | **Xenial** arm64 | 4070 | 50500 | 48500 | 1750 | 3100 | - |
 | [ODROID-C2](http://ix.io/3N6Q) | 1530 MHz | 5.10 | Bullseye arm64 | 4010 | 44090 | 51490 | 1600 | 2730 | - |
 | [ODROID-C4](http://ix.io/2kaS) | 2010 MHz | 4.9 | Focal arm64 | 5450 | 195130 | 941590 | 3310 | 6270 | 7.71 |
-| [ODROID-HC4](http://ix.io/3MhQ) | 2100 MHz | 5.10 | Bullseye arm64 | 5510 | 192130 | 981430 | 2990 | 5060 | - |
+| [ODROID-HC4](http://ix.io/3Na5) | 2100 MHz | 5.10 | Buster arm64 | 5730 | 191560 | 980970 | 3540 | 5150 | - |
 | [ODROID-N2](http://ix.io/1BsF) | 1800/1900 MHz | 4.9 | Bionic arm64 | 8140 | 324900 | 1024680 | 4120 | 8610 | 11.39 |
 | [ODROID-N2](http://ix.io/3MuT) | 2000/1900 MHz | 5.10 | Buster arm64 | 9090 | 212920 | 1007210 | 4260 | 9080 | - |
+| [ODROID-N2+](http://ix.io/3Nau) | 2400/2000 MHz | 5.10 | Focal arm64 | 9720 | 287810 | 1153860 | 4070 | 7220 | - |
 | [ODROID-N2+](http://ix.io/3DtN) | 2400/2000 MHz | 5.14 | Impish arm64 | 9790 | 421730 | 1366930 | 4300 | 7480 | - |
 | [ODROID-N2+](http://ix.io/3LoH) | 2400/2000 MHz | 5.14 | Hirsute arm64 | 9780 | 298900 | 1154140 | 4030 | 7120 | - |
 | [ODROID-XU4](http://ix.io/1ixL) | 1900/1400 MHz | 3.10 | **Jessie** armhf | 6750 | 74100 | 68200 | 2200 | 4800 | - |
@@ -96,6 +97,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Raspberry Pi 4 B](http://ix.io/1MFf) | 1500 MHz | 4.19 | Raspbian Buster | 5500 | 62350 | 64860 | 2460 | 3170 | - |
 | [Raspberry Pi 4 B](http://ix.io/3EgS) | 1500 MHz | 5.10 | Raspberry Pi OS Buster | 5750 | 62310 | 64930 | 2550 | 3430 | - |
 | [Raspberry Pi 4 B](http://ix.io/3Gia) | 1800 MHz | 5.10 | Raspberry Pi OS Buster | 6550 | 75040 | 77830 | 2780 | 3080 | - |
+| [Raspberry Pi 4 B](http://ix.io/3N94) | 1800 MHz | 5.10 | Raspberry Pi OS Bullseye | 5940 | 74620 | 77670 | 2310 | 2690 | - |
 | [Raspberry Pi 4 B](http://ix.io/3F9C) | 1800 MHz | 5.10 | Raspberry Pi OS Buster **arm64** | 5760 | 45570 | 36240 | 2240 | 3120 | 9.46 |
 | [Raspberry Pi 4 B](http://ix.io/3InF) | 1800 MHz | 5.15 | **Jammy arm64** | 5640 | 45210 | 36260 | 2580 | 3110 | - |
 | [Raspberry Pi 400](http://ix.io/2Cyi) | 1800 MHz | 5.4 | Raspberry Pi OS Buster | 6550 | 75050 | 77890 | 2680 | 3110 | - |

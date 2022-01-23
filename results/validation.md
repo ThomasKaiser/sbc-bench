@@ -81,7 +81,7 @@
 | [1rYm](1rYm.txt) | v0.6.2 Khadas Captain | 0.2%/0.2% | 3.7G/3.6G | X | X | X | X | 1% | 0% | [check log](1rYm.txt) |
 | [1rrO](1rrO.txt) | v0.6.2 ROCK PI 4B | 0.4%/0.3% | 1.9G/1.7G | X | X | X | X | 1% | 0% | [check log](1rrO.txt) |
 | [1tJg](1tJg.txt) | v0.6.2 Olimex A64 Teres-I | 0.6%/0.6% | 1.9G/1.6G | X | X | X | X | 2% | 0% | |
-| [1u3W](1u3W.txt) | v0.6.2 Cubietech Cubietruck | 0%/0% | 2.0G/1.7G | X | X | X | X | <span style=color:red> 9%</span> | 0% | |
+| <del>[1u3W](1u3W.txt)</del> | <del>v0.6.2 Cubietech Cubietruck </del> | <del>0%/0%</del> | <del>2.0G/1.7G</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del><span style=color:red> 9%</span></del> | <del> 0%</del> | |
 | [1uTS](1uTS.txt) | v0.6.2 Celeron N4100 | 0%/2.1% | 3.7G/2.1G | X | X | X | X | 2% | 2% | |
 | [1uar](1uar.txt) | v0.6.2 Khadas Captain | 0.3%/0.6% | 3.7G/3.6G | X | X | X | X | 1% | 0% | [check log](1uar.txt) |
 | [1ub9](1ub9.txt) | v0.6.2 Pine64 RockPro64 | 0%/0.5% | 3.8G/3.7G | X | X | X | X | 1% | 0% | |
@@ -137,7 +137,7 @@
 | [3MQJ](3MQJ.txt) | v0.9.1 Xunlong Orange Pi PC 2 | 0%/0% | 985Mi/753Mi | X | X | X | X | <span style=color:red>**13%**</span> | 0% | |
 | [3MQV](3MQV.txt) | v0.9.1 Xunlong Orange Pi PC Plus | 0%/0% | 999Mi/779Mi | X | X | X | X | 2% | 0% | |
 | [3MX1](3MX1.txt) | v0.9.1 Radxa Zero | 0%/0% | 1.9Gi/1.6Gi | X | X | X | X | 1% | 0% | |
-| [3MhQ](3MhQ.txt) | v0.9.1 Hardkernel ODROID-HC4 | 0%/0% | 3.7Gi/3.3Gi | X | X | X | X | 1% | 0% | |
+| <del>[3MhQ](3MhQ.txt)</del> | <del>v0.9.1 Hardkernel ODROID-HC4 </del> | <del>0%/0%</del> | <del>3.7Gi/3.3Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 1%</del> | <del> 0%</del> | |
 | [3MiR](3MiR.txt) | v0.9.1 TRONFY MXQ S805 | 1.1%/0% | 987Mi/794Mi | X | X | X | X | 2% | 0% | |
 | [3MuT](3MuT.txt) | v0.9.1 Hardkernel ODROID-N2 | 0%/0.2% | 3.6Gi/3.3Gi | X | X | X | X | 1% | 0% | |
 | [3MzQ](3MzQ.txt) | v0.9.1 Khadas VIM | 0.5%/0% | 1.9Gi/1.5Gi | X | X | X | X | 1% | 0% | |
@@ -146,5 +146,9 @@
 | [3N5c](3N5c.txt) | v0.9.2 bigboy | 0%/0% | 31Gi/29Gi | X | X | X | X | 1% | 0% | |
 | [3N6Q](3N6Q.txt) | v0.9.2 Hardkernel ODROID-C2 | 0.7%/0.2% | 1.9Gi/1.6Gi | X | X | X | X | 1% | 0% | |
 | [3N7H](3N7H.txt) | v0.9.2 FriendlyElec NanoPi K1 Plus | 0%/1.3% | 1.9Gi/1.7Gi | X | X | X | X | 2% | 0% | |
+| [3N94](3N94.txt) | v0.9.2 RPi 4 Model B Rev 1.4 / BCM2711 r | 0%/0% | 7.7Gi/7.4Gi | X | X | X | X | 4% | <span style=color:red>**12%**</span> | |
+| [3Na5](3Na5.txt) | v0.9.2 Hardkernel ODROID-HC4 | 0%/0% | 3.7Gi/3.5Gi | X | X | X | X | 1% | 0% | |
+| [3Nau](3Nau.txt) | v0.9.2 Hardkernel ODROID-N2Plus | 0%/0% | 3.6Gi/3.3Gi | X | X | X | X | 1% | 0% | |
+| [3Naw](3Naw.txt) | v0.9.2 Cubietech Cubietruck | 8.3%/8.8% | 2,0Gi/1,8Gi | X | X | X | X | <span style=color:red> 8%</span> | <span style=color:red> 5%</span> | |
 | [3rUb](3rUb.txt) | v0.7.7 Pine64 RK3566 Quartz64-A Board | 0%/0% | 3.8Gi/3.5Gi | X | X | X | X | 1% | 0% | |
 | [3wZn](3wZn.txt) | v0.7.7 Radxa Zero | 0.3%/0% | 3.7Gi/3.4Gi | X | X | X | X | 1% | 0% | |

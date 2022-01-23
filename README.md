@@ -103,7 +103,7 @@ A typical result (Rock64 with Armbian/Stretch) will look like this:
 
 ### [7-zip](https://www.7-cpu.com)
 
-7-zip's internal benchmark mode is a pretty good representation of 'server workloads in general'. It doesn't utilize CPU cores fully (at least not on ARM, on Intel with Hyperthreading it's a different story) and it depends somewhat on memory performance (low latency more important than high bandwidth) and amount of available memory. When running fully parallel on systems that have many cores but are low on memory we see just as in reality the kernel either killing processes due to 'out of memory' or starting to swap if configured.
+7-zip's internal benchmark mode is a pretty good representation of 'server workloads in general'. It doesn't utilize CPU cores fully (at least not on ARM, on x64 with Hyperthreading it's a different story), it depends somewhat on memory performance (low latency more important than high bandwidth) and amount of available memory. When running fully parallel on systems that have many cores but are low on memory we see just as in reality the kernel either killing processes due to 'out of memory' or starting to swap if configured.
 
 On big.LITTLE systems we start with one run pinned to a little core followed by one pinned to a big core. Then follow 3 consecutive runs using all available cores. The results might look like this:
 
@@ -112,6 +112,16 @@ On big.LITTLE systems we start with one run pinned to a little core followed by 
     7-zip total scores (3 consecutive runs): 7382,7407,7426
 
 *(this is a RPi 3 B+ with [latest firmware update applied destroying performance](https://www.raspberrypi.org/forums/viewtopic.php?f=63&t=217056) showing throttling symptoms followed by a Rock64 at 1.4GHz with Armbian standard settings passively cooled by small heatsink followed by an octa-core NanoPi Fire3 also at 1.4 GHz but with heatsink and fan this time)*
+
+**How to interpret 7-zip MIPS scores**: 7-zip ist all about integer CPU and memory performance. And by looking at the 'total score' (running on all CPU cores in parallel) you need to keep in mind that only a few use cases are really parallel and limited to 'integer performance'. That's why it's written 'server workloads in general' above since there overall performance scales well with count of CPU cores.
+
+If your use case is different (desktop, rendering, video editing, number crunching and so on that either depends more on single-threaded performance and/or involves floating point arithmetic, vector extensions or GPGPU), 7-zip MIPS are rather irrelevant for you since they do not even remotely represent your use case!
+
+With 'server workloads' in mind 7-zip MIPS give _an estimate_ of what to expect. A system showing two times more 7-zip MIPS compared to another will be able to run more (maybe twice as much or even more) daemons/tasks _as long as the stuff is only CPU bound_. How an individual daemon/task performs is a totally different story and needs to be checked (single-core 7-zip MIPS are available via left column in [results list](https://github.com/ThomasKaiser/sbc-bench/blob/master/Results.md)).
+
+With a system scoring 125% compared to another it's a different story and you need to examine individual results and your use case closely (time to switch from staring at numbers to [Active Benchmarking](https://www.brendangregg.com/activebenchmarking.html)).
+
+A nice example is comparing two ARMv8 server designs: [32 Neoverse-N1 cores (Amazon m6g.8xlarge VM) vs. 96 ThunderX1 cores (dual CPU ThunderX CN8890 blade)](https://github.com/ThomasKaiser/sbc-bench/issues/38#issuecomment-1019093501). Both systems share an identical multi-core score (~110000 7-zip MIPS) but any _real_ server workload will perform better on the Neoverse-N1 design. Single-threaded performance there is at least twice as high, memory performance way better and this will make the difference with real-world stuff unless the use case is really all about 100% CPU utilization on all cores all the time.
 
 ### [OpenSSL](https://www.openssl.org)
 

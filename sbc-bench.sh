@@ -1709,7 +1709,7 @@ SummarizeResults() {
 
 	# add dmesg output since start of the benchmark if something relevant is there
 	TimeStamp="$(dmesg | tr -d '[' | tr -d ']' | awk -F" " '/sbc-bench started/ {print $1}' | tail -n1)"
-	dmesg | sed "/${TimeStamp}/,\$!d" | grep -v 'sbc-bench started' >"${TempDir}/dmesg"
+	dmesg | sed "/${TimeStamp}/,\$!d" | egrep -v 'sbc-bench started|started with executable stack' >"${TempDir}/dmesg"
 	if [ -s "${TempDir}/dmesg" ]; then
 		echo -e "\n##########################################################################\n\ndmesg output while running the benchmarks:\n" >>${ResultLog}
 		cat "${TempDir}/dmesg" >>${ResultLog}
@@ -1988,10 +1988,6 @@ GuessARMSoC() {
 	#
 	# The cpuid flags seems to appear on all ARMv8 cores starting with kernel 5
 	#
-	# Allwinner A83T | 8 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
-	# x Allwinner A64/H5 | 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
-	# x Allwinner H6 | 4 x Cortex-A53 / r0p4 / fp asimd aes pmull sha1 sha2 crc32 cpuid (kernel 5.x)
-	# Allwinner H616 | 4 x Cortex-A53 / r0p4 / fp asimd aes pmull sha1 sha2 crc32 (kernel 4.9)
 	# Amlogic A113D | 4 x Cortex-A53
 	# AnnapurnaLabs Alpine | 2 x Cortex-A15 / r2p4 / swp half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt
 	# Armada 370/XP | 1 x Marvell PJ4 / r1p1 / half thumb fastmult vfp edsp vfpv3 vfpv3d16 tls idivt
@@ -2004,9 +2000,10 @@ GuessARMSoC() {
 	# rockchip-cpuinfo cpuinfo: SoC            : 35681000 --> https://dev.t-firefly.com/forum.php?mod=redirect&goto=findpost&ptid=104549&pid=280260
 	# rockchip-cpuinfo cpuinfo: SoC            : 35682000 --> https://forum.banana-pi.org/t/banana-pi-bpi-r2-pro-open-soruce-router-board-with-rockchip-rk3568-run-debian-linux/
 	#
-	# dmesg | grep 'soc soc0:'
+	# Amlogic: dmesg | grep 'soc soc0:'
 	# soc soc0: Amlogic Meson G12B (S922X) Revision 29:c (40:2) Detected
 	# soc soc0: Amlogic Meson SM1 (S905X3) Revision 2b:c (10:2) Detected
+	# soc soc0: Amlogic Meson GXL (S805X) Revision 21:d (34:2) Detected
 	#
 	# If /proc/cpuinfo Hardware field is 'Amlogic' then 1st chars of 'AmLogic Serial'
 	# and if not present 'Serial' might have special meaning as it's the 'chip id'
@@ -2032,10 +2029,13 @@ GuessARMSoC() {
 
 	CPUInfo="$(cat /proc/cpuinfo)"
 	HardwareInfo="$(awk -F': ' '/^Hardware/ {print $2}' <<< "${CPUInfo}" | tail -n1)"
-	RockchipGuess="$(dmesg | awk -F': ' '/rockchip-cpuinfo cpuinfo: SoC/ {print $3}')"
+	RockchipGuess="$(dmesg | awk -F': ' '/rockchip-cpuinfo cpuinfo: SoC/ {print $3}'| head -n1)"
+	AmlogicGuess="$(dmesg | awk -F'(' '/soc soc0: Amlogic/ {print $2}' | cut -f1 -d')' | head -n1)"
 	
 	if [ "X${RockchipGuess}" != "X" ]; then
 		echo "Rockchip RK$(cut -c-4 <<<"${RockchipGuess}") (${RockchipGuess})"
+	elif [ "X${AmlogicGuess}" != "X" ]; then
+		echo "Amlogic ${AmlogicGuess}"
 	else
 		# Guessing by 'Hardware :' in /proc/cpuinfo is something that only reliably works
 		# with vendor's BSP kernels. With mainline kernel it's impossible to rely on this
@@ -2215,6 +2215,10 @@ GuessSoCbySignature() {
 			# TI AM3358 or Allwinner A10, 1 x Cortex-A8 / r3p2 / half thumb fastmult vfp edsp neon vfpv3 tls vfpd32
 			lsmod | grep -i sun4i && echo "Allwinner A10" || echo "TI AM3358"
 			;;
+		00A7r0p5)
+			# Allwinner S3/V3/V3s
+			echo "Allwinner S3/V3/V3s"
+			;;
 		00A7r0p400A7r0p4)
 			# Allwinner A20, 2 x Cortex-A7 / r0p4 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
 			echo "Allwinner A20"
@@ -2224,10 +2228,11 @@ GuessSoCbySignature() {
 			echo "SigmaStar SSD201/SSD202D"
 			;;
 		00A7r0p500A7r0p500A7r0p500A7r0p5)
-			grep -q 'ahci-sunxi' /proc/interrupts
+			# Allwinner sun8i: could be Allwinner H3/H2+, R40/V40 or A33/R16
+			egrep -q 'ahci-sunxi|axp22x' /proc/interrupts
 			case $? in
 				0)
-					# SATA is present, so we're talking about R40/V40, 4 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
+					# SATA and/or AXP221s PMIC is present, so we're talking about R40/V40, 4 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
 					echo "Allwinner R40/V40"
 					;;
 				*)
@@ -2235,6 +2240,10 @@ GuessSoCbySignature() {
 					echo "Allwinner H3/H2+"
 					;;
 			esac
+			;;
+		??A7r0p5??A7r0p5??A7r0p5??A7r0p5??A7r0p5??A7r0p5??A7r0p5??A7r0p5)
+			# Allwinner A83T, 8 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
+			echo "Allwinner A83T"
 			;;
 		20A5r0p120A5r0p120A5r0p120A5r0p1|2A5222)
 			# S805, 4 x Cortex-A5 / r0p1 / half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpv4 vfpd32 (3.10: swp half thumb fastmult vfp edsp neon vfpv3 tls vfpv4)

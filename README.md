@@ -134,7 +134,7 @@ If those 7-zip MIPS apply only to a few selected use cases as performance indica
 A good example for the latter is Odroid XU4, four times tested with different kernel and OS versions (Jessie, Stretch, Bionic and Focal which all build packages with different GCC versions). Memory performance remained the same (for a way to quickly check this see [included script snippets](results/.snippets-for-insights.sh)) but for whatever reasons the performance fluctuated over time:
 
 | Kernel / Compiler | 7-zip MIPS | CPU utilisation compression | CPU utilisation decompression |
-| ----: | :----: | :----: | :----: | :----: |
+| ----: | :----: | :----: | :----: |
 | [Kernel 3.10 / GCC 4.9](results/1ixL.txt) | 6730 | 88% | 82% |
 | [Kernel 4.9 / GCC 6.3](results/1iWL.txt) | 6370 | 64% | 78% |
 | [Kernel 4.14 / GCC 7.3](results/1iLy.txt) | 7100 | 64% | 78% |

@@ -1524,6 +1524,7 @@ RunTinyMemBench() {
 	cat ${TempLog} >>${ResultLog}
 	MemCpyScore="$(awk -F" " '/^ standard memcpy/ {print $4}' <${TempLog} | tail -n1)"
 	MemSetScore="$(awk -F" " '/^ standard memset/ {print $4}' <${TempLog} | tail -n1)"
+	# round results
 	MemBenchScore="$(( $(awk '{printf ("%0.0f",$1/10); }' <<<"${MemCpyScore}" ) * 10 )) | $(( $(awk '{printf ("%0.0f",$1/10); }' <<<"${MemSetScore}" ) * 10 ))"
 } # RunTinyMemBench
 
@@ -1581,6 +1582,11 @@ Run7ZipBenchmark() {
 		kill ${MonitoringPID}
 		echo -e "\n##########################################################################\n" >>${ResultLog}
 		cat ${TempLog} >>${ResultLog}
+		# create average score from all $RunHowManyTimes runs
+		CombinedScore=$(( $(awk -F" " '/^Tot:/ {s+=$4} END {printf "%.0f", s}' <${TempLog}) / ${RunHowManyTimes} ))
+	else
+		# use the single score instead on a single core machine
+		CombinedScore=$(awk -F" " '/^Tot:/ {print $4}' <${TempLog})
 	fi
 
 	sed -i 's/|//' ${TempLog}
@@ -1590,7 +1596,7 @@ Run7ZipBenchmark() {
 	echo -e "\nCompression: ${CompScore}" >>${ResultLog}
 	echo -e "Decompression: ${DecompScore}" >>${ResultLog}
 	echo -e "Total: ${TotScore}" >>${ResultLog}
-	CombinedScore=$(( $(awk -F" " '/^Tot:/ {s+=$4} END {printf "%.0f", s}' <${TempLog}) / 3 ))
+	# round result
 	ZipScore="$(( $(awk '{printf ("%0.0f",$1/10); }' <<<"${CombinedScore}" ) * 10 ))"
 } # Run7ZipBenchmark
 
@@ -1623,6 +1629,7 @@ RunOpenSSLBenchmark() {
 	grep '^aes-' ${OpenSSLLog} >>${ResultLog}
 	AES128=$(( $(awk '/^aes-128-cbc/ {print $2}' <"${OpenSSLLog}" | awk -F"." '{s+=$1} END {printf "%.0f", s}') / 2 ))
 	AES256=$(( $(awk '/^aes-256-cbc/ {print $7}' <"${OpenSSLLog}" | awk -F"." '{s+=$1} END {printf "%.0f", s}') / 2 ))
+	# round result
 	OpenSSLScore="$(( $(awk '{printf ("%0.0f",$1/10); }' <<<"${AES128}") * 10 )) | $(( $(awk '{printf ("%0.0f",$1/10); }' <<<"${AES256}") * 10 ))"
 } # RunOpenSSLBenchmark
 

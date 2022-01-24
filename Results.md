@@ -82,6 +82,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Renegade](http://ix.io/1iFx) | 1400 MHz | 4.4 | Stretch arm64 | 3710 | 95030 | 644200 | 1565 | 7435 | 3.92 |
 | [Raspberry Pi B](http://ix.io/3E7U) | 700 MHz | 5.10 | Raspberry Pi OS Buster | 310 | 5900 | 11310 | 340 | 1400 | - |
 | [Raspberry Pi B](http://ix.io/3MGN) | 700 MHz | 5.10 | Raspberry Pi OS Bullseye | 320 | 7900 | 11630 | 360 | 1420 | - |
+| [Raspberry Pi Zero](http://ix.io/3Njz) | 1000 MHz | 5.10 | Bullseye armv6l/armhf | 470 | 10450 | 17060 | 430 | 1670 | - |
 | [Raspberry Pi 2 B+](http://ix.io/1iFf) | 900 MHz | 4.14 | **Debian** Stretch | 2070 | 14350 | 17450 | 615 | 1175 | - |
 | [Raspberry Pi 2 B+](http://ix.io/3MGs) | 900 MHz | 5.10 | Raspberry Pi OS Bullseye | 2150 | 13830 | 16500 | 1000 | 1180 | - |
 | [Raspberry Pi 3 B+](http://ix.io/1iI5) | original | 4.9 | Raspbian Stretch | 3600 | 35500 | 42700 | 1230 | 1640 | - |

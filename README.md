@@ -69,7 +69,7 @@ We call `mhz` twice. At the begin of the benchmark with an idle and cold system 
 
 ### [tinymembench](https://github.com/ssvb/tinymembench)
 
-Unlike other 'RAM benchmarks' *tinymembench* checks for both memory bandwidth and latency in a lot of variations. It also measures multiple times and if sample standard deviation exceeds 0.1%, it is shown in brackets next to the result. So it's pretty easy to spot background activity ruining benchmark results.
+Unlike other 'RAM benchmarks' *tinymembench* checks for both memory bandwidth **and** latency in a lot of variations so it's even possible to get some insights about internal cache sizes. It also measures multiple times and if sample standard deviation exceeds 0.1%, it is shown in brackets next to the result. So it's pretty easy to spot background activity ruining benchmark results.
 
 On big.LITTLE systems we pin execution one time to a little and one time to a big core to know the difference this makes. For the sake of simplicity we output *memcpy* and *memset* numbers at the end of the benchmark. On an *overclocked* RPi 3 B+ (arm_freq=1570, over_voltage=4, core_freq=500, sdram_freq=510, over_voltage_sdram=2) this will look like this
 
@@ -113,7 +113,7 @@ On big.LITTLE systems we start with one run pinned to a little core followed by 
 
 *(this is a RPi 3 B+ with [latest firmware update applied destroying performance](https://www.raspberrypi.org/forums/viewtopic.php?f=63&t=217056) showing throttling symptoms followed by a Rock64 at 1.4GHz with Armbian standard settings passively cooled by small heatsink followed by an octa-core NanoPi Fire3 also at 1.4 GHz but with heatsink and fan this time)*
 
-**How to interpret 7-zip MIPS scores**: 7-zip ist all about integer CPU and memory performance. And by looking at the 'total score' (running on all CPU cores in parallel) you need to keep in mind that only a few use cases are really parallel and limited to 'integer performance'. That's why it's written 'server workloads in general' above since there overall performance scales well with count of CPU cores.
+**How to interpret 7-zip MIPS scores**: 7-zip ist all about integer CPU and memory performance. And by looking at the 'total score' (running on all CPU cores in parallel) you need to keep in mind that only a few use cases are really parallel and limited to 'integer performance'. That's why it's written 'server workloads in general' above since this applies here and overall performance scales well with count of CPU cores.
 
 If your use case is different (desktop, rendering, video editing, number crunching and so on that either depends more on single-threaded performance and/or involves floating point arithmetic, vector extensions or GPGPU), 7-zip MIPS are rather irrelevant for you since they do not even remotely represent your use case!
 
@@ -121,7 +121,26 @@ With 'server workloads' in mind 7-zip MIPS give _an estimate_ of what to expect.
 
 With a system scoring 125% compared to another it's a different story and you need to examine individual results and your use case closely (time to switch from staring at numbers to [Active Benchmarking](https://www.brendangregg.com/activebenchmarking.html)).
 
-A nice example is comparing two ARMv8 server designs: [32 Neoverse-N1 cores (Amazon m6g.8xlarge VM) vs. 96 ThunderX1 cores (dual CPU ThunderX CN8890 blade)](https://github.com/ThomasKaiser/sbc-bench/issues/38#issuecomment-1019093501). Both systems share an identical multi-core score (~110000 7-zip MIPS) but any _real_ server workload will perform better on the Neoverse-N1 design. Single-threaded performance there is at least twice as high, memory performance way better and this will make the difference with real-world stuff unless the use case is really all about 100% CPU utilization on all cores all the time.
+A nice example is comparing two ARMv8 server designs: [32 Neoverse-N1 cores (Amazon m6g.8xlarge VM) vs. 96 ThunderX1 cores (dual CPU ThunderX CN8890 blade)](https://github.com/ThomasKaiser/sbc-bench/issues/38#issuecomment-1019093501). Both systems share an identical multi-core score (~110000 7-zip MIPS) but any _real_ server workload will perform better on the Neoverse-N1 design. Single-threaded performance there is at least twice as high, memory performance way better and this will make the difference with real-world stuff unless the use case is really _all_ about 100% CPU utilisation on _all_ cores _all_ the time.
+
+If those 7-zip MIPS apply only to a few selected use cases as performance indicator why are they used in sbc-bench?
+
+  * 7-zip's multi-threaded benchmark is that demanding that it can be used to check for power supply issues and thermal/throttling (that's why it's executed 3 times in a row)
+  * Results are not _that much_ affected by compiler version which allows to compare scores made in different years with different OS versions (confirmed with Debian Stretch/Buster/Bullseye and Ubuntu Bionic/Focal/Jammy or in other words: GCC 6.3 - 10.2). Majority of kitchen-sink benchmarks [overly depend on compiler version / settings](https://www.brendangregg.com/blog/2014-05-02/compilers-love-messing-with-benchmarks.html) and as such usually it makes comparing results from different years pointless
+  * Also the benchmark is not known to perform completely different when built for ARMv6, ARMv7 oder ARMv8 (the infamous `sysbench cpu` benchmark on the other hand ['performs' 10-15 times better on a 64-bit Raspbian](https://forums.raspberrypi.com/viewtopic.php?p=1536679&sid=8ddda8e0d980ef2fdf495f176a92c1ec#p1536679) which is _not_ related to 64-bit vs. 32-bit but just due to ARMv8 ISA containing a `divide` instruction)
+  * Unlike many other kitchen-sink benchmarks RAM access / memory performance matters (`sysbench cpu` for example runs completely inside CPU caches). With this benchmark it's easy to spot memory performance issues like [this](https://github.com/armbian/build/issues/1744) (after switching bootloaders DDR4 RAM got clocked with just 333 instead of the former 1056 MHz). It's one of the 'cheapest' tools for regression testing but unfortunately not widely used there
+  * the multi-core test is also nice to spot internal CPU/SoC bottlenecks and/or scheduler improvements
+
+A good example for the latter is Odroid XU4, four times tested with different kernel and OS versions (Jessie, Stretch, Bionic and Focal which all build packages with different GCC versions). Memory performance remained the same (for a way to quickly check this see [included script snippets](results/.snippets-for-insights.sh)) but for whatever reasons the performance fluctuated over time:
+
+| Kernel / Compiler | 7-zip MIPS | CPU utilisation compression | CPU utilisation decompression |
+| ----: | :----: | :----: | :----: | :----: |
+| [Kernel 3.10 / GCC 4.9](results/1ixL.txt) | 6730 | 88% | 82% |
+| [Kernel 4.9 / GCC 6.3](results/1iWL.txt) | 6370 | 64% | 78% |
+| [Kernel 4.14 / GCC 7.3](results/1iLy.txt) | 7100 | 64% | 78% |
+| [Kernel 5.4 / GCC 9.3](results/3GnC.txt) | 8980 | 94% | 84% |
+
+The 1st row with Jessie results should be taken with a grain of salt since using 7-zip 9.20 while all later results are made with 16.02. Asides that the 2 last columns show overall CPU utilisation with compression and decompression and might indicate a scheduler problem with kernel 4.x. Only more detailed tests with more kernel/GCC combinations or switching to [Active Benchmarking](https://www.brendangregg.com/activebenchmarking.html) could really tell.
 
 ### [OpenSSL](https://www.openssl.org)
 
@@ -208,7 +227,7 @@ In this case we were able to spot some background activity in this line:
 
     10:21:10: 1392MHz  1.13  27%   1%  26%   0%   0%   0%  59.5°C
 
-*$something* happened in parallel which will slightly lower the generated benchmark score. While 2% CPU utilization for other stuff won't hurt that much at least we need to have an eye on this since when there are higher utilization numbers reported when running the single threaded stuff the system shows way too much background activity to report reasonable benchmark scores. Then we simply generated numbers without meaning.
+*$something* happened in parallel which will slightly lower the generated benchmark score. While 2% CPU utilisation for other stuff won't hurt that much at least we need to have an eye on this since when there are higher utilisation numbers reported when running the single threaded stuff the system shows way too much background activity to report reasonable benchmark scores. Then we simply generated numbers without meaning.
 
 ### Throttling
 

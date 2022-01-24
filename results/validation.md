@@ -150,5 +150,6 @@
 | [3Na5](3Na5.txt) | v0.9.2 Hardkernel ODROID-HC4 | 0%/0% | 3.7Gi/3.5Gi | X | X | X | X | 1% | 0% | |
 | [3Nau](3Nau.txt) | v0.9.2 Hardkernel ODROID-N2Plus | 0%/0% | 3.6Gi/3.3Gi | X | X | X | X | 1% | 0% | |
 | [3Naw](3Naw.txt) | v0.9.2 Cubietech Cubietruck | 8.3%/8.8% | 2,0Gi/1,8Gi | X | X | X | X | <span style=color:red> 8%</span> | <span style=color:red> 5%</span> | |
+| [3Njz](3Njz.txt) | v0.9.2 Raspberry Pi Zero W Rev 1.1 | 0.9%/0.8% | 477Mi/416Mi | X | X | X | X | <span style=color:red> 5%</span> | 0% | |
 | [3rUb](3rUb.txt) | v0.7.7 Pine64 RK3566 Quartz64-A Board | 0%/0% | 3.8Gi/3.5Gi | X | X | X | X | 1% | 0% | |
 | [3wZn](3wZn.txt) | v0.7.7 Radxa Zero | 0.3%/0% | 3.7Gi/3.4Gi | X | X | X | X | 1% | 0% | |

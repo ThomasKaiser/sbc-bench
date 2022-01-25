@@ -1694,8 +1694,11 @@ SummarizeResults() {
 	# only check for throttling in normal mode and not when plotting performance/mhz graphs
 	[ "X${PlotCpufreqOPPs}" = "Xyes" ] || CheckForThrottling
 
-	# Check %iowait percentage as an indication of swapping happened
-	IOWait=$(CheckIOWait)
+	# Check %iowait and %sys percentage as an indication of swapping or too much background
+	# activity happened
+	IOWaitAvg=$(CheckIOWait)
+	IOWaitMax="$(egrep "MHz  |---  " "${MonitorLog}" | awk -F"%" '{print $5}' | sed '/^[[:space:]]*$/d' | sed -e '1,2d' | sort -n -r | head -n1 | sed 's/  //')"
+	SysMax="$(egrep "MHz  |---  " "${MonitorLog}" | awk -F"%" '{print $2}' | sed '/^[[:space:]]*$/d' | sed -e '1,2d' | sort -n -r | head -n1 | sed 's/  //')"
 
 	# Prepare benchmark results
 	echo -e "\n##########################################################################\n" >>${ResultLog}
@@ -1801,7 +1804,7 @@ UploadResults() {
 			echo " [${UploadURL}](${UploadURL}) |" >>${ResultLog}
 			echo -e "\nFull results uploaded to ${UploadURL}. \c"
 			# check whether benchmark ran into a sane environment (no throttling and no swapping)
-			if [ ${IOWait:-0} -le 5 -a ! -f ${TempDir}/throttling_info.txt ]; then
+			if [ ${IOWaitAvg:-0} -le 4 -a ${IOWaitMax:-0} -le 8 -a ${SysMax:-0} -le 8 -a ! -f ${TempDir}/throttling_info.txt ]; then
 				# in case it's not x86/x64 then also suggest adding results to official list
 				case ${CPUArchitecture} in
 					x86*|i686)
@@ -1833,9 +1836,16 @@ UploadResults() {
 						esac
 						;;
 					*)
-						echo -e "\n\nIn case this device ${BOLD}is not already represented${NC} in official sbc-bench results list then please"
-						echo -e "consider submitting it at https://github.com/ThomasKaiser/sbc-bench/issues with this line:"
-						tail -n 1 "${ResultLog}"
+						# not running on x86/x64, neither throttling and none/minor swapping
+						# occured. Check whether SoC in question is already known since if
+						# that's the case no more submissions to official results are needed
+						grep -q "^SoC guess:" "${ResultLog}"
+						if [ $? -ne 0 ]; then
+							# not an already known SoC, so suggest submitting results
+							echo -e "\n\nIn case this device ${BOLD}is not already represented${NC} in official sbc-bench results list then please"
+							echo -e "consider submitting it at https://github.com/ThomasKaiser/sbc-bench/issues with this line:"
+							tail -n 1 "${ResultLog}"
+						fi
 						echo
 						;;
 				esac

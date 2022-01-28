@@ -30,7 +30,7 @@
 | [1iGW](1iGW.txt) | v0.4 Rock64 | 0%/0% | 1.9G/1.8G | X | X | X | X | 1% | <span style=color:red> 7%</span> | |
 | [1iGz](1iGz.txt) | v0.4 Raspberry Pi 3 B+ | 0.1%/0% | 927M/813M | X | X | X | X | 2% | <span style=color:red>**25%**</span> | |
 | [1iH0](1iH0.txt) | v0.4 Raspberry Pi 3 B+ | 0%/0% | 927M/819M | X | X | X | X | 2% | <span style=color:red>**30%**</span> | [check log](1iH0.txt) |
-| [1iH4](1iH4.txt) | v0.4 Rock64 | 0.5%/0% | 1.9G/1.8G | X | X | X | X | 0% | 4% | |
+| [1iH4](1iH4.txt) | v0.4 Rock64 | 0.5%/0% | 1.9G/1.8G | X | X | X | X | 0% | <span style=color:red> 4%</span> | |
 | [1iHB](1iHB.txt) | v0.4 Rock64 | 0.3%/0% | 1.9G/1.8G | X | X | X | X | 0% | <span style=color:red> 5%</span> | |
 | [1iHo](1iHo.txt) | v0.4 Rock64 | 0%/0% | 1.9G/1.8G | X | X | X | X | 1% | <span style=color:red> 6%</span> | |
 | [1iI5](1iI5.txt) | v0.4 Raspberry Pi 3 B+ | 0%/0.2% | 927M/822M | X | X | X | X | 1% | <span style=color:red>**22%**</span> | |
@@ -75,7 +75,7 @@
 | [1oib](1oib.txt) | v0.6.1 FriendlyElec NanoPi NEO4 | 0%/0.3% | 919M/769M | X | X | X | | 1% | 0% | |
 | [1oim](1oim.txt) | v0.6.1 FriendlyElec NanoPi M4 | 0%/0.4% | 919M/769M | X | X | X | | 1% | 0% | |
 | [1p3T](1p3T.txt) | v0.6.1 FriendlyElec NanoPi NEO4 | 0%/0.5% | 992M/825M | X | X | X | | 1% | 0% | |
-| [1pJi](1pJi.txt) | v0.6.1 ROCK PI 4B | 0.2%/0.4% | 1.9G/1.8G | X | X | X | X | 2% | 0% | [check log](1pJi.txt) |
+| <del>[1pJi](1pJi.txt)</del> | <del>v0.6.1 ROCK PI 4B </del> | <del>0.2%/0.4%</del> | <del>1.9G/1.8G</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 2%</del> | <del> 0%</del> | <del>[check log](1pJi.txt)</del> |
 | [1qal](1qal.txt) | v0.6.2 Celeron J4105 | 0%/0.3% | 7.6G/7.2G | X | X | X | X | 1% | 0% | |
 | [1qb0](1qb0.txt) | v0.6.2 Celeron J4105 | 0%/0% | 31G/30G | X | X | X | X | 1% | 0% | |
 | [1rYm](1rYm.txt) | v0.6.2 Khadas Captain | 0.2%/0.2% | 3.7G/3.6G | X | X | X | X | 1% | 0% | [check log](1rYm.txt) |
@@ -148,8 +148,10 @@
 | [3N7H](3N7H.txt) | v0.9.2 FriendlyElec NanoPi K1 Plus | 0%/1.3% | 1.9Gi/1.7Gi | X | X | X | X | 2% | 0% | |
 | [3N94](3N94.txt) | v0.9.2 RPi 4 Model B Rev 1.4 / BCM2711 | 0%/0% | 7.7Gi/7.4Gi | X | X | X | X | 4% | <span style=color:red>**12%**</span> | |
 | [3Na5](3Na5.txt) | v0.9.2 Hardkernel ODROID-HC4 | 0%/0% | 3.7Gi/3.5Gi | X | X | X | X | 1% | 0% | |
-| [3Nau](3Nau.txt) | v0.9.2 Hardkernel ODROID-N2Plus | 0%/0% | 3.6Gi/3.3Gi | X | X | X | X | 1% | 0% | |
 | [3Naw](3Naw.txt) | v0.9.2 Cubietech Cubietruck | 8.3%/8.8% | 2,0Gi/1,8Gi | X | X | X | X | <span style=color:red> 8%</span> | <span style=color:red> 5%</span> | |
 | [3Njz](3Njz.txt) | v0.9.2 Raspberry Pi Zero W Rev 1.1 | 0.9%/0.8% | 477Mi/416Mi | X | X | X | X | <span style=color:red> 5%</span> | 0% | |
+| [3Ntu](3Ntu.txt) | v0.9.2 Hardkernel ODROID-N2Plus | 0%/0% | 1.8Gi/1.5Gi | X | X | X | X | 1% | 0% | |
+| [3NvH](3NvH.txt) | v0.9.2 Radxa ROCK Pi 4C | 0%/0.5% | 3.8Gi/3.2Gi | X | X | X | X | 2% | 0% | |
+| [3Nzx](3Nzx.txt) | v0.9.2 LeMaker Banana Pi | 0%/0.5% | 985Mi/813Mi | X | X | X | X | <span style=color:red> 9%</span> | 1% | |
 | [3rUb](3rUb.txt) | v0.7.7 Pine64 RK3566 Quartz64-A Board | 0%/0% | 3.8Gi/3.5Gi | X | X | X | X | 1% | 0% | |
 | [3wZn](3wZn.txt) | v0.7.7 Radxa Zero | 0.3%/0% | 3.7Gi/3.4Gi | X | X | X | X | 1% | 0% | |

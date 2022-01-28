@@ -74,9 +74,9 @@ for file in *.txt ; do
 		echo -e "${Prefix}${SysBusy}%${Suffix} | \c"
 	fi
 	IOBusy="$(egrep "MHz  |---  " "${file}" | awk -F"%" '{print $5}' | sed '/^[[:space:]]*$/d' | sed -e '1,2d' | sort -n -r | head -n1 | sed 's/  //')"
-	if [ ${IOBusy:-0} -ge 10 ]; then
+	if [ ${IOBusy:-0} -ge 8 ]; then
 		echo -e "${Prefix}<span style="color:red">**${IOBusy}%**</span>${Suffix} | \c"
-	elif [ ${IOBusy:-0} -ge 5 ]; then
+	elif [ ${IOBusy:-0} -ge 4 ]; then
 		echo -e "${Prefix}<span style="color:red">${IOBusy}%</span>${Suffix} | \c"
 	else
 		echo -e "${Prefix}${IOBusy}%${Suffix} | \c"

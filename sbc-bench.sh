@@ -1695,7 +1695,7 @@ SummarizeResults() {
 	[ "X${PlotCpufreqOPPs}" = "Xyes" ] || CheckForThrottling
 
 	# Check %iowait and %sys percentage as an indication of swapping or too much background
-	# activity happened
+	# activity
 	IOWaitAvg=$(CheckIOWait)
 	IOWaitMax="$(egrep "MHz  |---  " "${MonitorLog}" | awk -F"%" '{print $5}' | sed '/^[[:space:]]*$/d' | sed -e '1,2d' | sort -n -r | head -n1 | sed 's/  //')"
 	SysMax="$(egrep "MHz  |---  " "${MonitorLog}" | awk -F"%" '{print $2}' | sed '/^[[:space:]]*$/d' | sed -e '1,2d' | sort -n -r | head -n1 | sed 's/  //')"
@@ -1804,7 +1804,7 @@ UploadResults() {
 			echo " [${UploadURL}](${UploadURL}) |" >>${ResultLog}
 			echo -e "\nFull results uploaded to ${UploadURL}. \c"
 			# check whether benchmark ran into a sane environment (no throttling and no swapping)
-			if [ ${IOWaitAvg:-0} -le 4 -a ${IOWaitMax:-0} -le 8 -a ${SysMax:-0} -le 8 -a ! -f ${TempDir}/throttling_info.txt ]; then
+			if [ ${IOWaitAvg:-0} -le 2 -a ${IOWaitMax:-0} -le 5 -a ${SysMax:-0} -le 5 -a ! -f ${TempDir}/throttling_info.txt ]; then
 				# in case it's not x86/x64 then also suggest adding results to official list
 				case ${CPUArchitecture} in
 					x86*|i686)
@@ -2114,7 +2114,7 @@ GuessARMSoC() {
 								echo "Amlogic S905X4"
 								;;
 							*)
-								echo "Amlogic"
+								echo "unknown Amlogic, serial $(cut -c-4 <<<"${AmLogicSerial}")..."
 								;;
 						esac
 						;;
@@ -2372,7 +2372,7 @@ GuessSoCbySignature() {
 			lsmod | grep -i meson && echo "Amlogic S905X4" || echo "Rockchip RK3566 or RK3568"
 			;;
 		00A53r0p400A53r0p400A53r0p400A53r0p414A72r0p214A72r0p2)
-			# RK3399, 4 x Cortex-A53 / r0p4 + 2 x Cortex-A72 / r0p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32
+			# RK3399, 4 x Cortex-A53 / r0p4 + 2 x Cortex-A72 / r0p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32 (32-bit 4.4 BSP kernel: half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt lpae evtstrm aes pmull sha1 sha2 crc32)
 			echo "Rockchip RK3399"
 			;;
 		150A7r0p5150A7r0p5150A7r0p5150A7r0p5)

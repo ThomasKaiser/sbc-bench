@@ -33,6 +33,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Khadas VIM3](http://ix.io/1MFD) | 2200/1800 MHz | 4.9 | Bionic arm64 | 8600 | 398370 | 1256910 | 4980 | 9300 | 13.12 |
 | [Khadas VIM3L](http://ix.io/26Wy) | 1908 MHz | 4.9 | Bionic arm64 | 5170 | 194360 | 1440220 | 3670 | 6360 | 7.29 |
 | [Le Potato](http://ix.io/1iSQ) | 1410 MHz | 4.18 | Stretch arm64 | 3780 | 96680 | 657200 | 1810 | 5730 | 3.92 |
+| [LeMaker Banana Pi](http://ix.io/3Nzx) | 960 MHz | 5.10 | Bullseye armhf | 1020 | 15310 | 18620 | 370 | 1480 | - |
 | [Lime A10](http://ix.io/1j1L) | 910 MHz | 4.14 | Stretch armhf | 550 | 25200 | 28250 | 440 | 1300 | - |
 | [NanoPC T3+](http://ix.io/1iyp) | 1400 MHz | 4.4 | **Xenial armhf** | 6400 | 143800 | 651000 | 1650 | 3700 | - |
 | [NanoPC T3+](http://ix.io/1iRJ) | 1400 MHz | 4.14 | Bionic arm64 | 7480 | 126000 | 652600 | 1440 | 4540 | 10.99 |
@@ -61,7 +62,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [ODROID-HC4](http://ix.io/3Na5) | 2100 MHz | 5.10 | Buster arm64 | 5730 | 191560 | 980970 | 3540 | 5150 | - |
 | [ODROID-N2](http://ix.io/1BsF) | 1800/1900 MHz | 4.9 | Bionic arm64 | 8140 | 324900 | 1024680 | 4120 | 8610 | 11.39 |
 | [ODROID-N2](http://ix.io/3MuT) | 2000/1900 MHz | 5.10 | Buster arm64 | 9090 | 212920 | 1007210 | 4260 | 9080 | - |
-| [ODROID-N2+](http://ix.io/3Nau) | 2400/2000 MHz | 5.10 | Focal arm64 | 9720 | 287810 | 1153860 | 4070 | 7220 | - |
+| [ODROID-N2+](http://ix.io/3Ntu) | 2400/2000 MHz | 5.10 | Focal arm64 | 9720 | 287820 | 1154280 | 4090 | 7170 | - |
 | [ODROID-N2+](http://ix.io/3DtN) | 2400/2000 MHz | 5.14 | Impish arm64 | 9790 | 421730 | 1366930 | 4300 | 7480 | - |
 | [ODROID-N2+](http://ix.io/3LoH) | 2400/2000 MHz | 5.14 | Hirsute arm64 | 9780 | 298900 | 1154140 | 4030 | 7120 | - |
 | [ODROID-XU4](http://ix.io/1ixL) | 1900/1400 MHz | 3.10 | **Jessie** armhf | 6750 | 74100 | 68200 | 2200 | 4800 | - |
@@ -111,9 +112,9 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Rock64](http://ix.io/1iZj) | 1400 MHz | 4.4 | Stretch arm64 | 3590 | 95000 | 643700 | 1320 | 5640 | 4.40 |
 | [Rock64](http://ix.io/1iYK) | 1400 MHz | 4.4 | Stretch arm64 | 3580 | 94800 | 644380 | 1330 | 5680 | 4.63 |
 | [Rock64](http://ix.io/1iwz) | 1400 MHz | 4.4 | Stretch **armhf** | 3620 | 99400 | 624000 | 1430 | 3620 | - |
-| [Rock Pi 4A](http://ix.io/21fX) | 2000/1500 MHz | 5.3 | Bionic arm64 | 6910 | 402750 | 1147370 | 3660 | 8310 | 10.71 |
-| [Rock Pi 4B](http://ix.io/1pJi) | 1800/1400 MHz | 4.4 | Stretch **armhf** | ~6250 | 261960 | 1007500 | 1900 | 4850 | - |
-| [Rock Pi 4B](http://ix.io/1rrO) | 2000/1500 MHz | 4.4 | Stretch **armhf** | ~6450 | 301470 | 1113900 | 1870 | 4860 | - |
+| [Rock Pi 4](http://ix.io/1rrO) | 2000/1500 MHz | 4.4 | Stretch **armhf** | ~6450 | 301470 | 1113900 | 1870 | 4860 | - |
+| [Rock Pi 4](http://ix.io/21fX) | 2000/1500 MHz | 5.3 | Bionic arm64 | 6910 | 402750 | 1147370 | 3660 | 8310 | 10.71 |
+| [Rock Pi 4](http://ix.io/3NvH) | 1800/1400 MHz | 5.10 | Buster arm64 | 6550 | 204870 | 840370 | 3520 | 8290 | - |
 | [Rock Pi S](http://ix.io/1XKY) | 1300 MHz | 4.4 | Buster | 2590 | 68740 | 282290 | 830 | 1880 | - |
 | [RockPro64](http://ix.io/1lBC) | 1800/1400 MHz | 4.4 | Stretch arm64 | 6140 | 298800 | 1015600 | 2770 | 4850 | 8.14 |
 | [RockPro64](http://ix.io/1iFZ) | 1800/1400 MHz | 4.4 | Stretch **armhf** | 6250 | 275000 | 1000150 | 2000 | 4835 | - |
@@ -152,7 +153,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 * *kH/s* is a **multi threaded** cpuminer score showing the board's performance when executing NEON optimized code. To get the performance difference between big and little cores click the links in the left column
 * The Amazon a1.xlarge numbers represent a 1st gen Graviton CPU (64-bit 'ARM Neoverse') limited to four A72 cores and 8GB memory.
 * The 1st Apple M1 number represents a *single core* Ubuntu 20.10 VM running on an MacBook Air with the VM executed almost all the time on one of [Apple's ARMv8.4 power cores](https://github.com/ThomasKaiser/Knowledge/blob/master/articles/Exploring_Apple_Silicon_on_MacBookAir10.md#virtualization). The 2nd number is the same VM setup this time sent to an efficiency core clocking in at just 600 MHz instead of the usual 2064 MHz. Running natively and not inside a VM performance numbers are 5% to 10% higher.
-* Cubietruck numbers are more or less representative for all other Allwinner A20 devices, same with Lime for Allwinner A10, Olimex Teres-I for Allwinner A64, Orange Pi "PC Plus" and "Plus 2" for Allwinner H2+/H3 and NanoPi K1 Plus, Orange Pi "PC 2" and Prime for Allwinner H5.
+* Cubietruck and 'LeMaker Banana Pi' numbers are more or less representative for all other Allwinner A20 devices, same with Lime for Allwinner A10, Olimex Teres-I for Allwinner A64, Orange Pi "PC Plus" and "Plus 2" for Allwinner H2+/H3 and NanoPi K1 Plus, Orange Pi "PC 2" and Prime for Allwinner H5.
 * Clearfog Pro and Helios4 use exactly same SoC (Armada 385), kernel and clockspeeds and the only reason why OpenSSL numbers differ is since Helios4 numbers were made using [Marvell's CESA crypto accelerator via cryptodev](https://forum.armbian.com/topic/7763-benchmarking-cpus/?do=findComment&comment=59569) which provides nice speed improvements with larger block sizes but also some initialization overhead with tiny block sizes. Also CPU utilization is way lower so the SoC is free for other stuff while performing better at the same time.
 * EspressoBin's boot BLOB claims to run at up to 1GHz while real clockspeeds are lower maxing out with this setting at 790MHz (obviously a kernel bug -- see [details](https://forum.armbian.com/topic/4089-espressobin-support-development-efforts/?do=findComment&comment=60082))
 * Gigabyte H270-T70 numbers are for one [blade module equipped with two Cavium ThunderX CN8890 (48 cores each)](https://twitter.com/linux_chenxing/status/1449603003057532930).

@@ -169,7 +169,7 @@ ARMv8 Crypto Extensions make the difference here. Even at almost half the CPU cl
 
 ## Ensuring proper benchmark execution
 
-Benchmarking a system that is otherwise busy will result in numbers without meaning. Therefore it's important to ensure the system is as idle as possible. That's the reason `sbc-bench` won't start as long as '1 min average load' is reported as 0.1 or above:
+Benchmarking a system that is otherwise busy will result in numbers without meaning. Therefore it's important to ensure the system is as idle as possible. That's the reason `sbc-bench` will only start once '1 min average load' is reported as below 0.1:
 
 ![](pics/system-too-busy.gif)
 

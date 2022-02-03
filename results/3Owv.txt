@@ -1,0 +1,4030 @@
+sbc-bench v0.9.2 bigboy (Thu, 03 Feb 2022 21:29:40 +0900)
+
+Distributor ID:	Debian
+Description:	Debian GNU/Linux bookworm/sid
+Release:	unstable
+Codename:	sid
+Architecture:	arm64
+
+Device Info:
+	Manufacturer: GIGABYTE
+	Product Name: H270-T70-D5
+	Version: 0100
+	Family: Server
+
+BIOS/UEFI:
+	Vendor: GIGABYTE
+	Version: F02
+	Release Date: 08/06/2019
+	BIOS Revision: 5.11
+
+/usr/bin/gcc (Debian 11.2.0-14) 11.2.0
+
+Uptime: 21:29:42 up 2 days,  5:14,  3 users,  load average: 0.97, 18.38, 21.95
+
+Linux 5.16.0 (bigboy) 	02/03/22 	_aarch64_	(96 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+           0.33    0.00    0.05    0.00    0.00   99.62
+
+Device             tps    kB_read/s    kB_wrtn/s    kB_dscd/s    kB_read    kB_wrtn    kB_dscd
+sda               5.23         4.56       153.38         0.00     874542   29395516          0
+
+               total        used        free      shared  buff/cache   available
+Mem:           127Gi       8.7Gi       118Gi        32Mi       414Mi       108Gi
+Swap:             0B          0B          0B
+
+
+##########################################################################
+
+Checking cpufreq OPP for cpu0-cpu47 (Cavium ThunderX 88XX):
+
+No cpufreq support available. Measured on cpu1: 2000 Mhz (1997.063/1997.236/1997.829)
+
+Checking cpufreq OPP for cpu48-cpu95 (Cavium ThunderX 88XX):
+
+No cpufreq support available. Measured on cpu49: 2000 Mhz (1998.175/1998.299/1997.903)
+
+##########################################################################
+
+Executing benchmark on cpu0 (Cavium ThunderX 88XX):
+
+tinymembench v0.4.9 (simple benchmark for memory throughput and latency)
+
+==========================================================================
+== Memory bandwidth tests                                               ==
+==                                                                      ==
+== Note 1: 1MB = 1000000 bytes                                          ==
+== Note 2: Results for 'copy' tests show how many bytes can be          ==
+==         copied per second (adding together read and writen           ==
+==         bytes would have provided twice higher numbers)              ==
+== Note 3: 2-pass copy means that we are using a small temporary buffer ==
+==         to first fetch data into it, and only then write it to the   ==
+==         destination (source -> L1 cache, L1 cache -> destination)    ==
+== Note 4: If sample standard deviation exceeds 0.1%, it is shown in    ==
+==         brackets                                                     ==
+==========================================================================
+
+ C copy backwards                                     :    943.8 MB/s
+ C copy backwards (32 byte blocks)                    :    966.1 MB/s
+ C copy backwards (64 byte blocks)                    :    966.3 MB/s
+ C copy                                               :    997.0 MB/s
+ C copy prefetched (32 bytes step)                    :   2398.5 MB/s
+ C copy prefetched (64 bytes step)                    :   2403.3 MB/s
+ C 2-pass copy                                        :    803.9 MB/s
+ C 2-pass copy prefetched (32 bytes step)             :   1361.5 MB/s
+ C 2-pass copy prefetched (64 bytes step)             :   1434.5 MB/s
+ C fill                                               :  12329.5 MB/s (0.1%)
+ C fill (shuffle within 16 byte blocks)               :  12168.0 MB/s (0.1%)
+ C fill (shuffle within 32 byte blocks)               :  12555.1 MB/s (0.1%)
+ C fill (shuffle within 64 byte blocks)               :  12539.5 MB/s (0.1%)
+ ---
+ standard memcpy                                      :   4193.0 MB/s
+ standard memset                                      :  16800.8 MB/s
+ ---
+ NEON LDP/STP copy                                    :   1171.9 MB/s
+ NEON LDP/STP copy pldl2strm (32 bytes step)          :   2400.0 MB/s
+ NEON LDP/STP copy pldl2strm (64 bytes step)          :   2761.6 MB/s
+ NEON LDP/STP copy pldl1keep (32 bytes step)          :   3234.1 MB/s (0.1%)
+ NEON LDP/STP copy pldl1keep (64 bytes step)          :   3286.8 MB/s
+ NEON LD1/ST1 copy                                    :    874.2 MB/s
+ NEON STP fill                                        :  16231.1 MB/s
+ NEON STNP fill                                       :  16300.9 MB/s (0.1%)
+ ARM LDP/STP copy                                     :   1177.9 MB/s
+ ARM STP fill                                         :  16376.6 MB/s (0.1%)
+ ARM STNP fill                                        :  16263.1 MB/s
+
+==========================================================================
+== Framebuffer read tests.                                              ==
+==                                                                      ==
+== Many ARM devices use a part of the system memory as the framebuffer, ==
+== typically mapped as uncached but with write-combining enabled.       ==
+== Writes to such framebuffers are quite fast, but reads are much       ==
+== slower and very sensitive to the alignment and the selection of      ==
+== CPU instructions which are used for accessing memory.                ==
+==                                                                      ==
+== Many x86 systems allocate the framebuffer in the GPU memory,         ==
+== accessible for the CPU via a relatively slow PCI-E bus. Moreover,    ==
+== PCI-E is asymmetric and handles reads a lot worse than writes.       ==
+==                                                                      ==
+== If uncached framebuffer reads are reasonably fast (at least 100 MB/s ==
+== or preferably >300 MB/s), then using the shadow framebuffer layer    ==
+== is not necessary in Xorg DDX drivers, resulting in a nice overall    ==
+== performance improvement. For example, the xf86-video-fbturbo DDX     ==
+== uses this trick.                                                     ==
+==========================================================================
+
+ NEON LDP/STP copy (from framebuffer)                 :   4069.3 MB/s
+ NEON LDP/STP 2-pass copy (from framebuffer)          :   2961.5 MB/s (0.1%)
+ NEON LD1/ST1 copy (from framebuffer)                 :   1957.9 MB/s
+ NEON LD1/ST1 2-pass copy (from framebuffer)          :   1153.8 MB/s (0.1%)
+ ARM LDP/STP copy (from framebuffer)                  :   4202.4 MB/s
+ ARM LDP/STP 2-pass copy (from framebuffer)           :   3145.2 MB/s
+
+==========================================================================
+== Memory latency test                                                  ==
+==                                                                      ==
+== Average time is measured for random memory accesses in the buffers   ==
+== of different sizes. The larger is the buffer, the more significant   ==
+== are relative contributions of TLB, L1/L2 cache misses and SDRAM      ==
+== accesses. For extremely large buffer sizes we are expecting to see   ==
+== page table walk with several requests to SDRAM for almost every      ==
+== memory access (though 64MiB is not nearly large enough to experience ==
+== this effect to its fullest).                                         ==
+==                                                                      ==
+== Note 1: All the numbers are representing extra time, which needs to  ==
+==         be added to L1 cache latency. The cycle timings for L1 cache ==
+==         latency can be usually found in the processor documentation. ==
+== Note 2: Dual random read means that we are simultaneously performing ==
+==         two independent memory accesses at a time. In the case if    ==
+==         the memory subsystem can't handle multiple outstanding       ==
+==         requests, dual random read has the same timings as two       ==
+==         single reads performed one after another.                    ==
+==========================================================================
+
+block size : single random read / dual random read, [MADV_NOHUGEPAGE]
+      1024 :    0.0 ns          /     0.0 ns 
+      2048 :    0.0 ns          /     0.0 ns 
+      4096 :    0.0 ns          /     0.0 ns 
+      8192 :    0.0 ns          /     0.0 ns 
+     16384 :    0.0 ns          /     0.0 ns 
+     32768 :    0.0 ns          /     0.0 ns 
+     65536 :    9.7 ns          /    19.8 ns 
+    131072 :   14.6 ns          /    29.6 ns 
+    262144 :   17.0 ns          /    34.7 ns 
+    524288 :   18.2 ns          /    37.1 ns 
+   1048576 :   18.8 ns          /    38.3 ns 
+   2097152 :   19.2 ns          /    38.9 ns 
+   4194304 :   23.7 ns          /    47.8 ns 
+   8388608 :   26.1 ns          /    52.3 ns 
+  16777216 :   33.2 ns          /    67.1 ns 
+  33554432 :   78.7 ns          /   157.6 ns 
+  67108864 :  104.1 ns          /   208.7 ns 
+
+block size : single random read / dual random read, [MADV_HUGEPAGE]
+      1024 :    0.0 ns          /     0.0 ns 
+      2048 :    0.0 ns          /     0.0 ns 
+      4096 :    0.1 ns          /     0.0 ns 
+      8192 :    0.0 ns          /     0.0 ns 
+     16384 :    0.0 ns          /     0.0 ns 
+     32768 :    0.0 ns          /     0.0 ns 
+     65536 :    9.7 ns          /    19.9 ns 
+    131072 :   14.6 ns          /    29.6 ns 
+    262144 :   17.0 ns          /    34.7 ns 
+    524288 :   18.2 ns          /    37.1 ns 
+   1048576 :   18.8 ns          /    38.3 ns 
+   2097152 :   19.1 ns          /    38.9 ns 
+   4194304 :   23.5 ns          /    47.8 ns 
+   8388608 :   25.8 ns          /    52.3 ns 
+  16777216 :   33.1 ns          /    66.5 ns 
+  33554432 :   78.7 ns          /   157.6 ns 
+  67108864 :  104.1 ns          /   208.6 ns 
+
+Executing benchmark on cpu48 (Cavium ThunderX 88XX):
+
+tinymembench v0.4.9 (simple benchmark for memory throughput and latency)
+
+==========================================================================
+== Memory bandwidth tests                                               ==
+==                                                                      ==
+== Note 1: 1MB = 1000000 bytes                                          ==
+== Note 2: Results for 'copy' tests show how many bytes can be          ==
+==         copied per second (adding together read and writen           ==
+==         bytes would have provided twice higher numbers)              ==
+== Note 3: 2-pass copy means that we are using a small temporary buffer ==
+==         to first fetch data into it, and only then write it to the   ==
+==         destination (source -> L1 cache, L1 cache -> destination)    ==
+== Note 4: If sample standard deviation exceeds 0.1%, it is shown in    ==
+==         brackets                                                     ==
+==========================================================================
+
+ C copy backwards                                     :    962.4 MB/s
+ C copy backwards (32 byte blocks)                    :    981.6 MB/s
+ C copy backwards (64 byte blocks)                    :    981.6 MB/s
+ C copy                                               :   1009.3 MB/s
+ C copy prefetched (32 bytes step)                    :   2458.3 MB/s
+ C copy prefetched (64 bytes step)                    :   2465.0 MB/s
+ C 2-pass copy                                        :    809.7 MB/s
+ C 2-pass copy prefetched (32 bytes step)             :   1429.8 MB/s
+ C 2-pass copy prefetched (64 bytes step)             :   1505.0 MB/s
+ C fill                                               :  12478.3 MB/s
+ C fill (shuffle within 16 byte blocks)               :  12313.0 MB/s
+ C fill (shuffle within 32 byte blocks)               :  12714.2 MB/s
+ C fill (shuffle within 64 byte blocks)               :  12696.5 MB/s
+ ---
+ standard memcpy                                      :   4281.5 MB/s
+ standard memset                                      :  17026.2 MB/s
+ ---
+ NEON LDP/STP copy                                    :   1190.1 MB/s
+ NEON LDP/STP copy pldl2strm (32 bytes step)          :   2453.5 MB/s
+ NEON LDP/STP copy pldl2strm (64 bytes step)          :   2813.2 MB/s
+ NEON LDP/STP copy pldl1keep (32 bytes step)          :   3302.5 MB/s
+ NEON LDP/STP copy pldl1keep (64 bytes step)          :   3359.6 MB/s
+ NEON LD1/ST1 copy                                    :    897.2 MB/s
+ NEON STP fill                                        :  16441.4 MB/s
+ NEON STNP fill                                       :  16505.9 MB/s
+ ARM LDP/STP copy                                     :   1206.2 MB/s
+ ARM STP fill                                         :  16580.7 MB/s
+ ARM STNP fill                                        :  16474.4 MB/s
+
+==========================================================================
+== Framebuffer read tests.                                              ==
+==                                                                      ==
+== Many ARM devices use a part of the system memory as the framebuffer, ==
+== typically mapped as uncached but with write-combining enabled.       ==
+== Writes to such framebuffers are quite fast, but reads are much       ==
+== slower and very sensitive to the alignment and the selection of      ==
+== CPU instructions which are used for accessing memory.                ==
+==                                                                      ==
+== Many x86 systems allocate the framebuffer in the GPU memory,         ==
+== accessible for the CPU via a relatively slow PCI-E bus. Moreover,    ==
+== PCI-E is asymmetric and handles reads a lot worse than writes.       ==
+==                                                                      ==
+== If uncached framebuffer reads are reasonably fast (at least 100 MB/s ==
+== or preferably >300 MB/s), then using the shadow framebuffer layer    ==
+== is not necessary in Xorg DDX drivers, resulting in a nice overall    ==
+== performance improvement. For example, the xf86-video-fbturbo DDX     ==
+== uses this trick.                                                     ==
+==========================================================================
+
+ NEON LDP/STP copy (from framebuffer)                 :   4116.5 MB/s
+ NEON LDP/STP 2-pass copy (from framebuffer)          :   2994.8 MB/s
+ NEON LD1/ST1 copy (from framebuffer)                 :   1979.9 MB/s
+ NEON LD1/ST1 2-pass copy (from framebuffer)          :   1166.6 MB/s
+ ARM LDP/STP copy (from framebuffer)                  :   4253.8 MB/s
+ ARM LDP/STP 2-pass copy (from framebuffer)           :   3182.8 MB/s
+
+==========================================================================
+== Memory latency test                                                  ==
+==                                                                      ==
+== Average time is measured for random memory accesses in the buffers   ==
+== of different sizes. The larger is the buffer, the more significant   ==
+== are relative contributions of TLB, L1/L2 cache misses and SDRAM      ==
+== accesses. For extremely large buffer sizes we are expecting to see   ==
+== page table walk with several requests to SDRAM for almost every      ==
+== memory access (though 64MiB is not nearly large enough to experience ==
+== this effect to its fullest).                                         ==
+==                                                                      ==
+== Note 1: All the numbers are representing extra time, which needs to  ==
+==         be added to L1 cache latency. The cycle timings for L1 cache ==
+==         latency can be usually found in the processor documentation. ==
+== Note 2: Dual random read means that we are simultaneously performing ==
+==         two independent memory accesses at a time. In the case if    ==
+==         the memory subsystem can't handle multiple outstanding       ==
+==         requests, dual random read has the same timings as two       ==
+==         single reads performed one after another.                    ==
+==========================================================================
+
+block size : single random read / dual random read, [MADV_NOHUGEPAGE]
+      1024 :    0.0 ns          /     0.0 ns 
+      2048 :    0.0 ns          /     0.0 ns 
+      4096 :    0.0 ns          /     0.0 ns 
+      8192 :    0.0 ns          /     0.0 ns 
+     16384 :    0.0 ns          /     0.0 ns 
+     32768 :    0.0 ns          /     0.0 ns 
+     65536 :    9.5 ns          /    19.5 ns 
+    131072 :   14.3 ns          /    29.3 ns 
+    262144 :   16.7 ns          /    34.2 ns 
+    524288 :   17.9 ns          /    36.6 ns 
+   1048576 :   18.5 ns          /    37.9 ns 
+   2097152 :   18.9 ns          /    38.5 ns 
+   4194304 :   23.3 ns          /    47.2 ns 
+   8388608 :   25.3 ns          /    51.7 ns 
+  16777216 :   31.8 ns          /    64.4 ns 
+  33554432 :   77.5 ns          /   155.5 ns 
+  67108864 :  102.6 ns          /   206.0 ns 
+
+block size : single random read / dual random read, [MADV_HUGEPAGE]
+      1024 :    0.0 ns          /     0.0 ns 
+      2048 :    0.0 ns          /     0.0 ns 
+      4096 :    0.0 ns          /     0.0 ns 
+      8192 :    0.0 ns          /     0.0 ns 
+     16384 :    0.0 ns          /     0.0 ns 
+     32768 :    0.0 ns          /     0.0 ns 
+     65536 :    9.5 ns          /    19.5 ns 
+    131072 :   14.3 ns          /    29.3 ns 
+    262144 :   16.7 ns          /    34.2 ns 
+    524288 :   17.9 ns          /    36.6 ns 
+   1048576 :   18.5 ns          /    37.9 ns 
+   2097152 :   18.8 ns          /    38.5 ns 
+   4194304 :   23.2 ns          /    47.2 ns 
+   8388608 :   25.3 ns          /    51.7 ns 
+  16777216 :   31.8 ns          /    63.4 ns 
+  33554432 :   77.6 ns          /   155.9 ns 
+  67108864 :  102.6 ns          /   206.0 ns 
+
+##########################################################################
+
+Executing benchmark on each cluster individually
+
+OpenSSL 1.1.1m, built on 14 Dec 2021
+type             16 bytes     64 bytes    256 bytes   1024 bytes   8192 bytes  16384 bytes
+aes-128-cbc     108973.43k   261392.00k   400944.55k   466615.30k   489788.76k   491301.55k
+aes-128-cbc     109940.27k   264490.77k   405785.77k   472175.62k   495747.07k   497582.08k
+aes-192-cbc     102758.06k   231715.67k   336456.79k   381708.97k   397423.96k   398387.88k
+aes-192-cbc     105135.29k   237195.18k   342089.81k   386852.18k   402330.97k   403374.08k
+aes-256-cbc     100149.62k   212456.49k   293998.85k   326743.04k   337849.00k   338782.89k
+aes-256-cbc     101484.01k   215188.05k   297491.88k   330886.49k   342070.61k   342796.97k
+
+##########################################################################
+
+Executing benchmark single-threaded on cpu0 (Cavium ThunderX 88XX)
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,96 CPUs LE)
+
+LE
+CPU Freq: - - - - - - 512000000 1024000000 -
+
+RAM size:  130768 MB,  # CPU hardware threads:  96
+RAM usage:    435 MB,  # Benchmark threads:      1
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       1576   100   1537   1534  |      23734   100   2030   2026
+23:       1456   100   1487   1484  |      23424   100   2031   2028
+24:       1376   100   1483   1480  |      22968   100   2020   2016
+25:       1327   100   1519   1516  |      22633   100   2018   2015
+----------------------------------  | ------------------------------
+Avr:             100   1507   1504  |              100   2025   2021
+Tot:             100   1766   1762
+
+Executing benchmark single-threaded on cpu48 (Cavium ThunderX 88XX)
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,96 CPUs LE)
+
+LE
+CPU Freq: - - - - - 256000000 - - -
+
+RAM size:  130768 MB,  # CPU hardware threads:  96
+RAM usage:    435 MB,  # Benchmark threads:      1
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       1597   100   1557   1554  |      24040   100   2056   2053
+23:       1475   100   1506   1503  |      23767   100   2061   2057
+24:       1394   100   1502   1499  |      23221   100   2042   2039
+25:       1345   100   1539   1536  |      22916   100   2043   2040
+----------------------------------  | ------------------------------
+Avr:             100   1526   1523  |              100   2051   2047
+Tot:             100   1788   1785
+
+##########################################################################
+
+Executing benchmark 3 times multi-threaded
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,96 CPUs LE)
+
+LE
+CPU Freq: - - - - - - - - -
+
+RAM size:  130768 MB,  # CPU hardware threads:  96
+RAM usage:  21180 MB,  # Benchmark threads:     96
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:      72384  8564    823  70416  |    2059268  9225   1905 175601
+23:      68608  8153    857  69904  |    1950519  8956   1886 168774
+24:      66642  8497    844  71654  |    1965737  9188   1879 172525
+25:      62027  7784    910  70820  |    1507775  7232   1856 134169
+----------------------------------  | ------------------------------
+Avr:            8250    859  70698  |             8650   1881 162767
+Tot:            8450   1370 116733
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,96 CPUs LE)
+
+LE
+CPU Freq: 64000000 64000000 - - - 256000000 - - -
+
+RAM size:  130768 MB,  # CPU hardware threads:  96
+RAM usage:  21180 MB,  # Benchmark threads:     96
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:      73665  8650    829  71662  |    2074446  9297   1904 176895
+23:      71526  8579    850  72877  |    1914988  8839   1876 165699
+24:      61867  7706    864  66520  |    1859774  8850   1845 163225
+25:      59756  7083    964  68228  |    1735926  8303   1861 154471
+----------------------------------  | ------------------------------
+Avr:            8004    877  69822  |             8822   1872 165073
+Tot:            8413   1374 117447
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,96 CPUs LE)
+
+LE
+CPU Freq: - - - - - - - - -
+
+RAM size:  130768 MB,  # CPU hardware threads:  96
+RAM usage:  21180 MB,  # Benchmark threads:     96
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:      73598  8250    868  71597  |    1888140  8465   1903 161008
+23:      68564  8514    821  69859  |    1940303  8932   1881 167890
+24:      67881  8642    845  72986  |    1882253  8933   1850 165198
+25:      65465  7972    938  74746  |    1523868  7426   1827 135601
+----------------------------------  | ------------------------------
+Avr:            8344    868  72297  |             8439   1865 157424
+Tot:            8392   1367 114861
+
+Compression: 70698,69822,72297
+Decompression: 162767,165073,157424
+Total: 116733,117447,114861
+
+##########################################################################
+
+** cpuminer-multi 1.3.7 by tpruvot@github **
+BTC donation address: 1FhDPLPpw18X4srecguG3MxJYe4a1JsZnd (tpruvot)
+
+[2022-02-03 21:51:33] 96 miner threads started, using 'scrypt' algorithm.
+[2022-02-03 21:51:34] CPU #32: 1.73 kH/s
+[2022-02-03 21:51:34] CPU #33: 1.73 kH/s
+[2022-02-03 21:51:34] CPU #35: 1.73 kH/s
+[2022-02-03 21:51:34] CPU #34: 1.73 kH/s
+[2022-02-03 21:51:34] CPU #36: 1.73 kH/s
+[2022-02-03 21:51:34] CPU #37: 1.73 kH/s
+[2022-02-03 21:51:34] CPU #39: 1.73 kH/s
+[2022-02-03 21:51:34] CPU #38: 1.73 kH/s
+[2022-02-03 21:51:34] CPU #41: 1.73 kH/s
+[2022-02-03 21:51:34] CPU #40: 1.73 kH/s
+[2022-02-03 21:51:34] CPU #42: 1.73 kH/s
+[2022-02-03 21:51:34] CPU #44: 1.73 kH/s
+[2022-02-03 21:51:34] CPU #43: 1.72 kH/s
+[2022-02-03 21:51:34] CPU #45: 1.73 kH/s
+[2022-02-03 21:51:34] CPU #46: 1.73 kH/s
+[2022-02-03 21:51:34] CPU #49: 1.73 kH/s
+[2022-02-03 21:51:34] CPU #48: 1.73 kH/s
+[2022-02-03 21:51:34] CPU #47: 1.73 kH/s
+[2022-02-03 21:51:34] CPU #50: 1.73 kH/s
+[2022-02-03 21:51:34] CPU #51: 1.73 kH/s
+[2022-02-03 21:51:34] CPU #52: 1.73 kH/s
+[2022-02-03 21:51:34] CPU #53: 1.73 kH/s
+[2022-02-03 21:51:34] CPU #54: 1.73 kH/s
+[2022-02-03 21:51:34] CPU #55: 1.73 kH/s
+[2022-02-03 21:51:34] CPU #56: 1.73 kH/s
+[2022-02-03 21:51:34] CPU #57: 1.73 kH/s
+[2022-02-03 21:51:34] CPU #58: 1.73 kH/s
+[2022-02-03 21:51:34] CPU #59: 1.73 kH/s
+[2022-02-03 21:51:34] CPU #60: 1.73 kH/s
+[2022-02-03 21:51:34] CPU #61: 1.73 kH/s
+[2022-02-03 21:51:34] CPU #62: 1.73 kH/s
+[2022-02-03 21:51:34] CPU #63: 1.73 kH/s
+[2022-02-03 21:51:34] CPU #29: 0.96 kH/s
+[2022-02-03 21:51:34] CPU #31: 0.95 kH/s
+[2022-02-03 21:51:34] CPU #30: 0.94 kH/s
+[2022-02-03 21:51:34] CPU #16: 0.93 kH/s
+[2022-02-03 21:51:34] CPU #17: 0.93 kH/s
+[2022-02-03 21:51:34] CPU #18: 0.93 kH/s
+[2022-02-03 21:51:34] CPU #19: 0.93 kH/s
+[2022-02-03 21:51:34] CPU #20: 0.93 kH/s
+[2022-02-03 21:51:34] CPU #21: 0.93 kH/s
+[2022-02-03 21:51:34] CPU #22: 0.93 kH/s
+[2022-02-03 21:51:34] CPU #23: 0.93 kH/s
+[2022-02-03 21:51:34] CPU #26: 0.93 kH/s
+[2022-02-03 21:51:34] CPU #28: 0.93 kH/s
+[2022-02-03 21:51:34] CPU #25: 0.93 kH/s
+[2022-02-03 21:51:34] CPU #27: 0.93 kH/s
+[2022-02-03 21:51:34] CPU #15: 0.91 kH/s
+[2022-02-03 21:51:34] CPU #24: 0.91 kH/s
+[2022-02-03 21:51:34] CPU #12: 0.91 kH/s
+[2022-02-03 21:51:34] CPU #10: 0.90 kH/s
+[2022-02-03 21:51:34] CPU #1: 0.90 kH/s
+[2022-02-03 21:51:34] CPU #14: 0.90 kH/s
+[2022-02-03 21:51:34] CPU #6: 0.89 kH/s
+[2022-02-03 21:51:34] CPU #3: 0.89 kH/s
+[2022-02-03 21:51:34] CPU #2: 0.88 kH/s
+[2022-02-03 21:51:34] CPU #7: 0.89 kH/s
+[2022-02-03 21:51:34] CPU #13: 0.89 kH/s
+[2022-02-03 21:51:34] CPU #9: 0.89 kH/s
+[2022-02-03 21:51:34] CPU #4: 0.89 kH/s
+[2022-02-03 21:51:34] CPU #5: 0.89 kH/s
+[2022-02-03 21:51:34] CPU #8: 0.89 kH/s
+[2022-02-03 21:51:34] CPU #11: 0.89 kH/s
+[2022-02-03 21:51:34] CPU #0: 0.87 kH/s
+[2022-02-03 21:51:34] CPU #65: 0.87 kH/s
+[2022-02-03 21:51:34] CPU #76: 0.89 kH/s
+[2022-02-03 21:51:34] CPU #78: 0.88 kH/s
+[2022-02-03 21:51:34] CPU #70: 0.88 kH/s
+[2022-02-03 21:51:34] CPU #69: 0.88 kH/s
+[2022-02-03 21:51:34] CPU #74: 0.88 kH/s
+[2022-02-03 21:51:34] CPU #72: 0.88 kH/s
+[2022-02-03 21:51:34] CPU #77: 0.88 kH/s
+[2022-02-03 21:51:34] CPU #71: 0.88 kH/s
+[2022-02-03 21:51:34] CPU #66: 0.88 kH/s
+[2022-02-03 21:51:34] CPU #80: 0.89 kH/s
+[2022-02-03 21:51:34] CPU #89: 0.89 kH/s
+[2022-02-03 21:51:34] CPU #86: 0.89 kH/s
+[2022-02-03 21:51:34] CPU #87: 0.89 kH/s
+[2022-02-03 21:51:34] CPU #81: 0.89 kH/s
+[2022-02-03 21:51:34] CPU #84: 0.89 kH/s
+[2022-02-03 21:51:34] CPU #79: 0.89 kH/s
+[2022-02-03 21:51:34] CPU #90: 0.89 kH/s
+[2022-02-03 21:51:34] CPU #83: 0.89 kH/s
+[2022-02-03 21:51:34] CPU #92: 0.89 kH/s
+[2022-02-03 21:51:34] CPU #73: 0.88 kH/s
+[2022-02-03 21:51:34] CPU #75: 0.88 kH/s
+[2022-02-03 21:51:34] CPU #68: 0.88 kH/s
+[2022-02-03 21:51:34] CPU #64: 0.88 kH/s
+[2022-02-03 21:51:34] CPU #67: 0.88 kH/s
+[2022-02-03 21:51:34] CPU #95: 0.90 kH/s
+[2022-02-03 21:51:34] CPU #88: 0.87 kH/s
+[2022-02-03 21:51:34] CPU #91: 0.89 kH/s
+[2022-02-03 21:51:34] CPU #82: 0.89 kH/s
+[2022-02-03 21:51:34] CPU #85: 0.89 kH/s
+[2022-02-03 21:51:34] CPU #93: 0.87 kH/s
+[2022-02-03 21:51:34] CPU #94: 0.88 kH/s
+[2022-02-03 21:51:38] Total: 111.90 kH/s
+[2022-02-03 21:51:43] CPU #35: 1.73 kH/s
+[2022-02-03 21:51:43] CPU #33: 1.73 kH/s
+[2022-02-03 21:51:43] CPU #32: 1.73 kH/s
+[2022-02-03 21:51:43] CPU #34: 1.73 kH/s
+[2022-02-03 21:51:43] CPU #41: 1.73 kH/s
+[2022-02-03 21:51:43] CPU #37: 1.73 kH/s
+[2022-02-03 21:51:43] CPU #39: 1.73 kH/s
+[2022-02-03 21:51:43] CPU #38: 1.73 kH/s
+[2022-02-03 21:51:43] CPU #36: 1.73 kH/s
+[2022-02-03 21:51:43] CPU #42: 1.73 kH/s
+[2022-02-03 21:51:43] CPU #44: 1.73 kH/s
+[2022-02-03 21:51:43] CPU #45: 1.73 kH/s
+[2022-02-03 21:51:43] CPU #46: 1.73 kH/s
+[2022-02-03 21:51:43] CPU #47: 1.73 kH/s
+[2022-02-03 21:51:43] CPU #49: 1.73 kH/s
+[2022-02-03 21:51:43] CPU #43: 1.73 kH/s
+[2022-02-03 21:51:43] CPU #48: 1.73 kH/s
+[2022-02-03 21:51:43] CPU #40: 1.73 kH/s
+[2022-02-03 21:51:43] CPU #52: 1.73 kH/s
+[2022-02-03 21:51:43] CPU #50: 1.73 kH/s
+[2022-02-03 21:51:43] CPU #51: 1.73 kH/s
+[2022-02-03 21:51:43] CPU #53: 1.73 kH/s
+[2022-02-03 21:51:43] CPU #55: 1.73 kH/s
+[2022-02-03 21:51:43] CPU #54: 1.73 kH/s
+[2022-02-03 21:51:43] CPU #57: 1.73 kH/s
+[2022-02-03 21:51:43] CPU #58: 1.73 kH/s
+[2022-02-03 21:51:43] CPU #63: 1.73 kH/s
+[2022-02-03 21:51:43] CPU #59: 1.73 kH/s
+[2022-02-03 21:51:43] CPU #61: 1.73 kH/s
+[2022-02-03 21:51:43] CPU #56: 1.73 kH/s
+[2022-02-03 21:51:43] CPU #60: 1.73 kH/s
+[2022-02-03 21:51:43] CPU #62: 1.73 kH/s
+[2022-02-03 21:51:43] CPU #65: 0.87 kH/s
+[2022-02-03 21:51:43] CPU #7: 0.87 kH/s
+[2022-02-03 21:51:43] CPU #77: 0.87 kH/s
+[2022-02-03 21:51:43] CPU #66: 0.87 kH/s
+[2022-02-03 21:51:43] CPU #93: 0.87 kH/s
+[2022-02-03 21:51:43] CPU #5: 0.87 kH/s
+[2022-02-03 21:51:43] CPU #9: 0.87 kH/s
+[2022-02-03 21:51:43] CPU #3: 0.87 kH/s
+[2022-02-03 21:51:43] CPU #0: 0.86 kH/s
+[2022-02-03 21:51:43] CPU #2: 0.87 kH/s
+[2022-02-03 21:51:43] CPU #78: 0.87 kH/s
+[2022-02-03 21:51:43] CPU #4: 0.87 kH/s
+[2022-02-03 21:51:43] CPU #74: 0.87 kH/s
+[2022-02-03 21:51:43] CPU #69: 0.87 kH/s
+[2022-02-03 21:51:43] CPU #75: 0.87 kH/s
+[2022-02-03 21:51:43] CPU #88: 0.87 kH/s
+[2022-02-03 21:51:43] CPU #6: 0.87 kH/s
+[2022-02-03 21:51:43] CPU #72: 0.86 kH/s
+[2022-02-03 21:51:43] CPU #70: 0.87 kH/s
+[2022-02-03 21:51:43] CPU #71: 0.86 kH/s
+[2022-02-03 21:51:43] CPU #68: 0.87 kH/s
+[2022-02-03 21:51:43] CPU #94: 0.87 kH/s
+[2022-02-03 21:51:43] CPU #13: 0.87 kH/s
+[2022-02-03 21:51:43] CPU #11: 0.86 kH/s
+[2022-02-03 21:51:43] CPU #73: 0.86 kH/s
+[2022-02-03 21:51:43] CPU #67: 0.86 kH/s
+[2022-02-03 21:51:43] CPU #76: 0.87 kH/s
+[2022-02-03 21:51:43] CPU #8: 0.86 kH/s
+[2022-02-03 21:51:43] CPU #14: 0.87 kH/s
+[2022-02-03 21:51:43] CPU #10: 0.87 kH/s
+[2022-02-03 21:51:43] CPU #1: 0.86 kH/s
+[2022-02-03 21:51:43] CPU #79: 0.87 kH/s
+[2022-02-03 21:51:43] CPU #92: 0.87 kH/s
+[2022-02-03 21:51:43] CPU #86: 0.87 kH/s
+[2022-02-03 21:51:43] CPU #83: 0.87 kH/s
+[2022-02-03 21:51:43] CPU #84: 0.87 kH/s
+[2022-02-03 21:51:43] CPU #90: 0.87 kH/s
+[2022-02-03 21:51:43] CPU #81: 0.87 kH/s
+[2022-02-03 21:51:43] CPU #87: 0.87 kH/s
+[2022-02-03 21:51:43] CPU #82: 0.87 kH/s
+[2022-02-03 21:51:43] CPU #89: 0.86 kH/s
+[2022-02-03 21:51:43] CPU #91: 0.87 kH/s
+[2022-02-03 21:51:43] CPU #64: 0.85 kH/s
+[2022-02-03 21:51:43] CPU #80: 0.87 kH/s
+[2022-02-03 21:51:43] CPU #12: 0.86 kH/s
+[2022-02-03 21:51:43] CPU #85: 0.86 kH/s
+[2022-02-03 21:51:43] CPU #15: 0.87 kH/s
+[2022-02-03 21:51:43] CPU #24: 0.87 kH/s
+[2022-02-03 21:51:43] CPU #95: 0.87 kH/s
+[2022-02-03 21:51:43] Total: 110.89 kH/s
+[2022-02-03 21:51:43] CPU #17: 0.87 kH/s
+[2022-02-03 21:51:43] CPU #21: 0.87 kH/s
+[2022-02-03 21:51:43] CPU #23: 0.87 kH/s
+[2022-02-03 21:51:43] CPU #20: 0.87 kH/s
+[2022-02-03 21:51:43] CPU #25: 0.87 kH/s
+[2022-02-03 21:51:43] CPU #26: 0.87 kH/s
+[2022-02-03 21:51:43] CPU #27: 0.87 kH/s
+[2022-02-03 21:51:43] CPU #28: 0.87 kH/s
+[2022-02-03 21:51:43] CPU #22: 0.86 kH/s
+[2022-02-03 21:51:43] CPU #16: 0.87 kH/s
+[2022-02-03 21:51:43] CPU #19: 0.86 kH/s
+[2022-02-03 21:51:43] CPU #18: 0.86 kH/s
+[2022-02-03 21:51:43] CPU #30: 0.87 kH/s
+[2022-02-03 21:51:43] CPU #31: 0.87 kH/s
+[2022-02-03 21:51:43] CPU #29: 0.87 kH/s
+[2022-02-03 21:51:48] Total: 110.87 kH/s
+[2022-02-03 21:51:53] CPU #35: 1.73 kH/s
+[2022-02-03 21:51:53] CPU #33: 1.73 kH/s
+[2022-02-03 21:51:53] CPU #32: 1.73 kH/s
+[2022-02-03 21:51:53] CPU #34: 1.73 kH/s
+[2022-02-03 21:51:53] CPU #41: 1.73 kH/s
+[2022-02-03 21:51:53] CPU #38: 1.73 kH/s
+[2022-02-03 21:51:53] CPU #39: 1.73 kH/s
+[2022-02-03 21:51:53] CPU #37: 1.73 kH/s
+[2022-02-03 21:51:53] CPU #36: 1.73 kH/s
+[2022-02-03 21:51:53] CPU #42: 1.73 kH/s
+[2022-02-03 21:51:53] CPU #44: 1.73 kH/s
+[2022-02-03 21:51:53] CPU #49: 1.73 kH/s
+[2022-02-03 21:51:53] CPU #45: 1.73 kH/s
+[2022-02-03 21:51:53] CPU #47: 1.73 kH/s
+[2022-02-03 21:51:53] CPU #46: 1.73 kH/s
+[2022-02-03 21:51:53] CPU #40: 1.73 kH/s
+[2022-02-03 21:51:53] CPU #48: 1.73 kH/s
+[2022-02-03 21:51:53] CPU #43: 1.73 kH/s
+[2022-02-03 21:51:53] CPU #52: 1.73 kH/s
+[2022-02-03 21:51:53] CPU #51: 1.73 kH/s
+[2022-02-03 21:51:53] CPU #50: 1.73 kH/s
+[2022-02-03 21:51:53] CPU #53: 1.73 kH/s
+[2022-02-03 21:51:53] CPU #55: 1.73 kH/s
+[2022-02-03 21:51:53] CPU #54: 1.73 kH/s
+[2022-02-03 21:51:53] CPU #57: 1.73 kH/s
+[2022-02-03 21:51:53] CPU #58: 1.73 kH/s
+[2022-02-03 21:51:53] CPU #59: 1.73 kH/s
+[2022-02-03 21:51:53] CPU #63: 1.73 kH/s
+[2022-02-03 21:51:53] CPU #61: 1.73 kH/s
+[2022-02-03 21:51:53] CPU #62: 1.73 kH/s
+[2022-02-03 21:51:53] CPU #60: 1.73 kH/s
+[2022-02-03 21:51:53] CPU #56: 1.73 kH/s
+[2022-02-03 21:51:53] CPU #65: 0.87 kH/s
+[2022-02-03 21:51:53] CPU #93: 0.87 kH/s
+[2022-02-03 21:51:53] CPU #0: 0.86 kH/s
+[2022-02-03 21:51:53] CPU #72: 0.87 kH/s
+[2022-02-03 21:51:53] CPU #74: 0.87 kH/s
+[2022-02-03 21:51:53] CPU #8: 0.87 kH/s
+[2022-02-03 21:51:53] CPU #5: 0.87 kH/s
+[2022-02-03 21:51:53] CPU #2: 0.87 kH/s
+[2022-02-03 21:51:53] CPU #7: 0.87 kH/s
+[2022-02-03 21:51:53] CPU #3: 0.87 kH/s
+[2022-02-03 21:51:53] CPU #77: 0.87 kH/s
+[2022-02-03 21:51:53] CPU #9: 0.87 kH/s
+[2022-02-03 21:51:53] CPU #69: 0.87 kH/s
+[2022-02-03 21:51:53] CPU #6: 0.87 kH/s
+[2022-02-03 21:51:53] CPU #66: 0.87 kH/s
+[2022-02-03 21:51:53] CPU #71: 0.87 kH/s
+[2022-02-03 21:51:53] CPU #78: 0.87 kH/s
+[2022-02-03 21:51:53] CPU #11: 0.87 kH/s
+[2022-02-03 21:51:53] CPU #68: 0.87 kH/s
+[2022-02-03 21:51:53] CPU #4: 0.86 kH/s
+[2022-02-03 21:51:53] CPU #75: 0.87 kH/s
+[2022-02-03 21:51:53] CPU #70: 0.87 kH/s
+[2022-02-03 21:51:53] CPU #73: 0.87 kH/s
+[2022-02-03 21:51:53] CPU #67: 0.87 kH/s
+[2022-02-03 21:51:53] CPU #13: 0.87 kH/s
+[2022-02-03 21:51:53] CPU #88: 0.86 kH/s
+[2022-02-03 21:51:53] CPU #94: 0.87 kH/s
+[2022-02-03 21:51:53] CPU #1: 0.87 kH/s
+[2022-02-03 21:51:53] CPU #76: 0.87 kH/s
+[2022-02-03 21:51:53] CPU #14: 0.87 kH/s
+[2022-02-03 21:51:53] CPU #10: 0.87 kH/s
+[2022-02-03 21:51:53] CPU #90: 0.87 kH/s
+[2022-02-03 21:51:53] CPU #83: 0.87 kH/s
+[2022-02-03 21:51:53] CPU #87: 0.87 kH/s
+[2022-02-03 21:51:53] CPU #89: 0.87 kH/s
+[2022-02-03 21:51:53] CPU #86: 0.87 kH/s
+[2022-02-03 21:51:53] CPU #84: 0.86 kH/s
+[2022-02-03 21:51:53] CPU #79: 0.86 kH/s
+[2022-02-03 21:51:53] CPU #12: 0.87 kH/s
+[2022-02-03 21:51:53] CPU #64: 0.85 kH/s
+[2022-02-03 21:51:53] CPU #91: 0.87 kH/s
+[2022-02-03 21:51:53] CPU #85: 0.87 kH/s
+[2022-02-03 21:51:53] CPU #81: 0.86 kH/s
+[2022-02-03 21:51:53] CPU #82: 0.86 kH/s
+[2022-02-03 21:51:53] CPU #92: 0.87 kH/s
+[2022-02-03 21:51:53] CPU #80: 0.87 kH/s
+[2022-02-03 21:51:53] CPU #15: 0.87 kH/s
+[2022-02-03 21:51:53] CPU #24: 0.87 kH/s
+[2022-02-03 21:51:53] CPU #95: 0.87 kH/s
+[2022-02-03 21:51:53] Total: 110.90 kH/s
+[2022-02-03 21:51:53] CPU #22: 0.87 kH/s
+[2022-02-03 21:51:53] CPU #17: 0.87 kH/s
+[2022-02-03 21:51:53] CPU #21: 0.87 kH/s
+[2022-02-03 21:51:53] CPU #27: 0.87 kH/s
+[2022-02-03 21:51:53] CPU #28: 0.87 kH/s
+[2022-02-03 21:51:53] CPU #18: 0.87 kH/s
+[2022-02-03 21:51:53] CPU #19: 0.87 kH/s
+[2022-02-03 21:51:53] CPU #26: 0.87 kH/s
+[2022-02-03 21:51:53] CPU #23: 0.87 kH/s
+[2022-02-03 21:51:53] CPU #25: 0.87 kH/s
+[2022-02-03 21:51:53] CPU #20: 0.87 kH/s
+[2022-02-03 21:51:53] CPU #16: 0.87 kH/s
+[2022-02-03 21:51:53] CPU #30: 0.87 kH/s
+[2022-02-03 21:51:53] CPU #31: 0.87 kH/s
+[2022-02-03 21:51:53] CPU #29: 0.87 kH/s
+[2022-02-03 21:51:58] Total: 110.92 kH/s
+[2022-02-03 21:52:03] CPU #40: 1.73 kH/s
+[2022-02-03 21:52:03] CPU #35: 1.73 kH/s
+[2022-02-03 21:52:03] CPU #33: 1.73 kH/s
+[2022-02-03 21:52:03] CPU #34: 1.73 kH/s
+[2022-02-03 21:52:03] CPU #32: 1.73 kH/s
+[2022-02-03 21:52:03] CPU #41: 1.73 kH/s
+[2022-02-03 21:52:03] CPU #38: 1.73 kH/s
+[2022-02-03 21:52:03] CPU #39: 1.73 kH/s
+[2022-02-03 21:52:03] CPU #37: 1.73 kH/s
+[2022-02-03 21:52:03] CPU #36: 1.73 kH/s
+[2022-02-03 21:52:03] CPU #42: 1.73 kH/s
+[2022-02-03 21:52:03] CPU #49: 1.73 kH/s
+[2022-02-03 21:52:03] CPU #44: 1.73 kH/s
+[2022-02-03 21:52:03] CPU #45: 1.73 kH/s
+[2022-02-03 21:52:03] CPU #47: 1.73 kH/s
+[2022-02-03 21:52:03] CPU #46: 1.73 kH/s
+[2022-02-03 21:52:03] CPU #48: 1.73 kH/s
+[2022-02-03 21:52:03] CPU #43: 1.73 kH/s
+[2022-02-03 21:52:03] CPU #52: 1.73 kH/s
+[2022-02-03 21:52:03] CPU #51: 1.73 kH/s
+[2022-02-03 21:52:03] CPU #50: 1.73 kH/s
+[2022-02-03 21:52:03] CPU #53: 1.73 kH/s
+[2022-02-03 21:52:03] CPU #55: 1.73 kH/s
+[2022-02-03 21:52:03] CPU #54: 1.73 kH/s
+[2022-02-03 21:52:03] CPU #58: 1.73 kH/s
+[2022-02-03 21:52:03] CPU #57: 1.73 kH/s
+[2022-02-03 21:52:03] CPU #59: 1.73 kH/s
+[2022-02-03 21:52:03] CPU #63: 1.73 kH/s
+[2022-02-03 21:52:03] CPU #61: 1.73 kH/s
+[2022-02-03 21:52:03] CPU #62: 1.73 kH/s
+[2022-02-03 21:52:03] CPU #60: 1.73 kH/s
+[2022-02-03 21:52:03] CPU #56: 1.73 kH/s
+[2022-02-03 21:52:03] CPU #65: 0.87 kH/s
+[2022-02-03 21:52:03] CPU #8: 0.87 kH/s
+[2022-02-03 21:52:03] CPU #93: 0.87 kH/s
+[2022-02-03 21:52:03] CPU #7: 0.87 kH/s
+[2022-02-03 21:52:03] CPU #72: 0.87 kH/s
+[2022-02-03 21:52:03] CPU #3: 0.87 kH/s
+[2022-02-03 21:52:03] CPU #77: 0.87 kH/s
+[2022-02-03 21:52:03] CPU #66: 0.87 kH/s
+[2022-02-03 21:52:03] CPU #88: 0.87 kH/s
+[2022-02-03 21:52:03] CPU #9: 0.87 kH/s
+[2022-02-03 21:52:03] CPU #74: 0.87 kH/s
+[2022-02-03 21:52:03] CPU #78: 0.87 kH/s
+[2022-02-03 21:52:03] CPU #5: 0.86 kH/s
+[2022-02-03 21:52:03] CPU #6: 0.87 kH/s
+[2022-02-03 21:52:03] CPU #75: 0.87 kH/s
+[2022-02-03 21:52:03] CPU #4: 0.87 kH/s
+[2022-02-03 21:52:03] CPU #2: 0.86 kH/s
+[2022-02-03 21:52:03] CPU #73: 0.87 kH/s
+[2022-02-03 21:52:03] CPU #67: 0.87 kH/s
+[2022-02-03 21:52:03] CPU #13: 0.87 kH/s
+[2022-02-03 21:52:03] CPU #70: 0.87 kH/s
+[2022-02-03 21:52:03] CPU #69: 0.86 kH/s
+[2022-02-03 21:52:03] CPU #71: 0.86 kH/s
+[2022-02-03 21:52:03] CPU #11: 0.87 kH/s
+[2022-02-03 21:52:03] CPU #68: 0.87 kH/s
+[2022-02-03 21:52:03] CPU #0: 0.85 kH/s
+[2022-02-03 21:52:03] CPU #94: 0.86 kH/s
+[2022-02-03 21:52:03] CPU #64: 0.86 kH/s
+[2022-02-03 21:52:03] CPU #83: 0.87 kH/s
+[2022-02-03 21:52:03] CPU #76: 0.87 kH/s
+[2022-02-03 21:52:03] CPU #14: 0.87 kH/s
+[2022-02-03 21:52:03] CPU #1: 0.86 kH/s
+[2022-02-03 21:52:03] CPU #84: 0.87 kH/s
+[2022-02-03 21:52:03] CPU #89: 0.87 kH/s
+[2022-02-03 21:52:03] CPU #86: 0.87 kH/s
+[2022-02-03 21:52:03] CPU #87: 0.87 kH/s
+[2022-02-03 21:52:03] CPU #90: 0.87 kH/s
+[2022-02-03 21:52:03] CPU #79: 0.87 kH/s
+[2022-02-03 21:52:03] CPU #12: 0.87 kH/s
+[2022-02-03 21:52:03] CPU #81: 0.86 kH/s
+[2022-02-03 21:52:03] CPU #10: 0.86 kH/s
+[2022-02-03 21:52:03] CPU #82: 0.87 kH/s
+[2022-02-03 21:52:03] CPU #92: 0.87 kH/s
+[2022-02-03 21:52:03] CPU #85: 0.87 kH/s
+[2022-02-03 21:52:03] CPU #91: 0.87 kH/s
+[2022-02-03 21:52:03] CPU #80: 0.87 kH/s
+[2022-02-03 21:52:03] CPU #15: 0.87 kH/s
+[2022-02-03 21:52:03] CPU #24: 0.87 kH/s
+[2022-02-03 21:52:03] CPU #95: 0.87 kH/s
+[2022-02-03 21:52:03] Total: 110.92 kH/s
+[2022-02-03 21:52:03] CPU #18: 0.87 kH/s
+[2022-02-03 21:52:03] CPU #21: 0.87 kH/s
+[2022-02-03 21:52:03] CPU #19: 0.87 kH/s
+[2022-02-03 21:52:03] CPU #22: 0.87 kH/s
+[2022-02-03 21:52:03] CPU #25: 0.87 kH/s
+[2022-02-03 21:52:03] CPU #26: 0.87 kH/s
+[2022-02-03 21:52:03] CPU #23: 0.87 kH/s
+[2022-02-03 21:52:03] CPU #20: 0.87 kH/s
+[2022-02-03 21:52:03] CPU #27: 0.86 kH/s
+[2022-02-03 21:52:03] CPU #16: 0.87 kH/s
+[2022-02-03 21:52:03] CPU #28: 0.86 kH/s
+[2022-02-03 21:52:03] CPU #17: 0.87 kH/s
+[2022-02-03 21:52:03] CPU #30: 0.87 kH/s
+[2022-02-03 21:52:03] CPU #31: 0.86 kH/s
+[2022-02-03 21:52:03] CPU #29: 0.86 kH/s
+[2022-02-03 21:52:08] Total: 110.93 kH/s
+[2022-02-03 21:52:13] CPU #40: 1.73 kH/s
+[2022-02-03 21:52:13] CPU #35: 1.73 kH/s
+[2022-02-03 21:52:13] CPU #33: 1.73 kH/s
+[2022-02-03 21:52:13] CPU #34: 1.73 kH/s
+[2022-02-03 21:52:13] CPU #32: 1.73 kH/s
+[2022-02-03 21:52:13] CPU #41: 1.73 kH/s
+[2022-02-03 21:52:13] CPU #38: 1.73 kH/s
+[2022-02-03 21:52:13] CPU #43: 1.73 kH/s
+[2022-02-03 21:52:13] CPU #37: 1.73 kH/s
+[2022-02-03 21:52:13] CPU #39: 1.73 kH/s
+[2022-02-03 21:52:13] CPU #36: 1.73 kH/s
+[2022-02-03 21:52:13] CPU #42: 1.73 kH/s
+[2022-02-03 21:52:13] CPU #44: 1.73 kH/s
+[2022-02-03 21:52:13] CPU #47: 1.73 kH/s
+[2022-02-03 21:52:13] CPU #45: 1.73 kH/s
+[2022-02-03 21:52:13] CPU #46: 1.73 kH/s
+[2022-02-03 21:52:13] CPU #49: 1.73 kH/s
+[2022-02-03 21:52:13] CPU #48: 1.73 kH/s
+[2022-02-03 21:52:13] CPU #50: 1.73 kH/s
+[2022-02-03 21:52:13] CPU #52: 1.73 kH/s
+[2022-02-03 21:52:13] CPU #57: 1.73 kH/s
+[2022-02-03 21:52:13] CPU #63: 1.73 kH/s
+[2022-02-03 21:52:13] CPU #51: 1.73 kH/s
+[2022-02-03 21:52:13] CPU #55: 1.73 kH/s
+[2022-02-03 21:52:13] CPU #53: 1.73 kH/s
+[2022-02-03 21:52:13] CPU #60: 1.73 kH/s
+[2022-02-03 21:52:13] CPU #54: 1.73 kH/s
+[2022-02-03 21:52:13] CPU #56: 1.73 kH/s
+[2022-02-03 21:52:13] CPU #58: 1.73 kH/s
+[2022-02-03 21:52:13] CPU #59: 1.73 kH/s
+[2022-02-03 21:52:13] CPU #61: 1.73 kH/s
+[2022-02-03 21:52:13] CPU #62: 1.73 kH/s
+[2022-02-03 21:52:13] CPU #0: 0.86 kH/s
+[2022-02-03 21:52:13] CPU #65: 0.87 kH/s
+[2022-02-03 21:52:13] CPU #93: 0.87 kH/s
+[2022-02-03 21:52:13] CPU #72: 0.87 kH/s
+[2022-02-03 21:52:13] CPU #9: 0.87 kH/s
+[2022-02-03 21:52:13] CPU #8: 0.87 kH/s
+[2022-02-03 21:52:13] CPU #7: 0.87 kH/s
+[2022-02-03 21:52:13] CPU #5: 0.87 kH/s
+[2022-02-03 21:52:13] CPU #4: 0.87 kH/s
+[2022-02-03 21:52:13] CPU #2: 0.87 kH/s
+[2022-02-03 21:52:13] CPU #67: 0.87 kH/s
+[2022-02-03 21:52:13] CPU #75: 0.87 kH/s
+[2022-02-03 21:52:13] CPU #6: 0.87 kH/s
+[2022-02-03 21:52:13] CPU #88: 0.87 kH/s
+[2022-02-03 21:52:13] CPU #77: 0.86 kH/s
+[2022-02-03 21:52:13] CPU #69: 0.87 kH/s
+[2022-02-03 21:52:13] CPU #11: 0.87 kH/s
+[2022-02-03 21:52:13] CPU #66: 0.86 kH/s
+[2022-02-03 21:52:13] CPU #71: 0.87 kH/s
+[2022-02-03 21:52:13] CPU #74: 0.86 kH/s
+[2022-02-03 21:52:13] CPU #78: 0.86 kH/s
+[2022-02-03 21:52:13] CPU #68: 0.87 kH/s
+[2022-02-03 21:52:13] CPU #70: 0.87 kH/s
+[2022-02-03 21:52:13] CPU #13: 0.87 kH/s
+[2022-02-03 21:52:13] CPU #3: 0.86 kH/s
+[2022-02-03 21:52:13] CPU #73: 0.86 kH/s
+[2022-02-03 21:52:13] CPU #94: 0.87 kH/s
+[2022-02-03 21:52:13] CPU #1: 0.87 kH/s
+[2022-02-03 21:52:13] CPU #89: 0.87 kH/s
+[2022-02-03 21:52:13] CPU #84: 0.87 kH/s
+[2022-02-03 21:52:13] CPU #76: 0.87 kH/s
+[2022-02-03 21:52:13] CPU #14: 0.87 kH/s
+[2022-02-03 21:52:13] CPU #79: 0.87 kH/s
+[2022-02-03 21:52:13] CPU #81: 0.87 kH/s
+[2022-02-03 21:52:13] CPU #83: 0.87 kH/s
+[2022-02-03 21:52:13] CPU #90: 0.87 kH/s
+[2022-02-03 21:52:13] CPU #10: 0.87 kH/s
+[2022-02-03 21:52:13] CPU #91: 0.87 kH/s
+[2022-02-03 21:52:13] CPU #82: 0.87 kH/s
+[2022-02-03 21:52:13] CPU #86: 0.86 kH/s
+[2022-02-03 21:52:13] CPU #87: 0.86 kH/s
+[2022-02-03 21:52:13] CPU #12: 0.87 kH/s
+[2022-02-03 21:52:13] CPU #80: 0.87 kH/s
+[2022-02-03 21:52:13] CPU #92: 0.86 kH/s
+[2022-02-03 21:52:13] CPU #85: 0.86 kH/s
+[2022-02-03 21:52:13] CPU #64: 0.85 kH/s
+[2022-02-03 21:52:13] CPU #24: 0.87 kH/s
+[2022-02-03 21:52:13] CPU #15: 0.87 kH/s
+[2022-02-03 21:52:13] CPU #95: 0.86 kH/s
+[2022-02-03 21:52:13] Total: 110.90 kH/s
+[2022-02-03 21:52:13] CPU #23: 0.87 kH/s
+[2022-02-03 21:52:13] CPU #22: 0.87 kH/s
+[2022-02-03 21:52:13] CPU #20: 0.87 kH/s
+[2022-02-03 21:52:13] CPU #27: 0.87 kH/s
+[2022-02-03 21:52:13] CPU #28: 0.87 kH/s
+[2022-02-03 21:52:13] CPU #21: 0.87 kH/s
+[2022-02-03 21:52:13] CPU #18: 0.87 kH/s
+[2022-02-03 21:52:13] CPU #26: 0.87 kH/s
+[2022-02-03 21:52:13] CPU #17: 0.87 kH/s
+[2022-02-03 21:52:13] CPU #19: 0.87 kH/s
+[2022-02-03 21:52:13] CPU #25: 0.87 kH/s
+[2022-02-03 21:52:13] CPU #16: 0.87 kH/s
+[2022-02-03 21:52:13] CPU #30: 0.87 kH/s
+[2022-02-03 21:52:13] CPU #31: 0.87 kH/s
+[2022-02-03 21:52:13] CPU #29: 0.87 kH/s
+[2022-02-03 21:52:18] Total: 110.93 kH/s
+[2022-02-03 21:52:23] CPU #40: 1.73 kH/s
+[2022-02-03 21:52:23] CPU #33: 1.73 kH/s
+[2022-02-03 21:52:23] CPU #35: 1.73 kH/s
+[2022-02-03 21:52:23] CPU #34: 1.73 kH/s
+[2022-02-03 21:52:23] CPU #32: 1.73 kH/s
+[2022-02-03 21:52:23] CPU #41: 1.73 kH/s
+[2022-02-03 21:52:23] CPU #38: 1.73 kH/s
+[2022-02-03 21:52:23] CPU #37: 1.73 kH/s
+[2022-02-03 21:52:23] CPU #43: 1.73 kH/s
+[2022-02-03 21:52:23] CPU #39: 1.73 kH/s
+[2022-02-03 21:52:23] CPU #36: 1.73 kH/s
+[2022-02-03 21:52:23] CPU #42: 1.73 kH/s
+[2022-02-03 21:52:23] CPU #49: 1.73 kH/s
+[2022-02-03 21:52:23] CPU #44: 1.73 kH/s
+[2022-02-03 21:52:23] CPU #47: 1.73 kH/s
+[2022-02-03 21:52:23] CPU #45: 1.73 kH/s
+[2022-02-03 21:52:23] CPU #46: 1.73 kH/s
+[2022-02-03 21:52:23] CPU #48: 1.73 kH/s
+[2022-02-03 21:52:23] CPU #50: 1.73 kH/s
+[2022-02-03 21:52:23] CPU #57: 1.73 kH/s
+[2022-02-03 21:52:23] CPU #63: 1.73 kH/s
+[2022-02-03 21:52:23] CPU #53: 1.73 kH/s
+[2022-02-03 21:52:23] CPU #52: 1.73 kH/s
+[2022-02-03 21:52:23] CPU #60: 1.73 kH/s
+[2022-02-03 21:52:23] CPU #56: 1.73 kH/s
+[2022-02-03 21:52:23] CPU #51: 1.73 kH/s
+[2022-02-03 21:52:23] CPU #55: 1.73 kH/s
+[2022-02-03 21:52:23] CPU #54: 1.73 kH/s
+[2022-02-03 21:52:23] CPU #58: 1.73 kH/s
+[2022-02-03 21:52:23] CPU #59: 1.73 kH/s
+[2022-02-03 21:52:23] CPU #61: 1.73 kH/s
+[2022-02-03 21:52:23] CPU #62: 1.73 kH/s
+[2022-02-03 21:52:23] CPU #65: 0.87 kH/s
+[2022-02-03 21:52:23] CPU #8: 0.87 kH/s
+[2022-02-03 21:52:23] CPU #93: 0.87 kH/s
+[2022-02-03 21:52:23] CPU #0: 0.86 kH/s
+[2022-02-03 21:52:23] CPU #5: 0.87 kH/s
+[2022-02-03 21:52:23] CPU #72: 0.87 kH/s
+[2022-02-03 21:52:23] CPU #7: 0.87 kH/s
+[2022-02-03 21:52:23] CPU #75: 0.87 kH/s
+[2022-02-03 21:52:23] CPU #2: 0.87 kH/s
+[2022-02-03 21:52:23] CPU #77: 0.87 kH/s
+[2022-02-03 21:52:23] CPU #78: 0.87 kH/s
+[2022-02-03 21:52:23] CPU #69: 0.87 kH/s
+[2022-02-03 21:52:23] CPU #9: 0.87 kH/s
+[2022-02-03 21:52:23] CPU #71: 0.87 kH/s
+[2022-02-03 21:52:23] CPU #66: 0.87 kH/s
+[2022-02-03 21:52:23] CPU #74: 0.87 kH/s
+[2022-02-03 21:52:23] CPU #67: 0.87 kH/s
+[2022-02-03 21:52:23] CPU #4: 0.86 kH/s
+[2022-02-03 21:52:23] CPU #13: 0.87 kH/s
+[2022-02-03 21:52:23] CPU #3: 0.87 kH/s
+[2022-02-03 21:52:23] CPU #73: 0.87 kH/s
+[2022-02-03 21:52:23] CPU #88: 0.86 kH/s
+[2022-02-03 21:52:23] CPU #6: 0.86 kH/s
+[2022-02-03 21:52:23] CPU #11: 0.86 kH/s
+[2022-02-03 21:52:23] CPU #94: 0.87 kH/s
+[2022-02-03 21:52:23] CPU #68: 0.86 kH/s
+[2022-02-03 21:52:23] CPU #70: 0.86 kH/s
+[2022-02-03 21:52:23] CPU #89: 0.87 kH/s
+[2022-02-03 21:52:23] CPU #76: 0.87 kH/s
+[2022-02-03 21:52:23] CPU #1: 0.86 kH/s
+[2022-02-03 21:52:23] CPU #81: 0.87 kH/s
+[2022-02-03 21:52:23] CPU #14: 0.87 kH/s
+[2022-02-03 21:52:23] CPU #10: 0.87 kH/s
+[2022-02-03 21:52:23] CPU #79: 0.87 kH/s
+[2022-02-03 21:52:23] CPU #84: 0.87 kH/s
+[2022-02-03 21:52:23] CPU #87: 0.87 kH/s
+[2022-02-03 21:52:23] CPU #90: 0.87 kH/s
+[2022-02-03 21:52:23] CPU #86: 0.87 kH/s
+[2022-02-03 21:52:23] CPU #83: 0.87 kH/s
+[2022-02-03 21:52:23] CPU #80: 0.87 kH/s
+[2022-02-03 21:52:23] CPU #12: 0.87 kH/s
+[2022-02-03 21:52:23] CPU #82: 0.87 kH/s
+[2022-02-03 21:52:23] CPU #92: 0.87 kH/s
+[2022-02-03 21:52:23] CPU #85: 0.87 kH/s
+[2022-02-03 21:52:23] CPU #91: 0.87 kH/s
+[2022-02-03 21:52:23] CPU #64: 0.85 kH/s
+[2022-02-03 21:52:23] CPU #24: 0.87 kH/s
+[2022-02-03 21:52:23] CPU #15: 0.86 kH/s
+[2022-02-03 21:52:23] CPU #95: 0.87 kH/s
+[2022-02-03 21:52:23] Total: 110.93 kH/s
+[2022-02-03 21:52:23] CPU #21: 0.87 kH/s
+[2022-02-03 21:52:23] CPU #18: 0.87 kH/s
+[2022-02-03 21:52:23] CPU #27: 0.87 kH/s
+[2022-02-03 21:52:23] CPU #22: 0.87 kH/s
+[2022-02-03 21:52:23] CPU #26: 0.87 kH/s
+[2022-02-03 21:52:23] CPU #28: 0.87 kH/s
+[2022-02-03 21:52:23] CPU #23: 0.87 kH/s
+[2022-02-03 21:52:23] CPU #25: 0.87 kH/s
+[2022-02-03 21:52:23] CPU #20: 0.87 kH/s
+[2022-02-03 21:52:23] CPU #19: 0.86 kH/s
+[2022-02-03 21:52:23] CPU #17: 0.86 kH/s
+[2022-02-03 21:52:23] CPU #16: 0.86 kH/s
+[2022-02-03 21:52:23] CPU #30: 0.87 kH/s
+[2022-02-03 21:52:23] CPU #31: 0.86 kH/s
+[2022-02-03 21:52:23] CPU #29: 0.87 kH/s
+[2022-02-03 21:52:28] Total: 110.91 kH/s
+[2022-02-03 21:52:32] CPU #34: 1.73 kH/s
+[2022-02-03 21:52:33] CPU #32: 1.73 kH/s
+[2022-02-03 21:52:33] CPU #41: 1.73 kH/s
+[2022-02-03 21:52:33] CPU #38: 1.73 kH/s
+[2022-02-03 21:52:33] CPU #37: 1.73 kH/s
+[2022-02-03 21:52:33] CPU #43: 1.73 kH/s
+[2022-02-03 21:52:33] CPU #49: 1.73 kH/s
+[2022-02-03 21:52:33] CPU #39: 1.73 kH/s
+[2022-02-03 21:52:33] CPU #42: 1.73 kH/s
+[2022-02-03 21:52:33] CPU #36: 1.73 kH/s
+[2022-02-03 21:52:33] CPU #47: 1.73 kH/s
+[2022-02-03 21:52:33] CPU #45: 1.73 kH/s
+[2022-02-03 21:52:33] CPU #44: 1.73 kH/s
+[2022-02-03 21:52:33] CPU #46: 1.73 kH/s
+[2022-02-03 21:52:33] CPU #48: 1.73 kH/s
+[2022-02-03 21:52:33] CPU #50: 1.73 kH/s
+[2022-02-03 21:52:33] CPU #63: 1.73 kH/s
+[2022-02-03 21:52:33] CPU #53: 1.73 kH/s
+[2022-02-03 21:52:33] CPU #52: 1.73 kH/s
+[2022-02-03 21:52:33] CPU #60: 1.73 kH/s
+[2022-02-03 21:52:33] CPU #57: 1.73 kH/s
+[2022-02-03 21:52:33] CPU #56: 1.73 kH/s
+[2022-02-03 21:52:33] CPU #54: 1.73 kH/s
+[2022-02-03 21:52:33] CPU #51: 1.73 kH/s
+[2022-02-03 21:52:33] CPU #55: 1.73 kH/s
+[2022-02-03 21:52:33] CPU #58: 1.73 kH/s
+[2022-02-03 21:52:33] CPU #59: 1.73 kH/s
+[2022-02-03 21:52:33] CPU #61: 1.73 kH/s
+[2022-02-03 21:52:33] CPU #62: 1.73 kH/s
+[2022-02-03 21:52:33] CPU #65: 0.87 kH/s
+[2022-02-03 21:52:33] CPU #93: 0.87 kH/s
+[2022-02-03 21:52:33] CPU #7: 0.87 kH/s
+[2022-02-03 21:52:33] CPU #8: 0.87 kH/s
+[2022-02-03 21:52:33] CPU #2: 0.87 kH/s
+[2022-02-03 21:52:33] CPU #72: 0.87 kH/s
+[2022-02-03 21:52:33] CPU #66: 0.87 kH/s
+[2022-02-03 21:52:33] CPU #74: 0.87 kH/s
+[2022-02-03 21:52:33] CPU #77: 0.87 kH/s
+[2022-02-03 21:52:33] CPU #9: 0.87 kH/s
+[2022-02-03 21:52:33] CPU #0: 0.86 kH/s
+[2022-02-03 21:52:33] CPU #78: 0.87 kH/s
+[2022-02-03 21:52:33] CPU #67: 0.87 kH/s
+[2022-02-03 21:52:33] CPU #69: 0.87 kH/s
+[2022-02-03 21:52:33] CPU #4: 0.87 kH/s
+[2022-02-03 21:52:33] CPU #5: 0.86 kH/s
+[2022-02-03 21:52:33] CPU #6: 0.87 kH/s
+[2022-02-03 21:52:33] CPU #75: 0.87 kH/s
+[2022-02-03 21:52:33] CPU #73: 0.87 kH/s
+[2022-02-03 21:52:33] CPU #3: 0.87 kH/s
+[2022-02-03 21:52:33] CPU #11: 0.87 kH/s
+[2022-02-03 21:52:33] CPU #88: 0.87 kH/s
+[2022-02-03 21:52:33] CPU #68: 0.87 kH/s
+[2022-02-03 21:52:33] CPU #71: 0.86 kH/s
+[2022-02-03 21:52:33] CPU #70: 0.87 kH/s
+[2022-02-03 21:52:33] CPU #13: 0.86 kH/s
+[2022-02-03 21:52:33] CPU #94: 0.87 kH/s
+[2022-02-03 21:52:33] CPU #1: 0.87 kH/s
+[2022-02-03 21:52:33] CPU #10: 0.87 kH/s
+[2022-02-03 21:52:33] CPU #84: 0.87 kH/s
+[2022-02-03 21:52:33] CPU #86: 0.87 kH/s
+[2022-02-03 21:52:33] CPU #89: 0.87 kH/s
+[2022-02-03 21:52:33] CPU #90: 0.87 kH/s
+[2022-02-03 21:52:33] CPU #83: 0.87 kH/s
+[2022-02-03 21:52:33] CPU #12: 0.87 kH/s
+[2022-02-03 21:52:33] CPU #79: 0.87 kH/s
+[2022-02-03 21:52:33] CPU #81: 0.86 kH/s
+[2022-02-03 21:52:33] CPU #76: 0.86 kH/s
+[2022-02-03 21:52:33] CPU #14: 0.86 kH/s
+[2022-02-03 21:52:33] CPU #64: 0.85 kH/s
+[2022-02-03 21:52:33] CPU #82: 0.87 kH/s
+[2022-02-03 21:52:33] CPU #80: 0.87 kH/s
+[2022-02-03 21:52:33] CPU #87: 0.86 kH/s
+[2022-02-03 21:52:33] CPU #85: 0.87 kH/s
+[2022-02-03 21:52:33] CPU #92: 0.87 kH/s
+[2022-02-03 21:52:33] CPU #15: 0.87 kH/s
+[2022-02-03 21:52:33] CPU #91: 0.86 kH/s
+[2022-02-03 21:52:33] CPU #24: 0.87 kH/s
+[2022-02-03 21:52:33] CPU #95: 0.87 kH/s
+[2022-02-03 21:52:33] Total: 110.94 kH/s
+[2022-02-03 21:52:33] CPU #21: 0.87 kH/s
+[2022-02-03 21:52:33] CPU #18: 0.87 kH/s
+[2022-02-03 21:52:33] CPU #26: 0.87 kH/s
+[2022-02-03 21:52:33] CPU #19: 0.87 kH/s
+[2022-02-03 21:52:33] CPU #27: 0.87 kH/s
+[2022-02-03 21:52:33] CPU #22: 0.87 kH/s
+[2022-02-03 21:52:33] CPU #23: 0.87 kH/s
+[2022-02-03 21:52:33] CPU #28: 0.87 kH/s
+[2022-02-03 21:52:33] CPU #17: 0.87 kH/s
+[2022-02-03 21:52:33] CPU #16: 0.87 kH/s
+[2022-02-03 21:52:33] CPU #25: 0.86 kH/s
+[2022-02-03 21:52:33] CPU #20: 0.86 kH/s
+[2022-02-03 21:52:33] CPU #30: 0.87 kH/s
+[2022-02-03 21:52:33] CPU #31: 0.87 kH/s
+[2022-02-03 21:52:33] CPU #29: 0.86 kH/s
+[2022-02-03 21:52:33] CPU #40: 1.73 kH/s
+[2022-02-03 21:52:33] CPU #33: 1.73 kH/s
+[2022-02-03 21:52:33] CPU #35: 1.73 kH/s
+[2022-02-03 21:52:38] Total: 110.92 kH/s
+[2022-02-03 21:52:38] CPU #34: 1.73 kH/s
+[2022-02-03 21:52:42] CPU #49: 1.73 kH/s
+[2022-02-03 21:52:42] CPU #37: 1.73 kH/s
+[2022-02-03 21:52:42] CPU #43: 1.73 kH/s
+[2022-02-03 21:52:42] CPU #39: 1.73 kH/s
+[2022-02-03 21:52:43] CPU #42: 1.73 kH/s
+[2022-02-03 21:52:43] CPU #36: 1.73 kH/s
+[2022-02-03 21:52:43] CPU #47: 1.73 kH/s
+[2022-02-03 21:52:43] CPU #45: 1.73 kH/s
+[2022-02-03 21:52:43] CPU #44: 1.73 kH/s
+[2022-02-03 21:52:43] CPU #46: 1.73 kH/s
+[2022-02-03 21:52:43] CPU #48: 1.73 kH/s
+[2022-02-03 21:52:43] CPU #50: 1.73 kH/s
+[2022-02-03 21:52:43] CPU #63: 1.73 kH/s
+[2022-02-03 21:52:43] CPU #53: 1.73 kH/s
+[2022-02-03 21:52:43] CPU #52: 1.73 kH/s
+[2022-02-03 21:52:43] CPU #60: 1.73 kH/s
+[2022-02-03 21:52:43] CPU #57: 1.73 kH/s
+[2022-02-03 21:52:43] CPU #56: 1.73 kH/s
+[2022-02-03 21:52:43] CPU #54: 1.73 kH/s
+[2022-02-03 21:52:43] CPU #51: 1.73 kH/s
+[2022-02-03 21:52:43] CPU #55: 1.73 kH/s
+[2022-02-03 21:52:43] CPU #58: 1.73 kH/s
+[2022-02-03 21:52:43] CPU #59: 1.73 kH/s
+[2022-02-03 21:52:43] CPU #61: 1.73 kH/s
+[2022-02-03 21:52:43] CPU #62: 1.73 kH/s
+[2022-02-03 21:52:43] CPU #65: 0.86 kH/s
+[2022-02-03 21:52:43] CPU #8: 0.87 kH/s
+[2022-02-03 21:52:43] CPU #9: 0.87 kH/s
+[2022-02-03 21:52:43] CPU #78: 0.87 kH/s
+[2022-02-03 21:52:43] CPU #72: 0.87 kH/s
+[2022-02-03 21:52:43] CPU #93: 0.86 kH/s
+[2022-02-03 21:52:43] CPU #7: 0.87 kH/s
+[2022-02-03 21:52:43] CPU #5: 0.87 kH/s
+[2022-02-03 21:52:43] CPU #0: 0.86 kH/s
+[2022-02-03 21:52:43] CPU #2: 0.87 kH/s
+[2022-02-03 21:52:43] CPU #4: 0.87 kH/s
+[2022-02-03 21:52:43] CPU #77: 0.87 kH/s
+[2022-02-03 21:52:43] CPU #6: 0.87 kH/s
+[2022-02-03 21:52:43] CPU #74: 0.86 kH/s
+[2022-02-03 21:52:43] CPU #66: 0.86 kH/s
+[2022-02-03 21:52:43] CPU #69: 0.87 kH/s
+[2022-02-03 21:52:43] CPU #71: 0.87 kH/s
+[2022-02-03 21:52:43] CPU #88: 0.87 kH/s
+[2022-02-03 21:52:43] CPU #67: 0.87 kH/s
+[2022-02-03 21:52:43] CPU #11: 0.87 kH/s
+[2022-02-03 21:52:43] CPU #68: 0.87 kH/s
+[2022-02-03 21:52:43] CPU #75: 0.86 kH/s
+[2022-02-03 21:52:43] CPU #13: 0.87 kH/s
+[2022-02-03 21:52:43] CPU #73: 0.86 kH/s
+[2022-02-03 21:52:43] CPU #3: 0.86 kH/s
+[2022-02-03 21:52:43] CPU #70: 0.87 kH/s
+[2022-02-03 21:52:43] CPU #94: 0.87 kH/s
+[2022-02-03 21:52:43] CPU #83: 0.87 kH/s
+[2022-02-03 21:52:43] CPU #1: 0.86 kH/s
+[2022-02-03 21:52:43] CPU #81: 0.87 kH/s
+[2022-02-03 21:52:43] CPU #86: 0.87 kH/s
+[2022-02-03 21:52:43] CPU #14: 0.87 kH/s
+[2022-02-03 21:52:43] CPU #76: 0.87 kH/s
+[2022-02-03 21:52:43] CPU #10: 0.87 kH/s
+[2022-02-03 21:52:43] CPU #87: 0.87 kH/s
+[2022-02-03 21:52:43] CPU #80: 0.87 kH/s
+[2022-02-03 21:52:43] CPU #64: 0.86 kH/s
+[2022-02-03 21:52:43] CPU #90: 0.87 kH/s
+[2022-02-03 21:52:43] CPU #89: 0.86 kH/s
+[2022-02-03 21:52:43] CPU #84: 0.86 kH/s
+[2022-02-03 21:52:43] CPU #12: 0.87 kH/s
+[2022-02-03 21:52:43] CPU #79: 0.86 kH/s
+[2022-02-03 21:52:43] CPU #82: 0.87 kH/s
+[2022-02-03 21:52:43] CPU #85: 0.87 kH/s
+[2022-02-03 21:52:43] CPU #92: 0.87 kH/s
+[2022-02-03 21:52:43] CPU #91: 0.87 kH/s
+[2022-02-03 21:52:43] CPU #15: 0.87 kH/s
+[2022-02-03 21:52:43] CPU #24: 0.87 kH/s
+[2022-02-03 21:52:43] CPU #95: 0.87 kH/s
+[2022-02-03 21:52:43] Total: 110.92 kH/s
+[2022-02-03 21:52:43] CPU #21: 0.87 kH/s
+[2022-02-03 21:52:43] CPU #28: 0.87 kH/s
+[2022-02-03 21:52:43] CPU #22: 0.87 kH/s
+[2022-02-03 21:52:43] CPU #23: 0.87 kH/s
+[2022-02-03 21:52:43] CPU #26: 0.87 kH/s
+[2022-02-03 21:52:43] CPU #25: 0.87 kH/s
+[2022-02-03 21:52:43] CPU #17: 0.87 kH/s
+[2022-02-03 21:52:43] CPU #20: 0.87 kH/s
+[2022-02-03 21:52:43] CPU #19: 0.86 kH/s
+[2022-02-03 21:52:43] CPU #18: 0.87 kH/s
+[2022-02-03 21:52:43] CPU #27: 0.87 kH/s
+[2022-02-03 21:52:43] CPU #16: 0.86 kH/s
+[2022-02-03 21:52:43] CPU #30: 0.86 kH/s
+[2022-02-03 21:52:43] CPU #31: 0.87 kH/s
+[2022-02-03 21:52:43] CPU #29: 0.87 kH/s
+[2022-02-03 21:52:43] CPU #33: 1.73 kH/s
+[2022-02-03 21:52:43] CPU #40: 1.73 kH/s
+[2022-02-03 21:52:43] CPU #35: 1.73 kH/s
+[2022-02-03 21:52:43] CPU #32: 1.73 kH/s
+[2022-02-03 21:52:43] CPU #41: 1.73 kH/s
+[2022-02-03 21:52:43] CPU #38: 1.73 kH/s
+[2022-02-03 21:52:48] Total: 110.89 kH/s
+[2022-02-03 21:52:48] CPU #49: 1.73 kH/s
+[2022-02-03 21:52:48] CPU #37: 1.73 kH/s
+[2022-02-03 21:52:48] CPU #34: 1.73 kH/s
+[2022-02-03 21:52:48] CPU #43: 1.73 kH/s
+[2022-02-03 21:52:48] CPU #39: 1.73 kH/s
+[2022-02-03 21:52:52] CPU #36: 1.73 kH/s
+[2022-02-03 21:52:52] CPU #47: 1.73 kH/s
+[2022-02-03 21:52:52] CPU #45: 1.73 kH/s
+[2022-02-03 21:52:53] CPU #48: 1.73 kH/s
+[2022-02-03 21:52:53] CPU #46: 1.73 kH/s
+[2022-02-03 21:52:53] CPU #44: 1.73 kH/s
+[2022-02-03 21:52:53] CPU #50: 1.73 kH/s
+[2022-02-03 21:52:53] CPU #53: 1.73 kH/s
+[2022-02-03 21:52:53] CPU #63: 1.73 kH/s
+[2022-02-03 21:52:53] CPU #52: 1.73 kH/s
+[2022-02-03 21:52:53] CPU #60: 1.73 kH/s
+[2022-02-03 21:52:53] CPU #57: 1.73 kH/s
+[2022-02-03 21:52:53] CPU #56: 1.73 kH/s
+[2022-02-03 21:52:53] CPU #54: 1.73 kH/s
+[2022-02-03 21:52:53] CPU #51: 1.73 kH/s
+[2022-02-03 21:52:53] CPU #58: 1.73 kH/s
+[2022-02-03 21:52:53] CPU #61: 1.73 kH/s
+[2022-02-03 21:52:53] CPU #55: 1.73 kH/s
+[2022-02-03 21:52:53] CPU #62: 1.73 kH/s
+[2022-02-03 21:52:53] CPU #59: 1.73 kH/s
+[2022-02-03 21:52:53] CPU #65: 0.87 kH/s
+[2022-02-03 21:52:53] CPU #72: 0.87 kH/s
+[2022-02-03 21:52:53] CPU #93: 0.87 kH/s
+[2022-02-03 21:52:53] CPU #5: 0.87 kH/s
+[2022-02-03 21:52:53] CPU #8: 0.87 kH/s
+[2022-02-03 21:52:53] CPU #7: 0.87 kH/s
+[2022-02-03 21:52:53] CPU #74: 0.87 kH/s
+[2022-02-03 21:52:53] CPU #77: 0.87 kH/s
+[2022-02-03 21:52:53] CPU #66: 0.87 kH/s
+[2022-02-03 21:52:53] CPU #9: 0.87 kH/s
+[2022-02-03 21:52:53] CPU #78: 0.87 kH/s
+[2022-02-03 21:52:53] CPU #69: 0.87 kH/s
+[2022-02-03 21:52:53] CPU #71: 0.87 kH/s
+[2022-02-03 21:52:53] CPU #6: 0.87 kH/s
+[2022-02-03 21:52:53] CPU #11: 0.87 kH/s
+[2022-02-03 21:52:53] CPU #4: 0.87 kH/s
+[2022-02-03 21:52:53] CPU #67: 0.87 kH/s
+[2022-02-03 21:52:53] CPU #2: 0.86 kH/s
+[2022-02-03 21:52:53] CPU #88: 0.87 kH/s
+[2022-02-03 21:52:53] CPU #73: 0.87 kH/s
+[2022-02-03 21:52:53] CPU #3: 0.87 kH/s
+[2022-02-03 21:52:53] CPU #75: 0.87 kH/s
+[2022-02-03 21:52:53] CPU #0: 0.85 kH/s
+[2022-02-03 21:52:53] CPU #13: 0.87 kH/s
+[2022-02-03 21:52:53] CPU #68: 0.87 kH/s
+[2022-02-03 21:52:53] CPU #70: 0.87 kH/s
+[2022-02-03 21:52:53] CPU #64: 0.86 kH/s
+[2022-02-03 21:52:53] CPU #94: 0.86 kH/s
+[2022-02-03 21:52:53] CPU #1: 0.87 kH/s
+[2022-02-03 21:52:53] CPU #87: 0.87 kH/s
+[2022-02-03 21:52:53] CPU #86: 0.87 kH/s
+[2022-02-03 21:52:53] CPU #14: 0.87 kH/s
+[2022-02-03 21:52:53] CPU #84: 0.87 kH/s
+[2022-02-03 21:52:53] CPU #90: 0.87 kH/s
+[2022-02-03 21:52:53] CPU #89: 0.87 kH/s
+[2022-02-03 21:52:53] CPU #83: 0.87 kH/s
+[2022-02-03 21:52:53] CPU #81: 0.87 kH/s
+[2022-02-03 21:52:53] CPU #12: 0.87 kH/s
+[2022-02-03 21:52:53] CPU #76: 0.86 kH/s
+[2022-02-03 21:52:53] CPU #10: 0.86 kH/s
+[2022-02-03 21:52:53] CPU #82: 0.87 kH/s
+[2022-02-03 21:52:53] CPU #80: 0.87 kH/s
+[2022-02-03 21:52:53] CPU #79: 0.86 kH/s
+[2022-02-03 21:52:53] CPU #85: 0.87 kH/s
+[2022-02-03 21:52:53] CPU #91: 0.87 kH/s
+[2022-02-03 21:52:53] CPU #92: 0.87 kH/s
+[2022-02-03 21:52:53] CPU #15: 0.87 kH/s
+[2022-02-03 21:52:53] CPU #24: 0.87 kH/s
+[2022-02-03 21:52:53] CPU #95: 0.87 kH/s
+[2022-02-03 21:52:53] Total: 110.94 kH/s
+[2022-02-03 21:52:53] CPU #22: 0.87 kH/s
+[2022-02-03 21:52:53] CPU #23: 0.87 kH/s
+[2022-02-03 21:52:53] CPU #21: 0.87 kH/s
+[2022-02-03 21:52:53] CPU #25: 0.87 kH/s
+[2022-02-03 21:52:53] CPU #19: 0.87 kH/s
+[2022-02-03 21:52:53] CPU #20: 0.87 kH/s
+[2022-02-03 21:52:53] CPU #26: 0.87 kH/s
+[2022-02-03 21:52:53] CPU #18: 0.87 kH/s
+[2022-02-03 21:52:53] CPU #17: 0.87 kH/s
+[2022-02-03 21:52:53] CPU #28: 0.86 kH/s
+[2022-02-03 21:52:53] CPU #16: 0.87 kH/s
+[2022-02-03 21:52:53] CPU #27: 0.87 kH/s
+[2022-02-03 21:52:53] CPU #30: 0.87 kH/s
+[2022-02-03 21:52:53] CPU #31: 0.86 kH/s
+[2022-02-03 21:52:53] CPU #29: 0.87 kH/s
+[2022-02-03 21:52:53] CPU #35: 1.73 kH/s
+[2022-02-03 21:52:53] CPU #33: 1.73 kH/s
+[2022-02-03 21:52:53] CPU #40: 1.73 kH/s
+[2022-02-03 21:52:53] CPU #41: 1.73 kH/s
+[2022-02-03 21:52:53] CPU #32: 1.73 kH/s
+[2022-02-03 21:52:53] CPU #38: 1.73 kH/s
+[2022-02-03 21:52:53] CPU #42: 1.73 kH/s
+[2022-02-03 21:52:58] Total: 110.93 kH/s
+[2022-02-03 21:52:58] CPU #49: 1.73 kH/s
+[2022-02-03 21:52:58] CPU #34: 1.73 kH/s
+[2022-02-03 21:52:58] CPU #37: 1.73 kH/s
+[2022-02-03 21:52:58] CPU #43: 1.73 kH/s
+[2022-02-03 21:52:58] CPU #39: 1.73 kH/s
+[2022-02-03 21:52:58] CPU #47: 1.73 kH/s
+[2022-02-03 21:52:58] CPU #36: 1.73 kH/s
+[2022-02-03 21:53:02] CPU #50: 1.73 kH/s
+[2022-02-03 21:53:02] CPU #53: 1.73 kH/s
+[2022-02-03 21:53:03] CPU #52: 1.73 kH/s
+[2022-02-03 21:53:03] CPU #63: 1.73 kH/s
+[2022-02-03 21:53:03] CPU #57: 1.73 kH/s
+[2022-02-03 21:53:03] CPU #60: 1.73 kH/s
+[2022-02-03 21:53:03] CPU #56: 1.73 kH/s
+[2022-02-03 21:53:03] CPU #54: 1.73 kH/s
+[2022-02-03 21:53:03] CPU #51: 1.73 kH/s
+[2022-02-03 21:53:03] CPU #58: 1.73 kH/s
+[2022-02-03 21:53:03] CPU #61: 1.73 kH/s
+[2022-02-03 21:53:03] CPU #55: 1.73 kH/s
+[2022-02-03 21:53:03] CPU #62: 1.73 kH/s
+[2022-02-03 21:53:03] CPU #59: 1.73 kH/s
+[2022-02-03 21:53:03] CPU #65: 0.87 kH/s
+[2022-02-03 21:53:03] CPU #93: 0.87 kH/s
+[2022-02-03 21:53:03] CPU #7: 0.87 kH/s
+[2022-02-03 21:53:03] CPU #5: 0.87 kH/s
+[2022-02-03 21:53:03] CPU #0: 0.86 kH/s
+[2022-02-03 21:53:03] CPU #8: 0.87 kH/s
+[2022-02-03 21:53:03] CPU #4: 0.87 kH/s
+[2022-02-03 21:53:03] CPU #2: 0.87 kH/s
+[2022-02-03 21:53:03] CPU #6: 0.87 kH/s
+[2022-02-03 21:53:03] CPU #75: 0.87 kH/s
+[2022-02-03 21:53:03] CPU #72: 0.87 kH/s
+[2022-02-03 21:53:03] CPU #74: 0.87 kH/s
+[2022-02-03 21:53:03] CPU #73: 0.87 kH/s
+[2022-02-03 21:53:03] CPU #77: 0.86 kH/s
+[2022-02-03 21:53:03] CPU #3: 0.87 kH/s
+[2022-02-03 21:53:03] CPU #78: 0.87 kH/s
+[2022-02-03 21:53:03] CPU #9: 0.87 kH/s
+[2022-02-03 21:53:03] CPU #69: 0.87 kH/s
+[2022-02-03 21:53:03] CPU #67: 0.87 kH/s
+[2022-02-03 21:53:03] CPU #71: 0.86 kH/s
+[2022-02-03 21:53:03] CPU #66: 0.87 kH/s
+[2022-02-03 21:53:03] CPU #11: 0.87 kH/s
+[2022-02-03 21:53:03] CPU #68: 0.87 kH/s
+[2022-02-03 21:53:03] CPU #70: 0.86 kH/s
+[2022-02-03 21:53:03] CPU #13: 0.86 kH/s
+[2022-02-03 21:53:03] CPU #94: 0.87 kH/s
+[2022-02-03 21:53:03] CPU #88: 0.86 kH/s
+[2022-02-03 21:53:03] CPU #1: 0.87 kH/s
+[2022-02-03 21:53:03] CPU #89: 0.87 kH/s
+[2022-02-03 21:53:03] CPU #81: 0.87 kH/s
+[2022-02-03 21:53:03] CPU #84: 0.87 kH/s
+[2022-02-03 21:53:03] CPU #10: 0.87 kH/s
+[2022-02-03 21:53:03] CPU #14: 0.87 kH/s
+[2022-02-03 21:53:03] CPU #79: 0.87 kH/s
+[2022-02-03 21:53:03] CPU #86: 0.87 kH/s
+[2022-02-03 21:53:03] CPU #83: 0.87 kH/s
+[2022-02-03 21:53:03] CPU #87: 0.87 kH/s
+[2022-02-03 21:53:03] CPU #76: 0.87 kH/s
+[2022-02-03 21:53:03] CPU #80: 0.87 kH/s
+[2022-02-03 21:53:03] CPU #12: 0.87 kH/s
+[2022-02-03 21:53:03] CPU #64: 0.85 kH/s
+[2022-02-03 21:53:03] CPU #90: 0.86 kH/s
+[2022-02-03 21:53:03] CPU #82: 0.86 kH/s
+[2022-02-03 21:53:03] CPU #85: 0.86 kH/s
+[2022-02-03 21:53:03] CPU #15: 0.87 kH/s
+[2022-02-03 21:53:03] CPU #92: 0.86 kH/s
+[2022-02-03 21:53:03] CPU #91: 0.86 kH/s
+[2022-02-03 21:53:03] CPU #24: 0.87 kH/s
+[2022-02-03 21:53:03] CPU #28: 0.87 kH/s
+[2022-02-03 21:53:03] CPU #26: 0.87 kH/s
+[2022-02-03 21:53:03] CPU #21: 0.87 kH/s
+[2022-02-03 21:53:03] CPU #95: 0.86 kH/s
+[2022-02-03 21:53:03] Total: 110.92 kH/s
+[2022-02-03 21:53:03] CPU #27: 0.87 kH/s
+[2022-02-03 21:53:03] CPU #22: 0.87 kH/s
+[2022-02-03 21:53:03] CPU #17: 0.87 kH/s
+[2022-02-03 21:53:03] CPU #23: 0.87 kH/s
+[2022-02-03 21:53:03] CPU #18: 0.87 kH/s
+[2022-02-03 21:53:03] CPU #16: 0.87 kH/s
+[2022-02-03 21:53:03] CPU #20: 0.87 kH/s
+[2022-02-03 21:53:03] CPU #25: 0.86 kH/s
+[2022-02-03 21:53:03] CPU #19: 0.86 kH/s
+[2022-02-03 21:53:03] CPU #30: 0.87 kH/s
+[2022-02-03 21:53:03] CPU #31: 0.87 kH/s
+[2022-02-03 21:53:03] CPU #29: 0.86 kH/s
+[2022-02-03 21:53:03] CPU #33: 1.73 kH/s
+[2022-02-03 21:53:03] CPU #35: 1.73 kH/s
+[2022-02-03 21:53:03] CPU #40: 1.73 kH/s
+[2022-02-03 21:53:03] CPU #41: 1.73 kH/s
+[2022-02-03 21:53:03] CPU #32: 1.73 kH/s
+[2022-02-03 21:53:03] CPU #38: 1.73 kH/s
+[2022-02-03 21:53:03] CPU #42: 1.73 kH/s
+[2022-02-03 21:53:03] CPU #45: 1.73 kH/s
+[2022-02-03 21:53:03] CPU #46: 1.73 kH/s
+[2022-02-03 21:53:03] CPU #44: 1.73 kH/s
+[2022-02-03 21:53:03] CPU #48: 1.73 kH/s
+[2022-02-03 21:53:08] Total: 110.94 kH/s
+[2022-02-03 21:53:08] CPU #49: 1.73 kH/s
+[2022-02-03 21:53:08] CPU #34: 1.73 kH/s
+[2022-02-03 21:53:08] CPU #37: 1.73 kH/s
+[2022-02-03 21:53:08] CPU #43: 1.73 kH/s
+[2022-02-03 21:53:08] CPU #36: 1.73 kH/s
+[2022-02-03 21:53:08] CPU #39: 1.73 kH/s
+[2022-02-03 21:53:08] CPU #47: 1.73 kH/s
+[2022-02-03 21:53:08] CPU #50: 1.73 kH/s
+[2022-02-03 21:53:08] CPU #53: 1.73 kH/s
+[2022-02-03 21:53:12] CPU #52: 1.73 kH/s
+[2022-02-03 21:53:12] CPU #56: 1.73 kH/s
+[2022-02-03 21:53:12] CPU #54: 1.73 kH/s
+[2022-02-03 21:53:13] CPU #51: 1.73 kH/s
+[2022-02-03 21:53:13] CPU #62: 1.73 kH/s
+[2022-02-03 21:53:13] CPU #58: 1.73 kH/s
+[2022-02-03 21:53:13] CPU #55: 1.73 kH/s
+[2022-02-03 21:53:13] CPU #61: 1.73 kH/s
+[2022-02-03 21:53:13] CPU #59: 1.73 kH/s
+[2022-02-03 21:53:13] CPU #65: 0.87 kH/s
+[2022-02-03 21:53:13] CPU #93: 0.87 kH/s
+[2022-02-03 21:53:13] CPU #2: 0.87 kH/s
+[2022-02-03 21:53:13] CPU #75: 0.87 kH/s
+[2022-02-03 21:53:13] CPU #5: 0.87 kH/s
+[2022-02-03 21:53:13] CPU #72: 0.87 kH/s
+[2022-02-03 21:53:13] CPU #73: 0.87 kH/s
+[2022-02-03 21:53:13] CPU #77: 0.87 kH/s
+[2022-02-03 21:53:13] CPU #8: 0.87 kH/s
+[2022-02-03 21:53:13] CPU #74: 0.87 kH/s
+[2022-02-03 21:53:13] CPU #71: 0.87 kH/s
+[2022-02-03 21:53:13] CPU #67: 0.87 kH/s
+[2022-02-03 21:53:13] CPU #6: 0.87 kH/s
+[2022-02-03 21:53:13] CPU #78: 0.87 kH/s
+[2022-02-03 21:53:13] CPU #69: 0.87 kH/s
+[2022-02-03 21:53:13] CPU #9: 0.87 kH/s
+[2022-02-03 21:53:13] CPU #11: 0.87 kH/s
+[2022-02-03 21:53:13] CPU #88: 0.87 kH/s
+[2022-02-03 21:53:13] CPU #66: 0.87 kH/s
+[2022-02-03 21:53:13] CPU #13: 0.87 kH/s
+[2022-02-03 21:53:13] CPU #7: 0.87 kH/s
+[2022-02-03 21:53:13] CPU #4: 0.86 kH/s
+[2022-02-03 21:53:13] CPU #3: 0.87 kH/s
+[2022-02-03 21:53:13] CPU #70: 0.87 kH/s
+[2022-02-03 21:53:13] CPU #0: 0.85 kH/s
+[2022-02-03 21:53:13] CPU #1: 0.87 kH/s
+[2022-02-03 21:53:13] CPU #94: 0.87 kH/s
+[2022-02-03 21:53:13] CPU #68: 0.86 kH/s
+[2022-02-03 21:53:13] CPU #64: 0.86 kH/s
+[2022-02-03 21:53:13] CPU #84: 0.87 kH/s
+[2022-02-03 21:53:13] CPU #83: 0.87 kH/s
+[2022-02-03 21:53:13] CPU #10: 0.87 kH/s
+[2022-02-03 21:53:13] CPU #81: 0.87 kH/s
+[2022-02-03 21:53:13] CPU #14: 0.87 kH/s
+[2022-02-03 21:53:13] CPU #86: 0.87 kH/s
+[2022-02-03 21:53:13] CPU #76: 0.87 kH/s
+[2022-02-03 21:53:13] CPU #79: 0.87 kH/s
+[2022-02-03 21:53:13] CPU #80: 0.87 kH/s
+[2022-02-03 21:53:13] CPU #89: 0.86 kH/s
+[2022-02-03 21:53:13] CPU #12: 0.87 kH/s
+[2022-02-03 21:53:13] CPU #82: 0.87 kH/s
+[2022-02-03 21:53:13] CPU #90: 0.87 kH/s
+[2022-02-03 21:53:13] CPU #87: 0.86 kH/s
+[2022-02-03 21:53:13] CPU #85: 0.87 kH/s
+[2022-02-03 21:53:13] CPU #92: 0.87 kH/s
+[2022-02-03 21:53:13] CPU #91: 0.87 kH/s
+[2022-02-03 21:53:13] CPU #24: 0.87 kH/s
+[2022-02-03 21:53:13] CPU #15: 0.86 kH/s
+[2022-02-03 21:53:13] CPU #21: 0.87 kH/s
+[2022-02-03 21:53:13] CPU #26: 0.87 kH/s
+[2022-02-03 21:53:13] CPU #18: 0.87 kH/s
+[2022-02-03 21:53:13] CPU #22: 0.87 kH/s
+[2022-02-03 21:53:13] CPU #23: 0.87 kH/s
+[2022-02-03 21:53:13] CPU #95: 0.87 kH/s
+[2022-02-03 21:53:13] Total: 110.95 kH/s
+[2022-02-03 21:53:13] CPU #25: 0.87 kH/s
+[2022-02-03 21:53:13] CPU #28: 0.86 kH/s
+[2022-02-03 21:53:13] CPU #20: 0.87 kH/s
+[2022-02-03 21:53:13] CPU #27: 0.87 kH/s
+[2022-02-03 21:53:13] CPU #17: 0.87 kH/s
+[2022-02-03 21:53:13] CPU #19: 0.87 kH/s
+[2022-02-03 21:53:13] CPU #16: 0.86 kH/s
+[2022-02-03 21:53:13] CPU #30: 0.87 kH/s
+[2022-02-03 21:53:13] CPU #31: 0.87 kH/s
+[2022-02-03 21:53:13] CPU #29: 0.86 kH/s
+[2022-02-03 21:53:13] CPU #33: 1.73 kH/s
+[2022-02-03 21:53:13] CPU #35: 1.73 kH/s
+[2022-02-03 21:53:13] CPU #40: 1.73 kH/s
+[2022-02-03 21:53:13] CPU #41: 1.73 kH/s
+[2022-02-03 21:53:13] CPU #32: 1.73 kH/s
+[2022-02-03 21:53:13] CPU #38: 1.73 kH/s
+[2022-02-03 21:53:13] CPU #42: 1.73 kH/s
+[2022-02-03 21:53:13] CPU #45: 1.73 kH/s
+[2022-02-03 21:53:13] CPU #48: 1.73 kH/s
+[2022-02-03 21:53:13] CPU #46: 1.73 kH/s
+[2022-02-03 21:53:13] CPU #44: 1.73 kH/s
+[2022-02-03 21:53:13] CPU #63: 1.73 kH/s
+[2022-02-03 21:53:13] CPU #60: 1.73 kH/s
+[2022-02-03 21:53:13] CPU #57: 1.73 kH/s
+[2022-02-03 21:53:18] Total: 110.91 kH/s
+[2022-02-03 21:53:18] CPU #49: 1.73 kH/s
+[2022-02-03 21:53:18] CPU #34: 1.73 kH/s
+[2022-02-03 21:53:18] CPU #37: 1.73 kH/s
+[2022-02-03 21:53:18] CPU #43: 1.73 kH/s
+[2022-02-03 21:53:18] CPU #36: 1.73 kH/s
+[2022-02-03 21:53:18] CPU #39: 1.73 kH/s
+[2022-02-03 21:53:18] CPU #47: 1.73 kH/s
+[2022-02-03 21:53:18] CPU #50: 1.73 kH/s
+[2022-02-03 21:53:18] CPU #53: 1.73 kH/s
+[2022-02-03 21:53:18] CPU #56: 1.73 kH/s
+[2022-02-03 21:53:18] CPU #52: 1.73 kH/s
+[2022-02-03 21:53:19] CPU #54: 1.73 kH/s
+[2022-02-03 21:53:19] CPU #57: 1.73 kH/s
+[2022-02-03 21:53:23] CPU #51: 1.73 kH/s
+[2022-02-03 21:53:23] CPU #62: 1.73 kH/s
+[2022-02-03 21:53:23] CPU #58: 1.73 kH/s
+[2022-02-03 21:53:23] CPU #55: 1.73 kH/s
+[2022-02-03 21:53:23] CPU #61: 1.73 kH/s
+[2022-02-03 21:53:23] CPU #59: 1.73 kH/s
+[2022-02-03 21:53:23] CPU #65: 0.87 kH/s
+[2022-02-03 21:53:23] CPU #93: 0.87 kH/s
+[2022-02-03 21:53:23] CPU #77: 0.87 kH/s
+[2022-02-03 21:53:23] CPU #71: 0.87 kH/s
+[2022-02-03 21:53:23] CPU #69: 0.87 kH/s
+[2022-02-03 21:53:23] CPU #9: 0.87 kH/s
+[2022-02-03 21:53:23] CPU #72: 0.87 kH/s
+[2022-02-03 21:53:23] CPU #4: 0.87 kH/s
+[2022-02-03 21:53:23] CPU #66: 0.87 kH/s
+[2022-02-03 21:53:23] CPU #7: 0.87 kH/s
+[2022-02-03 21:53:23] CPU #0: 0.86 kH/s
+[2022-02-03 21:53:23] CPU #75: 0.87 kH/s
+[2022-02-03 21:53:23] CPU #2: 0.86 kH/s
+[2022-02-03 21:53:23] CPU #5: 0.86 kH/s
+[2022-02-03 21:53:23] CPU #8: 0.87 kH/s
+[2022-02-03 21:53:23] CPU #73: 0.87 kH/s
+[2022-02-03 21:53:23] CPU #88: 0.87 kH/s
+[2022-02-03 21:53:23] CPU #6: 0.87 kH/s
+[2022-02-03 21:53:23] CPU #13: 0.87 kH/s
+[2022-02-03 21:53:23] CPU #3: 0.87 kH/s
+[2022-02-03 21:53:23] CPU #68: 0.87 kH/s
+[2022-02-03 21:53:23] CPU #70: 0.87 kH/s
+[2022-02-03 21:53:23] CPU #11: 0.87 kH/s
+[2022-02-03 21:53:23] CPU #74: 0.86 kH/s
+[2022-02-03 21:53:23] CPU #67: 0.86 kH/s
+[2022-02-03 21:53:23] CPU #78: 0.86 kH/s
+[2022-02-03 21:53:23] CPU #1: 0.87 kH/s
+[2022-02-03 21:53:23] CPU #94: 0.87 kH/s
+[2022-02-03 21:53:23] CPU #10: 0.87 kH/s
+[2022-02-03 21:53:23] CPU #76: 0.87 kH/s
+[2022-02-03 21:53:23] CPU #89: 0.87 kH/s
+[2022-02-03 21:53:23] CPU #84: 0.87 kH/s
+[2022-02-03 21:53:23] CPU #81: 0.87 kH/s
+[2022-02-03 21:53:23] CPU #64: 0.86 kH/s
+[2022-02-03 21:53:23] CPU #83: 0.87 kH/s
+[2022-02-03 21:53:23] CPU #14: 0.86 kH/s
+[2022-02-03 21:53:23] CPU #86: 0.86 kH/s
+[2022-02-03 21:53:23] CPU #87: 0.87 kH/s
+[2022-02-03 21:53:23] CPU #85: 0.87 kH/s
+[2022-02-03 21:53:23] CPU #82: 0.87 kH/s
+[2022-02-03 21:53:23] CPU #79: 0.86 kH/s
+[2022-02-03 21:53:23] CPU #12: 0.86 kH/s
+[2022-02-03 21:53:23] CPU #90: 0.87 kH/s
+[2022-02-03 21:53:23] CPU #92: 0.87 kH/s
+[2022-02-03 21:53:23] CPU #91: 0.87 kH/s
+[2022-02-03 21:53:23] CPU #80: 0.86 kH/s
+[2022-02-03 21:53:23] CPU #15: 0.87 kH/s
+[2022-02-03 21:53:23] CPU #24: 0.87 kH/s
+[2022-02-03 21:53:23] CPU #22: 0.87 kH/s
+[2022-02-03 21:53:23] CPU #23: 0.87 kH/s
+[2022-02-03 21:53:23] CPU #28: 0.87 kH/s
+[2022-02-03 21:53:23] CPU #95: 0.87 kH/s
+[2022-02-03 21:53:23] Total: 110.94 kH/s
+[2022-02-03 21:53:23] CPU #25: 0.87 kH/s
+[2022-02-03 21:53:23] CPU #19: 0.87 kH/s
+[2022-02-03 21:53:23] CPU #27: 0.87 kH/s
+[2022-02-03 21:53:23] CPU #26: 0.87 kH/s
+[2022-02-03 21:53:23] CPU #21: 0.86 kH/s
+[2022-02-03 21:53:23] CPU #18: 0.87 kH/s
+[2022-02-03 21:53:23] CPU #17: 0.87 kH/s
+[2022-02-03 21:53:23] CPU #16: 0.87 kH/s
+[2022-02-03 21:53:23] CPU #20: 0.86 kH/s
+[2022-02-03 21:53:23] CPU #30: 0.87 kH/s
+[2022-02-03 21:53:23] CPU #31: 0.86 kH/s
+[2022-02-03 21:53:23] CPU #29: 0.87 kH/s
+[2022-02-03 21:53:23] CPU #33: 1.73 kH/s
+[2022-02-03 21:53:23] CPU #35: 1.73 kH/s
+[2022-02-03 21:53:23] CPU #40: 1.73 kH/s
+[2022-02-03 21:53:23] CPU #41: 1.73 kH/s
+[2022-02-03 21:53:23] CPU #32: 1.73 kH/s
+[2022-02-03 21:53:23] CPU #38: 1.73 kH/s
+[2022-02-03 21:53:23] CPU #42: 1.73 kH/s
+[2022-02-03 21:53:23] CPU #45: 1.73 kH/s
+[2022-02-03 21:53:23] CPU #46: 1.73 kH/s
+[2022-02-03 21:53:23] CPU #44: 1.73 kH/s
+[2022-02-03 21:53:23] CPU #48: 1.73 kH/s
+[2022-02-03 21:53:23] CPU #60: 1.73 kH/s
+[2022-02-03 21:53:23] CPU #63: 1.73 kH/s
+[2022-02-03 21:53:28] Total: 110.91 kH/s
+[2022-02-03 21:53:28] CPU #49: 1.73 kH/s
+[2022-02-03 21:53:28] CPU #34: 1.73 kH/s
+[2022-02-03 21:53:28] CPU #37: 1.73 kH/s
+[2022-02-03 21:53:28] CPU #43: 1.73 kH/s
+[2022-02-03 21:53:28] CPU #36: 1.73 kH/s
+[2022-02-03 21:53:28] CPU #39: 1.73 kH/s
+[2022-02-03 21:53:28] CPU #47: 1.73 kH/s
+[2022-02-03 21:53:28] CPU #50: 1.73 kH/s
+[2022-02-03 21:53:28] CPU #53: 1.73 kH/s
+[2022-02-03 21:53:28] CPU #56: 1.73 kH/s
+[2022-02-03 21:53:28] CPU #52: 1.73 kH/s
+[2022-02-03 21:53:28] CPU #54: 1.73 kH/s
+[2022-02-03 21:53:28] CPU #57: 1.73 kH/s
+[2022-02-03 21:53:33] CPU #51: 1.73 kH/s
+[2022-02-03 21:53:33] CPU #62: 1.73 kH/s
+[2022-02-03 21:53:33] CPU #58: 1.73 kH/s
+[2022-02-03 21:53:33] CPU #55: 1.73 kH/s
+[2022-02-03 21:53:33] CPU #61: 1.73 kH/s
+[2022-02-03 21:53:33] CPU #59: 1.73 kH/s
+[2022-02-03 21:53:33] CPU #65: 0.86 kH/s
+[2022-02-03 21:53:33] CPU #93: 0.87 kH/s
+[2022-02-03 21:53:33] CPU #69: 0.87 kH/s
+[2022-02-03 21:53:33] CPU #8: 0.87 kH/s
+[2022-02-03 21:53:33] CPU #5: 0.87 kH/s
+[2022-02-03 21:53:33] CPU #70: 0.87 kH/s
+[2022-02-03 21:53:33] CPU #2: 0.87 kH/s
+[2022-02-03 21:53:33] CPU #72: 0.87 kH/s
+[2022-02-03 21:53:33] CPU #75: 0.87 kH/s
+[2022-02-03 21:53:33] CPU #13: 0.87 kH/s
+[2022-02-03 21:53:33] CPU #4: 0.87 kH/s
+[2022-02-03 21:53:33] CPU #3: 0.87 kH/s
+[2022-02-03 21:53:33] CPU #7: 0.87 kH/s
+[2022-02-03 21:53:33] CPU #88: 0.87 kH/s
+[2022-02-03 21:53:33] CPU #73: 0.87 kH/s
+[2022-02-03 21:53:33] CPU #77: 0.86 kH/s
+[2022-02-03 21:53:33] CPU #74: 0.87 kH/s
+[2022-02-03 21:53:33] CPU #78: 0.87 kH/s
+[2022-02-03 21:53:33] CPU #11: 0.87 kH/s
+[2022-02-03 21:53:33] CPU #71: 0.86 kH/s
+[2022-02-03 21:53:33] CPU #9: 0.87 kH/s
+[2022-02-03 21:53:33] CPU #67: 0.87 kH/s
+[2022-02-03 21:53:33] CPU #6: 0.87 kH/s
+[2022-02-03 21:53:33] CPU #66: 0.87 kH/s
+[2022-02-03 21:53:33] CPU #68: 0.87 kH/s
+[2022-02-03 21:53:33] CPU #64: 0.86 kH/s
+[2022-02-03 21:53:33] CPU #1: 0.87 kH/s
+[2022-02-03 21:53:33] CPU #94: 0.87 kH/s
+[2022-02-03 21:53:33] CPU #0: 0.85 kH/s
+[2022-02-03 21:53:33] CPU #79: 0.87 kH/s
+[2022-02-03 21:53:33] CPU #89: 0.87 kH/s
+[2022-02-03 21:53:33] CPU #84: 0.87 kH/s
+[2022-02-03 21:53:33] CPU #81: 0.87 kH/s
+[2022-02-03 21:53:33] CPU #14: 0.87 kH/s
+[2022-02-03 21:53:33] CPU #83: 0.87 kH/s
+[2022-02-03 21:53:33] CPU #86: 0.87 kH/s
+[2022-02-03 21:53:33] CPU #10: 0.87 kH/s
+[2022-02-03 21:53:33] CPU #76: 0.87 kH/s
+[2022-02-03 21:53:33] CPU #87: 0.87 kH/s
+[2022-02-03 21:53:33] CPU #80: 0.87 kH/s
+[2022-02-03 21:53:33] CPU #90: 0.87 kH/s
+[2022-02-03 21:53:33] CPU #12: 0.87 kH/s
+[2022-02-03 21:53:33] CPU #82: 0.87 kH/s
+[2022-02-03 21:53:33] CPU #85: 0.86 kH/s
+[2022-02-03 21:53:33] CPU #91: 0.86 kH/s
+[2022-02-03 21:53:33] CPU #92: 0.86 kH/s
+[2022-02-03 21:53:33] CPU #15: 0.86 kH/s
+[2022-02-03 21:53:33] CPU #24: 0.87 kH/s
+[2022-02-03 21:53:33] CPU #28: 0.87 kH/s
+[2022-02-03 21:53:33] CPU #19: 0.87 kH/s
+[2022-02-03 21:53:33] CPU #27: 0.87 kH/s
+[2022-02-03 21:53:33] CPU #22: 0.87 kH/s
+[2022-02-03 21:53:33] CPU #23: 0.87 kH/s
+[2022-02-03 21:53:33] CPU #17: 0.87 kH/s
+[2022-02-03 21:53:33] CPU #21: 0.87 kH/s
+[2022-02-03 21:53:33] CPU #18: 0.87 kH/s
+[2022-02-03 21:53:33] CPU #95: 0.87 kH/s
+[2022-02-03 21:53:33] Total: 110.95 kH/s
+[2022-02-03 21:53:33] CPU #25: 0.87 kH/s
+[2022-02-03 21:53:33] CPU #20: 0.87 kH/s
+[2022-02-03 21:53:33] CPU #26: 0.86 kH/s
+[2022-02-03 21:53:33] CPU #16: 0.86 kH/s
+[2022-02-03 21:53:33] CPU #30: 0.86 kH/s
+[2022-02-03 21:53:33] CPU #31: 0.87 kH/s
+[2022-02-03 21:53:33] CPU #29: 0.87 kH/s
+[2022-02-03 21:53:33] CPU #33: 1.73 kH/s
+[2022-02-03 21:53:33] CPU #35: 1.73 kH/s
+[2022-02-03 21:53:33] CPU #40: 1.73 kH/s
+[2022-02-03 21:53:33] CPU #41: 1.73 kH/s
+[2022-02-03 21:53:33] CPU #32: 1.73 kH/s
+[2022-02-03 21:53:33] CPU #38: 1.73 kH/s
+[2022-02-03 21:53:33] CPU #42: 1.73 kH/s
+[2022-02-03 21:53:33] CPU #48: 1.73 kH/s
+[2022-02-03 21:53:33] CPU #45: 1.73 kH/s
+[2022-02-03 21:53:33] CPU #60: 1.73 kH/s
+[2022-02-03 21:53:33] CPU #46: 1.73 kH/s
+[2022-02-03 21:53:33] CPU #44: 1.73 kH/s
+[2022-02-03 21:53:33] CPU #63: 1.73 kH/s
+[2022-02-03 21:53:38] Total: 110.91 kH/s
+[2022-02-03 21:53:38] CPU #49: 1.73 kH/s
+[2022-02-03 21:53:38] CPU #34: 1.73 kH/s
+[2022-02-03 21:53:38] CPU #37: 1.73 kH/s
+[2022-02-03 21:53:38] CPU #43: 1.73 kH/s
+[2022-02-03 21:53:38] CPU #36: 1.73 kH/s
+[2022-02-03 21:53:38] CPU #39: 1.73 kH/s
+[2022-02-03 21:53:38] CPU #50: 1.73 kH/s
+[2022-02-03 21:53:38] CPU #47: 1.73 kH/s
+[2022-02-03 21:53:38] CPU #53: 1.73 kH/s
+[2022-02-03 21:53:38] CPU #56: 1.73 kH/s
+[2022-02-03 21:53:38] CPU #52: 1.73 kH/s
+[2022-02-03 21:53:38] CPU #54: 1.73 kH/s
+[2022-02-03 21:53:38] CPU #57: 1.73 kH/s
+[2022-02-03 21:53:43] CPU #51: 1.73 kH/s
+[2022-02-03 21:53:43] CPU #62: 1.73 kH/s
+[2022-02-03 21:53:43] CPU #55: 1.73 kH/s
+[2022-02-03 21:53:43] CPU #58: 1.73 kH/s
+[2022-02-03 21:53:43] CPU #61: 1.73 kH/s
+[2022-02-03 21:53:43] CPU #59: 1.73 kH/s
+[2022-02-03 21:53:43] CPU #65: 0.87 kH/s
+[2022-02-03 21:53:43] CPU #93: 0.87 kH/s
+[2022-02-03 21:53:43] CPU #2: 0.87 kH/s
+[2022-02-03 21:53:43] CPU #5: 0.87 kH/s
+[2022-02-03 21:53:43] CPU #77: 0.87 kH/s
+[2022-02-03 21:53:43] CPU #7: 0.87 kH/s
+[2022-02-03 21:53:43] CPU #88: 0.87 kH/s
+[2022-02-03 21:53:43] CPU #71: 0.87 kH/s
+[2022-02-03 21:53:43] CPU #69: 0.87 kH/s
+[2022-02-03 21:53:43] CPU #70: 0.87 kH/s
+[2022-02-03 21:53:43] CPU #72: 0.87 kH/s
+[2022-02-03 21:53:43] CPU #67: 0.87 kH/s
+[2022-02-03 21:53:43] CPU #11: 0.87 kH/s
+[2022-02-03 21:53:43] CPU #74: 0.87 kH/s
+[2022-02-03 21:53:43] CPU #75: 0.87 kH/s
+[2022-02-03 21:53:43] CPU #9: 0.87 kH/s
+[2022-02-03 21:53:43] CPU #4: 0.87 kH/s
+[2022-02-03 21:53:43] CPU #78: 0.87 kH/s
+[2022-02-03 21:53:43] CPU #73: 0.87 kH/s
+[2022-02-03 21:53:43] CPU #66: 0.87 kH/s
+[2022-02-03 21:53:43] CPU #13: 0.87 kH/s
+[2022-02-03 21:53:43] CPU #8: 0.87 kH/s
+[2022-02-03 21:53:43] CPU #64: 0.86 kH/s
+[2022-02-03 21:53:43] CPU #3: 0.87 kH/s
+[2022-02-03 21:53:43] CPU #68: 0.87 kH/s
+[2022-02-03 21:53:43] CPU #6: 0.86 kH/s
+[2022-02-03 21:53:43] CPU #1: 0.87 kH/s
+[2022-02-03 21:53:43] CPU #89: 0.87 kH/s
+[2022-02-03 21:53:43] CPU #94: 0.86 kH/s
+[2022-02-03 21:53:43] CPU #79: 0.87 kH/s
+[2022-02-03 21:53:43] CPU #14: 0.87 kH/s
+[2022-02-03 21:53:43] CPU #86: 0.87 kH/s
+[2022-02-03 21:53:43] CPU #80: 0.87 kH/s
+[2022-02-03 21:53:43] CPU #76: 0.87 kH/s
+[2022-02-03 21:53:43] CPU #0: 0.85 kH/s
+[2022-02-03 21:53:43] CPU #84: 0.87 kH/s
+[2022-02-03 21:53:43] CPU #83: 0.87 kH/s
+[2022-02-03 21:53:43] CPU #10: 0.86 kH/s
+[2022-02-03 21:53:43] CPU #81: 0.86 kH/s
+[2022-02-03 21:53:43] CPU #12: 0.87 kH/s
+[2022-02-03 21:53:43] CPU #85: 0.87 kH/s
+[2022-02-03 21:53:43] CPU #87: 0.86 kH/s
+[2022-02-03 21:53:43] CPU #82: 0.87 kH/s
+[2022-02-03 21:53:43] CPU #90: 0.87 kH/s
+[2022-02-03 21:53:43] CPU #91: 0.87 kH/s
+[2022-02-03 21:53:43] CPU #92: 0.87 kH/s
+[2022-02-03 21:53:43] CPU #24: 0.87 kH/s
+[2022-02-03 21:53:43] CPU #15: 0.86 kH/s
+[2022-02-03 21:53:43] CPU #21: 0.87 kH/s
+[2022-02-03 21:53:43] CPU #22: 0.87 kH/s
+[2022-02-03 21:53:43] CPU #23: 0.87 kH/s
+[2022-02-03 21:53:43] CPU #28: 0.87 kH/s
+[2022-02-03 21:53:43] CPU #95: 0.87 kH/s
+[2022-02-03 21:53:43] Total: 110.94 kH/s
+[2022-02-03 21:53:43] CPU #25: 0.87 kH/s
+[2022-02-03 21:53:43] CPU #27: 0.87 kH/s
+[2022-02-03 21:53:43] CPU #19: 0.87 kH/s
+[2022-02-03 21:53:43] CPU #18: 0.87 kH/s
+[2022-02-03 21:53:43] CPU #17: 0.87 kH/s
+[2022-02-03 21:53:43] CPU #16: 0.87 kH/s
+[2022-02-03 21:53:43] CPU #26: 0.87 kH/s
+[2022-02-03 21:53:43] CPU #20: 0.86 kH/s
+[2022-02-03 21:53:43] CPU #30: 0.87 kH/s
+[2022-02-03 21:53:43] CPU #31: 0.87 kH/s
+[2022-02-03 21:53:43] CPU #29: 0.86 kH/s
+[2022-02-03 21:53:43] CPU #33: 1.73 kH/s
+[2022-02-03 21:53:43] CPU #35: 1.73 kH/s
+[2022-02-03 21:53:43] CPU #40: 1.73 kH/s
+[2022-02-03 21:53:43] CPU #41: 1.73 kH/s
+[2022-02-03 21:53:43] CPU #32: 1.73 kH/s
+[2022-02-03 21:53:43] CPU #38: 1.73 kH/s
+[2022-02-03 21:53:43] CPU #42: 1.73 kH/s
+[2022-02-03 21:53:43] CPU #48: 1.73 kH/s
+[2022-02-03 21:53:43] CPU #60: 1.73 kH/s
+[2022-02-03 21:53:43] CPU #45: 1.73 kH/s
+[2022-02-03 21:53:43] CPU #63: 1.73 kH/s
+[2022-02-03 21:53:43] CPU #46: 1.73 kH/s
+[2022-02-03 21:53:43] CPU #44: 1.73 kH/s
+[2022-02-03 21:53:48] Total: 110.92 kH/s
+[2022-02-03 21:53:48] CPU #49: 1.73 kH/s
+[2022-02-03 21:53:48] CPU #34: 1.73 kH/s
+[2022-02-03 21:53:48] CPU #37: 1.73 kH/s
+[2022-02-03 21:53:48] CPU #43: 1.73 kH/s
+[2022-02-03 21:53:48] CPU #36: 1.73 kH/s
+[2022-02-03 21:53:48] CPU #50: 1.73 kH/s
+[2022-02-03 21:53:48] CPU #39: 1.73 kH/s
+[2022-02-03 21:53:48] CPU #47: 1.73 kH/s
+[2022-02-03 21:53:48] CPU #53: 1.73 kH/s
+[2022-02-03 21:53:48] CPU #56: 1.73 kH/s
+[2022-02-03 21:53:48] CPU #52: 1.73 kH/s
+[2022-02-03 21:53:48] CPU #54: 1.73 kH/s
+[2022-02-03 21:53:48] CPU #57: 1.73 kH/s
+[2022-02-03 21:53:53] CPU #51: 1.73 kH/s
+[2022-02-03 21:53:53] CPU #62: 1.73 kH/s
+[2022-02-03 21:53:53] CPU #55: 1.73 kH/s
+[2022-02-03 21:53:53] CPU #58: 1.73 kH/s
+[2022-02-03 21:53:53] CPU #61: 1.73 kH/s
+[2022-02-03 21:53:53] CPU #59: 1.73 kH/s
+[2022-02-03 21:53:53] CPU #65: 0.87 kH/s
+[2022-02-03 21:53:53] CPU #93: 0.87 kH/s
+[2022-02-03 21:53:53] CPU #77: 0.87 kH/s
+[2022-02-03 21:53:53] CPU #8: 0.87 kH/s
+[2022-02-03 21:53:53] CPU #69: 0.87 kH/s
+[2022-02-03 21:53:53] CPU #71: 0.87 kH/s
+[2022-02-03 21:53:53] CPU #75: 0.87 kH/s
+[2022-02-03 21:53:53] CPU #5: 0.87 kH/s
+[2022-02-03 21:53:53] CPU #72: 0.87 kH/s
+[2022-02-03 21:53:53] CPU #4: 0.87 kH/s
+[2022-02-03 21:53:53] CPU #7: 0.87 kH/s
+[2022-02-03 21:53:53] CPU #2: 0.86 kH/s
+[2022-02-03 21:53:53] CPU #73: 0.87 kH/s
+[2022-02-03 21:53:53] CPU #70: 0.87 kH/s
+[2022-02-03 21:53:53] CPU #13: 0.87 kH/s
+[2022-02-03 21:53:53] CPU #3: 0.87 kH/s
+[2022-02-03 21:53:53] CPU #11: 0.87 kH/s
+[2022-02-03 21:53:53] CPU #74: 0.87 kH/s
+[2022-02-03 21:53:53] CPU #67: 0.87 kH/s
+[2022-02-03 21:53:53] CPU #9: 0.87 kH/s
+[2022-02-03 21:53:53] CPU #78: 0.87 kH/s
+[2022-02-03 21:53:53] CPU #68: 0.87 kH/s
+[2022-02-03 21:53:53] CPU #66: 0.87 kH/s
+[2022-02-03 21:53:53] CPU #6: 0.87 kH/s
+[2022-02-03 21:53:53] CPU #0: 0.85 kH/s
+[2022-02-03 21:53:53] CPU #88: 0.86 kH/s
+[2022-02-03 21:53:53] CPU #1: 0.87 kH/s
+[2022-02-03 21:53:53] CPU #94: 0.87 kH/s
+[2022-02-03 21:53:53] CPU #14: 0.87 kH/s
+[2022-02-03 21:53:53] CPU #64: 0.86 kH/s
+[2022-02-03 21:53:53] CPU #76: 0.87 kH/s
+[2022-02-03 21:53:53] CPU #89: 0.87 kH/s
+[2022-02-03 21:53:53] CPU #80: 0.87 kH/s
+[2022-02-03 21:53:53] CPU #84: 0.87 kH/s
+[2022-02-03 21:53:53] CPU #81: 0.87 kH/s
+[2022-02-03 21:53:53] CPU #83: 0.87 kH/s
+[2022-02-03 21:53:53] CPU #86: 0.87 kH/s
+[2022-02-03 21:53:53] CPU #12: 0.87 kH/s
+[2022-02-03 21:53:53] CPU #10: 0.87 kH/s
+[2022-02-03 21:53:53] CPU #87: 0.87 kH/s
+[2022-02-03 21:53:53] CPU #85: 0.87 kH/s
+[2022-02-03 21:53:53] CPU #90: 0.87 kH/s
+[2022-02-03 21:53:53] CPU #79: 0.86 kH/s
+[2022-02-03 21:53:53] CPU #92: 0.87 kH/s
+[2022-02-03 21:53:53] CPU #82: 0.86 kH/s
+[2022-02-03 21:53:53] CPU #91: 0.87 kH/s
+[2022-02-03 21:53:53] CPU #24: 0.87 kH/s
+[2022-02-03 21:53:53] CPU #15: 0.86 kH/s
+[2022-02-03 21:53:53] CPU #22: 0.87 kH/s
+[2022-02-03 21:53:53] CPU #23: 0.87 kH/s
+[2022-02-03 21:53:53] CPU #28: 0.87 kH/s
+[2022-02-03 21:53:53] CPU #27: 0.87 kH/s
+[2022-02-03 21:53:53] CPU #21: 0.86 kH/s
+[2022-02-03 21:53:53] CPU #95: 0.87 kH/s
+[2022-02-03 21:53:53] Total: 110.95 kH/s
+[2022-02-03 21:53:53] CPU #18: 0.87 kH/s
+[2022-02-03 21:53:53] CPU #17: 0.87 kH/s
+[2022-02-03 21:53:53] CPU #16: 0.87 kH/s
+[2022-02-03 21:53:53] CPU #26: 0.87 kH/s
+[2022-02-03 21:53:53] CPU #25: 0.86 kH/s
+[2022-02-03 21:53:53] CPU #19: 0.86 kH/s
+[2022-02-03 21:53:53] CPU #20: 0.87 kH/s
+[2022-02-03 21:53:53] CPU #30: 0.87 kH/s
+[2022-02-03 21:53:53] CPU #31: 0.87 kH/s
+[2022-02-03 21:53:53] CPU #29: 0.87 kH/s
+[2022-02-03 21:53:53] CPU #33: 1.73 kH/s
+[2022-02-03 21:53:53] CPU #35: 1.73 kH/s
+[2022-02-03 21:53:53] CPU #40: 1.73 kH/s
+[2022-02-03 21:53:53] CPU #41: 1.73 kH/s
+[2022-02-03 21:53:53] CPU #32: 1.73 kH/s
+[2022-02-03 21:53:53] CPU #38: 1.73 kH/s
+[2022-02-03 21:53:53] CPU #42: 1.73 kH/s
+[2022-02-03 21:53:53] CPU #60: 1.73 kH/s
+[2022-02-03 21:53:53] CPU #63: 1.73 kH/s
+[2022-02-03 21:53:53] CPU #48: 1.73 kH/s
+[2022-02-03 21:53:53] CPU #45: 1.73 kH/s
+[2022-02-03 21:53:53] CPU #46: 1.73 kH/s
+[2022-02-03 21:53:53] CPU #44: 1.73 kH/s
+[2022-02-03 21:53:58] Total: 110.92 kH/s
+[2022-02-03 21:53:58] CPU #49: 1.73 kH/s
+[2022-02-03 21:53:58] CPU #34: 1.73 kH/s
+[2022-02-03 21:53:58] CPU #37: 1.73 kH/s
+[2022-02-03 21:53:58] CPU #43: 1.73 kH/s
+[2022-02-03 21:53:58] CPU #36: 1.73 kH/s
+[2022-02-03 21:53:58] CPU #50: 1.73 kH/s
+[2022-02-03 21:53:58] CPU #39: 1.73 kH/s
+[2022-02-03 21:53:58] CPU #47: 1.73 kH/s
+[2022-02-03 21:53:58] CPU #56: 1.73 kH/s
+[2022-02-03 21:53:58] CPU #53: 1.73 kH/s
+[2022-02-03 21:53:58] CPU #57: 1.73 kH/s
+[2022-02-03 21:53:58] CPU #52: 1.73 kH/s
+[2022-02-03 21:53:58] CPU #54: 1.73 kH/s
+[2022-02-03 21:54:02] CPU #55: 1.73 kH/s
+[2022-02-03 21:54:02] CPU #58: 1.73 kH/s
+[2022-02-03 21:54:03] CPU #61: 1.73 kH/s
+[2022-02-03 21:54:03] CPU #59: 1.73 kH/s
+[2022-02-03 21:54:03] CPU #65: 0.87 kH/s
+[2022-02-03 21:54:03] CPU #93: 0.87 kH/s
+[2022-02-03 21:54:03] CPU #77: 0.87 kH/s
+[2022-02-03 21:54:03] CPU #69: 0.87 kH/s
+[2022-02-03 21:54:03] CPU #75: 0.87 kH/s
+[2022-02-03 21:54:03] CPU #2: 0.87 kH/s
+[2022-02-03 21:54:03] CPU #5: 0.87 kH/s
+[2022-02-03 21:54:03] CPU #13: 0.87 kH/s
+[2022-02-03 21:54:03] CPU #8: 0.87 kH/s
+[2022-02-03 21:54:03] CPU #7: 0.87 kH/s
+[2022-02-03 21:54:03] CPU #11: 0.87 kH/s
+[2022-02-03 21:54:03] CPU #71: 0.87 kH/s
+[2022-02-03 21:54:03] CPU #74: 0.87 kH/s
+[2022-02-03 21:54:03] CPU #70: 0.87 kH/s
+[2022-02-03 21:54:03] CPU #88: 0.87 kH/s
+[2022-02-03 21:54:03] CPU #78: 0.87 kH/s
+[2022-02-03 21:54:03] CPU #9: 0.87 kH/s
+[2022-02-03 21:54:03] CPU #66: 0.87 kH/s
+[2022-02-03 21:54:03] CPU #72: 0.87 kH/s
+[2022-02-03 21:54:03] CPU #4: 0.86 kH/s
+[2022-02-03 21:54:03] CPU #6: 0.87 kH/s
+[2022-02-03 21:54:03] CPU #3: 0.87 kH/s
+[2022-02-03 21:54:03] CPU #73: 0.86 kH/s
+[2022-02-03 21:54:03] CPU #94: 0.87 kH/s
+[2022-02-03 21:54:03] CPU #68: 0.86 kH/s
+[2022-02-03 21:54:03] CPU #67: 0.87 kH/s
+[2022-02-03 21:54:03] CPU #0: 0.85 kH/s
+[2022-02-03 21:54:03] CPU #64: 0.86 kH/s
+[2022-02-03 21:54:03] CPU #89: 0.87 kH/s
+[2022-02-03 21:54:03] CPU #1: 0.86 kH/s
+[2022-02-03 21:54:03] CPU #10: 0.87 kH/s
+[2022-02-03 21:54:03] CPU #81: 0.87 kH/s
+[2022-02-03 21:54:03] CPU #14: 0.87 kH/s
+[2022-02-03 21:54:03] CPU #86: 0.87 kH/s
+[2022-02-03 21:54:03] CPU #79: 0.87 kH/s
+[2022-02-03 21:54:03] CPU #76: 0.87 kH/s
+[2022-02-03 21:54:03] CPU #87: 0.87 kH/s
+[2022-02-03 21:54:03] CPU #85: 0.87 kH/s
+[2022-02-03 21:54:03] CPU #84: 0.86 kH/s
+[2022-02-03 21:54:03] CPU #12: 0.87 kH/s
+[2022-02-03 21:54:03] CPU #83: 0.86 kH/s
+[2022-02-03 21:54:03] CPU #80: 0.86 kH/s
+[2022-02-03 21:54:03] CPU #91: 0.87 kH/s
+[2022-02-03 21:54:03] CPU #82: 0.87 kH/s
+[2022-02-03 21:54:03] CPU #90: 0.86 kH/s
+[2022-02-03 21:54:03] CPU #92: 0.86 kH/s
+[2022-02-03 21:54:03] CPU #24: 0.87 kH/s
+[2022-02-03 21:54:03] CPU #15: 0.86 kH/s
+[2022-02-03 21:54:03] CPU #22: 0.87 kH/s
+[2022-02-03 21:54:03] CPU #23: 0.87 kH/s
+[2022-02-03 21:54:03] CPU #16: 0.87 kH/s
+[2022-02-03 21:54:03] CPU #21: 0.87 kH/s
+[2022-02-03 21:54:03] CPU #19: 0.87 kH/s
+[2022-02-03 21:54:03] CPU #27: 0.87 kH/s
+[2022-02-03 21:54:03] CPU #28: 0.86 kH/s
+[2022-02-03 21:54:03] CPU #17: 0.87 kH/s
+[2022-02-03 21:54:03] CPU #25: 0.87 kH/s
+[2022-02-03 21:54:03] CPU #26: 0.87 kH/s
+[2022-02-03 21:54:03] CPU #20: 0.87 kH/s
+[2022-02-03 21:54:03] CPU #18: 0.86 kH/s
+[2022-02-03 21:54:03] CPU #95: 0.86 kH/s
+[2022-02-03 21:54:03] Total: 110.93 kH/s
+[2022-02-03 21:54:03] CPU #30: 0.87 kH/s
+[2022-02-03 21:54:03] CPU #31: 0.86 kH/s
+[2022-02-03 21:54:03] CPU #29: 0.87 kH/s
+[2022-02-03 21:54:03] CPU #33: 1.73 kH/s
+[2022-02-03 21:54:03] CPU #35: 1.73 kH/s
+[2022-02-03 21:54:03] CPU #40: 1.73 kH/s
+[2022-02-03 21:54:03] CPU #41: 1.73 kH/s
+[2022-02-03 21:54:03] CPU #32: 1.73 kH/s
+[2022-02-03 21:54:03] CPU #38: 1.73 kH/s
+[2022-02-03 21:54:03] CPU #60: 1.73 kH/s
+[2022-02-03 21:54:03] CPU #63: 1.73 kH/s
+[2022-02-03 21:54:03] CPU #42: 1.73 kH/s
+[2022-02-03 21:54:03] CPU #48: 1.73 kH/s
+[2022-02-03 21:54:03] CPU #45: 1.73 kH/s
+[2022-02-03 21:54:03] CPU #46: 1.73 kH/s
+[2022-02-03 21:54:03] CPU #44: 1.73 kH/s
+[2022-02-03 21:54:03] CPU #62: 1.73 kH/s
+[2022-02-03 21:54:03] CPU #51: 1.73 kH/s
+[2022-02-03 21:54:08] Total: 110.90 kH/s
+[2022-02-03 21:54:08] CPU #49: 1.73 kH/s
+[2022-02-03 21:54:08] CPU #34: 1.73 kH/s
+[2022-02-03 21:54:08] CPU #37: 1.73 kH/s
+[2022-02-03 21:54:08] CPU #43: 1.73 kH/s
+[2022-02-03 21:54:08] CPU #50: 1.73 kH/s
+[2022-02-03 21:54:08] CPU #36: 1.73 kH/s
+[2022-02-03 21:54:08] CPU #39: 1.73 kH/s
+[2022-02-03 21:54:08] CPU #47: 1.73 kH/s
+[2022-02-03 21:54:08] CPU #53: 1.73 kH/s
+[2022-02-03 21:54:08] CPU #56: 1.73 kH/s
+[2022-02-03 21:54:08] CPU #57: 1.73 kH/s
+[2022-02-03 21:54:08] CPU #52: 1.73 kH/s
+[2022-02-03 21:54:08] CPU #54: 1.73 kH/s
+[2022-02-03 21:54:08] CPU #55: 1.73 kH/s
+[2022-02-03 21:54:08] CPU #58: 1.73 kH/s
+[2022-02-03 21:54:12] CPU #59: 1.73 kH/s
+[2022-02-03 21:54:13] CPU #65: 0.87 kH/s
+[2022-02-03 21:54:13] CPU #93: 0.86 kH/s
+[2022-02-03 21:54:13] CPU #77: 0.87 kH/s
+[2022-02-03 21:54:13] CPU #11: 0.87 kH/s
+[2022-02-03 21:54:13] CPU #69: 0.87 kH/s
+[2022-02-03 21:54:13] CPU #8: 0.87 kH/s
+[2022-02-03 21:54:13] CPU #71: 0.87 kH/s
+[2022-02-03 21:54:13] CPU #75: 0.87 kH/s
+[2022-02-03 21:54:13] CPU #0: 0.86 kH/s
+[2022-02-03 21:54:13] CPU #70: 0.87 kH/s
+[2022-02-03 21:54:13] CPU #4: 0.87 kH/s
+[2022-02-03 21:54:13] CPU #7: 0.87 kH/s
+[2022-02-03 21:54:13] CPU #73: 0.87 kH/s
+[2022-02-03 21:54:13] CPU #5: 0.86 kH/s
+[2022-02-03 21:54:13] CPU #13: 0.87 kH/s
+[2022-02-03 21:54:13] CPU #2: 0.86 kH/s
+[2022-02-03 21:54:13] CPU #72: 0.87 kH/s
+[2022-02-03 21:54:13] CPU #3: 0.87 kH/s
+[2022-02-03 21:54:13] CPU #68: 0.87 kH/s
+[2022-02-03 21:54:13] CPU #6: 0.87 kH/s
+[2022-02-03 21:54:13] CPU #88: 0.87 kH/s
+[2022-02-03 21:54:13] CPU #74: 0.86 kH/s
+[2022-02-03 21:54:13] CPU #78: 0.86 kH/s
+[2022-02-03 21:54:13] CPU #67: 0.87 kH/s
+[2022-02-03 21:54:13] CPU #9: 0.86 kH/s
+[2022-02-03 21:54:13] CPU #66: 0.86 kH/s
+[2022-02-03 21:54:13] CPU #1: 0.87 kH/s
+[2022-02-03 21:54:13] CPU #94: 0.86 kH/s
+[2022-02-03 21:54:13] CPU #10: 0.87 kH/s
+[2022-02-03 21:54:13] CPU #89: 0.87 kH/s
+[2022-02-03 21:54:13] CPU #84: 0.87 kH/s
+[2022-02-03 21:54:13] CPU #64: 0.86 kH/s
+[2022-02-03 21:54:13] CPU #81: 0.87 kH/s
+[2022-02-03 21:54:13] CPU #14: 0.86 kH/s
+[2022-02-03 21:54:13] CPU #12: 0.87 kH/s
+[2022-02-03 21:54:13] CPU #87: 0.87 kH/s
+[2022-02-03 21:54:13] CPU #83: 0.87 kH/s
+[2022-02-03 21:54:13] CPU #86: 0.86 kH/s
+[2022-02-03 21:54:13] CPU #76: 0.86 kH/s
+[2022-02-03 21:54:13] CPU #80: 0.87 kH/s
+[2022-02-03 21:54:13] CPU #82: 0.87 kH/s
+[2022-02-03 21:54:13] CPU #79: 0.86 kH/s
+[2022-02-03 21:54:13] CPU #85: 0.87 kH/s
+[2022-02-03 21:54:13] CPU #92: 0.87 kH/s
+[2022-02-03 21:54:13] CPU #91: 0.87 kH/s
+[2022-02-03 21:54:13] CPU #90: 0.87 kH/s
+[2022-02-03 21:54:13] CPU #24: 0.87 kH/s
+[2022-02-03 21:54:13] CPU #15: 0.87 kH/s
+[2022-02-03 21:54:13] CPU #21: 0.87 kH/s
+[2022-02-03 21:54:13] CPU #16: 0.87 kH/s
+[2022-02-03 21:54:13] CPU #22: 0.87 kH/s
+[2022-02-03 21:54:13] CPU #23: 0.87 kH/s
+[2022-02-03 21:54:13] CPU #25: 0.87 kH/s
+[2022-02-03 21:54:13] CPU #28: 0.87 kH/s
+[2022-02-03 21:54:13] CPU #27: 0.87 kH/s
+[2022-02-03 21:54:13] CPU #20: 0.87 kH/s
+[2022-02-03 21:54:13] CPU #18: 0.87 kH/s
+[2022-02-03 21:54:13] CPU #17: 0.87 kH/s
+[2022-02-03 21:54:13] CPU #19: 0.87 kH/s
+[2022-02-03 21:54:13] CPU #26: 0.87 kH/s
+[2022-02-03 21:54:13] CPU #95: 0.86 kH/s
+[2022-02-03 21:54:13] Total: 110.92 kH/s
+[2022-02-03 21:54:13] CPU #30: 0.87 kH/s
+[2022-02-03 21:54:13] CPU #31: 0.87 kH/s
+[2022-02-03 21:54:13] CPU #29: 0.87 kH/s
+[2022-02-03 21:54:13] CPU #33: 1.73 kH/s
+[2022-02-03 21:54:13] CPU #35: 1.73 kH/s
+[2022-02-03 21:54:13] CPU #40: 1.73 kH/s
+[2022-02-03 21:54:13] CPU #41: 1.73 kH/s
+[2022-02-03 21:54:13] CPU #32: 1.73 kH/s
+[2022-02-03 21:54:13] CPU #38: 1.73 kH/s
+[2022-02-03 21:54:13] CPU #60: 1.73 kH/s
+[2022-02-03 21:54:13] CPU #63: 1.73 kH/s
+[2022-02-03 21:54:13] CPU #48: 1.73 kH/s
+[2022-02-03 21:54:13] CPU #42: 1.73 kH/s
+[2022-02-03 21:54:13] CPU #45: 1.73 kH/s
+[2022-02-03 21:54:13] CPU #46: 1.73 kH/s
+[2022-02-03 21:54:13] CPU #44: 1.73 kH/s
+[2022-02-03 21:54:13] CPU #62: 1.73 kH/s
+[2022-02-03 21:54:13] CPU #51: 1.73 kH/s
+[2022-02-03 21:54:14] CPU #61: 1.73 kH/s
+[2022-02-03 21:54:18] Total: 110.94 kH/s
+[2022-02-03 21:54:18] CPU #49: 1.73 kH/s
+[2022-02-03 21:54:18] CPU #34: 1.73 kH/s
+[2022-02-03 21:54:18] CPU #50: 1.73 kH/s
+[2022-02-03 21:54:18] CPU #37: 1.73 kH/s
+[2022-02-03 21:54:18] CPU #43: 1.73 kH/s
+[2022-02-03 21:54:18] CPU #36: 1.73 kH/s
+[2022-02-03 21:54:18] CPU #53: 1.73 kH/s
+[2022-02-03 21:54:18] CPU #39: 1.73 kH/s
+[2022-02-03 21:54:18] CPU #47: 1.73 kH/s
+[2022-02-03 21:54:18] CPU #56: 1.73 kH/s
+[2022-02-03 21:54:18] CPU #57: 1.73 kH/s
+[2022-02-03 21:54:18] CPU #54: 1.73 kH/s
+[2022-02-03 21:54:18] CPU #52: 1.73 kH/s
+[2022-02-03 21:54:18] CPU #58: 1.73 kH/s
+[2022-02-03 21:54:18] CPU #55: 1.73 kH/s
+[2022-02-03 21:54:18] CPU #59: 1.73 kH/s
+[2022-02-03 21:54:23] CPU #65: 0.86 kH/s
+[2022-02-03 21:54:23] CPU #93: 0.87 kH/s
+[2022-02-03 21:54:23] CPU #77: 0.87 kH/s
+[2022-02-03 21:54:23] CPU #69: 0.87 kH/s
+[2022-02-03 21:54:23] CPU #75: 0.87 kH/s
+[2022-02-03 21:54:23] CPU #5: 0.87 kH/s
+[2022-02-03 21:54:23] CPU #0: 0.86 kH/s
+[2022-02-03 21:54:23] CPU #71: 0.87 kH/s
+[2022-02-03 21:54:23] CPU #2: 0.87 kH/s
+[2022-02-03 21:54:23] CPU #13: 0.87 kH/s
+[2022-02-03 21:54:23] CPU #4: 0.87 kH/s
+[2022-02-03 21:54:23] CPU #3: 0.87 kH/s
+[2022-02-03 21:54:23] CPU #73: 0.87 kH/s
+[2022-02-03 21:54:23] CPU #70: 0.87 kH/s
+[2022-02-03 21:54:23] CPU #11: 0.86 kH/s
+[2022-02-03 21:54:23] CPU #8: 0.87 kH/s
+[2022-02-03 21:54:23] CPU #7: 0.87 kH/s
+[2022-02-03 21:54:23] CPU #88: 0.87 kH/s
+[2022-02-03 21:54:23] CPU #9: 0.87 kH/s
+[2022-02-03 21:54:23] CPU #78: 0.87 kH/s
+[2022-02-03 21:54:23] CPU #66: 0.87 kH/s
+[2022-02-03 21:54:23] CPU #68: 0.87 kH/s
+[2022-02-03 21:54:23] CPU #74: 0.87 kH/s
+[2022-02-03 21:54:23] CPU #72: 0.87 kH/s
+[2022-02-03 21:54:23] CPU #67: 0.87 kH/s
+[2022-02-03 21:54:23] CPU #6: 0.87 kH/s
+[2022-02-03 21:54:23] CPU #94: 0.87 kH/s
+[2022-02-03 21:54:23] CPU #1: 0.87 kH/s
+[2022-02-03 21:54:23] CPU #10: 0.87 kH/s
+[2022-02-03 21:54:23] CPU #89: 0.87 kH/s
+[2022-02-03 21:54:23] CPU #84: 0.87 kH/s
+[2022-02-03 21:54:23] CPU #81: 0.87 kH/s
+[2022-02-03 21:54:23] CPU #86: 0.87 kH/s
+[2022-02-03 21:54:23] CPU #12: 0.87 kH/s
+[2022-02-03 21:54:23] CPU #83: 0.87 kH/s
+[2022-02-03 21:54:23] CPU #14: 0.87 kH/s
+[2022-02-03 21:54:23] CPU #87: 0.87 kH/s
+[2022-02-03 21:54:23] CPU #76: 0.87 kH/s
+[2022-02-03 21:54:23] CPU #85: 0.87 kH/s
+[2022-02-03 21:54:23] CPU #79: 0.87 kH/s
+[2022-02-03 21:54:23] CPU #64: 0.85 kH/s
+[2022-02-03 21:54:23] CPU #90: 0.87 kH/s
+[2022-02-03 21:54:23] CPU #80: 0.86 kH/s
+[2022-02-03 21:54:23] CPU #82: 0.86 kH/s
+[2022-02-03 21:54:23] CPU #92: 0.87 kH/s
+[2022-02-03 21:54:23] CPU #91: 0.87 kH/s
+[2022-02-03 21:54:23] CPU #15: 0.87 kH/s
+[2022-02-03 21:54:23] CPU #24: 0.87 kH/s
+[2022-02-03 21:54:23] CPU #22: 0.87 kH/s
+[2022-02-03 21:54:23] CPU #25: 0.87 kH/s
+[2022-02-03 21:54:23] CPU #28: 0.87 kH/s
+[2022-02-03 21:54:23] CPU #23: 0.87 kH/s
+[2022-02-03 21:54:23] CPU #21: 0.86 kH/s
+[2022-02-03 21:54:23] CPU #95: 0.87 kH/s
+[2022-02-03 21:54:23] Total: 110.93 kH/s
+[2022-02-03 21:54:23] CPU #16: 0.87 kH/s
+[2022-02-03 21:54:23] CPU #19: 0.87 kH/s
+[2022-02-03 21:54:23] CPU #18: 0.87 kH/s
+[2022-02-03 21:54:23] CPU #26: 0.87 kH/s
+[2022-02-03 21:54:23] CPU #20: 0.87 kH/s
+[2022-02-03 21:54:23] CPU #27: 0.86 kH/s
+[2022-02-03 21:54:23] CPU #17: 0.86 kH/s
+[2022-02-03 21:54:23] CPU #30: 0.87 kH/s
+[2022-02-03 21:54:23] CPU #31: 0.87 kH/s
+[2022-02-03 21:54:23] CPU #29: 0.87 kH/s
+[2022-02-03 21:54:23] CPU #33: 1.73 kH/s
+[2022-02-03 21:54:23] CPU #35: 1.73 kH/s
+[2022-02-03 21:54:23] CPU #40: 1.73 kH/s
+[2022-02-03 21:54:23] CPU #41: 1.73 kH/s
+[2022-02-03 21:54:23] CPU #38: 1.73 kH/s
+[2022-02-03 21:54:23] CPU #32: 1.73 kH/s
+[2022-02-03 21:54:23] CPU #60: 1.73 kH/s
+[2022-02-03 21:54:23] CPU #63: 1.73 kH/s
+[2022-02-03 21:54:23] CPU #48: 1.73 kH/s
+[2022-02-03 21:54:23] CPU #42: 1.73 kH/s
+[2022-02-03 21:54:23] CPU #45: 1.73 kH/s
+[2022-02-03 21:54:23] CPU #46: 1.73 kH/s
+[2022-02-03 21:54:23] CPU #44: 1.73 kH/s
+[2022-02-03 21:54:23] CPU #62: 1.73 kH/s
+[2022-02-03 21:54:23] CPU #51: 1.73 kH/s
+[2022-02-03 21:54:23] CPU #61: 1.73 kH/s
+[2022-02-03 21:54:28] Total: 110.91 kH/s
+[2022-02-03 21:54:28] CPU #49: 1.73 kH/s
+[2022-02-03 21:54:28] CPU #34: 1.73 kH/s
+[2022-02-03 21:54:28] CPU #50: 1.73 kH/s
+[2022-02-03 21:54:28] CPU #37: 1.73 kH/s
+[2022-02-03 21:54:28] CPU #43: 1.73 kH/s
+[2022-02-03 21:54:28] CPU #36: 1.73 kH/s
+[2022-02-03 21:54:28] CPU #53: 1.73 kH/s
+[2022-02-03 21:54:28] CPU #56: 1.73 kH/s
+[2022-02-03 21:54:28] CPU #39: 1.73 kH/s
+[2022-02-03 21:54:28] CPU #47: 1.73 kH/s
+[2022-02-03 21:54:28] CPU #57: 1.73 kH/s
+[2022-02-03 21:54:28] CPU #54: 1.73 kH/s
+[2022-02-03 21:54:28] CPU #52: 1.73 kH/s
+[2022-02-03 21:54:28] CPU #58: 1.73 kH/s
+[2022-02-03 21:54:28] CPU #55: 1.73 kH/s
+[2022-02-03 21:54:28] CPU #59: 1.73 kH/s
+[2022-02-03 21:54:33] CPU #65: 0.87 kH/s
+[2022-02-03 21:54:33] CPU #93: 0.87 kH/s
+[2022-02-03 21:54:33] CPU #75: 0.87 kH/s
+[2022-02-03 21:54:33] CPU #71: 0.87 kH/s
+[2022-02-03 21:54:33] CPU #2: 0.87 kH/s
+[2022-02-03 21:54:33] CPU #5: 0.87 kH/s
+[2022-02-03 21:54:33] CPU #11: 0.87 kH/s
+[2022-02-03 21:54:33] CPU #77: 0.87 kH/s
+[2022-02-03 21:54:33] CPU #69: 0.87 kH/s
+[2022-02-03 21:54:33] CPU #7: 0.87 kH/s
+[2022-02-03 21:54:33] CPU #0: 0.86 kH/s
+[2022-02-03 21:54:33] CPU #8: 0.87 kH/s
+[2022-02-03 21:54:33] CPU #78: 0.87 kH/s
+[2022-02-03 21:54:33] CPU #13: 0.87 kH/s
+[2022-02-03 21:54:33] CPU #4: 0.87 kH/s
+[2022-02-03 21:54:33] CPU #70: 0.87 kH/s
+[2022-02-03 21:54:33] CPU #9: 0.87 kH/s
+[2022-02-03 21:54:33] CPU #73: 0.87 kH/s
+[2022-02-03 21:54:33] CPU #66: 0.87 kH/s
+[2022-02-03 21:54:33] CPU #72: 0.87 kH/s
+[2022-02-03 21:54:33] CPU #3: 0.87 kH/s
+[2022-02-03 21:54:33] CPU #74: 0.87 kH/s
+[2022-02-03 21:54:33] CPU #88: 0.87 kH/s
+[2022-02-03 21:54:33] CPU #68: 0.87 kH/s
+[2022-02-03 21:54:33] CPU #6: 0.87 kH/s
+[2022-02-03 21:54:33] CPU #67: 0.87 kH/s
+[2022-02-03 21:54:33] CPU #94: 0.87 kH/s
+[2022-02-03 21:54:33] CPU #1: 0.87 kH/s
+[2022-02-03 21:54:33] CPU #14: 0.87 kH/s
+[2022-02-03 21:54:33] CPU #86: 0.87 kH/s
+[2022-02-03 21:54:33] CPU #76: 0.87 kH/s
+[2022-02-03 21:54:33] CPU #10: 0.87 kH/s
+[2022-02-03 21:54:33] CPU #83: 0.87 kH/s
+[2022-02-03 21:54:33] CPU #84: 0.87 kH/s
+[2022-02-03 21:54:33] CPU #89: 0.86 kH/s
+[2022-02-03 21:54:33] CPU #80: 0.87 kH/s
+[2022-02-03 21:54:33] CPU #12: 0.87 kH/s
+[2022-02-03 21:54:33] CPU #81: 0.86 kH/s
+[2022-02-03 21:54:33] CPU #90: 0.87 kH/s
+[2022-02-03 21:54:33] CPU #82: 0.87 kH/s
+[2022-02-03 21:54:33] CPU #85: 0.87 kH/s
+[2022-02-03 21:54:33] CPU #87: 0.86 kH/s
+[2022-02-03 21:54:33] CPU #79: 0.86 kH/s
+[2022-02-03 21:54:33] CPU #64: 0.85 kH/s
+[2022-02-03 21:54:33] CPU #92: 0.87 kH/s
+[2022-02-03 21:54:33] CPU #91: 0.87 kH/s
+[2022-02-03 21:54:33] CPU #15: 0.87 kH/s
+[2022-02-03 21:54:33] CPU #24: 0.87 kH/s
+[2022-02-03 21:54:33] CPU #28: 0.87 kH/s
+[2022-02-03 21:54:33] CPU #21: 0.87 kH/s
+[2022-02-03 21:54:33] CPU #22: 0.87 kH/s
+[2022-02-03 21:54:33] CPU #23: 0.87 kH/s
+[2022-02-03 21:54:33] CPU #25: 0.87 kH/s
+[2022-02-03 21:54:33] CPU #16: 0.87 kH/s
+[2022-02-03 21:54:33] CPU #27: 0.87 kH/s
+[2022-02-03 21:54:33] CPU #18: 0.87 kH/s
+[2022-02-03 21:54:33] CPU #17: 0.87 kH/s
+[2022-02-03 21:54:33] CPU #19: 0.86 kH/s
+[2022-02-03 21:54:33] CPU #26: 0.87 kH/s
+[2022-02-03 21:54:33] CPU #95: 0.86 kH/s
+[2022-02-03 21:54:33] Total: 110.93 kH/s
+[2022-02-03 21:54:33] CPU #20: 0.86 kH/s
+[2022-02-03 21:54:33] CPU #30: 0.87 kH/s
+[2022-02-03 21:54:33] CPU #31: 0.87 kH/s
+[2022-02-03 21:54:33] CPU #29: 0.87 kH/s
+[2022-02-03 21:54:33] CPU #33: 1.73 kH/s
+[2022-02-03 21:54:33] CPU #35: 1.73 kH/s
+[2022-02-03 21:54:33] CPU #41: 1.73 kH/s
+[2022-02-03 21:54:33] CPU #40: 1.73 kH/s
+[2022-02-03 21:54:33] CPU #38: 1.73 kH/s
+[2022-02-03 21:54:33] CPU #60: 1.73 kH/s
+[2022-02-03 21:54:33] CPU #32: 1.73 kH/s
+[2022-02-03 21:54:33] CPU #63: 1.73 kH/s
+[2022-02-03 21:54:33] CPU #48: 1.73 kH/s
+[2022-02-03 21:54:33] CPU #42: 1.73 kH/s
+[2022-02-03 21:54:33] CPU #45: 1.73 kH/s
+[2022-02-03 21:54:33] CPU #46: 1.73 kH/s
+[2022-02-03 21:54:33] CPU #44: 1.73 kH/s
+[2022-02-03 21:54:33] CPU #62: 1.73 kH/s
+[2022-02-03 21:54:33] CPU #51: 1.73 kH/s
+[2022-02-03 21:54:33] CPU #61: 1.73 kH/s
+[2022-02-03 21:54:38] Total: 110.93 kH/s
+[2022-02-03 21:54:38] CPU #49: 1.73 kH/s
+[2022-02-03 21:54:38] CPU #34: 1.73 kH/s
+[2022-02-03 21:54:38] CPU #50: 1.73 kH/s
+[2022-02-03 21:54:38] CPU #37: 1.73 kH/s
+[2022-02-03 21:54:38] CPU #43: 1.73 kH/s
+[2022-02-03 21:54:38] CPU #36: 1.73 kH/s
+[2022-02-03 21:54:38] CPU #56: 1.73 kH/s
+[2022-02-03 21:54:38] CPU #53: 1.73 kH/s
+[2022-02-03 21:54:38] CPU #47: 1.73 kH/s
+[2022-02-03 21:54:38] CPU #39: 1.73 kH/s
+[2022-02-03 21:54:38] CPU #57: 1.73 kH/s
+[2022-02-03 21:54:38] CPU #54: 1.73 kH/s
+[2022-02-03 21:54:38] CPU #52: 1.73 kH/s
+[2022-02-03 21:54:38] CPU #58: 1.73 kH/s
+[2022-02-03 21:54:38] CPU #55: 1.73 kH/s
+[2022-02-03 21:54:38] CPU #59: 1.73 kH/s
+[2022-02-03 21:54:43] CPU #65: 0.87 kH/s
+[2022-02-03 21:54:43] CPU #93: 0.87 kH/s
+[2022-02-03 21:54:43] CPU #5: 0.87 kH/s
+[2022-02-03 21:54:43] CPU #11: 0.87 kH/s
+[2022-02-03 21:54:43] CPU #77: 0.87 kH/s
+[2022-02-03 21:54:43] CPU #69: 0.87 kH/s
+[2022-02-03 21:54:43] CPU #7: 0.87 kH/s
+[2022-02-03 21:54:43] CPU #75: 0.86 kH/s
+[2022-02-03 21:54:43] CPU #71: 0.87 kH/s
+[2022-02-03 21:54:43] CPU #0: 0.86 kH/s
+[2022-02-03 21:54:43] CPU #13: 0.87 kH/s
+[2022-02-03 21:54:43] CPU #4: 0.87 kH/s
+[2022-02-03 21:54:43] CPU #2: 0.86 kH/s
+[2022-02-03 21:54:43] CPU #73: 0.87 kH/s
+[2022-02-03 21:54:43] CPU #8: 0.87 kH/s
+[2022-02-03 21:54:43] CPU #3: 0.87 kH/s
+[2022-02-03 21:54:43] CPU #9: 0.87 kH/s
+[2022-02-03 21:54:43] CPU #78: 0.86 kH/s
+[2022-02-03 21:54:43] CPU #68: 0.87 kH/s
+[2022-02-03 21:54:43] CPU #66: 0.87 kH/s
+[2022-02-03 21:54:43] CPU #94: 0.87 kH/s
+[2022-02-03 21:54:43] CPU #67: 0.87 kH/s
+[2022-02-03 21:54:43] CPU #6: 0.87 kH/s
+[2022-02-03 21:54:43] CPU #72: 0.87 kH/s
+[2022-02-03 21:54:43] CPU #74: 0.86 kH/s
+[2022-02-03 21:54:43] CPU #70: 0.86 kH/s
+[2022-02-03 21:54:43] CPU #88: 0.86 kH/s
+[2022-02-03 21:54:43] CPU #1: 0.87 kH/s
+[2022-02-03 21:54:43] CPU #86: 0.87 kH/s
+[2022-02-03 21:54:43] CPU #10: 0.87 kH/s
+[2022-02-03 21:54:43] CPU #89: 0.87 kH/s
+[2022-02-03 21:54:43] CPU #84: 0.87 kH/s
+[2022-02-03 21:54:43] CPU #80: 0.87 kH/s
+[2022-02-03 21:54:43] CPU #79: 0.87 kH/s
+[2022-02-03 21:54:43] CPU #81: 0.87 kH/s
+[2022-02-03 21:54:43] CPU #83: 0.87 kH/s
+[2022-02-03 21:54:43] CPU #87: 0.87 kH/s
+[2022-02-03 21:54:43] CPU #14: 0.86 kH/s
+[2022-02-03 21:54:43] CPU #12: 0.87 kH/s
+[2022-02-03 21:54:43] CPU #85: 0.87 kH/s
+[2022-02-03 21:54:43] CPU #76: 0.86 kH/s
+[2022-02-03 21:54:43] CPU #82: 0.87 kH/s
+[2022-02-03 21:54:43] CPU #90: 0.87 kH/s
+[2022-02-03 21:54:43] CPU #64: 0.85 kH/s
+[2022-02-03 21:54:43] CPU #92: 0.87 kH/s
+[2022-02-03 21:54:43] CPU #91: 0.87 kH/s
+[2022-02-03 21:54:43] CPU #24: 0.87 kH/s
+[2022-02-03 21:54:43] CPU #15: 0.86 kH/s
+[2022-02-03 21:54:43] CPU #21: 0.87 kH/s
+[2022-02-03 21:54:43] CPU #22: 0.87 kH/s
+[2022-02-03 21:54:43] CPU #28: 0.87 kH/s
+[2022-02-03 21:54:43] CPU #25: 0.87 kH/s
+[2022-02-03 21:54:43] CPU #27: 0.87 kH/s
+[2022-02-03 21:54:43] CPU #17: 0.87 kH/s
+[2022-02-03 21:54:43] CPU #18: 0.87 kH/s
+[2022-02-03 21:54:43] CPU #23: 0.86 kH/s
+[2022-02-03 21:54:43] CPU #95: 0.87 kH/s
+[2022-02-03 21:54:43] Total: 110.94 kH/s
+[2022-02-03 21:54:43] CPU #19: 0.87 kH/s
+[2022-02-03 21:54:43] CPU #26: 0.87 kH/s
+[2022-02-03 21:54:43] CPU #16: 0.87 kH/s
+[2022-02-03 21:54:43] CPU #20: 0.87 kH/s
+[2022-02-03 21:54:43] CPU #30: 0.87 kH/s
+[2022-02-03 21:54:43] CPU #31: 0.87 kH/s
+[2022-02-03 21:54:43] CPU #29: 0.87 kH/s
+[2022-02-03 21:54:43] CPU #33: 1.73 kH/s
+[2022-02-03 21:54:43] CPU #35: 1.73 kH/s
+[2022-02-03 21:54:43] CPU #41: 1.73 kH/s
+[2022-02-03 21:54:43] CPU #40: 1.73 kH/s
+[2022-02-03 21:54:43] CPU #60: 1.73 kH/s
+[2022-02-03 21:54:43] CPU #63: 1.73 kH/s
+[2022-02-03 21:54:43] CPU #38: 1.73 kH/s
+[2022-02-03 21:54:43] CPU #32: 1.73 kH/s
+[2022-02-03 21:54:43] CPU #48: 1.73 kH/s
+[2022-02-03 21:54:43] CPU #42: 1.73 kH/s
+[2022-02-03 21:54:43] CPU #45: 1.73 kH/s
+[2022-02-03 21:54:43] CPU #46: 1.73 kH/s
+[2022-02-03 21:54:43] CPU #44: 1.73 kH/s
+[2022-02-03 21:54:43] CPU #62: 1.73 kH/s
+[2022-02-03 21:54:43] CPU #51: 1.73 kH/s
+[2022-02-03 21:54:43] CPU #61: 1.73 kH/s
+[2022-02-03 21:54:48] Total: 110.92 kH/s
+[2022-02-03 21:54:48] CPU #49: 1.73 kH/s
+[2022-02-03 21:54:48] CPU #34: 1.73 kH/s
+[2022-02-03 21:54:48] CPU #50: 1.73 kH/s
+[2022-02-03 21:54:48] CPU #37: 1.73 kH/s
+[2022-02-03 21:54:48] CPU #43: 1.73 kH/s
+[2022-02-03 21:54:48] CPU #36: 1.73 kH/s
+[2022-02-03 21:54:48] CPU #56: 1.73 kH/s
+[2022-02-03 21:54:48] CPU #53: 1.73 kH/s
+[2022-02-03 21:54:48] CPU #47: 1.73 kH/s
+[2022-02-03 21:54:48] CPU #39: 1.73 kH/s
+[2022-02-03 21:54:48] CPU #57: 1.73 kH/s
+[2022-02-03 21:54:48] CPU #54: 1.73 kH/s
+[2022-02-03 21:54:48] CPU #52: 1.73 kH/s
+[2022-02-03 21:54:48] CPU #58: 1.73 kH/s
+[2022-02-03 21:54:48] CPU #55: 1.73 kH/s
+[2022-02-03 21:54:48] CPU #59: 1.73 kH/s
+[2022-02-03 21:54:53] CPU #65: 0.86 kH/s
+[2022-02-03 21:54:53] CPU #93: 0.87 kH/s
+[2022-02-03 21:54:53] CPU #75: 0.87 kH/s
+[2022-02-03 21:54:53] CPU #0: 0.86 kH/s
+[2022-02-03 21:54:53] CPU #5: 0.87 kH/s
+[2022-02-03 21:54:53] CPU #2: 0.87 kH/s
+[2022-02-03 21:54:53] CPU #71: 0.87 kH/s
+[2022-02-03 21:54:53] CPU #7: 0.87 kH/s
+[2022-02-03 21:54:53] CPU #77: 0.86 kH/s
+[2022-02-03 21:54:53] CPU #11: 0.86 kH/s
+[2022-02-03 21:54:53] CPU #78: 0.87 kH/s
+[2022-02-03 21:54:53] CPU #69: 0.86 kH/s
+[2022-02-03 21:54:53] CPU #3: 0.87 kH/s
+[2022-02-03 21:54:53] CPU #88: 0.87 kH/s
+[2022-02-03 21:54:53] CPU #9: 0.87 kH/s
+[2022-02-03 21:54:53] CPU #8: 0.87 kH/s
+[2022-02-03 21:54:53] CPU #66: 0.87 kH/s
+[2022-02-03 21:54:53] CPU #70: 0.87 kH/s
+[2022-02-03 21:54:53] CPU #13: 0.86 kH/s
+[2022-02-03 21:54:53] CPU #74: 0.87 kH/s
+[2022-02-03 21:54:53] CPU #4: 0.86 kH/s
+[2022-02-03 21:54:53] CPU #73: 0.86 kH/s
+[2022-02-03 21:54:53] CPU #6: 0.87 kH/s
+[2022-02-03 21:54:53] CPU #67: 0.87 kH/s
+[2022-02-03 21:54:53] CPU #72: 0.87 kH/s
+[2022-02-03 21:54:53] CPU #68: 0.86 kH/s
+[2022-02-03 21:54:53] CPU #94: 0.86 kH/s
+[2022-02-03 21:54:53] CPU #10: 0.87 kH/s
+[2022-02-03 21:54:53] CPU #89: 0.87 kH/s
+[2022-02-03 21:54:53] CPU #1: 0.86 kH/s
+[2022-02-03 21:54:53] CPU #81: 0.87 kH/s
+[2022-02-03 21:54:53] CPU #86: 0.87 kH/s
+[2022-02-03 21:54:53] CPU #14: 0.87 kH/s
+[2022-02-03 21:54:53] CPU #83: 0.87 kH/s
+[2022-02-03 21:54:53] CPU #87: 0.87 kH/s
+[2022-02-03 21:54:53] CPU #76: 0.87 kH/s
+[2022-02-03 21:54:53] CPU #84: 0.86 kH/s
+[2022-02-03 21:54:53] CPU #12: 0.87 kH/s
+[2022-02-03 21:54:53] CPU #82: 0.87 kH/s
+[2022-02-03 21:54:53] CPU #79: 0.86 kH/s
+[2022-02-03 21:54:53] CPU #91: 0.87 kH/s
+[2022-02-03 21:54:53] CPU #80: 0.86 kH/s
+[2022-02-03 21:54:53] CPU #85: 0.86 kH/s
+[2022-02-03 21:54:53] CPU #90: 0.87 kH/s
+[2022-02-03 21:54:53] CPU #64: 0.85 kH/s
+[2022-02-03 21:54:53] CPU #92: 0.86 kH/s
+[2022-02-03 21:54:53] CPU #24: 0.87 kH/s
+[2022-02-03 21:54:53] CPU #15: 0.86 kH/s
+[2022-02-03 21:54:53] CPU #21: 0.87 kH/s
+[2022-02-03 21:54:53] CPU #25: 0.87 kH/s
+[2022-02-03 21:54:53] CPU #22: 0.87 kH/s
+[2022-02-03 21:54:53] CPU #28: 0.87 kH/s
+[2022-02-03 21:54:53] CPU #27: 0.87 kH/s
+[2022-02-03 21:54:53] CPU #23: 0.87 kH/s
+[2022-02-03 21:54:53] CPU #95: 0.87 kH/s
+[2022-02-03 21:54:53] Total: 110.92 kH/s
+[2022-02-03 21:54:53] CPU #16: 0.87 kH/s
+[2022-02-03 21:54:53] CPU #19: 0.87 kH/s
+[2022-02-03 21:54:53] CPU #20: 0.87 kH/s
+[2022-02-03 21:54:53] CPU #17: 0.86 kH/s
+[2022-02-03 21:54:53] CPU #18: 0.86 kH/s
+[2022-02-03 21:54:53] CPU #26: 0.87 kH/s
+[2022-02-03 21:54:53] CPU #30: 0.87 kH/s
+[2022-02-03 21:54:53] CPU #31: 0.87 kH/s
+[2022-02-03 21:54:53] CPU #29: 0.87 kH/s
+[2022-02-03 21:54:53] CPU #33: 1.73 kH/s
+[2022-02-03 21:54:53] CPU #35: 1.73 kH/s
+[2022-02-03 21:54:53] CPU #60: 1.73 kH/s
+[2022-02-03 21:54:53] CPU #63: 1.73 kH/s
+[2022-02-03 21:54:53] CPU #41: 1.73 kH/s
+[2022-02-03 21:54:53] CPU #40: 1.73 kH/s
+[2022-02-03 21:54:53] CPU #38: 1.73 kH/s
+[2022-02-03 21:54:53] CPU #32: 1.73 kH/s
+[2022-02-03 21:54:53] CPU #48: 1.73 kH/s
+[2022-02-03 21:54:53] CPU #42: 1.73 kH/s
+[2022-02-03 21:54:53] CPU #45: 1.73 kH/s
+[2022-02-03 21:54:53] CPU #46: 1.73 kH/s
+[2022-02-03 21:54:53] CPU #44: 1.73 kH/s
+[2022-02-03 21:54:53] CPU #62: 1.73 kH/s
+[2022-02-03 21:54:53] CPU #51: 1.73 kH/s
+[2022-02-03 21:54:53] CPU #61: 1.73 kH/s
+[2022-02-03 21:54:58] Total: 110.93 kH/s
+[2022-02-03 21:54:58] CPU #49: 1.73 kH/s
+[2022-02-03 21:54:58] CPU #34: 1.73 kH/s
+[2022-02-03 21:54:58] CPU #50: 1.73 kH/s
+[2022-02-03 21:54:58] CPU #37: 1.73 kH/s
+[2022-02-03 21:54:58] CPU #43: 1.73 kH/s
+[2022-02-03 21:54:58] CPU #56: 1.73 kH/s
+[2022-02-03 21:54:58] CPU #36: 1.73 kH/s
+[2022-02-03 21:54:58] CPU #53: 1.73 kH/s
+[2022-02-03 21:54:58] CPU #47: 1.73 kH/s
+[2022-02-03 21:54:58] CPU #57: 1.73 kH/s
+[2022-02-03 21:54:58] CPU #39: 1.73 kH/s
+[2022-02-03 21:54:58] CPU #54: 1.73 kH/s
+[2022-02-03 21:54:58] CPU #52: 1.73 kH/s
+[2022-02-03 21:54:58] CPU #58: 1.73 kH/s
+[2022-02-03 21:54:58] CPU #55: 1.73 kH/s
+[2022-02-03 21:54:58] CPU #59: 1.73 kH/s
+[2022-02-03 21:55:03] CPU #65: 0.87 kH/s
+[2022-02-03 21:55:03] CPU #93: 0.87 kH/s
+[2022-02-03 21:55:03] CPU #75: 0.87 kH/s
+[2022-02-03 21:55:03] CPU #77: 0.87 kH/s
+[2022-02-03 21:55:03] CPU #5: 0.87 kH/s
+[2022-02-03 21:55:03] CPU #11: 0.87 kH/s
+[2022-02-03 21:55:03] CPU #69: 0.87 kH/s
+[2022-02-03 21:55:03] CPU #7: 0.87 kH/s
+[2022-02-03 21:55:03] CPU #88: 0.87 kH/s
+[2022-02-03 21:55:03] CPU #71: 0.87 kH/s
+[2022-02-03 21:55:03] CPU #78: 0.87 kH/s
+[2022-02-03 21:55:03] CPU #4: 0.87 kH/s
+[2022-02-03 21:55:03] CPU #73: 0.87 kH/s
+[2022-02-03 21:55:03] CPU #2: 0.86 kH/s
+[2022-02-03 21:55:03] CPU #13: 0.87 kH/s
+[2022-02-03 21:55:03] CPU #67: 0.87 kH/s
+[2022-02-03 21:55:03] CPU #74: 0.87 kH/s
+[2022-02-03 21:55:03] CPU #70: 0.87 kH/s
+[2022-02-03 21:55:03] CPU #3: 0.87 kH/s
+[2022-02-03 21:55:03] CPU #72: 0.87 kH/s
+[2022-02-03 21:55:03] CPU #6: 0.87 kH/s
+[2022-02-03 21:55:03] CPU #68: 0.87 kH/s
+[2022-02-03 21:55:03] CPU #9: 0.86 kH/s
+[2022-02-03 21:55:03] CPU #8: 0.86 kH/s
+[2022-02-03 21:55:03] CPU #66: 0.86 kH/s
+[2022-02-03 21:55:03] CPU #94: 0.86 kH/s
+[2022-02-03 21:55:03] CPU #0: 0.85 kH/s
+[2022-02-03 21:55:03] CPU #64: 0.86 kH/s
+[2022-02-03 21:55:03] CPU #1: 0.87 kH/s
+[2022-02-03 21:55:03] CPU #14: 0.87 kH/s
+[2022-02-03 21:55:03] CPU #87: 0.87 kH/s
+[2022-02-03 21:55:03] CPU #86: 0.87 kH/s
+[2022-02-03 21:55:03] CPU #10: 0.87 kH/s
+[2022-02-03 21:55:03] CPU #76: 0.87 kH/s
+[2022-02-03 21:55:03] CPU #84: 0.87 kH/s
+[2022-02-03 21:55:03] CPU #89: 0.86 kH/s
+[2022-02-03 21:55:03] CPU #80: 0.87 kH/s
+[2022-02-03 21:55:03] CPU #81: 0.87 kH/s
+[2022-02-03 21:55:03] CPU #12: 0.87 kH/s
+[2022-02-03 21:55:03] CPU #79: 0.87 kH/s
+[2022-02-03 21:55:03] CPU #85: 0.87 kH/s
+[2022-02-03 21:55:03] CPU #83: 0.86 kH/s
+[2022-02-03 21:55:03] CPU #82: 0.87 kH/s
+[2022-02-03 21:55:03] CPU #92: 0.87 kH/s
+[2022-02-03 21:55:03] CPU #91: 0.87 kH/s
+[2022-02-03 21:55:03] CPU #90: 0.86 kH/s
+[2022-02-03 21:55:03] CPU #15: 0.87 kH/s
+[2022-02-03 21:55:03] CPU #24: 0.87 kH/s
+[2022-02-03 21:55:03] CPU #28: 0.87 kH/s
+[2022-02-03 21:55:03] CPU #21: 0.87 kH/s
+[2022-02-03 21:55:03] CPU #22: 0.87 kH/s
+[2022-02-03 21:55:03] CPU #23: 0.87 kH/s
+[2022-02-03 21:55:03] CPU #19: 0.87 kH/s
+[2022-02-03 21:55:03] CPU #25: 0.87 kH/s
+[2022-02-03 21:55:03] CPU #27: 0.87 kH/s
+[2022-02-03 21:55:03] CPU #16: 0.87 kH/s
+[2022-02-03 21:55:03] CPU #17: 0.87 kH/s
+[2022-02-03 21:55:03] CPU #20: 0.87 kH/s
+[2022-02-03 21:55:03] CPU #18: 0.87 kH/s
+[2022-02-03 21:55:03] CPU #26: 0.87 kH/s
+[2022-02-03 21:55:03] CPU #95: 0.86 kH/s
+[2022-02-03 21:55:03] Total: 110.94 kH/s
+[2022-02-03 21:55:03] CPU #30: 0.87 kH/s
+[2022-02-03 21:55:03] CPU #31: 0.87 kH/s
+[2022-02-03 21:55:03] CPU #29: 0.86 kH/s
+[2022-02-03 21:55:03] CPU #33: 1.73 kH/s
+[2022-02-03 21:55:03] CPU #35: 1.73 kH/s
+[2022-02-03 21:55:03] CPU #63: 1.73 kH/s
+[2022-02-03 21:55:03] CPU #60: 1.73 kH/s
+[2022-02-03 21:55:03] CPU #41: 1.73 kH/s
+[2022-02-03 21:55:03] CPU #40: 1.73 kH/s
+[2022-02-03 21:55:03] CPU #48: 1.73 kH/s
+[2022-02-03 21:55:03] CPU #38: 1.73 kH/s
+[2022-02-03 21:55:03] CPU #32: 1.73 kH/s
+[2022-02-03 21:55:03] CPU #42: 1.73 kH/s
+[2022-02-03 21:55:03] CPU #45: 1.73 kH/s
+[2022-02-03 21:55:03] CPU #46: 1.73 kH/s
+[2022-02-03 21:55:03] CPU #44: 1.73 kH/s
+[2022-02-03 21:55:03] CPU #51: 1.73 kH/s
+[2022-02-03 21:55:03] CPU #62: 1.73 kH/s
+[2022-02-03 21:55:03] CPU #61: 1.73 kH/s
+[2022-02-03 21:55:08] Total: 110.92 kH/s
+[2022-02-03 21:55:08] CPU #49: 1.73 kH/s
+[2022-02-03 21:55:08] CPU #34: 1.73 kH/s
+[2022-02-03 21:55:08] CPU #50: 1.73 kH/s
+[2022-02-03 21:55:08] CPU #37: 1.73 kH/s
+[2022-02-03 21:55:08] CPU #43: 1.73 kH/s
+[2022-02-03 21:55:08] CPU #53: 1.73 kH/s
+[2022-02-03 21:55:08] CPU #36: 1.73 kH/s
+[2022-02-03 21:55:08] CPU #56: 1.73 kH/s
+[2022-02-03 21:55:08] CPU #57: 1.73 kH/s
+[2022-02-03 21:55:08] CPU #47: 1.73 kH/s
+[2022-02-03 21:55:08] CPU #39: 1.73 kH/s
+[2022-02-03 21:55:08] CPU #54: 1.73 kH/s
+[2022-02-03 21:55:08] CPU #52: 1.73 kH/s
+[2022-02-03 21:55:08] CPU #58: 1.73 kH/s
+[2022-02-03 21:55:08] CPU #55: 1.73 kH/s
+[2022-02-03 21:55:08] CPU #59: 1.73 kH/s
+[2022-02-03 21:55:13] CPU #65: 0.87 kH/s
+[2022-02-03 21:55:13] CPU #75: 0.87 kH/s
+[2022-02-03 21:55:13] CPU #93: 0.87 kH/s
+[2022-02-03 21:55:13] CPU #11: 0.87 kH/s
+[2022-02-03 21:55:13] CPU #77: 0.87 kH/s
+[2022-02-03 21:55:13] CPU #69: 0.87 kH/s
+[2022-02-03 21:55:13] CPU #78: 0.87 kH/s
+[2022-02-03 21:55:13] CPU #5: 0.87 kH/s
+[2022-02-03 21:55:13] CPU #71: 0.87 kH/s
+[2022-02-03 21:55:13] CPU #13: 0.87 kH/s
+[2022-02-03 21:55:13] CPU #2: 0.87 kH/s
+[2022-02-03 21:55:13] CPU #0: 0.86 kH/s
+[2022-02-03 21:55:13] CPU #4: 0.87 kH/s
+[2022-02-03 21:55:13] CPU #73: 0.87 kH/s
+[2022-02-03 21:55:13] CPU #7: 0.86 kH/s
+[2022-02-03 21:55:13] CPU #8: 0.87 kH/s
+[2022-02-03 21:55:13] CPU #70: 0.87 kH/s
+[2022-02-03 21:55:13] CPU #88: 0.87 kH/s
+[2022-02-03 21:55:13] CPU #9: 0.87 kH/s
+[2022-02-03 21:55:13] CPU #68: 0.87 kH/s
+[2022-02-03 21:55:13] CPU #3: 0.87 kH/s
+[2022-02-03 21:55:13] CPU #66: 0.87 kH/s
+[2022-02-03 21:55:13] CPU #94: 0.87 kH/s
+[2022-02-03 21:55:13] CPU #74: 0.87 kH/s
+[2022-02-03 21:55:13] CPU #6: 0.87 kH/s
+[2022-02-03 21:55:13] CPU #72: 0.87 kH/s
+[2022-02-03 21:55:13] CPU #67: 0.87 kH/s
+[2022-02-03 21:55:13] CPU #1: 0.87 kH/s
+[2022-02-03 21:55:13] CPU #89: 0.87 kH/s
+[2022-02-03 21:55:13] CPU #76: 0.87 kH/s
+[2022-02-03 21:55:13] CPU #10: 0.87 kH/s
+[2022-02-03 21:55:13] CPU #84: 0.87 kH/s
+[2022-02-03 21:55:13] CPU #81: 0.87 kH/s
+[2022-02-03 21:55:13] CPU #86: 0.87 kH/s
+[2022-02-03 21:55:13] CPU #83: 0.87 kH/s
+[2022-02-03 21:55:13] CPU #14: 0.86 kH/s
+[2022-02-03 21:55:13] CPU #87: 0.87 kH/s
+[2022-02-03 21:55:13] CPU #80: 0.87 kH/s
+[2022-02-03 21:55:13] CPU #85: 0.87 kH/s
+[2022-02-03 21:55:13] CPU #64: 0.86 kH/s
+[2022-02-03 21:55:13] CPU #79: 0.86 kH/s
+[2022-02-03 21:55:13] CPU #90: 0.87 kH/s
+[2022-02-03 21:55:13] CPU #12: 0.86 kH/s
+[2022-02-03 21:55:13] CPU #82: 0.86 kH/s
+[2022-02-03 21:55:13] CPU #92: 0.87 kH/s
+[2022-02-03 21:55:13] CPU #91: 0.87 kH/s
+[2022-02-03 21:55:13] CPU #24: 0.87 kH/s
+[2022-02-03 21:55:13] CPU #15: 0.87 kH/s
+[2022-02-03 21:55:13] CPU #21: 0.87 kH/s
+[2022-02-03 21:55:13] CPU #23: 0.87 kH/s
+[2022-02-03 21:55:13] CPU #28: 0.87 kH/s
+[2022-02-03 21:55:13] CPU #25: 0.87 kH/s
+[2022-02-03 21:55:13] CPU #95: 0.87 kH/s
+[2022-02-03 21:55:13] Total: 110.94 kH/s
+[2022-02-03 21:55:13] CPU #22: 0.86 kH/s
+[2022-02-03 21:55:13] CPU #27: 0.87 kH/s
+[2022-02-03 21:55:13] CPU #18: 0.87 kH/s
+[2022-02-03 21:55:13] CPU #26: 0.87 kH/s
+[2022-02-03 21:55:13] CPU #16: 0.87 kH/s
+[2022-02-03 21:55:13] CPU #17: 0.87 kH/s
+[2022-02-03 21:55:13] CPU #19: 0.87 kH/s
+[2022-02-03 21:55:13] CPU #20: 0.87 kH/s
+[2022-02-03 21:55:13] CPU #30: 0.86 kH/s
+[2022-02-03 21:55:13] CPU #31: 0.87 kH/s
+[2022-02-03 21:55:13] CPU #29: 0.87 kH/s
+[2022-02-03 21:55:13] CPU #33: 1.73 kH/s
+[2022-02-03 21:55:13] CPU #35: 1.73 kH/s
+[2022-02-03 21:55:13] CPU #63: 1.73 kH/s
+[2022-02-03 21:55:13] CPU #60: 1.73 kH/s
+[2022-02-03 21:55:13] CPU #48: 1.73 kH/s
+[2022-02-03 21:55:13] CPU #41: 1.73 kH/s
+[2022-02-03 21:55:13] CPU #40: 1.73 kH/s
+[2022-02-03 21:55:13] CPU #38: 1.73 kH/s
+[2022-02-03 21:55:13] CPU #32: 1.73 kH/s
+[2022-02-03 21:55:13] CPU #42: 1.73 kH/s
+[2022-02-03 21:55:13] CPU #45: 1.73 kH/s
+[2022-02-03 21:55:13] CPU #46: 1.73 kH/s
+[2022-02-03 21:55:13] CPU #44: 1.73 kH/s
+[2022-02-03 21:55:13] CPU #62: 1.73 kH/s
+[2022-02-03 21:55:13] CPU #51: 1.73 kH/s
+[2022-02-03 21:55:13] CPU #61: 1.73 kH/s
+[2022-02-03 21:55:18] Total: 110.91 kH/s
+[2022-02-03 21:55:18] CPU #49: 1.73 kH/s
+[2022-02-03 21:55:18] CPU #50: 1.73 kH/s
+[2022-02-03 21:55:18] CPU #34: 1.73 kH/s
+[2022-02-03 21:55:18] CPU #37: 1.73 kH/s
+[2022-02-03 21:55:18] CPU #53: 1.73 kH/s
+[2022-02-03 21:55:18] CPU #43: 1.73 kH/s
+[2022-02-03 21:55:18] CPU #56: 1.73 kH/s
+[2022-02-03 21:55:18] CPU #36: 1.73 kH/s
+[2022-02-03 21:55:18] CPU #57: 1.73 kH/s
+[2022-02-03 21:55:18] CPU #47: 1.73 kH/s
+[2022-02-03 21:55:18] CPU #54: 1.73 kH/s
+[2022-02-03 21:55:18] CPU #52: 1.73 kH/s
+[2022-02-03 21:55:18] CPU #39: 1.73 kH/s
+[2022-02-03 21:55:18] CPU #58: 1.73 kH/s
+[2022-02-03 21:55:18] CPU #55: 1.73 kH/s
+[2022-02-03 21:55:18] CPU #59: 1.73 kH/s
+[2022-02-03 21:55:23] CPU #65: 0.87 kH/s
+[2022-02-03 21:55:23] CPU #93: 0.87 kH/s
+[2022-02-03 21:55:23] CPU #0: 0.86 kH/s
+[2022-02-03 21:55:23] CPU #77: 0.87 kH/s
+[2022-02-03 21:55:23] CPU #69: 0.87 kH/s
+[2022-02-03 21:55:23] CPU #75: 0.87 kH/s
+[2022-02-03 21:55:23] CPU #5: 0.87 kH/s
+[2022-02-03 21:55:23] CPU #2: 0.87 kH/s
+[2022-02-03 21:55:23] CPU #11: 0.86 kH/s
+[2022-02-03 21:55:23] CPU #7: 0.87 kH/s
+[2022-02-03 21:55:23] CPU #73: 0.87 kH/s
+[2022-02-03 21:55:23] CPU #78: 0.87 kH/s
+[2022-02-03 21:55:23] CPU #8: 0.87 kH/s
+[2022-02-03 21:55:23] CPU #3: 0.87 kH/s
+[2022-02-03 21:55:23] CPU #4: 0.87 kH/s
+[2022-02-03 21:55:23] CPU #9: 0.87 kH/s
+[2022-02-03 21:55:23] CPU #71: 0.86 kH/s
+[2022-02-03 21:55:23] CPU #13: 0.86 kH/s
+[2022-02-03 21:55:23] CPU #70: 0.87 kH/s
+[2022-02-03 21:55:23] CPU #66: 0.87 kH/s
+[2022-02-03 21:55:23] CPU #94: 0.87 kH/s
+[2022-02-03 21:55:23] CPU #74: 0.87 kH/s
+[2022-02-03 21:55:23] CPU #67: 0.87 kH/s
+[2022-02-03 21:55:23] CPU #88: 0.86 kH/s
+[2022-02-03 21:55:23] CPU #72: 0.87 kH/s
+[2022-02-03 21:55:23] CPU #6: 0.87 kH/s
+[2022-02-03 21:55:23] CPU #68: 0.86 kH/s
+[2022-02-03 21:55:23] CPU #89: 0.87 kH/s
+[2022-02-03 21:55:23] CPU #1: 0.87 kH/s
+[2022-02-03 21:55:23] CPU #14: 0.87 kH/s
+[2022-02-03 21:55:23] CPU #86: 0.87 kH/s
+[2022-02-03 21:55:23] CPU #10: 0.87 kH/s
+[2022-02-03 21:55:23] CPU #76: 0.87 kH/s
+[2022-02-03 21:55:23] CPU #83: 0.87 kH/s
+[2022-02-03 21:55:23] CPU #85: 0.87 kH/s
+[2022-02-03 21:55:23] CPU #84: 0.87 kH/s
+[2022-02-03 21:55:23] CPU #80: 0.87 kH/s
+[2022-02-03 21:55:23] CPU #12: 0.87 kH/s
+[2022-02-03 21:55:23] CPU #79: 0.87 kH/s
+[2022-02-03 21:55:23] CPU #81: 0.86 kH/s
+[2022-02-03 21:55:23] CPU #82: 0.87 kH/s
+[2022-02-03 21:55:23] CPU #87: 0.86 kH/s
+[2022-02-03 21:55:23] CPU #90: 0.87 kH/s
+[2022-02-03 21:55:23] CPU #92: 0.87 kH/s
+[2022-02-03 21:55:23] CPU #91: 0.87 kH/s
+[2022-02-03 21:55:23] CPU #24: 0.87 kH/s
+[2022-02-03 21:55:23] CPU #64: 0.85 kH/s
+[2022-02-03 21:55:23] CPU #15: 0.86 kH/s
+[2022-02-03 21:55:23] CPU #21: 0.87 kH/s
+[2022-02-03 21:55:23] CPU #95: 0.87 kH/s
+[2022-02-03 21:55:23] Total: 110.93 kH/s
+[2022-02-03 21:55:23] CPU #28: 0.87 kH/s
+[2022-02-03 21:55:23] CPU #22: 0.87 kH/s
+[2022-02-03 21:55:23] CPU #23: 0.87 kH/s
+[2022-02-03 21:55:23] CPU #25: 0.87 kH/s
+[2022-02-03 21:55:23] CPU #27: 0.87 kH/s
+[2022-02-03 21:55:23] CPU #17: 0.87 kH/s
+[2022-02-03 21:55:23] CPU #26: 0.87 kH/s
+[2022-02-03 21:55:23] CPU #18: 0.86 kH/s
+[2022-02-03 21:55:23] CPU #19: 0.86 kH/s
+[2022-02-03 21:55:23] CPU #20: 0.86 kH/s
+[2022-02-03 21:55:23] CPU #16: 0.86 kH/s
+[2022-02-03 21:55:23] CPU #30: 0.87 kH/s
+[2022-02-03 21:55:23] CPU #31: 0.86 kH/s
+[2022-02-03 21:55:23] CPU #29: 0.87 kH/s
+[2022-02-03 21:55:23] CPU #33: 1.73 kH/s
+[2022-02-03 21:55:23] CPU #35: 1.73 kH/s
+[2022-02-03 21:55:23] CPU #63: 1.73 kH/s
+[2022-02-03 21:55:23] CPU #60: 1.73 kH/s
+[2022-02-03 21:55:23] CPU #48: 1.73 kH/s
+[2022-02-03 21:55:23] CPU #41: 1.73 kH/s
+[2022-02-03 21:55:23] CPU #40: 1.73 kH/s
+[2022-02-03 21:55:23] CPU #38: 1.73 kH/s
+[2022-02-03 21:55:23] CPU #32: 1.73 kH/s
+[2022-02-03 21:55:23] CPU #42: 1.73 kH/s
+[2022-02-03 21:55:23] CPU #45: 1.73 kH/s
+[2022-02-03 21:55:23] CPU #46: 1.73 kH/s
+[2022-02-03 21:55:23] CPU #62: 1.73 kH/s
+[2022-02-03 21:55:23] CPU #51: 1.73 kH/s
+[2022-02-03 21:55:23] CPU #44: 1.73 kH/s
+[2022-02-03 21:55:23] CPU #61: 1.73 kH/s
+[2022-02-03 21:55:28] Total: 110.90 kH/s
+[2022-02-03 21:55:28] CPU #49: 1.73 kH/s
+[2022-02-03 21:55:28] CPU #50: 1.73 kH/s
+[2022-02-03 21:55:28] CPU #34: 1.73 kH/s
+[2022-02-03 21:55:28] CPU #53: 1.73 kH/s
+[2022-02-03 21:55:28] CPU #37: 1.73 kH/s
+[2022-02-03 21:55:28] CPU #43: 1.73 kH/s
+[2022-02-03 21:55:28] CPU #56: 1.73 kH/s
+[2022-02-03 21:55:28] CPU #57: 1.73 kH/s
+[2022-02-03 21:55:28] CPU #36: 1.73 kH/s
+[2022-02-03 21:55:28] CPU #54: 1.73 kH/s
+[2022-02-03 21:55:28] CPU #47: 1.73 kH/s
+[2022-02-03 21:55:28] CPU #39: 1.73 kH/s
+[2022-02-03 21:55:28] CPU #52: 1.73 kH/s
+[2022-02-03 21:55:28] CPU #58: 1.73 kH/s
+[2022-02-03 21:55:28] CPU #55: 1.73 kH/s
+[2022-02-03 21:55:28] CPU #59: 1.73 kH/s
+[2022-02-03 21:55:33] CPU #65: 0.87 kH/s
+[2022-02-03 21:55:33] CPU #75: 0.87 kH/s
+[2022-02-03 21:55:33] CPU #93: 0.86 kH/s
+[2022-02-03 21:55:33] CPU #77: 0.87 kH/s
+[2022-02-03 21:55:33] CPU #11: 0.87 kH/s
+[2022-02-03 21:55:33] CPU #69: 0.87 kH/s
+[2022-02-03 21:55:33] CPU #7: 0.87 kH/s
+[2022-02-03 21:55:33] CPU #71: 0.87 kH/s
+[2022-02-03 21:55:33] CPU #78: 0.87 kH/s
+[2022-02-03 21:55:33] CPU #13: 0.87 kH/s
+[2022-02-03 21:55:33] CPU #5: 0.86 kH/s
+[2022-02-03 21:55:33] CPU #4: 0.87 kH/s
+[2022-02-03 21:55:33] CPU #73: 0.87 kH/s
+[2022-02-03 21:55:33] CPU #2: 0.86 kH/s
+[2022-02-03 21:55:33] CPU #88: 0.87 kH/s
+[2022-02-03 21:55:33] CPU #70: 0.87 kH/s
+[2022-02-03 21:55:33] CPU #8: 0.87 kH/s
+[2022-02-03 21:55:33] CPU #68: 0.87 kH/s
+[2022-02-03 21:55:33] CPU #9: 0.87 kH/s
+[2022-02-03 21:55:33] CPU #3: 0.87 kH/s
+[2022-02-03 21:55:33] CPU #0: 0.86 kH/s
+[2022-02-03 21:55:33] CPU #94: 0.87 kH/s
+[2022-02-03 21:55:33] CPU #66: 0.87 kH/s
+[2022-02-03 21:55:33] CPU #72: 0.87 kH/s
+[2022-02-03 21:55:33] CPU #67: 0.87 kH/s
+[2022-02-03 21:55:33] CPU #6: 0.87 kH/s
+[2022-02-03 21:55:33] CPU #74: 0.86 kH/s
+[2022-02-03 21:55:33] CPU #1: 0.87 kH/s
+[2022-02-03 21:55:33] CPU #14: 0.87 kH/s
+[2022-02-03 21:55:33] CPU #89: 0.87 kH/s
+[2022-02-03 21:55:33] CPU #10: 0.87 kH/s
+[2022-02-03 21:55:33] CPU #84: 0.87 kH/s
+[2022-02-03 21:55:33] CPU #81: 0.87 kH/s
+[2022-02-03 21:55:33] CPU #83: 0.87 kH/s
+[2022-02-03 21:55:33] CPU #12: 0.87 kH/s
+[2022-02-03 21:55:33] CPU #86: 0.86 kH/s
+[2022-02-03 21:55:33] CPU #76: 0.86 kH/s
+[2022-02-03 21:55:33] CPU #64: 0.86 kH/s
+[2022-02-03 21:55:33] CPU #87: 0.87 kH/s
+[2022-02-03 21:55:33] CPU #85: 0.87 kH/s
+[2022-02-03 21:55:33] CPU #82: 0.87 kH/s
+[2022-02-03 21:55:33] CPU #79: 0.86 kH/s
+[2022-02-03 21:55:33] CPU #80: 0.86 kH/s
+[2022-02-03 21:55:33] CPU #90: 0.87 kH/s
+[2022-02-03 21:55:33] CPU #92: 0.87 kH/s
+[2022-02-03 21:55:33] CPU #91: 0.87 kH/s
+[2022-02-03 21:55:33] CPU #24: 0.87 kH/s
+[2022-02-03 21:55:33] CPU #15: 0.87 kH/s
+[2022-02-03 21:55:33] CPU #21: 0.87 kH/s
+[2022-02-03 21:55:33] CPU #22: 0.87 kH/s
+[2022-02-03 21:55:33] CPU #23: 0.87 kH/s
+[2022-02-03 21:55:33] CPU #28: 0.87 kH/s
+[2022-02-03 21:55:33] CPU #25: 0.87 kH/s
+[2022-02-03 21:55:33] CPU #95: 0.87 kH/s
+[2022-02-03 21:55:33] Total: 110.93 kH/s
+[2022-02-03 21:55:33] CPU #27: 0.87 kH/s
+[2022-02-03 21:55:33] CPU #18: 0.87 kH/s
+[2022-02-03 21:55:33] CPU #17: 0.87 kH/s
+[2022-02-03 21:55:33] CPU #19: 0.87 kH/s
+[2022-02-03 21:55:33] CPU #26: 0.87 kH/s
+[2022-02-03 21:55:33] CPU #16: 0.87 kH/s
+[2022-02-03 21:55:33] CPU #20: 0.87 kH/s
+[2022-02-03 21:55:33] CPU #30: 0.87 kH/s
+[2022-02-03 21:55:33] CPU #31: 0.87 kH/s
+[2022-02-03 21:55:33] CPU #29: 0.87 kH/s
+[2022-02-03 21:55:33] CPU #33: 1.73 kH/s
+[2022-02-03 21:55:33] CPU #35: 1.73 kH/s
+[2022-02-03 21:55:33] CPU #60: 1.73 kH/s
+[2022-02-03 21:55:33] CPU #63: 1.73 kH/s
+[2022-02-03 21:55:33] CPU #48: 1.73 kH/s
+[2022-02-03 21:55:33] CPU #41: 1.73 kH/s
+[2022-02-03 21:55:33] CPU #40: 1.73 kH/s
+[2022-02-03 21:55:33] CPU #38: 1.73 kH/s
+[2022-02-03 21:55:33] CPU #32: 1.73 kH/s
+[2022-02-03 21:55:33] CPU #42: 1.73 kH/s
+[2022-02-03 21:55:33] CPU #45: 1.73 kH/s
+[2022-02-03 21:55:33] CPU #46: 1.73 kH/s
+[2022-02-03 21:55:33] CPU #44: 1.73 kH/s
+[2022-02-03 21:55:33] CPU #62: 1.73 kH/s
+[2022-02-03 21:55:33] CPU #51: 1.73 kH/s
+[2022-02-03 21:55:33] CPU #61: 1.73 kH/s
+[2022-02-03 21:55:38] Total: 110.90 kH/s
+[2022-02-03 21:55:38] CPU #49: 1.73 kH/s
+[2022-02-03 21:55:38] CPU #50: 1.73 kH/s
+[2022-02-03 21:55:38] CPU #34: 1.73 kH/s
+[2022-02-03 21:55:38] CPU #37: 1.73 kH/s
+[2022-02-03 21:55:38] CPU #56: 1.73 kH/s
+[2022-02-03 21:55:38] CPU #53: 1.73 kH/s
+[2022-02-03 21:55:38] CPU #43: 1.73 kH/s
+[2022-02-03 21:55:38] CPU #36: 1.73 kH/s
+[2022-02-03 21:55:38] CPU #57: 1.73 kH/s
+[2022-02-03 21:55:38] CPU #47: 1.73 kH/s
+[2022-02-03 21:55:38] CPU #54: 1.73 kH/s
+[2022-02-03 21:55:38] CPU #39: 1.73 kH/s
+[2022-02-03 21:55:38] CPU #52: 1.73 kH/s
+[2022-02-03 21:55:38] CPU #58: 1.73 kH/s
+[2022-02-03 21:55:38] CPU #55: 1.73 kH/s
+[2022-02-03 21:55:38] CPU #59: 1.73 kH/s
+[2022-02-03 21:55:43] CPU #65: 0.87 kH/s
+[2022-02-03 21:55:43] CPU #93: 0.87 kH/s
+[2022-02-03 21:55:43] CPU #11: 0.87 kH/s
+[2022-02-03 21:55:43] CPU #77: 0.87 kH/s
+[2022-02-03 21:55:43] CPU #75: 0.86 kH/s
+[2022-02-03 21:55:43] CPU #69: 0.87 kH/s
+[2022-02-03 21:55:43] CPU #5: 0.87 kH/s
+[2022-02-03 21:55:43] CPU #88: 0.87 kH/s
+[2022-02-03 21:55:43] CPU #2: 0.87 kH/s
+[2022-02-03 21:55:43] CPU #4: 0.87 kH/s
+[2022-02-03 21:55:43] CPU #71: 0.87 kH/s
+[2022-02-03 21:55:43] CPU #13: 0.87 kH/s
+[2022-02-03 21:55:43] CPU #7: 0.87 kH/s
+[2022-02-03 21:55:43] CPU #78: 0.87 kH/s
+[2022-02-03 21:55:43] CPU #8: 0.87 kH/s
+[2022-02-03 21:55:43] CPU #3: 0.87 kH/s
+[2022-02-03 21:55:43] CPU #9: 0.87 kH/s
+[2022-02-03 21:55:43] CPU #94: 0.87 kH/s
+[2022-02-03 21:55:43] CPU #66: 0.87 kH/s
+[2022-02-03 21:55:43] CPU #74: 0.87 kH/s
+[2022-02-03 21:55:43] CPU #73: 0.86 kH/s
+[2022-02-03 21:55:43] CPU #67: 0.87 kH/s
+[2022-02-03 21:55:43] CPU #70: 0.86 kH/s
+[2022-02-03 21:55:43] CPU #72: 0.87 kH/s
+[2022-02-03 21:55:43] CPU #68: 0.86 kH/s
+[2022-02-03 21:55:43] CPU #0: 0.85 kH/s
+[2022-02-03 21:55:43] CPU #1: 0.87 kH/s
+[2022-02-03 21:55:43] CPU #6: 0.86 kH/s
+[2022-02-03 21:55:43] CPU #89: 0.87 kH/s
+[2022-02-03 21:55:43] CPU #10: 0.87 kH/s
+[2022-02-03 21:55:43] CPU #14: 0.87 kH/s
+[2022-02-03 21:55:43] CPU #86: 0.87 kH/s
+[2022-02-03 21:55:43] CPU #64: 0.86 kH/s
+[2022-02-03 21:55:43] CPU #81: 0.87 kH/s
+[2022-02-03 21:55:43] CPU #83: 0.87 kH/s
+[2022-02-03 21:55:43] CPU #87: 0.87 kH/s
+[2022-02-03 21:55:43] CPU #76: 0.87 kH/s
+[2022-02-03 21:55:43] CPU #80: 0.87 kH/s
+[2022-02-03 21:55:43] CPU #90: 0.87 kH/s
+[2022-02-03 21:55:43] CPU #84: 0.86 kH/s
+[2022-02-03 21:55:43] CPU #12: 0.87 kH/s
+[2022-02-03 21:55:43] CPU #79: 0.86 kH/s
+[2022-02-03 21:55:43] CPU #82: 0.87 kH/s
+[2022-02-03 21:55:43] CPU #85: 0.87 kH/s
+[2022-02-03 21:55:43] CPU #91: 0.87 kH/s
+[2022-02-03 21:55:43] CPU #92: 0.86 kH/s
+[2022-02-03 21:55:43] CPU #24: 0.87 kH/s
+[2022-02-03 21:55:43] CPU #15: 0.87 kH/s
+[2022-02-03 21:55:43] CPU #28: 0.87 kH/s
+[2022-02-03 21:55:43] CPU #23: 0.87 kH/s
+[2022-02-03 21:55:43] CPU #21: 0.86 kH/s
+[2022-02-03 21:55:43] CPU #22: 0.86 kH/s
+[2022-02-03 21:55:43] CPU #95: 0.87 kH/s
+[2022-02-03 21:55:43] Total: 110.93 kH/s
+[2022-02-03 21:55:43] CPU #18: 0.87 kH/s
+[2022-02-03 21:55:43] CPU #19: 0.87 kH/s
+[2022-02-03 21:55:43] CPU #25: 0.86 kH/s
+[2022-02-03 21:55:43] CPU #27: 0.86 kH/s
+[2022-02-03 21:55:43] CPU #16: 0.87 kH/s
+[2022-02-03 21:55:43] CPU #20: 0.87 kH/s
+[2022-02-03 21:55:43] CPU #17: 0.86 kH/s
+[2022-02-03 21:55:43] CPU #30: 0.87 kH/s
+[2022-02-03 21:55:43] CPU #26: 0.86 kH/s
+[2022-02-03 21:55:43] CPU #31: 0.87 kH/s
+[2022-02-03 21:55:43] CPU #29: 0.87 kH/s
+[2022-02-03 21:55:43] CPU #33: 1.73 kH/s
+[2022-02-03 21:55:43] CPU #35: 1.73 kH/s
+[2022-02-03 21:55:43] CPU #60: 1.73 kH/s
+[2022-02-03 21:55:43] CPU #63: 1.73 kH/s
+[2022-02-03 21:55:43] CPU #48: 1.73 kH/s
+[2022-02-03 21:55:43] CPU #41: 1.73 kH/s
+[2022-02-03 21:55:43] CPU #38: 1.73 kH/s
+[2022-02-03 21:55:43] CPU #40: 1.73 kH/s
+[2022-02-03 21:55:43] CPU #32: 1.73 kH/s
+[2022-02-03 21:55:43] CPU #42: 1.73 kH/s
+[2022-02-03 21:55:43] CPU #45: 1.73 kH/s
+[2022-02-03 21:55:43] CPU #46: 1.73 kH/s
+[2022-02-03 21:55:43] CPU #62: 1.73 kH/s
+[2022-02-03 21:55:43] CPU #51: 1.73 kH/s
+[2022-02-03 21:55:43] CPU #44: 1.73 kH/s
+[2022-02-03 21:55:43] CPU #61: 1.73 kH/s
+[2022-02-03 21:55:48] Total: 110.91 kH/s
+[2022-02-03 21:55:48] CPU #49: 1.73 kH/s
+[2022-02-03 21:55:48] CPU #50: 1.73 kH/s
+[2022-02-03 21:55:48] CPU #34: 1.73 kH/s
+[2022-02-03 21:55:48] CPU #56: 1.73 kH/s
+[2022-02-03 21:55:48] CPU #37: 1.73 kH/s
+[2022-02-03 21:55:48] CPU #53: 1.73 kH/s
+[2022-02-03 21:55:48] CPU #43: 1.73 kH/s
+[2022-02-03 21:55:48] CPU #57: 1.73 kH/s
+[2022-02-03 21:55:48] CPU #36: 1.73 kH/s
+[2022-02-03 21:55:48] CPU #54: 1.73 kH/s
+[2022-02-03 21:55:48] CPU #47: 1.73 kH/s
+[2022-02-03 21:55:48] CPU #39: 1.73 kH/s
+[2022-02-03 21:55:48] CPU #52: 1.73 kH/s
+[2022-02-03 21:55:48] CPU #58: 1.73 kH/s
+[2022-02-03 21:55:48] CPU #55: 1.73 kH/s
+[2022-02-03 21:55:48] CPU #59: 1.73 kH/s
+[2022-02-03 21:55:53] CPU #11: 0.87 kH/s
+[2022-02-03 21:55:53] CPU #0: 0.86 kH/s
+[2022-02-03 21:55:53] CPU #65: 0.86 kH/s
+[2022-02-03 21:55:53] CPU #75: 0.87 kH/s
+[2022-02-03 21:55:53] CPU #93: 0.86 kH/s
+[2022-02-03 21:55:53] CPU #5: 0.87 kH/s
+[2022-02-03 21:55:53] CPU #77: 0.87 kH/s
+[2022-02-03 21:55:53] CPU #69: 0.87 kH/s
+[2022-02-03 21:55:53] CPU #2: 0.87 kH/s
+[2022-02-03 21:55:53] CPU #71: 0.87 kH/s
+[2022-02-03 21:55:53] CPU #73: 0.87 kH/s
+[2022-02-03 21:55:53] CPU #68: 0.87 kH/s
+[2022-02-03 21:55:53] CPU #78: 0.87 kH/s
+[2022-02-03 21:55:53] CPU #13: 0.87 kH/s
+[2022-02-03 21:55:53] CPU #72: 0.87 kH/s
+[2022-02-03 21:55:53] CPU #88: 0.87 kH/s
+[2022-02-03 21:55:53] CPU #74: 0.87 kH/s
+[2022-02-03 21:55:53] CPU #9: 0.87 kH/s
+[2022-02-03 21:55:53] CPU #8: 0.87 kH/s
+[2022-02-03 21:55:53] CPU #4: 0.87 kH/s
+[2022-02-03 21:55:53] CPU #3: 0.87 kH/s
+[2022-02-03 21:55:53] CPU #6: 0.87 kH/s
+[2022-02-03 21:55:53] CPU #7: 0.87 kH/s
+[2022-02-03 21:55:53] CPU #66: 0.87 kH/s
+[2022-02-03 21:55:53] CPU #70: 0.86 kH/s
+[2022-02-03 21:55:53] CPU #94: 0.86 kH/s
+[2022-02-03 21:55:53] CPU #1: 0.87 kH/s
+[2022-02-03 21:55:53] CPU #67: 0.86 kH/s
+[2022-02-03 21:55:53] CPU #14: 0.87 kH/s
+[2022-02-03 21:55:53] CPU #87: 0.87 kH/s
+[2022-02-03 21:55:53] CPU #76: 0.87 kH/s
+[2022-02-03 21:55:53] CPU #86: 0.87 kH/s
+[2022-02-03 21:55:53] CPU #10: 0.87 kH/s
+[2022-02-03 21:55:53] CPU #79: 0.87 kH/s
+[2022-02-03 21:55:53] CPU #89: 0.86 kH/s
+[2022-02-03 21:55:53] CPU #84: 0.87 kH/s
+[2022-02-03 21:55:53] CPU #81: 0.87 kH/s
+[2022-02-03 21:55:53] CPU #80: 0.87 kH/s
+[2022-02-03 21:55:53] CPU #12: 0.87 kH/s
+[2022-02-03 21:55:53] CPU #83: 0.86 kH/s
+[2022-02-03 21:55:53] CPU #82: 0.87 kH/s
+[2022-02-03 21:55:53] CPU #90: 0.87 kH/s
+[2022-02-03 21:55:53] CPU #85: 0.87 kH/s
+[2022-02-03 21:55:53] CPU #64: 0.85 kH/s
+[2022-02-03 21:55:53] CPU #92: 0.87 kH/s
+[2022-02-03 21:55:53] CPU #91: 0.87 kH/s
+[2022-02-03 21:55:53] CPU #24: 0.87 kH/s
+[2022-02-03 21:55:53] CPU #15: 0.86 kH/s
+[2022-02-03 21:55:53] CPU #28: 0.87 kH/s
+[2022-02-03 21:55:53] CPU #21: 0.87 kH/s
+[2022-02-03 21:55:53] CPU #22: 0.87 kH/s
+[2022-02-03 21:55:53] CPU #23: 0.87 kH/s
+[2022-02-03 21:55:53] CPU #25: 0.87 kH/s
+[2022-02-03 21:55:53] CPU #27: 0.87 kH/s
+[2022-02-03 21:55:53] CPU #95: 0.87 kH/s
+[2022-02-03 21:55:53] Total: 110.94 kH/s
+[2022-02-03 21:55:53] CPU #16: 0.87 kH/s
+[2022-02-03 21:55:53] CPU #17: 0.87 kH/s
+[2022-02-03 21:55:53] CPU #18: 0.87 kH/s
+[2022-02-03 21:55:53] CPU #19: 0.87 kH/s
+[2022-02-03 21:55:53] CPU #26: 0.87 kH/s
+[2022-02-03 21:55:53] CPU #20: 0.87 kH/s
+[2022-02-03 21:55:53] CPU #30: 0.87 kH/s
+[2022-02-03 21:55:53] CPU #31: 0.87 kH/s
+[2022-02-03 21:55:53] CPU #29: 0.87 kH/s
+[2022-02-03 21:55:53] CPU #33: 1.73 kH/s
+[2022-02-03 21:55:53] CPU #35: 1.73 kH/s
+[2022-02-03 21:55:53] CPU #60: 1.73 kH/s
+[2022-02-03 21:55:53] CPU #63: 1.73 kH/s
+[2022-02-03 21:55:53] CPU #41: 1.73 kH/s
+[2022-02-03 21:55:53] CPU #48: 1.73 kH/s
+[2022-02-03 21:55:53] CPU #38: 1.73 kH/s
+[2022-02-03 21:55:53] CPU #40: 1.73 kH/s
+[2022-02-03 21:55:53] CPU #32: 1.73 kH/s
+[2022-02-03 21:55:53] CPU #42: 1.73 kH/s
+[2022-02-03 21:55:53] CPU #45: 1.73 kH/s
+[2022-02-03 21:55:53] CPU #51: 1.73 kH/s
+[2022-02-03 21:55:53] CPU #46: 1.73 kH/s
+[2022-02-03 21:55:53] CPU #62: 1.73 kH/s
+[2022-02-03 21:55:53] CPU #44: 1.73 kH/s
+[2022-02-03 21:55:53] CPU #61: 1.73 kH/s
+[2022-02-03 21:55:58] Total: 110.92 kH/s
+[2022-02-03 21:55:58] CPU #49: 1.73 kH/s
+[2022-02-03 21:55:58] CPU #50: 1.73 kH/s
+[2022-02-03 21:55:58] CPU #34: 1.73 kH/s
+[2022-02-03 21:55:58] CPU #53: 1.73 kH/s
+[2022-02-03 21:55:58] CPU #56: 1.73 kH/s
+[2022-02-03 21:55:58] CPU #37: 1.73 kH/s
+[2022-02-03 21:55:58] CPU #43: 1.73 kH/s
+[2022-02-03 21:55:58] CPU #57: 1.73 kH/s
+[2022-02-03 21:55:58] CPU #54: 1.73 kH/s
+[2022-02-03 21:55:58] CPU #36: 1.73 kH/s
+[2022-02-03 21:55:58] CPU #47: 1.73 kH/s
+[2022-02-03 21:55:58] CPU #39: 1.73 kH/s
+[2022-02-03 21:55:58] CPU #52: 1.73 kH/s
+[2022-02-03 21:55:58] CPU #58: 1.73 kH/s
+[2022-02-03 21:55:58] CPU #55: 1.73 kH/s
+[2022-02-03 21:55:58] CPU #59: 1.73 kH/s
+[2022-02-03 21:56:03] CPU #65: 0.87 kH/s
+[2022-02-03 21:56:03] CPU #75: 0.87 kH/s
+[2022-02-03 21:56:03] CPU #93: 0.87 kH/s
+[2022-02-03 21:56:03] CPU #5: 0.87 kH/s
+[2022-02-03 21:56:03] CPU #11: 0.87 kH/s
+[2022-02-03 21:56:03] CPU #69: 0.87 kH/s
+[2022-02-03 21:56:03] CPU #77: 0.87 kH/s
+[2022-02-03 21:56:03] CPU #73: 0.87 kH/s
+[2022-02-03 21:56:03] CPU #68: 0.87 kH/s
+[2022-02-03 21:56:03] CPU #71: 0.87 kH/s
+[2022-02-03 21:56:03] CPU #0: 0.86 kH/s
+[2022-02-03 21:56:03] CPU #2: 0.87 kH/s
+[2022-02-03 21:56:03] CPU #13: 0.87 kH/s
+[2022-02-03 21:56:03] CPU #70: 0.87 kH/s
+[2022-02-03 21:56:03] CPU #88: 0.87 kH/s
+[2022-02-03 21:56:03] CPU #78: 0.87 kH/s
+[2022-02-03 21:56:03] CPU #8: 0.87 kH/s
+[2022-02-03 21:56:03] CPU #4: 0.87 kH/s
+[2022-02-03 21:56:03] CPU #3: 0.87 kH/s
+[2022-02-03 21:56:03] CPU #94: 0.87 kH/s
+[2022-02-03 21:56:03] CPU #7: 0.87 kH/s
+[2022-02-03 21:56:03] CPU #74: 0.87 kH/s
+[2022-02-03 21:56:03] CPU #67: 0.87 kH/s
+[2022-02-03 21:56:03] CPU #6: 0.87 kH/s
+[2022-02-03 21:56:03] CPU #72: 0.87 kH/s
+[2022-02-03 21:56:03] CPU #9: 0.87 kH/s
+[2022-02-03 21:56:03] CPU #66: 0.87 kH/s
+[2022-02-03 21:56:03] CPU #1: 0.87 kH/s
+[2022-02-03 21:56:03] CPU #76: 0.87 kH/s
+[2022-02-03 21:56:03] CPU #89: 0.87 kH/s
+[2022-02-03 21:56:03] CPU #14: 0.87 kH/s
+[2022-02-03 21:56:03] CPU #10: 0.87 kH/s
+[2022-02-03 21:56:03] CPU #86: 0.87 kH/s
+[2022-02-03 21:56:03] CPU #81: 0.87 kH/s
+[2022-02-03 21:56:03] CPU #87: 0.87 kH/s
+[2022-02-03 21:56:03] CPU #83: 0.87 kH/s
+[2022-02-03 21:56:03] CPU #80: 0.87 kH/s
+[2022-02-03 21:56:03] CPU #85: 0.87 kH/s
+[2022-02-03 21:56:03] CPU #79: 0.86 kH/s
+[2022-02-03 21:56:03] CPU #84: 0.86 kH/s
+[2022-02-03 21:56:03] CPU #12: 0.86 kH/s
+[2022-02-03 21:56:03] CPU #64: 0.85 kH/s
+[2022-02-03 21:56:03] CPU #82: 0.86 kH/s
+[2022-02-03 21:56:03] CPU #90: 0.86 kH/s
+[2022-02-03 21:56:03] CPU #92: 0.87 kH/s
+[2022-02-03 21:56:03] CPU #91: 0.86 kH/s
+[2022-02-03 21:56:03] CPU #15: 0.87 kH/s
+[2022-02-03 21:56:03] CPU #24: 0.87 kH/s
+[2022-02-03 21:56:03] CPU #23: 0.87 kH/s
+[2022-02-03 21:56:03] CPU #21: 0.87 kH/s
+[2022-02-03 21:56:03] CPU #22: 0.87 kH/s
+[2022-02-03 21:56:03] CPU #28: 0.87 kH/s
+[2022-02-03 21:56:03] CPU #25: 0.87 kH/s
+[2022-02-03 21:56:03] CPU #27: 0.87 kH/s
+[2022-02-03 21:56:03] CPU #19: 0.87 kH/s
+[2022-02-03 21:56:03] CPU #18: 0.87 kH/s
+[2022-02-03 21:56:03] CPU #17: 0.87 kH/s
+[2022-02-03 21:56:03] CPU #16: 0.87 kH/s
+[2022-02-03 21:56:03] CPU #26: 0.87 kH/s
+[2022-02-03 21:56:03] CPU #95: 0.87 kH/s
+[2022-02-03 21:56:03] Total: 110.95 kH/s
+[2022-02-03 21:56:03] CPU #20: 0.87 kH/s
+[2022-02-03 21:56:03] CPU #30: 0.87 kH/s
+[2022-02-03 21:56:03] CPU #31: 0.86 kH/s
+[2022-02-03 21:56:03] CPU #29: 0.87 kH/s
+[2022-02-03 21:56:03] CPU #33: 1.73 kH/s
+[2022-02-03 21:56:03] CPU #35: 1.73 kH/s
+[2022-02-03 21:56:03] CPU #60: 1.73 kH/s
+[2022-02-03 21:56:03] CPU #63: 1.73 kH/s
+[2022-02-03 21:56:03] CPU #41: 1.73 kH/s
+[2022-02-03 21:56:03] CPU #38: 1.73 kH/s
+[2022-02-03 21:56:03] CPU #48: 1.73 kH/s
+[2022-02-03 21:56:03] CPU #40: 1.73 kH/s
+[2022-02-03 21:56:03] CPU #32: 1.73 kH/s
+[2022-02-03 21:56:03] CPU #42: 1.73 kH/s
+[2022-02-03 21:56:03] CPU #45: 1.73 kH/s
+[2022-02-03 21:56:03] CPU #51: 1.73 kH/s
+[2022-02-03 21:56:03] CPU #46: 1.73 kH/s
+[2022-02-03 21:56:03] CPU #62: 1.73 kH/s
+[2022-02-03 21:56:03] CPU #44: 1.73 kH/s
+[2022-02-03 21:56:03] CPU #61: 1.73 kH/s
+[2022-02-03 21:56:08] Total: 110.91 kH/s
+[2022-02-03 21:56:08] CPU #49: 1.73 kH/s
+[2022-02-03 21:56:08] CPU #50: 1.73 kH/s
+[2022-02-03 21:56:08] CPU #34: 1.73 kH/s
+[2022-02-03 21:56:08] CPU #53: 1.73 kH/s
+[2022-02-03 21:56:08] CPU #56: 1.73 kH/s
+[2022-02-03 21:56:08] CPU #37: 1.73 kH/s
+[2022-02-03 21:56:08] CPU #57: 1.73 kH/s
+[2022-02-03 21:56:08] CPU #43: 1.73 kH/s
+[2022-02-03 21:56:08] CPU #54: 1.73 kH/s
+[2022-02-03 21:56:08] CPU #36: 1.73 kH/s
+[2022-02-03 21:56:08] CPU #47: 1.73 kH/s
+[2022-02-03 21:56:08] CPU #39: 1.73 kH/s
+[2022-02-03 21:56:08] CPU #52: 1.73 kH/s
+[2022-02-03 21:56:08] CPU #58: 1.73 kH/s
+[2022-02-03 21:56:08] CPU #55: 1.73 kH/s
+[2022-02-03 21:56:08] CPU #59: 1.73 kH/s
+[2022-02-03 21:56:13] CPU #75: 0.87 kH/s
+[2022-02-03 21:56:13] CPU #65: 0.87 kH/s
+[2022-02-03 21:56:13] CPU #77: 0.87 kH/s
+[2022-02-03 21:56:13] CPU #93: 0.86 kH/s
+[2022-02-03 21:56:13] CPU #5: 0.87 kH/s
+[2022-02-03 21:56:13] CPU #11: 0.86 kH/s
+[2022-02-03 21:56:13] CPU #71: 0.87 kH/s
+[2022-02-03 21:56:13] CPU #69: 0.86 kH/s
+[2022-02-03 21:56:13] CPU #78: 0.87 kH/s
+[2022-02-03 21:56:13] CPU #7: 0.87 kH/s
+[2022-02-03 21:56:13] CPU #73: 0.86 kH/s
+[2022-02-03 21:56:13] CPU #2: 0.87 kH/s
+[2022-02-03 21:56:13] CPU #68: 0.87 kH/s
+[2022-02-03 21:56:13] CPU #94: 0.87 kH/s
+[2022-02-03 21:56:13] CPU #8: 0.87 kH/s
+[2022-02-03 21:56:13] CPU #88: 0.87 kH/s
+[2022-02-03 21:56:13] CPU #70: 0.87 kH/s
+[2022-02-03 21:56:13] CPU #74: 0.87 kH/s
+[2022-02-03 21:56:13] CPU #13: 0.86 kH/s
+[2022-02-03 21:56:13] CPU #67: 0.87 kH/s
+[2022-02-03 21:56:13] CPU #9: 0.87 kH/s
+[2022-02-03 21:56:13] CPU #4: 0.86 kH/s
+[2022-02-03 21:56:13] CPU #3: 0.86 kH/s
+[2022-02-03 21:56:13] CPU #0: 0.85 kH/s
+[2022-02-03 21:56:13] CPU #6: 0.87 kH/s
+[2022-02-03 21:56:13] CPU #66: 0.87 kH/s
+[2022-02-03 21:56:13] CPU #1: 0.87 kH/s
+[2022-02-03 21:56:13] CPU #72: 0.87 kH/s
+[2022-02-03 21:56:13] CPU #80: 0.87 kH/s
+[2022-02-03 21:56:13] CPU #89: 0.87 kH/s
+[2022-02-03 21:56:13] CPU #14: 0.87 kH/s
+[2022-02-03 21:56:13] CPU #81: 0.87 kH/s
+[2022-02-03 21:56:13] CPU #64: 0.86 kH/s
+[2022-02-03 21:56:13] CPU #86: 0.87 kH/s
+[2022-02-03 21:56:13] CPU #83: 0.87 kH/s
+[2022-02-03 21:56:13] CPU #76: 0.87 kH/s
+[2022-02-03 21:56:13] CPU #10: 0.87 kH/s
+[2022-02-03 21:56:13] CPU #84: 0.87 kH/s
+[2022-02-03 21:56:13] CPU #12: 0.87 kH/s
+[2022-02-03 21:56:13] CPU #79: 0.86 kH/s
+[2022-02-03 21:56:13] CPU #82: 0.87 kH/s
+[2022-02-03 21:56:13] CPU #90: 0.87 kH/s
+[2022-02-03 21:56:13] CPU #87: 0.86 kH/s
+[2022-02-03 21:56:13] CPU #85: 0.87 kH/s
+[2022-02-03 21:56:13] CPU #92: 0.87 kH/s
+[2022-02-03 21:56:13] CPU #91: 0.87 kH/s
+[2022-02-03 21:56:13] CPU #24: 0.87 kH/s
+[2022-02-03 21:56:13] CPU #15: 0.86 kH/s
+[2022-02-03 21:56:13] CPU #21: 0.87 kH/s
+[2022-02-03 21:56:13] CPU #22: 0.87 kH/s
+[2022-02-03 21:56:13] CPU #28: 0.87 kH/s
+[2022-02-03 21:56:13] CPU #27: 0.87 kH/s
+[2022-02-03 21:56:13] CPU #23: 0.87 kH/s
+[2022-02-03 21:56:13] CPU #19: 0.87 kH/s
+[2022-02-03 21:56:13] CPU #25: 0.87 kH/s
+[2022-02-03 21:56:13] CPU #17: 0.87 kH/s
+[2022-02-03 21:56:13] CPU #95: 0.87 kH/s
+[2022-02-03 21:56:13] Total: 110.93 kH/s
+[2022-02-03 21:56:13] CPU #16: 0.87 kH/s
+[2022-02-03 21:56:13] CPU #18: 0.86 kH/s
+[2022-02-03 21:56:13] CPU #26: 0.87 kH/s
+[2022-02-03 21:56:13] CPU #30: 0.87 kH/s
+[2022-02-03 21:56:13] CPU #20: 0.86 kH/s
+[2022-02-03 21:56:13] CPU #31: 0.87 kH/s
+[2022-02-03 21:56:13] CPU #29: 0.86 kH/s
+[2022-02-03 21:56:13] CPU #33: 1.73 kH/s
+[2022-02-03 21:56:13] CPU #35: 1.73 kH/s
+[2022-02-03 21:56:13] CPU #63: 1.73 kH/s
+[2022-02-03 21:56:13] CPU #60: 1.73 kH/s
+[2022-02-03 21:56:13] CPU #41: 1.73 kH/s
+[2022-02-03 21:56:13] CPU #48: 1.73 kH/s
+[2022-02-03 21:56:13] CPU #38: 1.73 kH/s
+[2022-02-03 21:56:13] CPU #40: 1.73 kH/s
+[2022-02-03 21:56:13] CPU #32: 1.73 kH/s
+[2022-02-03 21:56:13] CPU #42: 1.73 kH/s
+[2022-02-03 21:56:13] CPU #51: 1.73 kH/s
+[2022-02-03 21:56:13] CPU #45: 1.73 kH/s
+[2022-02-03 21:56:13] CPU #46: 1.73 kH/s
+[2022-02-03 21:56:13] CPU #62: 1.73 kH/s
+[2022-02-03 21:56:13] CPU #44: 1.73 kH/s
+[2022-02-03 21:56:13] CPU #61: 1.73 kH/s
+[2022-02-03 21:56:18] Total: 110.90 kH/s
+[2022-02-03 21:56:18] CPU #49: 1.73 kH/s
+[2022-02-03 21:56:18] CPU #50: 1.73 kH/s
+[2022-02-03 21:56:18] CPU #34: 1.73 kH/s
+[2022-02-03 21:56:18] CPU #53: 1.73 kH/s
+[2022-02-03 21:56:18] CPU #56: 1.73 kH/s
+[2022-02-03 21:56:18] CPU #57: 1.73 kH/s
+[2022-02-03 21:56:18] CPU #37: 1.73 kH/s
+[2022-02-03 21:56:18] CPU #54: 1.73 kH/s
+[2022-02-03 21:56:18] CPU #43: 1.73 kH/s
+[2022-02-03 21:56:18] CPU #36: 1.73 kH/s
+[2022-02-03 21:56:18] CPU #47: 1.73 kH/s
+[2022-02-03 21:56:18] CPU #39: 1.73 kH/s
+[2022-02-03 21:56:18] CPU #52: 1.73 kH/s
+[2022-02-03 21:56:18] CPU #58: 1.73 kH/s
+[2022-02-03 21:56:18] CPU #55: 1.73 kH/s
+[2022-02-03 21:56:18] CPU #59: 1.73 kH/s
+[2022-02-03 21:56:23] CPU #65: 0.86 kH/s
+[2022-02-03 21:56:23] CPU #93: 0.87 kH/s
+[2022-02-03 21:56:23] CPU #75: 0.87 kH/s
+[2022-02-03 21:56:23] CPU #5: 0.87 kH/s
+[2022-02-03 21:56:23] CPU #69: 0.87 kH/s
+[2022-02-03 21:56:23] CPU #11: 0.87 kH/s
+[2022-02-03 21:56:23] CPU #77: 0.86 kH/s
+[2022-02-03 21:56:23] CPU #73: 0.87 kH/s
+[2022-02-03 21:56:23] CPU #2: 0.87 kH/s
+[2022-02-03 21:56:23] CPU #71: 0.87 kH/s
+[2022-02-03 21:56:23] CPU #68: 0.87 kH/s
+[2022-02-03 21:56:23] CPU #3: 0.87 kH/s
+[2022-02-03 21:56:23] CPU #78: 0.87 kH/s
+[2022-02-03 21:56:23] CPU #88: 0.87 kH/s
+[2022-02-03 21:56:23] CPU #4: 0.87 kH/s
+[2022-02-03 21:56:23] CPU #13: 0.87 kH/s
+[2022-02-03 21:56:23] CPU #8: 0.87 kH/s
+[2022-02-03 21:56:23] CPU #7: 0.87 kH/s
+[2022-02-03 21:56:23] CPU #94: 0.87 kH/s
+[2022-02-03 21:56:23] CPU #70: 0.87 kH/s
+[2022-02-03 21:56:23] CPU #9: 0.87 kH/s
+[2022-02-03 21:56:23] CPU #67: 0.87 kH/s
+[2022-02-03 21:56:23] CPU #64: 0.86 kH/s
+[2022-02-03 21:56:23] CPU #74: 0.86 kH/s
+[2022-02-03 21:56:23] CPU #72: 0.87 kH/s
+[2022-02-03 21:56:23] CPU #14: 0.87 kH/s
+[2022-02-03 21:56:23] CPU #83: 0.87 kH/s
+[2022-02-03 21:56:23] CPU #89: 0.87 kH/s
+[2022-02-03 21:56:23] CPU #66: 0.86 kH/s
+[2022-02-03 21:56:23] CPU #76: 0.87 kH/s
+[2022-02-03 21:56:23] CPU #6: 0.87 kH/s
+[2022-02-03 21:56:23] CPU #0: 0.85 kH/s
+[2022-02-03 21:56:23] CPU #10: 0.87 kH/s
+[2022-02-03 21:56:23] CPU #84: 0.87 kH/s
+[2022-02-03 21:56:23] CPU #79: 0.87 kH/s
+[2022-02-03 21:56:23] CPU #81: 0.87 kH/s
+[2022-02-03 21:56:23] CPU #1: 0.86 kH/s
+[2022-02-03 21:56:23] CPU #86: 0.86 kH/s
+[2022-02-03 21:56:23] CPU #87: 0.87 kH/s
+[2022-02-03 21:56:23] CPU #82: 0.87 kH/s
+[2022-02-03 21:56:23] CPU #80: 0.87 kH/s
+[2022-02-03 21:56:23] CPU #85: 0.87 kH/s
+[2022-02-03 21:56:23] CPU #12: 0.87 kH/s
+[2022-02-03 21:56:23] CPU #92: 0.87 kH/s
+[2022-02-03 21:56:23] CPU #91: 0.87 kH/s
+[2022-02-03 21:56:23] CPU #90: 0.86 kH/s
+[2022-02-03 21:56:23] CPU #24: 0.87 kH/s
+[2022-02-03 21:56:23] CPU #15: 0.86 kH/s
+[2022-02-03 21:56:23] CPU #28: 0.87 kH/s
+[2022-02-03 21:56:23] CPU #21: 0.87 kH/s
+[2022-02-03 21:56:23] CPU #22: 0.87 kH/s
+[2022-02-03 21:56:23] CPU #19: 0.87 kH/s
+[2022-02-03 21:56:23] CPU #23: 0.87 kH/s
+[2022-02-03 21:56:23] CPU #25: 0.87 kH/s
+[2022-02-03 21:56:23] CPU #27: 0.87 kH/s
+[2022-02-03 21:56:23] CPU #16: 0.87 kH/s
+[2022-02-03 21:56:23] CPU #18: 0.87 kH/s
+[2022-02-03 21:56:23] CPU #17: 0.87 kH/s
+[2022-02-03 21:56:23] CPU #26: 0.87 kH/s
+[2022-02-03 21:56:23] CPU #95: 0.87 kH/s
+[2022-02-03 21:56:23] Total: 110.92 kH/s
+[2022-02-03 21:56:23] CPU #20: 0.87 kH/s
+[2022-02-03 21:56:23] CPU #30: 0.87 kH/s
+[2022-02-03 21:56:23] CPU #31: 0.87 kH/s
+[2022-02-03 21:56:23] CPU #29: 0.87 kH/s
+[2022-02-03 21:56:23] CPU #33: 1.73 kH/s
+[2022-02-03 21:56:23] CPU #35: 1.73 kH/s
+[2022-02-03 21:56:23] CPU #63: 1.73 kH/s
+[2022-02-03 21:56:23] CPU #60: 1.73 kH/s
+[2022-02-03 21:56:23] CPU #48: 1.73 kH/s
+[2022-02-03 21:56:23] CPU #41: 1.73 kH/s
+[2022-02-03 21:56:23] CPU #38: 1.73 kH/s
+[2022-02-03 21:56:23] CPU #40: 1.73 kH/s
+[2022-02-03 21:56:23] CPU #32: 1.73 kH/s
+[2022-02-03 21:56:23] CPU #51: 1.73 kH/s
+[2022-02-03 21:56:23] CPU #42: 1.73 kH/s
+[2022-02-03 21:56:23] CPU #45: 1.73 kH/s
+[2022-02-03 21:56:23] CPU #46: 1.73 kH/s
+[2022-02-03 21:56:23] CPU #62: 1.73 kH/s
+[2022-02-03 21:56:23] CPU #44: 1.73 kH/s
+[2022-02-03 21:56:23] CPU #61: 1.73 kH/s
+[2022-02-03 21:56:28] Total: 110.93 kH/s
+[2022-02-03 21:56:28] CPU #49: 1.73 kH/s
+[2022-02-03 21:56:28] CPU #50: 1.73 kH/s
+[2022-02-03 21:56:28] CPU #34: 1.73 kH/s
+[2022-02-03 21:56:28] CPU #53: 1.73 kH/s
+[2022-02-03 21:56:28] CPU #56: 1.73 kH/s
+[2022-02-03 21:56:28] CPU #57: 1.73 kH/s
+[2022-02-03 21:56:28] CPU #37: 1.73 kH/s
+[2022-02-03 21:56:28] CPU #54: 1.73 kH/s
+[2022-02-03 21:56:28] CPU #43: 1.73 kH/s
+[2022-02-03 21:56:28] CPU #36: 1.73 kH/s
+[2022-02-03 21:56:28] CPU #47: 1.73 kH/s
+[2022-02-03 21:56:28] CPU #39: 1.73 kH/s
+[2022-02-03 21:56:28] CPU #52: 1.73 kH/s
+[2022-02-03 21:56:28] CPU #58: 1.73 kH/s
+[2022-02-03 21:56:28] CPU #55: 1.73 kH/s
+[2022-02-03 21:56:28] CPU #59: 1.73 kH/s
+[2022-02-03 21:56:33] CPU #65: 0.87 kH/s
+[2022-02-03 21:56:33] CPU #93: 0.87 kH/s
+[2022-02-03 21:56:33] CPU #11: 0.87 kH/s
+[2022-02-03 21:56:33] CPU #75: 0.86 kH/s
+[2022-02-03 21:56:33] CPU #69: 0.87 kH/s
+[2022-02-03 21:56:33] CPU #77: 0.87 kH/s
+[2022-02-03 21:56:33] CPU #5: 0.87 kH/s
+[2022-02-03 21:56:33] CPU #73: 0.87 kH/s
+[2022-02-03 21:56:33] CPU #0: 0.86 kH/s
+[2022-02-03 21:56:33] CPU #8: 0.87 kH/s
+[2022-02-03 21:56:33] CPU #13: 0.87 kH/s
+[2022-02-03 21:56:33] CPU #78: 0.87 kH/s
+[2022-02-03 21:56:33] CPU #3: 0.87 kH/s
+[2022-02-03 21:56:33] CPU #4: 0.87 kH/s
+[2022-02-03 21:56:33] CPU #68: 0.87 kH/s
+[2022-02-03 21:56:33] CPU #7: 0.87 kH/s
+[2022-02-03 21:56:33] CPU #94: 0.87 kH/s
+[2022-02-03 21:56:33] CPU #74: 0.87 kH/s
+[2022-02-03 21:56:33] CPU #71: 0.86 kH/s
+[2022-02-03 21:56:33] CPU #2: 0.86 kH/s
+[2022-02-03 21:56:33] CPU #67: 0.87 kH/s
+[2022-02-03 21:56:33] CPU #88: 0.86 kH/s
+[2022-02-03 21:56:33] CPU #70: 0.87 kH/s
+[2022-02-03 21:56:33] CPU #9: 0.87 kH/s
+[2022-02-03 21:56:33] CPU #72: 0.87 kH/s
+[2022-02-03 21:56:33] CPU #66: 0.87 kH/s
+[2022-02-03 21:56:33] CPU #89: 0.87 kH/s
+[2022-02-03 21:56:33] CPU #1: 0.87 kH/s
+[2022-02-03 21:56:33] CPU #14: 0.87 kH/s
+[2022-02-03 21:56:33] CPU #6: 0.87 kH/s
+[2022-02-03 21:56:33] CPU #86: 0.87 kH/s
+[2022-02-03 21:56:33] CPU #83: 0.87 kH/s
+[2022-02-03 21:56:33] CPU #76: 0.87 kH/s
+[2022-02-03 21:56:33] CPU #81: 0.87 kH/s
+[2022-02-03 21:56:33] CPU #87: 0.87 kH/s
+[2022-02-03 21:56:33] CPU #85: 0.87 kH/s
+[2022-02-03 21:56:33] CPU #10: 0.86 kH/s
+[2022-02-03 21:56:33] CPU #79: 0.87 kH/s
+[2022-02-03 21:56:33] CPU #84: 0.86 kH/s
+[2022-02-03 21:56:33] CPU #82: 0.87 kH/s
+[2022-02-03 21:56:33] CPU #80: 0.86 kH/s
+[2022-02-03 21:56:33] CPU #90: 0.87 kH/s
+[2022-02-03 21:56:33] CPU #12: 0.87 kH/s
+[2022-02-03 21:56:33] CPU #91: 0.87 kH/s
+[2022-02-03 21:56:33] CPU #64: 0.85 kH/s
+[2022-02-03 21:56:33] CPU #92: 0.87 kH/s
+[2022-02-03 21:56:33] CPU #24: 0.87 kH/s
+[2022-02-03 21:56:33] CPU #23: 0.87 kH/s
+[2022-02-03 21:56:33] CPU #15: 0.86 kH/s
+[2022-02-03 21:56:33] CPU #27: 0.87 kH/s
+[2022-02-03 21:56:33] CPU #21: 0.86 kH/s
+[2022-02-03 21:56:33] CPU #22: 0.86 kH/s
+[2022-02-03 21:56:33] CPU #28: 0.86 kH/s
+[2022-02-03 21:56:33] CPU #19: 0.87 kH/s
+[2022-02-03 21:56:33] CPU #18: 0.87 kH/s
+[2022-02-03 21:56:33] CPU #95: 0.87 kH/s
+[2022-02-03 21:56:33] Total: 110.93 kH/s
+[2022-02-03 21:56:33] CPU #25: 0.86 kH/s
+[2022-02-03 21:56:33] CPU #17: 0.86 kH/s
+[2022-02-03 21:56:33] CPU #20: 0.87 kH/s
+[2022-02-03 21:56:33] CPU #16: 0.87 kH/s
+[2022-02-03 21:56:33] CPU #26: 0.87 kH/s
+[2022-02-03 21:56:33] CPU #30: 0.86 kH/s
+[2022-02-03 21:56:33] CPU #31: 0.86 kH/s
+[2022-02-03 21:56:33] CPU #29: 0.87 kH/s
+
+Total Scores: 111.90,110.95,110.94,110.93,110.92,110.91,110.90,110.89,110.87
+
+##########################################################################
+
+Testing clockspeeds again. System health now:
+
+Time      CPU n/a    load %cpu %sys %usr %nice %io %irq   Temp
+21:56:13:   ---     96.56  66%   0%  66%   0%   0%   0%     0°C
+
+Checking cpufreq OPP for cpu0-cpu47 (Cavium ThunderX 88XX):
+
+No cpufreq support available. Measured on cpu1: 2000 Mhz (1997.038/1998.522/1997.903)
+
+Checking cpufreq OPP for cpu48-cpu95 (Cavium ThunderX 88XX):
+
+No cpufreq support available. Measured on cpu49: 2000 Mhz (1997.780/1998.175/1988.281)
+
+##########################################################################
+
+System health while running tinymembench:
+
+Time      CPU n/a    load %cpu %sys %usr %nice %io %irq   Temp
+21:29:49:   ---      1.13   0%   0%   0%   0%   0%   0%    --
+21:31:09:   ---      1.56   1%   0%   1%   0%   0%   0%    --
+21:32:29:   ---      1.68   1%   0%   1%   0%   0%   0%    --
+21:33:49:   ---      1.83   1%   0%   1%   0%   0%   0%    --
+21:35:09:   ---      1.68   1%   0%   1%   0%   0%   0%    --
+21:36:29:   ---      1.89   1%   0%   1%   0%   0%   0%    --
+21:37:49:   ---      1.82   1%   0%   1%   0%   0%   0%    --
+21:39:09:   ---      1.73   1%   0%   1%   0%   0%   0%    --
+21:40:29:   ---      1.72   1%   0%   1%   0%   0%   0%    --
+
+System health while running OpenSSL benchmark:
+
+Time      CPU n/a    load %cpu %sys %usr %nice %io %irq   Temp
+21:40:37:   ---      1.83   0%   0%   0%   0%   0%   0%    --
+21:40:53:   ---      1.87   1%   0%   1%   0%   0%   0%    --
+21:41:09:   ---      1.83   1%   0%   1%   0%   0%   0%    --
+21:41:25:   ---      1.65   1%   0%   1%   0%   0%   0%    --
+21:41:41:   ---      1.71   1%   0%   1%   0%   0%   0%    --
+21:41:57:   ---      1.64   1%   0%   1%   0%   0%   0%    --
+21:42:13:   ---      1.71   1%   0%   1%   0%   0%   0%    --
+
+System health while running 7-zip single core benchmark:
+
+Time      CPU n/a    load %cpu %sys %usr %nice %io %irq   Temp
+21:42:25:   ---      1.75   0%   0%   0%   0%   0%   0%    --
+21:42:38:   ---      1.59   1%   0%   1%   0%   0%   0%    --
+21:42:51:   ---      1.57   1%   0%   1%   0%   0%   0%    --
+21:43:04:   ---      1.60   1%   0%   1%   0%   0%   0%    --
+21:43:17:   ---      1.63   1%   0%   1%   0%   0%   0%    --
+21:43:30:   ---      1.61   1%   0%   1%   0%   0%   0%    --
+21:43:43:   ---      1.76   1%   0%   1%   0%   0%   0%    --
+21:43:56:   ---      1.64   1%   0%   1%   0%   0%   0%    --
+21:44:09:   ---      1.64   1%   0%   1%   0%   0%   0%    --
+21:44:22:   ---      1.64   1%   0%   1%   0%   0%   0%    --
+21:44:35:   ---      1.70   1%   0%   1%   0%   0%   0%    --
+21:44:48:   ---      1.70   1%   0%   1%   0%   0%   0%    --
+21:45:01:   ---      1.81   1%   0%   1%   0%   0%   0%    --
+
+System health while running 7-zip multi core benchmark:
+
+Time      CPU n/a    load %cpu %sys %usr %nice %io %irq   Temp
+21:45:11:   ---      1.68   0%   0%   0%   0%   0%   0%    --
+21:45:21:   ---      9.10  74%   0%  72%   0%   0%   0%    --
+21:45:31:   ---     22.46  89%   0%  89%   0%   0%   0%    --
+21:45:41:   ---     27.08  49%   0%  48%   0%   0%   0%    --
+21:45:51:   ---     37.91  91%   0%  90%   0%   0%   0%    --
+21:46:01:   ---     32.31   3%   0%   3%   0%   0%   0%    --
+21:46:11:   ---     43.63  95%   1%  94%   0%   0%   0%    --
+21:46:21:   ---     48.37  90%   0%  90%   0%   0%   0%    --
+21:46:31:   ---     41.17   1%   0%   1%   0%   0%   0%    --
+21:46:42:   ---     34.99   1%   0%   1%   0%   0%   0%    --
+21:46:52:   ---     41.17  84%   1%  81%   0%   0%   0%    --
+21:47:02:   ---     52.40  90%   1%  89%   0%   0%   0%    --
+21:47:12:   ---     55.98  69%   0%  68%   0%   0%   0%    --
+21:47:22:   ---     56.91  53%   0%  52%   0%   0%   0%    --
+21:47:34:   ---     63.58  93%   0%  92%   0%   0%   0%    --
+21:47:45:   ---     61.11  57%   0%  57%   0%   0%   0%    --
+21:47:57:   ---     67.14  95%   0%  94%   0%   0%   0%    --
+21:48:07:   ---     59.21  14%   0%  14%   0%   0%   0%    --
+21:48:18:   ---     67.19  87%   1%  85%   0%   0%   0%    --
+21:48:29:   ---     71.69  84%   0%  83%   0%   0%   0%    --
+21:48:39:   ---     61.14  13%   0%  13%   0%   0%   0%    --
+21:48:49:   ---     51.97   1%   0%   0%   0%   0%   0%    --
+21:48:59:   ---     56.72  68%   1%  66%   0%   0%   0%    --
+21:49:09:   ---     63.25  88%   1%  86%   0%   0%   0%    --
+21:49:20:   ---     58.93  58%   0%  57%   0%   0%   0%    --
+21:49:30:   ---     57.02  64%   0%  64%   0%   0%   0%    --
+21:49:40:   ---     63.10  89%   0%  88%   0%   0%   0%    --
+21:49:50:   ---     60.63  59%   0%  58%   0%   0%   0%    --
+21:50:03:   ---     61.29  79%   0%  78%   0%   0%   0%    --
+21:50:14:   ---     54.89  46%   0%  46%   0%   0%   0%    --
+21:50:24:   ---     63.77  62%   0%  61%   0%   0%   0%    --
+21:50:36:   ---     70.44  91%   0%  90%   0%   0%   0%    --
+21:50:47:   ---     65.81  24%   0%  24%   0%   0%   0%    --
+21:50:57:   ---     55.92   1%   0%   1%   0%   0%   0%    --
+21:51:07:   ---     54.52  72%   1%  69%   0%   0%   0%    --
+21:51:17:   ---     62.47  95%   1%  94%   0%   0%   0%    --
+21:51:27:   ---     61.83  67%   0%  65%   0%   0%   0%    --
+
+System health while running cpuminer:
+
+Time      CPU n/a    load %cpu %sys %usr %nice %io %irq   Temp
+21:51:33:   ---     61.95   0%   0%   0%   0%   0%   0%    --
+21:52:13:   ---     78.84  66%   0%  66%   0%   0%   0%    --
+21:52:53:   ---     87.58  66%   0%  66%   0%   0%   0%    --
+21:53:33:   ---     92.03  66%   0%  66%   0%   0%   0%    --
+21:54:13:   ---     94.33  66%   0%  66%   0%   0%   0%    --
+21:54:53:   ---     95.63  66%   0%  66%   0%   0%   0%    --
+21:55:33:   ---     96.20  66%   0%  66%   0%   0%   0%    --
+21:56:13:   ---     96.56  66%   0%  66%   0%   0%   0%    --
+
+##########################################################################
+
+Linux 5.16.0 (bigboy) 	02/03/22 	_aarch64_	(96 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+           0.56    0.00    0.05    0.00    0.00   99.39
+
+Device             tps    kB_read/s    kB_wrtn/s    kB_dscd/s    kB_read    kB_wrtn    kB_dscd
+sda               5.19         4.62       152.18         0.00     893518   29411616          0
+
+               total        used        free      shared  buff/cache   available
+Mem:           127Gi       8.8Gi       118Gi        32Mi       442Mi       108Gi
+Swap:             0B          0B          0B
+
+CPU sysfs topology (clusters, cpufreq members, clockspeeds)
+                 cpufreq   min    max
+ CPU    cluster  policy   speed  speed   core type
+  0        0        0       -      -     Cavium ThunderX 88XX / r1p1
+  1        0        0       -      -     Cavium ThunderX 88XX / r1p1
+  2        0        0       -      -     Cavium ThunderX 88XX / r1p1
+  3        0        0       -      -     Cavium ThunderX 88XX / r1p1
+  4        0        0       -      -     Cavium ThunderX 88XX / r1p1
+  5        0        0       -      -     Cavium ThunderX 88XX / r1p1
+  6        0        0       -      -     Cavium ThunderX 88XX / r1p1
+  7        0        0       -      -     Cavium ThunderX 88XX / r1p1
+  8        0        0       -      -     Cavium ThunderX 88XX / r1p1
+  9        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 10        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 11        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 12        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 13        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 14        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 15        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 16        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 17        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 18        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 19        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 20        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 21        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 22        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 23        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 24        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 25        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 26        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 27        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 28        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 29        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 30        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 31        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 32        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 33        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 34        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 35        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 36        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 37        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 38        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 39        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 40        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 41        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 42        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 43        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 44        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 45        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 46        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 47        0        0       -      -     Cavium ThunderX 88XX / r1p1
+ 48        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 49        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 50        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 51        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 52        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 53        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 54        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 55        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 56        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 57        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 58        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 59        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 60        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 61        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 62        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 63        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 64        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 65        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 66        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 67        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 68        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 69        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 70        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 71        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 72        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 73        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 74        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 75        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 76        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 77        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 78        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 79        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 80        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 81        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 82        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 83        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 84        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 85        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 86        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 87        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 88        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 89        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 90        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 91        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 92        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 93        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 94        1        0       -      -     Cavium ThunderX 88XX / r1p1
+ 95        1        0       -      -     Cavium ThunderX 88XX / r1p1
+
+Architecture:                    aarch64
+CPU op-mode(s):                  64-bit
+Byte Order:                      Little Endian
+CPU(s):                          96
+On-line CPU(s) list:             0-95
+Vendor ID:                       Cavium
+Model name:                      ThunderX 88XX
+Model:                           1
+Thread(s) per core:              1
+Core(s) per cluster:             48
+Socket(s):                       2
+Cluster(s):                      2
+Stepping:                        0x1
+BogoMIPS:                        200.00
+Flags:                           fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
+NUMA node(s):                    2
+NUMA node0 CPU(s):               0-47
+NUMA node1 CPU(s):               48-95
+Vulnerability Itlb multihit:     Not affected
+Vulnerability L1tf:              Not affected
+Vulnerability Mds:               Not affected
+Vulnerability Meltdown:          Vulnerable
+Vulnerability Spec store bypass: Vulnerable
+Vulnerability Spectre v1:        Mitigation; __user pointer sanitization
+Vulnerability Spectre v2:        Vulnerable
+Vulnerability Srbds:             Not affected
+Vulnerability Tsx async abort:   Not affected
+
+SoC guess: 2 x ThunderX CN8890
+ Compiler: /usr/bin/gcc (Debian 11.2.0-14/aarch64-linux-gnu)
+ Userland: arm64
+   Kernel: 5.16.0/aarch64
+           CONFIG_HZ=250
+           CONFIG_HZ_250=y
+           CONFIG_PREEMPT_NONE=y
+           CONFIG_PREEMPT_NONE_BUILD=y
+           CONFIG_PREEMPT_NOTIFIERS=y
+
+DIMM configuration:
+
+Physical Memory Array
+	Location: System Board Or Motherboard
+	Use: System Memory
+	Error Correction Type: None
+	Maximum Capacity: 1 TB
+	Number Of Devices: 8
+
+Memory Device
+	Array Handle: 0x0032
+	Total Width: 72 bits
+	Data Width: 64 bits
+	Size: 8 GB
+	Form Factor: DIMM
+	Locator: DIMM_P0_A0
+	Bank Locator: P0_Node0_Channel0_Dimm0
+	Type: DDR4
+	Type Detail: Registered (Buffered)
+	Speed: 2400 MT/s
+	Manufacturer: SK Hynix
+	Asset Tag: DIMM_P0_A0_AssetTag
+	Part Number: HMA81GR7AFR8N-UH    
+	Rank: 1
+	Configured Memory Speed: 1880 MT/s
+
+Memory Device
+	Array Handle: 0x0032
+	Total Width: 72 bits
+	Data Width: 64 bits
+	Size: 8 GB
+	Form Factor: DIMM
+	Locator: DIMM_P0_A1
+	Bank Locator: P0_Node0_Channel0_Dimm1
+	Type: DDR4
+	Type Detail: Registered (Buffered)
+	Speed: 2400 MT/s
+	Manufacturer: SK Hynix
+	Asset Tag: DIMM_P0_A1_AssetTag
+	Part Number: HMA81GR7AFR8N-UH    
+	Rank: 1
+	Configured Memory Speed: 1880 MT/s
+
+Memory Device
+	Array Handle: 0x0032
+	Total Width: 72 bits
+	Data Width: 64 bits
+	Size: 8 GB
+	Form Factor: DIMM
+	Locator: DIMM_P0_B0
+	Bank Locator: P0_Node0_Channel1_Dimm0
+	Type: DDR4
+	Type Detail: Registered (Buffered)
+	Speed: 2400 MT/s
+	Manufacturer: SK Hynix
+	Asset Tag: DIMM_P0_B0_AssetTag
+	Part Number: HMA81GR7AFR8N-UH    
+	Rank: 1
+	Configured Memory Speed: 1880 MT/s
+
+Memory Device
+	Array Handle: 0x0032
+	Total Width: 72 bits
+	Data Width: 64 bits
+	Size: 8 GB
+	Form Factor: DIMM
+	Locator: DIMM_P0_B1
+	Bank Locator: P0_Node0_Channel1_Dimm1
+	Type: DDR4
+	Type Detail: Registered (Buffered)
+	Speed: 2400 MT/s
+	Manufacturer: SK Hynix
+	Asset Tag: DIMM_P0_B1_AssetTag
+	Part Number: HMA81GR7AFR8N-UH    
+	Rank: 1
+	Configured Memory Speed: 1880 MT/s
+
+Memory Device
+	Array Handle: 0x0032
+	Total Width: 72 bits
+	Data Width: 64 bits
+	Size: 8 GB
+	Form Factor: DIMM
+	Locator: DIMM_P0_C0
+	Bank Locator: P0_Node0_Channel2_Dimm0
+	Type: DDR4
+	Type Detail: Registered (Buffered)
+	Speed: 2400 MT/s
+	Manufacturer: SK Hynix
+	Asset Tag: DIMM_P0_C0_AssetTag
+	Part Number: HMA81GR7AFR8N-UH    
+	Rank: 1
+	Configured Memory Speed: 1880 MT/s
+
+Memory Device
+	Array Handle: 0x0032
+	Total Width: 72 bits
+	Data Width: 64 bits
+	Size: 8 GB
+	Form Factor: DIMM
+	Locator: DIMM_P0_C1
+	Bank Locator: P0_Node0_Channel2_Dimm1
+	Type: DDR4
+	Type Detail: Registered (Buffered)
+	Speed: 2400 MT/s
+	Manufacturer: SK Hynix
+	Asset Tag: DIMM_P0_C1_AssetTag
+	Part Number: HMA81GR7AFR8N-UH    
+	Rank: 1
+	Configured Memory Speed: 1880 MT/s
+
+Memory Device
+	Array Handle: 0x0032
+	Total Width: 72 bits
+	Data Width: 64 bits
+	Size: 8 GB
+	Form Factor: DIMM
+	Locator: DIMM_P0_D0
+	Bank Locator: P0_Node0_Channel3_Dimm0
+	Type: DDR4
+	Type Detail: Registered (Buffered)
+	Speed: 2400 MT/s
+	Manufacturer: SK Hynix
+	Asset Tag: DIMM_P0_D0_AssetTag
+	Part Number: HMA81GR7AFR8N-UH    
+	Rank: 1
+	Configured Memory Speed: 1880 MT/s
+
+Memory Device
+	Array Handle: 0x0032
+	Total Width: 72 bits
+	Data Width: 64 bits
+	Size: 8 GB
+	Form Factor: DIMM
+	Locator: DIMM_P0_D1
+	Bank Locator: P0_Node0_Channel3_Dimm1
+	Type: DDR4
+	Type Detail: Registered (Buffered)
+	Speed: 2400 MT/s
+	Manufacturer: SK Hynix
+	Asset Tag: DIMM_P0_D1_AssetTag
+	Part Number: HMA81GR7AFR8N-UH    
+	Rank: 1
+	Configured Memory Speed: 1880 MT/s
+
+Physical Memory Array
+	Location: System Board Or Motherboard
+	Use: System Memory
+	Error Correction Type: None
+	Maximum Capacity: 1 TB
+	Number Of Devices: 8
+
+Memory Device
+	Array Handle: 0x0048
+	Total Width: 72 bits
+	Data Width: 64 bits
+	Size: 8 GB
+	Form Factor: DIMM
+	Locator: DIMM_P1_E0
+	Bank Locator: P1_Node1_Channel0_Dimm0
+	Type: DDR4
+	Type Detail: Registered (Buffered)
+	Speed: 2400 MT/s
+	Manufacturer: SK Hynix
+	Asset Tag: DIMM_P1_E0_AssetTag
+	Part Number: HMA81GR7AFR8N-UH    
+	Rank: 1
+	Configured Memory Speed: 1880 MT/s
+
+Memory Device
+	Array Handle: 0x0048
+	Total Width: 72 bits
+	Data Width: 64 bits
+	Size: 8 GB
+	Form Factor: DIMM
+	Locator: DIMM_P1_E1
+	Bank Locator: P1_Node1_Channel0_Dimm1
+	Type: DDR4
+	Type Detail: Registered (Buffered)
+	Speed: 2400 MT/s
+	Manufacturer: SK Hynix
+	Asset Tag: DIMM_P1_E1_AssetTag
+	Part Number: HMA81GR7AFR8N-UH    
+	Rank: 1
+	Configured Memory Speed: 1880 MT/s
+
+Memory Device
+	Array Handle: 0x0048
+	Total Width: 72 bits
+	Data Width: 64 bits
+	Size: 8 GB
+	Form Factor: DIMM
+	Locator: DIMM_P1_F0
+	Bank Locator: P1_Node1_Channel1_Dimm0
+	Type: DDR4
+	Type Detail: Registered (Buffered)
+	Speed: 2400 MT/s
+	Manufacturer: SK Hynix
+	Asset Tag: DIMM_P1_F0_AssetTag
+	Part Number: HMA81GR7AFR8N-UH    
+	Rank: 1
+	Configured Memory Speed: 1880 MT/s
+
+Memory Device
+	Array Handle: 0x0048
+	Total Width: 72 bits
+	Data Width: 64 bits
+	Size: 8 GB
+	Form Factor: DIMM
+	Locator: DIMM_P1_F1
+	Bank Locator: P1_Node1_Channel1_Dimm1
+	Type: DDR4
+	Type Detail: Registered (Buffered)
+	Speed: 2400 MT/s
+	Manufacturer: SK Hynix
+	Asset Tag: DIMM_P1_F1_AssetTag
+	Part Number: HMA81GR7AFR8N-UH    
+	Rank: 1
+	Configured Memory Speed: 1880 MT/s
+
+Memory Device
+	Array Handle: 0x0048
+	Total Width: 72 bits
+	Data Width: 64 bits
+	Size: 8 GB
+	Form Factor: DIMM
+	Locator: DIMM_P1_G0
+	Bank Locator: P1_Node1_Channel2_Dimm0
+	Type: DDR4
+	Type Detail: Registered (Buffered)
+	Speed: 2400 MT/s
+	Manufacturer: SK Hynix
+	Asset Tag: DIMM_P1_G0_AssetTag
+	Part Number: HMA81GR7AFR8N-UH    
+	Rank: 1
+	Configured Memory Speed: 1880 MT/s
+
+Memory Device
+	Array Handle: 0x0048
+	Total Width: 72 bits
+	Data Width: 64 bits
+	Size: 8 GB
+	Form Factor: DIMM
+	Locator: DIMM_P1_G1
+	Bank Locator: P1_Node1_Channel2_Dimm1
+	Type: DDR4
+	Type Detail: Registered (Buffered)
+	Speed: 2400 MT/s
+	Manufacturer: SK Hynix
+	Asset Tag: DIMM_P1_G1_AssetTag
+	Part Number: HMA81GR7AFR8N-UH    
+	Rank: 1
+	Configured Memory Speed: 1880 MT/s
+
+Memory Device
+	Array Handle: 0x0048
+	Total Width: 72 bits
+	Data Width: 64 bits
+	Size: 8 GB
+	Form Factor: DIMM
+	Locator: DIMM_P1_H0
+	Bank Locator: P1_Node1_Channel3_Dimm0
+	Type: DDR4
+	Type Detail: Registered (Buffered)
+	Speed: 2400 MT/s
+	Manufacturer: SK Hynix
+	Asset Tag: DIMM_P1_H0_AssetTag
+	Part Number: HMA81GR7AFR8N-UH    
+	Rank: 1
+	Configured Memory Speed: 1880 MT/s
+
+Memory Device
+	Array Handle: 0x0048
+	Total Width: 72 bits
+	Data Width: 64 bits
+	Size: 8 GB
+	Form Factor: DIMM
+	Locator: DIMM_P1_H1
+	Bank Locator: P1_Node1_Channel3_Dimm1
+	Type: DDR4
+	Type Detail: Registered (Buffered)
+	Speed: 2400 MT/s
+	Manufacturer: SK Hynix
+	Asset Tag: DIMM_P1_H1_AssetTag
+	Part Number: HMA81GR7AFR8N-UH    
+	Rank: 1
+	Configured Memory Speed: 1880 MT/s
+
+
+
+| bigboy | no cpufreq support | 5.16 | Sid arm64 | 116350 | 109460 | 340790 | 4280 | 17030 | 110.95 |

@@ -2005,7 +2005,6 @@ GuessARMSoC() {
 	#
 	# The cpuid flags seems to appear on all ARMv8 cores starting with kernel 5
 	#
-	# Amlogic A113D | 4 x Cortex-A53
 	# AnnapurnaLabs Alpine | 2 x Cortex-A15 / r2p4 / swp half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt
 	# Armada 370/XP | 1 x Marvell PJ4 / r1p1 / half thumb fastmult vfp edsp vfpv3 vfpv3d16 tls idivt
 	# Comcerto 2000 EVM (FreeScale/NXP QorIQ LS1024A) | 2 x Cortex-A9 / r2p1 / swp half thumb fastmult vfp edsp thumbee neon vfpv3 tls
@@ -2091,7 +2090,7 @@ GuessARMSoC() {
 								;;
 							25*)
 								# AXG
-								echo "Amlogic A113D"
+								echo "Amlogic A113X/A113D"
 								;;
 							28*)
 								# G12A: S905X2, S905D2, S905Y2
@@ -2407,13 +2406,13 @@ GuessSoCbySignature() {
 			# Nvidia Xavier | 4-8 x NVidia Carmel / r0p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp
 			echo "Nvidia Xavier"
 			;;
-		?0A17r0p1?0A17r0p1?0A17r0p1?0A17r0p1)
+		50A17r0p150A17r0p150A17r0p150A17r0p1)
 			# RK3288, 4 x Cortex-A17 / r0p1 / half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
 			echo "Rockchip RK3288"
 			;;
 		?0A7r0p3?0A7r0p3?0A7r0p3?0A7r0p3)
-			# MT7623, 4 x Cortex-A7 / r0p3 / half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
-			echo "Mediatek MT7623"
+			# MT7623 or Allwinner A31, 4 x Cortex-A7 / r0p3 / half thumb fastmult vfp edsp (thumbee) neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
+			grep -q ' thumbee' /proc/cpuinfo && echo "Mediatek MT7623" || echo "Allwinner A31"
 			;;
 		00A53r0p300A53r0p300A53r0p300A53r0p310A53r0p310A53r0p310A53r0p310A53r0p3)
 			# Samsung/Nexell S5P6818, 8 x Cortex-A53 / r0p3 / fp asimd aes pmull sha1 sha2 crc32
@@ -2459,13 +2458,17 @@ GetCPUSignature() {
 IdentifyGXLG12A() {
 	# Amlogic GXL and G12A SoC families share same cluster details (quad A53 / r0p4).
 	# They differ in speed though: GXL usually fakes 1.5 GHz while being limited to
-	# 1.4 GHz (LibreComputer's La Frite being the exception reporting true 1416 MHz)
+	# 1.4 GHz (LibreComputer's La Frite and Jethub D1 being exceptions reporting 1416 MHz)
 	# but G12A (S905X2, S905D2, S905Y2) clocks higher and doesn't fake clockspeeds
 	MaxSpeed="$(sed -e '1,/^ CPU/ d' <<<"${CPUTopology}" | tail -n1 | awk -F" " '{print $5}')"
 	case ${MaxSpeed} in
 		15??|14??)
 			# GXL: 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid (running 32-bit: fp asimd evtstrm aes pmull sha1 sha2 crc32 wp half thumb fastmult vfp edsp neon vfpv3 tlsi vfpv4 idiva idivt)
-			echo "Amlogic S805X, S805Y, S905X/S905D/S905W/S905L/S905M2"
+			echo "Amlogic A113X/A113D, S805X, S805Y, S905X/S905D/S905L/S905M2"
+			;;
+		12??)
+			# S905W being limited to 1.2 GHz
+			echo "Amlogic S905W"
 			;;
 		*)
 			# G12A/TL1: 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid

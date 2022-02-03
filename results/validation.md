@@ -153,5 +153,7 @@
 | [3Ntu](3Ntu.txt) | v0.9.2 Hardkernel ODROID-N2Plus | 0%/0% | 1.8Gi/1.5Gi | X | X | X | X | 1% | 0% | |
 | [3NvH](3NvH.txt) | v0.9.2 Radxa ROCK Pi 4C | 0%/0.5% | 3.8Gi/3.2Gi | X | X | X | X | 2% | 0% | |
 | [3Nzx](3Nzx.txt) | v0.9.2 LeMaker Banana Pi | 0%/0.5% | 985Mi/813Mi | X | X | X | X | <span style=color:red> 9%</span> | 1% | |
+| [3Owk](3Owk.txt) | v0.9.2 bigboy | 0%/0% | 127Gi/108Gi | X | X | X | X | 1% | 1% | |
+| [3Owv](3Owv.txt) | v0.9.2 bigboy | 0%/0% | 127Gi/108Gi | X | X | X | X | 1% | 0% | |
 | [3rUb](3rUb.txt) | v0.7.7 Pine64 RK3566 Quartz64-A Board | 0%/0% | 3.8Gi/3.5Gi | X | X | X | X | 1% | 0% | |
 | [3wZn](3wZn.txt) | v0.7.7 Radxa Zero | 0.3%/0% | 3.7Gi/3.4Gi | X | X | X | X | 1% | 0% | |

@@ -1359,7 +1359,7 @@ InitialMonitoring() {
 	echo -e "\n${GCC} ${GCC_Version}" >>${ResultLog}
 
 	# Some basic system info needed to interpret system health later
-	echo -e "\nUptime:$(uptime)\n\n$(iostat | grep -v "^loop")\n\n$(free -h)\n\n$(swapon -s)" | sed '/^$/N;/^\n$/D' >>${ResultLog}
+	echo -e "\nUptime:$(uptime)\n\n$(iostat | grep -v "^loop")\n\n$(free -h)\n\n$(swapon -s)\n" | sed '/^$/N;/^\n$/D' >>${ResultLog}
 	ShowZswapStats 2>/dev/null >>${ResultLog}
 	
 	# set up Netio consumption monitoring if requested. Device address and socket
@@ -1729,6 +1729,7 @@ SummarizeResults() {
 	echo -e "\n##########################################################################\n" >>${ResultLog}
 	echo -e "$(iostat | grep -v "^loop")\n\n$(free -h)\n\n$(swapon -s)\n" | sed '/^$/N;/^\n$/D' >>${ResultLog}
 	ShowZswapStats 2>/dev/null >>${ResultLog}
+	echo >>${ResultLog}
 	cat "${TempDir}/cpu-topology.log" >>${ResultLog}
 	lscpu >>${ResultLog}
 	LogEnvironment >>${ResultLog}
@@ -1766,8 +1767,12 @@ LogEnvironment() {
 	# Log userland architecture if available
 	[ "X${ARCH}" != "X" ] && echo " Userland: ${ARCH}"
 	# Log ThreadX version if available
-	[ "X${ThreadXVersion}" != "X" ] && echo -e \
-		"  ThreadX: $(awk '/^version/ {print $2}' <<<"${ThreadXVersion}") / $(head -n1 <<<"${ThreadXVersion}")"
+	if [ "X${ThreadXVersion}" != "X" ]; then
+		echo -e "  ThreadX: $(awk '/^version/ {print $2}' <<<"${ThreadXVersion}") / $(head -n1 <<<"${ThreadXVersion}")"
+		vcgencmd mem_reloc_stats | while read ; do
+			echo "           ${REPLY}"
+		done
+	fi
 	# check for VM/container mode to add this to kernel info
 	VirtWhat="$(systemd-detect-virt 2>/dev/null)"
 	[ "X${VirtWhat}" != "X" -a "X${VirtWhat}" != "Xnone" ] && VirtOrContainer=" (${VirtWhat})"
@@ -2559,11 +2564,11 @@ ShowZswapStats() {
 		read compressor </sys/module/zswap/parameters/compressor 2>/dev/null
 		read zpool </sys/module/zswap/parameters/zpool 2>/dev/null
 		if [ -n ${max_pool_percent} -a -n ${compressor} -a -n ${zpool} ]; then
-			echo -e "\nZswap active using ${compressor}/${zpool}, max pool occupation: ${max_pool_percent}%\c"
+			echo -e "Zswap active using ${compressor}/${zpool}, max pool occupation: ${max_pool_percent}%\c"
 		elif [ -n ${compressor} -a -n ${zpool} ]; then
-			echo -e "\nZswap active using ${compressor}/${zpool}\c"
+			echo -e "Zswap active using ${compressor}/${zpool}\c"
 		else
-			echo -e "\nZswap active\c"
+			echo -e "Zswap active\c"
 		fi
 		if [ -d /sys/kernel/debug/zswap ]; then
 			echo ", details:"

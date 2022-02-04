@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.9.2
+Version=0.9.3
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -1201,7 +1201,7 @@ BasicSetup() {
 					# get SoC revision based on mmc controller's bus location
 					od -An -tx1 /proc/device-tree/emmc2bus/dma-ranges 2>/dev/null | tr -d '[:space:]' | \
 						grep -q 'c0000000000000000000000040' && BCM2711="B0" || BCM2711="C0 or later"
-					DeviceName="$(sed 's/Raspberry Pi/RPi/' <<<"${DeviceName}") / BCM2711 rev ${BCM2711}"
+					DeviceName="$(sed 's/Raspberry Pi/RPi/' <<<"${DeviceName}") / BCM2711 Rev ${BCM2711}"
 					;;
 			esac		
 			;;
@@ -1347,7 +1347,7 @@ InitialMonitoring() {
 		ThreadXVersion="$(/usr/bin/vcgencmd version)"
 		[ -f /boot/config.txt ] && ThreadXConfig=/boot/config.txt || ThreadXConfig=/boot/firmware/config.txt
 		grep -q "arm_boost=1" ${ThreadXConfig} 2>/dev/null || (grep -q "C0 or later" <<<"${DeviceName}" && \
-			echo -e "\nWarning: your Raspberry Pi is powered by BCM2711 rev. ${BCM2711} but arm_boost=1\nis not set in ${ThreadXConfig}. Some (mis)information about what you are missing:\nhttps://www.raspberrypi.com/news/bullseye-bonus-1-8ghz-raspberry-pi-4/" >>${ResultLog})
+			echo -e "\nWarning: your Raspberry Pi is powered by BCM2711 Rev. ${BCM2711} but arm_boost=1\nis not set in ${ThreadXConfig}. Some (mis)information about what you are missing:\nhttps://www.raspberrypi.com/news/bullseye-bonus-1-8ghz-raspberry-pi-4/" >>${ResultLog})
 		echo -e "\nRaspberry Pi ThreadX version:\n${ThreadXVersion}" >>${ResultLog}
 		[ -f ${ThreadXConfig} ] && echo -e "\nThreadX configuration (${ThreadXConfig}):\n$(grep -v '#' ${ThreadXConfig} | sed '/^\s*$/d')" >>${ResultLog}
 		echo -e "\nActual ThreadX settings:\n$(vcgencmd get_config int)" >>${ResultLog}
@@ -1360,6 +1360,7 @@ InitialMonitoring() {
 
 	# Some basic system info needed to interpret system health later
 	echo -e "\nUptime:$(uptime)\n\n$(iostat | grep -v "^loop")\n\n$(free -h)\n\n$(swapon -s)" | sed '/^$/N;/^\n$/D' >>${ResultLog}
+	ShowZswapStats 2>/dev/null >>${ResultLog}
 	
 	# set up Netio consumption monitoring if requested. Device address and socket
 	# need to be available as Netio (environment) variable.
@@ -1727,6 +1728,7 @@ SummarizeResults() {
 
 	echo -e "\n##########################################################################\n" >>${ResultLog}
 	echo -e "$(iostat | grep -v "^loop")\n\n$(free -h)\n\n$(swapon -s)\n" | sed '/^$/N;/^\n$/D' >>${ResultLog}
+	ShowZswapStats 2>/dev/null >>${ResultLog}
 	cat "${TempDir}/cpu-topology.log" >>${ResultLog}
 	lscpu >>${ResultLog}
 	LogEnvironment >>${ResultLog}
@@ -2113,6 +2115,10 @@ GuessARMSoC() {
 								echo "Amlogic S905X4"
 								;;
 							*)
+								# https://tinyurl.com/y85lsxsc:
+								# T3 --> T982, T963D4, T965D4
+								# S4 --> S905Y4, S805X2 (quad Cortex-A35) https://lkml.org/lkml/2022/1/6/204
+								# S4D --> S905C3, S905C3ENG
 								echo "unknown Amlogic, serial $(cut -c-4 <<<"${AmLogicSerial}")..."
 								;;
 						esac
@@ -2543,6 +2549,35 @@ IdentifyAllwinnerARMv8() {
 	# if we end up here then print some generic BS
 	echo "Allwinner unidentified SoC"
 } # IdentifyAllwinnerARMv8
+
+ShowZswapStats() {
+	# https://www.kernel.org/doc/Documentation/vm/zswap.txt
+	ZswapEnabled="$(sed 's/Y/1/' </sys/module/zswap/parameters/enabled)"
+	if [ "${ZswapEnabled}" = "1" ]; then
+		# read module parameters
+		read max_pool_percent </sys/module/zswap/parameters/max_pool_percent 2>/dev/null
+		read compressor </sys/module/zswap/parameters/compressor 2>/dev/null
+		read zpool </sys/module/zswap/parameters/zpool 2>/dev/null
+		if [ -n ${max_pool_percent} -a -n ${compressor} -a -n ${zpool} ]; then
+			echo -e "\nZswap active using ${compressor}/${zpool}, max pool occupation: ${max_pool_percent}%\c"
+		elif [ -n ${compressor} -a -n ${zpool} ]; then
+			echo -e "\nZswap active using ${compressor}/${zpool}\c"
+		else
+			echo -e "\nZswap active\c"
+		fi
+		if [ -d /sys/kernel/debug/zswap ]; then
+			echo ", details:"
+			read stored_pages </sys/kernel/debug/zswap/stored_pages
+			read pool_total_size </sys/kernel/debug/zswap/pool_total_size
+			if [ ${pool_total_size:-0} -gt 0 ]; then
+				# https://unix.stackexchange.com/a/412760
+				compression_ratio=$(awk -F" " '{printf ("%0.1f",$1*4096/$2); }' <<<"${stored_pages} ${pool_total_size}")
+				echo -e "\tcompression_ratio:${compression_ratio:-0}"
+			fi
+			grep -R . /sys/kernel/debug/zswap/ | sed 's|/sys/kernel/debug/zswap/|\t|' | sort
+		fi
+	fi
+} # ShowZswapStats
 
 DisplayUsage() {
 	echo -e "\nUsage: ${BOLD}${0##*/} [-c] [-p] [-h] [-m] [-t \$degree] [-T \$degree]${NC}\n"

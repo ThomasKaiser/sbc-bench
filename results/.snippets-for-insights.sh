@@ -46,5 +46,37 @@ CPUUtilization7ZIP() {
 	done
 } # CPUUtilization7ZIP
 
-# CPUUtilization7ZIP >7-zip-cpu-utilisation.md
+CheckRAID6PerfAndAlgo() {
+	# if you collected a bunch of armhwinfo files (fetched from ix.io)
+	# then you can do some sort of data mining with it, e.g. checking
+	# for the RAID algo and achieved MB/s the kernel chose.
 
+	echo -e "# raid6 performance and algorithm\n"
+	echo -e "See function CheckRAID6PerfAndAlgo in https://github.com/ThomasKaiser/sbc-bench/blob/master/results/.snippets-for-insights.sh\n"
+	echo "| MB/s / algo | Board | Kernel | URL |"
+	echo "| :----- | :----: | :---- | :----|"
+	for file in *.armhwinfo ; do
+		RAID6Raw="$(grep -a 'using algorithm' $file | awk -F" " '{print $8" ("$6")"}')"
+		if [ "X${RAID6Raw}" != "X" ]; then
+			# dmesg output contains raid6 info, let's grab lowest/highest
+			RAID6Min=$(sort -n <<<"${RAID6Raw}" | head -n1)
+			RAID6Max=$(sort -n -r <<<"${RAID6Raw}" | head -n1)
+			PerfRelation="$(awk '{print $1/$2}' <<<"$(cut -f1 -d' ' <<<"${RAID6Max}") $(cut -f1 -d' ' <<<"${RAID6Min}")")"
+			if [ $(awk '{printf ("%0.0f",$1*100); }' <<<"${PerfRelation}") -lt 110 ]; then
+				# difference between lowest and highest less than 10% so don't bother
+				RAID6Perf="${RAID6Max}"
+			else
+				# report both values
+				RAID6Perf="${RAID6Max} / <span style=\"color:red\">**${RAID6Min}**</span>"
+			fi
+			BoardName="$(grep -a 'Machine model: ' $file | awk -F"model: " '{print $2}' | head -n1)"
+			[ "X${BoardName}" = "X" ] && BoardName="$(grep -a -B2 '### dmesg:' $file | cut -f2 -d'|' | head -n1)"
+			KernelVersions="$(grep -a -B2 '### dmesg:' $file | awk -F"|" '/\|/ {print $6}' | cut -f1 -d'-' | sort | uniq | tr '\n' '/' | sed -e 's/\ //g' -e 's/\/$//')"
+			URL="http://ix.io/${file%.*}"
+			echo -e "${RAID6Perf} | ${BoardName} | ${KernelVersions} | [${URL}](${URL}) |"
+		fi
+	done | sort -n -r | grep "^[1-9][0-9]" | sed -e 's/^/| /'
+} # CheckRAID6PerfAndAlgo
+
+# CPUUtilization7ZIP >7-zip-cpu-utilisation.md
+# CheckRAID6PerfAndAlgo >raid6-perf-and-algo.md

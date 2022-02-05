@@ -1788,6 +1788,8 @@ LogEnvironment() {
 		[ -f /proc/config.gz ] && zgrep -E "^CONFIG_HZ|^CONFIG_PREEMPT" /proc/config.gz | \
 			while read ; do echo "           ${REPLY}"; done | sort -V
 	fi
+	# if available report the kernel's xor/raid6 choices
+	dmesg | awk -F"] " '/ raid6: | xor: / {print "           "$2}'
 } # LogEnvironment
 
 UploadResults() {
@@ -2036,7 +2038,7 @@ GuessARMSoC() {
 	# * 1b --> S805
 	# * 1f --> S905          https://forum.odroid.com/viewtopic.php?p=155548#p155548
 	# * 20 --> S912          https://forum.doozan.com/read.php?3,62704,62709#msg-62709 but in conflict with https://github.com/LibreELEC/linux-amlogic/blob/amlogic-3.14.y/arch/arm64/boot/dts/amlogic/mesongxtvbb.dtsi (quad A53)
-	# * 21 --> S905X         https://blog.lvu.kr/amlogic-s905x-set-top-box-t95n-m8s-2g8g-2/
+	# * 21 --> S905X/S805X   https://blog.lvu.kr/amlogic-s905x-set-top-box-t95n-m8s-2g8g-2/
 	# * 22 --> S912          https://github.com/CoreELEC/bl301/blob/coreelec-bl301/arch/arm/include/asm/cpu_id.h
 	# * 24 --> T962X/T962E
 	# * 25 --> A113D (AXG)   https://tinyurl.com/y76bj6ky
@@ -2053,12 +2055,12 @@ GuessARMSoC() {
 	CPUInfo="$(cat /proc/cpuinfo)"
 	HardwareInfo="$(awk -F': ' '/^Hardware/ {print $2}' <<< "${CPUInfo}" | tail -n1)"
 	RockchipGuess="$(dmesg | awk -F': ' '/rockchip-cpuinfo cpuinfo: SoC/ {print $3}'| head -n1)"
-	AmlogicGuess="$(dmesg | awk -F'(' '/soc soc0: Amlogic/ {print $2}' | cut -f1 -d')' | head -n1)"
+	AmlogicGuess="$(dmesg | awk -F": " '/soc soc0: / {print $2}' | sed 's/ Detected//' | head -n1)"
 	
 	if [ "X${RockchipGuess}" != "X" ]; then
 		echo "Rockchip RK$(cut -c-4 <<<"${RockchipGuess}") (${RockchipGuess})"
 	elif [ "X${AmlogicGuess}" != "X" ]; then
-		echo "Amlogic ${AmlogicGuess}"
+		echo "${AmlogicGuess}"
 	else
 		# Guessing by 'Hardware :' in /proc/cpuinfo is something that only reliably works
 		# with vendor's BSP kernels. With mainline kernel it's impossible to rely on this
@@ -2123,7 +2125,8 @@ GuessARMSoC() {
 								# https://tinyurl.com/y85lsxsc:
 								# T3 --> T982, T963D4, T965D4
 								# S4 --> S905Y4, S805X2 (quad Cortex-A35) https://lkml.org/lkml/2022/1/6/204
-								# S4D --> S905C3, S905C3ENG
+								# S4D --> S905C3, S905C3ENG (quad Cortex-A35): https://archive.md/4H6xM
+								# T7 --> A311D2: https://archive.md/BtOLg
 								echo "unknown Amlogic, serial $(cut -c-4 <<<"${AmLogicSerial}")..."
 								;;
 						esac
@@ -2343,6 +2346,10 @@ GuessSoCbySignature() {
 					fi
 					;;
 			esac
+			;;
+		00A53r0p400A53r0p400A53r0p400A53r0p414A53r0p414A53r0p414A53r0p414A53r0p4)
+			# S912, 4 x Cortex-A53 / r0p4 + 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
+			echo "Amlogic S912"
 			;;
 		00A53r0p400A53r0p412A73r0p212A73r0p212A73r0p212A73r0p2)
 			# S922X/A311D, 2 x Cortex-A53 / r0p4 + 4 x Cortex-A73 / r0p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32

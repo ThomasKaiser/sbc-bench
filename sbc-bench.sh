@@ -1793,7 +1793,9 @@ LogEnvironment() {
 } # LogEnvironment
 
 UploadResults() {
-	UploadURL=$(curl -s -F 'f:1=<-' ix.io <${ResultLog} 2>/dev/null || curl -s -F 'f:1=<-' ix.io <${ResultLog})
+	# upload results to ix.io and replace multiple empty lines with one. 2nd try if 1st does not succeed
+	UploadURL=$(sed '/^$/N;/^\n$/D' <${ResultLog} | curl -s -F 'f:1=<-' ix.io 2>/dev/null || \
+		sed '/^$/N;/^\n$/D' <${ResultLog} | curl -s -F 'f:1=<-' ix.io)
 
 	# Display benchmark results
 	[ ${#ClusterConfig[@]} -gt 1 ] && ClusterInfo=" (different CPU cores measured individually)"
@@ -1884,65 +1886,70 @@ CheckIOWait() {
 } # CheckIOWait
 
 CheckForThrottling() {
-	# Check for throttling on normal ARM SBC
-	if [ -f /sys/devices/system/cpu/cpufreq/policy0/stats/time_in_state ]; then
-		ls /sys/devices/system/cpu/cpufreq/policy?/stats/time_in_state | sort | while read ; do
-			Number=$(echo ${REPLY} | tr -c -d '[:digit:]')
-			diff ${TempDir}/time_in_state_after_${Number} ${TempDir}/time_in_state_before_${Number} >/dev/null 2>&1
-			if [ $? -ne 0 ]; then
-				if [ ${#ClusterConfig[@]} -eq 1 ]; then
-					# all CPU cores have same cpufreq policies, we report globally
-					ReportCpufreqStatistics ${Number}
-					echo -e "${LRED}${BOLD}ATTENTION: Throttling might have occured. Check the log for details.${NC}\n"
-				else
-					# report affected cluster
-					for i in $(seq 0 $(( ${#ClusterConfig[@]} -1 )) ) ; do
-						if [ ${ClusterConfig[$i]} -eq ${Number} ]; then
-							FirstCore=${Number}
-							LastCore=$(GetLastClusterCore $(( ${i} + 1 )))
-							CPUInfo="$(GetCPUInfo ${Number})"
-							ReportCpufreqStatistics ${Number} " for CPUs ${FirstCore}-${LastCore}${CPUInfo}"
-							echo -e "${LRED}${BOLD}ATTENTION: Throttling might have occured on CPUs ${FirstCore}-${LastCore}${CPUInfo}. Check the log for details.${NC}\n"
+	# Check for throttling on normal ARM or RISC-V SBC (on x86 cpufreq statistics are
+	# more or less irrelevant)
+	case ${CPUArchitecture} in
+		arm*|aarch*|riscv*)
+			if [ -f /sys/devices/system/cpu/cpufreq/policy0/stats/time_in_state ]; then
+				ls /sys/devices/system/cpu/cpufreq/policy?/stats/time_in_state | sort | while read ; do
+					Number=$(echo ${REPLY} | tr -c -d '[:digit:]')
+					diff ${TempDir}/time_in_state_after_${Number} ${TempDir}/time_in_state_before_${Number} >/dev/null 2>&1
+					if [ $? -ne 0 ]; then
+						if [ ${#ClusterConfig[@]} -eq 1 ]; then
+							# all CPU cores have same cpufreq policies, we report globally
+							ReportCpufreqStatistics ${Number}
+							echo -e "${LRED}${BOLD}ATTENTION: Throttling might have occured. Check the log for details.${NC}\n"
+						else
+							# report affected cluster
+							for i in $(seq 0 $(( ${#ClusterConfig[@]} -1 )) ) ; do
+								if [ ${ClusterConfig[$i]} -eq ${Number} ]; then
+									FirstCore=${Number}
+									LastCore=$(GetLastClusterCore $(( ${i} + 1 )))
+									CPUInfo="$(GetCPUInfo ${Number})"
+									ReportCpufreqStatistics ${Number} " for CPUs ${FirstCore}-${LastCore}${CPUInfo}"
+									echo -e "${LRED}${BOLD}ATTENTION: Throttling might have occured on CPUs ${FirstCore}-${LastCore}${CPUInfo}. Check the log for details.${NC}\n"
+								fi
+							done
 						fi
-					done
+					fi
+				done
+			fi
+
+			# Check for killed CPU cores. Some unfortunate users might still use Allwinner BSP kernels
+			CPUCoresNow=$(grep -c '^processor' /proc/cpuinfo)
+			if [ ${CPUCoresNow} -lt ${CPUCores} ]; then
+				echo -e "${LRED}${BOLD}ATTENTION: Due to overheating prevention $(( ${CPUCores} - ${CPUCoresNow} )) CPU cores have been killed. Check the log for details.${NC}\n"
+			fi
+
+			# Check for throttling/undervoltage on Raspberry Pi
+			grep -q '1400/1200MHz' ${MonitorLog} && Warning="ATTENTION: Silent throttling has occured. Check the log for details."
+			if [ ${USE_VCGENCMD} = true ] ; then
+				Health="$(LC_ALL=C perl -e "printf \"%19b\n\", $(/usr/bin/vcgencmd get_throttled | cut -f2 -d=)" 2>/dev/null | tr -d '[:blank:]')"
+				# https://forum.armbian.com/topic/7763-benchmarking-cpus/?do=findComment&comment=59042
+				HealthLength=$(wc -c <<<"${Health}")
+				[ ${HealthLength} -eq 19 ] && Health="0${Health}"
+				case ${Health} in
+					10*)
+						Warning="ATTENTION: Frequency capping to 600 MHz has occured. Check the log for details."
+						ReportRPiHealth ${Health} >>${TempDir}/throttling_info.txt
+						;;
+					01*)
+						Warning="ATTENTION: Throttling has occured. Check the log for details."
+						ReportRPiHealth ${Health} >>${TempDir}/throttling_info.txt
+						;;
+					11*)
+						Warning="ATTENTION: Throttling and frequency capping has occured. Check the log for details."
+						ReportRPiHealth ${Health} >>${TempDir}/throttling_info.txt
+						;;
+				esac
+				if [ "X${Warning}" = "X" ]; then
+					echo -e "${LGREEN}It seems neither throttling nor frequency capping has occured.${NC}\n"
+				else
+					echo -e "${LRED}${BOLD}${Warning}${NC}\n"
 				fi
 			fi
-		done
-	fi
-
-	# Check for killed CPU cores. Some unfortunate users might still use Allwinner BSP kernels
-	CPUCoresNow=$(grep -c '^processor' /proc/cpuinfo)
-	if [ ${CPUCoresNow} -lt ${CPUCores} ]; then
-		echo -e "${LRED}${BOLD}ATTENTION: Due to overheating prevention $(( ${CPUCores} - ${CPUCoresNow} )) CPU cores have been killed. Check the log for details.${NC}\n"
-	fi
-
-	# Check for throttling/undervoltage on Raspberry Pi
-	grep -q '1400/1200MHz' ${MonitorLog} && Warning="ATTENTION: Silent throttling has occured. Check the log for details."
-	if [ ${USE_VCGENCMD} = true ] ; then
-		Health="$(LC_ALL=C perl -e "printf \"%19b\n\", $(/usr/bin/vcgencmd get_throttled | cut -f2 -d=)" 2>/dev/null | tr -d '[:blank:]')"
-		# https://forum.armbian.com/topic/7763-benchmarking-cpus/?do=findComment&comment=59042
-		HealthLength=$(wc -c <<<"${Health}")
-		[ ${HealthLength} -eq 19 ] && Health="0${Health}"
-		case ${Health} in
-			10*)
-				Warning="ATTENTION: Frequency capping to 600 MHz has occured. Check the log for details."
-				ReportRPiHealth ${Health} >>${TempDir}/throttling_info.txt
-				;;
-			01*)
-				Warning="ATTENTION: Throttling has occured. Check the log for details."
-				ReportRPiHealth ${Health} >>${TempDir}/throttling_info.txt
-				;;
-			11*)
-				Warning="ATTENTION: Throttling and frequency capping has occured. Check the log for details."
-				ReportRPiHealth ${Health} >>${TempDir}/throttling_info.txt
-				;;
-		esac
-		if [ "X${Warning}" = "X" ]; then
-			echo -e "${LGREEN}It seems neither throttling nor frequency capping has occured.${NC}\n"
-		else
-			echo -e "${LRED}${BOLD}${Warning}${NC}\n"
-		fi
-	fi
+			;;
+	esac
 } # CheckForThrottling
 
 ReportCpufreqStatistics() {
@@ -2258,7 +2265,7 @@ GuessSoCbySignature() {
 			echo "SigmaStar SSD201/SSD202D"
 			;;
 		00A7r0p500A7r0p500A7r0p500A7r0p5)
-			# Allwinner sun8i: could be Allwinner H3/H2+, R40/V40 or A33/R16
+			# Allwinner sun8i: could be Allwinner H3/H2+, R40/V40 or A33/R16 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
 			egrep -q 'ahci-sunxi|axp22x' /proc/interrupts
 			case $? in
 				0)

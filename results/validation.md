@@ -129,7 +129,6 @@
 | [3Lir](3Lir.txt) | v0.9.1 ASUS Tinker Board | 0.5%/0% | 2.0Gi/1.5Gi | X | X | X | X | 2% | 0% | |
 | [3Llk](3Llk.txt) | v0.8.7 Raspberry Pi 4 Model B Rev 1.4 | 1.7%/0.4% | 3.7Gi/2.5Gi | X | X | X | X | <span style=color:red> 8%</span> | 0% | [check log](3Llk.txt) |
 | [3LoH](3LoH.txt) | v0.9.1 Hardkernel ODROID-N2Plus | 0%/0% | 3.6Gi/3.1Gi | X | X | X | X | 1% | 0% | |
-| [3Lpf](3Lpf.txt) | v0.8.8 NVIDIA Jetson Nano Developer Kit | 0.2%/0% | 3,9G/3,4G | X | X | X | X | 2% | <span style=color:red> 6%</span> | |
 | [3M9F](3M9F.txt) | v0.9.1 Generic RK322x TV Box board | 1.6%/0.5% | 1.9Gi/1.7Gi | X | X | X | X | <span style=color:red> 5%</span> | 0% | |
 | [3MAK](3MAK.txt) | v0.9.1 FriendlyElec NanoPi M4 Ver2.0 | 0.3%/0.3% | 3.8Gi/3.4Gi | X | X | X | X | 2% | 1% | |
 | [3MGN](3MGN.txt) | v0.9.1 Raspberry Pi Model B Rev 2 | 1.4%/1.1% | 429Mi/347Mi | X | X | X | | 2% | 0% | [check log](3MGN.txt) |
@@ -154,6 +153,7 @@
 | [3NvH](3NvH.txt) | v0.9.2 Radxa ROCK Pi 4C | 0%/0.5% | 3.8Gi/3.2Gi | X | X | X | X | 2% | 0% | |
 | [3Nzx](3Nzx.txt) | v0.9.2 LeMaker Banana Pi | 0%/0.5% | 985Mi/813Mi | X | X | X | X | <span style=color:red> 9%</span> | 1% | |
 | [3OBF](3OBF.txt) | v0.9.2 RPi 4 Model B Rev 1.1 / BCM2711 | 0%/0.6% | 909Mi/765Mi | X | X | X | X | 4% | 2% | |
+| [3OKN](3OKN.txt) | v0.9.3 NVIDIA Jetson Nano Developer Kit | 0.1%/0% | 3,9G/3,3G | X | X | X | X | <span style=color:red> 7%</span> | 0% | |
 | [3Owk](3Owk.txt) | v0.9.2 bigboy | 0%/0% | 127Gi/108Gi | X | X | X | X | 1% | 1% | |
 | [3Owv](3Owv.txt) | v0.9.2 bigboy | 0%/0% | 127Gi/108Gi | X | X | X | X | 1% | 0% | |
 | [3rUb](3rUb.txt) | v0.7.7 Pine64 RK3566 Quartz64-A Board | 0%/0% | 3.8Gi/3.5Gi | X | X | X | X | 1% | 0% | |

@@ -24,7 +24,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Hugsun X99](http://ix.io/2ICt) | 2088/1800 MHz | 5.9 | Focal arm64 | 7710 | 412105 | 1184306 | 2270 | 5970 | - |
 | [HummingBoard Pulse i.MX8M Quad](http://ix.io/27FC) | 1500 MHz | 4.19 | Buster arm64 | 4330 | 97380 | 695540 | 2230 | 9900 | - |
 | [Jetson Nano](http://ix.io/1I4j) | 1430 MHz | 4.9 | Bionic arm64 | 5060 | 276890 | 513700 | 3680 | 8560 | 6.64 |
-| [Jetson Nano](http://ix.io/3Lpf) | 1480 MHz | 4.9 | Bionic arm64 | 5250 | 280720 | 531940 | 3730 | 8860 | - |
+| [Jetson Nano](http://ix.io/3OKN) | 1480 MHz | 4.9 | Bionic arm64 | 5240 | 280140 | 532090 | 3730 | 8860 | - |
 | [Khadas Edge/Captain](http://ix.io/1rYm) | 2000/1500 MHz | 4.4 | Bionic arm64 | 6550 | 402150 | 1130400 | 2810 | 4860 | 10.50 |
 | [Khadas Edge/Captain](http://ix.io/1uar) | 2000/1500 MHz | 4.4 | Stretch arm64 | 6600 | 269485 | 1127780 | 2860 | 4880 | 8.85 |
 | [Khadas VIM1](http://ix.io/3MzQ) | 1400 MHz | 5.10 | Bullseye arm64 | 3700 | 92890 | 658070 | 1630 | 5270 | - |

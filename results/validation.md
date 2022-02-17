@@ -135,7 +135,7 @@
 | [3MGs](3MGs.txt) | v0.9.1 Raspberry Pi 2 Model B Rev 1.1 | 0.8%/0.2% | 922Mi/835Mi | X | X | X | X | 2% | 0% | |
 | [3MQJ](3MQJ.txt) | v0.9.1 Xunlong Orange Pi PC 2 | 0%/0% | 985Mi/753Mi | X | X | X | X | <span style=color:red>**13%**</span> | 0% | |
 | [3MQV](3MQV.txt) | v0.9.1 Xunlong Orange Pi PC Plus | 0%/0% | 999Mi/779Mi | X | X | X | X | 2% | 0% | |
-| [3MX1](3MX1.txt) | v0.9.1 Radxa Zero | 0%/0% | 1.9Gi/1.6Gi | X | X | X | X | 1% | 0% | |
+| <del>[3MX1](3MX1.txt)</del> | <del>v0.9.1 Radxa Zero </del> | <del>0%/0%</del> | <del>1.9Gi/1.6Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 1%</del> | <del> 0%</del> | |
 | <del>[3MhQ](3MhQ.txt)</del> | <del>v0.9.1 Hardkernel ODROID-HC4 </del> | <del>0%/0%</del> | <del>3.7Gi/3.3Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 1%</del> | <del> 0%</del> | |
 | [3MiR](3MiR.txt) | v0.9.1 TRONFY MXQ S805 | 1.1%/0% | 987Mi/794Mi | X | X | X | X | 2% | 0% | |
 | [3MuT](3MuT.txt) | v0.9.1 Hardkernel ODROID-N2 | 0%/0.2% | 3.6Gi/3.3Gi | X | X | X | X | 1% | 0% | |
@@ -151,10 +151,12 @@
 | [3Njz](3Njz.txt) | v0.9.2 Raspberry Pi Zero W Rev 1.1 | 0.9%/0.8% | 477Mi/416Mi | X | X | X | X | <span style=color:red> 5%</span> | 0% | |
 | [3Ntu](3Ntu.txt) | v0.9.2 Hardkernel ODROID-N2Plus | 0%/0% | 1.8Gi/1.5Gi | X | X | X | X | 1% | 0% | |
 | [3NvH](3NvH.txt) | v0.9.2 Radxa ROCK Pi 4C | 0%/0.5% | 3.8Gi/3.2Gi | X | X | X | X | 2% | 0% | |
-| [3Nzx](3Nzx.txt) | v0.9.2 LeMaker Banana Pi | 0%/0.5% | 985Mi/813Mi | X | X | X | X | <span style=color:red> 9%</span> | 1% | |
+| <del>[3Nzx](3Nzx.txt)</del> | <del>v0.9.2 LeMaker Banana Pi </del> | <del>0%/0.5%</del> | <del>985Mi/813Mi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del><span style=color:red> 9%</span></del> | <del> 1%</del> | |
 | [3OBF](3OBF.txt) | v0.9.2 RPi 4 Model B Rev 1.1 / BCM2711 | 0%/0.6% | 909Mi/765Mi | X | X | X | X | 4% | 2% | |
 | [3OKN](3OKN.txt) | v0.9.3 NVIDIA Jetson Nano Developer Kit | 0.1%/0% | 3,9G/3,3G | X | X | X | X | <span style=color:red> 7%</span> | 0% | |
 | [3Owk](3Owk.txt) | v0.9.2 bigboy | 0%/0% | 127Gi/108Gi | X | X | X | X | 1% | 1% | |
 | [3Owv](3Owv.txt) | v0.9.2 bigboy | 0%/0% | 127Gi/108Gi | X | X | X | X | 1% | 0% | |
+| [3PLr](3PLr.txt) | v0.9.3 LeMaker Banana Pi | 8.2%/8.6% | 997Mi/862Mi | X | X | X | X | <span style=color:red> 7%</span> | 0% | |
+| [3PlT](3PlT.txt) | v0.9.3 Radxa Zero | 0.6%/0.5% | 3.7Gi/3.2Gi | X | X | X | X | 3% | 2% | |
 | [3rUb](3rUb.txt) | v0.7.7 Pine64 RK3566 Quartz64-A Board | 0%/0% | 3.8Gi/3.5Gi | X | X | X | X | 1% | 0% | |
 | [3wZn](3wZn.txt) | v0.7.7 Radxa Zero | 0.3%/0% | 3.7Gi/3.4Gi | X | X | X | X | 1% | 0% | |

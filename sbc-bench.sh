@@ -2334,6 +2334,15 @@ GuessSoCbySignature() {
 									*sunxi*)
 										IdentifyAllwinnerARMv8 | head -n1
 										;;
+									*sun50iw2)
+										echo "Allwinner H5"
+										;;
+									*sun50iw6)
+										echo "Allwinner H6"
+										;;
+									*sun50iw9)
+										echo "Allwinner H616/H313"
+										;;
 									*rockchip*)
 										echo "Rockchip RK3328"
 										;;
@@ -2353,6 +2362,10 @@ GuessSoCbySignature() {
 					fi
 					;;
 			esac
+			;;
+		00A53r0p400A53r0p4)
+			# Allwinner R329, 2 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
+			echo "Allwinner R329"
 			;;
 		00A53r0p400A53r0p400A53r0p400A53r0p414A53r0p414A53r0p414A53r0p414A53r0p4)
 			# S912, 4 x Cortex-A53 / r0p4 + 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
@@ -2398,6 +2411,10 @@ GuessSoCbySignature() {
 		00A53r0p400A53r0p400A53r0p400A53r0p414A72r0p214A72r0p2)
 			# RK3399, 4 x Cortex-A53 / r0p4 + 2 x Cortex-A72 / r0p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32 (32-bit 4.4 BSP kernel: half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt lpae evtstrm aes pmull sha1 sha2 crc32)
 			echo "Rockchip RK3399"
+			;;
+		??A55r2p0??A55r2p0??A55r2p0??A55r2p0??A76r4p0??A76r4p0??A76r4p0??A76r4p0)
+			# RK3588, 4 x Cortex-A55 / r2p0 + 4 x Cortex-A76 / r4p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp asimdrdm lrcpc dcpop asimddp
+			echo "Rockchip RK3588/RK3588s"
 			;;
 		150A7r0p5150A7r0p5150A7r0p5150A7r0p5)
 			case "${DeviceName}" in

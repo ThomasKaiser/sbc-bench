@@ -2484,6 +2484,10 @@ GuessSoCbySignature() {
 			# PLX NAS7820: 2 x ARM11 MPCore / r0p5 / swp half thumb fastmult edsp java
 			echo "PLX NAS7820"
 			;;
+		360Phytiumr1p3360Phytiumr1p3360Phytiumr1p3360Phytiumr1p3360Phytiumr1p3360Phytiumr1p3360Phytiumr1p3360Phytiumr1p3)
+			# Phytium D2000: 8 x Phytium FTC663 / r1p3 / fp asimd evtstrm aes pmull sha1 sha2 crc32
+			echo "Phytium D2000"
+			;;
 	esac
 }
 

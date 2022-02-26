@@ -11,6 +11,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | Device / details | Clockspeed | Kernel | Distro | 7-zip | AES-128 (16 byte) | AES-256 (16 KB) | memcpy | memset | kH/s |
 | ----- | :--------: | :----: | :----: | ----: | ------: | ------: | -----: | -----: | ---: |
 | [Amazon a1.xlarge](http://ix.io/2iFY) | 2300 MHz | 4.15 | Bionic arm64 | 8610 | 458500 | 1297960 | 4280 | 14220 | - |
+| [AMedia X96 Max+](http://ix.io/3QOj) | 2100 MHz | 5.15 | Focal arm64 | 5270 | 197690 | 981830 | 2630 | 5150 | - |
 | [Apple M1 power core](http://ix.io/2Gjg) | 3200 MHz | 5.8 | Groovy arm64 | 5100 | 638810 | 1119670 | 27960 | 63950 | 5.30 |
 | [Apple M1 efficiency](http://ix.io/2Gtf) | *600* MHz | 5.8 | Groovy arm64 | 650 | 150340 | 224520 | 5130 | 7640 | 0.76 |
 | [BPi M4](http://ix.io/1Dt1) | 1400 MHz | 4.9 | Bionic arm64 | 3500 | 125430 | 651460 | 1010 | 4360 | 5.48 |
@@ -27,7 +28,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Jetson Nano](http://ix.io/3OKN) | 1480 MHz | 4.9 | Bionic arm64 | 5240 | 280140 | 532090 | 3730 | 8860 | - |
 | [Khadas Edge/Captain](http://ix.io/1rYm) | 2000/1500 MHz | 4.4 | Bionic arm64 | 6550 | 402150 | 1130400 | 2810 | 4860 | 10.50 |
 | [Khadas Edge/Captain](http://ix.io/1uar) | 2000/1500 MHz | 4.4 | Stretch arm64 | 6600 | 269485 | 1127780 | 2860 | 4880 | 8.85 |
-| [Khadas VIM1](http://ix.io/3MzQ) | 1400 MHz | 5.10 | Bullseye arm64 | 3700 | 92890 | 658070 | 1630 | 5270 | - |
+| [Khadas VIM1](http://ix.io/3QLN) | 1400 MHz | 5.1 | Buster arm64 | 3860 | 90160 | 659460 | 1930 | 5900 | - |
 | [Khadas VIM2](http://ix.io/1ixi) | 1400/1000 MHz | 4.9 | **Xenial** arm64 | 4800 | 177600 | 659000 | 1690 | 5610 | - |
 | [Khadas VIM2](http://ix.io/1iJ7) | 1400/1000 MHz | 4.17 | Bionic arm64 | 5450 | 126770 | 659600 | 1920 | 5920 | 8.59 |
 | [Khadas VIM3](http://ix.io/1MFD) | 2200/1800 MHz | 4.9 | Bionic arm64 | 8600 | 398370 | 1256910 | 4980 | 9300 | 13.12 |
@@ -46,6 +47,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [NanoPi Fire3](http://ix.io/3GmP) | 1400 MHz | 4.14 | Focal arm64 | 7360 | 118460 | 653770 | 1530 | 4590 | 11.27 |
 | [NanoPi K1 Plus](http://ix.io/3N7H) | 1370 MHz | 5.10 | Focal arm64 | 3520 | 115020 | 638880 | 1070 | 3680 | 5.50 |
 | [NanoPi K2](http://ix.io/1iT1) | 1480 MHz | 4.14 | Stretch arm64 | 3850 | 43020 | 50370 | 1660 | 3870 | 4.61 |
+| [NanoPi K2](http://ix.io/3Qve) | 1480 MHz | 5.10 | Bullseye arm64 | 3880 | 42840 | 51490 | 1850 | 3790 | - |
 | [NanoPi M1 Plus](http://ix.io/3N2z) | 1370 MHz | 4.19 | Bionic armhf | 3030 | 25720 | 26660 | 830 | 3450 | - |
 | [NanoPi M4](http://ix.io/1lzP) | 2000/1500 MHz | 4.19 | Stretch arm64 | 6400 | 334650 | 1128330 | 4080 | 8270 | 8.86 |
 | [NanoPi M4v2](http://ix.io/3MAK) | 2015/1510 MHz | 5.10 | Bullseye arm64 | 6680 | 230410 | 921980 | 3110 | 7640 | - |
@@ -115,7 +117,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Rock64](http://ix.io/1iwz) | 1400 MHz | 4.4 | Stretch **armhf** | 3620 | 99400 | 624000 | 1430 | 3620 | - |
 | [Rock Pi 4](http://ix.io/1rrO) | 2000/1500 MHz | 4.4 | Stretch **armhf** | ~6450 | 301470 | 1113900 | 1870 | 4860 | - |
 | [Rock Pi 4](http://ix.io/21fX) | 2000/1500 MHz | 5.3 | Bionic arm64 | 6910 | 402750 | 1147370 | 3660 | 8310 | 10.71 |
-| [Rock Pi 4](http://ix.io/3NvH) | 1800/1400 MHz | 5.10 | Buster arm64 | 6550 | 204870 | 840370 | 3520 | 8290 | - |
+| [Rock Pi 4](http://ix.io/3Q2q) | 2000/1500 MHz | 5.10 | Focal arm64 | 6900 | 255380 | 926270 | 3430 | 8260 | - |
 | [Rock Pi S](http://ix.io/1XKY) | 1300 MHz | 4.4 | Buster | 2590 | 68740 | 282290 | 830 | 1880 | - |
 | [RockPro64](http://ix.io/1lBC) | 1800/1400 MHz | 4.4 | Stretch arm64 | 6140 | 298800 | 1015600 | 2770 | 4850 | 8.14 |
 | [RockPro64](http://ix.io/1iFZ) | 1800/1400 MHz | 4.4 | Stretch **armhf** | 6250 | 275000 | 1000150 | 2000 | 4835 | - |
@@ -141,6 +143,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Pentium J5005](http://ix.io/21rE) | 2700/1500 MHz | 5.0 | Bionic amd64 | 9230 | 379740 | 778360 | 5530 | 7130 | 20.74 |
 | [Celeron N4500](http://ix.io/3HUU) | 2800/1100 MHz | 5.13 | Impish amd64 | 6300 | 663550 | 783840 | 8100 | 8350 | - |
 | [Celeron N5100](http://ix.io/3IlQ) | 2800/1100 MHz | 5.13 | Focal amd64 | 10550 | 661820 | 783800 | 7750 | 8090 | 19.22 |
+| [Celeron N5105](http://ix.io/3Qf7) | 2900/2000 MHz | 5.13 | Focal amd64 | 11450 | 632410 | 811760 | 7710 | 9290 | 21.79 |
 | [Pentium G4600](http://ix.io/2jVw) | 3600 MHz | 4.19 | Buster amd64 | 11810 | 878790 | 984820 | 15120 | 33380 | 21.88 |
 
 &ast; Number obtained with cryptodev (Marvell's CESA).
@@ -154,11 +157,10 @@ So do **not** rely on collected numbers unless you carefully read through all th
 * *kH/s* is a **multi threaded** cpuminer score showing the board's performance when executing NEON optimized code. To get the performance difference between big and little cores click the links in the left column
 * The Amazon a1.xlarge numbers represent a 1st gen Graviton CPU (64-bit 'ARM Neoverse') limited to four A72 cores and 8GB memory.
 * The 1st Apple M1 number represents a *single core* Ubuntu 20.10 VM running on an MacBook Air with the VM executed almost all the time on one of [Apple's ARMv8.4 power cores](https://github.com/ThomasKaiser/Knowledge/blob/master/articles/Exploring_Apple_Silicon_on_MacBookAir10.md#virtualization). The 2nd number is the same VM setup this time sent to an efficiency core clocking in at just 600 MHz instead of the usual 2064 MHz. Running natively and not inside a VM performance numbers are 5% to 10% higher.
-* Cubietruck and 'LeMaker Banana Pi' numbers are more or less representative for all other Allwinner A20 devices, same with Lime for Allwinner A10, Olimex Teres-I for Allwinner A64, Orange Pi "PC Plus" and "Plus 2" for Allwinner H2+/H3 and NanoPi K1 Plus, Orange Pi "PC 2" and Prime for Allwinner H5.
+* Cubietruck and 'LeMaker Banana Pi' numbers are more or less representative for all other Allwinner A20 devices, same with Lime for Allwinner A10, Olimex Teres-I for Allwinner A64, Orange Pi "PC Plus" and "Plus 2" for Allwinner H2+/H3 and NanoPi K1 Plus, Orange Pi "PC 2" and Prime for Allwinner H5. AMedia X96 Max+ numbers represent Amlogic S905X3 devices.
 * Clearfog Pro and Helios4 use exactly same SoC (Armada 385), kernel and clockspeeds and the only reason why OpenSSL numbers differ is since Helios4 numbers were made using [Marvell's CESA crypto accelerator via cryptodev](https://forum.armbian.com/topic/7763-benchmarking-cpus/?do=findComment&comment=59569) which provides nice speed improvements with larger block sizes but also some initialization overhead with tiny block sizes. Also CPU utilization is way lower so the SoC is free for other stuff while performing better at the same time.
 * EspressoBin's boot BLOB claims to run at up to 1GHz while real clockspeeds are lower maxing out with this setting at 790MHz (obviously a kernel bug -- see [details](https://forum.armbian.com/topic/4089-espressobin-support-development-efforts/?do=findComment&comment=60082))
 * Gigabyte H270-T70 numbers are for one [blade module equipped with two Cavium ThunderX CN8890 (48 cores each)](https://twitter.com/linux_chenxing/status/1449603003057532930). With different DRAM config/settings results vary (see [here](http://ix.io/3Owk) and [there](http://ix.io/3Owv)).
-* HoneyComb LX2 numbers are made with pre-release settings (the NXP LX2160A's A72 cores clocked with 1.9 GHz instead of 2.0 GHz). Solid-Run's Jon Nettleton shared also slightly better [numbers with CPU cores at 2.4Ghz and RAM at 3200Mtps](https://www.cnx-software.com/2019/03/29/clearfog-itx-workstation-ultimate-arm-developer-platform/#comment-561998).
 * Hugsun X99 is an [overclocked RK3399 TV box](https://github.com/ThomasKaiser/sbc-bench/issues/20), just to show the effect of overclocking the A53 cores to 1.8 GHz and the A72 to 2.1 GHz on an RK3399.
 * Jetson Nano was [properly powered with 5V/5A via barrel plug](https://forum.armbian.com/topic/9921-nvidia-jetson-nano/?do=findComment&comment=78467) (when powering through Micro USB the board enters a lower consumption/performance profile)
 * Phytium D2000 consists of 8 [custom 64-bit ARMv8-compatible FTC663 cores](https://en.wikipedia.org/wiki/FeiTeng_(processor))

@@ -30,9 +30,7 @@ Main() {
 		USE_VCGENCMD=false
 	fi
 	
-	# check whether we're running in monitoring or benchmark mode
-	# Backwards compatibility: if 1st argument is 'neon' run cpuminer test
-	[ "X$1" = "Xneon" ] && ExecuteCpuminer=yes
+	# check in which mode we're supposed to run
 	while getopts 'chmtTpN' c ; do
 		case ${c} in
 			m)
@@ -703,6 +701,10 @@ GetTempSensor() {
 			aml_thermal|cpu|cpu_thermal|cpu-thermal|cpu0-thermal|cpu0_thermal|soc_thermal|soc-thermal)
 				# Seems like a good find
 				TempInfo="Thermal source: ${ThermalNode%/*}/ (${ThermalSource})"
+				;;
+			nvme|w1_slave_temp)
+				# Obviously wrong
+				TempInfo="Wrong thermal source: /etc/armbianmonitor/datasources/soctemp (${ThermalSource})"
 				;;
 			*)
 				# Quick results check within one week showed the following types which
@@ -2088,6 +2090,10 @@ GuessARMSoC() {
 								# Meson8B
 								echo "Amlogic S805"
 								;;
+							1d*)
+								# Meson8m2
+								echo "Amlogic S812"
+								;;
 							1f*)
 								# GXBB
 								echo "Amlogic S905"
@@ -2286,6 +2292,10 @@ GuessSoCbySignature() {
 			# S805, 4 x Cortex-A5 / r0p1 / half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpv4 vfpd32 (3.10: swp half thumb fastmult vfp edsp neon vfpv3 tls vfpv4)
 			echo "Amlogic S805"
 			;;
+		20A9r4p120A9r4p120A9r4p120A9r4p1|2A9222)
+			# S805, 4 x Cortex-A9 / r4p1 / half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpd32
+			echo "Amlogic S812"
+			;;
 		00A53r0p400A53r0p400A53r0p400A53r0p4)
 			# The boring quad Cortex-A53 done by every SoC vendor: 4 x Cortex-A53 / r0p4
 			# Allwinner A64/H5/H6, BCM2837/BCM2709, RK3328, i.MX8 M, S905, S905X/S805X, S805Y, S905X/S905D/S905W/S905L/S905M2, S905X2/S905Y2/T962X2, RealTek RTD129x/RTD139x
@@ -2404,7 +2414,7 @@ GuessSoCbySignature() {
 			echo "Amlogic S905X3"
 			;;
 		00A55r2p000A55r2p000A55r2p000A55r2p0)
-			# Amlogic S905X4, RK3566/RK3568
+			# Amlogic S905X4 or RK3566/RK3568
 			# 4 x Cortex-A55 / r2p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp asimdrdm lrcpc dcpop asimddp
 			lsmod | grep -i meson && echo "Amlogic S905X4" || echo "Rockchip RK3566 or RK3568"
 			;;

@@ -149,7 +149,7 @@
 | [3Na5](3Na5.txt) | v0.9.2 Hardkernel ODROID-HC4 | 0%/0% | 3.7Gi/3.5Gi | X | X | X | X | 1% | 0% | |
 | [3Naw](3Naw.txt) | v0.9.2 Cubietech Cubietruck | 8.3%/8.8% | 2,0Gi/1,8Gi | X | X | X | X | <span style=color:red> 8%</span> | <span style=color:red> 5%</span> | |
 | [3Njz](3Njz.txt) | v0.9.2 Raspberry Pi Zero W Rev 1.1 | 0.9%/0.8% | 477Mi/416Mi | X | X | X | X | <span style=color:red> 5%</span> | 0% | |
-| [3Ntu](3Ntu.txt) | v0.9.2 Hardkernel ODROID-N2Plus | 0%/0% | 1.8Gi/1.5Gi | X | X | X | X | 1% | 0% | |
+| <del>[3Ntu](3Ntu.txt)</del> | <del>v0.9.2 Hardkernel ODROID-N2Plus </del> | <del>0%/0%</del> | <del>1.8Gi/1.5Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 1%</del> | <del> 0%</del> | |
 | <del>[3NvH](3NvH.txt)</del> | <del>v0.9.2 Radxa ROCK Pi 4C </del> | <del>0%/0.5%</del> | <del>3.8Gi/3.2Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 2%</del> | <del> 0%</del> | |
 | <del>[3Nzx](3Nzx.txt)</del> | <del>v0.9.2 LeMaker Banana Pi </del> | <del>0%/0.5%</del> | <del>985Mi/813Mi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del><span style=color:red> 9%</span></del> | <del> 1%</del> | |
 | [3OBF](3OBF.txt) | v0.9.2 RPi 4 Model B Rev 1.1 / BCM2711 | 0%/0.6% | 909Mi/765Mi | X | X | X | X | 4% | 2% | |
@@ -163,5 +163,9 @@
 | [3QOj](3QOj.txt) | v0.9.3 AMedia X96 Max+ | 0%/0.8% | 3.7Gi/3.4Gi | X | X | X | X | 1% | 0% | |
 | [3Qf7](3Qf7.txt) | v0.9.3 Celeron N5105 | 0%/0% | 7.5Gi/6.4Gi | X | X | X | X | 2% | 0% | |
 | [3Qve](3Qve.txt) | v0.9.3 FriendlyARM NanoPi K2 | 0.9%/0.9% | 1.9Gi/1.6Gi | X | X | X | X | 1% | 1% | |
+| [3R1a](3R1a.txt) | v0.9.3 Hardkernel ODROID-N2Plus | 0%/0% | 3,7Gi/3,4Gi | X | X | X | X | 1% | 0% | |
+| [3R2Z](3R2Z.txt) | v0.9.3 Khadas VIM3 | 0%/0% | 3.7Gi/3.3Gi | X | X | X | X | 0% | 0% | |
+| [3R3N](3R3N.txt) | v0.9.3 Akaso M8S | 0%/0.4% | 986Mi/873Mi | X | X | X | X | 1% | <span style=color:red>**11%**</span> | [check log](3R3N.txt) |
+| [3Rsg](3Rsg.txt) | v0.9.3 Firefly RK3568-ROC-PC HDMI | 0%/0% | 3.7Gi/3.4Gi | X | X | X | X | 2% | 0% | |
 | [3rUb](3rUb.txt) | v0.7.7 Pine64 RK3566 Quartz64-A Board | 0%/0% | 3.8Gi/3.5Gi | X | X | X | X | 1% | 0% | |
 | [3wZn](3wZn.txt) | v0.7.7 Radxa Zero | 0.3%/0% | 3.7Gi/3.4Gi | X | X | X | X | 1% | 0% | |

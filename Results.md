@@ -78,6 +78,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Orange Pi Plus 2](http://ix.io/1iX4) | 1300 MHz | 4.14 | Stretch armhf | 2890 | 21480 | 25250 | 830 | 3240 | - |
 | [Orange Pi Prime](http://ix.io/2kTH) | 1370 MHz | 5.4 | Buster | 3590 | 89210 | 637980 | 1180 | 3540 | - |
 | [Phytium D2000](http://ix.io/3GrW) | 2300 MHz | 5.13 | Impish arm64 | 16680 | 448610 | 828450 | 2920 | 7310 | - |
+| [Phytium D2000](http://ix.io/3Sl9) | 2300 MHz | 5.4 | Kylin arm64 | 16970 | 875630 | 1657030 | 4090 | 16290 | - |
 | [PineH64](http://ix.io/1jEr) | 1800 MHz | 4.18 | Stretch arm64 | 4650 | 123400 | 836900 | 1380 | 5530 | 5.62 |
 | [PineH64](http://ix.io/26Ph) | 1800 MHz | 5.4 | Buster arm64 | 4710 | 116900 | 839870 | 1420 | 5560 | 7.10 |
 | [Quartz64](http://ix.io/3rUb) | 1800 MHz | 5.13 | Buster arm64 | 4840 | 165250 | 845490 | 2980 | 7650| - |
@@ -133,6 +134,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Tinkerboard](http://ix.io/1iSX) | 1730 MHz | 4.14 | Stretch armhf | 5350 | 63150 | 66600 | 1480 | 3900 | - |
 | [Tinkerboard](http://ix.io/3Lir) | 1800 MHz | 4.4 | Buster armhf | 5440 | 62410 | 66300 | 1340 | 3510 | - |
 | [TRONFY MXQ S805](http://ix.io/3MiR) | 1536 MHz | 5.10 | Focal armhf | 3100 | 26250 | 29080 | 980 | 2990 | - |
+| [Tronsmart MXIII Plus](http://ix.io/3S5U) | 1560 MHz | 5.10 | Buster armhf | 3880 | 42850 | 42570 | 1470 | 3430 | - |
 | [x5-Z8300](http://ix.io/1lgD) | 1420 MHz | 4.9 | Stretch amd64 | 3900 | 101580 | 178010 | 2380 | 2380 | 7.81 |
 | [x5-Z8350](http://ix.io/1HnC) | 1920/1680 MHz | 4.15 | Bionic amd64 | 4710 | 120300 | 207640 | 2740 | 3140 | - |
 | [x5-Z8350](http://ix.io/2Jdb) | 1920/1680 MHz | 5.4 | Focal amd64 | 4790 | 129810 | 237230 | 3170 | 2960 | 9.38 |
@@ -158,7 +160,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 * *AES-256 (16 KB)* is a **single threaded** encryption score with rather huge chunks of data. On big.LITTLE SoCs numbers show big core performance
 * *memcpy* and *memset* are tinymembench measurements for memory bandwidth. On big.LITTLE SoCs numbers show big core performance
 * *kH/s* is a **multi threaded** cpuminer score showing the board's performance when executing NEON optimized code. To get the performance difference between big and little cores click the links in the left column
-* The Akaso M8S numbers may be representative for other Amlogic S812 devices (quad Cortex-A9 @ 1.2 GHz)
+* The Akaso M8S and Tronsmart MXIII Plus numbers may be representative for other Amlogic S812 devices (quad Cortex-A9 @ 1.2/1.55 GHz)
 * The Amazon a1.xlarge numbers represent a 1st gen Graviton CPU (64-bit 'ARM Neoverse') limited to four A72 cores and 8GB memory.
 * The 1st Apple M1 number represents a *single core* Ubuntu 20.10 VM running on an MacBook Air with the VM executed almost all the time on one of [Apple's ARMv8.4 power cores](https://github.com/ThomasKaiser/Knowledge/blob/master/articles/Exploring_Apple_Silicon_on_MacBookAir10.md#virtualization). The 2nd number is the same VM setup this time sent to an efficiency core clocking in at just 600 MHz instead of the usual 2064 MHz. Running natively and not inside a VM performance numbers are 5% to 10% higher.
 * Cubietruck and 'LeMaker Banana Pi' numbers are more or less representative for all other Allwinner A20 devices, same with Lime for Allwinner A10, Olimex Teres-I for Allwinner A64, Orange Pi "PC Plus" and "Plus 2" for Allwinner H2+/H3 and NanoPi K1 Plus, Orange Pi "PC 2" and Prime for Allwinner H5. AMedia X96 Max+ numbers represent Amlogic S905X3 devices.

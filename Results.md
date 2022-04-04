@@ -15,6 +15,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [AMedia X96 Max+](http://ix.io/3QOj) | 2100 MHz | 5.15 | Focal arm64 | 5270 | 197690 | 981830 | 2630 | 5150 | - |
 | [Apple M1 power core](http://ix.io/2Gjg) | 3200 MHz | 5.8 | Groovy arm64 | 5100 | 638810 | 1119670 | 27960 | 63950 | 5.30 |
 | [Apple M1 efficiency](http://ix.io/2Gtf) | *600* MHz | 5.8 | Groovy arm64 | 650 | 150340 | 224520 | 5130 | 7640 | 0.76 |
+| [BPi M2U](http://ix.io/3TKh) | 1010 Mhz | 5.16 | Buster armhf | 2230 | 15550 | 19540 | 790 | 2540 | - |
 | [BPi M4](http://ix.io/1Dt1) | 1400 MHz | 4.9 | Bionic arm64 | 3500 | 125430 | 651460 | 1010 | 4360 | 5.48 |
 | [BPi R2](http://ix.io/1iGV) | 1300 MHz | 4.4 | **Xenial** armhf | 2600 | 27550 | 25350 | 1500 | 3800 | - |
 | [Clearfog Pro](http://ix.io/1iFa) | 1600 MHz | 4.14 | Stretch armhf | 2185 | 44500 | 43900 | 935 | 4940 | - |
@@ -63,7 +64,9 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [ODROID-C2](http://ix.io/1ixI) | 1750 MHz | 3.14 | **Xenial** arm64 | 4070 | 50500 | 48500 | 1750 | 3100 | - |
 | [ODROID-C2](http://ix.io/3N6Q) | 1530 MHz | 5.10 | Bullseye arm64 | 4010 | 44090 | 51490 | 1600 | 2730 | - |
 | [ODROID-C4](http://ix.io/2kaS) | 2010 MHz | 4.9 | Focal arm64 | 5450 | 195130 | 941590 | 3310 | 6270 | 7.71 |
+| [ODROID-C4](http://ix.io/3TQ2) | 2100 MHz | 5.10 | Buster arm64 | 5770 | 189990 | 981940 | 3540 | 5150 | - |
 | [ODROID-HC4](http://ix.io/3Na5) | 2100 MHz | 5.10 | Buster arm64 | 5730 | 191560 | 980970 | 3540 | 5150 | - |
+| [ODROID-M1](http://ix.io/3Ug9) | 1930 MHz | 4.19 | Focal arm64 | 5010 | 185660 | 898610 | 3070 | 6220 | 7.14 |
 | [ODROID-N2](http://ix.io/1BsF) | 1800/1900 MHz | 4.9 | Bionic arm64 | 8140 | 324900 | 1024680 | 4120 | 8610 | 11.39 |
 | [ODROID-N2](http://ix.io/3MuT) | 2000/1900 MHz | 5.10 | Buster arm64 | 9090 | 212920 | 1007210 | 4260 | 9080 | - |
 | [ODROID-N2+](http://ix.io/3R1a) | 2400/2000 MHz | 5.10 | Focal arm64 | 9680 | 275730 | 1153830 | 4030 | 7120 | - |
@@ -171,8 +174,8 @@ So do **not** rely on collected numbers unless you carefully read through all th
 * Jetson Nano was [properly powered with 5V/5A via barrel plug](https://forum.armbian.com/topic/9921-nvidia-jetson-nano/?do=findComment&comment=78467) (when powering through Micro USB the board enters a lower consumption/performance profile)
 * Phytium D2000 consists of 8 [custom 64-bit ARMv8-compatible FTC663 cores](https://en.wikipedia.org/wiki/FeiTeng_(processor))
 * NanoPi NEO4 numbers: 1st result is from my NEO4 N°1 running with a [NanoPi M4 image](https://github.com/armbian/build/blob/1c00822819f7fdfeac57bff8f991be526ca1add7/config/sources/rk3399.conf#L91). This NEO uses the vendor supplied thermal pad between SoC and heatsink. 2nd number from my 2nd NEO4 this time using NEO4 settings (`rk3399-nanopi4-rev04.dtb` loaded) with a copper shim between heatsink and SoC which as usual improves 'thermal performance' a lot. Since memory bandwidth and especially latency is too low another test needed with my NEO4 N°2, this time again with M4 settings (`rk3399-nanopi4-rev01.dtb` loaded) and an additional fan. Memory performance restored, slightly better performance due to colder SoC. 4th result made with 4.19.0-rc4. Please be aware that RK3399 memory performance numbers differ alot between 4.4 and mainline kernel for yet unknown reasons!
+* ODROID-M1, Quartz64 and RK3568-ROC-PC numbers are preliminary since software support situation for RK3566/RK3568 is still in a very early stage
 * ODROID-N2 number should be taken with a grain of salt since made with a [pretty early software stack](https://forum.armbian.com/topic/9619-announcement-odroid-n2/?do=findComment&comment=72764). Most probably scores will slightly improve over time. 'Overclocked' executions with both CPU clusters set to 2.0 GHz showed reliability issues most probably due to DVFS undervoltage (cpuminer quit almost immediately [here](http://ix.io/1BrG) while it ran only 50 seconds [there](http://ix.io/1Bsz) -- this tool since being a load generator checking for data corruption can also be used for reliability testing but I would prefer our [StabilityTester](https://github.com/ThomasKaiser/StabilityTester) instead)
-* Quartz64 numbers are preliminary since software support situation for RK3566/RK3568 is still in a very early stage
 * Rock Pi S is based on RK3308 Quad Cortex-A35 but the above numbers are not typical for A35 since the SoC design is severly limited: only a 16-bit RAM bus and 589MHz(*2) DDR clock in Rockchip’s DDR loader
 * RPi 3 B+ performance shown as *original* was measured with an older ThreadX release (6e08617e7767b09ef97b3d6cee8b75eba6d7ee0b from Mar 13 2018). Back then the 3B+ was faster than the 3B. This changed with a newer ThreadX release (4800f08a139d6ca1c5ecbee345ea6682e2160881 from Jun 7 2018) since RPi Trading people decided to trash performance on every RPi 3 B+ to masquerade instability issues on a fraction of boards ([details](https://www.raspberrypi.org/forums/viewtopic.php?f=63&t=217056#p1334921))
 * RPi 3 B+ performance numbers shown as *normal* were made with no or just a heatsink (in contrast to *with fan*)

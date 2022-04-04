@@ -2405,6 +2405,10 @@ GuessSoCbySignature() {
 			# Exynos 5422, 4 x Cortex-A7 / r0p3 + 4 x Cortex-A15 / r2p3 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae (with 5.x also evtstrm)
 			echo "Exynos 5422"
 			;;
+		??A9r3p0??A9r3p0??A9r3p0??A9r3p0)
+			# RK3188, 4 x Cortex-A9 / r3p0 / half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpd32
+			echo "Rockchip RK3188"
+			;;
 		00A35r0p200A35r0p200A35r0p200A35r0p2)
 			# RK3308, 4 x Cortex-A35 / r0p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			echo "Rockchip RK3308"

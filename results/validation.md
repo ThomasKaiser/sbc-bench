@@ -169,5 +169,8 @@
 | [3Rsg](3Rsg.txt) | v0.9.3 Firefly RK3568-ROC-PC HDMI | 0%/0% | 3.7Gi/3.4Gi | X | X | X | X | 2% | 0% | |
 | [3S5U](3S5U.txt) | v0.9.3 Tronsmart MXIII Plus | 0%/0.4% | 2.0Gi/1.7Gi | X | X | X | X | 2% | 0% | |
 | [3Sl9](3Sl9.txt) | v0.9.3 zqykj-K681-F223 | 0%/0.4% | 15Gi/13Gi | X | X | X | X | 3% | 1% | |
+| [3TKh](3TKh.txt) | v0.9.3 Banana Pi BPI-M2-Ultra | 2.0%/0% | 2.0Gi/1.5Gi | X | X | X | X | 3% | 0% | |
+| [3TQ2](3TQ2.txt) | v0.9.3 Hardkernel ODROID-C4 | 0.3%/0% | 3.7Gi/3.2Gi | X | X | X | X | 4% | 0% | |
+| [3Ug9](3Ug9.txt) | v0.9.3 Hardkernel ODROID-M1 | 0%/0% | 7.3Gi/7.0Gi | X | X | X | X | 2% | 0% | |
 | [3rUb](3rUb.txt) | v0.7.7 Pine64 RK3566 Quartz64-A Board | 0%/0% | 3.8Gi/3.5Gi | X | X | X | X | 1% | 0% | |
 | [3wZn](3wZn.txt) | v0.7.7 Radxa Zero | 0.3%/0% | 3.7Gi/3.4Gi | X | X | X | X | 1% | 0% | |

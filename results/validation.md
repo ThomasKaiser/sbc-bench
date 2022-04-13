@@ -153,7 +153,7 @@
 | <del>[3NvH](3NvH.txt)</del> | <del>v0.9.2 Radxa ROCK Pi 4C </del> | <del>0%/0.5%</del> | <del>3.8Gi/3.2Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 2%</del> | <del> 0%</del> | |
 | <del>[3Nzx](3Nzx.txt)</del> | <del>v0.9.2 LeMaker Banana Pi </del> | <del>0%/0.5%</del> | <del>985Mi/813Mi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del><span style=color:red> 9%</span></del> | <del> 1%</del> | |
 | [3OBF](3OBF.txt) | v0.9.2 RPi 4 Model B Rev 1.1 / BCM2711 | 0%/0.6% | 909Mi/765Mi | X | X | X | X | 4% | 2% | |
-| [3OKN](3OKN.txt) | v0.9.3 NVIDIA Jetson Nano Developer Kit | 0.1%/0% | 3,9G/3,3G | X | X | X | X | <span style=color:red> 7%</span> | 0% | |
+| <del>[3OKN](3OKN.txt)</del> | <del>v0.9.3 NVIDIA Jetson Nano Developer Kit</del> | <del>0.1%/0%</del> | <del>3,9G/3,3G</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del><span style=color:red> 7%</span></del> | <del> 0%</del> | |
 | [3Owk](3Owk.txt) | v0.9.2 bigboy | 0%/0% | 127Gi/108Gi | X | X | X | X | 1% | 1% | |
 | [3Owv](3Owv.txt) | v0.9.2 bigboy | 0%/0% | 127Gi/108Gi | X | X | X | X | 1% | 0% | |
 | [3PLr](3PLr.txt) | v0.9.3 LeMaker Banana Pi | 8.2%/8.6% | 997Mi/862Mi | X | X | X | X | <span style=color:red> 7%</span> | 0% | |
@@ -171,6 +171,8 @@
 | [3Sl9](3Sl9.txt) | v0.9.3 zqykj-K681-F223 | 0%/0.4% | 15Gi/13Gi | X | X | X | X | 3% | 1% | |
 | [3TKh](3TKh.txt) | v0.9.3 Banana Pi BPI-M2-Ultra | 2.0%/0% | 2.0Gi/1.5Gi | X | X | X | X | 3% | 0% | |
 | [3TQ2](3TQ2.txt) | v0.9.3 Hardkernel ODROID-C4 | 0.3%/0% | 3.7Gi/3.2Gi | X | X | X | X | 4% | 0% | |
+| [3UXa](3UXa.txt) | v0.9.3 Radxa ROCK 3 Model A | 0%/0.3% | 7.5Gi/7.2Gi | X | X | X | X | 2% | 0% | |
+| [3Ufc](3Ufc.txt) | v0.9.3 NVIDIA Jetson Nano 2GB Developer | 1.3%/0.3% | 1.9G/1.5G | X | X | X | X | <span style=color:red> 5%</span> | 0% | |
 | [3Ug9](3Ug9.txt) | v0.9.3 Hardkernel ODROID-M1 | 0%/0% | 7.3Gi/7.0Gi | X | X | X | X | 2% | 0% | |
 | [3rUb](3rUb.txt) | v0.7.7 Pine64 RK3566 Quartz64-A Board | 0%/0% | 3.8Gi/3.5Gi | X | X | X | X | 1% | 0% | |
 | [3wZn](3wZn.txt) | v0.7.7 Radxa Zero | 0.3%/0% | 3.7Gi/3.4Gi | X | X | X | X | 1% | 0% | |

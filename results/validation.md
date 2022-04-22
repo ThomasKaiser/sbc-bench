@@ -174,5 +174,8 @@
 | [3UXa](3UXa.txt) | v0.9.3 Radxa ROCK 3 Model A | 0%/0.3% | 7.5Gi/7.2Gi | X | X | X | X | 2% | 0% | |
 | [3Ufc](3Ufc.txt) | v0.9.3 NVIDIA Jetson Nano 2GB Developer | 1.3%/0.3% | 1.9G/1.5G | X | X | X | X | <span style=color:red> 5%</span> | 0% | |
 | [3Ug9](3Ug9.txt) | v0.9.3 Hardkernel ODROID-M1 | 0%/0% | 7.3Gi/7.0Gi | X | X | X | X | 2% | 0% | |
+| [3VME](3VME.txt) | v0.9.3 RPi 4 Model B Rev 1.1 / BCM2711 | 1.9%/0.2% | 967Mi/807Mi | X | X | X | X | <span style=color:red>**12%**</span> | 0% | |
+| [3Vdt](3Vdt.txt) | v0.9.3 Khadas VIM3L | 0%/0% | 1.8Gi/1.1Gi | X | X | X | X | 4% | 3% | |
+| [3VfL](3VfL.txt) | v0.9.3 Khadas VIM3 | 0%/0.2% | 3.7Gi/2.7Gi | X | X | X | X | 1% | 0% | |
 | [3rUb](3rUb.txt) | v0.7.7 Pine64 RK3566 Quartz64-A Board | 0%/0% | 3.8Gi/3.5Gi | X | X | X | X | 1% | 0% | |
 | [3wZn](3wZn.txt) | v0.7.7 Radxa Zero | 0.3%/0% | 3.7Gi/3.4Gi | X | X | X | X | 1% | 0% | |

@@ -35,7 +35,9 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Khadas VIM2](http://ix.io/1iJ7) | 1400/1000 MHz | 4.17 | Bionic arm64 | 5450 | 126770 | 659600 | 1920 | 5920 | 8.59 |
 | [Khadas VIM3](http://ix.io/1MFD) | 2200/1800 MHz | 4.9 | Bionic arm64 | 8600 | 398370 | 1256910 | 4980 | 9300 | 13.12 |
 | [Khadas VIM3](http://ix.io/3R2Z) | 2400/2015 MHz | 5.10 | Bullseye arm64 | 9650 | 248840 | 1153140 | 4850 | 7380 | - |
-| [Khadas VIM3L](http://ix.io/26Wy) | 1908 MHz | 4.9 | Bionic arm64 | 5170 | 194360 | 1440220 | 3670 | 6360 | 7.29 |
+| [Khadas VIM3](http://ix.io/3VfL) | 2400/2015 MHz | 5.10 | Focal arm64 | 9760 | 287680 | 1153160 | 4840 | 8260 | - |
+| [Khadas VIM3L](http://ix.io/26Wy) | 1908 MHz | 4.9 | Bionic arm64 | 5160 | 194360 | 892110 | 3670 | 6360 | 7.29 |
+| [Khadas VIM3L](http://ix.io/3Vdt) | 1908 MHz | 5.16 | Bullseye arm64 | 5110 | 174110 | 890730 | 3700 | 5140 | - |
 | [Le Potato](http://ix.io/1iSQ) | 1410 MHz | 4.18 | Stretch arm64 | 3780 | 96680 | 657200 | 1810 | 5730 | 3.92 |
 | [LeMaker Banana Pi](http://ix.io/3PLr) | 960 MHz | 5.10 | Bullseye armhf | 1040 | 15080 | 18640 | 440 | 2020 | - |
 | [Lime A10](http://ix.io/1j1L) | 910 MHz | 4.14 | Stretch armhf | 550 | 25200 | 28250 | 440 | 1300 | - |
@@ -111,7 +113,8 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Raspberry Pi 4 B](http://ix.io/3N94) | 1800 MHz | 5.10 | Raspberry Pi OS Bullseye | 5940 | 74620 | 77670 | 2310 | 2690 | - |
 | [Raspberry Pi 4 B](http://ix.io/3F9C) | 1800 MHz | 5.10 | Raspberry Pi OS Buster **arm64** | 5760 | 45570 | 36240 | 2240 | 3120 | 9.46 |
 | [Raspberry Pi 4 B](http://ix.io/3OBF) | 1800 MHz | 5.10 | Raspberry Pi OS Bullseye arm64 **arm64** | 5790 | 45120 | 36260 | 2330 | 3120 | 8.74 |
-| [Raspberry Pi 4 B](http://ix.io/3InF) | 1800 MHz | 5.15 | **Jammy arm64** | 5640 | 45210 | 36260 | 2580 | 3110 | - |
+| [Raspberry Pi 4 B](http://ix.io/3InF) | 1800 MHz | 5.15 | Armbian **Jammy arm64** | 5640 | 45210 | 36260 | 2580 | 3110 | - |
+| [Raspberry Pi 4 B](http://ix.io/3VME) | 1800 MHz | 5.15 | Jammy armhf | 6300 | 77160 | 82750 | 1190 | 3110 | - |
 | [Raspberry Pi 400](http://ix.io/2Cyi) | 1800 MHz | 5.4 | Raspberry Pi OS Buster | 6550 | 75050 | 77890 | 2680 | 3110 | - |
 | [RK3228A TV Box](http://ix.io/3M9F) | 1200 MHz | 4.4 | Buster armhf | 2310 | 18520 | 23070 | 410 | 1230 | - |
 | [RK3568-ROC-PC](http://ix.io/3Rsg) | 1960 MHz | 4.19 | Bullseye arm64 | 5040 | 179090 | 912800 | 3130 | 6240 | - |
@@ -175,7 +178,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 * Jetson Nano was [properly powered with 5V/5A via barrel plug](https://forum.armbian.com/topic/9921-nvidia-jetson-nano/?do=findComment&comment=78467) (when powering through Micro USB the board enters a lower consumption/performance profile)
 * Phytium D2000 consists of 8 [custom 64-bit ARMv8-compatible FTC663 cores](https://en.wikipedia.org/wiki/FeiTeng_(processor))
 * NanoPi NEO4 numbers: 1st result is from my NEO4 N°1 running with a [NanoPi M4 image](https://github.com/armbian/build/blob/1c00822819f7fdfeac57bff8f991be526ca1add7/config/sources/rk3399.conf#L91). This NEO uses the vendor supplied thermal pad between SoC and heatsink. 2nd number from my 2nd NEO4 this time using NEO4 settings (`rk3399-nanopi4-rev04.dtb` loaded) with a copper shim between heatsink and SoC which as usual improves 'thermal performance' a lot. Since memory bandwidth and especially latency is too low another test needed with my NEO4 N°2, this time again with M4 settings (`rk3399-nanopi4-rev01.dtb` loaded) and an additional fan. Memory performance restored, slightly better performance due to colder SoC. 4th result made with 4.19.0-rc4. Please be aware that RK3399 memory performance numbers differ alot between 4.4 and mainline kernel for yet unknown reasons!
-* ODROID-M1, Quartz64, ROCK 3A and RK3568-ROC-PC numbers are preliminary since software support situation for RK3566/RK3568 is still in a very early stage. Please also note that no RK3568 SBC so far is able to clock up to 2.0GHz (limited by some boot BLOB to lower cpufreqs most probably related to thermals)
+* ODROID-M1, Quartz64, ROCK 3A and RK3568-ROC-PC numbers are preliminary since software support situation for RK3566/RK3568 is still in a very early stage. Please also note that no RK3568 SBC so far is able to clock up to 2.0GHz (limited by some boot BLOB to lower cpufreqs [most probably related to thermals](https://forum.odroid.com/viewtopic.php?p=346334#p346334))
 * ODROID-N2 number should be taken with a grain of salt since made with a [pretty early software stack](https://forum.armbian.com/topic/9619-announcement-odroid-n2/?do=findComment&comment=72764). Most probably scores will slightly improve over time. 'Overclocked' executions with both CPU clusters set to 2.0 GHz showed reliability issues most probably due to DVFS undervoltage (cpuminer quit almost immediately [here](http://ix.io/1BrG) while it ran only 50 seconds [there](http://ix.io/1Bsz) -- this tool since being a load generator checking for data corruption can also be used for reliability testing but I would prefer our [StabilityTester](https://github.com/ThomasKaiser/StabilityTester) instead)
 * Rock Pi S is based on RK3308 Quad Cortex-A35 but the above numbers are not typical for A35 since the SoC design is severly limited: only a 16-bit RAM bus and 589MHz(*2) DDR clock in Rockchip’s DDR loader
 * RPi 3 B+ performance shown as *original* was measured with an older ThreadX release (6e08617e7767b09ef97b3d6cee8b75eba6d7ee0b from Mar 13 2018). Back then the 3B+ was faster than the 3B. This changed with a newer ThreadX release (4800f08a139d6ca1c5ecbee345ea6682e2160881 from Jun 7 2018) since RPi Trading people decided to trash performance on every RPi 3 B+ to masquerade instability issues on a fraction of boards ([details](https://www.raspberrypi.org/forums/viewtopic.php?f=63&t=217056#p1334921))

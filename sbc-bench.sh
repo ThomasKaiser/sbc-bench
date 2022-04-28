@@ -2134,12 +2134,15 @@ GuessARMSoC() {
 								# SC2: S905X4
 								echo "Amlogic S905X4"
 								;;
+							36*)
+								# T7: A311D2
+								echo "Amlogic A311D2"
+								;;
 							*)
 								# https://tinyurl.com/y85lsxsc:
 								# T3 --> T982, T963D4, T965D4
 								# S4 --> S905Y4, S805X2 (quad Cortex-A35) https://lkml.org/lkml/2022/1/6/204
 								# S4D --> S905C3, S905C3ENG (quad Cortex-A35): https://archive.md/4H6xM
-								# T7 --> A311D2: https://archive.md/BtOLg
 								echo "unknown Amlogic, serial $(cut -c-4 <<<"${AmLogicSerial}")..."
 								;;
 						esac

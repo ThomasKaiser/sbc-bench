@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.9.3
+Version=0.9.4
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -1479,7 +1479,7 @@ CheckCPUCluster() {
 		for i in ${OPPtoCheck} ; do
 			echo ${i} >/sys/devices/system/cpu/cpufreq/policy${1}/scaling_max_freq
 			sleep 0.1
-			MeasuredSpeed=$(taskset -c $1 "${InstallLocation}"/mhz/mhz 3 100000 | awk -F" cpu_MHz=" '{print $2}' | awk -F" " '{print $1}' | tr '\n' '/' | sed 's|/$||')
+			MeasuredSpeed=$(taskset -c $1 "${InstallLocation}"/mhz/mhz 3 100000 | awk -F" cpu_MHz=" '{print $2}' | awk -F" " '{print $1}' | sort -r -n | tr '\n' '/' | sed 's|/$||')
 			RoundedSpeed=$(( $(awk '{printf ("%0.0f",$1/5+0.5); }' <<<"${MeasuredSpeed}") * 5 ))
 			SysfsSpeed=$(( $i / 1000 ))
 			if [ ${USE_VCGENCMD} = true ] ; then
@@ -1503,7 +1503,7 @@ CheckCPUCluster() {
 				CpuToCheck=$(( $1 + 1 ))
 				;;
 		esac
-		MeasuredSpeed=$(taskset -c ${CpuToCheck} "${InstallLocation}"/mhz/mhz 3 1000000 | awk -F" cpu_MHz=" '{print $2}' | awk -F" " '{print $1}' | tr '\n' '/' | sed 's|/$||')
+		MeasuredSpeed=$(taskset -c ${CpuToCheck} "${InstallLocation}"/mhz/mhz 3 1000000 | awk -F" cpu_MHz=" '{print $2}' | awk -F" " '{print $1}' | sort -r -n | tr '\n' '/' | sed 's|/$||')
 		RoundedSpeed=$(( $(awk '{printf ("%0.0f",$1/5+0.5); }' <<<"${MeasuredSpeed}") * 5 ))
 		echo -e "No cpufreq support available. Measured on cpu${CpuToCheck}: ${RoundedSpeed} Mhz (${MeasuredSpeed})"
 	fi
@@ -1525,8 +1525,8 @@ RunTinyMemBench() {
 	kill ${MonitoringPID}
 	echo -e "\n##########################################################################" >>${ResultLog}
 	cat ${TempLog} >>${ResultLog}
-	MemCpyScore="$(awk -F" " '/^ standard memcpy/ {print $4}' <${TempLog} | tail -n1)"
-	MemSetScore="$(awk -F" " '/^ standard memset/ {print $4}' <${TempLog} | tail -n1)"
+	MemCpyScore="$(awk -F" " '/^ standard memcpy/ {print $4}' <${TempLog} | sort -n | tail -n1)"
+	MemSetScore="$(awk -F" " '/^ standard memset/ {print $4}' <${TempLog} | sort -n | tail -n1)"
 	# round results
 	MemBenchScore="$(( $(awk '{printf ("%0.0f",$1/10); }' <<<"${MemCpyScore}" ) * 10 )) | $(( $(awk '{printf ("%0.0f",$1/10); }' <<<"${MemSetScore}" ) * 10 ))"
 } # RunTinyMemBench
@@ -1618,6 +1618,9 @@ RunOpenSSLBenchmark() {
 			openssl speed -elapsed -evp aes-${bytelength}-cbc 2>/dev/null
 			openssl speed -elapsed -evp aes-${bytelength}-cbc 2>/dev/null
 		done | tr '[:upper:]' '[:lower:]' >${OpenSSLLog}
+		# add both scores and divide by two to get an average
+		AES128=$(( $(awk '/^aes-128-cbc/ {print $2}' <"${OpenSSLLog}" | awk -F"." '{s+=$1} END {printf "%.0f", s}') / 2 ))
+		AES256=$(( $(awk '/^aes-256-cbc/ {print $7}' <"${OpenSSLLog}" | awk -F"." '{s+=$1} END {printf "%.0f", s}') / 2 ))
 	else
 		# different package ids, we walk through all clusters
 		echo -e "Executing benchmark on each cluster individually\n" >>${ResultLog}
@@ -1626,12 +1629,13 @@ RunOpenSSLBenchmark() {
 				taskset -c ${ClusterConfig[$i]} openssl speed -elapsed -evp aes-${bytelength}-cbc 2>/dev/null
 			done
 		done | tr '[:upper:]' '[:lower:]' >${OpenSSLLog}
+		# check scores and choose highest for reporting
+		AES128=$(awk '/^aes-128-cbc/ {print $2}' <"${OpenSSLLog}" | awk -F"." '{print $1}' | sort -n | tail -n1)
+		AES256=$(awk '/^aes-256-cbc/ {print $7}' <"${OpenSSLLog}" | awk -F"." '{print $1}' | sort -n | tail -n1)
 	fi
 	kill ${MonitoringPID}
 	echo -e "$(openssl version | awk -F" " '{print $1" "$2", built on "$3" "$4" "$5" "$6" "$7" "$8" "$9" "$10" "$11" "$12" "$13" "$14" "$15}' | sed 's/ *$//')\n$(grep '^type' ${OpenSSLLog} | head -n1)" >>${ResultLog}
 	grep '^aes-' ${OpenSSLLog} >>${ResultLog}
-	AES128=$(( $(awk '/^aes-128-cbc/ {print $2}' <"${OpenSSLLog}" | awk -F"." '{s+=$1} END {printf "%.0f", s}') / 2 ))
-	AES256=$(( $(awk '/^aes-256-cbc/ {print $7}' <"${OpenSSLLog}" | awk -F"." '{s+=$1} END {printf "%.0f", s}') / 2 ))
 	# round result
 	OpenSSLScore="$(( $(awk '{printf ("%0.0f",$1/10); }' <<<"${AES128}") * 10 )) | $(( $(awk '{printf ("%0.0f",$1/10); }' <<<"${AES256}") * 10 ))"
 } # RunOpenSSLBenchmark

@@ -1319,14 +1319,16 @@ InitialMonitoring() {
 	read HostName </etc/hostname
 	echo -e "sbc-bench v${Version} ${DeviceName:-$HostName} ($(date -R))\n" >${ResultLog}
 
-	# Log distribution info
-	[ -f /etc/armbian-release ] && . /etc/armbian-release
+	# Log distribution info / Xunlong's lame Armbian rip-off tries to hide its origin
+	[ -f /etc/orangepi-release ] && ArmbianReleaseFile=/etc/orangepi-release
+	[ -f /etc/armbian-release ] && ArmbianReleaseFile=/etc/armbian-release
+	. "${ArmbianReleaseFile}"
 	command -v lsb_release >/dev/null 2>&1 && (lsb_release -a 2>/dev/null) >>${ResultLog}
 	ARCH=$(dpkg --print-architecture 2>/dev/null) || \
 		ARCH=$(awk -F"=" '/^CARCH/ {print $2}' /etc/makepkg.conf 2>/dev/null) || \
 		ARCH="unknown/$(uname -m)"
 	if [ -n "${BOARDFAMILY}" ]; then
-		echo -e "\nArmbian release info:\n$(grep -v "#" /etc/armbian-release)" >>${ResultLog}
+		echo -e "\nArmbian release info:\n$(grep -v "#" "${ArmbianReleaseFile}")" >>${ResultLog}
 	else
 		echo -e "Architecture:\t$(tr -d '"' <<<${ARCH})" >>${ResultLog}
 	fi
@@ -2174,7 +2176,16 @@ GuessARMSoC() {
 				case ${AllwinnerGuess} in
 					*unidentified*)
 						if [ -f /etc/armbian-release ]; then
-							BoardFamily="$(awk -F'=' '/^BOARDFAMILY/ {print $2}' </etc/armbian-release)"
+							# use Armbian's release info since there we can rely on SoC family
+							# naming unlike cpuinfo output that was fake for many years
+							ArmbianReleaseFile=/etc/armbian-release
+						elif [ -f /etc/orangepi-release ]; then
+							# try to deal with Xunlong's lame Armbian rip-off over at
+							# https://github.com/orangepi-xunlong/orangepi-build
+							ArmbianReleaseFile=/etc/orangepi-release
+						fi
+						if [ -f "${ArmbianReleaseFile}" ]; then
+							BoardFamily="$(awk -F'=' '/^BOARDFAMILY/ {print $2}' <"${ArmbianReleaseFile}")"
 							case ${BoardFamily} in
 								sun50iw1)
 									echo "Allwinner A64"
@@ -2236,6 +2247,9 @@ GuessARMSoC() {
 						;;
 					*C4)
 						echo "Amlogic S905X3"
+						;;
+					*M1)
+						echo "Rockchip RK3568"
 						;;
 					*N1)
 						echo "Rockchip RK3399"
@@ -2594,6 +2608,9 @@ IdentifyAllwinnerARMv8() {
 
 	# Maybe there's something in kernel ring buffer identifying the SoC
 	dmesg | egrep -q "sun50i-h616|sun50iw9" && echo "Allwinner H616/H313"
+	dmesg | grep -q sun50i-a64 && echo "Allwinner A64"
+	dmesg | grep -q sun50i-h5 && echo "Allwinner H5"
+	dmesg | grep -q sun50i-h6- && echo "Allwinner H6"
 
 	# A64 is accompanied by AXP803 PMIC:
 	grep -q axp803 /proc/interrupts && echo "Allwinner A64"
@@ -2601,9 +2618,6 @@ IdentifyAllwinnerARMv8() {
 	# With A64 BSP kernel we can try to rely on a sysfs node
 	[ -d /sys/devices/platform/axp81x_board/axp81x-supplyer.47 ] \
 		 && echo "Allwinner A64"
-
-	# Maybe there's something in kernel ring buffer identifying the SoC
-	dmesg | grep -q sun50i-a64 && echo "Allwinner A64"
 
 	# H5 is usually combined with an I2C attached Silergy SY8106A voltage regulator
 	lsmod | grep -i -q sy8106a && echo "Allwinner H5"

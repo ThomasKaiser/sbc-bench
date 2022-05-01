@@ -178,5 +178,6 @@
 | [3Vdt](3Vdt.txt) | v0.9.3 Khadas VIM3L | 0%/0% | 1.8Gi/1.1Gi | X | X | X | X | 4% | 3% | |
 | [3VfL](3VfL.txt) | v0.9.3 Khadas VIM3 | 0%/0.2% | 3.7Gi/2.7Gi | X | X | X | X | 1% | 0% | |
 | [3Wq0](3Wq0.txt) | v0.9.3 Khadas VIM4 | 0%/0.3% | 7.8Gi/6.0Gi | X | X | X | X | 2% | 0% | |
+| [3Wvv](3Wvv.txt) | v0.9.4 Khadas VIM4 | 0%/0.2% | 7.8Gi/6.6Gi | X | X | X | X | 2% | 0% | |
 | [3rUb](3rUb.txt) | v0.7.7 Pine64 RK3566 Quartz64-A Board | 0%/0% | 3.8Gi/3.5Gi | X | X | X | X | 1% | 0% | |
 | [3wZn](3wZn.txt) | v0.7.7 Radxa Zero | 0.3%/0% | 3.7Gi/3.4Gi | X | X | X | X | 1% | 0% | |

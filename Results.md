@@ -34,10 +34,11 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Khadas VIM2](http://ix.io/1ixi) | 1400/1000 MHz | 4.9 | **Xenial** arm64 | 4800 | 177600 | 659000 | 1690 | 5610 | - |
 | [Khadas VIM2](http://ix.io/1iJ7) | 1400/1000 MHz | 4.17 | Bionic arm64 | 5450 | 126770 | 659600 | 1920 | 5920 | 8.59 |
 | [Khadas VIM3](http://ix.io/1MFD) | 2200/1800 MHz | 4.9 | Bionic arm64 | 8600 | 398370 | 1256910 | 4980 | 9300 | 13.12 |
-| [Khadas VIM3](http://ix.io/3R2Z) | 2400/2015 MHz | 5.10 | Bullseye arm64 | 9650 | 248840 | 1153140 | 4850 | 7380 | - |
-| [Khadas VIM3](http://ix.io/3VfL) | 2400/2015 MHz | 5.10 | Focal arm64 | 9760 | 287680 | 1153160 | 4840 | 8260 | - |
+| [Khadas VIM3](http://ix.io/3R2Z) | 2400/2015 MHz | 5.10 | Bullseye arm64 | 9650 | 365710 | 1366350 | 4850 | 7380 | - |
+| [Khadas VIM3](http://ix.io/3VfL) | 2400/2015 MHz | 5.10 | Focal arm64 | 9760 | 405960 | 1365900 | 4840 | 8260 | - |
 | [Khadas VIM3L](http://ix.io/26Wy) | 1908 MHz | 4.9 | Bionic arm64 | 5160 | 194360 | 892110 | 3670 | 6360 | 7.29 |
 | [Khadas VIM3L](http://ix.io/3Vdt) | 1908 MHz | 5.16 | Bullseye arm64 | 5110 | 174110 | 890730 | 3700 | 5140 | - |
+| [Khadas VIM4](http://ix.io/3Wvv) | 2200/1970 MHz | 5.4 | Focal arm64 | 12090 | 372300 | 1253200 | 7810 | 11600 | - |
 | [Khadas VIM4](http://ix.io/3Wq0) | 2200/2010 MHz | 5.4 | Jammy arm64 | 12100 | 339708 | 1252070 | 7800 | 11590 | - |
 | [Le Potato](http://ix.io/1iSQ) | 1410 MHz | 4.18 | Stretch arm64 | 3780 | 96680 | 657200 | 1810 | 5730 | 3.92 |
 | [LeMaker Banana Pi](http://ix.io/3PLr) | 960 MHz | 5.10 | Bullseye armhf | 1040 | 15080 | 18640 | 440 | 2020 | - |
@@ -61,7 +62,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [NanoPi NEO4](http://ix.io/1oib) | 2000/1500 MHz | 4.4| Stretch arm64 | 6030 | 342620 | 1121380 | 2230 | 4770 | 8.57 |
 | [NanoPi NEO4](http://ix.io/1oim) | 2000/1500 MHz | 4.4| Stretch arm64 | 6520 | 268720 | 1123190 | 2280 | 4770 | 8.83 |
 | [NanoPi NEO4](http://ix.io/1p3T) | 2000/1500 MHz | 4.19 | Stretch arm64 | 6750 | 278200 | 1139850 | 2370 | 6110 | 8.84 |
-| [NanoPi NEO4](http://ix.io/3GmR) | 2016/1512 MHz | 5.10 | Focal arm64 | 6970 | 255390 | 924310 | 2450 | 6190 | 11.36 |
+| [NanoPi NEO4](http://ix.io/3GmR) | 2016/1512 MHz | 5.10 | Focal arm64 | 6970 | 383690 | 1145030 | 2450 | 6190 | 11.36 |
 | [Nintendo Switch](http://ix.io/1Rnj) | 1780 MHz | 4.9 | **Fedora 30 arm-64** | 6170 | 346340 | 642670 | 2500 | 3570 | - |
 | [Nintendo Switch](http://ix.io/3Di2) | 2090 MHz | 4.9 | Bionic arm64 | 6720 | 389030 | 746680 | 2370 | 3670 | 9.25 |
 | [ODROID-C2](http://ix.io/1ixI) | 1750 MHz | 3.14 | **Xenial** arm64 | 4070 | 50500 | 48500 | 1750 | 3100 | - |
@@ -71,20 +72,20 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [ODROID-HC4](http://ix.io/3Na5) | 2100 MHz | 5.10 | Buster arm64 | 5730 | 191560 | 980970 | 3540 | 5150 | - |
 | [ODROID-M1](http://ix.io/3Ug9) | 1930 MHz | 4.19 | Focal arm64 | 5010 | 185660 | 898610 | 3070 | 6220 | 7.14 |
 | [ODROID-N2](http://ix.io/1BsF) | 1800/1900 MHz | 4.9 | Bionic arm64 | 8140 | 324900 | 1024680 | 4120 | 8610 | 11.39 |
-| [ODROID-N2](http://ix.io/3MuT) | 2000/1900 MHz | 5.10 | Buster arm64 | 9090 | 212920 | 1007210 | 4260 | 9080 | - |
-| [ODROID-N2+](http://ix.io/3R1a) | 2400/2000 MHz | 5.10 | Focal arm64 | 9680 | 275730 | 1153830 | 4030 | 7120 | - |
+| [ODROID-N2](http://ix.io/3MuT) | 2000/1900 MHz | 5.10 | Buster arm64 | 9090 | 298890 | 1085350 | 4260 | 9080 | - |
+| [ODROID-N2+](http://ix.io/3R1a) | 2400/2000 MHz | 5.10 | Focal arm64 | 9680 | 381930 | 1366730 | 4030 | 7120 | - |
 | [ODROID-N2+](http://ix.io/3DtN) | 2400/2000 MHz | 5.14 | Impish arm64 | 9790 | 421730 | 1366930 | 4300 | 7480 | - |
-| [ODROID-N2+](http://ix.io/3LoH) | 2400/2000 MHz | 5.14 | Hirsute arm64 | 9780 | 298900 | 1154140 | 4030 | 7120 | - |
+| [ODROID-N2+](http://ix.io/3LoH) | 2400/2000 MHz | 5.14 | Hirsute arm64 | 9780 | 421750 | 1366090 | 4030 | 7120 | - |
 | [ODROID-XU4](http://ix.io/1ixL) | 1900/1400 MHz | 3.10 | **Jessie** armhf | 6750 | 74100 | 68200 | 2200 | 4800 | - |
 | [ODROID-XU4](http://ix.io/1iWL) | 2000/1400 MHz | 4.9 | Stretch armhf | 6400 | 73350 | 72075 | 2230 | 4850 | - |
-| [ODROID-XU4](http://ix.io/3GnC) | 2000/1400 MHz | 5.4 | Focal armhf | 8980 | 49350 | 49590 | 2280 | 4910 | - |
+| [ODROID-XU4](http://ix.io/3GnC) | 2000/1400 MHz | 5.4 | Focal armhf | 8980 | 72450 | 72020 | 2280 | 4910 | - |
 | [Olimex A20-Lime2](http://ix.io/3EOw) | 960 MHz | 5.10 | Bullseye armhf | 1040 | 15280 | 18670 | 460 | 2020 | - |
 | [Orange Pi PC Plus](http://ix.io/3MQV) | 1370 MHz | 5.10 | Focal armhf | 3060 | 25740 | 26590 | 890 | 3450 | - |
 | [Orange Pi PC 2](http://ix.io/3MQJ) | 1370 MHz | 5.10 | Focal arm64 | 3500 | 114830 | 637410 | 1070 | 3680 | - |
 | [Orange Pi Plus 2](http://ix.io/1iX4) | 1300 MHz | 4.14 | Stretch armhf | 2890 | 21480 | 25250 | 830 | 3240 | - |
 | [Orange Pi Prime](http://ix.io/2kTH) | 1370 MHz | 5.4 | Buster | 3590 | 89210 | 637980 | 1180 | 3540 | - |
 | [Phytium D2000](http://ix.io/3GrW) | 2300 MHz | 5.13 | Impish arm64 | 16680 | 448610 | 828450 | 2920 | 7310 | - |
-| [Phytium D2000](http://ix.io/3Sl9) | 2300 MHz | 5.4 | Kylin arm64 | 16970 | 875630 | 1657030 | 4090 | 16290 | - |
+| [Phytium D2000](http://ix.io/3Sl9) | 2300 MHz | 5.4 | Kylin arm64 | 16970 | 437820 | 828520 | 4090 | 16290 | - |
 | [PineH64](http://ix.io/1jEr) | 1800 MHz | 4.18 | Stretch arm64 | 4650 | 123400 | 836900 | 1380 | 5530 | 5.62 |
 | [PineH64](http://ix.io/26Ph) | 1800 MHz | 5.4 | Buster arm64 | 4710 | 116900 | 839870 | 1420 | 5560 | 7.10 |
 | [Quartz64](http://ix.io/3rUb) | 1800 MHz | 5.13 | Buster arm64 | 4840 | 165250 | 845490 | 2980 | 7650| - |
@@ -129,7 +130,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Rock64](http://ix.io/1iwz) | 1400 MHz | 4.4 | Stretch **armhf** | 3620 | 99400 | 624000 | 1430 | 3620 | - |
 | [Rock Pi 4](http://ix.io/1rrO) | 2000/1500 MHz | 4.4 | Stretch **armhf** | ~6450 | 301470 | 1113900 | 1870 | 4860 | - |
 | [Rock Pi 4](http://ix.io/21fX) | 2000/1500 MHz | 5.3 | Bionic arm64 | 6910 | 402750 | 1147370 | 3660 | 8310 | 10.71 |
-| [Rock Pi 4](http://ix.io/3Q2q) | 2000/1500 MHz | 5.10 | Focal arm64 | 6900 | 255380 | 926270 | 3430 | 8260 | - |
+| [Rock Pi 4](http://ix.io/3Q2q) | 2000/1500 MHz | 5.10 | Focal arm64 | 6900 | 383680 | 1146500 | 3430 | 8260 | - |
 | [Rock Pi S](http://ix.io/1XKY) | 1300 MHz | 4.4 | Buster | 2590 | 68740 | 282290 | 830 | 1880 | - |
 | [RockPro64](http://ix.io/1lBC) | 1800/1400 MHz | 4.4 | Stretch arm64 | 6140 | 298800 | 1015600 | 2770 | 4850 | 8.14 |
 | [RockPro64](http://ix.io/1iFZ) | 1800/1400 MHz | 4.4 | Stretch **armhf** | 6250 | 275000 | 1000150 | 2000 | 4835 | - |

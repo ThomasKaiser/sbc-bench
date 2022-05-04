@@ -144,7 +144,7 @@ The 1st row with Jessie results should be taken with a grain of salt since using
 
 ### [OpenSSL](https://www.openssl.org)
 
-This test solely focuses on AES performance (VPN use case, full disk encryption). The test tries to quickly confirm whether an ARM SoC can make use of special crypto engines. Some SoC vendors don't care, some add proprietary engines to their SoCs (Marvell's CESA as an example), some vendors chose to license ARM's 'ARMv8 Crypto Extensions' (see [here](results/ARMv8-Crypto-Extensions.md) for some insights). So in case a board runs with an 64-bit ARM SoC this simple test shows the presence of a crypto extensions or not.
+This test solely focuses on AES performance (VPN use case, full disk encryption). The test tries to quickly confirm whether an ARM SoC can make use of special crypto engines. Some SoC vendors don't care, some add proprietary engines to their SoCs (Marvell's CESA as an example), some vendors chose to license ARM's 'ARMv8 Crypto Extensions' (see [here](results/ARMv8-Crypto-Extensions.md) for some insights). So in case a board runs with an 64-bit ARM SoC this simple test shows the presence of crypto extensions or not.
 
 Results might look like this on an *overclocked* Raspberry Pi 3 B+ at 1570 MHz [lacking any crypto acceleration](https://www.raspberrypi.org/forums/viewtopic.php?t=207888#p1333029):
 

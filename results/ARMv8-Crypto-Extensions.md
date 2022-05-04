@@ -67,9 +67,9 @@ Crawling through sbc-bench results collection comparing +25 different SoCs/CPUs 
 | [Armada 3700LP](http://ix.io/1kt2) | 790 | 368330 | 466 |
 | [S912](http://ix.io/1iJ7) | 1000 | 466780 | 466 |
 | [Allwinner A64](http://ix.io/1tJg) | 1050 | 491590 | 468 |
-| [RK3288](http://ix.io/1iGW) | 1290 | 601200 | 466 |
+| [RK3328](http://ix.io/1iGW) | 1290 | 601200 | 466 |
 | [Allwinner H5](http://ix.io/2kTH) | 1370 | 637980 | 465 |
-| [RK3288](http://ix.io/1iFx) | 1380 | 644200 | 467 |
+| [RK3328](http://ix.io/1iFx) | 1380 | 644200 | 467 |
 | [S5P6818](http://ix.io/3GmP) (64-bit) | 1400 | 653770 | 466 |
 | [S5P6818](http://ix.io/1iyp) (32-bit) | 1400 | 651000 | 465 |
 | [RTD1395](http://ix.io/1Dt1) | 1400 | 651460 | 465 |

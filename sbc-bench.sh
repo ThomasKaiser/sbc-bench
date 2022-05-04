@@ -2125,7 +2125,7 @@ GuessARMSoC() {
 								echo "Amlogic S905X2/S905D2/S905Y2"
 								;;
 							29*)
-								# S922X, A311D
+								# G12B: S922X, A311D
 								echo "Amlogic S922X/A311D"
 								;;
 							2b*)

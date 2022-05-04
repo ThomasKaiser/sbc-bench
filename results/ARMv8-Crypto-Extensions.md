@@ -1,0 +1,104 @@
+# ARMv8 Crypto Extensions
+
+### Basics
+
+SoC vendors who license ARMv8 ARM cores (usually 64-bit capable) can decide which optional features they want to license: for example crypographic acceleration called ['ARMv8 Cryptography Extensions'](https://developer.arm.com/documentation/ddi0500/e/CJHDEBAF).
+
+Usually SoC vendors do, the only two known exceptions are Amlogic on their very first 64-bit SoC S905 and BroadCom on those SoCs powering all 64-bit capable Raspberry Pis: both lack any crypto acceleration and perform way lower than all other 64-bit ARM SoCs in this area.
+
+If the kernel has been built correctly, availability of accelerated cryptography functions can be checked by querying `/proc/cpuinfo`: The 'Features' entry will additionally contain `aes pmull sha1 sha2`.
+
+### sbc-bench's use of OpenSSL
+
+`sbc-bench` is using OpenSSL's internal AES benchmark as a _detection_ for crypto acceleration testing single-threaded through AES-128, AES-192 and AES-256. For the latter a benchmark run looks like this:
+
+    openssl speed -elapsed -evp aes-256-cbc
+    You have chosen to measure elapsed time instead of user CPU time.
+    Doing aes-256-cbc for 3s on 16 size blocks: 63579690 aes-256-cbc's in 3.00s
+    Doing aes-256-cbc for 3s on 64 size blocks: 34729604 aes-256-cbc's in 3.00s
+    Doing aes-256-cbc for 3s on 256 size blocks: 11848770 aes-256-cbc's in 3.00s
+    Doing aes-256-cbc for 3s on 1024 size blocks: 3221240 aes-256-cbc's in 3.00s
+    Doing aes-256-cbc for 3s on 8192 size blocks: 419117 aes-256-cbc's in 3.00s
+    Doing aes-256-cbc for 3s on 16384 size blocks: 209578 aes-256-cbc's in 3.00s
+    ...
+    The 'numbers' are in 1000s of bytes per second processed.
+    type             16 bytes     64 bytes    256 bytes   1024 bytes   8192 bytes  16384 bytes
+    aes-256-cbc     339091.68k   740898.22k  1011095.04k  1099516.59k  1144468.82k  1144575.32k
+
+The results are '1000s of bytes per second processed' and we'll focus from now on only on most right column since not affected by initialization overhead (16K chunk size with a `1144575.32k` score in the example above). 
+
+_ARMv8 Crypto Extensions_ are not a classic 'crypto engine' running at a fixed clock (like Marvell's CESA for example) but scale linearly with clockspeed. Also with the openssl benchmark it doesn't matter how DRAM configuration/performance looks like since the whole benchmark runs inside CPU caches and while OpenSSL uses userspace crypto the scores are identical regardless whether userland is `armhf` or `arm64` (see Samsung/Nexell S5P6818 numbers below). Distro used as well as OpenSSL version also don't seem to matter.
+
+### Scores predictable based on CPU core and clockspeed
+
+It all boils down to type of ARM core and CPU clockspeed since the ratio between openssl score and CPU clockspeed is fixed in the following way (using sbc-bench result collection as base which unfortunately misses all more modern ARM cores than A73):
+
+  * Cortex-A35: ~217, an A35 running at 1000 MHz will produce an ~217000k aes-256-cbc score (or ~434000k at 2000 MHz)
+  * Cortex-A57: ~359, an A57 running at 1000 MHz will produce an ~359000k aes-256-cbc score (or ~718000k at 2000 MHz)
+  * Cortex-A53/A55: ~467, A53/A55 running at 1000 MHz will produce an ~467000k aes-256-cbc score (or ~935000k at 2000 MHz)
+  * Cortex-A72/A73: ~569, A72/A73 running at 1000 MHz will produce an ~569000k aes-256-cbc score (or ~1138000k at 2000 MHz)
+
+Amazon's Graviton/Graviton2 ARM CPUs score identical to A72/A73 and the custom FTC663 core inside the [Feiteng D2000 CPU](https://en.wikipedia.org/wiki/FeiTeng_(processor)#Future_processors) performs identical to an A57.
+
+### Implications
+
+Encryption/decryption performance with real-world tasks is an entirely different thing than looking at these results from a synthetic benchmark that runs completly inside the CPU cores/caches. Real performance with real use cases might look entirely different (e.g. full disk encryption or performance as a VPN gateway).
+
+The `openssl speed -elapsed -evp aes-256-cbc` test is still more of a check whether crypto acceleration is available than a benchmark for real-world crypto performance. But if and only if ARMv8 Crypto Extensions have been licensed by an ARM SoC vendor simple conclusions can be drawn since there exists a fixed correlation between core type, clockspeed and `aes-256-cbc` score. So if we know that a new SoC features e.g. A55 cores but cheats with reported clockspeeds and we're not able to [measure clockspeeds](https://github.com/wtarreau/mhz) then we can use the openssl benchmark to guess real CPU clockspeeds. Vice versa could work too but it's better to [look up the CPU ID](https://github.com/ThomasKaiser/sbc-bench/blob/bbfa29ffce306e6f4137ab1236c63fc21998c0c8/sbc-bench.sh#L134-L267) instead.
+
+All of this **only** applies to ARM SoCs with _ARMv8 Crypto Extensions_ licensed. Since otherwise scores thrown out by `openssl` depend heavily on compiler version/settings and even different code paths. Check out ODROID-C2 and RPi 4 'AES-256 (16 KB)' scores in [official results list](../Results.md): with C2 more recent run outperforms higher CPU clockspeed and with RPi 4 comparing armhf (32-bit) and arm64 (64-bit) is even more telling since `openssl` reports less than 50% of 'AES performance' when running 64-bit compared to 32-bit since different code paths: assembler vs. C routines.
+
+### Numbers the aforementioned is based on
+
+Crawling through sbc-bench results collection comparing +25 different SoCs/CPUs from various vendors at various clockspeeds using OpenSSL versions 1.1.0f (25 May 2017) through 3.0.2 (15 Mar 2022) shows always the same relation between openssl score and clockspeed for those four core families (right column is OpenSSL's aes-256-cbc score divided through clockspeed in MHz):
+
+| ARM core | MHz | aes-256 | score/mhz |
+| :----: | ----:  | :----:  | :----:  |
+| Cortex-A35 | | | |
+| [RK3308](http://ix.io/1XKY) | 1300 | 282290 | 217 |
+| Cortex-A57 | | | |
+| [Jetson Nano](http://ix.io/1I4j) | 1430 | 513700 | 359 |
+| [Nintendo Switch](http://ix.io/1Rnj) | 1780| 642670 | 361 |
+| [Jetson Nano](http://ix.io/3Ufc) | 2000 | 717500 | 358 |
+| [Nintendo Switch](http://ix.io/3Di2) | 2090 | 746680 | 357 |
+| FTC663 | | | |
+| [Phytium D2000](http://ix.io/3Sl9) | 2300 | 828520 | 360 |
+| Cortex-A53 | | | |
+| [Armada 3700LP](http://ix.io/1kt2) | 790 MHz | 368330 | 466 |
+| [S912](http://ix.io/1iJ7) | 1000 | 466780 | 466 |
+| [Allwinner A64](http://ix.io/1tJg) | 1050 | 491590 | 468 |
+| [RK3288](http://ix.io/1iGW) | 1290 | 601200 | 466 |
+| [Allwinner H5](http://ix.io/2kTH) | 1370 | 637980 | 465 |
+| [RK3288](http://ix.io/1iFx) | 1380 | 644200 | 467 |
+| [S5P6818](http://ix.io/3GmP) (64-bit) | 1400 | 653770 | 466 |
+| [S5P6818](http://ix.io/1iyp) (32-bit) | 1400 | 651000 | 465 |
+| [RTD1395](http://ix.io/1Dt1) | 1400 | 651460 | 465 |
+| [S905X](http://ix.io/3QLN) | 1410 | 659460 | 467 |
+| [S912](http://ix.io/1iJ7) | 1420 | 659603 | 464 |
+| [i.MX8M Quad](http://ix.io/27FC) | 1500 | 695540 | 463 |
+| [RK3399](http://ix.io/2yIx) | 1510 | 695265 | 460 |
+| [S905Y2](http://ix.io/3JCm) | 1800 | 838360 | 465 |
+| [RK3399](http://ix.io/2ICt) | 1800| 839360 | 466 |
+| [Allwinner H6](http://ix.io/26Ph) | 1800 | 839870 | 466 |
+| [A311D](http://ix.io/3VfL) | 2010 | 940425 | 467 |
+| [A311D2](http://ix.io/3Wq0) | 2010 | 941040 | 468 |
+| Cortex-A55 | | | |
+| [RK3566](http://ix.io/3rUb) | 1800 | 845490 | 469 |
+| [S905X3](http://ix.io/3Vdt) | 1908 | 890730 | 466 |
+| [RK3568](http://ix.io/3Ug9) | 1930 | 898610 | 465 |
+| [RK3568](http://ix.io/3UXa) | 1950 | 911730 | 467 |
+| [S905X3](http://ix.io/2kaS) | 2010 | 941590 | 468 |
+| [S905X3](http://ix.io/3TQ2) | 2100 | 981940 | 467 |
+| Cortex-A72 | | | |
+| [RK3399](http://ix.io/1iWU) | 1800 | 1023600 | 568 |
+| [NXP LX2160A](http://ix.io/1ET3) | 1900 | 1079480 | 568 |
+| [RK3399](http://ix.io/2yIx) | 2010 | 1144950 | 569 |
+| [RK3399](http://ix.io/2ICt) | 2088| 1184306 | 567 |
+| [Amazon a1.xlarge](http://ix.io/2iFY) | 2300 | 1297960 | 564 |
+| Cortex-A73 | | | |
+| [S922](http://ix.io/1BsF) | 1800 | 1024680 | 569 |
+| [S922](http://ix.io/3MuT) | 1900 | 1085350 | 571 |
+| [A311D2](http://ix.io/3Wq0) | 2200 | 1252070 | 569 |
+| [A311D](http://ix.io/3VfL) | 2400 | 1365900 | 569 |
+| Neoverse-N1 | | | |
+| [Amazon m6g.8xlarge](http://ix.io/2FrG) | 2500 | 1424770 | 570 |

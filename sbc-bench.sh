@@ -2144,7 +2144,7 @@ GuessARMSoC() {
 	
 	if [ "X${RockchipGuess}" != "X" ]; then
 		echo "Rockchip RK$(cut -c-4 <<<"${RockchipGuess}") (${RockchipGuess})"
-	elif [ "X${AmlogicGuess}" != "Amlogic Meson" ]; then
+	elif [ "X${AmlogicGuess}" != "XAmlogic Meson" ]; then
 		echo "${AmlogicGuess}" | sed -e 's/SM1 (Unknown) Revision 2b:b/SM1 (S905D3) Revision 2b:b/' \
 		-e 's/G12A (Unknown) Revision 28:b (30:2)/G12A (S905Y2) Revision 28:b (30:2)/' \
 		-e 's/GXL (Unknown) Revision 21:c (e2:2)/GXL (S905X) Revision 21:c (e2:2)/' \
@@ -2388,7 +2388,7 @@ GuessSoCbySignature() {
 			lsmod | grep -i sun4i && echo "Allwinner A10" || echo "TI AM3358"
 			;;
 		00A7r0p5)
-			# Allwinner S3/V3/V3s
+			# Allwinner S3/V3/V3s, 1 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
 			echo "Allwinner S3/V3/V3s"
 			;;
 		00A7r0p400A7r0p4)

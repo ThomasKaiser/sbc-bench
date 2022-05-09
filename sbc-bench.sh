@@ -2090,6 +2090,9 @@ GuessARMSoC() {
 	# soc soc0: Amlogic Meson SM1 (Unknown) Revision 2b:b (40:2)' Detected <-- S905D3 on Khadas VIM3L
 	# soc soc0: Amlogic Meson SM1 (S905X3) Revision 2b:c (10:2) Detected <-- AMedia X96 Max+ / H96 Max X3 / ODROID-C4 / ODROID-HC4 / HK1 Box / Vontar X3 / SEI Robotics SEI610 / Shenzhen Amediatech Technology Co., Ltd X96 Max / Shenzhen CYX Industrial Co., Ltd A95XF3-AIR / Sinovoip BANANAPI-M5 / Tanix TX3 (QZ)
 	#
+	# With T7/A311D2 the string 'soc soc0:' is missing in Amlogic's BSP kernel, instead it's just
+	# '[    0.492977] Amlogic Meson T7 (A311D2) Revision 36:b (1:3) Detected' in dmesg output
+	#
 	# SoC IDs listed by Amlogic reference designs (ID pattern pretty obvious):
 	# - P200 Development Board (GXBB):
 	#   - S905: 1f:c (13:1)
@@ -2137,17 +2140,18 @@ GuessARMSoC() {
 	CPUInfo="$(cat /proc/cpuinfo)"
 	HardwareInfo="$(awk -F': ' '/^Hardware/ {print $2}' <<< "${CPUInfo}" | tail -n1)"
 	RockchipGuess="$(dmesg | awk -F': ' '/rockchip-cpuinfo cpuinfo: SoC/ {print $3}'| head -n1)"
-	AmlogicGuess="$(dmesg | awk -F": " '/soc soc0: / {print $2}' | sed 's/ Detected//' | head -n1)"
+	AmlogicGuess="Amlogic Meson$(dmesg | grep -i " detected$" | awk -F"Amlogic Meson" '/Amlogic Meson/ {print $2}' | head -n1)"
 	
 	if [ "X${RockchipGuess}" != "X" ]; then
 		echo "Rockchip RK$(cut -c-4 <<<"${RockchipGuess}") (${RockchipGuess})"
-	elif [ "X${AmlogicGuess}" != "X" ]; then
+	elif [ "X${AmlogicGuess}" != "Amlogic Meson" ]; then
 		echo "${AmlogicGuess}" | sed -e 's/SM1 (Unknown) Revision 2b:b/SM1 (S905D3) Revision 2b:b/' \
 		-e 's/G12A (Unknown) Revision 28:b (30:2)/G12A (S905Y2) Revision 28:b (30:2)/' \
 		-e 's/GXL (Unknown) Revision 21:c (e2:2)/GXL (S905X) Revision 21:c (e2:2)/' \
 		-e 's/GXL (Unknown) Revision 21:d (a4:2)/GXL (S905W) Revision 21:d (a4:2)/' \
 		-e 's/GXL (Unknown) Revision 21:d (4:2)/GXL (S905D) Revision 21:d (4:2)/' \
-		-e 's/GXL (Unknown) Revision 21:c (c2:2)/GXL (S905L) Revision 21:c (c2:2)/'
+		-e 's/GXL (Unknown) Revision 21:c (c2:2)/GXL (S905L) Revision 21:c (c2:2)/' \
+		-e 's/ Detected//' -e 's/ detected//'
 	else
 		# Guessing by 'Hardware :' in /proc/cpuinfo is something that only reliably works
 		# with vendor's BSP kernels. With mainline kernel it's impossible to rely on this
@@ -2245,7 +2249,7 @@ GuessARMSoC() {
 								echo "Amlogic S905X4"
 								;;
 							36*)
-								# T7: A311D2
+								# T7: A311D2: 36:b (1:3)
 								echo "Amlogic A311D2"
 								;;
 							*)

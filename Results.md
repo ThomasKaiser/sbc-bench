@@ -142,6 +142,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Teres-I](http://ix.io/1tJg) | 1050 MHz | 4.19 | Stretch arm64 | 2785 | 72261 | 491590 | 1080 | 2820 | - |
 | [Tinkerboard](http://ix.io/1iSX) | 1730 MHz | 4.14 | Stretch armhf | 5350 | 63150 | 66600 | 1480 | 3900 | - |
 | [Tinkerboard](http://ix.io/3Lir) | 1800 MHz | 4.4 | Buster armhf | 5440 | 62410 | 66300 | 1340 | 3510 | - |
+| [Tinkerboard](http://ix.io/3X9q) | 1800 MHz | 5.10 | Buster armhf | 5770 | 64100 | 67060 | 1540 | 4110 | - |
 | [TRONFY MXQ S805](http://ix.io/3MiR) | 1536 MHz | 5.10 | Focal armhf | 3100 | 26250 | 29080 | 980 | 2990 | - |
 | [Tronsmart MXIII Plus](http://ix.io/3S5U) | 1560 MHz | 5.10 | Buster armhf | 3880 | 42850 | 42570 | 1470 | 3430 | - |
 | [x5-Z8300](http://ix.io/1lgD) | 1420 MHz | 4.9 | Stretch amd64 | 3900 | 101580 | 178010 | 2380 | 2380 | 7.81 |

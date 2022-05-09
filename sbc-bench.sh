@@ -223,6 +223,9 @@ GetARMCore() {
 	51/211:Qualcomm Kryo
 	51/800:Qualcomm Falkor V1/Kryo
 	51/801:Qualcomm Kryo V2
+	51/803:Qualcomm Kryo 3XX Silver
+	51/804:Qualcomm Kryo 4XX Gold
+	51/805:Qualcomm Kryo 4XX Silver
 	51/c00:Qualcomm Falkor
 	51/c01:Qualcomm Saphira
 	53:Samsung
@@ -2041,52 +2044,75 @@ GuessARMSoC() {
 	# rockchip-cpuinfo cpuinfo: SoC            : 35682000 --> https://forum.banana-pi.org/t/banana-pi-bpi-r2-pro-open-soruce-router-board-with-rockchip-rk3568-run-debian-linux/
 	#
 	# Amlogic: dmesg | grep 'soc soc0:'
-	# soc soc0: Amlogic Meson8b (S805) RevA (1b - 0:B72) detected
-	# soc soc0: Amlogic Meson GXBB (S905) Revision 1f:b (0:1) Detected
-	# soc soc0: Amlogic Meson GXBB (S905) Revision 1f:c (0:1) Detected
-	# soc soc0: Amlogic Meson GXBB (S905) Revision 1f:c (13:1) Detected
-	# soc soc0: Amlogic Meson GXBB (S905H) Revision 1f:c (23:1) Detected
-	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:a (82:2) Detected
+	# soc soc0: Amlogic Meson8b (S805) RevA (1b - 0:B72) detected <-- ODROID-C1 / S805-onecloud / Endless Computers Endless Mini
+	# soc soc0: Amlogic Meson8m2 (S812) RevA (1d - 0:74E) detected <-- Akaso M8S / Tronsmart MXIII Plus
+	# soc soc0: Amlogic Meson GXBB (S905) Revision 1f:b (0:1) Detected <-- ODROID-C2
+	# soc soc0: Amlogic Meson GXBB (S905) Revision 1f:c (0:1) Detected <-- ODROID-C2
+	# soc soc0: Amlogic Meson GXBB (S905) Revision 1f:c (13:1) Detected <-- NanoPi K2 / NEXBOX A95X / Tronsmart Vega S95 Telos / Amlogic Meson GXBB P200 Development Board
+	# soc soc0: Amlogic Meson GXBB (S905H) Revision 1f:c (23:1) Detected <-- Amlogic Meson GXBB P201 Development Board
+	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:a (82:2) Detected <-- Khadas VIM / NEXBOX A95X (S905X)/ Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson GXL (Unknown) Revision 21:b (2:2) Detected <-- Phicomm N1
-	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:b (82:2) Detected
-	# soc soc0: Amlogic Meson GXL (S905W) Revision 21:b (a2:2) Detected
-	# soc soc0: Amlogic Meson GXL (S905L) Revision 21:b (c2:2) Detected
-	# soc soc0: Amlogic Meson GXL (S905M2) Revision 21:b (e2:2) Detected
-	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:c (84:2) Detected
-	# soc soc0: Amlogic Meson GXL (S905L) Revision 21:c (c2:2) Detected
+	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:b (82:2) Detected <-- Libre Computer AML-S905X-CC / Tanix TX3 Mini / Amlogic Meson GXL (S905X) P212 Development Board
+	# soc soc0: Amlogic Meson GXL (S905W) Revision 21:b (a2:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board
+	# soc soc0: Amlogic Meson GXL (S905L) Revision 21:b (c2:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board
+	# soc soc0: Amlogic Meson GXL (S905M2) Revision 21:b (e2:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board
+	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:c (84:2) Detected <-- Khadas VIM / Amlogic Meson GXL (S905X) P212 Development Board
+	# soc soc0: Amlogic Meson GXL (S905L) Revision 21:c (c2:2) Detected <-- PiBox by wdmomo
 	# soc soc0: Amlogic Meson GXL (Unknown) Revision 21:c (c2:2) Detected <-- S905L on "PiBox by wdmomo"
-	# soc soc0: Amlogic Meson GXL (S905L) Revision 21:c (c4:2) Detected
+	# soc soc0: Amlogic Meson GXL (S905L) Revision 21:c (c4:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson GXL (Unknown) Revision 21:c (e2:2) Detected <-- S905X on Khadas VIM
-	# soc soc0: Amlogic Meson GXL (S905D) Revision 21:d (0:2) Detected
+	# soc soc0: Amlogic Meson GXL (S905D) Revision 21:d (0:2) Detected <-- Tanix TX3 Mini
 	# soc soc0: Amlogic Meson GXL (Unknown) Revision 21:d (4:2) Detected <-- Phicomm N1
-	# soc soc0: Amlogic Meson GXL (S805X) Revision 21:d (34:2) Detected
-	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:d (84:2) Detected
-	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:d (85:2) Detected
-	# soc soc0: Amlogic Meson GXL (Unknown) Revision 21:d (a4:2) Detected <-- Amlogic Meson GXL (S905W) P281 Development Board
-	# soc soc0: Amlogic Meson GXL (S905L) Revision 21:d (c4:2) Detected
-	# soc soc0: Amlogic Meson GXL (S905M2) Revision 21:d (e4:2) Detected
-	# soc soc0: Amlogic Meson GXL (S905W) Revision 21:e (a5:2) Detected
-	# soc soc0: Amlogic Meson GXL (S905L) Revision 21:e (c5:2) Detected
-	# soc soc0: Amlogic Meson GXM (S912) Revision 22:a (82:2) Detected
-	# soc soc0: Amlogic Meson GXM (S912) Revision 22:b (82:2) Detected
-	# soc soc0: Amlogic Meson AXG (Unknown) Revision 25:b (43:2) Detected <-- A113D on JetHome JetHub J100
-	# soc soc0: Amlogic Meson AXG (Unknown) Revision 25:c (43:2) Detected <-- A113X JetHome JetHub J100
+	# soc soc0: Amlogic Meson GXL (S905D) Revision 21:d (4:2) Detected <-- Phicomm N1
+	# soc soc0: Amlogic Meson GXL (S805X) Revision 21:d (34:2) Detected <-- Libre Computer AML-S805X-AC
+	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:d (84:2) Detected <-- Khadas VIM / Amlogic Meson GXL (S905X) P212 Development Board
+	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:d (85:2) Detected <-- Libre Computer AML-S905X-CC
+	# soc soc0: Amlogic Meson GXL (Unknown) Revision 21:d (a4:2) Detected <-- Khadas VIM / Tanix TX3 Mini / JetHome JetHub J80 / Amlogic Meson GXL (S905X) P212 Development Board / Amlogic Meson GXL (S905W) P281 Development Board
+	# soc soc0: Amlogic Meson GXL (S905L) Revision 21:d (c4:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board
+	# soc soc0: Amlogic Meson GXL (S905M2) Revision 21:d (e4:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board
+	# soc soc0: Amlogic Meson GXL (S905W) Revision 21:e (a5:2) Detected <-- Tanix TX3 Mini / JetHome JetHub J80 / Amlogic Meson GXL (S905X) P212 Development Board / Amlogic Meson GXL (S905W) P281 Development Board
+	# soc soc0: Amlogic Meson GXL (S905L) Revision 21:e (c5:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board
+	# soc soc0: Amlogic Meson GXM (S912) Revision 22:a (82:2) Detected <-- Beelink GT1 / Octopus Planet / Amlogic Meson GXM (S912) Q200 Development Board / Amlogic Meson GXM (S912) Q201 Development Board
+	# soc soc0: Amlogic Meson GXM (S912) Revision 22:b (82:2) Detected <-- Tronsmart Vega S96 / Octopus Planet / Amlogic Meson GXM (S912) Q201 Development Board
+	# soc soc0: Amlogic Meson AXG (Unknown) Revision 25:b (43:2) Detected <-- JetHome JetHub J100
+	# soc soc0: Amlogic Meson AXG (Unknown) Revision 25:c (43:2) Detected <-- JetHome JetHub J100
 	# soc soc0: Amlogic Meson GXLX (Unknown) Revision 26:e (c1:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson G12A (Unknown) Revision 28:b (30:2) Detected <-- S905Y2 on Radxa Zero
-	# soc soc0: Amlogic Meson G12A (S905X2) Revision 28:b (40:2) Detected
+	# soc soc0: Amlogic Meson G12A (S905X2) Revision 28:b (40:2) Detected <-- Shenzhen Amediatech Technology Co., Ltd X96 Max
 	# soc soc0: Amlogic Meson G12A (Unknown) Revision 28:b (70:2) Detected <-- Amlogic Meson G12A U200 Development Board
 	# soc soc0: Amlogic Meson G12A (Unknown) Revision 28:c (70:2) Detected <-- Amlogic Meson G12A U200 Development Board
-	# soc soc0: Amlogic Meson G12B (S922X) Revision 29:a (40:2) Detected
-	# soc soc0: Amlogic Meson G12B (A311D) Revision 29:b (10:2) Detected
-	# soc soc0: Amlogic Meson G12B (S922X) Revision 29:b (40:2) Detected
-	# soc soc0: Amlogic Meson G12B (S922X) Revision 29:c (40:2) Detected
+	# soc soc0: Amlogic Meson G12B (S922X) Revision 29:a (40:2) Detected <-- ODROID-N2 / Beelink GT-King Pro
+	# soc soc0: Amlogic Meson G12B (A311D) Revision 29:b (10:2) Detected <-- Khadas VIM3
+	# soc soc0: Amlogic Meson G12B (S922X) Revision 29:b (40:2) Detected <-- Beelink GT-King Pro
+	# soc soc0: Amlogic Meson G12B (S922X) Revision 29:c (40:2) Detected <-- ODROID-N2+ ('S922X-B')
 	# soc soc0: Amlogic Meson Unknown (Unknown) Revision 2a:e (c5:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board
-	# soc soc0: Amlogic Meson SM1 (Unknown) Revision 2b:b (1:2) Detected <-- Shenzhen Amediatech Technology Co., Ltd X96 Air / AMedia X96 Max+
+	# soc soc0: Amlogic Meson SM1 (Unknown) Revision 2b:b (1:2) Detected <-- Shenzhen Amediatech Technology Co., Ltd X96 Air / AMedia X96 Max+ / SEI Robotics SEI610
 	# soc soc0: Amlogic Meson SM1 (Unknown) Revision 2b:b (40:2)' Detected <-- S905D3 on Khadas VIM3L
-	# soc soc0: Amlogic Meson SM1 (S905X3) Revision 2b:c (10:2) Detected
+	# soc soc0: Amlogic Meson SM1 (S905X3) Revision 2b:c (10:2) Detected <-- AMedia X96 Max+ / H96 Max X3 / ODROID-C4 / ODROID-HC4 / HK1 Box / Vontar X3 / SEI Robotics SEI610 / Shenzhen Amediatech Technology Co., Ltd X96 Max / Shenzhen CYX Industrial Co., Ltd A95XF3-AIR / Sinovoip BANANAPI-M5 / Tanix TX3 (QZ)
+	#
+	# SoC IDs listed by Amlogic reference designs (ID pattern pretty obvious):
+	# - P200 Development Board (GXBB):
+	#   - S905: 1f:c (13:1)
+	# - P201 Development Board (GXBB):
+	#   - S905H: 1f:c (23:1)
+	# - P212 Development Board (GXL):
+	#   - S905X: 21:a (82:2), 21:b (82:2), 21:c (84:2), 21:d (84:2)
+	#   - S905W: 21:b (a2:2), 21:e (a5:2)
+	#   - S905L: 21:b (c2:2), 21:c (c4:2), 21:d (c4:2), 21:e (c5:2)
+	#   - S905M2: 21:b (e2:2), 21:d (e4:2)
+	#   - Unknown: 21:d (a4:2), 2a:e (c5:2), 26:e (c1:2)
+	# - P281 Development Board (GXL):
+	#   - S905W: 21:e (a5:2)
+	#   - Unknown: 21:d (a4:2)
+	# - Q200 Development Board (GXM):
+	#   - S912: 22:a (82:2)
+	# - Q201 Development Board (GXM):
+	#   - S912: 22:a (82:2), 22:b (82:2)
+	# - U200 Development Board (G12A):
+	#   - Unknown: 28:b (70:2), 28:c (70:2)
 	#
 	# If /proc/cpuinfo Hardware field is 'Amlogic' then 1st chars of 'AmLogic Serial'
-	# and if not present 'Serial' might have special meaning as it's the 'chip id'
+	# and if not present 'Serial' have special meaning as it's the 'chip id'
 	# https://github.com/CoreELEC/bl301/blob/1b435f3e20160d50fc01c3ef616f1dbd9ff26be8/arch/arm/include/asm/cpu_id.h#L21-L42
 	# https://www.kernel.org/doc/Documentation/devicetree/bindings/arm/amlogic.txt
 	# 
@@ -2099,6 +2125,7 @@ GuessARMSoC() {
 	# * 25 --> A113D (AXG)   https://tinyurl.com/y76bj6ky
 	# * 28 --> S905X2        https://discourse.coreelec.org/t/coreelec-bl301-wake-up-feature-inject-bl301/6321
 	# * 2b --> S905X3/S905D3 https://discourse.coreelec.org/t/proc-cpuinfo-is-missing-a-core-for-s950x3/14081
+	# * 2c --> A113L         https://www.cnx-software.com/2020/02/15/amlogic-a113l-dual-core-cortex-a35-processor-targets-smart-audio-and-iot-applications/
 	# * 29 --> S922X/A311D   https://longervision.github.io/2020/04/18/AI/EdgeComputing/khadas-vim3-amlogic-a311d/
 	# * 2e --> T962X2
 	# * 32 --> S905X4        https://androidpctv.com/h96-max-x4-fake-s905x4/
@@ -2119,6 +2146,7 @@ GuessARMSoC() {
 		-e 's/G12A (Unknown) Revision 28:b (30:2)/G12A (S905Y2) Revision 28:b (30:2)/' \
 		-e 's/GXL (Unknown) Revision 21:c (e2:2)/GXL (S905X) Revision 21:c (e2:2)/' \
 		-e 's/GXL (Unknown) Revision 21:d (a4:2)/GXL (S905W) Revision 21:d (a4:2)/' \
+		-e 's/GXL (Unknown) Revision 21:d (4:2)/GXL (S905D) Revision 21:d (4:2)/' \
 		-e 's/GXL (Unknown) Revision 21:c (c2:2)/GXL (S905L) Revision 21:c (c2:2)/'
 	else
 		# Guessing by 'Hardware :' in /proc/cpuinfo is something that only reliably works
@@ -2137,23 +2165,30 @@ GuessARMSoC() {
 						fi
 						case "${AmLogicSerial}" in
 							1b*)
-								# Meson8B
+								# Meson8B: S805: RevA (1b - 0:B72)
 								echo "Amlogic S805"
 								;;
 							1d*)
-								# Meson8m2
+								# Meson8m2: S812: RevA (1d - 0:74E)
 								echo "Amlogic S812"
 								;;
 							1f*)
-								# GXBB: S905, S905H
+								# GXBB: S905, S905H, S905M
+								# - S905: 1f:b (0:1) / 1f:c (0:1)
+								# - S905H: 1f:c (23:1)
 								echo "Amlogic S905"
 								;;
 							21*)
 								# GXL: S805X, S805Y, S905X, S905D, S905W, S905L, S905M2
-								echo "Amlogic S805X, S805Y, S905X/S905D/S905W/S905L/S905M2"
+								# - S805X: 21:d (34:2)
+								# - S905X: 21:a (82:2), 21:b (82:2), 21:c (84:2), 21:d (84:2)
+								# - S905W: 21:b (a2:2), 21:e (a5:2)
+								# - S905L: 21:b (c2:2), 21:c (c4:2), 21:d (c4:2), 21:e (c5:2)
+								# - S905M2: 21:b (e2:2), 21:d (e4:2)
+								echo "Amlogic S805X/S805Y/S905X/S905D/S905W/S905L/S905M2"
 								;;
 							22*)
-								# GXM
+								# GXM: S912: 22:a (82:2), 22:b (82:2)
 								echo "Amlogic S912"
 								;;
 							24*)
@@ -2161,11 +2196,13 @@ GuessARMSoC() {
 								echo "Amlogic T962X/T962E"
 								;;
 							25*)
-								# AXG
+								# AXG: A113X, A113D
+								# - Unknown: 25:b (43:2), 25:c (43:2)
 								echo "Amlogic A113X/A113D"
 								;;
 							26*)
-								# GXLX
+								# GXLX, seems to be compatible to GXL since one occurence of ID '26:e (c1:2)'
+								# has been detected on 'Amlogic Meson GXL (S905X) P212 Development Board'
 								echo "unknown Amlogic GXLX SoC"
 								;;
 							27*)
@@ -2174,15 +2211,26 @@ GuessARMSoC() {
 								;;
 							28*)
 								# G12A: S905X2, S905D2, S905Y2
+								# - S905X2: 28:b (40:2)
+								# - S905Y2: 28:b (30:2)
 								echo "Amlogic S905X2/S905D2/S905Y2"
 								;;
 							29*)
-								# G12B: S922X, A311D
+								# G12B: A311D, S922X
+								# - A311D: 29:b (10:2)
+								# - S922X: 29:a (40:2), 29:b (40:2)
+								# - S922X-B: 29:c (40:2)
 								echo "Amlogic S922X/A311D"
 								;;
 							2b*)
 								# SM1: S905X3, S905D3
+								# - S905X3: 2b:b (1:2), 2b:c (10:2)
+								# - S905D3: 2b:b (40:2)
 								echo "Amlogic S905X3/S905D3"
+								;;
+							2c*)
+								# A1: A113L
+								echo "Amlogic A113L"
 								;;
 							2e*)
 								# TL1: T962X2

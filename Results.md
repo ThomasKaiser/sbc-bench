@@ -73,9 +73,9 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [ODROID-M1](http://ix.io/3Ug9) | 1930 MHz | 4.19 | Focal arm64 | 5010 | 185660 | 898610 | 3070 | 6220 | 7.14 |
 | [ODROID-N2](http://ix.io/1BsF) | 1800/1900 MHz | 4.9 | Bionic arm64 | 8140 | 324900 | 1024680 | 4120 | 8610 | 11.39 |
 | [ODROID-N2](http://ix.io/3MuT) | 2000/1900 MHz | 5.10 | Buster arm64 | 9090 | 298890 | 1085350 | 4260 | 9080 | - |
-| [ODROID-N2+](http://ix.io/3R1a) | 2400/2000 MHz | 5.10 | Focal arm64 | 9680 | 381930 | 1366730 | 4030 | 7120 | - |
-| [ODROID-N2+](http://ix.io/3DtN) | 2400/2000 MHz | 5.14 | Impish arm64 | 9790 | 421730 | 1366930 | 4300 | 7480 | - |
-| [ODROID-N2+](http://ix.io/3LoH) | 2400/2000 MHz | 5.14 | Hirsute arm64 | 9780 | 421750 | 1366090 | 4030 | 7120 | - |
+| [ODROID-N2+](http://ix.io/3R1a) | 2400/2015 MHz | 5.10 | Focal arm64 | 9680 | 381930 | 1366730 | 4030 | 7120 | - |
+| [ODROID-N2+](http://ix.io/3DtN) | 2400/2015 MHz | 5.14 | Impish arm64 | 9790 | 421730 | 1366930 | 4300 | 7480 | - |
+| [ODROID-N2+](http://ix.io/3LoH) | 2400/2015 MHz | 5.14 | Hirsute arm64 | 9780 | 421750 | 1366090 | 4030 | 7120 | - |
 | [ODROID-XU4](http://ix.io/1ixL) | 1900/1400 MHz | 3.10 | **Jessie** armhf | 6750 | 74100 | 68200 | 2200 | 4800 | - |
 | [ODROID-XU4](http://ix.io/1iWL) | 2000/1400 MHz | 4.9 | Stretch armhf | 6400 | 73350 | 72075 | 2230 | 4850 | - |
 | [ODROID-XU4](http://ix.io/3GnC) | 2000/1400 MHz | 5.4 | Focal armhf | 8980 | 72450 | 72020 | 2280 | 4910 | - |

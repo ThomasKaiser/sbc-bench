@@ -4,7 +4,7 @@
 
 SoC vendors who license ARMv8 cores (usually 64-bit capable) can decide between certain optional features: for example crypographic acceleration called ['ARMv8 Cryptography Extensions'](https://developer.arm.com/documentation/ddi0500/e/CJHDEBAF).
 
-Usually SoC vendors do, the only two known exceptions are Amlogic on their very first 64-bit SoC S905 and BroadCom on those SoCs powering all 64-bit capable Raspberry Pis: both lack any crypto acceleration and perform way lower than all other 64-bit ARM SoCs in this area.
+Usually SoC vendors do, the only two known exceptions are Amlogic on their very first 64-bit SoC S905 (used only on ODROID-C2 and NanoPi K2) and BroadCom on those SoCs powering all 64-bit capable Raspberry Pis: both lack any crypto acceleration and perform way lower than all other 64-bit ARM SoCs in this area.
 
 If the kernel has been built correctly, availability of accelerated cryptography functions can be checked by querying `/proc/cpuinfo`: The 'Features' entry will additionally show `aes pmull sha1 sha2`.
 
@@ -46,13 +46,13 @@ Encryption/decryption performance with real-world tasks is an entirely different
 
 The `openssl speed -elapsed -evp aes-256-cbc` test is still more of a check whether crypto acceleration is available than a benchmark for real-world crypto performance. But if and only if ARMv8 Crypto Extensions have been licensed by an ARM SoC vendor simple conclusions can be drawn since there exists a fixed correlation between core type, clockspeed and `aes-256-cbc` score. So if we know that a new SoC features e.g. A55 cores, cheats with reported clockspeeds and we're not able to [measure clockspeeds](https://github.com/wtarreau/mhz) then we can use the openssl benchmark to guess real CPU clockspeeds. Vice versa should work too but it's better to [look up the CPU ID](https://github.com/ThomasKaiser/sbc-bench/blob/bbfa29ffce306e6f4137ab1236c63fc21998c0c8/sbc-bench.sh#L134-L267) instead.
 
-All of this **only** applies to ARM SoCs with _ARMv8 Crypto Extensions_ licensed. Since otherwise scores thrown out by `openssl` depend heavily on compiler version/settings and even different code paths. Check out ODROID-C2 and RPi 4 'AES-256 (16 KB)' scores in [official results list](../Results.md): with C2 'modern OS' outperforms higher CPU clock and with RPi 4 comparing armhf userland (32-bit) and arm64 (64-bit) is even more telling since `openssl` reports less than 50% of 'AES performance' when running 64-bit compared to 32-bit since different code paths: generic C with 64-bit vs. optimized assembler routines.
+All of this **only** applies to ARM SoCs with _ARMv8 Crypto Extensions_ licensed. Since otherwise scores thrown out by `openssl` depend heavily on compiler version/settings and even different code paths. Check out ODROID-C2 and RPi 4 'AES-256 (16 KB)' scores in [official results list](../Results.md): with C2 'modern OS' outperforms higher CPU clock and with RPi 4 comparing armhf userland (32-bit) and arm64 (64-bit) is even more telling since `openssl` reports less than 50% of 'AES performance' when running 64-bit compared to 32-bit since different code paths: generic C with 64-bit vs. optimized assembler routines with 32-bit.
 
 ### Numbers the aforementioned conclusions are based on
 
-Crawling through sbc-bench results collection comparing +25 different SoCs/CPUs from various vendors at various clockspeeds using OpenSSL versions 1.1.0f (25 May 2017) through 3.0.2 (15 Mar 2022) shows always the same relation between openssl score and clockspeed for those four core families (right column is OpenSSL's aes-256-cbc score divided through clockspeed in MHz):
+Crawling through [sbc-bench results collection](../Results.md) comparing +25 different SoCs/CPUs from various vendors at various clockspeeds using OpenSSL versions 1.1.0f (25 May 2017) through 3.0.2 (15 Mar 2022) shows always the same relation between openssl score and clockspeed for those four core families (right column is OpenSSL's aes-256-cbc score divided through clockspeed in MHz):
 
-| ARM core | MHz | aes-256 | score/mhz |
+| ARM core | MHz | aes-256-cbc | score/mhz |
 | :----: | ----:  | :----:  | :----:  |
 | Cortex-A35 | | | |
 | [RK3308](http://ix.io/1XKY) | 1300 | 282290 | 217 |

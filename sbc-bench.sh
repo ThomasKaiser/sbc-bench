@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.9.4
+Version=0.9.5
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -117,8 +117,12 @@ Main() {
 		RunTinyMemBench
 		RunOpenSSLBenchmark
 		Run7ZipBenchmark
-		if [ "${ExecuteCpuminer}" = "yes" -a -x "${InstallLocation}"/cpuminer-multi/cpuminer ]; then
-			RunCpuminerBenchmark
+		if [ "${ExecuteCpuminer}" = "yes" ]; then
+			if [ -x "${InstallLocation}"/cpuminer-multi/cpuminer ]; then
+				RunCpuminerBenchmark
+			else
+				echo -e "\x08\x08 Done.\n(${InstallLocation}/cpuminer-multi/cpuminer missing or not executable)...\c"
+			fi
 		fi
 	fi
 	CheckTimeInState after
@@ -1159,14 +1163,28 @@ CheckRelease() {
 } # CheckRelease
 
 CheckLoad() {
-	# Only continue if average load is less than 0.1
+	# Only continue if average load is less than 0.1 or averaged CPU utilization is lower
+	# than 2.5% for 30 sec. Please note that average load on Linux is *not* the same as CPU
+	# utilization: https://www.brendangregg.com/blog/2017-08-08/linux-load-averages.html
 	AvgLoad1Min=$(awk -F" " '{print $1*100}' < /proc/loadavg)
-	[ $AvgLoad1Min -ge 10 ] && echo -e "\nAverage load is 0.1 or higher (way too much background activity). Waiting...\n"
-	while [ $AvgLoad1Min -ge 10 ]; do
-		echo -e "System too busy for benchmarking:$(uptime)"
-		sleep 5
-		AvgLoad1Min=$(awk -F" " '{print $1*100}' < /proc/loadavg)
-	done
+	if [ $AvgLoad1Min -ge 10 ]; then
+		echo -e "\nAverage load and/or CPU utilization too high (too much background activity). Waiting...\n"
+		/bin/bash "${PathToMe}" -m 5 >"${TempDir}/wait-for-loadavg.log" &
+		MonitoringPID=$!
+		while [ $AvgLoad1Min -ge 10 -a ${CPUSum:-100} -ge 15 ]; do
+			sleep 5
+			CPUutilization="$(awk -F" " '/^[0-9]/ {print $4}' <"${TempDir}/wait-for-loadavg.log" | sed 's/%//' | tail -n6)"
+			LogLength=$(wc -l <<<"${CPUutilization}")
+			if [ ${LogLength} -gt 5 ]; then
+				CPUSum="$(awk '{s+=$1} END {printf "%.0f", s}' <<<"${CPUutilization}")"
+			else
+				CPUSum=100
+			fi
+			echo -e "Too busy for benchmarking:$(uptime), cpu: $(tail -n1 <<<"${CPUutilization}")%"
+			AvgLoad1Min=$(awk -F" " '{print $1*100}' < /proc/loadavg)
+		done
+		kill ${MonitoringPID}
+	fi
 	echo ""
 } # CheckLoad
 
@@ -1325,7 +1343,7 @@ InitialMonitoring() {
 	# Log distribution info / Xunlong's lame Armbian rip-off tries to hide its origin
 	[ -f /etc/orangepi-release ] && ArmbianReleaseFile=/etc/orangepi-release
 	[ -f /etc/armbian-release ] && ArmbianReleaseFile=/etc/armbian-release
-	. "${ArmbianReleaseFile}"
+	[ -f "${ArmbianReleaseFile}" ] && . "${ArmbianReleaseFile}"
 	command -v lsb_release >/dev/null 2>&1 && (lsb_release -a 2>/dev/null) >>${ResultLog}
 	ARCH=$(dpkg --print-architecture 2>/dev/null) || \
 		ARCH=$(awk -F"=" '/^CARCH/ {print $2}' /etc/makepkg.conf 2>/dev/null) || \
@@ -1515,7 +1533,7 @@ CheckCPUCluster() {
 } # CheckCPUCluster
 
 RunTinyMemBench() {
-	echo -e "\x08\x08 Done (results will be available in ${EstimatedDuration}-$(( ${EstimatedDuration} * 140 / 100 )) minutes)."
+	echo -e "\x08\x08 Done (results will be available in $(( ${EstimatedDuration} * 110 / 100 ))-$(( ${EstimatedDuration} * 150 / 100 )) minutes)."
 	echo -e "Executing tinymembench...\c"
 	echo -e "System health while running tinymembench:\n" >${MonitorLog}
 	/bin/bash "${PathToMe}" -m $(( 40 * ${#ClusterConfig[@]} )) >>${MonitorLog} &
@@ -2025,7 +2043,7 @@ CacheAndDIMMDetails() {
 } # CacheAndDIMMDetails
 
 GuessARMSoC() {
-	# function that might guess ARM SoC names correctly sometimes in the future
+	# function that tries to guess ARM SoC names correctly
 	#
 	# For a rough performance estimate wrt different Cortex ARMv8 cores see:
 	# https://www.cnx-software.com/2021/12/10/starfive-dubhe-64-bit-risc-v-core-12nm-2-ghz-processors/#comment-588823
@@ -2122,27 +2140,12 @@ GuessARMSoC() {
 	# S922X:   '29:c (40:2)' / 290c4000012b1500000639314e315350
 	# A311D2:  '36:b (1:3)'  / 360b010300000000081d810911605690
 	#
-	# Chars 1-2: meson family (21=GXL, 22=GXM, 2b=SM1, 29=G12B, 36=T7 and so on, see below)
-	# Chars 3-4: production batch, the older the SoC the lower
-	# Chars 5-6: SKU differentiation, see GXL case construct below starting at '21??3*')
+	# Chars 1-2: meson family: 21=GXL, 22=GXM, 2b=SM1, 29=G12B, 36=T7 and so on, see below
+	# Chars 3-4: production batch: the earlier production run the lower (0a, 0b, 0c and so on)
+	# Chars 5-6: SKU differentiation: see GXL case construct below starting at '21??3*')
 	#
 	# https://github.com/CoreELEC/bl301/blob/1b435f3e20160d50fc01c3ef616f1dbd9ff26be8/arch/arm/include/asm/cpu_id.h#L21-L42
 	# https://www.kernel.org/doc/Documentation/devicetree/bindings/arm/amlogic.txt
-	# 
-	# * 1b --> S805
-	# * 1f --> S905          https://forum.odroid.com/viewtopic.php?p=155548#p155548
-	# * 20 --> S912          https://forum.doozan.com/read.php?3,62704,62709#msg-62709 but in conflict with https://github.com/LibreELEC/linux-amlogic/blob/amlogic-3.14.y/arch/arm64/boot/dts/amlogic/mesongxtvbb.dtsi (quad A53)
-	# * 21 --> S905X/S805X   https://blog.lvu.kr/amlogic-s905x-set-top-box-t95n-m8s-2g8g-2/
-	# * 22 --> S912          https://github.com/CoreELEC/bl301/blob/coreelec-bl301/arch/arm/include/asm/cpu_id.h
-	# * 24 --> T962X/T962E
-	# * 25 --> A113D (AXG)   https://tinyurl.com/y76bj6ky
-	# * 28 --> S905X2        https://discourse.coreelec.org/t/coreelec-bl301-wake-up-feature-inject-bl301/6321
-	# * 2b --> S905X3/S905D3 https://discourse.coreelec.org/t/proc-cpuinfo-is-missing-a-core-for-s950x3/14081
-	# * 2c --> A113L         https://www.cnx-software.com/2020/02/15/amlogic-a113l-dual-core-cortex-a35-processor-targets-smart-audio-and-iot-applications/
-	# * 29 --> S922X/A311D   https://longervision.github.io/2020/04/18/AI/EdgeComputing/khadas-vim3-amlogic-a311d/
-	# * 2e --> T962X2
-	# * 32 --> S905X4        https://androidpctv.com/h96-max-x4-fake-s905x4/
-	#
 	# Amlogic chip ids: https://github.com/CoreELEC/linux-amlogic/blob/ab1ab097d1a7b01d644d09625c9e4c7e31e35fb4/arch/arm64/kernel/cpuinfo.c#L135-L158
 	# More cpuinfo: http://tessy.org/wiki/index.php?Arm#ae54e1d6 (archived at https://archive.md/nf6kL)
 	# https://github.com/pytorch/cpuinfo/tree/master/src/arm/linux/
@@ -2245,11 +2248,11 @@ GuessARMSoC() {
 							26*)
 								# GXLX, seems to be compatible to GXL since one occurence of ID '26:e (c1:2)'
 								# has been detected on 'Amlogic Meson GXL (S905X) P212 Development Board'
-								echo "unknown Amlogic GXLX SoC"
+								echo "unknown Amlogic GXLX SoC, serial $(cut -c-6 <<<"${AmLogicSerial}")..."
 								;;
 							27*)
 								# TXHD
-								echo "unknown Amlogic TXHD SoC"
+								echo "unknown Amlogic TXHD SoC, serial $(cut -c-6 <<<"${AmLogicSerial}")..."
 								;;
 							28??4*)
 								# G12A: S905X2: 28:b (40:2)
@@ -2304,7 +2307,7 @@ GuessARMSoC() {
 								;;
 							2f*)
 								# TM2: ?
-								echo "unknown Amlogic TM2 SoC"
+								echo "unknown Amlogic TM2 SoC, serial $(cut -c-6 <<<"${AmLogicSerial}")..."
 								;;
 							32*)
 								# SC2: S905X4
@@ -2319,7 +2322,7 @@ GuessARMSoC() {
 								# T3 --> T982, T963D4, T965D4
 								# S4 --> S905Y4, S805X2 (quad Cortex-A35) https://lkml.org/lkml/2022/1/6/204
 								# S4D --> S905C3, S905C3ENG (quad Cortex-A35): https://archive.md/4H6xM
-								echo "unknown Amlogic, serial $(cut -c-4 <<<"${AmLogicSerial}")..."
+								echo "unknown Amlogic, serial $(cut -c-6 <<<"${AmLogicSerial}")..."
 								;;
 						esac
 						;;

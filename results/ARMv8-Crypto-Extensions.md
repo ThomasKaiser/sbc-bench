@@ -96,8 +96,8 @@ Crawling through sbc-bench results collection comparing +25 different SoCs/CPUs 
 | [RK3399](http://ix.io/2ICt) | 2088| 1184306 | 567 |
 | [Amazon a1.xlarge](http://ix.io/2iFY) | 2300 | 1297960 | 564 |
 | Cortex-A73 | | | |
-| [S922](http://ix.io/1BsF) | 1800 | 1024680 | 569 |
-| [S922](http://ix.io/3MuT) | 1900 | 1085350 | 571 |
+| [S922X](http://ix.io/1BsF) | 1800 | 1024680 | 569 |
+| [S922X](http://ix.io/3MuT) | 1900 | 1085350 | 571 |
 | [A311D2](http://ix.io/3Wq0) | 2200 | 1252070 | 569 |
 | [A311D](http://ix.io/3VfL) | 2400 | 1365900 | 569 |
 | Neoverse-N1 | | | |

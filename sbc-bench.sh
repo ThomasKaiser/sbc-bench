@@ -2086,7 +2086,7 @@ GuessARMSoC() {
 	# soc soc0: Amlogic Meson G12B (S922X) Revision 29:b (40:2) Detected <-- Beelink GT-King Pro
 	# soc soc0: Amlogic Meson G12B (S922X) Revision 29:c (40:2) Detected <-- ODROID-N2+ ('S922X-B')
 	# soc soc0: Amlogic Meson Unknown (Unknown) Revision 2a:e (c5:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board
-	# soc soc0: Amlogic Meson SM1 (Unknown) Revision 2b:b (1:2) Detected <-- Shenzhen Amediatech Technology Co., Ltd X96 Air / AMedia X96 Max+ / SEI Robotics SEI610
+	# soc soc0: Amlogic Meson SM1 (Unknown) Revision 2b:b (1:2) Detected <-- BananaPi M5 / Shenzhen Amediatech Technology Co., Ltd X96 Air / AMedia X96 Max+ / SEI Robotics SEI610
 	# soc soc0: Amlogic Meson SM1 (Unknown) Revision 2b:b (40:2)' Detected <-- S905D3 on Khadas VIM3L
 	# soc soc0: Amlogic Meson SM1 (S905X3) Revision 2b:c (10:2) Detected <-- AMedia X96 Max+ / H96 Max X3 / ODROID-C4 / ODROID-HC4 / HK1 Box / Vontar X3 / SEI Robotics SEI610 / Shenzhen Amediatech Technology Co., Ltd X96 Max / Shenzhen CYX Industrial Co., Ltd A95XF3-AIR / Sinovoip BANANAPI-M5 / Tanix TX3 (QZ)
 	#
@@ -2114,8 +2114,18 @@ GuessARMSoC() {
 	# - U200 Development Board (G12A):
 	#   - Unknown: 28:b (70:2), 28:c (70:2)
 	#
-	# If /proc/cpuinfo Hardware field is 'Amlogic' then 1st chars of 'AmLogic Serial'
-	# and if not present 'Serial' have special meaning as it's the 'chip id'
+	# If /proc/cpuinfo Hardware field is 'Amlogic' then the first five/six chars of 'AmLogic
+	# Serial' and if not present 'Serial' have special meaning as it's the 'chip id':
+	# S905X:   '21:a (82:2)' / 210a820094e04a851342e1d007989aa7
+	# S912:    '22:a (82:2)' / 220a82006da41365fedf301742726826
+	# S905X3:  '2b:b (1:2)'  / 2b0b0100010918000006323730523050
+	# S922X:   '29:c (40:2)' / 290c4000012b1500000639314e315350
+	# A311D2:  '36:b (1:3)'  / 360b010300000000081d810911605690
+	#
+	# Chars 1-2: meson family (21=GXL, 22=GXM, 2b=SM1, 29=G12B, 36=T7 and so on, see below)
+	# Chars 3-4: production batch, the older the SoC the lower
+	# Chars 5-6: SKU differentiation, see GXL case construct below starting at '21??3*')
+	#
 	# https://github.com/CoreELEC/bl301/blob/1b435f3e20160d50fc01c3ef616f1dbd9ff26be8/arch/arm/include/asm/cpu_id.h#L21-L42
 	# https://www.kernel.org/doc/Documentation/devicetree/bindings/arm/amlogic.txt
 	# 
@@ -2176,11 +2186,39 @@ GuessARMSoC() {
 								# Meson8m2: S812: RevA (1d - 0:74E)
 								echo "Amlogic S812"
 								;;
+							1f??0*)
+								# GXBB: S905: 1f:b (0:1) / 1f:c (0:1)
+								echo "Amlogic S905"
+								;;
+							1f??23*)
+								# GXBB: S905H: 1f:c (23:1)
+								echo "Amlogic S905H"
+								;;
 							1f*)
 								# GXBB: S905, S905H, S905M
 								# - S905: 1f:b (0:1) / 1f:c (0:1)
 								# - S905H: 1f:c (23:1)
-								echo "Amlogic S905"
+								echo "Amlogic S905/S905H/S905M"
+								;;
+							21??3*)
+								# GXL: S805X: 21:d (34:2)
+								echo "Amlogic S805X"
+								;;
+							21??8*)
+								# GXL: S905X: 21:a (82:2), 21:b (82:2), 21:c (84:2), 21:d (84:2)
+								echo "Amlogic S905X"
+								;;
+							21??a*)
+								# GXL: S905W: 21:b (a2:2), 21:e (a5:2)
+								echo "Amlogic S905W"
+								;;
+							21??c*)
+								# GXL: S905L: 21:b (c2:2), 21:c (c4:2), 21:d (c4:2), 21:e (c5:2)
+								echo "Amlogic S905L"
+								;;
+							21??e*)
+								# GXL: S905M2: 21:b (e2:2), 21:d (e4:2)
+								echo "Amlogic S905M2"
 								;;
 							21*)
 								# GXL: S805X, S805Y, S905X, S905D, S905W, S905L, S905M2
@@ -2213,18 +2251,42 @@ GuessARMSoC() {
 								# TXHD
 								echo "unknown Amlogic TXHD SoC"
 								;;
+							28??4*)
+								# G12A: S905X2: 28:b (40:2)
+								echo "Amlogic S905X2"
+								;;
+							28??3*)
+								# G12A: S905Y2: 28:b (30:2)
+								echo "Amlogic S905Y2"
+								;;
 							28*)
 								# G12A: S905X2, S905D2, S905Y2
 								# - S905X2: 28:b (40:2)
 								# - S905Y2: 28:b (30:2)
 								echo "Amlogic S905X2/S905D2/S905Y2"
 								;;
+							29??1*)
+								# - G12B: A311D: 29:b (10:2)
+								echo "Amlogic A311D"
+								;;
+							29??4*)
+								# - G12B: S922X: 29:a (40:2), 29:b (40:2), 29:c (40:2)
+								echo "Amlogic S922X"
+								;;
 							29*)
 								# G12B: A311D, S922X
 								# - A311D: 29:b (10:2)
 								# - S922X: 29:a (40:2), 29:b (40:2)
-								# - S922X-B: 29:c (40:2)
+								# - 'S922X-B': 29:c (40:2)
 								echo "Amlogic S922X/A311D"
+								;;
+							2b??1*)
+								# SM1: S905X3: 2b:b (1:2), 2b:c (10:2)
+								echo "Amlogic S905X3"
+								;;
+							2b??4*)
+								# SM1: S905D3: 2b:b (40:2)
+								echo "Amlogic S905D3"
 								;;
 							2b*)
 								# SM1: S905X3, S905D3

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.9.5
+Version=0.9.6
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -115,6 +115,7 @@ Main() {
 	else
 		CheckNetio
 		RunTinyMemBench
+		RunRamlat
 		RunOpenSSLBenchmark
 		Run7ZipBenchmark
 		if [ "${ExecuteCpuminer}" = "yes" ]; then
@@ -948,10 +949,11 @@ MonitorBoard() {
 		DisplayHeader="Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp${NetioHeader}"
 		CPUs=singlecluster
 	elif [ -f /sys/devices/system/cpu/cpufreq/policy${ClusterConfig[1]}/${CpuFreqToQuery} ]; then
+		ClusterCount=$(( ${#ClusterConfig[@]} -1 ))
 		DisplayHeader="Time       big.LITTLE   load %cpu %sys %usr %nice %io %irq   Temp${NetioHeader}"
 		read FirstCluster </sys/devices/system/cpu/cpufreq/policy${ClusterConfig[0]}/cpuinfo_max_freq
-		read SecondCluster </sys/devices/system/cpu/cpufreq/policy${ClusterConfig[1]}/cpuinfo_max_freq
-		if [ ${SecondCluster} -ge ${FirstCluster} ]; then
+		read LastCluster </sys/devices/system/cpu/cpufreq/policy${ClusterConfig[$ClusterCount]}/cpuinfo_max_freq
+		if [ ${LastCluster} -ge ${FirstCluster} ]; then
 			CPUs=biglittle
 		else
 			CPUs=littlebig
@@ -983,13 +985,13 @@ MonitorBoard() {
 				echo -e "$(date "+%H:%M:%S"): $(printf "%4s" ${FakeFreq})/$(printf "%4s" ${RealFreq})MHz $(printf "%5s" ${LoadAvg}) ${procStats}  $(printf "%4s" ${SocTemp})°C  $(printf "%7s" ${CoreVoltage})${NetioColumn}"
 				;;
 			biglittle)
-				BigFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpufreq/policy${ClusterConfig[1]}/${CpuFreqToQuery} 2>/dev/null)
+				BigFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpufreq/policy${ClusterConfig[$ClusterCount]}/${CpuFreqToQuery} 2>/dev/null)
 				LittleFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpufreq/policy${ClusterConfig[0]}/${CpuFreqToQuery} 2>/dev/null)
 				echo -e "$(date "+%H:%M:%S"): $(printf "%4s" ${BigFreq})/$(printf "%4s" ${LittleFreq})MHz $(printf "%5s" ${LoadAvg}) ${procStats}  $(printf "%4s" ${SocTemp})°C${NetioColumn}"
 				;;
 			littlebig)
 				BigFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpufreq/policy${ClusterConfig[0]}/${CpuFreqToQuery} 2>/dev/null)
-				LittleFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpufreq/policy${ClusterConfig[1]}/${CpuFreqToQuery} 2>/dev/null)
+				LittleFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpufreq/policy${ClusterConfig[$ClusterCount]}/${CpuFreqToQuery} 2>/dev/null)
 				echo -e "$(date "+%H:%M:%S"): $(printf "%4s" ${BigFreq})/$(printf "%4s" ${LittleFreq})MHz $(printf "%5s" ${LoadAvg}) ${procStats}  $(printf "%4s" ${SocTemp})°C${NetioColumn}"
 				;;
 			singlecluster)
@@ -1180,7 +1182,7 @@ CheckLoad() {
 			else
 				CPUSum=100
 			fi
-			echo -e "Too busy for benchmarking:$(uptime), cpu: $(tail -n1 <<<"${CPUutilization}")%"
+			echo -e "Too busy for benchmarking:$(uptime),  cpu: $(tail -n1 <<<"${CPUutilization}")%"
 			AvgLoad1Min=$(awk -F" " '{print $1*100}' < /proc/loadavg)
 		done
 		kill ${MonitoringPID}
@@ -1271,6 +1273,13 @@ InstallPrerequisits() {
 			echo -e "${LRED}${BOLD}Not able to build necessary tools. Aborting.${NC}\nMost probably gcc and make packages are missing." >&2
 			exit 1
 		fi
+	fi
+
+	# get/build ramlat benchmark if not already built
+	if [ ! -x "${InstallLocation}"/ramspeed/ramlat ]; then
+		cd "${InstallLocation}"
+		git clone https://github.com/wtarreau/ramspeed >/dev/null 2>&1
+		[ -d "${InstallLocation}"/ramspeed ] && cd ramspeed ; gcc -o ramlat ramlat.c >/dev/null 2>&1
 	fi
 
 	# get/build mhz if not already there
@@ -1533,7 +1542,7 @@ CheckCPUCluster() {
 } # CheckCPUCluster
 
 RunTinyMemBench() {
-	echo -e "\x08\x08 Done (results will be available in $(( ${EstimatedDuration} * 110 / 100 ))-$(( ${EstimatedDuration} * 150 / 100 )) minutes)."
+	echo -e "\x08\x08 Done (results will be available in $(( ${EstimatedDuration} * 110 / 100 ))-$(( ${EstimatedDuration} * 160 / 100 )) minutes)."
 	echo -e "Executing tinymembench...\c"
 	echo -e "System health while running tinymembench:\n" >${MonitorLog}
 	/bin/bash "${PathToMe}" -m $(( 40 * ${#ClusterConfig[@]} )) >>${MonitorLog} &
@@ -1553,6 +1562,25 @@ RunTinyMemBench() {
 	# round results
 	MemBenchScore="$(( $(awk '{printf ("%0.0f",$1/10); }' <<<"${MemCpyScore}" ) * 10 )) | $(( $(awk '{printf ("%0.0f",$1/10); }' <<<"${MemSetScore}" ) * 10 ))"
 } # RunTinyMemBench
+
+RunRamlat() {
+	if [ -x "${InstallLocation}"/ramspeed/ramlat ]; then
+		echo -e "\x08\x08 Done.\nExecuting RAM latency tester...\c"
+		echo -e "\nSystem health while running ramlat:\n" >>${MonitorLog}
+		/bin/bash "${PathToMe}" -m $(( ${#ClusterConfig[@]} * 3 )) >>${MonitorLog} &
+		MonitoringPID=$!
+		echo -n "" >${TempLog}
+		for i in $(seq 0 $(( ${#ClusterConfig[@]} -1 )) ) ; do
+			CPUInfo="$(GetCPUInfo ${ClusterConfig[$i]})"
+			echo -e "\nExecuting ramlat on cpu${ClusterConfig[$i]}${CPUInfo}, results in ns:\n" >>${TempLog}
+			taskset -c ${ClusterConfig[$i]} "${InstallLocation}"/ramspeed/ramlat -s -n 200 \
+				| while read ; do  echo "    ${REPLY}"; done >>${TempLog} 2>&1
+		done
+		kill ${MonitoringPID}
+		echo -e "\n##########################################################################" >>${ResultLog}
+		cat ${TempLog} >>${ResultLog}
+	fi
+} # RunRamlat
 
 Run7ZipBenchmark() {
 	echo -e "\x08\x08 Done.\nExecuting 7-zip benchmark...\c"
@@ -2806,6 +2834,16 @@ ShowZswapStats() {
 	# https://www.kernel.org/doc/Documentation/vm/zswap.txt
 	ZswapEnabled="$(sed 's/Y/1/' </sys/module/zswap/parameters/enabled)"
 	if [ "${ZswapEnabled}" = "1" ]; then
+		# check whether zswap is in conflict with zram. If both are combined together
+		# once swapping occurs performance will be trashed, see sbc-bench results from
+		# systems where this mess happened: zswap statistics, zram usage and the %sys CPU
+		# percentage in 'System health while running 7-zip multi core benchmark:' section:
+		# - http://ix.io/3PCk
+		# - http://ix.io/3Rfi
+		# - http://ix.io/3X7U
+		# - http://ix.io/3X1E
+		grep -q '/dev/zram' /proc/swaps && echo -e "WARNING: ZSWAP ON TOP OF ZRAM HAS BEEN CONFIGURED ON THIS SYSTEM!\nTHIS WILL SEVERELY HARM PERFORMANCE IN CASE SWAPPING OCCURS!\n"
+
 		# read module parameters
 		read max_pool_percent </sys/module/zswap/parameters/max_pool_percent 2>/dev/null
 		read compressor </sys/module/zswap/parameters/compressor 2>/dev/null

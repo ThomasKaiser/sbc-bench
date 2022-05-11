@@ -54,7 +54,7 @@ Unfortunately to adjust the cpufreq governor and to collect monitoring data exec
 
 ## Which tools are used and why?
 
-I chose [mhz](https://github.com/wtarreau/mhz), [tinymembench](https://github.com/ssvb/tinymembench), [cpuminer](https://github.com/tkinjo1985/cpuminer-multi.git), [7-zip](https://www.7-cpu.com) and [OpenSSL](https://www.openssl.org)'s AES benchmarks for the following reasons:
+I chose [mhz](https://github.com/wtarreau/mhz), [tinymembench](https://github.com/ssvb/tinymembench), [ramlat](https://github.com/wtarreau/ramspeed), [cpuminer](https://github.com/tkinjo1985/cpuminer-multi.git), [7-zip](https://www.7-cpu.com) and [OpenSSL](https://www.openssl.org)'s AES benchmarks for the following reasons:
 
 ### [mhz](https://github.com/wtarreau/mhz)
 
@@ -88,6 +88,10 @@ On a NanoPC T4 (RK3399, 2xA72/4xA53 CPU cores) this will look like this with mai
 *(first two lines show execution on a little A53 core, the last ones when pinned to an A72 big core)*
 
 On ARM SoCs CPU and GPU/VPU usually share memory access so it's worth a try to experiment with disabling HDMI/GPU for headless use cases. Often memory bandwidth and therefore overall performance increases. Same when switching between kernel branches.
+
+### [ramlat](https://github.com/wtarreau/ramspeed)
+
+Provides some insights about cache sizes/speed and memory latency/bandwidth. Stuff [like this](https://www.cnx-software.com/2021/03/04/rockchip-rk3566-tv-box-h96-max-android-11/#comment-581346).
 
 ### [cpuminer](https://github.com/tkinjo1985/cpuminer-multi.git)
 

@@ -2088,13 +2088,14 @@ GuessARMSoC() {
 	# rockchip-cpuinfo cpuinfo: SoC            : 35661000 --> https://forum.pine64.org/showthread.php?tid=14457&pid=101319#pid101319
 	# rockchip-cpuinfo cpuinfo: SoC            : 35681000 --> https://dev.t-firefly.com/forum.php?mod=redirect&goto=findpost&ptid=104549&pid=280260
 	# rockchip-cpuinfo cpuinfo: SoC            : 35682000 --> https://forum.banana-pi.org/t/banana-pi-bpi-r2-pro-open-soruce-router-board-with-rockchip-rk3568-run-debian-linux/
+	# rockchip-cpuinfo cpuinfo: SoC            : 35880000 --> http://ix.io/3XzI
 	#
 	# Amlogic: dmesg | grep 'soc soc0:'
 	# soc soc0: Amlogic Meson8b (S805) RevA (1b - 0:B72) detected <-- ODROID-C1 / S805-onecloud / Endless Computers Endless Mini
 	# soc soc0: Amlogic Meson8m2 (S812) RevA (1d - 0:74E) detected <-- Akaso M8S / Tronsmart MXIII Plus
 	# soc soc0: Amlogic Meson GXBB (S905) Revision 1f:b (0:1) Detected <-- ODROID-C2
 	# soc soc0: Amlogic Meson GXBB (S905) Revision 1f:c (0:1) Detected <-- ODROID-C2
-	# soc soc0: Amlogic Meson GXBB (S905) Revision 1f:c (13:1) Detected <-- NanoPi K2 / NEXBOX A95X / Tronsmart Vega S95 Telos / Amlogic Meson GXBB P200 Development Board
+	# soc soc0: Amlogic Meson GXBB (S905) Revision 1f:c (13:1) Detected <-- NanoPi K2 / NEXBOX A95X / Tronsmart Vega S95 Telos / Amlogic Meson GXBB P200 Development Board / Amlogic Meson GXBB P201 Development Board
 	# soc soc0: Amlogic Meson GXBB (S905H) Revision 1f:c (23:1) Detected <-- Amlogic Meson GXBB P201 Development Board
 	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:a (82:2) Detected <-- Khadas VIM / NEXBOX A95X (S905X)/ Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson GXL (Unknown) Revision 21:b (2:2) Detected <-- Phicomm N1
@@ -2143,6 +2144,7 @@ GuessARMSoC() {
 	# - P200 Development Board (GXBB):
 	#   - S905: 1f:c (13:1)
 	# - P201 Development Board (GXBB):
+	#   - S905: 1f:c (13:1)
 	#   - S905H: 1f:c (23:1)
 	# - P212 Development Board (GXL):
 	#   - S905X: 21:a (82:2), 21:b (82:2), 21:c (84:2), 21:d (84:2)
@@ -2217,8 +2219,8 @@ GuessARMSoC() {
 								# Meson8m2: S812: RevA (1d - 0:74E)
 								echo "Amlogic S812"
 								;;
-							1f??0*)
-								# GXBB: S905: 1f:b (0:1) / 1f:c (0:1)
+							1f??0*|1f??1*)
+								# GXBB: S905: 1f:b (0:1) / 1f:c (0:1) / 1f:c (13:1)
 								echo "Amlogic S905"
 								;;
 							1f??23*)
@@ -2652,8 +2654,8 @@ GuessSoCbySignature() {
 			# RK3399, 4 x Cortex-A53 / r0p4 + 2 x Cortex-A72 / r0p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32 (32-bit 4.4 BSP kernel: half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt lpae evtstrm aes pmull sha1 sha2 crc32)
 			echo "Rockchip RK3399"
 			;;
-		??A55r2p0??A55r2p0??A55r2p0??A55r2p0??A76r4p0??A76r4p0??A76r4p0??A76r4p0)
-			# RK3588, 4 x Cortex-A55 / r2p0 + 4 x Cortex-A76 / r4p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp asimdrdm lrcpc dcpop asimddp
+		0?A55r2p00?A55r2p00?A55r2p00?A55r2p01?A76r4p01?A76r4p02?A76r4p02?A76r4p0)
+			# RK3588, 4 x Cortex-A55 / r2p0 + 2 x Cortex-A76 / r4p0 / + 2 x Cortex-A76 / r4p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp asimdrdm lrcpc dcpop asimddp
 			echo "Rockchip RK3588/RK3588s"
 			;;
 		150A7r0p5150A7r0p5150A7r0p5150A7r0p5)

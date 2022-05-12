@@ -31,14 +31,14 @@ _ARMv8 Crypto Extensions_ are not a classic 'crypto engine' running at a fixed c
 
 ### Scores predictable based on CPU core and clockspeed
 
-It all boils down to type of ARM core and CPU clockspeed since the ratio between openssl score and CPU clockspeed is fixed in the following way (using sbc-bench result collection as base which unfortunately misses all more modern ARM cores than A73):
+It all boils down to type of ARM core and CPU clockspeed since the ratio between openssl score and CPU clockspeed is fixed in the following way (using sbc-bench result collection as base which unfortunately misses all more modern ARM cores than A73 and A76):
 
   * Cortex-A35: ~217, an A35 running at 1000 MHz will produce an ~217000k aes-256-cbc score (or ~434000k at 2000 MHz)
   * Cortex-A57: ~359, an A57 running at 1000 MHz will produce an ~359000k aes-256-cbc score (or ~718000k at 2000 MHz)
   * Cortex-A53/A55: ~467, A53/A55 running at 1000 MHz will produce an ~467000k aes-256-cbc score (or ~935000k at 2000 MHz)
-  * Cortex-A72/A73: ~569, A72/A73 running at 1000 MHz will produce an ~569000k aes-256-cbc score (or ~1138000k at 2000 MHz)
+  * Cortex-A72/A73/A76: ~570, A72/A73/A76 running at 1000 MHz will produce an ~570000k aes-256-cbc score (or ~1140000k at 2000 MHz)
 
-Amazon's Graviton/Graviton2 ARM CPUs score identical to A72/A73 and the custom FTC663 core inside the [Feiteng D2000 CPU](https://en.wikipedia.org/wiki/FeiTeng_(processor)#Future_processors) performs identical to an A57.
+Amazon's Graviton/Graviton2 ARM CPUs score identical to A72/A73/A76 and the custom FTC663 core inside the [Feiteng D2000 CPU](https://en.wikipedia.org/wiki/FeiTeng_(processor)#Future_processors) performs identical to an A57.
 
 ### Implications
 
@@ -83,6 +83,7 @@ Crawling through [sbc-bench results collection](../Results.md) comparing +25 dif
 | [A311D](http://ix.io/3VfL) | 2010 | 940425 | 467 |
 | [A311D2](http://ix.io/3Wq0) | 2010 | 941040 | 468 |
 | Cortex-A55 | | | |
+| [RK3588](http://ix.io/3XzI) | 915 | 427753 | 467 |
 | [RK3566](http://ix.io/3rUb) | 1800 | 845490 | 469 |
 | [S905X3](http://ix.io/3Vdt) | 1908 | 890730 | 466 |
 | [RK3568](http://ix.io/3Ug9) | 1930 | 898610 | 465 |
@@ -102,3 +103,5 @@ Crawling through [sbc-bench results collection](../Results.md) comparing +25 dif
 | [A311D](http://ix.io/3VfL) | 2400 | 1365900 | 569 |
 | Neoverse-N1 | | | |
 | [Amazon m6g.8xlarge](http://ix.io/2FrG) | 2500 | 1424770 | 570 |
+| Cortex-A76 | | | |
+| [RK3588](http://ix.io/3XzI) | 985 | 560196 | 569 |

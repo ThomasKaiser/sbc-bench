@@ -46,15 +46,27 @@ CPUUtilization7ZIP() {
 	done
 } # CPUUtilization7ZIP
 
-CheckRAID6PerfAndAlgo() {
-	# if you collected a bunch of armhwinfo files (fetched from ix.io)
-	# then you can do some sort of data mining with it, e.g. checking
-	# for the RAID algo and achieved MB/s the kernel chose.
+ProcessSBCbenchs() {
+	for file in *.txt ; do
+		RAID6Raw="$(grep -a 'using algorithm' $file | awk -F" " '{print $6" ("$4")"}')"
+		if [ "X${RAID6Raw}" != "X" ]; then
+			RAID6Perf=$(sort -n -r <<<"${RAID6Raw}" | head -n1)
+			BoardName="$(tail -n1 $file | awk -F"|" '{print $2}')"
+			[ "X${BoardName}" = "X" ] && BoardName="$(head -n1 $file | cut -f1 -d'(' | awk -F" " '{print $3" "$4" "$5}')"
+			KernelVersions="$(grep '^Linux ' $file | awk -F" " '{print $2}' | head -n1)"
+			URL="http://ix.io/${file%.*}"
+			case ${RAID6Perf} in
+				*neon*)
+					# filter out x86 and crappy kernel configs leaving out NEON support
+					echo -e "${RAID6Perf} | ${BoardName} | ${KernelVersions} | [${URL}](${URL}) |"
+					;;
+			esac
+		fi
+		echo -e ".\c" >&2
+	done
+} # ProcessSBCbenchs
 
-	echo -e "# raid6 performance and algorithm\n"
-	echo -e "See function CheckRAID6PerfAndAlgo in https://github.com/ThomasKaiser/sbc-bench/blob/master/results/.snippets-for-insights.sh\n"
-	echo "| MB/s / algo | Board | Kernel | URL |"
-	echo "| :----- | :----: | :---- | :----|"
+ProcessARMhwinfo() {
 	for file in *.armhwinfo ; do
 		RAID6Raw="$(grep -a 'using algorithm' $file | awk -F" " '{print $8" ("$6")"}')"
 		if [ "X${RAID6Raw}" != "X" ]; then
@@ -75,7 +87,20 @@ CheckRAID6PerfAndAlgo() {
 			URL="http://ix.io/${file%.*}"
 			echo -e "${RAID6Perf} | ${BoardName} | ${KernelVersions} | [${URL}](${URL}) |"
 		fi
-	done | sort -n -r | grep "^[1-9][0-9]" | sed -e 's/^/| /'
+		echo -e ".\c" >&2
+	done
+} # ProcessARMhwinfo
+
+CheckRAID6PerfAndAlgo() {
+	# if you collected a bunch of armhwinfo files (fetched from ix.io)
+	# then you can do some sort of data mining with it, e.g. checking
+	# for the RAID algo and achieved MB/s the kernel chose.
+
+	echo -e "# raid6 performance and algorithm\n"
+	echo -e "See function CheckRAID6PerfAndAlgo in https://github.com/ThomasKaiser/sbc-bench/blob/master/results/.snippets-for-insights.sh\n"
+	echo "| MB/s / algo | Board | Kernel | URL |"
+	echo "| :----- | :----: | :---- | :----|"
+	( ProcessARMhwinfo ; ProcessSBCbenchs ) | sort -n -r | grep "^[1-9][0-9]" | sed -e 's/^/| /'
 } # CheckRAID6PerfAndAlgo
 
 # CPUUtilization7ZIP >7-zip-cpu-utilisation.md

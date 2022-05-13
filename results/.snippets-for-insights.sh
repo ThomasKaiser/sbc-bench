@@ -47,9 +47,18 @@ CPUUtilization7ZIP() {
 } # CPUUtilization7ZIP
 
 CheckRAID6PerfAndAlgo() {
-	# if you collected a bunch of armhwinfo files (fetched from ix.io)
+	# If you collected a bunch of armhwinfo files (fetched from ix.io)
 	# then you can do some sort of data mining with it, e.g. checking
 	# for the RAID algo and achieved MB/s the kernel chose.
+
+	# One use case of this collection is to determine best RAID6 PQ algo
+	# per ARM core family. Then adopting this kernel patch here:
+	# https://bugs.launchpad.net/ubuntu/+source/linux-gcp/+bug/1812728
+	# Then add e.g. CONFIG_RAID6_PQ_DEFAULT_ALG=neonx4 to kernel cmdline
+	# on boards with little cores (neonx8 seems best with A72/A73, neonx2
+	# with Cortex-A9 and so on). Would save approx. 1 second on each boot
+	# for every Armbian device out there. But since Armbian is now all
+	# about desktop and GUI there's no-one left caring about such details.
 
 	echo -e "# raid6 performance and algorithm\n"
 	echo -e "See function CheckRAID6PerfAndAlgo in https://github.com/ThomasKaiser/sbc-bench/blob/master/results/.snippets-for-insights.sh\n"

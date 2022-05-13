@@ -1349,7 +1349,7 @@ InitialMonitoring() {
 	read HostName </etc/hostname
 	echo -e "sbc-bench v${Version} ${DeviceName:-$HostName} ($(date -R))\n" >${ResultLog}
 
-	# Log distribution info / Xunlong's lame Armbian rip-off tries to hide its origin
+	# get distribution info / Xunlong's lame Armbian rip-off tries to hide its origin
 	[ -f /etc/orangepi-release ] && ArmbianReleaseFile=/etc/orangepi-release
 	[ -f /etc/armbian-release ] && ArmbianReleaseFile=/etc/armbian-release
 	[ -f "${ArmbianReleaseFile}" ] && . "${ArmbianReleaseFile}"
@@ -1357,11 +1357,6 @@ InitialMonitoring() {
 	ARCH=$(dpkg --print-architecture 2>/dev/null) || \
 		ARCH=$(awk -F"=" '/^CARCH/ {print $2}' /etc/makepkg.conf 2>/dev/null) || \
 		ARCH="unknown/$(uname -m)"
-	if [ -n "${BOARDFAMILY}" ]; then
-		echo -e "\nArmbian release info:\n$(grep -v "#" "${ArmbianReleaseFile}")" >>${ResultLog}
-	else
-		echo -e "Architecture:\t$(tr -d '"' <<<${ARCH})" >>${ResultLog}
-	fi
 
 	# Log system info if present:
 	SystemInfo="$(dmidecode -t system 2>/dev/null | egrep "Manufacturer: |Product Name: |Version: |Family: |SKU Number: " | egrep -v ":  $|O.E.M.|123456789")"
@@ -1393,7 +1388,7 @@ InitialMonitoring() {
 	echo -e "\n${GCC} ${GCC_Version}" >>${ResultLog}
 
 	# Some basic system info needed to interpret system health later
-	echo -e "\nUptime:$(uptime)\n\n$(iostat | grep -v "^loop")\n\n$(free -h)\n\n$(swapon -s)\n" | sed '/^$/N;/^\n$/D' >>${ResultLog}
+	echo -e "\nUptime:$(uptime)\n\n$(iostat | egrep -v "^loop|boot0|boot1")\n\n$(free -h)\n\n$(swapon -s)\n" | sed '/^$/N;/^\n$/D' >>${ResultLog}
 	ShowZswapStats 2>/dev/null >>${ResultLog}
 	
 	# set up Netio consumption monitoring if requested. Device address and socket
@@ -1784,7 +1779,7 @@ SummarizeResults() {
 	fi
 
 	echo -e "\n##########################################################################\n" >>${ResultLog}
-	echo -e "$(iostat | grep -v "^loop")\n\n$(free -h)\n\n$(swapon -s)\n" | sed '/^$/N;/^\n$/D' >>${ResultLog}
+	echo -e "$(iostat | egrep -v "^loop|boot0|boot1")\n\n$(free -h)\n\n$(swapon -s)\n" | sed '/^$/N;/^\n$/D' >>${ResultLog}
 	ShowZswapStats 2>/dev/null >>${ResultLog}
 	echo >>${ResultLog}
 	cat "${TempDir}/cpu-topology.log" >>${ResultLog}

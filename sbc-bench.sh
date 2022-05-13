@@ -1574,7 +1574,7 @@ RunRamlat() {
 			CPUInfo="$(GetCPUInfo ${ClusterConfig[$i]})"
 			echo -e "\nExecuting ramlat on cpu${ClusterConfig[$i]}${CPUInfo}, results in ns:\n" >>${TempLog}
 			taskset -c ${ClusterConfig[$i]} "${InstallLocation}"/ramspeed/ramlat -s -n 200 \
-				| while read ; do  echo "    ${REPLY}"; done >>${TempLog} 2>&1
+				| sed -e 's/^/    /' >>${TempLog} 2>&1
 		done
 		kill ${MonitoringPID}
 		echo -e "\n##########################################################################" >>${ResultLog}
@@ -1814,13 +1814,19 @@ LogEnvironment() {
 	# try to guess the SoC and report if successful
 	GuessedSoC="$(GuessARMSoC)"
 	if [ "X${GuessedSoC}" != "X" ]; then
-		echo -e "\nSoC guess: ${GuessedSoC}\c"
+		echo -e "\nSoC guess: ${GuessedSoC}"
 	elif [ "X${CPUSignature}" != "X" ]; then
-		echo -e "\nSignature: ${CPUSignature}\c"
+		echo -e "\nSignature: ${CPUSignature}"
+	fi
+	# log /proc/device-tree/compatible contents if available
+	DTCompatible="$(strings /proc/device-tree/compatible 2>/dev/null)"
+	if [ "X${DTCompatible}" != "X" ]; then
+		echo "DT compat: $(head -n1 <<<"${DTCompatible}")"
+		tail -n +2 <<<"${DTCompatible}" | sed -e 's/^/           /'
 	fi
 	# Log compiler version
 	GCC_Info="$(${GCC} -v 2>&1 | egrep "^Target|^Configured")"
-	echo -e "\n Compiler: ${GCC} $(cut -f1 -d')' <<<${GCC_Version})/$(awk -F": " '/^Target/ {print $2}' <<< "${GCC_Info}"))"
+	echo -e " Compiler: ${GCC} $(cut -f1 -d')' <<<${GCC_Version})/$(awk -F": " '/^Target/ {print $2}' <<< "${GCC_Info}"))"
 	# Log userland architecture if available
 	[ "X${ARCH}" != "X" ] && echo " Userland: ${ARCH}"
 	# Log ThreadX version if available
@@ -1923,7 +1929,7 @@ UploadResults() {
 			;;
 		*)
 			echo -e "\nUnable to upload full test results. Please copy&paste the below stuff to pastebin.com and\nprovide the URL. Check the output for throttling and swapping please.\n\n"
-			cat ${ResultLog}
+			sed '/^$/N;/^\n$/D' <${ResultLog}
 			echo -e "\n\n"
 			;;
 	esac
@@ -2135,7 +2141,7 @@ GuessARMSoC() {
 	# soc soc0: Amlogic Meson Unknown (Unknown) Revision 2a:e (c5:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson SM1 (Unknown) Revision 2b:b (1:2) Detected <-- BananaPi M5 / Shenzhen Amediatech Technology Co., Ltd X96 Air / AMedia X96 Max+ / SEI Robotics SEI610
 	# soc soc0: Amlogic Meson SM1 (Unknown) Revision 2b:b (40:2)' Detected <-- S905D3 on Khadas VIM3L
-	# soc soc0: Amlogic Meson SM1 (S905X3) Revision 2b:c (10:2) Detected <-- AMedia X96 Max+ / H96 Max X3 / ODROID-C4 / ODROID-HC4 / HK1 Box / Vontar X3 / SEI Robotics SEI610 / Shenzhen Amediatech Technology Co., Ltd X96 Max / Shenzhen CYX Industrial Co., Ltd A95XF3-AIR / Sinovoip BANANAPI-M5 / Tanix TX3 (QZ)
+	# soc soc0: Amlogic Meson SM1 (S905X3) Revision 2b:c (10:2) Detected <-- AMedia X96 Max+ / H96 Max X3 / ODROID-C4 / ODROID-HC4 / HK1 Box / Vontar X3 / SEI Robotics SEI610 / Shenzhen Amediatech Technology Co., Ltd X96 Max/Air / Shenzhen CYX Industrial Co., Ltd A95XF3-AIR / Sinovoip BANANAPI-M5 / Tanix TX3 (QZ)
 	#
 	# With T7/A311D2 the string 'soc soc0:' is missing in Amlogic's BSP kernel, instead it's just
 	# '[    0.492977] Amlogic Meson T7 (A311D2) Revision 36:b (1:3) Detected' in dmesg output

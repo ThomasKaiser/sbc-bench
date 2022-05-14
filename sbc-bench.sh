@@ -1807,6 +1807,7 @@ SummarizeResults() {
 
 LogEnvironment() {
 	# try to guess the SoC and report if successful
+	DTCompatible="$(strings /proc/device-tree/compatible 2>/dev/null)"
 	GuessedSoC="$(GuessARMSoC)"
 	if [ "X${GuessedSoC}" != "X" ]; then
 		echo -e "\nSoC guess: ${GuessedSoC}"
@@ -1814,7 +1815,6 @@ LogEnvironment() {
 		echo -e "\nSignature: ${CPUSignature}"
 	fi
 	# log /proc/device-tree/compatible contents if available
-	DTCompatible="$(strings /proc/device-tree/compatible 2>/dev/null)"
 	if [ "X${DTCompatible}" != "X" ]; then
 		echo "DT compat: $(head -n1 <<<"${DTCompatible}")"
 		tail -n +2 <<<"${DTCompatible}" | sed -e 's/^/           /'
@@ -2112,7 +2112,7 @@ GuessARMSoC() {
 	# soc soc0: Amlogic Meson GXL (S905D) Revision 21:d (0:2) Detected <-- Tanix TX3 Mini
 	# soc soc0: Amlogic Meson GXL (Unknown) Revision 21:d (4:2) Detected <-- Phicomm N1
 	# soc soc0: Amlogic Meson GXL (S905D) Revision 21:d (4:2) Detected <-- Phicomm N1
-	# soc soc0: Amlogic Meson GXL (S805X) Revision 21:d (34:2) Detected <-- Libre Computer AML-S805X-AC
+	# soc soc0: Amlogic Meson GXL (S805X) Revision 21:d (34:2) Detected <-- Libre Computer AML-S805X-AC, Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:d (84:2) Detected <-- Khadas VIM / Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:d (85:2) Detected <-- Libre Computer AML-S905X-CC
 	# soc soc0: Amlogic Meson GXL (Unknown) Revision 21:d (a4:2) Detected <-- Khadas VIM / Tanix TX3 Mini / JetHome JetHub J80 / Amlogic Meson GXL (S905X) P212 Development Board / Amlogic Meson GXL (S905W) P281 Development Board
@@ -2481,7 +2481,25 @@ GuessSoCbySignature() {
 	case ${CPUSignature} in
 		??A8r3p2)
 			# TI AM3358 or Allwinner A10, 1 x Cortex-A8 / r3p2 / half thumb fastmult vfp edsp neon vfpv3 tls vfpd32
-			lsmod | grep -i sun4i && echo "Allwinner A10" || echo "TI AM3358"
+			lsmod | grep -i -q sun4i
+			case $? in
+				0)
+					# Allwinner A10, 1 x Cortex-A8 / r3p2 / half thumb fastmult vfp edsp neon vfpv3 tls vfpd32
+					echo "Allwinner A10"
+					;;
+				*)
+					case "${DTCompatible}" in
+						*sun4i*|*allwinner*)
+							# Allwinner A10, 1 x Cortex-A8 / r3p2 / half thumb fastmult vfp edsp neon vfpv3 tls vfpd32
+							echo "Allwinner A10"
+							;;
+						*)
+							# TI AM3358, 1 x Cortex-A8 / r3p2 / half thumb fastmult vfp edsp neon vfpv3 tls vfpd32
+							echo "TI AM3358"
+							;;
+						esac
+					;;
+			esac
 			;;
 		00A7r0p5)
 			# Allwinner S3/V3/V3s, 1 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
@@ -2504,8 +2522,27 @@ GuessSoCbySignature() {
 					echo "Allwinner R40/V40"
 					;;
 				*)
-					# Allwinner H3/H2+, 4 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
-					echo "Allwinner H3/H2+"
+					case "${DTCompatible}" in
+						*sun8i-r40*)
+							# R40/V40, 4 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
+							echo "Allwinner R40/V40"
+							;;
+						*sun8i-h3*)
+							# Allwinner H3, 4 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
+							echo "Allwinner H3"
+							;;
+						*sun8i-h2*)
+							# Allwinner H2+, 4 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
+							echo "Allwinner H2+"
+							;;
+						*sun8i-a33*|*sun8i-r16*)
+							# Allwinner A33/R16, 4 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
+							echo "Allwinner A33/R16"
+							;;
+						*)
+							echo "Allwinner H3/H2+ or R40/V40 or A33/R16"
+							;;
+					esac
 					;;
 			esac
 			;;
@@ -2797,6 +2834,14 @@ IdentifyAllwinnerARMv8() {
 	#
 	# Since no access to A64 and H616/H313 right now, try to identify the different
 	# quad core SoCs based on presence of PMIC, USB3 and maybe clockspeeds
+
+	# check device-tree compatible strings
+	grep -q h616 <<<"${DTCompatible}" && echo "Allwinner H616/H313"
+	grep -q t507 <<<"${DTCompatible}" && echo "Allwinner T507"
+	grep -q h313 <<<"${DTCompatible}" && echo "Allwinner H313"
+	grep -q h6 <<<"${DTCompatible}" && echo "Allwinner H6"
+	grep -q h5 <<<"${DTCompatible}" && echo "Allwinner H5"
+	grep -q a64 <<<"${DTCompatible}" && echo "Allwinner A64"
 
 	# Check for USB3 first, mainline kernel:
 	grep -q "xhci" /proc/interrupts && echo "Allwinner H6"

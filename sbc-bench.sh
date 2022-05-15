@@ -4,7 +4,7 @@ Version=0.9.6
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
-	export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+	export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/vc/bin
 	PathToMe="$( cd "$(dirname "$0")" ; pwd -P )/${0##*/}"
 	unset LC_ALL LC_MESSAGES LANGUAGE LANG # prevent localisation of decimal points and other stuff
 
@@ -22,7 +22,8 @@ Main() {
 	# The following allows to use sbc-bench on real ARM devices where for
 	# whatever reasons a fake /usr/bin/vcgencmd is lying around -- see for
 	# an example here: https://github.com/ThomasKaiser/sbc-bench/pull/13
-	if [ -z "${USE_VCGENCMD}" -a -f /usr/bin/vcgencmd ]; then
+	VCGENCMD=$(command -v vcgencmd)
+	if [ -z "${USE_VCGENCMD}" -a -x "${VCGENCMD}" ]; then
 		# this seems to be a Raspberry Pi where we need to query
 		# ThreadX on the VC via vcgencmd to get real information
 		USE_VCGENCMD=true
@@ -543,8 +544,8 @@ CheckPerformance() {
 		SysfsSpeed=$(( $i / 1000 ))
 		if [ ${USE_VCGENCMD} = true ] ; then
 			# On RPi we query ThreadX about clockspeeds too
-			ThreadXFreq=$(/usr/bin/vcgencmd measure_clock arm | awk -F"=" '{printf ("%0.0f",$2/1000000); }' )
-			CoreVoltage=$(/usr/bin/vcgencmd measure_volts | cut -f2 -d= | sed 's/000//')
+			ThreadXFreq=$("${VCGENCMD}" measure_clock arm | awk -F"=" '{printf ("%0.0f",$2/1000000); }' )
+			CoreVoltage=$("${VCGENCMD}" measure_volts | cut -f2 -d= | sed 's/000//')
 			echo -e "$(printf "%4s" ${SysfsSpeed}) /  $(printf "%4s" ${ThreadXFreq}) /$(printf "%6s" ${RoundedSpeed}):\c" >>"${CpufreqLog}"
 			echo -e "${ThreadXFreq}\t\c" >>"${CpufreqDat}"
 			echo -e "${ThreadXFreq}MHz, \c"
@@ -693,7 +694,7 @@ RenderPDF() {
 } # RenderPDF
 
 GetTempSensor() {
-	# In Armbian we can not really rely on /etc/armbianmonitor/datasources/soctemp
+	# In Armbian we can not rely on /etc/armbianmonitor/datasources/soctemp at all any more
 	# since nobody is left there who cares about /usr/lib/armbian/armbian-hardware-monitor
 	if [ -f /etc/armbianmonitor/datasources/soctemp ]; then
 		TempSource=/etc/armbianmonitor/datasources/soctemp
@@ -706,7 +707,7 @@ GetTempSensor() {
 		case ${ThermalSource} in
 			# check name/type of thermal node Armbian 'has chosen' (it's an unmaintained
 			# mess since 2018)
-			aml_thermal|cpu|cpu_thermal|cpu-thermal|cpu0-thermal|cpu0_thermal|soc_thermal|soc-thermal)
+			aml_thermal|cpu|cpu_thermal*|cpu-thermal*|cpu0-thermal*|cpu0_thermal*|soc_thermal*|soc-thermal*|CPU-therm|x86_pkg_temp)
 				# Seems like a good find
 				TempInfo="Thermal source: ${ThermalNode%/*}/ (${ThermalSource})"
 				;;
@@ -718,7 +719,7 @@ GetTempSensor() {
 				# Quick results check within one week showed the following types which
 				# smell all not that good if it's about CPU or SoC temperatures:
 				# scpi_sensors, w1_slave_temp, thermal-fan-est, iio_hwmon
-				NodeGuess=$(cat /sys/devices/virtual/thermal/thermal_zone?/type 2>/dev/null | egrep "cpu|soc" | tail -n1)
+				NodeGuess=$(cat /sys/devices/virtual/thermal/thermal_zone?/type 2>/dev/null | egrep "cpu|soc|CPU-therm|x86_pkg_temp" | tail -n1)
 				if [ "X${NodeGuess}" != "X" ]; then
 					# let's use this thermal node instead
 					TempSource="$(mktemp /tmp/soctemp.XXXXXX)"
@@ -980,8 +981,8 @@ MonitorBoard() {
 		case ${CPUs} in
 			raspberrypi)
 				FakeFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpu0/cpufreq/${CpuFreqToQuery} 2>/dev/null)
-				RealFreq=$(/usr/bin/vcgencmd measure_clock arm | awk -F"=" '{printf ("%0.0f",$2/1000000); }' )
-				CoreVoltage=$(/usr/bin/vcgencmd measure_volts | cut -f2 -d= | sed 's/000//')
+				RealFreq=$("${VCGENCMD}" measure_clock arm | awk -F"=" '{printf ("%0.0f",$2/1000000); }' )
+				CoreVoltage=$("${VCGENCMD}" measure_volts | cut -f2 -d= | sed 's/000//')
 				echo -e "$(date "+%H:%M:%S"): $(printf "%4s" ${FakeFreq})/$(printf "%4s" ${RealFreq})MHz $(printf "%5s" ${LoadAvg}) ${procStats}  $(printf "%4s" ${SocTemp})°C  $(printf "%7s" ${CoreVoltage})${NetioColumn}"
 				;;
 			biglittle)
@@ -1158,7 +1159,7 @@ CheckRelease() {
 			;;
 		*)
 			echo -e "${LRED}${BOLD}WARNING: this tool is meant to run only on Debian Stretch, Buster, Bullseye or Ubuntu Bionic, Focal, Jammy.${NC}"
-			echo -e "When running on other distros results are partially meaningless or can't be collected.\nPress [ctrl]-[c] to stop or [enter] to continue."
+			echo -e "When running on other distros results are partially meaningless or can't be collected.\nPress [ctrl]-[c] to stop or [enter] to continue.\c"
 			read
 			;;
 	esac
@@ -1244,18 +1245,47 @@ BasicSetup() {
 	CPUCores=$(grep -c '^processor' /proc/cpuinfo)
 } # BasicSetup
 
+CheckMissingPackages() {
+	# check for missing packages and construct installation string with list of needed packages
+	command -v apt >/dev/null 2>&1
+	if [ $? -eq 0 ]; then
+		# Debian/Ubuntu/Linux Mint
+		echo -e "apt -f -qq -y install \c"
+		command -v gcc >/dev/null 2>&1 || echo -e "gcc make build-essential \c"
+	fi
+	command -v pacman >/dev/null 2>&1
+	if [ $? -eq 0 ]; then
+		# Arch/Manjaro
+		echo -e "pacman --noconfirm -Sq \c"
+		command -v gcc >/dev/null 2>&1 || echo -e "gcc make base-devel \c"
+	fi	
+	command -v iostat >/dev/null 2>&1 || echo -e "sysstat \c"
+	command -v git >/dev/null 2>&1 || echo -e "git \c"
+	command -v openssl >/dev/null 2>&1 || echo -e "openssl \c"
+	command -v curl >/dev/null 2>&1 || echo -e "curl \c"
+	command -v dmidecode >/dev/null 2>&1 || echo -e "dmidecode \c"
+	command -v decode-dimms >/dev/null 2>&1 || echo -e "i2c-tools \c"
+	command -v sensors >/dev/null 2>&1 || echo -e "lm-sensors \c"
+}
+
 InstallPrerequisits() {
 	echo -e "sbc-bench v${Version}\n\nInstalling needed tools. This may take some time...\c"
-	SevenZip=$(command -v 7za || command -v 7zr)
-	[ -z "${SevenZip}" ] && add-apt-repository -y universe >/dev/null 2>&1 ; apt -f -qq -y install p7zip >/dev/null 2>&1 && SevenZip=/usr/bin/7zr
-	[ -z "${SevenZip}" ] && (echo "No 7-zip binary found and could not be installed. Aborting" >&2 ; exit 1)
-
-	command -v iostat >/dev/null 2>&1 || apt -f -qq -y install sysstat >/dev/null 2>&1
-	command -v git >/dev/null 2>&1 || apt -f -qq -y install git >/dev/null 2>&1
-	command -v openssl >/dev/null 2>&1 || apt -f -qq -y install openssl >/dev/null 2>&1
-	command -v curl >/dev/null 2>&1 || apt -f -qq -y install curl >/dev/null 2>&1
-	command -v dmidecode >/dev/null 2>&1 || apt -f -qq -y install dmidecode >/dev/null 2>&1
 	
+	# Determine missing packages and install them with a single command
+	MissingPackages="$(CheckMissingPackages)"
+	SevenZip=$(command -v 7zr || command -v 7za)
+	if [ -z "${SevenZip}" ]; then
+		# add needed repository and install 7-zip and all other packages
+		add-apt-repository -y universe >/dev/null 2>&1
+		${MissingPackages} p7zip >/dev/null 2>&1
+		SevenZip=$(command -v 7zr || command -v 7za)
+	else
+		# 7-zip already there, just install other missing packages if needed
+		${MissingPackages} >/dev/null 2>&1
+	fi
+
+	[ -z "${SevenZip}" ] && (echo "${LRED}${BOLD}No 7-zip binary found and could not be installed. Aborting${NC}" >&2 ; exit 1)
+
 	if [ "${PlotCpufreqOPPs}" = "yes" ]; then
 		command -v htmldoc >/dev/null 2>&1 || apt -f -qq -y --no-install-recommends install htmldoc >/dev/null 2>&1
 		command -v gnuplot >/dev/null 2>&1 || apt -f -qq -y --no-install-recommends install gnuplot-nox >/dev/null 2>&1
@@ -1264,7 +1294,6 @@ InstallPrerequisits() {
 	# get/build tinymembench if not already there
 	[ -d "${InstallLocation}" ] || mkdir -p "${InstallLocation}"
 	if [ ! -x "${InstallLocation}"/tinymembench/tinymembench ]; then
-		apt -f -qq -y install gcc make build-essential >/dev/null 2>&1
 		cd "${InstallLocation}"
 		git clone https://github.com/ssvb/tinymembench >/dev/null 2>&1
 		cd tinymembench
@@ -1301,6 +1330,7 @@ InstallCpuminer() {
 	if [ ! -x "${InstallLocation}"/cpuminer-multi/cpuminer ]; then
 		cd "${InstallLocation}"
 		apt-get -f -qq -y install automake autoconf pkg-config libcurl4-openssl-dev libjansson-dev libssl-dev libgmp-dev make g++ zlib1g-dev >/dev/null 2>&1
+		pacman --noconfirm -Sq automake autoconf pkg-config libcurl4-openssl-dev libjansson-dev libssl-dev libgmp-dev make g++ zlib1g-dev >/dev/null 2>&1
 		git clone https://github.com/tkinjo1985/cpuminer-multi.git
 		cd cpuminer-multi/
 		./build.sh
@@ -1373,13 +1403,13 @@ InitialMonitoring() {
 	# On Raspberries we also collect 'firmware' information and on RPi 4 check SoC revision
 	# against config.txt contents:
 	if [ ${USE_VCGENCMD} = true ] ; then
-		ThreadXVersion="$(/usr/bin/vcgencmd version)"
+		ThreadXVersion="$("${VCGENCMD}" version)"
 		[ -f /boot/config.txt ] && ThreadXConfig=/boot/config.txt || ThreadXConfig=/boot/firmware/config.txt
 		grep -q "arm_boost=1" ${ThreadXConfig} 2>/dev/null || (grep -q "C0 or later" <<<"${DeviceName}" && \
 			echo -e "\nWarning: your Raspberry Pi is powered by BCM2711 Rev. ${BCM2711} but arm_boost=1\nis not set in ${ThreadXConfig}. Some (mis)information about what you are missing:\nhttps://www.raspberrypi.com/news/bullseye-bonus-1-8ghz-raspberry-pi-4/" >>${ResultLog})
 		echo -e "\nRaspberry Pi ThreadX version:\n${ThreadXVersion}" >>${ResultLog}
 		[ -f ${ThreadXConfig} ] && echo -e "\nThreadX configuration (${ThreadXConfig}):\n$(grep -v '#' ${ThreadXConfig} | sed '/^\s*$/d')" >>${ResultLog}
-		echo -e "\nActual ThreadX settings:\n$(vcgencmd get_config int)" >>${ResultLog}
+		echo -e "\nActual ThreadX settings:\n$("${VCGENCMD}" get_config int)" >>${ResultLog}
 	fi
 
 	# Log gcc version
@@ -1511,8 +1541,8 @@ CheckCPUCluster() {
 			SysfsSpeed=$(( $i / 1000 ))
 			if [ ${USE_VCGENCMD} = true ] ; then
 				# On RPi we query ThreadX about clockspeeds and Vcore voltage too
-				ThreadXFreq=$(/usr/bin/vcgencmd measure_clock arm | awk -F"=" '{printf ("%0.0f",$2/1000000); }' )
-				CoreVoltage=$(/usr/bin/vcgencmd measure_volts | cut -f2 -d= | sed 's/000//')
+				ThreadXFreq=$("${VCGENCMD}" measure_clock arm | awk -F"=" '{printf ("%0.0f",$2/1000000); }' )
+				CoreVoltage=$("${VCGENCMD}" measure_volts | cut -f2 -d= | sed 's/000//')
 				echo -e "Cpufreq OPP: $(printf "%4s" ${SysfsSpeed})  ThreadX: $(printf "%4s" ${ThreadXFreq})  Measured: $(printf "%4s" ${RoundedSpeed}) @ ${CoreVoltage}"
 			else
 				echo -e "Cpufreq OPP: $(printf "%4s" ${SysfsSpeed})    Measured: $(printf "%4s" ${RoundedSpeed}) (${MeasuredSpeed})"
@@ -1827,7 +1857,7 @@ LogEnvironment() {
 	# Log ThreadX version if available
 	if [ "X${ThreadXVersion}" != "X" ]; then
 		echo -e "  ThreadX: $(awk '/^version/ {print $2}' <<<"${ThreadXVersion}") / $(head -n1 <<<"${ThreadXVersion}")"
-		vcgencmd mem_reloc_stats | while read ; do
+		"${VCGENCMD}" mem_reloc_stats | while read ; do
 			echo "           ${REPLY}"
 		done
 	fi
@@ -1982,7 +2012,7 @@ CheckForThrottling() {
 			# Check for throttling/undervoltage on Raspberry Pi
 			grep -q '1400/1200MHz' ${MonitorLog} && Warning="ATTENTION: Silent throttling has occured. Check the log for details."
 			if [ ${USE_VCGENCMD} = true ] ; then
-				Health="$(LC_ALL=C perl -e "printf \"%19b\n\", $(/usr/bin/vcgencmd get_throttled | cut -f2 -d=)" 2>/dev/null | tr -d '[:blank:]')"
+				Health="$(LC_ALL=C perl -e "printf \"%19b\n\", $("${VCGENCMD}" get_throttled | cut -f2 -d=)" 2>/dev/null | tr -d '[:blank:]')"
 				# https://forum.armbian.com/topic/7763-benchmarking-cpus/?do=findComment&comment=59042
 				HealthLength=$(wc -c <<<"${Health}")
 				[ ${HealthLength} -eq 19 ] && Health="0${Health}"
@@ -2054,7 +2084,6 @@ CacheAndDIMMDetails() {
 		# check wether there's even more detailed DIMM info available via i2c
 		unset DIMMDetails
 		modprobe eeprom >/dev/null 2>&1
-		command -v decode-dimms >/dev/null 2>&1 || apt -f -qq -y install i2c-tools >/dev/null 2>&1
 		command -v decode-dimms >/dev/null 2>&1 && \
 			DIMMDetails="$(decode-dimms 2>/dev/null | sed -ne '/Decoding EEPROM/,$ p' | sed '/^$/N;/^\n$/D' | grep -v Serial)"
 		if [ "X${DIMMDetails}" != "X" ]; then
@@ -2109,7 +2138,7 @@ GuessARMSoC() {
 	# soc soc0: Amlogic Meson GXL (Unknown) Revision 21:c (c2:2) Detected <-- S905L on "PiBox by wdmomo"
 	# soc soc0: Amlogic Meson GXL (S905L) Revision 21:c (c4:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson GXL (Unknown) Revision 21:c (e2:2) Detected <-- S905X on Khadas VIM
-	# soc soc0: Amlogic Meson GXL (S905D) Revision 21:d (0:2) Detected <-- Tanix TX3 Mini
+	# soc soc0: Amlogic Meson GXL (S905D) Revision 21:d (0:2) Detected <-- Tanix TX3 Mini, Amlogic Meson GXL (S905W) P281 Development Board
 	# soc soc0: Amlogic Meson GXL (Unknown) Revision 21:d (4:2) Detected <-- Phicomm N1
 	# soc soc0: Amlogic Meson GXL (S905D) Revision 21:d (4:2) Detected <-- Phicomm N1
 	# soc soc0: Amlogic Meson GXL (S805X) Revision 21:d (34:2) Detected <-- Libre Computer AML-S805X-AC, Amlogic Meson GXL (S905X) P212 Development Board
@@ -2154,6 +2183,7 @@ GuessARMSoC() {
 	#   - S905M2: 21:b (e2:2), 21:d (e4:2)
 	#   - Unknown: 21:d (a4:2), 2a:e (c5:2), 26:e (c1:2)
 	# - P281 Development Board (GXL):
+	#   - S905D: 21:d (0:2)
 	#   - S905W: 21:e (a5:2)
 	#   - Unknown: 21:d (a4:2)
 	# - Q200 Development Board (GXM):
@@ -2238,6 +2268,10 @@ GuessARMSoC() {
 								# GXL: S805X: 21:d (34:2)
 								echo "Amlogic S805X"
 								;;
+							21??0*|21??4*)
+								# GXL: S905D: 21:d (0:2), 21:d (4:2)
+								echo "Amlogic S905D"
+								;;
 							21??8*)
 								# GXL: S905X: 21:a (82:2), 21:b (82:2), 21:c (84:2), 21:d (84:2)
 								echo "Amlogic S905X"
@@ -2256,6 +2290,7 @@ GuessARMSoC() {
 								;;
 							21*)
 								# GXL: S805X, S805Y, S905X, S905D, S905W, S905L, S905M2
+								# - S905D: 21:d (0:2), 21:d (4:2)
 								# - S805X: 21:d (34:2)
 								# - S905X: 21:a (82:2), 21:b (82:2), 21:c (84:2), 21:d (84:2)
 								# - S905W: 21:b (a2:2), 21:e (a5:2)

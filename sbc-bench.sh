@@ -1150,6 +1150,9 @@ ProcessStats() {
 } # ProcessStats
 
 CheckRelease() {
+	# check OS
+	OperatingSystem="$(hostnamectl | awk -F": " '/Operating System:/ {print $2}')"
+
 	# Display warning when not executing on Debian Stretch/Buster/Bullseye or Ubuntu Bionic/Focal/Jammy
 	command -v lsb_release >/dev/null 2>&1 || apt -f -qq -y install lsb-release >/dev/null 2>&1
 	Distro=$(lsb_release -c | awk -F" " '{print $2}' | tr '[:upper:]' '[:lower:]')
@@ -1158,8 +1161,8 @@ CheckRelease() {
 			:
 			;;
 		*)
-			echo -e "${LRED}${BOLD}WARNING: this tool is meant to run only on Debian Stretch, Buster, Bullseye or Ubuntu Bionic, Focal, Jammy.${NC}"
-			echo -e "When running on other distros results are partially meaningless or can't be collected.\nPress [ctrl]-[c] to stop or [enter] to continue.\c"
+			echo -e "${LRED}${BOLD}WARNING: This tool is meant to run only on Debian Stretch, Buster, Bullseye or Ubuntu Bionic, Focal, Jammy.${NC}\n"
+			echo -e "When executed on ${BOLD}${OperatingSystem}${NC} results are partially meaningless.\nPress [ctrl]-[c] to stop or the famous [any] key to continue.\c"
 			read
 			;;
 	esac
@@ -1247,26 +1250,51 @@ BasicSetup() {
 
 CheckMissingPackages() {
 	# check for missing packages and construct installation string with list of needed packages
-	command -v apt >/dev/null 2>&1
-	if [ $? -eq 0 ]; then
-		# Debian/Ubuntu/Linux Mint
-		echo -e "apt -f -qq -y install \c"
-		command -v gcc >/dev/null 2>&1 || echo -e "gcc make build-essential \c"
-	fi
-	command -v pacman >/dev/null 2>&1
-	if [ $? -eq 0 ]; then
-		# Arch/Manjaro
-		echo -e "pacman --noconfirm -Sq \c"
-		command -v gcc >/dev/null 2>&1 || echo -e "gcc make base-devel \c"
-	fi	
+	case ${OperatingSystem} in
+		"Arch Linux"*|*manjaro*|*Manjaro*)
+			# Arch/Manjaro
+			command -v pacman >/dev/null 2>&1
+			if [ $? -eq 0 ]; then
+				# Arch/Manjaro
+				echo -e "pacman --noconfirm -Sq \c"
+				command -v gcc >/dev/null 2>&1 || echo -e "gcc make base-devel \c"
+				command -v sensors >/dev/null 2>&1 || echo -e "lm-sensors \c"
+			else
+				echo -e "echo \c"
+			fi	
+			;;
+		*SUSE*|*suse*|*Suse*)
+			command -v zypper >/dev/null 2>&1
+			if [ $? -eq 0 ]; then
+				# Some Suse variant with zypper present
+				echo -e "zypper install -y \c"
+				command -v gcc >/dev/null 2>&1 || zypper install -y -t pattern devel_basis
+				command -v sensors >/dev/null 2>&1 || echo -e "sensors \c"
+			else
+				echo -e "echo \c"
+			fi
+			;;
+		*)
+			# other distro, let's check for apt
+			command -v apt >/dev/null 2>&1
+			if [ $? -eq 0 ]; then
+				# Debian/Ubuntu/Linux Mint
+				echo -e "apt -f -qq -y install \c"
+				command -v gcc >/dev/null 2>&1 || echo -e "gcc make build-essential \c"
+				command -v sensors >/dev/null 2>&1 || echo -e "lm-sensors \c"
+			else
+				echo -e "echo \c"
+			fi
+			;;
+	esac
+
 	command -v iostat >/dev/null 2>&1 || echo -e "sysstat \c"
 	command -v git >/dev/null 2>&1 || echo -e "git \c"
 	command -v openssl >/dev/null 2>&1 || echo -e "openssl \c"
 	command -v curl >/dev/null 2>&1 || echo -e "curl \c"
 	command -v dmidecode >/dev/null 2>&1 || echo -e "dmidecode \c"
 	command -v decode-dimms >/dev/null 2>&1 || echo -e "i2c-tools \c"
-	command -v sensors >/dev/null 2>&1 || echo -e "lm-sensors \c"
-}
+} # CheckMissingPackages
 
 InstallPrerequisits() {
 	echo -e "sbc-bench v${Version}\n\nInstalling needed tools. This may take some time...\c"
@@ -1284,7 +1312,7 @@ InstallPrerequisits() {
 		${MissingPackages} >/dev/null 2>&1
 	fi
 
-	[ -z "${SevenZip}" ] && (echo "${LRED}${BOLD}No 7-zip binary found and could not be installed. Aborting${NC}" >&2 ; exit 1)
+	[ -z "${SevenZip}" ] && (echo -e "${LRED}${BOLD}No 7-zip binary found and could not be installed. Aborting${NC}" >&2 ; exit 1)
 
 	if [ "${PlotCpufreqOPPs}" = "yes" ]; then
 		command -v htmldoc >/dev/null 2>&1 || apt -f -qq -y --no-install-recommends install htmldoc >/dev/null 2>&1
@@ -1329,6 +1357,7 @@ InstallCpuminer() {
 	# get/build cpuminer if not already there
 	if [ ! -x "${InstallLocation}"/cpuminer-multi/cpuminer ]; then
 		cd "${InstallLocation}"
+		zypper install -y automake autoconf pkg-config libcurl4-openssl-dev libjansson-dev libssl-dev libgmp-dev make g++ zlib1g-dev >/dev/null 2>&1
 		apt-get -f -qq -y install automake autoconf pkg-config libcurl4-openssl-dev libjansson-dev libssl-dev libgmp-dev make g++ zlib1g-dev >/dev/null 2>&1
 		pacman --noconfirm -Sq automake autoconf pkg-config libcurl4-openssl-dev libjansson-dev libssl-dev libgmp-dev make g++ zlib1g-dev >/dev/null 2>&1
 		git clone https://github.com/tkinjo1985/cpuminer-multi.git
@@ -1379,14 +1408,22 @@ InitialMonitoring() {
 	read HostName </etc/hostname
 	echo -e "sbc-bench v${Version} ${DeviceName:-$HostName} ($(date -R))\n" >${ResultLog}
 
-	# get distribution info / Xunlong's lame Armbian rip-off tries to hide its origin
+	# get distribution info
+	command -v lsb_release >/dev/null 2>&1 && (lsb_release -a 2>/dev/null | grep -v "n/a") >>${ResultLog}
+	ARCH=$(dpkg --print-architecture 2>/dev/null) || \
+		ARCH=$(awk -F'"' '/^CARCH/ {print $2}' /etc/makepkg.conf 2>/dev/null) || \
+		ARCH="$(uname -m)"
+
+	# Log Raspberry OS info if available
+	[ -f /etc/apt/sources.list.d/raspi.list ] && \
+		echo "Raspbian URL:   $(grep -v '#' /etc/apt/sources.list.d/raspi.list | head -n1)" >>${ResultLog}
+	
+	# Log Armbian info if available
 	[ -f /etc/orangepi-release ] && ArmbianReleaseFile=/etc/orangepi-release
 	[ -f /etc/armbian-release ] && ArmbianReleaseFile=/etc/armbian-release
 	[ -f "${ArmbianReleaseFile}" ] && . "${ArmbianReleaseFile}"
-	command -v lsb_release >/dev/null 2>&1 && (lsb_release -a 2>/dev/null) >>${ResultLog}
-	ARCH=$(dpkg --print-architecture 2>/dev/null) || \
-		ARCH=$(awk -F"=" '/^CARCH/ {print $2}' /etc/makepkg.conf 2>/dev/null) || \
-		ARCH="unknown/$(uname -m)"
+	[ "X${BOARD_NAME}" != "X" ] && \
+		echo "Armbian info:   ${BOARD_NAME}, ${BOARDFAMILY}, ${VERSION}, ${BUILD_REPOSITORY_URL}" >>${ResultLog}
 
 	# Log system info if present:
 	SystemInfo="$(dmidecode -t system 2>/dev/null | egrep "Manufacturer: |Product Name: |Version: |Family: |SKU Number: " | egrep -v ":  $|O.E.M.|123456789")"
@@ -1827,9 +1864,9 @@ SummarizeResults() {
 		KernelVersion="$(awk -F"." '{print $1"."$2}' <<<"${KernelVersion}")"
 		KernelArch="$(uname -m | sed -e 's/armv7l/armhf/' -e 's/aarch64/arm64/')"
 		if [ "X${KernelArch}" = "X" -o "X${KernelArch}" = "X${ARCH}" ]; then
-			DistroInfo="$(cut -c-1 <<<"${Distro##*/}" | tr '[:lower:]' '[:upper:]')$(cut -c2- <<<"${Distro##*/}") ${ARCH}"
+			DistroInfo="${OperatingSystem} ${ARCH}"
 		else
-			DistroInfo="$(cut -c-1 <<<"${Distro##*/}" | tr '[:lower:]' '[:upper:]')$(cut -c2- <<<"${Distro##*/}") ${KernelArch}/${ARCH}"
+			DistroInfo="${OperatingSystem} ${KernelArch}/${ARCH}"
 		fi
 		echo -e "\n| ${DeviceName:-$HostName} | ${MHz} | ${KernelVersion} | ${DistroInfo} | ${ZipScore} | ${OpenSSLScore} | ${MemBenchScore} | ${CpuminerScore:-"-"} |\c" >>${ResultLog}
 	fi
@@ -1843,6 +1880,8 @@ LogEnvironment() {
 		echo -e "\nSoC guess: ${GuessedSoC}"
 	elif [ "X${CPUSignature}" != "X" ]; then
 		echo -e "\nSignature: ${CPUSignature}"
+	else
+		echo ""
 	fi
 	# log /proc/device-tree/compatible contents if available
 	if [ "X${DTCompatible}" != "X" ]; then
@@ -1851,7 +1890,7 @@ LogEnvironment() {
 	fi
 	# Log compiler version
 	GCC_Info="$(${GCC} -v 2>&1 | egrep "^Target|^Configured")"
-	echo -e " Compiler: ${GCC} $(cut -f1 -d')' <<<${GCC_Version})/$(awk -F": " '/^Target/ {print $2}' <<< "${GCC_Info}"))"
+	echo -e " Compiler: ${GCC} ${GCC_Version} / $(awk -F": " '/^Target/ {print $2}' <<< "${GCC_Info}")"
 	# Log userland architecture if available
 	[ "X${ARCH}" != "X" ] && echo " Userland: ${ARCH}"
 	# Log ThreadX version if available

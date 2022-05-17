@@ -8,7 +8,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 
 ## Some numbers
 
-*(ODROID-M1, Quartz64, ROCK 3A, ROCK 5A, RK3568-ROC-PC and Khadas VIM4 numbers are preliminary since software support situation for RK3566/RK3568/RK3588 and A311D2 is still in a very early stage. Please also note that with RK35xx SBC so far [real measured clockspeeds are somewhat unstable](https://forum.odroid.com/viewtopic.php?p=346334#p346334)*
+*(ODROID-M1, Quartz64, ROCK 3A, ROCK 5A, RK3568-ROC-PC and Khadas VIM4 numbers are preliminary since software support situation for RK3566/RK3568/RK3588 and A311D2 is still in a very early stage. Please also note that with RK35xx SBC so far [real measured clockspeeds are somewhat unstable](https://forum.odroid.com/viewtopic.php?p=349694#p349694).*
 
 | Device / details | Clockspeed | Kernel | Distro | 7-zip | AES-128 (16 byte) | AES-256 (16 KB) | memcpy | memset | kH/s |
 | ----- | :--------: | :----: | :----: | ----: | ------: | ------: | -----: | -----: | ---: |
@@ -92,7 +92,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [PineH64](http://ix.io/26Ph) | 1800 MHz | 5.4 | Buster arm64 | 4710 | 116900 | 839870 | 1420 | 5560 | 7.10 |
 | [Quartz64](http://ix.io/3rUb) | 1800 MHz | 5.13 | Buster arm64 | 4840 | 165250 | 845490 | 2980 | 7650| - |
 | [Radxa ROCK 3A](http://ix.io/3UXa) | 1950 MHz | 5.15 | Bullseye arm64 | 4920 | 178380 | 911730 | 2820 | 7520 | - |
-| [Radxa ROCK 5A](http://ix.io/3XXN) | 2300/1800 MHz | 5.10 | Bullseye arm64 | 15830 | 646290 | 1324910 | 9080 | 27230 | 23.63 |
+| [Radxa ROCK 5A](http://ix.io/3XYo) | 2330/1800 MHz | 5.10 | Bullseye arm64 | 16030 | 647210 | 1325370 | 10810 | 27990 | 23.71 |
 | [Radxa Zero](http://ix.io/3wZn) | 1800 MHz | 5.10 | Focal arm64 | 4610 | 151370 | 840080 | 1600 | 5370 | - |
 | [Radxa Zero](http://ix.io/3PlT) | 1800 MHz | 5.10 | Buster arm64 | 4570 | 114530 | 839080 | 1610 | 5250 | 6.82 |
 | [Radxa Zero](http://ix.io/3JCm) | 1800 MHz | 5.10 | Bullseye arm64 | 4580 | 105170 | 838360 | 1600 | 5360 | 7.13 |

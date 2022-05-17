@@ -1486,7 +1486,7 @@ CheckClockspeedsAndSensors() {
 	echo -e "\n##########################################################################" >>${ResultLog}
 	if [ -f ${MonitorLog} ]; then
 		# 2nd check after most demanding benchmark has been run.
-		echo -e "\nTesting clockspeeds again. System health now:\n" >>${ResultLog}
+		echo -e "\nTesting clockspeeds again, now under full load. System health now:\n" >>${ResultLog}
 		grep 'Time' ${MonitorLog} | tail -n 1 >"${TempDir}/systemhealth.now" >>${ResultLog}
 		grep ':' ${MonitorLog} | tail -n 1 >>"${TempDir}/systemhealth.now" >>${ResultLog}
 	else
@@ -1575,17 +1575,33 @@ CheckCPUCluster() {
 		fi
 		for i in ${OPPtoCheck} ; do
 			echo ${i} >/sys/devices/system/cpu/cpufreq/policy${1}/scaling_max_freq
-			sleep 0.1
-			MeasuredSpeed=$(taskset -c $1 "${InstallLocation}"/mhz/mhz 3 100000 | awk -F" cpu_MHz=" '{print $2}' | awk -F" " '{print $1}' | sort -r -n | tr '\n' '/' | sed 's|/$||')
-			RoundedSpeed=$(( $(awk '{printf ("%0.0f",$1/5+0.5); }' <<<"${MeasuredSpeed}") * 5 ))
+			# instead of 'sleep 0.1' fire up some real workload in a try to compensate for SoC
+			# firmwares that might do their own thing wrt clockspeeds (keep them low when idle)
+			taskset -c $1 "${InstallLocation}"/mhz/mhz 1 1000000 >/dev/null
+			MeasuredSpeed=$(taskset -c $1 "${InstallLocation}"/mhz/mhz 3 1000000 | awk -F" cpu_MHz=" '{print $2}' | awk -F" " '{print $1}' | sort -r -n | tr '\n' '/' | sed 's|/$||')
+			SpeedSum=$(tr '/' '\n' <<<"${MeasuredSpeed}" | tr -d '.' | awk '{s+=$1} END {printf "%.0f", s}')
+			RoundedSpeed=$(( ${SpeedSum} / 3000 ))
 			SysfsSpeed=$(( $i / 1000 ))
+			MeasuredDiff=$(awk '{printf ("%0.3f",$1/$2); }' <<<"${RoundedSpeed}000 ${SysfsSpeed}000" | tr -d '.')
+			if [ ${MeasuredDiff} -lt 990 ]; then
+				# measured clockspeed lower than 1% than cpufreq OPP
+				DiffPercentage=$(awk '{printf ("%0.0f",$1-$2); }' <<<"1000 ${MeasuredDiff}" | awk '{printf ("%0.1f",$1/10); }')
+				PrettyDiff="$(printf "%7s" \(-${DiffPercentage})%)"
+			elif [ ${MeasuredDiff} -gt 1010 ]; then
+				# measured clockspeed higher than 1% than cpufreq OPP
+				DiffPercentage=$(awk '{printf ("%0.0f",$1-$2); }' <<<"${MeasuredDiff} 1000" | awk '{printf ("%0.1f",$1/10); }')
+				PrettyDiff="$(printf "%7s" \(+${DiffPercentage})%)"
+			else
+				PrettyDiff=""
+			fi
+
 			if [ ${USE_VCGENCMD} = true ] ; then
 				# On RPi we query ThreadX about clockspeeds and Vcore voltage too
 				ThreadXFreq=$("${VCGENCMD}" measure_clock arm | awk -F"=" '{printf ("%0.0f",$2/1000000); }' )
 				CoreVoltage=$("${VCGENCMD}" measure_volts | cut -f2 -d= | sed 's/000//')
-				echo -e "Cpufreq OPP: $(printf "%4s" ${SysfsSpeed})  ThreadX: $(printf "%4s" ${ThreadXFreq})  Measured: $(printf "%4s" ${RoundedSpeed}) @ ${CoreVoltage}"
+				echo -e "Cpufreq OPP: $(printf "%4s" ${SysfsSpeed})  ThreadX: $(printf "%4s" ${ThreadXFreq})  Measured: $(printf "%4s" ${RoundedSpeed}) @ ${CoreVoltage}${PrettyDiff}"
 			else
-				echo -e "Cpufreq OPP: $(printf "%4s" ${SysfsSpeed})    Measured: $(printf "%4s" ${RoundedSpeed}) (${MeasuredSpeed})"
+				echo -e "Cpufreq OPP: $(printf "%4s" ${SysfsSpeed})    Measured: $(printf "%4s" ${RoundedSpeed}) $(printf "%27s" \(${MeasuredSpeed}))${PrettyDiff}"
 			fi
 		done
 		echo ${MaxSpeed} >/sys/devices/system/cpu/cpufreq/policy${1}/scaling_max_freq
@@ -1600,14 +1616,16 @@ CheckCPUCluster() {
 				CpuToCheck=$(( $1 + 1 ))
 				;;
 		esac
+		taskset -c $1 "${InstallLocation}"/mhz/mhz 1 1000000 >/dev/null
 		MeasuredSpeed=$(taskset -c ${CpuToCheck} "${InstallLocation}"/mhz/mhz 3 1000000 | awk -F" cpu_MHz=" '{print $2}' | awk -F" " '{print $1}' | sort -r -n | tr '\n' '/' | sed 's|/$||')
-		RoundedSpeed=$(( $(awk '{printf ("%0.0f",$1/5+0.5); }' <<<"${MeasuredSpeed}") * 5 ))
+		SpeedSum=$(tr '/' '\n' <<<"${MeasuredSpeed}" | tr -d '.' | awk '{s+=$1} END {printf "%.0f", s}')
+		RoundedSpeed=$(( ${SpeedSum} / 3000 ))
 		echo -e "No cpufreq support available. Measured on cpu${CpuToCheck}: ${RoundedSpeed} Mhz (${MeasuredSpeed})"
 	fi
 } # CheckCPUCluster
 
 RunTinyMemBench() {
-	echo -e "\x08\x08 Done (results will be available in $(( ${EstimatedDuration} * 110 / 100 ))-$(( ${EstimatedDuration} * 160 / 100 )) minutes)."
+	echo -e "\x08\x08 Done (results will be available in $(( ${EstimatedDuration} * 120 / 100 ))-$(( ${EstimatedDuration} * 170 / 100 )) minutes)."
 	echo -e "Executing tinymembench...\c"
 	echo -e "System health while running tinymembench:\n" >${MonitorLog}
 	/bin/bash "${PathToMe}" -m $(( 40 * ${#ClusterConfig[@]} )) >>${MonitorLog} &

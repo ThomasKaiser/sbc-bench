@@ -84,8 +84,9 @@ Crawling through [sbc-bench results collection](../Results.md) comparing +25 dif
 | [A311D2](http://ix.io/3Wq0) | 2010 | 941040 | 468 |
 | Cortex-A55 | | | |
 | [RK3588](http://ix.io/3XzI) | 915 | 427750 | 467 |
-| [RK3588s](http://ix.io/3XTA) | 1780 | 830636 | 467 |
+| [RK3588s](http://ix.io/3XTA) | 1780 | 830640 | 467 |
 | [RK3566](http://ix.io/3rUb) | 1800 | 845490 | 469 |
+| [RK3588s](http://ix.io/3XYo) | 1815 | 846760 | 467 |
 | [S905X3](http://ix.io/3Vdt) | 1908 | 890730 | 466 |
 | [RK3568](http://ix.io/3Ug9) | 1930 | 898610 | 465 |
 | [RK3568](http://ix.io/3UXa) | 1950 | 911730 | 467 |
@@ -106,4 +107,6 @@ Crawling through [sbc-bench results collection](../Results.md) comparing +25 dif
 | [Amazon m6g.8xlarge](http://ix.io/2FrG) | 2500 | 1424770 | 570 |
 | Cortex-A76 | | | |
 | [RK3588](http://ix.io/3XzI) | 985 | 560200 | 569 |
-| [RK3588s](http://ix.io/3XXN) | ~2315 | 1324910 | 572 |
+| [RK3588s](http://ix.io/3XYo) | 2330 | 1325370 | 569 |
+
+

@@ -96,7 +96,8 @@ Crawling through [sbc-bench results collection](../Results.md) comparing +25 dif
 | [RK3399](http://ix.io/1iWU) | 1800 | 1023600 | 568 |
 | [NXP LX2160A](http://ix.io/1ET3) | 1900 | 1079480 | 568 |
 | [RK3399](http://ix.io/2yIx) | 2010 | 1144950 | 569 |
-| [RK3399](http://ix.io/2ICt) | 2088| 1184306 | 567 |
+| [RK3399](http://ix.io/2ICt) | 2088 | 1184306 | 567 |
+| [LX2160A](http://ix.io/3Y4f) | 2200 | 1251710 | 569 |
 | [Amazon a1.xlarge](http://ix.io/2iFY) | 2300 | 1297960 | 564 |
 | Cortex-A73 | | | |
 | [S922X](http://ix.io/1BsF) | 1800 | 1024680 | 569 |

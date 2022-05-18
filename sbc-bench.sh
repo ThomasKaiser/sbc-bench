@@ -1426,7 +1426,7 @@ InitialMonitoring() {
 	[ -f /etc/armbian-release ] && ArmbianReleaseFile=/etc/armbian-release
 	[ -f "${ArmbianReleaseFile}" ] && . "${ArmbianReleaseFile}"
 	[ "X${BOARD_NAME}" != "X" ] && \
-		echo "Armbian info:   ${BOARD_NAME}, ${BOARDFAMILY}, ${VERSION}, ${BUILD_REPOSITORY_URL}" >>${ResultLog}
+		echo "Armbian info:   ${BOARD_NAME}, ${BOARDFAMILY}, ${VERSION}, ${BUILD_REPOSITORY_URL}" | sed 's/,\ $//' >>${ResultLog}
 
 	# Log system info if present:
 	SystemInfo="$(dmidecode -t system 2>/dev/null | egrep "Manufacturer: |Product Name: |Version: |Family: |SKU Number: " | egrep -v ":  $|O.E.M.|123456789")"
@@ -2202,7 +2202,7 @@ GuessARMSoC() {
 	# soc soc0: Amlogic Meson GXL (Unknown) Revision 21:d (4:2) Detected <-- Phicomm N1
 	# soc soc0: Amlogic Meson GXL (S905D) Revision 21:d (4:2) Detected <-- Phicomm N1
 	# soc soc0: Amlogic Meson GXL (S805X) Revision 21:d (34:2) Detected <-- Libre Computer AML-S805X-AC, Amlogic Meson GXL (S905X) P212 Development Board
-	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:d (84:2) Detected <-- Khadas VIM / Amlogic Meson GXL (S905X) P212 Development Board
+	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:d (84:2) Detected <-- Khadas VIM, Libre Computer AML-S905X-CC, Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:d (85:2) Detected <-- Libre Computer AML-S905X-CC
 	# soc soc0: Amlogic Meson GXL (Unknown) Revision 21:d (a4:2) Detected <-- Khadas VIM / Tanix TX3 Mini / JetHome JetHub J80 / Amlogic Meson GXL (S905X) P212 Development Board / Amlogic Meson GXL (S905W) P281 Development Board
 	# soc soc0: Amlogic Meson GXL (S905L) Revision 21:d (c4:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board
@@ -2226,6 +2226,7 @@ GuessARMSoC() {
 	# soc soc0: Amlogic Meson SM1 (Unknown) Revision 2b:b (1:2) Detected <-- BananaPi M5 / Shenzhen Amediatech Technology Co., Ltd X96 Air / AMedia X96 Max+ / SEI Robotics SEI610
 	# soc soc0: Amlogic Meson SM1 (Unknown) Revision 2b:b (40:2)' Detected <-- S905D3 on Khadas VIM3L
 	# soc soc0: Amlogic Meson SM1 (S905X3) Revision 2b:c (10:2) Detected <-- AMedia X96 Max+ / H96 Max X3 / ODROID-C4 / ODROID-HC4 / HK1 Box / Vontar X3 / SEI Robotics SEI610 / Shenzhen Amediatech Technology Co., Ltd X96 Max/Air / Shenzhen CYX Industrial Co., Ltd A95XF3-AIR / Sinovoip BANANAPI-M5 / Tanix TX3 (QZ)
+	# soc soc0: Amlogic Meson SM1 (Unknown) Revision 2b:c (10:2) Detected <-- Khadas VIM3L
 	#
 	# With T7/A311D2 the string 'soc soc0:' is missing in Amlogic's BSP kernel, instead it's just
 	# '[    0.492977] Amlogic Meson T7 (A311D2) Revision 36:b (1:3) Detected' in dmesg output
@@ -2862,6 +2863,18 @@ GuessSoCbySignature() {
 		36?Phytiumr1p336?Phytiumr1p336?Phytiumr1p336?Phytiumr1p336?Phytiumr1p336?Phytiumr1p336?Phytiumr1p336?Phytiumr1p3)
 			# Phytium D2000: 8 x Phytium FTC663 / r1p3 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			echo "Phytium D2000"
+			;;
+		36?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p3)
+			# NXP LX2080A: 8 x Cortex-A72 / r0p3 / fp asimd evtstrm aes pmull sha1 sha2 crc32
+			echo "NXP LX2080A"
+			;;
+		36?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p3)
+			# NXP LX2120A: 12 x Cortex-A72 / r0p3 / fp asimd evtstrm aes pmull sha1 sha2 crc32
+			echo "NXP LX2120A"
+			;;
+		36?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p3)
+			# NXP LX2160A: 16 x Cortex-A72 / r0p3 / fp asimd evtstrm aes pmull sha1 sha2 crc32
+			echo "NXP LX2160A"
 			;;
 	esac
 }

@@ -44,7 +44,7 @@ Amazon's Graviton/Graviton2 ARM CPUs score identical to A72/A73/A76 and the cust
 
 Encryption/decryption performance with real-world tasks is an entirely different thing than looking at these results from a synthetic benchmark that runs completly inside the CPU cores/caches. Real performance with real use cases might look really different (e.g. full disk encryption or performance as a VPN gateway).
 
-The `openssl speed -elapsed -evp aes-256-cbc` test is still more of a check whether crypto acceleration is available than a benchmark for real-world crypto performance. But if and only if ARMv8 Crypto Extensions have been licensed by an ARM SoC vendor simple conclusions can be drawn since there exists a fixed correlation between core type, clockspeed and `aes-256-cbc` score. So if we know that a new SoC features e.g. A55 cores, cheats with reported clockspeeds and we're not able to [measure clockspeeds](https://github.com/wtarreau/mhz) then we can use the openssl benchmark to guess real CPU clockspeeds. Vice versa should work too but it's better to [look up the CPU ID](https://github.com/ThomasKaiser/sbc-bench/blob/bbfa29ffce306e6f4137ab1236c63fc21998c0c8/sbc-bench.sh#L134-L267) instead.
+The `openssl speed -elapsed -evp aes-256-cbc` test is still more of a check whether crypto acceleration is available than a benchmark for real-world crypto performance. But if and only if ARMv8 Crypto Extensions have been licensed by an ARM SoC vendor simple conclusions can be drawn since there exists a fixed correlation between core type, clockspeed and `aes-256-cbc` score. So if we know that a new SoC features e.g. A55 cores, cheats with reported clockspeeds and we're not able to [measure clockspeeds](https://github.com/wtarreau/mhz) then we can use the openssl benchmark to guess real CPU clockspeeds. Vice versa should work too but it's better to [look up the CPU ID](https://github.com/ThomasKaiser/sbc-bench/blob/d21493110ba16d0368908028924ef39da1210415/sbc-bench.sh#L140-L275) instead.
 
 All of this **only** applies to ARM SoCs with _ARMv8 Crypto Extensions_ licensed. Since otherwise scores thrown out by `openssl` depend heavily on compiler version/settings and even different code paths. Check out ODROID-C2 and RPi 4 'AES-256 (16 KB)' scores in [official results list](../Results.md): with C2 'modern OS' outperforms higher CPU clock and with RPi 4 comparing armhf userland (32-bit) and arm64 (64-bit) is even more telling since `openssl` reports less than 50% of 'AES performance' when running 64-bit compared to 32-bit since different code paths: generic C with 64-bit vs. optimized assembler routines with 32-bit.
 
@@ -94,7 +94,7 @@ Crawling through [sbc-bench results collection](../Results.md) comparing +25 dif
 | [S905X3](http://ix.io/3TQ2) | 2100 | 981940 | 467 |
 | Cortex-A72 | | | |
 | [RK3399](http://ix.io/1iWU) | 1800 | 1023600 | 568 |
-| [NXP LX2160A](http://ix.io/1ET3) | 1900 | 1079480 | 568 |
+| [LX2160A](http://ix.io/1ET3) | 1900 | 1079480 | 568 |
 | [RK3399](http://ix.io/2yIx) | 2010 | 1144950 | 569 |
 | [RK3399](http://ix.io/2ICt) | 2088 | 1184306 | 567 |
 | [LX2160A](http://ix.io/3Y4f) | 2200 | 1251710 | 569 |
@@ -109,5 +109,3 @@ Crawling through [sbc-bench results collection](../Results.md) comparing +25 dif
 | Cortex-A76 | | | |
 | [RK3588](http://ix.io/3XzI) | 985 | 560200 | 569 |
 | [RK3588s](http://ix.io/3XYo) | 2330 | 1325370 | 569 |
-
-

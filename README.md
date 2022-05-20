@@ -62,10 +62,10 @@ This tool is not a benchmark but instead calculates real CPU clockspeeds. This i
 
     Checking cpufreq OPP:
 
-    Cpufreq OPP:  666    Measured: 799.502/798.295/799.115
-    Cpufreq OPP: 1332    Measured: 1598.621/1598.759/1598.324
+    Cpufreq OPP: 1332    Measured: 1599 (1598.621/1598.759/1598.324) (+20%)
+    Cpufreq OPP:  666    Measured:  799    (799.502/798.295/799.115) (+20%)
 
-We call `mhz` twice. At the begin of the benchmark with an idle and cold system and directly after the most demanding benchmark has finished to see whether behaviour changes when SoC is overheated.
+We call `mhz` twice. At the begin of the benchmark with an idle and cold system and directly after the most demanding benchmark has finished with the device still under full load to see whether behaviour changes when SoC is overheated.
 
 ### [tinymembench](https://github.com/ssvb/tinymembench)
 
@@ -107,7 +107,7 @@ A typical result (Rock64 with Armbian/Stretch) will look like this:
 
 ### [7-zip](https://www.7-cpu.com)
 
-7-zip's internal benchmark mode is a pretty good representation of 'server workloads in general'. It doesn't utilize CPU cores fully (at least not on ARM, on x64 with Hyperthreading it's a different story), it depends somewhat on memory performance (low latency more important than high bandwidth) and amount of available memory. When running fully parallel on systems that have many cores but are low on memory we see just as in reality the kernel either killing processes due to 'out of memory' or starting to swap if configured.
+7-zip's internal benchmark mode is a pretty good representation of 'server workloads in general'. When running on all cores in parallel it doesn't utilize CPU cores fully (at least not on ARM, on x64 with Hyperthreading it's a different story), it depends somewhat on memory performance (low latency more important than high bandwidth) and amount of available memory. When running fully parallel on systems that have many cores but are low on memory we see just as in reality the kernel either killing processes due to 'out of memory' or starting to swap if configured.
 
 On big.LITTLE systems we start with one run pinned to a little core followed by one pinned to a big core. Then follow 3 consecutive runs using all available cores. The results might look like this:
 
@@ -173,7 +173,7 @@ ARMv8 Crypto Extensions make the difference here. Even at almost half the CPU cl
 
 ## Ensuring proper benchmark execution
 
-Benchmarking a system that is otherwise busy will result in numbers without meaning. Therefore it's important to ensure the system is as idle as possible. That's the reason `sbc-bench` will only start once '1 min average load' is reported as below 0.1:
+Benchmarking a system that is otherwise busy will result in numbers without meaning. Therefore it's important to ensure the system is as idle as possible. That's the reason `sbc-bench` will only start once '1 min average load' is reported as below 0.1 or CPU utilization less than 2.5% for 30 seconds:
 
 ![](pics/system-too-busy.gif)
 

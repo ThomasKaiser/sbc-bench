@@ -1513,7 +1513,7 @@ CheckClockspeedsAndSensors() {
 	fi
 
 	# if lm-sensors is present and reports anything add this to results.log
-	LMSensorsOutput="$(sensors -A 2>/dev/null)"
+	LMSensorsOutput="$(sensors -A 2>/dev/null | sed -e 's/rpi_volt-isa-0000//' -e 's/in0:              N\/A//')"
 	if [ "X${LMSensorsOutput}" != "X" ]; then
 		echo -e "\n##########################################################################\n" >>${ResultLog}
 		echo -e "Hardware sensors:\n\n${LMSensorsOutput}" >>${ResultLog}
@@ -2680,7 +2680,7 @@ GuessSoCbySignature() {
 					else
 						ModulesLoaded=$(lsmod | cut -f1 -d' ' | tr '\n' ' ')
 						case ${ModulesLoaded} in
-							*sun?i*)
+							*sun??i*)
 								# 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 								IdentifyAllwinnerARMv8 | head -n1
 								;;
@@ -2699,17 +2699,17 @@ GuessSoCbySignature() {
 							*)
 								# no significant module names found, guess by kernel
 								case "$(uname -a)" in
-									*sunxi*)
-										IdentifyAllwinnerARMv8 | head -n1
-										;;
-									*sun50iw2)
+									*sun50iw2*)
 										echo "Allwinner H5"
 										;;
-									*sun50iw6)
+									*sun50iw6*)
 										echo "Allwinner H6"
 										;;
-									*sun50iw9)
+									*sun50iw9*)
 										echo "Allwinner H616/H313"
+										;;
+									*-sun5*)
+										IdentifyAllwinnerARMv8 | head -n1
 										;;
 									*rockchip*)
 										echo "Rockchip RK3328"

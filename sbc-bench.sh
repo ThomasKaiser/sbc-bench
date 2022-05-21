@@ -2166,15 +2166,7 @@ GuessARMSoC() {
 	# For a rough performance estimate wrt different Cortex ARMv8 cores see:
 	# https://www.cnx-software.com/2021/12/10/starfive-dubhe-64-bit-risc-v-core-12nm-2-ghz-processors/#comment-588823
 	#
-	# The cpuid flags seems to appear on all ARMv8 cores starting with kernel 5
-	#
-	# AnnapurnaLabs Alpine | 2 x Cortex-A15 / r2p4 / swp half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt
-	# Armada 370/XP | 1 x Marvell PJ4 / r1p1 / half thumb fastmult vfp edsp vfpv3 vfpv3d16 tls idivt
-	# Comcerto 2000 EVM (FreeScale/NXP QorIQ LS1024A) | 2 x Cortex-A9 / r2p1 / swp half thumb fastmult vfp edsp thumbee neon vfpv3 tls
-	# HiSilicon Kirin 930 | 8 x Cortex-A53 / r0p3 / fp asimd evtstrm aes pmull sha1 sha2 crc32
-	# Marvell PJ4Bv7 | 4 x Marvell PJ4B-MP / r2p2 / swp half thumb fastmult vfp edsp vfpv3 tls
-	#
-	# Recent Rockchip BSP include something like this in dmesg output:
+	# Recent Rockchip BSP kernels include something like this in dmesg output:
 	# rockchip-cpuinfo cpuinfo: SoC            : 35661000 --> https://forum.pine64.org/showthread.php?tid=14457&pid=101319#pid101319
 	# rockchip-cpuinfo cpuinfo: SoC            : 35681000 --> https://dev.t-firefly.com/forum.php?mod=redirect&goto=findpost&ptid=104549&pid=280260
 	# rockchip-cpuinfo cpuinfo: SoC            : 35682000 --> https://forum.banana-pi.org/t/banana-pi-bpi-r2-pro-open-soruce-router-board-with-rockchip-rk3568-run-debian-linux/
@@ -2190,7 +2182,7 @@ GuessARMSoC() {
 	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:a (82:2) Detected <-- Khadas VIM / NEXBOX A95X (S905X)/ Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson GXL (Unknown) Revision 21:b (2:2) Detected <-- Phicomm N1
 	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:b (82:2) Detected <-- Libre Computer AML-S905X-CC / Tanix TX3 Mini / Amlogic Meson GXL (S905X) P212 Development Board
-	# soc soc0: Amlogic Meson GXL (S905W) Revision 21:b (a2:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board
+	# soc soc0: Amlogic Meson GXL (S905W) Revision 21:b (a2:2) Detected <-- Tanix TX3 Mini, Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson GXL (S905L) Revision 21:b (c2:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson GXL (S905M2) Revision 21:b (e2:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:c (84:2) Detected <-- Khadas VIM / Amlogic Meson GXL (S905X) P212 Development Board
@@ -2229,7 +2221,7 @@ GuessARMSoC() {
 	# soc soc0: Amlogic Meson SM1 (Unknown) Revision 2b:c (10:2) Detected <-- Khadas VIM3L
 	#
 	# With T7/A311D2 the string 'soc soc0:' is missing in Amlogic's BSP kernel, instead it's just
-	# '[    0.492977] Amlogic Meson T7 (A311D2) Revision 36:b (1:3) Detected' in dmesg output
+	# 'Amlogic Meson T7 (A311D2) Revision 36:b (1:3) Detected' in dmesg output
 	#
 	# SoC IDs listed by Amlogic reference designs (ID pattern pretty obvious):
 	# - P200 Development Board (GXBB):
@@ -2254,8 +2246,8 @@ GuessARMSoC() {
 	# - U200 Development Board (G12A):
 	#   - Unknown: 28:b (70:2), 28:c (70:2)
 	#
-	# If /proc/cpuinfo Hardware field is 'Amlogic' then the first five/six chars of 'AmLogic
-	# Serial' and if not present 'Serial' have special meaning as it's the 'chip id':
+	# If /proc/cpuinfo Hardware field is 'Amlogic' then chars 1-6 of 'AmLogic Serial'
+	# and if not present 'Serial' have special meaning as it's the 'chip id':
 	# S905X:   '21:a (82:2)' / 210a820094e04a851342e1d007989aa7
 	# S912:    '22:a (82:2)' / 220a82006da41365fedf301742726826
 	# S905X3:  '2b:b (1:2)'  / 2b0b0100010918000006323730523050
@@ -2271,6 +2263,63 @@ GuessARMSoC() {
 	# Amlogic chip ids: https://github.com/CoreELEC/linux-amlogic/blob/ab1ab097d1a7b01d644d09625c9e4c7e31e35fb4/arch/arm64/kernel/cpuinfo.c#L135-L158
 	# More cpuinfo: http://tessy.org/wiki/index.php?Arm#ae54e1d6 (archived at https://archive.md/nf6kL)
 	# https://github.com/pytorch/cpuinfo/tree/master/src/arm/linux/
+	#
+	# With ARMv7 SoCs (or ARMv8 SoCs booting a 32-bit kernel) dmesg output starts with a line identifying
+	# core type and stepping of cpu0:
+	# CPU: ARMv7 Processor [410fc051] revision 1 (ARMv7), cr=10c5387d  <-  Cortex-A5 / r0p1 / Amlogic S805
+	# CPU: ARMv7 Processor [410fc073] revision 3 (ARMv7), cr=10c5387d  <-  Cortex-A7 / r0p3 / Exynos 5422
+	# CPU: ARMv7 Processor [410fc073] revision 3 (ARMv7), cr=50c5387d  <-  Cortex-A7 / r0p3 / Banana Pi M2 (Allwinner A31), Odroid XU4 (Exynos 5422)
+	# CPU: ARMv7 Processor [410fc074] revision 4 (ARMv7), cr=10c5387d  <-  Cortex-A7 / r0p4 / Allwinner A20: Banana Pi
+	# CPU: ARMv7 Processor [410fc074] revision 4 (ARMv7), cr=50c5387d  <-  Cortex-A7 / r0p4 / Allwinner A20: Banana Pi, Banana Pi Pro, Cubieboard 2, Cubietruck, Lime 2, OLinuXino-A20, pcDuino3 Nano
+	# CPU: ARMv7 Processor [410fc075] revision 5 (ARMv7), cr=10c5387d  <-  Cortex-A7 / r0p5 / Beelink X2, Orange Pi+ 2E, Orange Pi One, Orange Pi PC, Orange Pi PC +, Orange Pi Zero, rk322x-box, BCM2836 (BCM2709)
+	# CPU: ARMv7 Processor [410fc075] revision 5 (ARMv7), cr=10c53c7d  <-  Cortex-A7 / r0p5 / HiSilicon Hi351x, Freescale/NXP i.MX7D, Freescale i.MX6 ULL, BCM2836 (BCM2709), Qualcomm MDM9607 (Snapdragon X5 LTE Modem)
+	# CPU: ARMv7 Processor [410fc075] revision 5 (ARMv7), cr=50c5387d  <-  Cortex-A7 / r0p5 / Banana Pi M2+, Banana Pi M2U, Banana Pi M2 Zero, Banana Pi M3, Beelink X2, Cubietruck+, NanoPi Air, NanoPi Duo, NanoPi Duo2, NanoPi M1, NanoPi Neo, NanoPi R1, Orange Pi+, Orange Pi+ 2E, Orange Pi Lite, Orange Pi One, Orange Pi PC, Orange Pi PC +, Orange Pi R1, Orange Pi Zero, Orange Pi Zero LTS, Orange Pi Zero Plus 2, ZeroPi
+	# CPU: ARMv7 Processor [410fc075] revision 5 (ARMv7), cr=70c5387d  <-  Cortex-A7 / r0p5 / STMicroelectronics STM32MP157C-DK2 Discovery Board
+	# CPU: ARMv7 Processor [410fc0d1] revision 1 (ARMv7), cr=10c5387d  <-  Cortex-A17 / r0p1 / RK3288
+	# CPU: ARMv7 Processor [410fd034] revision 4 (ARMv7), cr=10c5383d  <-  Cortex-A53 / r0p4 / Raspberry Pi 3 Model B Rev 1.2 (BCM2837/BCM2709)
+	# CPU: ARMv7 Processor [410fd083] revision 3 (ARMv7), cr=30c5383d  <-  Cortex-A72 / r0p3 / BCM2711
+	# CPU: ARMv7 Processor [411fc087] revision 7 (ARMv7), cr=10c53c7f  <-  Cortex-A8 / r1p7 / TI Sitara AM3517
+	# CPU: ARMv7 Processor [412fc091] revision 1 (ARMv7), cr=10c5387d  <-  Cortex-A9 / r2p1 / NXP QorIQ LS1024A
+	# CPU: ARMv7 Processor [412fc09a] revision 10 (ARMv7), cr=10c5387d <-  Cortex-A9 / r2p10 / Freescale/NXP i.MX6
+	# CPU: ARMv7 Processor [413fc082] revision 2 (ARMv7), cr=10c53c7f  <-  Cortex-A8 / r3p2 / Beagleboard-xm
+	# CPU: ARMv7 Processor [413fc082] revision 2 (ARMv7), cr=50c5387d  <-  Cortex-A8 / r3p2 / Allwinner A10
+	# CPU: ARMv7 Processor [413fc090] revision 0 (ARMv7), cr=10c5387d  <-  Cortex-A9 / r3p0 / RK3188 / Cyclone V FPGA SoC / Exynos 4412
+	# CPU: ARMv7 Processor [413fc090] revision 0 (ARMv7), cr=10c53c7f  <-  Cortex-A9 / r3p0 / Amlogic 8726-MX
+	# CPU: ARMv7 Processor [413fc090] revision 0 (ARMv7), cr=50c5387d  <-  Cortex-A9 / r3p0 / Calxeda Highbank
+	# CPU: ARMv7 Processor [413fc0f2] revision 2 (ARMv7), cr=10c5347d  <-  Cortex-A15 / r3p2 / Renesas r8a7790 SoC
+	# CPU: ARMv7 Processor [414fc091] revision 1 (ARMv7), cr=50c5387d  <-  Cortex-A9 / r4p1 / Armada 375/38x
+	# CPU: ARMv7 Processor [414fc091] revision 1 (ARMv7), cr=10c53c7d  <-  Cortex-A9 / r4p1 / Marvell Armada 385 Development Board / Freescale/NXP 6SLL (Kindle Paperwhite 4)
+	# CPU: ARMv7 Processor [511f04d0] revision 0 (ARMv7), cr=10c5387d  <-  Qualcomm Krait / r1p0 / Qualcomm  MSM8960 (Snapdragon S4 Plus)
+	# CPU: ARMv7 Processor [512f04d0] revision 0 (ARMv7), cr=10c5787d  <-  Qualcomm Krait / r2p0 / Century Systems KUMQUAT
+	#
+	# For ARM core vendor and product ID see GetARMCore function above (e.g. Vendor ID 41 is ARM,
+	# 51 is Qualcomm and so on)
+	#
+	# 410fc051
+	#   |  | |
+	#   |  | +- 1       -> p1
+	#   |  +--- 41/c05  -> Cortex-A5 / r0p1
+	#   +------ 0       -> r0
+	#
+	# 410fc074
+	#   |  | +- 4       -> p4
+	#   |  +--- 41/c07  -> Cortex-A7 / r0p4
+	#   +------ 0       -> r0
+	#
+	# 412fc09a
+	#   |  | +- a (hex) -> p10
+	#   |  +--- 41/c09  -> Cortex-A9 / r2p10
+	#   +------ 2       -> r2
+	#
+	# 410fc0d1
+	#   |  | +- 1       -> p1
+	#   |  +--- 41/c0d  -> Cortex-A17 / r0p1
+	#   +------ 0       -> r0
+	#
+	# 511f04d0
+	#   |  | +- 1       -> p0
+	#   |  +--- 51/04d  -> Qualcomm Krait / r1p0
+	#   +------ 0       -> r1
 
 	CPUInfo="$(cat /proc/cpuinfo)"
 	HardwareInfo="$(awk -F': ' '/^Hardware/ {print $2}' <<< "${CPUInfo}" | tail -n1)"
@@ -2575,8 +2624,12 @@ GuessSoCbySignature() {
 	# Guess by CPU topology (core types and revision, clusters and cpufreq policies) and by
 	# specific features/flags
 	case ${CPUSignature} in
+		??A8r1p7)
+			# TI Sitara AM35xx, Cortex-A8 / r1p7
+			echo "TI Sitara AM35xx"
+			;;
 		??A8r3p2)
-			# TI AM3358 or Allwinner A10, 1 x Cortex-A8 / r3p2 / half thumb fastmult vfp edsp neon vfpv3 tls vfpd32
+			# TI OMAP3530/DM3730/AM335x or Allwinner A10, 1 x Cortex-A8 / r3p2 / half thumb fastmult vfp edsp neon vfpv3 tls vfpd32
 			lsmod | grep -i -q sun4i
 			case $? in
 				0)
@@ -2591,7 +2644,7 @@ GuessSoCbySignature() {
 							;;
 						*)
 							# TI AM3358, 1 x Cortex-A8 / r3p2 / half thumb fastmult vfp edsp neon vfpv3 tls vfpd32
-							echo "TI AM3358"
+							echo "TI OMAP3530/DM3730/AM335x"
 							;;
 						esac
 					;;
@@ -2651,7 +2704,7 @@ GuessSoCbySignature() {
 			echo "Amlogic S805"
 			;;
 		20A9r4p120A9r4p120A9r4p120A9r4p1|2A9222)
-			# S805, 4 x Cortex-A9 / r4p1 / half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpd32
+			# S812, 4 x Cortex-A9 / r4p1 / half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpd32
 			echo "Amlogic S812"
 			;;
 		00A53r0p400A53r0p400A53r0p400A53r0p4)
@@ -2767,9 +2820,13 @@ GuessSoCbySignature() {
 			# Exynos 5422, 4 x Cortex-A7 / r0p3 + 4 x Cortex-A15 / r2p3 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae (with 5.x also evtstrm)
 			echo "Exynos 5422"
 			;;
+		??A9r3p0??A9r3p0)
+			# AML8726-MX, 2 x Cortex-A9 / r3p0 / half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpd32
+			echo "Amlogic AML8726-MX"
+			;;
 		??A9r3p0??A9r3p0??A9r3p0??A9r3p0)
-			# RK3188, 4 x Cortex-A9 / r3p0 / half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpd32
-			echo "Rockchip RK3188"
+			# RK3188 or Exynos 4412, 4 x Cortex-A9 / r3p0 / half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpd32
+			grep -q samsung <<<"${DTCompatible}" && echo "Exynos 4412" || echo "Rockchip RK3188"
 			;;
 		00A35r0p200A35r0p200A35r0p200A35r0p2)
 			# RK3308, 4 x Cortex-A35 / r0p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32
@@ -2832,9 +2889,10 @@ GuessSoCbySignature() {
 			# MT7623 or Allwinner A31, 4 x Cortex-A7 / r0p3 / half thumb fastmult vfp edsp (thumbee) neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
 			grep -q ' thumbee' /proc/cpuinfo && echo "Mediatek MT7623" || echo "Allwinner A31"
 			;;
-		00A53r0p300A53r0p300A53r0p300A53r0p310A53r0p310A53r0p310A53r0p310A53r0p3)
+		??A53r0p3??A53r0p3??A53r0p3??A53r0p3??A53r0p3??A53r0p3??A53r0p3??A53r0p3)
 			# Samsung/Nexell S5P6818, 8 x Cortex-A53 / r0p3 / fp asimd aes pmull sha1 sha2 crc32
-			echo "Samsung/Nexell S5P6818"
+			# or HiSilicon Kirin 930, 8 x Cortex-A53 / r0p3 / fp asimd evtstrm aes pmull sha1 sha2 crc32
+			grep -q hisilicon <<<"${DTCompatible}" && echo "HiSilicon Kirin 930" || echo "Samsung/Nexell S5P6818"
 			;;
 		00Cavium88XXr1p1*)
 			# ThunderX CN8890, 48 x ThunderX 88XX / r1p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32
@@ -2842,21 +2900,37 @@ GuessSoCbySignature() {
 			;;
 		??A9r2p10??A9r2p10??A9r2p10??A9r2p10)
 			# NXP i.MX6 Quad | 4 x Cortex-A9 / r2p10 / swp half thumb fastmult vfp edsp thumbee neon vfpv3
-			echo " NXP i.MX6 Quad"
+			echo "NXP i.MX6 Quad"
 			;;
 		??A9r2p10??A9r2p10)
 			# NXP i.MX6 Quad | 2 x Cortex-A9 / r2p10 / swp half thumb fastmult vfp edsp thumbee neon vfpv3
-			echo " NXP i.MX6 Dual"
+			echo "NXP i.MX6 Dual"
 			;;
-		??MarvellPJ4PJ4br0p5)
+		??A9r2p1??A9r2p1)
+			# FreeScale/NXP QorIQ LS1024A | 2 x Cortex-A9 / r2p1 / swp half thumb fastmult vfp edsp thumbee neon vfpv3 tls
+			echo "NXP QorIQ LS1024A"
+			;;
+		??A15r2p4??A15r2p4)
+			# AnnapurnaLabs Alpine | 2 x Cortex-A15 / r2p4 / swp half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt
+			echo "AnnapurnaLabs Alpine"
+			;;
+		??Marvellr1p1)
+			# Marvell Armada 370/XP | 1 x Marvell PJ4 / r1p1 / half thumb fastmult vfp edsp vfpv3 vfpv3d16 tls idivt
+			echo "Marvell Armada 370/XP"
+			;;
+		??Marvellr0p5)
 			# Marvell Armada 510, 1 x Marvell PJ4 / r0p5 / swp half thumb fastmult vfp edsp iwmmxt thumbee
 			echo "Marvell Armada 510"
 			;;
-		??MarvellFeroceon88FR131r2p1)
+		??Marvell88FR131r2p1)
 			# Marvell Kirkwood 88F6281: 1 x Marvell Feroceon 88FR131 / r2p1 / swp half thumb fastmult edsp
 			echo "Marvell Kirkwood 88F6281"
 			;;
-		??ARM11MPCorer0p5??ARM11MPCorer0p5)
+		??Marvellr2p2??Marvellr2p2??Marvellr2p2??Marvellr2p2)
+			# Marvell PJ4Bv7 | 4 x Marvell PJ4B-MP / r2p2 / swp half thumb fastmult vfp edsp vfpv3 tls
+			echo "Marvell PJ4Bv7"
+			;;
+		??ARM11r0p5??ARM11r0p5)
 			# PLX NAS7820: 2 x ARM11 MPCore / r0p5 / swp half thumb fastmult edsp java
 			echo "PLX NAS7820"
 			;;

@@ -2170,7 +2170,7 @@ GuessARMSoC() {
 	# rockchip-cpuinfo cpuinfo: SoC            : 35661000 --> https://forum.pine64.org/showthread.php?tid=14457&pid=101319#pid101319
 	# rockchip-cpuinfo cpuinfo: SoC            : 35681000 --> https://dev.t-firefly.com/forum.php?mod=redirect&goto=findpost&ptid=104549&pid=280260
 	# rockchip-cpuinfo cpuinfo: SoC            : 35682000 --> https://forum.banana-pi.org/t/banana-pi-bpi-r2-pro-open-soruce-router-board-with-rockchip-rk3568-run-debian-linux/
-	# rockchip-cpuinfo cpuinfo: SoC            : 35880000 --> http://ix.io/3XzI
+	# rockchip-cpuinfo cpuinfo: SoC            : 35880000 --> http://ix.io/3Ypr (RK3588), http://ix.io/3XYo (RK3588S)
 	#
 	# Amlogic: dmesg | grep 'soc soc0:'
 	# soc soc0: Amlogic Meson8b (S805) RevA (1b - 0:B72) detected <-- ODROID-C1 / S805-onecloud / Endless Computers Endless Mini
@@ -2271,7 +2271,7 @@ GuessARMSoC() {
 	# CPU: ARMv7 Processor [410fc073] revision 3 (ARMv7), cr=50c5387d  <-  Cortex-A7 / r0p3 / Banana Pi M2 (Allwinner A31), Odroid XU4 (Exynos 5422)
 	# CPU: ARMv7 Processor [410fc074] revision 4 (ARMv7), cr=10c5387d  <-  Cortex-A7 / r0p4 / Allwinner A20: Banana Pi
 	# CPU: ARMv7 Processor [410fc074] revision 4 (ARMv7), cr=50c5387d  <-  Cortex-A7 / r0p4 / Allwinner A20: Banana Pi, Banana Pi Pro, Cubieboard 2, Cubietruck, Lime 2, OLinuXino-A20, pcDuino3 Nano
-	# CPU: ARMv7 Processor [410fc075] revision 5 (ARMv7), cr=10c5387d  <-  Cortex-A7 / r0p5 / Beelink X2, Orange Pi+ 2E, Orange Pi One, Orange Pi PC, Orange Pi PC +, Orange Pi Zero, rk322x-box, BCM2836 (BCM2709)
+	# CPU: ARMv7 Processor [410fc075] revision 5 (ARMv7), cr=10c5387d  <-  Cortex-A7 / r0p5 / Beelink X2, Orange Pi+ 2E, Orange Pi One, Orange Pi PC, Orange Pi PC +, Orange Pi Zero, rk322x-box, BCM2836 (BCM2709), Generic RK322x TV Box board
 	# CPU: ARMv7 Processor [410fc075] revision 5 (ARMv7), cr=10c53c7d  <-  Cortex-A7 / r0p5 / HiSilicon Hi351x, Freescale/NXP i.MX7D, Freescale i.MX6 ULL, BCM2836 (BCM2709), Qualcomm MDM9607 (Snapdragon X5 LTE Modem)
 	# CPU: ARMv7 Processor [410fc075] revision 5 (ARMv7), cr=50c5387d  <-  Cortex-A7 / r0p5 / Banana Pi M2+, Banana Pi M2U, Banana Pi M2 Zero, Banana Pi M3, Beelink X2, Cubietruck+, NanoPi Air, NanoPi Duo, NanoPi Duo2, NanoPi M1, NanoPi Neo, NanoPi R1, Orange Pi+, Orange Pi+ 2E, Orange Pi Lite, Orange Pi One, Orange Pi PC, Orange Pi PC +, Orange Pi R1, Orange Pi Zero, Orange Pi Zero LTS, Orange Pi Zero Plus 2, ZeroPi
 	# CPU: ARMv7 Processor [410fc075] revision 5 (ARMv7), cr=70c5387d  <-  Cortex-A7 / r0p5 / STMicroelectronics STM32MP157C-DK2 Discovery Board
@@ -2292,8 +2292,8 @@ GuessARMSoC() {
 	# CPU: ARMv7 Processor [511f04d0] revision 0 (ARMv7), cr=10c5387d  <-  Qualcomm Krait / r1p0 / Qualcomm  MSM8960 (Snapdragon S4 Plus)
 	# CPU: ARMv7 Processor [512f04d0] revision 0 (ARMv7), cr=10c5787d  <-  Qualcomm Krait / r2p0 / Century Systems KUMQUAT
 	#
-	# For ARM core vendor and product ID see GetARMCore function above (e.g. Vendor ID 41 is ARM,
-	# 51 is Qualcomm and so on)
+	# (MIDR_EL1: https://archive.ph/q80BH –– for vendor and core ID see GetARMCore
+	# function above, e.g. Vendor ID 41 is ARM, 48 is HiSilicon, 51 Qualcomm and so on)
 	#
 	# 410fc051
 	#   |  | |
@@ -2316,10 +2316,35 @@ GuessARMSoC() {
 	#   |  +--- 41/c0d  -> Cortex-A17 / r0p1
 	#   +------ 0       -> r0
 	#
+	# 481fd010
+	#   |  | +- 0       -> p0
+	#   |  +--- 48/d01  -> HiSilicon Kunpeng-920 / r1p0
+	#   +------ 1       -> r1
+	#
 	# 511f04d0
-	#   |  | +- 1       -> p0
+	#   |  | +- 0       -> p0
 	#   |  +--- 51/04d  -> Qualcomm Krait / r1p0
-	#   +------ 0       -> r1
+	#   +------ 1       -> r1
+	#
+	# With ARMv8 cores some 4.x (BSP) kernels expose type of cpu0 like this in dmesg output:
+	# 4.9.280-sun50iw9: Boot CPU: AArch64 Processor [410fd034] <- Cortex-A53 / r0p4
+	#  4.9.272-meson64: Boot CPU: AArch64 Processor [411fd050] <- Cortex-A55 / r1p0 (S905X3)
+	#   4.4.213-rk3399: Boot CPU: AArch64 Processor [410fd034] <- Cortex-A53 / r0p4
+	#
+	# ...while starting with later 4.x kernels and 5.x it looks like this:
+	# Booting Linux on physical CPU 0x0000000000 [0x410fd034] <- Cortex-A53 / r0p4
+	# Booting Linux on physical CPU 0x0000000000 [0x411fd050] <- Cortex-A55 / r1p0 (S905X3)
+	# Booting Linux on physical CPU 0x0000000000 [0x412fd050] <- Cortex-A55 / r2p0 (RK3566/RK3568 or RK3588/RK3588s or S905X4)
+	# Booting Linux on physical CPU 0x0000000000 [0x411fd071] <- Cortex-A57 / r1p1 (Tegra X1)
+	# Booting Linux on physical CPU 0x0000000000 [0x410fd083] <- Cortex-A72 / r0p3 (BCM2711 or LX2120A or Marvell Armada3900-A1)
+	# Booting Linux on physical CPU 0x0000080000 [0x481fd010] <- HiSilicon Kunpeng-920 / r1p0
+	# Booting Linux on physical CPU 0x0000000000 [0x51df805e] <- Qualcomm Kryo 4XX Silver / r13p14 (Snapdragon 8cx)
+	#
+	# In both cases (ARMv8 core and kernel 4.4 or higher) subsequently booted CPU cores show up
+	# in dmesg output like this:
+	# CPU4: Booted secondary processor [410fd082]                <- Cortex-A72 / r0p2 (RK3399 or i.MX8QM or Kunpeng-916 or LD20 or LS2088A)
+	# CPU2: Booted secondary processor 0x0000000100 [0x410fd092] <- Cortex-A73 / r0p2 (S922X/A311D or A311D2)
+	# CPU7: Booted secondary processor 0x0000000700 [0x51df804e] <- Qualcomm Kryo 4XX Gold / r13p14 (Snapdragon 8cx)
 
 	CPUInfo="$(cat /proc/cpuinfo)"
 	HardwareInfo="$(awk -F': ' '/^Hardware/ {print $2}' <<< "${CPUInfo}" | tail -n1)"
@@ -2814,7 +2839,8 @@ GuessSoCbySignature() {
 			;;
 		00A72r0p300A72r0p300A72r0p300A72r0p3)
 			# BCM2711, 4 x Cortex-A72 / r0p3 / fp asimd evtstrm crc32 (running 32-bit: half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm crc32)
-			echo "BCM2711${BCM2711}"
+			# or Marvell Armada3900-A1, 4 x Cortex-A72 / r0p3 / https://community.cisco.com/t5/wireless/catalyst-9130ax-ap-booting-into-wnc-linux-instead-of-ios-xe/td-p/4460181
+			grep -q raspberrypi <<<"${DTCompatible}" && echo "BCM2711${BCM2711}" || echo "Marvell Armada3900-A1"
 			;;
 		10A7r0p310A7r0p310A7r0p310A7r0p304A15r2p304A15r2p304A15r2p304A15r2p3)
 			# Exynos 5422, 4 x Cortex-A7 / r0p3 + 4 x Cortex-A15 / r2p3 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae (with 5.x also evtstrm)
@@ -2839,11 +2865,16 @@ GuessSoCbySignature() {
 		00A55r2p000A55r2p000A55r2p000A55r2p0)
 			# Amlogic S905X4 or RK3566/RK3568
 			# 4 x Cortex-A55 / r2p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp asimdrdm lrcpc dcpop asimddp
-			lsmod | grep -i meson && echo "Amlogic S905X4" || echo "Rockchip RK3566 or RK3568"
+			lsmod | grep -i meson && echo "Amlogic S905X4" || echo "Rockchip RK3566/RK3568"
 			;;
 		00A53r0p400A53r0p400A53r0p400A53r0p414A72r0p214A72r0p2)
 			# RK3399, 4 x Cortex-A53 / r0p4 + 2 x Cortex-A72 / r0p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32 (32-bit 4.4 BSP kernel: half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt lpae evtstrm aes pmull sha1 sha2 crc32)
-			echo "Rockchip RK3399"
+			# or maybe NXP i.MX8QM, 4 x Cortex-A53 / r0p4 + 2 x Cortex-A72 / r0p2
+			grep -q rockchip <<<"${DTCompatible}" && echo "Rockchip RK3399" || echo "NXP i.MX8QM"
+			;;
+		*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A72r0p2*A72r0p2)
+			# NXP i.MX8QM: 4 x Cortex-A53 / r0p4 + 2 x Cortex-A72 / r0p2 / https://community.nxp.com/t5/i-MX-Processors/RAM-size-vs-CPU-failed-to-come-online/td-p/1263854
+			echo "NXP i.MX8QM"
 			;;
 		0?A55r2p00?A55r2p00?A55r2p00?A55r2p01?A76r4p01?A76r4p02?A76r4p02?A76r4p0)
 			# RK3588, 4 x Cortex-A55 / r2p0 + 2 x Cortex-A76 / r4p0 / + 2 x Cortex-A76 / r4p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp asimdrdm lrcpc dcpop asimddp
@@ -2870,15 +2901,15 @@ GuessSoCbySignature() {
 			echo "Nvidia Tegra 3"
 			;;
 		00A57r1p100A57r1p100A57r1p100A57r1p1)
-			# Jetson Nano, 4 x Cortex-A57 / r1p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32
-			echo "Nvidia Jetson Nano"
+			# Tegra X1, 4 x Cortex-A57 / r1p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32
+			echo "Nvidia Tegra X1"
 			;;
 		*A57r1p3*)
 			# Jetson TX2, 1-4 x Cortex-A57 / r1p3 + 0-2 x Denver2 / r0p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			echo "Nvidia Jetson TX2"
 			;;
 		*NVidiaCarmelr0p0*)
-			# Nvidia Xavier | 4-8 x NVidia Carmel / r0p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp
+			# Nvidia Xavier | 4-8 x Nvidia Carmel / r0p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp
 			echo "Nvidia Xavier"
 			;;
 		50A17r0p150A17r0p150A17r0p150A17r0p1)
@@ -2937,6 +2968,42 @@ GuessSoCbySignature() {
 		36?Phytiumr1p336?Phytiumr1p336?Phytiumr1p336?Phytiumr1p336?Phytiumr1p336?Phytiumr1p336?Phytiumr1p336?Phytiumr1p3)
 			# Phytium D2000: 8 x Phytium FTC663 / r1p3 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			echo "Phytium D2000"
+			;;
+		*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*)
+			# Kunpeng 916 in Huawei Taishan 100 2280 server: 2 x 32 x Cortex-A72 / r0p2 / https://gist.github.com/expipiplus1/bd48761b119e867d3c9ddabc2f677374
+			echo "$(( ${CPUCores} / 32 )) x Kunpeng 916"
+			;;
+		*Kunpeng-920r1p0*)
+			# Kunpeng 920-6426 in Huawei Taishan 200 2280 V2 server: 2 x 64 x Kunpeng-920 / r1p0 / https://www.spinics.net/lists/linux-scsi/msg153166.html
+			# https://www.spec.org/cpu2017/results/res2020q2/cpu2017-20200529-22564.html / https://en.wikichip.org/wiki/hisilicon/microarchitectures/taishan_v110
+			case $(lscpu | awk -F":" '/ per socket/ {print $2}') in
+				*32)
+					echo "$(( ${CPUCores} / 32 )) x Kunpeng 920-3226"
+					;;
+				*48)
+					echo "$(( ${CPUCores} / 48 )) x Kunpeng 920-4826"
+					;;
+				*64)
+					echo "$(( ${CPUCores} / 64 )) x Kunpeng 920-6426"
+					;;
+				*24)
+					echo "Kunpeng 920 3211K"
+					;;
+				*8)
+					echo "Kunpeng 920 2249K"
+					;;
+				*4)
+					echo "Kunpeng 920 quad core"
+					;;
+			esac
+			;;
+		*A72r0p2*A72r0p2*A53r0p4*A53r0p4)
+			# Socionext UniPhier LD20: 2 x Cortex-A72 / r0p2 + 2 x Cortex-A53 / r0p4 / https://lore.kernel.org/all/CAM-ziR6N36F-2C7wHLEa4rUD1BpN+pAyMtnjCS9NWJWACZnwQA@mail.gmail.com/T/
+			echo "Socionext UniPhier LD20"
+			;;
+		*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2)
+			# NXP LS2088A: 8 x Cortex-A72 / r0p2 / https://community.nxp.com/t5/QorIQ/LS2088-ETH1-connection/td-p/1024323
+			echo "NXP LS2088A"
 			;;
 		36?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p3)
 			# NXP LX2080A: 8 x Cortex-A72 / r0p3 / fp asimd evtstrm aes pmull sha1 sha2 crc32

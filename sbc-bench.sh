@@ -1348,6 +1348,10 @@ InstallPrerequisits() {
 		git clone https://github.com/wtarreau/mhz >/dev/null 2>&1
 		cd mhz
 		make >/dev/null 2>&1
+		if [ ! -x "${InstallLocation}"/mhz/mhz ]; then
+			echo -e "${LRED}${BOLD}Not able to build necessary tools. Aborting.${NC}\nMost probably gcc and make packages are missing." >&2
+			exit 1
+		fi
 	fi
 
 	# if called with -c or as 'sbc-bench neon' we also use cpuminer
@@ -1483,37 +1487,42 @@ InitialMonitoring() {
 
 CheckClockspeedsAndSensors() {
 	echo -e "\x08\x08 Done.\nChecking cpufreq OPP...\c"
-	echo -e "\n##########################################################################" >>${ResultLog}
-	if [ -f ${MonitorLog} ]; then
-		# 2nd check after most demanding benchmark has been run.
-		echo -e "\nTesting clockspeeds again, now under full load. System health now:\n" >>${ResultLog}
-		grep 'Time' ${MonitorLog} | tail -n 1 >"${TempDir}/systemhealth.now" >>${ResultLog}
-		grep ':' ${MonitorLog} | tail -n 1 >>"${TempDir}/systemhealth.now" >>${ResultLog}
-	else
-		# 1st check, try to get info about Intel P-States
-		PStateStatus="$(journalctl -b 2>/dev/null | awk -F": " '/intel_pstate:/ {print $3}' | sed ':a;N;$!ba;s/\n/, /g')"
-		if [ "X${PStateStatus}" != "X" ]; then
-			echo -e "\nIntel P-States: ${PStateStatus}" >>${ResultLog}
+	if [ -x "${InstallLocation}"/mhz/mhz ]; then
+		echo -e "\n##########################################################################" >>${ResultLog}
+		if [ -f ${MonitorLog} ]; then
+			# 2nd check after most demanding benchmark has been run.
+			echo -e "\nTesting maximum cpufreq again, still under full load. System health now:\n" >>${ResultLog}
+			grep 'Time' ${MonitorLog} | tail -n 1 >"${TempDir}/systemhealth.now" >>${ResultLog}
+			grep ':' ${MonitorLog} | tail -n 1 >>"${TempDir}/systemhealth.now" >>${ResultLog}
+			OnlyCPUFreqMax=YES
+		else
+			# 1st check, try to get info about Intel P-States
+			PStateStatus="$(journalctl -b 2>/dev/null | awk -F": " '/intel_pstate:/ {print $3}' | sed ':a;N;$!ba;s/\n/, /g')"
+			if [ "X${PStateStatus}" != "X" ]; then
+				echo -e "\nIntel P-States: ${PStateStatus}" >>${ResultLog}
+			fi
 		fi
-	fi
-	if [ ${#ClusterConfig[@]} -eq 1 ]; then
-		# all CPU cores have same package id, we only need to test one core
-		CPUInfo="$(GetCPUInfo 0)"
-		echo -e "\nChecking cpufreq OPP${CPUInfo}:\n" >>${ResultLog}
-		CheckCPUCluster 0 >>${ResultLog}
+		if [ ${#ClusterConfig[@]} -eq 1 ]; then
+			# all CPU cores have same package id, we only need to test one core
+			CPUInfo="$(GetCPUInfo 0)"
+			echo -e "\nChecking cpufreq OPP${CPUInfo}:\n" >>${ResultLog}
+			CheckCPUCluster 0 >>${ResultLog}
+		else
+			# different package ids, we walk through all clusters
+			for i in $(seq 0 $(( ${#ClusterConfig[@]} -1 )) ) ; do
+				FirstCore=${ClusterConfig[$i]}
+				LastCore=$(GetLastClusterCore $(( $i + 1 )))
+				CPUInfo="$(GetCPUInfo ${ClusterConfig[$i]})"
+				echo -e "\nChecking cpufreq OPP for cpu${FirstCore}-cpu${LastCore}${CPUInfo}:\n" >>${ResultLog}
+				CheckCPUCluster ${FirstCore} >>${ResultLog}
+			done
+		fi
 	else
-		# different package ids, we walk through all clusters
-		for i in $(seq 0 $(( ${#ClusterConfig[@]} -1 )) ) ; do
-			FirstCore=${ClusterConfig[$i]}
-			LastCore=$(GetLastClusterCore $(( $i + 1 )))
-			CPUInfo="$(GetCPUInfo ${ClusterConfig[$i]})"
-			echo -e "\nChecking cpufreq OPP for cpu${FirstCore}-cpu${LastCore}${CPUInfo}:\n" >>${ResultLog}
-			CheckCPUCluster ${FirstCore} >>${ResultLog}
-		done
+		echo -e "\x08\x08\x08 not possible since ${InstallLocation}/mhz/mhz not executable...\c"
 	fi
 
 	# if lm-sensors is present and reports anything add this to results.log
-	LMSensorsOutput="$(sensors -A 2>/dev/null | sed -e 's/rpi_volt-isa-0000//' -e 's/in0:              N\/A//')"
+	LMSensorsOutput="$(sensors -A 2>/dev/null | sed -e 's/rpi_volt-isa-0000//' -e 's/in0:              N\/A  //')"
 	if [ "X${LMSensorsOutput}" != "X" ]; then
 		echo -e "\n##########################################################################\n" >>${ResultLog}
 		echo -e "Hardware sensors:\n\n${LMSensorsOutput}" >>${ResultLog}
@@ -1568,7 +1577,9 @@ CheckCPUCluster() {
 		read MinSpeed </sys/devices/system/cpu/cpufreq/policy${1}/cpuinfo_min_freq
 		read MaxSpeed </sys/devices/system/cpu/cpufreq/policy${1}/cpuinfo_max_freq
 		echo ${MinSpeed} >/sys/devices/system/cpu/cpufreq/policy${1}/scaling_min_freq
-		if [ -f /sys/devices/system/cpu/cpufreq/policy${1}/scaling_available_frequencies ]; then
+		if [ "X${OnlyCPUFreqMax}" = "XYES" ]; then
+			OPPtoCheck="${MaxSpeed}"
+		elif [ -f /sys/devices/system/cpu/cpufreq/policy${1}/scaling_available_frequencies ]; then
 			OPPtoCheck=$((tr " " "\n" </sys/devices/system/cpu/cpufreq/policy${1}/scaling_available_frequencies ; tr " " "\n" </sys/devices/system/cpu/cpufreq/policy${1}/scaling_boost_frequencies) 2>/dev/null | sort -n -r | uniq | sed '/^[[:space:]]*$/d')
 		else
 			OPPtoCheck="${MaxSpeed} ${MinSpeed}"
@@ -2215,10 +2226,12 @@ GuessARMSoC() {
 	# soc soc0: Amlogic Meson G12B (S922X) Revision 29:b (40:2) Detected <-- Beelink GT-King Pro
 	# soc soc0: Amlogic Meson G12B (S922X) Revision 29:c (40:2) Detected <-- ODROID-N2+ ('S922X-B')
 	# soc soc0: Amlogic Meson Unknown (Unknown) Revision 2a:e (c5:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board
-	# soc soc0: Amlogic Meson SM1 (Unknown) Revision 2b:b (1:2) Detected <-- BananaPi M5 / Shenzhen Amediatech Technology Co., Ltd X96 Air / AMedia X96 Max+ / SEI Robotics SEI610
-	# soc soc0: Amlogic Meson SM1 (Unknown) Revision 2b:b (40:2)' Detected <-- S905D3 on Khadas VIM3L
+	# soc soc0: Amlogic Meson SM1 (S905D3) Revision 2b:b (1:2) Detected <-- AMedia X96 Max+
+	# soc soc0: Amlogic Meson SM1 (Unknown) Revision 2b:b (1:2) Detected <-- Shenzhen Amediatech Technology Co., Ltd X96 Air / AMedia X96 Max+ / SEI Robotics SEI610
+	# soc soc0: Amlogic Meson SM1 (S905D3) Revision 2b:c (4:2) Detected <-- Khadas VIM3L / https://www.spinics.net/lists/arm-kernel/msg848718.html
 	# soc soc0: Amlogic Meson SM1 (S905X3) Revision 2b:c (10:2) Detected <-- AMedia X96 Max+ / H96 Max X3 / ODROID-C4 / ODROID-HC4 / HK1 Box / Vontar X3 / SEI Robotics SEI610 / Shenzhen Amediatech Technology Co., Ltd X96 Max/Air / Shenzhen CYX Industrial Co., Ltd A95XF3-AIR / Sinovoip BANANAPI-M5 / Tanix TX3 (QZ)
 	# soc soc0: Amlogic Meson SM1 (Unknown) Revision 2b:c (10:2) Detected <-- Khadas VIM3L
+	# soc soc0: Amlogic Meson SM1 (Unknown) Revision 2b:b (40:2) Detected <-- Khadas VIM3L
 	#
 	# With T7/A311D2 the string 'soc soc0:' is missing in Amlogic's BSP kernel, instead it's just
 	# 'Amlogic Meson T7 (A311D2) Revision 36:b (1:3) Detected' in dmesg output
@@ -2250,7 +2263,6 @@ GuessARMSoC() {
 	# and if not present 'Serial' have special meaning as it's the 'chip id':
 	# S905X:   '21:a (82:2)' / 210a820094e04a851342e1d007989aa7
 	# S912:    '22:a (82:2)' / 220a82006da41365fedf301742726826
-	# S905X3:  '2b:b (1:2)'  / 2b0b0100010918000006323730523050
 	# S922X:   '29:c (40:2)' / 290c4000012b1500000639314e315350
 	# A311D2:  '36:b (1:3)'  / 360b010300000000081d810911605690
 	#
@@ -2287,8 +2299,9 @@ GuessARMSoC() {
 	# CPU: ARMv7 Processor [413fc090] revision 0 (ARMv7), cr=10c53c7f  <-  Cortex-A9 / r3p0 / Amlogic 8726-MX
 	# CPU: ARMv7 Processor [413fc090] revision 0 (ARMv7), cr=50c5387d  <-  Cortex-A9 / r3p0 / Calxeda Highbank
 	# CPU: ARMv7 Processor [413fc0f2] revision 2 (ARMv7), cr=10c5347d  <-  Cortex-A15 / r3p2 / Renesas r8a7790 SoC
-	# CPU: ARMv7 Processor [414fc091] revision 1 (ARMv7), cr=50c5387d  <-  Cortex-A9 / r4p1 / Armada 375/38x
+	# CPU: ARMv7 Processor [414fc091] revision 1 (ARMv7), cr=10c5387d  <-  Cortex-A9 / r4p1 / Amlogic S812
 	# CPU: ARMv7 Processor [414fc091] revision 1 (ARMv7), cr=10c53c7d  <-  Cortex-A9 / r4p1 / Marvell Armada 385 Development Board / Freescale/NXP 6SLL (Kindle Paperwhite 4)
+	# CPU: ARMv7 Processor [414fc091] revision 1 (ARMv7), cr=50c5387d  <-  Cortex-A9 / r4p1 / Armada 375/38x
 	# CPU: ARMv7 Processor [511f04d0] revision 0 (ARMv7), cr=10c5387d  <-  Qualcomm Krait / r1p0 / Qualcomm  MSM8960 (Snapdragon S4 Plus)
 	# CPU: ARMv7 Processor [512f04d0] revision 0 (ARMv7), cr=10c5787d  <-  Qualcomm Krait / r2p0 / Century Systems KUMQUAT
 	#
@@ -2330,15 +2343,17 @@ GuessARMSoC() {
 	# 4.9.280-sun50iw9: Boot CPU: AArch64 Processor [410fd034] <- Cortex-A53 / r0p4
 	#  4.9.272-meson64: Boot CPU: AArch64 Processor [411fd050] <- Cortex-A55 / r1p0 (S905X3)
 	#   4.4.213-rk3399: Boot CPU: AArch64 Processor [410fd034] <- Cortex-A53 / r0p4
+	#      4.9.140-l4t: Boot CPU: AArch64 Processor [4e0f0040] <- NVidia Carmel / r0p0 (Jetson AGX Xavier)
 	#
-	# ...while starting with later 4.x kernels and 5.x it looks like this:
-	# Booting Linux on physical CPU 0x0000000000 [0x410fd034] <- Cortex-A53 / r0p4
-	# Booting Linux on physical CPU 0x0000000000 [0x411fd050] <- Cortex-A55 / r1p0 (S905X3)
-	# Booting Linux on physical CPU 0x0000000000 [0x412fd050] <- Cortex-A55 / r2p0 (RK3566/RK3568 or RK3588/RK3588s or S905X4)
-	# Booting Linux on physical CPU 0x0000000000 [0x411fd071] <- Cortex-A57 / r1p1 (Tegra X1)
-	# Booting Linux on physical CPU 0x0000000000 [0x410fd083] <- Cortex-A72 / r0p3 (BCM2711 or LX2120A or Marvell Armada3900-A1)
-	# Booting Linux on physical CPU 0x0000080000 [0x481fd010] <- HiSilicon Kunpeng-920 / r1p0
-	# Booting Linux on physical CPU 0x0000000000 [0x51df805e] <- Qualcomm Kryo 4XX Silver / r13p14 (Snapdragon 8cx)
+	# ...while starting with later 4.1x kernels and 5.x it looks like this:
+	# Booting Linux on physical CPU 0x0000000000 [0x410fd034]  <- Cortex-A53 / r0p4
+	# Booting Linux on physical CPU 0x0000000000 [0x411fd050]  <- Cortex-A55 / r1p0 (S905X3)
+	# Booting Linux on physical CPU 0x0000000000 [0x412fd050]  <- Cortex-A55 / r2p0 (RK3566/RK3568 or RK3588/RK3588s or S905X4)
+	# Booting Linux on physical CPU 0x0000000000 [0x411fd071]  <- Cortex-A57 / r1p1 (Tegra X1)
+	# Booting Linux on physical CPU 0x0000000000 [0x410fd083]  <- Cortex-A72 / r0p3 (BCM2711 or LX2120A or Marvell Armada3900-A1)
+	# Booting Linux on physical CPU 0x0000080000 [0x481fd010]  <- HiSilicon Kunpeng-920 / r1p0
+	# Booting Linux on physical CPU 0x0000000000 [0x51df805e]  <- Qualcomm Kryo 4XX Silver / r13p14 (Snapdragon 8cx)
+	# Booting Linux on physical CPU 0x0000000000 [0x410fd421]  <- Cortex-A78AE / r0p1 / Nvidia Jetson Orin NX / AGX Orin
 	#
 	# In both cases (ARMv8 core and kernel 4.4 or higher) subsequently booted CPU cores show up
 	# in dmesg output like this:
@@ -2484,18 +2499,8 @@ GuessARMSoC() {
 								# - 'S922X-B': 29:c (40:2)
 								echo "Amlogic S922X/A311D"
 								;;
-							2b??1*)
-								# SM1: S905X3: 2b:b (1:2), 2b:c (10:2)
-								echo "Amlogic S905X3"
-								;;
-							2b??4*)
-								# SM1: S905D3: 2b:b (40:2)
-								echo "Amlogic S905D3"
-								;;
 							2b*)
-								# SM1: S905X3, S905D3
-								# - S905X3: 2b:b (1:2), 2b:c (10:2)
-								# - S905D3: 2b:b (40:2)
+								# SM1: S905X3, S905D3: 2b:b (1:2), 2b:c (4:2), 2b:c (10:2), 2b:b (40:2)
 								echo "Amlogic S905X3/S905D3"
 								;;
 							2c*)
@@ -2908,9 +2913,23 @@ GuessSoCbySignature() {
 			# Jetson TX2, 1-4 x Cortex-A57 / r1p3 + 0-2 x Denver2 / r0p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			echo "Nvidia Jetson TX2"
 			;;
-		*NVidiaCarmelr0p0*)
-			# Nvidia Xavier | 4-8 x Nvidia Carmel / r0p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp
-			echo "Nvidia Xavier"
+		*NVidiar0p0*)
+			# Nvidia AGX Xavier | 4-8 x NVidia Carmel / r0p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp
+			echo "Nvidia AGX Xavier"
+			;;
+		*A78AEr0p1*A78AEr0p1*A78AEr0p1*A78AEr0p1*A78AEr0p1*)
+			# Nvidia Jetson Orin NX / AGX Orin: 6-12 Cortex-A78AE / r0p1 / https://forums.developer.nvidia.com/t/orin/212053/8 https://developer.nvidia.com/embedded/jetson-orin
+			case ${CPUCores} in
+				6)
+					echo "Nvidia Jetson Orin NX"
+					;;
+				8)
+					echo "Nvidia Jetson Orin NX or AGX Orin"
+					;;
+				*)
+					echo "Nvidia Jetson AGX Orin"
+					;;
+			esac
 			;;
 		50A17r0p150A17r0p150A17r0p150A17r0p1)
 			# RK3288, 4 x Cortex-A17 / r0p1 / half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm

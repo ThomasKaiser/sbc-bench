@@ -1395,10 +1395,6 @@ InitialMonitoring() {
 		EstimatedDuration=$(( ${TinymembenchDuration} + $(( $(( ${SingleThreadedDuration} + ${MultiThreadedDuration} )) / 60 )) + 3 ))
 	fi
 
-	# upload raw /proc/cpuinfo contents
-	(echo -e "/proc/cpuinfo\n\n$(uname -a) / $(cat /proc/device-tree/model)\n" ; cat /proc/cpuinfo) 2>/dev/null \
-		| curl -s -F 'f:1=<-' ix.io >/dev/null 2>&1 &
-
 	# Create temporary files
 	TempDir="$(mktemp -d /tmp/${0##*/}.XXXXXX)"
 	export TempDir
@@ -1411,6 +1407,10 @@ InitialMonitoring() {
 	CPUTopology="$(PrintCPUTopology)"
 	echo -e "${CPUTopology}\n" >"${TempDir}/cpu-topology.log" &
 	CPUSignature="$(GetCPUSignature)"
+
+	# upload raw /proc/cpuinfo contents
+	(echo -e "/proc/cpuinfo\n\n$(uname -a) / $(cat /proc/device-tree/model)\n" ; cat /proc/cpuinfo ; echo -e "\n${CPUTopology}\n\nCPU Signature: ${CPUSignature}") 2>/dev/null \
+		| curl -s -F 'f:1=<-' ix.io >/dev/null 2>&1 &
 	
 	# Log version and device info
 	read HostName </etc/hostname
@@ -2286,19 +2286,21 @@ GuessARMSoC() {
 	# CPU: ARMv7 Processor [410fc073] revision 3 (ARMv7), cr=50c5387d  <-  Cortex-A7 / r0p3 / Banana Pi M2 (Allwinner A31), Odroid XU4 (Exynos 5422)
 	# CPU: ARMv7 Processor [410fc074] revision 4 (ARMv7), cr=10c5387d  <-  Cortex-A7 / r0p4 / Allwinner A20: Banana Pi
 	# CPU: ARMv7 Processor [410fc074] revision 4 (ARMv7), cr=50c5387d  <-  Cortex-A7 / r0p4 / Allwinner A20: Banana Pi, Banana Pi Pro, Cubieboard 2, Cubietruck, Lime 2, OLinuXino-A20, pcDuino3 Nano
-	# CPU: ARMv7 Processor [410fc075] revision 5 (ARMv7), cr=10c5387d  <-  Cortex-A7 / r0p5 / Beelink X2, Orange Pi+ 2E, Orange Pi One, Orange Pi PC, Orange Pi PC +, Orange Pi Zero, rk322x-box, BCM2836 (BCM2709), Generic RK322x TV Box board
+	# CPU: ARMv7 Processor [410fc075] revision 5 (ARMv7), cr=10c5387d  <-  Cortex-A7 / r0p5 / Beelink X2, Orange Pi+ 2E, Orange Pi One, Orange Pi PC, Orange Pi PC +, Orange Pi Zero, rk322x-box, BCM2836 (BCM2709), Generic RK322x TV Box board, Nexbox A95X R1, Rockchip RV1108 MINIEVB V10, Firefly Core-RV1126-JD4 Board
 	# CPU: ARMv7 Processor [410fc075] revision 5 (ARMv7), cr=10c53c7d  <-  Cortex-A7 / r0p5 / HiSilicon Hi351x, Freescale/NXP i.MX7D, Freescale i.MX6 ULL, BCM2836 (BCM2709), Qualcomm MDM9607 (Snapdragon X5 LTE Modem)
+	# CPU: ARMv7 Processor [410fc075] revision 5 (ARMv7), cr=30c5387d  <-  Cortex-A7 / r0p5 / Renesas RZ/N1S
 	# CPU: ARMv7 Processor [410fc075] revision 5 (ARMv7), cr=50c5387d  <-  Cortex-A7 / r0p5 / Banana Pi M2+, Banana Pi M2U, Banana Pi M2 Zero, Banana Pi M3, Beelink X2, Cubietruck+, NanoPi Air, NanoPi Duo, NanoPi Duo2, NanoPi M1, NanoPi Neo, NanoPi R1, Orange Pi+, Orange Pi+ 2E, Orange Pi Lite, Orange Pi One, Orange Pi PC, Orange Pi PC +, Orange Pi R1, Orange Pi Zero, Orange Pi Zero LTS, Orange Pi Zero Plus 2, ZeroPi
 	# CPU: ARMv7 Processor [410fc075] revision 5 (ARMv7), cr=70c5387d  <-  Cortex-A7 / r0p5 / STMicroelectronics STM32MP157C-DK2 Discovery Board
 	# CPU: ARMv7 Processor [410fc0d1] revision 1 (ARMv7), cr=10c5387d  <-  Cortex-A17 / r0p1 / RK3288
 	# CPU: ARMv7 Processor [410fd034] revision 4 (ARMv7), cr=10c5383d  <-  Cortex-A53 / r0p4 / Raspberry Pi 3 Model B Rev 1.2 (BCM2837/BCM2709)
 	# CPU: ARMv7 Processor [410fd083] revision 3 (ARMv7), cr=30c5383d  <-  Cortex-A72 / r0p3 / BCM2711
 	# CPU: ARMv7 Processor [411fc087] revision 7 (ARMv7), cr=10c53c7f  <-  Cortex-A8 / r1p7 / TI Sitara AM3517
+	# CPU: ARMv7 Processor [411fc092] revision 2 (ARMv7), cr=10c5387f  <-  Cortex-A9 / r1p2 / TI OMAP 4460
 	# CPU: ARMv7 Processor [412fc091] revision 1 (ARMv7), cr=10c5387d  <-  Cortex-A9 / r2p1 / NXP QorIQ LS1024A
 	# CPU: ARMv7 Processor [412fc09a] revision 10 (ARMv7), cr=10c5387d <-  Cortex-A9 / r2p10 / Freescale/NXP i.MX6
 	# CPU: ARMv7 Processor [413fc082] revision 2 (ARMv7), cr=10c53c7f  <-  Cortex-A8 / r3p2 / Beagleboard-xm
 	# CPU: ARMv7 Processor [413fc082] revision 2 (ARMv7), cr=50c5387d  <-  Cortex-A8 / r3p2 / Allwinner A10
-	# CPU: ARMv7 Processor [413fc090] revision 0 (ARMv7), cr=10c5387d  <-  Cortex-A9 / r3p0 / RK3188 / Cyclone V FPGA SoC / Exynos 4412
+	# CPU: ARMv7 Processor [413fc090] revision 0 (ARMv7), cr=10c5387d  <-  Cortex-A9 / r3p0 / RK3306 / RK3188 / Cyclone V FPGA SoC / Exynos 4412
 	# CPU: ARMv7 Processor [413fc090] revision 0 (ARMv7), cr=10c53c7f  <-  Cortex-A9 / r3p0 / Amlogic 8726-MX
 	# CPU: ARMv7 Processor [413fc090] revision 0 (ARMv7), cr=50c5387d  <-  Cortex-A9 / r3p0 / Calxeda Highbank
 	# CPU: ARMv7 Processor [413fc0f2] revision 2 (ARMv7), cr=10c5347d  <-  Cortex-A15 / r3p2 / Renesas r8a7790 SoC
@@ -2349,14 +2351,17 @@ GuessARMSoC() {
 	#      4.9.140-l4t: Boot CPU: AArch64 Processor [4e0f0040] <- NVidia Carmel / r0p0 (Jetson AGX Xavier)
 	#
 	# ...while starting with later 4.1x kernels and 5.x it looks like this:
+	# Booting Linux on physical CPU 0x0000000000 [0x410fd030]  <- Cortex-A53 / r0p0 (Snapdragon 410 / MSM8916)
 	# Booting Linux on physical CPU 0x0000000000 [0x410fd034]  <- Cortex-A53 / r0p4
 	# Booting Linux on physical CPU 0x0000000000 [0x411fd050]  <- Cortex-A55 / r1p0 (S905X3)
 	# Booting Linux on physical CPU 0x0000000000 [0x412fd050]  <- Cortex-A55 / r2p0 (RK3566/RK3568 or RK3588/RK3588s or S905X4)
 	# Booting Linux on physical CPU 0x0000000000 [0x411fd071]  <- Cortex-A57 / r1p1 (Tegra X1)
+	# Booting Linux on physical CPU 0x0000000000 [0x411fd072]  <- Cortex-A57 / r1p2 (AMD Opteron A1100)
 	# Booting Linux on physical CPU 0x0000000000 [0x410fd083]  <- Cortex-A72 / r0p3 (BCM2711 or LX2120A or Marvell Armada3900-A1)
 	# Booting Linux on physical CPU 0x0000080000 [0x481fd010]  <- HiSilicon Kunpeng-920 / r1p0
 	# Booting Linux on physical CPU 0x0000000000 [0x51df805e]  <- Qualcomm Kryo 4XX Silver / r13p14 (Snapdragon 8cx)
-	# Booting Linux on physical CPU 0x0000000000 [0x410fd421]  <- Cortex-A78AE / r0p1 / Nvidia Jetson Orin NX / AGX Orin
+	# Booting Linux on physical CPU 0x0000000000 [0x410fd421]  <- Cortex-A78AE / r0p1 (Nvidia Jetson Orin NX / AGX Orin)
+	# Booting Linux on physical CPU 0x0000000000 [0x611f0221]  <- Apple Icestorm / r1p1 (Apple M1)
 	#
 	# In both cases (ARMv8 core and kernel 4.4 or higher) subsequently booted CPU cores show up
 	# in dmesg output like this:
@@ -2661,6 +2666,10 @@ GuessSoCbySignature() {
 			# TI Sitara AM35xx, Cortex-A8 / r1p7
 			echo "TI Sitara AM35xx"
 			;;
+		??A8r2p5)
+			# Freescale/NXP i.MX515: 1 x Cortex-A8 / r2p5 / https://bench.cr.yp.to/computers.html
+			echo "Freescale/NXP i.MX515"
+			;;
 		??A8r3p2)
 			# TI OMAP3530/DM3730/AM335x or Allwinner A10, 1 x Cortex-A8 / r3p2 / half thumb fastmult vfp edsp neon vfpv3 tls vfpd32
 			lsmod | grep -i -q sun4i
@@ -2685,47 +2694,53 @@ GuessSoCbySignature() {
 			;;
 		00A7r0p5)
 			# Allwinner S3/V3/V3s, 1 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
-			# or maybe Microchip SAMA7G54, 1 x Cortex-A7
-			grep -q allwinner <<<"${DTCompatible}" && echo "Allwinner S3/V3/V3s" || echo "Microchip SAMA7G54"
+			# or maybe Microchip SAMA7G54, 1 x Cortex-A7 / r0p5
+			# or maybe Rockchip RV1108 | 1 x Cortex-A7 / r0p5
+			case "${DTCompatible}" in
+				*rockchip*)
+					# Rockchip RV1108 | 1 x Cortex-A7 / r0p5
+					echo "Rockchip RV1108"
+					;;
+				*allwinner*)
+					# Allwinner S3/V3/V3s, 1 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
+					echo "Allwinner S3/V3/V3s"
+					;;
+				*)
+					# Microchip SAMA7G54, 1 x Cortex-A7 / r0p5
+					echo "Microchip SAMA7G54"
+					;;
+			esac
 			;;
 		00A7r0p400A7r0p4)
 			# Allwinner A20, 2 x Cortex-A7 / r0p4 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
 			echo "Allwinner A20"
 			;;
-		00A7r0p500A7r0p5)
-			# SigmaStar SSD201/SSD202D | 2 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
-			echo "SigmaStar SSD201/SSD202D"
-			;;
 		00A7r0p500A7r0p500A7r0p500A7r0p5)
 			# Allwinner sun8i: could be Allwinner H3/H2+, R40/V40 or A33/R16 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
-			egrep -q 'ahci-sunxi|axp22x' /proc/interrupts
-			case $? in
-				0)
-					# SATA and/or AXP221s PMIC is present, so we're talking about R40/V40, 4 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
+			# or maybe Rockchip RV1126 | 4 x Cortex-A7 / r0p5
+			case "${DTCompatible}" in
+				*rockchip*)
+					# Rockchip RV1126 | 4 x Cortex-A7 / r0p5
+					echo "Rockchip RV1126"
+					;;
+				*sun8i-r40*)
+					# R40/V40, 4 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
 					echo "Allwinner R40/V40"
 					;;
+				*sun8i-h3*)
+					# Allwinner H3, 4 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
+					echo "Allwinner H3"
+					;;
+				*sun8i-h2*)
+					# Allwinner H2+, 4 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
+					echo "Allwinner H2+"
+					;;
+				*sun8i-a33*|*sun8i-r16*)
+					# Allwinner A33/R16, 4 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
+					echo "Allwinner A33/R16"
+					;;
 				*)
-					case "${DTCompatible}" in
-						*sun8i-r40*)
-							# R40/V40, 4 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
-							echo "Allwinner R40/V40"
-							;;
-						*sun8i-h3*)
-							# Allwinner H3, 4 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
-							echo "Allwinner H3"
-							;;
-						*sun8i-h2*)
-							# Allwinner H2+, 4 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
-							echo "Allwinner H2+"
-							;;
-						*sun8i-a33*|*sun8i-r16*)
-							# Allwinner A33/R16, 4 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
-							echo "Allwinner A33/R16"
-							;;
-						*)
-							echo "Allwinner H3/H2+ or R40/V40 or A33/R16"
-							;;
-					esac
+					echo "Allwinner H3/H2+ or R40/V40 or A33/R16"
 					;;
 			esac
 			;;
@@ -2740,6 +2755,10 @@ GuessSoCbySignature() {
 		20A9r4p120A9r4p120A9r4p120A9r4p1|2A9222)
 			# S812, 4 x Cortex-A9 / r4p1 / half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpd32
 			echo "Amlogic S812"
+			;;
+		*A53r0p0*A53r0p0*A53r0p0*A53r0p0)
+			# Snapdragon 410 / MSM8916: 4 x Cortex-A53 / r0p0 / https://gist.github.com/Hinokami-Kagura/7292fd5e84b09e2409df1f165b2baf25
+			echo "Snapdragon 410"
 			;;
 		00A53r0p400A53r0p400A53r0p400A53r0p4)
 			# The boring quad Cortex-A53 done by every SoC vendor: 4 x Cortex-A53 / r0p4
@@ -2795,7 +2814,7 @@ GuessSoCbySignature() {
 										# AXG: A113X, A113D, 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 										echo "Amlogic A113X/A113D"
 										;;
-									*g12a*|*tl1*)
+									*g12a*)
 										# G12A: 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
 										echo "Amlogic S905X2/S905Y2/S905D2"
 										;;
@@ -2834,9 +2853,25 @@ GuessSoCbySignature() {
 			# Allwinner R329, 2 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			echo "Allwinner R329"
 			;;
-		00A53r0p400A53r0p400A53r0p400A53r0p414A53r0p414A53r0p414A53r0p414A53r0p4)
+		??A53r0p4??A53r0p4??A53r0p4??A53r0p4??A53r0p4??A53r0p4??A53r0p4??A53r0p4)
 			# S912, 4 x Cortex-A53 / r0p4 + 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
-			echo "Amlogic S912"
+			# or HiSilicon Kirin 960, 8 x Cortex-A53 / r0p4 / https://bench.cr.yp.to/computers.html
+			# or NXP QorIQ LS1088: 8 x Cortex-A53 / r0p4 / https://bench.cr.yp.to/computers.html
+			case "${DTCompatible}" in
+				*hisilicon*)
+					echo "HiSilicon Kirin 960"
+					;;
+				*amlogic*)
+					echo "Amlogic S912"
+					;;
+				*)
+					echo "NXP QorIQ LS1088"
+					;;
+			esac
+			;;
+		*A53r0p0*A53r0p0*A53r0p0*A53r0p0*A53r0p0*A53r0p0*A53r0p0*A53r0p0)
+			# HiSilicon Hi6220V100: 8 x Cortex-A53 / r0p0 / https://bench.cr.yp.to/computers.html
+			echo "HiSilicon Hi6220V100"
 			;;
 		00A53r0p400A53r0p412A73r0p212A73r0p212A73r0p212A73r0p2)
 			# S922X/A311D, 2 x Cortex-A53 / r0p4 + 4 x Cortex-A73 / r0p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32
@@ -2845,6 +2880,10 @@ GuessSoCbySignature() {
 		00A73r0p200A73r0p200A73r0p200A73r0p214A53r0p414A53r0p414A53r0p414A53r0p4)
 			# Amlogic A311D2, 4 x Cortex-A73 / r0p2 + 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			echo "Amlogic A311D2"
+			;;
+		*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A73r0p1*A73r0p1*A73r0p1*A73r0p1)
+			# HiSilicon Kirin 970: 4 x Cortex-A53 / r0p4 + 4 x Cortex-A73 / r0p1 / https://discuss.96boards.org/t/unable-to-pass-msi-while-booting-as-xen-dom0/8584
+			grep -q hisilicon <<<"${DTCompatible}" && echo "HiSilicon Kirin 970"
 			;;
 		0A9r4p10A9r4p1|00A9r4p100A9r4p1)
 			# Armada 375/38x, 2 x Cortex-A9 / r4p1 / swp half thumb fastmult vfp edsp neon vfpv3 tls
@@ -2869,7 +2908,8 @@ GuessSoCbySignature() {
 			;;
 		??A9r3p0??A9r3p0)
 			# AML8726-MX, 2 x Cortex-A9 / r3p0 / half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpd32
-			echo "Amlogic AML8726-MX"
+			# or RK3306, 2 x Cortex-A9 / r3p0 / https://lore.kernel.org/all/CAAFQd5CN_xvkdD+Bf9A+Mc+_jVxtdOKosrYH_8bNNHkGQw7eGA@mail.gmail.com/T/
+			grep -q amlogic <<<"${DTCompatible}" && echo "Amlogic AML8726-MX" || echo "Rockchip RK3306"
 			;;
 		??A9r3p0??A9r3p0??A9r3p0??A9r3p0)
 			# RK3188 or Exynos 4412, 4 x Cortex-A9 / r3p0 / half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpd32
@@ -2918,6 +2958,10 @@ GuessSoCbySignature() {
 			# NXP i.MX8QM: 4 x Cortex-A53 / r0p4 + 2 x Cortex-A72 / r0p2 / https://community.nxp.com/t5/i-MX-Processors/RAM-size-vs-CPU-failed-to-come-online/td-p/1263854
 			echo "NXP i.MX8QM"
 			;;
+		*A72r8p0*A72r8p0)
+			# Mediatek MT8173: 2 x Cortex-A72 / r8p0 / https://bench.cr.yp.to/computers.html
+			echo "Mediatek MT8173"
+			;;
 		0?A55r2p00?A55r2p00?A55r2p00?A55r2p01?A76r4p01?A76r4p02?A76r4p02?A76r4p0)
 			# RK3588, 4 x Cortex-A55 / r2p0 + 2 x Cortex-A76 / r4p0 / + 2 x Cortex-A76 / r4p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp asimdrdm lrcpc dcpop asimddp
 			echo "Rockchip RK3588/RK3588s"
@@ -2930,9 +2974,31 @@ GuessSoCbySignature() {
 					;;
 				*)
 					# RK3229/RK3228A, 4 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
-					echo "Rockchip RK3229/RK3228A"
+					# or maybe Rockchip RV1126 | 4 x Cortex-A7 / r0p5
+					grep -q "rk322" <<<"${DTCompatible}" && echo "Rockchip RK3229/RK3228A" || echo "Rockchip RV1126"
 					;;
 			esac
+			;;
+		*A7r0p5*A7r0p5)
+			# SigmaStar SSD201/SSD202D | 2 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
+			# or Rockchip RV1109 | 2 x Cortex-A7 / r0p5
+			# or Renesas RZ/N1 | 2 x Cortex-A7 / r0p5
+			case "${DTCompatible}" in
+				*rockchip*)
+					echo "Rockchip RV1109"
+					;;
+				*renesas*)
+					echo "Renesas RZ/N1D"
+					;;
+				*sstar*)
+					echo "SigmaStar SSD201/SSD202D"
+					;;
+			esac
+			grep -q  <<<"${DTCompatible}" && echo "Rockchip RV1109" || echo "SigmaStar SSD201/SSD202D"
+			;;
+		*A7r0p5*A7r0p5)
+			# most probably Rockchip RV1109 | 2 x Cortex-A7 / r0p5
+			grep -q rockchip <<<"${DTCompatible}" && echo "Rockchip RV1109"
 			;;
 		??A9r1p0??A9r1p0)
 			# Nvidia Tegra 2, 2 x Cortex-A9 / r1p0 / swp half thumb fastmult vfp edsp thumbee vfpv3 vfpv3d16 (no neon)
@@ -2942,8 +3008,13 @@ GuessSoCbySignature() {
 			# Nvidia Tegra 3, 4 x Cortex-A9 / r2p9 / swp half thumb fastmult vfp edsp neon vfpv3 tls
 			echo "Nvidia Tegra 3"
 			;;
-		00A57r1p100A57r1p100A57r1p100A57r1p1)
+		*A15r3p3*A15r3p3*A15r3p3*A15r3p3)
+			# Nvidia Tegra K1: 4 x Cortex-A15 / r3p3 / https://bench.cr.yp.to/computers.html
+			echo "Nvidia Tegra K1"
+			;;
+		00A57r1p100A57r1p100A57r1p100A57r1p1|00A57r8p100A57r8p100A57r8p100A57r8p1)
 			# Tegra X1, 4 x Cortex-A57 / r1p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32
+			# or maybe 4 x Cortex-A57 / r8p1 / https://bench.cr.yp.to/computers.html
 			echo "Nvidia Tegra X1"
 			;;
 		*A57r1p3*)
@@ -2997,6 +3068,14 @@ GuessSoCbySignature() {
 			# FreeScale/NXP QorIQ LS1024A | 2 x Cortex-A9 / r2p1 / swp half thumb fastmult vfp edsp thumbee neon vfpv3 tls
 			echo "NXP QorIQ LS1024A"
 			;;
+		??A9r1p2??A9r1p2)
+			# TI OMAP 4460 | 2 x Cortex-A9 / r1p2 / https://e2e.ti.com/support/processors-group/processors/f/processors-forum/243190/booting-problem-of-omap4460-pandaboard
+			echo "TI OMAP 4460"
+			;;
+		??A15r0p4??A15r0p4)
+			# Samsung Exynos 5 Dual 5250: 2 x Cortex-A15 / r0p4 / https://bench.cr.yp.to/computers.html
+			echo "Samsung Exynos 5 Dual 5250"
+			;;
 		??A15r2p4??A15r2p4)
 			# AnnapurnaLabs Alpine | 2 x Cortex-A15 / r2p4 / swp half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt
 			echo "AnnapurnaLabs Alpine"
@@ -3011,7 +3090,7 @@ GuessSoCbySignature() {
 			;;
 		??Marvell88FR131r2p1)
 			# Marvell Kirkwood 88F6281: 1 x Marvell Feroceon 88FR131 / r2p1 / swp half thumb fastmult edsp
-			echo "Marvell Kirkwood 88F6281"
+			echo "Marvell Kirkwood 88F6281 / Armada 300/310"
 			;;
 		??Marvellr2p2??Marvellr2p2??Marvellr2p2??Marvellr2p2)
 			# Marvell PJ4Bv7 | 4 x Marvell PJ4B-MP / r2p2 / swp half thumb fastmult vfp edsp vfpv3 tls
@@ -3024,6 +3103,18 @@ GuessSoCbySignature() {
 		36?Phytiumr1p336?Phytiumr1p336?Phytiumr1p336?Phytiumr1p336?Phytiumr1p336?Phytiumr1p336?Phytiumr1p336?Phytiumr1p3)
 			# Phytium D2000: 8 x Phytium FTC663 / r1p3 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			echo "Phytium D2000"
+			;;
+		*A57r1p2*A57r1p2*A57r1p2*A57r1p2*A57r1p2*A57r1p2*A57r1p2*A57r1p2)
+			# AMD Opteron A1100: 8 x Cortex-A57 / r1p2 / https://bugzilla-attachments.redhat.com/attachment.cgi?id=1475897
+			echo "AMD Opteron A1100"
+			;;
+		*Cavium99xxr1p1*)
+			# Cavium ThunderX2 CN9980: 32 x Cavium ThunderX2 99xx / r1p1
+			echo "$(( ${CPUCores} / 32 )) x Cavium ThunderX2 CN9980"
+			;;
+		*APMr0p0*APMr0p0*APMr0p0*APMr0p0*APMr0p0*APMr0p0*APMr0p0*APMr0p0*)
+			# APM 883208-X1: 8 x APM X-Gene / r0p0 / https://bench.cr.yp.to/computers.html
+			echo "$(( ${CPUCores} / 8 )) x APM 883208-X1"
 			;;
 		*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*)
 			# Kunpeng 916 in Huawei Taishan 100 2280 server: 2 x 32 x Cortex-A72 / r0p2 / https://gist.github.com/expipiplus1/bd48761b119e867d3c9ddabc2f677374
@@ -3072,6 +3163,11 @@ GuessSoCbySignature() {
 		36?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p3)
 			# NXP LX2160A: 16 x Cortex-A72 / r0p3 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			echo "NXP LX2160A"
+			;;
+		*Appler0p0*Appler0p0*Appler0p0*Appler0p0*Apple*Apple*Apple*Apple|*Appler1p1*Appler1p1*Appler1p1*Appler1p1*Appler1p1*Appler1p1*Appler1p1*Appler1p1)
+			# Apple M1: 4 x Apple Icestorm / r1p1 + 4 x Apple Firestorm / r1p1 / https://gist.github.com/z4yx/13520bd2beef49019b1b7436e3b95ddd
+			# or 4 x Apple Icestorm / r0p0 + 4 x Apple Firestorm / ? / https://bench.cr.yp.to/computers.html
+			echo "Apple M1"
 			;;
 	esac
 }

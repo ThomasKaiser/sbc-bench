@@ -896,6 +896,7 @@ MonitorBoard() {
 		BasicSetup
 		CPUTopology="$(PrintCPUTopology)"
 		CPUSignature="$(GetCPUSignature)"
+		DTCompatible="$(strings /proc/device-tree/compatible 2>/dev/null)"
 		GuessedSoC="$(GuessARMSoC)"
 		[ "X${GuessedSoC}" != "X" ] && echo -e "${GuessedSoC}, \c"
 		grep -q "BCM2711" <<<"${DeviceName}" && echo -e "${DeviceName}, \c"
@@ -2764,53 +2765,65 @@ GuessSoCbySignature() {
 						# S905: 4 x Cortex-A53 / r0p4 / fp asimd evtstrm crc32
 						echo "Amlogic S905"
 					else
-						ModulesLoaded=$(lsmod | cut -f1 -d' ' | tr '\n' ' ')
-						case ${ModulesLoaded} in
-							*sun??i*)
+						case "${DTCompatible}" in
+							*allwinner*)
 								# 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
-								IdentifyAllwinnerARMv8 | head -n1
+								case "${DTCompatible}" in
+									*h616*)
+										echo "Allwinner H616/H313"
+										;;
+									*h313*)
+										echo "Allwinner H313"
+										;;
+									*h6*)
+										echo "Allwinner H6"
+										;;
+									*h5*)
+										echo "Allwinner H5"
+										;;
+									*a64*)
+										echo "Allwinner A64"
+										;;
+									*t507*)
+										echo "Allwinner T507"
+										;;
+								esac
 								;;
-							*rockchip*|*dwmac_rk*)
+							*amlogic*)
+								case "${DTCompatible}" in
+									*axg*)
+										# AXG: A113X, A113D, 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
+										echo "Amlogic A113X/A113D"
+										;;
+									*g12a*|*tl1*)
+										# G12A: 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
+										echo "Amlogic S905X2/S905Y2/S905D2"
+										;;
+									*tl1*)
+										# TL1: 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
+										echo "Amlogic T962X2"
+										;;
+									*gxl*)
+										# GXL: 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
+										echo "Amlogic S805X, S805Y, S905X/S905D/S905W/S905L/S905M2"
+										;;
+									*)
+										# GXL or G12A: 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
+										IdentifyGXLG12A
+										;;
+								esac
+								;;
+							*rockchip*)
 								# RK3328, 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 								echo "Rockchip RK3328"
-								;;
-							*meson*)
-								# GXL or G12A: 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
-								IdentifyGXLG12A
 								;;
 							*imx8*)
 								# i.MX8M, 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 								echo "NXP i.MX8M"
 								;;
-							*)
-								# no significant module names found, guess by kernel
-								case "$(uname -a)" in
-									*sun50iw2*)
-										echo "Allwinner H5"
-										;;
-									*sun50iw6*)
-										echo "Allwinner H6"
-										;;
-									*sun50iw9*)
-										echo "Allwinner H616/H313"
-										;;
-									*-sun5*|*sunxi64*)
-										IdentifyAllwinnerARMv8 | head -n1
-										;;
-									*rockchip*)
-										echo "Rockchip RK3328"
-										;;
-									*meson*)
-										IdentifyGXLG12A
-										;;
-									*BPI-M4*)
-										echo "RealTek RTD1395"
-										;;
-									*)
-										# no kernel name match, guess by /proc/interrupts
-										grep -q "rockchip" /proc/interrupts && echo "Rockchip RK3328"
-										;;
-								esac
+							*realtek*)
+								# RealTek RTD1395, 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
+								echo "RealTek RTD1395"
 								;;
 						esac
 					fi

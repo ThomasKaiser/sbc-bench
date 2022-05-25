@@ -1593,15 +1593,17 @@ CheckCPUCluster() {
 			SpeedSum=$(tr '/' '\n' <<<"${MeasuredSpeed}" | tr -d '.' | awk '{s+=$1} END {printf "%.0f", s}')
 			RoundedSpeed=$(( ${SpeedSum} / 3000 ))
 			SysfsSpeed=$(( $i / 1000 ))
+			# report differences in cpufreq OPP ('advertised' clockspeed) and measured
+			# clockspeed if both OPP is higher than 450 MHz and difference exceeds 1%
 			MeasuredDiff=$(awk '{printf ("%0.3f",$1/$2); }' <<<"${RoundedSpeed}000 ${SysfsSpeed}000" | tr -d '.')
-			if [ ${MeasuredDiff} -lt 990 ]; then
+			if [ ${MeasuredDiff} -lt 990 -a ${SysfsSpeed} -gt 450 ]; then
 				# measured clockspeed lower than 1% than cpufreq OPP
 				DiffPercentage=$(awk '{printf ("%0.0f",$1-$2); }' <<<"1000 ${MeasuredDiff}" | awk '{printf ("%0.1f",$1/10); }')
 				PrettyDiff="$(printf "%7s" \(-${DiffPercentage})%)"
-			elif [ ${MeasuredDiff} -gt 1010 ]; then
+			elif [ ${MeasuredDiff} -gt 1010 -a ${SysfsSpeed} -gt 450 ]; then
 				# measured clockspeed higher than 1% than cpufreq OPP
 				DiffPercentage=$(awk '{printf ("%0.0f",$1-$2); }' <<<"${MeasuredDiff} 1000" | awk '{printf ("%0.1f",$1/10); }')
-				PrettyDiff="$(printf "%7s" \(+${DiffPercentage})%)"
+				PrettyDiff="$(printf "%10s" \(+${DiffPercentage})%)"
 			else
 				PrettyDiff=""
 			fi
@@ -1825,8 +1827,8 @@ PrintCPUTopology() {
 		read CPUCluster </sys/devices/system/cpu/cpu${i}/topology/physical_package_id
 		if [ -d /sys/devices/system/cpu/cpufreq/policy${i} ]; then
 			CPUFreqPolicy=${i}
-			CPUSpeedMin=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpufreq/policy${i}/scaling_min_freq)
-			CPUSpeedMax=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpufreq/policy${i}/scaling_max_freq)
+			CPUSpeedMin=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpufreq/policy${i}/cpuinfo_min_freq)
+			CPUSpeedMax=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpufreq/policy${i}/cpuinfo_max_freq)
 		fi
 		if [ -z ${CPUFreqPolicy} -o "${CPUFreqPolicy}" = "none" ]; then
 			echo "$(printf "%3s" ${i})$(printf "%9s" ${CPUCluster})        0       -      -     ${CoreName:-"    -"}"
@@ -2682,7 +2684,8 @@ GuessSoCbySignature() {
 			;;
 		00A7r0p5)
 			# Allwinner S3/V3/V3s, 1 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
-			echo "Allwinner S3/V3/V3s"
+			# or maybe Microchip SAMA7G54, 1 x Cortex-A7
+			grep -q allwinner <<<"${DTCompatible}" && echo "Allwinner S3/V3/V3s" || echo "Microchip SAMA7G54"
 			;;
 		00A7r0p400A7r0p4)
 			# Allwinner A20, 2 x Cortex-A7 / r0p4 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
@@ -2791,7 +2794,7 @@ GuessSoCbySignature() {
 									*sun50iw9*)
 										echo "Allwinner H616/H313"
 										;;
-									*-sun5*)
+									*-sun5*|*sunxi64*)
 										IdentifyAllwinnerARMv8 | head -n1
 										;;
 									*rockchip*)
@@ -2859,9 +2862,30 @@ GuessSoCbySignature() {
 			# RK3188 or Exynos 4412, 4 x Cortex-A9 / r3p0 / half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpd32
 			grep -q samsung <<<"${DTCompatible}" && echo "Exynos 4412" || echo "Rockchip RK3188"
 			;;
+		00A35r0p200A35r0p2)
+			# RK1808, 2 x Cortex-A35 / r0p2 / https://patchwork.kernel.org/project/linux-arm-kernel/patch/20210516230551.12469-6-afaerber@suse.de/#24199353
+			echo "Rockchip RK1808"
+			;;
 		00A35r0p200A35r0p200A35r0p200A35r0p2)
-			# RK3308, 4 x Cortex-A35 / r0p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32
-			echo "Rockchip RK3308"
+			# RK3308/RK3326/PX30, 4 x Cortex-A35 / r0p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32
+			# or i.MX8QXP, 4 x Cortex-A35 / r0p2 / https://gist.github.com/stravs/f82c8a0af276b2d1e6b57235d048f027
+			case "${DTCompatible}" in
+				*rk3308*)
+					echo "Rockchip RK3308"
+					;;
+				*rk3326*)
+					echo "Rockchip RK3326"
+					;;
+				*px30*)
+					echo "Rockchip PX30"
+					;;
+				*rockchip*)
+					echo "Rockchip RK3308/RK3326/PX30"
+					;;
+				*)
+					echo "NXP i.MX8QXP"
+					;;
+			esac
 			;;
 		00A55r1p000A55r1p000A55r1p000A55r1p0)
 			# Amlogic S905X3, 4 x Cortex-A55 / r1p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp (with 5.4+ also 'asimddp asimdrdm cpuid dcpop lrcpc')

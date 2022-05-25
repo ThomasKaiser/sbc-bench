@@ -2177,6 +2177,62 @@ CacheAndDIMMDetails() {
 GuessARMSoC() {
 	# function that tries to guess ARM SoC names correctly
 	#
+	# ARM core types/steppings this function deals with:
+	#
+	#      APM X-Gene / r0p0: APM 883208-X1
+	#  Apple Icestorm / r1p1: Apple M1
+	# Apple Firestorm / r1p1: Apple M1
+	#    ARM11 MPCore / r0p5: PLX NAS7820
+	#         ARM1176 / r0p7: Broadcom BCM2835
+	#       Cortex-A5 / r0p1: Amlogic S805
+	#       Cortex-A7 / r0p3: Allwinner A31, MediaTek MT7623, Samsung Exynos 5422
+	#       Cortex-A7 / r0p4: Allwinner A20
+	#       Cortex-A7 / r0p5: Allwinner H3/H2+/R40/V40/A33/R16/A83T/H8/S3/V3/V3s, Broadcom BCM2836, HiSilicon Hi351x, Freescale/NXP i.MX7D/i.MX6 ULL, Microchip SAMA7G54, Qualcomm MDM9607, Renesas RZ/N1, Rockchip RK3229/RK3228A/RV1108/RV1109/RV1126, SigmaStar SSD201/SSD202D, STMicroelectronics STM32MP157
+	#       Cortex-A8 / r1p7: TI Sitara AM3517
+	#       Cortex-A8 / r2p5: Freescale/NXP i.MX515
+	#       Cortex-A8 / r3p2: Allwinner A10, TI OMAP3530/DM3730/AM335x
+	#       Cortex-A9 / r1p0: Nvidia Tegra 2
+	#       Cortex-A9 / r1p2: TI OMAP 4460
+	#       Cortex-A9 / r2p1: Comcerto 2000 AKA FreeScale/NXP QorIQ LS1024A -> https://github.com/Bonstra/c2000doc
+	#       Cortex-A9 / r2p9: Nvidia Tegra 3
+	#       Cortex-A9 / r2p10: Freescale/NXP i.MX6 Dual/Quad
+	#       Cortex-A9 / r3p0: Amlogic 8726-MX, Calxeda Highbank, Cyclone V FPGA SoC, Rockchip RK3306/RK3188, Samsung Exynos 4412
+	#       Cortex-A9 / r4p1: Amlogic S812, Freescale/NXP i.MX6SLL, Marvell Armada 375/38x
+	#      Cortex-A15 / r0p4: Samsung Exynos 5 Dual 5250
+	#      Cortex-A15 / r2p3: Samsung Exynos 5422
+	#      Cortex-A15 / r2p4: AnnapurnaLabs Alpine
+	#      Cortex-A15 / r3p2: Renesas r8a7790
+	#      Cortex-A15 / r3p3: Nvidia Tegra K1
+	#      Cortex-A17 / r0p1: Rockchip RK3288
+	#      Cortex-A35 / r0p2: NXP i.MX8QXP, Rockchip RK1808/RK3308/RK3326/PX30
+	#      Cortex-A53 / r0p0: HiSilicon Hi6220V100, Qualcomm Snapdragon 410 (MSM8916)
+	#      Cortex-A53 / r0p3: HiSilicon Kirin 930, Samsung/Nexell S5P6818
+	#      Cortex-A53 / r0p4: Allwinner A64/H313/H5/H6/H616/H64/R329/T507, Amlogic A113X/A113D/A311D/A311D2/S805X/S805Y/S905/S905X/S905D/S905W/S905L/S905M2/S905X2/S905Y2/S905D2/S912/S922X/T962X2, Broadcom BCM2837/BCM2709/BCM2710/RP3A0-AU (BCM2710A1), HiSilicon Kirin 960/970, Marvell Armada 37x0, NXP i.MX8M/i.MX8QM/LS1xx8, RealTek RTD129x/RTD139x, Rockchip RK3328/RK3399, Socionext LD20
+	#      Cortex-A55 / r1p0: Amlogic S905X3/S905D3
+	#      Cortex-A55 / r2p0: Amlogic S905X4, Rockchip RK3566/RK3568/RK3588/RK3588s
+	#      Cortex-A57 / r1p1: Nvidia Tegra X1
+	#      Cortex-A57 / r1p2: AMD Opteron A1100
+	#      Cortex-A57 / r1p3: Nvidia Jetson TX2
+	#      Cortex-A72 / r0p0: Mediatek MT8173
+	#      Cortex-A72 / r0p2: HiSilicon Kunpeng 916, NXP i.MX8QM/LS2xx8A, Rockchip RK3399, Socionext LD20, 
+	#      Cortex-A72 / r0p3: Broadcom BCM2711, NXP LX2xx0A, Marvell Armada3900-A1
+	#      Cortex-A73 / r0p1: HiSilicon Kirin 970
+	#      Cortex-A73 / r0p2: Amlogic A311D/A311D2/S922X, 
+	#      Cortex-A76 / r4p0: Rockchip RK3588/RK3588s
+	#    Cortex-A78AE / r0p1: Nvidia Jetson Orin NX / AGX Orin
+	#   NVidia Carmel / r0p0: Jetson AGX Xavier
+	# NVidia Denver 2 / r0p0: Nvidia Jetson TX2
+	#     Kunpeng-920 / r1p0: HiSilicon Kunpeng 920
+	# Marvell 88FR131 / r2p1: Marvell Kirkwood 88F6281
+	#     Marvell PJ4 / r0p5: Marvell Armada 510
+	#     Marvell PJ4 / r1p1: Marvell Armada 370/XP
+	# Marvell PJ4B-MP / r2p2: Marvell PJ4Bv7
+	#  Phytium FTC663 / r1p3: Phytium D2000
+	#  Qualcomm Krait / r1p0: Qualcomm Snapdragon S4 Plus (MSM8960)
+	#  Qualcomm Krait / r2p0: Qualcomm IPQ806x
+	#   ThunderX 88XX / r1p1: ThunderX CN8890
+	#  ThunderX2 99xx / r1p1: Cavium ThunderX2 CN9980
+	#
 	# For a rough performance estimate wrt different Cortex ARMv8 cores see:
 	# https://www.cnx-software.com/2021/12/10/starfive-dubhe-64-bit-risc-v-core-12nm-2-ghz-processors/#comment-588823
 	#
@@ -2305,10 +2361,10 @@ GuessARMSoC() {
 	# CPU: ARMv7 Processor [413fc090] revision 0 (ARMv7), cr=50c5387d  <-  Cortex-A9 / r3p0 / Calxeda Highbank
 	# CPU: ARMv7 Processor [413fc0f2] revision 2 (ARMv7), cr=10c5347d  <-  Cortex-A15 / r3p2 / Renesas r8a7790 SoC
 	# CPU: ARMv7 Processor [414fc091] revision 1 (ARMv7), cr=10c5387d  <-  Cortex-A9 / r4p1 / Amlogic S812
-	# CPU: ARMv7 Processor [414fc091] revision 1 (ARMv7), cr=10c53c7d  <-  Cortex-A9 / r4p1 / Marvell Armada 385 Development Board / Freescale/NXP 6SLL (Kindle Paperwhite 4)
+	# CPU: ARMv7 Processor [414fc091] revision 1 (ARMv7), cr=10c53c7d  <-  Cortex-A9 / r4p1 / Marvell Armada 385 Development Board / Freescale/NXP i.MX6SLL (Kindle Paperwhite 4)
 	# CPU: ARMv7 Processor [414fc091] revision 1 (ARMv7), cr=50c5387d  <-  Cortex-A9 / r4p1 / Armada 375/38x
 	# CPU: ARMv7 Processor [511f04d0] revision 0 (ARMv7), cr=10c5387d  <-  Qualcomm Krait / r1p0 / Qualcomm  MSM8960 (Snapdragon S4 Plus)
-	# CPU: ARMv7 Processor [512f04d0] revision 0 (ARMv7), cr=10c5787d  <-  Qualcomm Krait / r2p0 / Century Systems KUMQUAT
+	# CPU: ARMv7 Processor [512f04d0] revision 0 (ARMv7), cr=10c5787d  <-  Qualcomm Krait / r2p0 / Qualcomm IPQ806x
 	#
 	# (MIDR_EL1: https://archive.ph/q80BH –– for vendor and core ID see GetARMCore
 	# function above, e.g. Vendor ID 41 is ARM, 48 is HiSilicon, 51 Qualcomm and so on)
@@ -2841,8 +2897,8 @@ GuessSoCbySignature() {
 								echo "NXP i.MX8M"
 								;;
 							*realtek*)
-								# RealTek RTD1395, 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
-								echo "RealTek RTD1395"
+								# RealTek RTD129x/RTD139x, 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
+								echo "RealTek RTD129x/RTD139x"
 								;;
 						esac
 					fi
@@ -2958,8 +3014,8 @@ GuessSoCbySignature() {
 			# NXP i.MX8QM: 4 x Cortex-A53 / r0p4 + 2 x Cortex-A72 / r0p2 / https://community.nxp.com/t5/i-MX-Processors/RAM-size-vs-CPU-failed-to-come-online/td-p/1263854
 			echo "NXP i.MX8QM"
 			;;
-		*A72r8p0*A72r8p0)
-			# Mediatek MT8173: 2 x Cortex-A72 / r8p0 / https://bench.cr.yp.to/computers.html
+		*A72r0p0*A72r0p0)
+			# Mediatek MT8173: 2 x Cortex-A72 / r0p0 / https://bench.cr.yp.to/computers.html -> r8p0 is wrong
 			echo "Mediatek MT8173"
 			;;
 		0?A55r2p00?A55r2p00?A55r2p00?A55r2p01?A76r4p01?A76r4p02?A76r4p02?A76r4p0)
@@ -2994,11 +3050,6 @@ GuessSoCbySignature() {
 					echo "SigmaStar SSD201/SSD202D"
 					;;
 			esac
-			grep -q  <<<"${DTCompatible}" && echo "Rockchip RV1109" || echo "SigmaStar SSD201/SSD202D"
-			;;
-		*A7r0p5*A7r0p5)
-			# most probably Rockchip RV1109 | 2 x Cortex-A7 / r0p5
-			grep -q rockchip <<<"${DTCompatible}" && echo "Rockchip RV1109"
 			;;
 		??A9r1p0??A9r1p0)
 			# Nvidia Tegra 2, 2 x Cortex-A9 / r1p0 / swp half thumb fastmult vfp edsp thumbee vfpv3 vfpv3d16 (no neon)
@@ -3012,13 +3063,12 @@ GuessSoCbySignature() {
 			# Nvidia Tegra K1: 4 x Cortex-A15 / r3p3 / https://bench.cr.yp.to/computers.html
 			echo "Nvidia Tegra K1"
 			;;
-		00A57r1p100A57r1p100A57r1p100A57r1p1|00A57r8p100A57r8p100A57r8p100A57r8p1)
+		00A57r1p100A57r1p100A57r1p100A57r1p1)
 			# Tegra X1, 4 x Cortex-A57 / r1p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32
-			# or maybe 4 x Cortex-A57 / r8p1 / https://bench.cr.yp.to/computers.html
 			echo "Nvidia Tegra X1"
 			;;
 		*A57r1p3*)
-			# Jetson TX2, 1-4 x Cortex-A57 / r1p3 + 0-2 x Denver2 / r0p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32
+			# Jetson TX2, 1-4 x Cortex-A57 / r1p3 + 0-2 x Denver 2 / r0p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			echo "Nvidia Jetson TX2"
 			;;
 		*NVidiar0p0*)

@@ -1409,7 +1409,7 @@ InitialMonitoring() {
 	CPUSignature="$(GetCPUSignature)"
 
 	# upload raw /proc/cpuinfo contents
-	(echo -e "/proc/cpuinfo\n\n$(uname -a) / $(cat /proc/device-tree/model)\n" ; cat /proc/cpuinfo ; echo -e "\n${CPUTopology}\n\nCPU Signature: ${CPUSignature}") 2>/dev/null \
+	(echo -e "/proc/cpuinfo\n\n$(uname -a) / $(cat /proc/device-tree/model)\n" ; cat /proc/cpuinfo ; echo -e "\n${CPUTopology}\n\n${CPUSignature}") 2>/dev/null \
 		| curl -s -F 'f:1=<-' ix.io >/dev/null 2>&1 &
 	
 	# Log version and device info
@@ -1433,13 +1433,13 @@ InitialMonitoring() {
 	[ "X${BOARD_NAME}" != "X" ] && \
 		echo "Armbian info:   ${BOARD_NAME}, ${BOARDFAMILY}, ${VERSION}, ${BUILD_REPOSITORY_URL}" | sed 's/,\ $//' >>${ResultLog}
 
-	# Log system info if present:
-	SystemInfo="$(dmidecode -t system 2>/dev/null | egrep "Manufacturer: |Product Name: |Version: |Family: |SKU Number: " | egrep -v ":  $|O.E.M.|123456789")"
+	# Log system info if available:
+	SystemInfo="$(dmidecode -t system 2>/dev/null | egrep "Manufacturer: |Product Name: |Version: |Family: |SKU Number: " | egrep -v ":  $|O.E.M.|123456789|: Not ")"
 	if [ "X${SystemInfo}" != "X" ]; then
 		echo -e "\nDevice Info:\n${SystemInfo}" >>${ResultLog}
 	fi
 	
-	# Log BIOS/UEFI info if present:
+	# Log BIOS/UEFI info if available:
 	UEFIInfo="$(dmidecode -t bios 2>/dev/null | egrep "Vendor:|Version:|Release Date:|Revision:")"
 	if [ "X${UEFIInfo}" != "X" ]; then
 		echo -e "\nBIOS/UEFI:\n${UEFIInfo}" >>${ResultLog}
@@ -1600,7 +1600,7 @@ CheckCPUCluster() {
 			if [ ${MeasuredDiff} -lt 990 -a ${SysfsSpeed} -gt 450 ]; then
 				# measured clockspeed lower than 1% than cpufreq OPP
 				DiffPercentage=$(awk '{printf ("%0.0f",$1-$2); }' <<<"1000 ${MeasuredDiff}" | awk '{printf ("%0.1f",$1/10); }')
-				PrettyDiff="$(printf "%7s" \(-${DiffPercentage})%)"
+				PrettyDiff="$(printf "%10s" \(-${DiffPercentage})%)"
 			elif [ ${MeasuredDiff} -gt 1010 -a ${SysfsSpeed} -gt 450 ]; then
 				# measured clockspeed higher than 1% than cpufreq OPP
 				DiffPercentage=$(awk '{printf ("%0.0f",$1-$2); }' <<<"${MeasuredDiff} 1000" | awk '{printf ("%0.1f",$1/10); }')
@@ -1908,6 +1908,15 @@ SummarizeResults() {
 } # SummarizeResults
 
 LogEnvironment() {
+	# Log processor info if available and we're not running virtualized:
+	VirtWhat="$(systemd-detect-virt 2>/dev/null)"
+	if [ "X${VirtWhat}" = "X" -o "X${VirtWhat}" = "Xnone" ]; then
+		ProcessorInfo="$(dmidecode -t processor 2>/dev/null | egrep -v -i "^#|^Handle|Serial|O.E.M.|123456789|SMBIOS|: Not |Unknown|OUT OF SPEC|00 00 00 00 00 00 00 00|: None")"
+		if [ "X${ProcessorInfo}" != "X" ]; then
+			echo -e "\n${ProcessorInfo}\n"
+		fi
+	fi
+
 	# try to guess the SoC and report if successful
 	DTCompatible="$(strings /proc/device-tree/compatible 2>/dev/null)"
 	GuessedSoC="$(GuessARMSoC)"
@@ -1936,7 +1945,6 @@ LogEnvironment() {
 		done
 	fi
 	# check for VM/container mode to add this to kernel info
-	VirtWhat="$(systemd-detect-virt 2>/dev/null)"
 	[ "X${VirtWhat}" != "X" -a "X${VirtWhat}" != "Xnone" ] && VirtOrContainer=" (${VirtWhat})"
 	# kernel info
 	KernelVersion="$(uname -r)"
@@ -2148,20 +2156,23 @@ CacheAndDIMMDetails() {
 	DIMMFilter="$(echo -e "Locator:|\tVolatile Size:|\tType:|Speed:|\tRank:")"
 	DIMMDetails="$(dmidecode -t memory 2>/dev/null | egrep "${DIMMFilter}" | sed "/\tLocator:/i \ ")"
 	if [ "X${DIMMDetails}" != "X" ]; then
-		echo -e "\nDIMM configuration:\c"
-		# check whether 'Volatile Size' is contained and if not include full command output
-		grep -q "Volatile Size:" <<<"${DIMMDetails}" && \
-			echo -e "${DIMMDetails}" | egrep -v -i ": Unknown|: None" || \
-			(echo ; dmidecode -t memory 2>/dev/null | \
-			egrep -i -v "^Handle |^# dmidecode |^Getting SMBIOS data|^SMBIOS |Serial Number:|Not Provided|No Module Installed|Unknown|NO DIMM" \
-			| sed '/^$/N;/^\n$/D')
-		# check wether there's even more detailed DIMM info available via i2c
-		unset DIMMDetails
-		modprobe eeprom >/dev/null 2>&1
-		command -v decode-dimms >/dev/null 2>&1 && \
-			DIMMDetails="$(decode-dimms 2>/dev/null | sed -ne '/Decoding EEPROM/,$ p' | sed '/^$/N;/^\n$/D' | grep -v Serial)"
-		if [ "X${DIMMDetails}" != "X" ]; then
-			echo -e "\n${DIMMDetails}"
+		if [ "X${VirtWhat}" = "X" -o "X${VirtWhat}" = "Xnone" ]; then
+			# only report DIMM config when running bare metal
+			echo -e "\nDIMM configuration:\c"
+			# check whether 'Volatile Size' is contained and if not include full command output
+			grep -q "Volatile Size:" <<<"${DIMMDetails}" && \
+				echo -e "${DIMMDetails}" | egrep -v -i ": Unknown|: None" || \
+				(echo ; dmidecode -t memory 2>/dev/null | \
+				egrep -i -v "^Handle |^# dmidecode |^Getting SMBIOS data|^SMBIOS |Serial Number:|Not Provided|No Module Installed|Unknown|NO DIMM" \
+				| sed '/^$/N;/^\n$/D')
+			# check wether there's even more detailed DIMM info available via i2c
+			unset DIMMDetails
+			modprobe eeprom >/dev/null 2>&1
+			command -v decode-dimms >/dev/null 2>&1 && \
+				DIMMDetails="$(decode-dimms 2>/dev/null | sed -ne '/Decoding EEPROM/,$ p' | sed '/^$/N;/^\n$/D' | grep -v Serial)"
+			if [ "X${DIMMDetails}" != "X" ]; then
+				echo -e "\n${DIMMDetails}"
+			fi
 		fi
 	fi
 	find /sys/devices/system/cpu -name "cache" -type d | sort -V | while read ; do
@@ -2205,8 +2216,9 @@ GuessARMSoC() {
 	#      Cortex-A15 / r3p3: Nvidia Tegra K1
 	#      Cortex-A17 / r0p1: Rockchip RK3288
 	#      Cortex-A35 / r0p2: NXP i.MX8QXP, Rockchip RK1808/RK3308/RK3326/PX30
-	#      Cortex-A53 / r0p0: HiSilicon Hi6220V100, Qualcomm Snapdragon 410 (MSM8916)
-	#      Cortex-A53 / r0p3: HiSilicon Kirin 930, Samsung/Nexell S5P6818
+	#      Cortex-A53 / r0p0: Qualcomm Snapdragon 410 (MSM8916)
+	#      Cortex-A53 / r0p2: Qualcomm Snapdragon 810 (MSM8994)
+	#      Cortex-A53 / r0p3: HiSilicon Kirin 620/930, Samsung/Nexell S5P6818
 	#      Cortex-A53 / r0p4: Allwinner A64/H313/H5/H6/H616/H64/R329/T507, Amlogic A113X/A113D/A311D/A311D2/S805X/S805Y/S905/S905X/S905D/S905W/S905L/S905M2/S905X2/S905Y2/S905D2/S912/S922X/T962X2, Broadcom BCM2837/BCM2709/BCM2710/RP3A0-AU (BCM2710A1), HiSilicon Kirin 960/970, Marvell Armada 37x0, NXP i.MX8M/i.MX8QM/LS1xx8, RealTek RTD129x/RTD139x, Rockchip RK3328/RK3399, Socionext LD20
 	#      Cortex-A55 / r1p0: Amlogic S905X3/S905D3
 	#      Cortex-A55 / r2p0: Amlogic S905X4, Rockchip RK3566/RK3568/RK3588/RK3588s
@@ -2215,11 +2227,12 @@ GuessARMSoC() {
 	#      Cortex-A57 / r1p3: Nvidia Jetson TX2
 	#      Cortex-A72 / r0p0: Mediatek MT8173
 	#      Cortex-A72 / r0p2: HiSilicon Kunpeng 916, NXP i.MX8QM/LS2xx8A, Rockchip RK3399, Socionext LD20, 
-	#      Cortex-A72 / r0p3: Broadcom BCM2711, NXP LX2xx0A, Marvell Armada3900-A1
+	#      Cortex-A72 / r0p3: Broadcom BCM2711, NXP LX2xx0A, Marvell Armada3900-A1, AWS Graviton -> https://tinyurl.com/y47yz2f6
 	#      Cortex-A73 / r0p1: HiSilicon Kirin 970
-	#      Cortex-A73 / r0p2: Amlogic A311D/A311D2/S922X, 
+	#      Cortex-A73 / r0p2: Amlogic A311D/A311D2/S922X
 	#      Cortex-A76 / r4p0: Rockchip RK3588/RK3588s
 	#    Cortex-A78AE / r0p1: Nvidia Jetson Orin NX / AGX Orin
+	#     Neoverse-N1 / r3p1: Ampere Altra, AWS Graviton2
 	#   NVidia Carmel / r0p0: Jetson AGX Xavier
 	# NVidia Denver 2 / r0p0: Nvidia Jetson TX2
 	#     Kunpeng-920 / r1p0: HiSilicon Kunpeng 920
@@ -2408,19 +2421,20 @@ GuessARMSoC() {
 	#
 	# ...while starting with later 4.1x kernels and 5.x it looks like this:
 	# Booting Linux on physical CPU 0x0000000000 [0x410fd030]  <- Cortex-A53 / r0p0 (Snapdragon 410 / MSM8916)
+	# Booting Linux on physical CPU 0x0000000000 [0x410fd032]  <- Cortex-A53 / r0p2 (Snapdragon 810 / MSM8994)
 	# Booting Linux on physical CPU 0x0000000000 [0x410fd034]  <- Cortex-A53 / r0p4
 	# Booting Linux on physical CPU 0x0000000000 [0x411fd050]  <- Cortex-A55 / r1p0 (S905X3)
 	# Booting Linux on physical CPU 0x0000000000 [0x412fd050]  <- Cortex-A55 / r2p0 (RK3566/RK3568 or RK3588/RK3588s or S905X4)
 	# Booting Linux on physical CPU 0x0000000000 [0x411fd071]  <- Cortex-A57 / r1p1 (Tegra X1)
 	# Booting Linux on physical CPU 0x0000000000 [0x411fd072]  <- Cortex-A57 / r1p2 (AMD Opteron A1100)
-	# Booting Linux on physical CPU 0x0000000000 [0x410fd083]  <- Cortex-A72 / r0p3 (BCM2711 or LX2120A or Marvell Armada3900-A1)
+	# Booting Linux on physical CPU 0x0000000000 [0x410fd083]  <- Cortex-A72 / r0p3 (BCM2711 or LX2120A or Marvell Armada3900-A1 or AWS Graviton)
 	# Booting Linux on physical CPU 0x0000080000 [0x481fd010]  <- HiSilicon Kunpeng-920 / r1p0
 	# Booting Linux on physical CPU 0x0000000000 [0x51df805e]  <- Qualcomm Kryo 4XX Silver / r13p14 (Snapdragon 8cx)
+	# Booting Linux on physical CPU 0x0000000000 [0x413fd0c1]  <- Neoverse-N1 / r3p1 (Ampere Altra)
 	# Booting Linux on physical CPU 0x0000000000 [0x410fd421]  <- Cortex-A78AE / r0p1 (Nvidia Jetson Orin NX / AGX Orin)
 	# Booting Linux on physical CPU 0x0000000000 [0x611f0221]  <- Apple Icestorm / r1p1 (Apple M1)
 	#
-	# In both cases (ARMv8 core and kernel 4.4 or higher) subsequently booted CPU cores show up
-	# in dmesg output like this:
+	# Subsequently booted CPU cores show up in dmesg output like this:
 	# CPU4: Booted secondary processor [410fd082]                <- Cortex-A72 / r0p2 (RK3399 or i.MX8QM or Kunpeng-916 or LD20 or LS2088A)
 	# CPU2: Booted secondary processor 0x0000000100 [0x410fd092] <- Cortex-A73 / r0p2 (S922X/A311D or A311D2)
 	# CPU7: Booted secondary processor 0x0000000700 [0x51df804e] <- Qualcomm Kryo 4XX Gold / r13p14 (Snapdragon 8cx)
@@ -2816,6 +2830,10 @@ GuessSoCbySignature() {
 			# Snapdragon 410 / MSM8916: 4 x Cortex-A53 / r0p0 / https://gist.github.com/Hinokami-Kagura/7292fd5e84b09e2409df1f165b2baf25
 			echo "Snapdragon 410"
 			;;
+		*A53r0p2*A53r0p2*A53r0p2*A53r0p2*A57*)
+			# Snapdragon 810 / MSM8994: 4 x Cortex-A53 / r0p2 + 4 x Cortex-A57 / https://www.spinics.net/lists/linux-arm-msm/msg83825.html
+			echo "Snapdragon 810"
+			;;
 		00A53r0p400A53r0p400A53r0p400A53r0p4)
 			# The boring quad Cortex-A53 done by every SoC vendor: 4 x Cortex-A53 / r0p4
 			# Allwinner A64/H5/H6, BCM2837/BCM2709, RK3328, i.MX8 M, S905, S905X/S805X, S805Y, S905X/S905D/S905W/S905L/S905M2, S905X2/S905Y2/T962X2, RealTek RTD129x/RTD139x
@@ -2924,10 +2942,6 @@ GuessSoCbySignature() {
 					echo "NXP QorIQ LS1088"
 					;;
 			esac
-			;;
-		*A53r0p0*A53r0p0*A53r0p0*A53r0p0*A53r0p0*A53r0p0*A53r0p0*A53r0p0)
-			# HiSilicon Hi6220V100: 8 x Cortex-A53 / r0p0 / https://bench.cr.yp.to/computers.html
-			echo "HiSilicon Hi6220V100"
 			;;
 		00A53r0p400A53r0p412A73r0p212A73r0p212A73r0p212A73r0p2)
 			# S922X/A311D, 2 x Cortex-A53 / r0p4 + 4 x Cortex-A73 / r0p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32
@@ -3099,8 +3113,8 @@ GuessSoCbySignature() {
 			;;
 		??A53r0p3??A53r0p3??A53r0p3??A53r0p3??A53r0p3??A53r0p3??A53r0p3??A53r0p3)
 			# Samsung/Nexell S5P6818, 8 x Cortex-A53 / r0p3 / fp asimd aes pmull sha1 sha2 crc32
-			# or HiSilicon Kirin 930, 8 x Cortex-A53 / r0p3 / fp asimd evtstrm aes pmull sha1 sha2 crc32
-			grep -q hisilicon <<<"${DTCompatible}" && echo "HiSilicon Kirin 930" || echo "Samsung/Nexell S5P6818"
+			# or HiSilicon Kirin 620/930, 8 x Cortex-A53 / r0p3 / fp asimd evtstrm aes pmull sha1 sha2 crc32
+			grep -q hisilicon <<<"${DTCompatible}" && echo "HiSilicon Kirin 620/930" || echo "Samsung/Nexell S5P6818"
 			;;
 		00Cavium88XXr1p1*)
 			# ThunderX CN8890, 48 x ThunderX 88XX / r1p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32
@@ -3214,7 +3228,44 @@ GuessSoCbySignature() {
 			# NXP LX2160A: 16 x Cortex-A72 / r0p3 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			echo "NXP LX2160A"
 			;;
-		*Appler0p0*Appler0p0*Appler0p0*Appler0p0*Apple*Apple*Apple*Apple|*Appler1p1*Appler1p1*Appler1p1*Appler1p1*Appler1p1*Appler1p1*Appler1p1*Appler1p1)
+		*Neoverse-N1r3p1*)
+			# Ampere Altra / Altra Max: 32/64/80/128 x Neoverse-N1 / r3p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp ssbs
+			# or AWS Graviton2: 1/2/4/8/16/32/48/64 vCPU Neoverse-N1 / r3p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp ssbs
+			# https://lore.kernel.org/all/alpine.DEB.2.22.394.2204131354190.3066615@ubuntu-linux-20-04-desktop/
+			# https://www.spec.org/cpu2017/results/res2021q3/cpu2017-20210702-27694.pdf
+			# https://www.youtube.com/watch?v=4jImmuMqnwc&t=1111s
+			# https://www.anandtech.com/show/15578/cloud-clash-amazon-graviton2-arm-against-intel-and-amd
+			# https://github.com/coreos/fedora-coreos-tracker/issues/920#issuecomment-904981854
+			# https://github.com/xianyi/OpenBLAS/issues/2696#issuecomment-652627716
+			# https://www.anandtech.com/show/16979/the-ampere-altra-max-review-pushing-it-to-128-cores-per-socket
+			# https://blog.cloudflare.com/arms-race-ampere-altra-takes-on-aws-graviton2/
+			#
+			# Distinguishing between Graviton2 and Ampera Altra (QuickSilver) isn't easy since they
+			# share same core types, stepping, CPU flags and even cache sizes. Measured clockspeeds
+			# should differ (2.5 GHz for AWS vs. 3/3+ GHz for Altra while reviews mentioned little
+			# less). Altra Max (Mystique) could be identified by its smaller L3 cache.
+			VirtWhat="$(systemd-detect-virt 2>/dev/null)"
+			if [ "X${VirtWhat}" = "X" -o "X${VirtWhat}" = "Xnone" ]; then
+				case $(lscpu | awk -F":" '/ per socket/ {print $2}') in
+					*32)
+						echo "$(( ${CPUCores} / 32 )) x Ampere Altra AADP-32"
+						;;
+					*64)
+						echo "$(( ${CPUCores} / 64 )) x Ampere Altra AADP-64"
+						;;
+					*80)
+						echo "$(( ${CPUCores} / 80 )) x Ampere Altra AADP-80"
+						;;
+					*128)
+						echo "$(( ${CPUCores} / 128 )) x Ampere Altra Max"
+						;;
+				esac
+			else
+				# logic flawed ofc since VMs could also run on the Ampere Altra
+				echo "AWS Graviton2"
+			fi
+			;;
+		*Appler0p0*Appler0p0*Appler0p0*Appler0p0*Apple*Apple*Apple*Apple*|*Appler1p1*Appler1p1*Appler1p1*Appler1p1*Appler1p1*Appler1p1*Appler1p1*Appler1p1)
 			# Apple M1: 4 x Apple Icestorm / r1p1 + 4 x Apple Firestorm / r1p1 / https://gist.github.com/z4yx/13520bd2beef49019b1b7436e3b95ddd
 			# or 4 x Apple Icestorm / r0p0 + 4 x Apple Firestorm / ? / https://bench.cr.yp.to/computers.html
 			echo "Apple M1"

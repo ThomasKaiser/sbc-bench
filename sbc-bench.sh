@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.9.6
+Version=0.9.7
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -901,7 +901,6 @@ MonitorBoard() {
 		[ "X${GuessedSoC}" != "X" ] && echo -e "${GuessedSoC}, \c"
 		grep -q "BCM2711" <<<"${DeviceName}" && echo -e "${DeviceName}, \c"
 		command -v dpkg >/dev/null 2>&1 && Userland=", Userland: $(dpkg --print-architecture 2>/dev/null)"
-		VirtWhat="$(systemd-detect-virt 2>/dev/null)"
 		[ "X${VirtWhat}" != "X" -a "X${VirtWhat}" != "Xnone" ] && VirtOrContainer=" / ${BOLD}${VirtWhat}${NC}"
 		echo -e "Kernel: ${CPUArchitecture}${VirtOrContainer}${Userland}"
 		echo -e "${CPUTopology}\n"
@@ -1199,7 +1198,10 @@ CheckLoad() {
 } # CheckLoad
 
 GetCPUClusters() {
-	if [ -d /sys/devices/system/cpu/cpufreq/policy0 -a "${CPUArchitecture}" != "x86_64" ]; then
+	if [ "X${VirtWhat}" != "X" -a "X${VirtWhat}" != "Xnone" ]; then
+		# in virtualized environments we only check cpu0
+		echo "0"
+	elif [ -d /sys/devices/system/cpu/cpufreq/policy0 -a "${CPUArchitecture}" != "x86_64" ]; then
 		# cpufreq support exists on ARM, we rely on this
 		ls -ld /sys/devices/system/cpu/cpufreq/policy? | awk -F"policy" '{print $2}'
 	else
@@ -1221,10 +1223,73 @@ BasicSetup() {
 		done
 	fi
 
+	# try to derive DeviceName from device-tree if available
+	[ -f /proc/device-tree/model ] && read DeviceName </proc/device-tree/model
+
+	# detect environment
+	X86CPUName="$(lscpu | sed 's/ \{1,\}/ /g' | awk -F": " '/^Model name/ {print $2}' | sed -e 's/1.th Gen //' -e 's/.th Gen //' -e 's/Core(TM) //' -e 's/ Processor//' -e 's/Intel(R) Xeon(R) CPU //' -e 's/Intel(R) //' -e 's/(R)//' -e 's/CPU //' -e 's/ 0 @/ @/' -e 's/AMD //' -e 's/Authentic //' -e 's/ with .*//')"
+	VirtWhat="$(systemd-detect-virt 2>/dev/null)"
+	[ -f /sys/class/dmi/id/sys_vendor ] && DMIInfo="$(grep -R . /sys/class/dmi/id/ 2>/dev/null)"
+	DMISysVendor="$(awk -F":" '/sys_vendor:/ {print $2}' <<<"${DMIInfo}" | egrep -v "System manufacturer|Default|default|Not ")"
+	DMIProductName="$(awk -F":" '/product_name:/ {print $2}' <<<"${DMIInfo}" | egrep -v "Product Name|Default|default|Not ")"
+	DMIProductVersion="$(awk -F":" '/product_version:/ {print $2}' <<<"${DMIInfo}" | egrep -v "O.E.M.|123456789|Not |Default|System Product Name|System Version")"
+
+	# Overwrite DeviceName in virtualized environments with hypervisor info
+	case ${DMISysVendor} in
+		# https://github.com/chef-boneyard/dmidecode_collection
+		Amazon*)
+			# older systemd versions fail on AWS/arm64: https://github.com/systemd/systemd/issues/18929
+			VirtWhat="kvm"
+			DeviceName="AWS ${DMIProductName} ${VirtWhat} VM"
+			;;
+		Hetzner*)
+			DeviceName="Hetzner ${X86CPUName} ${VirtWhat} VM"
+			;;
+		QEMU*)
+			DeviceName="${DMIProductName} ${VirtWhat}/QEMU VM"
+			;;
+		Parallels*)
+			DeviceName="Parallels $(awk -F":" '/bios_version:/ {print $2}' <<<"${DMIInfo}") VM"
+			;;
+		innotek*|Oracle*)
+			grep -q "product_name:VirtualBox" <<<"${DMIInfo}" && \
+				DeviceName="VirtualBox ${X86CPUName} VM"
+			;;
+		VMware*)
+			DeviceName="VMware ${X86CPUName} VM"
+			;;
+		Alibaba*)
+			DeviceName="${DMIProductName} ${VirtWhat} VM"
+			;;
+		Xen*)
+			DeviceName="Xen ${DMIProductVersion} ${X86CPUName} VM"
+			;;
+		Microsoft*)
+			grep -q "product_name:Virtual" <<<"${DMIInfo}" && \
+				DeviceName="Hyper-V ${DMIProductVersion} VM"
+			;;
+		OpenStack*)
+			DeviceName="OpenStack ${DMIProductVersion} VM"
+			;;
+		"Red Hat"*)
+			case ${DMIProductName} in
+				OpenStack*)
+					DeviceName="OpenStack ${DMIProductVersion} VM"
+					;;
+				"RHEV Hypervisor"*)
+					DeviceName="RHEV Hypervisor ${DMIProductVersion} VM"
+					;;
+			esac
+			;;
+		RDO*)
+			grep -q "product_name:OpenStack" <<<"${DMIInfo}" && \
+				DeviceName="OpenStack ${DMIProductVersion} VM"
+			;;
+	esac
+
 	CPUArchitecture="$(lscpu | awk -F" " '/^Architecture/ {print $2}')"
 	case ${CPUArchitecture} in
 		arm*|aarch*|riscv*)
-			[ -f /proc/device-tree/model ] && read DeviceName </proc/device-tree/model
 			[ "X${DeviceName}" = "Xsun20iw1p1" ] && DeviceName="Allwinner D1"
 			ARMTypes=($(awk -F"0x" '/^CPU implementer|^CPU part/ {print $2}' /proc/cpuinfo))
 			ARMStepping=($(awk -F": " '/^CPU variant|^CPU revision/ {print $2}' /proc/cpuinfo))
@@ -1236,11 +1301,24 @@ BasicSetup() {
 						grep -q 'c0000000000000000000000040' && BCM2711="B0" || BCM2711="C0 or later"
 					DeviceName="$(sed 's/Raspberry Pi/RPi/' <<<"${DeviceName}") / BCM2711 Rev ${BCM2711}"
 					;;
-			esac		
+			esac
+			# if there's no device-tree support but DMI info available use this for DeviceName
+			[ ! -f /proc/device-tree/model -a -n ${DMISysVendor} ] && \
+				DeviceName="${DMISysVendor} ${DMIProductName} ${DMIProductVersion}"
 			;;
 		x86*|i686)
-			# Try to get device name from CPU entry
-			DeviceName="$(lscpu | sed 's/ \{1,\}/ /g' | awk -F": " '/^Model name/ {print $2}')"
+			# if no DeviceName is already assigned then try to construct it from DMI data
+			if [ -z ${DeviceName} ]; then
+				if [ "X${VirtWhat}" = "X" -o "X${VirtWhat}" = "Xnone" ]; then
+					# seems bare metal, but we double check
+					grep -q -i "Virtual" <<<"${DMIProductName}" && \
+						DeviceName="${DMISysVendor} ${DMIProductName} ${DMIProductVersion} VM" || \
+						DeviceName="${DMISysVendor} ${DMIProductName} ${DMIProductVersion} / ${X86CPUName}"
+				else
+					# seems virtualized and not already caught by DMISysVendor case construct
+					DeviceName="${DMISysVendor} ${DMIProductName} ${DMIProductVersion} ${VirtWhat} VM"
+				fi
+			fi
 			;;
 		*)
 			echo "${CPUArchitecture} not supported. Aborting." >&2
@@ -1413,8 +1491,8 @@ InitialMonitoring() {
 		| curl -s -F 'f:1=<-' ix.io >/dev/null 2>&1 &
 	
 	# Log version and device info
-	read HostName </etc/hostname
-	echo -e "sbc-bench v${Version} ${DeviceName:-$HostName} ($(date -R))\n" >${ResultLog}
+	read HostName </etc/hostname 2>/dev/null
+	echo -e "sbc-bench v${Version} ${DeviceName:-$HostName} ($(date -R))\n" | sed 's/  / /g' >${ResultLog}
 
 	# get distribution info
 	command -v lsb_release >/dev/null 2>&1 && (lsb_release -a 2>/dev/null | grep -v "n/a") >>${ResultLog}
@@ -1433,16 +1511,16 @@ InitialMonitoring() {
 	[ "X${BOARD_NAME}" != "X" ] && \
 		echo "Armbian info:   ${BOARD_NAME}, ${BOARDFAMILY}, ${VERSION}, ${BUILD_REPOSITORY_URL}" | sed 's/,\ $//' >>${ResultLog}
 
-	# Log system info if available:
-	SystemInfo="$(dmidecode -t system 2>/dev/null | egrep "Manufacturer: |Product Name: |Version: |Family: |SKU Number: " | egrep -v ":  $|O.E.M.|123456789|: Not ")"
-	if [ "X${SystemInfo}" != "X" ]; then
-		echo -e "\nDevice Info:\n${SystemInfo}" >>${ResultLog}
-	fi
-	
-	# Log BIOS/UEFI info if available:
-	UEFIInfo="$(dmidecode -t bios 2>/dev/null | egrep "Vendor:|Version:|Release Date:|Revision:")"
-	if [ "X${UEFIInfo}" != "X" ]; then
-		echo -e "\nBIOS/UEFI:\n${UEFIInfo}" >>${ResultLog}
+	# Log system info and BIOS/UEFI versions if available and running bare metal:
+	if [ "X${VirtWhat}" = "X" -o "X${VirtWhat}" = "Xnone" ]; then
+		SystemInfo="$(dmidecode -t system 2>/dev/null | egrep "Manufacturer: |Product Name: |Version: |Family: |SKU Number: " | egrep -v ":  $|O.E.M.|123456789|: Not |Default|System Product Name")"
+		if [ "X${SystemInfo}" != "X" ]; then
+			echo -e "\nDevice Info:\n${SystemInfo}" >>${ResultLog}
+		fi
+		UEFIInfo="$(dmidecode -t bios 2>/dev/null | egrep "Vendor:|Version:|Release Date:|Revision:")"
+		if [ "X${UEFIInfo}" != "X" ]; then
+			echo -e "\nBIOS/UEFI:\n${UEFIInfo}" >>${ResultLog}
+		fi
 	fi
 
 	# On Raspberries we also collect 'firmware' information and on RPi 4 check SoC revision
@@ -1630,7 +1708,7 @@ CheckCPUCluster() {
 				CpuToCheck=$(( $1 + 1 ))
 				;;
 		esac
-		taskset -c $1 "${InstallLocation}"/mhz/mhz 1 1000000 >/dev/null
+		taskset -c ${CpuToCheck} "${InstallLocation}"/mhz/mhz 1 1000000 >/dev/null
 		MeasuredSpeed=$(taskset -c ${CpuToCheck} "${InstallLocation}"/mhz/mhz 3 1000000 | awk -F" cpu_MHz=" '{print $2}' | awk -F" " '{print $1}' | sort -r -n | tr '\n' '/' | sed 's|/$||')
 		SpeedSum=$(tr '/' '\n' <<<"${MeasuredSpeed}" | tr -d '.' | awk '{s+=$1} END {printf "%.0f", s}')
 		RoundedSpeed=$(( ${SpeedSum} / 3000 ))
@@ -1807,7 +1885,6 @@ RunCpuminerBenchmark() {
 
 PrintCPUTopology() {
 	# prints list of CPU cores, clusters and cpufreq policy nodes
-	X86CPUName="$(sed -e 's/1.th Gen //' -e 's/.th Gen //' -e 's/Core(TM) //' -e 's/ Processor//' -e 's/Intel(R) Xeon(R) CPU //' -e 's/Intel(R) //' -e 's/(R)//' -e 's/CPU //' -e 's/ 0 @/ @/' -e 's/AMD //' -e 's/Authentic //' -e 's/ with .*//' <<<"${DeviceName}")"
 	CPUFreqPolicy="none"
 	echo "CPU sysfs topology (clusters, cpufreq members, clockspeeds)"
 	echo "                 cpufreq   min    max"
@@ -1903,7 +1980,7 @@ SummarizeResults() {
 		else
 			DistroInfo="${OperatingSystem} ${KernelArch}/${ARCH}"
 		fi
-		echo -e "\n| ${DeviceName:-$HostName} | ${MHz} | ${KernelVersion} | ${DistroInfo} | ${ZipScore} | ${OpenSSLScore} | ${MemBenchScore} | ${CpuminerScore:-"-"} |\c" >>${ResultLog}
+		echo -e "\n| ${DeviceName:-$HostName} | ${MHz} | ${KernelVersion} | ${DistroInfo} | ${ZipScore} | ${OpenSSLScore} | ${MemBenchScore} | ${CpuminerScore:-"-"} |\c" | sed 's/  / /g' >>${ResultLog}
 	fi
 } # SummarizeResults
 
@@ -1988,38 +2065,10 @@ UploadResults() {
 			if [ ${IOWaitAvg:-0} -le 2 -a ${IOWaitMax:-0} -le 5 -a ${SysMax:-0} -le 5 -a ! -f ${TempDir}/throttling_info.txt ]; then
 				# in case it's not x86/x64 then also suggest adding results to official list
 				case ${CPUArchitecture} in
-					x86*|i686)
-						# Collecting x86 results is somewhat pointless. At least inform
-						# about environment the benchmark was running in
-						VirtWhat="$(systemd-detect-virt 2>/dev/null)"
-						Manufacturer="$(dmidecode -t system 2>/dev/null | awk -F": " '/Manufacturer:/ {print $2}')"
-						case "${Manufacturer}" in
-							"")
-								# No dmidecode output as such check where we're running
-								if [ "X${VirtWhat}" = "X" -o "X${VirtWhat}" = "Xnone" ]; then
-									echo -e "\n"
-								else
-									echo -e "Please be aware that benchmark was running inside a ${VirtWhat} instance\n"
-								fi
-								;;
-							*)
-								# Check whether virtualization flags are present
-								grep -q ^flags.*\ hypervisor /proc/cpuinfo
-								case $? in
-									0)
-										echo -e "Please be aware that benchmark was running inside a ${Manufacturer}/${VirtWhat} instance\n"
-										;;
-									*)
-										echo -e "\n"
-										;;
-								esac
-								;;
-						esac
-						;;
-					*)
-						# not running on x86/x64, neither throttling and none/minor swapping
-						# occured. Check whether SoC in question is already known since if
-						# that's the case no more submissions to official results are needed
+					arm*|aarch*|riscv*)
+						# not running on x86/x64, neither throttling nor relevant swapping occured.
+						# Check whether SoC in question is already known since if true no more
+						# submissions to official results are needed
 						grep -q "^SoC guess:" "${ResultLog}"
 						if [ $? -ne 0 ]; then
 							# not an already known SoC, so suggest submitting results
@@ -2279,6 +2328,7 @@ GuessARMSoC() {
 	# soc soc0: Amlogic Meson GXL (S805X) Revision 21:d (34:2) Detected <-- Libre Computer AML-S805X-AC, Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:d (84:2) Detected <-- Khadas VIM, Libre Computer AML-S905X-CC, Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:d (85:2) Detected <-- Libre Computer AML-S905X-CC
+	# soc soc0: Amlogic Meson GXL (S905W) Revision 21:d (a4:2) Detected <-- Amlogic Meson GXL (S905W) P281 Development Board
 	# soc soc0: Amlogic Meson GXL (Unknown) Revision 21:d (a4:2) Detected <-- Khadas VIM / Tanix TX3 Mini / JetHome JetHub J80 / Amlogic Meson GXL (S905X) P212 Development Board / Amlogic Meson GXL (S905W) P281 Development Board
 	# soc soc0: Amlogic Meson GXL (S905L) Revision 21:d (c4:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson GXL (S905M2) Revision 21:d (e4:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board
@@ -2323,6 +2373,7 @@ GuessARMSoC() {
 	# - P281 Development Board (GXL):
 	#   - S905D: 21:d (0:2)
 	#   - S905W: 21:e (a5:2)
+	#   - S905W: 21:d (a4:2)
 	#   - Unknown: 21:d (a4:2)
 	# - Q200 Development Board (GXM):
 	#   - S912: 22:a (82:2)
@@ -3240,11 +3291,10 @@ GuessSoCbySignature() {
 			# https://www.anandtech.com/show/16979/the-ampere-altra-max-review-pushing-it-to-128-cores-per-socket
 			# https://blog.cloudflare.com/arms-race-ampere-altra-takes-on-aws-graviton2/
 			#
-			# Distinguishing between Graviton2 and Ampera Altra (QuickSilver) isn't easy since they
+			# Distinguishing between Graviton2 and Ampere Altra (QuickSilver) isn't easy since they
 			# share same core types, stepping, CPU flags and even cache sizes. Measured clockspeeds
 			# should differ (2.5 GHz for AWS vs. 3/3+ GHz for Altra while reviews mentioned little
 			# less). Altra Max (Mystique) could be identified by its smaller L3 cache.
-			VirtWhat="$(systemd-detect-virt 2>/dev/null)"
 			if [ "X${VirtWhat}" = "X" -o "X${VirtWhat}" = "Xnone" ]; then
 				case $(lscpu | awk -F":" '/ per socket/ {print $2}') in
 					*32)

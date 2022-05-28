@@ -1251,9 +1251,8 @@ BasicSetup() {
 		Parallels*)
 			DeviceName="Parallels $(awk -F":" '/bios_version:/ {print $2}' <<<"${DMIInfo}") VM"
 			;;
-		innotek*|Oracle*)
-			grep -q "product_name:VirtualBox" <<<"${DMIInfo}" && \
-				DeviceName="VirtualBox ${X86CPUName} VM"
+		innotek*|Innotek*|Oracle*)
+			grep -q "VirtualBox" <<<"${DMIProductName}" && DeviceName="VirtualBox ${X86CPUName} VM"
 			;;
 		VMware*)
 			DeviceName="VMware ${X86CPUName} VM"
@@ -1265,8 +1264,7 @@ BasicSetup() {
 			DeviceName="Xen ${DMIProductVersion} ${X86CPUName} VM"
 			;;
 		Microsoft*)
-			grep -q "product_name:Virtual" <<<"${DMIInfo}" && \
-				DeviceName="Hyper-V ${DMIProductVersion} VM"
+			grep -q "Virtual" <<<"${DMIProductName}" && DeviceName="Hyper-V ${DMIProductVersion} VM"
 			;;
 		OpenStack*)
 			DeviceName="OpenStack ${DMIProductVersion} VM"
@@ -1282,8 +1280,7 @@ BasicSetup() {
 			esac
 			;;
 		RDO*)
-			grep -q "product_name:OpenStack" <<<"${DMIInfo}" && \
-				DeviceName="OpenStack ${DMIProductVersion} VM"
+			grep -q "OpenStack" <<<"${DMIProductName}" && DeviceName="OpenStack ${DMIProductVersion} VM"
 			;;
 	esac
 
@@ -1303,7 +1300,7 @@ BasicSetup() {
 					;;
 			esac
 			# if there's no device-tree support but DMI info available use this for DeviceName
-			[ ! -f /proc/device-tree/model -a -n ${DMISysVendor} ] && \
+			[ ! -f /proc/device-tree/model -a "X${DMISysVendor}" != "X" ] && \
 				DeviceName="${DMISysVendor} ${DMIProductName} ${DMIProductVersion}"
 			;;
 		x86*|i686)
@@ -1513,7 +1510,7 @@ InitialMonitoring() {
 
 	# Log system info and BIOS/UEFI versions if available and running bare metal:
 	if [ "X${VirtWhat}" = "X" -o "X${VirtWhat}" = "Xnone" ]; then
-		SystemInfo="$(dmidecode -t system 2>/dev/null | egrep "Manufacturer: |Product Name: |Version: |Family: |SKU Number: " | egrep -v ":  $|O.E.M.|123456789|: Not |Default|System Product Name")"
+		SystemInfo="$(dmidecode -t system 2>/dev/null | egrep "Manufacturer: |Product Name: |Version: |Family: |SKU Number: " | egrep -v ":  $|O.E.M.|123456789|: Not |Default|default|System Product Name|System manufacturer|System Version")"
 		if [ "X${SystemInfo}" != "X" ]; then
 			echo -e "\nDevice Info:\n${SystemInfo}" >>${ResultLog}
 		fi
@@ -1673,13 +1670,13 @@ CheckCPUCluster() {
 			RoundedSpeed=$(( ${SpeedSum} / 3000 ))
 			SysfsSpeed=$(( $i / 1000 ))
 			# report differences in cpufreq OPP ('advertised' clockspeed) and measured
-			# clockspeed if both OPP is higher than 450 MHz and difference exceeds 1%
+			# clockspeed if difference exceeds 1%
 			MeasuredDiff=$(awk '{printf ("%0.3f",$1/$2); }' <<<"${RoundedSpeed}000 ${SysfsSpeed}000" | tr -d '.')
-			if [ ${MeasuredDiff} -lt 990 -a ${SysfsSpeed} -gt 450 ]; then
+			if [ ${MeasuredDiff} -lt 990 ]; then
 				# measured clockspeed lower than 1% than cpufreq OPP
 				DiffPercentage=$(awk '{printf ("%0.0f",$1-$2); }' <<<"1000 ${MeasuredDiff}" | awk '{printf ("%0.1f",$1/10); }')
 				PrettyDiff="$(printf "%10s" \(-${DiffPercentage})%)"
-			elif [ ${MeasuredDiff} -gt 1010 -a ${SysfsSpeed} -gt 450 ]; then
+			elif [ ${MeasuredDiff} -gt 1010 ]; then
 				# measured clockspeed higher than 1% than cpufreq OPP
 				DiffPercentage=$(awk '{printf ("%0.0f",$1-$2); }' <<<"${MeasuredDiff} 1000" | awk '{printf ("%0.1f",$1/10); }')
 				PrettyDiff="$(printf "%10s" \(+${DiffPercentage})%)"
@@ -1969,7 +1966,13 @@ SummarizeResults() {
 	# Add a line suitable for Results.md on Github if not in efficiency plotting mode
 	if [ "X${PlotCpufreqOPPs}" != "Xyes" ]; then
 		if [ -f /sys/devices/system/cpu/cpufreq/policy0/cpuinfo_max_freq ]; then
-			MHz="$(sort -n -r /sys/devices/system/cpu/cpufreq/policy?/cpuinfo_max_freq | head -n 2 | tr '\n' '/' | sed -e 's|000/|/|g' -e 's|/$||') MHz"
+			HighestClock=$(sort -n -r /sys/devices/system/cpu/cpufreq/policy?/cpuinfo_max_freq | head -n1 | sed -e 's/000$//')
+			LowestClock=$(sort -n -r /sys/devices/system/cpu/cpufreq/policy?/cpuinfo_max_freq | tail -n1 | sed -e 's/000$//')
+			if [ ${HighestClock} -eq ${LowestClock} ]; then
+				MHz="${HighestClock} MHz"
+			else
+				MHz="${HighestClock}/${LowestClock} MHz"
+			fi
 		else
 			MHz="no cpufreq support"
 		fi
@@ -2273,7 +2276,7 @@ GuessARMSoC() {
 	#      Cortex-A55 / r2p0: Amlogic S905X4, Rockchip RK3566/RK3568/RK3588/RK3588s
 	#      Cortex-A57 / r1p1: Nvidia Tegra X1
 	#      Cortex-A57 / r1p2: AMD Opteron A1100
-	#      Cortex-A57 / r1p3: Nvidia Jetson TX2
+	#      Cortex-A57 / r1p3: Nvidia Jetson TX2, Renesas R8A7795/R8A7796/R8A77965
 	#      Cortex-A72 / r0p0: Mediatek MT8173
 	#      Cortex-A72 / r0p2: HiSilicon Kunpeng 916, NXP i.MX8QM/LS2xx8A, Rockchip RK3399, Socionext LD20, 
 	#      Cortex-A72 / r0p3: Broadcom BCM2711, NXP LX2xx0A, Marvell Armada3900-A1, AWS Graviton -> https://tinyurl.com/y47yz2f6
@@ -2469,6 +2472,7 @@ GuessARMSoC() {
 	#  4.9.272-meson64: Boot CPU: AArch64 Processor [411fd050] <- Cortex-A55 / r1p0 (S905X3)
 	#   4.4.213-rk3399: Boot CPU: AArch64 Processor [410fd034] <- Cortex-A53 / r0p4
 	#      4.9.140-l4t: Boot CPU: AArch64 Processor [4e0f0040] <- NVidia Carmel / r0p0 (Jetson AGX Xavier)
+	#      4.9.0-yocto: Boot CPU: AArch64 Processor [411fd073] <- Cortex-A57 / r1p3 (Renesas R8A7795/R-Car H3)
 	#
 	# ...while starting with later 4.1x kernels and 5.x it looks like this:
 	# Booting Linux on physical CPU 0x0000000000 [0x410fd030]  <- Cortex-A53 / r0p0 (Snapdragon 410 / MSM8916)
@@ -3134,7 +3138,21 @@ GuessSoCbySignature() {
 			;;
 		*A57r1p3*)
 			# Jetson TX2, 1-4 x Cortex-A57 / r1p3 + 0-2 x Denver 2 / r0p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32
-			echo "Nvidia Jetson TX2"
+			# or Renesas R-Car family: 2-4 x Cortex-A57 / r1p3 + 0-4 Cortex-A53 / r0p4 / https://jira.automotivelinux.org/browse/SPEC-2614?focusedCommentId=20987&page=com.atlassian.jira.plugin.system.issuetabpanels%3Acomment-tabpanel
+			case "${DTCompatible}" in
+				*r8a7795*)
+					echo "Renesas R8A7795/R-Car H3"
+					;;
+				*r8a77965*)
+					echo "Renesas R8A77965/R-Car M3N"
+					;;
+				*r8a7796*)
+					echo "Renesas R8A7796/R-Car M3"
+					;;
+				*Nvidia*)
+					echo "Nvidia Jetson TX2"
+					;;
+			esac
 			;;
 		*NVidiar0p0*)
 			# Nvidia AGX Xavier | 4-8 x NVidia Carmel / r0p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp

@@ -102,7 +102,7 @@ Main() {
 	done
 
 	CheckRelease
-	CheckLoad
+	CheckLoadAndDmesg
 	[ -f /sys/devices/system/cpu/cpufreq/policy0/scaling_governor ] && \
 		read OriginalCPUFreqGovernor </sys/devices/system/cpu/cpufreq/policy0/scaling_governor 2>/dev/null
 	BasicSetup performance >/dev/null 2>&1
@@ -1171,7 +1171,17 @@ CheckRelease() {
 	esac
 } # CheckRelease
 
-CheckLoad() {
+CheckLoadAndDmesg() {
+	# Check if kernel ring buffer contains boot messages. These help identifying HW.
+	dmesg | grep -q '0.000000] Booting Linux'
+	case $? in
+		1)
+			echo -e "${LRED}${BOLD}WARNING: dmesg output does not contain early boot messages which\nhelp in identifying hardware details.${NC}\n"
+			echo -e "It is recommended to reboot now and then execute the benchmarks.\nPress ${BOLD}[ctrl]-[c]${NC} to stop or any other key to continue.\c"
+			read
+			;;
+	esac
+
 	# Only continue if average load is less than 0.1 or averaged CPU utilization is lower
 	# than 2.5% for 30 sec. Please note that average load on Linux is *not* the same as CPU
 	# utilization: https://www.brendangregg.com/blog/2017-08-08/linux-load-averages.html
@@ -1195,7 +1205,7 @@ CheckLoad() {
 		kill ${MonitoringPID}
 	fi
 	echo ""
-} # CheckLoad
+} # CheckLoadAndDmesg
 
 GetCPUClusters() {
 	if [ "X${VirtWhat}" != "X" -a "X${VirtWhat}" != "Xnone" ]; then
@@ -1508,16 +1518,15 @@ InitialMonitoring() {
 	[ "X${BOARD_NAME}" != "X" ] && \
 		echo "Armbian info:   ${BOARD_NAME}, ${BOARDFAMILY}, ${VERSION}, ${BUILD_REPOSITORY_URL}" | sed 's/,\ $//' >>${ResultLog}
 
-	# Log system info and BIOS/UEFI versions if available and running bare metal:
-	if [ "X${VirtWhat}" = "X" -o "X${VirtWhat}" = "Xnone" ]; then
-		SystemInfo="$(dmidecode -t system 2>/dev/null | egrep "Manufacturer: |Product Name: |Version: |Family: |SKU Number: " | egrep -v ":  $|O.E.M.|123456789|: Not |Default|default|System Product Name|System manufacturer|System Version")"
-		if [ "X${SystemInfo}" != "X" ]; then
-			echo -e "\nDevice Info:\n${SystemInfo}" >>${ResultLog}
-		fi
-		UEFIInfo="$(dmidecode -t bios 2>/dev/null | egrep "Vendor:|Version:|Release Date:|Revision:")"
-		if [ "X${UEFIInfo}" != "X" ]; then
-			echo -e "\nBIOS/UEFI:\n${UEFIInfo}" >>${ResultLog}
-		fi
+	# Log system info and BIOS/UEFI versions if available:
+	SystemInfo="$(dmidecode -t system 2>/dev/null | egrep "Manufacturer: |Product Name: |Version: |Family: |SKU Number: " | egrep -v ":  $|O.E.M.|123456789|: Not |Default|default|System Product Name|System manufacturer|System Version")"
+	if [ "X${SystemInfo}" != "X" ]; then
+		# Skip worthless SMBIOS/DMI emulation on RPi
+		grep -i -q "raspberrypi" <<<"${SystemInfo}" || echo -e "\nDevice Info:\n${SystemInfo}" >>${ResultLog}
+	fi
+	UEFIInfo="$(dmidecode -t bios 2>/dev/null | egrep "Vendor:|Version:|Release Date:|Revision:")"
+	if [ "X${UEFIInfo}" != "X" ]; then
+		echo -e "\nBIOS/UEFI:\n${UEFIInfo}" >>${ResultLog}
 	fi
 
 	# On Raspberries we also collect 'firmware' information and on RPi 4 check SoC revision
@@ -1709,7 +1718,7 @@ CheckCPUCluster() {
 		MeasuredSpeed=$(taskset -c ${CpuToCheck} "${InstallLocation}"/mhz/mhz 3 1000000 | awk -F" cpu_MHz=" '{print $2}' | awk -F" " '{print $1}' | sort -r -n | tr '\n' '/' | sed 's|/$||')
 		SpeedSum=$(tr '/' '\n' <<<"${MeasuredSpeed}" | tr -d '.' | awk '{s+=$1} END {printf "%.0f", s}')
 		RoundedSpeed=$(( ${SpeedSum} / 3000 ))
-		echo -e "No cpufreq support available. Measured on cpu${CpuToCheck}: ${RoundedSpeed} Mhz (${MeasuredSpeed})"
+		echo -e "No cpufreq support available. Measured on cpu${CpuToCheck}: ${RoundedSpeed} MHz (${MeasuredSpeed})"
 	fi
 } # CheckCPUCluster
 
@@ -2286,7 +2295,7 @@ GuessARMSoC() {
 	#      Cortex-A57 / r1p3: Nvidia Jetson TX2, Renesas R8A7795/R8A7796/R8A77965
 	#      Cortex-A72 / r0p0: Mediatek MT8173
 	#      Cortex-A72 / r0p2: HiSilicon Kunpeng 916, NXP i.MX8QM/LS2xx8A, Rockchip RK3399, Socionext LD20, 
-	#      Cortex-A72 / r0p3: Broadcom BCM2711, NXP LX2xx0A, Marvell Armada3900-A1, AWS Graviton -> https://tinyurl.com/y47yz2f6
+	#      Cortex-A72 / r0p3: Broadcom BCM2711, NXP LX2xx0A, Marvell Armada3900-A1, Xilinx Versal, AWS Graviton -> https://tinyurl.com/y47yz2f6
 	#      Cortex-A73 / r0p1: HiSilicon Kirin 970
 	#      Cortex-A73 / r0p2: Amlogic A311D/A311D2/S922X
 	#      Cortex-A76 / r4p0: Rockchip RK3588/RK3588s
@@ -2316,7 +2325,7 @@ GuessARMSoC() {
 	# rockchip-cpuinfo cpuinfo: SoC            : 35880000 --> http://ix.io/3Ypr (RK3588), http://ix.io/3XYo (RK3588S)
 	#
 	# Amlogic: dmesg | grep 'soc soc0:'
-	# soc soc0: Amlogic Meson8b (S805) RevA (1b - 0:B72) detected <-- ODROID-C1 / S805-onecloud / Endless Computers Endless Mini
+	# soc soc0: Amlogic Meson8b (S805) RevA (1b - 0:B72) detected <-- ODROID-C1 / S805-onecloud / Endless Computers Endless Mini, TRONFY MXQ S805
 	# soc soc0: Amlogic Meson8m2 (S812) RevA (1d - 0:74E) detected <-- Akaso M8S / Tronsmart MXIII Plus
 	# soc soc0: Amlogic Meson GXBB (S905) Revision 1f:b (0:1) Detected <-- ODROID-C2
 	# soc soc0: Amlogic Meson GXBB (S905) Revision 1f:c (0:1) Detected <-- ODROID-C2
@@ -2443,6 +2452,7 @@ GuessARMSoC() {
 	# CPU: ARMv7 Processor [414fc091] revision 1 (ARMv7), cr=50c5387d  <-  Cortex-A9 / r4p1 / Armada 375/38x
 	# CPU: ARMv7 Processor [511f04d0] revision 0 (ARMv7), cr=10c5387d  <-  Qualcomm Krait / r1p0 / Qualcomm  MSM8960 (Snapdragon S4 Plus)
 	# CPU: ARMv7 Processor [512f04d0] revision 0 (ARMv7), cr=10c5787d  <-  Qualcomm Krait / r2p0 / Qualcomm IPQ806x
+	# CPU: ARMv6-compatible processor [410fb767] revision 7 (ARMv7), cr=00c5387d <- ARM1176 / r0p7: Broadcom BCM2835/BCM2708
 	#
 	# (MIDR_EL1: https://archive.ph/q80BH –– for vendor and core ID see GetARMCore
 	# function above, e.g. Vendor ID 41 is ARM, 48 is HiSilicon, 51 Qualcomm and so on)
@@ -2493,7 +2503,7 @@ GuessARMSoC() {
 	# Booting Linux on physical CPU 0x0000000000 [0x412fd050]  <- Cortex-A55 / r2p0 (RK3566/RK3568 or RK3588/RK3588s or S905X4)
 	# Booting Linux on physical CPU 0x0000000000 [0x411fd071]  <- Cortex-A57 / r1p1 (Tegra X1)
 	# Booting Linux on physical CPU 0x0000000000 [0x411fd072]  <- Cortex-A57 / r1p2 (AMD Opteron A1100)
-	# Booting Linux on physical CPU 0x0000000000 [0x410fd083]  <- Cortex-A72 / r0p3 (BCM2711 or LX2120A or Marvell Armada3900-A1 or AWS Graviton)
+	# Booting Linux on physical CPU 0x0000000000 [0x410fd083]  <- Cortex-A72 / r0p3 (BCM2711 or LX2120A or Marvell Armada3900-A1 or AWS Graviton or Xilinx Versal)
 	# Booting Linux on physical CPU 0x0000080000 [0x481fd010]  <- HiSilicon Kunpeng-920 / r1p0
 	# Booting Linux on physical CPU 0x0000000000 [0x51df805e]  <- Qualcomm Kryo 4XX Silver / r13p14 (Snapdragon 8cx)
 	# Booting Linux on physical CPU 0x0000000000 [0x413fd0c1]  <- Neoverse-N1 / r3p1 (Ampere Altra)
@@ -2598,7 +2608,7 @@ GuessARMSoC() {
 								echo "Amlogic S912"
 								;;
 							24*)
-								# TXLX
+								# TXLX: T962X, T962E
 								echo "Amlogic T962X/T962E"
 								;;
 							25*)
@@ -2645,8 +2655,8 @@ GuessARMSoC() {
 								echo "Amlogic S922X/A311D"
 								;;
 							2b*)
-								# SM1: S905X3, S905D3: 2b:b (1:2), 2b:c (4:2), 2b:c (10:2), 2b:b (40:2)
-								echo "Amlogic S905X3/S905D3"
+								# SM1: S905X3, S905D3, S905Y3: 2b:b (1:2), 2b:c (4:2), 2b:c (10:2), 2b:b (40:2)
+								echo "Amlogic S905X3/S905D3/S905Y3"
 								;;
 							2c*)
 								# A1: A113L
@@ -2657,12 +2667,12 @@ GuessARMSoC() {
 								echo "Amlogic T962X2"
 								;;
 							2f*)
-								# TM2: ?
-								echo "unknown Amlogic TM2 SoC, serial $(cut -c-6 <<<"${AmLogicSerial}")..."
+								# TM2: T962X3, T962E2
+								echo "Amlogic T962X3/T962E2, serial $(cut -c-6 <<<"${AmLogicSerial}")..."
 								;;
 							32*)
-								# SC2: S905X4
-								echo "Amlogic S905X4"
+								# SC2: S905X4, S905C2
+								echo "Amlogic S905X4/S905C2"
 								;;
 							36*)
 								# T7: A311D2: 36:b (1:3)
@@ -3038,6 +3048,10 @@ GuessSoCbySignature() {
 			# BCM2711, 4 x Cortex-A72 / r0p3 / fp asimd evtstrm crc32 (running 32-bit: half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm crc32)
 			# or Marvell Armada3900-A1, 4 x Cortex-A72 / r0p3 / https://community.cisco.com/t5/wireless/catalyst-9130ax-ap-booting-into-wnc-linux-instead-of-ios-xe/td-p/4460181
 			grep -q raspberrypi <<<"${DTCompatible}" && echo "BCM2711${BCM2711}" || echo "Marvell Armada3900-A1"
+			;;
+		??A72r0p3??A72r0p3)
+			# Xilinx Versal, 2 x Cortex-A72 / r0p3 / fp asimd aes pmull sha1 sha2 crc32 cpuid
+			echo "Xilinx Versal"
 			;;
 		10A7r0p310A7r0p310A7r0p310A7r0p304A15r2p304A15r2p304A15r2p304A15r2p3)
 			# Exynos 5422, 4 x Cortex-A7 / r0p3 + 4 x Cortex-A15 / r2p3 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae (with 5.x also evtstrm)

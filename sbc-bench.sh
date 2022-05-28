@@ -1974,7 +1974,13 @@ SummarizeResults() {
 				MHz="${HighestClock}/${LowestClock} MHz"
 			fi
 		else
-			MHz="no cpufreq support"
+			# no cpufreq support, we check measured values and use them if available
+			MeasuredClockspeeds="$(awk -F": " '/No cpufreq support available. Measured on cpu/ {print $2}' <${ResultLog} | cut -f1 -d' ' | head -n ${#ClusterConfig[@]} | tr '\n' '/')"
+			if [ "X${MeasuredClockspeeds}" = "X/" ]; then
+				MHz="no cpufreq support"
+			else
+				MHz="$(sed 's|/$| MHz|' <<<"${MeasuredClockspeeds}")"
+			fi
 		fi
 		KernelVersion="$(awk -F"." '{print $1"."$2}' <<<"${KernelVersion}")"
 		KernelArch="$(uname -m | sed -e 's/armv7l/armhf/' -e 's/aarch64/arm64/')"
@@ -2248,6 +2254,7 @@ GuessARMSoC() {
 	#    ARM11 MPCore / r0p5: PLX NAS7820
 	#         ARM1176 / r0p7: Broadcom BCM2835
 	#       Cortex-A5 / r0p1: Amlogic S805
+	#       Cortex-A7 / r0p2: MediaTek MT6589/TMK6588
 	#       Cortex-A7 / r0p3: Allwinner A31, MediaTek MT7623, Samsung Exynos 5422
 	#       Cortex-A7 / r0p4: Allwinner A20
 	#       Cortex-A7 / r0p5: Allwinner H3/H2+/R40/V40/A33/R16/A83T/H8/S3/V3/V3s, Broadcom BCM2836, HiSilicon Hi351x, Freescale/NXP i.MX7D/i.MX6 ULL, Microchip SAMA7G54, Qualcomm MDM9607, Renesas RZ/N1, Rockchip RK3229/RK3228A/RV1108/RV1109/RV1126, SigmaStar SSD201/SSD202D, STMicroelectronics STM32MP157
@@ -2264,7 +2271,7 @@ GuessARMSoC() {
 	#      Cortex-A15 / r0p4: Samsung Exynos 5 Dual 5250
 	#      Cortex-A15 / r2p3: Samsung Exynos 5422
 	#      Cortex-A15 / r2p4: AnnapurnaLabs Alpine
-	#      Cortex-A15 / r3p2: Renesas r8a7790
+	#      Cortex-A15 / r3p2: Renesas R8A7790
 	#      Cortex-A15 / r3p3: Nvidia Tegra K1
 	#      Cortex-A17 / r0p1: Rockchip RK3288
 	#      Cortex-A35 / r0p2: NXP i.MX8QXP, Rockchip RK1808/RK3308/RK3326/PX30
@@ -2285,6 +2292,7 @@ GuessARMSoC() {
 	#      Cortex-A76 / r4p0: Rockchip RK3588/RK3588s
 	#    Cortex-A78AE / r0p1: Nvidia Jetson Orin NX / AGX Orin
 	#     Neoverse-N1 / r3p1: Ampere Altra, AWS Graviton2
+	#     Neoverse-V1 / r1p1: AWS Graviton3
 	#   NVidia Carmel / r0p0: Jetson AGX Xavier
 	# NVidia Denver 2 / r0p0: Nvidia Jetson TX2
 	#     Kunpeng-920 / r1p0: HiSilicon Kunpeng 920
@@ -2337,6 +2345,7 @@ GuessARMSoC() {
 	# soc soc0: Amlogic Meson GXL (S905M2) Revision 21:d (e4:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson GXL (S905W) Revision 21:e (a5:2) Detected <-- Tanix TX3 Mini / JetHome JetHub J80 / Amlogic Meson GXL (S905X) P212 Development Board / Amlogic Meson GXL (S905W) P281 Development Board
 	# soc soc0: Amlogic Meson GXL (S905L) Revision 21:e (c5:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board
+	# soc soc0: Amlogic Meson GXM (Unknown) Revision 22:a (82:2) Detected <-- Amlogic Meson GXM (S912) Q201 Development Board
 	# soc soc0: Amlogic Meson GXM (S912) Revision 22:a (82:2) Detected <-- Beelink GT1 / Octopus Planet / Amlogic Meson GXM (S912) Q200 Development Board / Amlogic Meson GXM (S912) Q201 Development Board
 	# soc soc0: Amlogic Meson GXM (S912) Revision 22:b (82:2) Detected <-- Tronsmart Vega S96 / Octopus Planet / Amlogic Meson GXM (S912) Q201 Development Board
 	# soc soc0: Amlogic Meson AXG (Unknown) Revision 25:b (43:2) Detected <-- JetHome JetHub J100
@@ -2382,6 +2391,7 @@ GuessARMSoC() {
 	#   - S912: 22:a (82:2)
 	# - Q201 Development Board (GXM):
 	#   - S912: 22:a (82:2), 22:b (82:2)
+	#   - Unknown: 22:a (82:2)
 	# - U200 Development Board (G12A):
 	#   - Unknown: 28:b (70:2), 28:c (70:2)
 	#
@@ -2406,6 +2416,7 @@ GuessARMSoC() {
 	# core type and stepping of cpu0:
 	# CPU: ARMv7 Processor [410fc051] revision 1 (ARMv7), cr=10c5387d  <-  Cortex-A5 / r0p1 / Amlogic S805
 	# CPU: ARMv7 Processor [410fc073] revision 3 (ARMv7), cr=10c5387d  <-  Cortex-A7 / r0p3 / Exynos 5422
+	# CPU: ARMv7 Processor [410fc072] revision 2 (ARMv7), cr=10c5387d  <-  Cortex-A7 / r0p2 / MediaTek MT6589/TMK6588
 	# CPU: ARMv7 Processor [410fc073] revision 3 (ARMv7), cr=50c5387d  <-  Cortex-A7 / r0p3 / Banana Pi M2 (Allwinner A31), Odroid XU4 (Exynos 5422)
 	# CPU: ARMv7 Processor [410fc074] revision 4 (ARMv7), cr=10c5387d  <-  Cortex-A7 / r0p4 / Allwinner A20: Banana Pi
 	# CPU: ARMv7 Processor [410fc074] revision 4 (ARMv7), cr=50c5387d  <-  Cortex-A7 / r0p4 / Allwinner A20: Banana Pi, Banana Pi Pro, Cubieboard 2, Cubietruck, Lime 2, OLinuXino-A20, pcDuino3 Nano
@@ -2426,7 +2437,7 @@ GuessARMSoC() {
 	# CPU: ARMv7 Processor [413fc090] revision 0 (ARMv7), cr=10c5387d  <-  Cortex-A9 / r3p0 / RK3306 / RK3188 / Cyclone V FPGA SoC / Exynos 4412
 	# CPU: ARMv7 Processor [413fc090] revision 0 (ARMv7), cr=10c53c7f  <-  Cortex-A9 / r3p0 / Amlogic 8726-MX
 	# CPU: ARMv7 Processor [413fc090] revision 0 (ARMv7), cr=50c5387d  <-  Cortex-A9 / r3p0 / Calxeda Highbank
-	# CPU: ARMv7 Processor [413fc0f2] revision 2 (ARMv7), cr=10c5347d  <-  Cortex-A15 / r3p2 / Renesas r8a7790 SoC
+	# CPU: ARMv7 Processor [413fc0f2] revision 2 (ARMv7), cr=10c5347d  <-  Cortex-A15 / r3p2 / Renesas R8A7790 SoC
 	# CPU: ARMv7 Processor [414fc091] revision 1 (ARMv7), cr=10c5387d  <-  Cortex-A9 / r4p1 / Amlogic S812
 	# CPU: ARMv7 Processor [414fc091] revision 1 (ARMv7), cr=10c53c7d  <-  Cortex-A9 / r4p1 / Marvell Armada 385 Development Board / Freescale/NXP i.MX6SLL (Kindle Paperwhite 4)
 	# CPU: ARMv7 Processor [414fc091] revision 1 (ARMv7), cr=50c5387d  <-  Cortex-A9 / r4p1 / Armada 375/38x
@@ -2486,10 +2497,11 @@ GuessARMSoC() {
 	# Booting Linux on physical CPU 0x0000080000 [0x481fd010]  <- HiSilicon Kunpeng-920 / r1p0
 	# Booting Linux on physical CPU 0x0000000000 [0x51df805e]  <- Qualcomm Kryo 4XX Silver / r13p14 (Snapdragon 8cx)
 	# Booting Linux on physical CPU 0x0000000000 [0x413fd0c1]  <- Neoverse-N1 / r3p1 (Ampere Altra)
+	# Booting Linux on physical CPU 0x0000000000 [0x411fd401]  <- Neoverse-V1 / r1p1 (AWS Graviton3)
 	# Booting Linux on physical CPU 0x0000000000 [0x410fd421]  <- Cortex-A78AE / r0p1 (Nvidia Jetson Orin NX / AGX Orin)
 	# Booting Linux on physical CPU 0x0000000000 [0x611f0221]  <- Apple Icestorm / r1p1 (Apple M1)
 	#
-	# Subsequently booted CPU cores show up in dmesg output like this:
+	# Additional CPU cores show up in dmesg output like this (always exposing MIDR_EL1):
 	# CPU4: Booted secondary processor [410fd082]                <- Cortex-A72 / r0p2 (RK3399 or i.MX8QM or Kunpeng-916 or LD20 or LS2088A)
 	# CPU2: Booted secondary processor 0x0000000100 [0x410fd092] <- Cortex-A73 / r0p2 (S922X/A311D or A311D2)
 	# CPU7: Booted secondary processor 0x0000000700 [0x51df804e] <- Qualcomm Kryo 4XX Gold / r13p14 (Snapdragon 8cx)
@@ -3149,7 +3161,7 @@ GuessSoCbySignature() {
 				*r8a7796*)
 					echo "Renesas R8A7796/R-Car M3"
 					;;
-				*Nvidia*)
+				*nvidia*)
 					echo "Nvidia Jetson TX2"
 					;;
 			esac
@@ -3175,6 +3187,10 @@ GuessSoCbySignature() {
 		50A17r0p150A17r0p150A17r0p150A17r0p1)
 			# RK3288, 4 x Cortex-A17 / r0p1 / half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
 			echo "Rockchip RK3288"
+			;;
+		?0A7r0p2?0A7r0p2?0A7r0p2?0A7r0p2)
+			# MT6589, 4 x Cortex-A7 / r0p2 / https://gist.github.com/MaTBeu4uk/3a1bea6bf8c658829622f3ecbcf4b7eb
+			echo "Mediatek MT6589"
 			;;
 		?0A7r0p3?0A7r0p3?0A7r0p3?0A7r0p3)
 			# MT7623 or Allwinner A31, 4 x Cortex-A7 / r0p3 / half thumb fastmult vfp edsp (thumbee) neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
@@ -3313,7 +3329,9 @@ GuessSoCbySignature() {
 			# share same core types, stepping, CPU flags and even cache sizes. Measured clockspeeds
 			# should differ (2.5 GHz for AWS vs. 3/3+ GHz for Altra while reviews mentioned little
 			# less). Altra Max (Mystique) could be identified by its smaller L3 cache.
-			if [ "X${VirtWhat}" = "X" -o "X${VirtWhat}" = "Xnone" ]; then
+			MeasuredClockspeed=$(awk -F": " '/No cpufreq support available. Measured on cpu/ {print $2}' <${ResultLog} | cut -f1 -d' ' | head -n 1)
+			if [ ${MeasuredClockspeed} -gt 2550 ]; then
+				# Lame assumption that cpufreq above 2.5GHz identifies Ampere Altra
 				case $(lscpu | awk -F":" '/ per socket/ {print $2}') in
 					*32)
 						echo "$(( ${CPUCores} / 32 )) x Ampere Altra AADP-32"
@@ -3327,11 +3345,22 @@ GuessSoCbySignature() {
 					*128)
 						echo "$(( ${CPUCores} / 128 )) x Ampere Altra Max"
 						;;
+					*)
+						echo "Ampere Altra / Altra Max"
+						;;
 				esac
 			else
-				# logic flawed ofc since VMs could also run on the Ampere Altra
-				echo "AWS Graviton2"
+				if [ "X${VirtWhat}" = "X" -o "X${VirtWhat}" = "Xnone" ]; then
+					# if no virtualization is detected we might be on downclocked Ampere Altra
+					echo "Ampere Altra / Altra Max"
+				else
+					echo "AWS Graviton2"
+				fi
 			fi
+			;;
+		*Neoverse-V1r1p1*)
+			# AWS Graviton3: 1/2/4/8/16/32/48/64 vCPU Neoverse-V1 / r1p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 sve asimdfhm dit uscat ilrcpc flagm ssbs paca pacg dcpodp svei8mm svebf16 i8mm bf16 dgh rng
+			echo "AWS Graviton3"
 			;;
 		*Appler0p0*Appler0p0*Appler0p0*Appler0p0*Apple*Apple*Apple*Apple*|*Appler1p1*Appler1p1*Appler1p1*Appler1p1*Appler1p1*Appler1p1*Appler1p1*Appler1p1)
 			# Apple M1: 4 x Apple Icestorm / r1p1 + 4 x Apple Firestorm / r1p1 / https://gist.github.com/z4yx/13520bd2beef49019b1b7436e3b95ddd

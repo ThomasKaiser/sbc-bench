@@ -2252,9 +2252,9 @@ CacheAndDIMMDetails() {
 		fi
 	fi
 
-	if [ ${#ClusterConfig[@]} -gt 1 ]; then
-		# only output individual cache sizes from sysfs if more than 1 CPU cluster
-		# (since otherwise lscpu already reported the full picture)
+	if [ ${#ClusterConfig[@]} -gt 1 -o ${CPUArchitecture} == *riscv* ]; then
+		# only output individual cache sizes from sysfs on RISC-V or if more than 1 CPU
+		# cluster (since otherwise lscpu already reported the full picture)
 		find /sys/devices/system/cpu -name "cache" -type d | sort -V | while read ; do
 			find "${REPLY}" -name size -type f | while read ; do
 				echo -e "\n${REPLY}: $(cat ${REPLY})\c"
@@ -3404,7 +3404,7 @@ GuessSoCbySignature() {
 
 GetCPUSignature() {
 	case ${CPUArchitecture} in
-		arm*|aarch*)
+		arm*|aarch*|riscv*)
 			sed -e '1,/^ CPU/ d' -e 's/Cortex-//' <<<"${CPUTopology}" | while read ; do
 				echo -e "$(awk -F" " '{print $2$3$6$8$9$10}' <<<"${REPLY}" | sed -e 's/-//g' -e 's/\///g')\c"
 			done

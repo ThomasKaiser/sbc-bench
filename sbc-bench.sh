@@ -128,7 +128,6 @@ Main() {
 		fi
 	fi
 	CheckTimeInState after
-	"${SevenZip}" b >/dev/null 2>&1 & # run 7-zip bench in the background
 	CheckClockspeedsAndSensors # test again loaded system after heating the SoC to the max
 	SummarizeResults
 	UploadResults
@@ -1315,7 +1314,7 @@ BasicSetup() {
 			;;
 		x86*|i686)
 			# if no DeviceName is already assigned then try to construct it from DMI data
-			if [ -z ${DeviceName} ]; then
+			if [ -z "${DeviceName}" ]; then
 				if [ "X${VirtWhat}" = "X" -o "X${VirtWhat}" = "Xnone" ]; then
 					# seems bare metal, but we double check
 					grep -q -i "Virtual" <<<"${DMIProductName}" && \
@@ -1779,12 +1778,13 @@ Run7ZipBenchmark() {
 	/bin/bash "${PathToMe}" -m ${MonInterval} >>${MonitorLog} &
 	MonitoringPID=$!
 	if [ ${#ClusterConfig[@]} -eq 1 ]; then
-		# all CPU cores have same package id
+		# Only cpu0 or single CPU cluster
 		CPUInfo="$(GetCPUInfo 0)"
 		echo -e "\nExecuting benchmark single-threaded on cpu0${CPUInfo}" >>${TempLog}
 		[ -s "${NetioConsumptionFile}" ] && sleep 10
 		taskset -c 0 "${SevenZip}" b -mmt=1 >>${TempLog}
 	else
+		# test each cluster individually
 		for i in $(seq 0 $(( ${#ClusterConfig[@]} -1 )) ) ; do
 			CPUInfo="$(GetCPUInfo ${ClusterConfig[$i]})"
 			echo -e "\nExecuting benchmark single-threaded on cpu${ClusterConfig[$i]}${CPUInfo}" >>${TempLog}
@@ -1817,8 +1817,9 @@ Run7ZipBenchmark() {
 		kill ${MonitoringPID}
 		echo -e "\n##########################################################################\n" >>${ResultLog}
 		cat ${TempLog} >>${ResultLog}
-		# create average score from all $RunHowManyTimes runs
-		CombinedScore=$(( $(awk -F" " '/^Tot:/ {s+=$4} END {printf "%.0f", s}' <${TempLog}) / ${RunHowManyTimes} ))
+		# create average score from all finished benchmark runs (7-zip can get oom-killed)
+		FinishedRuns=$(grep -c '^Tot:' ${TempLog})
+		CombinedScore=$(( $(awk -F" " '/^Tot:/ {s+=$4} END {printf "%.0f", s}' <${TempLog}) / ${FinishedRuns} ))
 	else
 		# use the single score instead on a single core machine
 		CombinedScore=$(awk -F" " '/^Tot:/ {print $4}' <${TempLog})
@@ -1983,12 +1984,13 @@ SummarizeResults() {
 				MHz="${HighestClock}/${LowestClock} MHz"
 			fi
 		else
-			# no cpufreq support, we check measured values and use them if available
-			MeasuredClockspeeds="$(awk -F": " '/No cpufreq support available. Measured on cpu/ {print $2}' <${ResultLog} | cut -f1 -d' ' | head -n ${#ClusterConfig[@]} | tr '\n' '/')"
-			if [ "X${MeasuredClockspeeds}" = "X/" ]; then
+			# no cpufreq support, we check first measured value and use it if available
+			MeasuredClockspeed=$(awk -F": " '/No cpufreq support available. Measured on cpu/ {print $2}' <${ResultLog} | cut -f1 -d' ' | head -n 1)
+			if [ "X${MeasuredClockspeed}" = "X" ]; then
 				MHz="no cpufreq support"
 			else
-				MHz="$(sed 's|/$| MHz|' <<<"${MeasuredClockspeeds}")"
+				# slightly round up measured clockspeed
+				MHz="~$(( $(awk '{printf ("%0.0f",$1/10+0.5); }' <<<"${MeasuredClockspeed}") * 10 ))"
 			fi
 		fi
 		KernelVersion="$(awk -F"." '{print $1"."$2}' <<<"${KernelVersion}")"
@@ -2242,13 +2244,18 @@ CacheAndDIMMDetails() {
 			fi
 		fi
 	fi
-	find /sys/devices/system/cpu -name "cache" -type d | sort -V | while read ; do
-		find "${REPLY}" -name size -type f | while read ; do
-			echo -e "\n${REPLY}: $(cat ${REPLY})\c"
-			[ -f ${REPLY%/*}/level ] && echo -e ", level: $(cat ${REPLY%/*}/level)\c"
-			[ -f ${REPLY%/*}/type ] && echo -e ", type: $(cat ${REPLY%/*}/type)\c"
-		done
-	done | sed -e 's|/sys/devices/system/cpu/||' -e 's|cache/||' -e 's|/size||'
+
+	if [ ${#ClusterConfig[@]} -gt 1 ]; then
+		# only output individual cache sizes from sysfs if more than 1 CPU cluster
+		# (since otherwise lscpu already reported the full picture)
+		find /sys/devices/system/cpu -name "cache" -type d | sort -V | while read ; do
+			find "${REPLY}" -name size -type f | while read ; do
+				echo -e "\n${REPLY}: $(cat ${REPLY})\c"
+				[ -f ${REPLY%/*}/level ] && echo -e ", level: $(cat ${REPLY%/*}/level)\c"
+				[ -f ${REPLY%/*}/type ] && echo -e ", type: $(cat ${REPLY%/*}/type)\c"
+			done
+		done | sed -e 's|/sys/devices/system/cpu/||' -e 's|cache/||' -e 's|/size||' | sort -n
+	fi
 	echo ""
 } # CacheAndDIMMDetails
 
@@ -2288,8 +2295,8 @@ GuessARMSoC() {
 	#      Cortex-A53 / r0p2: Qualcomm Snapdragon 810 (MSM8994)
 	#      Cortex-A53 / r0p3: HiSilicon Kirin 620/930, Samsung/Nexell S5P6818
 	#      Cortex-A53 / r0p4: Allwinner A64/H313/H5/H6/H616/H64/R329/T507, Amlogic A113X/A113D/A311D/A311D2/S805X/S805Y/S905/S905X/S905D/S905W/S905L/S905M2/S905X2/S905Y2/S905D2/S912/S922X/T962X2, Broadcom BCM2837/BCM2709/BCM2710/RP3A0-AU (BCM2710A1), HiSilicon Kirin 960/970, Marvell Armada 37x0, NXP i.MX8M/i.MX8QM/LS1xx8, RealTek RTD129x/RTD139x, Rockchip RK3328/RK3399, Socionext LD20
-	#      Cortex-A55 / r1p0: Amlogic S905X3/S905D3
-	#      Cortex-A55 / r2p0: Amlogic S905X4, Rockchip RK3566/RK3568/RK3588/RK3588s
+	#      Cortex-A55 / r1p0: Amlogic S905X3/S905D3/S905Y3/T962X3/T962E2
+	#      Cortex-A55 / r2p0: Amlogic S905X4/S905C2, Rockchip RK3566/RK3568/RK3588/RK3588s
 	#      Cortex-A57 / r1p1: Nvidia Tegra X1
 	#      Cortex-A57 / r1p2: AMD Opteron A1100
 	#      Cortex-A57 / r1p3: Nvidia Jetson TX2, Renesas R8A7795/R8A7796/R8A77965
@@ -2297,7 +2304,7 @@ GuessARMSoC() {
 	#      Cortex-A72 / r0p2: HiSilicon Kunpeng 916, NXP i.MX8QM/LS2xx8A, Rockchip RK3399, Socionext LD20, 
 	#      Cortex-A72 / r0p3: Broadcom BCM2711, NXP LX2xx0A, Marvell Armada3900-A1, Xilinx Versal, AWS Graviton -> https://tinyurl.com/y47yz2f6
 	#      Cortex-A73 / r0p1: HiSilicon Kirin 970
-	#      Cortex-A73 / r0p2: Amlogic A311D/A311D2/S922X
+	#      Cortex-A73 / r0p2: Amlogic A311D/A311D2/S922X, MediaTek Helio P60T
 	#      Cortex-A76 / r4p0: Rockchip RK3588/RK3588s
 	#    Cortex-A78AE / r0p1: Nvidia Jetson Orin NX / AGX Orin
 	#     Neoverse-N1 / r3p1: Ampere Altra, AWS Graviton2
@@ -2511,9 +2518,9 @@ GuessARMSoC() {
 	# Booting Linux on physical CPU 0x0000000000 [0x410fd421]  <- Cortex-A78AE / r0p1 (Nvidia Jetson Orin NX / AGX Orin)
 	# Booting Linux on physical CPU 0x0000000000 [0x611f0221]  <- Apple Icestorm / r1p1 (Apple M1)
 	#
-	# Additional CPU cores show up in dmesg output like this (always exposing MIDR_EL1):
+	# Additional ARMv8 cores show up in dmesg output like this (always exposing MIDR_EL1 except for Amlogic's T7 5.4 BSP kernel):
 	# CPU4: Booted secondary processor [410fd082]                <- Cortex-A72 / r0p2 (RK3399 or i.MX8QM or Kunpeng-916 or LD20 or LS2088A)
-	# CPU2: Booted secondary processor 0x0000000100 [0x410fd092] <- Cortex-A73 / r0p2 (S922X/A311D or A311D2)
+	# CPU2: Booted secondary processor 0x0000000100 [0x410fd092] <- Cortex-A73 / r0p2 (S922X/A311D)
 	# CPU7: Booted secondary processor 0x0000000700 [0x51df804e] <- Qualcomm Kryo 4XX Gold / r13p14 (Snapdragon 8cx)
 
 	CPUInfo="$(cat /proc/cpuinfo)"
@@ -3023,6 +3030,10 @@ GuessSoCbySignature() {
 		00A53r0p400A53r0p412A73r0p212A73r0p212A73r0p212A73r0p2)
 			# S922X/A311D, 2 x Cortex-A53 / r0p4 + 4 x Cortex-A73 / r0p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			echo "Amlogic S922X/A311D"
+			;;
+		*A73r0p2*A73r0p2*A73r0p2*A73r0p2*A73r0p2*A73r0p2*A73r0p2*A73r0p2)
+			# MediaTek Helio P60T, 8 x Cortex-A73 / r0p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32 / https://github.com/vmlemon/understand/wiki/Lenovo-ChromeBook-Duet
+			echo "MediaTek Helio P60T"
 			;;
 		00A73r0p200A73r0p200A73r0p200A73r0p214A53r0p414A53r0p414A53r0p414A53r0p4)
 			# Amlogic A311D2, 4 x Cortex-A73 / r0p2 + 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32

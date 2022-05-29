@@ -275,13 +275,20 @@ GetARMCore() {
 	c0:Ampere" | cut -f2 -d:
 } # GetARMCore
 
-GetCPUType() {
-	# function that returns name of ARM cores
+GetCoreType() {
+	# function that returns name of ARM/RISC-V cores
 	# $1 is the CPU in question, 1st CPU is always cpu0
-	if [ -n "${ARMTypes}" ]; then
-		GetARMCore "${ARMTypes[$(( $1 * 2 ))]}" "${ARMTypes[$(( $(( $1 * 2 )) + 1 ))]}"
-	fi
-} # GetCPUType
+	case ${CPUArchitecture} in
+		arm*|aarch*)
+			if [ -n "${ARMTypes}" ]; then
+				GetARMCore "${ARMTypes[$(( $1 * 2 ))]}" "${ARMTypes[$(( $(( $1 * 2 )) + 1 ))]}"
+			fi
+			;;
+		riscv*)
+			awk -F": " '/^uarch/ {print $2}' /proc/cpuinfo | sed -n $(( $1 + 1 ))p
+			;;
+	esac
+} # GetCoreType
 
 GetARMStepping() {
 	# Parse '^CPU variant|^CPU revision' fields from /proc/cpuinfo and transform them
@@ -293,9 +300,9 @@ GetARMStepping() {
 } # GetARMStepping
 
 GetCPUInfo() {
-	# function that returns ARM core type in brackets if possible otherwise empty string
-	ARMCore="$(GetCPUType $1)"
-	[ -n "${ARMCore}" ] && echo -n " (${ARMCore})"
+	# function that returns ARM/RISC-V core type in brackets if possible otherwise empty string
+	CoreType="$(GetCoreType $1)"
+	[ -n "${CoreType}" ] && echo -n " (${CoreType})"
 } # GetCPUInfo
 
 GetLastClusterCore() {
@@ -1897,7 +1904,7 @@ PrintCPUTopology() {
 	echo "                 cpufreq   min    max"
 	echo " CPU    cluster  policy   speed  speed   core type"
 	for i in $(seq 0 $(( ${CPUCores} - 1 )) ); do
-		CoreName="$(GetCPUType $i)"
+		CoreName="$(GetCoreType $i)"
 		# check if CoreName is empty
 		if [ "X${CoreName}" = "X" ]; then
 			# try to return CPU type instead of core type on x86 if available

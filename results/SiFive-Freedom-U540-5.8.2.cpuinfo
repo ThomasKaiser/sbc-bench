@@ -1,0 +1,23 @@
+processor	: 0
+hart		: 1
+isa		: rv64imafdc
+mmu		: sv39
+uarch		: sifive,u54-mc
+
+processor	: 1
+hart		: 2
+isa		: rv64imafdc
+mmu		: sv39
+uarch		: sifive,u54-mc
+
+processor	: 2
+hart		: 3
+isa		: rv64imafdc
+mmu		: sv39
+uarch		: sifive,u54-mc
+
+processor	: 3
+hart		: 4
+isa		: rv64imafdc
+mmu		: sv39
+uarch		: sifive,u54-mc

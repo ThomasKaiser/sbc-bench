@@ -1,0 +1,5 @@
+processor	: 0
+hart		: 0
+isa		: rv64imafdc
+mmu		: sv39
+uarch		: thead,c906

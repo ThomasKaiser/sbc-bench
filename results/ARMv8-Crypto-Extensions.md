@@ -38,7 +38,7 @@ It all boils down to type of ARM core and CPU clockspeed since the ratio between
   * Cortex-A53/A55: ~467, A53/A55 running at 1000 MHz will produce an ~467000k aes-256-cbc score (or ~935000k at 2000 MHz)
   * Cortex-A72/A73/A76: ~570, A72/A73/A76 running at 1000 MHz will produce an ~570000k aes-256-cbc score (or ~1140000k at 2000 MHz)
 
-Amazon's Graviton/Graviton2 ARM CPUs score identical to A72/A73/A76 and the custom FTC663 core inside the [Feiteng D2000 CPU](https://en.wikipedia.org/wiki/FeiTeng_(processor)#Future_processors) performs identical to an A57.
+Amazon's Graviton/Graviton2 ARM CPUs score identical to A72/A73/A76 and the custom FTC663 core inside the [Feiteng D2000 CPU](https://en.wikipedia.org/wiki/FeiTeng_(processor)#Future_processors) performs identical to an A57. NVidia's Carmel core performs marginally better than Cortex-A57 (~374, the Jetson Xavier NX numbers below).
 
 ### Implications
 
@@ -63,6 +63,8 @@ Crawling through [sbc-bench results collection](../Results.md) comparing +25 dif
 | [Nintendo Switch](http://ix.io/3Di2) | 2090 | 746680 | 357 |
 | FTC663 | | | |
 | [Phytium D2000](http://ix.io/3Sl9) | 2300 | 828520 | 360 |
+| Carmel | | | |
+| [Jetson Xavier NX](http://ix.io/3YWp) | 1890 | 706280 | 374 |
 | Cortex-A53 | | | |
 | [Armada 3700LP](http://ix.io/1kt2) | 790 | 368330 | 466 |
 | [S912](http://ix.io/1iJ7) | 1000 | 466780 | 466 |

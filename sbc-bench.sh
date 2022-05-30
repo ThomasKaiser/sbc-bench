@@ -2316,7 +2316,7 @@ GuessARMSoC() {
 	#    Cortex-A78AE / r0p1: Nvidia Jetson Orin NX / AGX Orin
 	#     Neoverse-N1 / r3p1: Ampere Altra, AWS Graviton2
 	#     Neoverse-V1 / r1p1: AWS Graviton3
-	#   NVidia Carmel / r0p0: Jetson AGX Xavier
+	#   NVidia Carmel / r0p0: Nvidia Tegra Xavier
 	# NVidia Denver 2 / r0p0: Nvidia Jetson TX2
 	#     Kunpeng-920 / r1p0: HiSilicon Kunpeng 920
 	# Marvell 88FR131 / r2p1: Marvell Kirkwood 88F6281
@@ -2506,7 +2506,7 @@ GuessARMSoC() {
 	# 4.9.280-sun50iw9: Boot CPU: AArch64 Processor [410fd034] <- Cortex-A53 / r0p4
 	#  4.9.272-meson64: Boot CPU: AArch64 Processor [411fd050] <- Cortex-A55 / r1p0 (S905X3)
 	#   4.4.213-rk3399: Boot CPU: AArch64 Processor [410fd034] <- Cortex-A53 / r0p4
-	#      4.9.140-l4t: Boot CPU: AArch64 Processor [4e0f0040] <- NVidia Carmel / r0p0 (Jetson AGX Xavier)
+	#      4.9.140-l4t: Boot CPU: AArch64 Processor [4e0f0040] <- NVidia Carmel / r0p0 (Nvidia Tegra Xavier)
 	#      4.9.0-yocto: Boot CPU: AArch64 Processor [411fd073] <- Cortex-A57 / r1p3 (Renesas R8A7795/R-Car H3)
 	#
 	# ...while starting with later 4.1x kernels and 5.x it looks like this:
@@ -3199,8 +3199,8 @@ GuessSoCbySignature() {
 			esac
 			;;
 		*NVidiar0p0*)
-			# Nvidia AGX Xavier | 4-8 x NVidia Carmel / r0p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp
-			echo "Nvidia AGX Xavier"
+			# Nvidia Tegra Xavier | 4-8 x NVidia Carmel / r0p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp
+			echo "Nvidia Tegra Xavier"
 			;;
 		*A78AEr0p1*A78AEr0p1*A78AEr0p1*A78AEr0p1*A78AEr0p1*)
 			# Nvidia Jetson Orin NX / AGX Orin: 6-12 Cortex-A78AE / r0p1 / https://forums.developer.nvidia.com/t/orin/212053/8 https://developer.nvidia.com/embedded/jetson-orin

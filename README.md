@@ -253,3 +253,11 @@ The detailed log then will contain information how much time (in milliseconds) h
      408 MHz:  352.72 sec
 
 **Important:** to get throttling notifications running a kernel with `CONFIG_CPU_FREQ_STAT=y` is needed since otherwise cpufreq statistics are not available. And this will not work on Raspberries since there [cpufreq driver has not the slightest idea what's going on](https://github.com/raspberrypi/linux/issues/2512#issuecomment-382703153).
+
+### Unattended execution
+
+If `sbc-bench` should benchmark in an automated fashion then exporting `MODE=unattended` prior to execution will prevent warning dialogs and informative messages like 'Average load and/or CPU utilization too high' (of course `sbc-bench` will still check whether average load or CPU utilization is too high and refuse to start since benchmarking a busy system is useless):
+
+Everything sent to `stdout` can be ignored (but parsing for 'check the log' is highly recommended since hinting at too much background activity and/or swapping resulting in numbers without meaning instead of benchmark scores). Full benchmark results are available at `/var/log/sbc-bench.log` with the last line containing a performance summary. So something like this could be used for regression testing and similar stuff:
+
+    MODE=unattended sbc-bench.sh -c | grep -q 'check the log' || tail -n1 /var/log/sbc-bench.log

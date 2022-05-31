@@ -831,14 +831,14 @@ CheckNetio() {
 	if [ "X${Netio}" != "X" ]; then
 		# Try to fetch XML
 		XMLOutput="$(curl -q --connect-timeout 1 "http://${NetioDevice}/netio.xml" 2>/dev/null | tr '\015' '\012')"
-		if [ "X${XMLOutput}" = "X" ]; then
+		if [ "X${XMLOutput}" = "X" -a "X${MODE}" != "Xunattended" ]; then
 			echo -e "\nError: not able to fetch \"http://${NetioDevice}/netio.xml\" within a second.\nPlease check parameters and connection manually." >&2
 			DisplayUsage
 			exit 1
 		else
 			# check current reading of the socket we're supposed to be plugged into
 			OutputCurrent=($(grep '^<Current>' <<<"${XMLOutput}" | sed -e 's/\(<[^<][^<]*>\)//g' | tr '\n' ' '))
-			if [ ${OutputCurrent[$(( ${NetioSocket} - 1 ))]} -eq 0 ]; then
+			if [ ${OutputCurrent[$(( ${NetioSocket} - 1 ))]} -eq 0 -a "X${MODE}" != "Xunattended" ]; then
 				echo -e "\nWarning: socket ${NetioSocket} of Netio device ${NetioDevice} provides zero current.\n"
 			fi
 			NetioConsumptionFile="${TempDir}/netio.current"
@@ -1170,9 +1170,12 @@ CheckRelease() {
 			:
 			;;
 		*)
-			echo -e "${LRED}${BOLD}WARNING: This tool is meant to run only on Debian Stretch, Buster, Bullseye or Ubuntu Bionic, Focal, Jammy.${NC}\n"
-			echo -e "When executed on ${BOLD}${OperatingSystem}${NC} results are partially meaningless.\nPress [ctrl]-[c] to stop or the famous [any] key to continue.\c"
-			read
+			# only inform/ask user if $MODE != unattended
+			if [ "X${MODE}" != "Xunattended" ]; then
+				echo -e "${LRED}${BOLD}WARNING: This tool is meant to run only on Debian Stretch, Buster, Bullseye or Ubuntu Bionic, Focal, Jammy.${NC}\n"
+				echo -e "When executed on ${BOLD}${OperatingSystem}${NC} results are partially meaningless.\nPress [ctrl]-[c] to stop or the famous [any] key to continue.\c"
+				read
+			fi
 			;;
 	esac
 } # CheckRelease
@@ -1182,18 +1185,28 @@ CheckLoadAndDmesg() {
 	dmesg | grep -q '0.000000] Booting Linux'
 	case $? in
 		1)
-			echo -e "${LRED}${BOLD}WARNING: dmesg output does not contain early boot messages which\nhelp in identifying hardware details.${NC}\n"
-			echo -e "It is recommended to reboot now and then execute the benchmarks.\nPress ${BOLD}[ctrl]-[c]${NC} to stop or any other key to continue.\c"
-			read
+			if [ "X${MODE}" != "Xunattended" ]; then
+				echo -e "${LRED}${BOLD}WARNING: dmesg output does not contain early boot messages which\nhelp in identifying hardware details.${NC}\n"
+				echo -e "It is recommended to reboot now and then execute the benchmarks.\nPress ${BOLD}[ctrl]-[c]${NC} to stop or any other key to continue.\c"
+				read
+			fi
 			;;
 	esac
+
+	# check for CPU cores being offline
+	OfflineCores=$(awk -F":" '/^Off-line/ {print $2}' <<<"${LSCPU}" | tr -d ' ')
+	if [ "X${OfflineCores}" != "X" -a [ "X${MODE}" != "Xunattended" ]; then
+		echo -e "${LRED}${BOLD}WARNING: One or more CPU cores are offline: ${OfflineCores}${NC}\n"
+		echo -e "Press ${BOLD}[ctrl]-[c]${NC} to stop or any other key to continue.\c"
+		read
+	fi
 
 	# Only continue if average load is less than 0.1 or averaged CPU utilization is lower
 	# than 2.5% for 30 sec. Please note that average load on Linux is *not* the same as CPU
 	# utilization: https://www.brendangregg.com/blog/2017-08-08/linux-load-averages.html
 	AvgLoad1Min=$(awk -F" " '{print $1*100}' < /proc/loadavg)
 	if [ $AvgLoad1Min -ge 10 ]; then
-		echo -e "\nAverage load and/or CPU utilization too high (too much background activity). Waiting...\n"
+		[ "X${MODE}" != "Xunattended" ] && echo -e "\nAverage load and/or CPU utilization too high (too much background activity). Waiting...\n"
 		/bin/bash "${PathToMe}" -m 5 >"${TempDir}/wait-for-loadavg.log" &
 		MonitoringPID=$!
 		while [ $AvgLoad1Min -ge 10 -a ${CPUSum:-100} -ge 15 ]; do
@@ -1205,7 +1218,7 @@ CheckLoadAndDmesg() {
 			else
 				CPUSum=100
 			fi
-			echo -e "Too busy for benchmarking:$(uptime),  cpu: $(tail -n1 <<<"${CPUutilization}")%"
+			[ "X${MODE}" != "Xunattended" ] && echo -e "Too busy for benchmarking:$(uptime),  cpu: $(tail -n1 <<<"${CPUutilization}")%"
 			AvgLoad1Min=$(awk -F" " '{print $1*100}' < /proc/loadavg)
 		done
 		kill ${MonitoringPID}
@@ -1243,7 +1256,8 @@ BasicSetup() {
 	[ -f /proc/device-tree/model ] && read DeviceName </proc/device-tree/model
 
 	# detect environment
-	X86CPUName="$(lscpu | sed 's/ \{1,\}/ /g' | awk -F": " '/^Model name/ {print $2}' | sed -e 's/1.th Gen //' -e 's/.th Gen //' -e 's/Core(TM) //' -e 's/ Processor//' -e 's/Intel(R) Xeon(R) CPU //' -e 's/Intel(R) //' -e 's/(R)//' -e 's/CPU //' -e 's/ 0 @/ @/' -e 's/AMD //' -e 's/Authentic //' -e 's/ with .*//')"
+	LSCPU="$(lscpu)"
+	X86CPUName="$(sed 's/ \{1,\}/ /g' <<<"${LSCPU}" | awk -F": " '/^Model name/ {print $2}' | sed -e 's/1.th Gen //' -e 's/.th Gen //' -e 's/Core(TM) //' -e 's/ Processor//' -e 's/Intel(R) Xeon(R) CPU //' -e 's/Intel(R) //' -e 's/(R)//' -e 's/CPU //' -e 's/ 0 @/ @/' -e 's/AMD //' -e 's/Authentic //' -e 's/ with .*//')"
 	VirtWhat="$(systemd-detect-virt 2>/dev/null)"
 	[ -f /sys/class/dmi/id/sys_vendor ] && DMIInfo="$(grep -R . /sys/class/dmi/id/ 2>/dev/null)"
 	DMISysVendor="$(awk -F":" '/sys_vendor:/ {print $2}' <<<"${DMIInfo}" | egrep -v "System manufacturer|Default|default|Not ")"
@@ -1300,7 +1314,7 @@ BasicSetup() {
 			;;
 	esac
 
-	CPUArchitecture="$(lscpu | awk -F" " '/^Architecture/ {print $2}')"
+	CPUArchitecture="$(awk -F" " '/^Architecture/ {print $2}' <<<"${LSCPU}")"
 	case ${CPUArchitecture} in
 		arm*|aarch*|riscv*)
 			[ "X${DeviceName}" = "Xsun20iw1p1" ] && DeviceName="Allwinner D1"
@@ -1505,7 +1519,7 @@ InitialMonitoring() {
 	
 	# Log version and device info
 	read HostName </etc/hostname 2>/dev/null
-	echo -e "sbc-bench v${Version} ${DeviceName:-$HostName} ($(date -R))\n" | sed 's/  / /g' >${ResultLog}
+	echo -e "sbc-bench v${Version} ${DeviceName:-$HostName} ${MODE} ($(date -R))\n" | sed 's/  / /g' >${ResultLog}
 
 	# get distribution info
 	command -v lsb_release >/dev/null 2>&1 && (lsb_release -a 2>/dev/null | grep -v "n/a") >>${ResultLog}
@@ -1976,7 +1990,7 @@ SummarizeResults() {
 	ShowZswapStats 2>/dev/null >>${ResultLog}
 	echo >>${ResultLog}
 	cat "${TempDir}/cpu-topology.log" >>${ResultLog}
-	lscpu >>${ResultLog}
+	echo "${LSCPU}" >>${ResultLog}
 	LogEnvironment >>${ResultLog}
 	CacheAndDIMMDetails >>${ResultLog}
 
@@ -2086,7 +2100,7 @@ UploadResults() {
 	case ${UploadURL} in
 		http*)
 			# uploading results worked, check sanity of results and environment
-			echo " [${UploadURL}](${UploadURL}) |" >>${ResultLog}
+			echo " ${UploadURL} |" >>${ResultLog}
 			echo -e "\nFull results uploaded to ${UploadURL}. \c"
 			# check whether benchmark ran into a sane environment (no throttling and no swapping)
 			if [ ${IOWaitAvg:-0} -le 2 -a ${IOWaitMax:-0} -le 5 -a ${SysMax:-0} -le 5 -a ! -f ${TempDir}/throttling_info.txt ]; then
@@ -2097,7 +2111,7 @@ UploadResults() {
 						# Check whether SoC in question is already known since if true no more
 						# submissions to official results are needed
 						grep -q "^SoC guess:" "${ResultLog}"
-						if [ $? -ne 0 ]; then
+						if [ $? -ne 0 -a "X${MODE}" != "Xunattended" ]; then
 							# not an already known SoC, so suggest submitting results
 							echo -e "\n\nIn case this device ${BOLD}is not already represented${NC} in official sbc-bench results list then please"
 							echo -e "consider submitting it at https://github.com/ThomasKaiser/sbc-bench/issues with this line:"
@@ -2111,9 +2125,11 @@ UploadResults() {
 			fi
 			;;
 		*)
-			echo -e "\nUnable to upload full test results. Please copy&paste the below stuff to pastebin.com and\nprovide the URL. Check the output for throttling and swapping please.\n\n"
-			sed '/^$/N;/^\n$/D' <${ResultLog}
-			echo -e "\n\n"
+			if [ "X${MODE}" != "Xunattended" ]; then
+				echo -e "\nUnable to upload full test results. Please copy&paste the below stuff to pastebin.com and\nprovide the URL. Check the output for throttling and swapping please.\n\n"
+				sed '/^$/N;/^\n$/D' <${ResultLog}
+				echo -e "\n\n"
+			fi
 			;;
 	esac
 
@@ -2375,6 +2391,7 @@ GuessARMSoC() {
 	# soc soc0: Amlogic Meson AXG (Unknown) Revision 25:c (43:2) Detected <-- JetHome JetHub J100
 	# soc soc0: Amlogic Meson GXLX (Unknown) Revision 26:e (c1:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson G12A (Unknown) Revision 28:b (30:2) Detected <-- S905Y2 on Radxa Zero
+	# soc soc0: Amlogic Meson G12A (S905Y2) Revision 28:b (30:2) Detected <-- S905Y2 on Radxa Zero
 	# soc soc0: Amlogic Meson G12A (S905X2) Revision 28:b (40:2) Detected <-- Shenzhen Amediatech Technology Co., Ltd X96 Max
 	# soc soc0: Amlogic Meson G12A (Unknown) Revision 28:b (70:2) Detected <-- Amlogic Meson G12A U200 Development Board
 	# soc soc0: Amlogic Meson G12A (Unknown) Revision 28:c (70:2) Detected <-- Amlogic Meson G12A U200 Development Board
@@ -2821,7 +2838,10 @@ GuessARMSoC() {
 
 GuessSoCbySignature() {
 	# Guess by CPU topology (core types and revision, clusters and cpufreq policies) and by
-	# specific features/flags
+	# specific features/flags. Skip whole check if cores are offline.
+
+	[ "X${OfflineCores}" != "X" ] && return 1
+
 	case ${CPUSignature} in
 		??A8r1p7)
 			# TI Sitara AM35xx, Cortex-A8 / r1p7
@@ -3304,7 +3324,7 @@ GuessSoCbySignature() {
 		*Kunpeng-920r1p0*)
 			# Kunpeng 920-6426 in Huawei Taishan 200 2280 V2 server: 2 x 64 x Kunpeng-920 / r1p0 / https://www.spinics.net/lists/linux-scsi/msg153166.html
 			# https://www.spec.org/cpu2017/results/res2020q2/cpu2017-20200529-22564.html / https://en.wikichip.org/wiki/hisilicon/microarchitectures/taishan_v110
-			case $(lscpu | awk -F":" '/ per socket/ {print $2}') in
+			case $(awk -F":" '/ per socket/ {print $2}' <<<"${LSCPU}") in
 				*32)
 					echo "$(( ${CPUCores} / 32 )) x Kunpeng 920-3226"
 					;;
@@ -3364,7 +3384,7 @@ GuessSoCbySignature() {
 			MeasuredClockspeed=$(awk -F": " '/No cpufreq support available. Measured on cpu/ {print $2}' <${ResultLog} | cut -f1 -d' ' | head -n 1)
 			if [ ${MeasuredClockspeed} -gt 2550 ]; then
 				# Lame assumption that cpufreq above 2.5GHz identifies Ampere Altra
-				case $(lscpu | awk -F":" '/ per socket/ {print $2}') in
+				case $(awk -F":" '/ per socket/ {print $2}' <<<"${LSCPU}") in
 					*32)
 						echo "$(( ${CPUCores} / 32 )) x Ampere Altra AADP-32"
 						;;

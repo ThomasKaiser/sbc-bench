@@ -307,7 +307,7 @@ GetCPUInfo() {
 
 GetLastClusterCore() {
 	NextCore=${ClusterConfig[$1]}
-	[ "${NextCore}" = "" ] && NextCore=${CPUCores}
+	[ "${NextCore}" = "" ] && NextCore=$(awk -F" " '/^CPU\(s)/ {print $2}' <<<"${LSCPU}")
 	echo -n $(( ${NextCore} - 1 ))
 } # GetLastClusterCore
 
@@ -1173,7 +1173,7 @@ CheckRelease() {
 			# only inform/ask user if $MODE != unattended
 			if [ "X${MODE}" != "Xunattended" ]; then
 				echo -e "${LRED}${BOLD}WARNING: This tool is meant to run only on Debian Stretch, Buster, Bullseye or Ubuntu Bionic, Focal, Jammy.${NC}\n"
-				echo -e "When executed on ${BOLD}${OperatingSystem}${NC} results are partially meaningless.\nPress [ctrl]-[c] to stop or the famous [any] key to continue.\c"
+				echo -e "When executed on ${BOLD}${OperatingSystem}${NC} results are partially meaningless.\nPress [ctrl]-[c] to stop or ${BOLD}[enter]${NC} to continue.\c"
 				read
 			fi
 			;;
@@ -1187,17 +1187,17 @@ CheckLoadAndDmesg() {
 		1)
 			if [ "X${MODE}" != "Xunattended" ]; then
 				echo -e "${LRED}${BOLD}WARNING: dmesg output does not contain early boot messages which\nhelp in identifying hardware details.${NC}\n"
-				echo -e "It is recommended to reboot now and then execute the benchmarks.\nPress ${BOLD}[ctrl]-[c]${NC} to stop or any other key to continue.\c"
+				echo -e "It is recommended to reboot now and then execute the benchmarks.\nPress ${BOLD}[ctrl]-[c]${NC} to stop or ${BOLD}[enter]${NC} to continue.\c"
 				read
 			fi
 			;;
 	esac
 
 	# check for CPU cores being offline
-	OfflineCores=$(awk -F":" '/^Off-line/ {print $2}' <<<"${LSCPU}" | tr -d ' ')
-	if [ "X${OfflineCores}" != "X" -a [ "X${MODE}" != "Xunattended" ]; then
+	read OfflineCores </sys/devices/system/cpu/offline
+	if [ "X${OfflineCores}" != "X" -a "X${MODE}" != "Xunattended" ]; then
 		echo -e "${LRED}${BOLD}WARNING: One or more CPU cores are offline: ${OfflineCores}${NC}\n"
-		echo -e "Press ${BOLD}[ctrl]-[c]${NC} to stop or any other key to continue.\c"
+		echo -e "Press ${BOLD}[ctrl]-[c]${NC} to stop or ${BOLD}[enter]${NC} to continue.\c"
 		read
 	fi
 
@@ -1618,8 +1618,16 @@ CheckClockspeedsAndSensors() {
 				FirstCore=${ClusterConfig[$i]}
 				LastCore=$(GetLastClusterCore $(( $i + 1 )))
 				CPUInfo="$(GetCPUInfo ${ClusterConfig[$i]})"
-				echo -e "\nChecking cpufreq OPP for cpu${FirstCore}-cpu${LastCore}${CPUInfo}:\n" >>${ResultLog}
-				CheckCPUCluster ${FirstCore} >>${ResultLog}
+				CoresOnline ${FirstCore} ${LastCore}
+				case $? in
+					0)
+						echo -e "\nChecking cpufreq OPP for cpu${FirstCore}-cpu${LastCore}${CPUInfo}:\n" >>${ResultLog}
+						CheckCPUCluster ${FirstCore} >>${ResultLog}
+						;;
+					*)
+						echo -e "\nSkipping cpu${FirstCore}-cpu${LastCore}${CPUInfo} since cores are offline: ${OfflineCores}" >>${ResultLog}
+						;;
+				esac
 			done
 		fi
 	else
@@ -1650,6 +1658,17 @@ CheckClockspeedsAndSensors() {
 		fi
 	fi
 } # CheckClockspeedsAndSensors
+
+CoresOnline() {
+	# check whether CPU hotplug is supported on cores != 0 (cpu0 can't be offline)
+	if [ ${1} -ne 0 -a -f /sys/devices/system/cpu/cpu${1}/online ]; then
+		for i in $(seq $1 ${2:-$1}) ; do
+			read IsOnline </sys/devices/system/cpu/cpu${i}/online
+			[ ${IsOnline} -eq 0 ] && return 1
+		done
+	fi
+	return 0
+} # CoresOnline
 
 CheckTimeInState() {
 	# Check cpufreq statistics prior and after benchmark to detect throttling (won't work
@@ -1726,7 +1745,7 @@ CheckCPUCluster() {
 	else
 		# no cpufreq support: measure speeds on cpu0 on single core machines, otherwise on
 		# next cpu core to not interfere with probable bad IRQ/SMP affinitiy settings.
-		case $(grep -c '^processor' /proc/cpuinfo) in
+		case ${CPUCores} in
 			1)
 				CpuToCheck=0
 				;;
@@ -1750,10 +1769,13 @@ RunTinyMemBench() {
 	MonitoringPID=$!
 	echo -n "" >${TempLog}
 	for i in $(seq 0 $(( ${#ClusterConfig[@]} -1 )) ) ; do
-		CPUInfo="$(GetCPUInfo ${ClusterConfig[$i]})"
-		echo -e "\nExecuting benchmark on cpu${ClusterConfig[$i]}${CPUInfo}:\n" >>${TempLog}
-		[ -s "${NetioConsumptionFile}" ] && sleep 10
-		taskset -c ${ClusterConfig[$i]} "${InstallLocation}"/tinymembench/tinymembench >>${TempLog} 2>&1
+		CoresOnline ${ClusterConfig[$i]}
+		if [ $? -eq 0 ]; then
+			CPUInfo="$(GetCPUInfo ${ClusterConfig[$i]})"
+			echo -e "\nExecuting benchmark on cpu${ClusterConfig[$i]}${CPUInfo}:\n" >>${TempLog}
+			[ -s "${NetioConsumptionFile}" ] && sleep 10
+			taskset -c ${ClusterConfig[$i]} "${InstallLocation}"/tinymembench/tinymembench >>${TempLog} 2>&1
+		fi
 	done
 	kill ${MonitoringPID}
 	echo -e "\n##########################################################################" >>${ResultLog}
@@ -1772,10 +1794,13 @@ RunRamlat() {
 		MonitoringPID=$!
 		echo -n "" >${TempLog}
 		for i in $(seq 0 $(( ${#ClusterConfig[@]} -1 )) ) ; do
-			CPUInfo="$(GetCPUInfo ${ClusterConfig[$i]})"
-			echo -e "\nExecuting ramlat on cpu${ClusterConfig[$i]}${CPUInfo}, results in ns:\n" >>${TempLog}
-			taskset -c ${ClusterConfig[$i]} "${InstallLocation}"/ramspeed/ramlat -s -n 200 \
-				| sed -e 's/^/    /' >>${TempLog} 2>&1
+			CoresOnline ${ClusterConfig[$i]}
+			if [ $? -eq 0 ]; then
+				CPUInfo="$(GetCPUInfo ${ClusterConfig[$i]})"
+				echo -e "\nExecuting ramlat on cpu${ClusterConfig[$i]}${CPUInfo}, results in ns:\n" >>${TempLog}
+				taskset -c ${ClusterConfig[$i]} "${InstallLocation}"/ramspeed/ramlat -s -n 200 \
+					| sed -e 's/^/    /' >>${TempLog} 2>&1
+			fi
 		done
 		kill ${MonitoringPID}
 		echo -e "\n##########################################################################" >>${ResultLog}
@@ -1807,10 +1832,13 @@ Run7ZipBenchmark() {
 	else
 		# test each cluster individually
 		for i in $(seq 0 $(( ${#ClusterConfig[@]} -1 )) ) ; do
-			CPUInfo="$(GetCPUInfo ${ClusterConfig[$i]})"
-			echo -e "\nExecuting benchmark single-threaded on cpu${ClusterConfig[$i]}${CPUInfo}" >>${TempLog}
-			[ -s "${NetioConsumptionFile}" ] && sleep 10
-			taskset -c ${ClusterConfig[$i]} "${SevenZip}" b -mmt=1 >>${TempLog}
+			CoresOnline ${ClusterConfig[$i]}
+			if [ $? -eq 0 ]; then
+				CPUInfo="$(GetCPUInfo ${ClusterConfig[$i]})"
+				echo -e "\nExecuting benchmark single-threaded on cpu${ClusterConfig[$i]}${CPUInfo}" >>${TempLog}
+				[ -s "${NetioConsumptionFile}" ] && sleep 10
+				taskset -c ${ClusterConfig[$i]} "${SevenZip}" b -mmt=1 >>${TempLog}
+			fi
 		done
 	fi	
 	kill ${MonitoringPID}
@@ -1831,7 +1859,7 @@ Run7ZipBenchmark() {
 		/bin/bash "${PathToMe}" -m ${MonInterval} >>${MonitorLog} &
 		MonitoringPID=$!
 		RunHowManyTimes=3
-		echo -e "Executing benchmark ${RunHowManyTimes} times multi-threaded" >>${TempLog}
+		echo -e "Executing benchmark ${RunHowManyTimes} times multi-threaded on CPUs $(cat /sys/devices/system/cpu/online)" >>${TempLog}
 		for ((i=1;i<=RunHowManyTimes;i++)); do
 			"${SevenZip}" b -mmt=${CPUCores} >>${TempLog}
 		done
@@ -1880,9 +1908,14 @@ RunOpenSSLBenchmark() {
 		echo -e "Executing benchmark on each cluster individually\n" >>${ResultLog}
 		for bytelength in 128 192 256 ; do
 			for i in $(seq 0 $(( ${#ClusterConfig[@]} -1 )) ) ; do
-				taskset -c ${ClusterConfig[$i]} openssl speed -elapsed -evp aes-${bytelength}-cbc 2>/dev/null
+				CoresOnline ${ClusterConfig[$i]}
+				if [ $? -eq 0 ]; then
+					CPUInfo="$(GetCPUInfo ${ClusterConfig[$i]})"
+					taskset -c ${ClusterConfig[$i]} openssl speed -elapsed -evp aes-${bytelength}-cbc 2>/dev/null \
+						| tr '[:upper:]' '[:lower:]' | sed "/^aes/ s/$/${CPUInfo}/"
+				fi
 			done
-		done | tr '[:upper:]' '[:lower:]' >${OpenSSLLog}
+		done >${OpenSSLLog}
 		# check scores and choose highest for reporting
 		AES128=$(awk '/^aes-128-cbc/ {print $2}' <"${OpenSSLLog}" | awk -F"." '{print $1}' | sort -n | tail -n1)
 		AES256=$(awk '/^aes-256-cbc/ {print $7}' <"${OpenSSLLog}" | awk -F"." '{print $1}' | sort -n | tail -n1)
@@ -1930,7 +1963,8 @@ PrintCPUTopology() {
 				CoreName="${CoreName} / ${CoreStepping}"
 			fi
 		fi
-		read CPUCluster </sys/devices/system/cpu/cpu${i}/topology/physical_package_id
+		[ -f /sys/devices/system/cpu/cpu${i}/topology/physical_package_id ] && \
+			read CPUCluster </sys/devices/system/cpu/cpu${i}/topology/physical_package_id
 		if [ -d /sys/devices/system/cpu/cpufreq/policy${i} ]; then
 			CPUFreqPolicy=${i}
 			CPUSpeedMin=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpufreq/policy${i}/cpuinfo_min_freq)
@@ -2359,6 +2393,7 @@ GuessARMSoC() {
 	# soc soc0: Amlogic Meson8m2 (S812) RevA (1d - 0:74E) detected <-- Akaso M8S / Tronsmart MXIII Plus
 	# soc soc0: Amlogic Meson GXBB (S905) Revision 1f:b (0:1) Detected <-- ODROID-C2
 	# soc soc0: Amlogic Meson GXBB (S905) Revision 1f:c (0:1) Detected <-- ODROID-C2
+	# soc soc0: Amlogic Meson GXBB (S905) Revision 1f:b (12:1) Detected <-- Beelink Mini MX
 	# soc soc0: Amlogic Meson GXBB (S905) Revision 1f:c (13:1) Detected <-- NanoPi K2 / NEXBOX A95X / Tronsmart Vega S95 Telos / Amlogic Meson GXBB P200 Development Board / Amlogic Meson GXBB P201 Development Board
 	# soc soc0: Amlogic Meson GXBB (S905H) Revision 1f:c (23:1) Detected <-- Amlogic Meson GXBB P201 Development Board
 	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:a (82:2) Detected <-- Khadas VIM / NEXBOX A95X (S905X)/ Amlogic Meson GXL (S905X) P212 Development Board
@@ -2838,9 +2873,12 @@ GuessARMSoC() {
 
 GuessSoCbySignature() {
 	# Guess by CPU topology (core types and revision, clusters and cpufreq policies) and by
-	# specific features/flags. Skip whole check if cores are offline.
+	# specific features/flags. Skip whole check if one or more cores are offline.
 
-	[ "X${OfflineCores}" != "X" ] && return 1
+	if [ "X${OfflineCores}" != "X" ]; then
+		echo "Not able to guess since these CPU cores are offline: ${OfflineCores}"
+		return 1
+	fi
 
 	case ${CPUSignature} in
 		??A8r1p7)

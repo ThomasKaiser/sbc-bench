@@ -322,6 +322,8 @@ BashBench(){
 	# 4.4.20 / Allwinner H3:               566944214
 	# 5.0.3  / BCM2711:                    152325522
 	# 5.0.17 / Apple Firestorm:             28319838
+
+	local i
 	StartTime=$(date +"%s%N")
 	i=0
 	while [ $i -lt 10000 ]
@@ -344,6 +346,8 @@ BashBench(){
 PlotPerformanceGraph() {
 	# function that walks through all cpufreq OPP and plots a performance graph using
 	# 7-ZIP MIPS. Needs gnuplot and htmldoc (Debian/Ubuntu: gnuplot-nox htmldoc packages)
+
+	local i
 
 	if [ ! -f /sys/devices/system/cpu/cpufreq/policy0/scaling_governor ]; then
 		# no cpufreq support -> no way to test through different clockspeeds. Stop
@@ -471,7 +475,9 @@ CheckPerformance() {
 	#   cpu0, "4" for cpu4 or for example on an RK3399 "04" to handle both cpu clusters
 	#   at the same time
 	# * $3 taskset options as provided via the -p switch when calling sbc-bench
-	
+
+	local i
+
 	if [ -n "${3}" ]; then
 		# if taskset options are provided ensure that '-mmt=1' is set when only a single
 		# core is tested.
@@ -1206,7 +1212,7 @@ CheckLoadAndDmesg() {
 	# utilization: https://www.brendangregg.com/blog/2017-08-08/linux-load-averages.html
 	AvgLoad1Min=$(awk -F" " '{print $1*100}' < /proc/loadavg)
 	if [ $AvgLoad1Min -ge 10 ]; then
-		[ "X${MODE}" != "Xunattended" ] && echo -e "\nAverage load and/or CPU utilization too high (too much background activity). Waiting...\n"
+		echo -e "\nAverage load and/or CPU utilization too high (too much background activity). Waiting...\n"
 		/bin/bash "${PathToMe}" -m 5 >"${TempDir}/wait-for-loadavg.log" &
 		MonitoringPID=$!
 		while [ $AvgLoad1Min -ge 10 -a ${CPUSum:-100} -ge 15 ]; do
@@ -1218,7 +1224,7 @@ CheckLoadAndDmesg() {
 			else
 				CPUSum=100
 			fi
-			[ "X${MODE}" != "Xunattended" ] && echo -e "Too busy for benchmarking:$(uptime),  cpu: $(tail -n1 <<<"${CPUutilization}")%"
+			echo -e "Too busy for benchmarking:$(uptime),  cpu: $(tail -n1 <<<"${CPUutilization}")%"
 			AvgLoad1Min=$(awk -F" " '{print $1*100}' < /proc/loadavg)
 		done
 		kill ${MonitoringPID}
@@ -1661,8 +1667,12 @@ CheckClockspeedsAndSensors() {
 
 CoresOnline() {
 	# check whether CPU hotplug is supported on cores != 0 (cpu0 can't be offline)
+	# $1 -> first core to check
+	# $2 -> last core to check, if missing only $1 will be checked
+
+	local i
 	if [ ${1} -ne 0 -a -f /sys/devices/system/cpu/cpu${1}/online ]; then
-		for i in $(seq $1 ${2:-$1}) ; do
+		for i in $(seq ${1} ${2:-$1}) ; do
 			read IsOnline </sys/devices/system/cpu/cpu${i}/online
 			[ ${IsOnline} -eq 0 ] && return 1
 		done

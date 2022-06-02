@@ -1542,7 +1542,7 @@ InitialMonitoring() {
 	[ -f /etc/armbian-release ] && ArmbianReleaseFile=/etc/armbian-release
 	[ -f "${ArmbianReleaseFile}" ] && . "${ArmbianReleaseFile}"
 	[ "X${BOARD_NAME}" != "X" ] && \
-		echo "Armbian info:   ${BOARD_NAME}, ${BOARDFAMILY}, ${VERSION}, ${BUILD_REPOSITORY_URL}" | sed 's/,\ $//' >>${ResultLog}
+		echo "Armbian info:   ${BOARD_NAME}, ${BOARDFAMILY}, ${LINUXFAMILY}, ${VERSION}, ${BUILD_REPOSITORY_URL}" | sed 's/,\ $//' >>${ResultLog}
 
 	# Log system info and BIOS/UEFI versions if available:
 	SystemInfo="$(dmidecode -t system 2>/dev/null | egrep "Manufacturer: |Product Name: |Version: |Family: |SKU Number: " | egrep -v ":  $|O.E.M.|123456789|: Not |Default|default|System Product Name|System manufacturer|System Version")"
@@ -3466,6 +3466,14 @@ GuessSoCbySignature() {
 			# Apple M1: 4 x Apple Icestorm / r1p1 + 4 x Apple Firestorm / r1p1 / https://gist.github.com/z4yx/13520bd2beef49019b1b7436e3b95ddd
 			# or 4 x Apple Icestorm / r0p0 + 4 x Apple Firestorm / ? / https://bench.cr.yp.to/computers.html
 			echo "Apple M1"
+			;;
+		10thead,c906)
+			# Allwinner D1: single T-Head C906 core
+			echo "Allwinner D1"
+			;;
+		*sifive,u54-mc*sifive,u54-mc*sifive,u54-mc*sifive,u54-mc)
+			# SiFive "Freedom" U540: 4 x U54-MC https://www.sifive.com/cores/u54-mc
+			echo "SiFive U540"
 			;;
 	esac
 }

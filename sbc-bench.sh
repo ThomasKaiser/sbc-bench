@@ -119,7 +119,7 @@ Main() {
 		RunRamlat
 		RunOpenSSLBenchmark
 		Run7ZipBenchmark
-		if [ "${ExecuteCpuminer}" = "yes" ]; then
+		if [ "${ExecuteCpuminer}" = "yes" -o "X${MODE}" = "Xextensive" ]; then
 			if [ -x "${InstallLocation}"/cpuminer-multi/cpuminer ]; then
 				RunCpuminerBenchmark
 			else
@@ -310,6 +310,12 @@ GetLastClusterCore() {
 	[ "${NextCore}" = "" ] && NextCore=$(awk -F" " '/^CPU\(s)/ {print $2}' <<<"${LSCPU}")
 	echo -n $(( ${NextCore} - 1 ))
 } # GetLastClusterCore
+
+GetLastClusterCoreByType() {
+	NextCore=${ClusterConfigByCoreType[$1]}
+	[ "${NextCore}" = "" ] && NextCore=$(awk -F" " '/^CPU\(s)/ {print $2}' <<<"${LSCPU}")
+	echo -n $(( ${NextCore} - 1 ))
+} # GetLastClusterCoreByType
 
 BashBench(){
 	# quick integer performance assessment using a simple bash loop.
@@ -1250,6 +1256,26 @@ GetCPUClusters() {
 	fi
 } # GetCPUClusters
 
+GetCoreClusters() {
+	# function to determine clusters by CPU core type used by MODE=extensive
+	#
+	# Amlogic S912 for example contains 2 quad-core A53 clusters with different
+	# cpufreq scaling properties but it's just 8 boring A53 and no big.LITTLE
+	# so there's no reason to treat S912 as '2 clusters CPU'.
+	# RK3588 contains of 4 x A55 cores and 4 x A76 but the latter are handled
+	# as two different clusters sharing same properties for whatever reasons.
+
+	local i
+	TotalCores=$(awk -F" " '/^CPU\(s)/ {print $2}' <<<"${LSCPU}")
+	for i in $(seq 0 $(( ${TotalCores} - 1 )) ) ; do
+		ThisCore="$(GetCPUInfo $i)"
+		if [ "X${ThisCore}" != "X${LastCore}" ]; then
+			echo "${i}"
+			LastCore="${ThisCore}"
+		fi
+	done
+} # GetCoreClusters
+
 BasicSetup() {
 	# set cpufreq governor based on $1 (defaults to ondemand if not provided)
 	if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
@@ -1360,6 +1386,7 @@ BasicSetup() {
 	esac
 
 	ClusterConfig=($(GetCPUClusters))
+	ClusterConfigByCoreType=($(GetCoreClusters))
 	CPUCores=$(grep -c '^processor' /proc/cpuinfo)
 } # BasicSetup
 
@@ -1772,7 +1799,12 @@ CheckCPUCluster() {
 } # CheckCPUCluster
 
 RunTinyMemBench() {
-	echo -e "\x08\x08 Done (results will be available in $(( ${EstimatedDuration} * 120 / 100 ))-$(( ${EstimatedDuration} * 170 / 100 )) minutes)."
+	if [ "X${MODE}" = "Xextensive" ]; then
+		# extensive mode, do not print any duration estimates
+		echo -e "\x08\x08 Done."
+	else
+		echo -e "\x08\x08 Done (results will be available in $(( ${EstimatedDuration} * 120 / 100 ))-$(( ${EstimatedDuration} * 170 / 100 )) minutes)."
+	fi
 	echo -e "Executing tinymembench...\c"
 	echo -e "System health while running tinymembench:\n" >${MonitorLog}
 	/bin/bash "${PathToMe}" -m $(( 40 * ${#ClusterConfig[@]} )) >>${MonitorLog} &
@@ -1893,6 +1925,33 @@ Run7ZipBenchmark() {
 	echo -e "Total: ${TotScore}" >>${ResultLog}
 	# round result
 	ZipScore="$(( $(awk '{printf ("%0.0f",$1/10); }' <<<"${CombinedScore}" ) * 10 ))"
+
+	if [ ${#ClusterConfigByCoreType[@]} -ne 1 -a "X${MODE}" = "Xextensive" ]; then
+		# extensive mode: we're testing additionally through each CPU core cluster
+		echo -e "\nSystem health while running 7-zip cluster benchmarks:\n" >>${MonitorLog}
+		echo -e "\c" >${TempLog}
+		RunHowManyTimes=3
+		/bin/bash "${PathToMe}" -m $(( ${MonInterval} * ${#ClusterConfigByCoreType[@]} )) >>${MonitorLog} &
+		MonitoringPID=$!
+
+		for i in $(seq 0 $(( ${#ClusterConfigByCoreType[@]} -1 )) ) ; do
+			CoresOnline ${ClusterConfigByCoreType[$i]}
+			if [ $? -eq 0 ]; then
+				FirstCore=${ClusterConfigByCoreType[$i]}
+				CPUInfo="$(GetCPUInfo ${FirstCore})"
+				LastCore=$(GetLastClusterCoreByType $(( $i + 1 )))
+				HowManyCores=$(( $(( ${LastCore} - ${FirstCore} )) + 1 ))
+				echo -e "\nExecuting benchmark ${RunHowManyTimes} times multi-threaded on CPUs ${FirstCore}-${LastCore}${CPUInfo}" >>${TempLog}
+				for ((o=1;o<=RunHowManyTimes;o++)); do
+					taskset -c ${FirstCore}-${LastCore} "${SevenZip}" b -mmt=${HowManyCores} >>${TempLog}
+				done
+			fi
+		done
+
+		kill ${MonitoringPID}
+		echo -e "\n##########################################################################\n" >>${ResultLog}
+		cat ${TempLog} >>${ResultLog}
+	fi
 } # Run7ZipBenchmark
 
 RunOpenSSLBenchmark() {
@@ -1935,6 +1994,19 @@ RunOpenSSLBenchmark() {
 	grep '^aes-' ${OpenSSLLog} >>${ResultLog}
 	# round result
 	OpenSSLScore="$(( $(awk '{printf ("%0.0f",$1/10); }' <<<"${AES128}") * 10 )) | $(( $(awk '{printf ("%0.0f",$1/10); }' <<<"${AES256}") * 10 ))"
+
+	if [ "X${MODE}" = "Xextensive" ]; then
+		# in extensive mode run openssl benchmarks on all cores in parallel
+		echo -e "\nSystem health while running parallel OpenSSL benchmarks:\n" >>${MonitorLog}
+		/bin/bash "${PathToMe}" -m 4 >>${MonitorLog} &
+		MonitoringPID=$!
+		for ((o=1;o<=CPUCores;o++)); do
+			taskset -c $(( ${o} - 1 )) openssl speed -elapsed -evp aes-256-cbc 2>/dev/null >"${TempDir}"/openssl.log.${o} &
+		done
+		sleep 25
+		grep '^aes-' "${TempDir}"/openssl.log.* | cut -f2 -d':' | sort -r -n | sed "/^aes/ s/$/ (fully parallel)/" >>${ResultLog}
+		kill ${MonitoringPID}
+	fi
 } # RunOpenSSLBenchmark
 
 RunCpuminerBenchmark() {

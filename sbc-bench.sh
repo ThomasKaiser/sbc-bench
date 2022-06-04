@@ -307,13 +307,13 @@ GetCPUInfo() {
 
 GetLastClusterCore() {
 	NextCore=${ClusterConfig[$1]}
-	[ "${NextCore}" = "" ] && NextCore=$(awk -F" " '/^CPU\(s)/ {print $2}' <<<"${LSCPU}")
+	[ "${NextCore}" = "" ] && NextCore=$(awk -F" " '/^CPU...:/ {print $2}' <<<"${LSCPU}")
 	echo -n $(( ${NextCore} - 1 ))
 } # GetLastClusterCore
 
 GetLastClusterCoreByType() {
 	NextCore=${ClusterConfigByCoreType[$1]}
-	[ "${NextCore}" = "" ] && NextCore=$(awk -F" " '/^CPU\(s)/ {print $2}' <<<"${LSCPU}")
+	[ "${NextCore}" = "" ] && NextCore=$(awk -F" " '/^CPU...:/ {print $2}' <<<"${LSCPU}")
 	echo -n $(( ${NextCore} - 1 ))
 } # GetLastClusterCoreByType
 
@@ -1262,11 +1262,11 @@ GetCoreClusters() {
 	# Amlogic S912 for example contains 2 quad-core A53 clusters with different
 	# cpufreq scaling properties but it's just 8 boring A53 and no big.LITTLE
 	# so there's no reason to treat S912 as '2 clusters CPU'.
-	# RK3588 contains of 4 x A55 cores and 4 x A76 but the latter are handled
+	# RK3588 consists of 4 x A55 cores and 4 x A76 but the latter are handled
 	# as two different clusters sharing same properties for whatever reasons.
 
 	local i
-	TotalCores=$(awk -F" " '/^CPU\(s)/ {print $2}' <<<"${LSCPU}")
+	TotalCores=$(awk -F" " '/^CPU...:/ {print $2}' <<<"${LSCPU}")
 	for i in $(seq 0 $(( ${TotalCores} - 1 )) ) ; do
 		ThisCore="$(GetCPUInfo $i)"
 		if [ "X${ThisCore}" != "X${LastCore}" ]; then

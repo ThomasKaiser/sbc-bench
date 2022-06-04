@@ -261,3 +261,13 @@ If `sbc-bench` should benchmark in an automated fashion then exporting `MODE=una
 Everything sent to `stdout` can be ignored (but parsing for 'check the log' is highly recommended since hinting at too much background activity and/or swapping resulting in numbers without meaning instead of benchmark scores). Full benchmark results are available at `/var/log/sbc-bench.log` with the last line containing a performance summary. So something like this could be used for regression testing and similar stuff:
 
     MODE=unattended sbc-bench.sh -c | grep -q 'check the log' || tail -n1 /var/log/sbc-bench.log
+
+### Extensive mode
+
+When exporting `MODE=extensive` (not compatible with `MODE=unattended` so use either/or) then `sbc-bench` conducts additional tests:
+
+  * the `openssl` benchmarks will also be executed in parallel on all CPU cores (takes another 30 seconds)
+  * the `cpuminer` test will be fired up (does not work on 32-bit ARM platforms so nothing changes here, otherwise 5 more minutes)
+  * on ARM/RISC-V SoCs with clusters of different CPU cores (e.g. RK3399 with 4 x Cortex-A53 and 2 x Cortex-A72) additional multi-threaded `7-zip` tests per cluster are done (no duration estimate possible since depends on SoC architecture)
+
+This operation mode will be extended further over time to get insights into SoC internals.

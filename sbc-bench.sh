@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.9.7
+Version=0.9.8
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -1475,10 +1475,13 @@ InstallPrerequisits() {
 	fi
 
 	# get/build ramlat benchmark if not already built
-	if [ ! -x "${InstallLocation}"/ramspeed/ramlat ]; then
+	if [ ! -x "${InstallLocation}"/ramspeed/ramlat -o ! -f "${InstallLocation}"/ramspeed/Makefile ]; then
 		cd "${InstallLocation}"
-		git clone https://github.com/wtarreau/ramspeed >/dev/null 2>&1
-		[ -d "${InstallLocation}"/ramspeed ] && cd ramspeed ; gcc -o ramlat ramlat.c >/dev/null 2>&1
+		if [ ! -d "${InstallLocation}"/ramspeed ]; then
+			git clone https://github.com/wtarreau/ramspeed >/dev/null 2>&1
+		else
+			[ -d "${InstallLocation}"/ramspeed ] && cd ramspeed ; git pull >/dev/null 2>&1; make >/dev/null 2>&1
+		fi
 	fi
 
 	# get/build mhz if not already there
@@ -3256,7 +3259,20 @@ GuessSoCbySignature() {
 		00A55r2p000A55r2p000A55r2p000A55r2p0)
 			# Amlogic S905X4 or RK3566/RK3568
 			# 4 x Cortex-A55 / r2p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp asimdrdm lrcpc dcpop asimddp
-			lsmod | grep -i meson && echo "Amlogic S905X4" || echo "Rockchip RK3566/RK3568"
+			case "${DTCompatible}" in
+				*amlogic*)
+					echo "Amlogic S905X4"
+					;;
+				*rk3566*)
+					echo "Rockchip RK3566"
+					;;
+				*rk3568*)
+					echo "Rockchip RK3568"
+					;;
+				*rockchip*)
+					echo "Rockchip RK3566/RK3568"
+					;;
+			esac
 			;;
 		00A53r0p400A53r0p400A53r0p400A53r0p414A72r0p214A72r0p2)
 			# RK3399, 4 x Cortex-A53 / r0p4 + 2 x Cortex-A72 / r0p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32 (32-bit 4.4 BSP kernel: half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt lpae evtstrm aes pmull sha1 sha2 crc32)

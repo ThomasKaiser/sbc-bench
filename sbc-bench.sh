@@ -1194,7 +1194,7 @@ CheckRelease() {
 
 CheckLoadAndDmesg() {
 	# Check if kernel ring buffer contains boot messages. These help identifying HW.
-	dmesg | grep -q '0.000000] Booting Linux'
+	dmesg | grep -q '] Booting Linux'
 	case $? in
 		1)
 			if [ "X${MODE}" != "Xunattended" ]; then

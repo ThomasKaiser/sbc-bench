@@ -1474,14 +1474,13 @@ InstallPrerequisits() {
 		fi
 	fi
 
-	# get/build ramlat benchmark if not already built
+	# get/build ramlat benchmark if not already built, rebuild if formerly compiled w/o GCC optimizations:
+	# https://www.cnx-software.com/2022/06/05/nanopi-r5s-preview-part-2-ubuntu-20-04-friendlycore/#comment-593141
 	if [ ! -x "${InstallLocation}"/ramspeed/ramlat -o ! -f "${InstallLocation}"/ramspeed/Makefile ]; then
-		cd "${InstallLocation}"
 		if [ ! -d "${InstallLocation}"/ramspeed ]; then
-			git clone https://github.com/wtarreau/ramspeed >/dev/null 2>&1
-		else
-			[ -d "${InstallLocation}"/ramspeed ] && cd ramspeed ; git pull >/dev/null 2>&1; make >/dev/null 2>&1
+			cd "${InstallLocation}" && git clone https://github.com/wtarreau/ramspeed >/dev/null 2>&1
 		fi
+		[ -d "${InstallLocation}"/ramspeed ] && cd "${InstallLocation}"/ramspeed ; git pull >/dev/null 2>&1; make >/dev/null 2>&1
 	fi
 
 	# get/build mhz if not already there

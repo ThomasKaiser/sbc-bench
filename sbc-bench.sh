@@ -1554,7 +1554,11 @@ InitialMonitoring() {
 	
 	# Log version and device info
 	read HostName </etc/hostname 2>/dev/null
-	echo -e "sbc-bench v${Version} ${DeviceName:-$HostName} ${MODE} ($(date -R))\n" | sed 's/  / /g' >${ResultLog}
+	if [ "X${MODE}" = "Xunattended" -o "X${MODE}" = "Xextensive" ]; then
+		echo -e "sbc-bench v${Version} ${DeviceName:-$HostName} ${MODE} ($(date -R))\n" | sed 's/  / /g' >${ResultLog}
+	else
+		echo -e "sbc-bench v${Version} ${DeviceName:-$HostName} ($(date -R))\n" | sed 's/  / /g' >${ResultLog}
+	fi
 
 	# get distribution info
 	command -v lsb_release >/dev/null 2>&1 && (lsb_release -a 2>/dev/null | grep -v "n/a") >>${ResultLog}
@@ -2434,7 +2438,7 @@ GuessARMSoC() {
 	#      Cortex-A35 / r0p2: NXP i.MX8QXP, Rockchip RK1808/RK3308/RK3326/PX30
 	#      Cortex-A53 / r0p0: Qualcomm Snapdragon 410 (MSM8916)
 	#      Cortex-A53 / r0p2: Qualcomm Snapdragon 810 (MSM8994)
-	#      Cortex-A53 / r0p3: HiSilicon Kirin 620/930, Samsung/Nexell S5P6818
+	#      Cortex-A53 / r0p3: HiSilicon Kirin 620/930, Nexell S5P6818
 	#      Cortex-A53 / r0p4: Allwinner A64/H313/H5/H6/H616/H64/R329/T507, Amlogic A113X/A113D/A311D/A311D2/S805X/S805Y/S905/S905X/S905D/S905W/S905L/S905M2/S905X2/S905Y2/S905D2/S912/S922X/T962X2, Broadcom BCM2837/BCM2709/BCM2710/RP3A0-AU (BCM2710A1), HiSilicon Kirin 960/970, Marvell Armada 37x0, NXP i.MX8M/i.MX8QM/LS1xx8, RealTek RTD129x/RTD139x, Rockchip RK3328/RK3399, Socionext LD20
 	#      Cortex-A55 / r1p0: Amlogic S905X3/S905D3/S905Y3/T962X3/T962E2
 	#      Cortex-A55 / r2p0: Amlogic S905X4/S905C2, Rockchip RK3566/RK3568/RK3588/RK3588s
@@ -3273,14 +3277,10 @@ GuessSoCbySignature() {
 					;;
 			esac
 			;;
-		00A53r0p400A53r0p400A53r0p400A53r0p414A72r0p214A72r0p2)
+		*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A72r0p2*A72r0p2)
 			# RK3399, 4 x Cortex-A53 / r0p4 + 2 x Cortex-A72 / r0p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32 (32-bit 4.4 BSP kernel: half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt lpae evtstrm aes pmull sha1 sha2 crc32)
 			# or maybe NXP i.MX8QM, 4 x Cortex-A53 / r0p4 + 2 x Cortex-A72 / r0p2
 			grep -q rockchip <<<"${DTCompatible}" && echo "Rockchip RK3399" || echo "NXP i.MX8QM"
-			;;
-		*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A72r0p2*A72r0p2)
-			# NXP i.MX8QM: 4 x Cortex-A53 / r0p4 + 2 x Cortex-A72 / r0p2 / https://community.nxp.com/t5/i-MX-Processors/RAM-size-vs-CPU-failed-to-come-online/td-p/1263854
-			echo "NXP i.MX8QM"
 			;;
 		*A72r0p0*A72r0p0)
 			# Mediatek MT8173: 2 x Cortex-A72 / r0p0 / https://bench.cr.yp.to/computers.html -> r8p0 is wrong
@@ -3384,9 +3384,16 @@ GuessSoCbySignature() {
 			grep -q ' thumbee' /proc/cpuinfo && echo "Mediatek MT7623" || echo "Allwinner A31"
 			;;
 		??A53r0p3??A53r0p3??A53r0p3??A53r0p3??A53r0p3??A53r0p3??A53r0p3??A53r0p3)
-			# Samsung/Nexell S5P6818, 8 x Cortex-A53 / r0p3 / fp asimd aes pmull sha1 sha2 crc32
+			# Nexell S5P6818, 8 x Cortex-A53 / r0p3 / fp asimd aes pmull sha1 sha2 crc32
 			# or HiSilicon Kirin 620/930, 8 x Cortex-A53 / r0p3 / fp asimd evtstrm aes pmull sha1 sha2 crc32
-			grep -q hisilicon <<<"${DTCompatible}" && echo "HiSilicon Kirin 620/930" || echo "Samsung/Nexell S5P6818"
+			case "${DTCompatible}" in
+				*hisilicon*)
+					echo "HiSilicon Kirin 620/930"
+					;;
+				*nexell*)
+					echo "Nexell S5P6818"
+					;;
+			esac
 			;;
 		00Cavium88XXr1p1*)
 			# ThunderX CN8890, 48 x ThunderX 88XX / r1p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32
@@ -3397,7 +3404,7 @@ GuessSoCbySignature() {
 			echo "NXP i.MX6 Quad"
 			;;
 		??A9r2p10??A9r2p10)
-			# NXP i.MX6 Quad | 2 x Cortex-A9 / r2p10 / swp half thumb fastmult vfp edsp thumbee neon vfpv3
+			# NXP i.MX6 Dual | 2 x Cortex-A9 / r2p10 / swp half thumb fastmult vfp edsp thumbee neon vfpv3
 			echo "NXP i.MX6 Dual"
 			;;
 		??A9r2p1??A9r2p1)

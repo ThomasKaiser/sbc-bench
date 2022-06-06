@@ -1,0 +1,71 @@
+processor	: 0
+BogoMIPS	: 19.84
+Features	: fp asimd aes pmull sha1 sha2 crc32 cpuid
+CPU implementer	: 0x41
+CPU architecture: 8
+CPU variant	: 0x0
+CPU part	: 0xd03
+CPU revision	: 3
+
+processor	: 1
+BogoMIPS	: 19.84
+Features	: fp asimd aes pmull sha1 sha2 crc32 cpuid
+CPU implementer	: 0x41
+CPU architecture: 8
+CPU variant	: 0x0
+CPU part	: 0xd03
+CPU revision	: 3
+
+processor	: 2
+BogoMIPS	: 19.84
+Features	: fp asimd aes pmull sha1 sha2 crc32 cpuid
+CPU implementer	: 0x41
+CPU architecture: 8
+CPU variant	: 0x0
+CPU part	: 0xd03
+CPU revision	: 3
+
+processor	: 3
+BogoMIPS	: 19.84
+Features	: fp asimd aes pmull sha1 sha2 crc32 cpuid
+CPU implementer	: 0x41
+CPU architecture: 8
+CPU variant	: 0x0
+CPU part	: 0xd03
+CPU revision	: 3
+
+processor	: 4
+BogoMIPS	: 19.84
+Features	: fp asimd aes pmull sha1 sha2 crc32 cpuid
+CPU implementer	: 0x41
+CPU architecture: 8
+CPU variant	: 0x0
+CPU part	: 0xd03
+CPU revision	: 3
+
+processor	: 5
+BogoMIPS	: 19.84
+Features	: fp asimd aes pmull sha1 sha2 crc32 cpuid
+CPU implementer	: 0x41
+CPU architecture: 8
+CPU variant	: 0x0
+CPU part	: 0xd03
+CPU revision	: 3
+
+processor	: 6
+BogoMIPS	: 19.84
+Features	: fp asimd aes pmull sha1 sha2 crc32 cpuid
+CPU implementer	: 0x41
+CPU architecture: 8
+CPU variant	: 0x0
+CPU part	: 0xd03
+CPU revision	: 3
+
+processor	: 7
+BogoMIPS	: 19.84
+Features	: fp asimd aes pmull sha1 sha2 crc32 cpuid
+CPU implementer	: 0x41
+CPU architecture: 8
+CPU variant	: 0x0
+CPU part	: 0xd03
+CPU revision	: 3

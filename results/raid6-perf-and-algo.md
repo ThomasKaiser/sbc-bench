@@ -12,6 +12,7 @@ See function CheckRAID6PerfAndAlgo in https://github.com/ThomasKaiser/sbc-bench/
 | 7039 (neonx4) |  Firefly ITX-3588J HDMI(Linux)  | 5.10.66 | [http://ix.io/3Ypr](http://ix.io/3Ypr) |
 | 7039 (neonx4) |  Firefly ITX-3588J HDMI(Linux)  | 5.10.66 | [http://ix.io/3Ypn](http://ix.io/3Ypn) |
 | 5782 (sse2x4) |  uefi-x86  | 5.16.15 | [http://ix.io/3WfL](http://ix.io/3WfL) |
+| 5181 (neonx4) |  RPi 4 Model B Rev 1.4 / BCM2711 Rev C0 or later  | 5.15.0 | [http://ix.io/3ZfL](http://ix.io/3ZfL) |
 | 4992 (neonx4) | Hardkernel Odroid XU4 | 5.13.12/5.16.16 | [http://ix.io/3T7S](http://ix.io/3T7S) |
 | 4989 (neonx4) |  Hardkernel Odroid XU4  | 5.15.18 | [http://ix.io/3PiF](http://ix.io/3PiF) |
 | 4981 (neonx4) | Hardkernel Odroid XU4 | 5.15.18/5.15.4 | [http://ix.io/3Q5c](http://ix.io/3Q5c) |
@@ -19,6 +20,7 @@ See function CheckRAID6PerfAndAlgo in https://github.com/ThomasKaiser/sbc-bench/
 | 4949 (neonx4) | Hardkernel Odroid XU4 | 5.16.11 | [http://ix.io/3WKK](http://ix.io/3WKK) |
 | 4930 (neonx4) |  Hardkernel Odroid XU4  | 5.15.17 | [http://ix.io/3PLi](http://ix.io/3PLi) |
 | 4920 (neonx4) | Hardkernel Odroid XU4 | 5.16.11 | [http://ix.io/3XmM](http://ix.io/3XmM) |
+| 4896 (neonx4) | Hardkernel Odroid XU4 | 5.17.5 | [http://ix.io/3Zjk](http://ix.io/3Zjk) |
 | 4848 (neonx4) |  Hardkernel Odroid HC1  | 5.16.11 | [http://ix.io/3WzA](http://ix.io/3WzA) |
 | 4827 (neonx2) / <span style="color:red">**1442 (neonx8)**</span> | Hardkernel Odroid XU4 | 4.14.212/5.10.13 | [http://ix.io/3Rzw](http://ix.io/3Rzw) |
 | 3324 (neonx4) | Tanix TX6 | 5.7.0 | [http://ix.io/3RVz](http://ix.io/3RVz) |
@@ -27,6 +29,7 @@ See function CheckRAID6PerfAndAlgo in https://github.com/ThomasKaiser/sbc-bench/
 | 3154 (neonx4) / <span style="color:red">**2786 (neonx8)**</span> | Hardkernel ODROID-N2Plus | 5.10.103 | [http://ix.io/3Vjn](http://ix.io/3Vjn) |
 | 3154 (neonx4) |  Khadas VIM3  | 5.10.81 | [http://ix.io/3R2T](http://ix.io/3R2T) |
 | 3154 (neonx4) | Khadas VIM3 | 5.10.60/5.10.81 | [http://ix.io/3NsX](http://ix.io/3NsX) |
+| 3154 (neonx4) | Hardkernel ODROID-N2Plus | 5.10.110 | [http://ix.io/3ZdS](http://ix.io/3ZdS) |
 | 3154 (neonx4) |  Hardkernel ODROID-N2Plus  | 5.10.103 | [http://ix.io/3Ys5](http://ix.io/3Ys5) |
 | 3154 (neonx4) | Hardkernel ODROID-N2Plus | 5.10.103 | [http://ix.io/3Xrr](http://ix.io/3Xrr) |
 | 3154 (neonx4) |  Hardkernel ODROID-N2Plus  | 5.10.103 | [http://ix.io/3WuA](http://ix.io/3WuA) |
@@ -79,11 +82,18 @@ See function CheckRAID6PerfAndAlgo in https://github.com/ThomasKaiser/sbc-bench/
 | 2995 (neonx4) | Hardkernel ODROID-N2Plus | 5.10.103 | [http://ix.io/3WSj](http://ix.io/3WSj) |
 | 2993 (neonx4) | Hardkernel ODROID-N2Plus | 5.10.81 | [http://ix.io/3PWX](http://ix.io/3PWX) |
 | 2981 (neonx4) |  Hardkernel ODROID-N2Plus  | 5.17.5 | [http://ix.io/3XtY](http://ix.io/3XtY) |
+| 2981 (neonx4) |  Hardkernel ODROID-N2Plus  | 5.16.0 | [http://ix.io/3Z8o](http://ix.io/3Z8o) |
 | 2970 (neonx4) | NVIDIA Jetson Nano Developer Kit | 5.10.60/5.10.90 | [http://ix.io/3NaJ](http://ix.io/3NaJ) |
+| 2924 (neonx4) |  Hardkernel ODROID-N2  | 5.17.11 | [http://ix.io/3Zhr](http://ix.io/3Zhr) |
 | 2906 (neonx4) | NVIDIA Jetson Nano Developer Kit | 5.16.11 | [http://ix.io/3Rpo](http://ix.io/3Rpo) |
 | 2904 (neonx8) | Beelink Mini MX | 5.10.117 | [http://ix.io/3YnY](http://ix.io/3YnY) |
 | 2895 (neonx4) | NVIDIA Jetson Nano Developer Kit | 5.10.60 | [http://ix.io/3PMm](http://ix.io/3PMm) |
 | 2887 (neonx8) |  NVIDIA Jetson Nano Developer Kit  | 5.15.25 | [http://ix.io/3YMY](http://ix.io/3YMY) |
+| 2848 (neonx8) | Beelink Mini MX | 5.15.44 | [http://ix.io/3ZuA](http://ix.io/3ZuA) |
+| 2847 (neonx8) |  Amlogic Meson GXBB P201 Development Board  | 5.15.45 | [http://ix.io/3ZwW](http://ix.io/3ZwW) |
+| 2845 (neonx8) | Beelink Mini MX | 5.15.44 | [http://ix.io/3Z1B](http://ix.io/3Z1B) |
+| 2843 (neonx8) |  Amlogic Meson GXBB P201 Development Board  | 5.15.45 | [http://ix.io/3Zwv](http://ix.io/3Zwv) |
+| 2841 (neonx8) | Beelink Mini MX | 5.15.44 | [http://ix.io/3Zut](http://ix.io/3Zut) |
 | 2837 (neonx8) | NVIDIA Jetson Nano Developer Kit | 5.16.11 | [http://ix.io/3Rh4](http://ix.io/3Rh4) |
 | 2827 (neonx4) | Hardkernel ODROID-C2 | 5.9.14 | [http://ix.io/3Wks](http://ix.io/3Wks) |
 | 2825 (neonx4) | Hardkernel ODROID-C2 | 5.10.102/5.6.15 | [http://ix.io/3XBW](http://ix.io/3XBW) |
@@ -112,6 +122,7 @@ See function CheckRAID6PerfAndAlgo in https://github.com/ThomasKaiser/sbc-bench/
 | 2816 (neonx4) | Tronsmart Vega S95 Pro | 5.9.0 | [http://ix.io/3O44](http://ix.io/3O44) |
 | 2816 (neonx4) |  Hardkernel ODROID-C2  | 5.10.102 | [http://ix.io/3Td9](http://ix.io/3Td9) |
 | 2815 (neonx4) | Hardkernel ODROID-C2 | 5.10.88 | [http://ix.io/3Ok7](http://ix.io/3Ok7) |
+| 2815 (neonx4) | Hardkernel ODROID-C2 | 5.10.110 | [http://ix.io/3YRa](http://ix.io/3YRa) |
 | 2815 (neonx4) | Hardkernel ODROID-C2 | 5.10.102 | [http://ix.io/3YdT](http://ix.io/3YdT) |
 | 2814 (neonx4) | Hardkernel ODROID-C2 | 5.15.25/5.17.1 | [http://ix.io/3VKW](http://ix.io/3VKW) |
 | 2813 (neonx4) |  Hardkernel ODROID-C2  | 5.10.102 | [http://ix.io/3Xjw](http://ix.io/3Xjw) |
@@ -134,13 +145,16 @@ See function CheckRAID6PerfAndAlgo in https://github.com/ThomasKaiser/sbc-bench/
 | 2465 (neonx2) |  Helios4  | 5.15.26 | [http://ix.io/3XvG](http://ix.io/3XvG) |
 | 2465 (neonx2) | Helios4 | 5.10.60 | [http://ix.io/3Nax](http://ix.io/3Nax) |
 | 2464 (neonx2) | Ugoos UT2 | 5.10.96 | [http://ix.io/3Ptq](http://ix.io/3Ptq) |
+| 2315 (neonx4) | OrangePi 4 LTS | 5.10.43 | [http://ix.io/3Z7a](http://ix.io/3Z7a) |
 | 2300 (neonx4) | OrangePi 4 LTS | 5.10.43 | [http://ix.io/3YEJ](http://ix.io/3YEJ) |
 | 2298 (neonx4) | OrangePi 4 LTS | 5.10.43 | [http://ix.io/3YLA](http://ix.io/3YLA) |
 | 2293 (neonx4) | OrangePi 4 LTS | 5.10.43 | [http://ix.io/3WHH](http://ix.io/3WHH) |
 | 2292 (neonx4) | OrangePi 4 LTS | 5.10.43 | [http://ix.io/3Yat](http://ix.io/3Yat) |
+| 2268 (neonx8) | Oranth Tanix TX3 Mini | 5.10.119 | [http://ix.io/3Zgz](http://ix.io/3Zgz) |
 | 2264 (neonx8) | Amlogic Meson GXL (S905X) P212 Development Board | 5.10.112 | [http://ix.io/3W6Y](http://ix.io/3W6Y) |
 | 2263 (neonx8) | Amlogic Meson GXL (S905X) P212 Development Board | 5.10.112 | [http://ix.io/3WRk](http://ix.io/3WRk) |
 | 2260 (neonx8) | Phicomm N1 | 5.10.109 | [http://ix.io/3Vlt](http://ix.io/3Vlt) |
+| 2228 (neonx8) | Octopus Planet | 5.15.36 | [http://ix.io/3ZkB](http://ix.io/3ZkB) |
 | 2228 (neonx8) | Amlogic Meson GXM (S912) Q201 Development Board | 5.15.41 | [http://ix.io/3Yok](http://ix.io/3Yok) |
 | 2227 (neonx8) | Amlogic Meson GXL (S905X) P212 Development Board | 5.15.36 | [http://ix.io/3Xuc](http://ix.io/3Xuc) |
 | 2226 (neonx8) |  Shenzhen Amediatech Technology Co., Ltd X96 Air  | 5.10.116 | [http://ix.io/3XWp](http://ix.io/3XWp) |
@@ -148,6 +162,7 @@ See function CheckRAID6PerfAndAlgo in https://github.com/ThomasKaiser/sbc-bench/
 | 2226 (neonx8) |  Amlogic Meson GXM (S912) Q200 Development Board  | 5.15.32 | [http://ix.io/3UWi](http://ix.io/3UWi) |
 | 2226 (neonx8) | Amlogic Meson GXL (S905X) P212 Development Board | 5.15.32 | [http://ix.io/3Uov](http://ix.io/3Uov) |
 | 2225 (neonx8) | Amlogic Meson GXL (S905X) P212 Development Board | 5.15.32 | [http://ix.io/3Utb](http://ix.io/3Utb) |
+| 2224 (neonx8) | Shenzhen CYX Industrial Co., Ltd A95XF3-AIR | 5.10.118/5.17.11 | [http://ix.io/3YQJ](http://ix.io/3YQJ) |
 | 2224 (neonx8) |  Oranth Tanix TX3 Mini  | 5.15.38 | [http://ix.io/3XwG](http://ix.io/3XwG) |
 | 2224 (neonx8) | Amlogic Meson GXL (S905X) P212 Development Board | 5.15.36 | [http://ix.io/3XnY](http://ix.io/3XnY) |
 | 2224 (neonx8) | Amlogic Meson GXL (S905X) P212 Development Board | 5.15.35 | [http://ix.io/3W2E](http://ix.io/3W2E) |
@@ -176,6 +191,7 @@ See function CheckRAID6PerfAndAlgo in https://github.com/ThomasKaiser/sbc-bench/
 | 2207 (neonx4) | Libre Computer AML-S805X-AC | 5.10.102 | [http://ix.io/3Ysj](http://ix.io/3Ysj) |
 | 2207 (neonx4) | Libre Computer AML-S805X-AC | 5.10.102 | [http://ix.io/3VGb](http://ix.io/3VGb) |
 | 2207 (neonx4) | Khadas VIM | 5.10.60/5.10.81 | [http://ix.io/3Pl2](http://ix.io/3Pl2) |
+| 2207 (neonx4) | JetHome JetHub J100 | 5.9.16 | [http://ix.io/3Zbk](http://ix.io/3Zbk) |
 | 2206 (neonx4) | Libre Computer AML-S905X-CC | 5.10.102 | [http://ix.io/3WeZ](http://ix.io/3WeZ) |
 | 2206 (neonx4) | JetHome JetHub J80 | 5.9.16 | [http://ix.io/3OVg](http://ix.io/3OVg) |
 | 2206 (neonx4) | JetHome JetHub J100 | 5.9.16 | [http://ix.io/3RtY](http://ix.io/3RtY) |
@@ -183,6 +199,7 @@ See function CheckRAID6PerfAndAlgo in https://github.com/ThomasKaiser/sbc-bench/
 | 2205 (neonx4) |  Radxa Zero  | 5.15.23 | [http://ix.io/3PMy](http://ix.io/3PMy) |
 | 2205 (neonx4) | Libre Computer AML-S905X-CC | 5.10.102 | [http://ix.io/3UqU](http://ix.io/3UqU) |
 | 2204 (neonx4) | Radxa Zero | 5.15.11/5.15.2 | [http://ix.io/3NsA](http://ix.io/3NsA) |
+| 2204 (neonx4) | Oranth Tanix TX3 Mini | 5.9.0 | [http://ix.io/3YS8](http://ix.io/3YS8) |
 | 2204 (neonx4) | Libre Computer AML-S905X-CC | 5.10.60/5.10.81 | [http://ix.io/3QrB](http://ix.io/3QrB) |
 | 2204 (neonx4) | Libre Computer AML-S905X-CC | 5.10.102 | [http://ix.io/3Y4l](http://ix.io/3Y4l) |
 | 2204 (neonx4) | Libre Computer AML-S905X-CC | 5.10.102 | [http://ix.io/3WPV](http://ix.io/3WPV) |
@@ -231,6 +248,7 @@ See function CheckRAID6PerfAndAlgo in https://github.com/ThomasKaiser/sbc-bench/
 | 2202 (neonx4) | Amlogic Meson G12A U200 Development Board | 5.9.0 | [http://ix.io/3UvE](http://ix.io/3UvE) |
 | 2201 (neonx4) / <span style="color:red">**1830 (neonx4)**</span> | Amlogic Meson GXM (S912) Q200 Development Board | 5.9.0 | [http://ix.io/3QBF](http://ix.io/3QBF) |
 | 2201 (neonx4) | Oranth Tanix TX3 Mini | 5.9.0 | [http://ix.io/3SgT](http://ix.io/3SgT) |
+| 2201 (neonx4) | Libre Computer AML-S905X-CC | 5.10.110 | [http://ix.io/3Zf0](http://ix.io/3Zf0) |
 | 2201 (neonx4) | Khadas VIM | 5.9.0 | [http://ix.io/3Nzi](http://ix.io/3Nzi) |
 | 2201 (neonx4) | Khadas VIM | 5.9.0 | [http://ix.io/3NxP](http://ix.io/3NxP) |
 | 2201 (neonx4) |  Amlogic Meson GXM (S912) Q201 Development Board  | 5.9.0 | [http://ix.io/3SX7](http://ix.io/3SX7) |
@@ -251,6 +269,7 @@ See function CheckRAID6PerfAndAlgo in https://github.com/ThomasKaiser/sbc-bench/
 | 2199 (neonx4) | Oranth Tanix TX3 Mini | 5.9.0 | [http://ix.io/3Uva](http://ix.io/3Uva) |
 | 2199 (neonx4) |  Oranth Tanix TX3 Mini  | 5.9.0 | [http://ix.io/3QIW](http://ix.io/3QIW) |
 | 2199 (neonx4) | NEXBOX A95X (S905X) | 5.9.0 | [http://ix.io/3Q4i](http://ix.io/3Q4i) |
+| 2199 (neonx4) | Libre Computer AML-S905X-CC | 5.10.110 | [http://ix.io/3Za2](http://ix.io/3Za2) |
 | 2199 (neonx4) | Libre Computer AML-S905X-CC | 5.10.102 | [http://ix.io/3Tlh](http://ix.io/3Tlh) |
 | 2199 (neonx4) | JetHome JetHub J80 | 5.9.16 | [http://ix.io/3ON8](http://ix.io/3ON8) |
 | 2199 (neonx4) | JetHome JetHub J80 | 5.9.16 | [http://ix.io/3ON7](http://ix.io/3ON7) |
@@ -280,6 +299,7 @@ See function CheckRAID6PerfAndAlgo in https://github.com/ThomasKaiser/sbc-bench/
 | 2197 (neonx4) |  Amlogic Meson GXL (S905W) P281 Development Board  | 5.9.0 | [http://ix.io/3UDM](http://ix.io/3UDM) |
 | 2197 (neonx4) | Amlogic Meson GXL (S905W) P281 Development Board | 5.9.0 | [http://ix.io/3U97](http://ix.io/3U97) |
 | 2197 (neonx4) | Amlogic Meson GXL (S905W) P281 Development Board | 5.9.0 | [http://ix.io/3Rda](http://ix.io/3Rda) |
+| 2196 (neonx4) |  Radxa Zero  | 5.10.110 | [http://ix.io/3YZL](http://ix.io/3YZL) |
 | 2196 (neonx4) | Phicomm N1 | 5.9.0 | [http://ix.io/3RCI](http://ix.io/3RCI) |
 | 2196 (neonx4) | Amlogic Meson GXL (S905X) P212 Development Board | 5.9.0 | [http://ix.io/3V09](http://ix.io/3V09) |
 | 2196 (neonx4) | Amlogic Meson GXL (S905X) P212 Development Board | 5.9.0 | [http://ix.io/3UwU](http://ix.io/3UwU) |
@@ -297,6 +317,7 @@ See function CheckRAID6PerfAndAlgo in https://github.com/ThomasKaiser/sbc-bench/
 | 2194 (neonx4) | Amlogic Meson GXL (S905X) P212 Development Board | 5.9.0 | [http://ix.io/3PTN](http://ix.io/3PTN) |
 | 2194 (neonx4) | Amlogic Meson GXL (S905W) P281 Development Board | 5.9.0 | [http://ix.io/3Vyp](http://ix.io/3Vyp) |
 | 2193 (neonx4) |  Oranth Tanix TX3 Mini  | 5.9.0 | [http://ix.io/3Q4b](http://ix.io/3Q4b) |
+| 2193 (neonx4) |  Libre Computer AML-S905X-CC  | 5.10.110 | [http://ix.io/3ZiH](http://ix.io/3ZiH) |
 | 2193 (neonx4) |  Hardkernel ODROID-HC4  | 5.10.102 | [http://ix.io/3Ymi](http://ix.io/3Ymi) |
 | 2192 (neonx4) | SEI Robotics SEI610 | 5.9.0 | [http://ix.io/3Onh](http://ix.io/3Onh) |
 | 2192 (neonx4) | Phicomm N1 | 5.9.0 | [http://ix.io/3OIP](http://ix.io/3OIP) |
@@ -334,6 +355,8 @@ See function CheckRAID6PerfAndAlgo in https://github.com/ThomasKaiser/sbc-bench/
 | 2190 (neonx4) | Sinovoip BANANAPI-M5 | 5.10.51 | [http://ix.io/3OVs](http://ix.io/3OVs) |
 | 2190 (neonx4) |  SEI Robotics SEI610  | 5.9.0 | [http://ix.io/3P20](http://ix.io/3P20) |
 | 2190 (neonx4) | Hardkernel ODROID-HC4 | 5.10.81 | [http://ix.io/3Nc3](http://ix.io/3Nc3) |
+| 2190 (neonx4) | Hardkernel ODROID-HC4 | 5.10.110 | [http://ix.io/3ZrK](http://ix.io/3ZrK) |
+| 2190 (neonx4) |  Hardkernel ODROID-HC4  | 5.10.110 | [http://ix.io/3ZlI](http://ix.io/3ZlI) |
 | 2190 (neonx4) |  Hardkernel ODROID-HC4  | 5.10.102 | [http://ix.io/3XBp](http://ix.io/3XBp) |
 | 2190 (neonx4) | Hardkernel ODROID-HC4 | 5.10.102 | [http://ix.io/3Vlv](http://ix.io/3Vlv) |
 | 2190 (neonx4) |  Hardkernel ODROID-HC4  | 5.10.102 | [http://ix.io/3SQi](http://ix.io/3SQi) |
@@ -342,6 +365,7 @@ See function CheckRAID6PerfAndAlgo in https://github.com/ThomasKaiser/sbc-bench/
 | 2190 (neonx4) | Hardkernel ODROID-C4 | 5.10.102 | [http://ix.io/3VET](http://ix.io/3VET) |
 | 2190 (neonx4) | AMedia X96 Max+ (eth0 speed:100Mb/s) | 5.15.41 | [http://ix.io/3YbN](http://ix.io/3YbN) |
 | 2190 (neonx4) | AMedia X96 Max+ (eth0 speed:100Mb/s) | 5.15.41 | [http://ix.io/3YbM](http://ix.io/3YbM) |
+| 2189 (neonx8) | AMedia X96 Max+ (eth0 speed:100Mb/s) | 5.15.44 | [http://ix.io/3ZkX](http://ix.io/3ZkX) |
 | 2189 (neonx8) | AMedia X96 Max+ (eth0 speed:100Mb/s) | 5.15.32 | [http://ix.io/3Uns](http://ix.io/3Uns) |
 | 2189 (neonx4) |  SEI Robotics SEI610  | 5.9.0 | [http://ix.io/3XFw](http://ix.io/3XFw) |
 | 2189 (neonx4) |  Hardkernel ODROID-HC4  | 5.10.102 | [http://ix.io/3VGj](http://ix.io/3VGj) |
@@ -368,6 +392,8 @@ See function CheckRAID6PerfAndAlgo in https://github.com/ThomasKaiser/sbc-bench/
 | 2184 (neonx4) |  Hardkernel ODROID-HC4  | 5.10.102 | [http://ix.io/3Yak](http://ix.io/3Yak) |
 | 2183 (neonx8) |  HK1 Box/Vontar X3  | 5.15.36 | [http://ix.io/3XuO](http://ix.io/3XuO) |
 | 2183 (neonx4) | Hardkernel ODROID-HC4 | 5.10.81 | [http://ix.io/3OFm](http://ix.io/3OFm) |
+| 2181 (neonx8) | AMedia X96 Max+ (eth0 speed:100Mb/s) | 5.15.44 | [http://ix.io/3ZrC](http://ix.io/3ZrC) |
+| 2180 (neonx8) |  HK1 Box/Vontar X3  | 5.15.44 | [http://ix.io/3Zjl](http://ix.io/3Zjl) |
 | 2180 (neonx4) |  Amlogic Meson GXM (S912) Q201 Development Board  | 5.15.41 | [http://ix.io/3Y67](http://ix.io/3Y67) |
 | 2175 (neonx4) | Hardkernel ODROID-C4 | 5.17.3 | [http://ix.io/3W0O](http://ix.io/3W0O) |
 | 2174 (neonx8) | AMedia X96 Max+ (eth0 speed:100Mb/s) | 5.15.15/5.15.16 | [http://ix.io/3NwM](http://ix.io/3NwM) |
@@ -392,6 +418,7 @@ See function CheckRAID6PerfAndAlgo in https://github.com/ThomasKaiser/sbc-bench/
 | 2096 (neonx2) / <span style="color:red">**1828 (neonx4)**</span> | Amlogic Meson GXM (S912) Q200 Development Board | 5.9.0 | [http://ix.io/3R22](http://ix.io/3R22) |
 | 2086 (neonx4) |  RockPro 64  | 4.4.192 | [http://ix.io/3TEa](http://ix.io/3TEa) |
 | 2084 (neonx4) |  RockPro 64  | 4.4.192 | [http://ix.io/3Vuv](http://ix.io/3Vuv) |
+| 2033 (neonx8) | Hardkernel ODROID-N2 | 5.4.27 | [http://ix.io/3YQU](http://ix.io/3YQU) |
 | 1999 (neonx8) | Hardkernel ODROID-C2 | 5.3.11 | [http://ix.io/3SFo](http://ix.io/3SFo) |
 | 1980 (neonx8) | Bananapi BPI-M5 | 4.9.272 | [http://ix.io/3Rjh](http://ix.io/3Rjh) |
 | 1965 (neonx8) | Tronsmart Vega S95 Telos | 5.4.180 | [http://ix.io/3QvO](http://ix.io/3QvO) |
@@ -421,9 +448,14 @@ See function CheckRAID6PerfAndAlgo in https://github.com/ThomasKaiser/sbc-bench/
 | 1851 (neonx4) | OrangePi Zero2 | 5.17.5 | [http://ix.io/3WW0](http://ix.io/3WW0) |
 | 1851 (neonx4) | OrangePi Zero2 | 5.17.5 | [http://ix.io/3WVL](http://ix.io/3WVL) |
 | 1850 (neonx4) / <span style="color:red">**745 (neonx4)**</span> | OrangePi Zero2 | 5.15.11/5.15.18 | [http://ix.io/3OFh](http://ix.io/3OFh) |
+| 1849 (neonx4) | OrangePi Zero2 | 5.17.11 | [http://ix.io/3YTi](http://ix.io/3YTi) |
+| 1849 (neonx4) | OrangePi Zero2 | 5.17.11 | [http://ix.io/3YSX](http://ix.io/3YSX) |
+| 1849 (neonx4) |  Orange Pi Zero2  | 5.16.17 | [http://ix.io/3Z2g](http://ix.io/3Z2g) |
+| 1849 (neonx4) |  Orange Pi Zero2  | 5.16.17 | [http://ix.io/3YR1](http://ix.io/3YR1) |
 | 1849 (neonx4) |  NanoPi M4  | 4.4.213 | [http://ix.io/3SKh](http://ix.io/3SKh) |
 | 1849 (neonx4) |  NanoPi M4  | 4.4.213 | [http://ix.io/3SKg](http://ix.io/3SKg) |
 | 1848 (neonx4) / <span style="color:red">**743 (neonx4)**</span> | OrangePi Zero2 | 5.15.11 | [http://ix.io/3NHu](http://ix.io/3NHu) |
+| 1848 (neonx4) | OrangePi Zero2 | 5.17.11 | [http://ix.io/3ZpF](http://ix.io/3ZpF) |
 | 1848 (neonx4) |  Orange Pi Zero2  | 5.16.17 | [http://ix.io/3YCj](http://ix.io/3YCj) |
 | 1848 (neonx4) | OrangePi Zero2 | 5.15.11 | [http://ix.io/3RZp](http://ix.io/3RZp) |
 | 1848 (neonx4) |  NanoPi M4  | 4.4.213 | [http://ix.io/3SNj](http://ix.io/3SNj) |
@@ -503,6 +535,7 @@ See function CheckRAID6PerfAndAlgo in https://github.com/ThomasKaiser/sbc-bench/
 | 1724 (neonx8) | Radxa ROCK Pi 4B | 5.10.35/5.10.63/5.15.18 | [http://ix.io/3OcZ](http://ix.io/3OcZ) |
 | 1723 (neonx4) | Radxa ROCK Pi 4B | 5.15.32 | [http://ix.io/3UwF](http://ix.io/3UwF) |
 | 1723 (neonx4) | Radxa ROCK Pi 4B | 5.15.32 | [http://ix.io/3UR2](http://ix.io/3UR2) |
+| 1723 (neonx4) | OrangePi 4 | 5.15.35 | [http://ix.io/3Z2i](http://ix.io/3Z2i) |
 | 1723 (neonx4) | OrangePi 4 | 5.15.25 | [http://ix.io/3Yi6](http://ix.io/3Yi6) |
 | 1723 (neonx4) | OrangePi 4 | 5.15.25 | [http://ix.io/3XNU](http://ix.io/3XNU) |
 | 1723 (neonx4) | OrangePi 4 | 5.15.25 | [http://ix.io/3Wvd](http://ix.io/3Wvd) |
@@ -528,6 +561,7 @@ See function CheckRAID6PerfAndAlgo in https://github.com/ThomasKaiser/sbc-bench/
 | 1722 (neonx4) | FriendlyElec NanoPC-T4 | 5.16.8 | [http://ix.io/3SjP](http://ix.io/3SjP) |
 | 1721 (neonx4) | Radxa ROCK Pi 4C | 5.15.35 | [http://ix.io/3YMH](http://ix.io/3YMH) |
 | 1721 (neonx4) | Radxa ROCK Pi 4C | 5.15.35 | [http://ix.io/3YFx](http://ix.io/3YFx) |
+| 1721 (neonx4) | Radxa ROCK Pi 4B | 5.15.35 | [http://ix.io/3Z2m](http://ix.io/3Z2m) |
 | 1721 (neonx4) | Radxa ROCK Pi 4B | 5.15.35 | [http://ix.io/3YyA](http://ix.io/3YyA) |
 | 1721 (neonx4) | Radxa ROCK Pi 4B | 5.15.35 | [http://ix.io/3Yr2](http://ix.io/3Yr2) |
 | 1721 (neonx4) | Radxa ROCK Pi 4B | 5.15.35 | [http://ix.io/3Yn9](http://ix.io/3Yn9) |
@@ -539,6 +573,7 @@ See function CheckRAID6PerfAndAlgo in https://github.com/ThomasKaiser/sbc-bench/
 | 1721 (neonx4) | Radxa ROCK Pi 4B | 5.15.25 | [http://ix.io/3Uzu](http://ix.io/3Uzu) |
 | 1721 (neonx4) | Radxa ROCK Pi 4B | 5.10.60/5.15.25 | [http://ix.io/3VcY](http://ix.io/3VcY) |
 | 1721 (neonx4) | Radxa ROCK Pi 4A | 5.10.60/5.15.25 | [http://ix.io/3VhA](http://ix.io/3VhA) |
+| 1721 (neonx4) |  Pine64 RockPro64 v2.1  | 5.15.35 | [http://ix.io/3ZpR](http://ix.io/3ZpR) |
 | 1721 (neonx4) | Pine64 RockPro64 v2.1 | 5.15.31 | [http://ix.io/3Vvf](http://ix.io/3Vvf) |
 | 1721 (neonx4) | OrangePi 4 | 5.15.25 | [http://ix.io/3Wve](http://ix.io/3Wve) |
 | 1721 (neonx4) | OrangePi 4 | 5.15.25 | [http://ix.io/3Wmh](http://ix.io/3Wmh) |
@@ -560,9 +595,12 @@ See function CheckRAID6PerfAndAlgo in https://github.com/ThomasKaiser/sbc-bench/
 | 1704 (neonx8) | Phicomm N1 | 4.18.7 | [http://ix.io/3Y46](http://ix.io/3Y46) |
 | 1698 (neonx8) |  RockPro 64  | 4.4.213 | [http://ix.io/3UpH](http://ix.io/3UpH) |
 | 1696 (neonx8) |  RockPro 64  | 4.4.213 | [http://ix.io/3P2b](http://ix.io/3P2b) |
+| 1696 (neonx8) |  Rockpi 4C  | 4.4.213 | [http://ix.io/3Z0x](http://ix.io/3Z0x) |
+| 1696 (neonx8) |  Rockpi 4C  | 4.4.213 | [http://ix.io/3Z0A](http://ix.io/3Z0A) |
 | 1695 (neonx8) |  RockPro 64  | 4.4.213 | [http://ix.io/3OBy](http://ix.io/3OBy) |
 | 1695 (neonx8) |  RockPro 64  | 4.4.213 | [http://ix.io/3OBx](http://ix.io/3OBx) |
 | 1695 (neonx8) |  RockPro 64  | 4.4.213 | [http://ix.io/3NGn](http://ix.io/3NGn) |
+| 1695 (neonx8) |  Firefly RK3399  | 4.4.213 | [http://ix.io/3Zpw](http://ix.io/3Zpw) |
 | 1693 (neonx4) | Radxa ROCK Pi 4B | 5.10.35/5.10.63 | [http://ix.io/3OKU](http://ix.io/3OKU) |
 | 1691 (neonx4) | Pine64 RockPro64 v2.1 | 5.10.43 | [http://ix.io/3UAO](http://ix.io/3UAO) |
 | 1690 (neonx4) | FriendlyElec NanoPi M4 | 5.9.14 | [http://ix.io/3RWQ](http://ix.io/3RWQ) |
@@ -610,6 +648,13 @@ See function CheckRAID6PerfAndAlgo in https://github.com/ThomasKaiser/sbc-bench/
 | 1683 (neonx4) |  HPH TRV-9  | 5.10.63 | [http://ix.io/3Qfh](http://ix.io/3Qfh) |
 | 1683 (neonx4) | Helios64 | 5.10.63 | [http://ix.io/3Pdu](http://ix.io/3Pdu) |
 | 1683 (neonx4) | FriendlyElec NanoPi M4 Ver2.0 | 5.10.63 | [http://ix.io/3RqW](http://ix.io/3RqW) |
+| 1683 (neonx4) |  FriendlyARM NanoPi NEO4  | 5.10.63 | [http://ix.io/3Zsk](http://ix.io/3Zsk) |
+| 1683 (neonx4) |  FriendlyARM NanoPi NEO4  | 5.10.63 | [http://ix.io/3Zmh](http://ix.io/3Zmh) |
+| 1683 (neonx4) |  FriendlyARM NanoPi NEO4  | 5.10.63 | [http://ix.io/3ZhO](http://ix.io/3ZhO) |
+| 1683 (neonx4) |  FriendlyARM NanoPi NEO4  | 5.10.63 | [http://ix.io/3Zho](http://ix.io/3Zho) |
+| 1683 (neonx4) |  FriendlyARM NanoPi NEO4  | 5.10.63 | [http://ix.io/3ZhF](http://ix.io/3ZhF) |
+| 1683 (neonx4) |  FriendlyARM NanoPi NEO4  | 5.10.63 | [http://ix.io/3Zh6](http://ix.io/3Zh6) |
+| 1683 (neonx4) |  FriendlyARM NanoPi NEO4  | 5.10.63 | [http://ix.io/3Z7r](http://ix.io/3Z7r) |
 | 1683 (neonx4) |  FriendlyARM NanoPi NEO4  | 5.10.63 | [http://ix.io/3YOo](http://ix.io/3YOo) |
 | 1683 (neonx4) |  FriendlyARM NanoPi NEO4  | 5.10.63 | [http://ix.io/3Xvk](http://ix.io/3Xvk) |
 | 1683 (neonx4) |  FriendlyARM NanoPi NEO4  | 5.10.63 | [http://ix.io/3Xv2](http://ix.io/3Xv2) |
@@ -624,7 +669,17 @@ See function CheckRAID6PerfAndAlgo in https://github.com/ThomasKaiser/sbc-bench/
 | 1682 (neonx4) |  OPI 3 LTS  | 5.10.75 | [http://ix.io/3NQA](http://ix.io/3NQA) |
 | 1682 (neonx4) |  FriendlyElec NanoPi R4S  | 5.10.63 | [http://ix.io/3PG3](http://ix.io/3PG3) |
 | 1682 (neonx4) | FriendlyElec NanoPi M4 | 5.10.60 | [http://ix.io/3RUe](http://ix.io/3RUe) |
+| 1682 (neonx4) |  FriendlyARM NanoPi NEO4  | 5.10.63 | [http://ix.io/3Z4y](http://ix.io/3Z4y) |
+| 1682 (neonx4) |  FriendlyARM NanoPi NEO4  | 5.10.63 | [http://ix.io/3Z4v](http://ix.io/3Z4v) |
+| 1682 (neonx4) |  FriendlyARM NanoPi NEO4  | 5.10.63 | [http://ix.io/3Z4i](http://ix.io/3Z4i) |
+| 1682 (neonx4) |  FriendlyARM NanoPi NEO4  | 5.10.63 | [http://ix.io/3Z4e](http://ix.io/3Z4e) |
+| 1682 (neonx4) |  FriendlyARM NanoPi NEO4  | 5.10.63 | [http://ix.io/3Z4b](http://ix.io/3Z4b) |
+| 1682 (neonx4) |  FriendlyARM NanoPi NEO4  | 5.10.63 | [http://ix.io/3Z47](http://ix.io/3Z47) |
+| 1682 (neonx4) |  FriendlyARM NanoPi NEO4  | 5.10.63 | [http://ix.io/3Z0p](http://ix.io/3Z0p) |
+| 1682 (neonx4) |  FriendlyARM NanoPi NEO4  | 5.10.63 | [http://ix.io/3Z0c](http://ix.io/3Z0c) |
+| 1682 (neonx4) |  FriendlyARM NanoPi NEO4  | 5.10.63 | [http://ix.io/3YSp](http://ix.io/3YSp) |
 | 1682 (neonx4) |  FriendlyARM NanoPi NEO4  | 5.10.63 | [http://ix.io/3XqG](http://ix.io/3XqG) |
+| 1682 (neonx4) |  Clockworkpi A06  | 5.10.60 | [http://ix.io/3YYO](http://ix.io/3YYO) |
 | 1682 (neonx4) | Clockworkpi A06 | 5.10.60 | [http://ix.io/3W9E](http://ix.io/3W9E) |
 | 1682 (neonx4) | Clockworkpi A06 | 5.10.60 | [http://ix.io/3VHp](http://ix.io/3VHp) |
 | 1682 (neonx4) | Clockworkpi A06 | 5.10.60 | [http://ix.io/3VHo](http://ix.io/3VHo) |
@@ -667,8 +722,11 @@ See function CheckRAID6PerfAndAlgo in https://github.com/ThomasKaiser/sbc-bench/
 | 1672 (neonx4) | Tanix TX6 | 5.10.68 | [http://ix.io/3VuV](http://ix.io/3VuV) |
 | 1672 (neonx4) |  Tanix TX6  | 5.10.68 | [http://ix.io/3Pdt](http://ix.io/3Pdt) |
 | 1672 (neonx4) | OrangePi 4 | 5.13.12 | [http://ix.io/3OV7](http://ix.io/3OV7) |
+| 1670 (neonx4) |  Pine H64 model B  | 5.15.43 | [http://ix.io/3YWr](http://ix.io/3YWr) |
 | 1662 (neonx4) | Pine64 RockPro64 v2.1 | 5.16.17 | [http://ix.io/3Wkr](http://ix.io/3Wkr) |
+| 1631 (neonx4) |  Orange Pi One+  | 5.15.43 | [http://ix.io/3Z1b](http://ix.io/3Z1b) |
 | 1630 (neonx4) |  Tanix TX6  | 5.10.82 | [http://ix.io/3VoG](http://ix.io/3VoG) |
+| 1630 (neonx4) | OrangePi 3 LTS | 5.16.17 | [http://ix.io/3Zl8](http://ix.io/3Zl8) |
 | 1629 (neonx4) | OrangePi 3 LTS | 5.16.17 | [http://ix.io/3Yev](http://ix.io/3Yev) |
 | 1628 (neonx8) | Phicomm N1 | 5.4.108 | [http://ix.io/3VN0](http://ix.io/3VN0) |
 | 1628 (neonx4) |  Tanix TX6  | 5.10.82 | [http://ix.io/3VmK](http://ix.io/3VmK) |
@@ -677,6 +735,7 @@ See function CheckRAID6PerfAndAlgo in https://github.com/ThomasKaiser/sbc-bench/
 | 1627 (neonx4) |  OPI 3 LTS  | 5.15.32 | [http://ix.io/3Vts](http://ix.io/3Vts) |
 | 1626 (neonx4) | OrangePi One Plus | 5.15.25 | [http://ix.io/3X1R](http://ix.io/3X1R) |
 | 1626 (neonx4) |  OrangePi One Plus  | 5.15.25 | [http://ix.io/3Vjq](http://ix.io/3Vjq) |
+| 1626 (neonx4) |  Orange Pi Lite 2  | 5.15.43 | [http://ix.io/3YVg](http://ix.io/3YVg) |
 | 1626 (neonx4) |  OPI 3 LTS  | 5.16.17 | [http://ix.io/3YuT](http://ix.io/3YuT) |
 | 1625 (neonx4) |  Tanix TX6  | 5.10.82 | [http://ix.io/3VqS](http://ix.io/3VqS) |
 | 1625 (neonx4) |  Orange Pi 3  | 5.15.25 | [http://ix.io/3Vau](http://ix.io/3Vau) |
@@ -684,7 +743,9 @@ See function CheckRAID6PerfAndAlgo in https://github.com/ThomasKaiser/sbc-bench/
 | 1624 (neonx4) |  OrangePi One Plus  | 5.15.25 | [http://ix.io/3Vjx](http://ix.io/3Vjx) |
 | 1624 (neonx4) |  Orange Pi One+  | 5.15.25 | [http://ix.io/3UVA](http://ix.io/3UVA) |
 | 1624 (neonx4) |  Orange Pi 3 LTS  | 5.17.5 | [http://ix.io/3Y3i](http://ix.io/3Y3i) |
+| 1624 (neonx4) |  Orange Pi 3  | 5.15.43 | [http://ix.io/3ZaO](http://ix.io/3ZaO) |
 | 1624 (neonx4) |  Orange Pi 3  | 5.15.25 | [http://ix.io/3WRZ](http://ix.io/3WRZ) |
+| 1624 (neonx4) |  OPI 3 LTS  | 5.16.17 | [http://ix.io/3Zn7](http://ix.io/3Zn7) |
 | 1624 (neonx4) |  OPI 3 LTS  | 5.16.17 | [http://ix.io/3Yas](http://ix.io/3Yas) |
 | 1623 (neonx4) | Tanix TX6 | 5.15.27 | [http://ix.io/3WrU](http://ix.io/3WrU) |
 | 1623 (neonx4) |  Orange Pi Lite 2  | 5.15.25 | [http://ix.io/3WPO](http://ix.io/3WPO) |
@@ -708,6 +769,9 @@ See function CheckRAID6PerfAndAlgo in https://github.com/ThomasKaiser/sbc-bench/
 | 1600 (neonx8) | Oranth Tanix TX3 Mini | 5.4.172 | [http://ix.io/3OtE](http://ix.io/3OtE) |
 | 1598 (neonx8) | Oranth Tanix TX3 Mini | 5.4.157 | [http://ix.io/3P6y](http://ix.io/3P6y) |
 | 1597 (neonx8) / <span style="color:red">**1054 (neonx8)**</span> | Pine64 Rock64 | 4.17.0 | [http://ix.io/3PiK](http://ix.io/3PiK) |
+| 1579 (neonx4) | Raspberry Pi 4 Model B Rev 1.1 | 5.15.44 | [http://ix.io/3ZhW](http://ix.io/3ZhW) |
+| 1579 (neonx4) | Raspberry Pi 4 Model B Rev 1.1 | 5.15.44 | [http://ix.io/3ZhV](http://ix.io/3ZhV) |
+| 1576 (neonx4) | Raspberry Pi 4 Model B Rev 1.1 | 5.15.36 | [http://ix.io/3ZmS](http://ix.io/3ZmS) |
 | 1575 (neonx4) | Raspberry Pi 4 Model B Rev 1.2 | 5.15.32 | [http://ix.io/3UGN](http://ix.io/3UGN) |
 | 1575 (neonx4) | Raspberry Pi 4 Model B Rev 1.1 | 5.15.24 | [http://ix.io/3WGS](http://ix.io/3WGS) |
 | 1574 (neonx4) |  RPi 400 Rev 1.0 / BCM2711 Rev C0 or later  | 5.15.32 | [http://ix.io/3U13](http://ix.io/3U13) |
@@ -727,6 +791,7 @@ See function CheckRAID6PerfAndAlgo in https://github.com/ThomasKaiser/sbc-bench/
 | 1573 (neonx4) | Raspberry Pi 4 Model B Rev 1.1 | 5.15.24 | [http://ix.io/3ULA](http://ix.io/3ULA) |
 | 1573 (neonx4) | Raspberry Pi 4 Model B Rev 1.1 | 5.15.24 | [http://ix.io/3RwU](http://ix.io/3RwU) |
 | 1573 (neonx4) | Raspberry Pi 400 Rev 1.1 | 5.15.24 | [http://ix.io/3Y0E](http://ix.io/3Y0E) |
+| 1572 (neonx4) | Raspberry Pi 4 Model B Rev 1.1 | 5.15.36 | [http://ix.io/3ZrG](http://ix.io/3ZrG) |
 | 1557 (neonx8) |  NanoPi K1 Plus  | 5.16.11/5.16.16 | [http://ix.io/3UoU](http://ix.io/3UoU) |
 | 1554 (neonx8) |  Banana Pi M64  | 5.16.11 | [http://ix.io/3WHZ](http://ix.io/3WHZ) |
 | 1504 (neonx4) | SoPine with baseboard | 5.10.21 | [http://ix.io/3QgD](http://ix.io/3QgD) |
@@ -747,6 +812,7 @@ See function CheckRAID6PerfAndAlgo in https://github.com/ThomasKaiser/sbc-bench/
 | 1501 (neonx4) | Pine64+ | 5.10.60 | [http://ix.io/3OXE](http://ix.io/3OXE) |
 | 1501 (neonx4) | Pine64+ | 5.10.60 | [http://ix.io/3NfX](http://ix.io/3NfX) |
 | 1501 (neonx4) |  Pine64  | 5.10.60 | [http://ix.io/3N7X](http://ix.io/3N7X) |
+| 1501 (neonx4) |  Pine64  | 5.10.60/5.15.25/5.15.43 | [http://ix.io/3Zpe](http://ix.io/3Zpe) |
 | 1501 (neonx4) |  Orange Pi Win  | 5.10.60/5.15.25 | [http://ix.io/3Xv0](http://ix.io/3Xv0) |
 | 1500 (neonx4) | Xunlong Orange Pi Zero Plus | 5.10.12 | [http://ix.io/3WEm](http://ix.io/3WEm) |
 | 1500 (neonx4) | Xunlong Orange Pi PC 2 | 5.10.60 | [http://ix.io/3RLy](http://ix.io/3RLy) |
@@ -772,6 +838,7 @@ See function CheckRAID6PerfAndAlgo in https://github.com/ThomasKaiser/sbc-bench/
 | 1497 (neonx4) |  Pine64  | 5.15.26 | [http://ix.io/3XWV](http://ix.io/3XWV) |
 | 1497 (neonx4) |  Pine64  | 5.15.26 | [http://ix.io/3Xau](http://ix.io/3Xau) |
 | 1497 (neonx4) |  Orange Pi Prime  | 5.15.25 | [http://ix.io/3Uom](http://ix.io/3Uom) |
+| 1497 (neonx4) |  Orange Pi PC2  | 5.15.43 | [http://ix.io/3YRf](http://ix.io/3YRf) |
 | 1497 (neonx4) |  Orange Pi PC2  | 5.15.26 | [http://ix.io/3Xdg](http://ix.io/3Xdg) |
 | 1497 (neonx4) |  Orange Pi PC2  | 5.15.26 | [http://ix.io/3Wfs](http://ix.io/3Wfs) |
 | 1497 (neonx4) |  Orange Pi PC2  | 5.15.26 | [http://ix.io/3S3u](http://ix.io/3S3u) |
@@ -790,6 +857,7 @@ See function CheckRAID6PerfAndAlgo in https://github.com/ThomasKaiser/sbc-bench/
 | 1495 (neonx4) | Xunlong Orange Pi Zero Plus | 5.10.60 | [http://ix.io/3PYt](http://ix.io/3PYt) |
 | 1495 (neonx4) | Xunlong Orange Pi Zero Plus | 5.10.60 | [http://ix.io/3PQ2](http://ix.io/3PQ2) |
 | 1495 (neonx4) | Xunlong Orange Pi Zero Plus | 5.10.60 | [http://ix.io/3PQ1](http://ix.io/3PQ1) |
+| 1495 (neonx4) |  Pine64  | 5.15.43 | [http://ix.io/3YWJ](http://ix.io/3YWJ) |
 | 1495 (neonx4) |  Pine64+  | 5.15.33 | [http://ix.io/3URN](http://ix.io/3URN) |
 | 1495 (neonx4) |  Pine64  | 5.15.26 | [http://ix.io/3XGJ](http://ix.io/3XGJ) |
 | 1495 (neonx4) |  Pine64+  | 5.15.26 | [http://ix.io/3Xdw](http://ix.io/3Xdw) |
@@ -843,6 +911,7 @@ See function CheckRAID6PerfAndAlgo in https://github.com/ThomasKaiser/sbc-bench/
 | 1468 (neonx4) | Radxa ROCK Pi 4B | 5.15.25 | [http://ix.io/3Sh7](http://ix.io/3Sh7) |
 | 1467 (neonx8) | Hardkernel Odroid XU4 | 5.4.181 | [http://ix.io/3WPp](http://ix.io/3WPp) |
 | 1467 (neonx8) | Hardkernel Odroid XU4 | 5.4.160 | [http://ix.io/3Ogd](http://ix.io/3Ogd) |
+| 1466 (neonx8) |  Hardkernel Odroid HC1  | 5.4.181 | [http://ix.io/3Z49](http://ix.io/3Z49) |
 | 1465 (neonx8) | Hardkernel Odroid XU4 | 5.4.181 | [http://ix.io/3Vzi](http://ix.io/3Vzi) |
 | 1462 (neonx8) |  Hardkernel Odroid XU4  | 5.4.181 | [http://ix.io/3Yee](http://ix.io/3Yee) |
 | 1462 (neonx8) | Hardkernel Odroid XU4 | 4.14.222/5.4.160 | [http://ix.io/3O2s](http://ix.io/3O2s) |
@@ -865,15 +934,18 @@ See function CheckRAID6PerfAndAlgo in https://github.com/ThomasKaiser/sbc-bench/
 | 1439 (neonx4) |  Hardkernel ODROID-M1  | 5.18.0 | [http://ix.io/3WYK](http://ix.io/3WYK) |
 | 1423 (neonx4) | Radxa Rock3A | 5.17.1/5.17.5 | [http://ix.io/3Ysr](http://ix.io/3Ysr) |
 | 1423 (neonx4) | Radxa Rock3A | 5.16.16/5.16.17 | [http://ix.io/3TJq](http://ix.io/3TJq) |
+| 1422 (neonx4) |  Radxa Rock3A  | 5.17.5 | [http://ix.io/3Zb5](http://ix.io/3Zb5) |
 | 1421 (neonx4) | Radxa Rock3A | 5.16.18 | [http://ix.io/3U4y](http://ix.io/3U4y) |
 | 1420 (neonx4) |  Firefly rk3568-roc-pc  | 5.16.18 | [http://ix.io/3VhV](http://ix.io/3VhV) |
 | 1419 (neonx8) |  Amlogic Meson GXM (S912) Q201 Development Board  | 4.16.1 | [http://ix.io/3YOa](http://ix.io/3YOa) |
+| 1383 (neonx4) |  Hardkernel ODROID-M1  | 5.18.0 | [http://ix.io/3ZpL](http://ix.io/3ZpL) |
 | 1350 (neonx4) | Helios4 | 4.19.63 | [http://ix.io/3RcK](http://ix.io/3RcK) |
 | 1342 (neonx4) | Hardkernel Odroid XU4 | 5.4.72 | [http://ix.io/3XTf](http://ix.io/3XTf) |
 | 1341 (neonx4) | Khadas VIM3L | 5.5.0 | [http://ix.io/3Y5O](http://ix.io/3Y5O) |
 | 1323 (neonx8) / <span style="color:red">**1142 (neonx4)**</span> | Leez RK3399 P710 | 5.4.1 | [http://ix.io/3UiM](http://ix.io/3UiM) |
 | 1317 (neonx8) |  Orange Pi Zero 2  | 4.9.170 | [http://ix.io/3RDH](http://ix.io/3RDH) |
 | 1317 (neonx8) |  Orange Pi Zero 2  | 4.9.170 | [http://ix.io/3PSV](http://ix.io/3PSV) |
+| 1316 (neonx8) |  Orange Pi Zero2  | 4.9.255 | [http://ix.io/3Zao](http://ix.io/3Zao) |
 | 1316 (neonx8) |  Orange Pi Zero2  | 4.9.255 | [http://ix.io/3Q2W](http://ix.io/3Q2W) |
 | 1316 (neonx8) |  Orange Pi Zero 2  | 4.9.170 | [http://ix.io/3Xp0](http://ix.io/3Xp0) |
 | 1316 (neonx8) |  Orange Pi Zero 2  | 4.9.170 | [http://ix.io/3VZu](http://ix.io/3VZu) |
@@ -904,6 +976,9 @@ See function CheckRAID6PerfAndAlgo in https://github.com/ThomasKaiser/sbc-bench/
 | 1314 (neonx8) |  Orange Pi Zero2  | 4.9.255 | [http://ix.io/3OcY](http://ix.io/3OcY) |
 | 1314 (neonx8) |  Orange Pi Zero2  | 4.9.255 | [http://ix.io/3Nrx](http://ix.io/3Nrx) |
 | 1314 (neonx8) |  Orange Pi Zero2  | 4.9.255 | [http://ix.io/3N9r](http://ix.io/3N9r) |
+| 1314 (neonx8) |  Orange Pi Zero 2  | 4.9.170 | [http://ix.io/3Zg1](http://ix.io/3Zg1) |
+| 1314 (neonx8) |  Orange Pi Zero 2  | 4.9.170 | [http://ix.io/3YXU](http://ix.io/3YXU) |
+| 1314 (neonx8) |  Orange Pi Zero 2  | 4.9.170 | [http://ix.io/3YXr](http://ix.io/3YXr) |
 | 1314 (neonx8) |  Orange Pi Zero 2  | 4.9.170 | [http://ix.io/3YwD](http://ix.io/3YwD) |
 | 1314 (neonx8) |  Orange Pi Zero 2  | 4.9.170 | [http://ix.io/3Y8z](http://ix.io/3Y8z) |
 | 1314 (neonx8) |  Orange Pi Zero 2  | 4.9.170 | [http://ix.io/3XqE](http://ix.io/3XqE) |
@@ -927,6 +1002,7 @@ See function CheckRAID6PerfAndAlgo in https://github.com/ThomasKaiser/sbc-bench/
 | 1314 (neonx8) |  Orange Pi Zero 2  | 4.9.170 | [http://ix.io/3Nq4](http://ix.io/3Nq4) |
 | 1313 (neonx8) |  Orange Pi Zero2  | 4.9.280 | [http://ix.io/3RP5](http://ix.io/3RP5) |
 | 1313 (neonx8) |  Orange Pi Zero2  | 4.9.280 | [http://ix.io/3PMq](http://ix.io/3PMq) |
+| 1313 (neonx8) |  Orange Pi Zero2  | 4.9.255 | [http://ix.io/3Zls](http://ix.io/3Zls) |
 | 1313 (neonx8) |  Orange Pi Zero2  | 4.9.255 | [http://ix.io/3YpR](http://ix.io/3YpR) |
 | 1313 (neonx8) |  Orange Pi Zero2  | 4.9.255 | [http://ix.io/3YLx](http://ix.io/3YLx) |
 | 1313 (neonx8) |  Orange Pi Zero2  | 4.9.255 | [http://ix.io/3YKU](http://ix.io/3YKU) |
@@ -980,8 +1056,10 @@ See function CheckRAID6PerfAndAlgo in https://github.com/ThomasKaiser/sbc-bench/
 | 1125 (neonx8) | FriendlyARM NanoPi NEO Plus2 | 4.19.56 | [http://ix.io/3Wdw](http://ix.io/3Wdw) |
 | 1110 (neonx8) | Pine64 Rock64 | 5.12.6/5.15.18 | [http://ix.io/3PMb](http://ix.io/3PMb) |
 | 1110 (neonx8) | Pine64 Rock64 | 5.12.6/5.15.18 | [http://ix.io/3PMa](http://ix.io/3PMa) |
+| 1108 (neonx4) | Rockchip RK3288 Asus Tinker Board S | 5.15.35 | [http://ix.io/3ZpU](http://ix.io/3ZpU) |
 | 1108 (neonx4) | Rockchip RK3288 Asus Tinker Board S | 5.15.18/5.15.19 | [http://ix.io/3OtC](http://ix.io/3OtC) |
 | 1107 (neonx4) | Rockchip RK3288 Asus Tinker Board S | 5.13.12 | [http://ix.io/3Sld](http://ix.io/3Sld) |
+| 1106 (neonx4) | Rockchip RK3288 Asus Tinker Board S | 5.15.44 | [http://ix.io/3Zip](http://ix.io/3Zip) |
 | 1106 (neonx4) | Rockchip RK3288 Asus Tinker Board S | 5.15.25 | [http://ix.io/3Y2d](http://ix.io/3Y2d) |
 | 1106 (neonx4) |  Rockchip RK3288 Asus Tinker Board S  | 5.15.25 | [http://ix.io/3XtT](http://ix.io/3XtT) |
 | 1106 (neonx4) |  Rockchip RK3288 Asus Tinker Board S  | 5.15.25 | [http://ix.io/3XtP](http://ix.io/3XtP) |
@@ -1100,6 +1178,7 @@ See function CheckRAID6PerfAndAlgo in https://github.com/ThomasKaiser/sbc-bench/
 | 1073 (neonx4) |  FriendlyElec NanoPi R2S  | 5.15.25 | [http://ix.io/3SPZ](http://ix.io/3SPZ) |
 | 1073 (neonx4) |  FriendlyElec NanoPi R2S  | 5.15.25 | [http://ix.io/3SPK](http://ix.io/3SPK) |
 | 1073 (neonx4) | Firefly roc-rk3328-cc | 5.10.60 | [http://ix.io/3P24](http://ix.io/3P24) |
+| 1073 (neonx4) |  Beelink A1  | 5.17.9 | [http://ix.io/3Z24](http://ix.io/3Z24) |
 | 1072 (neonx4) |  Xunlong Orange Pi R1 Plus  | 5.16.18 | [http://ix.io/3Uja](http://ix.io/3Uja) |
 | 1072 (neonx4) | Pine64 Rock64 | 5.10.63 | [http://ix.io/3RJq](http://ix.io/3RJq) |
 | 1072 (neonx4) | Pine64 Rock64 | 5.10.60 | [http://ix.io/3WJD](http://ix.io/3WJD) |
@@ -1107,6 +1186,8 @@ See function CheckRAID6PerfAndAlgo in https://github.com/ThomasKaiser/sbc-bench/
 | 1072 (neonx4) | Pine64 Rock64 | 5.10.60/5.10.63 | [http://ix.io/3NfS](http://ix.io/3NfS) |
 | 1072 (neonx4) | FriendlyElec NanoPi R2S | 5.10.60 | [http://ix.io/3R01](http://ix.io/3R01) |
 | 1072 (neonx4) | FriendlyElec NanoPi NEO3 | 5.10.60 | [http://ix.io/3Yip](http://ix.io/3Yip) |
+| 1072 (neonx4) | Firefly ROC-RK3328-PC | 5.17.9 | [http://ix.io/3ZaC](http://ix.io/3ZaC) |
+| 1072 (neonx4) | Firefly ROC-RK3328-PC | 5.17.9 | [http://ix.io/3ZaB](http://ix.io/3ZaB) |
 | 1071 (neonx4) | Xunlong Orange Pi R1 Plus | 5.8.18 | [http://ix.io/3Okr](http://ix.io/3Okr) |
 | 1071 (neonx4) | Pine64 Rock64 | 5.8.6 | [http://ix.io/3PIo](http://ix.io/3PIo) |
 | 1071 (neonx4) |  FriendlyElec NanoPi R2S  | 5.10.63 | [http://ix.io/3QSr](http://ix.io/3QSr) |
@@ -1116,11 +1197,16 @@ See function CheckRAID6PerfAndAlgo in https://github.com/ThomasKaiser/sbc-bench/
 | 1071 (neonx4) |  FriendlyElec NanoPi R2S  | 5.10.60 | [http://ix.io/3PKD](http://ix.io/3PKD) |
 | 1071 (neonx4) |  FriendlyElec NanoPi NEO3  | 5.13.12 | [http://ix.io/3URU](http://ix.io/3URU) |
 | 1071 (neonx4) | Firefly roc-rk3328-cc | 5.15.25 | [http://ix.io/3SOn](http://ix.io/3SOn) |
+| 1070 (neonx4) | Xunlong Orange Pi R1 Plus LTS | 5.15.35 | [http://ix.io/3YTs](http://ix.io/3YTs) |
 | 1070 (neonx4) | Rockchip RK3318 BOX | 5.15.23 | [http://ix.io/3TJh](http://ix.io/3TJh) |
 | 1070 (neonx4) | Rockchip RK3318 BOX | 5.14.14 | [http://ix.io/3NNz](http://ix.io/3NNz) |
 | 1070 (neonx4) | Rockchip RK3318 BOX | 5.14.14 | [http://ix.io/3NNy](http://ix.io/3NNy) |
+| 1070 (neonx4) |  Pine64 Rock64  | 5.15.35 | [http://ix.io/3YYH](http://ix.io/3YYH) |
 | 1070 (neonx4) |  Pine64 Rock64  | 5.10.63 | [http://ix.io/3PPW](http://ix.io/3PPW) |
 | 1070 (neonx4) | FriendlyElec NanoPi R2S | 5.10.60 | [http://ix.io/3Ne8](http://ix.io/3Ne8) |
+| 1070 (neonx4) | Firefly ROC-RK3328-PC | 5.17.9 | [http://ix.io/3Zik](http://ix.io/3Zik) |
+| 1070 (neonx4) | Firefly ROC-RK3328-PC | 5.17.9 | [http://ix.io/3Zij](http://ix.io/3Zij) |
+| 1070 (neonx4) | Firefly ROC-RK3328-PC | 5.17.9 | [http://ix.io/3Zih](http://ix.io/3Zih) |
 | 1069 (neonx4) |  FriendlyElec NanoPi R2S  | 5.10.63 | [http://ix.io/3RKn](http://ix.io/3RKn) |
 | 1069 (neonx4) |  FriendlyElec NanoPi R2S  | 5.10.63 | [http://ix.io/3RJI](http://ix.io/3RJI) |
 | 1069 (neonx4) |  Firefly roc-rk3328-cc  | 5.15.25 | [http://ix.io/3XpP](http://ix.io/3XpP) |
@@ -1161,6 +1247,7 @@ See function CheckRAID6PerfAndAlgo in https://github.com/ThomasKaiser/sbc-bench/
 | 916 (neonx2) | OrangePi Zero Plus2 H3 | 5.16.10 | [http://ix.io/3QeC](http://ix.io/3QeC) |
 | 916 (neonx2) | Banana Pi BPI-M3 | 5.10.60 | [http://ix.io/3QJY](http://ix.io/3QJY) |
 | 916 (neonx2) | Banana Pi BPI-M3 | 5.10.60 | [http://ix.io/3QJX](http://ix.io/3QJX) |
+| 915 (neonx2) | Xunlong Orange Pi R1 | 5.15.25 | [http://ix.io/3YPr](http://ix.io/3YPr) |
 | 915 (neonx2) | Xunlong Orange Pi R1 | 5.15.25 | [http://ix.io/3XbL](http://ix.io/3XbL) |
 | 915 (neonx2) |  Xunlong Orange Pi R1  | 5.15.25 | [http://ix.io/3Vzl](http://ix.io/3Vzl) |
 | 915 (neonx2) | Xunlong Orange Pi R1 | 5.10.60 | [http://ix.io/3TSr](http://ix.io/3TSr) |
@@ -1211,6 +1298,8 @@ See function CheckRAID6PerfAndAlgo in https://github.com/ThomasKaiser/sbc-bench/
 | 915 (neonx2) | Xunlong Orange Pi PC Plus | 5.10.4/5.15.25 | [http://ix.io/3T8u](http://ix.io/3T8u) |
 | 915 (neonx2) | Xunlong Orange Pi PC Plus | 5.10.19 | [http://ix.io/3Ulw](http://ix.io/3Ulw) |
 | 915 (neonx2) | Xunlong Orange Pi PC | 5.8.5 | [http://ix.io/3Ogy](http://ix.io/3Ogy) |
+| 915 (neonx2) | Xunlong Orange Pi PC | 5.15.26 | [http://ix.io/3YPJ](http://ix.io/3YPJ) |
+| 915 (neonx2) | Xunlong Orange Pi PC | 5.15.26 | [http://ix.io/3YPB](http://ix.io/3YPB) |
 | 915 (neonx2) |  Xunlong Orange Pi PC  | 5.15.26 | [http://ix.io/3Yl9](http://ix.io/3Yl9) |
 | 915 (neonx2) | Xunlong Orange Pi PC | 5.15.26 | [http://ix.io/3Yb1](http://ix.io/3Yb1) |
 | 915 (neonx2) | Xunlong Orange Pi PC | 5.15.26 | [http://ix.io/3XPH](http://ix.io/3XPH) |
@@ -1259,6 +1348,10 @@ See function CheckRAID6PerfAndAlgo in https://github.com/ThomasKaiser/sbc-bench/
 | 915 (neonx2) | Xunlong Orange Pi PC | 5.10.17/5.10.21/5.10.4/5.15.25/5.9.14 | [http://ix.io/3X3s](http://ix.io/3X3s) |
 | 915 (neonx2) | Xunlong Orange Pi One | 5.8.16 | [http://ix.io/3UpR](http://ix.io/3UpR) |
 | 915 (neonx2) | Xunlong Orange Pi One | 5.7.15 | [http://ix.io/3OUz](http://ix.io/3OUz) |
+| 915 (neonx2) |  Xunlong Orange Pi One  | 5.15.43 | [http://ix.io/3Ze7](http://ix.io/3Ze7) |
+| 915 (neonx2) | Xunlong Orange Pi One | 5.15.43 | [http://ix.io/3Z4j](http://ix.io/3Z4j) |
+| 915 (neonx2) | Xunlong Orange Pi One | 5.15.43 | [http://ix.io/3YTu](http://ix.io/3YTu) |
+| 915 (neonx2) | Xunlong Orange Pi One | 5.15.25 | [http://ix.io/3YYd](http://ix.io/3YYd) |
 | 915 (neonx2) | Xunlong Orange Pi One | 5.15.25 | [http://ix.io/3YOt](http://ix.io/3YOt) |
 | 915 (neonx2) | Xunlong Orange Pi One | 5.15.25 | [http://ix.io/3Y3c](http://ix.io/3Y3c) |
 | 915 (neonx2) | Xunlong Orange Pi One | 5.15.25 | [http://ix.io/3Xaz](http://ix.io/3Xaz) |
@@ -1299,7 +1392,10 @@ See function CheckRAID6PerfAndAlgo in https://github.com/ThomasKaiser/sbc-bench/
 | 915 (neonx2) | Xunlong Orange Pi One | 5.10.60/5.15.25 | [http://ix.io/3R7K](http://ix.io/3R7K) |
 | 915 (neonx2) | Xunlong Orange Pi One | 5.10.12 | [http://ix.io/3Tip](http://ix.io/3Tip) |
 | 915 (neonx2) | Xunlong Orange Pi Lite | 5.8.13 | [http://ix.io/3Nmj](http://ix.io/3Nmj) |
+| 915 (neonx2) | Xunlong Orange Pi Lite | 5.17.5 | [http://ix.io/3YVU](http://ix.io/3YVU) |
 | 915 (neonx2) | Xunlong Orange Pi Lite | 5.17.5 | [http://ix.io/3YNn](http://ix.io/3YNn) |
+| 915 (neonx2) | Xunlong Orange Pi Lite | 5.16.11/5.17.11 | [http://ix.io/3Zag](http://ix.io/3Zag) |
+| 915 (neonx2) | Xunlong Orange Pi Lite | 5.15.43 | [http://ix.io/3ZeE](http://ix.io/3ZeE) |
 | 915 (neonx2) | Xunlong Orange Pi Lite | 5.15.25 | [http://ix.io/3Wwc](http://ix.io/3Wwc) |
 | 915 (neonx2) |  Xunlong Orange Pi Lite  | 5.15.25 | [http://ix.io/3SzA](http://ix.io/3SzA) |
 | 915 (neonx2) | Xunlong Orange Pi Lite | 5.15.25 | [http://ix.io/3SFj](http://ix.io/3SFj) |
@@ -1312,6 +1408,7 @@ See function CheckRAID6PerfAndAlgo in https://github.com/ThomasKaiser/sbc-bench/
 | 915 (neonx2) | Xunlong Orange Pi Lite | 5.10.60/5.15.25 | [http://ix.io/3VLt](http://ix.io/3VLt) |
 | 915 (neonx2) | Xunlong Orange Pi Lite | 5.10.60/5.15.25 | [http://ix.io/3Uvc](http://ix.io/3Uvc) |
 | 915 (neonx2) | Xunlong Orange Pi Lite | 5.10.60/5.15.25 | [http://ix.io/3Tf1](http://ix.io/3Tf1) |
+| 915 (neonx2) | Xunlong Orange Pi 2 | 5.10.60 | [http://ix.io/3Zli](http://ix.io/3Zli) |
 | 915 (neonx2) | Xunlong Orange Pi 2 | 5.10.60 | [http://ix.io/3YCd](http://ix.io/3YCd) |
 | 915 (neonx2) / <span style="color:red">**798 (neonx4)**</span> | Xunlong Orange Pi Plus 2E | 4.19.64/5.17.5 | [http://ix.io/3X38](http://ix.io/3X38) |
 | 915 (neonx2) / <span style="color:red">**798 (neonx4)**</span> | Xunlong Orange Pi Plus 2E | 4.19.64/5.17.5 | [http://ix.io/3X37](http://ix.io/3X37) |
@@ -1322,15 +1419,19 @@ See function CheckRAID6PerfAndAlgo in https://github.com/ThomasKaiser/sbc-bench/
 | 915 (neonx2) | OrangePi Zero Plus2 H3 | 5.10.60 | [http://ix.io/3SQm](http://ix.io/3SQm) |
 | 915 (neonx2) | OrangePi Zero Plus2 H3 | 5.10.60 | [http://ix.io/3SQl](http://ix.io/3SQl) |
 | 915 (neonx2) | OrangePi Zero Plus2 H3 | 5.10.60 | [http://ix.io/3Nv2](http://ix.io/3Nv2) |
+| 915 (neonx2) | FriendlyArm NanoPi M1 | 5.10.60 | [http://ix.io/3Z2I](http://ix.io/3Z2I) |
 | 915 (neonx2) | FriendlyArm NanoPi M1 | 5.10.60/5.15.25 | [http://ix.io/3Wxv](http://ix.io/3Wxv) |
 | 915 (neonx2) | Banana Pi BPI-M3 | 5.13.12/5.15.11 | [http://ix.io/3NsZ](http://ix.io/3NsZ) |
 | 915 (neonx2) | Banana Pi BPI-M3 | 5.10.60 | [http://ix.io/3V9d](http://ix.io/3V9d) |
+| 915 (neonx2) | Banana Pi BPI-M3 | 5.10.60/5.15.25 | [http://ix.io/3YQc](http://ix.io/3YQc) |
+| 915 (neonx2) | Banana Pi BPI-M3 | 5.10.60/5.15.25 | [http://ix.io/3YQa](http://ix.io/3YQa) |
 | 915 (neonx2) | Banana Pi BPI-M3 | 5.10.12 | [http://ix.io/3S78](http://ix.io/3S78) |
 | 915 (neonx2) |  Banana Pi BPI-M2-Zero  | 5.16.15 | [http://ix.io/3SB5](http://ix.io/3SB5) |
 | 915 (neonx2) |  Banana Pi BPI-M2-Zero  | 5.16.15 | [http://ix.io/3SAX](http://ix.io/3SAX) |
 | 915 (neonx2) |  Banana Pi BPI-M2-Zero  | 5.16.13 | [http://ix.io/3RPr](http://ix.io/3RPr) |
 | 915 (neonx2) | Banana Pi BPI-M2-Zero | 5.15.30 | [http://ix.io/3T1z](http://ix.io/3T1z) |
 | 915 (neonx2) | Banana Pi BPI-M2-Zero | 5.15.25 | [http://ix.io/3T2C](http://ix.io/3T2C) |
+| 915 (neonx2) | Banana Pi BPI-M2-Zero | 5.13.12/5.16.11 | [http://ix.io/3ZnK](http://ix.io/3ZnK) |
 | 915 (neonx2) | Banana Pi BPI-M2-Zero | 5.13.12/5.15.18 | [http://ix.io/3QV5](http://ix.io/3QV5) |
 | 915 (neonx2) | Banana Pi BPI-M2-Zero | 5.13.12/5.15.18 | [http://ix.io/3QV4](http://ix.io/3QV4) |
 | 915 (neonx2) | Banana Pi BPI-M2-Zero | 5.10.75/5.15.25 | [http://ix.io/3Sja](http://ix.io/3Sja) |
@@ -1368,6 +1469,7 @@ See function CheckRAID6PerfAndAlgo in https://github.com/ThomasKaiser/sbc-bench/
 | 914 (neonx2) | Xunlong Orange Pi Plus 2E | 5.15.25 | [http://ix.io/3S5i](http://ix.io/3S5i) |
 | 914 (neonx2) | Xunlong Orange Pi Plus 2E | 5.15.25 | [http://ix.io/3REA](http://ix.io/3REA) |
 | 914 (neonx2) | Xunlong Orange Pi Plus 2E | 5.15.25 | [http://ix.io/3R52](http://ix.io/3R52) |
+| 914 (neonx2) | Xunlong Orange Pi Plus 2E | 5.15.25/5.15.43 | [http://ix.io/3Zkj](http://ix.io/3Zkj) |
 | 914 (neonx2) | Xunlong Orange Pi PC Plus | 5.15.26 | [http://ix.io/3Yxh](http://ix.io/3Yxh) |
 | 914 (neonx2) | Xunlong Orange Pi PC Plus | 5.15.26 | [http://ix.io/3Yvp](http://ix.io/3Yvp) |
 | 914 (neonx2) |  Xunlong Orange Pi PC Plus  | 5.15.26 | [http://ix.io/3XZd](http://ix.io/3XZd) |
@@ -1385,6 +1487,9 @@ See function CheckRAID6PerfAndAlgo in https://github.com/ThomasKaiser/sbc-bench/
 | 914 (neonx2) |  Xunlong Orange Pi PC Plus  | 5.15.25 | [http://ix.io/3Ykh](http://ix.io/3Ykh) |
 | 914 (neonx2) |  Xunlong Orange Pi PC Plus  | 5.15.25 | [http://ix.io/3TQN](http://ix.io/3TQN) |
 | 914 (neonx2) | Xunlong Orange Pi PC Plus | 5.15.25/5.15.26 | [http://ix.io/3TL8](http://ix.io/3TL8) |
+| 914 (neonx2) | Xunlong Orange Pi PC | 5.15.43 | [http://ix.io/3Zii](http://ix.io/3Zii) |
+| 914 (neonx2) | Xunlong Orange Pi PC | 5.15.43 | [http://ix.io/3Zev](http://ix.io/3Zev) |
+| 914 (neonx2) |  Xunlong Orange Pi PC  | 5.15.43 | [http://ix.io/3YY1](http://ix.io/3YY1) |
 | 914 (neonx2) | Xunlong Orange Pi PC | 5.15.26 | [http://ix.io/3Yuc](http://ix.io/3Yuc) |
 | 914 (neonx2) | Xunlong Orange Pi PC | 5.15.26 | [http://ix.io/3Yu9](http://ix.io/3Yu9) |
 | 914 (neonx2) | Xunlong Orange Pi PC | 5.15.26 | [http://ix.io/3Ykl](http://ix.io/3Ykl) |
@@ -1414,18 +1519,25 @@ See function CheckRAID6PerfAndAlgo in https://github.com/ThomasKaiser/sbc-bench/
 | 914 (neonx2) | Xunlong Orange Pi PC | 5.15.25 | [http://ix.io/3Tnd](http://ix.io/3Tnd) |
 | 914 (neonx2) | Xunlong Orange Pi PC | 5.15.25 | [http://ix.io/3R9T](http://ix.io/3R9T) |
 | 914 (neonx2) | Xunlong Orange Pi PC | 5.15.25 | [http://ix.io/3R9S](http://ix.io/3R9S) |
+| 914 (neonx2) | Xunlong Orange Pi PC | 5.15.25/5.15.43 | [http://ix.io/3Z22](http://ix.io/3Z22) |
+| 914 (neonx2) |  Xunlong Orange Pi One  | 5.15.43 | [http://ix.io/3Zfj](http://ix.io/3Zfj) |
+| 914 (neonx2) |  Xunlong Orange Pi One  | 5.15.43 | [http://ix.io/3Zf8](http://ix.io/3Zf8) |
+| 914 (neonx2) | Xunlong Orange Pi One | 5.15.43 | [http://ix.io/3Zae](http://ix.io/3Zae) |
 | 914 (neonx2) |  Xunlong Orange Pi One  | 5.15.25 | [http://ix.io/3Xbf](http://ix.io/3Xbf) |
 | 914 (neonx2) | Xunlong Orange Pi One | 5.15.25 | [http://ix.io/3WHX](http://ix.io/3WHX) |
 | 914 (neonx2) |  Xunlong Orange Pi One  | 5.15.25 | [http://ix.io/3V9a](http://ix.io/3V9a) |
 | 914 (neonx2) |  Xunlong Orange Pi One  | 5.15.25 | [http://ix.io/3TQO](http://ix.io/3TQO) |
 | 914 (neonx2) | Xunlong Orange Pi One | 5.10.4 | [http://ix.io/3SIA](http://ix.io/3SIA) |
+| 914 (neonx2) | Xunlong Orange Pi Lite | 5.15.43 | [http://ix.io/3Zr2](http://ix.io/3Zr2) |
 | 914 (neonx2) |  Xunlong Orange Pi Lite  | 5.15.25 | [http://ix.io/3XCj](http://ix.io/3XCj) |
 | 914 (neonx2) | Xunlong Orange Pi Lite | 5.15.25 | [http://ix.io/3XC9](http://ix.io/3XC9) |
 | 914 (neonx2) |  Xunlong Orange Pi Lite  | 5.15.25 | [http://ix.io/3TNq](http://ix.io/3TNq) |
 | 914 (neonx2) |  Xunlong Orange Pi Lite  | 5.15.25 | [http://ix.io/3TNL](http://ix.io/3TNL) |
 | 914 (neonx2) | Xunlong Orange Pi Lite | 5.15.25 | [http://ix.io/3TCT](http://ix.io/3TCT) |
+| 914 (neonx2) |  Xunlong Orange Pi Lite  | 5.10.43 | [http://ix.io/3Zuf](http://ix.io/3Zuf) |
 | 914 (neonx2) / <span style="color:red">**727 (neonx4)**</span> | Xunlong Orange Pi PC | 5.15.25/5.4.8 | [http://ix.io/3S21](http://ix.io/3S21) |
 | 914 (neonx2) |  Banana Pi BPI-M2-Zero  | 5.16.13 | [http://ix.io/3SyX](http://ix.io/3SyX) |
+| 914 (neonx2) |  Banana Pi BPI-M2-Zero  | 5.15.43 | [http://ix.io/3Zv0](http://ix.io/3Zv0) |
 | 914 (neonx2) | Banana Pi BPI-M2-Zero | 5.13.12 | [http://ix.io/3Szb](http://ix.io/3Szb) |
 | 914 (neonx2) |  Banana Pi BPI-M2-Ultra  | 5.15.25 | [http://ix.io/3XlL](http://ix.io/3XlL) |
 | 914 (neonx2) |  Banana Pi BPI-M2-Ultra  | 5.15.25 | [http://ix.io/3XGy](http://ix.io/3XGy) |
@@ -1462,6 +1574,7 @@ See function CheckRAID6PerfAndAlgo in https://github.com/ThomasKaiser/sbc-bench/
 | 828 (neonx2) | LeMaker Banana Pro | 5.10.60 | [http://ix.io/3NSg](http://ix.io/3NSg) |
 | 828 (neonx2) | LeMaker Banana Pro | 5.10.60 | [http://ix.io/3Nfw](http://ix.io/3Nfw) |
 | 828 (neonx2) | LeMaker Banana Pro | 5.10.43/5.10.60 | [http://ix.io/3Rqx](http://ix.io/3Rqx) |
+| 828 (neonx2) | LeMaker Banana Pi | 5.15.43 | [http://ix.io/3Z0N](http://ix.io/3Z0N) |
 | 828 (neonx2) | LeMaker Banana Pi | 5.15.25 | [http://ix.io/3Yfn](http://ix.io/3Yfn) |
 | 828 (neonx2) | LeMaker Banana Pi | 5.15.25 | [http://ix.io/3Xoa](http://ix.io/3Xoa) |
 | 828 (neonx2) | LeMaker Banana Pi | 5.15.25 | [http://ix.io/3X7D](http://ix.io/3X7D) |
@@ -1508,6 +1621,7 @@ See function CheckRAID6PerfAndAlgo in https://github.com/ThomasKaiser/sbc-bench/
 | 828 (neonx2) | LeMaker Banana Pi | 5.10.43 | [http://ix.io/3Pal](http://ix.io/3Pal) |
 | 828 (neonx2) | Cubietech Cubietruck | 5.17.4 | [http://ix.io/3WmV](http://ix.io/3WmV) |
 | 828 (neonx2) | Cubietech Cubietruck | 5.15.25 | [http://ix.io/3Upk](http://ix.io/3Upk) |
+| 828 (neonx2) | Cubietech Cubietruck | 5.10.60 | [http://ix.io/3ZlX](http://ix.io/3ZlX) |
 | 828 (neonx2) | Cubietech Cubietruck | 5.10.60 | [http://ix.io/3U5X](http://ix.io/3U5X) |
 | 828 (neonx2) | Cubietech Cubietruck | 5.10.60 | [http://ix.io/3RoW](http://ix.io/3RoW) |
 | 828 (neonx2) | Cubietech Cubietruck | 5.10.60 | [http://ix.io/3RoP](http://ix.io/3RoP) |
@@ -1540,6 +1654,7 @@ See function CheckRAID6PerfAndAlgo in https://github.com/ThomasKaiser/sbc-bench/
 | 828 (neonx2) |  Cubietech Cubieboard2  | 5.10.60 | [http://ix.io/3QS4](http://ix.io/3QS4) |
 | 828 (neonx2) | Cubietech Cubieboard2 | 5.10.60 | [http://ix.io/3Q14](http://ix.io/3Q14) |
 | 828 (neonx2) | Cubietech Cubieboard2 | 5.10.60 | [http://ix.io/3Pq8](http://ix.io/3Pq8) |
+| 828 (neonx2) | Cubietech Cubieboard2 | 5.10.21/5.15.43 | [http://ix.io/3Zjf](http://ix.io/3Zjf) |
 | 827 (neonx2) |  LeMaker Banana Pro  | 5.15.25 | [http://ix.io/3XoX](http://ix.io/3XoX) |
 | 827 (neonx2) |  LeMaker Banana Pro  | 5.15.25 | [http://ix.io/3WTW](http://ix.io/3WTW) |
 | 827 (neonx2) | LeMaker Banana Pro | 5.15.25 | [http://ix.io/3SGd](http://ix.io/3SGd) |
@@ -1563,8 +1678,14 @@ See function CheckRAID6PerfAndAlgo in https://github.com/ThomasKaiser/sbc-bench/
 | 798 (neonx4) | Xunlong Orange Pi One | 4.14.78 | [http://ix.io/3Xuf](http://ix.io/3Xuf) |
 | 798 (neonx4) | Xunlong Orange Pi One | 4.14.78 | [http://ix.io/3WYv](http://ix.io/3WYv) |
 | 798 (neonx4) | Xunlong Orange Pi Lite | 4.19.62 | [http://ix.io/3ODS](http://ix.io/3ODS) |
+| 798 (neonx4) | Sinovoip BPI-M2 | 4.19.68 | [http://ix.io/3YTR](http://ix.io/3YTR) |
 | 798 (neonx4) | Sinovoip BPI-M2 | 4.19.68 | [http://ix.io/3R1E](http://ix.io/3R1E) |
 | 798 (neonx4) | Sinovoip BPI-M2 | 4.19.68 | [http://ix.io/3Owy](http://ix.io/3Owy) |
+| 798 (neonx4) |  FriendlyArm NanoPi M1 Plus  | 4.19.62 | [http://ix.io/3Zsm](http://ix.io/3Zsm) |
+| 798 (neonx4) |  FriendlyArm NanoPi M1 Plus  | 4.19.62 | [http://ix.io/3Zlv](http://ix.io/3Zlv) |
+| 798 (neonx4) |  FriendlyArm NanoPi M1 Plus  | 4.19.62 | [http://ix.io/3Z7o](http://ix.io/3Z7o) |
+| 798 (neonx4) |  FriendlyArm NanoPi M1 Plus  | 4.19.62 | [http://ix.io/3Z6F](http://ix.io/3Z6F) |
+| 798 (neonx4) |  FriendlyArm NanoPi M1 Plus  | 4.19.62 | [http://ix.io/3Z0d](http://ix.io/3Z0d) |
 | 798 (neonx4) |  FriendlyArm NanoPi M1 Plus  | 4.19.62 | [http://ix.io/3YzX](http://ix.io/3YzX) |
 | 798 (neonx4) |  FriendlyArm NanoPi M1 Plus  | 4.19.62 | [http://ix.io/3YxT](http://ix.io/3YxT) |
 | 798 (neonx4) |  FriendlyArm NanoPi M1 Plus  | 4.19.62 | [http://ix.io/3YuP](http://ix.io/3YuP) |
@@ -1593,10 +1714,13 @@ See function CheckRAID6PerfAndAlgo in https://github.com/ThomasKaiser/sbc-bench/
 | 766 (neonx8) |  ROCK64  | 4.4.192 | [http://ix.io/3RPD](http://ix.io/3RPD) |
 | 766 (neonx8) |  ROCK64  | 4.4.184 | [http://ix.io/3Ylf](http://ix.io/3Ylf) |
 | 766 (neonx8) |  ROCK64  | 4.4.174 | [http://ix.io/3TgG](http://ix.io/3TgG) |
+| 766 (neonx8) |  Pine64 Rock64  | 4.4.192 | [http://ix.io/3YV0](http://ix.io/3YV0) |
 | 766 (neonx8) |  Pine64 Rock64  | 4.4.192 | [http://ix.io/3RPA](http://ix.io/3RPA) |
 | 766 (neonx8) |  Pine64 Rock64  | 4.4.182 | [http://ix.io/3VaW](http://ix.io/3VaW) |
 | 762 (neonx8) | Chainedbox | 5.4.2 | [http://ix.io/3XHU](http://ix.io/3XHU) |
 | 760 (neonx8) | Radxa ROCK Pi E | 5.4.47 | [http://ix.io/3NA5](http://ix.io/3NA5) |
+| 758 (neonx8) | Mrkaio M68S | 4.19.219 | [http://ix.io/3Z20](http://ix.io/3Z20) |
+| 758 (neonx8) |  Mrkaio M68S  | 4.19.219 | [http://ix.io/3Z1o](http://ix.io/3Z1o) |
 | 757 (neonx8) |  Firefly RK3568-ROC-PC HDMI (Linux)  | 4.19.219 | [http://ix.io/3ViV](http://ix.io/3ViV) |
 | 757 (neonx8) |  Firefly RK3568-ROC-PC HDMI (Linux)  | 4.19.219 | [http://ix.io/3ViP](http://ix.io/3ViP) |
 | 757 (neonx8) |  Firefly RK3568-ROC-PC HDMI (Linux)  | 4.19.219 | [http://ix.io/3Rsg](http://ix.io/3Rsg) |
@@ -1610,6 +1734,7 @@ See function CheckRAID6PerfAndAlgo in https://github.com/ThomasKaiser/sbc-bench/
 | 739 (neonx2) | Generic RK322x Tv Box board | 5.15.25 | [http://ix.io/3XIi](http://ix.io/3XIi) |
 | 739 (neonx2) | Generic RK322x Tv Box board | 5.10.60/5.15.25 | [http://ix.io/3ToJ](http://ix.io/3ToJ) |
 | 738 (neonx2) |  Generic RK322x Tv Box board  | 5.16.16 | [http://ix.io/3Txd](http://ix.io/3Txd) |
+| 738 (neonx2) | Generic RK322x Tv Box board | 5.15.35 | [http://ix.io/3Zjs](http://ix.io/3Zjs) |
 | 738 (neonx2) | Generic RK322x Tv Box board | 5.10.60/5.15.25 | [http://ix.io/3Twf](http://ix.io/3Twf) |
 | 734 (neonx2) | Generic RK322x Tv Box board | 5.10.93 | [http://ix.io/3Nin](http://ix.io/3Nin) |
 | 734 (neonx2) | Generic RK322x Tv Box board | 5.10.60 | [http://ix.io/3QJL](http://ix.io/3QJL) |
@@ -1621,7 +1746,12 @@ See function CheckRAID6PerfAndAlgo in https://github.com/ThomasKaiser/sbc-bench/
 | 727 (neonx4) |  Xunlong Orange Pi PC  | 5.4.20 | [http://ix.io/3Xbd](http://ix.io/3Xbd) |
 | 727 (neonx4) |  Xunlong Orange Pi One  | 5.4.8 | [http://ix.io/3XJa](http://ix.io/3XJa) |
 | 727 (neonx4) |  Xunlong Orange Pi One  | 5.4.8 | [http://ix.io/3XJ2](http://ix.io/3XJ2) |
+| 727 (neonx4) |  Xunlong Orange Pi Lite  | 5.3.13 | [http://ix.io/3ZqI](http://ix.io/3ZqI) |
+| 727 (neonx4) | Xunlong Orange Pi Lite | 5.3.13 | [http://ix.io/3ZqB](http://ix.io/3ZqB) |
 | 727 (neonx4) | OrangePi Zero Plus2 H3 | 5.4.8 | [http://ix.io/3Rrb](http://ix.io/3Rrb) |
+| 727 (neonx4) | Banana Pi BPI-M2-Zero | 5.4.18 | [http://ix.io/3YSS](http://ix.io/3YSS) |
+| 727 (neonx4) | Banana Pi BPI-M2-Zero | 5.4.18 | [http://ix.io/3YSR](http://ix.io/3YSR) |
+| 727 (neonx4) | Banana Pi BPI-M2-Zero | 5.4.18 | [http://ix.io/3YSQ](http://ix.io/3YSQ) |
 | 727 (neonx4) |  Banana Pi BPI-M2-Ultra  | 5.4.8 | [http://ix.io/3RX6](http://ix.io/3RX6) |
 | 727 (neonx4) | Banana Pi BPI-M2-Ultra | 5.4.20 | [http://ix.io/3VdN](http://ix.io/3VdN) |
 | 726 (neonx4) | Xunlong Orange Pi PC | 5.4.65 | [http://ix.io/3XTm](http://ix.io/3XTm) |
@@ -1637,6 +1767,7 @@ See function CheckRAID6PerfAndAlgo in https://github.com/ThomasKaiser/sbc-bench/
 | 726 (neonx4) | Xunlong Orange Pi PC | 5.4.65 | [http://ix.io/3Szq](http://ix.io/3Szq) |
 | 726 (neonx4) | Xunlong Orange Pi PC | 5.4.65 | [http://ix.io/3SLy](http://ix.io/3SLy) |
 | 726 (neonx4) | Xunlong Orange Pi PC | 5.4.65 | [http://ix.io/3PYC](http://ix.io/3PYC) |
+| 726 (neonx4) | Xunlong Orange Pi One | 5.4.65 | [http://ix.io/3YVR](http://ix.io/3YVR) |
 | 726 (neonx4) | Xunlong Orange Pi One | 5.4.65 | [http://ix.io/3SAW](http://ix.io/3SAW) |
 | 726 (neonx4) | Xunlong Orange Pi Lite | 5.4.45 | [http://ix.io/3OqR](http://ix.io/3OqR) |
 | 726 (neonx4) | OrangePi Zero Plus2 H3 | 5.4.65 | [http://ix.io/3OVJ](http://ix.io/3OVJ) |
@@ -1645,6 +1776,7 @@ See function CheckRAID6PerfAndAlgo in https://github.com/ThomasKaiser/sbc-bench/
 | 726 (neonx4) | Banana Pi BPI-M2-Zero | 5.4.45 | [http://ix.io/3XmH](http://ix.io/3XmH) |
 | 721 (neonx4) | LeMaker Banana Pi | 4.19.59 | [http://ix.io/3SL7](http://ix.io/3SL7) |
 | 721 (neonx4) | LeMaker Banana Pi | 4.19.59 | [http://ix.io/3Ruw](http://ix.io/3Ruw) |
+| 721 (neonx4) | LeMaker Banana Pi | 4.19.38 | [http://ix.io/3Z0u](http://ix.io/3Z0u) |
 | 719 (neonx4) | T2-OLinuXino-MICRO-e4Gs16M-IND | 5.2.21 | [http://ix.io/3Vse](http://ix.io/3Vse) |
 | 658 (neonx4) | LeMaker Banana Pro | 5.4.20 | [http://ix.io/3Vfa](http://ix.io/3Vfa) |
 | 658 (neonx4) | LeMaker Banana Pro | 5.4.20 | [http://ix.io/3Vf9](http://ix.io/3Vf9) |
@@ -1664,9 +1796,13 @@ See function CheckRAID6PerfAndAlgo in https://github.com/ThomasKaiser/sbc-bench/
 | 619 (neonx2) | Endless Computers Endless Mini | 5.9.0 | [http://ix.io/3PpE](http://ix.io/3PpE) |
 | 619 (neonx2) | BugScaner | 5.9.0 | [http://ix.io/3U4I](http://ix.io/3U4I) |
 | 619 (neonx2) | BugScaner | 5.9.0 | [http://ix.io/3NK7](http://ix.io/3NK7) |
+| 618 (neonx2) |  TRONFY MXQ S805  | 5.10.0 | [http://ix.io/3YP7](http://ix.io/3YP7) |
 | 582 (neonx4) | Generic RK322x TV Box board | 4.4.194 | [http://ix.io/3OyX](http://ix.io/3OyX) |
 | 581 (neonx4) | RK3229 ReSpeaker Board V1.0 | 4.4.194 | [http://ix.io/3RNV](http://ix.io/3RNV) |
+| 581 (neonx4) | Generic RK322x TV Box board | 4.4.194 | [http://ix.io/3ZkD](http://ix.io/3ZkD) |
+| 581 (neonx4) | Generic RK322x TV Box board | 4.4.194 | [http://ix.io/3YXh](http://ix.io/3YXh) |
 | 581 (neonx4) | Generic RK322x TV Box board | 4.4.194 | [http://ix.io/3Ywm](http://ix.io/3Ywm) |
+| 581 (neonx4) | Generic RK322x TV Box board | 4.4.194 | [http://ix.io/3YVx](http://ix.io/3YVx) |
 | 581 (neonx4) | Generic RK322x TV Box board | 4.4.194 | [http://ix.io/3Ymg](http://ix.io/3Ymg) |
 | 581 (neonx4) |  Generic RK322x TV Box board  | 4.4.194 | [http://ix.io/3XzU](http://ix.io/3XzU) |
 | 581 (neonx4) | Generic RK322x TV Box board | 4.4.194 | [http://ix.io/3Xu8](http://ix.io/3Xu8) |
@@ -1749,8 +1885,13 @@ See function CheckRAID6PerfAndAlgo in https://github.com/ThomasKaiser/sbc-bench/
 | 436 (neonx2) | FriendlyARM NanoPi NEO | 5.10.60 | [http://ix.io/3Ool](http://ix.io/3Ool) |
 | 435 (neonx2) |  Xunlong Orange Pi Zero  | 5.17.5 | [http://ix.io/3XGW](http://ix.io/3XGW) |
 | 435 (neonx2) | Xunlong Orange Pi Zero | 5.16.11 | [http://ix.io/3VBH](http://ix.io/3VBH) |
+| 435 (neonx2) | Xunlong Orange Pi Zero | 5.15.43 | [http://ix.io/3ZgU](http://ix.io/3ZgU) |
+| 435 (neonx2) | Xunlong Orange Pi Zero | 5.15.43 | [http://ix.io/3Zaw](http://ix.io/3Zaw) |
 | 435 (neonx2) | Xunlong Orange Pi Zero | 5.15.35 | [http://ix.io/3YLM](http://ix.io/3YLM) |
 | 435 (neonx2) |  Xunlong Orange Pi Zero  | 5.15.25 | [http://ix.io/3Yxp](http://ix.io/3Yxp) |
+| 435 (neonx2) |  Xunlong Orange Pi Zero  | 5.15.25 | [http://ix.io/3YX6](http://ix.io/3YX6) |
+| 435 (neonx2) | Xunlong Orange Pi Zero | 5.15.25 | [http://ix.io/3YUp](http://ix.io/3YUp) |
+| 435 (neonx2) | Xunlong Orange Pi Zero | 5.15.25 | [http://ix.io/3YPY](http://ix.io/3YPY) |
 | 435 (neonx2) |  Xunlong Orange Pi Zero  | 5.15.25 | [http://ix.io/3Yf1](http://ix.io/3Yf1) |
 | 435 (neonx2) | Xunlong Orange Pi Zero | 5.15.25 | [http://ix.io/3YA1](http://ix.io/3YA1) |
 | 435 (neonx2) | Xunlong Orange Pi Zero | 5.15.25 | [http://ix.io/3Y4i](http://ix.io/3Y4i) |
@@ -1832,6 +1973,7 @@ See function CheckRAID6PerfAndAlgo in https://github.com/ThomasKaiser/sbc-bench/
 | 435 (neonx2) |  Xunlong Orange Pi Zero  | 5.15.25 | [http://ix.io/3R7B](http://ix.io/3R7B) |
 | 435 (neonx2) | Xunlong Orange Pi Zero | 5.15.25/5.17.5 | [http://ix.io/3XGM](http://ix.io/3XGM) |
 | 435 (neonx2) | Xunlong Orange Pi Zero | 5.15.25/5.15.35 | [http://ix.io/3Yn5](http://ix.io/3Yn5) |
+| 435 (neonx2) | Xunlong Orange Pi Zero | 5.10.60 | [http://ix.io/3YUC](http://ix.io/3YUC) |
 | 435 (neonx2) | Xunlong Orange Pi Zero | 5.10.60 | [http://ix.io/3Ycb](http://ix.io/3Ycb) |
 | 435 (neonx2) | Xunlong Orange Pi Zero | 5.10.60 | [http://ix.io/3Xv7](http://ix.io/3Xv7) |
 | 435 (neonx2) | Xunlong Orange Pi Zero | 5.10.60 | [http://ix.io/3U9E](http://ix.io/3U9E) |
@@ -1866,6 +2008,7 @@ See function CheckRAID6PerfAndAlgo in https://github.com/ThomasKaiser/sbc-bench/
 | 435 (neonx2) | FriendlyARM NanoPi NEO Air | 5.10.46 | [http://ix.io/3RWp](http://ix.io/3RWp) |
 | 435 (neonx2) | FriendlyARM NanoPi NEO Air | 5.10.46 | [http://ix.io/3RWn](http://ix.io/3RWn) |
 | 435 (neonx2) | FriendlyARM NanoPi NEO | 5.16.11 | [http://ix.io/3Rwl](http://ix.io/3Rwl) |
+| 435 (neonx2) | FriendlyARM NanoPi NEO | 5.15.43 | [http://ix.io/3Z10](http://ix.io/3Z10) |
 | 435 (neonx2) | FriendlyARM NanoPi NEO | 5.15.25 | [http://ix.io/3YJP](http://ix.io/3YJP) |
 | 435 (neonx2) |  FriendlyARM NanoPi NEO  | 5.15.25 | [http://ix.io/3YIA](http://ix.io/3YIA) |
 | 435 (neonx2) |  FriendlyARM NanoPi NEO  | 5.15.25 | [http://ix.io/3Yhp](http://ix.io/3Yhp) |
@@ -1887,78 +2030,305 @@ See function CheckRAID6PerfAndAlgo in https://github.com/ThomasKaiser/sbc-bench/
 | 435 (neonx2) | FriendlyARM NanoPi NEO | 5.10.60 | [http://ix.io/3PjH](http://ix.io/3PjH) |
 | 435 (neonx2) | FriendlyARM NanoPi NEO | 5.10.60 | [http://ix.io/3Pj9](http://ix.io/3Pj9) |
 | 435 (neonx2) | FriendlyARM NanoPi NEO | 5.10.60/5.15.25 | [http://ix.io/3XWK](http://ix.io/3XWK) |
+| 435 (neonx2) | FriendlyARM NanoPi DUO | 5.10.60 | [http://ix.io/3YOO](http://ix.io/3YOO) |
 | 435 (neonx2) | FriendlyARM NanoPi DUO | 5.10.34/5.10.43 | [http://ix.io/3Rjy](http://ix.io/3Rjy) |
 | 435 (neonx2) | FriendlyARM NanoPi Duo2 | 5.15.30 | [http://ix.io/3T4K](http://ix.io/3T4K) |
 | 435 (neonx2) | FriendlyARM NanoPi Duo2 | 5.13.12 | [http://ix.io/3YE1](http://ix.io/3YE1) |
 | 423 (neonx4) | Hardkernel ODROID-C1 | 3.10.108/5.1.0/5.3.8 | [http://ix.io/3P13](http://ix.io/3P13) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 5.4.27 | [http://ix.io/3PS1](http://ix.io/3PS1) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Zx3](http://ix.io/3Zx3) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Zwz](http://ix.io/3Zwz) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3ZwV](http://ix.io/3ZwV) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Zwp](http://ix.io/3Zwp) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Zwi](http://ix.io/3Zwi) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Zw9](http://ix.io/3Zw9) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Zvx](http://ix.io/3Zvx) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3ZvO](http://ix.io/3ZvO) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Zvn](http://ix.io/3Zvn) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Zv5](http://ix.io/3Zv5) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Zuv](http://ix.io/3Zuv) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3ZuQ](http://ix.io/3ZuQ) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Zul](http://ix.io/3Zul) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Zuk](http://ix.io/3Zuk) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3ZuF](http://ix.io/3ZuF) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Zub](http://ix.io/3Zub) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Ztw](http://ix.io/3Ztw) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3ZtP](http://ix.io/3ZtP) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Zta](http://ix.io/3Zta) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Zsl](http://ix.io/3Zsl) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3ZsD](http://ix.io/3ZsD) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Zsa](http://ix.io/3Zsa) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Zrq](http://ix.io/3Zrq) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Zrj](http://ix.io/3Zrj) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3ZrF](http://ix.io/3ZrF) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Zr1](http://ix.io/3Zr1) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Zqx](http://ix.io/3Zqx) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Zqw](http://ix.io/3Zqw) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Zqn](http://ix.io/3Zqn) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Zqf](http://ix.io/3Zqf) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Zqe](http://ix.io/3Zqe) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Zq4](http://ix.io/3Zq4) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Zq3](http://ix.io/3Zq3) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3ZpW](http://ix.io/3ZpW) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Zpr](http://ix.io/3Zpr) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3ZpH](http://ix.io/3ZpH) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3ZpC](http://ix.io/3ZpC) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3ZpB](http://ix.io/3ZpB) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Zp8](http://ix.io/3Zp8) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Zou](http://ix.io/3Zou) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3ZoK](http://ix.io/3ZoK) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Zog](http://ix.io/3Zog) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Zof](http://ix.io/3Zof) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Zo1](http://ix.io/3Zo1) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Znv](http://ix.io/3Znv) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3ZnD](http://ix.io/3ZnD) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3ZnC](http://ix.io/3ZnC) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Zn9](http://ix.io/3Zn9) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3ZmT](http://ix.io/3ZmT) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Zmr](http://ix.io/3Zmr) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3ZmL](http://ix.io/3ZmL) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Zmb](http://ix.io/3Zmb) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3ZlZ](http://ix.io/3ZlZ) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Zlw](http://ix.io/3Zlw) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Zll](http://ix.io/3Zll) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3ZlK](http://ix.io/3ZlK) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Zlb](http://ix.io/3Zlb) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Zla](http://ix.io/3Zla) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Zl2](http://ix.io/3Zl2) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Zl1](http://ix.io/3Zl1) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Zkt](http://ix.io/3Zkt) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Zkg](http://ix.io/3Zkg) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3ZkC](http://ix.io/3ZkC) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Zk2](http://ix.io/3Zk2) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3ZjQ](http://ix.io/3ZjQ) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3ZjP](http://ix.io/3ZjP) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Zjm](http://ix.io/3Zjm) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3ZjA](http://ix.io/3ZjA) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Zj7](http://ix.io/3Zj7) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3ZiQ](http://ix.io/3ZiQ) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3ZiJ](http://ix.io/3ZiJ) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3ZhY](http://ix.io/3ZhY) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Zhu](http://ix.io/3Zhu) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Zhn](http://ix.io/3Zhn) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3ZhI](http://ix.io/3ZhI) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Zhd](http://ix.io/3Zhd) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3ZgZ](http://ix.io/3ZgZ) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3ZgF](http://ix.io/3ZgF) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Zg4](http://ix.io/3Zg4) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Zfz](http://ix.io/3Zfz) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Zfy](http://ix.io/3Zfy) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3ZfX](http://ix.io/3ZfX) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3ZfU](http://ix.io/3ZfU) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Zfn](http://ix.io/3Zfn) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3ZfJ](http://ix.io/3ZfJ) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Zf4](http://ix.io/3Zf4) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3ZeW](http://ix.io/3ZeW) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3ZeV](http://ix.io/3ZeV) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Zeu](http://ix.io/3Zeu) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Zel](http://ix.io/3Zel) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3ZeK](http://ix.io/3ZeK) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3ZeJ](http://ix.io/3ZeJ) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Zed](http://ix.io/3Zed) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Ze3](http://ix.io/3Ze3) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3ZdU](http://ix.io/3ZdU) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3ZcF](http://ix.io/3ZcF) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Zbm](http://ix.io/3Zbm) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3ZbC](http://ix.io/3ZbC) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Zb6](http://ix.io/3Zb6) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Zaz](http://ix.io/3Zaz) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Zay](http://ix.io/3Zay) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3ZaU](http://ix.io/3ZaU) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3ZaQ](http://ix.io/3ZaQ) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3ZaP](http://ix.io/3ZaP) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Zap](http://ix.io/3Zap) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Zam](http://ix.io/3Zam) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Zak](http://ix.io/3Zak) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3ZaJ](http://ix.io/3ZaJ) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Zaj](http://ix.io/3Zaj) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Za3](http://ix.io/3Za3) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Z9y](http://ix.io/3Z9y) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Z9x](http://ix.io/3Z9x) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Z9U](http://ix.io/3Z9U) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Z9e](http://ix.io/3Z9e) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Z93](http://ix.io/3Z93) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Z8V](http://ix.io/3Z8V) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Z8U](http://ix.io/3Z8U) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Z8t](http://ix.io/3Z8t) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Z8s](http://ix.io/3Z8s) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Z8M](http://ix.io/3Z8M) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Z8L](http://ix.io/3Z8L) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Z8D](http://ix.io/3Z8D) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Z8C](http://ix.io/3Z8C) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Z7W](http://ix.io/3Z7W) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Z7C](http://ix.io/3Z7C) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Z4u](http://ix.io/3Z4u) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Z4t](http://ix.io/3Z4t) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Z4c](http://ix.io/3Z4c) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Z44](http://ix.io/3Z44) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Z3W](http://ix.io/3Z3W) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Z3S](http://ix.io/3Z3S) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Z3q](http://ix.io/3Z3q) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Z3O](http://ix.io/3Z3O) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Z3k](http://ix.io/3Z3k) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Z3h](http://ix.io/3Z3h) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Z3B](http://ix.io/3Z3B) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Z39](http://ix.io/3Z39) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Z38](http://ix.io/3Z38) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Z2Y](http://ix.io/3Z2Y) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Z2X](http://ix.io/3Z2X) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Z2l](http://ix.io/3Z2l) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Z2e](http://ix.io/3Z2e) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Z2d](http://ix.io/3Z2d) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Z2C](http://ix.io/3Z2C) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Z23](http://ix.io/3Z23) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Z1M](http://ix.io/3Z1M) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Z1i](http://ix.io/3Z1i) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Z1A](http://ix.io/3Z1A) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Z1a](http://ix.io/3Z1a) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Z0y](http://ix.io/3Z0y) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Z0V](http://ix.io/3Z0V) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Z0U](http://ix.io/3Z0U) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Z0J](http://ix.io/3Z0J) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Z00](http://ix.io/3Z00) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YZZ](http://ix.io/3YZZ) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YZW](http://ix.io/3YZW) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YZw](http://ix.io/3YZw) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YzW](http://ix.io/3YzW) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YzV](http://ix.io/3YzV) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YZR](http://ix.io/3YZR) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YZq](http://ix.io/3YZq) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Yzo](http://ix.io/3Yzo) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YZM](http://ix.io/3YZM) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YZK](http://ix.io/3YZK) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YZJ](http://ix.io/3YZJ) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Yzf](http://ix.io/3Yzf) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Yze](http://ix.io/3Yze) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YZC](http://ix.io/3YZC) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YZB](http://ix.io/3YZB) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YZa](http://ix.io/3YZa) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YyZ](http://ix.io/3YyZ) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YyY](http://ix.io/3YyY) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YYX](http://ix.io/3YYX) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Yyu](http://ix.io/3Yyu) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YYt](http://ix.io/3YYt) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Yyt](http://ix.io/3Yyt) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YyR](http://ix.io/3YyR) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YYk](http://ix.io/3YYk) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Yyf](http://ix.io/3Yyf) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YyB](http://ix.io/3YyB) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YY6](http://ix.io/3YY6) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YxV](http://ix.io/3YxV) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Yxv](http://ix.io/3Yxv) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YXT](http://ix.io/3YXT) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Yxq](http://ix.io/3Yxq) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YxK](http://ix.io/3YxK) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YXI](http://ix.io/3YXI) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Yxi](http://ix.io/3Yxi) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YxG](http://ix.io/3YxG) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Yxc](http://ix.io/3Yxc) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YxB](http://ix.io/3YxB) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Yxb](http://ix.io/3Yxb) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YX8](http://ix.io/3YX8) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YX7](http://ix.io/3YX7) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Yx6](http://ix.io/3Yx6) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YWw](http://ix.io/3YWw) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YWU](http://ix.io/3YWU) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YWT](http://ix.io/3YWT) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YWq](http://ix.io/3YWq) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YwQ](http://ix.io/3YwQ) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Ywo](http://ix.io/3Ywo) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Ywn](http://ix.io/3Ywn) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YWM](http://ix.io/3YWM) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Ywl](http://ix.io/3Ywl) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Ywk](http://ix.io/3Ywk) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YWi](http://ix.io/3YWi) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YWg](http://ix.io/3YWg) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YWf](http://ix.io/3YWf) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YwF](http://ix.io/3YwF) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Yw8](http://ix.io/3Yw8) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YW7](http://ix.io/3YW7) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Yw7](http://ix.io/3Yw7) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YW6](http://ix.io/3YW6) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YvY](http://ix.io/3YvY) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Yvx](http://ix.io/3Yvx) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YVQ](http://ix.io/3YVQ) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YVq](http://ix.io/3YVq) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YVp](http://ix.io/3YVp) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YvN](http://ix.io/3YvN) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YVj](http://ix.io/3YVj) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YVF](http://ix.io/3YVF) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YV8](http://ix.io/3YV8) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YV7](http://ix.io/3YV7) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YUy](http://ix.io/3YUy) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YuX](http://ix.io/3YuX) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YuW](http://ix.io/3YuW) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Yus](http://ix.io/3Yus) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YUL](http://ix.io/3YUL) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Yuj](http://ix.io/3Yuj) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YUi](http://ix.io/3YUi) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Yui](http://ix.io/3Yui) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YUg](http://ix.io/3YUg) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Yud](http://ix.io/3Yud) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Yu8](http://ix.io/3Yu8) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YtZ](http://ix.io/3YtZ) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Ytz](http://ix.io/3Ytz) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YTV](http://ix.io/3YTV) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YTv](http://ix.io/3YTv) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Ytr](http://ix.io/3Ytr) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YtO](http://ix.io/3YtO) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Ytl](http://ix.io/3Ytl) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YTG](http://ix.io/3YTG) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YTF](http://ix.io/3YTF) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Ytd](http://ix.io/3Ytd) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YtB](http://ix.io/3YtB) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Yt9](http://ix.io/3Yt9) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YT1](http://ix.io/3YT1) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YT0](http://ix.io/3YT0) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YsY](http://ix.io/3YsY) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Ysx](http://ix.io/3Ysx) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YSu](http://ix.io/3YSu) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YSP](http://ix.io/3YSP) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YSO](http://ix.io/3YSO) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YSm](http://ix.io/3YSm) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YsJ](http://ix.io/3YsJ) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Ysh](http://ix.io/3Ysh) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YSf](http://ix.io/3YSf) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YSE](http://ix.io/3YSE) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YSD](http://ix.io/3YSD) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YS4](http://ix.io/3YS4) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Ys4](http://ix.io/3Ys4) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YRY](http://ix.io/3YRY) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Yrx](http://ix.io/3Yrx) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YrU](http://ix.io/3YrU) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YRO](http://ix.io/3YRO) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YRl](http://ix.io/3YRl) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Yrk](http://ix.io/3Yrk) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YRh](http://ix.io/3YRh) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YRF](http://ix.io/3YRF) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YRb](http://ix.io/3YRb) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YQZ](http://ix.io/3YQZ) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YqZ](http://ix.io/3YqZ) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YQY](http://ix.io/3YQY) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Yqy](http://ix.io/3Yqy) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YQP](http://ix.io/3YQP) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YQO](http://ix.io/3YQO) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YQk](http://ix.io/3YQk) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YQI](http://ix.io/3YQI) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Yqh](http://ix.io/3Yqh) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YqG](http://ix.io/3YqG) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YqF](http://ix.io/3YqF) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YQ2](http://ix.io/3YQ2) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Yq2](http://ix.io/3Yq2) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YQ1](http://ix.io/3YQ1) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Ypu](http://ix.io/3Ypu) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Ypp](http://ix.io/3Ypp) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YPM](http://ix.io/3YPM) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YPl](http://ix.io/3YPl) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YpG](http://ix.io/3YpG) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Ypg](http://ix.io/3Ypg) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YpF](http://ix.io/3YpF) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YPb](http://ix.io/3YPb) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YPA](http://ix.io/3YPA) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Yp8](http://ix.io/3Yp8) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YOz](http://ix.io/3YOz) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YOU](http://ix.io/3YOU) |
@@ -1966,6 +2336,7 @@ See function CheckRAID6PerfAndAlgo in https://github.com/ThomasKaiser/sbc-bench/
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YOq](http://ix.io/3YOq) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Yom](http://ix.io/3Yom) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YOI](http://ix.io/3YOI) |
+| 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YOH](http://ix.io/3YOH) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3Yo7](http://ix.io/3Yo7) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YNZ](http://ix.io/3YNZ) |
 | 379 (neonx4) | Xunlong Orange Pi Zero | 4.19.62 | [http://ix.io/3YnU](http://ix.io/3YnU) |
@@ -4735,8 +5106,25 @@ See function CheckRAID6PerfAndAlgo in https://github.com/ThomasKaiser/sbc-bench/
 | 346 (neonx4) |  Xunlong Orange Pi Zero  | 5.4.88 | [http://ix.io/3RUY](http://ix.io/3RUY) |
 | 346 (neonx4) | Xunlong Orange Pi Zero | 5.4.31 | [http://ix.io/3WW7](http://ix.io/3WW7) |
 | 346 (neonx4) | Xunlong Orange Pi Zero | 5.4.31 | [http://ix.io/3WW6](http://ix.io/3WW6) |
+| 346 (neonx4) | Xunlong Orange Pi Zero | 5.4.20 | [http://ix.io/3ZrY](http://ix.io/3ZrY) |
+| 346 (neonx4) | Xunlong Orange Pi Zero | 5.4.20 | [http://ix.io/3ZoZ](http://ix.io/3ZoZ) |
+| 346 (neonx4) | Xunlong Orange Pi Zero | 5.4.20 | [http://ix.io/3Zny](http://ix.io/3Zny) |
+| 346 (neonx4) | Xunlong Orange Pi Zero | 5.4.20 | [http://ix.io/3Znf](http://ix.io/3Znf) |
+| 346 (neonx4) | Xunlong Orange Pi Zero | 5.4.20 | [http://ix.io/3Znd](http://ix.io/3Znd) |
+| 346 (neonx4) | Xunlong Orange Pi Zero | 5.4.20 | [http://ix.io/3ZjI](http://ix.io/3ZjI) |
+| 346 (neonx4) | Xunlong Orange Pi Zero | 5.4.20 | [http://ix.io/3Zi2](http://ix.io/3Zi2) |
+| 346 (neonx4) | Xunlong Orange Pi Zero | 5.4.20 | [http://ix.io/3ZeD](http://ix.io/3ZeD) |
+| 346 (neonx4) | Xunlong Orange Pi Zero | 5.4.20 | [http://ix.io/3Zce](http://ix.io/3Zce) |
+| 346 (neonx4) | Xunlong Orange Pi Zero | 5.4.20 | [http://ix.io/3Zc7](http://ix.io/3Zc7) |
+| 346 (neonx4) | Xunlong Orange Pi Zero | 5.4.20 | [http://ix.io/3Z9k](http://ix.io/3Z9k) |
+| 346 (neonx4) | Xunlong Orange Pi Zero | 5.4.20 | [http://ix.io/3Z8h](http://ix.io/3Z8h) |
+| 346 (neonx4) | Xunlong Orange Pi Zero | 5.4.20 | [http://ix.io/3Z2P](http://ix.io/3Z2P) |
+| 346 (neonx4) | Xunlong Orange Pi Zero | 5.4.20 | [http://ix.io/3YYT](http://ix.io/3YYT) |
 | 346 (neonx4) | Xunlong Orange Pi Zero | 5.4.20 | [http://ix.io/3YwH](http://ix.io/3YwH) |
+| 346 (neonx4) | Xunlong Orange Pi Zero | 5.4.20 | [http://ix.io/3YTm](http://ix.io/3YTm) |
+| 346 (neonx4) | Xunlong Orange Pi Zero | 5.4.20 | [http://ix.io/3YTl](http://ix.io/3YTl) |
 | 346 (neonx4) | Xunlong Orange Pi Zero | 5.4.20 | [http://ix.io/3YsZ](http://ix.io/3YsZ) |
+| 346 (neonx4) | Xunlong Orange Pi Zero | 5.4.20 | [http://ix.io/3YQK](http://ix.io/3YQK) |
 | 346 (neonx4) | Xunlong Orange Pi Zero | 5.4.20 | [http://ix.io/3Yo9](http://ix.io/3Yo9) |
 | 346 (neonx4) | Xunlong Orange Pi Zero | 5.4.20 | [http://ix.io/3Yn4](http://ix.io/3Yn4) |
 | 346 (neonx4) | Xunlong Orange Pi Zero | 5.4.20 | [http://ix.io/3Yn1](http://ix.io/3Yn1) |

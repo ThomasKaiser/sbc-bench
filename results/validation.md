@@ -115,7 +115,6 @@
 | [3F9C](3F9C.txt) | v0.8.4 Raspberry Pi 4 Model B Rev 1.1 | 0%/0.6% | 959Mi/815Mi | X | X | X | X | <span style=color:red>**12%**</span> | 0% | |
 | <del>[3FlD](3FlD.txt)</del> | <del>v0.8.4 Raspberry Pi 4 Model B Rev 1.1 </del> | <del>0%/0.6%</del> | <del>959Mi/839Mi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del><span style=color:red> 9%</span></del> | <del> 0%</del> | |
 | [3Gia](3Gia.txt) | v0.8.5 Raspberry Pi 4 Model B Rev 1.1 | 2.0%/1.0% | 857Mi/696Mi | X | X | X | X | 3% | 0% | |
-| [3GmP](3GmP.txt) | v0.8.6 NanoPi Fire3 | 0%/0% | 994Mi/671Mi | X | X | X | X | 4% | 0% | |
 | [3GmR](3GmR.txt) | v0.8.6 FriendlyARM NanoPi NEO4 | 0%/0.7% | 977Mi/714Mi | X | X | X | X | 1% | 0% | |
 | [3GnC](3GnC.txt) | v0.8.6 Hardkernel Odroid XU4 | 0%/0.9% | 1.9Gi/1.7Gi | X | X | X | X | 4% | 0% | [check log](3GnC.txt) |
 | [3GrW](3GrW.txt) | v0.8.6 | 0%/4.0% | 15Gi/14Gi | X | X | X | X | 1% | 0% | |
@@ -184,5 +183,6 @@
 | <del>[3XzI](3XzI.txt)</del> | <del>v0.9.6 Firefly ITX-3588J HDMI</del> | <del>0.2%/0.4%</del> | <del>7.5Gi/6.5Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 3%</del> | <del> 0%</del> | |
 | [3Y4f](3Y4f.txt) | v0.9.6 keeper.lan | 0.3%/0% | 30Gi/29Gi | X | X | X | X | 2% | 0% | |
 | [3YWp](3YWp.txt) | v0.9.7 NVIDIA Jetson Xavier NX Develope | 1.9%/0.8% | 7.6G/5.2G | X | X | X | X | 2% | 0% | |
+| [3ZxU](3ZxU.txt) | v0.9.8 NanoPi Fire3 extensive | 0%/0% | 994Mi/853Mi | X | X | X | X | <span style=color:red> 8%</span> | 0% | |
 | [3rUb](3rUb.txt) | v0.7.7 Pine64 RK3566 Quartz64-A Board | 0%/0% | 3.8Gi/3.5Gi | X | X | X | X | 1% | 0% | |
 | [3wZn](3wZn.txt) | v0.7.7 Radxa Zero | 0.3%/0% | 3.7Gi/3.4Gi | X | X | X | X | 1% | 0% | |

@@ -8,7 +8,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 
 ## Some numbers
 
-*(ODROID-M1, Quartz64, ROCK 3A, ROCK 5A, RK3568-ROC-PC and Khadas VIM4 numbers are preliminary since software support situation for RK3566/RK3568/RK3588 and A311D2 is still in a very early stage. Please also note that with RK35xx SBC so far [real measured clockspeeds are somewhat unstable](https://forum.odroid.com/viewtopic.php?p=349694#p349694).*
+*ODROID-M1, Quartz64, ROCK 3A, ROCK 5A, RK3568-ROC-PC and Khadas VIM4 numbers are preliminary since software support situation for RK3566/RK3568/RK3588 and A311D2 is still in a very early stage. Please also note that with RK35xx SBC so far [real measured clockspeeds are somewhat unstable](https://forum.odroid.com/viewtopic.php?p=350782#p350782).*
 
 | Device / details | Clockspeed | Kernel | Distro | 7-zip | AES-128 (16 byte) | AES-256 (16 KB) | memcpy | memset | kH/s |
 | ----- | :--------: | :----: | :----: | ----: | ------: | ------: | -----: | -----: | ---: |
@@ -55,7 +55,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [NanoPC T4](http://ix.io/1lkG) | 2000/1500 MHz | 4.4 | Stretch arm64 | 5870 | 308370 | 1124040 | 2810 | 4890 | 8.70 |
 | [NanoPi Fire3](http://ix.io/1jiU) | 1380 MHz | 4.14 | Stretch arm64 | 7420 | 95700 | 645400 | 1520 | 4570 | 8.53 |
 | [NanoPi Fire3](http://ix.io/1jjm) | 1400 MHz | 4.14 | Bionic arm64 | 7440 | 126050 | 653000 | 1560 | 4600 | 10.96 |
-| [NanoPi Fire3](http://ix.io/3GmP) | 1400 MHz | 4.14 | Focal arm64 | 7360 | 118460 | 653770 | 1530 | 4590 | 11.27 |
+| [NanoPi Fire3](http://ix.io/3ZxU) | 1400 MHz | 4.14 | Focal arm64 | 7350 | 118250 | 652640 | 1530 | 4590 | 11.18 |
 | [NanoPi K1 Plus](http://ix.io/3N7H) | 1370 MHz | 5.10 | Focal arm64 | 3520 | 115020 | 638880 | 1070 | 3680 | 5.50 |
 | [NanoPi K2](http://ix.io/1iT1) | 1480 MHz | 4.14 | Stretch arm64 | 3850 | 43020 | 50370 | 1660 | 3870 | 4.61 |
 | [NanoPi K2](http://ix.io/3Qve) | 1480 MHz | 5.10 | Bullseye arm64 | 3880 | 42840 | 51490 | 1850 | 3790 | - |

@@ -256,7 +256,7 @@ The detailed log then will contain information how much time (in milliseconds) h
 
 ### Unattended execution
 
-If `sbc-bench` should benchmark in an automated fashion then exporting `MODE=unattended` prior to execution will prevent warning dialogs (of course `sbc-bench` will still check whether average load or CPU utilization is too high and refuse to start since benchmarking a busy system is useless):
+If `sbc-bench` should benchmark in an automated fashion then exporting `MODE=unattended` prior to execution will prevent warning dialogs but of course `sbc-bench` will still check whether average load or CPU utilization is too high and refuse to start since benchmarking a busy system is useless.
 
 Everything sent to `stdout` can be ignored (but parsing for 'check the log' is highly recommended since hinting at too much background activity and/or swapping resulting in numbers without meaning instead of benchmark scores). Full benchmark results are available at `/var/log/sbc-bench.log` with the last line containing a performance summary. So something like this could be used for regression testing and similar stuff:
 

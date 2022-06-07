@@ -1216,12 +1216,21 @@ CheckLoadAndDmesg() {
 	# Only continue if average load is less than 0.1 or averaged CPU utilization is lower
 	# than 2.5% for 30 sec. Please note that average load on Linux is *not* the same as CPU
 	# utilization: https://www.brendangregg.com/blog/2017-08-08/linux-load-averages.html
+
+	# switch to performance cpufreq governor since this helps lowering load and CPU
+	# utilization in less time
+	if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
+		for Cluster in $(ls -d /sys/devices/system/cpu/cpufreq/policy?); do
+			[ -w ${Cluster}/scaling_governor ] && echo performance >${Cluster}/scaling_governor 2>/dev/null
+		done
+	fi
+
 	AvgLoad1Min=$(awk -F" " '{print $1*100}' < /proc/loadavg)
 	if [ $AvgLoad1Min -ge 10 ]; then
 		echo -e "\nAverage load and/or CPU utilization too high (too much background activity). Waiting...\n"
 		/bin/bash "${PathToMe}" -m 5 >"${TempDir}/wait-for-loadavg.log" &
 		MonitoringPID=$!
-		while [ $AvgLoad1Min -ge 10 -a ${CPUSum:-100} -ge 15 ]; do
+		while [ $AvgLoad1Min -ge 10 -a ${CPUSum:-100} -ge 10 ]; do
 			sleep 5
 			CPUutilization="$(awk -F" " '/^[0-9]/ {print $4}' <"${TempDir}/wait-for-loadavg.log" | sed 's/%//' | tail -n6)"
 			LogLength=$(wc -l <<<"${CPUutilization}")
@@ -1978,6 +1987,7 @@ RunOpenSSLBenchmark() {
 		# add both scores and divide by two to get an average
 		AES128=$(( $(awk '/^aes-128-cbc/ {print $2}' <"${OpenSSLLog}" | awk -F"." '{s+=$1} END {printf "%.0f", s}') / 2 ))
 		AES256=$(( $(awk '/^aes-256-cbc/ {print $7}' <"${OpenSSLLog}" | awk -F"." '{s+=$1} END {printf "%.0f", s}') / 2 ))
+		[ "X${MODE}" = "Xextensive" ] && openssl speed -elapsed -evp aes-256-gcm 2>/dev/null | tr '[:upper:]' '[:lower:]' >>${OpenSSLLog}
 	else
 		# different package ids, we walk through all clusters
 		echo -e "Executing benchmark on each cluster individually\n" >>${ResultLog}
@@ -1988,6 +1998,9 @@ RunOpenSSLBenchmark() {
 					CPUInfo="$(GetCPUInfo ${ClusterConfig[$i]})"
 					taskset -c ${ClusterConfig[$i]} openssl speed -elapsed -evp aes-${bytelength}-cbc 2>/dev/null \
 						| tr '[:upper:]' '[:lower:]' | sed "/^aes/ s/$/${CPUInfo}/"
+					if [ "X${MODE}" = "Xextensive" -a ${bytelength} -eq 256 ]; then
+						openssl speed -elapsed -evp aes-256-gcm 2>/dev/null | tr '[:upper:]' '[:lower:]' | sed "/^aes/ s/$/${CPUInfo}/"
+					fi
 				fi
 			done
 		done >${OpenSSLLog}
@@ -2007,10 +2020,15 @@ RunOpenSSLBenchmark() {
 		/bin/bash "${PathToMe}" -m 4 >>${MonitorLog} &
 		MonitoringPID=$!
 		for ((o=1;o<=CPUCores;o++)); do
-			taskset -c $(( ${o} - 1 )) openssl speed -elapsed -evp aes-256-cbc 2>/dev/null >"${TempDir}"/openssl.log.${o} &
+			taskset -c $(( ${o} - 1 )) openssl speed -elapsed -evp aes-256-cbc 2>/dev/null >"${TempDir}"/openssl.log.cbc.${o} &
 		done
 		sleep 25
-		grep '^aes-' "${TempDir}"/openssl.log.* | cut -f2 -d':' | sort -r -n | sed "/^aes/ s/$/ (fully parallel)/" >>${ResultLog}
+		for ((o=1;o<=CPUCores;o++)); do
+			taskset -c $(( ${o} - 1 )) openssl speed -elapsed -evp aes-256-gcm 2>/dev/null >"${TempDir}"/openssl.log.gcm.${o} &
+		done
+		sleep 25
+		grep '^aes-256-cbc' "${TempDir}"/openssl.log.* | cut -f2 -d':' | sort -r -n | sed "/^aes/ s/$/ (fully parallel)/" >>${ResultLog}
+		grep '^aes-256-gcm' "${TempDir}"/openssl.log.* | cut -f2 -d':' | sort -r -n | sed "/^aes/ s/$/ (fully parallel)/" >>${ResultLog}
 		kill ${MonitoringPID}
 	fi
 } # RunOpenSSLBenchmark
@@ -2217,7 +2235,7 @@ UploadResults() {
 	echo -e "\n${BOLD}7-zip total scores${NC} (3 consecutive runs): $(awk -F" " '/^Total:/ {print $2}' ${ResultLog})"
 	if [ -f ${OpenSSLLog} ]; then
 		echo -e "\n${BOLD}OpenSSL results${NC}${ClusterInfo}:\n$(grep '^type' ${OpenSSLLog} | head -n1)"
-		grep '^aes-' ${OpenSSLLog}
+		grep '^aes-...-cbc' ${OpenSSLLog}
 	fi
 	case ${UploadURL} in
 		http*)
@@ -2427,7 +2445,7 @@ GuessARMSoC() {
 	#       Cortex-A9 / r2p1: Comcerto 2000 AKA FreeScale/NXP QorIQ LS1024A -> https://github.com/Bonstra/c2000doc
 	#       Cortex-A9 / r2p9: Nvidia Tegra 3
 	#       Cortex-A9 / r2p10: Freescale/NXP i.MX6 Dual/Quad
-	#       Cortex-A9 / r3p0: Amlogic 8726-MX, Calxeda Highbank, Cyclone V FPGA SoC, Rockchip RK3306/RK3188, Samsung Exynos 4412
+	#       Cortex-A9 / r3p0: Amlogic 8726-MX, Calxeda Highbank, Cyclone V FPGA SoC, Rockchip RK3066/RK3188, Samsung Exynos 4412
 	#       Cortex-A9 / r4p1: Amlogic S812, Freescale/NXP i.MX6SLL, Marvell Armada 375/38x
 	#      Cortex-A15 / r0p4: Samsung Exynos 5 Dual 5250
 	#      Cortex-A15 / r2p3: Samsung Exynos 5422
@@ -2597,7 +2615,7 @@ GuessARMSoC() {
 	# CPU: ARMv7 Processor [412fc09a] revision 10 (ARMv7), cr=10c5387d <-  Cortex-A9 / r2p10 / Freescale/NXP i.MX6
 	# CPU: ARMv7 Processor [413fc082] revision 2 (ARMv7), cr=10c53c7f  <-  Cortex-A8 / r3p2 / Beagleboard-xm
 	# CPU: ARMv7 Processor [413fc082] revision 2 (ARMv7), cr=50c5387d  <-  Cortex-A8 / r3p2 / Allwinner A10
-	# CPU: ARMv7 Processor [413fc090] revision 0 (ARMv7), cr=10c5387d  <-  Cortex-A9 / r3p0 / RK3306 / RK3188 / Cyclone V FPGA SoC / Exynos 4412
+	# CPU: ARMv7 Processor [413fc090] revision 0 (ARMv7), cr=10c5387d  <-  Cortex-A9 / r3p0 / RK3066 / RK3188 / Cyclone V FPGA SoC / Exynos 4412
 	# CPU: ARMv7 Processor [413fc090] revision 0 (ARMv7), cr=10c53c7f  <-  Cortex-A9 / r3p0 / Amlogic 8726-MX
 	# CPU: ARMv7 Processor [413fc090] revision 0 (ARMv7), cr=50c5387d  <-  Cortex-A9 / r3p0 / Calxeda Highbank
 	# CPU: ARMv7 Processor [413fc0f2] revision 2 (ARMv7), cr=10c5347d  <-  Cortex-A15 / r3p2 / Renesas R8A7790 SoC
@@ -3055,12 +3073,12 @@ GuessSoCbySignature() {
 			# Allwinner A83T, 8 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
 			echo "Allwinner A83T"
 			;;
-		20A5r0p120A5r0p120A5r0p120A5r0p1|2A5222)
-			# S805, 4 x Cortex-A5 / r0p1 / half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpv4 vfpd32 (3.10: swp half thumb fastmult vfp edsp neon vfpv3 tls vfpv4)
+		20A5r0p120A5r0p120A5r0p120A5r0p1|2A5222|20A5r0p1202020)
+			# Amlogic S805/M805, 4 x Cortex-A5 / r0p1 / half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpv4 vfpd32 (3.10: swp half thumb fastmult vfp edsp neon vfpv3 tls vfpv4)
 			echo "Amlogic S805"
 			;;
 		20A9r4p120A9r4p120A9r4p120A9r4p1|2A9222)
-			# S812, 4 x Cortex-A9 / r4p1 / half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpd32
+			# Amlogic S812, 4 x Cortex-A9 / r4p1 / half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpd32
 			echo "Amlogic S812"
 			;;
 		*A53r0p0*A53r0p0*A53r0p0*A53r0p0)
@@ -3165,7 +3183,7 @@ GuessSoCbySignature() {
 			echo "Allwinner R329"
 			;;
 		??A53r0p4??A53r0p4??A53r0p4??A53r0p4??A53r0p4??A53r0p4??A53r0p4??A53r0p4)
-			# S912, 4 x Cortex-A53 / r0p4 + 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
+			# Amlogic S912, 4 x Cortex-A53 / r0p4 + 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			# or HiSilicon Kirin 960, 8 x Cortex-A53 / r0p4 / https://bench.cr.yp.to/computers.html
 			# or NXP QorIQ LS1088: 8 x Cortex-A53 / r0p4 / https://bench.cr.yp.to/computers.html
 			case "${DTCompatible}" in
@@ -3181,7 +3199,7 @@ GuessSoCbySignature() {
 			esac
 			;;
 		00A53r0p400A53r0p412A73r0p212A73r0p212A73r0p212A73r0p2)
-			# S922X/A311D, 2 x Cortex-A53 / r0p4 + 4 x Cortex-A73 / r0p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32
+			# Amlogic S922X/A311D, 2 x Cortex-A53 / r0p4 + 4 x Cortex-A73 / r0p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			echo "Amlogic S922X/A311D"
 			;;
 		*A73r0p2*A73r0p2*A73r0p2*A73r0p2*A73r0p2*A73r0p2*A73r0p2*A73r0p2)
@@ -3223,8 +3241,8 @@ GuessSoCbySignature() {
 			;;
 		??A9r3p0??A9r3p0)
 			# AML8726-MX, 2 x Cortex-A9 / r3p0 / half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpd32
-			# or RK3306, 2 x Cortex-A9 / r3p0 / https://lore.kernel.org/all/CAAFQd5CN_xvkdD+Bf9A+Mc+_jVxtdOKosrYH_8bNNHkGQw7eGA@mail.gmail.com/T/
-			grep -q amlogic <<<"${DTCompatible}" && echo "Amlogic AML8726-MX" || echo "Rockchip RK3306"
+			# or RK3066, 2 x Cortex-A9 / r3p0 / swp half thumb fastmult vfp edsp neon vfpv3 / https://lore.kernel.org/all/CAAFQd5CN_xvkdD+Bf9A+Mc+_jVxtdOKosrYH_8bNNHkGQw7eGA@mail.gmail.com/T/
+			grep -q amlogic <<<"${DTCompatible}" && echo "Amlogic AML8726-MX" || echo "Rockchip RK3066"
 			;;
 		??A9r3p0??A9r3p0??A9r3p0??A9r3p0)
 			# RK3188 or Exynos 4412, 4 x Cortex-A9 / r3p0 / half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpd32
@@ -3568,6 +3586,10 @@ GuessSoCbySignature() {
 		*sifive,u54-mc*sifive,u54-mc*sifive,u54-mc*sifive,u54-mc)
 			# SiFive "Freedom" U540: 4 x U54-MC https://www.sifive.com/cores/u54-mc
 			echo "SiFive U540"
+			;;
+		*sifive,u74-mc*sifive,u74-mc)
+			# StarFive JH7100: 2 x U74-MC https://rvspace.org/en/Product/JH7100/Technical_Documents/JH7100_Datasheet
+			echo "StarFive JH7100"
 			;;
 	esac
 }

@@ -2448,6 +2448,7 @@ GuessARMSoC() {
 	#       Cortex-A9 / r3p0: Amlogic 8726-MX, Calxeda Highbank, Cyclone V FPGA SoC, Rockchip RK3066/RK3188, Samsung Exynos 4412
 	#       Cortex-A9 / r4p1: Amlogic S812, Freescale/NXP i.MX6SLL, Marvell Armada 375/38x
 	#      Cortex-A15 / r0p4: Samsung Exynos 5 Dual 5250
+	#      Cortex-A15 / r2p2: TI Sitara AM572x
 	#      Cortex-A15 / r2p3: Samsung Exynos 5422
 	#      Cortex-A15 / r2p4: AnnapurnaLabs Alpine
 	#      Cortex-A15 / r3p2: Renesas R8A7790
@@ -2466,6 +2467,7 @@ GuessARMSoC() {
 	#      Cortex-A72 / r0p0: Mediatek MT8173
 	#      Cortex-A72 / r0p2: HiSilicon Kunpeng 916, NXP i.MX8QM/LS2xx8A, Rockchip RK3399, Socionext LD20, 
 	#      Cortex-A72 / r0p3: Broadcom BCM2711, NXP LS1028A, NXP LX2xx0A, Marvell Armada3900-A1, Xilinx Versal, AWS Graviton -> https://tinyurl.com/y47yz2f6
+	#      Cortex-A72 / r1p0: TI J721E (TDA4VM/DRA829V)
 	#      Cortex-A73 / r0p1: HiSilicon Kirin 970
 	#      Cortex-A73 / r0p2: Amlogic A311D/A311D2/S922X, MediaTek Helio P60T
 	#      Cortex-A76 / r4p0: Rockchip RK3588/RK3588s
@@ -2526,7 +2528,7 @@ GuessARMSoC() {
 	# soc soc0: Amlogic Meson GXL (S905W) Revision 21:e (a5:2) Detected <-- Tanix TX3 Mini / JetHome JetHub J80 / Amlogic Meson GXL (S905X) P212 Development Board / Amlogic Meson GXL (S905W) P281 Development Board
 	# soc soc0: Amlogic Meson GXL (S905L) Revision 21:e (c5:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson GXM (Unknown) Revision 22:a (82:2) Detected <-- Amlogic Meson GXM (S912) Q201 Development Board
-	# soc soc0: Amlogic Meson GXM (S912) Revision 22:a (82:2) Detected <-- Beelink GT1 / Octopus Planet / Amlogic Meson GXM (S912) Q200 Development Board / Amlogic Meson GXM (S912) Q201 Development Board
+	# soc soc0: Amlogic Meson GXM (S912) Revision 22:a (82:2) Detected <-- Beelink GT1 / Octopus Planet / Libre Computer AML-S912-PC / Amlogic Meson GXM (S912) Q200 Development Board / Amlogic Meson GXM (S912) Q201 Development Board
 	# soc soc0: Amlogic Meson GXM (S912) Revision 22:b (82:2) Detected <-- Tronsmart Vega S96 / Octopus Planet / Amlogic Meson GXM (S912) Q201 Development Board
 	# soc soc0: Amlogic Meson AXG (Unknown) Revision 25:b (43:2) Detected <-- JetHome JetHub J100
 	# soc soc0: Amlogic Meson AXG (Unknown) Revision 25:c (43:2) Detected <-- JetHome JetHub J100
@@ -2614,6 +2616,7 @@ GuessARMSoC() {
 	# CPU: ARMv7 Processor [411fc092] revision 2 (ARMv7), cr=10c5387f  <-  Cortex-A9 / r1p2 / TI OMAP 4460
 	# CPU: ARMv7 Processor [412fc091] revision 1 (ARMv7), cr=10c5387d  <-  Cortex-A9 / r2p1 / NXP QorIQ LS1024A
 	# CPU: ARMv7 Processor [412fc09a] revision 10 (ARMv7), cr=10c5387d <-  Cortex-A9 / r2p10 / Freescale/NXP i.MX6
+	# CPU: ARMv7 Processor [412fc0f2] revision 2 (ARMv7), cr=10c5387d  <-  Cortex-A15 / r2p2 / TI Sitara AM572x
 	# CPU: ARMv7 Processor [413fc082] revision 2 (ARMv7), cr=10c53c7f  <-  Cortex-A8 / r3p2 / Beagleboard-xm
 	# CPU: ARMv7 Processor [413fc082] revision 2 (ARMv7), cr=50c5387d  <-  Cortex-A8 / r3p2 / Allwinner A10
 	# CPU: ARMv7 Processor [413fc090] revision 0 (ARMv7), cr=10c5387d  <-  Cortex-A9 / r3p0 / RK3066 / RK3188 / Cyclone V FPGA SoC / Exynos 4412
@@ -3308,6 +3311,14 @@ GuessSoCbySignature() {
 		*A72r0p0*A72r0p0)
 			# Mediatek MT8173: 2 x Cortex-A72 / r0p0 / https://bench.cr.yp.to/computers.html -> r8p0 is wrong
 			echo "Mediatek MT8173"
+			;;
+		00A72r1p000A72r1p0)
+			# TI J721E (TDA4VM/DRA829V): 2 x Cortex-A72 / r1p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32
+			echo "TI J721E"
+			;;
+		*A15r2p2*A15r2p2)
+			# TI Sitara AM572x: 2 x Cortex-A15 / r2p2 / half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
+			echo "TI Sitara AM572x"
 			;;
 		0?A55r2p00?A55r2p00?A55r2p00?A55r2p01?A76r4p01?A76r4p02?A76r4p02?A76r4p0)
 			# RK3588, 4 x Cortex-A55 / r2p0 + 2 x Cortex-A76 / r4p0 / + 2 x Cortex-A76 / r4p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp asimdrdm lrcpc dcpop asimddp

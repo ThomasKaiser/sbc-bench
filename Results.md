@@ -46,6 +46,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Khadas VIM4](http://ix.io/3Wq0) | 2200/2010 MHz | 5.4 | Jammy arm64 | 12100 | 339708 | 1252070 | 7800 | 11590 | - |
 | [Le Potato](http://ix.io/1iSQ) | 1410 MHz | 4.18 | Stretch arm64 | 3780 | 96680 | 657200 | 1810 | 5730 | 3.92 |
 | [LeMaker Banana Pi](http://ix.io/3PLr) | 960 MHz | 5.10 | Bullseye armhf | 1040 | 15080 | 18640 | 440 | 2020 | - |
+| [Libre Computer AML-S912-PC](http://ix.io/40cj) | 1415/1000 MHz | 5.15 | Bullseye arm64 | 5980 | 91890 | 659290 | 1650 | 5170 | - |
 | [Lime A10](http://ix.io/1j1L) | 910 MHz | 4.14 | Stretch armhf | 550 | 25200 | 28250 | 440 | 1300 | - |
 | [NanoPC T3+](http://ix.io/1iyp) | 1400 MHz | 4.4 | **Xenial armhf** | 6400 | 143800 | 651000 | 1650 | 3700 | - |
 | [NanoPC T3+](http://ix.io/1iRJ) | 1400 MHz | 4.14 | Bionic arm64 | 7480 | 126000 | 652600 | 1440 | 4540 | 10.99 |
@@ -225,7 +226,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 ## The bigger picture
 
 * To compare different hardware exactly the same software environment (apps, libs, compiler, kernel) is needed. Ignoring this will produce numbers without meaning.
-* ARM's big cores (A15, A17, A72) perform a lot better than the little cores (A7, A53). Everything that needs high **single threaded** performance will hugely benefit from running on such a core. This puts SoCs like RK3288 (Tinkerboard), Exynos 5244 (ODROID XU4) or RK3399 in a better position. For the big.LITTLE designs a working HMP scheduler is mandatory since otherwise performance hungry tasks end up on a slow core. This is even true for [pseudo big.LITTLE like on the Vim2/S912](https://forum.khadas.com/t/s912-limited-to-1200-mhz-with-multithreaded-loads/2311/71?u=tkaiser)
+* ARM's big cores (A15, A17, A72) perform a lot better than the little cores (A7, A53). Everything that needs high **single threaded** performance will hugely benefit from running on such a core. This puts SoCs like RK3288 (Tinkerboard), Exynos 5244 (ODROID XU4) or RK3399 in a better position. For the big.LITTLE designs a working HMP scheduler is mandatory since otherwise performance hungry tasks end up on a slow core. This is even true for [pseudo big.LITTLE like on the VIM2/S912](https://forum.khadas.com/t/s912-limited-to-1200-mhz-with-multithreaded-loads/2311/71?u=tkaiser)
 * *7-zip's* benchmark still looks like a nice indicator for a 'server workloads' performance index (**multi threaded** tasks that do not rely on floating point arithmetics but partially on memory performance). Though these scores are totally irrelevant when it's about SBC use cases that focus on something different (e.g. a 'Desktop Linux' needing high single threaded CPU performance, HW accelerated GPU and VPU and also fast random IO on the rootfs)
 * We see a huge variation in *tinymembench* numbers with some boards outperforming others by magnitudes while the effect in reality for CPU bound workloads is rather minimal though high memory bandwidth is a requirement for certain other tasks (e.g. playing 4K video). At least numbers are there to generate further insights.
 * Identical SoCs perform more or less identical if 'environmental conditions' (clockspeeds) are the same -- see Renegade vs. Rock64 numbers or NanoPC T4 vs. RockPro64 or ODROID-C2 vs. NanoPi K2.

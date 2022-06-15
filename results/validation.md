@@ -188,3 +188,4 @@
 | [3rUb](3rUb.txt) | v0.7.7 Pine64 RK3566 Quartz64-A Board | 0%/0% | 3.8Gi/3.5Gi | X | X | X | X | 1% | 0% | |
 | [3wZn](3wZn.txt) | v0.7.7 Radxa Zero | 0.3%/0% | 3.7Gi/3.4Gi | X | X | X | X | 1% | 0% | |
 | [408h](408h.txt) | v0.9.8 Ugoos UT2 | 0%/0% | 2.0Gi/1.8Gi | X | X | X | X | 2% | 0% | |
+| [40cj](40cj.txt) | v0.9.8 Libre Computer AML-S912-PC | 0%/0% | 1.8Gi/1.6Gi | X | X | X | X | <span style=color:red>**53%**</span> | 3% | |

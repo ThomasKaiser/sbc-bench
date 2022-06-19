@@ -1557,8 +1557,9 @@ InitialMonitoring() {
 	echo -e "${CPUTopology}\n" >"${TempDir}/cpu-topology.log" &
 	CPUSignature="$(GetCPUSignature)"
 
-	# upload raw /proc/cpuinfo contents
-	(echo -e "/proc/cpuinfo\n\n$(uname -a) / $(cat /proc/device-tree/model)\n" ; cat /proc/cpuinfo ; echo -e "\n${CPUTopology}\n\n${CPUSignature}") 2>/dev/null \
+	# upload raw /proc/cpuinfo contents and device-tree compatible entry
+	DTCompatible="$(strings /proc/device-tree/compatible 2>/dev/null)"
+	(echo -e "/proc/cpuinfo\n\n$(uname -a) / ${DeviceName}\n" ; cat /proc/cpuinfo ; echo -e "\n${CPUTopology}\n\n${CPUSignature}\n\n${DTCompatible}") 2>/dev/null \
 		| curl -s -F 'f:1=<-' ix.io >/dev/null 2>&1 &
 	
 	# Log version and device info
@@ -2176,7 +2177,6 @@ LogEnvironment() {
 	fi
 
 	# try to guess the SoC and report if successful
-	DTCompatible="$(strings /proc/device-tree/compatible 2>/dev/null)"
 	GuessedSoC="$(GuessARMSoC)"
 	if [ "X${GuessedSoC}" != "X" ]; then
 		echo -e "\nSoC guess: ${GuessedSoC}"
@@ -2502,7 +2502,7 @@ GuessARMSoC() {
 	# soc soc0: Amlogic Meson GXBB (S905) Revision 1f:b (0:1) Detected <-- ODROID-C2
 	# soc soc0: Amlogic Meson GXBB (S905) Revision 1f:c (0:1) Detected <-- ODROID-C2
 	# soc soc0: Amlogic Meson GXBB (S905) Revision 1f:b (12:1) Detected <-- Beelink Mini MX
-	# soc soc0: Amlogic Meson GXBB (S905) Revision 1f:c (13:1) Detected <-- NanoPi K2 / NEXBOX A95X / Tronsmart Vega S95 Telos / Amlogic Meson GXBB P200 Development Board / Amlogic Meson GXBB P201 Development Board
+	# soc soc0: Amlogic Meson GXBB (S905) Revision 1f:c (13:1) Detected <-- Beelink Mini MX, NanoPi K2 / NEXBOX A95X / Tronsmart Vega S95 Telos / Amlogic Meson GXBB P200 Development Board / Amlogic Meson GXBB P201 Development Board
 	# soc soc0: Amlogic Meson GXBB (S905H) Revision 1f:c (23:1) Detected <-- Amlogic Meson GXBB P201 Development Board
 	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:a (82:2) Detected <-- Khadas VIM / NEXBOX A95X (S905X)/ Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson GXL (Unknown) Revision 21:b (2:2) Detected <-- Phicomm N1

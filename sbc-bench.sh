@@ -285,6 +285,7 @@ GetCoreType() {
 			fi
 			;;
 		riscv*)
+			# doesn't work with Allwinner's crappy 5.4 BSP kernel since uarch is missing
 			awk -F": " '/^uarch/ {print $2}' /proc/cpuinfo | sed -n $(( $1 + 1 ))p
 			;;
 	esac
@@ -3599,7 +3600,7 @@ GuessSoCbySignature() {
 			# or 4 x Apple Icestorm / r0p0 + 4 x Apple Firestorm / ? / https://bench.cr.yp.to/computers.html
 			echo "Apple M1"
 			;;
-		10thead,c906)
+		10thead,c906|10)
 			# Allwinner D1: single T-Head C906 core
 			echo "Allwinner D1"
 			;;

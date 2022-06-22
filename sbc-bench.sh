@@ -936,6 +936,7 @@ MonitorBoard() {
 	CpuFreqToQuery=cpuinfo_cur_freq
 	CPUArchitecture="$(lscpu | awk -F" " '/^Architecture/ {print $2}')"
 	ClusterConfig=($(GetCPUClusters))
+	[ ${#ClusterConfig[@]} -eq 0 ] && ClusterConfig=(0)
 
 	# check platform
 	case ${CPUArchitecture} in
@@ -1260,7 +1261,7 @@ GetCPUClusters() {
 		# different cores even on systems with no cpufreq support.
 		SYS=/sys/devices/system/cpu
 		for PKG_ID in $(cat "${SYS}"/cpu*/topology/physical_package_id | sort | uniq); do
-	 	   dirname $(dirname $(grep "^${PKG_ID}$" "${SYS}"/cpu*/topology/physical_package_id | head -n1)) | tr -d -c '[:digit:]'
+	 	   dirname -- $(dirname -- $(grep "^${PKG_ID}$" "${SYS}"/cpu*/topology/physical_package_id | head -n1)) | tr -d -c '[:digit:]'
 	 	   echo " "
 		done
 	fi
@@ -1396,6 +1397,7 @@ BasicSetup() {
 	esac
 
 	ClusterConfig=($(GetCPUClusters))
+	[ ${#ClusterConfig[@]} -eq 0 ] && ClusterConfig=(0)
 	ClusterConfigByCoreType=($(GetCoreClusters))
 	CPUCores=$(grep -c '^processor' /proc/cpuinfo)
 } # BasicSetup
@@ -1449,18 +1451,20 @@ CheckMissingPackages() {
 } # CheckMissingPackages
 
 InstallPrerequisits() {
-	echo -e "sbc-bench v${Version}\n\nInstalling needed tools. This may take some time...\c"
+	echo -e "sbc-bench v${Version}\n\nInstalling needed tools:\c"
 	
 	# Determine missing packages and install them with a single command
 	MissingPackages="$(CheckMissingPackages)"
 	SevenZip=$(command -v 7zr || command -v 7za)
 	if [ -z "${SevenZip}" ]; then
 		# add needed repository and install 7-zip and all other packages
+		echo -e " ${MissingPackages}p7zip...\c"
 		add-apt-repository -y universe >/dev/null 2>&1
 		${MissingPackages} p7zip >/dev/null 2>&1
 		SevenZip=$(command -v 7zr || command -v 7za)
 	else
 		# 7-zip already there, just install other missing packages if needed
+		echo -e " ${MissingPackages}...\c"
 		${MissingPackages} >/dev/null 2>&1
 	fi
 
@@ -1474,6 +1478,7 @@ InstallPrerequisits() {
 	# get/build tinymembench if not already there
 	[ -d "${InstallLocation}" ] || mkdir -p "${InstallLocation}"
 	if [ ! -x "${InstallLocation}"/tinymembench/tinymembench ]; then
+		echo -e "\x08\x08\x08, tinymembench...\c"
 		cd "${InstallLocation}"
 		git clone https://github.com/ssvb/tinymembench >/dev/null 2>&1
 		cd tinymembench
@@ -1487,6 +1492,7 @@ InstallPrerequisits() {
 	# get/build ramlat benchmark if not already built, rebuild if formerly compiled w/o GCC optimizations:
 	# https://www.cnx-software.com/2022/06/05/nanopi-r5s-preview-part-2-ubuntu-20-04-friendlycore/#comment-593141
 	if [ ! -x "${InstallLocation}"/ramspeed/ramlat -o ! -f "${InstallLocation}"/ramspeed/Makefile ]; then
+		echo -e "\x08\x08\x08, ramlat...\c"
 		if [ ! -d "${InstallLocation}"/ramspeed ]; then
 			cd "${InstallLocation}" && git clone https://github.com/wtarreau/ramspeed >/dev/null 2>&1
 		fi
@@ -1495,6 +1501,7 @@ InstallPrerequisits() {
 
 	# get/build mhz if not already there
 	if [ ! -x "${InstallLocation}"/mhz/mhz ]; then
+		echo -e "\x08\x08\x08, mhz...\c"
 		cd "${InstallLocation}"
 		git clone https://github.com/wtarreau/mhz >/dev/null 2>&1
 		cd mhz
@@ -1514,6 +1521,7 @@ InstallPrerequisits() {
 InstallCpuminer() {
 	# get/build cpuminer if not already there
 	if [ ! -x "${InstallLocation}"/cpuminer-multi/cpuminer ]; then
+		echo -e "\x08\x08\x08, cpuminer...\c"
 		cd "${InstallLocation}"
 		zypper install -y automake autoconf pkg-config libcurl4-openssl-dev libjansson-dev libssl-dev libgmp-dev make g++ zlib1g-dev >/dev/null 2>&1
 		apt-get -f -qq -y install automake autoconf pkg-config libcurl4-openssl-dev libjansson-dev libssl-dev libgmp-dev make g++ zlib1g-dev >/dev/null 2>&1
@@ -1523,7 +1531,7 @@ InstallCpuminer() {
 		./build.sh
 	fi
 	if [ ! -x "${InstallLocation}"/cpuminer-multi/cpuminer ]; then
-		echo -e " (can't build cpuminer)\c"
+		echo -e "\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08(can't build cpuminer)   \c"
 	fi
 } # InstallCpuminer
 
@@ -1547,6 +1555,10 @@ InitialMonitoring() {
 
 	# Create temporary files
 	TempDir="$(mktemp -d /tmp/${0##*/}.XXXXXX)"
+	if [ ! -d "${TempDir}" ]; then
+		echo "Can not create temporary files below ${TempDir}. Aborting." >&2
+		exit 1
+	fi
 	export TempDir
 	TempLog="${TempDir}/temp.log"
 	ResultLog="${TempDir}/results.log"

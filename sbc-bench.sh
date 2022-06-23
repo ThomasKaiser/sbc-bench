@@ -1451,24 +1451,33 @@ CheckMissingPackages() {
 } # CheckMissingPackages
 
 InstallPrerequisits() {
-	echo -e "sbc-bench v${Version}\n\nInstalling needed tools:\c"
+	echo -e "sbc-bench v${Version}\n\nInstalling needed tools:  \c"
 	
 	# Determine missing packages and install them with a single command
 	MissingPackages="$(CheckMissingPackages)"
 	SevenZip=$(command -v 7zr || command -v 7za)
 	if [ -z "${SevenZip}" ]; then
-		# add needed repository and install 7-zip and all other packages
-		echo -e " ${MissingPackages}p7zip...\c"
+		MissingPackages="${MissingPackages}p7zip"
+	fi
+	
+	# add needed repository and install all necessary packages
+	egrep -q "sensors|gcc|git|sysstat|openssl|curl|dmidecode|i2c|p7zip" <<<"${MissingPackages}"
+	if [ $? -eq 0 ]; then
+		echo -e "\x08\x08 ${MissingPackages}...\c"
 		add-apt-repository -y universe >/dev/null 2>&1
-		${MissingPackages} p7zip >/dev/null 2>&1
-		SevenZip=$(command -v 7zr || command -v 7za)
-	else
-		# 7-zip already there, just install other missing packages if needed
-		echo -e " ${MissingPackages}...\c"
 		${MissingPackages} >/dev/null 2>&1
+		if [ $? -eq 100 ]; then
+			# if apt cache is too outdated update it and try again
+			apt update >/dev/null 2>&1
+			${MissingPackages} >/dev/null 2>&1
+		fi
 	fi
 
-	[ -z "${SevenZip}" ] && (echo -e "${LRED}${BOLD}No 7-zip binary found and could not be installed. Aborting${NC}" >&2 ; exit 1)
+	SevenZip=$(command -v 7zr || command -v 7za)
+	if [ -z "${SevenZip}" ]; then
+		echo -e "${LRED}${BOLD}No 7-zip binary found and could not be installed. Aborting${NC}" >&2
+		exit 1
+	fi
 
 	if [ "${PlotCpufreqOPPs}" = "yes" ]; then
 		command -v htmldoc >/dev/null 2>&1 || apt -f -qq -y --no-install-recommends install htmldoc >/dev/null 2>&1
@@ -1512,9 +1521,9 @@ InstallPrerequisits() {
 		fi
 	fi
 
-	# if called with -c or as 'sbc-bench neon' we also use cpuminer
-	if [ "${ExecuteCpuminer}" = "yes" ]; then
-		InstallCpuminer >/dev/null 2>&1
+	# if called with -c or as 'sbc-bench neon' or with MODE=extensive we also use cpuminer
+	if [ "${ExecuteCpuminer}" = "yes" -o "X${MODE}" = "Xextensive" ]; then
+		InstallCpuminer
 	fi
 } # InstallPrerequisits
 
@@ -1526,9 +1535,8 @@ InstallCpuminer() {
 		zypper install -y automake autoconf pkg-config libcurl4-openssl-dev libjansson-dev libssl-dev libgmp-dev make g++ zlib1g-dev >/dev/null 2>&1
 		apt-get -f -qq -y install automake autoconf pkg-config libcurl4-openssl-dev libjansson-dev libssl-dev libgmp-dev make g++ zlib1g-dev >/dev/null 2>&1
 		pacman --noconfirm -Sq automake autoconf pkg-config libcurl4-openssl-dev libjansson-dev libssl-dev libgmp-dev make g++ zlib1g-dev >/dev/null 2>&1
-		git clone https://github.com/tkinjo1985/cpuminer-multi.git
-		cd cpuminer-multi/
-		./build.sh
+		git clone https://github.com/tkinjo1985/cpuminer-multi.git >/dev/null 2>&1
+		cd cpuminer-multi/ && ./build.sh >/dev/null 2>&1
 	fi
 	if [ ! -x "${InstallLocation}"/cpuminer-multi/cpuminer ]; then
 		echo -e "\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08(can't build cpuminer)   \c"

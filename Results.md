@@ -23,6 +23,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Honeycomb LX2](http://ix.io/3Y4f) | 2200 MHz | 5.16 | **Fedora 35 aarch64** | 30690 | 418100 | 1251710 | 5050 | 16220 | 46.09 |
 | [Clearfog Pro](http://ix.io/1iFa) | 1600 MHz | 4.14 | Stretch armhf | 2185 | 44500 | 43900 | 935 | 4940 | - |
 | [Cubietruck](http://ix.io/3Naw) | 960 MHz | 5.10 | Bullseye armhf | 1030 | 15260 | 18640 | 440 | 2010 | - |
+| [Cubox-i4](http://ix.io/4132) | 980 MHz | 5.15 | Jammy armhf | 2360 | 25750 | 27000 | 340 | 340 | - |
 | [EspressoBin](http://ix.io/1kt2) | 800 MHz | 4.17 | Stretch arm64 | 1138 | 54290 | 368330 | 1040 | 2490 | 1.23 |
 | [EspressoBin](http://ix.io/1lCe) | 1200 MHz | 4.18 | Stretch arm64 | 1630 | 81900 | 544240 | 1000 | 2400 | 1.82 |
 | [Gigabyte H270-T70](http://ix.io/3N5c) | 2000 Mhz | 5.16 | Sid arm64 | 107180 | 110340 | 340750 | 4180 | 17130 | - |
@@ -94,7 +95,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [PineH64](http://ix.io/1jEr) | 1800 MHz | 4.18 | Stretch arm64 | 4650 | 123400 | 836900 | 1380 | 5530 | 5.62 |
 | [PineH64](http://ix.io/26Ph) | 1800 MHz | 5.4 | Buster arm64 | 4710 | 116900 | 839870 | 1420 | 5560 | 7.10 |
 | [Quartz64](http://ix.io/3rUb) | 1800 MHz | 5.13 | Buster arm64 | 4840 | 165250 | 845490 | 2980 | 7650| - |
-| [Radxa ROCK 3A](http://ix.io/3UXa) | 1950 MHz | 5.15 | Bullseye arm64 | 4920 | 178380 | 911730 | 2820 | 7520 | - |
+| [Radxa ROCK 3A](http://ix.io/40TX) | 2000 MHz | 5.18 | Bullseye arm64 | 5110 | 181400 | 935920 | 3150 | 6250 | 7.58 |
 | [Radxa ROCK 5A](http://ix.io/3XYo) | 2330/1800 MHz | 5.10 | Bullseye arm64 | 16030 | 647210 | 1325370 | 10810 | 27990 | 23.71 |
 | [Radxa Zero](http://ix.io/3wZn) | 1800 MHz | 5.10 | Focal arm64 | 4610 | 151370 | 840080 | 1600 | 5370 | - |
 | [Radxa Zero](http://ix.io/3PlT) | 1800 MHz | 5.10 | Buster arm64 | 4570 | 114530 | 839080 | 1610 | 5250 | 6.82 |

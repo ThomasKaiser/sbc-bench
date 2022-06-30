@@ -1,0 +1,12 @@
+Processor       : ARMv7 Processor rev 0 (v7l)
+BogoMIPS        : 1694.10
+Features        : swp half thumb fastmult vfp edsp vfpv3 vfpv3d16
+CPU implementer : 0x41
+CPU architecture: 7
+CPU variant     : 0x3
+CPU part        : 0xc09
+CPU revision    : 0
+
+Hardware        : MT5880
+Revision        : 0000
+Serial          : 0000000000000000

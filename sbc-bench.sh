@@ -187,12 +187,14 @@ GetARMCore() {
 	41/d41:Cortex-A78
 	41/d42:Cortex-A78AE
 	41/d44:Cortex-X1
-	41/d46:Cortex-510
-	41/d47:Cortex-710
+	41/d46:Cortex-A510
+	41/d47:Cortex-A710
 	41/d48:Cortex-X2
 	41/d49:Neoverse-N2
 	41/d4a:Neoverse-E1
 	41/d4b:Cortex-A78C
+	41/d4d:Cortex-A715
+	41/d4e:Cortex-X3
 	42:Broadcom
 	42/00f:Broadcom Brahma B15
 	42/100:Broadcom Brahma B53
@@ -2467,7 +2469,7 @@ GuessARMSoC() {
 	#       Cortex-A9 / r2p1: Comcerto 2000 AKA FreeScale/NXP QorIQ LS1024A -> https://github.com/Bonstra/c2000doc
 	#       Cortex-A9 / r2p9: Nvidia Tegra 3
 	#       Cortex-A9 / r2p10: Freescale/NXP i.MX6 Dual/Quad
-	#       Cortex-A9 / r3p0: Amlogic 8726-MX, Calxeda Highbank, Cyclone V FPGA SoC, Rockchip RK3066/RK3188, Samsung Exynos 4412
+	#       Cortex-A9 / r3p0: Amlogic 8726-MX, Calxeda Highbank, Cyclone V FPGA SoC, Mediatek MT5880, Rockchip RK3066/RK3188, Samsung Exynos 4412
 	#       Cortex-A9 / r4p1: Amlogic S812, Freescale/NXP i.MX6SLL, Marvell Armada 375/38x
 	#      Cortex-A15 / r0p4: Samsung Exynos 5 Dual 5250
 	#      Cortex-A15 / r2p2: TI Sitara AM572x
@@ -2626,7 +2628,7 @@ GuessARMSoC() {
 	# CPU: ARMv7 Processor [410fc072] revision 2 (ARMv7), cr=10c5387d  <-  Cortex-A7 / r0p2 / MediaTek MT6589/TMK6588
 	# CPU: ARMv7 Processor [410fc073] revision 3 (ARMv7), cr=50c5387d  <-  Cortex-A7 / r0p3 / Banana Pi M2 (Allwinner A31), Odroid XU4 (Exynos 5422)
 	# CPU: ARMv7 Processor [410fc074] revision 4 (ARMv7), cr=10c5387d  <-  Cortex-A7 / r0p4 / Allwinner A20: Banana Pi
-	# CPU: ARMv7 Processor [410fc074] revision 4 (ARMv7), cr=50c5387d  <-  Cortex-A7 / r0p4 / Allwinner A20: Banana Pi, Banana Pi Pro, Cubieboard 2, Cubietruck, Lime 2, OLinuXino-A20, pcDuino3 Nano
+	# CPU: ARMv7 Processor [410fc074] revision 4 (ARMv7), cr=50c5387d  <-  Cortex-A7 / r0p4 / Allwinner A20: Banana Pi, Banana Pi Pro, Cubieboard 2, Cubietruck, Lamobo R1, Lime 2, OLinuXino-A20, pcDuino3 Nano
 	# CPU: ARMv7 Processor [410fc075] revision 5 (ARMv7), cr=10c5387d  <-  Cortex-A7 / r0p5 / Beelink X2, Orange Pi+ 2E, Orange Pi One, Orange Pi PC, Orange Pi PC +, Orange Pi Zero, rk322x-box, BCM2836 (BCM2709), Generic RK322x TV Box board, Nexbox A95X R1, Rockchip RV1108 MINIEVB V10, Firefly Core-RV1126-JD4 Board
 	# CPU: ARMv7 Processor [410fc075] revision 5 (ARMv7), cr=10c53c7d  <-  Cortex-A7 / r0p5 / HiSilicon Hi351x, Freescale/NXP i.MX7D, Freescale i.MX6 ULL, BCM2836 (BCM2709), Qualcomm MDM9607 (Snapdragon X5 LTE Modem)
 	# CPU: ARMv7 Processor [410fc075] revision 5 (ARMv7), cr=30c5387d  <-  Cortex-A7 / r0p5 / Renesas RZ/N1S
@@ -3062,6 +3064,10 @@ GuessSoCbySignature() {
 					echo "Microchip SAMA7G54"
 					;;
 			esac
+			;;
+		*A9r3p0)
+			# Mediatek MT5880, 1 x Cortex-A9 / r3p0 / swp half thumb fastmult vfp edsp vfpv3 vfpv3d16
+			echo "Mediatek MT5880"
 			;;
 		00A7r0p400A7r0p4)
 			# Allwinner A20, 2 x Cortex-A7 / r0p4 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm

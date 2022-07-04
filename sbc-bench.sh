@@ -925,7 +925,8 @@ MonitorBoard() {
 		CPUTopology="$(PrintCPUTopology)"
 		CPUSignature="$(GetCPUSignature)"
 		DTCompatible="$(strings /proc/device-tree/compatible 2>/dev/null)"
-		GuessedSoC="$(GuessARMSoC)"
+		CPUArchitecture="$(lscpu | awk -F" " '/^Architecture/ {print $2}')"
+		[ "${CPUArchitecture}" = "x86_64" ] || GuessedSoC="$(GuessARMSoC)"
 		[ "X${GuessedSoC}" != "X" ] && echo -e "${GuessedSoC}, \c"
 		grep -q "BCM2711" <<<"${DeviceName}" && echo -e "${DeviceName}, \c"
 		command -v dpkg >/dev/null 2>&1 && Userland=", Userland: $(dpkg --print-architecture 2>/dev/null)"
@@ -1259,12 +1260,17 @@ CheckLoadAndDmesg() {
 } # CheckLoadAndDmesg
 
 GetCPUClusters() {
+	CountOfSockets=$(awk -F" " '/^Socket/ {print $2}' <<<"${LSCPU}")
 	if [ "X${VirtWhat}" != "X" -a "X${VirtWhat}" != "Xnone" ]; then
 		# in virtualized environments we only check cpu0
 		echo "0"
 	elif [ -d /sys/devices/system/cpu/cpufreq/policy0 -a "${CPUArchitecture}" != "x86_64" ]; then
-		# cpufreq support exists on ARM, we rely on this
+		# if cpufreq support exists on ARM or RISC-V, we rely on this
 		ls -ld /sys/devices/system/cpu/cpufreq/policy? | awk -F"policy" '{print $2}'
+	elif [ ${CountOfSockets:-1} -gt 1 -a "${CPUArchitecture}" = "x86_64" ]; then
+		# on multi-socket x86 systems all CPU cores are the same. lscpu output for Alder
+		# Lake fortunately reports just 1 socket: https://tinyurl.com/2xh4l3f2
+		echo "0"
 	else
 		# check for different CPU types based on package ids. This allows to test through
 		# different cores even on systems with no cpufreq support.
@@ -1312,8 +1318,8 @@ BasicSetup() {
 	X86CPUName="$(sed 's/ \{1,\}/ /g' <<<"${LSCPU}" | awk -F": " '/^Model name/ {print $2}' | sed -e 's/1.th Gen //' -e 's/.th Gen //' -e 's/Core(TM) //' -e 's/ Processor//' -e 's/Intel(R) Xeon(R) CPU //' -e 's/Intel(R) //' -e 's/(R)//' -e 's/CPU //' -e 's/ 0 @/ @/' -e 's/AMD //' -e 's/Authentic //' -e 's/ with .*//')"
 	VirtWhat="$(systemd-detect-virt 2>/dev/null)"
 	[ -f /sys/class/dmi/id/sys_vendor ] && DMIInfo="$(grep -R . /sys/class/dmi/id/ 2>/dev/null)"
-	DMISysVendor="$(awk -F":" '/sys_vendor:/ {print $2}' <<<"${DMIInfo}" | egrep -v "System manufacturer|Default|default|Not ")"
-	DMIProductName="$(awk -F":" '/product_name:/ {print $2}' <<<"${DMIInfo}" | egrep -v "Product Name|Default|default|Not ")"
+	DMISysVendor="$(awk -F":" '/sys_vendor:/ {print $2}' <<<"${DMIInfo}" | egrep -v "O.E.M.|System manufacturer|Default|default|Not ")"
+	DMIProductName="$(awk -F":" '/product_name:/ {print $2}' <<<"${DMIInfo}" | egrep -v "O.E.M.|Product Name|Default|default|Not ")"
 	DMIProductVersion="$(awk -F":" '/product_version:/ {print $2}' <<<"${DMIInfo}" | egrep -v "O.E.M.|123456789|Not |Default|System Product Name|System Version")"
 
 	# Overwrite DeviceName in virtualized environments with hypervisor info
@@ -1456,7 +1462,7 @@ CheckMissingPackages() {
 	command -v openssl >/dev/null 2>&1 || echo -e "openssl \c"
 	command -v curl >/dev/null 2>&1 || echo -e "curl \c"
 	command -v dmidecode >/dev/null 2>&1 || echo -e "dmidecode \c"
-	command -v decode-dimms >/dev/null 2>&1 || echo -e "i2c-tools \c"
+	command -v lshw >/dev/null 2>&1 || echo -e "lshw \c"
 } # CheckMissingPackages
 
 InstallPrerequisits() {
@@ -1470,7 +1476,7 @@ InstallPrerequisits() {
 	fi
 	
 	# add needed repository and install all necessary packages
-	egrep -q "sensors|gcc|git|sysstat|openssl|curl|dmidecode|i2c|p7zip" <<<"${MissingPackages}"
+	egrep -q "sensors|gcc|git|sysstat|openssl|curl|dmidecode|i2c|lshw|p7zip" <<<"${MissingPackages}"
 	if [ $? -eq 0 ]; then
 		echo -e "\x08\x08 ${MissingPackages}...\c"
 		add-apt-repository -y universe >/dev/null 2>&1
@@ -2206,8 +2212,8 @@ LogEnvironment() {
 		fi
 	fi
 
-	# try to guess the SoC and report if successful
-	GuessedSoC="$(GuessARMSoC)"
+	# try to guess ARM/RISC-V SoCs and report if successful
+	[ "${CPUArchitecture}" = "x86_64" ] || GuessedSoC="$(GuessARMSoC)"
 	if [ "X${GuessedSoC}" != "X" ]; then
 		echo -e "\nSoC guess: ${GuessedSoC}"
 	elif [ "X${CPUSignature}" != "X" ]; then
@@ -2415,26 +2421,21 @@ ReportRPiHealth() {
 } # ReportRPiHealth
 
 CacheAndDIMMDetails() {
-	DIMMFilter="$(echo -e "Locator:|\tVolatile Size:|\tType:|Speed:|\tRank:")"
-	DIMMDetails="$(dmidecode -t memory 2>/dev/null | egrep "${DIMMFilter}" | sed "/\tLocator:/i \ ")"
+	DIMMDetails="$(lshw -C memory 2>/dev/null | egrep "^          |-bank:" | grep -vi "serial:")"
 	if [ "X${DIMMDetails}" != "X" ]; then
 		if [ "X${VirtWhat}" = "X" -o "X${VirtWhat}" = "Xnone" ]; then
 			# only report DIMM config when running bare metal
-			echo -e "\nDIMM configuration:\c"
-			# check whether 'Volatile Size' is contained and if not include full command output
-			grep -q "Volatile Size:" <<<"${DIMMDetails}" && \
-				echo -e "${DIMMDetails}" | egrep -v -i ": Unknown|: None" || \
-				(echo ; dmidecode -t memory 2>/dev/null | \
-				egrep -i -v "^Handle |^# dmidecode |^Getting SMBIOS data|^SMBIOS |Serial Number:|Not Provided|No Module Installed|Unknown|NO DIMM" \
-				| sed '/^$/N;/^\n$/D')
-			# check wether there's even more detailed DIMM info available via i2c
-			unset DIMMDetails
-			modprobe eeprom >/dev/null 2>&1
-			command -v decode-dimms >/dev/null 2>&1 && \
-				DIMMDetails="$(decode-dimms 2>/dev/null | sed -ne '/Decoding EEPROM/,$ p' | sed '/^$/N;/^\n$/D' | grep -v Serial)"
-			if [ "X${DIMMDetails}" != "X" ]; then
-				echo -e "\n${DIMMDetails}"
-			fi
+			echo "${DIMMDetails}" >"${TempDir}/dimms"
+			# unfortunately lshw only reports max clockspeeds of DIMM modules so we try to
+			# get configured speed via dmidecode as well
+			DIMMFilter="$(echo -e "\tLocator:|\tConfigured Memory Speed:|\tConfigured Clock Speed:")"
+			dmidecode --type 17 | egrep "${DIMMFilter}" | tr "\n" "|" | sed -e 's/|\tCon/:/g' -e 's/\ //g' | tr '|' '\n' | grep -vi "unknown$" | while read ; do
+				Pattern="$(awk -F":" '{print $2}' <<<"${REPLY}")"
+				Insertion="$(awk -F":" '{print $4}' <<<"${REPLY}" | sed 's/\//\\\//')"
+				sed -i "s/^          slot: ${Pattern}$/          configured speed: ${Insertion}/g" "${TempDir}/dimms"
+			done
+			echo -e "\nDIMM configuration:"
+			cat "${TempDir}/dimms"
 		fi
 	fi
 
@@ -2562,7 +2563,7 @@ GuessARMSoC() {
 	# soc soc0: Amlogic Meson GXL (S905L) Revision 21:e (c5:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson GXM (Unknown) Revision 22:a (82:2) Detected <-- Amlogic Meson GXM (S912) Q201 Development Board
 	# soc soc0: Amlogic Meson GXM (S912) Revision 22:a (82:2) Detected <-- Beelink GT1 / Octopus Planet / Libre Computer AML-S912-PC / Amlogic Meson GXM (S912) Q200 Development Board / Amlogic Meson GXM (S912) Q201 Development Board
-	# soc soc0: Amlogic Meson GXM (S912) Revision 22:b (82:2) Detected <-- Tronsmart Vega S96 / Octopus Planet / Amlogic Meson GXM (S912) Q201 Development Board
+	# soc soc0: Amlogic Meson GXM (S912) Revision 22:b (82:2) Detected <-- Beelink GT1 / Tronsmart Vega S96 / Octopus Planet / Amlogic Meson GXM (S912) Q201 Development Board
 	# soc soc0: Amlogic Meson AXG (Unknown) Revision 25:b (43:2) Detected <-- JetHome JetHub J100
 	# soc soc0: Amlogic Meson AXG (Unknown) Revision 25:c (43:2) Detected <-- JetHome JetHub J100
 	# soc soc0: Amlogic Meson GXLX (Unknown) Revision 26:e (c1:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board

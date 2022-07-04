@@ -1,0 +1,23 @@
+processor	: 0
+hart		: 0
+isa		: rv64imafdcsu
+mmu		: sv39
+cpu-freq	: 1.2Ghz
+cpu-icache	: 64KB
+cpu-dcache	: 64KB
+cpu-l2cache	: 2MB
+cpu-tlb		: 1024 4-ways
+cpu-cacheline	: 64Bytes
+cpu-vector	: 0.7.1
+
+processor	: 1
+hart		: 1
+isa		: rv64imafdcsu
+mmu		: sv39
+cpu-freq	: 1.2Ghz
+cpu-icache	: 64KB
+cpu-dcache	: 64KB
+cpu-l2cache	: 2MB
+cpu-tlb		: 1024 4-ways
+cpu-cacheline	: 64Bytes
+cpu-vector	: 0.7.1

@@ -1292,8 +1292,7 @@ GetCoreClusters() {
 	# as two different clusters sharing same properties for whatever reasons.
 
 	local i
-	TotalCores=$(awk -F" " '/^CPU...:/ {print $2}' <<<"${LSCPU}")
-	for i in $(seq 0 $(( ${TotalCores} - 1 )) ) ; do
+	for i in $(seq 0 $(( ${CPUCores} - 1 )) ) ; do
 		ThisCore="$(GetCPUInfo $i)"
 		if [ "X${ThisCore}" != "X${LastCore}" ]; then
 			echo "${i}"
@@ -1411,10 +1410,14 @@ BasicSetup() {
 			;;
 	esac
 
+	CPUCores=$(awk -F" " '/^CPU...:/ {print $2}' <<<"${LSCPU}")
+	# Might not work with RISC-V on old kernels, see
+	# https://github.com/ThomasKaiser/sbc-bench/issues/46
+	[ ${CPUCores} -eq 0 ] && CPUCores=$(grep -c '^hart' /proc/cpuinfo)
+
 	ClusterConfig=($(GetCPUClusters))
 	[ ${#ClusterConfig[@]} -eq 0 ] && ClusterConfig=(0)
 	ClusterConfigByCoreType=($(GetCoreClusters))
-	CPUCores=$(grep -c '^processor' /proc/cpuinfo)
 } # BasicSetup
 
 CheckMissingPackages() {

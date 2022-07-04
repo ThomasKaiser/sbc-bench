@@ -1,0 +1,7 @@
+hart	: 0
+isa	: rv64i2p0m2p0a2p0f2p0d2p0c2p0xv5-0p0
+mmu	: sv39
+
+hart	: 1
+isa	: rv64i2p0m2p0a2p0f2p0d2p0c2p0xv5-0p0
+mmu	: sv39

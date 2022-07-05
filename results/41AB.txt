@@ -1,0 +1,345 @@
+sbc-bench v0.9.8 T-HEAD c910 ice (Mon, 04 Jul 2022 14:27:06 +0000)
+
+Distributor ID:	Debian
+Description:	Debian GNU/Linux bookworm/sid
+Release:	unreleased
+Codename:	sid
+
+/usr/bin/gcc (Debian 11.3.0-4) 11.3.0
+
+Uptime: 14:27:09 up 2 min,  1 user,  load average: 0.88, 0.37, 0.14,  0°C
+
+  mmcblk0       mmcblk0p1       mmcblk0p2       mmcblk0p3             cpu
+  kps tps svc_t   kps tps svc_t   kps tps svc_t   kps tps svc_t  us  sy  wt  id
+ 1670  33   3.6     2   0   4.7     4   0  41.8  1663  33   3.3   8  10   4  78
+
+               total        used        free      shared  buff/cache   available
+Mem:           3.4Gi        75Mi       3.2Gi       1.0Mi        95Mi       3.3Gi
+Swap:             0B          0B          0B
+
+##########################################################################
+
+Checking cpufreq OPP:
+
+No cpufreq support available. Measured on cpu1: 1199 MHz (1200.765/1199.273/1197.508)
+
+##########################################################################
+
+Executing benchmark on cpu0:
+
+tinymembench v0.4.9 (simple benchmark for memory throughput and latency)
+
+==========================================================================
+== Memory bandwidth tests                                               ==
+==                                                                      ==
+== Note 1: 1MB = 1000000 bytes                                          ==
+== Note 2: Results for 'copy' tests show how many bytes can be          ==
+==         copied per second (adding together read and writen           ==
+==         bytes would have provided twice higher numbers)              ==
+== Note 3: 2-pass copy means that we are using a small temporary buffer ==
+==         to first fetch data into it, and only then write it to the   ==
+==         destination (source -> L1 cache, L1 cache -> destination)    ==
+== Note 4: If sample standard deviation exceeds 0.1%, it is shown in    ==
+==         brackets                                                     ==
+==========================================================================
+
+ C copy backwards                                     :   3269.6 MB/s (1.3%)
+ C copy backwards (32 byte blocks)                    :    613.3 MB/s
+ C copy backwards (64 byte blocks)                    :    635.5 MB/s (0.3%)
+ C copy                                               :   3337.2 MB/s
+ C copy prefetched (32 bytes step)                    :   3339.3 MB/s (0.1%)
+ C copy prefetched (64 bytes step)                    :   3338.5 MB/s (0.3%)
+ C 2-pass copy                                        :   2428.8 MB/s
+ C 2-pass copy prefetched (32 bytes step)             :   2346.0 MB/s (0.2%)
+ C 2-pass copy prefetched (64 bytes step)             :   2346.3 MB/s
+ C fill                                               :   6464.6 MB/s (0.4%)
+ C fill (shuffle within 16 byte blocks)               :   6456.1 MB/s
+ C fill (shuffle within 32 byte blocks)               :   1652.2 MB/s (0.5%)
+ C fill (shuffle within 64 byte blocks)               :   1648.7 MB/s (0.4%)
+ ---
+ standard memcpy                                      :   3338.0 MB/s
+ standard memset                                      :   6469.4 MB/s (0.4%)
+
+==========================================================================
+== Memory latency test                                                  ==
+==                                                                      ==
+== Average time is measured for random memory accesses in the buffers   ==
+== of different sizes. The larger is the buffer, the more significant   ==
+== are relative contributions of TLB, L1/L2 cache misses and SDRAM      ==
+== accesses. For extremely large buffer sizes we are expecting to see   ==
+== page table walk with several requests to SDRAM for almost every      ==
+== memory access (though 64MiB is not nearly large enough to experience ==
+== this effect to its fullest).                                         ==
+==                                                                      ==
+== Note 1: All the numbers are representing extra time, which needs to  ==
+==         be added to L1 cache latency. The cycle timings for L1 cache ==
+==         latency can be usually found in the processor documentation. ==
+== Note 2: Dual random read means that we are simultaneously performing ==
+==         two independent memory accesses at a time. In the case if    ==
+==         the memory subsystem can't handle multiple outstanding       ==
+==         requests, dual random read has the same timings as two       ==
+==         single reads performed one after another.                    ==
+==========================================================================
+
+block size : single random read / dual random read
+      1024 :    0.0 ns          /     0.0 ns 
+      2048 :    0.0 ns          /     0.0 ns 
+      4096 :    0.0 ns          /     0.0 ns 
+      8192 :    0.0 ns          /     0.0 ns 
+     16384 :    0.0 ns          /     0.0 ns 
+     32768 :    0.0 ns          /     0.0 ns 
+     65536 :    0.1 ns          /     0.1 ns 
+    131072 :   18.4 ns          /    28.2 ns 
+    262144 :   27.7 ns          /    36.6 ns 
+    524288 :   32.3 ns          /    39.5 ns 
+   1048576 :   34.7 ns          /    40.7 ns 
+   2097152 :   39.4 ns          /    47.0 ns 
+   4194304 :  120.8 ns          /   171.2 ns 
+   8388608 :  177.6 ns          /   232.4 ns 
+  16777216 :  208.9 ns          /   260.8 ns 
+  33554432 :  231.5 ns          /   285.0 ns 
+  67108864 :  249.0 ns          /   308.1 ns 
+
+##########################################################################
+
+Executing ramlat on cpu0, results in ns:
+
+       size:  1x32  2x32  1x64  2x64 1xPTR 2xPTR 4xPTR 8xPTR
+         4k: 3.443 3.454 3.339 3.339 2.504 2.505 3.339 6.677 
+         8k: 3.444 3.454 3.338 3.338 2.509 2.505 3.339 6.679 
+        16k: 3.444 3.453 3.339 3.339 2.504 2.504 3.339 6.679 
+        32k: 12.93 15.24 15.50 14.99 13.76 14.37 16.81 29.80 
+        64k: 22.25 22.29 22.14 22.21 21.30 21.72 23.76 44.95 
+       128k: 33.91 33.89 33.17 32.96 32.61 32.41 36.04 64.70 
+       256k: 40.26 40.25 40.09 40.09 39.32 39.28 41.64 83.03 
+       512k: 42.03 40.27 40.09 40.11 39.27 39.37 41.82 82.77 
+      1024k: 40.56 40.25 40.13 40.11 39.26 39.39 49.50 83.83 
+      2048k: 108.5 111.9 112.7 115.3 113.8 117.9 120.8 141.0 
+      4096k: 208.1 210.3 210.6 211.9 208.1 210.0 220.7 238.1 
+      8192k: 226.5 229.6 226.3 229.7 226.3 228.7 239.9 261.1 
+     16384k: 230.8 233.8 230.6 233.9 230.6 233.4 245.9 261.6 
+
+##########################################################################
+
+Executing benchmark twice on cluster 0
+
+OpenSSL 3.0.4, built on 21 Jun 2022 (Library: OpenSSL 3.0.4 21 Jun 2022)
+type             16 bytes     64 bytes    256 bytes   1024 bytes   8192 bytes  16384 bytes
+aes-128-cbc      24624.51k    31869.59k    34222.27k    35238.91k    35468.63k    35342.63k
+aes-128-cbc      24226.90k    31513.32k    34422.78k    35239.59k    35361.68k    35487.74k
+aes-192-cbc      21351.48k    27323.90k    29554.35k    30085.87k    30365.01k    30280.46k
+aes-192-cbc      20837.63k    27090.41k    29531.05k    30061.03k    30362.28k    30375.94k
+aes-256-cbc      19943.67k    24050.03k    26251.48k    26909.70k    27115.52k    27036.32k
+aes-256-cbc      19731.72k    23759.73k    26027.86k    26644.48k    26742.39k    26820.61k
+
+##########################################################################
+
+Executing benchmark single-threaded on cpu0
+
+7-Zip (a) 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,2 CPUs LE)
+
+LE
+CPU Freq: 64000000 - - - - - - - -
+
+RAM size:    3444 MB,  # CPU hardware threads:   2
+RAM usage:    435 MB,  # Benchmark threads:      1
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:        921   100    897    896  |      13155   100   1124   1123
+23:        874   100    892    891  |      12910   100   1118   1118
+24:        839   100    903    903  |      12628   100   1109   1109
+25:        810   100    925    925  |      12261   100   1092   1091
+----------------------------------  | ------------------------------
+Avr:             100    904    904  |              100   1111   1110
+Tot:             100   1007   1007
+
+##########################################################################
+
+Executing benchmark 3 times multi-threaded on CPUs 0-1
+
+7-Zip (a) 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,2 CPUs LE)
+
+LE
+CPU Freq: 64000000 - - 64000000 128000000 256000000 - - -
+
+RAM size:    3444 MB,  # CPU hardware threads:   2
+RAM usage:    441 MB,  # Benchmark threads:      2
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       1332   157    825   1296  |      25915   200   1108   2213
+23:       1302   163    817   1327  |      25416   200   1102   2200
+24:       1262   166    819   1358  |      24775   199   1091   2175
+25:       1245   171    833   1422  |      23480   196   1068   2090
+----------------------------------  | ------------------------------
+Avr:             164    823   1351  |              199   1092   2169
+Tot:             181    958   1760
+
+7-Zip (a) 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,2 CPUs LE)
+
+LE
+CPU Freq: 64000000 - - - - - 512000000 1024000000 -
+
+RAM size:    3444 MB,  # CPU hardware threads:   2
+RAM usage:    441 MB,  # Benchmark threads:      2
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       1264   154    796   1230  |      25980   199   1112   2218
+23:       1298   162    814   1323  |      25325   199   1099   2192
+24:       1278   167    825   1375  |      24715   199   1090   2170
+25:       1225   168    833   1399  |      24057   200   1072   2141
+----------------------------------  | ------------------------------
+Avr:             163    817   1332  |              199   1093   2180
+Tot:             181    955   1756
+
+7-Zip (a) 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,2 CPUs LE)
+
+LE
+CPU Freq: 64000000 64000000 - 64000000 - - 512000000 1024000000 -
+
+RAM size:    3444 MB,  # CPU hardware threads:   2
+RAM usage:    441 MB,  # Benchmark threads:      2
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       1350   158    831   1314  |      26059   200   1114   2225
+23:       1271   161    803   1296  |      25441   200   1104   2202
+24:       1251   166    812   1346  |      24543   198   1086   2155
+25:       1250   171    835   1428  |      24148   200   1077   2149
+----------------------------------  | ------------------------------
+Avr:             164    820   1346  |              199   1095   2183
+Tot:             182    958   1764
+
+Compression: 1351,1332,1346
+Decompression: 2169,2180,2183
+Total: 1760,1756,1764
+
+##########################################################################
+
+Testing maximum cpufreq again, still under full load. System health now:
+
+Time      CPU n/a    load %cpu %sys %usr %nice %io %irq   Temp
+14:42:55:   ---      2.08  86%   1%  85%   0%   0%   0%     0°C
+
+Checking cpufreq OPP:
+
+No cpufreq support available. Measured on cpu1: 1199 MHz (1200.751/1200.207/1198.022)
+
+##########################################################################
+
+System health while running tinymembench:
+
+Time      CPU n/a    load %cpu %sys %usr %nice %io %irq   Temp
+14:27:13:   ---      0.88  23%   9%   9%   0%   4%   0%    --
+14:27:53:   ---      0.94  50%   0%  49%   0%   0%   0%    --
+14:28:33:   ---      0.97  50%   0%  49%   0%   0%   0%    --
+14:29:13:   ---      0.99  50%   0%  49%   0%   0%   0%    --
+14:29:53:   ---      0.99  50%   0%  50%   0%   0%   0%    --
+14:30:33:   ---      1.00  50%   0%  49%   0%   0%   0%    --
+14:31:13:   ---      1.07  50%   0%  50%   0%   0%   0%    --
+14:31:53:   ---      1.04  50%   0%  50%   0%   0%   0%    --
+14:32:33:   ---      1.02  50%   0%  50%   0%   0%   0%    --
+
+System health while running ramlat:
+
+Time      CPU n/a    load %cpu %sys %usr %nice %io %irq   Temp
+14:32:43:   ---      1.01  41%   3%  37%   0%   1%   0%    --
+14:32:46:   ---      1.01  50%   0%  50%   0%   0%   0%    --
+14:32:49:   ---      1.01  50%   0%  49%   0%   0%   0%    --
+14:32:52:   ---      1.01  50%   0%  50%   0%   0%   0%    --
+14:32:55:   ---      1.01  50%   0%  49%   0%   0%   0%    --
+14:32:58:   ---      1.01  50%   0%  50%   0%   0%   0%    --
+14:33:01:   ---      1.01  51%   0%  49%   0%   0%   0%    --
+14:33:04:   ---      1.01  51%   1%  50%   0%   0%   0%    --
+
+System health while running OpenSSL benchmark:
+
+Time      CPU n/a    load %cpu %sys %usr %nice %io %irq   Temp
+14:33:06:   ---      1.01  42%   2%  38%   0%   1%   0%    --
+14:33:22:   ---      1.01  50%   0%  49%   0%   0%   0%    --
+14:33:38:   ---      1.00  50%   0%  49%   0%   0%   0%    --
+14:33:54:   ---      1.00  50%   0%  49%   0%   0%   0%    --
+14:34:10:   ---      1.00  50%   0%  49%   0%   0%   0%    --
+14:34:26:   ---      1.00  50%   0%  49%   0%   0%   0%    --
+14:34:42:   ---      1.00  50%   0%  50%   0%   0%   0%    --
+
+System health while running 7-zip single core benchmark:
+
+Time      CPU n/a    load %cpu %sys %usr %nice %io %irq   Temp
+14:34:55:   ---      1.00  43%   2%  40%   0%   1%   0%    --
+14:35:06:   ---      1.00  50%   0%  49%   0%   0%   0%    --
+14:35:17:   ---      1.00  50%   0%  49%   0%   0%   0%    --
+14:35:28:   ---      1.00  50%   0%  49%   0%   0%   0%    --
+14:35:39:   ---      1.00  50%   0%  49%   0%   0%   0%    --
+14:35:50:   ---      1.00  50%   0%  49%   0%   0%   0%    --
+14:36:01:   ---      1.00  50%   0%  49%   0%   0%   0%    --
+14:36:12:   ---      1.00  50%   0%  49%   0%   0%   0%    --
+14:36:23:   ---      1.00  50%   0%  49%   0%   0%   0%    --
+14:36:34:   ---      1.00  50%   1%  49%   0%   0%   0%    --
+14:36:45:   ---      1.00  50%   0%  49%   0%   0%   0%    --
+14:36:56:   ---      1.00  50%   0%  49%   0%   0%   0%    --
+14:37:07:   ---      1.00  50%   0%  49%   0%   0%   0%    --
+
+System health while running 7-zip multi core benchmark:
+
+Time      CPU n/a    load %cpu %sys %usr %nice %io %irq   Temp
+14:37:18:   ---      1.00  44%   2%  41%   0%   0%   0%    --
+14:37:48:   ---      1.31  89%   0%  88%   0%   0%   0%    --
+14:38:18:   ---      1.51  91%   0%  90%   0%   0%   0%    --
+14:38:48:   ---      1.63  89%   1%  88%   0%   0%   0%    --
+14:39:18:   ---      1.83  91%   1%  90%   0%   0%   0%    --
+14:39:50:   ---      1.71  90%   0%  89%   0%   0%   0%    --
+14:40:21:   ---      1.89  92%   0%  91%   0%   0%   0%    --
+14:40:52:   ---      1.79  86%   1%  85%   0%   0%   0%    --
+14:41:22:   ---      1.87  89%   0%  88%   0%   0%   0%    --
+14:41:53:   ---      1.85  94%   0%  94%   0%   0%   0%    --
+14:42:25:   ---      1.91  92%   0%  91%   0%   0%   0%    --
+14:42:55:   ---      2.08  86%   1%  85%   0%   0%   0%    --
+
+##########################################################################
+
+  mmcblk0       mmcblk0p1       mmcblk0p2       mmcblk0p3             cpu
+  kps tps svc_t   kps tps svc_t   kps tps svc_t   kps tps svc_t  us  sy  wt  id
+  236   5   3.5     0   0   4.7     1   0  41.8   236   5   3.2  57   2   1  40
+
+               total        used        free      shared  buff/cache   available
+Mem:           3.4Gi        76Mi       3.2Gi       1.0Mi       116Mi       3.3Gi
+Swap:             0B          0B          0B
+
+CPU sysfs topology (clusters, cpufreq members, clockspeeds)
+                 cpufreq   min    max
+ CPU    cluster  policy   speed  speed   core type
+  0       -1        0       -      -         -
+  1       -1        0       -      -         -
+
+Architecture:        riscv64
+Byte Order:          Little Endian
+CPU(s):              2
+On-line CPU(s) list: 0,1
+
+Signature: 1010
+DT compat: thead,c910_ice
+ Compiler: /usr/bin/gcc (Debian 11.3.0-4) 11.3.0 / riscv64-linux-gnu
+ Userland: riscv64
+   Kernel: 5.10.4/riscv64
+           CONFIG_HZ=250
+           CONFIG_HZ_250=y
+           CONFIG_HZ_PERIODIC=y
+           CONFIG_PREEMPT_COUNT=y
+           CONFIG_PREEMPT_NONE=y
+
+| T-HEAD c910 ice | ~1200 MHz | 5.10 | Debian GNU/Linux bookworm/sid riscv64 | 1760 | 24420 | 26930 | 3340 | 6470 | - |

@@ -73,7 +73,7 @@ Main() {
 				#   cores as well. This will take ages.
 				PlotCpufreqOPPs=yes
 				CPUList=${2}
-				[ "X${CPUList}" = "X" -o "X${CPUList}" = "Xall" -o "X${CPUList}" = "Xcores" -o "X${CPUList}" = "Xclusters" ] \
+				[ "X${CPUList}" = "X" -o "X${CPUList}" = "Xall" -o "X${CPUList}" = "Xcores" -o "X${CPUList}" = "Xclusters" -o "X${CPUList}" = "Xcoreclusters" ] \
 					|| taskset -c ${CPUList} echo "foo" >/dev/null 2>&1
 				if [ $? -ne 0 ]; then
 					echo -e "\nInvalid option \"-p ${CPUList}\". Please check taskset manual page for --cpu-list format" >&2
@@ -435,9 +435,22 @@ PlotPerformanceGraph() {
 				done
 				RenderPDF
 				;;
+			coreclusters)
+				# check all identical cores of every cluster, on RK3588 for example 0-3 and 4-7
+				# though this SoC consists of 3 clusters: 0-3 (A55), 4-5 (A76) and 6-7 (A76)
+				for i in $(seq 0 $(( ${#ClusterConfigByCoreType[@]} -1 )) ) ; do
+					FirstCore=${ClusterConfigByCoreType[$i]}
+					LastCore=$(GetLastClusterCoreByType $(( $i + 1 )))
+					CheckPerformance "CPU ${FirstCore}-${LastCore}" "${FirstCore}" "${FirstCore}-${LastCore}"
+					CPUInfo="$(GetCPUInfo ${FirstCore})"
+					PlotGraph "CPU ${FirstCore}-${LastCore}${CPUInfo}" "${FirstCore}"
+				done
+				RenderPDF
+				;;
 			all)
-				# check each core of every cluster individually, check cores of each cluster
-				# and check all cores
+				# check each core of every cluster individually, check cores of each cluster,
+				# if real clusters and 'clusters of same type' (see RK3588 example above) differ
+				# then check 'clusters of same type' and then check all cores
 				for i in $(seq 0 $(( ${#ClusterConfig[@]} -1 )) ) ; do
 					FirstCore=${ClusterConfig[$i]}
 					CheckPerformance "CPU ${FirstCore}" "${FirstCore}" "${FirstCore}"
@@ -451,6 +464,15 @@ PlotPerformanceGraph() {
 					CPUInfo="$(GetCPUInfo ${FirstCore})"
 					PlotGraph "CPU ${FirstCore}-${LastCore}${CPUInfo}" "${FirstCore}"
 				done
+				if [ ${#ClusterConfigByCoreType[@]} -ne ${#ClusterConfig[@]} ]; then
+					for i in $(seq 0 $(( ${#ClusterConfigByCoreType[@]} -1 )) ) ; do
+						FirstCore=${ClusterConfigByCoreType[$i]}
+						LastCore=$(GetLastClusterCoreByType $(( $i + 1 )))
+						CheckPerformance "CPU ${FirstCore}-${LastCore}" "${FirstCore}" "${FirstCore}-${LastCore}"
+						CPUInfo="$(GetCPUInfo ${FirstCore})"
+						PlotGraph "CPU ${FirstCore}-${LastCore}${CPUInfo}" "${FirstCore}"
+					done
+				fi
 				if [ ${#ClusterConfig[@]} -gt 1 ]; then
 					# more than one CPU cluster, we test using all cores simultaneously
 					CheckPerformance "all CPU cores" $(tr -d '[:space:]' <<<${ClusterConfig[@]})
@@ -578,7 +600,7 @@ CheckPerformance() {
 			echo -e "${ThreadXFreq}MHz, \c"
 		else
 			echo -e "$(printf "%4s" ${SysfsSpeed}) / $(printf "%4s" ${RoundedSpeed}) :\c" >>"${CpufreqLog}"
-			echo -e "${SysfsSpeed}\t\c" >>"${CpufreqDat}"
+			echo -e "${MeasuredSpeed}\t\c" >>"${CpufreqDat}"
 			echo -e "${SysfsSpeed}MHz, \c"
 		fi
 
@@ -2257,6 +2279,8 @@ LogEnvironment() {
 	fi
 	# if available report the kernel's xor/raid6 choices
 	dmesg | awk -F"] " '/ raid6: | xor: / {print "           "$2}'
+	# with Rockchip BSP kernels try to report PVTM settings (Process-Voltage-Temperature Monitor)
+	dmesg | grep cpu.*pvtm | awk -F'] ' '{print "           "$2}'
 } # LogEnvironment
 
 UploadResults() {
@@ -3674,6 +3698,10 @@ GuessSoCbySignature() {
 		10thead,c906|10)
 			# Allwinner D1: single T-Head C906 core
 			echo "Allwinner D1"
+			;;
+		10thead,c91010thead,c910|1010)
+			# T-Head C910: Dual-core XuanTieISA (compatible with RISC-V 64GC) https://www.t-head.cn/product/c910?lang=en
+			grep -q c910 <<<"${DTCompatible}" && echo "T-Head C910"
 			;;
 		*sifive,u54-mc*sifive,u54-mc*sifive,u54-mc*sifive,u54-mc)
 			# SiFive "Freedom" U540: 4 x U54-MC https://www.sifive.com/cores/u54-mc

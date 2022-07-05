@@ -179,7 +179,7 @@
 | [3Wq0](3Wq0.txt) | v0.9.3 Khadas VIM4 | 0%/0.3% | 7.8Gi/6.0Gi | X | X | X | X | 2% | 0% | |
 | [3Wvv](3Wvv.txt) | v0.9.4 Khadas VIM4 | 0%/0.2% | 7.8Gi/6.6Gi | X | X | X | X | 2% | 0% | |
 | [3X9q](3X9q.txt) | v0.9.4 Rockchip RK3288 Asus Tinker Boar | 0.3%/0.2% | 2.0Gi/1.8Gi | X | X | X | X | 2% | 0% | |
-| [3XYo](3XYo.txt) | v0.9.6 Radxa ROCK 5A | 0%/0% | 3.7Gi/3.3Gi | X | X | X | X | 1% | 0% | |
+| <del>[3XYo](3XYo.txt)</del> | <del>v0.9.6 Radxa ROCK 5A </del> | <del>0%/0%</del> | <del>3.7Gi/3.3Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 1%</del> | <del> 0%</del> | |
 | <del>[3XzI](3XzI.txt)</del> | <del>v0.9.6 Firefly ITX-3588J HDMI</del> | <del>0.2%/0.4%</del> | <del>7.5Gi/6.5Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 3%</del> | <del> 0%</del> | |
 | [3Y4f](3Y4f.txt) | v0.9.6 keeper.lan | 0.3%/0% | 30Gi/29Gi | X | X | X | X | 2% | 0% | |
 | [3YWp](3YWp.txt) | v0.9.7 NVIDIA Jetson Xavier NX Develope | 1.9%/0.8% | 7.6G/5.2G | X | X | X | X | 2% | 0% | |
@@ -191,3 +191,5 @@
 | [40TX](40TX.txt) | v0.9.8 Radxa ROCK3 Model A | 0.6%/0% | 3.8Gi/3.5Gi | X | X | X | X | 2% | 0% | |
 | [40cj](40cj.txt) | v0.9.8 Libre Computer AML-S912-PC | 0%/0% | 1.8Gi/1.6Gi | X | X | X | X | <span style=color:red>**53%**</span> | 3% | |
 | [4132](4132.txt) | v0.9.8 SolidRun Cubox-i Dual/Quad | 2.3%/0% | 2.0Gi/1.8Gi | X | X | X | X | 3% | <span style=color:red>** 9%**</span> | |
+| [41AB](41AB.txt) | v0.9.8 T-HEAD c910 ice | 0%/0.4% | 3.4Gi/3.3Gi | X | X | X | X | 3% | 1% | |
+| [41BH](41BH.txt) | v0.9.8 Radxa ROCK 5B extensive | 0%/0% | 15Gi/15Gi | X | X | X | X | 1% | 0% | [check log](41BH.txt) |

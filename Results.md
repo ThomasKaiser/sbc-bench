@@ -8,7 +8,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 
 ## Some numbers
 
-*ODROID-M1, Quartz64, ROCK 3A, ROCK 5A, RK3568-ROC-PC and Khadas VIM4 numbers are preliminary since software support situation for RK3566/RK3568/RK3588 and A311D2 is still in a very early stage. Please also note that with RK35xx SBC so far [real measured clockspeeds are somewhat unstable](https://forum.odroid.com/viewtopic.php?p=350782#p350782).*
+*ODROID-M1, Quartz64, ROCK 3A, ROCK 5B, RK3568-ROC-PC and Khadas VIM4 numbers are preliminary since software support situation for RK3566/RK3568/RK3588 and A311D2 is still in a very early stage. Please also note that with RK35xx SBC so far [real measured clockspeeds are somewhat unstable](https://forum.odroid.com/viewtopic.php?p=350782#p350782).*
 
 | Device / details | Clockspeed | Kernel | Distro | 7-zip | AES-128 (16 byte) | AES-256 (16 KB) | memcpy | memset | kH/s |
 | ----- | :--------: | :----: | :----: | ----: | ------: | ------: | -----: | -----: | ---: |
@@ -96,7 +96,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [PineH64](http://ix.io/26Ph) | 1800 MHz | 5.4 | Buster arm64 | 4710 | 116900 | 839870 | 1420 | 5560 | 7.10 |
 | [Quartz64](http://ix.io/3rUb) | 1800 MHz | 5.13 | Buster arm64 | 4840 | 165250 | 845490 | 2980 | 7650| - |
 | [Radxa ROCK 3A](http://ix.io/40TX) | 2000 MHz | 5.18 | Bullseye arm64 | 5110 | 181400 | 935920 | 3150 | 6250 | 7.58 |
-| [Radxa ROCK 5A](http://ix.io/3XYo) | 2330/1800 MHz | 5.10 | Bullseye arm64 | 16030 | 647210 | 1325370 | 10810 | 27990 | 23.71 |
+| [Radxa ROCK 5B](http://ix.io/41BH) | 2350/1830 MHz | 5.10 | Focal arm64 | 16450 | 683350 | 1337540 | 10830 | 29220 | 25.31 |
 | [Radxa Zero](http://ix.io/3wZn) | 1800 MHz | 5.10 | Focal arm64 | 4610 | 151370 | 840080 | 1600 | 5370 | - |
 | [Radxa Zero](http://ix.io/3PlT) | 1800 MHz | 5.10 | Buster arm64 | 4570 | 114530 | 839080 | 1610 | 5250 | 6.82 |
 | [Radxa Zero](http://ix.io/3JCm) | 1800 MHz | 5.10 | Bullseye arm64 | 4580 | 105170 | 838360 | 1600 | 5360 | 7.13 |
@@ -147,6 +147,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [RockPro64](http://ix.io/2sZH) | 2010/1510 MHz | 5.4 | Focal arm64 | 6920 | 397740 | 1145300 | 3700 | 8430 | 11.55 |
 | [RockPro64](http://ix.io/2yIx) | 2010/1510 MHz | 5.8 | Bullseye arm64 | 7000 | 369820 | 1144950 | 3690 | 8360 | 11.08 |
 | [SBC2D70 (SSD202D)](http://ix.io/3N1U) | 1700 MHz | 5.16 | Sid armhf | 1960 | 26240 | 33120 | 770 | 3190 | - |
+| [T-HEAD C910 RVB-ICE](http://ix.io/41AB) | 1200 MHz | 5.10 | Sid riscv64 | 1760 | 24420 | 26930 | 3340 | 6470 | - |
 | [Teres-I](http://ix.io/1tJg) | 1050 MHz | 4.19 | Stretch arm64 | 2785 | 72261 | 491590 | 1080 | 2820 | - |
 | [Tinkerboard](http://ix.io/1iSX) | 1730 MHz | 4.14 | Stretch armhf | 5350 | 63150 | 66600 | 1480 | 3900 | - |
 | [Tinkerboard](http://ix.io/3Lir) | 1800 MHz | 4.4 | Buster armhf | 5440 | 62410 | 66300 | 1340 | 3510 | - |

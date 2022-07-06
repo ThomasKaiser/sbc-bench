@@ -293,8 +293,16 @@ GetCoreType() {
 			fi
 			;;
 		riscv*)
-			# doesn't work with Allwinner's crappy 5.4 BSP kernel since uarch is missing
-			awk -F": " '/^uarch/ {print $2}' /proc/cpuinfo | sed -n $(( $1 + 1 ))p
+			# relying on uarch doesn't work with older RISC-V kernels since missing
+			grep -q '^uarch' /proc/cpuinfo
+			case $? in
+				0)
+					awk -F": " '/^uarch/ {print $2}' /proc/cpuinfo | sed -n $(( $1 + 1 ))p
+					;;
+				*)
+					awk -F": " '/^isa/ {print $2}' /proc/cpuinfo | sed -n $(( $1 + 1 ))p
+					;;
+			esac
 			;;
 	esac
 } # GetCoreType
@@ -1712,9 +1720,11 @@ CheckClockspeedsAndSensors() {
 			OnlyCPUFreqMax=YES
 		else
 			# 1st check, try to get info about Intel P-States
-			PStateStatus="$(journalctl -b 2>/dev/null | awk -F": " '/intel_pstate:/ {print $3}' | sed ':a;N;$!ba;s/\n/, /g')"
-			if [ "X${PStateStatus}" != "X" ]; then
-				echo -e "\nIntel P-States: ${PStateStatus}" >>${ResultLog}
+			if [ "${CPUArchitecture}" = "x86_64" ]; then
+				PStateStatus="$(journalctl -b 2>/dev/null | awk -F": " '/intel_pstate:/ {print $3}' | sed ':a;N;$!ba;s/\n/, /g')"
+				if [ "X${PStateStatus}" != "X" ]; then
+					echo -e "\nIntel P-States: ${PStateStatus}" >>${ResultLog}
+				fi
 			fi
 		fi
 		if [ ${#ClusterConfig[@]} -eq 1 ]; then
@@ -1814,11 +1824,13 @@ CheckCPUCluster() {
 		# walk through all cpufreq OPP and report clockspeeds (kernel vs. measured)
 		read MinSpeed </sys/devices/system/cpu/cpufreq/policy${1}/cpuinfo_min_freq
 		read MaxSpeed </sys/devices/system/cpu/cpufreq/policy${1}/cpuinfo_max_freq
-		echo ${MinSpeed} >/sys/devices/system/cpu/cpufreq/policy${1}/scaling_min_freq
+		echo ${MinSpeed} >/sys/devices/system/cpu/cpufreq/policy${1}/scaling_min_freq 2>/dev/null
 		if [ "X${OnlyCPUFreqMax}" = "XYES" ]; then
 			OPPtoCheck="${MaxSpeed}"
 		elif [ -f /sys/devices/system/cpu/cpufreq/policy${1}/scaling_available_frequencies ]; then
 			OPPtoCheck=$((tr " " "\n" </sys/devices/system/cpu/cpufreq/policy${1}/scaling_available_frequencies ; tr " " "\n" </sys/devices/system/cpu/cpufreq/policy${1}/scaling_boost_frequencies) 2>/dev/null | sort -n -r | uniq | sed '/^[[:space:]]*$/d')
+		elif [ ${MinSpeed} -eq 0 ]; then
+			OPPtoCheck="${MaxSpeed}"
 		else
 			OPPtoCheck="${MaxSpeed} ${MinSpeed}"
 		fi
@@ -1880,7 +1892,7 @@ RunTinyMemBench() {
 		# extensive mode, do not print any duration estimates
 		echo -e "\x08\x08 Done."
 	else
-		echo -e "\x08\x08 Done (results will be available in $(( ${EstimatedDuration} * 120 / 100 ))-$(( ${EstimatedDuration} * 170 / 100 )) minutes)."
+		echo -e "\x08\x08 Done (results will be available in $(( ${EstimatedDuration} * 125 / 100 ))-$(( ${EstimatedDuration} * 180 / 100 )) minutes)."
 	fi
 	echo -e "Executing tinymembench...\c"
 	echo -e "System health while running tinymembench:\n" >${MonitorLog}
@@ -1987,7 +1999,7 @@ Run7ZipBenchmark() {
 		cat ${TempLog} >>${ResultLog}
 		# create average score from all finished benchmark runs (7-zip can get oom-killed)
 		FinishedRuns=$(grep -c '^Tot:' ${TempLog})
-		CombinedScore=$(( $(awk -F" " '/^Tot:/ {s+=$4} END {printf "%.0f", s}' <${TempLog}) / ${FinishedRuns} ))
+		[ ${FinishedRuns} -ne 0 ] && CombinedScore=$(( $(awk -F" " '/^Tot:/ {s+=$4} END {printf "%.0f", s}' <${TempLog}) / ${FinishedRuns} ))
 	else
 		# use the single score instead on a single core machine
 		CombinedScore=$(awk -F" " '/^Tot:/ {print $4}' <${TempLog})
@@ -2571,6 +2583,7 @@ GuessARMSoC() {
 	# soc soc0: Amlogic Meson GXL (S905L) Revision 21:b (c2:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson GXL (S905M2) Revision 21:b (e2:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:c (84:2) Detected <-- Khadas VIM / Amlogic Meson GXL (S905X) P212 Development Board
+	# soc soc0: Amlogic Meson GXL (Unknown) Revision 21:c (84:2) Detected <-- Khadas VIM
 	# soc soc0: Amlogic Meson GXL (S905L) Revision 21:c (c2:2) Detected <-- PiBox by wdmomo
 	# soc soc0: Amlogic Meson GXL (Unknown) Revision 21:c (c2:2) Detected <-- S905L on "PiBox by wdmomo"
 	# soc soc0: Amlogic Meson GXL (S905L) Revision 21:c (c4:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board
@@ -3699,7 +3712,11 @@ GuessSoCbySignature() {
 			# Allwinner D1: single T-Head C906 core
 			echo "Allwinner D1"
 			;;
-		10thead,c91010thead,c910|1010)
+		*rv64i2p0m2p0a2p0f2p0d2p0c2p0xv5-0p0*)
+			# Kendryte K510: Dual-core 64-bit RISC-V https://canaan.io/product/kendryte-k510
+			echo "Kendryte K510"
+			;;
+		1?thead,c9101?thead,c910|1?1?)
 			# T-Head C910: Dual-core XuanTieISA (compatible with RISC-V 64GC) https://www.t-head.cn/product/c910?lang=en
 			grep -q c910 <<<"${DTCompatible}" && echo "T-Head C910"
 			;;

@@ -752,7 +752,14 @@ RenderPDF() {
 
 GetTempSensor() {
 	# In Armbian we can not rely on /etc/armbianmonitor/datasources/soctemp at all any more
-	# since nobody is left there who cares about /usr/lib/armbian/armbian-hardware-monitor
+	# since nobody is left there who cares about /usr/lib/armbian/armbian-hardware-monitor.
+	# Armbian always chooses /sys/class/hwmon/hwmon0 which can be something totally different
+	# than the SoC temperature, for example:
+	# * http://ix.io/3Q5y --> sun4i_ts (touch controller)
+	# * http://ix.io/3MFz --> w1_slave_temp (1-wire sensor)
+	# * http://ix.io/411x --> gpu_thermal (obviously _not_ cpu_thermal)
+	# * http://ix.io/41IL --> iwlwifi_1 (Wi-Fi card)
+
 	if [ -f /etc/armbianmonitor/datasources/soctemp ]; then
 		TempSource=/etc/armbianmonitor/datasources/soctemp
 		ThermalNode="$(readlink /etc/armbianmonitor/datasources/soctemp)"
@@ -773,10 +780,10 @@ GetTempSensor() {
 				TempInfo="Wrong thermal source: /etc/armbianmonitor/datasources/soctemp (${ThermalSource})"
 				;;
 			*)
-				# Quick results check within one week showed the following types which
+				# Quick results check within few months showed the following types which
 				# smell all not that good if it's about CPU or SoC temperatures:
-				# scpi_sensors, w1_slave_temp, thermal-fan-est, iio_hwmon
-				NodeGuess=$(cat /sys/devices/virtual/thermal/thermal_zone?/type 2>/dev/null | egrep "cpu|soc|CPU-therm|x86_pkg_temp" | tail -n1)
+				# scpi_sensors, w1_slave_temp, iio_hwmon, sun4i_ts, gpu_thermal, iwlwifi_1
+				NodeGuess=$(cat /sys/devices/virtual/thermal/thermal_zone?/type 2>/dev/null | sort -n | egrep "cpu|soc|CPU-therm|x86_pkg_temp|thermal-fan-est" | head -n1)
 				if [ "X${NodeGuess}" != "X" ]; then
 					# let's use this thermal node instead
 					TempSource="$(mktemp /tmp/soctemp.XXXXXX)"
@@ -2518,7 +2525,7 @@ GuessARMSoC() {
 	#       Cortex-A9 / r2p9: Nvidia Tegra 3
 	#       Cortex-A9 / r2p10: Freescale/NXP i.MX6 Dual/Quad
 	#       Cortex-A9 / r3p0: Amlogic 8726-MX, Calxeda Highbank, Cyclone V FPGA SoC, Mediatek MT5880, Rockchip RK3066/RK3188, Samsung Exynos 4412
-	#       Cortex-A9 / r4p1: Amlogic S812, Freescale/NXP i.MX6SLL, Marvell Armada 375/38x
+	#       Cortex-A9 / r4p1: Amlogic S802/S812, Freescale/NXP i.MX6SLL, Marvell Armada 375/38x
 	#      Cortex-A15 / r0p4: Samsung Exynos 5 Dual 5250
 	#      Cortex-A15 / r2p2: TI Sitara AM572x
 	#      Cortex-A15 / r2p3: Samsung Exynos 5422
@@ -2569,6 +2576,7 @@ GuessARMSoC() {
 	# rockchip-cpuinfo cpuinfo: SoC            : 35880000 --> http://ix.io/3Ypr (RK3588), http://ix.io/3XYo (RK3588S)
 	#
 	# Amlogic: dmesg | grep 'soc soc0:'
+	# soc soc0: Amlogic Meson8 (S802) RevC (19 - 0:27ED) detected <-- Tronsmart S82
 	# soc soc0: Amlogic Meson8b (S805) RevA (1b - 0:B72) detected <-- ODROID-C1 / S805-onecloud / Endless Computers Endless Mini / TRONFY MXQ S805
 	# soc soc0: Amlogic Meson8m2 (S812) RevA (1d - 0:74E) detected <-- Akaso M8S / Tronsmart MXIII Plus
 	# soc soc0: Amlogic Meson GXBB (S905) Revision 1f:b (0:1) Detected <-- ODROID-C2
@@ -2799,6 +2807,10 @@ GuessARMSoC() {
 							AmLogicSerial="$(awk -F': ' '/^Serial/ {print $2}' <<< "${CPUInfo}" | tail -n1)"
 						fi
 						case "${AmLogicSerial}" in
+							19*)
+								# Meson8: S802: RevC (19 - 0:27ED)
+								echo "Amlogic S802"
+								;;
 							1b*)
 								# Meson8B: S805: RevA (1b - 0:B72)
 								echo "Amlogic S805"
@@ -3162,8 +3174,8 @@ GuessSoCbySignature() {
 			echo "Amlogic S805"
 			;;
 		20A9r4p120A9r4p120A9r4p120A9r4p1|2A9222)
-			# Amlogic S812, 4 x Cortex-A9 / r4p1 / half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpd32
-			echo "Amlogic S812"
+			# Amlogic S802/S812, 4 x Cortex-A9 / r4p1 / half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpd32
+			echo "Amlogic S802/S812"
 			;;
 		*A53r0p0*A53r0p0*A53r0p0*A53r0p0)
 			# Snapdragon 410 / MSM8916: 4 x Cortex-A53 / r0p0 / https://gist.github.com/Hinokami-Kagura/7292fd5e84b09e2409df1f165b2baf25
@@ -3714,7 +3726,7 @@ GuessSoCbySignature() {
 			;;
 		*rv64i2p0m2p0a2p0f2p0d2p0c2p0xv5-0p0*)
 			# Kendryte K510: Dual-core 64-bit RISC-V https://canaan.io/product/kendryte-k510
-			echo "Kendryte K510"
+			grep -q k510 <<<"${DTCompatible}" && echo "Kendryte K510"
 			;;
 		1?thead,c9101?thead,c910|1?1?)
 			# T-Head C910: Dual-core XuanTieISA (compatible with RISC-V 64GC) https://www.t-head.cn/product/c910?lang=en

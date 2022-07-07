@@ -1950,7 +1950,9 @@ Run7ZipBenchmark() {
 	echo -e "\x08\x08 Done.\nExecuting 7-zip benchmark...\c"
 	echo -e "\nSystem health while running 7-zip single core benchmark:\n" >>${MonitorLog}
 	echo -e "\c" >${TempLog}
+	# determine available RAM and adjust monitoring interval + dictionary size if necessary
 	TotalMem=$(free | awk -F" " '/^Mem:   / {print $7}' | tail -n1)
+	[ ${TotalMem:-350000} -lt 350000 ] && DictSize="-md=2m"
 	MemAdjustment=$(( $(( 1250000 / ${TotalMem} )) / 3 ))
 	if [ ${MemAdjustment} = 0 ]; then
 		MonInterval=$(( ${SingleThreadedDuration} / 8 ))
@@ -1966,7 +1968,7 @@ Run7ZipBenchmark() {
 		CPUInfo="$(GetCPUInfo 0)"
 		echo -e "\nExecuting benchmark single-threaded on cpu0${CPUInfo}" >>${TempLog}
 		[ -s "${NetioConsumptionFile}" ] && sleep 10
-		taskset -c 0 "${SevenZip}" b -mmt=1 >>${TempLog}
+		taskset -c 0 "${SevenZip}" b ${DictSize} -mmt=1 >>${TempLog}
 	else
 		# test each cluster individually
 		for i in $(seq 0 $(( ${#ClusterConfig[@]} -1 )) ) ; do
@@ -1975,7 +1977,7 @@ Run7ZipBenchmark() {
 				CPUInfo="$(GetCPUInfo ${ClusterConfig[$i]})"
 				echo -e "\nExecuting benchmark single-threaded on cpu${ClusterConfig[$i]}${CPUInfo}" >>${TempLog}
 				[ -s "${NetioConsumptionFile}" ] && sleep 10
-				taskset -c ${ClusterConfig[$i]} "${SevenZip}" b -mmt=1 >>${TempLog}
+				taskset -c ${ClusterConfig[$i]} "${SevenZip}" b ${DictSize} -mmt=1 >>${TempLog}
 			fi
 		done
 	fi	
@@ -1999,7 +2001,7 @@ Run7ZipBenchmark() {
 		RunHowManyTimes=3
 		echo -e "Executing benchmark ${RunHowManyTimes} times multi-threaded on CPUs $(cat /sys/devices/system/cpu/online)" >>${TempLog}
 		for ((i=1;i<=RunHowManyTimes;i++)); do
-			"${SevenZip}" b -mmt=${CPUCores} >>${TempLog}
+			"${SevenZip}" b ${DictSize} -mmt=${CPUCores} >>${TempLog}
 		done
 		kill ${MonitoringPID}
 		echo -e "\n##########################################################################\n" >>${ResultLog}
@@ -2039,7 +2041,7 @@ Run7ZipBenchmark() {
 				HowManyCores=$(( $(( ${LastCore} - ${FirstCore} )) + 1 ))
 				echo -e "\nExecuting benchmark ${RunHowManyTimes} times multi-threaded on CPUs ${FirstCore}-${LastCore}${CPUInfo}" >>${TempLog}
 				for ((o=1;o<=RunHowManyTimes;o++)); do
-					taskset -c ${FirstCore}-${LastCore} "${SevenZip}" b -mmt=${HowManyCores} >>${TempLog}
+					taskset -c ${FirstCore}-${LastCore} "${SevenZip}" b ${DictSize} -mmt=${HowManyCores} >>${TempLog}
 				done
 			fi
 		done
@@ -3724,7 +3726,7 @@ GuessSoCbySignature() {
 			# Allwinner D1: single T-Head C906 core
 			echo "Allwinner D1"
 			;;
-		*rv64i2p0m2p0a2p0f2p0d2p0c2p0xv5-0p0*)
+		10rv64i2p0m2p0a2p0f2p0d2p0c2p0xv50p011rv64i2p0m2p0a2p0f2p0d2p0c2p0xv50p0)
 			# Kendryte K510: Dual-core 64-bit RISC-V https://canaan.io/product/kendryte-k510
 			grep -q k510 <<<"${DTCompatible}" && echo "Kendryte K510"
 			;;

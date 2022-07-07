@@ -319,7 +319,7 @@ GetARMStepping() {
 GetCPUInfo() {
 	# function that returns ARM/RISC-V core type in brackets if possible otherwise empty string
 	CoreType="$(GetCoreType $1)"
-	[ -n "${CoreType}" ] && echo -n " (${CoreType})"
+	[ -n "${CoreType}" ] && echo " (${CoreType})"
 } # GetCPUInfo
 
 GetLastClusterCore() {
@@ -1302,8 +1302,14 @@ GetCPUClusters() {
 		# in virtualized environments we only check cpu0
 		echo "0"
 	elif [ -d /sys/devices/system/cpu/cpufreq/policy0 -a "${CPUArchitecture}" != "x86_64" ]; then
-		# if cpufreq support exists on ARM or RISC-V, we rely on this
-		ls -ld /sys/devices/system/cpu/cpufreq/policy? | awk -F"policy" '{print $2}'
+		# currently we do not trust into cpufreq support on RISC-V since Kendryte K510:
+		# https://github.com/ThomasKaiser/sbc-bench/issues/46#issuecomment-1175855473
+		if [ ${CPUArchitecture} == *riscv* ] then
+			echo "0"
+		else
+			# if cpufreq support exists on ARM we rely on this
+			ls -ld /sys/devices/system/cpu/cpufreq/policy? | awk -F"policy" '{print $2}'
+		fi
 	elif [ ${CountOfSockets:-1} -gt 1 -a "${CPUArchitecture}" = "x86_64" ]; then
 		# on multi-socket x86 systems all CPU cores are the same. lscpu output for Alder
 		# Lake fortunately reports just 1 socket: https://tinyurl.com/2xh4l3f2
@@ -1899,7 +1905,7 @@ RunTinyMemBench() {
 		# extensive mode, do not print any duration estimates
 		echo -e "\x08\x08 Done."
 	else
-		echo -e "\x08\x08 Done (results will be available in $(( ${EstimatedDuration} * 125 / 100 ))-$(( ${EstimatedDuration} * 180 / 100 )) minutes)."
+		echo -e "\x08\x08 Done (results will be available in $(( ${EstimatedDuration} * 120 / 100 ))-$(( ${EstimatedDuration} * 180 / 100 )) minutes)."
 	fi
 	echo -e "Executing tinymembench...\c"
 	echo -e "System health while running tinymembench:\n" >${MonitorLog}
@@ -2402,7 +2408,7 @@ CheckForThrottling() {
 			fi
 
 			# Check for killed CPU cores. Some unfortunate users might still use Allwinner BSP kernels
-			CPUCoresNow=$(grep -c '^processor' /proc/cpuinfo)
+			CPUCoresNow=$(lscpu | awk -F" " '/^CPU...:/ {print $2}')
 			if [ ${CPUCoresNow} -lt ${CPUCores} ]; then
 				echo -e "${LRED}${BOLD}ATTENTION: Due to overheating prevention $(( ${CPUCores} - ${CPUCoresNow} )) CPU cores have been killed. Check the log for details.${NC}\n"
 			fi

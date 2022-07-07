@@ -1,0 +1,632 @@
+sbc-bench v0.9.8 Tronsmart S82 (Wed, 06 Jul 2022 15:13:17 -0300)
+
+Distributor ID:	Ubuntu
+Description:	Ubuntu 20.04.3 LTS
+Release:	20.04
+Codename:	focal
+Armbian info:   S812, aml-s812, aml-s812, 21.11.0-trunk
+
+/usr/bin/gcc (Ubuntu 9.3.0-17ubuntu1~20.04) 9.3.0
+
+Uptime: 15:13:17 up 14 min,  1 user,  load average: 3.71, 2.92, 1.86,  44.5°C
+
+Linux 5.14.0-rc2-aml-s812 (aml-s812) 	07/06/22 	_armv7l_	(4 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+           3.68    0.01    1.96   11.79    0.00   82.56
+
+Device             tps    kB_read/s    kB_wrtn/s    kB_dscd/s    kB_read    kB_wrtn    kB_dscd
+sda              19.00       541.83       321.81         0.00     463642     275376          0
+
+              total        used        free      shared  buff/cache   available
+Mem:          2.0Gi       214Mi       1.5Gi        10Mi       225Mi       1.7Gi
+Swap:            0B          0B          0B
+
+##########################################################################
+
+Checking cpufreq OPP (Cortex-A9):
+
+Cpufreq OPP: 1608    Measured: 1603 (1604.580/1603.982/1602.350)
+Cpufreq OPP: 1416    Measured: 1411 (1413.853/1413.466/1408.256)
+Cpufreq OPP: 1200    Measured: 1189 (1194.116/1188.019/1186.709)
+Cpufreq OPP: 1008    Measured: 1005 (1006.680/1004.917/1004.185)
+Cpufreq OPP:  816    Measured:  812    (812.641/812.571/811.175)
+Cpufreq OPP:  720    Measured:  713    (713.936/713.843/712.858)
+Cpufreq OPP:  600    Measured:  594    (595.420/595.025/594.063)
+Cpufreq OPP:  504    Measured:  490    (500.213/499.051/471.155)     (-2.8%)
+Cpufreq OPP:  408    Measured:  403    (404.604/403.005/402.866)     (-1.2%)
+Cpufreq OPP:  312    Measured:  307    (308.682/307.267/307.208)     (-1.6%)
+Cpufreq OPP:  192    Measured:  375    (378.678/374.717/372.995)    (+95.3%)
+Cpufreq OPP:   96    Measured:  185    (187.253/184.508/184.085)    (+92.7%)
+
+##########################################################################
+
+Hardware sensors:
+
+iio_hwmon-isa-0000
+temp1:        +41.8 C  
+
+/dev/sda:	
+
+##########################################################################
+
+Executing benchmark on cpu0 (Cortex-A9):
+
+tinymembench v0.4.9 (simple benchmark for memory throughput and latency)
+
+==========================================================================
+== Memory bandwidth tests                                               ==
+==                                                                      ==
+== Note 1: 1MB = 1000000 bytes                                          ==
+== Note 2: Results for 'copy' tests show how many bytes can be          ==
+==         copied per second (adding together read and writen           ==
+==         bytes would have provided twice higher numbers)              ==
+== Note 3: 2-pass copy means that we are using a small temporary buffer ==
+==         to first fetch data into it, and only then write it to the   ==
+==         destination (source -> L1 cache, L1 cache -> destination)    ==
+== Note 4: If sample standard deviation exceeds 0.1%, it is shown in    ==
+==         brackets                                                     ==
+==========================================================================
+
+ C copy backwards                                     :    357.8 MB/s (0.5%)
+ C copy backwards (32 byte blocks)                    :    367.1 MB/s (0.2%)
+ C copy backwards (64 byte blocks)                    :    382.4 MB/s (0.2%)
+ C copy                                               :    466.7 MB/s
+ C copy prefetched (32 bytes step)                    :    515.7 MB/s
+ C copy prefetched (64 bytes step)                    :    338.3 MB/s (0.3%)
+ C 2-pass copy                                        :    500.9 MB/s (0.2%)
+ C 2-pass copy prefetched (32 bytes step)             :    551.5 MB/s
+ C 2-pass copy prefetched (64 bytes step)             :    561.6 MB/s
+ C fill                                               :   3231.3 MB/s (0.7%)
+ C fill (shuffle within 16 byte blocks)               :   3197.1 MB/s (0.8%)
+ C fill (shuffle within 32 byte blocks)               :   3188.7 MB/s (12.9%)
+ C fill (shuffle within 64 byte blocks)               :    429.5 MB/s (0.6%)
+ ---
+ standard memcpy                                      :    504.5 MB/s (0.8%)
+ standard memset                                      :   3196.3 MB/s (1.0%)
+ ---
+ NEON read                                            :    712.5 MB/s
+ NEON read prefetched (32 bytes step)                 :    954.5 MB/s (0.2%)
+ NEON read prefetched (64 bytes step)                 :   1005.6 MB/s (5.6%)
+ NEON read 2 data streams                             :    888.7 MB/s (0.2%)
+ NEON read 2 data streams prefetched (32 bytes step)  :    927.4 MB/s (1.5%)
+ NEON read 2 data streams prefetched (64 bytes step)  :    962.7 MB/s (0.1%)
+ NEON copy                                            :    486.2 MB/s
+ NEON copy prefetched (32 bytes step)                 :    529.7 MB/s
+ NEON copy prefetched (64 bytes step)                 :    543.0 MB/s
+ NEON unrolled copy                                   :    500.8 MB/s
+ NEON unrolled copy prefetched (32 bytes step)        :    504.0 MB/s
+ NEON unrolled copy prefetched (64 bytes step)        :    582.4 MB/s (0.3%)
+ NEON copy backwards                                  :    468.4 MB/s
+ NEON copy backwards prefetched (32 bytes step)       :    510.4 MB/s (0.4%)
+ NEON copy backwards prefetched (64 bytes step)       :    491.6 MB/s
+ NEON 2-pass copy                                     :    492.9 MB/s
+ NEON 2-pass copy prefetched (32 bytes step)          :    569.2 MB/s (0.3%)
+ NEON 2-pass copy prefetched (64 bytes step)          :    596.6 MB/s (1.4%)
+ NEON unrolled 2-pass copy                            :    436.1 MB/s (0.5%)
+ NEON unrolled 2-pass copy prefetched (32 bytes step) :    594.9 MB/s (0.5%)
+ NEON unrolled 2-pass copy prefetched (64 bytes step) :    644.1 MB/s (0.1%)
+ NEON fill                                            :   3187.0 MB/s (0.4%)
+ NEON fill backwards                                  :   3161.8 MB/s (0.6%)
+ VFP copy                                             :    532.2 MB/s (1.2%)
+ VFP 2-pass copy                                      :    521.7 MB/s (0.5%)
+ ARM fill (STRD)                                      :   3185.3 MB/s (3.2%)
+ ARM fill (STM with 8 registers)                      :   3199.5 MB/s (4.5%)
+ ARM fill (STM with 4 registers)                      :   3212.6 MB/s (4.4%)
+ ARM copy prefetched (incr pld)                       :    495.3 MB/s (0.6%)
+ ARM copy prefetched (wrap pld)                       :    494.0 MB/s
+ ARM 2-pass copy prefetched (incr pld)                :    571.8 MB/s (0.7%)
+ ARM 2-pass copy prefetched (wrap pld)                :    567.9 MB/s (0.6%)
+
+==========================================================================
+== Framebuffer read tests.                                              ==
+==                                                                      ==
+== Many ARM devices use a part of the system memory as the framebuffer, ==
+== typically mapped as uncached but with write-combining enabled.       ==
+== Writes to such framebuffers are quite fast, but reads are much       ==
+== slower and very sensitive to the alignment and the selection of      ==
+== CPU instructions which are used for accessing memory.                ==
+==                                                                      ==
+== Many x86 systems allocate the framebuffer in the GPU memory,         ==
+== accessible for the CPU via a relatively slow PCI-E bus. Moreover,    ==
+== PCI-E is asymmetric and handles reads a lot worse than writes.       ==
+==                                                                      ==
+== If uncached framebuffer reads are reasonably fast (at least 100 MB/s ==
+== or preferably >300 MB/s), then using the shadow framebuffer layer    ==
+== is not necessary in Xorg DDX drivers, resulting in a nice overall    ==
+== performance improvement. For example, the xf86-video-fbturbo DDX     ==
+== uses this trick.                                                     ==
+==========================================================================
+
+ NEON read (from framebuffer)                         :    289.1 MB/s
+ NEON copy (from framebuffer)                         :    260.1 MB/s (0.4%)
+ NEON 2-pass copy (from framebuffer)                  :    231.8 MB/s (0.7%)
+ NEON unrolled copy (from framebuffer)                :    263.0 MB/s (0.4%)
+ NEON 2-pass unrolled copy (from framebuffer)         :    233.3 MB/s (0.3%)
+ VFP copy (from framebuffer)                          :    484.3 MB/s (0.6%)
+ VFP 2-pass copy (from framebuffer)                   :    431.1 MB/s (0.5%)
+ ARM copy (from framebuffer)                          :    272.9 MB/s
+ ARM 2-pass copy (from framebuffer)                   :    244.9 MB/s (0.4%)
+
+==========================================================================
+== Memory latency test                                                  ==
+==                                                                      ==
+== Average time is measured for random memory accesses in the buffers   ==
+== of different sizes. The larger is the buffer, the more significant   ==
+== are relative contributions of TLB, L1/L2 cache misses and SDRAM      ==
+== accesses. For extremely large buffer sizes we are expecting to see   ==
+== page table walk with several requests to SDRAM for almost every      ==
+== memory access (though 64MiB is not nearly large enough to experience ==
+== this effect to its fullest).                                         ==
+==                                                                      ==
+== Note 1: All the numbers are representing extra time, which needs to  ==
+==         be added to L1 cache latency. The cycle timings for L1 cache ==
+==         latency can be usually found in the processor documentation. ==
+== Note 2: Dual random read means that we are simultaneously performing ==
+==         two independent memory accesses at a time. In the case if    ==
+==         the memory subsystem can't handle multiple outstanding       ==
+==         requests, dual random read has the same timings as two       ==
+==         single reads performed one after another.                    ==
+==========================================================================
+
+block size : single random read / dual random read
+      1024 :    0.0 ns          /     0.0 ns 
+      2048 :    0.0 ns          /     0.0 ns 
+      4096 :    0.0 ns          /     0.0 ns 
+      8192 :    0.0 ns          /     0.0 ns 
+     16384 :    0.0 ns          /     0.0 ns 
+     32768 :    0.0 ns          /     0.1 ns 
+     65536 :    7.6 ns          /    11.9 ns 
+    131072 :   11.3 ns          /    15.2 ns 
+    262144 :   15.8 ns          /    19.4 ns 
+    524288 :   18.5 ns          /    21.3 ns 
+   1048576 :   41.0 ns          /    60.5 ns 
+   2097152 :   97.2 ns          /   145.7 ns 
+   4194304 :  135.6 ns          /   184.3 ns 
+   8388608 :  157.0 ns          /   202.5 ns 
+  16777216 :  171.3 ns          /   217.6 ns 
+  33554432 :  181.6 ns          /   231.3 ns 
+  67108864 :  191.4 ns          /   247.3 ns 
+
+##########################################################################
+
+Executing ramlat on cpu0 (Cortex-A9), results in ns:
+
+       size:  1x32  2x32  1x64  2x64 1xPTR 2xPTR 4xPTR 8xPTR
+         4k: 2.497 2.495 2.494 2.497 2.497 2.493 2.651 5.437 
+         8k: 2.497 2.495 2.497 2.493 2.502 2.521 2.654 5.419 
+        16k: 2.499 2.502 2.508 2.498 2.495 2.495 2.657 5.420 
+        32k: 2.504 2.503 2.505 2.519 2.527 2.512 2.660 5.427 
+        64k: 14.03 15.70 14.09 15.75 14.00 15.70 19.57 37.05 
+       128k: 16.65 17.15 18.10 17.18 16.64 17.09 21.49 43.29 
+       256k: 25.91 29.75 25.90 29.75 25.71 29.79 39.51 67.07 
+       512k: 56.35 55.22 47.27 54.36 47.47 54.98 73.44 122.3 
+      1024k: 77.14 88.21 76.67 86.63 75.26 105.3 122.2 206.7 
+      2048k: 138.9 145.6 137.6 146.3 137.7 146.2 215.7 407.3 
+      4096k: 171.0 172.2 168.9 170.9 169.9 171.6 264.1 481.9 
+      8192k: 174.0 174.1 171.6 173.2 171.6 173.6 271.6 495.0 
+     16384k: 182.5 181.2 179.1 181.5 179.3 181.4 274.0 511.0 
+
+##########################################################################
+
+Executing benchmark twice on cluster 0 (Cortex-A9)
+
+OpenSSL 1.1.1f, built on 31 Mar 2020
+type             16 bytes     64 bytes    256 bytes   1024 bytes   8192 bytes  16384 bytes
+aes-128-cbc      43838.83k    52373.70k    55547.90k    56195.41k    56442.88k    56579.41k
+aes-128-cbc      43858.17k    52462.83k    55595.43k    56427.18k    56440.15k    56639.49k
+aes-192-cbc      39428.72k    45885.59k    48370.43k    49348.61k    49359.53k    49583.45k
+aes-192-cbc      39356.61k    45792.04k    48468.74k    49218.90k    49575.25k    49561.60k
+aes-256-cbc      35401.98k    40369.17k    42301.53k    42904.92k    43119.96k    43177.30k
+aes-256-cbc      35150.84k    40310.23k    42237.61k    42868.74k    43062.61k    43117.23k
+
+##########################################################################
+
+Executing benchmark single-threaded on cpu0 (Cortex-A9)
+
+7-Zip (a) [32] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,32 bits,4 CPUs LE)
+
+LE
+CPU Freq: 32000000 64000000 32000000 64000000 64000000 256000000 512000000 1024000000 2048000000
+
+RAM size:    2001 MB,  # CPU hardware threads:   4
+RAM usage:    435 MB,  # Benchmark threads:      1
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:        911   100    887    886  |      15733   100   1344   1343
+23:        865   100    882    882  |      15471   100   1340   1339
+24:        837   100    902    901  |      15119   100   1329   1327
+25:        801   100    916    915  |      14841   100   1322   1321
+----------------------------------  | ------------------------------
+Avr:             100    897    896  |              100   1334   1333
+Tot:             100   1115   1114
+
+##########################################################################
+
+Executing benchmark 3 times multi-threaded on CPUs 0-3
+
+7-Zip (a) [32] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,32 bits,4 CPUs LE)
+
+LE
+CPU Freq: 64000000 64000000 64000000 21333333 128000000 256000000 512000000 - 2048000000
+
+RAM size:    2001 MB,  # CPU hardware threads:   4
+RAM usage:    882 MB,  # Benchmark threads:      4
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       1659   221    730   1614  |      60114   395   1299   5129
+23:       2244   345    662   2287  |      58209   390   1292   5037
+24:       2197   351    673   2363  |      57755   396   1281   5070
+25:       2120   351    691   2421  |      56695   396   1275   5046
+----------------------------------  | ------------------------------
+Avr:             317    689   2171  |              394   1287   5070
+Tot:             356    988   3621
+
+7-Zip (a) [32] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,32 bits,4 CPUs LE)
+
+LE
+CPU Freq: 64000000 64000000 64000000 - - 256000000 512000000 1024000000 2048000000
+
+RAM size:    2001 MB,  # CPU hardware threads:   4
+RAM usage:    882 MB,  # Benchmark threads:      4
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       2400   340    686   2335  |      60453   396   1301   5158
+23:       2319   352    671   2363  |      59205   396   1294   5123
+24:       2282   364    675   2454  |      57878   396   1284   5081
+25:       1800   277    742   2056  |      56417   394   1274   5021
+----------------------------------  | ------------------------------
+Avr:             333    694   2302  |              395   1288   5096
+Tot:             364    991   3699
+
+7-Zip (a) [32] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,32 bits,4 CPUs LE)
+
+LE
+CPU Freq: 32000000 64000000 64000000 64000000 - - 512000000 512000000 2048000000
+
+RAM size:    2001 MB,  # CPU hardware threads:   4
+RAM usage:    882 MB,  # Benchmark threads:      4
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       2030   279    708   1975  |      60193   395   1302   5135
+23:       2292   349    670   2335  |      58867   395   1291   5093
+24:       2228   354    677   2396  |      57775   395   1285   5072
+25:       1545   229    770   1765  |      56595   395   1275   5037
+----------------------------------  | ------------------------------
+Avr:             303    706   2118  |              395   1288   5084
+Tot:             349    997   3601
+
+Compression: 2171,2302,2118
+Decompression: 5070,5096,5084
+Total: 3621,3699,3601
+
+##########################################################################
+
+Testing maximum cpufreq again, still under full load. System health now:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+15:34:56: 1608MHz  5.56  67%   1%  65%   0%   0%   0%  63.1°C
+
+Checking cpufreq OPP (Cortex-A9):
+
+Cpufreq OPP: 1608    Measured: 1602 (1603.903/1603.345/1600.999)
+
+##########################################################################
+
+Hardware sensors:
+
+iio_hwmon-isa-0000
+temp1:        +60.4 C  
+
+/dev/sda:	
+
+##########################################################################
+
+Thermal source: /sys/devices/virtual/thermal/thermal_zone0/ (soc)
+                (Armbian wants to use /sys/class/hwmon/hwmon0 instead, that
+                zone is named iio_hwmon. Please check and if wrong
+                file a bug here: https://github.com/armbian/build/issues/)
+
+System health while running tinymembench:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+15:13:52: 1608MHz  4.13  18%   2%   4%   0%  11%   0%  45.9°C
+15:14:32: 1608MHz  3.52  27%   0%  25%   0%   2%   0%  49.4°C
+15:15:12: 1608MHz  3.31  28%   0%  25%   0%   2%   0%  50.5°C
+15:15:53: 1608MHz  3.15  26%   0%  25%   0%   0%   0%  50.3°C
+15:16:33: 1608MHz  3.04  25%   0%  25%   0%   0%   0%  51.1°C
+15:17:13: 1608MHz  3.02  25%   0%  25%   0%   0%   0%  51.5°C
+15:17:53: 1608MHz  2.96  25%   0%  25%   0%   0%   0%  52.5°C
+15:18:33: 1608MHz  2.98  27%   1%  26%   0%   0%   0%  52.3°C
+15:19:13: 1608MHz  3.05  25%   0%  25%   0%   0%   0%  52.3°C
+15:19:53: 1608MHz  3.02  26%   0%  25%   0%   0%   0%  51.1°C
+15:20:33: 1608MHz  3.01  26%   0%  25%   0%   0%   0%  50.9°C
+15:21:13: 1608MHz  3.00  25%   0%  25%   0%   0%   0%  51.7°C
+15:21:53: 1608MHz  3.00  25%   0%  25%   0%   0%   0%  51.9°C
+15:22:33: 1608MHz  3.18  25%   0%  25%   0%   0%   0%  50.9°C
+15:23:13: 1608MHz  3.01  25%   0%  25%   0%   0%   0%  52.1°C
+15:23:53: 1608MHz  3.00  25%   0%  25%   0%   0%   0%  51.3°C
+
+System health while running ramlat:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+15:24:23: 1608MHz  3.00  21%   1%  12%   0%   7%   0%  53.4°C
+15:24:26: 1608MHz  3.00  25%   0%  25%   0%   0%   0%  51.3°C
+15:24:29: 1608MHz  3.00  25%   0%  24%   0%   0%   0%  50.9°C
+15:24:32: 1608MHz  3.00  27%   0%  25%   0%   0%   0%  49.8°C
+15:24:35: 1608MHz  3.00  25%   0%  25%   0%   0%   0%  50.7°C
+15:24:38: 1608MHz  3.00  25%   0%  24%   0%   0%   0%  50.9°C
+15:24:41: 1608MHz  3.00  26%   0%  25%   0%   0%   0%  51.5°C
+15:24:44: 1608MHz  3.00  25%   0%  25%   0%   0%   0%  52.1°C
+15:24:47: 1608MHz  3.00  25%   0%  25%   0%   0%   0%  50.9°C
+15:24:50: 1608MHz  3.00  25%   0%  25%   0%   0%   0%  52.1°C
+
+System health while running OpenSSL benchmark:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+15:24:51: 1608MHz  3.00  21%   1%  13%   0%   7%   0%  54.6°C
+15:25:07: 1608MHz  3.00  27%   0%  25%   0%   1%   0%  51.3°C
+15:25:23: 1608MHz  3.00  25%   0%  25%   0%   0%   0%  51.5°C
+15:25:39: 1608MHz  2.94  25%   0%  25%   0%   0%   0%  50.9°C
+15:25:55: 1608MHz  2.95  25%   0%  25%   0%   0%   0%  51.9°C
+15:26:11: 1608MHz  2.96  25%   0%  25%   0%   0%   0%  50.3°C
+15:26:27: 1608MHz  2.97  25%   0%  25%   0%   0%   0%  51.1°C
+
+System health while running 7-zip single core benchmark:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+15:26:39: 1608MHz  2.91  21%   1%  13%   0%   6%   0%  51.7°C
+15:26:49: 1608MHz  2.93  25%   0%  24%   0%   0%   0%  51.5°C
+15:26:59: 1608MHz  2.94  25%   0%  25%   0%   0%   0%  51.9°C
+15:27:09: 1608MHz  2.95  25%   0%  24%   0%   0%   0%  51.3°C
+15:27:19: 1608MHz  2.96  25%   0%  24%   0%   0%   0%  51.7°C
+15:27:29: 1608MHz  2.96  25%   0%  25%   0%   0%   0%  51.5°C
+15:27:39: 1608MHz  2.90  25%   0%  24%   0%   0%   0%  51.7°C
+15:27:49: 1608MHz  2.91  25%   0%  24%   0%   0%   0%  52.9°C
+15:27:59: 1608MHz  2.93  25%   0%  24%   0%   0%   0%  51.3°C
+15:28:09: 1608MHz  2.94  25%   0%  24%   0%   0%   0%  51.7°C
+15:28:19: 1608MHz  2.95  25%   0%  24%   0%   0%   0%  51.5°C
+15:28:29: 1608MHz  2.96  25%   0%  24%   0%   0%   0%  51.9°C
+15:28:39: 1608MHz  2.88  25%   0%  24%   0%   0%   0%  52.1°C
+15:28:50: 1608MHz  2.90  25%   0%  24%   0%   0%   0%  51.1°C
+
+System health while running 7-zip multi core benchmark:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+15:28:55: 1608MHz  2.91  22%   1%  14%   0%   6%   0%  52.9°C
+15:29:19: 1608MHz  3.65  64%   0%  63%   0%   0%   0%  60.8°C
+15:29:45: 1608MHz  4.66  95%   1%  93%   0%   0%   0%  62.7°C
+15:30:10: 1608MHz  5.19  92%   2%  89%   0%   0%   0%  62.2°C
+15:30:32: 1608MHz  5.38  87%   2%  85%   0%   0%   0%  62.7°C
+15:30:57: 1608MHz  5.80  93%   2%  90%   0%   0%   0%  64.5°C
+15:31:22: 1608MHz  5.87  85%   0%  85%   0%   0%   0%  64.9°C
+15:31:46: 1608MHz  5.98  95%   1%  94%   0%   0%   0%  65.3°C
+15:32:10: 1608MHz  6.12  92%   2%  89%   0%   0%   0%  65.6°C
+15:32:32: 1608MHz  6.04  87%   2%  85%   0%   0%   0%  66.4°C
+15:32:57: 1608MHz  5.76  60%   1%  58%   0%   0%   0%  64.9°C
+15:33:23: 1608MHz  5.51  77%   0%  76%   0%   0%   0%  66.2°C
+15:33:48: 1608MHz  5.52  95%   1%  94%   0%   0%   0%  67.8°C
+15:34:13: 1608MHz  5.82  91%   1%  89%   0%   0%   0%  67.6°C
+15:34:35: 1608MHz  5.72  64%   1%  62%   0%   0%   0%  65.1°C
+15:34:56: 1608MHz  5.56  67%   1%  65%   0%   0%   0%  63.1°C
+
+##########################################################################
+
+dmesg output while running the benchmarks:
+
+[  967.614143] INFO: task kworker/u8:0:7 blocked for more than 845 seconds.
+[  967.614199]       Not tainted 5.14.0-rc2-aml-s812 #trunk
+[  967.614206] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+[  967.614212] task:kworker/u8:0    state:D stack:    0 pid:    7 ppid:     2 flags:0x00000000
+[  967.614238] Workqueue: events_unbound deferred_probe_work_func
+[  967.614296] [<c1353848>] (__schedule) from [<c1353fec>] (schedule+0x5c/0xe0)
+[  967.614329] [<c1353fec>] (schedule) from [<c13543a8>] (schedule_preempt_disabled+0xc/0x10)
+[  967.614343] [<c13543a8>] (schedule_preempt_disabled) from [<c1356438>] (__mutex_lock.constprop.9+0x344/0x5b8)
+[  967.614360] [<c1356438>] (__mutex_lock.constprop.9) from [<c0bf911c>] (txc_48352_update_codec_status+0x18/0x4c)
+[  967.614378] [<c0bf911c>] (txc_48352_update_codec_status) from [<c0bf9180>] (txc_48352_hdmi_codec_hook_plugged_cb+0x30/0x40)
+[  967.614387] [<c0bf9180>] (txc_48352_hdmi_codec_hook_plugged_cb) from [<c0f21968>] (soc_remove_component+0x88/0x8c)
+[  967.614412] [<c0f21968>] (soc_remove_component) from [<c0f21a44>] (soc_cleanup_card_resources+0xd8/0x254)
+[  967.614422] [<c0f21a44>] (soc_cleanup_card_resources) from [<c0f23f20>] (snd_soc_bind_card+0x2b0/0xc7c)
+[  967.614434] [<c0f23f20>] (snd_soc_bind_card) from [<c0f33c68>] (devm_snd_soc_register_card+0x44/0x84)
+[  967.614457] [<c0f33c68>] (devm_snd_soc_register_card) from [<c0f3c608>] (meson_card_probe+0x1fc/0x26c)
+[  967.614479] [<c0f3c608>] (meson_card_probe) from [<c0c17294>] (platform_probe+0x5c/0xb8)
+[  967.614497] [<c0c17294>] (platform_probe) from [<c0c14f44>] (really_probe+0xc0/0x318)
+[  967.614511] [<c0c14f44>] (really_probe) from [<c0c15220>] (__driver_probe_device+0x84/0xe4)
+[  967.614521] [<c0c15220>] (__driver_probe_device) from [<c0c152b4>] (driver_probe_device+0x34/0xc4)
+[  967.614531] [<c0c152b4>] (driver_probe_device) from [<c0c155b8>] (__device_attach_driver+0x8c/0xb4)
+[  967.614542] [<c0c155b8>] (__device_attach_driver) from [<c0c13430>] (bus_for_each_drv+0x80/0xc4)
+[  967.614552] [<c0c13430>] (bus_for_each_drv) from [<c0c14e10>] (__device_attach+0xe0/0x14c)
+[  967.614561] [<c0c14e10>] (__device_attach) from [<c0c140bc>] (bus_probe_device+0x84/0x8c)
+[  967.614572] [<c0c140bc>] (bus_probe_device) from [<c0c1455c>] (deferred_probe_work_func+0x7c/0xa8)
+[  967.614581] [<c0c1455c>] (deferred_probe_work_func) from [<c034f644>] (process_one_work+0x234/0x49c)
+[  967.614607] [<c034f644>] (process_one_work) from [<c034f8f0>] (worker_thread+0x44/0x5c8)
+[  967.614618] [<c034f8f0>] (worker_thread) from [<c03572c0>] (kthread+0x158/0x174)
+[  967.614634] [<c03572c0>] (kthread) from [<c0300150>] (ret_from_fork+0x14/0x24)
+[  967.614646] Exception stack(0xc2085fb0 to 0xc2085ff8)
+[  967.614654] 5fa0:                                     00000000 00000000 00000000 00000000
+[  967.614662] 5fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+[  967.614669] 5fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+[ 1088.440027] INFO: task kworker/u8:0:7 blocked for more than 966 seconds.
+[ 1088.440057]       Not tainted 5.14.0-rc2-aml-s812 #trunk
+[ 1088.440062] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+[ 1088.440066] task:kworker/u8:0    state:D stack:    0 pid:    7 ppid:     2 flags:0x00000000
+[ 1088.440082] Workqueue: events_unbound deferred_probe_work_func
+[ 1088.440111] [<c1353848>] (__schedule) from [<c1353fec>] (schedule+0x5c/0xe0)
+[ 1088.440135] [<c1353fec>] (schedule) from [<c13543a8>] (schedule_preempt_disabled+0xc/0x10)
+[ 1088.440146] [<c13543a8>] (schedule_preempt_disabled) from [<c1356438>] (__mutex_lock.constprop.9+0x344/0x5b8)
+[ 1088.440158] [<c1356438>] (__mutex_lock.constprop.9) from [<c0bf911c>] (txc_48352_update_codec_status+0x18/0x4c)
+[ 1088.440170] [<c0bf911c>] (txc_48352_update_codec_status) from [<c0bf9180>] (txc_48352_hdmi_codec_hook_plugged_cb+0x30/0x40)
+[ 1088.440179] [<c0bf9180>] (txc_48352_hdmi_codec_hook_plugged_cb) from [<c0f21968>] (soc_remove_component+0x88/0x8c)
+[ 1088.440194] [<c0f21968>] (soc_remove_component) from [<c0f21a44>] (soc_cleanup_card_resources+0xd8/0x254)
+[ 1088.440203] [<c0f21a44>] (soc_cleanup_card_resources) from [<c0f23f20>] (snd_soc_bind_card+0x2b0/0xc7c)
+[ 1088.440214] [<c0f23f20>] (snd_soc_bind_card) from [<c0f33c68>] (devm_snd_soc_register_card+0x44/0x84)
+[ 1088.440230] [<c0f33c68>] (devm_snd_soc_register_card) from [<c0f3c608>] (meson_card_probe+0x1fc/0x26c)
+[ 1088.440246] [<c0f3c608>] (meson_card_probe) from [<c0c17294>] (platform_probe+0x5c/0xb8)
+[ 1088.440261] [<c0c17294>] (platform_probe) from [<c0c14f44>] (really_probe+0xc0/0x318)
+[ 1088.440272] [<c0c14f44>] (really_probe) from [<c0c15220>] (__driver_probe_device+0x84/0xe4)
+[ 1088.440281] [<c0c15220>] (__driver_probe_device) from [<c0c152b4>] (driver_probe_device+0x34/0xc4)
+[ 1088.440290] [<c0c152b4>] (driver_probe_device) from [<c0c155b8>] (__device_attach_driver+0x8c/0xb4)
+[ 1088.440300] [<c0c155b8>] (__device_attach_driver) from [<c0c13430>] (bus_for_each_drv+0x80/0xc4)
+[ 1088.440310] [<c0c13430>] (bus_for_each_drv) from [<c0c14e10>] (__device_attach+0xe0/0x14c)
+[ 1088.440318] [<c0c14e10>] (__device_attach) from [<c0c140bc>] (bus_probe_device+0x84/0x8c)
+[ 1088.440327] [<c0c140bc>] (bus_probe_device) from [<c0c1455c>] (deferred_probe_work_func+0x7c/0xa8)
+[ 1088.440336] [<c0c1455c>] (deferred_probe_work_func) from [<c034f644>] (process_one_work+0x234/0x49c)
+[ 1088.440353] [<c034f644>] (process_one_work) from [<c034f8f0>] (worker_thread+0x44/0x5c8)
+[ 1088.440363] [<c034f8f0>] (worker_thread) from [<c03572c0>] (kthread+0x158/0x174)
+[ 1088.440374] [<c03572c0>] (kthread) from [<c0300150>] (ret_from_fork+0x14/0x24)
+[ 1088.440384] Exception stack(0xc2085fb0 to 0xc2085ff8)
+[ 1088.440390] 5fa0:                                     00000000 00000000 00000000 00000000
+[ 1088.440396] 5fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+[ 1088.440402] 5fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+[ 1209.265852] INFO: task kworker/u8:0:7 blocked for more than 1087 seconds.
+[ 1209.265881]       Not tainted 5.14.0-rc2-aml-s812 #trunk
+[ 1209.265886] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+[ 1209.265890] task:kworker/u8:0    state:D stack:    0 pid:    7 ppid:     2 flags:0x00000000
+[ 1209.265904] Workqueue: events_unbound deferred_probe_work_func
+[ 1209.265932] [<c1353848>] (__schedule) from [<c1353fec>] (schedule+0x5c/0xe0)
+[ 1209.265954] [<c1353fec>] (schedule) from [<c13543a8>] (schedule_preempt_disabled+0xc/0x10)
+[ 1209.265965] [<c13543a8>] (schedule_preempt_disabled) from [<c1356438>] (__mutex_lock.constprop.9+0x344/0x5b8)
+[ 1209.265976] [<c1356438>] (__mutex_lock.constprop.9) from [<c0bf911c>] (txc_48352_update_codec_status+0x18/0x4c)
+[ 1209.265989] [<c0bf911c>] (txc_48352_update_codec_status) from [<c0bf9180>] (txc_48352_hdmi_codec_hook_plugged_cb+0x30/0x40)
+[ 1209.265998] [<c0bf9180>] (txc_48352_hdmi_codec_hook_plugged_cb) from [<c0f21968>] (soc_remove_component+0x88/0x8c)
+[ 1209.266011] [<c0f21968>] (soc_remove_component) from [<c0f21a44>] (soc_cleanup_card_resources+0xd8/0x254)
+[ 1209.266020] [<c0f21a44>] (soc_cleanup_card_resources) from [<c0f23f20>] (snd_soc_bind_card+0x2b0/0xc7c)
+[ 1209.266031] [<c0f23f20>] (snd_soc_bind_card) from [<c0f33c68>] (devm_snd_soc_register_card+0x44/0x84)
+[ 1209.266047] [<c0f33c68>] (devm_snd_soc_register_card) from [<c0f3c608>] (meson_card_probe+0x1fc/0x26c)
+[ 1209.266061] [<c0f3c608>] (meson_card_probe) from [<c0c17294>] (platform_probe+0x5c/0xb8)
+[ 1209.266075] [<c0c17294>] (platform_probe) from [<c0c14f44>] (really_probe+0xc0/0x318)
+[ 1209.266086] [<c0c14f44>] (really_probe) from [<c0c15220>] (__driver_probe_device+0x84/0xe4)
+[ 1209.266095] [<c0c15220>] (__driver_probe_device) from [<c0c152b4>] (driver_probe_device+0x34/0xc4)
+[ 1209.266104] [<c0c152b4>] (driver_probe_device) from [<c0c155b8>] (__device_attach_driver+0x8c/0xb4)
+[ 1209.266114] [<c0c155b8>] (__device_attach_driver) from [<c0c13430>] (bus_for_each_drv+0x80/0xc4)
+[ 1209.266123] [<c0c13430>] (bus_for_each_drv) from [<c0c14e10>] (__device_attach+0xe0/0x14c)
+[ 1209.266131] [<c0c14e10>] (__device_attach) from [<c0c140bc>] (bus_probe_device+0x84/0x8c)
+[ 1209.266141] [<c0c140bc>] (bus_probe_device) from [<c0c1455c>] (deferred_probe_work_func+0x7c/0xa8)
+[ 1209.266150] [<c0c1455c>] (deferred_probe_work_func) from [<c034f644>] (process_one_work+0x234/0x49c)
+[ 1209.266167] [<c034f644>] (process_one_work) from [<c034f8f0>] (worker_thread+0x44/0x5c8)
+[ 1209.266175] [<c034f8f0>] (worker_thread) from [<c03572c0>] (kthread+0x158/0x174)
+[ 1209.266187] [<c03572c0>] (kthread) from [<c0300150>] (ret_from_fork+0x14/0x24)
+[ 1209.266196] Exception stack(0xc2085fb0 to 0xc2085ff8)
+[ 1209.266202] 5fa0:                                     00000000 00000000 00000000 00000000
+[ 1209.266208] 5fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+[ 1209.266213] 5fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+[ 1330.091733] INFO: task kworker/u8:0:7 blocked for more than 1208 seconds.
+[ 1330.091758]       Not tainted 5.14.0-rc2-aml-s812 #trunk
+[ 1330.091763] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+[ 1330.091767] task:kworker/u8:0    state:D stack:    0 pid:    7 ppid:     2 flags:0x00000000
+[ 1330.091781] Workqueue: events_unbound deferred_probe_work_func
+[ 1330.091807] [<c1353848>] (__schedule) from [<c1353fec>] (schedule+0x5c/0xe0)
+[ 1330.091827] [<c1353fec>] (schedule) from [<c13543a8>] (schedule_preempt_disabled+0xc/0x10)
+[ 1330.091838] [<c13543a8>] (schedule_preempt_disabled) from [<c1356438>] (__mutex_lock.constprop.9+0x344/0x5b8)
+[ 1330.091850] [<c1356438>] (__mutex_lock.constprop.9) from [<c0bf911c>] (txc_48352_update_codec_status+0x18/0x4c)
+[ 1330.091863] [<c0bf911c>] (txc_48352_update_codec_status) from [<c0bf9180>] (txc_48352_hdmi_codec_hook_plugged_cb+0x30/0x40)
+[ 1330.091871] [<c0bf9180>] (txc_48352_hdmi_codec_hook_plugged_cb) from [<c0f21968>] (soc_remove_component+0x88/0x8c)
+[ 1330.091885] [<c0f21968>] (soc_remove_component) from [<c0f21a44>] (soc_cleanup_card_resources+0xd8/0x254)
+[ 1330.091894] [<c0f21a44>] (soc_cleanup_card_resources) from [<c0f23f20>] (snd_soc_bind_card+0x2b0/0xc7c)
+[ 1330.091904] [<c0f23f20>] (snd_soc_bind_card) from [<c0f33c68>] (devm_snd_soc_register_card+0x44/0x84)
+[ 1330.091920] [<c0f33c68>] (devm_snd_soc_register_card) from [<c0f3c608>] (meson_card_probe+0x1fc/0x26c)
+[ 1330.091934] [<c0f3c608>] (meson_card_probe) from [<c0c17294>] (platform_probe+0x5c/0xb8)
+[ 1330.091948] [<c0c17294>] (platform_probe) from [<c0c14f44>] (really_probe+0xc0/0x318)
+[ 1330.091959] [<c0c14f44>] (really_probe) from [<c0c15220>] (__driver_probe_device+0x84/0xe4)
+[ 1330.091969] [<c0c15220>] (__driver_probe_device) from [<c0c152b4>] (driver_probe_device+0x34/0xc4)
+[ 1330.091978] [<c0c152b4>] (driver_probe_device) from [<c0c155b8>] (__device_attach_driver+0x8c/0xb4)
+[ 1330.091988] [<c0c155b8>] (__device_attach_driver) from [<c0c13430>] (bus_for_each_drv+0x80/0xc4)
+[ 1330.091998] [<c0c13430>] (bus_for_each_drv) from [<c0c14e10>] (__device_attach+0xe0/0x14c)
+[ 1330.092006] [<c0c14e10>] (__device_attach) from [<c0c140bc>] (bus_probe_device+0x84/0x8c)
+[ 1330.092016] [<c0c140bc>] (bus_probe_device) from [<c0c1455c>] (deferred_probe_work_func+0x7c/0xa8)
+[ 1330.092025] [<c0c1455c>] (deferred_probe_work_func) from [<c034f644>] (process_one_work+0x234/0x49c)
+[ 1330.092040] [<c034f644>] (process_one_work) from [<c034f8f0>] (worker_thread+0x44/0x5c8)
+[ 1330.092049] [<c034f8f0>] (worker_thread) from [<c03572c0>] (kthread+0x158/0x174)
+[ 1330.092060] [<c03572c0>] (kthread) from [<c0300150>] (ret_from_fork+0x14/0x24)
+[ 1330.092069] Exception stack(0xc2085fb0 to 0xc2085ff8)
+[ 1330.092075] 5fa0:                                     00000000 00000000 00000000 00000000
+[ 1330.092081] 5fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+[ 1330.092087] 5fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+
+##########################################################################
+
+Linux 5.14.0-rc2-aml-s812 (aml-s812) 	07/06/22 	_armv7l_	(4 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+          26.45    0.01    1.46    5.05    0.00   67.03
+
+Device             tps    kB_read/s    kB_wrtn/s    kB_dscd/s    kB_read    kB_wrtn    kB_dscd
+sda               7.99       221.54       144.06         0.00     482210     313568          0
+
+              total        used        free      shared  buff/cache   available
+Mem:          2.0Gi       212Mi       1.5Gi        10Mi       244Mi       1.7Gi
+Swap:            0B          0B          0B
+
+CPU sysfs topology (clusters, cpufreq members, clockspeeds)
+                 cpufreq   min    max
+ CPU    cluster  policy   speed  speed   core type
+  0        2        0       96    1608   Cortex-A9 / r4p1
+  1        2        0       96    1608   Cortex-A9 / r4p1
+  2        2        0       96    1608   Cortex-A9 / r4p1
+  3        2        0       96    1608   Cortex-A9 / r4p1
+
+Architecture:        armv7l
+Byte Order:          Little Endian
+CPU(s):              4
+On-line CPU(s) list: 0-3
+Thread(s) per core:  1
+Core(s) per socket:  4
+Socket(s):           1
+Vendor ID:           ARM
+Model:               1
+Model name:          Cortex-A9
+Stepping:            r4p1
+CPU max MHz:         1608.0000
+CPU min MHz:         96.0000
+BogoMIPS:            3.22
+Flags:               half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpd32
+
+SoC guess: Amlogic Meson8 (S802) RevC (19 - 0:27ED)
+DT compat: tronsmart,s82
+           amlogic,meson8
+ Compiler: /usr/bin/gcc (Ubuntu 9.3.0-17ubuntu1~20.04) 9.3.0 / arm-linux-gnueabihf
+ Userland: arm
+   Kernel: 5.14.0-rc2-aml-s812/armv7l
+           CONFIG_HZ=250
+           CONFIG_HZ_250=y
+           CONFIG_HZ_FIXED=0
+           CONFIG_PREEMPT_VOLUNTARY=y
+           raid6: neonx8   gen()  1016 MB/s
+           raid6: neonx8   xor()   676 MB/s
+           raid6: neonx4   gen()  1225 MB/s
+           raid6: neonx4   xor()   859 MB/s
+           raid6: neonx2   gen()  1533 MB/s
+           raid6: neonx2   xor()  1025 MB/s
+           raid6: neonx1   gen()  1197 MB/s
+           raid6: neonx1   xor()   837 MB/s
+           raid6: int32x8  gen()   333 MB/s
+           raid6: int32x8  xor()   207 MB/s
+           raid6: int32x4  gen()   367 MB/s
+           raid6: int32x4  xor()   223 MB/s
+           raid6: int32x2  gen()   463 MB/s
+           raid6: int32x2  xor()   236 MB/s
+           raid6: int32x1  gen()   432 MB/s
+           raid6: int32x1  xor()   196 MB/s
+           raid6: using algorithm neonx2 gen() 1533 MB/s
+           raid6: .... xor() 1025 MB/s, rmw enabled
+           raid6: using neon recovery algorithm
+           xor: measuring software checksum speed
+           xor: using function: arm4regs (1586 MB/sec)
+
+| Tronsmart S82 | 1608 MHz | 5.14 | Armbian 21.11.0-trunk Focal armhf/arm | 3640 | 43850 | 43150 | 500 | 3200 | - |

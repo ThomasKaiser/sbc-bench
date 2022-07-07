@@ -1304,7 +1304,7 @@ GetCPUClusters() {
 	elif [ -d /sys/devices/system/cpu/cpufreq/policy0 -a "${CPUArchitecture}" != "x86_64" ]; then
 		# currently we do not trust into cpufreq support on RISC-V since Kendryte K510:
 		# https://github.com/ThomasKaiser/sbc-bench/issues/46#issuecomment-1175855473
-		if [ ${CPUArchitecture} == *riscv* ] then
+		if [ ${CPUArchitecture} == *riscv* ]; then
 			echo "0"
 		else
 			# if cpufreq support exists on ARM we rely on this

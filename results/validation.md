@@ -193,3 +193,6 @@
 | [4132](4132.txt) | v0.9.8 SolidRun Cubox-i Dual/Quad | 2.3%/0% | 2.0Gi/1.8Gi | X | X | X | X | 3% | <span style=color:red>** 9%**</span> | |
 | [41AB](41AB.txt) | v0.9.8 T-HEAD c910 ice | 0%/0.4% | 3.4Gi/3.3Gi | X | X | X | X | 3% | 1% | |
 | [41BH](41BH.txt) | v0.9.8 Radxa ROCK 5B extensive | 0%/0% | 15Gi/15Gi | X | X | X | X | 1% | 0% | [check log](41BH.txt) |
+| [41Kb](41Kb.txt) | v0.9.8 / Celeron J1900 @ 1.99GHz | 0%/0% | 7.7Gi/6.5Gi | X | X | X | X | 2% | 0% | |
+| [41ML](41ML.txt) | v0.9.8 Tronsmart S82 | 0.8%/1.0% | 2.0Gi/1.7Gi | X | X | X | X | 2% | <span style=color:red> 7%</span> | |
+| [41Qa](41Qa.txt) | v0.9.8 canaan-creative,k510 | 0%/0% | 192Mi/131Mi | | | | | 4% | 1% | |

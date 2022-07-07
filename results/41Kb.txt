@@ -1,0 +1,2639 @@
+sbc-bench v0.9.8  / Celeron J1900 @ 1.99GHz (Wed, 06 Jul 2022 16:13:04 +0800)
+
+Distributor ID:	Ubuntu
+Description:	Ubuntu 20.04.4 LTS
+Release:	20.04
+Codename:	focal
+
+BIOS/UEFI:
+	Vendor: American Megatrends Inc.
+	Version: 5.6.5
+	Release Date: 08/07/2015
+	BIOS Revision: 5.6
+
+/usr/bin/gcc (Ubuntu 9.4.0-1ubuntu1~20.04.1) 9.4.0
+
+Uptime: 16:13:04 up 15 days,  7:50,  2 users,  load average: 0.19, 0.09, 0.10,  0°C
+
+Linux 5.4.0-120-generic (nas) 	2022年07月06日 	_x86_64_	(4 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+           0.44    0.01    0.59    0.18    0.00   98.78
+
+Device             tps    kB_read/s    kB_wrtn/s    kB_dscd/s    kB_read    kB_wrtn    kB_dscd
+sda               5.12         2.27       318.11        35.46    3003658  421257740   46954408
+sdb               1.42        11.08        47.61         0.00   14667797   63050648          0
+sdc               0.60         7.65        43.60         0.00   10136809   57735612          0
+sdd               1.37        10.84        47.61         0.00   14358577   63053528          0
+sde               0.31        23.61        27.86         0.00   31267897   36888060          0
+sdf               0.61        11.48        47.63         0.00   15203205   63067976          0
+sdg               0.30        23.21        27.85         0.00   30739241   36882652          0
+sdh               0.61        11.74        47.62         0.00   15541921   63061528          0
+sdi               0.60        11.50        47.62         0.00   15231353   63062664          0
+
+              total        used        free      shared  buff/cache   available
+Mem:          7.7Gi       966Mi       6.5Gi       6.0Mi       238Mi       6.5Gi
+Swap:         8.0Gi        14Mi       8.0Gi
+
+Filename				Type		Size	Used	Priority
+/dev/sda3                              	partition	8388604	14336	-2
+
+##########################################################################
+
+Intel P-States: Intel P-state driver initializing
+
+Checking cpufreq OPP:
+
+Cpufreq OPP: 1999    Measured: 1996 (1997.557/1996.322/1996.149)
+Cpufreq OPP: 1332    Measured: 1998 (2003.085/1995.853/1995.409)    (+50.0%)
+
+##########################################################################
+
+Hardware sensors:
+
+soc_dts1-virtual-0
+temp1:        +42.0 C  
+
+coretemp-isa-0000
+Core 0:       +41.0 C  (high = +105.0 C, crit = +105.0 C)
+Core 1:       +41.0 C  (high = +105.0 C, crit = +105.0 C)
+Core 2:       +44.0 C  (high = +105.0 C, crit = +105.0 C)
+Core 3:       +44.0 C  (high = +105.0 C, crit = +105.0 C)
+
+soc_dts0-virtual-0
+temp1:        +40.0 C  
+
+/dev/sda:	42°C
+/dev/sdb:	47°C
+/dev/sdc:	54°C
+/dev/sdd:	50°C
+/dev/sde:	55°C
+/dev/sdf:	51°C
+/dev/sdg:	52°C
+/dev/sdh:	42°C
+/dev/sdi:	44°C
+
+##########################################################################
+
+Executing benchmark on cpu0:
+
+tinymembench v0.4.9 (simple benchmark for memory throughput and latency)
+
+==========================================================================
+== Memory bandwidth tests                                               ==
+==                                                                      ==
+== Note 1: 1MB = 1000000 bytes                                          ==
+== Note 2: Results for 'copy' tests show how many bytes can be          ==
+==         copied per second (adding together read and writen           ==
+==         bytes would have provided twice higher numbers)              ==
+== Note 3: 2-pass copy means that we are using a small temporary buffer ==
+==         to first fetch data into it, and only then write it to the   ==
+==         destination (source -> L1 cache, L1 cache -> destination)    ==
+== Note 4: If sample standard deviation exceeds 0.1%, it is shown in    ==
+==         brackets                                                     ==
+==========================================================================
+
+ C copy backwards                                     :   2391.3 MB/s (0.3%)
+ C copy backwards (32 byte blocks)                    :   2391.7 MB/s
+ C copy backwards (64 byte blocks)                    :   2391.2 MB/s
+ C copy                                               :   2399.6 MB/s
+ C copy prefetched (32 bytes step)                    :   2067.1 MB/s
+ C copy prefetched (64 bytes step)                    :   2063.8 MB/s
+ C 2-pass copy                                        :   2122.0 MB/s (0.1%)
+ C 2-pass copy prefetched (32 bytes step)             :   1604.6 MB/s
+ C 2-pass copy prefetched (64 bytes step)             :   1596.2 MB/s
+ C fill                                               :   3411.8 MB/s
+ C fill (shuffle within 16 byte blocks)               :   3413.4 MB/s (1.2%)
+ C fill (shuffle within 32 byte blocks)               :   3415.4 MB/s (0.6%)
+ C fill (shuffle within 64 byte blocks)               :   3411.2 MB/s
+ ---
+ standard memcpy                                      :   3549.7 MB/s
+ standard memset                                      :   3397.3 MB/s
+ ---
+ MOVSB copy                                           :   2281.2 MB/s
+ MOVSD copy                                           :   2282.0 MB/s (0.1%)
+ SSE2 copy                                            :   2367.0 MB/s
+ SSE2 nontemporal copy                                :   3430.5 MB/s (0.1%)
+ SSE2 copy prefetched (32 bytes step)                 :   2251.6 MB/s (0.2%)
+ SSE2 copy prefetched (64 bytes step)                 :   2248.2 MB/s
+ SSE2 nontemporal copy prefetched (32 bytes step)     :   2742.5 MB/s (0.3%)
+ SSE2 nontemporal copy prefetched (64 bytes step)     :   2727.7 MB/s (0.3%)
+ SSE2 2-pass copy                                     :   2246.1 MB/s
+ SSE2 2-pass copy prefetched (32 bytes step)          :   1803.9 MB/s
+ SSE2 2-pass copy prefetched (64 bytes step)          :   1814.9 MB/s
+ SSE2 2-pass nontemporal copy                         :   1569.9 MB/s
+ SSE2 fill                                            :   3400.7 MB/s (0.3%)
+ SSE2 nontemporal fill                                :   5202.8 MB/s
+
+==========================================================================
+== Framebuffer read tests.                                              ==
+==                                                                      ==
+== Many ARM devices use a part of the system memory as the framebuffer, ==
+== typically mapped as uncached but with write-combining enabled.       ==
+== Writes to such framebuffers are quite fast, but reads are much       ==
+== slower and very sensitive to the alignment and the selection of      ==
+== CPU instructions which are used for accessing memory.                ==
+==                                                                      ==
+== Many x86 systems allocate the framebuffer in the GPU memory,         ==
+== accessible for the CPU via a relatively slow PCI-E bus. Moreover,    ==
+== PCI-E is asymmetric and handles reads a lot worse than writes.       ==
+==                                                                      ==
+== If uncached framebuffer reads are reasonably fast (at least 100 MB/s ==
+== or preferably >300 MB/s), then using the shadow framebuffer layer    ==
+== is not necessary in Xorg DDX drivers, resulting in a nice overall    ==
+== performance improvement. For example, the xf86-video-fbturbo DDX     ==
+== uses this trick.                                                     ==
+==========================================================================
+
+ MOVSD copy (from framebuffer)                        :     66.5 MB/s
+ MOVSD 2-pass copy (from framebuffer)                 :     66.4 MB/s
+ SSE2 copy (from framebuffer)                         :     66.5 MB/s (1.4%)
+ SSE2 2-pass copy (from framebuffer)                  :     66.4 MB/s (1.4%)
+
+==========================================================================
+== Memory latency test                                                  ==
+==                                                                      ==
+== Average time is measured for random memory accesses in the buffers   ==
+== of different sizes. The larger is the buffer, the more significant   ==
+== are relative contributions of TLB, L1/L2 cache misses and SDRAM      ==
+== accesses. For extremely large buffer sizes we are expecting to see   ==
+== page table walk with several requests to SDRAM for almost every      ==
+== memory access (though 64MiB is not nearly large enough to experience ==
+== this effect to its fullest).                                         ==
+==                                                                      ==
+== Note 1: All the numbers are representing extra time, which needs to  ==
+==         be added to L1 cache latency. The cycle timings for L1 cache ==
+==         latency can be usually found in the processor documentation. ==
+== Note 2: Dual random read means that we are simultaneously performing ==
+==         two independent memory accesses at a time. In the case if    ==
+==         the memory subsystem can't handle multiple outstanding       ==
+==         requests, dual random read has the same timings as two       ==
+==         single reads performed one after another.                    ==
+==========================================================================
+
+block size : single random read / dual random read, [MADV_NOHUGEPAGE]
+      1024 :    0.0 ns          /     0.0 ns 
+      2048 :    0.0 ns          /     0.0 ns 
+      4096 :    0.0 ns          /     0.0 ns 
+      8192 :    0.0 ns          /     0.0 ns 
+     16384 :    0.0 ns          /     0.0 ns 
+     32768 :    1.4 ns          /     2.5 ns 
+     65536 :    3.5 ns          /     5.5 ns 
+    131072 :    4.5 ns          /     6.7 ns 
+    262144 :    6.8 ns          /    10.1 ns 
+    524288 :    7.9 ns          /    11.9 ns 
+   1048576 :   14.1 ns          /    22.5 ns 
+   2097152 :   62.9 ns          /    95.6 ns 
+   4194304 :   87.9 ns          /   120.0 ns 
+   8388608 :  101.7 ns          /   131.4 ns 
+  16777216 :  109.3 ns          /   138.1 ns 
+  33554432 :  114.0 ns          /   142.8 ns 
+  67108864 :  127.9 ns          /   164.5 ns 
+
+block size : single random read / dual random read, [MADV_HUGEPAGE]
+      1024 :    0.0 ns          /     0.0 ns 
+      2048 :    0.0 ns          /     0.0 ns 
+      4096 :    0.0 ns          /     0.0 ns 
+      8192 :    0.0 ns          /     0.0 ns 
+     16384 :    0.0 ns          /     0.0 ns 
+     32768 :    1.4 ns          /     2.5 ns 
+     65536 :    3.5 ns          /     5.5 ns 
+    131072 :    4.5 ns          /     6.7 ns 
+    262144 :    6.8 ns          /    10.1 ns 
+    524288 :    7.9 ns          /    11.9 ns 
+   1048576 :    9.4 ns          /    14.3 ns 
+   2097152 :   56.0 ns          /    84.9 ns 
+   4194304 :   79.4 ns          /   105.2 ns 
+   8388608 :   91.1 ns          /   111.3 ns 
+  16777216 :   97.1 ns          /   113.3 ns 
+  33554432 :  100.0 ns          /   114.2 ns 
+  67108864 :  109.4 ns          /   131.2 ns 
+
+##########################################################################
+
+Executing ramlat on cpu0, results in ns:
+
+       size:  1x32  2x32  1x64  2x64 1xPTR 2xPTR 4xPTR 8xPTR
+         4k: 1.537 1.535 1.976 2.521 1.503 1.503 2.004 4.198 
+         8k: 1.534 1.535 1.973 2.522 1.508 1.503 2.004 4.197 
+        16k: 1.535 1.535 1.973 2.523 1.503 1.503 2.008 4.197 
+        32k: 7.456 8.380 4.242 8.793 7.424 9.060 10.92 19.08 
+        64k: 7.051 8.411 7.487 8.349 7.019 9.312 11.72 19.99 
+       128k: 7.048 8.452 7.501 8.343 7.015 9.526 11.95 20.31 
+       256k: 10.56 10.57 11.02 11.47 10.53 10.53 13.44 21.33 
+       512k: 10.56 10.60 11.01 11.47 10.54 10.55 13.49 21.32 
+      1024k: 71.97 72.44 71.19 71.98 71.11 75.40 77.62 108.0 
+      2048k: 112.2 113.3 112.1 115.5 112.0 112.5 114.2 152.9 
+      4096k: 111.6 113.3 111.7 116.2 111.5 112.5 113.6 154.3 
+      8192k: 111.6 113.8 111.8 116.0 111.5 113.1 115.8 159.4 
+     16384k: 119.9 122.6 120.3 125.6 119.9 121.3 125.2 164.4 
+
+##########################################################################
+
+Executing benchmark twice on cluster 0
+
+OpenSSL 1.1.1f, built on 31 Mar 2020
+type             16 bytes     64 bytes    256 bytes   1024 bytes   8192 bytes  16384 bytes
+aes-128-cbc      34061.79k    38612.67k    40164.61k    40578.39k    40700.59k    40703.32k
+aes-128-cbc      34066.73k    38618.71k    40176.55k    40587.61k    40708.78k    40714.24k
+aes-192-cbc      29252.76k    32548.39k    33642.24k    33942.87k    34026.84k    34029.57k
+aes-192-cbc      29253.10k    32501.10k    33638.40k    33929.56k    34004.99k    34013.18k
+aes-256-cbc      25624.37k    27822.17k    28584.11k    28790.44k    28849.49k    28863.15k
+aes-256-cbc      25643.21k    27831.49k    28592.30k    28798.98k    28860.42k    28863.15k
+
+##########################################################################
+
+Executing benchmark single-threaded on cpu0
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,4 CPUs Intel(R) Celeron(R) CPU  J1900  @ 1.99GHz (30678),ASM)
+
+      Intel(R) Celeron(R) CPU  J1900  @ 1.99GHz (30678)
+CPU Freq: - - - - 128000000 - - - -
+
+RAM size:    7849 MB,  # CPU hardware threads:   4
+RAM usage:    435 MB,  # Benchmark threads:      1
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       1420   100   1382   1382  |      20011   100   1709   1709
+23:       1331   100   1357   1356  |      19742   100   1709   1709
+24:       1270   100   1366   1366  |      19423   100   1706   1705
+25:       1203   100   1374   1374  |      19003   100   1692   1691
+----------------------------------  | ------------------------------
+Avr:             100   1370   1369  |              100   1704   1704
+Tot:             100   1537   1536
+
+##########################################################################
+
+Executing benchmark 3 times multi-threaded on CPUs 0-3
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,4 CPUs Intel(R) Celeron(R) CPU  J1900  @ 1.99GHz (30678),ASM)
+
+      Intel(R) Celeron(R) CPU  J1900  @ 1.99GHz (30678)
+CPU Freq: - - - - - - - - -
+
+RAM size:    7849 MB,  # CPU hardware threads:   4
+RAM usage:    882 MB,  # Benchmark threads:      4
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       4326   322   1306   4209  |      78325   395   1691   6682
+23:       4258   336   1292   4339  |      76784   394   1685   6644
+24:       4117   337   1312   4427  |      75454   394   1679   6624
+25:       4165   356   1335   4756  |      73888   396   1661   6576
+----------------------------------  | ------------------------------
+Avr:             338   1311   4433  |              395   1679   6631
+Tot:             366   1495   5532
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,4 CPUs Intel(R) Celeron(R) CPU  J1900  @ 1.99GHz (30678),ASM)
+
+      Intel(R) Celeron(R) CPU  J1900  @ 1.99GHz (30678)
+CPU Freq: 64000000 64000000 - - - - - - -
+
+RAM size:    7849 MB,  # CPU hardware threads:   4
+RAM usage:    882 MB,  # Benchmark threads:      4
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       4394   326   1312   4275  |      78391   396   1691   6688
+23:       4288   337   1298   4370  |      74999   386   1683   6489
+24:       4197   344   1311   4513  |      75692   396   1679   6645
+25:       4189   358   1336   4783  |      73986   396   1662   6585
+----------------------------------  | ------------------------------
+Avr:             341   1314   4485  |              393   1679   6602
+Tot:             367   1496   5543
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,4 CPUs Intel(R) Celeron(R) CPU  J1900  @ 1.99GHz (30678),ASM)
+
+      Intel(R) Celeron(R) CPU  J1900  @ 1.99GHz (30678)
+CPU Freq: 64000000 - - - - - - - -
+
+RAM size:    7849 MB,  # CPU hardware threads:   4
+RAM usage:    882 MB,  # Benchmark threads:      4
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       4348   324   1304   4230  |      76698   388   1688   6544
+23:       4276   336   1298   4358  |      77114   396   1685   6672
+24:       4211   346   1310   4528  |      75630   395   1680   6639
+25:       4181   357   1339   4774  |      71381   383   1658   6353
+----------------------------------  | ------------------------------
+Avr:             341   1313   4473  |              390   1678   6552
+Tot:             366   1495   5512
+
+Compression: 4433,4485,4473
+Decompression: 6631,6602,6552
+Total: 5532,5543,5512
+
+##########################################################################
+
+Testing maximum cpufreq again, still under full load. System health now:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+16:28:46: 2000MHz  3.91  93%   2%  90%   0%   0%   0%     0°C
+
+Checking cpufreq OPP:
+
+Cpufreq OPP: 1999    Measured: 1996 (1997.087/1996.791/1995.532)
+
+##########################################################################
+
+Hardware sensors:
+
+soc_dts1-virtual-0
+temp1:        +43.0 C  
+
+coretemp-isa-0000
+Core 0:       +43.0 C  (high = +105.0 C, crit = +105.0 C)
+Core 1:       +43.0 C  (high = +105.0 C, crit = +105.0 C)
+Core 2:       +46.0 C  (high = +105.0 C, crit = +105.0 C)
+Core 3:       +46.0 C  (high = +105.0 C, crit = +105.0 C)
+
+soc_dts0-virtual-0
+temp1:        +42.0 C  
+
+/dev/sda:	39°C
+/dev/sdb:	47°C
+/dev/sdc:	54°C
+/dev/sdd:	51°C
+/dev/sde:	55°C
+/dev/sdf:	51°C
+/dev/sdg:	53°C
+/dev/sdh:	43°C
+/dev/sdi:	45°C
+
+##########################################################################
+
+System health while running tinymembench:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+16:14:56: 2000MHz  0.94   1%   0%   0%   0%   0%   0%    --
+16:15:36: 2000MHz  0.97  25%   0%  25%   0%   0%   0%    --
+16:16:16: 2000MHz  0.99  26%   0%  25%   0%   0%   0%    --
+16:16:56: 2000MHz  0.99  25%   0%  25%   0%   0%   0%    --
+16:17:37: 2000MHz  1.10  25%   0%  25%   0%   0%   0%    --
+16:18:17: 2000MHz  1.05  25%   0%  25%   0%   0%   0%    --
+16:18:57: 2000MHz  1.02  25%   0%  25%   0%   0%   0%    --
+16:19:37: 2000MHz  1.07  25%   0%  25%   0%   0%   0%    --
+16:20:17: 2000MHz  1.03  25%   0%  25%   0%   0%   0%    --
+16:20:57: 2000MHz  1.44  39%   2%  36%   0%   0%   0%    --
+
+System health while running ramlat:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+16:21:18: 2000MHz  1.32   1%   0%   0%   0%   0%   0%    --
+16:21:21: 2000MHz  1.37  25%   0%  25%   0%   0%   0%    --
+16:21:24: 2000MHz  1.34  26%   1%  25%   0%   0%   0%    --
+16:21:27: 2000MHz  1.34  25%   0%  25%   0%   0%   0%    --
+16:21:30: 2000MHz  1.31  25%   0%  25%   0%   0%   0%    --
+16:21:33: 2000MHz  1.29  25%   0%  25%   0%   0%   0%    --
+16:21:36: 2000MHz  1.29  26%   0%  25%   0%   0%   0%    --
+16:21:39: 2000MHz  1.27  25%   0%  25%   0%   0%   0%    --
+
+System health while running OpenSSL benchmark:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+16:21:42: 2000MHz  1.27   1%   0%   0%   0%   0%   0%    --
+16:21:58: 2001MHz  1.34  25%   0%  25%   0%   0%   0%    --
+16:22:14: 2002MHz  1.24  25%   0%  25%   0%   0%   0%    --
+16:22:30: 2000MHz  1.19  25%   0%  25%   0%   0%   0%    --
+16:22:46: 2000MHz  1.15  26%   0%  25%   0%   0%   0%    --
+16:23:02: 2001MHz  1.18  25%   0%  25%   0%   0%   0%    --
+16:23:18: 2002MHz  1.13  25%   0%  25%   0%   0%   0%    --
+
+System health while running 7-zip single core benchmark:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+16:23:30: 2000MHz  1.11   1%   0%   0%   0%   0%   0%    --
+16:23:42: 2000MHz  1.09  26%   0%  25%   0%   0%   0%    --
+16:23:54: 2000MHz  1.07  25%   0%  25%   0%   0%   0%    --
+16:24:06: 2000MHz  1.06  25%   0%  25%   0%   0%   0%    --
+16:24:18: 2000MHz  1.05  25%   0%  24%   0%   0%   0%    --
+16:24:30: 2000MHz  1.04  25%   0%  25%   0%   0%   0%    --
+16:24:42: 2000MHz  1.03  26%   0%  25%   0%   0%   0%    --
+16:24:54: 2000MHz  1.02  25%   0%  24%   0%   0%   0%    --
+
+System health while running 7-zip multi core benchmark:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+16:25:04: 2000MHz  1.02   1%   0%   0%   0%   0%   0%    --
+16:25:29: 2000MHz  1.85  92%   1%  91%   0%   0%   0%    --
+16:25:54: 2000MHz  2.48  90%   1%  89%   0%   0%   0%    --
+16:26:18: 2000MHz  2.91  93%   1%  91%   0%   0%   0%    --
+16:26:43: 2000MHz  2.95  91%   1%  90%   0%   0%   0%    --
+16:27:07: 2000MHz  3.30  91%   1%  89%   0%   0%   0%    --
+16:27:32: 2000MHz  3.45  93%   2%  91%   0%   0%   0%    --
+16:27:57: 2000MHz  3.58  91%   1%  90%   0%   0%   0%    --
+16:28:21: 2000MHz  3.68  91%   1%  90%   0%   0%   0%    --
+16:28:46: 2000MHz  3.91  93%   2%  90%   0%   0%   0%    --
+
+##########################################################################
+
+dmesg output while running the benchmarks:
+
+[1324184.546188] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324187.809946] net_ratelimit: 15 callbacks suppressed
+[1324187.809951] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324188.013934] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324188.217921] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324188.421901] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324188.625890] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324188.829870] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324189.033859] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324189.237845] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324189.441820] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324189.645812] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324192.913578] net_ratelimit: 15 callbacks suppressed
+[1324192.913583] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324193.117556] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324193.321546] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324193.525525] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324193.729508] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324193.933499] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324194.137477] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324194.341461] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324194.545453] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324194.749437] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324198.013201] net_ratelimit: 15 callbacks suppressed
+[1324198.013205] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324198.217183] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324198.421168] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324198.625151] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324198.829141] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324199.033127] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324199.237114] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324199.441092] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324199.645078] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324199.849065] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324203.116828] net_ratelimit: 15 callbacks suppressed
+[1324203.116833] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324203.320818] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324203.524800] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324203.728788] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324203.932773] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324204.136756] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324204.340744] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324204.544725] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324204.748710] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324204.952695] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324208.220458] net_ratelimit: 15 callbacks suppressed
+[1324208.220463] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324208.424444] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324208.628428] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324208.832414] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324209.036407] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324209.240391] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324209.444376] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324209.648374] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324209.852343] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324210.056323] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324213.320089] net_ratelimit: 15 callbacks suppressed
+[1324213.320094] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324213.524069] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324213.728055] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324213.932041] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324214.136035] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324214.340018] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324214.544007] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324214.747980] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324214.951976] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324215.155965] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324218.419706] net_ratelimit: 15 callbacks suppressed
+[1324218.419711] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324218.623702] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324218.827681] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324219.031659] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324219.239654] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324219.443636] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324219.647622] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324219.851604] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324220.055591] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324220.259576] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324223.531332] net_ratelimit: 15 callbacks suppressed
+[1324223.531336] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324223.735316] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324223.939302] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324224.143289] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324224.347273] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324224.551260] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324224.755247] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324224.959231] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324225.163214] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324225.367208] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324228.634964] net_ratelimit: 15 callbacks suppressed
+[1324228.634968] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324228.838955] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324229.042940] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324229.246920] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324229.450906] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324229.654897] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324229.858875] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324230.062860] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324230.266844] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324230.470832] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324233.742594] net_ratelimit: 15 callbacks suppressed
+[1324233.742598] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324233.946584] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324234.150563] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324234.354548] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324234.558545] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324234.762518] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324234.966503] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324235.170491] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324235.374487] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324235.578456] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324238.842221] net_ratelimit: 15 callbacks suppressed
+[1324238.842226] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324239.046207] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324239.250190] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324239.454180] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324239.658165] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324239.862147] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324240.070149] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324240.274119] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324240.478103] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324240.682091] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324243.945851] net_ratelimit: 15 callbacks suppressed
+[1324243.945856] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324244.149839] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324244.353824] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324244.557807] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324244.761797] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324244.965777] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324245.169763] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324245.373748] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324245.577751] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324245.781716] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324249.045486] net_ratelimit: 15 callbacks suppressed
+[1324249.045491] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324249.249474] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324249.453457] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324249.657439] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324249.861424] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324250.065414] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324250.269395] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324250.473379] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324250.677367] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324250.881356] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324254.145116] net_ratelimit: 15 callbacks suppressed
+[1324254.145121] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324254.349099] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324254.553082] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324254.757072] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324254.961049] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324255.165388] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324255.369026] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324255.573015] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324255.776995] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324255.980980] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324259.244745] net_ratelimit: 15 callbacks suppressed
+[1324259.244750] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324259.448727] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324259.652715] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324259.856698] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324260.060683] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324260.264668] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324260.468656] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324260.672636] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324260.876642] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324261.080627] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324264.348375] net_ratelimit: 15 callbacks suppressed
+[1324264.348380] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324264.552359] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324264.756345] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324264.960332] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324265.164314] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324265.368296] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324265.572280] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324265.776269] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324265.980255] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324266.184239] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324269.448006] net_ratelimit: 15 callbacks suppressed
+[1324269.448011] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324269.651998] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324269.855976] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324270.059959] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324270.263952] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324270.467932] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324270.671910] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324270.879907] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324271.083886] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324271.287870] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324274.551642] net_ratelimit: 15 callbacks suppressed
+[1324274.551646] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324274.755629] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324274.959607] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324275.163599] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324275.367578] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324275.571563] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324275.775553] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324275.979533] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324276.183519] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324276.387505] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324279.651274] net_ratelimit: 15 callbacks suppressed
+[1324279.651278] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324279.855256] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324280.059248] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324280.263235] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324280.467224] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324280.671200] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324280.875188] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324281.083171] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324281.287163] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324281.491151] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324284.762906] net_ratelimit: 15 callbacks suppressed
+[1324284.762910] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324284.966889] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324285.170876] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324285.374864] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324285.578840] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324285.782828] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324285.986806] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324286.190800] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324286.394787] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324286.598786] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324289.862538] net_ratelimit: 15 callbacks suppressed
+[1324289.862543] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324290.066526] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324290.270514] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324290.474500] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324290.678481] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324290.882464] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324291.086445] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324291.290436] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324291.494415] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324291.698406] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324294.962172] net_ratelimit: 15 callbacks suppressed
+[1324294.962176] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324295.166154] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324295.370142] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324295.574127] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324295.778109] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324295.982091] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324296.186088] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324296.394100] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324296.602050] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324296.806038] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324300.069805] net_ratelimit: 15 callbacks suppressed
+[1324300.069811] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324300.273786] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324300.477783] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324300.681764] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324300.885746] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324301.089741] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324301.293711] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324301.497710] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324301.701681] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324301.905671] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324305.181427] net_ratelimit: 15 callbacks suppressed
+[1324305.181432] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324305.385421] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324305.589405] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324305.793407] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324305.997376] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324306.201359] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324306.405347] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324306.609335] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324306.813323] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324307.017301] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324310.285076] net_ratelimit: 15 callbacks suppressed
+[1324310.285081] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324310.489052] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324310.693040] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324310.897023] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324311.101007] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324311.305000] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324311.508980] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324311.712964] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324311.920942] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324312.124941] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324315.392744] net_ratelimit: 15 callbacks suppressed
+[1324315.392750] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324315.596736] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324315.800730] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324316.004710] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324316.208710] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324316.412653] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324316.616622] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324316.820632] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324317.024647] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324317.228641] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324320.492381] net_ratelimit: 15 callbacks suppressed
+[1324320.492388] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324320.696369] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324320.900355] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324321.104348] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324321.308322] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324321.512315] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324321.716297] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324321.920279] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324322.124256] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324322.328250] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324325.596020] net_ratelimit: 15 callbacks suppressed
+[1324325.596026] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324325.800002] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324326.003993] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324326.207981] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324326.411955] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324326.615914] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324326.819904] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324327.023928] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324327.227906] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324327.431889] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324330.695605] net_ratelimit: 15 callbacks suppressed
+[1324330.695610] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324330.899602] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324331.103579] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324331.307559] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324331.511545] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324331.715531] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324331.919520] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324332.123502] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324332.327485] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324332.531479] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324335.803248] net_ratelimit: 15 callbacks suppressed
+[1324335.803254] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324336.007224] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324336.211206] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324336.419254] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324336.623191] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324336.827171] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324337.035159] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324337.239133] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324337.447131] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324337.651106] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324340.950894] net_ratelimit: 15 callbacks suppressed
+[1324340.950901] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324341.158887] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324341.366867] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324341.574847] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324341.778832] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324341.986810] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324342.190793] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324342.394783] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324342.598757] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324342.802737] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324346.078580] net_ratelimit: 15 callbacks suppressed
+[1324346.078587] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324346.282576] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324346.486554] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324346.690544] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324346.894525] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324347.098487] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324347.302495] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324347.506481] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324347.710462] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324347.914430] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324351.182182] net_ratelimit: 15 callbacks suppressed
+[1324351.182188] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324351.386172] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324351.590155] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324351.794168] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324351.998162] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324352.202159] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324352.406125] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324352.610130] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324352.814094] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324353.018084] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324356.293783] net_ratelimit: 15 callbacks suppressed
+[1324356.293788] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324356.497773] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324356.701767] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324356.905741] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324357.109719] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324357.313708] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324357.517698] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324357.721679] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324357.925662] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324358.129653] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324361.405419] net_ratelimit: 15 callbacks suppressed
+[1324361.405424] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324361.613393] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324361.817400] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324362.021391] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324362.225361] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324362.429351] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324362.633329] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324362.837325] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324363.041307] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324363.249283] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324366.521053] net_ratelimit: 15 callbacks suppressed
+[1324366.521058] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324366.725034] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324366.929030] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324367.133004] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324367.336996] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324367.540987] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324367.744960] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324367.952941] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324368.160945] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324368.368912] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324371.652702] net_ratelimit: 15 callbacks suppressed
+[1324371.652707] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324371.856674] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324372.060666] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324372.268635] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324372.472635] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324372.676615] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324372.880595] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324373.084609] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324373.288570] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324373.492551] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324376.768324] net_ratelimit: 15 callbacks suppressed
+[1324376.768330] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324376.972315] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324377.176291] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324377.380282] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324377.584284] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324377.788252] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324377.992235] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324378.196223] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324378.400208] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324378.604189] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324381.875961] net_ratelimit: 15 callbacks suppressed
+[1324381.875966] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324382.079944] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324382.283935] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324382.487917] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324382.691902] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324382.895892] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324383.099883] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324383.307849] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324383.511852] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324383.715829] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324386.995600] net_ratelimit: 15 callbacks suppressed
+[1324386.995606] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324387.199592] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324387.403569] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324387.607552] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324387.811562] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324388.015530] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324388.219509] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324388.423497] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324388.627480] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324388.831465] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324392.095237] net_ratelimit: 15 callbacks suppressed
+[1324392.095243] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324392.299218] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324392.503207] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324392.707192] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324392.911180] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324393.115159] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324393.319145] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324393.523133] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324393.727114] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324393.931104] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324397.194874] net_ratelimit: 15 callbacks suppressed
+[1324397.194879] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324397.398857] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324397.602854] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324397.806828] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324398.010819] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324398.214805] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324398.418785] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324398.622771] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324398.826757] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324399.030744] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324402.294513] net_ratelimit: 15 callbacks suppressed
+[1324402.294518] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324402.498505] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324402.702489] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324402.906479] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324403.110462] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324403.314446] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324403.518435] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324403.722409] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324403.930392] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324404.134397] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324407.410152] net_ratelimit: 15 callbacks suppressed
+[1324407.410158] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324407.614132] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324407.818133] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324408.022109] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324408.226096] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324408.430087] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324408.634097] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324408.838128] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324409.042090] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324409.246078] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324412.509797] net_ratelimit: 15 callbacks suppressed
+[1324412.509802] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324412.713786] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324412.917761] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324413.121759] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324413.325745] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324413.529726] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324413.733735] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324413.937705] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324414.141675] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324414.345668] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324417.621456] net_ratelimit: 15 callbacks suppressed
+[1324417.621462] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324417.825422] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324418.029402] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324418.233391] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324418.437386] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324418.641362] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324418.845346] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324419.053330] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324419.257314] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324419.461303] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324422.725070] net_ratelimit: 15 callbacks suppressed
+[1324422.725074] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324422.929052] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324423.133038] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324423.337023] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324423.541009] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324423.745002] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324423.948979] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324424.152964] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324424.356957] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324424.560935] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324427.824704] net_ratelimit: 15 callbacks suppressed
+[1324427.824708] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324428.028699] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324428.232683] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324428.436663] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324428.640673] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324428.844641] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324429.048623] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324429.252607] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324429.456591] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324429.660586] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324432.924353] net_ratelimit: 15 callbacks suppressed
+[1324432.924357] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324433.128340] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324433.332320] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324433.536303] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324433.740302] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324433.944277] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324434.148270] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324434.352254] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324434.556234] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324434.760223] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324438.023990] net_ratelimit: 15 callbacks suppressed
+[1324438.023995] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324438.227973] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324438.431966] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324438.635946] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324438.839939] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324439.043913] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324439.247908] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324439.451887] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324439.655872] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324439.859864] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324443.123630] net_ratelimit: 15 callbacks suppressed
+[1324443.123635] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324443.327618] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324443.531604] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324443.735589] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324443.939581] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324444.143560] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324444.347542] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324444.551533] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324444.755513] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324444.959502] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324448.227277] net_ratelimit: 15 callbacks suppressed
+[1324448.227282] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324448.431262] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324448.635240] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324448.839235] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324449.043220] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324449.247203] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324449.451193] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324449.655170] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324449.859155] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324450.063147] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324453.326914] net_ratelimit: 15 callbacks suppressed
+[1324453.326919] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324453.530898] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324453.734898] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324453.938872] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324454.142861] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324454.346835] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324454.550834] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324454.754808] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324454.958799] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324455.162790] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324458.426557] net_ratelimit: 15 callbacks suppressed
+[1324458.426562] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324458.630543] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324458.834523] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324459.038523] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324459.242504] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324459.446496] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324459.650478] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324459.854460] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324460.058448] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324460.262432] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324463.526192] net_ratelimit: 15 callbacks suppressed
+[1324463.526197] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324463.730185] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324463.934170] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324464.138149] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324464.342138] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324464.546125] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324464.750106] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324464.954094] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324465.158089] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324465.362068] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324468.633836] net_ratelimit: 15 callbacks suppressed
+[1324468.633840] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324468.837822] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324469.041824] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324469.245797] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324469.449783] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324469.653766] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324469.857748] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324470.061741] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324470.265725] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324470.469705] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324473.733480] net_ratelimit: 15 callbacks suppressed
+[1324473.733485] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324473.937464] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324474.141446] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324474.345449] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324474.549422] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324474.753416] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324474.957397] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324475.161383] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324475.365365] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324475.569356] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324478.833127] net_ratelimit: 15 callbacks suppressed
+[1324478.833131] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324479.037104] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324479.241094] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324479.445076] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324479.649073] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324479.853050] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324480.057045] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324480.261019] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324480.465011] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324480.669000] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324483.932768] net_ratelimit: 15 callbacks suppressed
+[1324483.932773] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324484.136756] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324484.340735] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324484.548717] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324484.752712] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324484.956706] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324485.160682] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324485.364679] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324485.568665] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324485.772638] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324489.052407] net_ratelimit: 15 callbacks suppressed
+[1324489.052412] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324489.256399] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324489.460380] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324489.664363] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324489.868354] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324490.072338] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324490.276327] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324490.480310] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324490.684296] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324490.888293] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324494.160056] net_ratelimit: 15 callbacks suppressed
+[1324494.160061] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324494.364048] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324494.568023] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324494.772010] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324494.975995] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324495.179979] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324495.383967] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324495.587945] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324495.791938] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324495.995932] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324499.259695] net_ratelimit: 15 callbacks suppressed
+[1324499.259700] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324499.463685] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324499.667672] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324499.871650] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324500.075642] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324500.279625] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324500.483622] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324500.687599] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324500.891586] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324501.095575] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324504.371328] net_ratelimit: 15 callbacks suppressed
+[1324504.371333] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324504.575323] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324504.783308] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324504.987305] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324505.191280] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324505.395266] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324505.599254] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324505.803245] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324506.007225] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324506.211223] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324509.478988] net_ratelimit: 15 callbacks suppressed
+[1324509.479013] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324509.682971] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324509.890947] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324510.094936] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324510.298932] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324510.502907] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324510.706905] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324510.910886] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324511.114869] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324511.318859] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324514.594619] net_ratelimit: 15 callbacks suppressed
+[1324514.594624] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324514.798614] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324515.006606] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324515.210584] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324515.414567] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324515.622601] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324515.826549] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324516.030560] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324516.234546] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324516.438530] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324519.706315] net_ratelimit: 15 callbacks suppressed
+[1324519.706321] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324519.910287] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324520.114275] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324520.318263] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324520.522248] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324520.726229] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324520.930217] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324521.134203] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324521.342181] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324521.546174] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324524.817944] net_ratelimit: 15 callbacks suppressed
+[1324524.817949] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324525.021932] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324525.225918] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324525.429906] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324525.633891] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324525.837872] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324526.041862] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324526.245848] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324526.449830] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324526.653816] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324529.921570] net_ratelimit: 15 callbacks suppressed
+[1324529.921575] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324530.125583] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324530.329561] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324530.533545] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324530.737532] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324530.941513] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324531.145503] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324531.349492] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324531.553475] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324531.757468] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324535.025222] net_ratelimit: 15 callbacks suppressed
+[1324535.025227] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324535.229225] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324535.433187] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324535.637158] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324535.841146] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324536.045134] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324536.249117] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324536.453100] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324536.657090] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324536.861078] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324540.132842] net_ratelimit: 15 callbacks suppressed
+[1324540.132847] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324540.336833] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324540.540819] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324540.744806] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324540.948789] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324541.152773] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324541.360763] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324541.564746] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324541.768732] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324541.972721] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324545.240487] net_ratelimit: 15 callbacks suppressed
+[1324545.240492] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324545.444473] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324545.648469] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324545.852449] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324546.056433] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324546.260416] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324546.464406] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324546.672379] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324546.876375] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324547.080361] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324550.348137] net_ratelimit: 15 callbacks suppressed
+[1324550.348141] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324550.552115] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324550.756102] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324550.964086] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324551.168076] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324551.372061] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324551.576052] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324551.784027] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324551.988014] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324552.192007] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324555.479784] net_ratelimit: 15 callbacks suppressed
+[1324555.479789] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324555.683767] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324555.891758] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324556.095736] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324556.299720] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324556.503705] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324556.707695] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324556.911679] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324557.115662] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324557.319651] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324560.583465] net_ratelimit: 15 callbacks suppressed
+[1324560.583471] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324560.787445] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324560.991434] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324561.195420] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324561.399423] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324561.603387] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324561.807370] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324562.011353] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324562.215344] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324562.419328] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324565.683102] net_ratelimit: 15 callbacks suppressed
+[1324565.683107] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324565.887087] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324566.091076] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324566.295062] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324566.499048] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324566.703034] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324566.907018] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324567.111006] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324567.314992] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324567.518976] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324570.786713] net_ratelimit: 15 callbacks suppressed
+[1324570.786717] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324570.990699] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324571.194684] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324571.398676] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324571.602658] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324571.806640] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324572.010626] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324572.214615] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324572.418600] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324572.622596] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324575.886361] net_ratelimit: 15 callbacks suppressed
+[1324575.886365] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324576.090354] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324576.294332] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324576.498321] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324576.702303] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324576.906294] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324577.110270] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324577.314260] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324577.518248] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324577.722230] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324580.986030] net_ratelimit: 15 callbacks suppressed
+[1324580.986034] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324581.190004] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324581.393996] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324581.597971] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324581.801950] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324582.005942] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324582.209923] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324582.413905] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324582.617895] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324582.821886] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324586.085654] net_ratelimit: 15 callbacks suppressed
+[1324586.085659] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324586.289638] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324586.493622] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324586.697617] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324586.901597] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324587.105585] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324587.309572] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324587.513552] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324587.717539] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324587.921530] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324591.185299] net_ratelimit: 15 callbacks suppressed
+[1324591.185303] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324591.389283] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324591.593274] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324591.797255] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324592.001249] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324592.205231] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324592.409217] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324592.613207] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324592.817190] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324593.021172] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324596.284949] net_ratelimit: 15 callbacks suppressed
+[1324596.284954] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324596.488934] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324596.692936] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324596.896908] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324597.100892] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324597.304885] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324597.508865] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324597.712852] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324597.916834] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324598.120823] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324601.384599] net_ratelimit: 15 callbacks suppressed
+[1324601.384604] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324601.588587] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324601.792572] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324601.996559] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324602.200542] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324602.404527] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324602.608522] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324602.812501] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324603.016483] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324603.220484] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324606.488236] net_ratelimit: 15 callbacks suppressed
+[1324606.488240] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324606.692228] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324606.896216] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324607.100199] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324607.304183] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324607.508185] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324607.712174] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324607.916151] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324608.120146] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324608.324119] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324611.591895] net_ratelimit: 15 callbacks suppressed
+[1324611.591900] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324611.795880] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324611.999863] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324612.203851] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324612.411830] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324612.615827] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324612.819826] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324613.023793] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324613.227787] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324613.431766] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324616.695547] net_ratelimit: 15 callbacks suppressed
+[1324616.695551] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324616.903521] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324617.107516] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324617.311494] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324617.515484] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324617.723475] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324617.927467] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324618.131470] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324618.335467] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324618.539445] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324621.819217] net_ratelimit: 15 callbacks suppressed
+[1324621.819223] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324622.023192] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324622.227193] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324622.431173] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324622.635186] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324622.839151] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324623.043138] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324623.247127] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324623.451109] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324623.655099] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324626.918866] net_ratelimit: 15 callbacks suppressed
+[1324626.918871] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324627.122856] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324627.326839] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324627.530829] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324627.734807] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324627.938800] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324628.142780] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324628.346769] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324628.550761] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324628.754742] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324632.018534] net_ratelimit: 15 callbacks suppressed
+[1324632.018540] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324632.222484] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324632.426488] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324632.634465] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324632.842450] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324633.046439] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324633.250467] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324633.454420] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324633.658404] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324633.862388] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324637.126156] net_ratelimit: 15 callbacks suppressed
+[1324637.126161] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324637.330137] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324637.534134] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324637.738114] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324637.946089] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324638.154075] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324638.362062] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324638.570047] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324638.778033] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324638.986035] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324642.273777] net_ratelimit: 15 callbacks suppressed
+[1324642.273782] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324642.477767] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324642.681750] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324642.885734] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324643.089723] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324643.293711] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324643.497687] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324643.702090] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324643.905670] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324644.109654] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324647.373426] net_ratelimit: 15 callbacks suppressed
+[1324647.373430] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324647.577412] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324647.781399] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324647.985383] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324648.189367] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324648.393361] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324648.597347] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324648.801330] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324649.005312] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324649.209308] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324652.481074] net_ratelimit: 15 callbacks suppressed
+[1324652.481079] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324652.689063] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324652.893055] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324653.097037] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324653.301024] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324653.505018] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324653.708988] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324653.912974] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324654.116969] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324654.320959] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324657.588734] net_ratelimit: 15 callbacks suppressed
+[1324657.588739] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324657.792711] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324657.996696] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324658.200689] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324658.404671] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324658.608661] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324658.812638] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324659.016626] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324659.220611] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324659.424612] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324662.692373] net_ratelimit: 15 callbacks suppressed
+[1324662.692378] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324662.900356] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324663.104344] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324663.308334] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324663.516313] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324663.720300] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324663.924286] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324664.128278] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324664.332260] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324664.536243] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324667.812016] net_ratelimit: 15 callbacks suppressed
+[1324667.812021] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324668.016020] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324668.219993] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324668.423979] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324668.631957] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324668.835953] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324669.039938] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324669.243937] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324669.447911] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324669.651891] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324672.923671] net_ratelimit: 15 callbacks suppressed
+[1324672.923676] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324673.131654] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324673.339640] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324673.543628] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324673.747613] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324673.951610] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324674.155585] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324674.359571] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324674.563558] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324674.767541] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324678.039320] net_ratelimit: 15 callbacks suppressed
+[1324678.039325] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324678.243315] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324678.447286] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324678.651281] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324678.855261] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324679.059255] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324679.263229] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324679.467213] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324679.671201] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324679.875184] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324683.138967] net_ratelimit: 15 callbacks suppressed
+[1324683.138972] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324683.342951] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324683.546939] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324683.750925] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324683.954912] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324684.158896] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324684.362888] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324684.566866] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324684.770859] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324684.974880] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324688.238618] net_ratelimit: 15 callbacks suppressed
+[1324688.238622] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324688.442612] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324688.646589] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324688.850583] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324689.054562] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324689.258559] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324689.462534] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324689.666519] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324689.870515] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324690.074502] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324693.338310] net_ratelimit: 15 callbacks suppressed
+[1324693.338315] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324693.542290] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324693.746271] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324693.950260] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324694.154247] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324694.358228] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324694.562221] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324694.766194] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324694.970194] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324695.174179] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324698.437945] net_ratelimit: 15 callbacks suppressed
+[1324698.437950] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324698.641924] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324698.845920] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324699.049912] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324699.253897] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324699.457881] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324699.661851] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324699.865835] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324700.069879] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324700.273823] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324703.537563] net_ratelimit: 15 callbacks suppressed
+[1324703.537567] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324703.741553] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324703.949539] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324704.153528] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324704.357509] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324704.561502] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324704.765481] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324704.969466] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324705.173453] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324705.377447] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324708.641215] net_ratelimit: 15 callbacks suppressed
+[1324708.641219] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324708.845207] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324709.049194] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324709.253177] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324709.457158] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324709.661150] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324709.865134] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324710.069114] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324710.273102] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324710.477086] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324713.740866] net_ratelimit: 15 callbacks suppressed
+[1324713.740870] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324713.944856] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324714.148843] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324714.352829] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324714.556813] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324714.760796] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324714.964783] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324715.168772] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324715.372755] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324715.576739] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324718.840516] net_ratelimit: 15 callbacks suppressed
+[1324718.840520] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324719.044508] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324719.248487] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324719.452483] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324719.656483] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324719.860453] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324720.064433] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324720.268422] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324720.472401] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324720.676388] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324723.940165] net_ratelimit: 15 callbacks suppressed
+[1324723.940169] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324724.144159] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324724.348140] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324724.552127] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324724.756113] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324724.960098] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324725.164088] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324725.368070] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324725.572059] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324725.776044] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324729.039820] net_ratelimit: 15 callbacks suppressed
+[1324729.039824] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324729.243806] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324729.447790] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324729.651781] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324729.855763] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324730.059749] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324730.263738] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324730.467722] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324730.671714] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324730.875692] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324734.139471] net_ratelimit: 15 callbacks suppressed
+[1324734.139477] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324734.343460] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324734.547440] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324734.751433] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324734.955426] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324735.159402] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324735.363389] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324735.567377] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324735.771358] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324735.975347] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324739.239122] net_ratelimit: 15 callbacks suppressed
+[1324739.239127] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324739.443114] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324739.647094] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324739.851083] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324740.055065] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324740.259056] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324740.463038] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324740.667025] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324740.871038] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324741.074999] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324744.338771] net_ratelimit: 15 callbacks suppressed
+[1324744.338775] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324744.542765] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324744.746744] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324744.950731] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324745.154722] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324745.358702] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324745.562690] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324745.766678] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324745.970664] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324746.174648] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324749.438427] net_ratelimit: 15 callbacks suppressed
+[1324749.438432] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324749.642437] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324749.846405] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324750.050383] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324750.254366] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324750.458354] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324750.662344] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324750.866328] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324751.070313] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324751.274304] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324754.538078] net_ratelimit: 15 callbacks suppressed
+[1324754.538082] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324754.742062] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324754.946060] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324755.150036] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324755.354021] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324755.558013] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324755.762006] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324755.965979] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324756.169971] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324756.373955] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324759.637731] net_ratelimit: 15 callbacks suppressed
+[1324759.637736] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324759.841726] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324760.045706] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324760.249691] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324760.453671] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324760.657661] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324760.861650] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324761.065630] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324761.269625] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324761.473614] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324764.737382] net_ratelimit: 15 callbacks suppressed
+[1324764.737387] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324764.941366] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324765.145358] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324765.349349] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324765.553325] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324765.757316] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324765.961300] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324766.165284] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324766.369272] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324766.573253] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324769.837030] net_ratelimit: 15 callbacks suppressed
+[1324769.837034] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324770.041021] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324770.245007] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324770.448991] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324770.652974] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324770.856968] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324771.060948] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324771.264934] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324771.468931] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324771.672905] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324774.936686] net_ratelimit: 15 callbacks suppressed
+[1324774.936691] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324775.140674] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324775.344661] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324775.548641] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324775.752657] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324775.956622] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324776.160608] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324776.364590] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324776.568581] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324776.772566] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324780.036338] net_ratelimit: 15 callbacks suppressed
+[1324780.036342] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324780.240325] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324780.444313] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324780.648295] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324780.852286] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324781.056269] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324781.260256] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324781.464246] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324781.668228] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324781.872241] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324785.135996] net_ratelimit: 15 callbacks suppressed
+[1324785.136001] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324785.339981] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324785.543964] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324785.747951] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324785.951942] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324786.155921] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324786.359912] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324786.563893] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324786.767877] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324786.971865] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324790.235646] net_ratelimit: 15 callbacks suppressed
+[1324790.235650] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324790.439633] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324790.643614] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324790.847605] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324791.051589] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324791.255576] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324791.459564] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324791.663549] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324791.867534] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324792.071523] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324795.335296] net_ratelimit: 15 callbacks suppressed
+[1324795.335301] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324795.539281] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324795.743282] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324795.947256] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324796.151240] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324796.355229] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324796.559216] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324796.763200] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324796.967185] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324797.171176] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324800.434952] net_ratelimit: 15 callbacks suppressed
+[1324800.434957] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324800.638940] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324800.842927] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324801.046906] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324801.250902] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324801.454894] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324801.658869] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324801.862861] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324802.066839] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324802.270825] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324805.534600] net_ratelimit: 15 callbacks suppressed
+[1324805.534605] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324805.738592] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324805.942578] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324806.146560] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324806.350557] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324806.554537] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324806.758519] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324806.962518] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324807.166495] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324807.370481] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324810.634259] net_ratelimit: 15 callbacks suppressed
+[1324810.634264] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324810.838243] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324811.042231] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324811.246221] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324811.450201] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324811.654192] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324811.858173] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324812.062157] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324812.270145] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324812.474133] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324815.741944] net_ratelimit: 15 callbacks suppressed
+[1324815.741950] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324815.945906] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324816.149896] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324816.353892] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324816.557874] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324816.761864] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324816.965855] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324817.169821] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324817.373818] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324817.577797] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324820.841609] net_ratelimit: 15 callbacks suppressed
+[1324820.841615] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324821.049602] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324821.253586] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324821.457567] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324821.661520] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324821.869506] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324822.073505] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324822.277497] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324822.481473] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324822.685468] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324825.949362] net_ratelimit: 15 callbacks suppressed
+[1324825.949366] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324826.153333] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324826.357354] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324826.561351] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324826.765331] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324826.969330] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324827.173323] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324827.377312] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324827.581308] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324827.785301] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324831.049190] net_ratelimit: 15 callbacks suppressed
+[1324831.049195] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324831.253189] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324831.457178] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324831.661173] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324831.865164] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324832.069162] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324832.273154] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324832.477143] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324832.681136] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324832.885140] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324836.152999] net_ratelimit: 15 callbacks suppressed
+[1324836.153003] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324836.357006] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324836.561000] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324836.764993] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324836.968983] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324837.172991] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324837.376968] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324837.580970] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324837.784943] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324837.988951] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324841.260840] net_ratelimit: 15 callbacks suppressed
+[1324841.260846] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324841.464834] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324841.668827] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324841.872821] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324842.076811] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324842.280784] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324842.484797] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324842.688793] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324842.892782] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324843.096765] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324846.368672] net_ratelimit: 15 callbacks suppressed
+[1324846.368677] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324846.572636] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324846.776627] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324846.980624] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324847.188611] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324847.392603] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324847.596593] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324847.800585] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324848.004583] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324848.208588] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324851.472484] net_ratelimit: 15 callbacks suppressed
+[1324851.472489] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324851.676479] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324851.884457] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324852.088466] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324852.292484] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324852.500434] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324852.704444] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324852.908446] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324853.112432] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324853.316436] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324856.584289] net_ratelimit: 15 callbacks suppressed
+[1324856.584294] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324856.788276] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324856.992275] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324857.196271] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324857.400257] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324857.604257] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324857.808237] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324858.016238] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324858.220227] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324858.424226] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324861.688104] net_ratelimit: 15 callbacks suppressed
+[1324861.688110] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324861.892092] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324862.096088] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324862.300083] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324862.504070] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324862.708065] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324862.912058] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324863.116055] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324863.320048] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324863.524036] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324866.787915] net_ratelimit: 15 callbacks suppressed
+[1324866.787920] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324866.991911] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324867.195906] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324867.403894] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324867.607889] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324867.811882] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324868.015879] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324868.219870] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324868.427860] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324868.631862] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324871.903764] net_ratelimit: 15 callbacks suppressed
+[1324871.903769] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324872.107754] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324872.311753] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324872.515739] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324872.719732] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324872.923706] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324873.127696] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324873.331696] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324873.535678] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324873.739674] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324877.015559] net_ratelimit: 15 callbacks suppressed
+[1324877.015564] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324877.219548] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324877.423536] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324877.627533] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324877.831525] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324878.039519] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324878.243510] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324878.447498] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324878.651496] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324878.855486] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324882.155385] net_ratelimit: 15 callbacks suppressed
+[1324882.155390] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324882.359389] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324882.563378] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324882.767365] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324882.971359] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324883.175352] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324883.379346] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324883.583338] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324883.787340] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324883.991322] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324887.259181] net_ratelimit: 15 callbacks suppressed
+[1324887.259186] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324887.463174] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324887.667163] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324887.871154] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324888.075149] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324888.279147] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324888.483132] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324888.687120] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324888.891115] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324889.095109] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324892.370987] net_ratelimit: 15 callbacks suppressed
+[1324892.370992] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324892.574983] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324892.778978] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324892.982966] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324893.186959] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324893.390953] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324893.594940] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324893.798934] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324894.006925] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324894.214919] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324897.486815] net_ratelimit: 15 callbacks suppressed
+[1324897.486820] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324897.690813] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324897.894806] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324898.098796] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324898.302793] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324898.506768] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324898.710751] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324898.914758] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324899.118739] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324899.322728] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324902.590618] net_ratelimit: 15 callbacks suppressed
+[1324902.590624] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324902.794620] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324902.998600] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324903.202583] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324903.406578] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324903.610568] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324903.818573] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324904.022587] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324904.226574] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324904.430579] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324907.702431] net_ratelimit: 15 callbacks suppressed
+[1324907.702436] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324907.906447] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324908.110428] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324908.318426] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324908.522424] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324908.726402] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324908.930398] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324909.134400] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324909.338397] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324909.546365] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324912.810241] net_ratelimit: 15 callbacks suppressed
+[1324912.810247] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324913.014234] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324913.218227] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324913.422221] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324913.626212] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324913.830203] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324914.034201] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324914.238188] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324914.442191] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324914.646174] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324917.914055] net_ratelimit: 15 callbacks suppressed
+[1324917.914060] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324918.118043] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324918.322034] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324918.526024] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324918.730019] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324918.946002] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324919.150004] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324919.354008] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324919.557983] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324919.761977] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324923.029855] net_ratelimit: 15 callbacks suppressed
+[1324923.029861] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324923.233858] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324923.437860] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324923.641851] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324923.849841] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324924.053813] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324924.257810] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324924.461798] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324924.665795] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324924.869781] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324928.133657] net_ratelimit: 15 callbacks suppressed
+[1324928.133662] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324928.337649] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324928.541653] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324928.745630] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324928.949626] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324929.165613] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324929.369617] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324929.573598] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324929.777596] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324929.981596] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324933.245460] net_ratelimit: 15 callbacks suppressed
+[1324933.245466] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324933.449444] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324933.653448] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324933.857447] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324934.061429] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324934.265422] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324934.469417] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324934.673405] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324934.877405] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324935.081397] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324938.349272] net_ratelimit: 15 callbacks suppressed
+[1324938.349277] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324938.553257] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324938.757269] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324938.961250] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324939.165235] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324939.369238] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324939.573219] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324939.777213] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324939.985210] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324940.189197] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324943.457068] net_ratelimit: 15 callbacks suppressed
+[1324943.457073] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324943.661052] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324943.865048] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324944.069040] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324944.273032] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324944.477465] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324944.681013] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324944.885008] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324945.089013] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324945.292992] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324948.556868] net_ratelimit: 15 callbacks suppressed
+[1324948.556874] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324948.760857] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324948.964845] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324949.168839] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324949.372835] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324949.576841] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324949.780808] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324949.984809] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324950.188799] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324950.392802] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324953.656675] net_ratelimit: 15 callbacks suppressed
+[1324953.656680] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324953.860661] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324954.064649] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324954.268652] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324954.472633] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324954.676631] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324954.880615] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324955.084610] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324955.288602] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324955.492606] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324958.756475] net_ratelimit: 15 callbacks suppressed
+[1324958.756481] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324958.960461] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324959.168445] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324959.372451] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324959.576444] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324959.780436] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324959.984414] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324960.188411] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324960.392411] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324960.596403] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324963.860260] net_ratelimit: 15 callbacks suppressed
+[1324963.860266] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324964.064263] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324964.268253] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324964.472238] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324964.676231] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324964.880234] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324965.084224] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324965.288216] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324965.492210] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324965.696194] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324968.960050] net_ratelimit: 15 callbacks suppressed
+[1324968.960055] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324969.164057] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324969.368034] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324969.572026] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324969.776020] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324969.980021] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324970.184016] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324970.387998] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324970.591985] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324970.795982] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324974.067847] net_ratelimit: 15 callbacks suppressed
+[1324974.067853] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324974.271842] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324974.479845] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324974.683829] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324974.887821] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324975.091810] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324975.295806] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324975.499796] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324975.703806] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324975.907781] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324979.179656] net_ratelimit: 15 callbacks suppressed
+[1324979.179661] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324979.387646] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324979.591635] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324979.795648] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324979.999594] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324980.203606] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324980.407613] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324980.611590] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324980.815585] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324981.019595] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324984.287431] net_ratelimit: 15 callbacks suppressed
+[1324984.287436] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324984.491423] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324984.695430] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324984.899402] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324985.103395] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324985.307388] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324985.511393] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324985.715379] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324985.919381] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324986.123362] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324989.391223] net_ratelimit: 15 callbacks suppressed
+[1324989.391228] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324989.595216] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324989.799208] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324990.003200] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324990.211189] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324990.415178] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324990.619162] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324990.823164] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324991.027174] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324991.231157] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324994.499011] net_ratelimit: 15 callbacks suppressed
+[1324994.499017] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324994.707007] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324994.911012] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324995.114991] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324995.318988] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324995.526969] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324995.730964] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324995.934953] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324996.138951] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324996.342943] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324999.614804] net_ratelimit: 15 callbacks suppressed
+[1324999.614810] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1324999.818793] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325000.022791] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325000.226765] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325000.430763] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325000.634767] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325000.838751] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325001.042745] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325001.246728] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325001.450724] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325004.714586] net_ratelimit: 15 callbacks suppressed
+[1325004.714591] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325004.922575] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325005.126569] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325005.330557] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325005.534544] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325005.738539] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325005.942531] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325006.150524] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325006.354514] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325006.562505] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325009.830366] net_ratelimit: 15 callbacks suppressed
+[1325009.830372] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325010.034381] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325010.242371] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325010.446348] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325010.650357] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325010.854346] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325011.058321] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325011.262325] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325011.466305] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325011.674283] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325014.946177] net_ratelimit: 15 callbacks suppressed
+[1325014.946182] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325015.150165] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325015.354146] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325015.558142] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325015.762132] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325015.966118] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325016.170107] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325016.374113] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325016.578101] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325016.782071] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325020.045940] net_ratelimit: 15 callbacks suppressed
+[1325020.045945] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325020.249934] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325020.453923] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325020.657917] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325020.861908] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325021.065899] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325021.269876] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325021.473889] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325021.677872] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325021.881865] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325025.149726] net_ratelimit: 15 callbacks suppressed
+[1325025.149731] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325025.353729] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325025.557706] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325025.761697] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325025.965699] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325026.169685] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325026.373683] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325026.577645] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325026.785626] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325026.989619] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325030.261523] net_ratelimit: 15 callbacks suppressed
+[1325030.261528] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325030.465516] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325030.669503] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325030.873489] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325031.077487] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325031.281484] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325031.485467] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325031.689451] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325031.893456] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325032.097440] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325035.361295] net_ratelimit: 15 callbacks suppressed
+[1325035.361300] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325035.565285] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325035.769288] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325035.973277] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325036.177264] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325036.381258] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325036.585253] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325036.793241] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325036.997237] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325037.201234] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325040.473078] net_ratelimit: 15 callbacks suppressed
+[1325040.473083] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325040.677066] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325040.881072] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325041.085055] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325041.289038] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325041.493035] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325041.697034] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325041.901014] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325042.105012] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325042.309006] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325045.572856] net_ratelimit: 15 callbacks suppressed
+[1325045.572861] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325045.776845] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325045.980839] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325046.184829] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325046.388814] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325046.592812] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325046.796810] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325047.000788] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325047.204791] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325047.408781] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325050.672635] net_ratelimit: 15 callbacks suppressed
+[1325050.672640] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325050.876626] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325051.080619] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325051.284609] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325051.488591] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325051.692592] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325051.896585] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325052.100559] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325052.304568] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325052.508557] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325055.780415] net_ratelimit: 15 callbacks suppressed
+[1325055.780420] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325055.984459] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325056.192591] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325056.400396] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325056.604663] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325056.808378] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325057.012380] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325057.216361] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325057.420342] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325057.624361] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325060.892199] net_ratelimit: 15 callbacks suppressed
+[1325060.892205] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325061.096180] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325061.300170] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325061.504171] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325061.708160] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325061.912145] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325062.120137] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325062.324134] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325062.528109] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325062.732103] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325065.999956] net_ratelimit: 15 callbacks suppressed
+[1325065.999962] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325066.203949] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325066.407951] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325066.611947] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325066.819930] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325067.023915] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325067.227905] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325067.431893] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325067.639897] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325067.843883] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325071.107751] net_ratelimit: 15 callbacks suppressed
+[1325071.107757] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325071.311730] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325071.515734] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325071.719733] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325071.923725] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325072.127710] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325072.331676] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325072.535675] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325072.739671] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325072.943672] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325076.215525] net_ratelimit: 15 callbacks suppressed
+[1325076.215530] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325076.419520] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325076.623500] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325076.827484] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325077.031481] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325077.235486] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325077.439464] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325077.643454] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325077.847446] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325078.051436] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325081.323284] net_ratelimit: 15 callbacks suppressed
+[1325081.323290] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325081.527280] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325081.731287] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325081.935275] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325082.139254] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325082.347243] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325082.551235] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325082.755237] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325082.959221] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325083.163234] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325086.431069] net_ratelimit: 15 callbacks suppressed
+[1325086.431075] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325086.639057] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325086.843045] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325087.047059] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325087.251031] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325087.455021] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325087.659025] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325087.863005] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325088.066997] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325088.271004] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325091.534845] net_ratelimit: 15 callbacks suppressed
+[1325091.534851] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325091.738833] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325091.942817] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325092.146802] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325092.350806] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325092.554802] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325092.758777] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325092.962763] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325093.166773] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325093.370754] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325096.634606] net_ratelimit: 15 callbacks suppressed
+[1325096.634612] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325096.838600] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325097.042585] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325097.246583] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325097.450570] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325097.654567] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325097.858552] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325098.062579] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325098.266558] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325098.470524] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325101.734389] net_ratelimit: 15 callbacks suppressed
+[1325101.734394] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325101.938370] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325102.142363] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325102.346356] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325102.550343] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325102.754336] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325102.958339] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325103.166319] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325103.370310] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325103.574312] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325106.866137] net_ratelimit: 15 callbacks suppressed
+[1325106.866143] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325107.070148] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325107.274144] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325107.478130] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325107.682141] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325107.886113] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325108.090104] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325108.294096] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325108.498084] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325108.706085] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325111.977929] net_ratelimit: 15 callbacks suppressed
+[1325111.977935] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325112.181916] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325112.385916] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325112.589904] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325112.797891] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325113.001891] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325113.205883] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325113.409856] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325113.613857] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325113.817850] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325117.081674] net_ratelimit: 15 callbacks suppressed
+[1325117.081679] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325117.285680] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325117.489668] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325117.693656] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325117.897687] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325118.101644] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325118.305635] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325118.509626] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325118.713619] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325118.917608] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325122.181454] net_ratelimit: 15 callbacks suppressed
+[1325122.181460] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325122.385446] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325122.589435] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325122.793419] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325122.997426] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325123.201414] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325123.405410] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325123.609409] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325123.813381] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325124.017373] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325127.285197] net_ratelimit: 15 callbacks suppressed
+[1325127.285202] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325127.489187] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325127.693178] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325127.897167] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325128.101159] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325128.305148] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325128.509137] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325128.713140] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325128.917129] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325129.121118] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325132.388966] net_ratelimit: 15 callbacks suppressed
+[1325132.388971] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325132.592972] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325132.796946] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325133.000932] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325133.204927] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325133.408915] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325133.612909] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325133.816897] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325134.020929] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325134.224896] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325137.488730] net_ratelimit: 15 callbacks suppressed
+[1325137.488734] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325137.692717] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325137.896710] bond0: (slave kvmbr0): failed to get link speed/duplex
+[1325138.100730] bond0: (slave kvmbr0): failed to get link speed/duplex
+
+##########################################################################
+
+Linux 5.4.0-120-generic (nas) 	2022年07月06日 	_x86_64_	(4 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+           0.47    0.01    0.59    0.18    0.00   98.75
+
+Device             tps    kB_read/s    kB_wrtn/s    kB_dscd/s    kB_read    kB_wrtn    kB_dscd
+sda               5.13         3.18       318.04        35.43    4220426  421469048   46954408
+sdb               1.42        11.07        47.58         0.00   14667797   63050648          0
+sdc               0.60         7.65        43.57         0.00   10136809   57735612          0
+sdd               1.37        10.84        47.58         0.00   14358577   63053528          0
+sde               0.31        23.59        27.84         0.00   31267897   36888060          0
+sdf               0.61        11.47        47.59         0.00   15203205   63067976          0
+sdg               0.30        23.20        27.83         0.00   30739241   36882652          0
+sdh               0.61        11.73        47.59         0.00   15541921   63061528          0
+sdi               0.60        11.49        47.59         0.00   15231353   63062664          0
+
+              total        used        free      shared  buff/cache   available
+Mem:          7.7Gi       950Mi       5.3Gi       6.0Mi       1.4Gi       6.5Gi
+Swap:         8.0Gi        14Mi       8.0Gi
+
+Filename				Type		Size	Used	Priority
+/dev/sda3                              	partition	8388604	14336	-2
+
+CPU sysfs topology (clusters, cpufreq members, clockspeeds)
+                 cpufreq   min    max
+ CPU    cluster  policy   speed  speed   core type
+  0        0        0     1333    1999   Celeron J1900 @ 1.99GHz
+  1        0        1     1333    1999   Celeron J1900 @ 1.99GHz
+  2        0        2     1333    1999   Celeron J1900 @ 1.99GHz
+  3        0        3     1333    1999   Celeron J1900 @ 1.99GHz
+
+Architecture:                    x86_64
+CPU op-mode(s):                  32-bit, 64-bit
+Byte Order:                      Little Endian
+Address sizes:                   36 bits physical, 48 bits virtual
+CPU(s):                          4
+On-line CPU(s) list:             0-3
+Thread(s) per core:              1
+Core(s) per socket:              4
+Socket(s):                       1
+NUMA node(s):                    1
+Vendor ID:                       GenuineIntel
+CPU family:                      6
+Model:                           55
+Model name:                      Intel(R) Celeron(R) CPU  J1900  @ 1.99GHz
+Stepping:                        8
+CPU MHz:                         2000.311
+CPU max MHz:                     1999.2000
+CPU min MHz:                     1332.8000
+BogoMIPS:                        4000.00
+Virtualization:                  VT-x
+L1d cache:                       96 KiB
+L1i cache:                       128 KiB
+L2 cache:                        2 MiB
+NUMA node0 CPU(s):               0-3
+Vulnerability Itlb multihit:     Not affected
+Vulnerability L1tf:              Not affected
+Vulnerability Mds:               Mitigation; Clear CPU buffers; SMT disabled
+Vulnerability Meltdown:          Mitigation; PTI
+Vulnerability Mmio stale data:   Not affected
+Vulnerability Spec store bypass: Not affected
+Vulnerability Spectre v1:        Mitigation; usercopy/swapgs barriers and __user pointer sanitization
+Vulnerability Spectre v2:        Mitigation; Retpolines, IBPB conditional, IBRS_FW, STIBP disabled, RSB filling
+Vulnerability Srbds:             Not affected
+Vulnerability Tsx async abort:   Not affected
+Flags:                           fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx rdtscp lm constant_tsc arch_perfmon pebs bts rep_good nopl xtopology tsc_reliable nonstop_tsc cpuid aperfmperf tsc_known_freq pni pclmulqdq dtes64 monitor ds_cpl vmx est tm2 ssse3 cx16 xtpr pdcm sse4_1 sse4_2 movbe popcnt tsc_deadline_timer rdrand lahf_lm 3dnowprefetch epb pti ibrs ibpb stibp tpr_shadow vnmi flexpriority ept vpid tsc_adjust smep erms dtherm arat md_clear
+
+Processor Information
+	Socket Designation: SOCKET 0
+	Type: Central Processor
+	Family: Celeron
+	Manufacturer: Intel
+	ID: 78 06 03 00 FF FB EB BF
+	Signature: Type 0, Family 6, Model 55, Stepping 8
+	Flags:
+		FPU (Floating-point unit on-chip)
+		VME (Virtual mode extension)
+		DE (Debugging extension)
+		PSE (Page size extension)
+		TSC (Time stamp counter)
+		MSR (Model specific registers)
+		PAE (Physical address extension)
+		MCE (Machine check exception)
+		CX8 (CMPXCHG8 instruction supported)
+		APIC (On-chip APIC hardware supported)
+		SEP (Fast system call)
+		MTRR (Memory type range registers)
+		PGE (Page global enable)
+		MCA (Machine check architecture)
+		CMOV (Conditional move instruction supported)
+		PAT (Page attribute table)
+		PSE-36 (36-bit page size extension)
+		CLFSH (CLFLUSH instruction supported)
+		DS (Debug store)
+		ACPI (ACPI supported)
+		MMX (MMX technology supported)
+		FXSR (FXSAVE and FXSTOR instructions supported)
+		SSE (Streaming SIMD extensions)
+		SSE2 (Streaming SIMD extensions 2)
+		SS (Self-snoop)
+		HTT (Multi-threading)
+		TM (Thermal monitor supported)
+		PBE (Pending break enabled)
+	Version: Intel(R) Celeron(R) CPU J1900 @ 1.99GHz
+	Voltage: 1.2 V
+	External Clock: 83 MHz
+	Max Speed: 2400 MHz
+	Current Speed: 1990 MHz
+	Status: Populated, Enabled
+	Upgrade: Socket BGA1155
+	L1 Cache Handle: 0x0030
+	L2 Cache Handle: 0x0031
+	Asset Tag: Fill By OEM
+	Part Number: Fill By OEM
+	Core Count: 4
+	Core Enabled: 4
+	Thread Count: 4
+	Characteristics:
+		64-bit capable
+
+ Compiler: /usr/bin/gcc (Ubuntu 9.4.0-1ubuntu1~20.04.1) 9.4.0 / x86_64-linux-gnu
+ Userland: amd64
+   Kernel: 5.4.0-120-generic/x86_64
+           CONFIG_HZ=250
+           CONFIG_HZ_250=y
+           CONFIG_PREEMPT_NOTIFIERS=y
+           CONFIG_PREEMPT_VOLUNTARY=y
+
+DIMM configuration:
+          description: DIMM DDR3 1600 MHz (0.6 ns)
+          product: 9905428-435.A00LF
+          vendor: Kingston
+          physical id: 0
+          configured speed: 1333MT/s
+          size: 8GiB
+          width: 64 bits
+          clock: 1600MHz (0.6ns)
+
+|  / Celeron J1900 @ 1.99GHz | 1999200 MHz | 5.4 | Ubuntu 20.04.4 LTS x86_64/amd64 | 5530 | 34060 | 28860 | 3550 | 3400 | - |

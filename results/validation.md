@@ -188,6 +188,7 @@
 | [3rUb](3rUb.txt) | v0.7.7 Pine64 RK3566 Quartz64-A Board | 0%/0% | 3.8Gi/3.5Gi | X | X | X | X | 1% | 0% | |
 | [3wZn](3wZn.txt) | v0.7.7 Radxa Zero | 0.3%/0% | 3.7Gi/3.4Gi | X | X | X | X | 1% | 0% | |
 | [408h](408h.txt) | v0.9.8 Ugoos UT2 | 0%/0% | 2.0Gi/1.8Gi | X | X | X | X | 2% | 0% | |
+| [40BJ](40BJ.txt) | v0.9.8 Allwinner D1 | 3.0%/1.5% | 960Mi/852Mi | X | X | X | X | 4% | 0% | |
 | [40TX](40TX.txt) | v0.9.8 Radxa ROCK3 Model A | 0.6%/0% | 3.8Gi/3.5Gi | X | X | X | X | 2% | 0% | |
 | [40cj](40cj.txt) | v0.9.8 Libre Computer AML-S912-PC | 0%/0% | 1.8Gi/1.6Gi | X | X | X | X | <span style=color:red>**53%**</span> | 3% | |
 | [4132](4132.txt) | v0.9.8 SolidRun Cubox-i Dual/Quad | 2.3%/0% | 2.0Gi/1.8Gi | X | X | X | X | 3% | <span style=color:red>** 9%**</span> | |

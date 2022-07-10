@@ -20,14 +20,15 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [BPi M2U](http://ix.io/3TKh) | 1010 Mhz | 5.16 | Buster armhf | 2230 | 15550 | 19540 | 790 | 2540 | - |
 | [BPi M4](http://ix.io/1Dt1) | 1400 MHz | 4.9 | Bionic arm64 | 3500 | 125430 | 651460 | 1010 | 4360 | 5.48 |
 | [BPi R2](http://ix.io/1iGV) | 1300 MHz | 4.4 | **Xenial** armhf | 2600 | 27550 | 25350 | 1500 | 3800 | - |
-| [Honeycomb LX2](http://ix.io/3Y4f) | 2200 MHz | 5.16 | **Fedora 35 aarch64** | 30690 | 418100 | 1251710 | 5050 | 16220 | 46.09 |
 | [Clearfog Pro](http://ix.io/1iFa) | 1600 MHz | 4.14 | Stretch armhf | 2185 | 44500 | 43900 | 935 | 4940 | - |
+| [ClockworkPi R-01](http://ix.io/40BJ) | 1000 MHz | 5.4 | Focal riscv64 | 450 | 8900 | 9040 | 1220 | 2640 | - |
 | [Cubietruck](http://ix.io/3Naw) | 960 MHz | 5.10 | Bullseye armhf | 1030 | 15260 | 18640 | 440 | 2010 | - |
 | [Cubox-i4](http://ix.io/4132) | 980 MHz | 5.15 | Jammy armhf | 2360 | 25750 | 27000 | 340 | 340 | - |
 | [EspressoBin](http://ix.io/1kt2) | 800 MHz | 4.17 | Stretch arm64 | 1138 | 54290 | 368330 | 1040 | 2490 | 1.23 |
 | [EspressoBin](http://ix.io/1lCe) | 1200 MHz | 4.18 | Stretch arm64 | 1630 | 81900 | 544240 | 1000 | 2400 | 1.82 |
 | [Gigabyte H270-T70](http://ix.io/3N5c) | 2000 Mhz | 5.16 | Sid arm64 | 107180 | 110340 | 340750 | 4180 | 17130 | - |
 | [Helios4](http://ix.io/1jCy) | 1600 MHz | 4.14 | Stretch armhf | 2210 | 44785 &ast;1280 | 42500 &ast;98560 | 910 | 4840 | - |
+| [Honeycomb LX2](http://ix.io/3Y4f) | 2200 MHz | 5.16 | **Fedora 35 aarch64** | 30690 | 418100 | 1251710 | 5050 | 16220 | 46.09 |
 | [Hugsun X99](http://ix.io/2ICt) | 2088/1800 MHz | 5.9 | Focal arm64 | 7710 | 412105 | 1184306 | 2270 | 5970 | - |
 | [HummingBoard Pulse i.MX8M Quad](http://ix.io/27FC) | 1500 MHz | 4.19 | Buster arm64 | 4330 | 97380 | 695540 | 2230 | 9900 | - |
 | [Jetson Nano](http://ix.io/1I4j) | 1430 MHz | 4.9 | Bionic arm64 | 5060 | 276890 | 513700 | 3680 | 8560 | 6.64 |
@@ -209,6 +210,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 * Ugoos UT2 might be representative for other RK3188 devices though memory performance with UT2 seems severely limited
 * Vim2 is somewhat special: not a real big.LITTLE design but two A53 clusters controlled by a firmware BLOB that allows cluster 0 to clock up to 1414 MHz (reported falsely as 1512 MHz) and cluster 1 able to reach 1 GHz ([details](https://forum.khadas.com/t/cpu-frequency-up-to-2ghz/2010/23?u=tkaiser))
 * The 'TRONFY MXQ S805' numbers should be similar to ODROID-C1/C1+ since same Amlogic S805 SoC at same clockspeed.
+* All the RISC-V scores (ClockworkPi R-01, Kendryte K510, T-HEAD C910 RVB-ICE) suffer from missing software optimizations. For example the `openssl` benchmark is currently generic C on RISC-V vs. optimized assembler on ARM or even [ARMv8 Crypto Extensions](https://github.com/ThomasKaiser/sbc-bench/blob/master/results/ARMv8-Crypto-Extensions.md) or AES-NI on x64.
 * x86 numbers are meant as comparison. x5-Z8300 numbers were made with an [UP Board](https://wiki.up-community.org/Hardware_Specification), 1st x5-Z8350 is an Atomic Pi and the 2nd a RockPi X, Celeron J3455 with an [ASRock J3455-ITX mainboard](https://forum.openmediavault.org/index.php/Thread/24093), Pentium N4200 on [UP2 Board](https://wiki.up-community.org/Hardware_Specification_UP2), Pentium J4205 on an [ASRock J4205-ITX](https://forum.openmediavault.org/index.php/Thread/24093-Efficient-low-cost-home-made-NAS/?postID=182578#post182578), Ryzen Embedded R1606G on [DFI GHF51 SBC](https://www.cnx-software.com/2020/08/10/amd-ryzen-embedded-sbc-review-with-ubuntu-20-04/), Celeron J4105 on two ODROID-H2 with different DDR4-PC19200 (2400MT/s) SO-DIMMs (remotely accessed via maze.odroid.com) and Celeron N4100 tested on an [ODROID-H2 engineering sample](https://forum.odroid.com/viewtopic.php?f=168&t=32911&p=239613#p239581) with single channel DRAM config, Pentium J5005 is in an [MINIX NEO J50C-4](https://www.cnx-software.com/2019/12/12/a-look-at-ubuntu-on-minix-neo-g41v-4-and-j50c-4-mini-pcs/), Pentium G4600 is inside a [TK Microserver MI106+](https://www.thomas-krenn.com/de/produkte/tower-systeme/silent-tower-server/microserver-mi106-plus.html).
 * Both Jasper Lake numbers (N4500/N5100) were obtained using passively cooled Mini PC with only one DIMM. With dual channel memory (and better cooling in N5100's case) some scores might be significantly higher.
 

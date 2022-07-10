@@ -1515,10 +1515,10 @@ InstallPrerequisits() {
 	echo -e "sbc-bench v${Version}\n\nInstalling needed tools:  \c"
 	
 	# Determine missing packages and install them with a single command
-	MissingPackages="$(CheckMissingPackages)"
+	MissingPackages="$(CheckMissingPackages | sed 's/\ $//')"
 	SevenZip=$(command -v 7zr || command -v 7za)
 	if [ -z "${SevenZip}" ]; then
-		MissingPackages="${MissingPackages}p7zip"
+		MissingPackages="${MissingPackages} p7zip"
 	fi
 	
 	# add needed repository and install all necessary packages
@@ -1528,7 +1528,7 @@ InstallPrerequisits() {
 		add-apt-repository -y universe >/dev/null 2>&1
 		${MissingPackages} >/dev/null 2>&1
 		if [ $? -eq 100 ]; then
-			# if apt cache is too outdated update it and try again
+			# if apt cache is too outdated then update and try again
 			apt update >/dev/null 2>&1
 			${MissingPackages} >/dev/null 2>&1
 		fi
@@ -2552,6 +2552,7 @@ GuessARMSoC() {
 	#      Cortex-A57 / r1p2: AMD Opteron A1100
 	#      Cortex-A57 / r1p3: Nvidia Jetson TX2, Renesas R8A7795/R8A7796/R8A77965
 	#      Cortex-A72 / r0p0: Mediatek MT8173
+	#      Cortex-A72 / r0p1: Marvell Armada 8020/8040
 	#      Cortex-A72 / r0p2: HiSilicon Kunpeng 916, NXP i.MX8QM/LS2xx8A, Rockchip RK3399, Socionext LD20, 
 	#      Cortex-A72 / r0p3: Broadcom BCM2711, NXP LS1028A, NXP LX2xx0A, Marvell Armada3900-A1, Xilinx Versal, AWS Graviton -> https://tinyurl.com/y47yz2f6
 	#      Cortex-A72 / r1p0: TI J721E (TDA4VM/DRA829V)
@@ -2866,7 +2867,7 @@ GuessARMSoC() {
 								echo "Amlogic S905M2"
 								;;
 							21*)
-								# GXL: S805X, S805Y, S905X, S905D, S905W, S905L, S905M2
+								# GXL: S805X, S805Y, S905X, S905D, S905W, S905L, S905L2, S905M2
 								# - S905D: 21:d (0:2), 21:d (4:2)
 								# - S805X: 21:d (34:2)
 								# - S905X: 21:a (82:2), 21:b (82:2), 21:c (84:2), 21:d (84:2)
@@ -3257,7 +3258,7 @@ GuessSoCbySignature() {
 										;;
 									*gxl*)
 										# GXL: 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
-										echo "Amlogic S805X, S805Y, S905X/S905D/S905W/S905L/S905M2"
+										echo "Amlogic S805X, S805Y, S905X/S905D/S905W/S905L/S905L2/S905M2"
 										;;
 									*)
 										# GXL or G12A: 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
@@ -3338,6 +3339,14 @@ GuessSoCbySignature() {
 		0A9r4p10A9r4p1|00A9r4p100A9r4p1)
 			# Armada 375/38x, 2 x Cortex-A9 / r4p1 / swp half thumb fastmult vfp edsp neon vfpv3 tls
 			echo "Armada 375/38x"
+			;;
+		00A72r0p100A72r0p102A72r0p102A72r0p1)
+			# Armada 8040, 4 x Cortex-A72 / r0p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32
+			echo "Armada 8040"
+			;;
+		00A72r0p100A72r0p1)
+			# Armada 8040, 2 x Cortex-A72 / r0p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32
+			echo "Armada 8020"
 			;;
 		??A53r0p4??A53r0p4)
 			# Armada 3700, 2 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
@@ -3770,7 +3779,7 @@ IdentifyGXLG12A() {
 	case ${MaxSpeed} in
 		15??|14??)
 			# GXL: 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid (running 32-bit: fp asimd evtstrm aes pmull sha1 sha2 crc32 wp half thumb fastmult vfp edsp neon vfpv3 tlsi vfpv4 idiva idivt)
-			echo "Amlogic A113X/A113D, S805X, S805Y, S905X/S905D/S905L/S905M2"
+			echo "Amlogic A113X/A113D, S805X, S805Y, S905X/S905D/S905L/S905L2/S905M2"
 			;;
 		12??)
 			# S905W being limited to 1.2 GHz

@@ -3737,6 +3737,18 @@ GuessSoCbySignature() {
 			# or 4 x Apple Icestorm / r0p0 + 4 x Apple Firestorm / ? / https://bench.cr.yp.to/computers.html
 			echo "Apple M1"
 			;;
+		*AppleM1Pror2p0*AppleM1Pror2p0*AppleM1Pror2p0*AppleM1Pror2p0*AppleM1Pror2p0*AppleM1Pror2p0*AppleM1Pror2p0*AppleM1Pror2p0*AppleM1Pror2p0*AppleM1Pror2p0)
+			# Apple M1 Pro: 2 x Apple Icestorm / r2p0 + 4 x Apple Firestorm / r2p0 + 4 x Apple Firestorm / r2p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 asimddp sha512 asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp flagm2 frint
+			echo "Apple M1 Pro"
+			;;
+		*AppleM1Max*AppleM1Max*AppleM1Max*AppleM1Max*AppleM1Max*AppleM1Max*AppleM1Max*AppleM1Max*AppleM1Max*AppleM1Max*AppleM1Max*AppleM1Max*AppleM1Max*AppleM1Max*AppleM1Max*AppleM1Max*AppleM1Max*AppleM1Max*AppleM1Max*AppleM1Max)
+			# Apple M1 Ultra: 2 M1 Max combined on an Interposer
+			echo "Apple M1 Ultra"
+			;;
+		*AppleM1Max*AppleM1Max*AppleM1Max*AppleM1Max*AppleM1Max*AppleM1Max*AppleM1Max*AppleM1Max*AppleM1Max*AppleM1Max)
+			# Apple M1 Max: 2 x Apple Icestorm 8 x Apple Firestorm
+			echo "Apple M1 Max"
+			;;
 		*AppleM2r1p0*AppleM2r1p0*AppleM2r1p0*AppleM2r1p0*AppleM2r1p0*AppleM2r1p0*AppleM2r1p0*AppleM2r1p0)
 			# Apple M2: 4 x Apple Blizzard / r1p0 + 4 x Apple Avalanche / r1p0 / https://piped.kavin.rocks/watch?v=SidIJkC5YN0 (7:10:02)
 			echo "Apple M2"

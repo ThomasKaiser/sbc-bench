@@ -242,14 +242,18 @@ GetARMCore() {
 	56/581:Marvell PJ4/PJ4b
 	56/584:Marvell PJ4B-MP
 	61:Apple
-	61/020:Apple Icestorm T8101
-	61/021:Apple Firestorm T8101
-	61/022:Apple Icestorm T8103
-	61/023:Apple Firestorm T8103
-	61/030:Apple Blizzard T8110
-	61/031:Apple Avalanche T8110
-	61/032:Apple Blizzard T8112
-	61/033:Apple Avalanche T8112
+	61/020:Apple Icestorm A14
+	61/021:Apple Firestorm A14
+	61/022:Apple Icestorm M1
+	61/023:Apple Firestorm M1
+	61/024:Apple Icestorm M1Pro
+	61/025:Apple Firestorm M1Pro
+	61/028:Apple Icestorm M1Max
+	61/029:Apple Firestorm M1Max
+	61/030:Apple Blizzard A15
+	61/031:Apple Avalanche A15
+	61/032:Apple Blizzard M2
+	61/033:Apple Avalanche M2
 	66:Faraday
 	66/526:Faraday FA526
 	66/626:Faraday FA626
@@ -3345,7 +3349,7 @@ GuessSoCbySignature() {
 			echo "Armada 8040"
 			;;
 		00A72r0p100A72r0p1)
-			# Armada 8040, 2 x Cortex-A72 / r0p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32
+			# Armada 8020, 2 x Cortex-A72 / r0p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			echo "Armada 8020"
 			;;
 		??A53r0p4??A53r0p4)
@@ -3728,12 +3732,12 @@ GuessSoCbySignature() {
 			# AWS Graviton3: 1/2/4/8/16/32/48/64 vCPU Neoverse-V1 / r1p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 sve asimdfhm dit uscat ilrcpc flagm ssbs paca pacg dcpodp svei8mm svebf16 i8mm bf16 dgh rng
 			echo "AWS Graviton3"
 			;;
-		*AppleT8103r0p0*AppleT8103r0p0*AppleT8103r0p0*AppleT8103r0p0*AppleT8103*AppleT8103*AppleT8103*AppleT8103*|*AppleT8103r1p1*AppleT8103r1p1*AppleT8103r1p1*AppleT8103r1p1*AppleT8103r1p1*AppleT8103r1p1*AppleT8103r1p1*AppleT8103r1p1)
+		*AppleM1r0p0*AppleM1r0p0*AppleM1r0p0*AppleM1r0p0*AppleM1*AppleM1*AppleM1*AppleM1*|*AppleM1r1p1*AppleM1r1p1*AppleM1r1p1*AppleM1r1p1*AppleM1r1p1*AppleM1r1p1*AppleM1r1p1*AppleM1r1p1)
 			# Apple M1: 4 x Apple Icestorm / r1p1 + 4 x Apple Firestorm / r1p1 / https://gist.github.com/z4yx/13520bd2beef49019b1b7436e3b95ddd
 			# or 4 x Apple Icestorm / r0p0 + 4 x Apple Firestorm / ? / https://bench.cr.yp.to/computers.html
 			echo "Apple M1"
 			;;
-		*AppleT8112r1p0*AppleT8112r1p0*AppleT8112r1p0*AppleT8112r1p0*AppleT8112r1p0*AppleT8112r1p0*AppleT8112r1p0*AppleT8112r1p0)
+		*AppleM2r1p0*AppleM2r1p0*AppleM2r1p0*AppleM2r1p0*AppleM2r1p0*AppleM2r1p0*AppleM2r1p0*AppleM2r1p0)
 			# Apple M2: 4 x Apple Blizzard / r1p0 + 4 x Apple Avalanche / r1p0 / https://piped.kavin.rocks/watch?v=SidIJkC5YN0 (7:10:02)
 			echo "Apple M2"
 			;;

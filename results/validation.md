@@ -92,8 +92,8 @@
 | [27FC](27FC.txt) | v0.6.9 SolidRun i.MX8MQ HummingBoard Pu | 1.3%/0.3% | 2.9Gi/2.7Gi | X | X | X | X | 0% | 0% | |
 | [2Cyi](2Cyi.txt) | v0.7.4 Raspberry Pi 400 Rev 1.0 | 0%/0.9% | 3.7Gi/3.4Gi | X | X | X | X | 3% | 0% | |
 | <del>[2FrG](2FrG.txt)</del> | <del>v0.7.4 </del> | <del>0%/0%</del> | <del>123Gi/121Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 0%</del> | <del> 0%</del> | |
-| [2Gjg](2Gjg.txt) | v0.7.5 Apple M1 power core | 0.3%/13.2% | 1.9Gi/1.5Gi | X | X | X | X | 0% | 2% | |
-| [2Gtf](2Gtf.txt) | v0.7.5 Apple M1 efficiency | 1.1%/1.4% | 1.9Gi/1.5Gi | X | X | X | X | 4% | 1% | |
+| <del>[2Gjg](2Gjg.txt)</del> | <del>v0.7.5 </del> | <del>0.3%/13.2%</del> | <del>1.9Gi/1.5Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 0%</del> | <del> 2%</del> | |
+| <del>[2Gtf](2Gtf.txt)</del> | <del>v0.7.5 </del> | <del>1.1%/1.4%</del> | <del>1.9Gi/1.5Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 4%</del> | <del> 1%</del> | |
 | [2ICt](2ICt.txt) | v0.7.5 Hugsun X99 TV BOX | 0%/0.7% | 3.7Gi/3.4Gi | X | X | X | X | 0% | 0% | |
 | [2Jdb](2Jdb.txt) | v0.7.2 x5-Z8350 | 0%/0% | 3.8Gi/2.6Gi | X | X | X | X | 4% | <span style=color:red>**21%**</span> | |
 | [2iFY](2iFY.txt) | v0.7.1 Amazon a1.xlarge | 0%/0% | 7.5G/7.2G | X | X | X | X | 1% | 0% | |
@@ -197,3 +197,4 @@
 | [41Kb](41Kb.txt) | v0.9.8 / Celeron J1900 @ 1.99GHz | 0%/0% | 7.7Gi/6.5Gi | X | X | X | X | 2% | 0% | |
 | [41ML](41ML.txt) | v0.9.8 Tronsmart S82 | 0.8%/1.0% | 2.0Gi/1.7Gi | X | X | X | X | 2% | <span style=color:red> 7%</span> | |
 | [41Qa](41Qa.txt) | v0.9.8 canaan-creative,k510 | 0%/0% | 192Mi/131Mi | | | | | 4% | 1% | |
+| [443N](443N.txt) | v0.9.8 Apple MacBook Pro | 0.2%/8.9% | 15Gi/14Gi | X | X | X | X | 1% | 0% | |

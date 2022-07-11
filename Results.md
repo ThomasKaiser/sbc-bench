@@ -8,15 +8,14 @@ So do **not** rely on collected numbers unless you carefully read through all th
 
 ## Some numbers
 
-*ODROID-M1, Quartz64, ROCK 3A, ROCK 5B, RK3568-ROC-PC and Khadas VIM4 numbers are preliminary since software support situation for RK3566/RK3568/RK3588 and A311D2 is still in a very early stage. Please also note that with RK35xx SBC so far [real measured clockspeeds are somewhat unstable](https://forum.odroid.com/viewtopic.php?p=350782#p350782).*
+*ODROID-M1, Quartz64, ROCK 3A, ROCK 5B, RK3568-ROC-PC and Khadas VIM4 numbers are preliminary since software support situation for RK3566/RK3568/RK3588 and A311D2 is still in a very early stage. Same applies to [Apple M1 Pro](https://github.com/ThomasKaiser/sbc-bench/issues/47#issue-1300572558). Please also note that with RK35xx SBC so far [measured clockspeeds differ from what's defined in device-tree due to PVTM](https://github.com/ThomasKaiser/Knowledge/blob/master/articles/Quick_Preview_of_ROCK_5B.md#rk3588).*
 
 | Device / details | Clockspeed | Kernel | Distro | 7-zip | AES-128 (16 byte) | AES-256 (16 KB) | memcpy | memset | kH/s |
 | ----- | :--------: | :----: | :----: | ----: | ------: | ------: | -----: | -----: | ---: |
 | [Akaso M8S](http://ix.io/3R3N) | 1200 MHz | 5.10 | Buster armhf | 3050 | 32050 | 32120 | 1160 | 3330 | - |
 | [Amazon a1.xlarge](http://ix.io/2iFY) | 2300 MHz | 4.15 | Bionic arm64 | 8610 | 458500 | 1297960 | 4280 | 14220 | - |
 | [AMedia X96 Max+](http://ix.io/3QOj) | 2100 MHz | 5.15 | Focal arm64 | 5270 | 197690 | 981830 | 2630 | 5150 | - |
-| [Apple M1 power core](http://ix.io/2Gjg) | 3200 MHz | 5.8 | Groovy arm64 | 5100 | 638810 | 1119670 | 27960 | 63950 | 5.30 |
-| [Apple M1 efficiency](http://ix.io/2Gtf) | *600* MHz | 5.8 | Groovy arm64 | 650 | 150340 | 224520 | 5130 | 7640 | 0.76 |
+| [Apple M1 Pro](http://ix.io/443N) | 3030/2060 MHz | 5.18 | Gentoo 2.8 arm64 | 43800 | 620960 | 1064450 | 27110 | 71910 | 48.28 |
 | [BPi M2U](http://ix.io/3TKh) | 1010 Mhz | 5.16 | Buster armhf | 2230 | 15550 | 19540 | 790 | 2540 | - |
 | [BPi M4](http://ix.io/1Dt1) | 1400 MHz | 4.9 | Bionic arm64 | 3500 | 125430 | 651460 | 1010 | 4360 | 5.48 |
 | [BPi R2](http://ix.io/1iGV) | 1300 MHz | 4.4 | **Xenial** armhf | 2600 | 27550 | 25350 | 1500 | 3800 | - |

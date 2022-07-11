@@ -50,12 +50,14 @@ All of this **only** applies to ARM SoCs with _ARMv8 Crypto Extensions_ licensed
 
 ### Numbers the aforementioned conclusions are based on
 
-Crawling through [sbc-bench results collection](../Results.md) comparing +25 different SoCs/CPUs from various vendors at various clockspeeds using OpenSSL versions 1.1.0f (25 May 2017) through 3.0.2 (15 Mar 2022) shows always the same relation between openssl score and clockspeed for those four core families (right column is OpenSSL's aes-256-cbc score divided through clockspeed in MHz):
+Crawling through [sbc-bench results collection](../Results.md) comparing +30 different SoCs/CPUs from various vendors at various clockspeeds using OpenSSL versions 1.1.0f (25 May 2017) through 3.0.2 (15 Mar 2022) shows always the same relation between openssl score and clockspeed for those four core families (right column is OpenSSL's aes-256-cbc score divided through clockspeed in MHz):
 
 | ARM core | MHz | aes-256-cbc | score/mhz |
 | :----: | ----:  | :----:  | :----:  |
 | Cortex-A35 | | | |
 | [RK3308](http://ix.io/1XKY) | 1300 | 282290 | 217 |
+| Apple Firestorm | | | |
+| [M1 Pro](http://ix.io/443N) | 3030 | 1064110 | 351 |
 | Cortex-A57 | | | |
 | [Jetson Nano](http://ix.io/1I4j) | 1430 | 513700 | 359 |
 | [Nintendo Switch](http://ix.io/1Rnj) | 1780| 642670 | 361 |
@@ -65,6 +67,8 @@ Crawling through [sbc-bench results collection](../Results.md) comparing +25 dif
 | [Phytium D2000](http://ix.io/3Sl9) | 2300 | 828520 | 360 |
 | Carmel | | | |
 | [Jetson Xavier NX](http://ix.io/3YWp) | 1890 | 706280 | 374 |
+| Apple Icestorm | | | |
+| [M1 Pro](http://ix.io/443N) | 2060 | 784430 | 381 |
 | Cortex-A53 | | | |
 | [Armada 3700LP](http://ix.io/1kt2) | 790 | 368330 | 466 |
 | [S912](http://ix.io/1iJ7) | 1000 | 466780 | 466 |

@@ -93,6 +93,8 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Orange Pi Prime](http://ix.io/2kTH) | 1370 MHz | 5.4 | Buster | 3590 | 89210 | 637980 | 1180 | 3540 | - |
 | [Phytium D2000](http://ix.io/3GrW) | 2300 MHz | 5.13 | Impish arm64 | 16680 | 448610 | 828450 | 2920 | 7310 | - |
 | [Phytium D2000](http://ix.io/3Sl9) | 2300 MHz | 5.4 | Kylin arm64 | 16970 | 437820 | 828520 | 4090 | 16290 | - |
+| [Phytium D2000 16GB 1xSODIMM](http://ix.io/445T) | 2300 MHz | 5.19 | Jammy arm64 | 16390 | 427440 | 827090 | 2820 | 6490 | - |
+| [Phytium D2000 32GB 2xSODIMM](http://ix.io/445T) | 2300 MHz | 5.19 | Jammy arm64 | 16670 | 427490 | 828130 | 3480 | 16110 | - |
 | [PineH64](http://ix.io/1jEr) | 1800 MHz | 4.18 | Stretch arm64 | 4650 | 123400 | 836900 | 1380 | 5530 | 5.62 |
 | [PineH64](http://ix.io/26Ph) | 1800 MHz | 5.4 | Buster arm64 | 4710 | 116900 | 839870 | 1420 | 5560 | 7.10 |
 | [Quartz64](http://ix.io/3rUb) | 1800 MHz | 5.13 | Buster arm64 | 4840 | 165250 | 845490 | 2980 | 7650| - |

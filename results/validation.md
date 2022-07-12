@@ -117,7 +117,6 @@
 | [3Gia](3Gia.txt) | v0.8.5 Raspberry Pi 4 Model B Rev 1.1 | 2.0%/1.0% | 857Mi/696Mi | X | X | X | X | 3% | 0% | |
 | [3GmR](3GmR.txt) | v0.8.6 FriendlyARM NanoPi NEO4 | 0%/0.7% | 977Mi/714Mi | X | X | X | X | 1% | 0% | |
 | [3GnC](3GnC.txt) | v0.8.6 Hardkernel Odroid XU4 | 0%/0.9% | 1.9Gi/1.7Gi | X | X | X | X | 4% | 0% | [check log](3GnC.txt) |
-| [3GrW](3GrW.txt) | v0.8.6 | 0%/4.0% | 15Gi/14Gi | X | X | X | X | 1% | 0% | |
 | [3HUU](3HUU.txt) | v0.8.8 Celeron N4500 | 0.2%/0% | 7,5Gi/6,4Gi | X | X | X | X | 1% | 0% | |
 | <del>[3HUd](3HUd.txt)</del> | <del>v0.8.8 Intel Celeron N5100 @ 1.10GHz </del> | <del>0%/0%</del> | <del>7.6Gi/7.1Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 3%</del> | <del> 0%</del> | |
 | [3IlQ](3IlQ.txt) | v0.8.8 Celeron N5100 | 0%/0% | 7.6Gi/7.2Gi | X | X | X | X | 3% | 0% | |
@@ -167,7 +166,6 @@
 | [3R3N](3R3N.txt) | v0.9.3 Akaso M8S | 0%/0.4% | 986Mi/873Mi | X | X | X | X | 1% | <span style=color:red>**11%**</span> | [check log](3R3N.txt) |
 | [3Rsg](3Rsg.txt) | v0.9.3 Firefly RK3568-ROC-PC HDMI | 0%/0% | 3.7Gi/3.4Gi | X | X | X | X | 2% | 0% | |
 | [3S5U](3S5U.txt) | v0.9.3 Tronsmart MXIII Plus | 0%/0.4% | 2.0Gi/1.7Gi | X | X | X | X | 2% | 0% | |
-| [3Sl9](3Sl9.txt) | v0.9.3 zqykj-K681-F223 | 0%/0.4% | 15Gi/13Gi | X | X | X | X | 3% | 1% | |
 | [3TKh](3TKh.txt) | v0.9.3 Banana Pi BPI-M2-Ultra | 2.0%/0% | 2.0Gi/1.5Gi | X | X | X | X | 3% | 0% | |
 | [3TQ2](3TQ2.txt) | v0.9.3 Hardkernel ODROID-C4 | 0.3%/0% | 3.7Gi/3.2Gi | X | X | X | X | 4% | 0% | |
 | <del>[3UXa](3UXa.txt)</del> | <del>v0.9.3 Radxa ROCK 3 Model A </del> | <del>0%/0.3%</del> | <del>7.5Gi/7.2Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 2%</del> | <del> 0%</del> | |
@@ -198,3 +196,5 @@
 | [41ML](41ML.txt) | v0.9.8 Tronsmart S82 | 0.8%/1.0% | 2.0Gi/1.7Gi | X | X | X | X | 2% | <span style=color:red> 7%</span> | |
 | [41Qa](41Qa.txt) | v0.9.8 canaan-creative,k510 | 0%/0% | 192Mi/131Mi | | | | | 4% | 1% | |
 | [443N](443N.txt) | v0.9.8 Apple MacBook Pro | 0.2%/8.9% | 15Gi/14Gi | X | X | X | X | 1% | 0% | |
+| [445T](445T.txt) | v0.9.8 PHYTIUM LTD D2000 | 0%/2.4% | 15Gi/15Gi | X | X | X | X | 2% | 0% | |
+| [446h](446h.txt) | v0.9.8 PHYTIUM LTD D2000 | 0%/3.3% | 31Gi/30Gi | X | X | X | X | 2% | 0% | |

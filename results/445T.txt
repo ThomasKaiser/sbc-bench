@@ -1,0 +1,635 @@
+sbc-bench v0.9.8 PHYTIUM LTD D2000 (Mon, 11 Jul 2022 15:21:42 -0400)
+
+Distributor ID:	Ubuntu
+Description:	Ubuntu 22.04 LTS
+Release:	22.04
+Codename:	jammy
+Armbian info:   uefi-arm64, uefi-arm64, arm64, 22.08.0-trunk, git@github.com:armbian/build.git
+
+Device Info:
+	Manufacturer: PHYTIUM LTD
+	Product Name: D2000
+	Family: D2000
+
+BIOS/UEFI:
+	Vendor: PHYTIUM LTD
+	Version: <BAD INDEX>
+	Release Date: <BAD INDEX>
+
+/usr/bin/gcc (Ubuntu 11.2.0-19ubuntu1) 11.2.0
+
+Uptime: 15:21:42 up 12 min,  2 users,  load average: 0.41, 0.15, 0.06,  47.9°C
+
+Linux 5.19.0-rc5-arm64 (limp-phytium) 	07/11/22 	_aarch64_	(8 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+           0.61    0.00    0.53    0.01    0.00   98.85
+
+Device             tps    kB_read/s    kB_wrtn/s    kB_dscd/s    kB_read    kB_wrtn    kB_dscd
+nvme0n1          14.09       614.93        56.81         0.00     472713      43669          0
+zram0             0.78         3.12         0.01         0.00       2400          4          0
+zram1             0.83         0.61         8.12         0.00        468       6244          0
+
+               total        used        free      shared  buff/cache   available
+Mem:            15Gi       304Mi        14Gi       9.0Mi       264Mi        15Gi
+Swap:          7.8Gi          0B       7.8Gi
+
+Filename				Type		Size		Used		Priority
+/dev/zram0                              partition	8143816		0		5
+
+##########################################################################
+
+Checking cpufreq OPP (Phytium FTC663):
+
+No cpufreq support available. Measured on cpu1: 2298 MHz (2298.641/2298.615/2297.829)
+
+##########################################################################
+
+Hardware sensors:
+
+nvme-pci-0400
+Composite:    +47.9 C  (low  = -273.1 C, high = +82.8 C)
+                       (crit = +84.8 C)
+
+amdgpu-pci-0100
+vddgfx:      900.00 mV 
+fan1:             N/A  (min =    0 RPM, max = 6900 RPM)
+edge:         +60.0 C  (crit = +97.0 C, hyst = -273.1 C)
+PPT:           6.20 W  (cap =  25.00 W)
+
+/dev/nvme0n1:	48°C
+
+##########################################################################
+
+Executing benchmark on cpu0 (Phytium FTC663):
+
+tinymembench v0.4.9 (simple benchmark for memory throughput and latency)
+
+==========================================================================
+== Memory bandwidth tests                                               ==
+==                                                                      ==
+== Note 1: 1MB = 1000000 bytes                                          ==
+== Note 2: Results for 'copy' tests show how many bytes can be          ==
+==         copied per second (adding together read and writen           ==
+==         bytes would have provided twice higher numbers)              ==
+== Note 3: 2-pass copy means that we are using a small temporary buffer ==
+==         to first fetch data into it, and only then write it to the   ==
+==         destination (source -> L1 cache, L1 cache -> destination)    ==
+== Note 4: If sample standard deviation exceeds 0.1%, it is shown in    ==
+==         brackets                                                     ==
+==========================================================================
+
+ C copy backwards                                     :   2720.9 MB/s
+ C copy backwards (32 byte blocks)                    :   2718.8 MB/s
+ C copy backwards (64 byte blocks)                    :   2738.8 MB/s (0.2%)
+ C copy                                               :   2802.6 MB/s
+ C copy prefetched (32 bytes step)                    :   2948.9 MB/s (0.2%)
+ C copy prefetched (64 bytes step)                    :   2948.5 MB/s
+ C 2-pass copy                                        :   2628.1 MB/s
+ C 2-pass copy prefetched (32 bytes step)             :   2698.7 MB/s
+ C 2-pass copy prefetched (64 bytes step)             :   2710.4 MB/s
+ C fill                                               :   6928.6 MB/s (4.6%)
+ C fill (shuffle within 16 byte blocks)               :   5967.7 MB/s (0.3%)
+ C fill (shuffle within 32 byte blocks)               :   5997.7 MB/s (0.4%)
+ C fill (shuffle within 64 byte blocks)               :   6007.4 MB/s (0.4%)
+ ---
+ standard memcpy                                      :   2823.1 MB/s
+ standard memset                                      :   6488.5 MB/s (2.4%)
+ ---
+ NEON LDP/STP copy                                    :   2804.0 MB/s
+ NEON LDP/STP copy pldl2strm (32 bytes step)          :   1656.4 MB/s
+ NEON LDP/STP copy pldl2strm (64 bytes step)          :   1656.1 MB/s
+ NEON LDP/STP copy pldl1keep (32 bytes step)          :   2995.6 MB/s
+ NEON LDP/STP copy pldl1keep (64 bytes step)          :   2996.1 MB/s
+ NEON LD1/ST1 copy                                    :   2812.0 MB/s (0.1%)
+ NEON STP fill                                        :   6864.2 MB/s (4.1%)
+ NEON STNP fill                                       :   5958.6 MB/s
+ ARM LDP/STP copy                                     :   2803.3 MB/s
+ ARM STP fill                                         :   6920.9 MB/s (4.5%)
+ ARM STNP fill                                        :   6008.0 MB/s (0.7%)
+
+==========================================================================
+== Memory latency test                                                  ==
+==                                                                      ==
+== Average time is measured for random memory accesses in the buffers   ==
+== of different sizes. The larger is the buffer, the more significant   ==
+== are relative contributions of TLB, L1/L2 cache misses and SDRAM      ==
+== accesses. For extremely large buffer sizes we are expecting to see   ==
+== page table walk with several requests to SDRAM for almost every      ==
+== memory access (though 64MiB is not nearly large enough to experience ==
+== this effect to its fullest).                                         ==
+==                                                                      ==
+== Note 1: All the numbers are representing extra time, which needs to  ==
+==         be added to L1 cache latency. The cycle timings for L1 cache ==
+==         latency can be usually found in the processor documentation. ==
+== Note 2: Dual random read means that we are simultaneously performing ==
+==         two independent memory accesses at a time. In the case if    ==
+==         the memory subsystem can't handle multiple outstanding       ==
+==         requests, dual random read has the same timings as two       ==
+==         single reads performed one after another.                    ==
+==========================================================================
+
+block size : single random read / dual random read, [MADV_NOHUGEPAGE]
+      1024 :    0.0 ns          /     0.0 ns 
+      2048 :    0.0 ns          /     0.0 ns 
+      4096 :    0.0 ns          /     0.0 ns 
+      8192 :    0.0 ns          /     0.0 ns 
+     16384 :    0.0 ns          /     0.0 ns 
+     32768 :    0.0 ns          /     0.0 ns 
+     65536 :    3.9 ns          /     6.1 ns 
+    131072 :    5.9 ns          /     8.1 ns 
+    262144 :    8.4 ns          /    10.7 ns 
+    524288 :    9.8 ns          /    12.2 ns 
+   1048576 :   10.5 ns          /    13.1 ns 
+   2097152 :   12.8 ns          /    16.3 ns 
+   4194304 :   22.3 ns          /    28.5 ns 
+   8388608 :   75.1 ns          /   117.8 ns 
+  16777216 :  130.0 ns          /   179.0 ns 
+  33554432 :  158.3 ns          /   198.7 ns 
+  67108864 :  178.7 ns          /   216.4 ns 
+
+block size : single random read / dual random read, [MADV_HUGEPAGE]
+      1024 :    0.0 ns          /     0.0 ns 
+      2048 :    0.0 ns          /     0.0 ns 
+      4096 :    0.0 ns          /     0.0 ns 
+      8192 :    0.0 ns          /     0.0 ns 
+     16384 :    0.0 ns          /     0.0 ns 
+     32768 :    0.0 ns          /     0.0 ns 
+     65536 :    3.9 ns          /     6.1 ns 
+    131072 :    5.9 ns          /     8.1 ns 
+    262144 :    6.9 ns          /     8.8 ns 
+    524288 :    7.5 ns          /     9.1 ns 
+   1048576 :    7.6 ns          /     9.2 ns 
+   2097152 :    8.7 ns          /    10.0 ns 
+   4194304 :   17.5 ns          /    23.6 ns 
+   8388608 :   64.0 ns          /    96.9 ns 
+  16777216 :  114.6 ns          /   153.8 ns 
+  33554432 :  140.7 ns          /   171.0 ns 
+  67108864 :  155.5 ns          /   177.4 ns 
+
+##########################################################################
+
+Executing ramlat on cpu0 (Phytium FTC663), results in ns:
+
+       size:  1x32  2x32  1x64  2x64 1xPTR 2xPTR 4xPTR 8xPTR
+         4k: 2.176 2.176 2.176 2.176 1.741 1.741 1.741 3.481 
+         8k: 2.177 2.176 2.176 2.176 1.741 1.741 1.746 3.482 
+        16k: 2.177 2.176 2.177 2.177 1.741 1.741 3.443 3.482 
+        32k: 6.528 6.798 6.528 6.807 6.134 6.458 8.401 16.04 
+        64k: 8.053 8.077 8.053 8.081 7.617 7.819 11.92 23.74 
+       128k: 10.01 10.03 10.01 10.01 9.575 9.728 15.65 31.53 
+       256k: 13.87 13.87 13.86 13.87 13.44 13.53 16.13 31.53 
+       512k: 13.77 13.76 13.75 13.76 13.31 13.41 16.13 31.53 
+      1024k: 13.73 13.73 13.70 13.73 13.26 13.36 16.19 31.53 
+      2048k: 17.44 16.85 17.32 16.74 16.93 16.72 19.73 37.63 
+      4096k: 31.31 30.16 30.24 31.37 33.99 30.55 33.49 61.25 
+      8192k: 129.5 118.2 129.4 118.3 133.2 116.9 108.2 138.0 
+     16384k: 185.8 173.5 184.5 174.0 184.4 177.9 171.4 193.8 
+
+##########################################################################
+
+Executing benchmark twice on cluster 0 (Phytium FTC663)
+
+OpenSSL 3.0.2, built on 15 Mar 2022 (Library: OpenSSL 3.0.2 15 Mar 2022)
+type             16 bytes     64 bytes    256 bytes   1024 bytes   8192 bytes  16384 bytes
+aes-128-cbc     427522.69k   819786.79k  1063761.92k  1140348.93k  1173271.89k  1175191.55k
+aes-128-cbc     427364.37k   819511.96k  1063358.72k  1138977.11k  1175033.17k  1174639.96k
+aes-192-cbc     395011.62k   714104.47k   896944.47k   949102.25k   974288.21k   974187.18k
+aes-192-cbc     394779.15k   713888.75k   896692.05k   949784.23k   970072.06k   972303.02k
+aes-256-cbc     375191.66k   637170.86k   771845.63k   810119.17k   827777.02k   827004.25k
+aes-256-cbc     374950.03k   636969.07k   771570.94k   809948.84k   827392.00k   827168.09k
+
+##########################################################################
+
+Executing benchmark single-threaded on cpu0 (Phytium FTC663)
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,8 CPUs LE)
+
+LE
+CPU Freq: - - - - - - - - -
+
+RAM size:   15905 MB,  # CPU hardware threads:   8
+RAM usage:    435 MB,  # Benchmark threads:      1
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       2173   100   2115   2115  |      28060   100   2396   2396
+23:       1998   100   2037   2037  |      27606   100   2390   2390
+24:       1887   100   2030   2029  |      27067   100   2377   2376
+25:       1806   100   2063   2063  |      26440   100   2354   2353
+----------------------------------  | ------------------------------
+Avr:             100   2061   2061  |              100   2379   2379
+Tot:             100   2220   2220
+
+##########################################################################
+
+Executing benchmark 3 times multi-threaded on CPUs 0-7
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,8 CPUs LE)
+
+LE
+CPU Freq: - - - - - - - - -
+
+RAM size:   15905 MB,  # CPU hardware threads:   8
+RAM usage:   1765 MB,  # Benchmark threads:      8
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:      14489   717   1967  14096  |     218700   791   2359  18654
+23:      13846   741   1903  14108  |     213569   789   2343  18482
+24:      13399   757   1903  14407  |     209840   794   2321  18417
+25:      12954   771   1919  14791  |     202096   785   2291  17986
+----------------------------------  | ------------------------------
+Avr:             747   1923  14351  |              790   2328  18385
+Tot:             768   2126  16368
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,8 CPUs LE)
+
+LE
+CPU Freq: - - - - - - - - -
+
+RAM size:   15905 MB,  # CPU hardware threads:   8
+RAM usage:   1765 MB,  # Benchmark threads:      8
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:      14635   718   1982  14237  |     217959   787   2362  18591
+23:      14044   753   1900  14310  |     213515   787   2348  18477
+24:      13359   752   1911  14364  |     208935   789   2323  18338
+25:      12868   767   1915  14693  |     202958   788   2292  18062
+----------------------------------  | ------------------------------
+Avr:             748   1927  14401  |              788   2331  18367
+Tot:             768   2129  16384
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,8 CPUs LE)
+
+LE
+CPU Freq: - - - - 128000000 - - - -
+
+RAM size:   15905 MB,  # CPU hardware threads:   8
+RAM usage:   1765 MB,  # Benchmark threads:      8
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:      15018   738   1980  14610  |     215877   780   2360  18413
+23:      14356   762   1920  14628  |     212254   784   2344  18368
+24:      13588   756   1932  14610  |     207191   782   2327  18185
+25:      12751   762   1910  14559  |     201638   783   2291  17945
+----------------------------------  | ------------------------------
+Avr:             755   1936  14602  |              782   2330  18228
+Tot:             768   2133  16415
+
+Compression: 14351,14401,14602
+Decompression: 18385,18367,18228
+Total: 16368,16384,16415
+
+##########################################################################
+
+Testing maximum cpufreq again, still under full load. System health now:
+
+Time      CPU n/a    load %cpu %sys %usr %nice %io %irq   Temp
+15:33:23:   ---      7.62  86%   2%  83%   0%   0%   0%  47.9°C
+
+Checking cpufreq OPP (Phytium FTC663):
+
+No cpufreq support available. Measured on cpu1: 2298 MHz (2299.139/2298.877/2298.798)
+
+##########################################################################
+
+Hardware sensors:
+
+nvme-pci-0400
+Composite:    +47.9 C  (low  = -273.1 C, high = +82.8 C)
+                       (crit = +84.8 C)
+
+amdgpu-pci-0100
+vddgfx:      900.00 mV 
+fan1:             N/A  (min =    0 RPM, max = 6900 RPM)
+edge:         +64.0 C  (crit = +97.0 C, hyst = -273.1 C)
+PPT:           6.20 W  (cap =  25.00 W)
+
+/dev/nvme0n1:	48°C
+
+##########################################################################
+
+Wrong thermal source: /etc/armbianmonitor/datasources/soctemp (nvme)
+
+System health while running tinymembench:
+
+Time      CPU n/a    load %cpu %sys %usr %nice %io %irq   Temp
+15:21:45:   ---      0.46   1%   0%   0%   0%   0%   0%  47.9°C
+15:22:25:   ---      0.72  12%   0%  12%   0%   0%   0%  47.9°C
+15:23:05:   ---      0.86  12%   0%  12%   0%   0%   0%  47.9°C
+15:23:45:   ---      1.09  12%   0%  12%   0%   0%   0%  47.9°C
+15:24:25:   ---      1.04  12%   0%  12%   0%   0%   0%  47.9°C
+15:25:05:   ---      1.07  12%   0%  12%   0%   0%   0%  47.9°C
+15:25:45:   ---      1.08  12%   0%  12%   0%   0%   0%  47.9°C
+15:26:25:   ---      1.09  12%   0%  12%   0%   0%   0%  47.9°C
+15:27:05:   ---      1.05  12%   0%  12%   0%   0%   0%  47.9°C
+
+System health while running ramlat:
+
+Time      CPU n/a    load %cpu %sys %usr %nice %io %irq   Temp
+15:27:40:   ---      1.07   4%   0%   4%   0%   0%   0%  47.9°C
+15:27:43:   ---      1.07  12%   0%  12%   0%   0%   0%  47.9°C
+15:27:46:   ---      1.07  12%   0%  12%   0%   0%   0%  47.9°C
+15:27:49:   ---      1.07  12%   0%  12%   0%   0%   0%  47.9°C
+15:27:52:   ---      1.06  12%   0%  12%   0%   0%   0%  47.9°C
+15:27:55:   ---      1.06  12%   0%  12%   0%   0%   0%  47.9°C
+15:27:58:   ---      1.06  12%   0%  12%   0%   0%   0%  47.9°C
+15:28:01:   ---      1.05  12%   0%  12%   0%   0%   0%  47.9°C
+
+System health while running OpenSSL benchmark:
+
+Time      CPU n/a    load %cpu %sys %usr %nice %io %irq   Temp
+15:28:04:   ---      1.05   4%   0%   4%   0%   0%   0%  47.9°C
+15:28:20:   ---      1.04  12%   0%  12%   0%   0%   0%  47.9°C
+15:28:36:   ---      1.17  12%   0%  12%   0%   0%   0%  47.9°C
+15:28:52:   ---      1.14  12%   0%  12%   0%   0%   0%  47.9°C
+15:29:08:   ---      1.10  12%   0%  12%   0%   0%   0%  47.9°C
+15:29:24:   ---      1.08  12%   0%  12%   0%   0%   0%  47.9°C
+15:29:40:   ---      1.06  12%   0%  12%   0%   0%   0%  47.9°C
+
+System health while running 7-zip single core benchmark:
+
+Time      CPU n/a    load %cpu %sys %usr %nice %io %irq   Temp
+15:29:52:   ---      1.05   5%   0%   5%   0%   0%   0%  47.9°C
+15:29:57:   ---      1.04  12%   0%  12%   0%   0%   0%  47.9°C
+15:30:02:   ---      1.04  12%   0%  12%   0%   0%   0%  47.9°C
+15:30:07:   ---      1.04  12%   0%  12%   0%   0%   0%  47.9°C
+15:30:12:   ---      1.03  12%   0%  12%   0%   0%   0%  47.9°C
+15:30:17:   ---      1.03  12%   0%  12%   0%   0%   0%  47.9°C
+15:30:22:   ---      1.03  12%   0%  12%   0%   0%   0%  47.9°C
+15:30:27:   ---      1.02  12%   0%  12%   0%   0%   0%  47.9°C
+15:30:32:   ---      1.02  12%   0%  12%   0%   0%   0%  47.9°C
+15:30:37:   ---      1.02  12%   0%  12%   0%   0%   0%  47.9°C
+15:30:42:   ---      1.02  12%   0%  12%   0%   0%   0%  47.9°C
+15:30:47:   ---      1.02  12%   0%  12%   0%   0%   0%  47.9°C
+15:30:52:   ---      1.02  12%   0%  12%   0%   0%   0%  47.9°C
+
+System health while running 7-zip multi core benchmark:
+
+Time      CPU n/a    load %cpu %sys %usr %nice %io %irq   Temp
+15:30:56:   ---      1.01   5%   0%   5%   0%   0%   0%  47.9°C
+15:31:07:   ---      2.16  96%   0%  95%   0%   0%   0%  47.9°C
+15:31:17:   ---      3.21  95%   0%  94%   0%   0%   0%  47.9°C
+15:31:30:   ---      3.94  92%   1%  91%   0%   0%   0%  47.9°C
+15:31:41:   ---      4.99  89%   2%  86%   0%   0%   0%  47.9°C
+15:31:51:   ---      5.53  94%   1%  93%   0%   0%   0%  47.9°C
+15:32:01:   ---      5.83  93%   0%  92%   0%   0%   0%  47.9°C
+15:32:11:   ---      6.33  91%   0%  91%   0%   0%   0%  47.9°C
+15:32:21:   ---      6.59  96%   0%  95%   0%   0%   0%  47.9°C
+15:32:31:   ---      7.03  88%   2%  85%   0%   0%   0%  47.9°C
+15:32:41:   ---      7.26  93%   1%  92%   0%   0%   0%  47.9°C
+15:32:52:   ---      7.37  94%   0%  93%   0%   0%   0%  47.9°C
+15:33:02:   ---      7.47  92%   0%  91%   0%   0%   0%  47.9°C
+15:33:12:   ---      7.63  98%   1%  97%   0%   0%   0%  47.9°C
+15:33:23:   ---      7.62  86%   2%  83%   0%   0%   0%  47.9°C
+
+##########################################################################
+
+dmesg output while running the benchmarks:
+
+[  912.849637] usb 2-1: USB disconnect, device number 6
+[  912.850183] xhci_hcd 0000:06:00.0: WARN Set TR Deq Ptr cmd failed due to incorrect slot or ep state.
+[  912.851069] ax88179_178a 2-1:1.0 enx000ec67c3f3c: unregister 'ax88179_178a' usb-0000:06:00.0-1, ASIX AX88179 USB 3.0 Gigabit Ethernet
+[  912.851138] ax88179_178a 2-1:1.0 enx000ec67c3f3c: Failed to read reg index 0x0002: -19
+[  912.851145] ax88179_178a 2-1:1.0 enx000ec67c3f3c: Failed to write reg index 0x0002: -19
+[  912.889724] ax88179_178a 2-1:1.0 enx000ec67c3f3c (unregistered): Failed to write reg index 0x0002: -19
+[  912.889735] ax88179_178a 2-1:1.0 enx000ec67c3f3c (unregistered): Failed to write reg index 0x0001: -19
+[  912.889740] ax88179_178a 2-1:1.0 enx000ec67c3f3c (unregistered): Failed to write reg index 0x0002: -19
+[  913.174250] usb 2-1: new SuperSpeed USB device number 7 using xhci_hcd
+[  913.199428] usb 2-1: New USB device found, idVendor=0b95, idProduct=1790, bcdDevice= 1.00
+[  913.199434] usb 2-1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+[  913.199437] usb 2-1: Product: AX88179
+[  913.199441] usb 2-1: Manufacturer: ASIX Elec. Corp.
+[  913.199443] usb 2-1: SerialNumber: 00000000000179
+[  913.554316] ax88179_178a 2-1:1.0 eth0: register 'ax88179_178a' at usb-0000:06:00.0-1, ASIX AX88179 USB 3.0 Gigabit Ethernet, 00:0e:c6:7c:3f:3c
+[  913.567347] ax88179_178a 2-1:1.0 enx000ec67c3f3c: renamed from eth0
+[  913.987423] ax88179_178a 2-1:1.0 enx000ec67c3f3c: ax88179 - Link status is: 1
+[  916.374425] stmmaceth PHYT0004:00 enaphyt4i0: validation of gmii with support 00000000,00000000,00006280 and advertisement 00000000,00000000,00006280 failed: -EINVAL
+[  916.374674] stmmaceth PHYT0004:00 enaphyt4i0: stmmac_open: Cannot attach to PHY (error: -22)
+[  916.438761] stmmaceth PHYT0004:01 enaphyt4i1: validation of gmii with support 00000000,00000200,000062ef and advertisement 00000000,00000200,000062ef failed: -EINVAL
+[  916.439195] stmmaceth PHYT0004:01 enaphyt4i1: stmmac_open: Cannot attach to PHY (error: -22)
+[  916.444518] stmmaceth PHYT0004:00 enaphyt4i0: validation of gmii with support 00000000,00000000,00006280 and advertisement 00000000,00000000,00006280 failed: -EINVAL
+[  916.444761] stmmaceth PHYT0004:00 enaphyt4i0: stmmac_open: Cannot attach to PHY (error: -22)
+[  916.506754] stmmaceth PHYT0004:01 enaphyt4i1: validation of gmii with support 00000000,00000200,000062ef and advertisement 00000000,00000200,000062ef failed: -EINVAL
+[  916.507185] stmmaceth PHYT0004:01 enaphyt4i1: stmmac_open: Cannot attach to PHY (error: -22)
+[  916.512247] stmmaceth PHYT0004:00 enaphyt4i0: validation of gmii with support 00000000,00000000,00006280 and advertisement 00000000,00000000,00006280 failed: -EINVAL
+[  916.512498] stmmaceth PHYT0004:00 enaphyt4i0: stmmac_open: Cannot attach to PHY (error: -22)
+[  916.547394] ax88179_178a 2-1:1.0 enx000ec67c3f3c: ax88179 - Link status is: 1
+[  916.574750] stmmaceth PHYT0004:01 enaphyt4i1: validation of gmii with support 00000000,00000200,000062ef and advertisement 00000000,00000200,000062ef failed: -EINVAL
+[  916.575180] stmmaceth PHYT0004:01 enaphyt4i1: stmmac_open: Cannot attach to PHY (error: -22)
+[  916.575206] IPv6: ADDRCONF(NETDEV_CHANGE): enx000ec67c3f3c: link becomes ready
+[  916.585117] stmmaceth PHYT0004:00 enaphyt4i0: validation of gmii with support 00000000,00000000,00006280 and advertisement 00000000,00000000,00006280 failed: -EINVAL
+[  916.585360] stmmaceth PHYT0004:00 enaphyt4i0: stmmac_open: Cannot attach to PHY (error: -22)
+[  916.654745] stmmaceth PHYT0004:01 enaphyt4i1: validation of gmii with support 00000000,00000200,000062ef and advertisement 00000000,00000200,000062ef failed: -EINVAL
+[  916.655177] stmmaceth PHYT0004:01 enaphyt4i1: stmmac_open: Cannot attach to PHY (error: -22)
+[ 1079.827489] usb 2-1: USB disconnect, device number 7
+[ 1079.828056] xhci_hcd 0000:06:00.0: WARN Set TR Deq Ptr cmd failed due to incorrect slot or ep state.
+[ 1079.828859] ax88179_178a 2-1:1.0 enx000ec67c3f3c: unregister 'ax88179_178a' usb-0000:06:00.0-1, ASIX AX88179 USB 3.0 Gigabit Ethernet
+[ 1079.828929] ax88179_178a 2-1:1.0 enx000ec67c3f3c: Failed to read reg index 0x0002: -19
+[ 1079.828935] ax88179_178a 2-1:1.0 enx000ec67c3f3c: Failed to write reg index 0x0002: -19
+[ 1079.855603] ax88179_178a 2-1:1.0 enx000ec67c3f3c (unregistered): Failed to write reg index 0x0002: -19
+[ 1079.855615] ax88179_178a 2-1:1.0 enx000ec67c3f3c (unregistered): Failed to write reg index 0x0001: -19
+[ 1079.855620] ax88179_178a 2-1:1.0 enx000ec67c3f3c (unregistered): Failed to write reg index 0x0002: -19
+[ 1080.136109] usb 2-1: new SuperSpeed USB device number 8 using xhci_hcd
+[ 1080.161510] usb 2-1: New USB device found, idVendor=0b95, idProduct=1790, bcdDevice= 1.00
+[ 1080.161516] usb 2-1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+[ 1080.161520] usb 2-1: Product: AX88179
+[ 1080.161523] usb 2-1: Manufacturer: ASIX Elec. Corp.
+[ 1080.161526] usb 2-1: SerialNumber: 00000000000179
+[ 1080.516399] ax88179_178a 2-1:1.0 eth0: register 'ax88179_178a' at usb-0000:06:00.0-1, ASIX AX88179 USB 3.0 Gigabit Ethernet, 00:0e:c6:7c:3f:3c
+[ 1080.524935] ax88179_178a 2-1:1.0 enx000ec67c3f3c: renamed from eth0
+[ 1080.929645] ax88179_178a 2-1:1.0 enx000ec67c3f3c: ax88179 - Link status is: 1
+[ 1083.521601] ax88179_178a 2-1:1.0 enx000ec67c3f3c: ax88179 - Link status is: 1
+[ 1083.533117] IPv6: ADDRCONF(NETDEV_CHANGE): enx000ec67c3f3c: link becomes ready
+[ 1097.283286] usb 2-1: USB disconnect, device number 8
+[ 1097.283869] xhci_hcd 0000:06:00.0: WARN Set TR Deq Ptr cmd failed due to incorrect slot or ep state.
+[ 1097.284671] ax88179_178a 2-1:1.0 enx000ec67c3f3c: unregister 'ax88179_178a' usb-0000:06:00.0-1, ASIX AX88179 USB 3.0 Gigabit Ethernet
+[ 1097.284741] ax88179_178a 2-1:1.0 enx000ec67c3f3c: Failed to read reg index 0x0002: -19
+[ 1097.284748] ax88179_178a 2-1:1.0 enx000ec67c3f3c: Failed to write reg index 0x0002: -19
+[ 1097.307333] ax88179_178a 2-1:1.0 enx000ec67c3f3c (unregistered): Failed to write reg index 0x0002: -19
+[ 1097.307345] ax88179_178a 2-1:1.0 enx000ec67c3f3c (unregistered): Failed to write reg index 0x0001: -19
+[ 1097.307351] ax88179_178a 2-1:1.0 enx000ec67c3f3c (unregistered): Failed to write reg index 0x0002: -19
+[ 1097.591907] usb 2-1: new SuperSpeed USB device number 9 using xhci_hcd
+[ 1097.617198] usb 2-1: New USB device found, idVendor=0b95, idProduct=1790, bcdDevice= 1.00
+[ 1097.617205] usb 2-1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+[ 1097.617209] usb 2-1: Product: AX88179
+[ 1097.617212] usb 2-1: Manufacturer: ASIX Elec. Corp.
+[ 1097.617215] usb 2-1: SerialNumber: 00000000000179
+[ 1097.972339] ax88179_178a 2-1:1.0 eth0: register 'ax88179_178a' at usb-0000:06:00.0-1, ASIX AX88179 USB 3.0 Gigabit Ethernet, 00:0e:c6:7c:3f:3c
+[ 1097.980988] ax88179_178a 2-1:1.0 enx000ec67c3f3c: renamed from eth0
+[ 1098.401447] ax88179_178a 2-1:1.0 enx000ec67c3f3c: ax88179 - Link status is: 1
+[ 1101.025409] ax88179_178a 2-1:1.0 enx000ec67c3f3c: ax88179 - Link status is: 1
+[ 1101.036927] IPv6: ADDRCONF(NETDEV_CHANGE): enx000ec67c3f3c: link becomes ready
+[ 1216.369910] stmmaceth PHYT0004:00 enaphyt4i0: validation of gmii with support 00000000,00000000,00006280 and advertisement 00000000,00000000,00006280 failed: -EINVAL
+[ 1216.370156] stmmaceth PHYT0004:00 enaphyt4i0: stmmac_open: Cannot attach to PHY (error: -22)
+[ 1216.435016] stmmaceth PHYT0004:01 enaphyt4i1: validation of gmii with support 00000000,00000200,000062ef and advertisement 00000000,00000200,000062ef failed: -EINVAL
+[ 1216.435449] stmmaceth PHYT0004:01 enaphyt4i1: stmmac_open: Cannot attach to PHY (error: -22)
+[ 1216.440257] stmmaceth PHYT0004:00 enaphyt4i0: validation of gmii with support 00000000,00000000,00006280 and advertisement 00000000,00000000,00006280 failed: -EINVAL
+[ 1216.440499] stmmaceth PHYT0004:00 enaphyt4i0: stmmac_open: Cannot attach to PHY (error: -22)
+[ 1216.503010] stmmaceth PHYT0004:01 enaphyt4i1: validation of gmii with support 00000000,00000200,000062ef and advertisement 00000000,00000200,000062ef failed: -EINVAL
+[ 1216.503439] stmmaceth PHYT0004:01 enaphyt4i1: stmmac_open: Cannot attach to PHY (error: -22)
+[ 1216.508016] stmmaceth PHYT0004:00 enaphyt4i0: validation of gmii with support 00000000,00000000,00006280 and advertisement 00000000,00000000,00006280 failed: -EINVAL
+[ 1216.508256] stmmaceth PHYT0004:00 enaphyt4i0: stmmac_open: Cannot attach to PHY (error: -22)
+[ 1216.571005] stmmaceth PHYT0004:01 enaphyt4i1: validation of gmii with support 00000000,00000200,000062ef and advertisement 00000000,00000200,000062ef failed: -EINVAL
+[ 1216.571434] stmmaceth PHYT0004:01 enaphyt4i1: stmmac_open: Cannot attach to PHY (error: -22)
+[ 1216.575941] stmmaceth PHYT0004:00 enaphyt4i0: validation of gmii with support 00000000,00000000,00006280 and advertisement 00000000,00000000,00006280 failed: -EINVAL
+[ 1216.576189] stmmaceth PHYT0004:00 enaphyt4i0: stmmac_open: Cannot attach to PHY (error: -22)
+[ 1216.639003] stmmaceth PHYT0004:01 enaphyt4i1: validation of gmii with support 00000000,00000200,000062ef and advertisement 00000000,00000200,000062ef failed: -EINVAL
+[ 1216.639433] stmmaceth PHYT0004:01 enaphyt4i1: stmmac_open: Cannot attach to PHY (error: -22)
+[ 1337.476290] usb 2-1: USB disconnect, device number 9
+[ 1337.476935] xhci_hcd 0000:06:00.0: WARN Set TR Deq Ptr cmd failed due to incorrect slot or ep state.
+[ 1337.477880] ax88179_178a 2-1:1.0 enx000ec67c3f3c: unregister 'ax88179_178a' usb-0000:06:00.0-1, ASIX AX88179 USB 3.0 Gigabit Ethernet
+[ 1337.478013] ax88179_178a 2-1:1.0 enx000ec67c3f3c: Failed to read reg index 0x0002: -19
+[ 1337.478022] ax88179_178a 2-1:1.0 enx000ec67c3f3c: Failed to write reg index 0x0002: -19
+[ 1337.560431] ax88179_178a 2-1:1.0 enx000ec67c3f3c (unregistered): Failed to write reg index 0x0002: -19
+[ 1337.560449] ax88179_178a 2-1:1.0 enx000ec67c3f3c (unregistered): Failed to write reg index 0x0001: -19
+[ 1337.560454] ax88179_178a 2-1:1.0 enx000ec67c3f3c (unregistered): Failed to write reg index 0x0002: -19
+[ 1337.836986] usb 2-1: new SuperSpeed USB device number 10 using xhci_hcd
+[ 1337.866246] usb 2-1: New USB device found, idVendor=0b95, idProduct=1790, bcdDevice= 1.00
+[ 1337.866261] usb 2-1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+[ 1337.866264] usb 2-1: Product: AX88179
+[ 1337.866268] usb 2-1: Manufacturer: ASIX Elec. Corp.
+[ 1337.866271] usb 2-1: SerialNumber: 00000000000179
+[ 1338.229197] ax88179_178a 2-1:1.0 eth0: register 'ax88179_178a' at usb-0000:06:00.0-1, ASIX AX88179 USB 3.0 Gigabit Ethernet, 00:0e:c6:7c:3f:3c
+[ 1338.242716] ax88179_178a 2-1:1.0 enx000ec67c3f3c: renamed from eth0
+[ 1338.718866] ax88179_178a 2-1:1.0 enx000ec67c3f3c: ax88179 - Link status is: 1
+[ 1341.214841] ax88179_178a 2-1:1.0 enx000ec67c3f3c: ax88179 - Link status is: 1
+[ 1341.226719] IPv6: ADDRCONF(NETDEV_CHANGE): enx000ec67c3f3c: link becomes ready
+
+##########################################################################
+
+Linux 5.19.0-rc5-arm64 (limp-phytium) 	07/11/22 	_aarch64_	(8 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+          14.59    0.00    0.47    0.01    0.00   84.93
+
+Device             tps    kB_read/s    kB_wrtn/s    kB_dscd/s    kB_read    kB_wrtn    kB_dscd
+nvme0n1           9.19       331.90       151.09         0.00     491321     223661          0
+zram0             0.41         1.62         0.00         0.00       2400          4          0
+zram1             0.76         0.37         5.54         0.00        544       8204          0
+
+               total        used        free      shared  buff/cache   available
+Mem:            15Gi       308Mi        14Gi        17Mi       294Mi        15Gi
+Swap:          7.8Gi          0B       7.8Gi
+
+Filename				Type		Size		Used		Priority
+/dev/zram0                              partition	8143816		0		5
+
+CPU sysfs topology (clusters, cpufreq members, clockspeeds)
+                 cpufreq   min    max
+ CPU    cluster  policy   speed  speed   core type
+  0       36        0       -      -     Phytium FTC663 / r1p3
+  1       36        0       -      -     Phytium FTC663 / r1p3
+  2       36        0       -      -     Phytium FTC663 / r1p3
+  3       36        0       -      -     Phytium FTC663 / r1p3
+  4       36        0       -      -     Phytium FTC663 / r1p3
+  5       36        0       -      -     Phytium FTC663 / r1p3
+  6       36        0       -      -     Phytium FTC663 / r1p3
+  7       36        0       -      -     Phytium FTC663 / r1p3
+
+Architecture:                    aarch64
+CPU op-mode(s):                  32-bit, 64-bit
+Byte Order:                      Little Endian
+CPU(s):                          8
+On-line CPU(s) list:             0-7
+Vendor ID:                       Phytium
+Model name:                      S2500
+Model:                           3
+Thread(s) per core:              1
+Core(s) per socket:              8
+Socket(s):                       1
+Stepping:                        0x1
+BogoMIPS:                        96.00
+Flags:                           fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
+L1d cache:                       256 KiB (8 instances)
+L1i cache:                       256 KiB (8 instances)
+L2 cache:                        8 MiB (4 instances)
+L3 cache:                        4 MiB (1 instance)
+NUMA node(s):                    1
+NUMA node0 CPU(s):               0-7
+Vulnerability Itlb multihit:     Not affected
+Vulnerability L1tf:              Not affected
+Vulnerability Mds:               Not affected
+Vulnerability Meltdown:          Mitigation; PTI
+Vulnerability Mmio stale data:   Not affected
+Vulnerability Spec store bypass: Not affected
+Vulnerability Spectre v1:        Mitigation; __user pointer sanitization
+Vulnerability Spectre v2:        Not affected
+Vulnerability Srbds:             Not affected
+Vulnerability Tsx async abort:   Not affected
+
+Processor Information
+	Socket Designation: Phytium D2000/8
+	Type: Central Processor
+	Family: ARMv8
+	Manufacturer: PHYTIUM LTD
+	ID: 33 66 1F 70 00 00 00 00
+	Signature: Implementor 0x70, Variant 0x1, Architecture 15, Part 0x663, Revision 3
+	Version: Phytium D2000/ E8C
+	Voltage: 0.9 V
+	External Clock: 48 MHz
+	Max Speed: 2600 MHz
+	Current Speed: 2300 MHz
+	Status: Populated, Enabled
+	L1 Cache Handle: 0x1002
+	L2 Cache Handle: 0x1003
+	L3 Cache Handle: 0x1004
+	Core Count: 8
+	Core Enabled: 8
+	Thread Count: 1
+	Characteristics:
+		64-bit capable
+		Multi-Core
+		Execute Protection
+		Enhanced Virtualization
+		Power/Performance Control
+
+SoC guess: Phytium D2000
+ Compiler: /usr/bin/gcc (Ubuntu 11.2.0-19ubuntu1) 11.2.0 / aarch64-linux-gnu
+ Userland: arm64
+   Kernel: 5.19.0-rc5-arm64/aarch64
+           CONFIG_HZ=250
+           CONFIG_HZ_250=y
+           CONFIG_PREEMPT_NOTIFIERS=y
+           CONFIG_PREEMPT_VOLUNTARY=y
+           CONFIG_PREEMPT_VOLUNTARY_BUILD=y
+           raid6: neonx8   gen()  7123 MB/s
+           raid6: neonx4   gen()  7255 MB/s
+           raid6: neonx2   gen()  6158 MB/s
+           raid6: neonx1   gen()  4710 MB/s
+           raid6: int64x8  gen()  3972 MB/s
+           raid6: int64x4  gen()  4077 MB/s
+           raid6: int64x2  gen()  3783 MB/s
+           raid6: int64x1  gen()  2837 MB/s
+           raid6: using algorithm neonx4 gen() 7255 MB/s
+           raid6: .... xor() 5596 MB/s, rmw enabled
+           raid6: using neon recovery algorithm
+           xor: measuring software checksum speed
+           xor: using function: 32regs (10425 MB/sec)
+
+DIMM configuration:
+          description: DIMM DDR4 Synchronous 2400 MHz (0.4 ns)
+          product: Not Set
+          vendor: Micron
+          physical id: 0
+          slot: SOCKET 0 CHANNEL 0 DIMM 0
+          size: 16GiB
+          width: 64 bits
+          clock: 2400MHz (0.4ns)
+
+| PHYTIUM LTD D2000 | ~2300 MHz | 5.19 | Armbian 22.08.0-trunk Jammy arm64 | 16390 | 427440 | 827090 | 2820 | 6490 | - |

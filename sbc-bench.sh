@@ -962,7 +962,7 @@ MonitorBoard() {
 		if [ -n "${SoC_Revision}" ]; then
 			echo -e "${SoC_Family} ${SoC_ID} rev ${SoC_Revision}, \c"
 		fi
-		BasicSetup
+		BasicSetup nochange
 		CPUTopology="$(PrintCPUTopology)"
 		CPUSignature="$(GetCPUSignature)"
 		DTCompatible="$(strings /proc/device-tree/compatible 2>/dev/null)"
@@ -1087,7 +1087,7 @@ TempTest() {
 	[ ${SocTemp} -lt 20 ] && \
 		echo -e "${LRED}${BOLD}WARNING: sysfs thermal readout is ominously low: ${SocTemp}°C.${NC}\n" >&2
 
-	BasicSetup >/dev/null 2>&1
+	BasicSetup nochange >/dev/null 2>&1
 	InitialMonitoring
 	echo -e "\n${BOLD}Thermal efficiency test using $(readlink "${TempSource}")${NC}"
 	echo -e "\nInstalling needed tools. This may take some time...\c"
@@ -1350,10 +1350,12 @@ GetCoreClusters() {
 
 BasicSetup() {
 	# set cpufreq governor based on $1 (defaults to ondemand if not provided)
-	if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
-		for Cluster in $(ls -d /sys/devices/system/cpu/cpufreq/policy?); do
-			[ -w ${Cluster}/scaling_governor ] && echo ${1:-ondemand} >${Cluster}/scaling_governor 2>/dev/null
-		done
+	if [ "$1" != "nochange" ]; then
+		if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
+			for Cluster in $(ls -d /sys/devices/system/cpu/cpufreq/policy?); do
+				[ -w ${Cluster}/scaling_governor ] && echo ${1:-ondemand} >${Cluster}/scaling_governor 2>/dev/null
+			done
+		fi
 	fi
 
 	# try to derive DeviceName from device-tree if available

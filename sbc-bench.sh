@@ -6,7 +6,7 @@ InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted 
 Main() {
 	export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/vc/bin
 	PathToMe="$( cd "$(dirname "$0")" ; pwd -P )/${0##*/}"
-	unset LC_ALL LC_MESSAGES LANGUAGE LANG # prevent localisation of decimal points and other stuff
+	unset LC_ALL LC_MESSAGES LANGUAGE LANG 2>/dev/null # prevent localisation of decimal points and similar stuff
 
 	# Check if we're outputting to a terminal. If yes try to use bold and colors for messages
 	if test -t 1; then
@@ -2521,6 +2521,8 @@ GuessARMSoC() {
 	#      APM X-Gene / r0p0: APM 883208-X1
 	#  Apple Icestorm / r1p1: Apple M1
 	# Apple Firestorm / r1p1: Apple M1
+	#  Apple Icestorm / r2p0: Apple M1 Pro
+	# Apple Firestorm / r2p0: Apple M1 Pro
 	#  Apple Blizzard / r1p0: Apple M2
 	# Apple Avalanche / r1p0: Apple M2
 	#    ARM11 MPCore / r0p5: PLX NAS7820
@@ -2550,14 +2552,14 @@ GuessARMSoC() {
 	#      Cortex-A35 / r0p2: NXP i.MX8QXP, Rockchip RK1808/RK3308/RK3326/PX30
 	#      Cortex-A53 / r0p0: Qualcomm Snapdragon 410 (MSM8916)
 	#      Cortex-A53 / r0p2: Qualcomm Snapdragon 810 (MSM8994)
-	#      Cortex-A53 / r0p3: HiSilicon Kirin 620/930, Nexell S5P6818
-	#      Cortex-A53 / r0p4: Allwinner A64/H313/H5/H6/H616/H64/R329/T507, Amlogic A113X/A113D/A311D/A311D2/S805X/S805Y/S905/S905X/S905D/S905W/S905L/S905M2/S905X2/S905Y2/S905D2/S912/S922X/T962X2, Broadcom BCM2837/BCM2709/BCM2710/RP3A0-AU (BCM2710A1), HiSilicon Kirin 960/970, Marvell Armada 37x0, Mediatek MT6762M/MT6765, NXP i.MX8M/i.MX8QM/LS1xx8, RealTek RTD129x/RTD139x, Rockchip RK3318/RK3328/RK3399, Socionext LD20
+	#      Cortex-A53 / r0p3: HiSilicon Kirin 620/930, Nexell S5P6818, Snapdragon 808 / MSM8992
+	#      Cortex-A53 / r0p4: Allwinner A64/H313/H5/H6/H616/H64/R329/T507, Amlogic A113X/A113D/A311D/A311D2/S805X/S805Y/S905/S905X/S905D/S905W/S905L/S905M2/S905X2/S905Y2/S905D2/S912/S922X/T962X2, Broadcom BCM2837/BCM2709/BCM2710/RP3A0-AU (BCM2710A1), HiSilicon Kirin 960/970, Marvell Armada 37x0, Mediatek MT6762M/MT6765, NXP i.MX8M/i.MX8QM/LS1xx8, RealTek RTD129x/RTD139x, Rockchip RK3318/RK3328/RK3399, Snapdragon 650/652/653 / MSM8956/MSM8976/MSM8976PRO, Socionext LD20
 	#      Cortex-A55 / r1p0: Amlogic S905X3/S905D3/S905Y3/T962X3/T962E2
 	#      Cortex-A55 / r2p0: Amlogic S905X4/S905C2, Rockchip RK3566/RK3568/RK3588/RK3588s
-	#      Cortex-A57 / r1p1: Nvidia Tegra X1
-	#      Cortex-A57 / r1p2: AMD Opteron A1100
+	#      Cortex-A57 / r1p1: Nvidia Tegra X1, Snapdragon 810 / MSM8994/MSM8994V
+	#      Cortex-A57 / r1p2: AMD Opteron A1100, Snapdragon 808 / MSM8992
 	#      Cortex-A57 / r1p3: Nvidia Jetson TX2, Renesas R8A7795/R8A7796/R8A77965
-	#      Cortex-A72 / r0p0: Mediatek MT8173
+	#      Cortex-A72 / r0p0: Mediatek MT8173, Snapdragon 650/652/653 / MSM8956/MSM8976/MSM8976PRO
 	#      Cortex-A72 / r0p1: Marvell Armada 8020/8040
 	#      Cortex-A72 / r0p2: HiSilicon Kunpeng 916, NXP i.MX8QM/LS2xx8A, Rockchip RK3399, Socionext LD20, 
 	#      Cortex-A72 / r0p3: Broadcom BCM2711, NXP LS1028A, NXP LX2xx0A, Marvell Armada3900-A1, Xilinx Versal, AWS Graviton -> https://tinyurl.com/y47yz2f6
@@ -2618,14 +2620,14 @@ GuessARMSoC() {
 	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:d (84:2) Detected <-- Khadas VIM / Libre Computer AML-S905X-CC / Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:d (85:2) Detected <-- Libre Computer AML-S905X-CC
 	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:e (85:2) Detected <-- Vermax UHD 300X
-	# soc soc0: Amlogic Meson GXL (S905W) Revision 21:d (a4:2) Detected <-- Tanix TX3 Mini / Amlogic Meson GXL (S905W) P281 Development Board
+	# soc soc0: Amlogic Meson GXL (S905W) Revision 21:d (a4:2) Detected <-- Tanix TX3 Mini / Amlogic Meson GXL (S905X) P212 Development Board / Amlogic Meson GXL (S905W) P281 Development Board
 	# soc soc0: Amlogic Meson GXL (Unknown) Revision 21:d (a4:2) Detected <-- Khadas VIM / Tanix TX3 Mini / JetHome JetHub J80 / Amlogic Meson GXL (S905X) P212 Development Board / Amlogic Meson GXL (S905W) P281 Development Board
 	# soc soc0: Amlogic Meson GXL (S905L) Revision 21:d (c4:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson GXL (S905M2) Revision 21:d (e4:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson GXL (S905W) Revision 21:e (a5:2) Detected <-- Tanix TX3 Mini / JetHome JetHub J80 / Amlogic Meson GXL (S905X) P212 Development Board / Amlogic Meson GXL (S905W) P281 Development Board
 	# soc soc0: Amlogic Meson GXL (S905L) Revision 21:e (c5:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson GXM (Unknown) Revision 22:a (82:2) Detected <-- Amlogic Meson GXM (S912) Q201 Development Board
-	# soc soc0: Amlogic Meson GXM (S912) Revision 22:a (82:2) Detected <-- Beelink GT1 / Octopus Planet / Libre Computer AML-S912-PC / Amlogic Meson GXM (S912) Q200 Development Board / Amlogic Meson GXM (S912) Q201 Development Board
+	# soc soc0: Amlogic Meson GXM (S912) Revision 22:a (82:2) Detected <-- Beelink GT1 / Octopus Planet / Libre Computer AML-S912-PC / Khadas VIM2 / Amlogic Meson GXM (S912) Q200 Development Board / Amlogic Meson GXM (S912) Q201 Development Board
 	# soc soc0: Amlogic Meson GXM (S912) Revision 22:b (82:2) Detected <-- Beelink GT1 / Tronsmart Vega S96 / Octopus Planet / Amlogic Meson GXM (S912) Q201 Development Board
 	# soc soc0: Amlogic Meson AXG (Unknown) Revision 25:b (43:2) Detected <-- JetHome JetHub J100
 	# soc soc0: Amlogic Meson AXG (Unknown) Revision 25:c (43:2) Detected <-- JetHome JetHub J100
@@ -3193,11 +3195,23 @@ GuessSoCbySignature() {
 			echo "Amlogic S802/S812"
 			;;
 		*A53r0p0*A53r0p0*A53r0p0*A53r0p0)
-			# Snapdragon 410 / MSM8916: 4 x Cortex-A53 / r0p0 / https://gist.github.com/Hinokami-Kagura/7292fd5e84b09e2409df1f165b2baf25
+			# Snapdragon 410 / MSM8916/APQ8016: 4 x Cortex-A53 / r0p0 / fp asimd evtstrm crc32 cpuid
 			echo "Snapdragon 410"
 			;;
-		*A53r0p2*A53r0p2*A53r0p2*A53r0p2*A57*)
-			# Snapdragon 810 / MSM8994: 4 x Cortex-A53 / r0p2 + 4 x Cortex-A57 / https://www.spinics.net/lists/linux-arm-msm/msg83825.html
+		*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A72r0p0*A72r0p0)
+			# Snapdragon 650 / MSM8956: 4 x Cortex-A53 / r0p4 + 2 x Cortex-A72 / r0p0
+			echo "Snapdragon 650"
+			;;
+		*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A72r0p0*A72r0p0*A72r0p0*A72r0p0)
+			# Snapdragon 652/653 / MSM8976/MSM8976PRO: 4 x Cortex-A53 / r0p4 + 4 x Cortex-A72 / r0p0
+			echo "Snapdragon 652/653"
+			;;
+		*A53r0p3*A53r0p3*A53r0p3*A53r0p3*A57r1p2*A57r1p2)
+			# Snapdragon 808 / MSM8992: 4 x Cortex-A53 / r0p3 + 2 x Cortex-A57 / r1p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32
+			echo "Snapdragon 808"
+			;;
+		*A53r0p2*A53r0p2*A53r0p2*A53r0p2*A57r1p1*A57r1p1*A57r1p1*A57r1p1)
+			# Snapdragon 810 / MSM8994/MSM8994V: 4 x Cortex-A53 / r0p2 + 4 x Cortex-A57 / r1p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			echo "Snapdragon 810"
 			;;
 		00A53r0p400A53r0p400A53r0p400A53r0p4)
@@ -3561,6 +3575,9 @@ GuessSoCbySignature() {
 			# Nexell S5P6818, 8 x Cortex-A53 / r0p3 / fp asimd aes pmull sha1 sha2 crc32
 			# or HiSilicon Kirin 620/930, 8 x Cortex-A53 / r0p3 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			case "${DTCompatible}" in
+				*hi6220*)
+					echo "HiSilicon Kirin 620"
+					;;
 				*hisilicon*)
 					echo "HiSilicon Kirin 620/930"
 					;;

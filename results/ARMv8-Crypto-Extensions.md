@@ -4,7 +4,7 @@
 
 SoC vendors who license ARMv8 cores (usually 64-bit capable) can decide between certain optional features: for example crypographic acceleration called ['ARMv8 Cryptography Extensions'](https://developer.arm.com/documentation/ddi0500/e/CJHDEBAF).
 
-Usually SoC vendors do, the only two known exceptions are Amlogic on their very first 64-bit SoC S905 (used only on ODROID-C2 and NanoPi K2) and BroadCom on those SoCs powering all 64-bit capable Raspberry Pis: both lack any crypto acceleration and perform way lower than all other 64-bit ARM SoCs in this area.
+Usually SoC vendors do, the only known exceptions are early Cortex-A53 SoCs like Qualcomm's Snapdragon 410, Amlogic's very first 64-bit SoC S905 (used only on ODROID-C2 and NanoPi K2) and BroadCom's SoCs powering all 64-bit capable Raspberry Pis: all lack any crypto acceleration and perform way lower than all other 64-bit ARM SoCs in this area.
 
 If the kernel has been built correctly, availability of accelerated cryptography functions can be checked by querying `/proc/cpuinfo`: The 'Features' entry will additionally show `aes pmull sha1 sha2`.
 

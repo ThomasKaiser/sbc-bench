@@ -1,0 +1,191 @@
+   Geekbench Browser 
+     * Geekbench 5
+       Top Single-Core Results Top Multi-Core Results Recent Results
+       Recent Compute Results
+     * Geekbench ML
+       Recent Results
+     * Benchmark Charts
+       Android Benchmark Chart iOS Benchmark Chart Mac Benchmark Chart
+       Processor Benchmark Chart
+       ML Benchmark Chart
+       CUDA Benchmark Chart Metal Benchmark Chart OpenCL Benchmark Chart
+       Vulkan Benchmark Chart
+       _____________________
+     * Account
+       Sign Up Log In
+
+                               rockchip rk3588_s
+
+  Geekbench 5 Score
+
+   533
+   Single-Core Score
+   1983
+   Multi-Core Score
+   Geekbench 5.4.4 for Android AArch64
+
+  Result Information
+
+   Upload Date Tue, 29 Mar 2022 21:33:30 +0000 
+   Views       6                               
+
+  System Information
+
+   System Information
+   Operating System Android 12        
+   Model            rockchip rk3588_s 
+   Model ID         rockchip rk3588_s 
+   Motherboard      rk30sdk           
+   Governor         schedutil         
+
+   CPU Information
+   Name           ARM ARMv8            
+   Topology       1 Processor, 8 Cores 
+   Base Frequency 1.80 GHz             
+   Cluster 1      4 Cores @ 1.80 GHz   
+   Cluster 2      4 Cores @ 2.40 GHz   
+
+   Memory Information
+   Memory   7.48 GB   
+
+  Single-Core Performance
+
+   Single-Core Score     533                 
+   Crypto Score          777                 
+   Integer Score         519                 
+   Floating Point Score  521                 
+   AES-XTS               777                   
+                         1.32 GB/sec         
+   Text Compression      457                   
+                         2.31 MB/sec         
+   Image Compression     576                   
+                         27.2 Mpixels/sec    
+   Navigation            442                   
+                         1.25 MTE/sec        
+   HTML5                 493                   
+                         578.6 KElements/sec 
+   SQLite                538                   
+                         168.6 Krows/sec     
+   PDF Rendering         520                   
+                         28.2 Mpixels/sec    
+   Text Rendering        618                   
+                         197.0 KB/sec        
+   Clang                 541                   
+                         4.22 Klines/sec     
+   Camera                508                   
+                         5.89 images/sec     
+   N-Body Physics        280                   
+                         350.0 Kpairs/sec    
+   Rigid Body Physics    783                   
+                         4849.1 FPS          
+   Gaussian Blur         285                   
+                         15.7 Mpixels/sec    
+   Face Detection        552                   
+                         4.25 images/sec     
+   Horizon Detection     592                   
+                         14.6 Mpixels/sec    
+   Image Inpainting      814                   
+                         39.9 Mpixels/sec    
+   HDR                   949                   
+                         12.9 Mpixels/sec    
+   Ray Tracing           844                   
+                         677.6 Kpixels/sec   
+   Structure from Motion 467                   
+                         4.19 Kpixels/sec    
+   Speech Recognition    374                   
+                         11.9 Words/sec      
+   Machine Learning      327                   
+                         12.6 images/sec     
+
+  Multi-Core Performance
+
+   Multi-Core Score      1983               
+   Crypto Score          2768               
+   Integer Score         1897               
+   Floating Point Score  2038               
+   AES-XTS               2768                 
+                         4.72 GB/sec        
+   Text Compression      1815                 
+                         9.18 MB/sec        
+   Image Compression     2527                 
+                         119.5 Mpixels/sec  
+   Navigation            1369                 
+                         3.86 MTE/sec       
+   HTML5                 1797                 
+                         2.11 MElements/sec 
+   SQLite                2163                 
+                         677.7 Krows/sec    
+   PDF Rendering         2157                 
+                         117.0 Mpixels/sec  
+   Text Rendering        2079                 
+                         662.3 KB/sec       
+   Clang                 1788                 
+                         13.9 Klines/sec    
+   Camera                1626                 
+                         18.9 images/sec    
+   N-Body Physics        1346                 
+                         1.68 Mpairs/sec    
+   Rigid Body Physics    2934                 
+                         18174.4 FPS        
+   Gaussian Blur         1989                 
+                         109.3 Mpixels/sec  
+   Face Detection        2127                 
+                         16.4 images/sec    
+   Horizon Detection     2302                 
+                         56.8 Mpixels/sec   
+   Image Inpainting      2410                 
+                         118.3 Mpixels/sec  
+   HDR                   3947                 
+                         53.8 Mpixels/sec   
+   Ray Tracing           4003                 
+                         3.21 Mpixels/sec   
+   Structure from Motion 1897                 
+                         17.0 Kpixels/sec   
+   Speech Recognition    1085                 
+                         34.7 Words/sec     
+   Machine Learning      835                  
+                         32.2 images/sec    
+
+   Compare
+
+   Set Baseline
+
+   Share
+
+   Tweet
+   Geekbench ML now available for download
+
+        Products
+
+     * Geekbench 5
+     * Geekbench ML
+     * VoodooPad
+
+        Support
+
+     * Knowledge Base
+     * Lost License
+     * Contact
+     * Privacy Policy
+     * Terms of Use
+
+        News & Social
+
+     * Blog
+     * Twitter
+     * Discord
+     * Instagram
+     * YouTube
+
+        Company
+
+     * Corporate
+     * Jobs
+     * Media
+   [IMG]
+
+   1 Eglinton Avenue East, Suite 602
+   Toronto, Ontario, Canada
+   M4P 3A1
+
+   Copyright © 2004-2022 Primate Labs Inc.

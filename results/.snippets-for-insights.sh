@@ -112,5 +112,13 @@ ProcessARMhwinfo() {
 	done
 } # ProcessARMhwinfo
 
+CheckThermalSources() {
+	grep "^Thermal source:" *.txt | while read ; do
+		URL="$(cut -f1 -d'.' <<<"${REPLY}")"
+		Board="$(tail -n1 ${URL}.txt | cut -f2 -d'|')"
+		echo "  * [${Board}](http://ix.io/${URL})$(awk -F".txt" '{print $2}' <<<"${REPLY}")"
+	done
+} # CheckThermalSources
+
 # CPUUtilization7ZIP >7-zip-cpu-utilisation.md
 # CheckRAID6PerfAndAlgo >raid6-perf-and-algo.md

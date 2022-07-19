@@ -84,6 +84,7 @@ Crawling through [sbc-bench results collection](../Results.md) comparing +30 dif
 | [i.MX8M Quad](http://ix.io/27FC) | 1500 | 695540 | 463 |
 | [RK3399](http://ix.io/2yIx) | 1510 | 695265 | 460 |
 | [S905Y2](http://ix.io/3JCm) | 1800 | 838360 | 465 |
+| [i.MX8M Quad](http://ix.io/44Lq) | 1800 | 839321 | 466 |
 | [RK3399](http://ix.io/2ICt) | 1800| 839360 | 466 |
 | [Allwinner H6](http://ix.io/26Ph) | 1800 | 839870 | 466 |
 | [A311D](http://ix.io/3VfL) | 2010 | 940425 | 467 |

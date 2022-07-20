@@ -8,12 +8,12 @@
 CPUUtilization7ZIP() {
 	# function that takes sbc-bench results in working directory ending with *.txt 
 	# and parses them for 7-zip CPU utilization. Result is a markdown table
-	echo "| Device | comp single | decomp single | comp multi | decomp multi |"
-	echo "| ----: | :----: | :----: | :----: | :----: |"
+	echo "| Device | cores | comp single | decomp single | comp multi | decomp multi |"
+	echo "| ----: | :----: | :----: | :----: | :----: | :----: |"
 	for file in *.txt ; do
 		Title="$(head -n1 "${file}" | sed -e 's/sbc-bench //' -e 's/Hardkernel //' -e 's/Xunlong //' -e 's/Raspberry Pi/RPi/' -e 's/ Model //' -e 's/\ (/(/' | cut -f1 -d'(')"
 		case ${Title} in
-			"v0.4 "*|*"  : "*|"Distributor ID:"*|*AMD*|*Intel*)
+			"v0.4 "*|*"  : "*|"Distributor ID:"*|*AMD*|*Intel*|*extensive*)
 				# too old, skip
 				:
 				;;
@@ -40,7 +40,9 @@ CPUUtilization7ZIP() {
 						MultiPercentageDecomp=$(( ${RawDecomp} / $(( ${CPUs} * 3 )) ))
 					fi
 				fi
-				echo -e "| [${file%.*}](${file}) / ${Title} | ${SinglePercentageComp} | ${SinglePercentageDecomp} | ${MultiPercentageComp} | ${MultiPercentageDecomp} |"
+				SoCName="$(awk -F": " '/^SoC guess/ {print $2}' "${file}")"
+				[ "X${SoCName}" = "X" ] || Title="$(cut -f1 -d' ' <<<"${Title}") ${SoCName}"
+				echo -e "| [${Title}](http://ix.io/${file%.*}) | ${CPUs} | ${SinglePercentageComp} | ${SinglePercentageDecomp} | ${MultiPercentageComp} | ${MultiPercentageDecomp} |"
 				;;
 		esac
 	done

@@ -199,4 +199,4 @@
 | [445T](445T.txt) | v0.9.8 PHYTIUM LTD D2000 | 0%/2.4% | 15Gi/15Gi | X | X | X | X | 2% | 0% | |
 | [446h](446h.txt) | v0.9.8 PHYTIUM LTD D2000 | 0%/3.3% | 31Gi/30Gi | X | X | X | X | 2% | 0% | |
 | [44pd](44pd.txt) | v0.9.8 Silicom Minnowboard Turbot D0/D1 | 3.1%/0% | 1.8Gi/1.6Gi | X | X | X | X | 2% | 0% | |
-| <del>[lala](lala.txt)</del> | <del> tk@gaia:~/sbc-bench-results$ grep "</del> | <del>0%/0%</del> | <del>/</del> | | | | | <del><span style=color:red> 5%</span></del> | <del> 2%</del> | |
+| [450U](450U.txt) | v0.9.8 Qualcomm Technologies, Inc. qrb5 | 0.7%/0% | 7.5G/6.6G | X | X | X | X | <span style=color:red> 5%</span> | 0% | |

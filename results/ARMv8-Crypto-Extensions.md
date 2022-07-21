@@ -38,7 +38,7 @@ It all boils down to type of ARM core and CPU clockspeed since the ratio between
   * Cortex-A53/A55: ~467, A53/A55 running at 1000 MHz will produce an ~467000k aes-256-cbc score (or ~935000k at 2000 MHz)
   * Cortex-A72/A73/A76: ~570, A72/A73/A76 running at 1000 MHz will produce an ~570000k aes-256-cbc score (or ~1140000k at 2000 MHz)
 
-Amazon's Graviton/Graviton2 ARM CPUs score identical to A72/A73/A76 and the custom FTC663 core inside the [Feiteng D2000 CPU](https://en.wikipedia.org/wiki/FeiTeng_(processor)#Future_processors) performs identical to an A57. NVidia's Carmel core performs marginally better than Cortex-A57 (~374, the Jetson Xavier NX numbers below).
+Amazon's Graviton/Graviton2 ARM CPUs score identical to A72/A73/A76 and the custom FTC663 core inside the [Feiteng D2000 CPU](https://en.wikipedia.org/wiki/FeiTeng_(processor)#Future_processors) performs identical to an A57. NVidia's Carmel core performs marginally better than Cortex-A57 (~374, the Jetson Xavier NX numbers below). Qualcomm's Kryo 4XX Silver cores are based on A55 and perform exactly the same here.
 
 ### Implications
 
@@ -92,6 +92,7 @@ Crawling through [sbc-bench results collection](../Results.md) comparing +30 dif
 | Cortex-A55 | | | |
 | [RK3588](http://ix.io/3XzI) | 915 | 427750 | 467 |
 | [RK3588s](http://ix.io/3XTA) | 1780 | 830640 | 467 |
+| [QRB5165](http://ix.io/450U) | 1780 | 831950 | 467 |
 | [RK3566](http://ix.io/3rUb) | 1800 | 845490 | 469 |
 | [RK3588s](http://ix.io/3XYo) | 1815 | 846760 | 467 |
 | [S905X3](http://ix.io/3Vdt) | 1908 | 890730 | 466 |
@@ -116,3 +117,6 @@ Crawling through [sbc-bench results collection](../Results.md) comparing +30 dif
 | Cortex-A76 | | | |
 | [RK3588](http://ix.io/3XzI) | 985 | 560200 | 569 |
 | [RK3588s](http://ix.io/3XYo) | 2330 | 1325370 | 569 |
+| Cortex-A77 | | | |
+| [QRB5165](http://ix.io/450U) | 2415 | 1345230 | 557 |
+| [QRB5165](http://ix.io/450U) | 2830 | 1581487 | 559 |

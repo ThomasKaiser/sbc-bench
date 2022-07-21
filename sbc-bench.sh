@@ -316,7 +316,7 @@ GetARMStepping() {
 	# into 'Stepping' like lscpu does (the latter only showing info for cpu0 so partially
 	# useless on systems with different CPU clusters)
 	if [ -n "${ARMStepping}" ]; then
-		echo "r$(sed 's/^0x//' <<<${ARMStepping[$(( $1 * 2 ))]})p${ARMStepping[$(( $(( $1 * 2 )) + 1 ))]}"
+		echo "r$(awk -Wposix '{printf("%d\n", $1)}' <<<${ARMStepping[$(( $1 * 2 ))]})p${ARMStepping[$(( $(( $1 * 2 )) + 1 ))]}"
 	fi
 } # GetARMStepping
 

@@ -2567,6 +2567,7 @@ GuessARMSoC() {
 	#      Cortex-A73 / r0p1: HiSilicon Kirin 970
 	#      Cortex-A73 / r0p2: Amlogic A311D/A311D2/S922X, MediaTek Helio P60T
 	#      Cortex-A76 / r4p0: Rockchip RK3588/RK3588s
+	#      Cortex-A77 / r1p0: Qualcomm Snapdragon 865 
 	#    Cortex-A78AE / r0p1: Nvidia Jetson Orin NX / AGX Orin
 	#     Neoverse-N1 / r3p1: Ampere Altra, AWS Graviton2
 	#     Neoverse-V1 / r1p1: AWS Graviton3
@@ -2580,6 +2581,7 @@ GuessARMSoC() {
 	#  Phytium FTC663 / r1p3: Phytium D2000
 	#  Qualcomm Krait / r1p0: Qualcomm Snapdragon S4 Plus (MSM8960)
 	#  Qualcomm Krait / r2p0: Qualcomm IPQ806x
+	#   Qualcomm Kryo / r13p14: Qualcomm Snapdragon 865
 	#   ThunderX 88XX / r1p1: ThunderX CN8890
 	#  ThunderX2 99xx / r1p1: Cavium ThunderX2 CN9980
 	#
@@ -3765,7 +3767,7 @@ GuessSoCbySignature() {
 			echo "Apple M1 Ultra"
 			;;
 		*AppleM1Max*AppleM1Max*AppleM1Max*AppleM1Max*AppleM1Max*AppleM1Max*AppleM1Max*AppleM1Max*AppleM1Max*AppleM1Max)
-			# Apple M1 Max: 2 x Apple Icestorm 8 x Apple Firestorm
+			# Apple M1 Max: 2 x Apple Icestorm + 8 x Apple Firestorm
 			echo "Apple M1 Max"
 			;;
 		*AppleM2r1p0*AppleM2r1p0*AppleM2r1p0*AppleM2r1p0*AppleM2r1p0*AppleM2r1p0*AppleM2r1p0*AppleM2r1p0)
@@ -3791,6 +3793,10 @@ GuessSoCbySignature() {
 		*sifive,u74-mc*sifive,u74-mc)
 			# StarFive JH7100: 2 x U74-MC https://rvspace.org/en/Product/JH7100/Technical_Documents/JH7100_Datasheet
 			echo "StarFive JH7100"
+			;;
+		00Qualcomm4XXSilver00Qualcomm4XXSilver00Qualcomm4XXSilver00Qualcomm4XXSilver14A77r1p014A77r1p014A77r1p027A77r1p0)
+			# Qualcomm Snapdragon 865: 4 x Qualcomm Kryo 4XX Silver / r13p14 + 3 x Cortex-A77 / r1p0 + 1 x Cortex-A77 / r1p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp asimdrdm lrcpc dcpop asimddp
+			echo "Qualcomm Snapdragon 865"
 			;;
 	esac
 }

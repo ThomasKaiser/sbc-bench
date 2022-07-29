@@ -122,5 +122,16 @@ CheckThermalSources() {
 	done
 } # CheckThermalSources
 
+CheckODROIDN2cpufreq() {
+	grep 'ODROID-N2 ' *.txt | cut -f1 -d':' | while read ; do
+		OSRelease="Armbian $(awk -F"=" '/^VERSION/ {print $2}' "${REPLY}")"
+		[ "X${OSRelease}" = "XArmbian " ] && OSRelease="Armbian $(awk -F"," '/^Armbian info/ {print $4}' "${REPLY}" | sed 's/\ //')"
+		[ "X${OSRelease}" = "XArmbian " ] && OSRelease="$(awk -F":" '/^Description/ {print $2}' "${REPLY}" | sed 's/\t//')"
+		A53=$(awk -F" " '/^  0/ {print $5}' "${REPLY}")
+		A73=$(awk -F" " '/^  2/ {print $5}' "${REPLY}")
+		echo "${OSRelease}: ${A53}/${A73}"
+	done | sort
+} # CheckODROIDN2cpufreq
+
 # CPUUtilization7ZIP >7-zip-cpu-utilisation.md
 # CheckRAID6PerfAndAlgo >raid6-perf-and-algo.md

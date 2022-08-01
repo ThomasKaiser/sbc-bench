@@ -50,6 +50,8 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [LeMaker Banana Pi](http://ix.io/3PLr) | 960 MHz | 5.10 | Bullseye armhf | 1040 | 15080 | 18640 | 440 | 2020 | - |
 | [Libre Computer AML-S912-PC](http://ix.io/40cj) | 1415/1000 MHz | 5.15 | Bullseye arm64 | 5980 | 91890 | 659290 | 1650 | 5170 | - |
 | [Lime A10](http://ix.io/1j1L) | 910 MHz | 4.14 | Stretch armhf | 550 | 25200 | 28250 | 440 | 1300 | - |
+| [Marvell PXA1908](http://ix.io/46hs) | 1245 MHz | 3.14 | Bullseye arm64 | 3180 | 81260 | 581840 | 740 | 2220 | - |
+| [MT6580 K9M1](http://ix.io/466y) | 1300 MHz | 5.19 | Sid armhf | 2930 | 21580 | 25300 | 1250 | 3300 | - |
 | [NanoPC T3+](http://ix.io/1iyp) | 1400 MHz | 4.4 | **Xenial armhf** | 6400 | 143800 | 651000 | 1650 | 3700 | - |
 | [NanoPC T3+](http://ix.io/1iRJ) | 1400 MHz | 4.14 | Bionic arm64 | 7480 | 126000 | 652600 | 1440 | 4540 | 10.99 |
 | [NanoPC T4](http://ix.io/1iFz) | 1800/1400 MHz | 4.17 | Stretch arm64 | 6250 | 307200 | 1022500 | 4100 | 9000 | 8.24 |

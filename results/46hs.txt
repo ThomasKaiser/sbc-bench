@@ -1,0 +1,1936 @@
+sbc-bench v0.9.8 PXA1908 (Sun, 31 Jul 2022 20:37:55 +0300)
+
+Distributor ID:	Debian
+Description:	Debian GNU/Linux 11 (bullseye)
+Release:	11
+Codename:	bullseye
+
+/usr/bin/gcc (Debian 10.2.1-6) 10.2.1 20210110
+
+Uptime: 20:37:55 up 9 min,  0 users,  load average: 0.32, 0.48, 0.27,  42.0°C
+
+Linux 3.14.0-483125 (localhost) 	07/31/22 	_armv7l_	(4 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+          14.19    0.04   30.12    0.13    0.00   55.53
+
+Device             tps    kB_read/s    kB_wrtn/s    kB_dscd/s    kB_read    kB_wrtn    kB_dscd
+mmcblk0           2.19        30.51         0.61         0.00      17182        344          0
+mmcblk1           2.46       101.74         0.71         0.00      57300        400          0
+
+               total        used        free      shared  buff/cache   available
+Mem:           661Mi        46Mi       569Mi       0.0Ki        45Mi       603Mi
+Swap:             0B          0B          0B
+
+##########################################################################
+
+Checking cpufreq OPP (Cortex-A53):
+
+No cpufreq support available. Measured on cpu1: 0 MHz ()
+
+##########################################################################
+
+Hardware sensors:
+
+thsens_cpu-virtual-0
+temp1:        +43.0 C  
+
+sec-fuelgauge-virtual-0
+temp1:        +35.0 C  
+
+battery-virtual-0
+temp1:        +35.0 C  
+
+##########################################################################
+
+Executing benchmark on cpu0 (Cortex-A53):
+
+tinymembench v0.4.9 (simple benchmark for memory throughput and latency)
+
+==========================================================================
+== Memory bandwidth tests                                               ==
+==                                                                      ==
+== Note 1: 1MB = 1000000 bytes                                          ==
+== Note 2: Results for 'copy' tests show how many bytes can be          ==
+==         copied per second (adding together read and writen           ==
+==         bytes would have provided twice higher numbers)              ==
+== Note 3: 2-pass copy means that we are using a small temporary buffer ==
+==         to first fetch data into it, and only then write it to the   ==
+==         destination (source -> L1 cache, L1 cache -> destination)    ==
+== Note 4: If sample standard deviation exceeds 0.1%, it is shown in    ==
+==         brackets                                                     ==
+==========================================================================
+
+ C copy backwards                                     :    736.9 MB/s (1.7%)
+ C copy backwards (32 byte blocks)                    :    734.1 MB/s (0.9%)
+ C copy backwards (64 byte blocks)                    :    734.6 MB/s (0.4%)
+ C copy                                               :    731.6 MB/s (1.0%)
+ C copy prefetched (32 bytes step)                    :    656.1 MB/s (0.3%)
+ C copy prefetched (64 bytes step)                    :    694.6 MB/s (1.1%)
+ C 2-pass copy                                        :    922.5 MB/s (1.1%)
+ C 2-pass copy prefetched (32 bytes step)             :    720.5 MB/s (1.9%)
+ C 2-pass copy prefetched (64 bytes step)             :    582.1 MB/s (2.5%)
+ C fill                                               :   2224.4 MB/s (1.1%)
+ C fill (shuffle within 16 byte blocks)               :   2224.6 MB/s (2.0%)
+ C fill (shuffle within 32 byte blocks)               :   2224.7 MB/s (1.2%)
+ C fill (shuffle within 64 byte blocks)               :   2225.9 MB/s (1.2%)
+ ---
+ standard memcpy                                      :    740.8 MB/s (0.8%)
+ standard memset                                      :   2224.7 MB/s (1.0%)
+ ---
+ NEON LDP/STP copy                                    :    773.4 MB/s (1.4%)
+ NEON LDP/STP copy pldl2strm (32 bytes step)          :    696.7 MB/s (4.1%)
+ NEON LDP/STP copy pldl2strm (64 bytes step)          :    723.3 MB/s (0.9%)
+ NEON LDP/STP copy pldl1keep (32 bytes step)          :    785.0 MB/s (0.8%)
+ NEON LDP/STP copy pldl1keep (64 bytes step)          :    785.0 MB/s (0.7%)
+ NEON LD1/ST1 copy                                    :    741.9 MB/s (0.6%)
+ NEON STP fill                                        :   2228.4 MB/s (1.1%)
+ NEON STNP fill                                       :   1547.4 MB/s (12.6%)
+ ARM LDP/STP copy                                     :    743.1 MB/s (0.7%)
+ ARM STP fill                                         :   2230.2 MB/s (1.5%)
+ ARM STNP fill                                        :   1554.8 MB/s (15.0%)
+
+==========================================================================
+== Framebuffer read tests.                                              ==
+==                                                                      ==
+== Many ARM devices use a part of the system memory as the framebuffer, ==
+== typically mapped as uncached but with write-combining enabled.       ==
+== Writes to such framebuffers are quite fast, but reads are much       ==
+== slower and very sensitive to the alignment and the selection of      ==
+== CPU instructions which are used for accessing memory.                ==
+==                                                                      ==
+== Many x86 systems allocate the framebuffer in the GPU memory,         ==
+== accessible for the CPU via a relatively slow PCI-E bus. Moreover,    ==
+== PCI-E is asymmetric and handles reads a lot worse than writes.       ==
+==                                                                      ==
+== If uncached framebuffer reads are reasonably fast (at least 100 MB/s ==
+== or preferably >300 MB/s), then using the shadow framebuffer layer    ==
+== is not necessary in Xorg DDX drivers, resulting in a nice overall    ==
+== performance improvement. For example, the xf86-video-fbturbo DDX     ==
+== uses this trick.                                                     ==
+==========================================================================
+
+ NEON LDP/STP copy (from framebuffer)                 :    194.4 MB/s (0.4%)
+ NEON LDP/STP 2-pass copy (from framebuffer)          :    182.4 MB/s (0.2%)
+ NEON LD1/ST1 copy (from framebuffer)                 :     52.2 MB/s (0.3%)
+ NEON LD1/ST1 2-pass copy (from framebuffer)          :     50.4 MB/s (0.3%)
+ ARM LDP/STP copy (from framebuffer)                  :    105.5 MB/s (1.1%)
+ ARM LDP/STP 2-pass copy (from framebuffer)           :     98.3 MB/s
+
+==========================================================================
+== Memory latency test                                                  ==
+==                                                                      ==
+== Average time is measured for random memory accesses in the buffers   ==
+== of different sizes. The larger is the buffer, the more significant   ==
+== are relative contributions of TLB, L1/L2 cache misses and SDRAM      ==
+== accesses. For extremely large buffer sizes we are expecting to see   ==
+== page table walk with several requests to SDRAM for almost every      ==
+== memory access (though 64MiB is not nearly large enough to experience ==
+== this effect to its fullest).                                         ==
+==                                                                      ==
+== Note 1: All the numbers are representing extra time, which needs to  ==
+==         be added to L1 cache latency. The cycle timings for L1 cache ==
+==         latency can be usually found in the processor documentation. ==
+== Note 2: Dual random read means that we are simultaneously performing ==
+==         two independent memory accesses at a time. In the case if    ==
+==         the memory subsystem can't handle multiple outstanding       ==
+==         requests, dual random read has the same timings as two       ==
+==         single reads performed one after another.                    ==
+==========================================================================
+
+block size : single random read / dual random read
+      1024 :    0.0 ns          /     0.0 ns 
+      2048 :    0.0 ns          /     0.0 ns 
+      4096 :    0.0 ns          /     0.0 ns 
+      8192 :    0.0 ns          /     0.0 ns 
+     16384 :    0.0 ns          /     0.0 ns 
+     32768 :    0.0 ns          /     0.0 ns 
+     65536 :    4.7 ns          /     8.2 ns 
+    131072 :    7.2 ns          /    12.1 ns 
+    262144 :    8.5 ns          /    13.9 ns 
+    524288 :   10.2 ns          /    16.1 ns 
+   1048576 :   98.4 ns          /   152.6 ns 
+   2097152 :  145.4 ns          /   196.1 ns 
+   4194304 :  175.5 ns          /   217.9 ns 
+   8388608 :  191.7 ns          /   226.2 ns 
+  16777216 :  202.2 ns          /   232.2 ns 
+  33554432 :  200.0 ns          /   225.5 ns 
+  67108864 :  202.4 ns          /   236.6 ns 
+
+##########################################################################
+
+Executing ramlat on cpu0 (Cortex-A53), results in ns:
+
+       size:  1x32  2x32  1x64  2x64 1xPTR 2xPTR 4xPTR 8xPTR
+         4k: 3.207 3.207 2.405 2.406 2.405 2.423 3.308 6.716 
+         8k: 3.214 3.208 2.406 2.405 2.407 2.410 3.335 6.716 
+        16k: 3.208 3.208 2.406 2.407 2.406 2.409 3.308 6.766 
+        32k: 3.212 3.211 2.413 2.417 2.413 2.411 3.311 6.721 
+        64k: 21.62 23.50 21.26 22.97 21.27 23.13 29.36 54.05 
+       128k: 25.50 27.65 25.13 26.72 25.44 27.45 31.74 62.57 
+       256k: 27.11 29.00 27.28 28.34 27.06 28.42 32.73 62.70 
+       512k: 29.18 30.28 29.27 31.43 30.26 30.66 34.63 67.97 
+      1024k: 183.0 203.0 195.7 209.1 182.3 202.8 245.6 438.4 
+      2048k: 201.6 211.4 201.7 210.1 201.5 209.6 248.0 467.9 
+      4096k: 214.9 230.9 213.8 230.9 213.8 230.8 257.8 469.3 
+      8192k: 212.9 227.6 213.0 226.0 212.9 225.4 253.1 470.8 
+     16384k: 215.5 226.7 215.7 223.6 214.2 223.3 263.6 485.9 
+
+##########################################################################
+
+Executing benchmark twice on cluster 0 (Cortex-A53)
+
+OpenSSL 1.1.1n, built on 15 Mar 2022
+type             16 bytes     64 bytes    256 bytes   1024 bytes   8192 bytes  16384 bytes
+aes-128-cbc      81315.54k   258489.54k   550747.39k   803707.22k   927651.16k   936946.35k
+aes-128-cbc      81210.56k   258005.03k   551194.20k   804043.78k   927820.46k   937825.62k
+aes-192-cbc      77673.72k   233416.23k   460269.91k   626309.80k   699544.92k   705347.58k
+aes-192-cbc      77587.65k   233792.19k   460292.78k   626258.94k   699746.99k   705243.82k
+aes-256-cbc      76111.12k   218477.89k   404237.06k   527003.31k   577981.10k   581894.14k
+aes-256-cbc      75816.88k   218408.17k   404199.42k   526962.35k   578019.33k   581795.84k
+
+##########################################################################
+
+Executing benchmark single-threaded on cpu0 (Cortex-A53)
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,4 CPUs LE)
+
+LE
+CPU Freq: - - - - - - 512000000 - -
+
+RAM size:     661 MB,  # CPU hardware threads:   4
+RAM usage:    435 MB,  # Benchmark threads:      1
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:        762   100    743    742  |      13809   100   1180   1179
+23:        724   100    739    739  |      13553   100   1174   1173
+24:        693   100    746    746  |      13234   100   1166   1162
+25:        634   100    727    725  |      12836   100   1146   1142
+----------------------------------  | ------------------------------
+Avr:             100    739    738  |              100   1167   1164
+Tot:             100    953    951
+
+##########################################################################
+
+Executing benchmark 3 times multi-threaded on CPUs 0,3
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,4 CPUs LE)
+
+LE
+CPU Freq: - 64000000 64000000 64000000 128000000 - - - -
+
+RAM size:     661 MB,  # CPU hardware threads:   4
+RAM usage:    450 MB,  # Benchmark threads:      4
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       1924   326    575   1872  |      50654   382   1132   4322
+23:       1899   342    566   1935  |      51018   393   1123   4414
+24:       1862   342    585   2002  |      50330   393   1124   4418
+----------------------------------  | ------------------------------
+Avr:             337    575   1937  |              389   1126   4385
+Tot:             363    851   3161
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,4 CPUs LE)
+
+LE
+CPU Freq: 64000000 64000000 - - - - - - -
+
+RAM size:     661 MB,  # CPU hardware threads:   4
+RAM usage:    450 MB,  # Benchmark threads:      4
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       2010   332    589   1955  |      52792   395   1141   4504
+23:       1908   335    581   1944  |      51726   395   1133   4476
+24:       1869   340    591   2010  |      50128   392   1123   4401
+----------------------------------  | ------------------------------
+Avr:             336    587   1970  |              394   1132   4460
+Tot:             365    860   3215
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,4 CPUs LE)
+
+LE
+CPU Freq: - - - - - - - - -
+
+RAM size:     661 MB,  # CPU hardware threads:   4
+RAM usage:    450 MB,  # Benchmark threads:      4
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       1861   315    575   1810  |      52211   394   1132   4454
+23:       1909   344    566   1945  |      50524   389   1123   4372
+24:       1850   343    580   1990  |      49910   390   1125   4381
+----------------------------------  | ------------------------------
+Avr:             334    574   1915  |              391   1127   4403
+Tot:             362    850   3159
+
+Compression: 1937,1970,1915
+Decompression: 4385,4460,4403
+Total: 3161,3215,3159
+
+##########################################################################
+
+Testing maximum cpufreq again, still under full load. System health now:
+
+Time      CPU n/a    load %cpu %sys %usr %nice %io %irq   Temp
+20:56:43:   ---      3.64  89%   2%  87%   0%   0%   0%  64.0°C
+
+Checking cpufreq OPP (Cortex-A53):
+
+No cpufreq support available. Measured on cpu1: 1245 MHz (1247.561/1247.079/1240.475)
+
+##########################################################################
+
+Hardware sensors:
+
+thsens_cpu-virtual-0
+temp1:        +58.0 C  
+
+sec-fuelgauge-virtual-0
+temp1:        +35.0 C  
+
+battery-virtual-0
+temp1:        +35.0 C  
+
+##########################################################################
+
+Thermal source: /sys/devices/virtual/thermal/thermal_zone0/ (thsens_cpu)
+
+System health while running tinymembench:
+
+Time      CPU n/a    load %cpu %sys %usr %nice %io %irq   Temp
+20:37:56:   ---      0.32  44%  30%  14%   0%   0%   0%  45.0°C
+20:38:36:   ---      0.71  46%   2%  44%   0%   0%   0%  50.0°C
+20:39:16:   ---      0.91  50%   3%  46%   0%   0%   0%  50.0°C
+20:39:56:   ---      1.03  46%   1%  44%   0%   0%   0%  51.0°C
+20:40:37:   ---      1.27  47%   2%  43%   0%   0%   0%  50.0°C
+20:41:17:   ---      1.21  51%   2%  47%   0%   0%   0%  52.0°C
+20:41:57:   ---      1.22  50%   3%  47%   0%   0%   0%  48.0°C
+20:42:37:   ---      1.16  48%   1%  46%   0%   0%   0%  49.0°C
+20:43:17:   ---      1.08  47%   1%  45%   0%   0%   0%  48.0°C
+20:43:57:   ---      1.04  50%   0%  50%   0%   0%   0%  49.0°C
+20:44:37:   ---      1.02  48%   2%  45%   0%   0%   0%  50.0°C
+20:45:17:   ---      1.15 -77%  -5% -72%   0%   0%   0%  50.0°C
+20:45:57:   ---      1.22  18%   0%  17%   0%   0%   0%  50.0°C
+20:46:37:   ---      1.12  51%   1%  49%   0%   0%   0%  48.0°C
+20:47:17:   ---      1.13  51%   2%  49%   0%   0%   0%  49.0°C
+
+System health while running ramlat:
+
+Time      CPU n/a    load %cpu %sys %usr %nice %io %irq   Temp
+20:47:46:   ---      1.08  47%  12%  34%   0%   0%   0%  50.0°C
+20:47:49:   ---      1.08  37%   0%  37%   0%   0%   0%  49.0°C
+20:47:52:   ---      1.15  51%   1%  49%   0%   0%   0%  48.0°C
+20:47:55:   ---      1.14  50%   0%  50%   0%   0%   0%  50.0°C
+20:47:58:   ---      1.14  51%   1%  50%   0%   0%   0%  50.0°C
+20:48:01:   ---      1.13  -2%   0%  -2%   0%   0%   0%  50.0°C
+20:48:04:   ---      1.13   1%   0%   1%   0%   0%   0%  49.0°C
+20:48:08:   ---      1.12  57%   6%  51%   0%   0%   0%  49.0°C
+20:48:11:   ---      1.11  38%   1%  37%   0%   0%   0%  49.0°C
+
+System health while running OpenSSL benchmark:
+
+Time      CPU n/a    load %cpu %sys %usr %nice %io %irq   Temp
+20:48:12:   ---      1.11  47%  12%  34%   0%   0%   0%  50.0°C
+20:48:28:   ---      1.15  47%   3%  43%   0%   0%   0%  48.0°C
+20:48:44:   ---      1.12  50%   0%  49%   0%   0%   0%  50.0°C
+20:49:00:   ---      1.09  50%   0%  50%   0%   0%   0%  49.0°C
+20:49:16:   ---      1.25  48%   1%  47%   0%   0%   0%  49.0°C
+20:49:32:   ---      1.20  51%   1%  50%   0%   0%   0%  49.0°C
+20:49:48:   ---      1.15  50%   0%  50%   0%   0%   0%  48.0°C
+
+System health while running 7-zip single core benchmark:
+
+Time      CPU n/a    load %cpu %sys %usr %nice %io %irq   Temp
+20:50:00:   ---      1.13  47%  11%  36%   0%   0%   0%  48.0°C
+20:50:11:   ---      1.24  50%   0%  49%   0%   0%   0%  48.0°C
+20:50:22:   ---      1.20  50%   0%  49%   0%   0%   0%  48.0°C
+20:50:33:   ---      1.17  51%   0%  49%   0%   0%   0%  48.0°C
+20:50:44:   ---      1.14  50%   0%  49%   0%   0%   0%  47.0°C
+20:50:55:   ---      1.12  50%   0%  49%   0%   0%   0%  48.0°C
+20:51:06:   ---      1.09  51%   1%  49%   0%   0%   0%  48.0°C
+20:51:17:   ---      1.08  51%   1%  49%   0%   0%   0%  47.0°C
+20:51:28:   ---      1.07  51%   1%  49%   0%   0%   0%  48.0°C
+20:51:39:   ---      1.06  50%   6%  43%   0%   0%   0%  48.0°C
+20:51:50:   ---      1.04  49%   2%  45%   0%   0%   0%  48.0°C
+20:52:01:   ---      1.12  -8%  -1%  -7%   0%   0%   0%  49.0°C
+20:52:12:   ---      1.18  56%   4%  52%   0%   0%   0%  49.0°C
+20:52:23:   ---      1.15   5%   0%   5%   0%   0%   0%  48.0°C
+20:52:34:   ---      1.13  -7%   0%  -6%   0%   0%   0%  48.0°C
+
+System health while running 7-zip multi core benchmark:
+
+Time      CPU n/a    load %cpu %sys %usr %nice %io %irq   Temp
+20:52:41:   ---      1.11  51%  11%  40%   0%   0%   0%  50.0°C
+20:53:06:   ---      2.08 260%   6% 253%   0%   0%   0%  62.0°C
+20:53:30:   ---      2.94  92%   1%  91%   0%   0%   0%  64.0°C
+20:53:55:   ---      3.23  88%   2%  86%   0%   0%   0%  63.0°C
+20:54:19:   ---      3.52  91%   0%  90%   0%   0%   0%  62.0°C
+20:54:42:   ---      3.67  93%   0%  92%   0%   0%   0%  62.0°C
+20:55:05:   ---      3.84  91%   1%  90%   0%   0%   0%  61.0°C
+20:55:30:   ---      3.91  93%   1%  92%   0%   0%   0%  65.0°C
+20:55:55:   ---      3.74  90%   2%  87%   0%   0%   0%  66.0°C
+20:56:20:   ---      3.83  94%   1%  92%   0%   0%   0%  66.0°C
+20:56:43:   ---      3.64  89%   2%  87%   0%   0%   0%  64.0°C
+
+##########################################################################
+
+dmesg output while running the benchmarks:
+
+[  563.390039] c0 2666 (ls) ls[2666]: syscall 291
+[  563.390054] c0 2666 (ls) Code: aa0103e9 aa0403ea d2802468 d4000001 (b140041f) 
+[  563.390064] c0 2666 (ls) CPU: 0 PID: 2666 Comm: ls Tainted: G        W    3.14.0-483125 #1
+[  563.390073] c0 2666 (ls) task: ffffffc02b885e00 ti: ffffffc02abc4000 task.ti: ffffffc02abc4000
+[  563.390080] c0 2666 (ls) PC is at 0x7f9bef1614
+[  563.390086] c0 2666 (ls) LR is at 0x5566d44180
+[  563.390092] c0 2666 (ls) pc : [<0000007f9bef1614>] lr : [<0000005566d44180>] pstate: 80000000
+[  563.390097] c0 2666 (ls) sp : 0000007fdc01e870
+[  563.390101] c0 2666 (ls) R29: 0000007fdc01e870 R28: 0000000000000000 
+[  563.390109] c0 2666 (ls) R27: 0000000000000004 R26: 0000007fdc01fe46 
+[  563.390116] c0 2666 (ls) R25: 0000000000000001 R24: 0000000000000000 
+[  563.390123] c0 2666 (ls) R23: 0000005566d6f000 R22: 0000007fdc01fe46 
+[  563.390130] c0 2666 (ls) R21: 0000000000000002 R20: 0000005566d6f000 
+[  563.390137] c0 2666 (ls) R19: 0000005566d72a88 R18: 0000000000000004 
+[  563.390144] c0 2666 (ls) R17: 0000005566d70278 R16: 0000007f9bef15f0 
+[  563.390151] c0 2666 (ls) R15: 0000000000000000 R14: 0000000000000023 
+[  563.390157] c0 2666 (ls) R13: 0000000000000000 R12: 0000007f9be31228 
+[  563.390164] c0 2666 (ls) R11: 0000000000000000 R10: 0000007fdc01e8a8 
+[  563.390171] c0 2666 (ls) R9 : 0000007fdc01fe46 R8 : 0000000000000123 
+[  563.390178] c0 2666 (ls) R7 : 0000000000000000 R6 : ffffffffffffff9c 
+[  563.390185] c0 2666 (ls) R5 : 0000000000000000 R4 : 0000007fdc01e8a8 
+[  563.390191] c0 2666 (ls) R3 : 0000000000000002 R2 : 0000000000000000 
+[  563.390198] c0 2666 (ls) R1 : 0000007fdc01fe46 R0 : ffffffffffffff9c 
+[  563.390206] c0 2666 (ls) 
+[  563.390224] c0 2666 (ls) 
+[  563.390243] c0 2666 (ls) ls[2666]: syscall 291
+[  563.390251] c0 2666 (ls) Code: aa0103e9 aa0403ea d2802468 d4000001 (b140041f) 
+[  563.390258] c0 2666 (ls) CPU: 0 PID: 2666 Comm: ls Tainted: G        W    3.14.0-483125 #1
+[  563.390265] c0 2666 (ls) task: ffffffc02b885e00 ti: ffffffc02abc4000 task.ti: ffffffc02abc4000
+[  563.390270] c0 2666 (ls) PC is at 0x7f9bef1614
+[  563.390275] c0 2666 (ls) LR is at 0x5566d44180
+[  563.390281] c0 2666 (ls) pc : [<0000007f9bef1614>] lr : [<0000005566d44180>] pstate: 80000000
+[  563.390286] c0 2666 (ls) sp : 0000007fdc01e870
+[  563.390290] c0 2666 (ls) R29: 0000007fdc01e870 R28: 0000000000000000 
+[  563.390297] c0 2666 (ls) R27: 0000000000000000 R26: 0000007fdc01fe46 
+[  563.390304] c0 2666 (ls) R25: 0000000000000001 R24: 0000000000000000 
+[  563.390311] c0 2666 (ls) R23: 0000005566d6f000 R22: 0000007fdc01fe46 
+[  563.390317] c0 2666 (ls) R21: 0000000000000002 R20: 0000005566d6f000 
+[  563.390324] c0 2666 (ls) R19: 0000005566d72a88 R18: 0000000000000004 
+[  563.390331] c0 2666 (ls) R17: 0000007f9bef15f0 R16: 0000005566d70278 
+[  563.390338] c0 2666 (ls) R15: 0000000000000000 R14: 0000000000000023 
+[  563.390345] c0 2666 (ls) R13: 0000000000000000 R12: 0000007f9be31228 
+[  563.390352] c0 2666 (ls) R11: 0000000000000000 R10: 0000007fdc01e8a8 
+[  563.390359] c0 2666 (ls) R9 : 0000007fdc01fe46 R8 : 0000000000000123 
+[  563.390365] c0 2666 (ls) R7 : 0000000000000100 R6 : ffffffffffffff9c 
+[  563.390372] c0 2666 (ls) R5 : 0000000000000000 R4 : 0000007fdc01e8a8 
+[  563.390379] c0 2666 (ls) R3 : 0000000000000002 R2 : 0000000000000100 
+[  563.390386] c0 2666 (ls) R1 : 0000007fdc01fe46 R0 : ffffffffffffff9c 
+[  563.390393] c0 2666 (ls) 
+[  563.390411] c0 2666 (ls) 
+[  563.395558] c0 2667 (ls) ls[2667]: syscall 291
+[  563.395574] c0 2667 (ls) Code: aa0103e9 aa0403ea d2802468 d4000001 (b140041f) 
+[  563.395584] c0 2667 (ls) CPU: 0 PID: 2667 Comm: ls Tainted: G        W    3.14.0-483125 #1
+[  563.395592] c0 2667 (ls) task: ffffffc02b885240 ti: ffffffc02b200000 task.ti: ffffffc02b200000
+[  563.395599] c0 2667 (ls) PC is at 0x7f84f0d614
+[  563.395605] c0 2667 (ls) LR is at 0x5584ae2180
+[  563.395611] c0 2667 (ls) pc : [<0000007f84f0d614>] lr : [<0000005584ae2180>] pstate: 80000000
+[  563.395616] c0 2667 (ls) sp : 0000007fc720d3b0
+[  563.395620] c0 2667 (ls) R29: 0000007fc720d3b0 R28: 0000000000000000 
+[  563.395629] c0 2667 (ls) R27: 0000000000000004 R26: 0000007fc720de42 
+[  563.395636] c0 2667 (ls) R25: 0000000000000001 R24: 0000000000000000 
+[  563.395643] c0 2667 (ls) R23: 0000005584b0d000 R22: 0000007fc720de42 
+[  563.395649] c0 2667 (ls) R21: 0000000000000002 R20: 0000005584b0d000 
+[  563.395656] c0 2667 (ls) R19: 0000005584b10a88 R18: 0000000000000004 
+[  563.395663] c0 2667 (ls) R17: 0000005584b0e278 R16: 0000007f84f0d5f0 
+[  563.395670] c0 2667 (ls) R15: 0000000000000000 R14: 0000000000000023 
+[  563.395677] c0 2667 (ls) R13: 0000000000000000 R12: 0000007f84e4d228 
+[  563.395684] c0 2667 (ls) R11: 0000000000000000 R10: 0000007fc720d3e8 
+[  563.395691] c0 2667 (ls) R9 : 0000007fc720de42 R8 : 0000000000000123 
+[  563.395698] c0 2667 (ls) R7 : 0000000000000000 R6 : ffffffffffffff9c 
+[  563.395704] c0 2667 (ls) R5 : 0000000000000000 R4 : 0000007fc720d3e8 
+[  563.395711] c0 2667 (ls) R3 : 0000000000000002 R2 : 0000000000000000 
+[  563.395718] c0 2667 (ls) R1 : 0000007fc720de42 R0 : ffffffffffffff9c 
+[  563.395725] c0 2667 (ls) 
+[  563.395744] c0 2667 (ls) 
+[  563.395763] c0 2667 (ls) ls[2667]: syscall 291
+[  563.395771] c0 2667 (ls) Code: aa0103e9 aa0403ea d2802468 d4000001 (b140041f) 
+[  563.395778] c0 2667 (ls) CPU: 0 PID: 2667 Comm: ls Tainted: G        W    3.14.0-483125 #1
+[  563.395785] c0 2667 (ls) task: ffffffc02b885240 ti: ffffffc02b200000 task.ti: ffffffc02b200000
+[  563.395790] c0 2667 (ls) PC is at 0x7f84f0d614
+[  563.395795] c0 2667 (ls) LR is at 0x5584ae2180
+[  563.395801] c0 2667 (ls) pc : [<0000007f84f0d614>] lr : [<0000005584ae2180>] pstate: 80000000
+[  563.395806] c0 2667 (ls) sp : 0000007fc720d3b0
+[  563.395810] c0 2667 (ls) R29: 0000007fc720d3b0 R28: 0000000000000000 
+[  563.395817] c0 2667 (ls) R27: 0000000000000000 R26: 0000007fc720de42 
+[  563.395824] c0 2667 (ls) R25: 0000000000000001 R24: 0000000000000000 
+[  563.395831] c0 2667 (ls) R23: 0000005584b0d000 R22: 0000007fc720de42 
+[  563.395838] c0 2667 (ls) R21: 0000000000000002 R20: 0000005584b0d000 
+[  563.395845] c0 2667 (ls) R19: 0000005584b10a88 R18: 0000000000000004 
+[  563.395851] c0 2667 (ls) R17: 0000007f84f0d5f0 R16: 0000005584b0e278 
+[  563.395858] c0 2667 (ls) R15: 0000000000000000 R14: 0000000000000023 
+[  563.395865] c0 2667 (ls) R13: 0000000000000000 R12: 0000007f84e4d228 
+[  563.395872] c0 2667 (ls) R11: 0000000000000000 R10: 0000007fc720d3e8 
+[  563.395879] c0 2667 (ls) R9 : 0000007fc720de42 R8 : 0000000000000123 
+[  563.395885] c0 2667 (ls) R7 : 0000000000000100 R6 : ffffffffffffff9c 
+[  563.395892] c0 2667 (ls) R5 : 0000000000000000 R4 : 0000007fc720d3e8 
+[  563.395899] c0 2667 (ls) R3 : 0000000000000002 R2 : 0000000000000100 
+[  563.395906] c0 2667 (ls) R1 : 0000007fc720de42 R0 : ffffffffffffff9c 
+[  563.395913] c0 2667 (ls) 
+[  563.395931] c0 2667 (ls) 
+[  563.432882] c0 2674 (tinymembench) graphics fb0: mmpfb open: op_count = 2
+[  563.797774] c2 0 (swapper/2) CPU2: Booted secondary processor
+[  566.894532] c0 1098 (kworker/u8:2) CPU2: shutdown
+[  567.897328] c2 0 (swapper/2) CPU2: Booted secondary processor
+[  570.484537] c0 1098 (kworker/u8:2) CPU2: shutdown
+[  573.153976] c0 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4142mV),Inow(-366mA),Imax(0mA),SOC(93%),Tbat(350)
+[  573.156345] c0 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[  573.156367] c0 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Discharging), mode(None), Health(Good), Cable(1), level(100%)
+[  580.487181] c2 0 (swapper/2) CPU2: Booted secondary processor
+[  583.074385] c0 1098 (kworker/u8:2) CPU2: shutdown
+[  586.077280] c2 0 (swapper/2) CPU2: Booted secondary processor
+[  590.174547] c0 1098 (kworker/u8:2) CPU2: shutdown
+[  603.072617] c0 2674 (tinymembench) sm5504 4-0014: microusb_irq_handler
+[  603.123940] c0 1929 (kworker/0:0) sm5504 4-0014: I2C Read REG[0x 3] DATA[0x25]
+[  603.124274] c0 1929 (kworker/0:0) sm5504 4-0014: I2C Read REG[0x 4] DATA[0x 1]
+[  603.124598] c0 1929 (kworker/0:0) sm5504 4-0014: I2C Read REG[0x 2] DATA[0xe4]
+[  603.124923] c0 1929 (kworker/0:0) sm5504 4-0014: I2C Read REG[0x a] DATA[0x40]
+[  603.125246] c0 1929 (kworker/0:0) sm5504 4-0014: I2C Read REG[0x b] DATA[0x 0]
+[  603.125568] c0 1929 (kworker/0:0) sm5504 4-0014: I2C Read REG[0x 7] DATA[0x1f]
+[  603.125890] c0 1929 (kworker/0:0) sm5504 4-0014: I2C Read REG[0x24] DATA[0x 1]
+[  603.125898] c0 1929 (kworker/0:0) sm5504 4-0014: DCP ATTACHED*****
+[  603.125918] c0 1929 (kworker/0:0) sec_charger_cb: cable type (0x02)
+[  603.125926] c0 1929 (kworker/0:0) sec_charger_cb: VBUS Online
+[  603.125939] c0 1929 (kworker/0:0) sec-battery sec_battery.28: sec_bat_set_property: current_cable(3), wc_status(0), wire_status(3)
+[  603.125970] c0 1929 (kworker/0:0) bt432_ts 3-0020: TA connected
+[  603.125989] c0 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_cable_work: Start
+[  603.126016] c0 1098 (kworker/u8:2) sec_chg_set_property : float voltage (4400mV)
+[  603.126159] c0 1929 (kworker/0:0) usb_notifier: sec_cable_notifier 2 is attached
+[  603.126713] c0 1098 (kworker/u8:2) sec_chg_set_property : topoff current (120mA)
+[  603.127361] c0 1098 (kworker/u8:2) sec_chg_set_property : fast charging current (1500mA), siop_level=100
+[  603.154818] c0 1098 (kworker/u8:2) pm886_start_charging : Enable Charger!
+[  603.154833] c0 1098 (kworker/u8:2) sec_chg_set_property : vbus current limit (700mA)
+[  603.155173] c0 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_cable_work: Status:Charging, Sleep:No, Charging:Yes, Short Poll:Yes
+[  603.155183] c0 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_cable_work: Polling time is reset to 30 sec.
+[  603.516532] c0 898 (irq/154-bt432_t) bt432_ts 3-0020: TA setting changed to 1
+[  603.714005] c0 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4319mV),Inow(-384mA),Imax(0mA),SOC(93%),Tbat(350)
+[  603.716374] c0 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[  603.716735] c0 1098 (kworker/u8:2) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[  603.716744] c0 1098 (kworker/u8:2) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[  603.717769] c0 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_fullcharged_check: Charging Mode : Normal
+[  603.717782] c0 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[  605.338107] c0 1098 (kworker/u8:2) 88pm886-battery 88pm886-battery: pm886_battery_correct_soc: supplement: previous_soc = 926%, new_soc = 924%
+[  605.338125] c0 1098 (kworker/u8:2) 88pm886-battery 88pm886-battery: pm886_battery_correct_soc: only CC needs update: 924% -> 926%
+[  605.338153] c0 1098 (kworker/u8:2) 88pm886-battery 88pm886-battery: cap=93, temp=35, volt=4345, ocv_is_realiable=1
+[  613.774029] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4325mV),Inow(321mA),Imax(0mA),SOC(93%),Tbat(350)
+[  613.776455] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[  613.776834] c3 1098 (kworker/u8:2) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[  613.776845] c3 1098 (kworker/u8:2) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[  613.776862] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[  618.208585] c3 1846 (recovery) ktd2801_backlight_set_brightness: brightness(5), tune_level(7)
+[  620.213717] c3 1846 (recovery) ktd2801_backlight_set_brightness: brightness(0), tune_level(0)
+[  620.214440] c3 1846 (recovery) called gen_panel_set_status with status 0
+[  620.214458] c3 1846 (recovery) ktd2801_backlight_set_brightness: brightness(0), tune_level(0)
+[  620.214470] c3 1846 (recovery) kinetic,backlight-ktd2801 ktd2801-bl.25: ktd2801_backlight suspended
+[  620.432092] c3 1846 (recovery) panel_rst off 10 usec
+[  620.434608] c3 1846 (recovery) panel_avdd off 1000 usec
+[  620.435977] c3 1846 (recovery) mmp_dsi d420b800.dsi: dsi_set_on status 0
+[  620.436167] c3 1846 (recovery) mmp-disp mmp-disp: state save latency exceeded, new value 146885 ns
+[  620.436185] c3 1846 (recovery) power-domain-display: Power-off latency exceeded, new value 11500 ns
+[  620.436199] c3 1846 (recovery) ktd2801_backlight_set_brightness: brightness(0), tune_level(0)
+[  621.583611] c0 1929 (kworker/0:0) [KEY] gpio_key Press
+[  621.583962] c3 1846 (recovery) power-domain-display: Power-on latency exceeded, new value 17154 ns
+[  621.584095] c3 1846 (recovery) mmp-disp mmp-disp: state restore latency exceeded, new value 117807 ns
+[  621.599079] c3 1846 (recovery) called gen_panel_set_status with status 1
+[  621.611037] c3 1846 (recovery) panel_avdd on 10000 usec
+[  621.621418] c3 1846 (recovery) panel_rst off 10000 usec
+[  621.631830] c3 1846 (recovery) panel_rst on 10000 usec
+[  621.723586] c0 1929 (kworker/0:0) [KEY] gpio_key Release
+[  621.902986] c3 1846 (recovery) gen_panel_set_mdnie: set scenario(0)
+[  621.973887] c3 1846 (recovery) ktd2801_backlight_set_brightness: brightness(0), tune_level(0)
+[  621.973904] c3 1846 (recovery) kinetic,backlight-ktd2801 ktd2801-bl.25: ktd2801_backlight resumed.
+[  621.973918] c3 1846 (recovery) mmp_dsi d420b800.dsi: dsi_set_on status 1
+[  621.973943] c3 1846 (recovery) ktd2801_backlight_set_brightness: brightness(0), tune_level(0)
+[  621.974373] c3 1846 (recovery) ktd2801_backlight_set_brightness: brightness(255), tune_level(207)
+[  622.176421] c2 0 (swapper/2) CPU2: Booted secondary processor
+[  623.122398] c0 898 (irq/154-bt432_t) bt432_ts 3-0020: Finger down
+[  623.338436] c0 898 (irq/154-bt432_t) bt432_ts 3-0020: Finger up
+[  623.834025] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4332mV),Inow(323mA),Imax(0mA),SOC(93%),Tbat(350)
+[  623.836446] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[  623.836820] c3 1098 (kworker/u8:2) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[  623.836831] c3 1098 (kworker/u8:2) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[  623.836846] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[  624.572461] c0 898 (irq/154-bt432_t) bt432_ts 3-0020: Finger down
+[  624.625526] c0 898 (irq/154-bt432_t) bt432_ts 3-0020: Finger up
+[  627.774420] c0 1098 (kworker/u8:2) CPU2: shutdown
+[  628.776245] c2 0 (swapper/2) CPU2: Booted secondary processor
+[  630.874371] c0 1098 (kworker/u8:2) CPU2: shutdown
+[  633.894508] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4355mV),Inow(322mA),Imax(0mA),SOC(93%),Tbat(350)
+[  633.897112] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[  633.897530] c3 1098 (kworker/u8:2) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[  633.897544] c3 1098 (kworker/u8:2) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[  633.898724] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_fullcharged_check: Charging Mode : Normal
+[  633.898747] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[  643.954517] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4359mV),Inow(322mA),Imax(0mA),SOC(93%),Tbat(350)
+[  643.957186] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[  643.957635] c3 1098 (kworker/u8:2) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[  643.957652] c3 1098 (kworker/u8:2) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[  643.957684] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[  644.383519] c2 0 (swapper/2) CPU2: Booted secondary processor
+[  649.976183] c2 18 (migration/2) IRQ96 no longer affine to CPU2
+[  649.976483] c3 1098 (kworker/u8:2) CPU2: shutdown
+[  654.014863] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4362mV),Inow(319mA),Imax(0mA),SOC(93%),Tbat(350)
+[  654.018194] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[  654.018621] c3 1098 (kworker/u8:2) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[  654.018635] c3 1098 (kworker/u8:2) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[  654.018664] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[  664.074805] c3 6 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4366mV),Inow(318mA),Imax(0mA),SOC(93%),Tbat(350)
+[  664.078830] c3 6 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[  664.079520] c3 6 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[  664.079540] c3 6 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[  664.081324] c3 6 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_fullcharged_check: Charging Mode : Normal
+[  664.081356] c3 6 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[  665.483891] c2 0 (swapper/2) CPU2: Booted secondary processor
+[  668.574886] c0 1098 (kworker/u8:2) CPU2: shutdown
+[  670.583532] c2 0 (swapper/2) CPU2: Booted secondary processor
+[  672.684518] c0 1098 (kworker/u8:2) CPU2: shutdown
+[  674.144576] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4375mV),Inow(346mA),Imax(0mA),SOC(93%),Tbat(350)
+[  674.147531] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[  674.147920] c3 1098 (kworker/u8:2) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[  674.147930] c3 1098 (kworker/u8:2) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[  674.147948] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[  684.204525] c3 6 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4368mV),Inow(321mA),Imax(0mA),SOC(93%),Tbat(350)
+[  684.207159] c3 6 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[  684.207605] c3 6 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[  684.207621] c3 6 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[  684.207655] c3 6 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[  687.475269] c3 1846 (recovery) ktd2801_backlight_set_brightness: brightness(5), tune_level(7)
+[  687.693740] c2 0 (swapper/2) CPU2: Booted secondary processor
+[  688.981046] c3 1846 (recovery) ktd2801_backlight_set_brightness: brightness(0), tune_level(0)
+[  688.982364] c3 1846 (recovery) called gen_panel_set_status with status 0
+[  688.982392] c3 1846 (recovery) ktd2801_backlight_set_brightness: brightness(0), tune_level(0)
+[  688.982408] c3 1846 (recovery) kinetic,backlight-ktd2801 ktd2801-bl.25: ktd2801_backlight suspended
+[  689.183398] c3 1846 (recovery) panel_rst off 10 usec
+[  689.186254] c3 1846 (recovery) panel_avdd off 1000 usec
+[  689.187384] c3 1846 (recovery) mmp_dsi d420b800.dsi: dsi_set_on status 0
+[  689.187433] c3 1846 (recovery) mmp-disp mmp-disp: stop latency exceeded, new value 1615 ns
+[  689.187444] c3 1846 (recovery) mmp-disp mmp-disp: start latency exceeded, new value 424 ns
+[  689.187609] c3 1846 (recovery) power-domain-display: Power-off latency exceeded, new value 15384 ns
+[  689.187627] c3 1846 (recovery) ktd2801_backlight_set_brightness: brightness(0), tune_level(0)
+[  691.294408] c0 6 (kworker/u8:0) CPU2: shutdown
+[  694.263996] c0 6 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4393mV),Inow(360mA),Imax(0mA),SOC(93%),Tbat(350)
+[  694.266362] c0 6 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[  694.266721] c0 6 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[  694.266730] c0 6 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[  694.267739] c0 6 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_fullcharged_check: Charging Mode : Normal
+[  694.267752] c0 6 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[  697.445508] c0 898 (irq/154-bt432_t) bt432_ts 3-0020: Finger down
+[  697.445970] c3 1846 (recovery) power-domain-display: Power-on latency exceeded, new value 18808 ns
+[  697.446107] c3 1846 (recovery) mmp-disp mmp-disp: state restore latency exceeded, new value 121769 ns
+[  697.460894] c3 1846 (recovery) called gen_panel_set_status with status 1
+[  697.473275] c3 1846 (recovery) panel_avdd on 10000 usec
+[  697.483637] c3 1846 (recovery) panel_rst off 10000 usec
+[  697.494020] c3 1846 (recovery) panel_rst on 10000 usec
+[  697.639932] c0 898 (irq/154-bt432_t) bt432_ts 3-0020: Finger up
+[  697.765085] c3 1846 (recovery) gen_panel_set_mdnie: set scenario(0)
+[  697.833919] c3 1846 (recovery) ktd2801_backlight_set_brightness: brightness(0), tune_level(0)
+[  697.833940] c3 1846 (recovery) kinetic,backlight-ktd2801 ktd2801-bl.25: ktd2801_backlight resumed.
+[  697.833954] c3 1846 (recovery) mmp_dsi d420b800.dsi: dsi_set_on status 1
+[  697.833982] c3 1846 (recovery) ktd2801_backlight_set_brightness: brightness(0), tune_level(0)
+[  697.834498] c3 1846 (recovery) ktd2801_backlight_set_brightness: brightness(255), tune_level(207)
+[  697.913609] c0 1929 (kworker/0:0) [KEY] gpio_key Press
+[  698.033617] c0 1929 (kworker/0:0) [KEY] gpio_key Release
+[  699.396021] c0 898 (irq/154-bt432_t) bt432_ts 3-0020: Finger down
+[  699.590419] c0 898 (irq/154-bt432_t) bt432_ts 3-0020: Finger up
+[  699.796616] c2 0 (swapper/2) CPU2: Booted secondary processor
+[  700.649237] c0 898 (irq/154-bt432_t) bt432_ts 3-0020: Finger down
+[  700.911094] c0 898 (irq/154-bt432_t) bt432_ts 3-0020: Finger up
+[  701.296956] c1 0 (swapper/1) CPU1: Booted secondary processor
+[  704.324724] c3 6 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4378mV),Inow(318mA),Imax(0mA),SOC(93%),Tbat(350)
+[  704.327978] c3 6 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[  704.328509] c3 6 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[  704.328522] c3 6 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[  704.328542] c3 6 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[  704.404512] c0 1098 (kworker/u8:2) CPU1: shutdown
+[  706.494895] c2 18 (migration/2) IRQ96 no longer affine to CPU2
+[  706.495135] c3 1098 (kworker/u8:2) CPU2: shutdown
+[  714.384634] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4388mV),Inow(341mA),Imax(0mA),SOC(93%),Tbat(350)
+[  714.387895] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[  714.388421] c3 1098 (kworker/u8:2) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[  714.388435] c3 1098 (kworker/u8:2) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[  714.388454] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[  724.444528] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4383mV),Inow(332mA),Imax(0mA),SOC(93%),Tbat(350)
+[  724.447727] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[  724.448241] c3 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[  724.448254] c3 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[  724.449675] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_fullcharged_check: Charging Mode : Normal
+[  724.449702] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[  734.514772] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4388mV),Inow(318mA),Imax(0mA),SOC(93%),Tbat(350)
+[  734.518853] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[  734.519545] c3 1098 (kworker/u8:2) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[  734.519560] c3 1098 (kworker/u8:2) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[  734.519592] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[  742.509897] c2 0 (swapper/2) CPU2: Booted secondary processor
+[  744.586361] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4393mV),Inow(312mA),Imax(0mA),SOC(93%),Tbat(350)
+[  744.592720] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[  744.593772] c3 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[  744.593841] c3 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[  744.594700] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[  745.106319] c0 3244 (kworker/u8:3) CPU2: shutdown
+[  748.118675] c2 0 (swapper/2) CPU2: Booted secondary processor
+[  750.714491] c0 3244 (kworker/u8:3) CPU2: shutdown
+[  754.654001] c0 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4394mV),Inow(310mA),Imax(0mA),SOC(93%),Tbat(350)
+[  754.656370] c0 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[  754.656723] c0 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[  754.656732] c0 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[  754.657741] c0 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_fullcharged_check: Charging Mode : Normal
+[  754.657754] c0 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[  763.806153] c3 1846 (recovery) ktd2801_backlight_set_brightness: brightness(5), tune_level(7)
+[  764.714843] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4393mV),Inow(304mA),Imax(0mA),SOC(93%),Tbat(350)
+[  764.718942] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[  764.719621] c3 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[  764.719636] c3 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[  764.719668] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[  765.661471] c0 898 (irq/154-bt432_t) bt432_ts 3-0020: Finger down
+[  765.666581] c3 1846 (recovery) ktd2801_backlight_set_brightness: brightness(0), tune_level(0)
+[  765.673076] c3 1846 (recovery) called gen_panel_set_status with status 0
+[  765.673215] c3 1846 (recovery) ktd2801_backlight_set_brightness: brightness(0), tune_level(0)
+[  765.673292] c3 1846 (recovery) kinetic,backlight-ktd2801 ktd2801-bl.25: ktd2801_backlight suspended
+[  765.794321] c0 898 (irq/154-bt432_t) bt432_ts 3-0020: Finger up
+[  765.915341] c3 1846 (recovery) panel_rst off 10 usec
+[  765.919212] c3 1846 (recovery) panel_avdd off 1000 usec
+[  765.921001] c3 1846 (recovery) mmp_dsi d420b800.dsi: dsi_set_on status 0
+[  765.921261] c3 1846 (recovery) mmp-disp mmp-disp: stop latency exceeded, new value 10846 ns
+[  765.921298] c3 1846 (recovery) mmp-disp mmp-disp: start latency exceeded, new value 1230 ns
+[  765.921576] c3 1846 (recovery) mmp-disp mmp-disp: state save latency exceeded, new value 251731 ns
+[  765.921668] c3 1846 (recovery) power-domain-display: Power-off latency exceeded, new value 73500 ns
+[  765.921773] c3 1846 (recovery) ktd2801_backlight_set_brightness: brightness(0), tune_level(0)
+[  765.922703] c3 1846 (recovery) power-domain-display: Power-on latency exceeded, new value 78539 ns
+[  765.922777] c3 1846 (recovery) mmp-disp mmp-disp: start latency exceeded, new value 2154 ns
+[  765.922937] c3 1846 (recovery) mmp-disp mmp-disp: state restore latency exceeded, new value 139924 ns
+[  765.939334] c3 1846 (recovery) called gen_panel_set_status with status 1
+[  765.954796] c3 1846 (recovery) panel_avdd on 10000 usec
+[  765.966965] c3 1846 (recovery) panel_rst off 10000 usec
+[  765.978488] c3 1846 (recovery) panel_rst on 10000 usec
+[  766.228715] c2 0 (swapper/2) CPU2: Booted secondary processor
+[  766.260079] c3 1846 (recovery) gen_panel_set_mdnie: set scenario(0)
+[  766.425401] c3 1846 (recovery) ktd2801_backlight_set_brightness: brightness(0), tune_level(0)
+[  766.425494] c3 1846 (recovery) kinetic,backlight-ktd2801 ktd2801-bl.25: ktd2801_backlight resumed.
+[  766.425560] c3 1846 (recovery) mmp_dsi d420b800.dsi: dsi_set_on status 1
+[  766.425735] c3 1846 (recovery) ktd2801_backlight_set_brightness: brightness(0), tune_level(0)
+[  766.429264] c3 1846 (recovery) ktd2801_backlight_set_brightness: brightness(255), tune_level(207)
+[  766.604159] c0 898 (irq/154-bt432_t) bt432_ts 3-0020: Finger down
+[  766.657723] c0 898 (irq/154-bt432_t) bt432_ts 3-0020: Finger up
+[  767.097051] c0 898 (irq/154-bt432_t) bt432_ts 3-0020: Finger down
+[  767.415404] c0 898 (irq/154-bt432_t) bt432_ts 3-0020: Finger up
+[  768.116119] c0 898 (irq/154-bt432_t) bt432_ts 3-0020: Finger down
+[  768.169764] c0 898 (irq/154-bt432_t) bt432_ts 3-0020: Finger up
+[  771.529357] c2 18 (migration/2) IRQ96 no longer affine to CPU2
+[  771.530029] c3 1098 (kworker/u8:2) CPU2: shutdown
+[  774.774207] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4396mV),Inow(300mA),Imax(0mA),SOC(93%),Tbat(350)
+[  774.777160] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[  774.777605] c3 1098 (kworker/u8:2) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[  774.777614] c3 1098 (kworker/u8:2) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[  774.777627] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[  784.834190] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4392mV),Inow(295mA),Imax(0mA),SOC(93%),Tbat(350)
+[  784.836946] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[  784.837292] c3 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[  784.837301] c3 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[  784.838301] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_fullcharged_check: Charging Mode : Normal
+[  784.838312] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[  794.894161] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4393mV),Inow(291mA),Imax(0mA),SOC(93%),Tbat(350)
+[  794.897112] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[  794.897555] c3 1098 (kworker/u8:2) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[  794.897564] c3 1098 (kworker/u8:2) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[  794.897576] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[  804.954225] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4392mV),Inow(286mA),Imax(0mA),SOC(93%),Tbat(350)
+[  804.957171] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[  804.957519] c3 1098 (kworker/u8:2) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[  804.957527] c3 1098 (kworker/u8:2) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[  804.957540] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[  808.535302] c2 0 (swapper/2) CPU2: Booted secondary processor
+[  811.634338] c2 18 (migration/2) IRQ96 no longer affine to CPU2
+[  811.634741] c3 3244 (kworker/u8:3) CPU2: shutdown
+[  815.014182] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4392mV),Inow(282mA),Imax(0mA),SOC(93%),Tbat(350)
+[  815.017117] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[  815.017558] c3 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[  815.017567] c3 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[  815.018858] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_fullcharged_check: Charging Mode : Normal
+[  815.018869] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[  816.939191] c3 1098 (kworker/u8:2) 88pm886-battery 88pm886-battery: cap=94, temp=35, volt=4394, ocv_is_realiable=1
+[  825.074101] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4393mV),Inow(278mA),Imax(0mA),SOC(94%),Tbat(350)
+[  825.077017] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[  825.077454] c3 1098 (kworker/u8:2) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[  825.077463] c3 1098 (kworker/u8:2) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[  825.077475] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[  830.965966] c3 1846 (recovery) ktd2801_backlight_set_brightness: brightness(5), tune_level(7)
+[  832.358269] c0 898 (irq/154-bt432_t) bt432_ts 3-0020: Finger down
+[  832.358678] c3 1846 (recovery) ktd2801_backlight_set_brightness: brightness(255), tune_level(207)
+[  832.635929] c2 0 (swapper/2) CPU2: Booted secondary processor
+[  832.677109] c0 898 (irq/154-bt432_t) bt432_ts 3-0020: Finger up
+[  835.134194] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4388mV),Inow(268mA),Imax(0mA),SOC(94%),Tbat(350)
+[  835.136856] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[  835.137198] c3 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[  835.137207] c3 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[  835.137219] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[  835.734166] c0 1098 (kworker/u8:2) CPU2: shutdown
+[  845.194005] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4394mV),Inow(266mA),Imax(0mA),SOC(94%),Tbat(350)
+[  845.196397] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[  845.196751] c3 1098 (kworker/u8:2) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[  845.196760] c3 1098 (kworker/u8:2) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[  845.197773] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_fullcharged_check: Charging Mode : Normal
+[  845.197785] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[  855.254375] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4392mV),Inow(263mA),Imax(0mA),SOC(94%),Tbat(350)
+[  855.257429] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[  855.257904] c3 1098 (kworker/u8:2) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[  855.257915] c3 1098 (kworker/u8:2) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[  855.257930] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[  857.735270] c2 0 (swapper/2) CPU2: Booted secondary processor
+[  860.834323] c0 3244 (kworker/u8:3) CPU2: shutdown
+[  865.314004] c0 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4390mV),Inow(260mA),Imax(0mA),SOC(94%),Tbat(350)
+[  865.316362] c0 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[  865.316711] c0 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[  865.316720] c0 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[  865.316733] c0 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[  868.335273] c2 0 (swapper/2) CPU2: Booted secondary processor
+[  871.434337] c0 3244 (kworker/u8:3) CPU2: shutdown
+[  875.374003] c0 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4392mV),Inow(257mA),Imax(0mA),SOC(94%),Tbat(350)
+[  875.376361] c0 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[  875.376708] c0 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[  875.376718] c0 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[  875.377719] c0 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_fullcharged_check: Charging Mode : Normal
+[  875.377730] c0 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[  881.027024] c0 898 (irq/154-bt432_t) bt432_ts 3-0020: Finger down
+[  881.068941] c0 898 (irq/154-bt432_t) bt432_ts 3-0020: Finger up
+[  881.435249] c2 0 (swapper/2) CPU2: Booted secondary processor
+[  884.034295] c0 3244 (kworker/u8:3) CPU2: shutdown
+[  885.434015] c0 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4394mV),Inow(254mA),Imax(0mA),SOC(94%),Tbat(350)
+[  885.436376] c0 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[  885.436724] c0 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[  885.436733] c0 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[  885.436746] c0 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[  895.494314] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4393mV),Inow(251mA),Imax(0mA),SOC(94%),Tbat(350)
+[  895.497282] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[  895.497735] c3 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[  895.497745] c3 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[  895.497758] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[  905.554186] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4393mV),Inow(248mA),Imax(0mA),SOC(94%),Tbat(350)
+[  905.557154] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[  905.557610] c3 1098 (kworker/u8:2) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[  905.557619] c3 1098 (kworker/u8:2) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[  905.558916] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_fullcharged_check: Charging Mode : Normal
+[  905.558928] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[  915.614314] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4392mV),Inow(245mA),Imax(0mA),SOC(94%),Tbat(350)
+[  915.616996] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[  915.617356] c3 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[  915.617365] c3 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[  915.617378] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[  925.674310] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4390mV),Inow(242mA),Imax(0mA),SOC(94%),Tbat(350)
+[  925.677273] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[  925.677726] c3 1098 (kworker/u8:2) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[  925.677735] c3 1098 (kworker/u8:2) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[  925.677748] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[  928.535643] c2 0 (swapper/2) CPU2: Booted secondary processor
+[  929.113931] c0 898 (irq/154-bt432_t) bt432_ts 3-0020: Finger down
+[  929.132985] c0 898 (irq/154-bt432_t) bt432_ts 3-0020: Finger up
+[  931.634341] c0 3244 (kworker/u8:3) CPU2: shutdown
+[  935.734006] c0 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4393mV),Inow(239mA),Imax(0mA),SOC(94%),Tbat(350)
+[  935.736374] c0 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[  935.736723] c0 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[  935.736732] c0 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[  935.737734] c0 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_fullcharged_check: Charging Mode : Normal
+[  935.737745] c0 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[  944.135286] c2 0 (swapper/2) CPU2: Booted secondary processor
+[  945.794075] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4390mV),Inow(236mA),Imax(0mA),SOC(94%),Tbat(350)
+[  945.796702] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[  945.797057] c3 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[  945.797066] c3 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[  945.797078] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[  946.734333] c0 1098 (kworker/u8:2) CPU2: shutdown
+[  949.735295] c2 0 (swapper/2) CPU2: Booted secondary processor
+[  952.334312] c0 1098 (kworker/u8:2) CPU2: shutdown
+[  955.853975] c0 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4393mV),Inow(234mA),Imax(0mA),SOC(94%),Tbat(350)
+[  955.856325] c0 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[  955.856670] c0 1098 (kworker/u8:2) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[  955.856679] c0 1098 (kworker/u8:2) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[  955.856692] c0 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[  965.914005] c0 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4392mV),Inow(231mA),Imax(0mA),SOC(94%),Tbat(350)
+[  965.916363] c0 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[  965.916709] c0 1098 (kworker/u8:2) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[  965.916718] c0 1098 (kworker/u8:2) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[  965.917720] c0 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_fullcharged_check: Charging Mode : Normal
+[  965.917732] c0 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[  975.974334] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4392mV),Inow(229mA),Imax(0mA),SOC(94%),Tbat(350)
+[  975.977313] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[  975.977770] c3 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[  975.977779] c3 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[  975.977793] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[  986.034313] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4393mV),Inow(226mA),Imax(0mA),SOC(94%),Tbat(350)
+[  986.037262] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[  986.037711] c3 1098 (kworker/u8:2) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[  986.037720] c3 1098 (kworker/u8:2) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[  986.037733] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[  987.835306] c2 0 (swapper/2) CPU2: Booted secondary processor
+[  989.934324] c0 3244 (kworker/u8:3) CPU2: shutdown
+[  991.984745] c3 1846 (recovery) ktd2801_backlight_set_brightness: brightness(5), tune_level(7)
+[  993.761095] c0 898 (irq/154-bt432_t) bt432_ts 3-0020: Finger down
+[  993.761827] c3 1846 (recovery) ktd2801_backlight_set_brightness: brightness(0), tune_level(0)
+[  993.762296] c3 1846 (recovery) called gen_panel_set_status with status 0
+[  993.762309] c3 1846 (recovery) ktd2801_backlight_set_brightness: brightness(0), tune_level(0)
+[  993.762319] c3 1846 (recovery) kinetic,backlight-ktd2801 ktd2801-bl.25: ktd2801_backlight suspended
+[  993.791141] c0 898 (irq/154-bt432_t) bt432_ts 3-0020: Finger up
+[  993.969905] c3 1846 (recovery) panel_rst off 10 usec
+[  993.972274] c3 1846 (recovery) panel_avdd off 1000 usec
+[  993.973561] c3 1846 (recovery) mmp_dsi d420b800.dsi: dsi_set_on status 0
+[  993.973742] c3 1846 (recovery) ktd2801_backlight_set_brightness: brightness(0), tune_level(0)
+[  993.988783] c3 1846 (recovery) called gen_panel_set_status with status 1
+[  994.000595] c3 1846 (recovery) panel_avdd on 10000 usec
+[  994.010914] c3 1846 (recovery) panel_rst off 10000 usec
+[  994.021231] c3 1846 (recovery) panel_rst on 10000 usec
+[  994.292412] c3 1846 (recovery) gen_panel_set_mdnie: set scenario(0)
+[  994.363842] c3 1846 (recovery) ktd2801_backlight_set_brightness: brightness(0), tune_level(0)
+[  994.363855] c3 1846 (recovery) kinetic,backlight-ktd2801 ktd2801-bl.25: ktd2801_backlight resumed.
+[  994.363864] c3 1846 (recovery) mmp_dsi d420b800.dsi: dsi_set_on status 1
+[  994.363883] c3 1846 (recovery) ktd2801_backlight_set_brightness: brightness(0), tune_level(0)
+[  994.364188] c3 1846 (recovery) ktd2801_backlight_set_brightness: brightness(255), tune_level(207)
+[  994.435423] c2 0 (swapper/2) CPU2: Booted secondary processor
+[  995.002438] c0 898 (irq/154-bt432_t) bt432_ts 3-0020: Finger down
+[  995.186121] c0 898 (irq/154-bt432_t) bt432_ts 3-0020: Finger up
+[  995.625371] c0 898 (irq/154-bt432_t) bt432_ts 3-0020: Finger down
+[  995.896965] c0 898 (irq/154-bt432_t) bt432_ts 3-0020: Finger up
+[  996.093969] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4394mV),Inow(224mA),Imax(0mA),SOC(94%),Tbat(350)
+[  996.096333] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[  996.096681] c3 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[  996.096690] c3 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[  996.097691] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_fullcharged_check: Charging Mode : Normal
+[  996.097703] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[  996.857315] c0 898 (irq/154-bt432_t) bt432_ts 3-0020: Finger down
+[  996.923225] c0 898 (irq/154-bt432_t) bt432_ts 3-0020: Finger up
+[ 1000.033640] c0 3244 (kworker/u8:3) CPU2: shutdown
+[ 1004.035234] c2 0 (swapper/2) CPU2: Booted secondary processor
+[ 1006.134324] c0 3244 (kworker/u8:3) CPU2: shutdown
+[ 1006.154306] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4394mV),Inow(221mA),Imax(0mA),SOC(94%),Tbat(350)
+[ 1006.157287] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1006.157743] c3 1098 (kworker/u8:2) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1006.157752] c3 1098 (kworker/u8:2) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1006.157764] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[ 1016.214318] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4392mV),Inow(219mA),Imax(0mA),SOC(94%),Tbat(350)
+[ 1016.217302] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1016.217757] c3 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1016.217766] c3 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1016.217779] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[ 1026.274328] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4392mV),Inow(216mA),Imax(0mA),SOC(94%),Tbat(350)
+[ 1026.277309] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1026.277767] c3 1098 (kworker/u8:2) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1026.277776] c3 1098 (kworker/u8:2) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1026.279078] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_fullcharged_check: Charging Mode : Normal
+[ 1026.279092] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[ 1036.334304] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4393mV),Inow(214mA),Imax(0mA),SOC(94%),Tbat(350)
+[ 1036.337268] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1036.337719] c3 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1036.337728] c3 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1036.337741] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[ 1046.394070] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4390mV),Inow(212mA),Imax(0mA),SOC(94%),Tbat(360)
+[ 1046.397034] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1046.397486] c3 1098 (kworker/u8:2) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1046.397495] c3 1098 (kworker/u8:2) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1046.397508] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[ 1056.454312] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4393mV),Inow(210mA),Imax(0mA),SOC(94%),Tbat(350)
+[ 1056.457183] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1056.457634] c3 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1056.457644] c3 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1056.458847] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_fullcharged_check: Charging Mode : Normal
+[ 1056.458859] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[ 1058.135310] c2 0 (swapper/2) CPU2: Booted secondary processor
+[ 1059.215182] c3 1846 (recovery) ktd2801_backlight_set_brightness: brightness(5), tune_level(7)
+[ 1060.224314] c0 3244 (kworker/u8:3) CPU2: shutdown
+[ 1061.219795] c3 1846 (recovery) ktd2801_backlight_set_brightness: brightness(0), tune_level(0)
+[ 1061.220255] c3 1846 (recovery) called gen_panel_set_status with status 0
+[ 1061.220268] c3 1846 (recovery) ktd2801_backlight_set_brightness: brightness(0), tune_level(0)
+[ 1061.220278] c3 1846 (recovery) kinetic,backlight-ktd2801 ktd2801-bl.25: ktd2801_backlight suspended
+[ 1061.422793] c3 1846 (recovery) panel_rst off 10 usec
+[ 1061.425322] c3 1846 (recovery) panel_avdd off 1000 usec
+[ 1061.426382] c3 1846 (recovery) mmp_dsi d420b800.dsi: dsi_set_on status 0
+[ 1061.426562] c3 1846 (recovery) ktd2801_backlight_set_brightness: brightness(0), tune_level(0)
+[ 1066.514336] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4393mV),Inow(208mA),Imax(0mA),SOC(94%),Tbat(350)
+[ 1066.517316] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1066.517773] c3 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1066.517782] c3 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1066.517796] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[ 1076.574242] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4390mV),Inow(206mA),Imax(0mA),SOC(94%),Tbat(350)
+[ 1076.577239] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1076.577599] c3 1098 (kworker/u8:2) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1076.577608] c3 1098 (kworker/u8:2) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1076.577621] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[ 1086.634337] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4394mV),Inow(204mA),Imax(0mA),SOC(94%),Tbat(350)
+[ 1086.637410] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1086.637771] c3 1098 (kworker/u8:2) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1086.637779] c3 1098 (kworker/u8:2) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1086.639085] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_fullcharged_check: Charging Mode : Normal
+[ 1086.639100] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[ 1090.349405] c3 3244 (kworker/u8:3) 88pm886-battery 88pm886-battery: cap=95, temp=35, volt=4392, ocv_is_realiable=1
+[ 1096.694192] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4393mV),Inow(202mA),Imax(0mA),SOC(95%),Tbat(350)
+[ 1096.696673] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1096.697028] c3 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1096.697036] c3 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1096.697049] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[ 1106.754279] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4390mV),Inow(199mA),Imax(0mA),SOC(95%),Tbat(350)
+[ 1106.756925] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1106.757377] c3 1098 (kworker/u8:2) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1106.757386] c3 1098 (kworker/u8:2) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1106.757399] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[ 1108.179259] c0 448 (irq/36-88pm886) [KEY] key Press
+[ 1108.194241] c3 1846 (recovery) called gen_panel_set_status with status 1
+[ 1108.206341] c3 1846 (recovery) panel_avdd on 10000 usec
+[ 1108.216652] c3 1846 (recovery) panel_rst off 10000 usec
+[ 1108.226716] c3 1846 (recovery) panel_rst on 10000 usec
+[ 1108.365760] c0 448 (irq/36-88pm886) [KEY] key Release
+[ 1108.497879] c3 1846 (recovery) gen_panel_set_mdnie: set scenario(0)
+[ 1108.563806] c3 1846 (recovery) ktd2801_backlight_set_brightness: brightness(0), tune_level(0)
+[ 1108.563819] c3 1846 (recovery) kinetic,backlight-ktd2801 ktd2801-bl.25: ktd2801_backlight resumed.
+[ 1108.563829] c3 1846 (recovery) mmp_dsi d420b800.dsi: dsi_set_on status 1
+[ 1108.563848] c3 1846 (recovery) ktd2801_backlight_set_brightness: brightness(0), tune_level(0)
+[ 1108.564230] c3 1846 (recovery) ktd2801_backlight_set_brightness: brightness(255), tune_level(207)
+[ 1109.289504] c0 898 (irq/154-bt432_t) bt432_ts 3-0020: Finger down
+[ 1109.450534] c0 898 (irq/154-bt432_t) bt432_ts 3-0020: Finger up
+[ 1109.735306] c2 0 (swapper/2) CPU2: Booted secondary processor
+[ 1112.324229] c0 3244 (kworker/u8:3) CPU2: shutdown
+[ 1116.814109] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4393mV),Inow(196mA),Imax(0mA),SOC(95%),Tbat(350)
+[ 1116.817079] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1116.817533] c3 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1116.817542] c3 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1116.818840] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_fullcharged_check: Charging Mode : Normal
+[ 1116.818852] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[ 1117.178696] c0 898 (irq/154-bt432_t) bt432_ts 3-0020: Finger down
+[ 1117.231185] c0 898 (irq/154-bt432_t) bt432_ts 3-0020: Finger up
+[ 1118.520641] c0 898 (irq/154-bt432_t) bt432_ts 3-0020: Finger down
+[ 1118.842239] c0 898 (irq/154-bt432_t) bt432_ts 3-0020: Finger up
+[ 1126.874292] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4394mV),Inow(194mA),Imax(0mA),SOC(95%),Tbat(350)
+[ 1126.877265] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1126.877718] c3 1098 (kworker/u8:2) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1126.877727] c3 1098 (kworker/u8:2) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1126.877740] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[ 1136.934312] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4392mV),Inow(192mA),Imax(0mA),SOC(95%),Tbat(350)
+[ 1136.937295] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1136.937755] c3 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1136.937765] c3 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1136.937779] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[ 1146.994099] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4393mV),Inow(190mA),Imax(0mA),SOC(95%),Tbat(350)
+[ 1146.997089] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1146.997547] c3 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1146.997557] c3 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1146.998867] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_fullcharged_check: Charging Mode : Normal
+[ 1146.998882] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[ 1153.564157] c0 2674 (tinymembench) graphics fb0: mmpfb release: op_count = 1
+[ 1153.825368] c2 0 (swapper/2) CPU2: Booted secondary processor
+[ 1155.924305] c2 18 (migration/2) IRQ96 no longer affine to CPU2
+[ 1155.924531] c3 1098 (kworker/u8:2) CPU2: shutdown
+[ 1157.054153] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4393mV),Inow(189mA),Imax(0mA),SOC(95%),Tbat(350)
+[ 1157.057086] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1157.057527] c3 1098 (kworker/u8:2) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1157.057535] c3 1098 (kworker/u8:2) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1157.057547] c3 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[ 1165.002491] c3 1 (init) init: untracked pid 4899 exited
+[ 1167.114403] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4392mV),Inow(187mA),Imax(0mA),SOC(95%),Tbat(350)
+[ 1167.117358] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1167.117884] c3 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1167.117900] c3 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1167.117914] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[ 1167.925363] c2 0 (swapper/2) CPU2: Booted secondary processor
+[ 1170.014377] c0 1098 (kworker/u8:2) CPU2: shutdown
+[ 1175.515352] c2 0 (swapper/2) CPU2: Booted secondary processor
+[ 1177.173952] c0 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4392mV),Inow(185mA),Imax(0mA),SOC(95%),Tbat(350)
+[ 1177.176302] c0 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1177.176647] c0 1098 (kworker/u8:2) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1177.176655] c0 1098 (kworker/u8:2) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1177.177670] c0 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_fullcharged_check: Charging Mode : Normal
+[ 1177.177681] c0 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[ 1177.603964] c2 18 (migration/2) IRQ96 no longer affine to CPU2
+[ 1177.604196] c0 1098 (kworker/u8:2) CPU2: shutdown
+[ 1179.218859] c3 5297 (openssl) openssl[5297]: syscall 278
+[ 1179.218876] c3 5297 (openssl) Code: cb030081 d2800002 d28022c8 d4000001 (b140041f) 
+[ 1179.218888] c3 5297 (openssl) CPU: 3 PID: 5297 Comm: openssl Tainted: G        W    3.14.0-483125 #1
+[ 1179.218896] c3 5297 (openssl) task: ffffffc02c090bc0 ti: ffffffc0040dc000 task.ti: ffffffc0040dc000
+[ 1179.218905] c3 5297 (openssl) PC is at 0x7f8b26652c
+[ 1179.218910] c3 5297 (openssl) LR is at 0x7f8b553a90
+[ 1179.218916] c3 5297 (openssl) pc : [<0000007f8b26652c>] lr : [<0000007f8b553a90>] pstate: 80000000
+[ 1179.218921] c3 5297 (openssl) sp : 0000007febed9f30
+[ 1179.218926] c3 5297 (openssl) R29: 0000007febed9f30 R28: 0000007f8b655388 
+[ 1179.218934] c3 5297 (openssl) R27: 0000005587c719b0 R26: 0000005587c1eda8 
+[ 1179.218941] c3 5297 (openssl) R25: 0000005587c48000 R24: 000000007fffffff 
+[ 1179.218949] c3 5297 (openssl) R23: 0000007f8b2664f0 R22: 0000000000000002 
+[ 1179.218956] c3 5297 (openssl) R21: 0000005587c7f9a0 R20: 0000000000000020 
+[ 1179.218963] c3 5297 (openssl) R19: 0000005587c7f9f0 R18: 0000000000000000 
+[ 1179.218970] c3 5297 (openssl) R17: 0000007f8b2664f0 R16: 0000007f8b6765e0 
+[ 1179.218977] c3 5297 (openssl) R15: 0000000000000040 R14: 0000000000000000 
+[ 1179.218984] c3 5297 (openssl) R13: 0000000000000000 R12: 000000000000000e 
+[ 1179.218991] c3 5297 (openssl) R11: 0000007febeda1d0 R10: 0000007febeda200 
+[ 1179.218998] c3 5297 (openssl) R9 : 00000000ffffffe8 R8 : 0000000000000116 
+[ 1179.219004] c3 5297 (openssl) R7 : 0000000000000000 R6 : 0000000000000218 
+[ 1179.219011] c3 5297 (openssl) R5 : 0000007f8b744110 R4 : 0000005587c7fa10 
+[ 1179.219018] c3 5297 (openssl) R3 : 0000005587c7f9f0 R2 : 0000000000000000 
+[ 1179.219025] c3 5297 (openssl) R1 : 0000000000000020 R0 : 0000005587c7f9f0 
+[ 1179.219033] c3 5297 (openssl) 
+[ 1179.219051] c3 5297 (openssl) 
+[ 1179.219061] c3 5297 (openssl) openssl[5297]: syscall 278
+[ 1179.219069] c3 5297 (openssl) Code: aa0503e4 aa0603e5 aa0703e6 d4000001 (b13ffc1f) 
+[ 1179.219076] c3 5297 (openssl) CPU: 3 PID: 5297 Comm: openssl Tainted: G        W    3.14.0-483125 #1
+[ 1179.219082] c3 5297 (openssl) task: ffffffc02c090bc0 ti: ffffffc0040dc000 task.ti: ffffffc0040dc000
+[ 1179.219088] c3 5297 (openssl) PC is at 0x7f8b2fd0e4
+[ 1179.219093] c3 5297 (openssl) LR is at 0x7f8b553ab8
+[ 1179.219099] c3 5297 (openssl) pc : [<0000007f8b2fd0e4>] lr : [<0000007f8b553ab8>] pstate: 60000000
+[ 1179.219104] c3 5297 (openssl) sp : 0000007febed9f30
+[ 1179.219108] c3 5297 (openssl) R29: 0000007febed9f30 R28: 0000007f8b655388 
+[ 1179.219115] c3 5297 (openssl) R27: 0000005587c719b0 R26: 0000005587c1eda8 
+[ 1179.219123] c3 5297 (openssl) R25: 0000005587c48000 R24: 000000007fffffff 
+[ 1179.219130] c3 5297 (openssl) R23: 0000007f8b2664f0 R22: 0000000000000002 
+[ 1179.219137] c3 5297 (openssl) R21: 0000005587c7f9a0 R20: 0000000000000020 
+[ 1179.219144] c3 5297 (openssl) R19: 0000005587c7f9f0 R18: 0000000000000000 
+[ 1179.219151] c3 5297 (openssl) R17: 0000007f8b2fd0c0 R16: 0000007f8b676fc0 
+[ 1179.219158] c3 5297 (openssl) R15: 0000000000000040 R14: 0000000000000000 
+[ 1179.219165] c3 5297 (openssl) R13: 0000000000000000 R12: 000000000000000e 
+[ 1179.219172] c3 5297 (openssl) R11: 0000007febeda1d0 R10: 0000007febeda200 
+[ 1179.219179] c3 5297 (openssl) R9 : 00000000ffffffe8 R8 : 0000000000000116 
+[ 1179.219186] c3 5297 (openssl) R7 : 0000000000000000 R6 : 0000000000000000 
+[ 1179.219193] c3 5297 (openssl) R5 : 0000000000000218 R4 : 0000007f8b744110 
+[ 1179.219200] c3 5297 (openssl) R3 : 0000005587c7fa10 R2 : 0000000000000000 
+[ 1179.219207] c3 5297 (openssl) R1 : 0000000000000020 R0 : 0000005587c7f9f0 
+[ 1179.219214] c3 5297 (openssl) 
+[ 1179.219232] c3 5297 (openssl) 
+[ 1180.875643] c0 1846 (recovery) ktd2801_backlight_set_brightness: brightness(5), tune_level(7)
+[ 1181.105249] c2 0 (swapper/2) CPU2: Booted secondary processor
+[ 1181.594752] c3 1 (init) init: untracked pid 5271 exited
+[ 1182.303368] c0 898 (irq/154-bt432_t) bt432_ts 3-0020: Finger down
+[ 1182.303691] c0 1846 (recovery) ktd2801_backlight_set_brightness: brightness(255), tune_level(207)
+[ 1182.412152] c0 898 (irq/154-bt432_t) bt432_ts 3-0020: Finger up
+[ 1183.712039] c0 898 (irq/154-bt432_t) bt432_ts 3-0020: Finger down
+[ 1183.787995] c0 898 (irq/154-bt432_t) bt432_ts 3-0020: Finger up
+[ 1187.183852] c2 18 (migration/2) IRQ96 no longer affine to CPU2
+[ 1187.184094] c0 1098 (kworker/u8:2) CPU2: shutdown
+[ 1187.234495] c0 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4393mV),Inow(182mA),Imax(0mA),SOC(95%),Tbat(350)
+[ 1187.236847] c0 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1187.237192] c0 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1187.237201] c0 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1187.237213] c0 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[ 1197.237616] c3 5408 (openssl) openssl[5408]: syscall 278
+[ 1197.237633] c3 5408 (openssl) Code: cb030081 d2800002 d28022c8 d4000001 (b140041f) 
+[ 1197.237644] c3 5408 (openssl) CPU: 3 PID: 5408 Comm: openssl Tainted: G        W    3.14.0-483125 #1
+[ 1197.237652] c3 5408 (openssl) task: ffffffc02c1869c0 ti: ffffffc02c9f8000 task.ti: ffffffc02c9f8000
+[ 1197.237661] c3 5408 (openssl) PC is at 0x7fb701c52c
+[ 1197.237666] c3 5408 (openssl) LR is at 0x7fb7309a90
+[ 1197.237673] c3 5408 (openssl) pc : [<0000007fb701c52c>] lr : [<0000007fb7309a90>] pstate: 80000000
+[ 1197.237678] c3 5408 (openssl) sp : 0000007fec389da0
+[ 1197.237683] c3 5408 (openssl) R29: 0000007fec389da0 R28: 0000007fb740b388 
+[ 1197.237692] c3 5408 (openssl) R27: 00000055764c19b0 R26: 000000557646eda8 
+[ 1197.237699] c3 5408 (openssl) R25: 0000005576498000 R24: 000000007fffffff 
+[ 1197.237706] c3 5408 (openssl) R23: 0000007fb701c4f0 R22: 0000000000000002 
+[ 1197.237713] c3 5408 (openssl) R21: 00000055764cf9a0 R20: 0000000000000020 
+[ 1197.237720] c3 5408 (openssl) R19: 00000055764cf9f0 R18: 0000000000000000 
+[ 1197.237728] c3 5408 (openssl) R17: 0000007fb701c4f0 R16: 0000007fb742c5e0 
+[ 1197.237735] c3 5408 (openssl) R15: 0000000000000040 R14: 0000000000000000 
+[ 1197.237742] c3 5408 (openssl) R13: 0000000000000000 R12: 000000000000000e 
+[ 1197.237749] c3 5408 (openssl) R11: 0000007fec38a040 R10: 0000007fec38a070 
+[ 1197.237756] c3 5408 (openssl) R9 : 00000000ffffffe8 R8 : 0000000000000116 
+[ 1197.237763] c3 5408 (openssl) R7 : 0000000000000000 R6 : 0000000000000218 
+[ 1197.237770] c3 5408 (openssl) R5 : 0000007fb74fa110 R4 : 00000055764cfa10 
+[ 1197.237777] c3 5408 (openssl) R3 : 00000055764cf9f0 R2 : 0000000000000000 
+[ 1197.237784] c3 5408 (openssl) R1 : 0000000000000020 R0 : 00000055764cf9f0 
+[ 1197.237792] c3 5408 (openssl) 
+[ 1197.237810] c3 5408 (openssl) 
+[ 1197.237821] c3 5408 (openssl) openssl[5408]: syscall 278
+[ 1197.237829] c3 5408 (openssl) Code: aa0503e4 aa0603e5 aa0703e6 d4000001 (b13ffc1f) 
+[ 1197.237837] c3 5408 (openssl) CPU: 3 PID: 5408 Comm: openssl Tainted: G        W    3.14.0-483125 #1
+[ 1197.237843] c3 5408 (openssl) task: ffffffc02c1869c0 ti: ffffffc02c9f8000 task.ti: ffffffc02c9f8000
+[ 1197.237849] c3 5408 (openssl) PC is at 0x7fb70b30e4
+[ 1197.237854] c3 5408 (openssl) LR is at 0x7fb7309ab8
+[ 1197.237860] c3 5408 (openssl) pc : [<0000007fb70b30e4>] lr : [<0000007fb7309ab8>] pstate: 60000000
+[ 1197.237865] c3 5408 (openssl) sp : 0000007fec389da0
+[ 1197.237869] c3 5408 (openssl) R29: 0000007fec389da0 R28: 0000007fb740b388 
+[ 1197.237876] c3 5408 (openssl) R27: 00000055764c19b0 R26: 000000557646eda8 
+[ 1197.237883] c3 5408 (openssl) R25: 0000005576498000 R24: 000000007fffffff 
+[ 1197.237890] c3 5408 (openssl) R23: 0000007fb701c4f0 R22: 0000000000000002 
+[ 1197.237897] c3 5408 (openssl) R21: 00000055764cf9a0 R20: 0000000000000020 
+[ 1197.237904] c3 5408 (openssl) R19: 00000055764cf9f0 R18: 0000000000000000 
+[ 1197.237912] c3 5408 (openssl) R17: 0000007fb70b30c0 R16: 0000007fb742cfc0 
+[ 1197.237919] c3 5408 (openssl) R15: 0000000000000040 R14: 0000000000000000 
+[ 1197.237926] c3 5408 (openssl) R13: 0000000000000000 R12: 000000000000000e 
+[ 1197.237933] c3 5408 (openssl) R11: 0000007fec38a040 R10: 0000007fec38a070 
+[ 1197.237940] c3 5408 (openssl) R9 : 00000000ffffffe8 R8 : 0000000000000116 
+[ 1197.237947] c3 5408 (openssl) R7 : 0000000000000000 R6 : 0000000000000000 
+[ 1197.237954] c3 5408 (openssl) R5 : 0000000000000218 R4 : 0000007fb74fa110 
+[ 1197.237961] c3 5408 (openssl) R3 : 00000055764cfa10 R2 : 0000000000000000 
+[ 1197.237968] c3 5408 (openssl) R1 : 0000000000000020 R0 : 00000055764cf9f0 
+[ 1197.237975] c3 5408 (openssl) 
+[ 1197.237993] c3 5408 (openssl) 
+[ 1197.294607] c0 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4393mV),Inow(181mA),Imax(0mA),SOC(95%),Tbat(350)
+[ 1197.299197] c0 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1197.299542] c0 1098 (kworker/u8:2) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1197.299550] c0 1098 (kworker/u8:2) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1197.299562] c0 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[ 1207.353907] c0 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4394mV),Inow(179mA),Imax(0mA),SOC(95%),Tbat(350)
+[ 1207.356264] c0 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1207.356609] c0 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1207.356619] c0 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1207.357623] c0 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_fullcharged_check: Charging Mode : Normal
+[ 1207.357634] c0 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[ 1215.256450] c3 5496 (openssl) openssl[5496]: syscall 278
+[ 1215.256468] c3 5496 (openssl) Code: cb030081 d2800002 d28022c8 d4000001 (b140041f) 
+[ 1215.256478] c3 5496 (openssl) CPU: 3 PID: 5496 Comm: openssl Tainted: G        W    3.14.0-483125 #1
+[ 1215.256486] c3 5496 (openssl) task: ffffffc02c184680 ti: ffffffc0040dc000 task.ti: ffffffc0040dc000
+[ 1215.256494] c3 5496 (openssl) PC is at 0x7fa62b452c
+[ 1215.256499] c3 5496 (openssl) LR is at 0x7fa65a1a90
+[ 1215.256506] c3 5496 (openssl) pc : [<0000007fa62b452c>] lr : [<0000007fa65a1a90>] pstate: 80000000
+[ 1215.256511] c3 5496 (openssl) sp : 0000007fc8629090
+[ 1215.256515] c3 5496 (openssl) R29: 0000007fc8629090 R28: 0000007fa66a35f0 
+[ 1215.256524] c3 5496 (openssl) R27: 00000055605ac9b0 R26: 0000005560559da8 
+[ 1215.256531] c3 5496 (openssl) R25: 0000005560583000 R24: 000000007fffffff 
+[ 1215.256538] c3 5496 (openssl) R23: 0000007fa62b44f0 R22: 0000000000000002 
+[ 1215.256545] c3 5496 (openssl) R21: 00000055605ba9a0 R20: 0000000000000020 
+[ 1215.256552] c3 5496 (openssl) R19: 00000055605ba9f0 R18: 0000000000000000 
+[ 1215.256559] c3 5496 (openssl) R17: 0000007fa62b44f0 R16: 0000007fa66c45e0 
+[ 1215.256566] c3 5496 (openssl) R15: 0000000000000040 R14: 0000000000000000 
+[ 1215.256573] c3 5496 (openssl) R13: 0000000000000000 R12: 000000000000000e 
+[ 1215.256580] c3 5496 (openssl) R11: 0000007fc8629330 R10: 0000007fc8629360 
+[ 1215.256587] c3 5496 (openssl) R9 : 00000000ffffffe8 R8 : 0000000000000116 
+[ 1215.256594] c3 5496 (openssl) R7 : 0000000000000000 R6 : 0000000000000218 
+[ 1215.256601] c3 5496 (openssl) R5 : 0000007fa6792110 R4 : 00000055605baa10 
+[ 1215.256608] c3 5496 (openssl) R3 : 00000055605ba9f0 R2 : 0000000000000000 
+[ 1215.256615] c3 5496 (openssl) R1 : 0000000000000020 R0 : 00000055605ba9f0 
+[ 1215.256622] c3 5496 (openssl) 
+[ 1215.256641] c3 5496 (openssl) 
+[ 1215.256650] c3 5496 (openssl) openssl[5496]: syscall 278
+[ 1215.256658] c3 5496 (openssl) Code: aa0503e4 aa0603e5 aa0703e6 d4000001 (b13ffc1f) 
+[ 1215.256665] c3 5496 (openssl) CPU: 3 PID: 5496 Comm: openssl Tainted: G        W    3.14.0-483125 #1
+[ 1215.256671] c3 5496 (openssl) task: ffffffc02c184680 ti: ffffffc0040dc000 task.ti: ffffffc0040dc000
+[ 1215.256677] c3 5496 (openssl) PC is at 0x7fa634b0e4
+[ 1215.256682] c3 5496 (openssl) LR is at 0x7fa65a1ab8
+[ 1215.256688] c3 5496 (openssl) pc : [<0000007fa634b0e4>] lr : [<0000007fa65a1ab8>] pstate: 60000000
+[ 1215.256693] c3 5496 (openssl) sp : 0000007fc8629090
+[ 1215.256697] c3 5496 (openssl) R29: 0000007fc8629090 R28: 0000007fa66a35f0 
+[ 1215.256704] c3 5496 (openssl) R27: 00000055605ac9b0 R26: 0000005560559da8 
+[ 1215.256712] c3 5496 (openssl) R25: 0000005560583000 R24: 000000007fffffff 
+[ 1215.256719] c3 5496 (openssl) R23: 0000007fa62b44f0 R22: 0000000000000002 
+[ 1215.256726] c3 5496 (openssl) R21: 00000055605ba9a0 R20: 0000000000000020 
+[ 1215.256733] c3 5496 (openssl) R19: 00000055605ba9f0 R18: 0000000000000000 
+[ 1215.256740] c3 5496 (openssl) R17: 0000007fa634b0c0 R16: 0000007fa66c4fc0 
+[ 1215.256747] c3 5496 (openssl) R15: 0000000000000040 R14: 0000000000000000 
+[ 1215.256753] c3 5496 (openssl) R13: 0000000000000000 R12: 000000000000000e 
+[ 1215.256761] c3 5496 (openssl) R11: 0000007fc8629330 R10: 0000007fc8629360 
+[ 1215.256768] c3 5496 (openssl) R9 : 00000000ffffffe8 R8 : 0000000000000116 
+[ 1215.256775] c3 5496 (openssl) R7 : 0000000000000000 R6 : 0000000000000000 
+[ 1215.256781] c3 5496 (openssl) R5 : 0000000000000218 R4 : 0000007fa6792110 
+[ 1215.256788] c3 5496 (openssl) R3 : 00000055605baa10 R2 : 0000000000000000 
+[ 1215.256795] c3 5496 (openssl) R1 : 0000000000000020 R0 : 00000055605ba9f0 
+[ 1215.256803] c3 5496 (openssl) 
+[ 1215.256820] c3 5496 (openssl) 
+[ 1217.413902] c0 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4393mV),Inow(177mA),Imax(0mA),SOC(95%),Tbat(350)
+[ 1217.416260] c0 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1217.416605] c0 1098 (kworker/u8:2) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1217.416613] c0 1098 (kworker/u8:2) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1217.416626] c0 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[ 1227.474022] c0 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4392mV),Inow(176mA),Imax(0mA),SOC(95%),Tbat(350)
+[ 1227.476373] c0 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1227.476717] c0 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1227.476725] c0 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1227.476737] c0 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[ 1228.185251] c2 0 (swapper/2) CPU2: Booted secondary processor
+[ 1230.274293] c0 1098 (kworker/u8:2) CPU2: shutdown
+[ 1233.275302] c3 5567 (openssl) openssl[5567]: syscall 278
+[ 1233.275320] c3 5567 (openssl) Code: cb030081 d2800002 d28022c8 d4000001 (b140041f) 
+[ 1233.275331] c3 5567 (openssl) CPU: 3 PID: 5567 Comm: openssl Tainted: G        W    3.14.0-483125 #1
+[ 1233.275339] c3 5567 (openssl) task: ffffffc02c1869c0 ti: ffffffc02c9f8000 task.ti: ffffffc02c9f8000
+[ 1233.275347] c3 5567 (openssl) PC is at 0x7fa255852c
+[ 1233.275352] c3 5567 (openssl) LR is at 0x7fa2845a90
+[ 1233.275359] c3 5567 (openssl) pc : [<0000007fa255852c>] lr : [<0000007fa2845a90>] pstate: 80000000
+[ 1233.275364] c3 5567 (openssl) sp : 0000007fd2c150a0
+[ 1233.275368] c3 5567 (openssl) R29: 0000007fd2c150a0 R28: 0000007fa29475f0 
+[ 1233.275377] c3 5567 (openssl) R27: 00000055743b59b0 R26: 0000005574362da8 
+[ 1233.275384] c3 5567 (openssl) R25: 000000557438c000 R24: 000000007fffffff 
+[ 1233.275391] c3 5567 (openssl) R23: 0000007fa25584f0 R22: 0000000000000002 
+[ 1233.275398] c3 5567 (openssl) R21: 00000055743c39a0 R20: 0000000000000020 
+[ 1233.275405] c3 5567 (openssl) R19: 00000055743c39f0 R18: 0000000000000000 
+[ 1233.275412] c3 5567 (openssl) R17: 0000007fa25584f0 R16: 0000007fa29685e0 
+[ 1233.275419] c3 5567 (openssl) R15: 0000000000000040 R14: 0000000000000000 
+[ 1233.275426] c3 5567 (openssl) R13: 0000000000000000 R12: 000000000000000e 
+[ 1233.275433] c3 5567 (openssl) R11: 0000007fd2c15340 R10: 0000007fd2c15370 
+[ 1233.275440] c3 5567 (openssl) R9 : 00000000ffffffe8 R8 : 0000000000000116 
+[ 1233.275446] c3 5567 (openssl) R7 : 0000000000000000 R6 : 0000000000000218 
+[ 1233.275453] c3 5567 (openssl) R5 : 0000007fa2a36110 R4 : 00000055743c3a10 
+[ 1233.275460] c3 5567 (openssl) R3 : 00000055743c39f0 R2 : 0000000000000000 
+[ 1233.275467] c3 5567 (openssl) R1 : 0000000000000020 R0 : 00000055743c39f0 
+[ 1233.275474] c3 5567 (openssl) 
+[ 1233.275493] c3 5567 (openssl) 
+[ 1233.275502] c3 5567 (openssl) openssl[5567]: syscall 278
+[ 1233.275510] c3 5567 (openssl) Code: aa0503e4 aa0603e5 aa0703e6 d4000001 (b13ffc1f) 
+[ 1233.275517] c3 5567 (openssl) CPU: 3 PID: 5567 Comm: openssl Tainted: G        W    3.14.0-483125 #1
+[ 1233.275524] c3 5567 (openssl) task: ffffffc02c1869c0 ti: ffffffc02c9f8000 task.ti: ffffffc02c9f8000
+[ 1233.275529] c3 5567 (openssl) PC is at 0x7fa25ef0e4
+[ 1233.275534] c3 5567 (openssl) LR is at 0x7fa2845ab8
+[ 1233.275540] c3 5567 (openssl) pc : [<0000007fa25ef0e4>] lr : [<0000007fa2845ab8>] pstate: 60000000
+[ 1233.275545] c3 5567 (openssl) sp : 0000007fd2c150a0
+[ 1233.275549] c3 5567 (openssl) R29: 0000007fd2c150a0 R28: 0000007fa29475f0 
+[ 1233.275556] c3 5567 (openssl) R27: 00000055743b59b0 R26: 0000005574362da8 
+[ 1233.275563] c3 5567 (openssl) R25: 000000557438c000 R24: 000000007fffffff 
+[ 1233.275570] c3 5567 (openssl) R23: 0000007fa25584f0 R22: 0000000000000002 
+[ 1233.275577] c3 5567 (openssl) R21: 00000055743c39a0 R20: 0000000000000020 
+[ 1233.275584] c3 5567 (openssl) R19: 00000055743c39f0 R18: 0000000000000000 
+[ 1233.275591] c3 5567 (openssl) R17: 0000007fa25ef0c0 R16: 0000007fa2968fc0 
+[ 1233.275598] c3 5567 (openssl) R15: 0000000000000040 R14: 0000000000000000 
+[ 1233.275605] c3 5567 (openssl) R13: 0000000000000000 R12: 000000000000000e 
+[ 1233.275612] c3 5567 (openssl) R11: 0000007fd2c15340 R10: 0000007fd2c15370 
+[ 1233.275619] c3 5567 (openssl) R9 : 00000000ffffffe8 R8 : 0000000000000116 
+[ 1233.275626] c3 5567 (openssl) R7 : 0000000000000000 R6 : 0000000000000000 
+[ 1233.275633] c3 5567 (openssl) R5 : 0000000000000218 R4 : 0000007fa2a36110 
+[ 1233.275640] c3 5567 (openssl) R3 : 00000055743c3a10 R2 : 0000000000000000 
+[ 1233.275646] c3 5567 (openssl) R1 : 0000000000000020 R0 : 00000055743c39f0 
+[ 1233.275654] c3 5567 (openssl) 
+[ 1233.275671] c3 5567 (openssl) 
+[ 1237.533907] c0 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4392mV),Inow(174mA),Imax(0mA),SOC(95%),Tbat(350)
+[ 1237.536266] c0 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1237.536610] c0 1098 (kworker/u8:2) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1237.536619] c0 1098 (kworker/u8:2) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1237.537623] c0 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_fullcharged_check: Charging Mode : Normal
+[ 1237.537634] c0 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[ 1246.594677] c0 1846 (recovery) ktd2801_backlight_set_brightness: brightness(5), tune_level(7)
+[ 1247.593901] c0 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4394mV),Inow(173mA),Imax(0mA),SOC(95%),Tbat(350)
+[ 1247.596253] c0 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1247.596608] c0 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1247.596616] c0 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1247.596628] c0 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[ 1248.599171] c0 1846 (recovery) ktd2801_backlight_set_brightness: brightness(0), tune_level(0)
+[ 1248.599585] c0 1846 (recovery) called gen_panel_set_status with status 0
+[ 1248.599598] c0 1846 (recovery) ktd2801_backlight_set_brightness: brightness(0), tune_level(0)
+[ 1248.599607] c0 1846 (recovery) kinetic,backlight-ktd2801 ktd2801-bl.25: ktd2801_backlight suspended
+[ 1248.814636] c0 1846 (recovery) panel_rst off 10 usec
+[ 1248.817712] c0 1846 (recovery) panel_avdd off 1000 usec
+[ 1248.818763] c0 1846 (recovery) mmp_dsi d420b800.dsi: dsi_set_on status 0
+[ 1248.818929] c0 1846 (recovery) ktd2801_backlight_set_brightness: brightness(0), tune_level(0)
+[ 1251.293356] c3 5657 (openssl) openssl[5657]: syscall 278
+[ 1251.293372] c3 5657 (openssl) Code: cb030081 d2800002 d28022c8 d4000001 (b140041f) 
+[ 1251.293382] c3 5657 (openssl) CPU: 3 PID: 5657 Comm: openssl Tainted: G        W    3.14.0-483125 #1
+[ 1251.293391] c3 5657 (openssl) task: ffffffc02c184680 ti: ffffffc0040dc000 task.ti: ffffffc0040dc000
+[ 1251.293399] c3 5657 (openssl) PC is at 0x7f7d5c052c
+[ 1251.293404] c3 5657 (openssl) LR is at 0x7f7d8ada90
+[ 1251.293410] c3 5657 (openssl) pc : [<0000007f7d5c052c>] lr : [<0000007f7d8ada90>] pstate: 80000000
+[ 1251.293415] c3 5657 (openssl) sp : 0000007ff4fa4980
+[ 1251.293420] c3 5657 (openssl) R29: 0000007ff4fa4980 R28: 0000007f7d9af858 
+[ 1251.293428] c3 5657 (openssl) R27: 000000557b9d89b0 R26: 000000557b985da8 
+[ 1251.293436] c3 5657 (openssl) R25: 000000557b9af000 R24: 000000007fffffff 
+[ 1251.293443] c3 5657 (openssl) R23: 0000007f7d5c04f0 R22: 0000000000000002 
+[ 1251.293450] c3 5657 (openssl) R21: 000000557b9e69b0 R20: 0000000000000020 
+[ 1251.293457] c3 5657 (openssl) R19: 000000557b9e6a00 R18: 0000000000000000 
+[ 1251.293464] c3 5657 (openssl) R17: 0000007f7d5c04f0 R16: 0000007f7d9d05e0 
+[ 1251.293471] c3 5657 (openssl) R15: 0000000000000040 R14: 0000000000000000 
+[ 1251.293477] c3 5657 (openssl) R13: 0000000000000000 R12: 000000000000000e 
+[ 1251.293484] c3 5657 (openssl) R11: 0000007ff4fa4c20 R10: 0000007ff4fa4c50 
+[ 1251.293491] c3 5657 (openssl) R9 : 00000000ffffffe8 R8 : 0000000000000116 
+[ 1251.293498] c3 5657 (openssl) R7 : 0000000000000000 R6 : 0000000000000218 
+[ 1251.293505] c3 5657 (openssl) R5 : 0000007f7da9e110 R4 : 000000557b9e6a20 
+[ 1251.293581] c3 5657 (openssl) R3 : 000000557b9e6a00 R2 : 0000000000000000 
+[ 1251.293588] c3 5657 (openssl) R1 : 0000000000000020 R0 : 000000557b9e6a00 
+[ 1251.293596] c3 5657 (openssl) 
+[ 1251.293614] c3 5657 (openssl) 
+[ 1251.293624] c3 5657 (openssl) openssl[5657]: syscall 278
+[ 1251.293632] c3 5657 (openssl) Code: aa0503e4 aa0603e5 aa0703e6 d4000001 (b13ffc1f) 
+[ 1251.293639] c3 5657 (openssl) CPU: 3 PID: 5657 Comm: openssl Tainted: G        W    3.14.0-483125 #1
+[ 1251.293646] c3 5657 (openssl) task: ffffffc02c184680 ti: ffffffc0040dc000 task.ti: ffffffc0040dc000
+[ 1251.293652] c3 5657 (openssl) PC is at 0x7f7d6570e4
+[ 1251.293657] c3 5657 (openssl) LR is at 0x7f7d8adab8
+[ 1251.293663] c3 5657 (openssl) pc : [<0000007f7d6570e4>] lr : [<0000007f7d8adab8>] pstate: 60000000
+[ 1251.293668] c3 5657 (openssl) sp : 0000007ff4fa4980
+[ 1251.293672] c3 5657 (openssl) R29: 0000007ff4fa4980 R28: 0000007f7d9af858 
+[ 1251.293679] c3 5657 (openssl) R27: 000000557b9d89b0 R26: 000000557b985da8 
+[ 1251.293686] c3 5657 (openssl) R25: 000000557b9af000 R24: 000000007fffffff 
+[ 1251.293693] c3 5657 (openssl) R23: 0000007f7d5c04f0 R22: 0000000000000002 
+[ 1251.293700] c3 5657 (openssl) R21: 000000557b9e69b0 R20: 0000000000000020 
+[ 1251.293707] c3 5657 (openssl) R19: 000000557b9e6a00 R18: 0000000000000000 
+[ 1251.293714] c3 5657 (openssl) R17: 0000007f7d6570c0 R16: 0000007f7d9d0fc0 
+[ 1251.293721] c3 5657 (openssl) R15: 0000000000000040 R14: 0000000000000000 
+[ 1251.293728] c3 5657 (openssl) R13: 0000000000000000 R12: 000000000000000e 
+[ 1251.293735] c3 5657 (openssl) R11: 0000007ff4fa4c20 R10: 0000007ff4fa4c50 
+[ 1251.293742] c3 5657 (openssl) R9 : 00000000ffffffe8 R8 : 0000000000000116 
+[ 1251.293748] c3 5657 (openssl) R7 : 0000000000000000 R6 : 0000000000000000 
+[ 1251.293755] c3 5657 (openssl) R5 : 0000000000000218 R4 : 0000007f7da9e110 
+[ 1251.293762] c3 5657 (openssl) R3 : 000000557b9e6a20 R2 : 0000000000000000 
+[ 1251.293769] c3 5657 (openssl) R1 : 0000000000000020 R0 : 000000557b9e6a00 
+[ 1251.293776] c3 5657 (openssl) 
+[ 1251.293794] c3 5657 (openssl) 
+[ 1257.653906] c0 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4396mV),Inow(172mA),Imax(0mA),SOC(95%),Tbat(350)
+[ 1257.656264] c0 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1257.656608] c0 1098 (kworker/u8:2) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1257.656617] c0 1098 (kworker/u8:2) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1257.656628] c0 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[ 1267.713906] c0 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4390mV),Inow(170mA),Imax(0mA),SOC(95%),Tbat(350)
+[ 1267.716264] c0 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1267.716609] c0 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1267.716617] c0 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1267.717624] c0 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_fullcharged_check: Charging Mode : Normal
+[ 1267.717635] c0 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[ 1269.311711] c3 5728 (openssl) openssl[5728]: syscall 278
+[ 1269.311728] c3 5728 (openssl) Code: cb030081 d2800002 d28022c8 d4000001 (b140041f) 
+[ 1269.311738] c3 5728 (openssl) CPU: 3 PID: 5728 Comm: openssl Tainted: G        W    3.14.0-483125 #1
+[ 1269.311746] c3 5728 (openssl) task: ffffffc02c1869c0 ti: ffffffc02c9f8000 task.ti: ffffffc02c9f8000
+[ 1269.311754] c3 5728 (openssl) PC is at 0x7fa689052c
+[ 1269.311759] c3 5728 (openssl) LR is at 0x7fa6b7da90
+[ 1269.311766] c3 5728 (openssl) pc : [<0000007fa689052c>] lr : [<0000007fa6b7da90>] pstate: 80000000
+[ 1269.311771] c3 5728 (openssl) sp : 0000007fcd8b93b0
+[ 1269.311775] c3 5728 (openssl) R29: 0000007fcd8b93b0 R28: 0000007fa6c7f858 
+[ 1269.311784] c3 5728 (openssl) R27: 000000558c1769b0 R26: 000000558c123da8 
+[ 1269.311791] c3 5728 (openssl) R25: 000000558c14d000 R24: 000000007fffffff 
+[ 1269.311798] c3 5728 (openssl) R23: 0000007fa68904f0 R22: 0000000000000002 
+[ 1269.311805] c3 5728 (openssl) R21: 000000558c1849b0 R20: 0000000000000020 
+[ 1269.311812] c3 5728 (openssl) R19: 000000558c184a00 R18: 0000000000000000 
+[ 1269.311819] c3 5728 (openssl) R17: 0000007fa68904f0 R16: 0000007fa6ca05e0 
+[ 1269.311826] c3 5728 (openssl) R15: 0000000000000040 R14: 0000000000000000 
+[ 1269.311833] c3 5728 (openssl) R13: 0000000000000000 R12: 000000000000000e 
+[ 1269.311840] c3 5728 (openssl) R11: 0000007fcd8b9650 R10: 0000007fcd8b9680 
+[ 1269.311847] c3 5728 (openssl) R9 : 00000000ffffffe8 R8 : 0000000000000116 
+[ 1269.311854] c3 5728 (openssl) R7 : 0000000000000000 R6 : 0000000000000218 
+[ 1269.311861] c3 5728 (openssl) R5 : 0000007fa6d6e110 R4 : 000000558c184a20 
+[ 1269.311868] c3 5728 (openssl) R3 : 000000558c184a00 R2 : 0000000000000000 
+[ 1269.311875] c3 5728 (openssl) R1 : 0000000000000020 R0 : 000000558c184a00 
+[ 1269.311882] c3 5728 (openssl) 
+[ 1269.311901] c3 5728 (openssl) 
+[ 1269.311910] c3 5728 (openssl) openssl[5728]: syscall 278
+[ 1269.311918] c3 5728 (openssl) Code: aa0503e4 aa0603e5 aa0703e6 d4000001 (b13ffc1f) 
+[ 1269.311925] c3 5728 (openssl) CPU: 3 PID: 5728 Comm: openssl Tainted: G        W    3.14.0-483125 #1
+[ 1269.311932] c3 5728 (openssl) task: ffffffc02c1869c0 ti: ffffffc02c9f8000 task.ti: ffffffc02c9f8000
+[ 1269.311937] c3 5728 (openssl) PC is at 0x7fa69270e4
+[ 1269.311942] c3 5728 (openssl) LR is at 0x7fa6b7dab8
+[ 1269.311948] c3 5728 (openssl) pc : [<0000007fa69270e4>] lr : [<0000007fa6b7dab8>] pstate: 60000000
+[ 1269.311953] c3 5728 (openssl) sp : 0000007fcd8b93b0
+[ 1269.311957] c3 5728 (openssl) R29: 0000007fcd8b93b0 R28: 0000007fa6c7f858 
+[ 1269.311964] c3 5728 (openssl) R27: 000000558c1769b0 R26: 000000558c123da8 
+[ 1269.311971] c3 5728 (openssl) R25: 000000558c14d000 R24: 000000007fffffff 
+[ 1269.311979] c3 5728 (openssl) R23: 0000007fa68904f0 R22: 0000000000000002 
+[ 1269.311985] c3 5728 (openssl) R21: 000000558c1849b0 R20: 0000000000000020 
+[ 1269.311992] c3 5728 (openssl) R19: 000000558c184a00 R18: 0000000000000000 
+[ 1269.311999] c3 5728 (openssl) R17: 0000007fa69270c0 R16: 0000007fa6ca0fc0 
+[ 1269.312006] c3 5728 (openssl) R15: 0000000000000040 R14: 0000000000000000 
+[ 1269.312013] c3 5728 (openssl) R13: 0000000000000000 R12: 000000000000000e 
+[ 1269.312020] c3 5728 (openssl) R11: 0000007fcd8b9650 R10: 0000007fcd8b9680 
+[ 1269.312027] c3 5728 (openssl) R9 : 00000000ffffffe8 R8 : 0000000000000116 
+[ 1269.312034] c3 5728 (openssl) R7 : 0000000000000000 R6 : 0000000000000000 
+[ 1269.312041] c3 5728 (openssl) R5 : 0000000000000218 R4 : 0000007fa6d6e110 
+[ 1269.312048] c3 5728 (openssl) R3 : 000000558c184a20 R2 : 0000000000000000 
+[ 1269.312054] c3 5728 (openssl) R1 : 0000000000000020 R0 : 000000558c184a00 
+[ 1269.312062] c3 5728 (openssl) 
+[ 1269.312079] c3 5728 (openssl) 
+[ 1277.773919] c0 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4393mV),Inow(169mA),Imax(0mA),SOC(95%),Tbat(350)
+[ 1277.776275] c0 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1277.776619] c0 1098 (kworker/u8:2) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1277.776627] c0 1098 (kworker/u8:2) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1277.776639] c0 1098 (kworker/u8:2) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[ 1287.833901] c0 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4390mV),Inow(167mA),Imax(0mA),SOC(95%),Tbat(350)
+[ 1287.836229] c0 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1287.836569] c0 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1287.836578] c0 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1287.836590] c0 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[ 1291.604293] c3 1 (init) init: untracked pid 5779 exited
+[ 1297.894032] c0 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4393mV),Inow(166mA),Imax(0mA),SOC(95%),Tbat(350)
+[ 1297.896388] c0 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1297.896735] c0 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1297.896743] c0 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1297.897748] c0 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_fullcharged_check: Charging Mode : Normal
+[ 1297.897760] c0 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[ 1307.954346] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4392mV),Inow(164mA),Imax(0mA),SOC(95%),Tbat(350)
+[ 1307.957301] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1307.957749] c3 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1307.957759] c3 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1307.957771] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[ 1318.014278] c3 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4393mV),Inow(162mA),Imax(0mA),SOC(95%),Tbat(350)
+[ 1318.016933] c3 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1318.017374] c3 5969 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1318.017383] c3 5969 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1318.017396] c3 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[ 1328.074356] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4393mV),Inow(161mA),Imax(0mA),SOC(95%),Tbat(350)
+[ 1328.077323] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1328.077773] c3 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1328.077782] c3 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1328.078888] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_fullcharged_check: Charging Mode : Normal
+[ 1328.078900] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[ 1338.134285] c3 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4392mV),Inow(160mA),Imax(0mA),SOC(95%),Tbat(350)
+[ 1338.137034] c3 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1338.137381] c3 5969 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1338.137389] c3 5969 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1338.137401] c3 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[ 1348.194330] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4392mV),Inow(158mA),Imax(0mA),SOC(95%),Tbat(350)
+[ 1348.197023] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1348.197475] c3 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1348.197484] c3 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1348.197497] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[ 1358.254333] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4390mV),Inow(157mA),Imax(0mA),SOC(95%),Tbat(350)
+[ 1358.257297] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1358.257748] c3 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1358.257759] c3 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1358.259056] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_fullcharged_check: Charging Mode : Normal
+[ 1358.259068] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[ 1368.314314] c3 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4394mV),Inow(155mA),Imax(0mA),SOC(95%),Tbat(340)
+[ 1368.317288] c3 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1368.317744] c3 5969 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1368.317754] c3 5969 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1368.317767] c3 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[ 1378.374279] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4393mV),Inow(154mA),Imax(0mA),SOC(95%),Tbat(350)
+[ 1378.377220] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1378.377663] c3 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1378.377672] c3 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1378.377685] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[ 1381.259275] c0 448 (irq/36-88pm886) [KEY] key Press
+[ 1381.273569] c0 1846 (recovery) called gen_panel_set_status with status 1
+[ 1381.284959] c0 1846 (recovery) panel_avdd on 10000 usec
+[ 1381.294999] c0 1846 (recovery) panel_rst off 10000 usec
+[ 1381.305040] c0 1846 (recovery) panel_rst on 10000 usec
+[ 1381.427227] c0 448 (irq/36-88pm886) [KEY] key Release
+[ 1381.585158] c3 1846 (recovery) gen_panel_set_mdnie: set scenario(0)
+[ 1381.653757] c3 1846 (recovery) ktd2801_backlight_set_brightness: brightness(0), tune_level(0)
+[ 1381.653769] c3 1846 (recovery) kinetic,backlight-ktd2801 ktd2801-bl.25: ktd2801_backlight resumed.
+[ 1381.653779] c3 1846 (recovery) mmp_dsi d420b800.dsi: dsi_set_on status 1
+[ 1381.653797] c3 1846 (recovery) ktd2801_backlight_set_brightness: brightness(0), tune_level(0)
+[ 1381.654189] c3 1846 (recovery) ktd2801_backlight_set_brightness: brightness(255), tune_level(207)
+[ 1382.346924] c0 898 (irq/154-bt432_t) bt432_ts 3-0020: Finger down
+[ 1382.453282] c0 898 (irq/154-bt432_t) bt432_ts 3-0020: Finger up
+[ 1382.914432] c0 898 (irq/154-bt432_t) bt432_ts 3-0020: Finger down
+[ 1383.053615] c0 898 (irq/154-bt432_t) bt432_ts 3-0020: Finger up
+[ 1383.275386] c2 0 (swapper/2) CPU2: Booted secondary processor
+[ 1384.166730] c0 898 (irq/154-bt432_t) bt432_ts 3-0020: Finger down
+[ 1384.231533] c0 898 (irq/154-bt432_t) bt432_ts 3-0020: Finger up
+[ 1386.874373] c0 5969 (kworker/u8:0) CPU2: shutdown
+[ 1388.434028] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4393mV),Inow(150mA),Imax(0mA),SOC(95%),Tbat(340)
+[ 1388.436391] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1388.436737] c0 5969 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1388.436745] c0 5969 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1388.437749] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_fullcharged_check: Charging Mode : Normal
+[ 1388.437760] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[ 1394.375396] c2 0 (swapper/2) CPU2: Booted secondary processor
+[ 1396.464351] c0 5969 (kworker/u8:0) CPU2: shutdown
+[ 1398.493979] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4390mV),Inow(150mA),Imax(0mA),SOC(95%),Tbat(350)
+[ 1398.496339] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1398.496684] c0 5969 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1398.496693] c0 5969 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1398.496705] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[ 1399.965375] c2 0 (swapper/2) CPU2: Booted secondary processor
+[ 1402.064359] c3 5969 (kworker/u8:0) CPU2: shutdown
+[ 1406.565620] c2 0 (swapper/2) CPU2: Booted secondary processor
+[ 1408.554290] c3 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4393mV),Inow(149mA),Imax(0mA),SOC(95%),Tbat(340)
+[ 1408.557315] c3 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1408.557781] c3 5969 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1408.557790] c3 5969 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1408.557803] c3 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[ 1410.164527] c2 18 (migration/2) IRQ96 no longer affine to CPU2
+[ 1410.164767] c3 3244 (kworker/u8:3) CPU2: shutdown
+[ 1418.165394] c2 0 (swapper/2) CPU2: Booted secondary processor
+[ 1418.614371] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4393mV),Inow(147mA),Imax(0mA),SOC(95%),Tbat(350)
+[ 1418.617390] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1418.617849] c3 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1418.617858] c3 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1418.619179] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_fullcharged_check: Charging Mode : Normal
+[ 1418.619193] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[ 1422.264332] c0 5969 (kworker/u8:0) CPU2: shutdown
+[ 1428.674325] c3 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4393mV),Inow(146mA),Imax(0mA),SOC(95%),Tbat(350)
+[ 1428.677300] c3 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1428.677752] c3 5969 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1428.677761] c3 5969 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1428.677775] c3 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[ 1438.734249] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4394mV),Inow(145mA),Imax(0mA),SOC(95%),Tbat(340)
+[ 1438.737194] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1438.737639] c3 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1438.737648] c3 3244 (kworker/u8:3) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1438.737660] c3 3244 (kworker/u8:3) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[ 1441.765316] c2 0 (swapper/2) CPU2: Booted secondary processor
+[ 1444.364288] c0 5969 (kworker/u8:0) CPU2: shutdown
+[ 1444.530576] c0 898 (irq/154-bt432_t) bt432_ts 3-0020: Finger down
+[ 1444.549664] c0 898 (irq/154-bt432_t) bt432_ts 3-0020: Finger up
+[ 1444.865350] c2 0 (swapper/2) CPU2: Booted secondary processor
+[ 1447.964240] c0 5969 (kworker/u8:0) CPU2: shutdown
+[ 1448.465459] c2 0 (swapper/2) CPU2: Booted secondary processor
+[ 1448.794033] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4392mV),Inow(144mA),Imax(0mA),SOC(95%),Tbat(350)
+[ 1448.796423] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1448.796790] c0 5969 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1448.796800] c0 5969 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1448.797815] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_fullcharged_check: Charging Mode : Normal
+[ 1448.797829] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[ 1448.965546] c1 0 (swapper/1) CPU1: Booted secondary processor
+[ 1453.272315] c2 1 (init) init: untracked pid 6664 exited
+[ 1453.818170] c0 5969 (kworker/u8:0) 88pm886-battery 88pm886-battery: cap=96, temp=35, volt=4392, ocv_is_realiable=1
+[ 1458.854049] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4392mV),Inow(142mA),Imax(0mA),SOC(96%),Tbat(340)
+[ 1458.856468] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1458.856850] c0 5969 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1458.856861] c0 5969 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1458.856876] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[ 1468.914012] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4394mV),Inow(138mA),Imax(0mA),SOC(96%),Tbat(350)
+[ 1468.916371] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1468.916721] c0 5969 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1468.916730] c0 5969 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1468.916744] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[ 1478.974023] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4394mV),Inow(140mA),Imax(0mA),SOC(96%),Tbat(350)
+[ 1478.976423] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1478.976778] c0 5969 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1478.976787] c0 5969 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1478.977792] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_fullcharged_check: Charging Mode : Normal
+[ 1478.977804] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[ 1489.034033] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4389mV),Inow(135mA),Imax(0mA),SOC(96%),Tbat(350)
+[ 1489.036387] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1489.036736] c0 5969 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1489.036745] c0 5969 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1489.036758] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[ 1499.094022] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4392mV),Inow(134mA),Imax(0mA),SOC(96%),Tbat(350)
+[ 1499.096382] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1499.096731] c0 5969 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1499.096740] c0 5969 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1499.096753] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[ 1507.444749] c0 1846 (recovery) ktd2801_backlight_set_brightness: brightness(5), tune_level(7)
+[ 1509.154025] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4394mV),Inow(136mA),Imax(0mA),SOC(96%),Tbat(350)
+[ 1509.156426] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1509.156789] c0 5969 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1509.156799] c0 5969 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1509.157816] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_fullcharged_check: Charging Mode : Normal
+[ 1509.157830] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[ 1509.449227] c0 1846 (recovery) ktd2801_backlight_set_brightness: brightness(0), tune_level(0)
+[ 1509.449852] c0 1846 (recovery) called gen_panel_set_status with status 0
+[ 1509.449870] c0 1846 (recovery) ktd2801_backlight_set_brightness: brightness(0), tune_level(0)
+[ 1509.449881] c0 1846 (recovery) kinetic,backlight-ktd2801 ktd2801-bl.25: ktd2801_backlight suspended
+[ 1509.676127] c0 1846 (recovery) panel_rst off 10 usec
+[ 1509.679385] c0 1846 (recovery) panel_avdd off 1000 usec
+[ 1509.680686] c0 1846 (recovery) mmp_dsi d420b800.dsi: dsi_set_on status 0
+[ 1509.680876] c0 1846 (recovery) ktd2801_backlight_set_brightness: brightness(0), tune_level(0)
+[ 1519.214066] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4392mV),Inow(136mA),Imax(0mA),SOC(96%),Tbat(350)
+[ 1519.216454] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1519.216820] c0 5969 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1519.216830] c0 5969 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1519.216843] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[ 1529.274024] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4392mV),Inow(135mA),Imax(0mA),SOC(96%),Tbat(350)
+[ 1529.276382] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1529.276733] c0 5969 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1529.276742] c0 5969 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1529.276755] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[ 1539.334061] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4393mV),Inow(134mA),Imax(0mA),SOC(96%),Tbat(350)
+[ 1539.336482] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1539.336862] c0 5969 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1539.336873] c0 5969 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1539.337904] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_fullcharged_check: Charging Mode : Normal
+[ 1539.337922] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[ 1549.394020] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4390mV),Inow(133mA),Imax(0mA),SOC(96%),Tbat(350)
+[ 1549.396379] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1549.396727] c0 5969 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1549.396736] c0 5969 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1549.396748] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[ 1559.454033] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4396mV),Inow(132mA),Imax(0mA),SOC(96%),Tbat(350)
+[ 1559.456386] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1559.456734] c0 5969 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1559.456743] c0 5969 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1559.456755] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[ 1569.514052] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4393mV),Inow(131mA),Imax(0mA),SOC(96%),Tbat(350)
+[ 1569.516460] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1569.516833] c0 5969 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1569.516843] c0 5969 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1569.517862] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_fullcharged_check: Charging Mode : Normal
+[ 1569.517877] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[ 1579.574020] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4393mV),Inow(130mA),Imax(0mA),SOC(96%),Tbat(350)
+[ 1579.576393] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1579.576749] c0 5969 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1579.576759] c0 5969 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1579.576772] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[ 1589.634071] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4394mV),Inow(129mA),Imax(0mA),SOC(96%),Tbat(350)
+[ 1589.636469] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1589.636837] c0 5969 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1589.636846] c0 5969 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1589.636860] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[ 1599.694599] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4394mV),Inow(128mA),Imax(0mA),SOC(96%),Tbat(350)
+[ 1599.697000] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1599.697366] c0 5969 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1599.697377] c0 5969 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1599.698402] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_fullcharged_check: Charging Mode : Normal
+[ 1599.698418] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[ 1609.754014] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4393mV),Inow(127mA),Imax(0mA),SOC(96%),Tbat(350)
+[ 1609.756377] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1609.756730] c0 5969 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1609.756739] c0 5969 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1609.756752] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[ 1618.512544] c0 898 (irq/154-bt432_t) bt432_ts 3-0020: Finger down
+[ 1618.525650] c0 1846 (recovery) called gen_panel_set_status with status 1
+[ 1618.537080] c0 1846 (recovery) panel_avdd on 10000 usec
+[ 1618.547162] c0 1846 (recovery) panel_rst off 10000 usec
+[ 1618.553424] c0 898 (irq/154-bt432_t) bt432_ts 3-0020: Finger up
+[ 1618.557239] c0 1846 (recovery) panel_rst on 10000 usec
+[ 1618.846927] c0 1846 (recovery) gen_panel_set_mdnie: set scenario(0)
+[ 1618.903790] c0 1846 (recovery) ktd2801_backlight_set_brightness: brightness(0), tune_level(0)
+[ 1618.903805] c0 1846 (recovery) kinetic,backlight-ktd2801 ktd2801-bl.25: ktd2801_backlight resumed.
+[ 1618.903816] c0 1846 (recovery) mmp_dsi d420b800.dsi: dsi_set_on status 1
+[ 1618.903835] c0 1846 (recovery) ktd2801_backlight_set_brightness: brightness(0), tune_level(0)
+[ 1618.904263] c0 1846 (recovery) ktd2801_backlight_set_brightness: brightness(255), tune_level(207)
+[ 1618.913757] c0 1929 (kworker/0:0) [KEY] gpio_key Press
+[ 1619.063608] c0 1929 (kworker/0:0) [KEY] gpio_key Release
+[ 1619.647456] c0 898 (irq/154-bt432_t) bt432_ts 3-0020: Finger down
+[ 1619.797560] c0 898 (irq/154-bt432_t) bt432_ts 3-0020: Finger up
+[ 1619.814114] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4392mV),Inow(122mA),Imax(0mA),SOC(96%),Tbat(350)
+[ 1619.816538] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1619.816903] c0 5969 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1619.816912] c0 5969 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1619.816926] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[ 1620.944116] c0 898 (irq/154-bt432_t) bt432_ts 3-0020: Finger down
+[ 1621.020021] c0 898 (irq/154-bt432_t) bt432_ts 3-0020: Finger up
+[ 1621.787627] c0 898 (irq/154-bt432_t) bt432_ts 3-0020: Finger down
+[ 1622.204549] c0 898 (irq/154-bt432_t) bt432_ts 3-0020: Finger up
+[ 1629.874083] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4394mV),Inow(121mA),Imax(0mA),SOC(96%),Tbat(350)
+[ 1629.876487] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1629.876845] c0 5969 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1629.876854] c0 5969 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1629.877859] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_fullcharged_check: Charging Mode : Normal
+[ 1629.877870] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[ 1639.934027] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4392mV),Inow(120mA),Imax(0mA),SOC(96%),Tbat(350)
+[ 1639.936389] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1639.936740] c0 5969 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1639.936749] c0 5969 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1639.936763] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[ 1649.994692] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4394mV),Inow(121mA),Imax(0mA),SOC(96%),Tbat(350)
+[ 1649.997457] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1649.997828] c0 5969 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1649.997837] c0 5969 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1649.997852] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[ 1660.054033] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4396mV),Inow(119mA),Imax(0mA),SOC(96%),Tbat(350)
+[ 1660.056389] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1660.056739] c0 5969 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1660.056748] c0 5969 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1660.057751] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_fullcharged_check: Charging Mode : Normal
+[ 1660.057763] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[ 1670.114028] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4393mV),Inow(119mA),Imax(0mA),SOC(96%),Tbat(360)
+[ 1670.116388] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1670.116739] c0 5969 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1670.116747] c0 5969 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1670.116760] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[ 1680.174057] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4393mV),Inow(119mA),Imax(0mA),SOC(96%),Tbat(350)
+[ 1680.176450] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1680.176823] c0 5969 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1680.176832] c0 5969 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1680.176846] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Charging), mode(Normal), Health(Good), Cable(3), level(100%)
+[ 1685.032935] c3 1846 (recovery) ktd2801_backlight_set_brightness: brightness(5), tune_level(7)
+[ 1685.568111] c0 448 (irq/36-88pm886) 88pm886-charger 88pm886-charger: charge done interrupt is served
+[ 1685.570893] c0 448 (irq/36-88pm886) 88pm886 2-0030: pm886_chg_done_handler : Status, Power Supply Full from HW.
+[ 1685.572233] c0 448 (irq/36-88pm886) pm886_chg_done_handler: Interrupted by Full
+[ 1685.572294] c0 448 (irq/36-88pm886) sec_chg_set_property : float voltage (4400mV)
+[ 1685.572637] c0 448 (irq/36-88pm886) sec_chg_set_property : topoff current (120mA)
+[ 1685.572973] c0 448 (irq/36-88pm886) sec_chg_set_property : fast charging current (1500mA), siop_level=100
+[ 1685.604854] c0 448 (irq/36-88pm886) pm886_start_charging : Enable Charger!
+[ 1685.604876] c0 448 (irq/36-88pm886) sec_chg_set_property : vbus current limit (700mA)
+[ 1686.546516] c2 1846 (recovery) ktd2801_backlight_set_brightness: brightness(0), tune_level(0)
+[ 1686.547289] c2 1846 (recovery) called gen_panel_set_status with status 0
+[ 1686.547307] c2 1846 (recovery) ktd2801_backlight_set_brightness: brightness(0), tune_level(0)
+[ 1686.547318] c2 1846 (recovery) kinetic,backlight-ktd2801 ktd2801-bl.25: ktd2801_backlight suspended
+[ 1686.776499] c2 1846 (recovery) panel_rst off 10 usec
+[ 1686.778966] c2 1846 (recovery) panel_avdd off 1000 usec
+[ 1686.783649] c2 1846 (recovery) mmp_dsi d420b800.dsi: dsi_set_on status 0
+[ 1686.783846] c2 1846 (recovery) ktd2801_backlight_set_brightness: brightness(0), tune_level(0)
+[ 1690.234074] c2 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4393mV),Inow(118mA),Imax(0mA),SOC(96%),Tbat(350)
+[ 1690.236485] c2 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1690.236852] c2 5969 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1690.236862] c2 5969 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1690.236881] c2 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_fullcharged_check: Charging Mode : Additional
+[ 1690.236892] c2 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Full), mode(Additional), Health(Good), Cable(3), level(100%)
+[ 1693.443146] c0 448 (irq/36-88pm886) 88pm886-charger 88pm886-charger: charge done interrupt is served
+[ 1693.445898] c0 448 (irq/36-88pm886) 88pm886 2-0030: pm886_chg_done_handler : Status, Power Supply Full from HW.
+[ 1694.618080] c0 5969 (kworker/u8:0) 88pm886-battery 88pm886-battery: pm886_battery_correct_soc: 1132: capacity 959% < 1000%, ramp up..
+[ 1694.618098] c0 5969 (kworker/u8:0) 88pm886-battery 88pm886-battery: pm886_battery_correct_soc: only CC needs update: 959% -> 969%
+[ 1694.618125] c0 5969 (kworker/u8:0) 88pm886-battery 88pm886-battery: cap=97, temp=36, volt=4390, ocv_is_realiable=1
+[ 1700.294010] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_get_battery_info:Vnow(4393mV),Inow(118mA),Imax(0mA),SOC(97%),Tbat(350)
+[ 1700.296371] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_battery_cable_check: Battery Connected
+[ 1700.296720] c0 5969 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : PM886_CHG_STATUS2 : 0x69
+[ 1700.296728] c0 5969 (kworker/u8:0) 88pm886-charger 88pm886-charger: pm886_get_charging_health : Health in full status 
+[ 1700.296741] c0 5969 (kworker/u8:0) sec-battery sec_battery.28: sec_bat_monitor_work: Status(Full), mode(Additional), Health(Good), Cable(3), level(100%)
+[ 1704.977963] c0 898 (irq/154-bt432_t) bt432_ts 3-0020: Finger down
+[ 1704.992360] c2 1846 (recovery) called gen_panel_set_status with status 1
+[ 1704.997059] c0 898 (irq/154-bt432_t) bt432_ts 3-0020: Finger up
+[ 1705.003781] c2 1846 (recovery) panel_avdd on 10000 usec
+[ 1705.013848] c2 1846 (recovery) panel_rst off 10000 usec
+[ 1705.023916] c2 1846 (recovery) panel_rst on 10000 usec
+[ 1705.097177] c0 898 (irq/154-bt432_t) bt432_ts 3-0020: Finger down
+[ 1705.127960] c0 898 (irq/154-bt432_t) bt432_ts 3-0020: Finger up
+[ 1705.343662] c2 1846 (recovery) gen_panel_set_mdnie: set scenario(0)
+[ 1705.393619] c2 1846 (recovery) ktd2801_backlight_set_brightness: brightness(0), tune_level(0)
+[ 1705.393633] c2 1846 (recovery) kinetic,backlight-ktd2801 ktd2801-bl.25: ktd2801_backlight resumed.
+[ 1705.393644] c2 1846 (recovery) mmp_dsi d420b800.dsi: dsi_set_on status 1
+[ 1705.393664] c2 1846 (recovery) ktd2801_backlight_set_brightness: brightness(0), tune_level(0)
+[ 1705.394077] c2 1846 (recovery) ktd2801_backlight_set_brightness: brightness(255), tune_level(207)
+[ 1706.694049] c0 448 (irq/36-88pm886) 88pm886-charger 88pm886-charger: charge done interrupt is served
+[ 1706.696772] c0 448 (irq/36-88pm886) 88pm886 2-0030: pm886_chg_done_handler : Status, Power Supply Full from HW.
+[ 1707.148995] c0 898 (irq/154-bt432_t) bt432_ts 3-0020: Finger down
+[ 1707.355003] c0 898 (irq/154-bt432_t) bt432_ts 3-0020: Finger up
+[ 1707.959229] c0 898 (irq/154-bt432_t) bt432_ts 3-0020: Finger down
+[ 1708.010983] c0 898 (irq/154-bt432_t) bt432_ts 3-0020: Finger up
+[ 1708.564140] c0 5969 (kworker/u8:0) CPU2: shutdown
+[ 1708.658624] c0 898 (irq/154-bt432_t) bt432_ts 3-0020: Finger down
+[ 1708.721072] c0 898 (irq/154-bt432_t) bt432_ts 3-0020: Finger up
+[ 1708.955718] c3 7815 (ls) ls[7815]: syscall 291
+[ 1708.955734] c3 7815 (ls) Code: aa0103e9 aa0403ea d2802468 d4000001 (b140041f) 
+[ 1708.955744] c3 7815 (ls) CPU: 3 PID: 7815 Comm: ls Tainted: G        W    3.14.0-483125 #1
+[ 1708.955752] c3 7815 (ls) task: ffffffc02a4e5240 ti: ffffffc02a61c000 task.ti: ffffffc02a61c000
+[ 1708.955760] c3 7815 (ls) PC is at 0x7f8a69d614
+[ 1708.955765] c3 7815 (ls) LR is at 0x5592271180
+[ 1708.955771] c3 7815 (ls) pc : [<0000007f8a69d614>] lr : [<0000005592271180>] pstate: 80000000
+[ 1708.955776] c3 7815 (ls) sp : 0000007fd2d77a00
+[ 1708.955780] c3 7815 (ls) R29: 0000007fd2d77a00 R28: 0000000000000000 
+[ 1708.955789] c3 7815 (ls) R27: 0000000000000004 R26: 0000007fd2d78e46 
+[ 1708.955796] c3 7815 (ls) R25: 0000000000000001 R24: 0000000000000000 
+[ 1708.955803] c3 7815 (ls) R23: 000000559229c000 R22: 0000007fd2d78e46 
+[ 1708.955809] c3 7815 (ls) R21: 0000000000000002 R20: 000000559229c000 
+[ 1708.955816] c3 7815 (ls) R19: 000000559229fa88 R18: 0000000000000004 
+[ 1708.955823] c3 7815 (ls) R17: 000000559229d278 R16: 0000007f8a69d5f0 
+[ 1708.955830] c3 7815 (ls) R15: 0000000000000000 R14: 0000000000000023 
+[ 1708.955837] c3 7815 (ls) R13: 0000000000000000 R12: 0000007f8a5dd228 
+[ 1708.955844] c3 7815 (ls) R11: 0000000000000000 R10: 0000007fd2d77a38 
+[ 1708.955851] c3 7815 (ls) R9 : 0000007fd2d78e46 R8 : 0000000000000123 
+[ 1708.955858] c3 7815 (ls) R7 : 0000000000000000 R6 : ffffffffffffff9c 
+[ 1708.955864] c3 7815 (ls) R5 : 0000000000000000 R4 : 0000007fd2d77a38 
+[ 1708.955871] c3 7815 (ls) R3 : 0000000000000002 R2 : 0000000000000000 
+[ 1708.955878] c3 7815 (ls) R1 : 0000007fd2d78e46 R0 : ffffffffffffff9c 
+[ 1708.955885] c3 7815 (ls) 
+[ 1708.955904] c3 7815 (ls) 
+[ 1708.955923] c3 7815 (ls) ls[7815]: syscall 291
+[ 1708.955931] c3 7815 (ls) Code: aa0103e9 aa0403ea d2802468 d4000001 (b140041f) 
+[ 1708.955938] c3 7815 (ls) CPU: 3 PID: 7815 Comm: ls Tainted: G        W    3.14.0-483125 #1
+[ 1708.955944] c3 7815 (ls) task: ffffffc02a4e5240 ti: ffffffc02a61c000 task.ti: ffffffc02a61c000
+[ 1708.955950] c3 7815 (ls) PC is at 0x7f8a69d614
+[ 1708.955955] c3 7815 (ls) LR is at 0x5592271180
+[ 1708.955960] c3 7815 (ls) pc : [<0000007f8a69d614>] lr : [<0000005592271180>] pstate: 80000000
+[ 1708.955965] c3 7815 (ls) sp : 0000007fd2d77a00
+[ 1708.955969] c3 7815 (ls) R29: 0000007fd2d77a00 R28: 0000000000000000 
+[ 1708.955976] c3 7815 (ls) R27: 0000000000000000 R26: 0000007fd2d78e46 
+[ 1708.955983] c3 7815 (ls) R25: 0000000000000001 R24: 0000000000000000 
+[ 1708.955990] c3 7815 (ls) R23: 000000559229c000 R22: 0000007fd2d78e46 
+[ 1708.955997] c3 7815 (ls) R21: 0000000000000002 R20: 000000559229c000 
+[ 1708.956004] c3 7815 (ls) R19: 000000559229fa88 R18: 0000000000000004 
+[ 1708.956011] c3 7815 (ls) R17: 0000007f8a69d5f0 R16: 000000559229d278 
+[ 1708.956018] c3 7815 (ls) R15: 0000000000000000 R14: 0000000000000023 
+[ 1708.956025] c3 7815 (ls) R13: 0000000000000000 R12: 0000007f8a5dd228 
+[ 1708.956031] c3 7815 (ls) R11: 0000000000000000 R10: 0000007fd2d77a38 
+[ 1708.956038] c3 7815 (ls) R9 : 0000007fd2d78e46 R8 : 0000000000000123 
+[ 1708.956045] c3 7815 (ls) R7 : 0000000000000100 R6 : ffffffffffffff9c 
+[ 1708.956052] c3 7815 (ls) R5 : 0000000000000000 R4 : 0000007fd2d77a38 
+[ 1708.956059] c3 7815 (ls) R3 : 0000000000000002 R2 : 0000000000000100 
+[ 1708.956066] c3 7815 (ls) R1 : 0000007fd2d78e46 R0 : ffffffffffffff9c 
+[ 1708.956073] c3 7815 (ls) 
+[ 1708.956090] c3 7815 (ls) 
+[ 1708.961217] c3 7816 (ls) ls[7816]: syscall 291
+[ 1708.961232] c3 7816 (ls) Code: aa0103e9 aa0403ea d2802468 d4000001 (b140041f) 
+[ 1708.961242] c3 7816 (ls) CPU: 3 PID: 7816 Comm: ls Tainted: G        W    3.14.0-483125 #1
+[ 1708.961250] c3 7816 (ls) task: ffffffc02a4e0000 ti: ffffffc02a664000 task.ti: ffffffc02a664000
+[ 1708.961258] c3 7816 (ls) PC is at 0x7f89ae5614
+[ 1708.961263] c3 7816 (ls) LR is at 0x5591109180
+[ 1708.961269] c3 7816 (ls) pc : [<0000007f89ae5614>] lr : [<0000005591109180>] pstate: 80000000
+[ 1708.961274] c3 7816 (ls) sp : 0000007fcf310890
+[ 1708.961278] c3 7816 (ls) R29: 0000007fcf310890 R28: 0000000000000000 
+[ 1708.961286] c3 7816 (ls) R27: 0000000000000004 R26: 0000007fcf311e42 
+[ 1708.961294] c3 7816 (ls) R25: 0000000000000001 R24: 0000000000000000 
+[ 1708.961301] c3 7816 (ls) R23: 0000005591134000 R22: 0000007fcf311e42 
+[ 1708.961307] c3 7816 (ls) R21: 0000000000000002 R20: 0000005591134000 
+[ 1708.961314] c3 7816 (ls) R19: 0000005591137a88 R18: 0000000000000004 
+[ 1708.961321] c3 7816 (ls) R17: 0000005591135278 R16: 0000007f89ae55f0 
+[ 1708.961328] c3 7816 (ls) R15: 0000000000000000 R14: 0000000000000023 
+[ 1708.961335] c3 7816 (ls) R13: 0000000000000000 R12: 0000007f89a25228 
+[ 1708.961342] c3 7816 (ls) R11: 0000000000000000 R10: 0000007fcf3108c8 
+[ 1708.961349] c3 7816 (ls) R9 : 0000007fcf311e42 R8 : 0000000000000123 
+[ 1708.961356] c3 7816 (ls) R7 : 0000000000000000 R6 : ffffffffffffff9c 
+[ 1708.961362] c3 7816 (ls) R5 : 0000000000000000 R4 : 0000007fcf3108c8 
+[ 1708.961369] c3 7816 (ls) R3 : 0000000000000002 R2 : 0000000000000000 
+[ 1708.961376] c3 7816 (ls) R1 : 0000007fcf311e42 R0 : ffffffffffffff9c 
+[ 1708.961383] c3 7816 (ls) 
+[ 1708.961402] c3 7816 (ls) 
+[ 1708.961420] c3 7816 (ls) ls[7816]: syscall 291
+[ 1708.961428] c3 7816 (ls) Code: aa0103e9 aa0403ea d2802468 d4000001 (b140041f) 
+[ 1708.961435] c3 7816 (ls) CPU: 3 PID: 7816 Comm: ls Tainted: G        W    3.14.0-483125 #1
+[ 1708.961442] c3 7816 (ls) task: ffffffc02a4e0000 ti: ffffffc02a664000 task.ti: ffffffc02a664000
+[ 1708.961447] c3 7816 (ls) PC is at 0x7f89ae5614
+[ 1708.961452] c3 7816 (ls) LR is at 0x5591109180
+[ 1708.961458] c3 7816 (ls) pc : [<0000007f89ae5614>] lr : [<0000005591109180>] pstate: 80000000
+[ 1708.961463] c3 7816 (ls) sp : 0000007fcf310890
+[ 1708.961467] c3 7816 (ls) R29: 0000007fcf310890 R28: 0000000000000000 
+[ 1708.961474] c3 7816 (ls) R27: 0000000000000000 R26: 0000007fcf311e42 
+[ 1708.961481] c3 7816 (ls) R25: 0000000000000001 R24: 0000000000000000 
+[ 1708.961488] c3 7816 (ls) R23: 0000005591134000 R22: 0000007fcf311e42 
+[ 1708.961495] c3 7816 (ls) R21: 0000000000000002 R20: 0000005591134000 
+[ 1708.961502] c3 7816 (ls) R19: 0000005591137a88 R18: 0000000000000004 
+[ 1708.961509] c3 7816 (ls) R17: 0000007f89ae55f0 R16: 0000005591135278 
+[ 1708.961516] c3 7816 (ls) R15: 0000000000000000 R14: 0000000000000023 
+[ 1708.961522] c3 7816 (ls) R13: 0000000000000000 R12: 0000007f89a25228 
+[ 1708.961529] c3 7816 (ls) R11: 0000000000000000 R10: 0000007fcf3108c8 
+[ 1708.961536] c3 7816 (ls) R9 : 0000007fcf311e42 R8 : 0000000000000123 
+[ 1708.961543] c3 7816 (ls) R7 : 0000000000000100 R6 : ffffffffffffff9c 
+[ 1708.961550] c3 7816 (ls) R5 : 0000000000000000 R4 : 0000007fcf3108c8 
+[ 1708.961557] c3 7816 (ls) R3 : 0000000000000002 R2 : 0000000000000100 
+[ 1708.961563] c3 7816 (ls) R1 : 0000007fcf311e42 R0 : ffffffffffffff9c 
+[ 1708.961571] c3 7816 (ls) 
+[ 1708.961589] c3 7816 (ls) 
+
+##########################################################################
+
+Linux 3.14.0-483125 (localhost) 	07/31/22 	_armv7l_	(4 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+          52.90    0.14    8.08    0.04    0.00   38.84
+
+Device             tps    kB_read/s    kB_wrtn/s    kB_dscd/s    kB_read    kB_wrtn    kB_dscd
+mmcblk0           0.72        10.05         0.20         0.00      17182        344          0
+mmcblk1           1.15        36.78         1.82         0.00      62872       3116          0
+
+               total        used        free      shared  buff/cache   available
+Mem:           661Mi        48Mi       560Mi       0.0Ki        52Mi       601Mi
+Swap:             0B          0B          0B
+
+CPU sysfs topology (clusters, cpufreq members, clockspeeds)
+                 cpufreq   min    max
+ CPU    cluster  policy   speed  speed   core type
+  0       -1        0       -      -     Cortex-A53 / r0p2
+  1       -1        0       -      -         -
+  2       -1        0       -      -         -
+  3       -1        0       -      -         -
+
+Architecture:         armv7l
+CPU op-mode(s):       32-bit, 64-bit
+Byte Order:           Little Endian
+CPU(s):               4
+On-line CPU(s) list:  0
+Off-line CPU(s) list: 1-3
+Thread(s) per core:   1
+Core(s) per socket:   1
+Socket(s):            1
+Vendor ID:            ARM
+Model:                2
+Model name:           Cortex-A53
+Stepping:             r0p2
+CPU max MHz:          1248.0000
+CPU min MHz:          624.0000
+Flags:                fp asimd evtstrm aes pmull sha1 sha2 crc32  half thumb fastmult edsp tls vfp vfpv3 vfpv4 neon idiva idivt
+
+SoC guess: Not able to guess since these CPU cores are offline: 1-2
+DT compat: sec,j1nlte-06
+           marvell,pxa1908
+ Compiler: /usr/bin/gcc (Debian 10.2.1-6) 10.2.1 20210110 / aarch64-linux-gnu
+ Userland: arm64
+   Kernel: 3.14.0-483125/armv7l
+
+| PXA1908 | ~0 MHz | 3.14 | armhf/arm64 | 3180 | 81260 | 581840 | 740 | 2220 | - |
+
+
+Processor	: AArch64 Processor rev 2 (aarch64)
+processor	: 0
+processor	: 3
+Features	: fp asimd evtstrm aes pmull sha1 sha2 crc32  half thumb fastmult edsp tls vfp vfpv3 vfpv4 neon idiva idivt 
+CPU implementer	: 0x41
+CPU architecture: 8
+CPU variant	: 0x0
+CPU part	: 0xd03
+CPU revision	: 2
+
+Hardware	: PXA1908

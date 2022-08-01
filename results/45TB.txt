@@ -1,0 +1,1936 @@
+sbc-bench v0.9.8 Qualcomm Technologies, Inc. qrb5165 IOT RB5 (Thu, 28 Jul 2022 06:52:43 +0000)
+
+Distributor ID:	Ubuntu
+Description:	Ubuntu 18.04.6 LTS
+Release:	18.04
+Codename:	bionic
+
+/usr/bin/gcc (Ubuntu/Linaro 7.5.0-3ubuntu1~18.04) 7.5.0
+
+Uptime: 06:52:44 up 6 min,  1 user,  load average: 3.04, 2.39, 1.25,  33.9°C
+
+Linux 4.19.125 (qrb5165-rb5) 	07/28/22 	_aarch64_	(8 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+           1.52    0.02    7.23    0.13    0.00   91.10
+
+Device             tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn
+zram0             0.78         3.10         0.01       1196          4
+sda              59.24       943.26       647.36     363484     249460
+sdb               0.17         0.70         0.00        268          0
+sde               6.15       180.77         0.06      69660         24
+sdf               0.41         2.79         0.00       1076          0
+sdc               0.17         0.70         0.00        268          0
+sdd               0.21         1.39         0.00        536          0
+
+              total        used        free      shared  buff/cache   available
+Mem:           7.5G        715M        6.6G         12M        180M        6.7G
+Swap:          3.7G          0B        3.7G
+
+Filename				Type		Size	Used	Priority
+/dev/zram0                             	partition	3917040	0	10
+
+##########################################################################
+
+Checking cpufreq OPP for cpu0-cpu3 (Qualcomm Kryo 4XX Silver):
+
+Cpufreq OPP: 1804    Measured: 1751 (1758.151/1749.595/1747.416)     (-2.9%)
+Cpufreq OPP: 1708    Measured: 1653 (1659.324/1658.727/1641.604)     (-3.2%)
+Cpufreq OPP: 1612    Measured: 1567 (1580.734/1563.792/1558.414)     (-2.8%)
+Cpufreq OPP: 1516    Measured: 1482 (1491.764/1487.143/1468.622)     (-2.2%)
+Cpufreq OPP: 1420    Measured: 1370 (1374.732/1372.103/1365.371)     (-3.5%)
+Cpufreq OPP: 1344    Measured: 1292 (1294.172/1292.372/1290.692)     (-3.9%)
+Cpufreq OPP: 1248    Measured: 1233 (1236.111/1232.777/1230.691)     (-1.2%)
+Cpufreq OPP: 1171    Measured: 1126 (1129.785/1127.393/1121.920)     (-3.8%)
+Cpufreq OPP: 1075    Measured: 1025 (1028.648/1027.972/1021.154)     (-4.7%)
+Cpufreq OPP:  979    Measured:  951    (969.613/965.929/919.450)     (-2.9%)
+Cpufreq OPP:  883    Measured:  839    (850.527/834.941/833.815)     (-5.0%)
+Cpufreq OPP:  787    Measured:  743    (744.854/744.418/741.662)     (-5.6%)
+Cpufreq OPP:  691    Measured:  641    (645.779/643.853/633.420)     (-7.2%)
+Cpufreq OPP:  614    Measured:  578    (586.754/573.875/573.682)     (-5.9%)
+Cpufreq OPP:  518    Measured:  490    (506.524/491.532/474.819)     (-5.4%)
+Cpufreq OPP:  403    Measured:  361    (364.339/360.341/358.353)    (-10.4%)
+Cpufreq OPP:  300    Measured:  291    (293.902/290.957/290.232)     (-3.0%)
+
+Checking cpufreq OPP for cpu4-cpu6 (Cortex-A77):
+
+Cpufreq OPP: 2419    Measured: 2396 (2398.745/2398.345/2392.146)
+Cpufreq OPP: 2342    Measured: 2322 (2323.390/2322.695/2322.000)
+Cpufreq OPP: 2246    Measured: 2227 (2228.172/2228.098/2227.114)
+Cpufreq OPP: 2150    Measured: 2133 (2134.541/2133.683/2132.465)
+Cpufreq OPP: 2054    Measured: 2038 (2040.362/2038.939/2035.997)
+Cpufreq OPP: 1958    Measured: 1940 (1942.740/1940.871/1936.586)
+Cpufreq OPP: 1862    Measured: 1848 (1856.361/1845.663/1844.693)
+Cpufreq OPP: 1766    Measured: 1754 (1760.164/1754.959/1749.822)
+Cpufreq OPP: 1670    Measured: 1653 (1656.802/1654.289/1648.056)
+Cpufreq OPP: 1574    Measured: 1557 (1563.357/1558.376/1551.374)     (-1.1%)
+Cpufreq OPP: 1478    Measured: 1459 (1463.379/1462.037/1453.169)     (-1.3%)
+Cpufreq OPP: 1382    Measured: 1365 (1368.178/1367.077/1362.001)     (-1.2%)
+Cpufreq OPP: 1286    Measured: 1267 (1269.765/1269.110/1263.383)     (-1.5%)
+Cpufreq OPP: 1171    Measured: 1150 (1156.226/1151.894/1143.922)     (-1.8%)
+Cpufreq OPP: 1056    Measured: 1039 (1046.817/1041.392/1029.324)     (-1.6%)
+Cpufreq OPP:  940    Measured:  925    (927.378/926.848/921.258)     (-1.6%)
+Cpufreq OPP:  825    Measured:  809    (811.354/811.125/804.923)     (-1.9%)
+Cpufreq OPP:  710    Measured:  697    (702.026/696.927/692.736)     (-1.8%)
+
+Checking cpufreq OPP for cpu7-cpu7 (Cortex-A77):
+
+Cpufreq OPP: 2841    Measured: 2824 (2825.087/2824.486/2823.032)
+Cpufreq OPP: 2745    Measured: 2730 (2735.935/2730.337/2726.412)
+Cpufreq OPP: 2649    Measured: 2634 (2637.565/2632.857/2632.197)
+Cpufreq OPP: 2553    Measured: 2538 (2542.558/2538.183/2535.580)
+Cpufreq OPP: 2457    Measured: 2440 (2441.560/2440.674/2440.379)
+Cpufreq OPP: 2361    Measured: 2345 (2345.811/2345.620/2345.129)
+Cpufreq OPP: 2265    Measured: 2247 (2250.064/2249.436/2243.758)
+Cpufreq OPP: 2169    Measured: 2152 (2154.117/2153.864/2149.481)
+Cpufreq OPP: 2073    Measured: 2057 (2058.199/2057.590/2057.360)
+Cpufreq OPP: 1977    Measured: 1962 (1962.701/1962.343/1962.176)
+Cpufreq OPP: 1862    Measured: 1846 (1847.543/1846.909/1844.482)
+Cpufreq OPP: 1747    Measured: 1729 (1732.505/1732.096/1722.852)
+Cpufreq OPP: 1632    Measured: 1618 (1623.522/1618.005/1615.107)
+Cpufreq OPP: 1516    Measured: 1499 (1501.984/1501.373/1494.544)     (-1.1%)
+Cpufreq OPP: 1401    Measured: 1387 (1388.151/1387.689/1386.780)
+Cpufreq OPP: 1305    Measured: 1296 (1301.865/1296.734/1292.257)
+Cpufreq OPP: 1190    Measured: 1177 (1177.309/1177.202/1177.068)     (-1.1%)
+Cpufreq OPP: 1075    Measured: 1060 (1061.958/1060.540/1060.399)     (-1.4%)
+Cpufreq OPP:  960    Measured:  939    (947.408/946.822/925.064)     (-2.2%)
+Cpufreq OPP:  844    Measured:  832    (836.233/831.638/830.185)     (-1.4%)
+
+##########################################################################
+
+Executing benchmark on cpu0 (Qualcomm Kryo 4XX Silver):
+
+tinymembench v0.4.9 (simple benchmark for memory throughput and latency)
+
+==========================================================================
+== Memory bandwidth tests                                               ==
+==                                                                      ==
+== Note 1: 1MB = 1000000 bytes                                          ==
+== Note 2: Results for 'copy' tests show how many bytes can be          ==
+==         copied per second (adding together read and writen           ==
+==         bytes would have provided twice higher numbers)              ==
+== Note 3: 2-pass copy means that we are using a small temporary buffer ==
+==         to first fetch data into it, and only then write it to the   ==
+==         destination (source -> L1 cache, L1 cache -> destination)    ==
+== Note 4: If sample standard deviation exceeds 0.1%, it is shown in    ==
+==         brackets                                                     ==
+==========================================================================
+
+ C copy backwards                                     :   1614.6 MB/s (2.9%)
+ C copy backwards (32 byte blocks)                    :   1616.6 MB/s (1.4%)
+ C copy backwards (64 byte blocks)                    :   1613.5 MB/s (1.5%)
+ C copy                                               :   3650.0 MB/s (0.2%)
+ C copy prefetched (32 bytes step)                    :   1482.9 MB/s (2.6%)
+ C copy prefetched (64 bytes step)                    :   3636.2 MB/s (0.2%)
+ C 2-pass copy                                        :   2391.2 MB/s (0.1%)
+ C 2-pass copy prefetched (32 bytes step)             :   1185.8 MB/s (2.4%)
+ C 2-pass copy prefetched (64 bytes step)             :   2232.1 MB/s
+ C fill                                               :   9939.1 MB/s (3.4%)
+ C fill (shuffle within 16 byte blocks)               :   9969.2 MB/s (3.7%)
+ C fill (shuffle within 32 byte blocks)               :  10027.5 MB/s (3.3%)
+ C fill (shuffle within 64 byte blocks)               :   9700.8 MB/s (2.8%)
+ ---
+ standard memcpy                                      :   3633.0 MB/s (0.2%)
+ standard memset                                      :  12547.4 MB/s (8.8%)
+ ---
+ NEON LDP/STP copy                                    :   3637.7 MB/s (0.7%)
+ NEON LDP/STP copy pldl2strm (32 bytes step)          :   1333.3 MB/s (1.4%)
+ NEON LDP/STP copy pldl2strm (64 bytes step)          :   2638.0 MB/s (0.1%)
+ NEON LDP/STP copy pldl1keep (32 bytes step)          :   1674.3 MB/s (3.8%)
+ NEON LDP/STP copy pldl1keep (64 bytes step)          :   3631.0 MB/s
+ NEON LD1/ST1 copy                                    :   3645.1 MB/s (0.2%)
+ NEON STP fill                                        :  14892.7 MB/s (12.2%)
+ NEON STNP fill                                       :   5502.0 MB/s (7.5%)
+ ARM LDP/STP copy                                     :   3637.8 MB/s (0.3%)
+ ARM STP fill                                         :  12081.8 MB/s (9.7%)
+ ARM STNP fill                                        :   5488.7 MB/s (7.4%)
+
+==========================================================================
+== Memory latency test                                                  ==
+==                                                                      ==
+== Average time is measured for random memory accesses in the buffers   ==
+== of different sizes. The larger is the buffer, the more significant   ==
+== are relative contributions of TLB, L1/L2 cache misses and SDRAM      ==
+== accesses. For extremely large buffer sizes we are expecting to see   ==
+== page table walk with several requests to SDRAM for almost every      ==
+== memory access (though 64MiB is not nearly large enough to experience ==
+== this effect to its fullest).                                         ==
+==                                                                      ==
+== Note 1: All the numbers are representing extra time, which needs to  ==
+==         be added to L1 cache latency. The cycle timings for L1 cache ==
+==         latency can be usually found in the processor documentation. ==
+== Note 2: Dual random read means that we are simultaneously performing ==
+==         two independent memory accesses at a time. In the case if    ==
+==         the memory subsystem can't handle multiple outstanding       ==
+==         requests, dual random read has the same timings as two       ==
+==         single reads performed one after another.                    ==
+==========================================================================
+
+block size : single random read / dual random read
+      1024 :    0.0 ns          /     0.0 ns 
+      2048 :    0.0 ns          /     0.0 ns 
+      4096 :    0.0 ns          /     0.0 ns 
+      8192 :    0.0 ns          /     0.0 ns 
+     16384 :    0.2 ns          /     0.3 ns 
+     32768 :    0.2 ns          /     0.9 ns 
+     65536 :    1.6 ns          /     2.9 ns 
+    131072 :    3.2 ns          /     4.7 ns 
+    262144 :    8.1 ns          /    11.8 ns 
+    524288 :   11.8 ns          /    15.0 ns 
+   1048576 :   13.9 ns          /    16.0 ns 
+   2097152 :   15.0 ns          /    16.3 ns 
+   4194304 :   17.4 ns          /    19.9 ns 
+   8388608 :   76.7 ns          /   113.0 ns 
+  16777216 :  158.0 ns          /   204.6 ns 
+  33554432 :  204.2 ns          /   236.1 ns 
+  67108864 :  233.4 ns          /   253.5 ns 
+
+Executing benchmark on cpu4 (Cortex-A77):
+
+tinymembench v0.4.9 (simple benchmark for memory throughput and latency)
+
+==========================================================================
+== Memory bandwidth tests                                               ==
+==                                                                      ==
+== Note 1: 1MB = 1000000 bytes                                          ==
+== Note 2: Results for 'copy' tests show how many bytes can be          ==
+==         copied per second (adding together read and writen           ==
+==         bytes would have provided twice higher numbers)              ==
+== Note 3: 2-pass copy means that we are using a small temporary buffer ==
+==         to first fetch data into it, and only then write it to the   ==
+==         destination (source -> L1 cache, L1 cache -> destination)    ==
+== Note 4: If sample standard deviation exceeds 0.1%, it is shown in    ==
+==         brackets                                                     ==
+==========================================================================
+
+ C copy backwards                                     :  12506.7 MB/s (0.5%)
+ C copy backwards (32 byte blocks)                    :  12757.1 MB/s (0.5%)
+ C copy backwards (64 byte blocks)                    :  12766.2 MB/s (0.3%)
+ C copy                                               :  12698.9 MB/s (0.4%)
+ C copy prefetched (32 bytes step)                    :  11998.3 MB/s (0.3%)
+ C copy prefetched (64 bytes step)                    :  11863.3 MB/s (0.2%)
+ C 2-pass copy                                        :   8100.4 MB/s (0.9%)
+ C 2-pass copy prefetched (32 bytes step)             :   8511.0 MB/s (0.4%)
+ C 2-pass copy prefetched (64 bytes step)             :   8526.1 MB/s (0.4%)
+ C fill                                               :  15807.0 MB/s (12.8%)
+ C fill (shuffle within 16 byte blocks)               :  14879.3 MB/s (15.9%)
+ C fill (shuffle within 32 byte blocks)               :  14754.6 MB/s (15.4%)
+ C fill (shuffle within 64 byte blocks)               :   5755.1 MB/s (6.7%)
+ ---
+ standard memcpy                                      :  14389.3 MB/s (0.5%)
+ standard memset                                      :  22920.7 MB/s (4.4%)
+ ---
+ NEON LDP/STP copy                                    :  14240.8 MB/s (0.3%)
+ NEON LDP/STP copy pldl2strm (32 bytes step)          :  14088.4 MB/s (0.4%)
+ NEON LDP/STP copy pldl2strm (64 bytes step)          :  14134.2 MB/s (0.4%)
+ NEON LDP/STP copy pldl1keep (32 bytes step)          :  14093.1 MB/s
+ NEON LDP/STP copy pldl1keep (64 bytes step)          :  14192.2 MB/s (0.3%)
+ NEON LD1/ST1 copy                                    :  14365.4 MB/s (0.6%)
+ NEON STP fill                                        :  16904.4 MB/s (6.2%)
+ NEON STNP fill                                       :  19234.8 MB/s (7.8%)
+ ARM LDP/STP copy                                     :  14306.2 MB/s (0.6%)
+ ARM STP fill                                         :  15960.2 MB/s (11.1%)
+ ARM STNP fill                                        :  13947.3 MB/s (10.1%)
+
+==========================================================================
+== Memory latency test                                                  ==
+==                                                                      ==
+== Average time is measured for random memory accesses in the buffers   ==
+== of different sizes. The larger is the buffer, the more significant   ==
+== are relative contributions of TLB, L1/L2 cache misses and SDRAM      ==
+== accesses. For extremely large buffer sizes we are expecting to see   ==
+== page table walk with several requests to SDRAM for almost every      ==
+== memory access (though 64MiB is not nearly large enough to experience ==
+== this effect to its fullest).                                         ==
+==                                                                      ==
+== Note 1: All the numbers are representing extra time, which needs to  ==
+==         be added to L1 cache latency. The cycle timings for L1 cache ==
+==         latency can be usually found in the processor documentation. ==
+== Note 2: Dual random read means that we are simultaneously performing ==
+==         two independent memory accesses at a time. In the case if    ==
+==         the memory subsystem can't handle multiple outstanding       ==
+==         requests, dual random read has the same timings as two       ==
+==         single reads performed one after another.                    ==
+==========================================================================
+
+block size : single random read / dual random read
+      1024 :    0.0 ns          /     0.0 ns 
+      2048 :    0.0 ns          /     0.0 ns 
+      4096 :    0.0 ns          /     0.0 ns 
+      8192 :    0.0 ns          /     0.0 ns 
+     16384 :    0.0 ns          /     0.0 ns 
+     32768 :    0.0 ns          /     0.0 ns 
+     65536 :    0.0 ns          /     0.0 ns 
+    131072 :    1.1 ns          /     1.5 ns 
+    262144 :    1.6 ns          /     2.0 ns 
+    524288 :    8.1 ns          /    11.8 ns 
+   1048576 :   11.9 ns          /    14.9 ns 
+   2097152 :   14.3 ns          /    16.1 ns 
+   4194304 :   16.8 ns          /    18.4 ns 
+   8388608 :   55.7 ns          /    81.3 ns 
+  16777216 :   92.2 ns          /   121.9 ns 
+  33554432 :  120.7 ns          /   144.7 ns 
+  67108864 :  139.3 ns          /   159.0 ns 
+
+Executing benchmark on cpu7 (Cortex-A77):
+
+tinymembench v0.4.9 (simple benchmark for memory throughput and latency)
+
+==========================================================================
+== Memory bandwidth tests                                               ==
+==                                                                      ==
+== Note 1: 1MB = 1000000 bytes                                          ==
+== Note 2: Results for 'copy' tests show how many bytes can be          ==
+==         copied per second (adding together read and writen           ==
+==         bytes would have provided twice higher numbers)              ==
+== Note 3: 2-pass copy means that we are using a small temporary buffer ==
+==         to first fetch data into it, and only then write it to the   ==
+==         destination (source -> L1 cache, L1 cache -> destination)    ==
+== Note 4: If sample standard deviation exceeds 0.1%, it is shown in    ==
+==         brackets                                                     ==
+==========================================================================
+
+ C copy backwards                                     :  13734.0 MB/s (0.3%)
+ C copy backwards (32 byte blocks)                    :  13752.1 MB/s (0.3%)
+ C copy backwards (64 byte blocks)                    :  13730.5 MB/s (0.3%)
+ C copy                                               :  13788.8 MB/s (0.4%)
+ C copy prefetched (32 bytes step)                    :  13522.8 MB/s (0.4%)
+ C copy prefetched (64 bytes step)                    :  13384.0 MB/s (0.6%)
+ C 2-pass copy                                        :   8150.7 MB/s (0.3%)
+ C 2-pass copy prefetched (32 bytes step)             :   9098.0 MB/s
+ C 2-pass copy prefetched (64 bytes step)             :   9233.5 MB/s (0.5%)
+ C fill                                               :  15980.6 MB/s (12.4%)
+ C fill (shuffle within 16 byte blocks)               :  14196.8 MB/s (11.0%)
+ C fill (shuffle within 32 byte blocks)               :  15793.6 MB/s (12.8%)
+ C fill (shuffle within 64 byte blocks)               :   8278.0 MB/s (12.0%)
+ ---
+ standard memcpy                                      :  14609.6 MB/s (0.5%)
+ standard memset                                      :  25594.7 MB/s (1.7%)
+ ---
+ NEON LDP/STP copy                                    :  14506.5 MB/s
+ NEON LDP/STP copy pldl2strm (32 bytes step)          :  14579.2 MB/s (0.3%)
+ NEON LDP/STP copy pldl2strm (64 bytes step)          :  14592.7 MB/s (0.5%)
+ NEON LDP/STP copy pldl1keep (32 bytes step)          :  14498.5 MB/s (0.7%)
+ NEON LDP/STP copy pldl1keep (64 bytes step)          :  14276.8 MB/s (0.2%)
+ NEON LD1/ST1 copy                                    :  14329.5 MB/s (0.3%)
+ NEON STP fill                                        :  24002.9 MB/s (3.5%)
+ NEON STNP fill                                       :  24368.8 MB/s (4.7%)
+ ARM LDP/STP copy                                     :  14642.4 MB/s (1.0%)
+ ARM STP fill                                         :  18392.6 MB/s (6.7%)
+ ARM STNP fill                                        :  16980.8 MB/s (6.2%)
+
+==========================================================================
+== Memory latency test                                                  ==
+==                                                                      ==
+== Average time is measured for random memory accesses in the buffers   ==
+== of different sizes. The larger is the buffer, the more significant   ==
+== are relative contributions of TLB, L1/L2 cache misses and SDRAM      ==
+== accesses. For extremely large buffer sizes we are expecting to see   ==
+== page table walk with several requests to SDRAM for almost every      ==
+== memory access (though 64MiB is not nearly large enough to experience ==
+== this effect to its fullest).                                         ==
+==                                                                      ==
+== Note 1: All the numbers are representing extra time, which needs to  ==
+==         be added to L1 cache latency. The cycle timings for L1 cache ==
+==         latency can be usually found in the processor documentation. ==
+== Note 2: Dual random read means that we are simultaneously performing ==
+==         two independent memory accesses at a time. In the case if    ==
+==         the memory subsystem can't handle multiple outstanding       ==
+==         requests, dual random read has the same timings as two       ==
+==         single reads performed one after another.                    ==
+==========================================================================
+
+block size : single random read / dual random read
+      1024 :    0.0 ns          /     0.0 ns 
+      2048 :    0.0 ns          /     0.0 ns 
+      4096 :    0.0 ns          /     0.0 ns 
+      8192 :    0.0 ns          /     0.0 ns 
+     16384 :    0.0 ns          /     0.0 ns 
+     32768 :    0.0 ns          /     0.0 ns 
+     65536 :    0.0 ns          /     0.0 ns 
+    131072 :    0.9 ns          /     1.3 ns 
+    262144 :    1.9 ns          /     2.5 ns 
+    524288 :    2.8 ns          /     3.3 ns 
+   1048576 :    8.9 ns          /    11.8 ns 
+   2097152 :   12.2 ns          /    14.2 ns 
+   4194304 :   14.5 ns          /    16.1 ns 
+   8388608 :   47.2 ns          /    68.5 ns 
+  16777216 :   82.4 ns          /   109.8 ns 
+  33554432 :  106.6 ns          /   128.3 ns 
+  67108864 :  120.6 ns          /   137.2 ns 
+
+##########################################################################
+
+Executing ramlat on cpu0 (Qualcomm Kryo 4XX Silver), results in ns:
+
+       size:  1x32  2x32  1x64  2x64 1xPTR 2xPTR 4xPTR 8xPTR
+         4k: 1.719 1.714 1.712 1.705 1.151 1.715 2.313 4.676 
+         8k: 1.716 1.714 1.717 1.713 1.140 1.714 2.325 4.685 
+        16k: 1.712 1.715 1.719 1.717 1.148 1.715 2.312 4.691 
+        32k: 1.752 1.722 1.739 1.733 1.159 1.721 2.339 4.711 
+        64k: 11.04 12.12 10.89 12.12 11.01 12.13 16.90 30.30 
+       128k: 14.37 15.62 14.45 15.51 14.45 15.54 23.03 42.87 
+       256k: 16.03 16.49 15.98 16.41 15.55 16.57 25.66 49.81 
+       512k: 16.88 17.03 16.88 17.09 16.11 17.02 26.89 53.27 
+      1024k: 16.96 17.06 16.90 17.07 16.27 17.05 28.06 53.14 
+      2048k: 17.13 17.10 16.91 17.10 16.66 17.22 28.02 53.29 
+      4096k: 26.69 28.76 25.90 32.28 25.89 28.75 45.46 87.54 
+      8192k: 128.2 149.0 124.5 149.5 128.0 126.3 143.2 217.5 
+     16384k: 197.1 213.3 202.7 205.3 190.9 192.2 227.9 382.6 
+
+Executing ramlat on cpu4 (Cortex-A77), results in ns:
+
+       size:  1x32  2x32  1x64  2x64 1xPTR 2xPTR 4xPTR 8xPTR
+         4k: 1.666 1.665 1.666 1.667 1.665 1.667 1.669 3.121 
+         8k: 1.667 1.666 1.666 1.667 1.667 1.666 1.665 3.242 
+        16k: 1.667 1.666 1.667 1.667 1.665 1.668 1.669 3.242 
+        32k: 1.668 1.668 1.666 1.668 1.667 1.666 1.668 3.245 
+        64k: 1.669 1.670 1.670 1.668 1.670 1.671 1.669 3.258 
+       128k: 5.003 4.998 4.992 4.995 4.999 5.597 6.601 12.61 
+       256k: 7.552 6.865 7.352 6.861 7.504 6.964 8.287 14.39 
+       512k: 17.18 17.60 16.99 17.54 17.17 19.82 32.35 52.13 
+      1024k: 18.39 18.33 18.22 18.29 18.25 20.69 34.33 57.92 
+      2048k: 18.87 18.63 18.41 18.61 18.40 20.53 33.46 57.96 
+      4096k: 24.56 21.17 22.63 21.22 26.14 23.23 33.32 56.83 
+      8192k: 82.52 45.48 79.72 45.35 79.62 43.81 43.83 58.50 
+     16384k: 119.4 125.1 122.8 107.4 118.3 84.80 81.00 84.51 
+
+Executing ramlat on cpu7 (Cortex-A77), results in ns:
+
+       size:  1x32  2x32  1x64  2x64 1xPTR 2xPTR 4xPTR 8xPTR
+         4k: 1.416 1.418 1.415 1.416 1.416 1.415 1.419 2.653 
+         8k: 1.415 1.417 1.416 1.415 1.416 1.416 1.415 2.749 
+        16k: 1.416 1.415 1.416 1.416 1.415 1.416 1.417 2.756 
+        32k: 1.416 1.417 1.417 1.416 1.416 1.415 1.417 2.755 
+        64k: 1.418 1.417 1.418 1.417 1.417 1.418 1.418 2.760 
+       128k: 4.246 4.245 4.240 4.246 4.243 4.749 5.607 10.73 
+       256k: 4.248 4.246 4.251 4.243 4.247 4.736 5.607 10.77 
+       512k: 5.534 5.382 5.672 5.394 5.677 5.974 6.662 11.42 
+      1024k: 14.71 15.37 14.81 15.41 14.82 18.33 30.40 49.59 
+      2048k: 16.33 16.29 15.96 16.32 15.95 18.43 30.20 52.29 
+      4096k: 20.86 18.86 20.07 18.87 19.98 21.27 30.61 53.29 
+      8192k: 68.02 35.01 92.74 38.04 71.80 38.48 38.80 54.52 
+     16384k: 102.4 90.95 108.1 94.46 104.8 74.04 67.13 71.38 
+
+##########################################################################
+
+Executing benchmark on each cluster individually
+
+OpenSSL 1.1.1, built on 11 Sep 2018
+type             16 bytes     64 bytes    256 bytes   1024 bytes   8192 bytes  16384 bytes
+aes-128-cbc     171229.39k   491450.92k   932214.70k  1204956.16k  1314469.21k  1323734.36k (Qualcomm Kryo 4XX Silver)
+aes-128-cbc     964563.77k  1578113.73k  1793319.34k  1862259.37k  1875337.22k  1890456.92k (Cortex-A77)
+aes-128-cbc    1121461.87k  1837152.28k  2097974.36k  2179759.45k  2201228.63k  2206526.12k (Cortex-A77)
+aes-192-cbc     163179.09k   438407.51k   758129.32k   927098.20k   991417.69k   996229.12k (Qualcomm Kryo 4XX Silver)
+aes-192-cbc     883707.86k  1337240.11k  1495246.25k  1548955.31k  1564530.01k  1557572.27k (Cortex-A77)
+aes-192-cbc    1051668.41k  1586123.99k  1771626.92k  1834806.95k  1854682.45k  1855182.17k (Cortex-A77)
+aes-256-cbc     157875.17k   398352.09k   650035.63k   774351.53k   817564.33k   821138.77k (Qualcomm Kryo 4XX Silver)
+aes-256-cbc     827796.92k  1184615.96k  1298183.42k  1333288.96k  1342554.11k  1331522.22k (Cortex-A77)
+aes-256-cbc     980731.50k  1397749.21k  1539476.05k  1580429.65k  1589927.94k  1589897.90k (Cortex-A77)
+
+##########################################################################
+
+Executing benchmark single-threaded on cpu0 (Qualcomm Kryo 4XX Silver)
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,8 CPUs LE)
+
+LE
+CPU Freq:  1753  1761  1747  1609  1749  1753  1752  1756  1756
+
+RAM size:    7650 MB,  # CPU hardware threads:   8
+RAM usage:    435 MB,  # Benchmark threads:      1
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       1003    97   1002    976  |      20898    96   1854   1784
+23:        926    97    969    944  |      20270    96   1826   1755
+24:        877    97    969    944  |      19395    96   1774   1703
+25:        845    97    991    965  |      17503    96   1623   1558
+----------------------------------  | ------------------------------
+Avr:              97    983    957  |               96   1769   1700
+Tot:              97   1376   1329
+
+Executing benchmark single-threaded on cpu4 (Cortex-A77)
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,8 CPUs LE)
+
+LE
+CPU Freq:  2379  2398  2406  2408  2397  2400  2403  2402  2403
+
+RAM size:    7650 MB,  # CPU hardware threads:   8
+RAM usage:    435 MB,  # Benchmark threads:      1
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       2838    99   2789   2761  |      44113    99   3791   3766
+23:       2599    99   2677   2649  |      43345    99   3776   3752
+24:       2416    99   2626   2598  |      41595    99   3677   3652
+25:       2250    99   2598   2569  |      38517    99   3453   3428
+----------------------------------  | ------------------------------
+Avr:              99   2672   2644  |               99   3674   3650
+Tot:              99   3173   3147
+
+Executing benchmark single-threaded on cpu7 (Cortex-A77)
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,8 CPUs LE)
+
+LE
+CPU Freq:  2830  2826  2823  2805  2818  2825  2827  2826  2826
+
+RAM size:    7650 MB,  # CPU hardware threads:   8
+RAM usage:    435 MB,  # Benchmark threads:      1
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       3563    99   3495   3467  |      52091    99   4471   4448
+23:       3121    99   3219   3181  |      51165    99   4452   4429
+24:       2893    99   3140   3111  |      49215    99   4345   4321
+25:       2665    99   3073   3043  |      45741    99   4096   4071
+----------------------------------  | ------------------------------
+Avr:              99   3232   3200  |               99   4341   4317
+Tot:              99   3786   3759
+
+##########################################################################
+
+Executing benchmark 3 times multi-threaded on CPUs 0-7
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,8 CPUs LE)
+
+LE
+CPU Freq:  2230  2825  2807  2829  2828  2823  2826  2826  2826
+
+RAM size:    7650 MB,  # CPU hardware threads:   8
+RAM usage:   1765 MB,  # Benchmark threads:      8
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:      16257   716   2210  15815  |     254854   754   2882  21738
+23:      14803   708   2130  15083  |     249827   762   2836  21619
+24:      13583   704   2075  14605  |     242403   761   2797  21275
+25:      12896   711   2070  14725  |     226475   761   2650  20155
+----------------------------------  | ------------------------------
+Avr:             710   2121  15057  |              759   2791  21197
+Tot:             735   2456  18127
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,8 CPUs LE)
+
+LE
+CPU Freq:  2094  2752  2828  2831  2828  2825  2823  2827  2825
+
+RAM size:    7650 MB,  # CPU hardware threads:   8
+RAM usage:   1765 MB,  # Benchmark threads:      8
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:      16311   718   2209  15868  |     248147   729   2903  21166
+23:      14327   707   2064  14598  |     248360   752   2858  21492
+24:      13621   710   2061  14646  |     243191   764   2794  21344
+25:      12754   707   2059  14562  |     222523   742   2670  19804
+----------------------------------  | ------------------------------
+Avr:             711   2098  14918  |              747   2806  20952
+Tot:             729   2452  17935
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,8 CPUs LE)
+
+LE
+CPU Freq:  2098  2738  2828  2825  2830  2823  2824  2827  2825
+
+RAM size:    7650 MB,  # CPU hardware threads:   8
+RAM usage:   1765 MB,  # Benchmark threads:      8
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:      16209   718   2197  15769  |     249372   742   2867  21270
+23:      14022   689   2074  14287  |     244598   762   2777  21167
+24:      13439   706   2048  14451  |     234891   748   2757  20616
+25:      12888   711   2069  14716  |     219019   738   2643  19492
+----------------------------------  | ------------------------------
+Avr:             706   2097  14806  |              747   2761  20636
+Tot:             727   2429  17721
+
+Compression: 15057,14918,14806
+Decompression: 21197,20952,20636
+Total: 18127,17935,17721
+
+##########################################################################
+
+** cpuminer-multi 1.3.3 by tpruvot@github **
+BTC donation address: 1FhDPLPpw18X4srecguG3MxJYe4a1JsZnd (tpruvot)
+
+[2022-07-28 07:19:38] 8 miner threads started, using 'scrypt' algorithm.
+[2022-07-28 07:19:38] CPU #7: 4.99 kH/s
+[2022-07-28 07:19:38] CPU #4: 4.42 kH/s
+[2022-07-28 07:19:38] CPU #5: 4.32 kH/s
+[2022-07-28 07:19:38] CPU #6: 4.42 kH/s
+[2022-07-28 07:19:39] CPU #0: 1.72 kH/s
+[2022-07-28 07:19:39] CPU #2: 1.74 kH/s
+[2022-07-28 07:19:39] CPU #1: 1.72 kH/s
+[2022-07-28 07:19:39] CPU #3: 1.73 kH/s
+[2022-07-28 07:19:43] Total: 25.26 kH/s
+[2022-07-28 07:19:44] CPU #6: 4.34 kH/s
+[2022-07-28 07:19:48] CPU #0: 1.75 kH/s
+[2022-07-28 07:19:48] CPU #3: 1.74 kH/s
+[2022-07-28 07:19:48] CPU #2: 1.75 kH/s
+[2022-07-28 07:19:48] CPU #1: 1.73 kH/s
+[2022-07-28 07:19:48] CPU #7: 5.18 kH/s
+[2022-07-28 07:19:48] Total: 25.41 kH/s
+[2022-07-28 07:19:48] CPU #5: 4.43 kH/s
+[2022-07-28 07:19:49] CPU #4: 4.29 kH/s
+[2022-07-28 07:19:53] Total: 25.24 kH/s
+[2022-07-28 07:19:53] CPU #6: 4.43 kH/s
+[2022-07-28 07:19:57] CPU #4: 4.41 kH/s
+[2022-07-28 07:19:58] CPU #0: 1.75 kH/s
+[2022-07-28 07:19:58] CPU #3: 1.74 kH/s
+[2022-07-28 07:19:58] CPU #2: 1.75 kH/s
+[2022-07-28 07:19:58] CPU #1: 1.64 kH/s
+[2022-07-28 07:19:58] CPU #7: 5.21 kH/s
+[2022-07-28 07:19:58] Total: 25.36 kH/s
+[2022-07-28 07:19:58] CPU #5: 4.44 kH/s
+[2022-07-28 07:20:03] Total: 25.38 kH/s
+[2022-07-28 07:20:03] CPU #6: 4.43 kH/s
+[2022-07-28 07:20:04] CPU #4: 4.31 kH/s
+[2022-07-28 07:20:08] CPU #0: 1.75 kH/s
+[2022-07-28 07:20:08] CPU #3: 1.74 kH/s
+[2022-07-28 07:20:08] CPU #2: 1.74 kH/s
+[2022-07-28 07:20:08] CPU #1: 1.67 kH/s
+[2022-07-28 07:20:08] CPU #7: 5.20 kH/s
+[2022-07-28 07:20:08] Total: 25.33 kH/s
+[2022-07-28 07:20:08] CPU #5: 4.44 kH/s
+[2022-07-28 07:20:13] CPU #4: 4.44 kH/s
+[2022-07-28 07:20:13] Total: 25.34 kH/s
+[2022-07-28 07:20:13] CPU #6: 4.43 kH/s
+[2022-07-28 07:20:18] CPU #0: 1.75 kH/s
+[2022-07-28 07:20:18] CPU #2: 1.75 kH/s
+[2022-07-28 07:20:18] CPU #3: 1.73 kH/s
+[2022-07-28 07:20:18] CPU #1: 1.64 kH/s
+[2022-07-28 07:20:18] CPU #7: 5.17 kH/s
+[2022-07-28 07:20:18] Total: 25.34 kH/s
+[2022-07-28 07:20:18] CPU #5: 4.44 kH/s
+[2022-07-28 07:20:23] CPU #4: 4.43 kH/s
+[2022-07-28 07:20:23] Total: 25.35 kH/s
+[2022-07-28 07:20:24] CPU #6: 4.36 kH/s
+[2022-07-28 07:20:28] CPU #0: 1.75 kH/s
+[2022-07-28 07:20:28] CPU #3: 1.74 kH/s
+[2022-07-28 07:20:28] CPU #2: 1.75 kH/s
+[2022-07-28 07:20:28] CPU #1: 1.68 kH/s
+[2022-07-28 07:20:28] CPU #7: 5.14 kH/s
+[2022-07-28 07:20:28] Total: 25.29 kH/s
+[2022-07-28 07:20:28] CPU #5: 4.43 kH/s
+[2022-07-28 07:20:33] CPU #6: 4.43 kH/s
+[2022-07-28 07:20:33] CPU #4: 4.28 kH/s
+[2022-07-28 07:20:33] Total: 25.30 kH/s
+[2022-07-28 07:20:38] CPU #0: 1.76 kH/s
+[2022-07-28 07:20:38] CPU #2: 1.75 kH/s
+[2022-07-28 07:20:38] CPU #3: 1.73 kH/s
+[2022-07-28 07:20:38] CPU #1: 1.69 kH/s
+[2022-07-28 07:20:38] CPU #7: 5.13 kH/s
+[2022-07-28 07:20:38] Total: 25.30 kH/s
+[2022-07-28 07:20:38] CPU #5: 4.43 kH/s
+[2022-07-28 07:20:43] CPU #6: 4.43 kH/s
+[2022-07-28 07:20:43] CPU #4: 4.44 kH/s
+[2022-07-28 07:20:43] Total: 25.36 kH/s
+[2022-07-28 07:20:48] CPU #0: 1.76 kH/s
+[2022-07-28 07:20:48] CPU #3: 1.75 kH/s
+[2022-07-28 07:20:48] CPU #2: 1.75 kH/s
+[2022-07-28 07:20:48] CPU #1: 1.72 kH/s
+[2022-07-28 07:20:48] CPU #7: 5.14 kH/s
+[2022-07-28 07:20:48] Total: 25.28 kH/s
+[2022-07-28 07:20:48] CPU #5: 4.43 kH/s
+[2022-07-28 07:20:53] CPU #6: 4.43 kH/s
+[2022-07-28 07:20:53] CPU #4: 4.28 kH/s
+[2022-07-28 07:20:53] Total: 25.26 kH/s
+[2022-07-28 07:20:58] CPU #0: 1.75 kH/s
+[2022-07-28 07:20:58] CPU #3: 1.74 kH/s
+[2022-07-28 07:20:58] CPU #2: 1.75 kH/s
+[2022-07-28 07:20:58] CPU #1: 1.72 kH/s
+[2022-07-28 07:20:58] CPU #7: 5.17 kH/s
+[2022-07-28 07:20:58] Total: 25.27 kH/s
+[2022-07-28 07:20:58] CPU #5: 4.43 kH/s
+[2022-07-28 07:21:03] CPU #6: 4.43 kH/s
+[2022-07-28 07:21:03] CPU #4: 4.28 kH/s
+[2022-07-28 07:21:03] Total: 25.26 kH/s
+[2022-07-28 07:21:08] CPU #0: 1.75 kH/s
+[2022-07-28 07:21:08] CPU #3: 1.74 kH/s
+[2022-07-28 07:21:08] CPU #2: 1.75 kH/s
+[2022-07-28 07:21:08] CPU #1: 1.72 kH/s
+[2022-07-28 07:21:08] CPU #7: 5.20 kH/s
+[2022-07-28 07:21:08] Total: 25.21 kH/s
+[2022-07-28 07:21:08] CPU #5: 4.43 kH/s
+[2022-07-28 07:21:13] CPU #6: 4.36 kH/s
+[2022-07-28 07:21:13] CPU #4: 4.28 kH/s
+[2022-07-28 07:21:13] Total: 25.16 kH/s
+[2022-07-28 07:21:18] CPU #0: 1.75 kH/s
+[2022-07-28 07:21:18] CPU #3: 1.74 kH/s
+[2022-07-28 07:21:18] CPU #2: 1.74 kH/s
+[2022-07-28 07:21:18] CPU #1: 1.67 kH/s
+[2022-07-28 07:21:18] CPU #7: 5.14 kH/s
+[2022-07-28 07:21:18] Total: 25.34 kH/s
+[2022-07-28 07:21:18] CPU #5: 4.44 kH/s
+[2022-07-28 07:21:23] CPU #6: 4.43 kH/s
+[2022-07-28 07:21:23] CPU #4: 4.44 kH/s
+[2022-07-28 07:21:23] Total: 25.33 kH/s
+[2022-07-28 07:21:28] CPU #0: 1.75 kH/s
+[2022-07-28 07:21:28] CPU #3: 1.75 kH/s
+[2022-07-28 07:21:28] CPU #2: 1.74 kH/s
+[2022-07-28 07:21:28] CPU #1: 1.62 kH/s
+[2022-07-28 07:21:28] CPU #7: 5.18 kH/s
+[2022-07-28 07:21:28] Total: 25.35 kH/s
+[2022-07-28 07:21:28] CPU #5: 4.44 kH/s
+[2022-07-28 07:21:33] CPU #6: 4.43 kH/s
+[2022-07-28 07:21:33] CPU #4: 4.44 kH/s
+[2022-07-28 07:21:33] Total: 25.36 kH/s
+[2022-07-28 07:21:38] CPU #0: 1.76 kH/s
+[2022-07-28 07:21:38] CPU #3: 1.75 kH/s
+[2022-07-28 07:21:38] CPU #2: 1.75 kH/s
+[2022-07-28 07:21:38] CPU #1: 1.63 kH/s
+[2022-07-28 07:21:38] CPU #7: 5.17 kH/s
+[2022-07-28 07:21:38] Total: 25.37 kH/s
+[2022-07-28 07:21:38] CPU #5: 4.44 kH/s
+[2022-07-28 07:21:43] CPU #6: 4.43 kH/s
+[2022-07-28 07:21:43] CPU #4: 4.41 kH/s
+[2022-07-28 07:21:43] Total: 25.31 kH/s
+[2022-07-28 07:21:48] CPU #3: 1.75 kH/s
+[2022-07-28 07:21:48] CPU #2: 1.75 kH/s
+[2022-07-28 07:21:48] CPU #1: 1.73 kH/s
+[2022-07-28 07:21:48] CPU #0: 1.63 kH/s
+[2022-07-28 07:21:48] CPU #5: 4.43 kH/s
+[2022-07-28 07:21:48] CPU #7: 5.13 kH/s
+[2022-07-28 07:21:48] Total: 25.23 kH/s
+[2022-07-28 07:21:53] CPU #6: 4.43 kH/s
+[2022-07-28 07:21:53] CPU #4: 4.44 kH/s
+[2022-07-28 07:21:53] Total: 25.28 kH/s
+[2022-07-28 07:21:58] CPU #3: 1.76 kH/s
+[2022-07-28 07:21:58] CPU #2: 1.75 kH/s
+[2022-07-28 07:21:58] CPU #0: 1.75 kH/s
+[2022-07-28 07:21:58] CPU #1: 1.73 kH/s
+[2022-07-28 07:21:58] CPU #5: 4.43 kH/s
+[2022-07-28 07:21:58] CPU #7: 4.98 kH/s
+[2022-07-28 07:21:58] Total: 25.26 kH/s
+[2022-07-28 07:22:03] CPU #6: 4.43 kH/s
+[2022-07-28 07:22:03] CPU #4: 4.44 kH/s
+[2022-07-28 07:22:03] Total: 25.28 kH/s
+[2022-07-28 07:22:08] CPU #3: 1.75 kH/s
+[2022-07-28 07:22:08] CPU #0: 1.75 kH/s
+[2022-07-28 07:22:08] CPU #2: 1.75 kH/s
+[2022-07-28 07:22:08] CPU #1: 1.73 kH/s
+[2022-07-28 07:22:08] CPU #5: 4.43 kH/s
+[2022-07-28 07:22:08] CPU #7: 5.00 kH/s
+[2022-07-28 07:22:08] Total: 25.29 kH/s
+[2022-07-28 07:22:13] CPU #6: 4.43 kH/s
+[2022-07-28 07:22:13] CPU #4: 4.44 kH/s
+[2022-07-28 07:22:13] Total: 25.26 kH/s
+[2022-07-28 07:22:18] CPU #3: 1.75 kH/s
+[2022-07-28 07:22:18] CPU #0: 1.74 kH/s
+[2022-07-28 07:22:18] CPU #2: 1.75 kH/s
+[2022-07-28 07:22:18] CPU #1: 1.73 kH/s
+[2022-07-28 07:22:18] CPU #5: 4.37 kH/s
+[2022-07-28 07:22:18] CPU #7: 5.03 kH/s
+[2022-07-28 07:22:18] Total: 25.23 kH/s
+[2022-07-28 07:22:23] CPU #6: 4.43 kH/s
+[2022-07-28 07:22:23] CPU #4: 4.43 kH/s
+[2022-07-28 07:22:24] CPU #7: 4.97 kH/s
+[2022-07-28 07:22:24] Total: 25.17 kH/s
+[2022-07-28 07:22:27] Total: 25.24 kH/s
+[2022-07-28 07:22:28] CPU #3: 1.75 kH/s
+[2022-07-28 07:22:28] CPU #2: 1.75 kH/s
+[2022-07-28 07:22:28] CPU #0: 1.74 kH/s
+[2022-07-28 07:22:28] CPU #1: 1.72 kH/s
+[2022-07-28 07:22:28] CPU #5: 4.43 kH/s
+[2022-07-28 07:22:28] Total: 25.20 kH/s
+[2022-07-28 07:22:33] CPU #6: 4.43 kH/s
+[2022-07-28 07:22:33] CPU #4: 4.43 kH/s
+[2022-07-28 07:22:33] CPU #7: 4.98 kH/s
+[2022-07-28 07:22:33] Total: 25.27 kH/s
+[2022-07-28 07:22:38] CPU #3: 1.75 kH/s
+[2022-07-28 07:22:38] CPU #0: 1.75 kH/s
+[2022-07-28 07:22:38] CPU #2: 1.75 kH/s
+[2022-07-28 07:22:38] CPU #1: 1.72 kH/s
+[2022-07-28 07:22:38] CPU #5: 4.43 kH/s
+[2022-07-28 07:22:38] Total: 25.28 kH/s
+[2022-07-28 07:22:43] CPU #6: 4.43 kH/s
+[2022-07-28 07:22:43] CPU #4: 4.43 kH/s
+[2022-07-28 07:22:43] CPU #7: 5.00 kH/s
+[2022-07-28 07:22:43] Total: 25.29 kH/s
+[2022-07-28 07:22:48] CPU #3: 1.75 kH/s
+[2022-07-28 07:22:48] CPU #0: 1.75 kH/s
+[2022-07-28 07:22:48] CPU #2: 1.75 kH/s
+[2022-07-28 07:22:48] CPU #1: 1.73 kH/s
+[2022-07-28 07:22:48] CPU #5: 4.44 kH/s
+[2022-07-28 07:22:48] Total: 25.27 kH/s
+[2022-07-28 07:22:53] CPU #6: 4.43 kH/s
+[2022-07-28 07:22:53] CPU #4: 4.44 kH/s
+[2022-07-28 07:22:53] CPU #7: 5.02 kH/s
+[2022-07-28 07:22:53] Total: 25.30 kH/s
+[2022-07-28 07:22:58] CPU #3: 1.76 kH/s
+[2022-07-28 07:22:58] CPU #0: 1.75 kH/s
+[2022-07-28 07:22:58] CPU #2: 1.75 kH/s
+[2022-07-28 07:22:58] CPU #1: 1.73 kH/s
+[2022-07-28 07:22:58] CPU #5: 4.43 kH/s
+[2022-07-28 07:22:58] Total: 25.22 kH/s
+[2022-07-28 07:23:02] CPU #6: 4.43 kH/s
+[2022-07-28 07:23:03] CPU #4: 4.44 kH/s
+[2022-07-28 07:23:03] CPU #7: 5.04 kH/s
+[2022-07-28 07:23:03] Total: 25.30 kH/s
+[2022-07-28 07:23:08] CPU #3: 1.76 kH/s
+[2022-07-28 07:23:08] CPU #0: 1.75 kH/s
+[2022-07-28 07:23:08] CPU #2: 1.76 kH/s
+[2022-07-28 07:23:08] CPU #1: 1.73 kH/s
+[2022-07-28 07:23:08] CPU #5: 4.43 kH/s
+[2022-07-28 07:23:08] Total: 25.26 kH/s
+[2022-07-28 07:23:09] CPU #6: 4.40 kH/s
+[2022-07-28 07:23:13] CPU #4: 4.44 kH/s
+[2022-07-28 07:23:13] CPU #7: 5.02 kH/s
+[2022-07-28 07:23:13] Total: 25.25 kH/s
+[2022-07-28 07:23:17] CPU #6: 4.43 kH/s
+[2022-07-28 07:23:18] CPU #3: 1.76 kH/s
+[2022-07-28 07:23:18] CPU #0: 1.75 kH/s
+[2022-07-28 07:23:18] CPU #2: 1.75 kH/s
+[2022-07-28 07:23:18] CPU #1: 1.73 kH/s
+[2022-07-28 07:23:18] CPU #5: 4.44 kH/s
+[2022-07-28 07:23:18] Total: 25.29 kH/s
+[2022-07-28 07:23:23] CPU #4: 4.44 kH/s
+[2022-07-28 07:23:23] CPU #7: 5.00 kH/s
+[2022-07-28 07:23:23] Total: 25.27 kH/s
+[2022-07-28 07:23:23] CPU #6: 4.43 kH/s
+[2022-07-28 07:23:28] CPU #3: 1.75 kH/s
+[2022-07-28 07:23:28] CPU #0: 1.75 kH/s
+[2022-07-28 07:23:28] CPU #2: 1.75 kH/s
+[2022-07-28 07:23:28] CPU #1: 1.73 kH/s
+[2022-07-28 07:23:28] CPU #5: 4.43 kH/s
+[2022-07-28 07:23:28] Total: 25.30 kH/s
+[2022-07-28 07:23:33] CPU #4: 4.44 kH/s
+[2022-07-28 07:23:33] CPU #7: 4.97 kH/s
+[2022-07-28 07:23:33] Total: 25.26 kH/s
+[2022-07-28 07:23:33] CPU #6: 4.43 kH/s
+[2022-07-28 07:23:38] CPU #3: 1.75 kH/s
+[2022-07-28 07:23:38] CPU #0: 1.75 kH/s
+[2022-07-28 07:23:38] CPU #2: 1.75 kH/s
+[2022-07-28 07:23:38] CPU #1: 1.72 kH/s
+[2022-07-28 07:23:38] CPU #5: 4.43 kH/s
+[2022-07-28 07:23:38] Total: 25.32 kH/s
+[2022-07-28 07:23:43] CPU #4: 4.43 kH/s
+[2022-07-28 07:23:43] CPU #7: 4.97 kH/s
+[2022-07-28 07:23:43] Total: 25.27 kH/s
+[2022-07-28 07:23:43] CPU #6: 4.43 kH/s
+[2022-07-28 07:23:48] CPU #3: 1.75 kH/s
+[2022-07-28 07:23:48] CPU #0: 1.75 kH/s
+[2022-07-28 07:23:48] CPU #2: 1.74 kH/s
+[2022-07-28 07:23:48] CPU #1: 1.72 kH/s
+[2022-07-28 07:23:48] CPU #5: 4.43 kH/s
+[2022-07-28 07:23:48] Total: 25.29 kH/s
+[2022-07-28 07:23:53] CPU #4: 4.43 kH/s
+[2022-07-28 07:23:53] CPU #7: 5.00 kH/s
+[2022-07-28 07:23:53] Total: 25.29 kH/s
+[2022-07-28 07:23:54] CPU #6: 4.37 kH/s
+[2022-07-28 07:23:58] CPU #3: 1.76 kH/s
+[2022-07-28 07:23:58] CPU #0: 1.74 kH/s
+[2022-07-28 07:23:58] CPU #2: 1.75 kH/s
+[2022-07-28 07:23:58] CPU #1: 1.73 kH/s
+[2022-07-28 07:23:58] CPU #5: 4.43 kH/s
+[2022-07-28 07:23:58] Total: 25.25 kH/s
+[2022-07-28 07:24:03] CPU #4: 4.44 kH/s
+[2022-07-28 07:24:03] CPU #6: 4.43 kH/s
+[2022-07-28 07:24:03] CPU #7: 5.04 kH/s
+[2022-07-28 07:24:03] Total: 25.31 kH/s
+[2022-07-28 07:24:08] CPU #3: 1.76 kH/s
+[2022-07-28 07:24:08] CPU #0: 1.75 kH/s
+[2022-07-28 07:24:08] CPU #2: 1.75 kH/s
+[2022-07-28 07:24:08] CPU #1: 1.73 kH/s
+[2022-07-28 07:24:08] CPU #5: 4.43 kH/s
+[2022-07-28 07:24:08] Total: 25.26 kH/s
+[2022-07-28 07:24:13] CPU #4: 4.44 kH/s
+[2022-07-28 07:24:13] CPU #6: 4.43 kH/s
+[2022-07-28 07:24:13] CPU #7: 5.03 kH/s
+[2022-07-28 07:24:13] Total: 25.29 kH/s
+[2022-07-28 07:24:18] CPU #3: 1.76 kH/s
+[2022-07-28 07:24:18] CPU #0: 1.76 kH/s
+[2022-07-28 07:24:18] CPU #2: 1.76 kH/s
+[2022-07-28 07:24:18] CPU #1: 1.73 kH/s
+[2022-07-28 07:24:18] CPU #5: 4.43 kH/s
+[2022-07-28 07:24:18] Total: 25.29 kH/s
+[2022-07-28 07:24:23] CPU #4: 4.44 kH/s
+[2022-07-28 07:24:23] CPU #6: 4.43 kH/s
+[2022-07-28 07:24:23] CPU #7: 5.00 kH/s
+[2022-07-28 07:24:23] Total: 25.28 kH/s
+[2022-07-28 07:24:28] CPU #3: 1.76 kH/s
+[2022-07-28 07:24:28] CPU #0: 1.76 kH/s
+[2022-07-28 07:24:28] CPU #2: 1.75 kH/s
+[2022-07-28 07:24:28] CPU #1: 1.73 kH/s
+[2022-07-28 07:24:28] CPU #5: 4.43 kH/s
+[2022-07-28 07:24:28] Total: 25.31 kH/s
+[2022-07-28 07:24:33] CPU #4: 4.43 kH/s
+[2022-07-28 07:24:33] CPU #6: 4.37 kH/s
+[2022-07-28 07:24:33] CPU #7: 4.97 kH/s
+[2022-07-28 07:24:33] Total: 25.21 kH/s
+[2022-07-28 07:24:38] CPU #3: 1.75 kH/s
+[2022-07-28 07:24:38] CPU #0: 1.75 kH/s
+[2022-07-28 07:24:38] CPU #2: 1.74 kH/s
+[2022-07-28 07:24:38] CPU #1: 1.72 kH/s
+
+Total Scores: 25.41,25.38,25.37,25.36,25.35,25.34,25.33,25.32,25.31,25.30,25.29,25.28,25.27,25.26,25.25,25.24,25.23,25.22,25.21,25.20,25.17,25.16
+
+##########################################################################
+
+Testing maximum cpufreq again, still under full load. System health now:
+
+Time       big.LITTLE   load %cpu %sys %usr %nice %io %irq   Temp
+07:24:32: 2842/1805MHz 10.52 100%   0%  98%   0%   0%   1%  90.7°C
+
+Checking cpufreq OPP for cpu0-cpu3 (Qualcomm Kryo 4XX Silver):
+
+Cpufreq OPP: 1804    Measured: 1751 (1754.101/1753.701/1746.811)     (-2.9%)
+
+Checking cpufreq OPP for cpu4-cpu6 (Cortex-A77):
+
+Cpufreq OPP: 2419    Measured: 2402 (2403.574/2401.914/2400.942)
+
+Checking cpufreq OPP for cpu7-cpu7 (Cortex-A77):
+
+Cpufreq OPP: 2841    Measured: 2825 (2825.783/2825.277/2824.075)
+
+##########################################################################
+
+Thermal source: /sys/devices/virtual/thermal/thermal_zone9/ (cpu-1-2-usr)
+
+System health while running tinymembench:
+
+Time       big.LITTLE   load %cpu %sys %usr %nice %io %irq   Temp
+06:55:22: 2842/1805MHz  3.04  10%   6%   3%   0%   0%   0%  37.4°C
+06:57:23: 2842/1805MHz  3.04  13%   0%  12%   0%   0%   0%  41.7°C
+06:59:23: 2842/1805MHz  3.13  13%   0%  12%   0%   0%   0%  38.6°C
+07:01:23: 2842/1805MHz  3.09  13%   0%  12%   0%   0%   0%  40.1°C
+07:03:23: 2842/1805MHz  3.02  13%   0%  12%   0%   0%   0%  51.3°C
+07:05:23: 2842/1805MHz  3.08  13%   0%  12%   0%   0%   0%  42.8°C
+07:07:24: 2842/1805MHz  3.04  13%   0%  12%   0%   0%   0%  57.5°C
+07:09:24: 2842/1805MHz  3.04  13%   0%  12%   0%   0%   0%  49.0°C
+
+System health while running ramlat:
+
+Time       big.LITTLE   load %cpu %sys %usr %nice %io %irq   Temp
+07:11:08: 2842/1805MHz  3.15  12%   2%   9%   0%   0%   0%  45.1°C
+07:11:17: 2842/1805MHz  3.13  13%   0%  12%   0%   0%   0%  42.4°C
+07:11:26: 2842/1805MHz  3.19  13%   0%  12%   0%   0%   0%  42.8°C
+07:11:35: 2842/1805MHz  3.16  13%   0%  12%   0%   0%   0%  42.4°C
+07:11:45: 2842/1805MHz  3.15  13%   0%  12%   0%   0%   0%  43.6°C
+07:11:54: 2842/1805MHz  3.12  13%   0%  12%   0%   0%   0%  44.0°C
+07:12:03: 2842/1805MHz  3.10  13%   0%  12%   0%   0%   0%  45.1°C
+07:12:12: 2842/1805MHz  3.09  13%   0%  12%   0%   0%   0%  46.7°C
+
+System health while running OpenSSL benchmark:
+
+Time       big.LITTLE   load %cpu %sys %usr %nice %io %irq   Temp
+07:12:19: 2842/1805MHz  3.08  12%   2%   9%   0%   0%   0%  45.1°C
+07:12:35: 2842/1805MHz  3.06  13%   0%  12%   0%   0%   0%  40.5°C
+07:12:51: 2842/1805MHz  3.11  13%   0%  12%   0%   0%   0%  42.0°C
+07:13:07: 2842/1805MHz  3.08  13%   0%  12%   0%   0%   0%  46.3°C
+07:13:23: 2842/1805MHz  3.06  13%   0%  12%   0%   0%   0%  40.5°C
+07:13:39: 2842/1805MHz  3.05  13%   0%  12%   0%   0%   0%  42.8°C
+07:13:56: 2842/1805MHz  3.03  13%   0%  12%   0%   0%   0%  47.5°C
+07:14:12: 2842/1805MHz  3.27  13%   0%  12%   0%   0%   0%  40.9°C
+07:14:28: 2842/1805MHz  3.21  13%   0%  12%   0%   0%   0%  43.6°C
+07:14:44: 2842/1805MHz  3.16  13%   0%  12%   0%   0%   0%  50.5°C
+07:15:00: 2842/1805MHz  3.11  13%   0%  12%   0%   0%   0%  46.3°C
+
+System health while running 7-zip single core benchmark:
+
+Time       big.LITTLE   load %cpu %sys %usr %nice %io %irq   Temp
+07:15:01: 2842/1805MHz  3.11  12%   2%   9%   0%   0%   0%  42.8°C
+07:15:12: 2842/1805MHz  3.10  13%   1%  11%   0%   0%   0%  40.1°C
+07:15:22: 2842/1805MHz  3.08  13%   1%  11%   0%   0%   0%  39.7°C
+07:15:32: 2842/1805MHz  3.07  13%   1%  11%   0%   0%   0%  39.7°C
+07:15:42: 2842/1805MHz  3.06  13%   1%  11%   0%   0%   0%  39.7°C
+07:15:52: 2842/1805MHz  3.05  13%   2%  10%   0%   0%   0%  39.3°C
+07:16:02: 2842/1805MHz  3.04  13%   1%  11%   0%   0%   0%  39.0°C
+07:16:13: 2842/1805MHz  3.03  13%   1%  11%   0%   0%   0%  39.0°C
+07:16:23: 2842/1805MHz  3.03  13%   1%  11%   0%   0%   0%  39.0°C
+07:16:33: 2842/1805MHz  3.02  13%   1%  11%   0%   0%   0%  40.9°C
+07:16:43: 2842/1805MHz  3.10  13%   1%  11%   0%   0%   0%  42.4°C
+07:16:53: 2842/1805MHz  3.08  13%   1%  11%   0%   0%   0%  42.8°C
+07:17:03: 2842/1805MHz  3.07  13%   1%  12%   0%   0%   0%  42.8°C
+07:17:14: 2842/1805MHz  3.06  13%   1%  11%   0%   0%   0%  48.6°C
+07:17:24: 2842/1805MHz  3.34  13%   1%  12%   0%   0%   0%  47.8°C
+07:17:34: 2842/1805MHz  3.29  13%   1%  11%   0%   0%   0%  47.5°C
+
+System health while running 7-zip multi core benchmark:
+
+Time       big.LITTLE   load %cpu %sys %usr %nice %io %irq   Temp
+07:17:43: 2842/1805MHz  3.25  12%   2%   9%   0%   0%   0%  46.7°C
+07:17:54: 2842/1805MHz  4.36  81%   3%  76%   0%   0%   1%  80.7°C
+07:18:06: 2842/1805MHz  5.46  91%   3%  86%   0%   0%   1%  87.2°C
+07:18:16: 2842/1805MHz  6.85  90%   6%  82%   0%   0%   1%  76.8°C
+07:18:27: 2842/1805MHz  7.33  75%   4%  69%   0%   0%   1%  89.2°C
+07:18:38: 2842/1805MHz  7.58  88%   3%  83%   0%   0%   1%  81.8°C
+07:18:48: 2842/1805MHz  7.54  87%   5%  80%   0%   0%   1%  78.4°C
+07:18:59: 2842/1805MHz  7.51  92%   5%  85%   0%   0%   1%  88.0°C
+07:19:09: 2842/1805MHz  7.38  76%   4%  71%   0%   0%   1%  79.1°C
+07:19:21: 2842/1805MHz  8.02  89%   5%  83%   0%   0%   1%  84.1°C
+07:19:31: 2842/1805MHz  8.76  90%   5%  83%   0%   0%   1%  79.9°C
+
+System health while running cpuminer:
+
+Time       big.LITTLE   load %cpu %sys %usr %nice %io %irq   Temp
+07:19:41: 2842/1805MHz  8.94  16%   2%  13%   0%   0%   0%  82.6°C
+07:20:22: 2842/1805MHz  9.77 100%   0%  98%   0%   0%   1%  85.7°C
+07:21:04: 2842/1805MHz 10.12 100%   0%  98%   0%   0%   1%  85.7°C
+07:21:46: 2842/1805MHz 10.30 100%   0%  98%   0%   0%   1%  88.0°C
+07:22:27: 2842/1805MHz 10.48 100%   0%  98%   0%   0%   1%  88.8°C
+07:23:09: 2842/1805MHz 10.61 100%   0%  98%   0%   0%   1%  89.2°C
+07:23:50: 2842/1805MHz 10.50 100%   0%  98%   0%   0%   1%  91.1°C
+07:24:32: 2842/1805MHz 10.52 100%   0%  98%   0%   0%   1%  90.7°C
+
+##########################################################################
+
+dmesg output while running the benchmarks:
+
+[  386.004154] cnss: Runtime suspend start
+[  386.004828] [kworke][0x1c23f0821][06:52:45.073957] wlan: [38:I:PMO] pmo_core_is_wow_applicable: 319: lpass enabled, enabling wow
+[  386.004967] [kworke][0x1c23f12b2][06:52:45.074098] wlan: [38:I:PMO] pmo_core_enable_wow_in_fw: 799: drv wow is enabled
+[  386.005045] [kworke][0x1c23f1887][06:52:45.074176] wlan: [38:I:WMI] suspend type: WOW_IFACE_PAUSE_ENABLED
+[  386.028584] cnss: Setting MHI state: SUSPEND(6)
+[  386.028643] cnss: Suspending PCI link
+[  386.028659] cnss: Use PCIe DRV suspend
+[  386.030687] cnss: Runtime suspend status: 0
+[  389.603723] [irq][0x1c65d6460][06:52:48.672979] wlan: [0:I:HIF] wake interrupt received on irq 458
+[  389.604229] [irq][0x1c65d8b49][06:52:48.673498] wlan: [0:I:HIF] Runtime PM resume is requested by hif_wake_interrupt_handler [wlan]
+[  389.604557] cnss: Runtime resume start
+[  389.604660] cnss: Resuming PCI link
+[  389.606494] cnss: Set PCI link status to: 2
+[  389.606539] cnss: Setting MHI state: RESUME(7)
+[  389.614429] [soft_i][0x1c6608833][06:52:48.683698] wlan: [0:F:WMA] WLAN triggered wakeup: PATTERN_MATCH_FOUND (9), vdev: 0 (STA)
+[  389.614511] [soft_i][0x1c6608e88][06:52:48.683782] wlan: [0:F:WMA] WLAN wake reason counters:
+[  389.614555] [soft_i][0x1c6609049][06:52:48.683805] wlan: [0:F:WMA] uc:2 bc:0 v4_mc:0 v6_mc:0 ra:0 ns:0 na:0 icmp:0 icmpv6:0
+[  389.614579] [soft_i][0x1c6609391][06:52:48.683849] wlan: [0:F:WMA] assoc:0 disassoc:0 assoc_resp:0 reassoc:0 reassoc_resp:0 auth:0 deauth:0 action:0
+[  389.614601] [soft_i][0x1c6609552][06:52:48.683873] wlan: [0:F:WMA] pno_match:0 pno_complete:0 gscan:0 low_rssi:0 rssi_breach:0 oem:0 scan_11d:0
+[  389.614688] [soft_i][0x1c6609bd0][06:52:48.683959] wlan: [0:I:WMA] wma_wow_parse_data_pkt: 2455: Src_mac: 00:59:dc:7e:6b:40, Dst_mac: f0:74:e4:1f:b7:df
+[  389.614734] [soft_i][0x1c6609f51][06:52:48.684006] wlan: [0:I:WMA] WOW Wakeup: IPV4 TCP Packet rcvd
+[  389.614767] [soft_i][0x1c660a1cd][06:52:48.684039] wlan: [0:I:WMA] Pkt_len: 53, src_port: 80, dst_port: 45170
+[  389.614797] [soft_i][0x1c660a408][06:52:48.684069] wlan: [0:F:WMA] WLAN wake reason counters:
+[  389.614819] [soft_i][0x1c660a5b5][06:52:48.684091] wlan: [0:F:WMA] uc:3 bc:0 v4_mc:0 v6_mc:0 ra:0 ns:0 na:0 icmp:0 icmpv6:0
+[  389.614861] [soft_i][0x1c660a757][06:52:48.684113] wlan: [0:F:WMA] assoc:0 disassoc:0 assoc_resp:0 reassoc:0 reassoc_resp:0 auth:0 deauth:0 action:0
+[  389.614884] [soft_i][0x1c660aa8a][06:52:48.684156] wlan: [0:F:WMA] pno_match:0 pno_complete:0 gscan:0 low_rssi:0 rssi_breach:0 oem:0 scan_11d:0
+[  389.615379] cnss: Runtime resume status: 0
+[  389.615438] cnss: Runtime idle
+[  390.558494] perf: interrupt took too long (3190 > 3187), lowering kernel.perf_event_max_sample_rate to 62500
+[  391.123937] cnss: Runtime suspend start
+[  391.124660] [kworke][0x1c81afb83][06:52:50.193986] wlan: [1482:I:PMO] pmo_core_is_wow_applicable: 319: lpass enabled, enabling wow
+[  391.124807] [kworke][0x1c81b06b5][06:52:50.194136] wlan: [1482:I:PMO] pmo_core_enable_wow_in_fw: 799: drv wow is enabled
+[  391.125175] [kworke][0x1c81b0aad][06:52:50.194188] wlan: [1482:I:WMI] suspend type: WOW_IFACE_PAUSE_ENABLED
+[  391.148325] cnss: Setting MHI state: SUSPEND(6)
+[  391.148449] cnss: Suspending PCI link
+[  391.148466] cnss: Use PCIe DRV suspend
+[  391.150535] cnss: Runtime suspend status: 0
+[  412.628757] cnss: Runtime resume start
+[  412.628920] cnss: Resuming PCI link
+[  412.630848] cnss: Set PCI link status to: 2
+[  412.630915] cnss: Setting MHI state: RESUME(7)
+[  412.644345] cnss: Runtime resume status: 0
+[  412.644439] cnss: Runtime idle
+[  414.067387] cnss: Runtime suspend start
+[  414.068522] [kworke][0x1e25cd08b][06:53:13.138724] wlan: [22:I:PMO] pmo_core_is_wow_applicable: 319: lpass enabled, enabling wow
+[  414.068749] [kworke][0x1e25ce1c7][06:53:13.138954] wlan: [22:I:PMO] pmo_core_enable_wow_in_fw: 799: drv wow is enabled
+[  414.068827] [kworke][0x1e25ce79e][06:53:13.139032] wlan: [22:I:WMI] suspend type: WOW_IFACE_PAUSE_ENABLED
+[  414.093239] cnss: Setting MHI state: SUSPEND(6)
+[  414.093324] cnss: Suspending PCI link
+[  414.093353] cnss: Use PCIe DRV suspend
+[  414.098712] cnss: Runtime suspend status: 0
+[  428.000093] perf: interrupt took too long (4005 > 3987), lowering kernel.perf_event_max_sample_rate to 49750
+[  474.065956] cnss: Runtime resume start
+[  474.066077] cnss: Resuming PCI link
+[  474.067739] cnss: Set PCI link status to: 2
+[  474.067789] cnss: Setting MHI state: RESUME(7)
+[  474.074850] cnss: Runtime resume status: 0
+[  474.074910] cnss: Runtime idle
+[  474.897135] cnss: Runtime suspend start
+[  474.897800] [kworke][0x227f9e4fa][06:54:13.970343] wlan: [22:I:PMO] pmo_core_is_wow_applicable: 319: lpass enabled, enabling wow
+[  474.897942] [kworke][0x227f9efd5][06:54:13.970488] wlan: [22:I:PMO] pmo_core_enable_wow_in_fw: 799: drv wow is enabled
+[  474.897990] [kworke][0x227f9f374][06:54:13.970536] wlan: [22:I:WMI] suspend type: WOW_IFACE_PAUSE_ENABLED
+[  474.923372] cnss: Setting MHI state: SUSPEND(6)
+[  474.923431] cnss: Suspending PCI link
+[  474.923448] cnss: Use PCIe DRV suspend
+[  474.926489] cnss: Runtime suspend status: 0
+[  535.503514] cnss: Runtime resume start
+[  535.503635] cnss: Resuming PCI link
+[  535.505131] cnss: Set PCI link status to: 2
+[  535.505177] cnss: Setting MHI state: RESUME(7)
+[  535.512355] cnss: Runtime resume status: 0
+[  535.512411] cnss: Runtime idle
+[  536.014354] cnss: Runtime suspend start
+[  536.014991] [kworke][0x26deb5250][06:55:15.089877] wlan: [22:I:PMO] pmo_core_is_wow_applicable: 319: lpass enabled, enabling wow
+[  536.015130] [kworke][0x26deb5ce1][06:55:15.090018] wlan: [22:I:PMO] pmo_core_enable_wow_in_fw: 799: drv wow is enabled
+[  536.015175] [kworke][0x26deb6047][06:55:15.090063] wlan: [22:I:WMI] suspend type: WOW_IFACE_PAUSE_ENABLED
+[  536.039182] cnss: Setting MHI state: SUSPEND(6)
+[  536.039226] cnss: Suspending PCI link
+[  536.039241] cnss: Use PCIe DRV suspend
+[  536.041087] cnss: Runtime suspend status: 0
+[  549.136578] cnss: Runtime resume start
+[  549.136673] cnss: Resuming PCI link
+[  549.138123] cnss: Set PCI link status to: 2
+[  549.138161] cnss: Setting MHI state: RESUME(7)
+[  549.147490] cnss: Runtime resume status: 0
+[  549.147552] cnss: Runtime idle
+[  549.966054] cnss: Runtime suspend start
+[  549.966899] [kworke][0x27de2cb76][06:55:29.042295] wlan: [22:I:PMO] pmo_core_is_wow_applicable: 319: lpass enabled, enabling wow
+[  549.967016] [kworke][0x27de2d465][06:55:29.042414] wlan: [22:I:PMO] pmo_core_enable_wow_in_fw: 799: drv wow is enabled
+[  549.967059] [kworke][0x27de2d794][06:55:29.042457] wlan: [22:I:WMI] suspend type: WOW_IFACE_PAUSE_ENABLED
+[  549.990315] cnss: Setting MHI state: SUSPEND(6)
+[  549.990370] cnss: Suspending PCI link
+[  549.990385] cnss: Use PCIe DRV suspend
+[  549.992340] cnss: Runtime suspend status: 0
+[  554.192061] cnss: Runtime resume start
+[  554.192178] cnss: Resuming PCI link
+[  554.199616] cnss: Set PCI link status to: 2
+[  554.199652] cnss: Setting MHI state: RESUME(7)
+[  554.207267] cnss: Runtime resume status: 0
+[  554.207323] cnss: Runtime idle
+[  554.735938] cnss: Runtime suspend start
+[  554.736507] [kworke][0x2835823df][06:55:33.810861] wlan: [22:I:PMO] pmo_core_is_wow_applicable: 319: lpass enabled, enabling wow
+[  554.736622] [kworke][0x283582cd9][06:55:33.810980] wlan: [22:I:PMO] pmo_core_enable_wow_in_fw: 799: drv wow is enabled
+[  554.736665] [kworke][0x28358300c][06:55:33.811023] wlan: [22:I:WMI] suspend type: WOW_IFACE_PAUSE_ENABLED
+[  554.759920] cnss: Setting MHI state: SUSPEND(6)
+[  554.759972] cnss: Suspending PCI link
+[  554.759987] cnss: Use PCIe DRV suspend
+[  554.761913] cnss: Runtime suspend status: 0
+[  588.971863] perf: interrupt took too long (5022 > 5006), lowering kernel.perf_event_max_sample_rate to 39750
+[  596.951450] cnss: Runtime resume start
+[  596.951573] cnss: Resuming PCI link
+[  596.952887] cnss: Set PCI link status to: 2
+[  596.952924] cnss: Setting MHI state: RESUME(7)
+[  596.959667] cnss: Runtime resume status: 0
+[  596.959735] cnss: Runtime idle
+[  597.562600] cnss: Runtime suspend start
+[  597.563124] [kworke][0x2b45b005f][06:56:16.629761] wlan: [22:I:PMO] pmo_core_is_wow_applicable: 319: lpass enabled, enabling wow
+[  597.563271] [kworke][0x2b45b0b84][06:56:16.629909] wlan: [22:I:PMO] pmo_core_enable_wow_in_fw: 799: drv wow is enabled
+[  597.563314] [kworke][0x2b45b0eae][06:56:16.629952] wlan: [22:I:WMI] suspend type: WOW_IFACE_PAUSE_ENABLED
+[  597.587194] cnss: Setting MHI state: SUSPEND(6)
+[  597.587248] cnss: Suspending PCI link
+[  597.587263] cnss: Use PCIe DRV suspend
+[  597.589219] cnss: Runtime suspend status: 0
+[  656.315859] cnss: Runtime resume start
+[  656.315962] cnss: Resuming PCI link
+[  656.317770] cnss: Set PCI link status to: 2
+[  656.317816] cnss: Setting MHI state: RESUME(7)
+[  656.324576] cnss: Runtime resume status: 0
+[  656.324644] cnss: Runtime idle
+[  656.329863] [soft_i][0x2f79bd244][06:57:15.389544] wlan: [0:I:QDF] DHCP-R TX: SA:f0:74:e4:1f:b7:df DA:00:50:56:8a:9a:d1 msdu_id:6 status: succ
+[  656.337268] [dp_rx_][0x2f79dfcd5][06:57:15.396939] wlan: [2163:I:QDF] DHCP-A RX: SA:00:50:56:8a:9a:d1 DA:f0:74:e4:1f:b7:df
+[  656.845862] cnss: Runtime suspend start
+[  656.846507] [kworke][0x2f8332e00][06:57:15.906135] wlan: [22:I:PMO] pmo_core_is_wow_applicable: 319: lpass enabled, enabling wow
+[  656.846639] [kworke][0x2f833380a][06:57:15.906268] wlan: [22:I:PMO] pmo_core_enable_wow_in_fw: 799: drv wow is enabled
+[  656.846686] [kworke][0x2f8333b91][06:57:15.906315] wlan: [22:I:WMI] suspend type: WOW_IFACE_PAUSE_ENABLED
+[  656.869457] cnss: Setting MHI state: SUSPEND(6)
+[  656.869509] cnss: Suspending PCI link
+[  656.869644] cnss: Use PCIe DRV suspend
+[  656.871610] cnss: Runtime suspend status: 0
+[  658.350829] cnss: Runtime resume start
+[  658.350922] cnss: Resuming PCI link
+[  658.352249] cnss: Set PCI link status to: 2
+[  658.352285] cnss: Setting MHI state: RESUME(7)
+[  658.359718] cnss: Runtime resume status: 0
+[  658.359787] cnss: Runtime idle
+[  658.898233] cnss: Runtime suspend start
+[  658.898844] [kworke][0x2fa8c735b][06:57:17.958288] wlan: [22:I:PMO] pmo_core_is_wow_applicable: 319: lpass enabled, enabling wow
+[  658.898962] [kworke][0x2fa8c7c4c][06:57:17.958407] wlan: [22:I:PMO] pmo_core_enable_wow_in_fw: 799: drv wow is enabled
+[  658.899004] [kworke][0x2fa8c7f6d][06:57:17.958449] wlan: [22:I:WMI] suspend type: WOW_IFACE_PAUSE_ENABLED
+[  658.923729] cnss: Setting MHI state: SUSPEND(6)
+[  658.923788] cnss: Suspending PCI link
+[  658.923803] cnss: Use PCIe DRV suspend
+[  658.926044] cnss: Runtime suspend status: 0
+[  660.450401] cnss: Runtime resume start
+[  660.450496] cnss: Resuming PCI link
+[  660.451953] cnss: Set PCI link status to: 2
+[  660.451995] cnss: Setting MHI state: RESUME(7)
+[  660.459481] cnss: Runtime resume status: 0
+[  660.459555] cnss: Runtime idle
+[  661.154500] cnss: Runtime suspend start
+[  661.155128] [kworke][0x2fd2178ab][06:57:20.214373] wlan: [22:I:PMO] pmo_core_is_wow_applicable: 319: lpass enabled, enabling wow
+[  661.155246] [kworke][0x2fd218196][06:57:20.214492] wlan: [22:I:PMO] pmo_core_enable_wow_in_fw: 799: drv wow is enabled
+[  661.155288] [kworke][0x2fd2184ba][06:57:20.214534] wlan: [22:I:WMI] suspend type: WOW_IFACE_PAUSE_ENABLED
+[  661.196466] cnss: Setting MHI state: SUSPEND(6)
+[  661.196522] cnss: Suspending PCI link
+[  661.196537] cnss: Use PCIe DRV suspend
+[  661.199953] cnss: Runtime suspend status: 0
+[  661.490057] cnss: Runtime resume start
+[  661.490191] cnss: Resuming PCI link
+[  661.491529] cnss: Set PCI link status to: 2
+[  661.491567] cnss: Setting MHI state: RESUME(7)
+[  661.510555] cnss: Runtime resume status: 0
+[  661.510628] cnss: Runtime idle
+[  662.086532] cnss: Runtime suspend start
+[  662.087221] [kworke][0x2fe328b6d][06:57:21.146382] wlan: [22:I:PMO] pmo_core_is_wow_applicable: 319: lpass enabled, enabling wow
+[  662.087346] [kworke][0x2fe329521][06:57:21.146511] wlan: [22:I:PMO] pmo_core_enable_wow_in_fw: 799: drv wow is enabled
+[  662.087390] [kworke][0x2fe32986b][06:57:21.146555] wlan: [22:I:WMI] suspend type: WOW_IFACE_PAUSE_ENABLED
+[  662.126208] cnss: Setting MHI state: SUSPEND(6)
+[  662.126261] cnss: Suspending PCI link
+[  662.126275] cnss: Use PCIe DRV suspend
+[  662.128269] cnss: Runtime suspend status: 0
+[  714.019945] perf: interrupt took too long (6293 > 6277), lowering kernel.perf_event_max_sample_rate to 31750
+[  719.842937] cnss: Runtime resume start
+[  719.843033] cnss: Resuming PCI link
+[  719.844212] cnss: Set PCI link status to: 2
+[  719.844255] cnss: Setting MHI state: RESUME(7)
+[  719.863612] cnss: Runtime resume status: 0
+[  719.863682] cnss: Runtime idle
+[  720.386065] cnss: Runtime suspend start
+[  720.386874] [kworke][0x340ea855c][06:58:19.442082] wlan: [22:I:PMO] pmo_core_is_wow_applicable: 319: lpass enabled, enabling wow
+[  720.387039] [kworke][0x340ea9201][06:58:19.442250] wlan: [22:I:PMO] pmo_core_enable_wow_in_fw: 799: drv wow is enabled
+[  720.387086] [kworke][0x340ea9598][06:58:19.442298] wlan: [22:I:WMI] suspend type: WOW_IFACE_PAUSE_ENABLED
+[  720.422998] cnss: Setting MHI state: SUSPEND(6)
+[  720.423056] cnss: Suspending PCI link
+[  720.423071] cnss: Use PCIe DRV suspend
+[  720.425263] cnss: Runtime suspend status: 0
+[  781.285379] cnss: Runtime resume start
+[  781.285471] cnss: Resuming PCI link
+[  781.286696] cnss: Set PCI link status to: 2
+[  781.286732] cnss: Setting MHI state: RESUME(7)
+[  781.292685] cnss: Runtime resume status: 0
+[  781.292740] cnss: Runtime idle
+[  781.796415] cnss: Runtime suspend start
+[  781.796941] [kworke][0x38731c09e][06:59:20.849763] wlan: [22:I:PMO] pmo_core_is_wow_applicable: 319: lpass enabled, enabling wow
+[  781.797061] [kworke][0x38731c9af][06:59:20.849884] wlan: [22:I:PMO] pmo_core_enable_wow_in_fw: 799: drv wow is enabled
+[  781.797103] [kworke][0x38731cccc][06:59:20.849926] wlan: [22:I:WMI] suspend type: WOW_IFACE_PAUSE_ENABLED
+[  781.833692] cnss: Setting MHI state: SUSPEND(6)
+[  781.833748] cnss: Suspending PCI link
+[  781.833763] cnss: Use PCIe DRV suspend
+[  781.835626] cnss: Runtime suspend status: 0
+[  842.726442] cnss: Runtime resume start
+[  842.726567] cnss: Resuming PCI link
+[  842.727871] cnss: Set PCI link status to: 2
+[  842.727907] cnss: Setting MHI state: RESUME(7)
+[  842.738742] cnss: Runtime resume status: 0
+[  842.738797] cnss: Runtime idle
+[  843.241677] cnss: Runtime suspend start
+[  843.242202] [kworke][0x3cd834b2d][07:00:22.293770] wlan: [22:I:PMO] pmo_core_is_wow_applicable: 319: lpass enabled, enabling wow
+[  843.242357] [kworke][0x3cd8356d8][07:00:22.293925] wlan: [22:I:PMO] pmo_core_enable_wow_in_fw: 799: drv wow is enabled
+[  843.242399] [kworke][0x3cd835a07][07:00:22.293968] wlan: [22:I:WMI] suspend type: WOW_IFACE_PAUSE_ENABLED
+[  843.278590] cnss: Setting MHI state: SUSPEND(6)
+[  843.278643] cnss: Suspending PCI link
+[  843.278658] cnss: Use PCIe DRV suspend
+[  843.280562] cnss: Runtime suspend status: 0
+[  904.166952] cnss: Runtime resume start
+[  904.167040] cnss: Resuming PCI link
+[  904.168236] cnss: Set PCI link status to: 2
+[  904.168271] cnss: Setting MHI state: RESUME(7)
+[  904.189318] cnss: Runtime resume status: 0
+[  904.189380] cnss: Runtime idle
+[  904.710565] cnss: Runtime suspend start
+[  904.711135] [kworke][0x413dbc520][07:01:23.762150] wlan: [22:I:PMO] pmo_core_is_wow_applicable: 319: lpass enabled, enabling wow
+[  904.711250] [kworke][0x413dbcddc][07:01:23.762266] wlan: [22:I:PMO] pmo_core_enable_wow_in_fw: 799: drv wow is enabled
+[  904.711291] [kworke][0x413dbd0f3][07:01:23.762307] wlan: [22:I:WMI] suspend type: WOW_IFACE_PAUSE_ENABLED
+[  904.746998] cnss: Setting MHI state: SUSPEND(6)
+[  904.747049] cnss: Suspending PCI link
+[  904.747064] cnss: Use PCIe DRV suspend
+[  904.749130] cnss: Runtime suspend status: 0
+[  955.366612] cnss: Runtime PM resume is requested by cnss_pci_time_sync_work_hdlr
+[  955.366628] cnss: Runtime resume start
+[  955.366667] cnss: Resuming PCI link
+[  955.367742] cnss: Set PCI link status to: 2
+[  955.367753] cnss: Setting MHI state: RESUME(7)
+[  955.383877] cnss: Runtime resume status: 0
+[  955.383960] cnss: Host time = 962810240 us, device time = 914042580 us, offset = 48767660 us
+[  955.383987] cnss: Updated time sync regs [0x984] = 0x2e822ac, [0x988] = 0x0
+[  955.910597] cnss: Runtime suspend start
+[  955.910808] [kworke][0x44e73ad31][07:02:14.961708] wlan: [8941:I:PMO] pmo_core_is_wow_applicable: 319: lpass enabled, enabling wow
+[  955.910837] [kworke][0x44e73af5a][07:02:14.961737] wlan: [8941:I:PMO] pmo_core_enable_wow_in_fw: 799: drv wow is enabled
+[  955.910848] [kworke][0x44e73b03b][07:02:14.961748] wlan: [8941:I:WMI] suspend type: WOW_IFACE_PAUSE_ENABLED
+[  955.946296] cnss: Setting MHI state: SUSPEND(6)
+[  955.946312] cnss: Suspending PCI link
+[  955.946316] cnss: Use PCIe DRV suspend
+[  955.947551] cnss: Runtime suspend status: 0
+[  956.360189] cnss: Runtime resume start
+[  956.360314] cnss: Resuming PCI link
+[  956.361627] cnss: Set PCI link status to: 2
+[  956.361660] cnss: Setting MHI state: RESUME(7)
+[  956.381125] cnss: Runtime resume status: 0
+[  956.381191] cnss: Runtime idle
+[  956.395217] [soft_i][0x44f019789][07:02:15.446113] wlan: [0:I:QDF] DHCP-R TX: SA:f0:74:e4:1f:b7:df DA:00:50:56:8a:9a:d1 msdu_id:6 status: succ
+[  956.403551] [dp_rx_][0x44f0407c2][07:02:15.454437] wlan: [2163:I:QDF] DHCP-A RX: SA:00:50:56:8a:9a:d1 DA:f0:74:e4:1f:b7:df
+[  956.906426] cnss: Runtime suspend start
+[  956.907111] [kworke][0x44f978f53][07:02:15.958004] wlan: [10380:I:PMO] pmo_core_is_wow_applicable: 319: lpass enabled, enabling wow
+[  956.907280] [kworke][0x44f979c09][07:02:15.958173] wlan: [10380:I:PMO] pmo_core_enable_wow_in_fw: 799: drv wow is enabled
+[  956.907373] [kworke][0x44f97a30b][07:02:15.958267] wlan: [10380:I:WMI] suspend type: WOW_IFACE_PAUSE_ENABLED
+[  956.944486] cnss: Setting MHI state: SUSPEND(6)
+[  956.944534] cnss: Suspending PCI link
+[  956.944549] cnss: Use PCIe DRV suspend
+[  956.946650] cnss: Runtime suspend status: 0
+[  958.410197] cnss: Runtime resume start
+[  958.410490] cnss: Resuming PCI link
+[  958.412274] cnss: Set PCI link status to: 2
+[  958.412308] cnss: Setting MHI state: RESUME(7)
+[  958.432512] cnss: Runtime resume status: 0
+[  958.432572] cnss: Runtime idle
+[  958.950399] cnss: Runtime suspend start
+[  958.950936] [kworke][0x451ee562f][07:02:18.001829] wlan: [10380:I:PMO] pmo_core_is_wow_applicable: 319: lpass enabled, enabling wow
+[  958.951071] [kworke][0x451ee605d][07:02:18.001964] wlan: [10380:I:PMO] pmo_core_enable_wow_in_fw: 799: drv wow is enabled
+[  958.951110] [kworke][0x451ee635b][07:02:18.002004] wlan: [10380:I:WMI] suspend type: WOW_IFACE_PAUSE_ENABLED
+[  958.988756] cnss: Setting MHI state: SUSPEND(6)
+[  958.988802] cnss: Suspending PCI link
+[  958.988817] cnss: Use PCIe DRV suspend
+[  958.990968] cnss: Runtime suspend status: 0
+[  961.511350] cnss: Runtime resume start
+[  961.511440] cnss: Resuming PCI link
+[  961.518731] cnss: Set PCI link status to: 2
+[  961.518768] cnss: Setting MHI state: RESUME(7)
+[  961.538830] cnss: Runtime resume status: 0
+[  961.538894] cnss: Runtime idle
+[  962.130476] cnss: Runtime suspend start
+[  962.131025] [kworke][0x4559200a6][07:02:21.181915] wlan: [10380:I:PMO] pmo_core_is_wow_applicable: 319: lpass enabled, enabling wow
+[  962.131139] [kworke][0x455920984][07:02:21.182034] wlan: [10380:I:PMO] pmo_core_enable_wow_in_fw: 799: drv wow is enabled
+[  962.131179] [kworke][0x455920c86][07:02:21.182074] wlan: [10380:I:WMI] suspend type: WOW_IFACE_PAUSE_ENABLED
+[  962.166777] cnss: Setting MHI state: SUSPEND(6)
+[  962.166824] cnss: Suspending PCI link
+[  962.166838] cnss: Use PCIe DRV suspend
+[  962.168721] cnss: Runtime suspend status: 0
+[  965.607586] cnss: Runtime resume start
+[  965.607693] cnss: Resuming PCI link
+[  965.609354] cnss: Set PCI link status to: 2
+[  965.609394] cnss: Setting MHI state: RESUME(7)
+[  965.632856] cnss: Runtime resume status: 0
+[  966.218624] cnss: Runtime suspend start
+[  966.219246] [kworke][0x45a3fb965][07:02:25.270140] wlan: [22:I:PMO] pmo_core_is_wow_applicable: 319: lpass enabled, enabling wow
+[  966.219373] [kworke][0x45a3fc30d][07:02:25.270269] wlan: [22:I:PMO] pmo_core_enable_wow_in_fw: 799: drv wow is enabled
+[  966.219464] [kworke][0x45a3fc9d3][07:02:25.270360] wlan: [22:I:WMI] suspend type: WOW_IFACE_PAUSE_ENABLED
+[  966.256281] cnss: Setting MHI state: SUSPEND(6)
+[  966.256337] cnss: Suspending PCI link
+[  966.256352] cnss: Use PCIe DRV suspend
+[  966.258923] cnss: Runtime suspend status: 0
+[ 1027.047209] cnss: Runtime resume start
+[ 1027.047306] cnss: Resuming PCI link
+[ 1027.049065] cnss: Set PCI link status to: 2
+[ 1027.049106] cnss: Setting MHI state: RESUME(7)
+[ 1027.067499] cnss: Runtime resume status: 0
+[ 1027.067567] cnss: Runtime idle
+[ 1027.590551] cnss: Runtime suspend start
+[ 1027.591180] [kworke][0x4a07bc56a][07:03:26.642182] wlan: [22:I:PMO] pmo_core_is_wow_applicable: 319: lpass enabled, enabling wow
+[ 1027.591298] [kworke][0x4a07bd16e][07:03:26.642343] wlan: [22:I:PMO] pmo_core_enable_wow_in_fw: 799: drv wow is enabled
+[ 1027.591339] [kworke][0x4a07bd47e][07:03:26.642384] wlan: [22:I:WMI] suspend type: WOW_IFACE_PAUSE_ENABLED
+[ 1027.626952] cnss: Setting MHI state: SUSPEND(6)
+[ 1027.627008] cnss: Suspending PCI link
+[ 1027.627024] cnss: Use PCIe DRV suspend
+[ 1027.629088] cnss: Runtime suspend status: 0
+[ 1061.660399] cnss: Runtime resume start
+[ 1061.660488] cnss: Resuming PCI link
+[ 1061.661873] cnss: Set PCI link status to: 2
+[ 1061.661913] cnss: Setting MHI state: RESUME(7)
+[ 1061.679060] cnss: Runtime resume status: 0
+[ 1061.679124] cnss: Runtime idle
+[ 1062.502389] cnss: Runtime suspend start
+[ 1062.502954] [kworke][0x4c86fd789][07:04:01.554149] wlan: [22:I:PMO] pmo_core_is_wow_applicable: 319: lpass enabled, enabling wow
+[ 1062.503072] [kworke][0x4c86fe077][07:04:01.554268] wlan: [22:I:PMO] pmo_core_enable_wow_in_fw: 799: drv wow is enabled
+[ 1062.503114] [kworke][0x4c86fe388][07:04:01.554309] wlan: [22:I:WMI] suspend type: WOW_IFACE_PAUSE_ENABLED
+[ 1062.540916] cnss: Setting MHI state: SUSPEND(6)
+[ 1062.540974] cnss: Suspending PCI link
+[ 1062.540991] cnss: Use PCIe DRV suspend
+[ 1062.543453] cnss: Runtime suspend status: 0
+[ 1066.727717] cnss: Runtime resume start
+[ 1066.727807] cnss: Resuming PCI link
+[ 1066.734622] cnss: Set PCI link status to: 2
+[ 1066.734656] cnss: Setting MHI state: RESUME(7)
+[ 1066.765060] cnss: Runtime resume status: 0
+[ 1066.765124] cnss: Runtime idle
+[ 1067.287104] cnss: Runtime suspend start
+[ 1067.287765] [kworke][0x4cde9a44e][07:04:06.338149] wlan: [22:I:PMO] pmo_core_is_wow_applicable: 319: lpass enabled, enabling wow
+[ 1067.287887] [kworke][0x4cde9ad9d][07:04:06.338273] wlan: [22:I:PMO] pmo_core_enable_wow_in_fw: 799: drv wow is enabled
+[ 1067.287932] [kworke][0x4cde9b0f1][07:04:06.338317] wlan: [22:I:WMI] suspend type: WOW_IFACE_PAUSE_ENABLED
+[ 1067.325807] cnss: Setting MHI state: SUSPEND(6)
+[ 1067.325860] cnss: Suspending PCI link
+[ 1067.325876] cnss: Use PCIe DRV suspend
+[ 1067.328182] cnss: Runtime suspend status: 0
+[ 1088.491367] cnss: Runtime resume start
+[ 1088.491481] cnss: Resuming PCI link
+[ 1088.493245] cnss: Set PCI link status to: 2
+[ 1088.493288] cnss: Setting MHI state: RESUME(7)
+[ 1088.514613] cnss: Runtime resume status: 0
+[ 1088.514676] cnss: Runtime idle
+[ 1089.931096] cnss: Runtime suspend start
+[ 1089.931577] [kworke][0x4e7d3922c][07:04:28.977966] wlan: [22:I:PMO] pmo_core_is_wow_applicable: 319: lpass enabled, enabling wow
+[ 1089.931741] [kworke][0x4e7d39e78][07:04:28.978130] wlan: [22:I:PMO] pmo_core_enable_wow_in_fw: 799: drv wow is enabled
+[ 1089.931787] [kworke][0x4e7d3a1f9][07:04:28.978177] wlan: [22:I:WMI] suspend type: WOW_IFACE_PAUSE_ENABLED
+[ 1089.969340] cnss: Setting MHI state: SUSPEND(6)
+[ 1089.969384] cnss: Suspending PCI link
+[ 1089.969400] cnss: Use PCIe DRV suspend
+[ 1089.972867] cnss: Runtime suspend status: 0
+[ 1149.940719] cnss: Runtime resume start
+[ 1149.940798] cnss: Resuming PCI link
+[ 1149.942062] cnss: Set PCI link status to: 2
+[ 1149.942093] cnss: Setting MHI state: RESUME(7)
+[ 1149.961716] cnss: Runtime resume status: 0
+[ 1149.961774] cnss: Runtime idle
+[ 1150.484078] cnss: Runtime suspend start
+[ 1150.484582] [kworke][0x52d1fb5a4][07:05:29.521768] wlan: [22:I:PMO] pmo_core_is_wow_applicable: 319: lpass enabled, enabling wow
+[ 1150.484694] [kworke][0x52d1fbe17][07:05:29.521880] wlan: [22:I:PMO] pmo_core_enable_wow_in_fw: 799: drv wow is enabled
+[ 1150.484732] [kworke][0x52d1fc0fa][07:05:29.521919] wlan: [22:I:WMI] suspend type: WOW_IFACE_PAUSE_ENABLED
+[ 1150.519422] cnss: Setting MHI state: SUSPEND(6)
+[ 1150.519466] cnss: Suspending PCI link
+[ 1150.519480] cnss: Use PCIe DRV suspend
+[ 1150.522049] cnss: Runtime suspend status: 0
+[ 1211.388232] cnss: Runtime resume start
+[ 1211.388353] cnss: Resuming PCI link
+[ 1211.389978] cnss: Set PCI link status to: 2
+[ 1211.390014] cnss: Setting MHI state: RESUME(7)
+[ 1211.411816] cnss: Runtime resume status: 0
+[ 1211.411886] cnss: Runtime idle
+[ 1211.931911] cnss: Runtime suspend start
+[ 1211.932535] [kworke][0x5737209ee][07:06:30.962200] wlan: [22:I:PMO] pmo_core_is_wow_applicable: 319: lpass enabled, enabling wow
+[ 1211.932694] [kworke][0x5737215f8][07:06:30.962360] wlan: [22:I:PMO] pmo_core_enable_wow_in_fw: 799: drv wow is enabled
+[ 1211.932740] [kworke][0x573721973][07:06:30.962407] wlan: [22:I:WMI] suspend type: WOW_IFACE_PAUSE_ENABLED
+[ 1211.967938] cnss: Setting MHI state: SUSPEND(6)
+[ 1211.967990] cnss: Suspending PCI link
+[ 1211.968005] cnss: Use PCIe DRV suspend
+[ 1211.970079] cnss: Runtime suspend status: 0
+[ 1256.434870] cnss: Runtime resume start
+[ 1256.434953] cnss: Resuming PCI link
+[ 1256.436362] cnss: Set PCI link status to: 2
+[ 1256.436393] cnss: Setting MHI state: RESUME(7)
+[ 1256.453889] cnss: Runtime resume status: 0
+[ 1256.453950] cnss: Runtime idle
+[ 1256.464805] [soft_i][0x5a6689a71][07:07:15.489946] wlan: [0:I:QDF] DHCP-R TX: SA:f0:74:e4:1f:b7:df DA:00:50:56:8a:9a:d1 msdu_id:6 status: succ
+[ 1256.472417] [dp_rx_][0x5a66ad45d][07:07:15.497546] wlan: [2163:I:QDF] DHCP-A RX: SA:00:50:56:8a:9a:d1 DA:f0:74:e4:1f:b7:df
+[ 1256.976271] cnss: Runtime suspend start
+[ 1256.977147] [kworke][0x5a6feb3e8][07:07:16.002238] wlan: [9889:I:PMO] pmo_core_is_wow_applicable: 319: lpass enabled, enabling wow
+[ 1256.977334] [kworke][0x5a6fec1f0][07:07:16.002425] wlan: [9889:I:PMO] pmo_core_enable_wow_in_fw: 799: drv wow is enabled
+[ 1256.977582] [kworke][0x5a6fed49c][07:07:16.002674] wlan: [9889:I:WMI] suspend type: WOW_IFACE_PAUSE_ENABLED
+[ 1257.014826] cnss: Setting MHI state: SUSPEND(6)
+[ 1257.014875] cnss: Suspending PCI link
+[ 1257.014890] cnss: Use PCIe DRV suspend
+[ 1257.017097] cnss: Runtime suspend status: 0
+[ 1258.479840] cnss: Runtime resume start
+[ 1258.479922] cnss: Resuming PCI link
+[ 1258.481333] cnss: Set PCI link status to: 2
+[ 1258.481367] cnss: Setting MHI state: RESUME(7)
+[ 1258.501309] cnss: Runtime resume status: 0
+[ 1258.501371] cnss: Runtime idle
+[ 1259.016663] cnss: Runtime suspend start
+[ 1259.017207] [kworke][0x5a9546079][07:07:18.042108] wlan: [10380:I:PMO] pmo_core_is_wow_applicable: 319: lpass enabled, enabling wow
+[ 1259.017321] [kworke][0x5a9546918][07:07:18.042223] wlan: [10380:I:PMO] pmo_core_enable_wow_in_fw: 799: drv wow is enabled
+[ 1259.017361] [kworke][0x5a9546c16][07:07:18.042263] wlan: [10380:I:WMI] suspend type: WOW_IFACE_PAUSE_ENABLED
+[ 1259.055565] cnss: Setting MHI state: SUSPEND(6)
+[ 1259.055613] cnss: Suspending PCI link
+[ 1259.055628] cnss: Use PCIe DRV suspend
+[ 1259.058624] cnss: Runtime suspend status: 0
+[ 1261.569824] cnss: Runtime resume start
+[ 1261.569944] cnss: Resuming PCI link
+[ 1261.571286] cnss: Set PCI link status to: 2
+[ 1261.571318] cnss: Setting MHI state: RESUME(7)
+[ 1261.591249] cnss: Runtime resume status: 0
+[ 1261.591316] cnss: Runtime idle
+[ 1262.168969] cnss: Runtime suspend start
+[ 1262.169514] [kworke][0x5acefe77a][07:07:21.194122] wlan: [9889:I:PMO] pmo_core_is_wow_applicable: 319: lpass enabled, enabling wow
+[ 1262.169629] [kworke][0x5aceff028][07:07:21.194238] wlan: [9889:I:PMO] pmo_core_enable_wow_in_fw: 799: drv wow is enabled
+[ 1262.169669] [kworke][0x5aceff324][07:07:21.194278] wlan: [9889:I:WMI] suspend type: WOW_IFACE_PAUSE_ENABLED
+[ 1262.208103] cnss: Setting MHI state: SUSPEND(6)
+[ 1262.208152] cnss: Suspending PCI link
+[ 1262.208167] cnss: Use PCIe DRV suspend
+[ 1262.210116] cnss: Runtime suspend status: 0
+[ 1272.834708] cnss: Runtime resume start
+[ 1272.834829] cnss: Resuming PCI link
+[ 1272.836169] cnss: Set PCI link status to: 2
+[ 1272.836202] cnss: Setting MHI state: RESUME(7)
+[ 1272.852289] cnss: Runtime resume status: 0
+[ 1272.852352] cnss: Runtime idle
+[ 1273.665933] cnss: Runtime suspend start
+[ 1273.666891] [kworke][0x5ba18469d][07:07:32.690457] wlan: [22:I:PMO] pmo_core_is_wow_applicable: 319: lpass enabled, enabling wow
+[ 1273.667343] [kworke][0x5ba1868a4][07:07:32.690910] wlan: [22:I:PMO] pmo_core_enable_wow_in_fw: 799: drv wow is enabled
+[ 1273.667459] [kworke][0x5ba186c41][07:07:32.690959] wlan: [22:I:WMI] suspend type: WOW_IFACE_PAUSE_ENABLED
+[ 1273.702508] cnss: Setting MHI state: SUSPEND(6)
+[ 1273.702561] cnss: Suspending PCI link
+[ 1273.702577] cnss: Use PCIe DRV suspend
+[ 1273.704669] cnss: Runtime suspend status: 0
+[ 1334.279393] cnss: Runtime resume start
+[ 1334.279488] cnss: Resuming PCI link
+[ 1334.281158] cnss: Set PCI link status to: 2
+[ 1334.281196] cnss: Setting MHI state: RESUME(7)
+[ 1334.297475] cnss: Runtime resume status: 0
+[ 1334.297545] cnss: Runtime idle
+[ 1334.822751] cnss: Runtime suspend start
+[ 1334.823413] [kworke][0x6001539e1][07:08:33.842069] wlan: [22:I:PMO] pmo_core_is_wow_applicable: 319: lpass enabled, enabling wow
+[ 1334.823647] [kworke][0x600154b5c][07:08:33.842302] wlan: [22:I:PMO] pmo_core_enable_wow_in_fw: 799: drv wow is enabled
+[ 1334.823687] [kworke][0x600154e7e][07:08:33.842344] wlan: [22:I:WMI] suspend type: WOW_IFACE_PAUSE_ENABLED
+[ 1334.859162] cnss: Setting MHI state: SUSPEND(6)
+[ 1334.859215] cnss: Suspending PCI link
+[ 1334.859231] cnss: Use PCIe DRV suspend
+[ 1334.861316] cnss: Runtime suspend status: 0
+[ 1395.723323] cnss: Runtime resume start
+[ 1395.723440] cnss: Resuming PCI link
+[ 1395.724909] cnss: Set PCI link status to: 2
+[ 1395.724947] cnss: Setting MHI state: RESUME(7)
+[ 1395.738327] cnss: Runtime resume status: 0
+[ 1395.738380] cnss: Runtime idle
+[ 1396.650640] cnss: Runtime suspend start
+[ 1396.651104] [kworke][0x646d6cea4][07:09:35.665694] wlan: [22:I:PMO] pmo_core_is_wow_applicable: 319: lpass enabled, enabling wow
+[ 1396.651245] [kworke][0x646d6d950][07:09:35.665836] wlan: [22:I:PMO] pmo_core_enable_wow_in_fw: 799: drv wow is enabled
+[ 1396.651288] [kworke][0x646d6dc8a][07:09:35.665879] wlan: [22:I:WMI] suspend type: WOW_IFACE_PAUSE_ENABLED
+[ 1396.687291] cnss: Setting MHI state: SUSPEND(6)
+[ 1396.687341] cnss: Suspending PCI link
+[ 1396.687356] cnss: Use PCIe DRV suspend
+[ 1396.689191] cnss: Runtime suspend status: 0
+[ 1457.166659] cnss: Runtime resume start
+[ 1457.166736] cnss: Resuming PCI link
+[ 1457.168093] cnss: Set PCI link status to: 2
+[ 1457.168123] cnss: Setting MHI state: RESUME(7)
+[ 1457.184404] cnss: Runtime resume status: 0
+[ 1457.184458] cnss: Runtime idle
+[ 1457.710127] cnss: Runtime suspend start
+[ 1457.710615] [kworke][0x68cb755fd][07:10:36.721888] wlan: [22:I:PMO] pmo_core_is_wow_applicable: 319: lpass enabled, enabling wow
+[ 1457.710725] [kworke][0x68cb75e4d][07:10:36.721998] wlan: [22:I:PMO] pmo_core_enable_wow_in_fw: 799: drv wow is enabled
+[ 1457.710762] [kworke][0x68cb7611a][07:10:36.722036] wlan: [22:I:WMI] suspend type: WOW_IFACE_PAUSE_ENABLED
+[ 1457.746494] cnss: Setting MHI state: SUSPEND(6)
+[ 1457.746535] cnss: Suspending PCI link
+[ 1457.746550] cnss: Use PCIe DRV suspend
+[ 1457.748402] cnss: Runtime suspend status: 0
+[ 1518.609709] cnss: Runtime resume start
+[ 1518.609819] cnss: Resuming PCI link
+[ 1518.611481] cnss: Set PCI link status to: 2
+[ 1518.611526] cnss: Setting MHI state: RESUME(7)
+[ 1518.627609] cnss: Runtime resume status: 0
+[ 1518.627666] cnss: Runtime idle
+[ 1519.305116] cnss: Runtime suspend start
+[ 1519.305677] [kworke][0x6d334c376][07:11:38.314153] wlan: [22:I:PMO] pmo_core_is_wow_applicable: 319: lpass enabled, enabling wow
+[ 1519.305972] [kworke][0x6d334d9c6][07:11:38.314450] wlan: [22:I:PMO] pmo_core_enable_wow_in_fw: 799: drv wow is enabled
+[ 1519.306088] [kworke][0x6d334dd63][07:11:38.314498] wlan: [22:I:WMI] suspend type: WOW_IFACE_PAUSE_ENABLED
+[ 1519.341723] cnss: Setting MHI state: SUSPEND(6)
+[ 1519.341767] cnss: Suspending PCI link
+[ 1519.341783] cnss: Use PCIe DRV suspend
+[ 1519.343947] cnss: Runtime suspend status: 0
+[ 1556.542338] cnss: Runtime resume start
+[ 1556.542412] cnss: Resuming PCI link
+[ 1556.543506] cnss: Set PCI link status to: 2
+[ 1556.543535] cnss: Setting MHI state: RESUME(7)
+[ 1556.559739] cnss: Runtime resume status: 0
+[ 1556.559788] cnss: Runtime idle
+[ 1556.571910] [soft_i][0x6fdda9b95][07:12:15.578921] wlan: [0:I:QDF] DHCP-R TX: SA:f0:74:e4:1f:b7:df DA:00:50:56:8a:9a:d1 msdu_id:6 status: succ
+[ 1556.580391] [dp_rx_][0x6fddd146f][07:12:15.587360] wlan: [2163:I:QDF] DHCP-A RX: SA:00:50:56:8a:9a:d1 DA:f0:74:e4:1f:b7:df
+[ 1557.082235] cnss: Runtime suspend start
+[ 1557.082690] [kworke][0x6fe703fa3][07:12:16.089677] wlan: [10380:I:PMO] pmo_core_is_wow_applicable: 319: lpass enabled, enabling wow
+[ 1557.082829] [kworke][0x6fe704a1b][07:12:16.089817] wlan: [10380:I:PMO] pmo_core_enable_wow_in_fw: 799: drv wow is enabled
+[ 1557.082868] [kworke][0x6fe704cfe][07:12:16.089855] wlan: [10380:I:WMI] suspend type: WOW_IFACE_PAUSE_ENABLED
+[ 1557.120049] cnss: Setting MHI state: SUSPEND(6)
+[ 1557.120091] cnss: Suspending PCI link
+[ 1557.120105] cnss: Use PCIe DRV suspend
+[ 1557.121865] cnss: Runtime suspend status: 0
+[ 1558.586036] cnss: Runtime resume start
+[ 1558.586112] cnss: Resuming PCI link
+[ 1558.587347] cnss: Set PCI link status to: 2
+[ 1558.587377] cnss: Setting MHI state: RESUME(7)
+[ 1558.607656] cnss: Runtime resume status: 0
+[ 1558.607707] cnss: Runtime idle
+[ 1559.122320] cnss: Runtime suspend start
+[ 1559.122766] [kworke][0x700c5ed5e][07:12:18.129677] wlan: [9889:I:PMO] pmo_core_is_wow_applicable: 319: lpass enabled, enabling wow
+[ 1559.122876] [kworke][0x700c5f5ab][07:12:18.129788] wlan: [9889:I:PMO] pmo_core_enable_wow_in_fw: 799: drv wow is enabled
+[ 1559.122914] [kworke][0x700c5f87b][07:12:18.129825] wlan: [9889:I:WMI] suspend type: WOW_IFACE_PAUSE_ENABLED
+[ 1559.161520] cnss: Setting MHI state: SUSPEND(6)
+[ 1559.161562] cnss: Suspending PCI link
+[ 1559.161576] cnss: Use PCIe DRV suspend
+[ 1559.163361] cnss: Runtime suspend status: 0
+[ 1561.619967] cnss: Runtime resume start
+[ 1561.620114] cnss: Resuming PCI link
+[ 1561.627690] cnss: Set PCI link status to: 2
+[ 1561.627740] cnss: Setting MHI state: RESUME(7)
+[ 1561.647315] cnss: Runtime resume status: 0
+[ 1561.647379] cnss: Runtime idle
+[ 1562.210530] cnss: Runtime suspend start
+[ 1562.211155] [kworke][0x7044eba61][07:12:21.217949] wlan: [10380:I:PMO] pmo_core_is_wow_applicable: 319: lpass enabled, enabling wow
+[ 1562.211314] [kworke][0x7044ec52a][07:12:21.218093] wlan: [10380:I:PMO] pmo_core_enable_wow_in_fw: 799: drv wow is enabled
+[ 1562.211366] [kworke][0x7044eca51][07:12:21.218162] wlan: [10380:I:WMI] suspend type: WOW_IFACE_PAUSE_ENABLED
+[ 1562.247774] cnss: Setting MHI state: SUSPEND(6)
+[ 1562.247829] cnss: Suspending PCI link
+[ 1562.247845] cnss: Use PCIe DRV suspend
+[ 1562.249926] cnss: Runtime suspend status: 0
+[ 1580.052284] cnss: Runtime resume start
+[ 1580.052402] cnss: Resuming PCI link
+[ 1580.054038] cnss: Set PCI link status to: 2
+[ 1580.054087] cnss: Setting MHI state: RESUME(7)
+[ 1580.073157] cnss: Runtime resume status: 0
+[ 1580.073218] cnss: Runtime idle
+[ 1580.595338] cnss: Runtime suspend start
+[ 1580.595820] [kworke][0x71958dbe4][07:12:39.601945] wlan: [22:I:PMO] pmo_core_is_wow_applicable: 319: lpass enabled, enabling wow
+[ 1580.595957] [kworke][0x71958e69d][07:12:39.602088] wlan: [22:I:PMO] pmo_core_enable_wow_in_fw: 799: drv wow is enabled
+[ 1580.596003] [kworke][0x71958ea17][07:12:39.602134] wlan: [22:I:WMI] suspend type: WOW_IFACE_PAUSE_ENABLED
+[ 1580.633511] cnss: Setting MHI state: SUSPEND(6)
+[ 1580.633558] cnss: Suspending PCI link
+[ 1580.633575] cnss: Use PCIe DRV suspend
+[ 1580.637908] cnss: Runtime suspend status: 0
+[ 1641.494075] cnss: Runtime resume start
+[ 1641.494228] cnss: Resuming PCI link
+[ 1641.495890] cnss: Set PCI link status to: 2
+[ 1641.495936] cnss: Setting MHI state: RESUME(7)
+[ 1641.512307] cnss: Runtime resume status: 0
+[ 1641.512365] cnss: Runtime idle
+[ 1642.037153] cnss: Runtime suspend start
+[ 1642.037631] [kworke][0x75fa9640c][07:13:41.041748] wlan: [22:I:PMO] pmo_core_is_wow_applicable: 319: lpass enabled, enabling wow
+[ 1642.037793] [kworke][0x75fa9704d][07:13:41.041911] wlan: [22:I:PMO] pmo_core_enable_wow_in_fw: 799: drv wow is enabled
+[ 1642.037837] [kworke][0x75fa973aa][07:13:41.041956] wlan: [22:I:WMI] suspend type: WOW_IFACE_PAUSE_ENABLED
+[ 1642.075157] cnss: Setting MHI state: SUSPEND(6)
+[ 1642.075205] cnss: Suspending PCI link
+[ 1642.075221] cnss: Use PCIe DRV suspend
+[ 1642.077338] cnss: Runtime suspend status: 0
+[ 1702.935889] cnss: Runtime resume start
+[ 1702.936006] cnss: Resuming PCI link
+[ 1702.937596] cnss: Set PCI link status to: 2
+[ 1702.937642] cnss: Setting MHI state: RESUME(7)
+[ 1702.958683] cnss: Runtime resume status: 0
+[ 1702.958739] cnss: Runtime idle
+[ 1703.531222] cnss: Runtime suspend start
+[ 1703.531841] [kworke][0x7a60945af][07:14:42.534211] wlan: [22:I:PMO] pmo_core_is_wow_applicable: 319: lpass enabled, enabling wow
+[ 1703.532062] [kworke][0x7a6095679][07:14:42.534435] wlan: [22:I:PMO] pmo_core_enable_wow_in_fw: 799: drv wow is enabled
+[ 1703.532106] [kworke][0x7a60959d8][07:14:42.534480] wlan: [22:I:WMI] suspend type: WOW_IFACE_PAUSE_ENABLED
+[ 1703.568310] cnss: Setting MHI state: SUSPEND(6)
+[ 1703.568356] cnss: Suspending PCI link
+[ 1703.568373] cnss: Use PCIe DRV suspend
+[ 1703.570508] cnss: Runtime suspend status: 0
+[ 1764.377295] cnss: Runtime resume start
+[ 1764.377396] cnss: Resuming PCI link
+[ 1764.378764] cnss: Set PCI link status to: 2
+[ 1764.378803] cnss: Setting MHI state: RESUME(7)
+[ 1764.395290] cnss: Runtime resume status: 0
+[ 1764.395345] cnss: Runtime idle
+[ 1765.076517] cnss: Runtime suspend start
+[ 1765.077200] [kworke][0x7ec7823a8][07:15:44.078036] wlan: [22:I:PMO] pmo_core_is_wow_applicable: 319: lpass enabled, enabling wow
+[ 1765.077342] [kworke][0x7ec782e74][07:15:44.078180] wlan: [22:I:PMO] pmo_core_enable_wow_in_fw: 799: drv wow is enabled
+[ 1765.077392] [kworke][0x7ec78322f][07:15:44.078230] wlan: [22:I:WMI] suspend type: WOW_IFACE_PAUSE_ENABLED
+[ 1765.112866] cnss: Setting MHI state: SUSPEND(6)
+[ 1765.112930] cnss: Suspending PCI link
+[ 1765.112946] cnss: Use PCIe DRV suspend
+[ 1765.115109] cnss: Runtime suspend status: 0
+[ 1825.818523] cnss: Runtime resume start
+[ 1825.818613] cnss: Resuming PCI link
+[ 1825.820069] cnss: Set PCI link status to: 2
+[ 1825.820104] cnss: Setting MHI state: RESUME(7)
+[ 1825.836474] cnss: Runtime resume status: 0
+[ 1825.836535] cnss: Runtime idle
+[ 1826.361879] cnss: Runtime suspend start
+[ 1826.362699] [kworke][0x8329ae03f][07:16:45.362174] wlan: [22:I:PMO] pmo_core_is_wow_applicable: 319: lpass enabled, enabling wow
+[ 1826.362814] [kworke][0x8329ae8e6][07:16:45.362289] wlan: [22:I:PMO] pmo_core_enable_wow_in_fw: 799: drv wow is enabled
+[ 1826.362854] [kworke][0x8329aebe4][07:16:45.362329] wlan: [22:I:WMI] suspend type: WOW_IFACE_PAUSE_ENABLED
+[ 1826.399477] cnss: Setting MHI state: SUSPEND(6)
+[ 1826.399529] cnss: Suspending PCI link
+[ 1826.399545] cnss: Use PCIe DRV suspend
+[ 1826.401412] cnss: Runtime suspend status: 0
+[ 1856.538367] cnss: Runtime PM resume is requested by cnss_pci_time_sync_work_hdlr
+[ 1856.538379] cnss: Runtime resume start
+[ 1856.538416] cnss: Resuming PCI link
+[ 1856.539288] cnss: Set PCI link status to: 2
+[ 1856.539300] cnss: Setting MHI state: RESUME(7)
+[ 1856.554446] cnss: Runtime resume status: 0
+[ 1856.554638] cnss: Host time = 1863980920 us, device time = 1814646760 us, offset = 49334160 us
+[ 1856.554664] cnss: Updated time sync regs [0x984] = 0x2f0c790, [0x988] = 0x0
+[ 1856.637179] [soft_i][0x855405a70][07:17:15.636033] wlan: [0:I:QDF] DHCP-R TX: SA:f0:74:e4:1f:b7:df DA:00:50:56:8a:9a:d1 msdu_id:6 status: succ
+[ 1856.645038] [dp_rx_][0x85542a70e][07:17:15.643882] wlan: [2163:I:QDF] DHCP-A RX: SA:00:50:56:8a:9a:d1 DA:f0:74:e4:1f:b7:df
+[ 1857.146357] cnss: Runtime suspend start
+[ 1857.146550] [kworke][0x855d59593][07:17:16.145397] wlan: [14282:I:PMO] pmo_core_is_wow_applicable: 319: lpass enabled, enabling wow
+[ 1857.146583] [kworke][0x855d59822][07:17:16.145431] wlan: [14282:I:PMO] pmo_core_enable_wow_in_fw: 799: drv wow is enabled
+[ 1857.146597] [kworke][0x855d5992c][07:17:16.145445] wlan: [14282:I:WMI] suspend type: WOW_IFACE_PAUSE_ENABLED
+[ 1857.185390] [kworke][0x855e0f67b][07:17:16.184235] wlan: [14282:I:HIF] hif_try_complete_tasks: 652: waiting for tasklets 0 grp tasklets 0 work 2
+[ 1857.198549] cnss: Setting MHI state: SUSPEND(6)
+[ 1857.198568] cnss: Suspending PCI link
+[ 1857.198572] cnss: Use PCIe DRV suspend
+[ 1857.200023] cnss: Runtime suspend status: 0
+[ 1858.651126] cnss: Runtime resume start
+[ 1858.651207] cnss: Resuming PCI link
+[ 1858.652685] cnss: Set PCI link status to: 2
+[ 1858.652718] cnss: Setting MHI state: RESUME(7)
+[ 1858.673011] cnss: Runtime resume status: 0
+[ 1858.673074] cnss: Runtime idle
+[ 1859.194659] cnss: Runtime suspend start
+[ 1859.195315] [kworke][0x8582dce67][07:17:18.194115] wlan: [22:I:PMO] pmo_core_is_wow_applicable: 319: lpass enabled, enabling wow
+[ 1859.195564] [kworke][0x8582de11e][07:17:18.194364] wlan: [22:I:PMO] pmo_core_enable_wow_in_fw: 799: drv wow is enabled
+[ 1859.195605] [kworke][0x8582de437][07:17:18.194405] wlan: [22:I:WMI] suspend type: WOW_IFACE_PAUSE_ENABLED
+[ 1859.233149] cnss: Setting MHI state: SUSPEND(6)
+[ 1859.233199] cnss: Suspending PCI link
+[ 1859.233215] cnss: Use PCIe DRV suspend
+[ 1859.235506] cnss: Runtime suspend status: 0
+[ 1861.665468] cnss: Runtime resume start
+[ 1861.665551] cnss: Resuming PCI link
+[ 1861.666748] cnss: Set PCI link status to: 2
+[ 1861.667237] cnss: Setting MHI state: RESUME(7)
+[ 1861.686842] cnss: Runtime resume status: 0
+[ 1861.686900] cnss: Runtime idle
+[ 1862.254692] cnss: Runtime suspend start
+[ 1862.255199] [kworke][0x85bae41bd][07:17:21.253938] wlan: [22:I:PMO] pmo_core_is_wow_applicable: 319: lpass enabled, enabling wow
+[ 1862.255317] [kworke][0x85bae4aa5][07:17:21.254057] wlan: [22:I:PMO] pmo_core_enable_wow_in_fw: 799: drv wow is enabled
+[ 1862.255357] [kworke][0x85bae4d9d][07:17:21.254096] wlan: [22:I:WMI] suspend type: WOW_IFACE_PAUSE_ENABLED
+[ 1862.292507] cnss: Setting MHI state: SUSPEND(6)
+[ 1862.292556] cnss: Suspending PCI link
+[ 1862.292571] cnss: Use PCIe DRV suspend
+[ 1862.294603] cnss: Runtime suspend status: 0
+[ 1887.260256] cnss: Runtime resume start
+[ 1887.260339] cnss: Resuming PCI link
+[ 1887.261551] cnss: Set PCI link status to: 2
+[ 1887.261584] cnss: Setting MHI state: RESUME(7)
+[ 1887.291513] cnss: Runtime resume status: 0
+[ 1887.291581] cnss: Runtime idle
+[ 1887.803097] cnss: Runtime suspend start
+[ 1887.803802] [kworke][0x878eb32e6][07:17:46.802040] wlan: [10380:I:PMO] pmo_core_is_wow_applicable: 319: lpass enabled, enabling wow
+[ 1887.803916] [kworke][0x878eb3b86][07:17:46.802155] wlan: [10380:I:PMO] pmo_core_enable_wow_in_fw: 799: drv wow is enabled
+[ 1887.803955] [kworke][0x878eb3e80][07:17:46.802194] wlan: [10380:I:WMI] suspend type: WOW_IFACE_PAUSE_ENABLED
+[ 1887.838811] cnss: Setting MHI state: SUSPEND(6)
+[ 1887.838861] cnss: Suspending PCI link
+[ 1887.838876] cnss: Use PCIe DRV suspend
+[ 1887.840840] cnss: Runtime suspend status: 0
+[ 1948.700909] cnss: Runtime resume start
+[ 1948.700998] cnss: Resuming PCI link
+[ 1948.702349] cnss: Set PCI link status to: 2
+[ 1948.702384] cnss: Setting MHI state: RESUME(7)
+[ 1948.721015] cnss: Runtime resume status: 0
+[ 1948.721083] cnss: Runtime idle
+[ 1949.724194] cnss: Runtime suspend start
+[ 1949.724883] [kworke][0x8bfc823e9][07:18:48.721978] wlan: [550:I:PMO] pmo_core_is_wow_applicable: 319: lpass enabled, enabling wow
+[ 1949.725000] [kworke][0x8bfc82cc9][07:18:48.722096] wlan: [550:I:PMO] pmo_core_enable_wow_in_fw: 799: drv wow is enabled
+[ 1949.725040] [kworke][0x8bfc82fd2][07:18:48.722137] wlan: [550:I:WMI] suspend type: WOW_IFACE_PAUSE_ENABLED
+[ 1949.762268] cnss: Setting MHI state: SUSPEND(6)
+[ 1949.762316] cnss: Suspending PCI link
+[ 1949.762332] cnss: Use PCIe DRV suspend
+[ 1949.764368] cnss: Runtime suspend status: 0
+[ 2010.142062] cnss: Runtime resume start
+[ 2010.142164] cnss: Resuming PCI link
+[ 2010.143503] cnss: Set PCI link status to: 2
+[ 2010.143544] cnss: Setting MHI state: RESUME(7)
+[ 2010.159430] cnss: Runtime resume status: 0
+[ 2010.159484] cnss: Runtime idle
+[ 2010.685215] cnss: Runtime suspend start
+[ 2010.685699] [kworke][0x9058bc0fe][07:19:49.681748] wlan: [17671:I:PMO] pmo_core_is_wow_applicable: 319: lpass enabled, enabling wow
+[ 2010.685862] [kworke][0x9058bcd5a][07:19:49.681913] wlan: [17671:I:PMO] pmo_core_enable_wow_in_fw: 799: drv wow is enabled
+[ 2010.685906] [kworke][0x9058bd0c5][07:19:49.681958] wlan: [17671:I:WMI] suspend type: WOW_IFACE_PAUSE_ENABLED
+[ 2010.721963] cnss: Setting MHI state: SUSPEND(6)
+[ 2010.722007] cnss: Suspending PCI link
+[ 2010.722023] cnss: Use PCIe DRV suspend
+[ 2010.723929] cnss: Runtime suspend status: 0
+[ 2071.583109] cnss: Runtime resume start
+[ 2071.583210] cnss: Resuming PCI link
+[ 2071.584545] cnss: Set PCI link status to: 2
+[ 2071.584587] cnss: Setting MHI state: RESUME(7)
+[ 2071.602261] cnss: Runtime resume status: 0
+[ 2071.602312] cnss: Runtime idle
+[ 2072.126205] cnss: Runtime suspend start
+[ 2072.126712] [kworke][0x94bdc0b10][07:20:51.121746] wlan: [17671:I:PMO] pmo_core_is_wow_applicable: 319: lpass enabled, enabling wow
+[ 2072.126845] [kworke][0x94bdc1726][07:20:51.121907] wlan: [17671:I:PMO] pmo_core_enable_wow_in_fw: 799: drv wow is enabled
+[ 2072.126888] [kworke][0x94bdc1a68][07:20:51.121951] wlan: [17671:I:WMI] suspend type: WOW_IFACE_PAUSE_ENABLED
+[ 2072.162880] cnss: Setting MHI state: SUSPEND(6)
+[ 2072.162924] cnss: Suspending PCI link
+[ 2072.162939] cnss: Use PCIe DRV suspend
+[ 2072.164859] cnss: Runtime suspend status: 0
+[ 2086.216163] cnss: Runtime resume start
+[ 2086.216205] cnss: Resuming PCI link
+[ 2086.217146] cnss: Set PCI link status to: 2
+[ 2086.217163] cnss: Setting MHI state: RESUME(7)
+[ 2086.229944] cnss: Runtime resume status: 0
+[ 2086.229963] cnss: Runtime idle
+[ 2087.266389] cnss: Runtime suspend start
+[ 2087.266637] [kworke][0x95d2f93ff][07:21:06.261451] wlan: [1936:I:PMO] pmo_core_is_wow_applicable: 319: lpass enabled, enabling wow
+[ 2087.266712] [kworke][0x95d2f99ad][07:21:06.261526] wlan: [1936:I:PMO] pmo_core_enable_wow_in_fw: 799: drv wow is enabled
+[ 2087.266727] [kworke][0x95d2f9ad6][07:21:06.261542] wlan: [1936:I:WMI] suspend type: WOW_IFACE_PAUSE_ENABLED
+[ 2087.302571] cnss: Setting MHI state: SUSPEND(6)
+[ 2087.302585] cnss: Suspending PCI link
+[ 2087.302590] cnss: Use PCIe DRV suspend
+[ 2087.303967] cnss: Runtime suspend status: 0
+[ 2091.299025] cnss: Runtime resume start
+[ 2091.299054] cnss: Resuming PCI link
+[ 2091.308273] cnss: Set PCI link status to: 2
+[ 2091.308288] cnss: Setting MHI state: RESUME(7)
+[ 2091.326503] cnss: Runtime resume status: 0
+[ 2091.326526] cnss: Runtime idle
+[ 2091.838727] cnss: Runtime suspend start
+[ 2091.838979] [kworke][0x9626b21b2][07:21:10.833459] wlan: [1936:I:PMO] pmo_core_is_wow_applicable: 319: lpass enabled, enabling wow
+[ 2091.839016] [kworke][0x9626b247d][07:21:10.833496] wlan: [1936:I:PMO] pmo_core_enable_wow_in_fw: 799: drv wow is enabled
+[ 2091.839052] [kworke][0x9626b26e0][07:21:10.833528] wlan: [1936:I:WMI] suspend type: WOW_IFACE_PAUSE_ENABLED
+[ 2091.880236] cnss: Setting MHI state: SUSPEND(6)
+[ 2091.880255] cnss: Suspending PCI link
+[ 2091.880259] cnss: Use PCIe DRV suspend
+[ 2091.881696] cnss: Runtime suspend status: 0
+[ 2133.026642] cnss: Runtime resume start
+[ 2133.026741] cnss: Resuming PCI link
+[ 2133.028072] cnss: Set PCI link status to: 2
+[ 2133.028112] cnss: Setting MHI state: RESUME(7)
+[ 2133.043929] cnss: Runtime resume status: 0
+[ 2133.043981] cnss: Runtime idle
+[ 2133.733757] cnss: Runtime suspend start
+[ 2133.734234] [kworke][0x9925d213a][07:21:52.725744] wlan: [17671:I:PMO] pmo_core_is_wow_applicable: 319: lpass enabled, enabling wow
+[ 2133.734397] [kworke][0x9925d2b3a][07:21:52.725877] wlan: [17671:I:PMO] pmo_core_enable_wow_in_fw: 799: drv wow is enabled
+[ 2133.734440] [kworke][0x9925d30cf][07:21:52.725951] wlan: [17671:I:WMI] suspend type: WOW_IFACE_PAUSE_ENABLED
+[ 2133.773396] cnss: Setting MHI state: SUSPEND(6)
+[ 2133.773440] cnss: Suspending PCI link
+[ 2133.773457] cnss: Use PCIe DRV suspend
+[ 2133.775342] cnss: Runtime suspend status: 0
+[ 2156.660070] cnss: Runtime resume start
+[ 2156.660112] cnss: Resuming PCI link
+[ 2156.661017] cnss: Set PCI link status to: 2
+[ 2156.661034] cnss: Setting MHI state: RESUME(7)
+[ 2156.679617] cnss: Runtime resume status: 0
+[ 2156.679636] cnss: Runtime idle
+[ 2156.691035] [soft_i][0x9aca2c1cf][07:22:15.681000] wlan: [0:I:QDF] DHCP-R TX: SA:f0:74:e4:1f:b7:df DA:00:50:56:8a:9a:d1 msdu_id:6 status: succ
+[ 2156.697813] [dp_rx_][0x9aca4be2d][07:22:15.687778] wlan: [2163:I:QDF] DHCP-A RX: SA:00:50:56:8a:9a:d1 DA:f0:74:e4:1f:b7:df
+[ 2157.199270] cnss: Runtime suspend start
+[ 2157.199501] [kworke][0x9ad37b8c9][07:22:16.189432] wlan: [16813:I:PMO] pmo_core_is_wow_applicable: 319: lpass enabled, enabling wow
+[ 2157.199550] [kworke][0x9ad37bbce][07:22:16.189472] wlan: [16813:I:PMO] pmo_core_enable_wow_in_fw: 799: drv wow is enabled
+[ 2157.199569] [kworke][0x9ad37bdf0][07:22:16.189501] wlan: [16813:I:WMI] suspend type: WOW_IFACE_PAUSE_ENABLED
+[ 2157.238596] [kworke][0x9ad432cdc][07:22:16.228524] wlan: [16813:I:HIF] hif_try_complete_tasks: 652: waiting for tasklets 0 grp tasklets 0 work 1
+[ 2157.251342] cnss: Setting MHI state: SUSPEND(6)
+[ 2157.251361] cnss: Suspending PCI link
+[ 2157.251365] cnss: Use PCIe DRV suspend
+[ 2157.252864] cnss: Runtime suspend status: 0
+[ 2158.701957] cnss: Runtime resume start
+[ 2158.701990] cnss: Resuming PCI link
+[ 2158.702860] cnss: Set PCI link status to: 2
+[ 2158.702874] cnss: Setting MHI state: RESUME(7)
+[ 2158.724951] cnss: Runtime resume status: 0
+[ 2158.724969] cnss: Runtime idle
+[ 2159.235405] cnss: Runtime suspend start
+[ 2159.235601] [kworke][0x9af8c3c49][07:22:18.225397] wlan: [16813:I:PMO] pmo_core_is_wow_applicable: 319: lpass enabled, enabling wow
+[ 2159.235637] [kworke][0x9af8c3f09][07:22:18.225434] wlan: [16813:I:PMO] pmo_core_enable_wow_in_fw: 799: drv wow is enabled
+[ 2159.235651] [kworke][0x9af8c401a][07:22:18.225448] wlan: [16813:I:WMI] suspend type: WOW_IFACE_PAUSE_ENABLED
+[ 2159.273920] cnss: Setting MHI state: SUSPEND(6)
+[ 2159.273934] cnss: Suspending PCI link
+[ 2159.273939] cnss: Use PCIe DRV suspend
+[ 2159.275298] cnss: Runtime suspend status: 0
+[ 2161.700103] cnss: Runtime resume start
+[ 2161.700157] cnss: Resuming PCI link
+[ 2161.708234] cnss: Set PCI link status to: 2
+[ 2161.708248] cnss: Setting MHI state: RESUME(7)
+[ 2161.733468] cnss: Runtime resume status: 0
+[ 2161.733492] cnss: Runtime idle
+[ 2162.299581] cnss: Runtime suspend start
+[ 2162.299761] [kworke][0x9b30df057][07:22:21.289355] wlan: [16813:I:PMO] pmo_core_is_wow_applicable: 319: lpass enabled, enabling wow
+[ 2162.299797] [kworke][0x9b30df311][07:22:21.289392] wlan: [16813:I:PMO] pmo_core_enable_wow_in_fw: 799: drv wow is enabled
+[ 2162.299812] [kworke][0x9b30df43a][07:22:21.289407] wlan: [16813:I:WMI] suspend type: WOW_IFACE_PAUSE_ENABLED
+[ 2162.338436] cnss: Setting MHI state: SUSPEND(6)
+[ 2162.338456] cnss: Suspending PCI link
+[ 2162.338462] cnss: Use PCIe DRV suspend
+[ 2162.340581] cnss: Runtime suspend status: 0
+[ 2194.470645] cnss: Runtime resume start
+[ 2194.470748] cnss: Resuming PCI link
+[ 2194.472071] cnss: Set PCI link status to: 2
+[ 2194.472113] cnss: Setting MHI state: RESUME(7)
+[ 2194.487751] cnss: Runtime resume status: 0
+[ 2194.487802] cnss: Runtime idle
+[ 2195.013766] cnss: Runtime suspend start
+[ 2195.014230] [kworke][0x9d87e40f2][07:22:54.001708] wlan: [17671:I:PMO] pmo_core_is_wow_applicable: 319: lpass enabled, enabling wow
+[ 2195.014364] [kworke][0x9d87e4b0c][07:22:54.001843] wlan: [17671:I:PMO] pmo_core_enable_wow_in_fw: 799: drv wow is enabled
+[ 2195.014405] [kworke][0x9d87e4e2a][07:22:54.001884] wlan: [17671:I:WMI] suspend type: WOW_IFACE_PAUSE_ENABLED
+[ 2195.050503] cnss: Setting MHI state: SUSPEND(6)
+[ 2195.050563] cnss: Suspending PCI link
+[ 2195.050579] cnss: Use PCIe DRV suspend
+[ 2195.052656] cnss: Runtime suspend status: 0
+[ 2255.914342] cnss: Runtime resume start
+[ 2255.914443] cnss: Resuming PCI link
+[ 2255.915794] cnss: Set PCI link status to: 2
+[ 2255.915838] cnss: Setting MHI state: RESUME(7)
+[ 2255.931887] cnss: Runtime resume status: 0
+[ 2255.931938] cnss: Runtime idle
+[ 2256.457508] cnss: Runtime suspend start
+[ 2256.457986] [kworke][0xa1ecf5a8d][07:23:55.441745] wlan: [17671:I:PMO] pmo_core_is_wow_applicable: 319: lpass enabled, enabling wow
+[ 2256.458148] [kworke][0xa1ecf648d][07:23:55.441878] wlan: [17671:I:PMO] pmo_core_enable_wow_in_fw: 799: drv wow is enabled
+[ 2256.458194] [kworke][0xa1ecf6a3c][07:23:55.441954] wlan: [17671:I:WMI] suspend type: WOW_IFACE_PAUSE_ENABLED
+[ 2256.494496] cnss: Setting MHI state: SUSPEND(6)
+[ 2256.494541] cnss: Suspending PCI link
+[ 2256.494557] cnss: Use PCIe DRV suspend
+[ 2256.496463] cnss: Runtime suspend status: 0
+
+##########################################################################
+
+Linux 4.19.125 (qrb5165-rb5) 	07/28/22 	_aarch64_	(8 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+          24.90    0.03    2.63    0.03    0.00   72.42
+
+Device             tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn
+zram0             0.13         0.52         0.00       1196          4
+sda              11.81       160.73       123.78     371120     285804
+sdb               0.03         0.12         0.00        268          0
+sde               1.03        30.17         0.01      69660         24
+sdf               0.07         0.47         0.00       1076          0
+sdc               0.03         0.12         0.00        268          0
+sdd               0.03         0.23         0.00        536          0
+
+              total        used        free      shared  buff/cache   available
+Mem:           7.5G        717M        6.6G         12M        191M        6.7G
+Swap:          3.7G          0B        3.7G
+
+Filename				Type		Size	Used	Priority
+/dev/zram0                             	partition	3917040	0	10
+
+CPU sysfs topology (clusters, cpufreq members, clockspeeds)
+                 cpufreq   min    max
+ CPU    cluster  policy   speed  speed   core type
+  0        0        0      300    1805   Qualcomm Kryo 4XX Silver / r13p14
+  1        0        0      300    1805   Qualcomm Kryo 4XX Silver / r13p14
+  2        0        0      300    1805   Qualcomm Kryo 4XX Silver / r13p14
+  3        0        0      300    1805   Qualcomm Kryo 4XX Silver / r13p14
+  4        1        4      710    2419   Cortex-A77 / r1p0
+  5        1        4      710    2419   Cortex-A77 / r1p0
+  6        1        4      710    2419   Cortex-A77 / r1p0
+  7        2        7      845    2842   Cortex-A77 / r1p0
+
+Architecture:        aarch64
+Byte Order:          Little Endian
+CPU(s):              8
+On-line CPU(s) list: 0-7
+Thread(s) per core:  1
+Core(s) per socket:  2
+Socket(s):           3
+Vendor ID:           Qualcomm
+Model:               14
+Stepping:            0xd
+CPU max MHz:         2841.6001
+CPU min MHz:         300.0000
+BogoMIPS:            38.40
+L1d cache:           unknown size
+L1i cache:           unknown size
+L2 cache:            unknown size
+L3 cache:            unknown size
+Flags:               fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp
+
+SoC guess: Qualcomm Snapdragon 865 / QRB5165
+DT compat: qcom,kona-iot
+           qcom,kona
+           qcom,iot
+ Compiler: /usr/bin/gcc (Ubuntu/Linaro 7.5.0-3ubuntu1~18.04) 7.5.0 / aarch64-linux-gnu
+ Userland: arm64
+   Kernel: 4.19.125/aarch64
+           CONFIG_HZ=250
+           CONFIG_HZ_250=y
+           CONFIG_PREEMPTIRQ_EVENTS=y
+           CONFIG_PREEMPTIRQ_TRACEPOINTS=y
+           CONFIG_PREEMPT=y
+           CONFIG_PREEMPT_COUNT=y
+           CONFIG_PREEMPT_RCU=y
+           CONFIG_PREEMPT_TRACER=y
+           xor: measuring software checksum speed
+           xor: using function: 32regs (5321.000 MB/sec)
+           raid6: int64x1  gen()   975 MB/s
+           raid6: int64x1  xor()   636 MB/s
+           raid6: int64x2  gen()  1820 MB/s
+           raid6: int64x2  xor()  1010 MB/s
+           raid6: int64x4  gen()  2363 MB/s
+           raid6: int64x4  xor()  1288 MB/s
+           raid6: int64x8  gen()  2417 MB/s
+           raid6: int64x8  xor()  1372 MB/s
+           raid6: neonx1   gen()  2653 MB/s
+           raid6: neonx1   xor()  2464 MB/s
+           raid6: neonx2   gen()  3282 MB/s
+           raid6: neonx2   xor()  2814 MB/s
+           raid6: neonx4   gen()  3706 MB/s
+           raid6: neonx4   xor()  3081 MB/s
+           raid6: neonx8   gen()  3726 MB/s
+           raid6: neonx8   xor()  1895 MB/s
+           raid6: using algorithm neonx8 gen() 3726 MB/s
+           raid6: .... xor() 1895 MB/s, rmw enabled
+           raid6: using neon recovery algorithm
+
+| Qualcomm Technologies, Inc. qrb5165 IOT RB5 | 2841600/1804800 MHz | 4.19 | Ubuntu 18.04.6 LTS arm64 | 17930 | 1121460 | 1589900 | 14610 | 25590 | 25.38 |

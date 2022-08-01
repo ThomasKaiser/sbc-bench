@@ -1363,6 +1363,16 @@ BasicSetup() {
 
 	# detect environment
 	LSCPU="$(lscpu)"
+	CPUCores=$(awk -F" " '/^CPU...:/ {print $2}' <<<"${LSCPU}")
+	# Might not work with RISC-V on old kernels, see
+	# https://github.com/ThomasKaiser/sbc-bench/issues/46
+	[ ${CPUCores} -eq 0 ] && CPUCores=$(grep -c '^hart' /proc/cpuinfo)
+
+	# try to bring CPU cores that were sent offline when idle back online
+	for i in $(seq 0 $(( ${CPUCores} - 1 )) ); do
+		taskset -c ${i} echo "" >/dev/null 2>&1
+	done
+
 	X86CPUName="$(sed 's/ \{1,\}/ /g' <<<"${LSCPU}" | awk -F": " '/^Model name/ {print $2}' | sed -e 's/1.th Gen //' -e 's/.th Gen //' -e 's/Core(TM) //' -e 's/ Processor//' -e 's/Intel(R) Xeon(R) CPU //' -e 's/Intel(R) //' -e 's/(R)//' -e 's/CPU //' -e 's/ 0 @/ @/' -e 's/AMD //' -e 's/Authentic //' -e 's/ with .*//')"
 	VirtWhat="$(systemd-detect-virt 2>/dev/null)"
 	[ -f /sys/class/dmi/id/sys_vendor ] && DMIInfo="$(grep -R . /sys/class/dmi/id/ 2>/dev/null)"
@@ -1458,11 +1468,6 @@ BasicSetup() {
 			exit 1
 			;;
 	esac
-
-	CPUCores=$(awk -F" " '/^CPU...:/ {print $2}' <<<"${LSCPU}")
-	# Might not work with RISC-V on old kernels, see
-	# https://github.com/ThomasKaiser/sbc-bench/issues/46
-	[ ${CPUCores} -eq 0 ] && CPUCores=$(grep -c '^hart' /proc/cpuinfo)
 
 	ClusterConfig=($(GetCPUClusters))
 	[ ${#ClusterConfig[@]} -eq 0 ] && ClusterConfig=(0)
@@ -2551,7 +2556,7 @@ GuessARMSoC() {
 	#      Cortex-A17 / r0p1: Rockchip RK3288
 	#      Cortex-A35 / r0p2: NXP i.MX8QXP, Rockchip RK1808/RK3308/RK3326/PX30
 	#      Cortex-A53 / r0p0: Qualcomm Snapdragon 410 (MSM8916)
-	#      Cortex-A53 / r0p2: Qualcomm Snapdragon 810 (MSM8994)
+	#      Cortex-A53 / r0p2: Marvell PXA1908, Qualcomm Snapdragon 810 (MSM8994)
 	#      Cortex-A53 / r0p3: HiSilicon Kirin 620/930, Nexell S5P6818, Snapdragon 808 / MSM8992
 	#      Cortex-A53 / r0p4: Allwinner A64/H313/H5/H6/H616/H64/R329/T507, Amlogic A113X/A113D/A311D/A311D2/S805X/S805Y/S905/S905X/S905D/S905W/S905L/S905M2/S905X2/S905Y2/S905D2/S912/S922X/T962X2, Broadcom BCM2837/BCM2709/BCM2710/RP3A0-AU (BCM2710A1), HiSilicon Kirin 960/970, Marvell Armada 37x0, Mediatek MT6762M/MT6765, NXP i.MX8M/i.MX8QM/LS1xx8, RealTek RTD129x/RTD139x, Rockchip RK3318/RK3328/RK3399, Snapdragon 650/652/653 / MSM8956/MSM8976/MSM8976PRO, Socionext LD20
 	#      Cortex-A55 / r1p0: Amlogic S905X3/S905D3/S905Y3/T962X3/T962E2
@@ -2567,7 +2572,7 @@ GuessARMSoC() {
 	#      Cortex-A73 / r0p1: HiSilicon Kirin 970
 	#      Cortex-A73 / r0p2: Amlogic A311D/A311D2/S922X, MediaTek Helio P60T
 	#      Cortex-A76 / r4p0: Rockchip RK3588/RK3588s
-	#      Cortex-A77 / r1p0: Qualcomm Snapdragon 865 
+	#      Cortex-A77 / r1p0: Qualcomm Snapdragon 865 / QRB5165
 	#    Cortex-A78AE / r0p1: Nvidia Jetson Orin NX / AGX Orin
 	#     Neoverse-N1 / r3p1: Ampere Altra, AWS Graviton2
 	#     Neoverse-V1 / r1p1: AWS Graviton3
@@ -2581,7 +2586,7 @@ GuessARMSoC() {
 	#  Phytium FTC663 / r1p3: Phytium D2000
 	#  Qualcomm Krait / r1p0: Qualcomm Snapdragon S4 Plus (MSM8960)
 	#  Qualcomm Krait / r2p0: Qualcomm IPQ806x
-	#   Qualcomm Kryo / r13p14: Qualcomm Snapdragon 865
+	#   Qualcomm Kryo / r13p14: Qualcomm Snapdragon 865 / QRB5165
 	#   ThunderX 88XX / r1p1: ThunderX CN8890
 	#  ThunderX2 99xx / r1p1: Cavium ThunderX2 CN9980
 	#
@@ -2603,10 +2608,10 @@ GuessARMSoC() {
 	# soc soc0: Amlogic Meson GXBB (S905) Revision 1f:b (12:1) Detected <-- Beelink Mini MX
 	# soc soc0: Amlogic Meson GXBB (S905) Revision 1f:c (13:1) Detected <-- Beelink Mini MX / NanoPi K2 / NEXBOX A95X / Tronsmart Vega S95 Telos / WeTek Play 2 / Amlogic Meson GXBB P200 Development Board / Amlogic Meson GXBB P201 Development Board
 	# soc soc0: Amlogic Meson GXBB (S905H) Revision 1f:c (23:1) Detected <-- Amlogic Meson GXBB P201 Development Board
-	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:a (82:2) Detected <-- Khadas VIM / NEXBOX A95X (S905X)/ Tanix TX3 Mini / Amlogic Meson GXL (S905X) P212 Development Board
+	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:a (82:2) Detected <-- Khadas VIM / NEXBOX A95X (S905X) / Tanix TX3 Mini / Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson GXL (S905D) Revision 21:b (2:2) Detected <-- MeCool KI Pro
 	# soc soc0: Amlogic Meson GXL (Unknown) Revision 21:b (2:2) Detected <-- Phicomm N1
-	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:b (82:2) Detected <-- Libre Computer AML-S905X-CC / Tanix TX3 Mini / Amlogic Meson GXL (S905X) P212 Development Board
+	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:b (82:2) Detected <-- Libre Computer AML-S905X-CC / NEXBOX A95X (S905X) / Tanix TX3 Mini / Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson GXL (S905W) Revision 21:b (a2:2) Detected <-- Tanix TX3 Mini / Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson GXL (S905L) Revision 21:b (c2:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson GXL (S905M2) Revision 21:b (e2:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board
@@ -3225,6 +3230,11 @@ GuessSoCbySignature() {
 		*A53r0p2*A53r0p2*A53r0p2*A53r0p2*A57r1p1*A57r1p1*A57r1p1*A57r1p1)
 			# Snapdragon 810 / MSM8994/MSM8994V: 4 x Cortex-A53 / r0p2 + 4 x Cortex-A57 / r1p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			echo "Snapdragon 810"
+			;;
+		*A53r0p2)
+			# Marvell PXA1908: 4 x Cortex-A53 / r0p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32  half thumb fastmult edsp tls vfp vfpv3 vfpv4 neon idiva idivt
+			# At least with vendor's 3.14 kernel CPU cores are sent offline when idle so detection of all cores might fail
+			echo "Marvell PXA1908"
 			;;
 		00A53r0p400A53r0p400A53r0p400A53r0p4)
 			# The boring quad Cortex-A53 done by every SoC vendor: 4 x Cortex-A53 / r0p4

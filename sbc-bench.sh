@@ -57,8 +57,8 @@ Main() {
 				TempTest
 				exit 0
 				;;
-			p)
-				# plot performance chart instead of doing standard 7-zip benchmarks, thereby
+			g)
+				# graph performance chart instead of doing standard 7-zip benchmarks, thereby
 				# walking through different cpufreq OPP. An additional parameter in taskset's
 				# --cpu-list format can be provided, eg. '-p 0' to graph only cpu0 or '-p 4'
 				# to graph only cpu4 (which might be an A72 on big.LITTLE systems). Mixing
@@ -81,6 +81,43 @@ Main() {
 					exit 1
 				fi
 				;;
+			p)
+				# Phoronix Test Suite piggyback mode. PTS lacks sanity checks (measuring
+				# clockspeeds) and environment monitoring (too much background activity
+				# or throttling for example). You need to install PTS by yourself and run
+				# 'phoronix-test-suite batch-setup' once to configure batch operation mode:
+				#
+				# Save test results when in batch mode (Y/n): y
+				# Open the web browser automatically when in batch mode (y/N): n
+				# Auto upload the results to OpenBenchmarking.org (Y/n): Y
+				# Prompt for test identifier (Y/n): n
+				# Prompt for test description (Y/n): n
+				# Prompt for saved results file-name (Y/n): n
+				# Run all test options (Y/n): n
+				#
+				# If you want PTS progress info use 'tail -f /tmp/sbc-bench.*/temp.log'
+				# in another shell. You'll need this anyway since if 'Run all test options'
+				# has been answered with no, then PTS of course expects you giving manual
+				# feedback even if in batch-benchmark mode.
+				#
+				# root@rock-5b:/tmp/sbc-bench.Pvhatc# tail -f temp.log
+				# SQLite 3.30.1:
+				#     pts/sqlite-2.1.0
+				#     Disk Test Configuration
+				#         1: 1
+				#         2: 8
+				#         3: 32
+				#         4: 64
+				#         5: 128
+				#         6: Test All Options
+				#         ** Multiple items can be selected, delimit by a comma. **
+				#
+				# In the invoking shell you need to enter the desired config then PTS
+				# proceeds.
+				MODE="pts"
+				shift
+				PTSArguments="$@"
+				;;
 			N)
 				# internal Netio monitor mode. Do not use this unless you really know
 				# what you're doing. Requires enabled 'XML API' on your device (read-only
@@ -101,12 +138,13 @@ Main() {
 			esac
 	done
 
-	CheckRelease
+	[ "X${MODE}" = "Xpts" ] || CheckRelease
 	CheckLoadAndDmesg
 	[ -f /sys/devices/system/cpu/cpufreq/policy0/scaling_governor ] && \
 		read OriginalCPUFreqGovernor </sys/devices/system/cpu/cpufreq/policy0/scaling_governor 2>/dev/null
 	BasicSetup performance >/dev/null 2>&1
 	GetTempSensor
+	[ "X${MODE}" = "Xpts" ] && CheckPTS
 	InstallPrerequisits
 	InitialMonitoring
 	CheckClockspeedsAndSensors
@@ -115,15 +153,19 @@ Main() {
 		PlotPerformanceGraph
 	else
 		CheckNetio
-		RunTinyMemBench
+		[ "X${MODE}" = "Xpts" ] || RunTinyMemBench
 		RunRamlat
-		RunOpenSSLBenchmark
-		Run7ZipBenchmark
-		if [ "${ExecuteCpuminer}" = "yes" -o "X${MODE}" = "Xextensive" ]; then
-			if [ -x "${InstallLocation}"/cpuminer-multi/cpuminer ]; then
-				RunCpuminerBenchmark
-			else
-				echo -e "\x08\x08 Done.\n(${InstallLocation}/cpuminer-multi/cpuminer missing or not executable)...\c"
+		if [ "X${MODE}" = "Xpts" ]; then
+			RunPTS
+		else
+			RunOpenSSLBenchmark
+			Run7ZipBenchmark
+			if [ "${ExecuteCpuminer}" = "yes" -o "X${MODE}" = "Xextensive" ]; then
+				if [ -x "${InstallLocation}"/cpuminer-multi/cpuminer ]; then
+					RunCpuminerBenchmark
+				else
+					echo -e "\x08\x08 Done.\n(${InstallLocation}/cpuminer-multi/cpuminer missing or not executable)...\c"
+				fi
 			fi
 		fi
 	fi
@@ -1522,6 +1564,20 @@ CheckMissingPackages() {
 	command -v lshw >/dev/null 2>&1 || echo -e "lshw \c"
 } # CheckMissingPackages
 
+CheckPTS() {
+	command -v phoronix-test-suite >/dev/null 2>&1
+	if [ $? -ne 0 ]; then
+		command -v php >/dev/null 2>&1
+		if [ $? -eq 0 ]; then
+			echo "Neither phoronix-test-suite nor php found in \$PATH."
+		else
+			echo "No phoronix-test-suite found in \$PATH."
+		fi
+		echo -e "Please install PTS manually from http://phoronix-test-suite.com/?k=downloads\nThen execute \"phoronix-test-suite batch-setup\"."
+		exit 1
+	fi
+} # CheckPTS
+
 InstallPrerequisits() {
 	echo -e "sbc-bench v${Version}\n\nInstalling needed tools:  \c"
 	
@@ -1657,7 +1713,7 @@ InitialMonitoring() {
 	
 	# Log version and device info
 	read HostName </etc/hostname 2>/dev/null
-	if [ "X${MODE}" = "Xunattended" -o "X${MODE}" = "Xextensive" ]; then
+	if [ "X${MODE}" = "Xunattended" -o "X${MODE}" = "Xextensive" -o "X${MODE}" = "Xpts" ]; then
 		echo -e "sbc-bench v${Version} ${DeviceName:-$HostName} ${MODE} ($(date -R))\n" | sed 's/  / /g' >${ResultLog}
 	else
 		echo -e "sbc-bench v${Version} ${DeviceName:-$HostName} ($(date -R))\n" | sed 's/  / /g' >${ResultLog}
@@ -2150,6 +2206,25 @@ RunCpuminerBenchmark() {
 	CpuminerScore="$(awk -F"," '{print $2}' <<<"${TotalScores}")"
 } # RunCpuminerBenchmark
 
+RunPTS() {
+	echo -e "\x08\x08 Done.\nExecuting phoronix-test-suite...\c"
+	echo -e "\nSystem health while running Phoronix Test Suite:\n" >>${MonitorLog}
+	/bin/bash "${PathToMe}" -m 60 >>${MonitorLog} &
+	MonitoringPID=$!
+	PTS_SILENT_MODE=1 phoronix-test-suite batch-run ${PTSArguments} >${TempLog}
+	kill ${MonitoringPID}
+	ResultsURL="$(awk -F"https" '/Results Uploaded To/ {print $2}' <${TempLog})"
+	if [ "X${ResultsURL}" = "X" ]; then
+		echo -e "\x08\x08 Failed.\n$(cat ${TempLog})\n"
+		grep -q 'is not installed' ${TempLog} && \
+			echo -e "\nTry to manually resolve problems by \"phoronix-test-suite install ${PTSArguments}\""
+		exit 1
+	else
+		echo -e "\n##########################################################################\n" >>${ResultLog}
+		sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" <${TempLog} >>${ResultLog}
+	fi
+} # RunPTS
+
 PrintCPUTopology() {
 	# prints list of CPU cores, clusters and cpufreq policy nodes
 	CPUFreqPolicy="none"
@@ -2234,8 +2309,8 @@ SummarizeResults() {
 	LogEnvironment >>${ResultLog}
 	CacheAndDIMMDetails >>${ResultLog}
 
-	# Add a line suitable for Results.md on Github if not in efficiency plotting mode
-	if [ "X${PlotCpufreqOPPs}" != "Xyes" ]; then
+	# Add a line suitable for Results.md on Github if not in efficiency plotting or PTS mode
+	if [ "X${PlotCpufreqOPPs}" != "Xyes" -a "X${MODE}" != "Xpts" ]; then
 		if [ -f /sys/devices/system/cpu/cpufreq/policy0/cpuinfo_max_freq ]; then
 			HighestClock=$(sort -n -r /sys/devices/system/cpu/cpufreq/policy?/cpuinfo_max_freq | head -n1 | sed -e 's/000$//')
 			LowestClock=$(sort -n -r /sys/devices/system/cpu/cpufreq/policy?/cpuinfo_max_freq | tail -n1 | sed -e 's/000$//')
@@ -2326,17 +2401,19 @@ UploadResults() {
 	UploadURL=$(sed '/^$/N;/^\n$/D' <${ResultLog} | curl -s -F 'f:1=<-' ix.io 2>/dev/null || \
 		sed '/^$/N;/^\n$/D' <${ResultLog} | curl -s -F 'f:1=<-' ix.io)
 
-	# Display benchmark results
-	[ ${#ClusterConfig[@]} -gt 1 ] && ClusterInfo=" (different CPU cores measured individually)"
-	echo -e "${BOLD}Memory performance${NC}${ClusterInfo}:"
-	awk -F" " '/^ standard/ {print $2": "$4" "$5" "$6}' <${ResultLog}
-	if [ "${ExecuteCpuminer}" = "yes" -a -x "${InstallLocation}"/cpuminer-multi/cpuminer ]; then
-		echo -e "\n${BOLD}Cpuminer total scores${NC} (5 minutes execution): $(awk -F"Total Scores: " '/^Total Scores: / {print $2}' ${ResultLog}) kH/s"
-	fi
-	echo -e "\n${BOLD}7-zip total scores${NC} (3 consecutive runs): $(awk -F" " '/^Total:/ {print $2}' ${ResultLog})"
-	if [ -f ${OpenSSLLog} ]; then
-		echo -e "\n${BOLD}OpenSSL results${NC}${ClusterInfo}:\n$(grep '^type' ${OpenSSLLog} | head -n1)"
-		grep '^aes-...-cbc' ${OpenSSLLog}
+	# Display benchmark results if not in PTS mode
+	if [ "X${MODE}" != "Xpts" ]; then
+		[ ${#ClusterConfig[@]} -gt 1 ] && ClusterInfo=" (different CPU cores measured individually)"
+		echo -e "${BOLD}Memory performance${NC}${ClusterInfo}:"
+		awk -F" " '/^ standard/ {print $2": "$4" "$5" "$6}' <${ResultLog}
+		if [ "${ExecuteCpuminer}" = "yes" -a -x "${InstallLocation}"/cpuminer-multi/cpuminer ]; then
+			echo -e "\n${BOLD}Cpuminer total scores${NC} (5 minutes execution): $(awk -F"Total Scores: " '/^Total Scores: / {print $2}' ${ResultLog}) kH/s"
+		fi
+		echo -e "\n${BOLD}7-zip total scores${NC} (3 consecutive runs): $(awk -F" " '/^Total:/ {print $2}' ${ResultLog})"
+		if [ -f ${OpenSSLLog} ]; then
+			echo -e "\n${BOLD}OpenSSL results${NC}${ClusterInfo}:\n$(grep '^type' ${OpenSSLLog} | head -n1)"
+			grep '^aes-...-cbc' ${OpenSSLLog}
+		fi
 	fi
 	case ${UploadURL} in
 		http*)
@@ -3238,7 +3315,7 @@ GuessSoCbySignature() {
 			;;
 		00A53r0p400A53r0p400A53r0p400A53r0p4)
 			# The boring quad Cortex-A53 done by every SoC vendor: 4 x Cortex-A53 / r0p4
-			# Allwinner A64/H5/H6, BCM2837/BCM2709, RK3318/RK3328, i.MX8 M, S905, S905X/S805X, S805Y, S905X/S905D/S905W/S905L/S905M2, S905X2/S905Y2/T962X2, Mediatek MT6762M, RealTek RTD129x/RTD139x
+			# Allwinner A64/H5/H6, BCM2837/BCM2709, RK3318/RK3328, i.MX8 M, S905, S905X/S805X, S805Y, S905X/S905D/S905W/S905L/S905M2, S905X2/S905Y2/T962X2, Mediatek MT6762M/MT6765, RealTek RTD129x/RTD139x
 			case "${DeviceName}" in
 				"Raspberry Pi 2"*)
 					# 4 x Cortex-A53 / r0p4 / fp asimd evtstrm crc32
@@ -3328,6 +3405,10 @@ GuessSoCbySignature() {
 								# Mediatek MT6762M, 4 x Cortex-A53 / r0p4 / fp asimd aes pmull sha1 sha2 crc32
 								echo "Mediatek MT6762M"
 								;;
+							*mt6765*)
+								# Mediatek MT6765, 4 x Cortex-A53 / r0p4 / fp asimd aes pmull sha1 sha2 crc32
+								echo "Mediatek MT6765"
+								;;
 							*xlnx*|*zynqmp*|*zcu102*)
 								# Xilinx XCZU9EG, 4 x Cortex-A53 / r0p4 / fp asimd aes pmull sha1 sha2 crc32
 								echo "Xilinx XCZU9EG"
@@ -3349,7 +3430,6 @@ GuessSoCbySignature() {
 		??A53r0p4??A53r0p4??A53r0p4??A53r0p4??A53r0p4??A53r0p4??A53r0p4??A53r0p4)
 			# Amlogic S912, 4 x Cortex-A53 / r0p4 + 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			# or HiSilicon Kirin 960, 8 x Cortex-A53 / r0p4 / https://bench.cr.yp.to/computers.html
-			# or Mediatek MT6765, 4 x Cortex-A53 / r0p4 + 4 x Cortex-A53 / r0p4 / fp asimd aes pmull sha1 sha2 crc32
 			# or NXP QorIQ LS1088: 8 x Cortex-A53 / r0p4 / https://bench.cr.yp.to/computers.html
 			case "${DTCompatible}" in
 				*hisilicon*)
@@ -3357,9 +3437,6 @@ GuessSoCbySignature() {
 					;;
 				*amlogic*)
 					echo "Amlogic S912"
-					;;
-				*mt6765*)
-					echo "Mediatek MT6765"
 					;;
 				*)
 					echo "NXP QorIQ LS1088"
@@ -3977,9 +4054,10 @@ DisplayUsage() {
 	echo -e "\n Use ${BOLD}${0##*/}${NC} for the following tasks:\n"
 	echo -e " ${0##*/} invoked without arguments runs a standard benchmark"
 	echo -e " ${0##*/} ${BOLD}-c${NC} also executes cpuminer test (NEON/SSE)"
-	echo -e " ${0##*/} ${BOLD}-p${NC} plots 7-zip MIPS graph for every cpufreq OPP"
+	echo -e " ${0##*/} ${BOLD}-g${NC} graphs 7-zip MIPS for every cpufreq OPP"
 	echo -e " ${0##*/} ${BOLD}-h${NC} displays this help text"
 	echo -e " ${0##*/} ${BOLD}-m${NC} [\$seconds] provides CLI monitoring (5 sec default interval)"
+	echo -e " ${0##*/} ${BOLD}-p${NC} Phoronix mode, ensures benchmark is properly monitored"
 	echo -e " ${0##*/} ${BOLD}-t${NC} [\$degree] runs thermal test waiting to cool down to this value"
 	echo -e " ${0##*/} ${BOLD}-T${NC} [\$degree] runs thermal test heating up to this value\n"
 	echo -e " With a Netio powermeter accessible you can export ${BOLD}Netio=address/socket${NC}" to

@@ -8,7 +8,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 
 ## Some numbers
 
-*ODROID-M1, Quartz64, ROCK 3A, ROCK 5B, RK3568-ROC-PC and Khadas VIM4 numbers are preliminary since software support situation for RK3566/RK3568/RK3588 and A311D2 is still in a very early stage. Same applies to [Apple M1 Pro](https://github.com/ThomasKaiser/sbc-bench/issues/47#issue-1300572558). Please also note that with RK35xx SBC so far [measured clockspeeds differ from what's defined in device-tree due to PVTM](https://github.com/ThomasKaiser/Knowledge/blob/master/articles/Quick_Preview_of_ROCK_5B.md#rk3588).*
+*ODROID-M1, Quartz64, ROCK 3A, ROCK 5B, RK3568-ROC-PC and Khadas VIM4 numbers are preliminary since software support situation for RK3566/RK3568/RK3588 and A311D2 is still in a very early stage. Same applies to [Apple M1 Pro](https://github.com/ThomasKaiser/sbc-bench/issues/47#issue-1300572558). Please also note that with RK35xx SBC so far [measured clockspeeds differ from what's defined in device-tree due to PVTM](https://github.com/ThomasKaiser/Knowledge/blob/master/articles/Quick_Preview_of_ROCK_5B.md#pvtm).*
 
 | Device / details | Clockspeed | Kernel | Distro | 7-zip | AES-128 (16 byte) | AES-256 (16 KB) | memcpy | memset | kH/s |
 | ----- | :--------: | :----: | :----: | ----: | ------: | ------: | -----: | -----: | ---: |

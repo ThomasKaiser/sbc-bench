@@ -1,0 +1,13 @@
+Processor	: AArch64 Processor rev 2 (aarch64)
+processor	: 0
+processor	: 1
+processor	: 2
+processor	: 3
+Features	: fp asimd evtstrm aes pmull sha1 sha2 crc32  half thumb fastmult edsp tls vfp vfpv3 vfpv4 neon idiva idivt 
+CPU implementer	: 0x41
+CPU architecture: 8
+CPU variant	: 0x0
+CPU part	: 0xd03
+CPU revision	: 2
+
+Hardware	: PXA1908

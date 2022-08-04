@@ -1,6 +1,6 @@
 # Efficiency graphing
 
-As of v0.8.2 there's the `-p` option to draw efficiency graphs. With v0.8.3 came support for [Netio powermeters](https://www.netio-products.com/en) to also monitor the power the whole setup (device including wall wart) needs in which situation.
+As of v0.8.2 there's the `-g` option to draw efficiency graphs (between 0.8.2 and 0.9.8 it was called `-p`). With v0.8.3 came support for [Netio powermeters](https://www.netio-products.com/en) to also monitor the power the whole setup (device including wall wart) needs in which situation.
 
 Of course this is a bit flawed since the powermeter's accuracy is an issue and the efficiency of the wall wart / charger used. Also my own measurements are affected by the fact that majority of my SBC were early developer samples and as such idle consumption might differ with later production revisions that were/are on sale.
 

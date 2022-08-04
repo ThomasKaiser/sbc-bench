@@ -122,16 +122,24 @@ CheckThermalSources() {
 	done
 } # CheckThermalSources
 
-CheckODROIDN2cpufreq() {
-	grep 'ODROID-N2 ' *.txt | cut -f1 -d':' | while read ; do
-		OSRelease="Armbian $(awk -F"=" '/^VERSION/ {print $2}' "${REPLY}")"
-		[ "X${OSRelease}" = "XArmbian " ] && OSRelease="Armbian $(awk -F"," '/^Armbian info/ {print $4}' "${REPLY}" | sed 's/\ //')"
-		[ "X${OSRelease}" = "XArmbian " ] && OSRelease="$(awk -F":" '/^Description/ {print $2}' "${REPLY}" | sed 's/\t//')"
-		A53=$(awk -F" " '/^  0/ {print $5}' "${REPLY}")
-		A73=$(awk -F" " '/^  2/ {print $5}' "${REPLY}")
-		echo "${OSRelease}: ${A53}/${A73}"
-	done | sort
-} # CheckODROIDN2cpufreq
+CheckcpufreqVSdistro() {
+	for board in "Khadas VIM3" "Khadas VIM3L" "ODROID-N2" "ODROID-N2Plus" "Radxa ROCK 3 Model A" "Radxa ROCK 5B" ; do
+		echo -e "\n${board} "
+		grep "${board} " *.txt | cut -f1 -d':' | while read ; do
+			OSRelease="Armbian $(awk -F"=" '/^VERSION/ {print $2}' "${REPLY}")"
+			[ "X${OSRelease}" = "XArmbian " ] && OSRelease="Armbian $(awk -F"," '/^Armbian info/ {print $4}' "${REPLY}" | sed 's/\ //')"
+			[ "X${OSRelease}" = "XArmbian " ] && OSRelease="$(awk -F":" '/^Description/ {print $2}' "${REPLY}" | sed 's/\t//')"
+			Clockspeeds=$(tail -n1 "${REPLY}" | awk -F"|" '{print $3}')
+			if [ "x${Clockspeeds}" != "X" ]; then
+				echo ${OSRelease}: ${Clockspeeds}
+			else
+				A53=$(awk -F" " '/^  0/ {print $5}' "${REPLY}")
+				A73=$(awk -F" " '/^  2/ {print $5}' "${REPLY}")
+				echo ${OSRelease}: ${A53}/${A73} MHz
+			fi
+		done | sort
+	done
+} # CheckcpufreqVSdistro
 
 # CPUUtilization7ZIP >7-zip-cpu-utilisation.md
 # CheckRAID6PerfAndAlgo >raid6-perf-and-algo.md

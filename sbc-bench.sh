@@ -1301,7 +1301,7 @@ CheckLoadAndDmesg() {
 	esac
 
 	# check for CPU cores being offline
-	read OfflineCores </sys/devices/system/cpu/offline
+	OfflineCores=$(lscpu | awk -F" " '/^Off-line CPU/ {print $4}')
 	if [ "X${OfflineCores}" != "X" -a "X${MODE}" != "Xunattended" ]; then
 		echo -e "${LRED}${BOLD}WARNING: One or more CPU cores are offline: ${OfflineCores}${NC}\n"
 		echo -e "Press ${BOLD}[ctrl]-[c]${NC} to stop or ${BOLD}[enter]${NC} to continue.\c"
@@ -2688,7 +2688,7 @@ GuessARMSoC() {
 	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:a (82:2) Detected <-- Khadas VIM / NEXBOX A95X (S905X) / Tanix TX3 Mini / Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson GXL (S905D) Revision 21:b (2:2) Detected <-- MeCool KI Pro
 	# soc soc0: Amlogic Meson GXL (Unknown) Revision 21:b (2:2) Detected <-- Phicomm N1
-	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:b (82:2) Detected <-- Libre Computer AML-S905X-CC / NEXBOX A95X (S905X) / Tanix TX3 Mini / Amlogic Meson GXL (S905X) P212 Development Board
+	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:b (82:2) Detected <-- Libre Computer AML-S905X-CC / NEXBOX A95X (S905X) / Tanix TX3 Mini / Amlogic Meson GXL (S905X) P212 Development Board / Amlogic Meson GXL (S905W) P281 Development Board
 	# soc soc0: Amlogic Meson GXL (S905W) Revision 21:b (a2:2) Detected <-- Tanix TX3 Mini / Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson GXL (S905L) Revision 21:b (c2:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson GXL (S905M2) Revision 21:b (e2:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board
@@ -2752,6 +2752,7 @@ GuessARMSoC() {
 	#   - S905M2: 21:b (e2:2), 21:d (e4:2)
 	#   - Unknown: 21:d (a4:2), 2a:e (c5:2), 26:e (c1:2)
 	# - P281 Development Board (GXL):
+	#   - S905X: 21:b (82:2)
 	#   - S905D: 21:d (0:2)
 	#   - S905W: 21:e (a5:2)
 	#   - S905W: 21:d (a4:2)

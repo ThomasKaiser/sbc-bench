@@ -1598,10 +1598,10 @@ CheckGB() {
 	# try to download most recent GB version for the platform
 
 	# get latest version string from blog
-	GBVersion="$(links -dump "https://www.geekbench.com/blog/" | awk -F" " '/ Geekbench 5./ {print $2}' | head -n1)"
+	GBVersion="$(links -dump "https://www.geekbench.com/blog/" | awk -F" " '/ Geekbench [5-6].[0-9]/ {print $2}' | head -n1)"
 	case ${GBVersion} in
 		6*)
-			echo -e "\x08\x08 No support for Geekbench 6. Exiting"
+			echo -e "\x08\x08 No support for Geekbench 6 yet. Exiting"
 			exit 1
 			;;
 		5*)
@@ -1624,7 +1624,7 @@ CheckGB() {
 
 	case $ARCH in
 		armhf|armv7l)
-			# 32-bit ARM distro, here GB fails to geekbench5 to launch the platform binary
+			# 32-bit ARM: here the geekbench5 binary fails to launch the ARMv7 binary
 			DLSuffix="LinuxARMPreview"
 			GBBinaryName="geekbench_armv7"
 			;;
@@ -1648,15 +1648,16 @@ CheckGB() {
 
 	cd "${InstallLocation}" || exit 1
 	for i in $(seq 9 -1 0); do
-		# if there's already an executable stop here
-		# try to download version
 		GBDir="Geekbench-${GBVersion}.${i}-${DLSuffix}"
 		GBBinary="${InstallLocation}/${GBDir}/${GBBinaryName}"
+		# if there's already an executable stop here
 		[ -x "${GBBinary}" ] && return
+		# try to download version ${GBVersion}.${i}
 		TryoutURL="https://cdn.geekbench.com/${GBDir}.tar.gz"
 		Downloadfile="${InstallLocation}/${GBDir}.tar.gz"
 		[ -f "${Downloadfile}" ] || wget -q -O "${Downloadfile}" "${TryoutURL}" 2>/dev/null
 		if [ -s "${Downloadfile}" ]; then
+			# tarball could be downloaded, proceed with untar/remove
 			echo -e "\x08\x08 geekbench ${GBVersion}.${i}...\c"
 			tar xf "${Downloadfile}"
 			rm "${Downloadfile}"
@@ -2331,9 +2332,12 @@ RunGB() {
 		echo -e "\n##########################################################################\n" >>${ResultLog}
 		sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" <${TempLog} | sed '/add this result to your profile/,+3 d' | \
 			sed '/Geekbench 5 license/,+4 d' | sed '/active Internet connection/,+2 d' | \
-			sed '/preview build/,+1 d' >>${ResultLog}
+			sed '/preview build/,+1 d' | sed '/Single-Core/,+22 d' | sed '/Multi-Core/,+22 d' | \
+			sed '/Uploading results/,+4 d' | sed 's|: https://www.geekbench.com/||' >>${ResultLog}
 		links -dump "https${ResultsURL}" >${TempLog}
-		grep ' Score ' ${TempLog} | sed '/Multi-Core*/i \ \ \ ' >>${ResultLog}
+		grep ' Score ' ${TempLog} | sed '/Multi-Core*/i \ \ \ ' | sed 's/^\ //' >>${ResultLog}
+		echo -e "\n  Single-Core Performance\n" >>${ResultLog}
+		sed '1,/^  Single-Core Performance$/d' ${TempLog} | grep -v -E '/sec| FPS| Score' | head -n46 >>${ResultLog}
 	fi
 } # RunGB
 

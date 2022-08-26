@@ -91,9 +91,10 @@ Crawling through [sbc-bench results collection](../Results.md) comparing +30 dif
 | [A311D2](http://ix.io/3Wq0) | 2010 | 941040 | 468 |
 | Cortex-A55 | | | |
 | [RK3588](http://ix.io/3XzI) | 915 | 427750 | 467 |
+| [RK3566](http://ix.io/45X1) | 1750 |  818550 | 467 |
 | [RK3588s](http://ix.io/3XTA) | 1780 | 830640 | 467 |
 | [QRB5165](http://ix.io/450U) | 1780 | 831950 | 467 |
-| [RK3566](http://ix.io/3rUb) | 1800 | 845490 | 469 |
+| [RK3566](http://ix.io/3rUb) | 1810 | 845490 | 469 |
 | [RK3588s](http://ix.io/3XYo) | 1815 | 846760 | 467 |
 | [S905X3](http://ix.io/3Vdt) | 1908 | 890730 | 466 |
 | [RK3568](http://ix.io/3Ug9) | 1930 | 898610 | 465 |

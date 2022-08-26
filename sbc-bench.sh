@@ -32,7 +32,7 @@ Main() {
 	fi
 	
 	# check in which mode we're supposed to run
-	while getopts 'chmtTpN' c ; do
+	while getopts 'chmtTpNPG' c ; do
 		case ${c} in
 			m)
 				# monitoring mode
@@ -81,7 +81,13 @@ Main() {
 					exit 1
 				fi
 				;;
-			p)
+			G)
+				# Geekbench piggyback mode. Geekbench lacks sanity checks (measuring
+				# clockspeeds) and environment monitoring (too much background activity
+				# or throttling for example).
+				MODE="gb"
+				;;
+			P)
 				# Phoronix Test Suite piggyback mode. PTS lacks sanity checks (measuring
 				# clockspeeds) and environment monitoring (too much background activity
 				# or throttling for example). You need to install PTS by yourself and run
@@ -138,7 +144,7 @@ Main() {
 			esac
 	done
 
-	[ "X${MODE}" = "Xpts" ] || CheckRelease
+	[ "X${MODE}" = "Xpts" -o "X${MODE}" = "Xgb" ] || CheckRelease
 	CheckLoadAndDmesg
 	[ -f /sys/devices/system/cpu/cpufreq/policy0/scaling_governor ] && \
 		read OriginalCPUFreqGovernor </sys/devices/system/cpu/cpufreq/policy0/scaling_governor 2>/dev/null
@@ -146,6 +152,7 @@ Main() {
 	GetTempSensor
 	[ "X${MODE}" = "Xpts" ] && CheckPTS
 	InstallPrerequisits
+	[ "X${MODE}" = "Xgb" ] && CheckGB
 	InitialMonitoring
 	CheckClockspeedsAndSensors
 	CheckTimeInState before
@@ -153,10 +160,12 @@ Main() {
 		PlotPerformanceGraph
 	else
 		CheckNetio
-		[ "X${MODE}" = "Xpts" ] || RunTinyMemBench
+		[ "X${MODE}" = "Xpts" -o "X${MODE}" = "Xgb" ] || RunTinyMemBench
 		RunRamlat
 		if [ "X${MODE}" = "Xpts" ]; then
 			RunPTS
+		elif [ "X${MODE}" = "Xgb" ]; then
+			RunGB
 		else
 			RunOpenSSLBenchmark
 			Run7ZipBenchmark
@@ -1289,7 +1298,7 @@ CheckRelease() {
 
 CheckLoadAndDmesg() {
 	# Check if kernel ring buffer contains boot messages. These help identifying HW.
-	dmesg | grep -q '] Booting Linux'
+	dmesg | grep -q -E '] Booting Linux|] Linux version '
 	case $? in
 		1)
 			if [ "X${MODE}" != "Xunattended" ]; then
@@ -1562,6 +1571,13 @@ CheckMissingPackages() {
 	command -v curl >/dev/null 2>&1 || echo -e "curl \c"
 	command -v dmidecode >/dev/null 2>&1 || echo -e "dmidecode \c"
 	command -v lshw >/dev/null 2>&1 || echo -e "lshw \c"
+	if [ "X${MODE}" = "Xextensive" ]; then
+		command -v decode-dimms >/dev/null 2>&1 || echo -e "i2c-tools \c"
+	fi
+	if [ "X${MODE}" = "Xgb" ]; then
+		command -v wget >/dev/null 2>&1 || echo -e "wget \c"
+		command -v links >/dev/null 2>&1 || echo -e "links \c"
+	fi
 } # CheckMissingPackages
 
 CheckPTS() {
@@ -1578,6 +1594,79 @@ CheckPTS() {
 	fi
 } # CheckPTS
 
+CheckGB() {
+	# try to download most recent GB version for the platform
+
+	# get latest version string from blog
+	GBVersion="$(links -dump "https://www.geekbench.com/blog/" | awk -F" " '/ Geekbench 5./ {print $2}' | head -n1)"
+	case ${GBVersion} in
+		6*)
+			echo -e "\x08\x08 No support for Geekbench 6. Exiting"
+			exit 1
+			;;
+		5*)
+			:
+			;;
+		*)
+			echo -e "\x08\x08 Not able to determine Geekbench version. Exiting"
+			exit 1
+			;;
+	esac
+
+	# check platform since download URLs differ:
+	# RISC-V: https://cdn.geekbench.com/Geekbench-5.4.4-LinuxRISCVPreview.tar.gz
+	# ARM: https://cdn.geekbench.com/Geekbench-5.4.4-LinuxARMPreview.tar.gz
+	# x86: https://cdn.geekbench.com/Geekbench-5.4.4-Linux.tar.gz
+
+	ARCH=$(dpkg --print-architecture 2>/dev/null) || \
+	ARCH=$(awk -F'"' '/^CARCH/ {print $2}' /etc/makepkg.conf 2>/dev/null) || \
+	ARCH="$(uname -m)"
+
+	case $ARCH in
+		armhf|armv7l)
+			# 32-bit ARM distro, here GB fails to geekbench5 to launch the platform binary
+			DLSuffix="LinuxARMPreview"
+			GBBinaryName="geekbench_armv7"
+			;;
+		arm*)
+			DLSuffix="LinuxARMPreview"
+			GBBinaryName="geekbench5"
+			;;
+		riscv64)
+			DLSuffix="LinuxRISCVPreview"
+			GBBinaryName="geekbench_riscv64"
+			;;
+		amd64|*x86*)
+			DLSuffix="Linux"
+			GBBinaryName="geekbench5"
+			;;
+		*)
+			echo -e "\x08\x08 Not able to execute Geekbench on ${ARCH}. Exiting"
+			exit 1
+			;;
+	esac
+
+	cd "${InstallLocation}" || exit 1
+	for i in $(seq 9 -1 0); do
+		# if there's already an executable stop here
+		# try to download version
+		GBDir="Geekbench-${GBVersion}.${i}-${DLSuffix}"
+		GBBinary="${InstallLocation}/${GBDir}/${GBBinaryName}"
+		[ -x "${GBBinary}" ] && return
+		TryoutURL="https://cdn.geekbench.com/${GBDir}.tar.gz"
+		Downloadfile="${InstallLocation}/${GBDir}.tar.gz"
+		[ -f "${Downloadfile}" ] || wget -q -O "${Downloadfile}" "${TryoutURL}" 2>/dev/null
+		if [ -s "${Downloadfile}" ]; then
+			echo -e "\x08\x08 geekbench ${GBVersion}.${i}...\c"
+			tar xf "${Downloadfile}"
+			rm "${Downloadfile}"
+			break
+		elif [ -f "${Downloadfile}" ]; then
+			rm "${Downloadfile}"
+		fi
+	done
+} # CheckGB
+
 InstallPrerequisits() {
 	echo -e "sbc-bench v${Version}\n\nInstalling needed tools:  \c"
 	
@@ -1589,7 +1678,7 @@ InstallPrerequisits() {
 	fi
 	
 	# add needed repository and install all necessary packages
-	egrep -q "sensors|gcc|git|sysstat|openssl|curl|dmidecode|i2c|lshw|p7zip" <<<"${MissingPackages}"
+	egrep -q "sensors|gcc|git|sysstat|openssl|curl|dmidecode|i2c|lshw|p7zip|wget|links" <<<"${MissingPackages}"
 	if [ $? -eq 0 ]; then
 		echo -e "\x08\x08 ${MissingPackages}...\c"
 		add-apt-repository -y universe >/dev/null 2>&1
@@ -1713,7 +1802,7 @@ InitialMonitoring() {
 	
 	# Log version and device info
 	read HostName </etc/hostname 2>/dev/null
-	if [ "X${MODE}" = "Xunattended" -o "X${MODE}" = "Xextensive" -o "X${MODE}" = "Xpts" ]; then
+	if [ "X${MODE}" = "Xunattended" -o "X${MODE}" = "Xextensive" -o "X${MODE}" = "Xpts" -o "X${MODE}" = "Xgb" ]; then
 		echo -e "sbc-bench v${Version} ${DeviceName:-$HostName} ${MODE} ($(date -R))\n" | sed 's/  / /g' >${ResultLog}
 	else
 		echo -e "sbc-bench v${Version} ${DeviceName:-$HostName} ($(date -R))\n" | sed 's/  / /g' >${ResultLog}
@@ -2207,6 +2296,7 @@ RunCpuminerBenchmark() {
 } # RunCpuminerBenchmark
 
 RunPTS() {
+	# executing phoronix-test-suite
 	echo -e "\x08\x08 Done.\nExecuting phoronix-test-suite...\c"
 	echo -e "\nSystem health while running Phoronix Test Suite:\n" >>${MonitorLog}
 	/bin/bash "${PathToMe}" -m 60 >>${MonitorLog} &
@@ -2224,6 +2314,28 @@ RunPTS() {
 		sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" <${TempLog} >>${ResultLog}
 	fi
 } # RunPTS
+
+RunGB() {
+	# executing geekbench5
+	echo -e "\x08\x08 Done.\nExecuting Geekbench...\c"
+	echo -e "\nSystem health while running Geekbench:\n" >>${MonitorLog}
+	MonitorInterval=$(( ${QuickAndDirtyPerformance} / 10000000 ))
+	/bin/bash "${PathToMe}" -m ${MonitorInterval} >>${MonitorLog} &
+	MonitoringPID=$!
+	"${GBBinary}" >${TempLog} 2>&1
+	kill ${MonitoringPID}
+	ResultsURL="$(awk -F"https" '/browser.geekbench.com/ {print $2}' <${TempLog} | head -n1)"
+	if [ "X${ResultsURL}" = "X" ]; then
+		echo -e "\x08\x08 Failed.\n$(cat ${TempLog})\n"
+	else
+		echo -e "\n##########################################################################\n" >>${ResultLog}
+		sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" <${TempLog} | sed '/add this result to your profile/,+3 d' | \
+			sed '/Geekbench 5 license/,+4 d' | sed '/active Internet connection/,+2 d' | \
+			sed '/preview build/,+1 d' >>${ResultLog}
+		links -dump "https${ResultsURL}" >${TempLog}
+		grep ' Score ' ${TempLog} | sed '/Multi-Core*/i \ \ \ ' >>${ResultLog}
+	fi
+} # RunGB
 
 PrintCPUTopology() {
 	# prints list of CPU cores, clusters and cpufreq policy nodes
@@ -2309,8 +2421,8 @@ SummarizeResults() {
 	LogEnvironment >>${ResultLog}
 	CacheAndDIMMDetails >>${ResultLog}
 
-	# Add a line suitable for Results.md on Github if not in efficiency plotting or PTS mode
-	if [ "X${PlotCpufreqOPPs}" != "Xyes" -a "X${MODE}" != "Xpts" ]; then
+	# Add a line suitable for Results.md on Github if not in efficiency plotting or PTS or GB mode
+	if [ "X${PlotCpufreqOPPs}" != "Xyes" -a "X${MODE}" != "Xpts" -a "X${MODE}" != "Xgb" ]; then
 		if [ -f /sys/devices/system/cpu/cpufreq/policy0/cpuinfo_max_freq ]; then
 			HighestClock=$(sort -n -r /sys/devices/system/cpu/cpufreq/policy?/cpuinfo_max_freq | head -n1 | sed -e 's/000$//')
 			LowestClock=$(sort -n -r /sys/devices/system/cpu/cpufreq/policy?/cpuinfo_max_freq | tail -n1 | sed -e 's/000$//')
@@ -2401,8 +2513,8 @@ UploadResults() {
 	UploadURL=$(sed '/^$/N;/^\n$/D' <${ResultLog} | curl -s -F 'f:1=<-' ix.io 2>/dev/null || \
 		sed '/^$/N;/^\n$/D' <${ResultLog} | curl -s -F 'f:1=<-' ix.io)
 
-	# Display benchmark results if not in PTS mode
-	if [ "X${MODE}" != "Xpts" ]; then
+	# Display benchmark results if not in PTS or GB mode
+	if [ "X${MODE}" != "Xpts" -a "X${MODE}" != "Xgb" ]; then
 		[ ${#ClusterConfig[@]} -gt 1 ] && ClusterInfo=" (different CPU cores measured individually)"
 		echo -e "${BOLD}Memory performance${NC}${ClusterInfo}:"
 		awk -F" " '/^ standard/ {print $2": "$4" "$5" "$6}' <${ResultLog}
@@ -2413,6 +2525,14 @@ UploadResults() {
 		if [ -f ${OpenSSLLog} ]; then
 			echo -e "\n${BOLD}OpenSSL results${NC}${ClusterInfo}:\n$(grep '^type' ${OpenSSLLog} | head -n1)"
 			grep '^aes-...-cbc' ${OpenSSLLog}
+		fi
+	elif [ "X${MODE}" = "Xgb" ]; then
+		if [ ${IOWaitAvg:-0} -le 2 -a ${IOWaitMax:-0} -le 5 -a ${SysMax:-0} -le 5 -a ! -f ${TempDir}/throttling_info.txt ]; then
+			grep ' Score ' ${TempLog} | sed '/Multi-Core*/i \ \ \ '
+			echo -e "\n   https${ResultsURL}"
+		else
+			echo "Scores not valid. Throttling occured and/or too much background activity."
+			echo "Please check /var/log/sbc-bench.log for anomalies."
 		fi
 	fi
 	case ${UploadURL} in
@@ -2456,6 +2576,7 @@ UploadResults() {
 	[ -h /var/log/sbc-bench.log ] && return 1
 	[ -s /var/log/sbc-bench.log ] && echo -e "\n\n\n" >>/var/log/sbc-bench.log
 	cat ${ResultLog} >>/var/log/sbc-bench.log
+	echo ""
 } # UploadResults
 
 CheckIOWait() {
@@ -2581,6 +2702,17 @@ CacheAndDIMMDetails() {
 		fi
 	fi
 
+	# in MODE=extensive check wether there's even more detailed DIMM info available via i2c
+	if [ "X${MODE}" = "Xextensive" ]; then
+ 		unset DIMMDetails
+ 		modprobe eeprom >/dev/null 2>&1
+ 		command -v decode-dimms >/dev/null 2>&1 && \
+ 			DIMMDetails="$(decode-dimms 2>/dev/null | sed -ne '/Decoding EEPROM/,$ p' | sed '/^$/N;/^\n$/D' | grep -v Serial)"
+ 		if [ "X${DIMMDetails}" != "X" ]; then
+ 			echo -e "\n${DIMMDetails}"
+ 		fi
+ 	fi
+ 
 	if [ ${#ClusterConfig[@]} -gt 1 -o ${CPUArchitecture} == *riscv* ]; then
 		# only output individual cache sizes from sysfs on RISC-V or if more than 1 CPU
 		# cluster (since otherwise lscpu already reported the full picture)
@@ -2686,7 +2818,7 @@ GuessARMSoC() {
 	# soc soc0: Amlogic Meson GXBB (S905) Revision 1f:c (13:1) Detected <-- Beelink Mini MX / NanoPi K2 / NEXBOX A95X / Tronsmart Vega S95 Telos / WeTek Play 2 / Amlogic Meson GXBB P200 Development Board / Amlogic Meson GXBB P201 Development Board
 	# soc soc0: Amlogic Meson GXBB (S905H) Revision 1f:c (23:1) Detected <-- Amlogic Meson GXBB P201 Development Board
 	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:a (82:2) Detected <-- Khadas VIM / NEXBOX A95X (S905X) / Tanix TX3 Mini / Amlogic Meson GXL (S905X) P212 Development Board
-	# soc soc0: Amlogic Meson GXL (S905D) Revision 21:b (2:2) Detected <-- MeCool KI Pro
+	# soc soc0: Amlogic Meson GXL (S905D) Revision 21:b (2:2) Detected <-- MeCool KI Pro, Phicomm N1
 	# soc soc0: Amlogic Meson GXL (Unknown) Revision 21:b (2:2) Detected <-- Phicomm N1
 	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:b (82:2) Detected <-- Libre Computer AML-S905X-CC / NEXBOX A95X (S905X) / Tanix TX3 Mini / Amlogic Meson GXL (S905X) P212 Development Board / Amlogic Meson GXL (S905W) P281 Development Board
 	# soc soc0: Amlogic Meson GXL (S905W) Revision 21:b (a2:2) Detected <-- Tanix TX3 Mini / Amlogic Meson GXL (S905X) P212 Development Board
@@ -2865,7 +2997,7 @@ GuessARMSoC() {
 	# Booting Linux on physical CPU 0x0000000000 [0x412fd050]  <- Cortex-A55 / r2p0 (RK3566/RK3568 or RK3588/RK3588s or S905X4)
 	# Booting Linux on physical CPU 0x0000000000 [0x411fd071]  <- Cortex-A57 / r1p1 (Tegra X1)
 	# Booting Linux on physical CPU 0x0000000000 [0x411fd072]  <- Cortex-A57 / r1p2 (AMD Opteron A1100)
-	# Booting Linux on physical CPU 0x0000000000 [0x410fd083]  <- Cortex-A72 / r0p3 (BCM2711 or LX2120A or Marvell Armada3900-A1 or AWS Graviton or Xilinx Versal)
+	# Booting Linux on physical CPU 0x0000000000 [0x410fd083]  <- Cortex-A72 / r0p3 (BCM2711 or LX2xx0A or Marvell Armada3900-A1 or AWS Graviton or Xilinx Versal)
 	# Booting Linux on physical CPU 0x0000080000 [0x481fd010]  <- HiSilicon Kunpeng-920 / r1p0
 	# Booting Linux on physical CPU 0x0000000000 [0x51df805e]  <- Qualcomm Kryo 4XX Silver / r13p14 (Snapdragon 8cx)
 	# Booting Linux on physical CPU 0x0000000000 [0x413fd0c1]  <- Neoverse-N1 / r3p1 (Ampere Altra)
@@ -2888,12 +3020,17 @@ GuessARMSoC() {
 	if [ "X${RockchipGuess}" != "X" ]; then
 		echo "Rockchip RK$(cut -c-4 <<<"${RockchipGuess}") (${RockchipGuess})"
 	elif [ "X${AmlogicGuess}" != "XAmlogic Meson" ]; then
-		echo "${AmlogicGuess}" | sed -e 's/SM1 (Unknown) Revision 2b:b/SM1 (S905D3) Revision 2b:b/' \
-		-e 's/G12A (Unknown) Revision 28:b (30:2)/G12A (S905Y2) Revision 28:b (30:2)/' \
-		-e 's/GXL (Unknown) Revision 21:c (e2:2)/GXL (S905X) Revision 21:c (e2:2)/' \
-		-e 's/GXL (Unknown) Revision 21:d (a4:2)/GXL (S905W) Revision 21:d (a4:2)/' \
-		-e 's/GXL (Unknown) Revision 21:d (4:2)/GXL (S905D) Revision 21:d (4:2)/' \
+		echo "${AmlogicGuess}" | sed -e 's/GXL (Unknown) Revision 21:b (2:2)/GXL (S905D) Revision 21:b (2:2)/' \
+		-e 's/GXL (Unknown) Revision 21:c (84:2)/GXL (S905X) Revision 21:c (84:2)/' \
 		-e 's/GXL (Unknown) Revision 21:c (c2:2)/GXL (S905L) Revision 21:c (c2:2)/' \
+		-e 's/GXL (Unknown) Revision 21:c (e2:2)/GXL (S905X) Revision 21:c (e2:2)/' \
+		-e 's/GXL (Unknown) Revision 21:d (4:2)/GXL (S905D) Revision 21:d (4:2)/' \
+		-e 's/GXL (Unknown) Revision 21:d (a4:2)/GXL (S905W) Revision 21:d (a4:2)/' \
+		-e 's/GXM (Unknown) Revision 22:a (82:2)/GXM (S912) Revision 22:a (82:2)/' \
+		-e 's/G12A (Unknown) Revision 28:b (30:2)/G12A (S905Y2) Revision 28:b (30:2)/' \
+		-e 's/G12A (Unknown) Revision 28:c (30:2)/G12A (S905Y2) Revision 28:c (30:2)/' \
+		-e 's/SM1 (Unknown) Revision 2b:b (1:2)/SM1 (S905D3) Revision 2b:b (1:2)/' \
+		-e 's/SM1 (Unknown) Revision 2b:c (10:2)/SM1 (S905X3) Revision 2b:c (10:2)/' \
 		-e 's/ Detected//' -e 's/ detected//'
 	else
 		# Guessing by 'Hardware :' in /proc/cpuinfo is something that only reliably works
@@ -3798,7 +3935,7 @@ GuessSoCbySignature() {
 			# NXP LX2120A: 12 x Cortex-A72 / r0p3 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			echo "NXP LX2120A"
 			;;
-		36?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p3)
+		36?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p3|00A72r0p300A72r0p312A72r0p312A72r0p324A72r0p324A72r0p336A72r0p336A72r0p348A72r0p348A72r0p3510A72r0p3510A72r0p3612A72r0p3612A72r0p3714A72r0p3714A72r0p3)
 			# NXP LX2160A: 16 x Cortex-A72 / r0p3 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			echo "NXP LX2160A"
 			;;
@@ -4056,9 +4193,10 @@ DisplayUsage() {
 	echo -e " ${0##*/} invoked without arguments runs a standard benchmark"
 	echo -e " ${0##*/} ${BOLD}-c${NC} also executes cpuminer test (NEON/SSE)"
 	echo -e " ${0##*/} ${BOLD}-g${NC} graphs 7-zip MIPS for every cpufreq OPP"
+	echo -e " ${0##*/} ${BOLD}-G${NC} Geekbench mode, ensures benchmark is properly monitored"
 	echo -e " ${0##*/} ${BOLD}-h${NC} displays this help text"
 	echo -e " ${0##*/} ${BOLD}-m${NC} [\$seconds] provides CLI monitoring (5 sec default interval)"
-	echo -e " ${0##*/} ${BOLD}-p${NC} Phoronix mode, ensures benchmark is properly monitored"
+	echo -e " ${0##*/} ${BOLD}-P${NC} Phoronix mode, ensures benchmark is properly monitored"
 	echo -e " ${0##*/} ${BOLD}-t${NC} [\$degree] runs thermal test waiting to cool down to this value"
 	echo -e " ${0##*/} ${BOLD}-T${NC} [\$degree] runs thermal test heating up to this value\n"
 	echo -e " With a Netio powermeter accessible you can export ${BOLD}Netio=address/socket${NC}" to

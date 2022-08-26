@@ -1595,7 +1595,13 @@ CheckPTS() {
 } # CheckPTS
 
 CheckGB() {
-	# try to download most recent GB version for the platform
+	# try to download most recent GB version for the platform and check prerequisits
+	TotalMem=$(free | awk -F" " '/^Mem:   / {print $7}' | tail -n1)
+	if [ ${TotalMem:-1200000} -lt 1200000 ]; then
+		echo -e "\x08\x08 \n${LRED}${BOLD}WARNING: This machine is low on memory. Likely Geekbench will be oom-killed${NC}\n"
+		echo -e "Press [ctrl]-[c] to stop or ${BOLD}[enter]${NC} to continue.\c"
+		read
+	fi
 
 	# get latest version string from blog
 	GBVersion="$(links -dump "https://www.geekbench.com/blog/" | awk -F" " '/ Geekbench [5-6].[0-9]/ {print $2}' | head -n1)"
@@ -1627,18 +1633,22 @@ CheckGB() {
 			# 32-bit ARM: here the geekbench5 binary fails to launch the ARMv7 binary
 			DLSuffix="LinuxARMPreview"
 			GBBinaryName="geekbench_armv7"
+			FirstOfflineCPU=0
 			;;
 		arm*)
 			DLSuffix="LinuxARMPreview"
 			GBBinaryName="geekbench5"
+			FirstOfflineCPU=0
 			;;
 		riscv64)
 			DLSuffix="LinuxRISCVPreview"
 			GBBinaryName="geekbench_riscv64"
+			FirstOfflineCPU=1
 			;;
 		amd64|*x86*)
 			DLSuffix="Linux"
 			GBBinaryName="geekbench5"
+			FirstOfflineCPU=1
 			;;
 		*)
 			echo -e "\x08\x08 Not able to execute Geekbench on ${ARCH}. Exiting"
@@ -1658,7 +1668,7 @@ CheckGB() {
 		[ -f "${Downloadfile}" ] || wget -q -O "${Downloadfile}" "${TryoutURL}" 2>/dev/null
 		if [ -s "${Downloadfile}" ]; then
 			# tarball could be downloaded, proceed with untar/remove
-			echo -e "\x08\x08 geekbench ${GBVersion}.${i}...\c"
+			echo -e "\x08\x08\x08, geekbench ${GBVersion}.${i}...\c"
 			tar xf "${Downloadfile}"
 			rm "${Downloadfile}"
 			break
@@ -1669,8 +1679,18 @@ CheckGB() {
 } # CheckGB
 
 InstallPrerequisits() {
-	echo -e "sbc-bench v${Version}\n\nInstalling needed tools:  \c"
-	
+	case ${MODE} in
+		gb)
+			echo -e "sbc-bench v${Version} taking care of Geekbench\n\nInstalling needed tools:  \c"
+			;;
+		pts)
+			echo -e "sbc-bench v${Version} taking care of Phoronix Test Suite\n\nInstalling needed tools:  \c"
+			;;
+		*)
+			echo -e "sbc-bench v${Version}\n\nInstalling needed tools:  \c"
+			;;
+	esac
+
 	# Determine missing packages and install them with a single command
 	MissingPackages="$(CheckMissingPackages | sed 's/\ $//')"
 	SevenZip=$(command -v 7zr || command -v 7za)
@@ -2202,7 +2222,11 @@ Run7ZipBenchmark() {
 				CPUInfo="$(GetCPUInfo ${FirstCore})"
 				LastCore=$(GetLastClusterCoreByType $(( $i + 1 )))
 				HowManyCores=$(( $(( ${LastCore} - ${FirstCore} )) + 1 ))
-				echo -e "\nExecuting benchmark ${RunHowManyTimes} times multi-threaded on CPUs ${FirstCore}-${LastCore}${CPUInfo}" >>${TempLog}
+				if [ ${FirstCore} -eq ${LastCore} ]; then
+					echo -e "\nExecuting benchmark ${RunHowManyTimes} times single-threaded on CPU ${FirstCore}${CPUInfo}" >>${TempLog}
+				else
+					echo -e "\nExecuting benchmark ${RunHowManyTimes} times multi-threaded on CPUs ${FirstCore}-${LastCore}${CPUInfo}" >>${TempLog}
+				fi
 				for ((o=1;o<=RunHowManyTimes;o++)); do
 					taskset -c ${FirstCore}-${LastCore} "${SevenZip}" b ${DictSize} -mmt=${HowManyCores} >>${TempLog}
 				done
@@ -2317,27 +2341,99 @@ RunPTS() {
 } # RunPTS
 
 RunGB() {
-	# executing geekbench5
+	# executing geekbench5 in a sane and monitored environment
 	echo -e "\x08\x08 Done.\nExecuting Geekbench...\c"
-	echo -e "\nSystem health while running Geekbench:\n" >>${MonitorLog}
 	MonitorInterval=$(( ${QuickAndDirtyPerformance} / 10000000 ))
+
+	# if the CPU contains clusters of different CPU cores, test them individually first
+	if [ ${#ClusterConfigByCoreType[@]} -ne 1 ]; then
+		echo -e "\nSystem health while running Geekbench cluster benchmarks:\n" >>${MonitorLog}
+		/bin/bash "${PathToMe}" -m $(( ${MonitorInterval} * ${#ClusterConfigByCoreType[@]} )) >>${MonitorLog} &
+		MonitoringPID=$!
+
+		for i in $(seq 0 $(( ${#ClusterConfigByCoreType[@]} -1 )) ) ; do
+			CoresOnline ${ClusterConfigByCoreType[$i]}
+			if [ $? -eq 0 ]; then
+				FirstCore=${ClusterConfigByCoreType[$i]}
+				CPUInfo="$(GetCPUInfo ${FirstCore})"
+				LastCore=$(GetLastClusterCoreByType $(( $i + 1 )))
+				HowManyCores=$(( $(( ${LastCore} - ${FirstCore} )) + 1 ))
+				# try to send as much cores as possible offline (cpu0 can't be sent offline)
+				for i in $(seq ${FirstOfflineCPU} $(( ${CPUCores} - 1 )) ); do
+					if [ $i -lt ${FirstCore} -o $i -gt ${LastCore} ]; then
+						echo 0 > /sys/devices/system/cpu/cpu${i}/online 2>/dev/null
+					fi
+				done
+				taskset -c ${FirstCore}-${LastCore} "${GBBinary}" >${TempLog} 2>&1
+				ResultsURL="$(awk -F"https" '/browser.geekbench.com/ {print $2}' <${TempLog} | head -n1)"
+				if [ "X${ResultsURL}" = "X" ]; then
+					echo -e "\x08\x08 Failed...\c"
+				else
+					echo -e "\n##########################################################################\n" >>${ResultLog}
+					if [ ${FirstCore} -eq ${LastCore} ]; then
+						echo -e "Executing Geekbench on core ${FirstCore}${CPUInfo}\n" >>${ResultLog}
+					else
+						echo -e "Executing Geekbench on cores ${FirstCore}-${LastCore}${CPUInfo}\n" >>${ResultLog}
+					fi
+					sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" <${TempLog} | sed '/add this result to your profile/,+3 d' | \
+						sed '/Geekbench 5 license/,+4 d' | sed '/active Internet connection/,+2 d' | \
+						sed '/preview build/,+1 d' | sed '/Single-Core/,+22 d' | sed '/Multi-Core/,+22 d' | \
+						sed '/Uploading results/,+4 d' | sed 's|: https://www.geekbench.com/||' >>${ResultLog}
+					links -dump "https${ResultsURL}" >${TempLog}
+					grep ' Score ' ${TempLog} | sed '/Multi-Core*/i \ \ \ ' | sed 's/^\ //' >>${ResultLog}
+					echo -e "\n  Single-Core Performance" >>${ResultLog}
+					sed '1,/^  Single-Core Performance$/d' ${TempLog} | grep -v -E '/sec| FPS| Score' | head -n46 >>${ResultLog}
+				fi
+				# bring back offline cores
+				for i in $(seq ${FirstOfflineCPU} $(( ${CPUCores} - 1 )) ); do
+					echo 1 >/sys/devices/system/cpu/cpu${i}/online
+					[ -f /sys/devices/system/cpu/cpufreq/policy${i}/scaling_governor ] && \
+						echo performance >/sys/devices/system/cpu/cpufreq/policy${i}/scaling_governor 2>/dev/null
+					sleep 0.5
+					[ -f /sys/devices/system/cpu/cpufreq/policy${i}/scaling_governor ] && \
+						echo performance >/sys/devices/system/cpu/cpufreq/policy${i}/scaling_governor 2>/dev/null
+				done
+			fi
+		done
+
+		kill ${MonitoringPID}
+	fi
+
+	# run Geekbench on all cores twice
+	echo -e "\nSystem health while running Geekbench on all cores:\n" >>${MonitorLog}
 	/bin/bash "${PathToMe}" -m ${MonitorInterval} >>${MonitorLog} &
 	MonitoringPID=$!
 	"${GBBinary}" >${TempLog} 2>&1
+	TempLog2="${TempDir}/temp2.log"
+	"${GBBinary}" >${TempLog2} 2>&1
 	kill ${MonitoringPID}
 	ResultsURL="$(awk -F"https" '/browser.geekbench.com/ {print $2}' <${TempLog} | head -n1)"
-	if [ "X${ResultsURL}" = "X" ]; then
-		echo -e "\x08\x08 Failed.\n$(cat ${TempLog})\n"
+	ResultsURL2="$(awk -F"https" '/browser.geekbench.com/ {print $2}' <${TempLog2} | head -n1)"
+	if [ "X${ResultsURL}" = "X" -o "X${ResultsURL2}" = "X" ]; then
+		echo -e "\x08\x08 Failed.\c..."
 	else
 		echo -e "\n##########################################################################\n" >>${ResultLog}
+		echo -e "Executing Geekbench on all cores twice\n" >>${ResultLog}
 		sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" <${TempLog} | sed '/add this result to your profile/,+3 d' | \
 			sed '/Geekbench 5 license/,+4 d' | sed '/active Internet connection/,+2 d' | \
 			sed '/preview build/,+1 d' | sed '/Single-Core/,+22 d' | sed '/Multi-Core/,+22 d' | \
 			sed '/Uploading results/,+4 d' | sed 's|: https://www.geekbench.com/||' >>${ResultLog}
 		links -dump "https${ResultsURL}" >${TempLog}
 		grep ' Score ' ${TempLog} | sed '/Multi-Core*/i \ \ \ ' | sed 's/^\ //' >>${ResultLog}
-		echo -e "\n  Single-Core Performance\n" >>${ResultLog}
+		echo -e "\n  Single-Core Performance" >>${ResultLog}
 		sed '1,/^  Single-Core Performance$/d' ${TempLog} | grep -v -E '/sec| FPS| Score' | head -n46 >>${ResultLog}
+		echo -e "\n" >>${ResultLog}
+
+		sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" <${TempLog2} | sed '/add this result to your profile/,+3 d' | \
+			sed '/Geekbench 5 license/,+4 d' | sed '/active Internet connection/,+2 d' | \
+			sed '/preview build/,+1 d' | sed '/Single-Core/,+22 d' | sed '/Multi-Core/,+22 d' | \
+			sed '/Uploading results/,+4 d' | sed 's|: https://www.geekbench.com/||' >>${ResultLog}
+		links -dump "https${ResultsURL2}" >${TempLog2}
+		grep ' Score ' ${TempLog2} | sed '/Multi-Core*/i \ \ \ ' | sed 's/^\ //' >>${ResultLog}
+		echo -e "\n  Single-Core Performance" >>${ResultLog}
+		sed '1,/^  Single-Core Performance$/d' ${TempLog2} | grep -v -E '/sec| FPS| Score' | head -n46 >>${ResultLog}
+		CompareURL="https://browser.geekbench.com/v5/cpu/compare/${ResultsURL##*/}?baseline=${ResultsURL2##*/}"
+		echo -e "\n${CompareURL}" >>${ResultLog}
 	fi
 } # RunGB
 
@@ -2532,11 +2628,13 @@ UploadResults() {
 		fi
 	elif [ "X${MODE}" = "Xgb" ]; then
 		if [ ${IOWaitAvg:-0} -le 2 -a ${IOWaitMax:-0} -le 5 -a ${SysMax:-0} -le 5 -a ! -f ${TempDir}/throttling_info.txt ]; then
+			echo -e "First run:\n"
 			grep ' Score ' ${TempLog} | sed '/Multi-Core*/i \ \ \ '
-			echo -e "\n   https${ResultsURL}"
+			echo -e "\nSecond run:\n"
+			grep ' Score ' ${TempLog2} | sed '/Multi-Core*/i \ \ \ '
+			echo -e "\n   ${CompareURL}"
 		else
 			echo "Scores not valid. Throttling occured and/or too much background activity."
-			echo "Please check /var/log/sbc-bench.log for anomalies."
 		fi
 	fi
 	case ${UploadURL} in
@@ -2579,7 +2677,7 @@ UploadResults() {
 	# Skip log writing if log is a symlink to somewhere else
 	[ -h /var/log/sbc-bench.log ] && return 1
 	[ -s /var/log/sbc-bench.log ] && echo -e "\n\n\n" >>/var/log/sbc-bench.log
-	cat ${ResultLog} >>/var/log/sbc-bench.log
+	sed '/^$/N;/^\n$/D' <${ResultLog} >>/var/log/sbc-bench.log
 	echo ""
 } # UploadResults
 

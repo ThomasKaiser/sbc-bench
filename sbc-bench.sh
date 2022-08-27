@@ -1153,6 +1153,15 @@ TempTest() {
 			echo -e "${LRED}${BOLD}Not able to build necessary tools. Aborting.${NC}\nMost probably gcc and make packages are missing." >&2
 			exit 1
 		fi
+	else
+		grep -q 'among 5 runs of the short loop' "${InstallLocation}"/mhz/mhz.c
+		if [ $? -ne 0 ]; then
+			# rebuild mhz due to https://github.com/wtarreau/mhz/commit/6620e45f41429afe577aa3bb80614ac3934afd82
+			echo -e "\x08\x08\x08, mhz...\c"
+			cd "${InstallLocation}/mhz"
+			git pull >/dev/null 2>&1
+			make >/dev/null 2>&1
+		fi
 	fi
 	InstallCpuminer >/dev/null 2>&1
 	if [ ! -x "${InstallLocation}"/cpuminer-multi/cpuminer ]; then
@@ -1633,7 +1642,7 @@ CheckGB() {
 			# 32-bit ARM: here the geekbench5 binary fails to launch the ARMv7 binary
 			DLSuffix="LinuxARMPreview"
 			GBBinaryName="geekbench_armv7"
-			FirstOfflineCPU=0
+			FirstOfflineCPU=1
 			;;
 		arm*)
 			DLSuffix="LinuxARMPreview"
@@ -1756,6 +1765,15 @@ InstallPrerequisits() {
 		if [ ! -x "${InstallLocation}"/mhz/mhz ]; then
 			echo -e "${LRED}${BOLD}Not able to build necessary tools. Aborting.${NC}\nMost probably gcc and make packages are missing." >&2
 			exit 1
+		fi
+	else
+		grep -q 'among 5 runs of the short loop' "${InstallLocation}"/mhz/mhz.c
+		if [ $? -ne 0 ]; then
+			# rebuild mhz due to https://github.com/wtarreau/mhz/commit/6620e45f41429afe577aa3bb80614ac3934afd82
+			echo -e "\x08\x08\x08, mhz...\c"
+			cd "${InstallLocation}/mhz"
+			git pull >/dev/null 2>&1
+			make >/dev/null 2>&1
 		fi
 	fi
 
@@ -2377,6 +2395,7 @@ RunGB() {
 						echo -e "Executing Geekbench on cores ${FirstCore}-${LastCore}${CPUInfo}\n" >>${ResultLog}
 						ResultList="${TempDir}/${FirstCore}-${LastCore}.lst"
 					fi
+					echo -e "\n  https${ResultsURL}\n" >>${ResultLog}
 					links -dump "https${ResultsURL}" >${TempLog}
 					grep ' Score ' ${TempLog} | sed '/Multi-Core*/i \ \ \ ' | sed 's/^\ //' >>${ResultList}
 					echo -e "\n  Single-Core Performance" >>${ResultList}
@@ -2431,7 +2450,7 @@ RunGB() {
 		sed '1,/^  Single-Core Performance$/d' ${TempLog2} | grep -v -E '/sec| FPS| Score' | head -n46 >>${ResultList}
 		cat ${ResultList} >>${ResultLog}
 		# create a results table
-		CreateGBResultsTable | sed 's/ HTML /HTML /' >>${ResultLog}
+		CreateGBResultsTable | sed 's/ HTML /HTML  /' >>${ResultLog}
 		CompareURL="https://browser.geekbench.com/v5/cpu/compare/${ResultsURL##*/}?baseline=${ResultsURL2##*/}"
 		echo -e "\n\n${CompareURL}" >>${ResultLog}
 	fi

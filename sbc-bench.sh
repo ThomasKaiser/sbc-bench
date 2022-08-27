@@ -2359,9 +2359,9 @@ RunGB() {
 				LastCore=$(GetLastClusterCoreByType $(( $i + 1 )))
 				HowManyCores=$(( $(( ${LastCore} - ${FirstCore} )) + 1 ))
 				# try to send as much cores as possible offline (cpu0 can't be sent offline)
-				for i in $(seq ${FirstOfflineCPU} $(( ${CPUCores} - 1 )) ); do
-					if [ $i -lt ${FirstCore} -o $i -gt ${LastCore} ]; then
-						echo 0 > /sys/devices/system/cpu/cpu${i}/online 2>/dev/null
+				for o in $(seq ${FirstOfflineCPU} $(( ${CPUCores} - 1 )) ); do
+					if [ $o -lt ${FirstCore} -o $o -gt ${LastCore} ]; then
+						echo 0 > /sys/devices/system/cpu/cpu${o}/online 2>/dev/null
 					fi
 				done
 				taskset -c ${FirstCore}-${LastCore} "${GBBinary}" >${TempLog} 2>&1
@@ -2372,26 +2372,25 @@ RunGB() {
 					echo -e "\n##########################################################################\n" >>${ResultLog}
 					if [ ${FirstCore} -eq ${LastCore} ]; then
 						echo -e "Executing Geekbench on core ${FirstCore}${CPUInfo}\n" >>${ResultLog}
+						ResultList="${TempDir}/${FirstCore}.lst"
 					else
 						echo -e "Executing Geekbench on cores ${FirstCore}-${LastCore}${CPUInfo}\n" >>${ResultLog}
+						ResultList="${TempDir}/${FirstCore}-${LastCore}.lst"
 					fi
-					sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" <${TempLog} | sed '/add this result to your profile/,+3 d' | \
-						sed '/Geekbench 5 license/,+4 d' | sed '/active Internet connection/,+2 d' | \
-						sed '/preview build/,+1 d' | sed '/Single-Core/,+22 d' | sed '/Multi-Core/,+22 d' | \
-						sed '/Uploading results/,+4 d' | sed 's|: https://www.geekbench.com/||' >>${ResultLog}
 					links -dump "https${ResultsURL}" >${TempLog}
-					grep ' Score ' ${TempLog} | sed '/Multi-Core*/i \ \ \ ' | sed 's/^\ //' >>${ResultLog}
-					echo -e "\n  Single-Core Performance" >>${ResultLog}
-					sed '1,/^  Single-Core Performance$/d' ${TempLog} | grep -v -E '/sec| FPS| Score' | head -n46 >>${ResultLog}
+					grep ' Score ' ${TempLog} | sed '/Multi-Core*/i \ \ \ ' | sed 's/^\ //' >>${ResultList}
+					echo -e "\n  Single-Core Performance" >>${ResultList}
+					sed '1,/^  Single-Core Performance$/d' ${TempLog} | grep -v -E '/sec| FPS| Score' | head -n46 >>${ResultList}
+					cat ${ResultList} >>${ResultLog}
 				fi
 				# bring back offline cores
-				for i in $(seq ${FirstOfflineCPU} $(( ${CPUCores} - 1 )) ); do
-					echo 1 >/sys/devices/system/cpu/cpu${i}/online
-					[ -f /sys/devices/system/cpu/cpufreq/policy${i}/scaling_governor ] && \
-						echo performance >/sys/devices/system/cpu/cpufreq/policy${i}/scaling_governor 2>/dev/null
+				for o in $(seq ${FirstOfflineCPU} $(( ${CPUCores} - 1 )) ); do
+					echo 1 >/sys/devices/system/cpu/cpu${o}/online
+					[ -f /sys/devices/system/cpu/cpufreq/policy${o}/scaling_governor ] && \
+						echo performance >/sys/devices/system/cpu/cpufreq/policy${o}/scaling_governor 2>/dev/null
 					sleep 0.5
-					[ -f /sys/devices/system/cpu/cpufreq/policy${i}/scaling_governor ] && \
-						echo performance >/sys/devices/system/cpu/cpufreq/policy${i}/scaling_governor 2>/dev/null
+					[ -f /sys/devices/system/cpu/cpufreq/policy${o}/scaling_governor ] && \
+						echo performance >/sys/devices/system/cpu/cpufreq/policy${o}/scaling_governor 2>/dev/null
 				done
 			fi
 		done
@@ -2414,28 +2413,49 @@ RunGB() {
 	else
 		echo -e "\n##########################################################################\n" >>${ResultLog}
 		echo -e "Executing Geekbench on all cores twice\n" >>${ResultLog}
+		ResultList="${TempDir}/all-1st.lst"
 		sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" <${TempLog} | sed '/add this result to your profile/,+3 d' | \
 			sed '/Geekbench 5 license/,+4 d' | sed '/active Internet connection/,+2 d' | \
 			sed '/preview build/,+1 d' | sed '/Single-Core/,+22 d' | sed '/Multi-Core/,+22 d' | \
 			sed '/Uploading results/,+4 d' | sed 's|: https://www.geekbench.com/||' >>${ResultLog}
 		links -dump "https${ResultsURL}" >${TempLog}
-		grep ' Score ' ${TempLog} | sed '/Multi-Core*/i \ \ \ ' | sed 's/^\ //' >>${ResultLog}
-		echo -e "\n  Single-Core Performance" >>${ResultLog}
-		sed '1,/^  Single-Core Performance$/d' ${TempLog} | grep -v -E '/sec| FPS| Score' | head -n46 >>${ResultLog}
-		echo -e "\n" >>${ResultLog}
-
-		sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" <${TempLog2} | sed '/add this result to your profile/,+3 d' | \
-			sed '/Geekbench 5 license/,+4 d' | sed '/active Internet connection/,+2 d' | \
-			sed '/preview build/,+1 d' | sed '/Single-Core/,+22 d' | sed '/Multi-Core/,+22 d' | \
-			sed '/Uploading results/,+4 d' | sed 's|: https://www.geekbench.com/||' >>${ResultLog}
+		grep ' Score ' ${TempLog} | sed '/Multi-Core*/i \ \ \ ' | sed 's/^\ //' >${ResultList}
+		echo -e "\n  Single-Core Performance" >>${ResultList}
+		sed '1,/^  Single-Core Performance$/d' ${TempLog} | grep -v -E '/sec| FPS| Score' | head -n46 >>${ResultList}
+		cat ${ResultList} >>${ResultLog}
+		ResultList="${TempDir}/all-2nd.lst"
+		echo -e "\n  https${ResultsURL2}\n" >>${ResultLog}
 		links -dump "https${ResultsURL2}" >${TempLog2}
-		grep ' Score ' ${TempLog2} | sed '/Multi-Core*/i \ \ \ ' | sed 's/^\ //' >>${ResultLog}
-		echo -e "\n  Single-Core Performance" >>${ResultLog}
-		sed '1,/^  Single-Core Performance$/d' ${TempLog2} | grep -v -E '/sec| FPS| Score' | head -n46 >>${ResultLog}
+		grep ' Score ' ${TempLog2} | sed '/Multi-Core*/i \ \ \ ' | sed 's/^\ //' >${ResultList}
+		echo -e "\n  Single-Core Performance" >>${ResultList}
+		sed '1,/^  Single-Core Performance$/d' ${TempLog2} | grep -v -E '/sec| FPS| Score' | head -n46 >>${ResultList}
+		cat ${ResultList} >>${ResultLog}
+		# create a results table
+		CreateGBResultsTable | sed 's/ HTML /HTML /' >>${ResultLog}
 		CompareURL="https://browser.geekbench.com/v5/cpu/compare/${ResultsURL##*/}?baseline=${ResultsURL2##*/}"
-		echo -e "\n${CompareURL}" >>${ResultLog}
+		echo -e "\n\n${CompareURL}" >>${ResultLog}
 	fi
 } # RunGB
+
+CreateGBResultsTable() {
+	cd "${TempDir}/"
+	echo -e "\n##########################################################################\n"
+	echo -e "All Geekbench results:\n\n                         \c"
+	for o in *.lst ; do
+		printf "%10s" "${o%.*}" | sed 's/all-/all /g'
+	done
+	echo ""
+	for i in $(seq 1 $(wc -l <${ResultList}) ); do
+		for o in *.lst ; do
+			case $o in
+				0*)
+					printf "\n%25s" "$(sed -n ${i}p <$o | cut -c-26 | tr -d '[:digit:]')"
+					;;
+			esac
+			printf "%10s" $(sed -n ${i}p <$o | cut -c25- | tr -d -c '[:digit:]')
+		done
+	done
+} # CreateGBResultsTable
 
 PrintCPUTopology() {
 	# prints list of CPU cores, clusters and cpufreq policy nodes
@@ -2632,7 +2652,7 @@ UploadResults() {
 			grep ' Score ' ${TempLog} | sed '/Multi-Core*/i \ \ \ '
 			echo -e "\nSecond run:\n"
 			grep ' Score ' ${TempLog2} | sed '/Multi-Core*/i \ \ \ '
-			echo -e "\n   ${CompareURL}"
+			echo -e "\n${CompareURL}"
 		else
 			echo "Scores not valid. Throttling occured and/or too much background activity."
 		fi

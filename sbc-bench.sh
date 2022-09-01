@@ -1949,11 +1949,19 @@ CheckClockspeedsAndSensors() {
 				CoresOnline ${FirstCore} ${LastCore}
 				case $? in
 					0)
-						echo -e "\nChecking cpufreq OPP for cpu${FirstCore}-cpu${LastCore}${CPUInfo}:\n" >>${ResultLog}
+						if [ ${FirstCore} -eq ${LastCore} ]; then
+							echo -e "\nChecking cpufreq OPP for cpu${FirstCore}${CPUInfo}:\n" >>${ResultLog}
+						else
+							echo -e "\nChecking cpufreq OPP for cpu${FirstCore}-cpu${LastCore}${CPUInfo}:\n" >>${ResultLog}
+						fi
 						CheckCPUCluster ${FirstCore} >>${ResultLog}
 						;;
 					*)
-						echo -e "\nSkipping cpu${FirstCore}-cpu${LastCore}${CPUInfo} since cores are offline: ${OfflineCores}" >>${ResultLog}
+						if [ ${FirstCore} -eq ${LastCore} ]; then
+							echo -e "\nSkipping cpu${FirstCore}${CPUInfo} since cores are offline: ${OfflineCores}" >>${ResultLog}
+						else
+							echo -e "\nSkipping cpu${FirstCore}-cpu${LastCore}${CPUInfo} since cores are offline: ${OfflineCores}" >>${ResultLog}
+						fi
 						;;
 				esac
 			done

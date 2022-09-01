@@ -1887,10 +1887,12 @@ InitialMonitoring() {
 		echo -e "\nActual ThreadX settings:\n$("${VCGENCMD}" get_config int)" >>${ResultLog}
 	fi
 
-	# Log gcc version
-	GCC="$(command -v gcc)"
-	GCC_Version="$(${GCC} --version | sed 's/gcc\ //' | head -n1)"
-	echo -e "\n${GCC} ${GCC_Version}" >>${ResultLog}
+	# Log gcc version if not in Geekbench mode
+	if [ "X${MODE}" != "Xgb" ]; then
+		GCC="$(command -v gcc)"
+		GCC_Version="$(${GCC} --version | sed 's/gcc\ //' | head -n1)"
+		echo -e "\n${GCC} ${GCC_Version}" >>${ResultLog}
+	fi
 
 	# Some basic system info needed to interpret system health later
 	echo -e "\nUptime:$(uptime),  ${InitialTemp}°C\n\n$(iostat | egrep -v "^loop|boot0|boot1")\n\n$(free -h)\n\n$(swapon -s)\n" | sed '/^$/N;/^\n$/D' >>${ResultLog}
@@ -2623,9 +2625,11 @@ LogEnvironment() {
 		echo "DT compat: $(head -n1 <<<"${DTCompatible}")"
 		tail -n +2 <<<"${DTCompatible}" | sed -e 's/^/           /'
 	fi
-	# Log compiler version
-	GCC_Info="$(${GCC} -v 2>&1 | egrep "^Target|^Configured")"
-	echo -e " Compiler: ${GCC} ${GCC_Version} / $(awk -F": " '/^Target/ {print $2}' <<< "${GCC_Info}")"
+	# Log compiler version if not in Geekbench mode
+	if [ "X${MODE}" != "Xgb" ]; then
+		GCC_Info="$(${GCC} -v 2>&1 | egrep "^Target|^Configured")"
+		echo -e " Compiler: ${GCC} ${GCC_Version} / $(awk -F": " '/^Target/ {print $2}' <<< "${GCC_Info}")"
+	fi
 	# Log userland architecture if available
 	[ "X${ARCH}" != "X" ] && echo " Userland: ${ARCH}"
 	# Log ThreadX version if available
@@ -2635,6 +2639,9 @@ LogEnvironment() {
 			echo "           ${REPLY}"
 		done
 	fi
+	# check whether it's a Rockchip BSP kernel with dmc enabled
+	DMCGovernor="$(find /sys -name governor | grep '/dmc/' | head -n1)"
+	[ -f "${DMCGovernor}" ] && echo -e "  DMC gov: $(cat "${DMCGovernor}")"
 	# check for VM/container mode to add this to kernel info
 	[ "X${VirtWhat}" != "X" -a "X${VirtWhat}" != "Xnone" ] && VirtOrContainer=" (${VirtWhat})"
 	# kernel info

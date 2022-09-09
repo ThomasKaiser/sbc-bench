@@ -32,7 +32,7 @@ Main() {
 	fi
 	
 	# check in which mode we're supposed to run
-	while getopts 'chmtTpNPG' c ; do
+	while getopts 'chmtTgNPG' c ; do
 		case ${c} in
 			m)
 				# monitoring mode
@@ -3013,11 +3013,11 @@ GuessARMSoC() {
 	# soc soc0: Amlogic Meson G12A (Unknown) Revision 28:b (70:2) Detected <-- Amlogic Meson G12A U200 Development Board
 	# soc soc0: Amlogic Meson G12A (Unknown) Revision 28:c (70:2) Detected <-- Amlogic Meson G12A U200 Development Board / Skyworth E900V22C
 	# soc soc0: Amlogic Meson G12B (S922X) Revision 29:a (40:2) Detected <-- ODROID-N2 / Beelink GT-King Pro
-	# soc soc0: Amlogic Meson G12B (A311D) Revision 29:b (10:2) Detected <-- Khadas VIM3 / Radxa Zero 2
+	# soc soc0: Amlogic Meson G12B (A311D) Revision 29:b (10:2) Detected <-- Khadas VIM3 / Radxa Zero 2 / UnionPi Tiger
 	# soc soc0: Amlogic Meson G12B (S922X) Revision 29:b (40:2) Detected <-- Beelink GT-King Pro
 	# soc soc0: Amlogic Meson G12B (S922X) Revision 29:c (40:2) Detected <-- ODROID-N2+ ('S922X-B')
 	# soc soc0: Amlogic Meson Unknown (Unknown) Revision 2a:e (c5:2) Detected <-- Amlogic Meson GXL (S905L2) X7 5G Tv Box / Amlogic Meson GXL (S905X) P212 Development Board
-	# soc soc0: Amlogic Meson SM1 (S905D3) Revision 2b:b (1:2) Detected <-- AMedia X96 Max+
+	# soc soc0: Amlogic Meson SM1 (S905D3) Revision 2b:b (1:2) Detected <-- AMedia X96 Max+ / SEI Robotics SEI610
 	# soc soc0: Amlogic Meson SM1 (Unknown) Revision 2b:b (1:2) Detected <-- Shenzhen Amediatech Technology Co. Ltd X96 Air / AMedia X96 Max+ / SEI Robotics SEI610
 	# soc soc0: Amlogic Meson SM1 (S905D3) Revision 2b:c (4:2) Detected <-- Khadas VIM3L / https://www.spinics.net/lists/arm-kernel/msg848718.html
 	# soc soc0: Amlogic Meson SM1 (S905X3) Revision 2b:c (10:2) Detected <-- AMedia X96 Max+ / H96 Max X3 / ODROID-C4 / ODROID-HC4 / HK1 Box / Vontar X3 / SEI Robotics SEI610 / Shenzhen Amediatech Technology Co. Ltd X96 Max/Air / Shenzhen CYX Industrial Co. Ltd A95XF3-AIR / Sinovoip BANANAPI-M5 / Tanix TX3 (QZ)
@@ -3347,10 +3347,13 @@ GuessARMSoC() {
 								# T7: A311D2: 36:b (1:3)
 								echo "Amlogic A311D2"
 								;;
+							37*)
+								# S4: S905Y4, S805X2
+								echo "S905Y4/S805X2"
+								;;
 							*)
 								# https://tinyurl.com/y85lsxsc:
 								# T3 --> T982, T963D4, T965D4
-								# S4 --> S905Y4, S805X2 (quad Cortex-A35) https://lkml.org/lkml/2022/1/6/204
 								# S4D --> S905C3, S905C3ENG (quad Cortex-A35): https://archive.md/4H6xM
 								echo "unknown Amlogic, serial $(cut -c-6 <<<"${AmLogicSerial}")..."
 								;;
@@ -3819,6 +3822,10 @@ GuessSoCbySignature() {
 					echo "NXP i.MX8QXP"
 					;;
 			esac
+			;;
+		00A35r1p000A35r1p000A35r1p000A35r1p0)
+			# S905Y4/S805X2, 4 x Cortex-A35 / r1p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32
+			echo "Amlogic S905Y4/S805X2"
 			;;
 		00A55r1p000A55r1p000A55r1p000A55r1p0)
 			# Amlogic S905X3, 4 x Cortex-A55 / r1p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp (with 5.4+ also 'asimddp asimdrdm cpuid dcpop lrcpc')

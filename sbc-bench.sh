@@ -4192,8 +4192,12 @@ GuessSoCbySignature() {
 			# SiFive "Freedom" U540: 4 x U54-MC https://www.sifive.com/cores/u54-mc
 			echo "SiFive U540"
 			;;
+		10sifive,u74mc10sifive,u74mc10sifive,u74mc10sifive,u74mc|*sifive,u74mc*sifive,u74mc*sifive,u74mc*sifive,u74mc)
+			# StarFive JH7110: 4 x U74-MC https://doc-en.rvspace.org/Doc_Center/datasheet_7110.html
+			echo "StarFive JH7110"
+			;;
 		*sifive,u74-mc*sifive,u74-mc)
-			# StarFive JH7100: 2 x U74-MC https://rvspace.org/en/Product/JH7100/Technical_Documents/JH7100_Datasheet
+			# StarFive JH7100: 2 x U74-MC https://doc-en.rvspace.org/Doc_Center/datasheet_7100.html
 			echo "StarFive JH7100"
 			;;
 		00Qualcomm4XXSilver00Qualcomm4XXSilver00Qualcomm4XXSilver00Qualcomm4XXSilver14A77r1p014A77r1p014A77r1p027A77r1p0)

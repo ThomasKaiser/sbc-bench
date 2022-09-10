@@ -219,6 +219,7 @@ GetARMCore() {
 	41/c27:Cortex-M7
 	41/c60:Cortex-M0+
 	41/d01:Cortex-A32
+	41/d02:Cortex-A34
 	41/d03:Cortex-A53
 	41/d04:Cortex-A35
 	41/d05:Cortex-A55
@@ -237,6 +238,7 @@ GetARMCore() {
 	41/d40:Neoverse-V1
 	41/d41:Cortex-A78
 	41/d42:Cortex-A78AE
+	41/d43:Cortex-A65AE
 	41/d44:Cortex-X1
 	41/d46:Cortex-A510
 	41/d47:Cortex-A710
@@ -244,6 +246,7 @@ GetARMCore() {
 	41/d49:Neoverse-N2
 	41/d4a:Neoverse-E1
 	41/d4b:Cortex-A78C
+	41/d4c:Cortex-X1C
 	41/d4d:Cortex-A715
 	41/d4e:Cortex-X3
 	42:Broadcom
@@ -838,7 +841,7 @@ GetTempSensor() {
 				# Quick results check within few months showed the following types which
 				# smell all not that good if it's about CPU or SoC temperatures:
 				# scpi_sensors, w1_slave_temp, iio_hwmon, sun4i_ts, gpu_thermal, iwlwifi_1
-				NodeGuess=$(cat /sys/devices/virtual/thermal/thermal_zone?/type 2>/dev/null | sort -n | egrep "cpu|soc|CPU-therm|x86_pkg_temp|thermal-fan-est" | head -n1)
+				NodeGuess=$(cat /sys/devices/virtual/thermal/thermal_zone?/type 2>/dev/null | sort -n | grep -E "cpu|soc|CPU-therm|x86_pkg_temp|thermal-fan-est" | head -n1)
 				if [ "X${NodeGuess}" != "X" ]; then
 					# let's use this thermal node instead
 					TempSource="$(mktemp /tmp/soctemp.XXXXXX)"
@@ -908,7 +911,7 @@ GetTempSensor() {
 					read ThermalSource </sys/devices/platform/a20-tp-hwmon/name 2>/dev/null && \
 						TempInfo="Thermal source: /sys/devices/platform/a20-tp-hwmon/ (${ThermalSource})"
 				else
-					NodeGuess=$(cat /sys/devices/virtual/thermal/thermal_zone?/type 2>/dev/null | egrep -i "aml_thermal|cpu|soc" | tail -n1)
+					NodeGuess=$(cat /sys/devices/virtual/thermal/thermal_zone?/type 2>/dev/null | grep -E -i "aml_thermal|cpu|soc" | tail -n1)
 					if [ "X${NodeGuess}" != "X" ]; then
 						# let's use this thermal node
 						ThermalZone="$(GetThermalZone "${NodeGuess}")"
@@ -1307,7 +1310,8 @@ CheckRelease() {
 
 CheckLoadAndDmesg() {
 	# Check if kernel ring buffer contains boot messages. These help identifying HW.
-	dmesg | grep -q -E '] Booting Linux|] Linux version '
+	DMESG="$(dmesg | grep -E "Linux| raid6: | xor: |pvtm|rockchip-cpuinfo|Amlogic Meson|sun50i")"
+	grep -q -E '] Booting Linux|] Linux version ' <<<"${DMESG}"
 	case $? in
 		1)
 			if [ "X${MODE}" != "Xunattended" ]; then
@@ -1436,9 +1440,9 @@ BasicSetup() {
 	X86CPUName="$(sed 's/ \{1,\}/ /g' <<<"${LSCPU}" | awk -F": " '/^Model name/ {print $2}' | sed -e 's/1.th Gen //' -e 's/.th Gen //' -e 's/Core(TM) //' -e 's/ Processor//' -e 's/Intel(R) Xeon(R) CPU //' -e 's/Intel(R) //' -e 's/(R)//' -e 's/CPU //' -e 's/ 0 @/ @/' -e 's/AMD //' -e 's/Authentic //' -e 's/ with .*//')"
 	VirtWhat="$(systemd-detect-virt 2>/dev/null)"
 	[ -f /sys/class/dmi/id/sys_vendor ] && DMIInfo="$(grep -R . /sys/class/dmi/id/ 2>/dev/null)"
-	DMISysVendor="$(awk -F":" '/sys_vendor:/ {print $2}' <<<"${DMIInfo}" | egrep -v "O.E.M.|System manufacturer|Default|default|Not ")"
-	DMIProductName="$(awk -F":" '/product_name:/ {print $2}' <<<"${DMIInfo}" | egrep -v "O.E.M.|Product Name|Default|default|Not ")"
-	DMIProductVersion="$(awk -F":" '/product_version:/ {print $2}' <<<"${DMIInfo}" | egrep -v "O.E.M.|123456789|Not |Default|System Product Name|System Version")"
+	DMISysVendor="$(awk -F":" '/sys_vendor:/ {print $2}' <<<"${DMIInfo}" | grep -E -v "O.E.M.|System manufacturer|Default|default|Not ")"
+	DMIProductName="$(awk -F":" '/product_name:/ {print $2}' <<<"${DMIInfo}" | grep -E -v "O.E.M.|Product Name|Default|default|Not ")"
+	DMIProductVersion="$(awk -F":" '/product_version:/ {print $2}' <<<"${DMIInfo}" | grep -E -v "O.E.M.|123456789|Not |Default|System Product Name|System Version")"
 
 	# Overwrite DeviceName in virtualized environments with hypervisor info
 	case ${DMISysVendor} in
@@ -1708,7 +1712,7 @@ InstallPrerequisits() {
 	fi
 	
 	# add needed repository and install all necessary packages
-	egrep -q "sensors|gcc|git|sysstat|openssl|curl|dmidecode|i2c|lshw|p7zip|wget|links" <<<"${MissingPackages}"
+	grep -E -q "sensors|gcc|git|sysstat|openssl|curl|dmidecode|i2c|lshw|p7zip|wget|links" <<<"${MissingPackages}"
 	if [ $? -eq 0 ]; then
 		echo -e "\x08\x08 ${MissingPackages}...\c"
 		add-apt-repository -y universe >/dev/null 2>&1
@@ -1865,12 +1869,12 @@ InitialMonitoring() {
 		echo "Armbian info:   ${BOARD_NAME}, ${BOARDFAMILY}, ${LINUXFAMILY}, ${VERSION}, ${BUILD_REPOSITORY_URL}" | sed 's/,\ $//' >>${ResultLog}
 
 	# Log system info and BIOS/UEFI versions if available:
-	SystemInfo="$(dmidecode -t system 2>/dev/null | egrep "Manufacturer: |Product Name: |Version: |Family: |SKU Number: " | egrep -v ":  $|O.E.M.|123456789|: Not |Default|default|System Product Name|System manufacturer|System Version")"
+	SystemInfo="$(dmidecode -t system 2>/dev/null | grep -E "Manufacturer: |Product Name: |Version: |Family: |SKU Number: " | grep -E -v ":  $|O.E.M.|123456789|: Not |Default|default|System Product Name|System manufacturer|System Version")"
 	if [ "X${SystemInfo}" != "X" ]; then
 		# Skip worthless SMBIOS/DMI emulation on RPi
 		grep -i -q "raspberrypi" <<<"${SystemInfo}" || echo -e "\nDevice Info:\n${SystemInfo}" >>${ResultLog}
 	fi
-	UEFIInfo="$(dmidecode -t bios 2>/dev/null | egrep "Vendor:|Version:|Release Date:|Revision:")"
+	UEFIInfo="$(dmidecode -t bios 2>/dev/null | grep -E "Vendor:|Version:|Release Date:|Revision:")"
 	if [ "X${UEFIInfo}" != "X" ]; then
 		echo -e "\nBIOS/UEFI:\n${UEFIInfo}" >>${ResultLog}
 	fi
@@ -1895,7 +1899,7 @@ InitialMonitoring() {
 	fi
 
 	# Some basic system info needed to interpret system health later
-	echo -e "\nUptime:$(uptime),  ${InitialTemp}°C\n\n$(iostat | egrep -v "^loop|boot0|boot1")\n\n$(free -h)\n\n$(swapon -s)\n" | sed '/^$/N;/^\n$/D' >>${ResultLog}
+	echo -e "\nUptime:$(uptime),  ${InitialTemp}°C\n\n$(iostat | grep -E -v "^loop|boot0|boot1")\n\n$(free -h)\n\n$(swapon -s)\n" | sed '/^$/N;/^\n$/D' >>${ResultLog}
 	ShowZswapStats 2>/dev/null >>${ResultLog}
 	
 	# set up Netio consumption monitoring if requested. Device address and socket
@@ -2533,8 +2537,8 @@ SummarizeResults() {
 	# Check %iowait and %sys percentage as an indication of swapping or too much background
 	# activity
 	IOWaitAvg=$(CheckIOWait)
-	IOWaitMax="$(egrep "MHz  |---  " "${MonitorLog}" | awk -F"%" '{print $5}' | sed '/^[[:space:]]*$/d' | sed -e '1,2d' | sort -n -r | head -n1 | sed 's/  //')"
-	SysMax="$(egrep "MHz  |---  " "${MonitorLog}" | awk -F"%" '{print $2}' | sed '/^[[:space:]]*$/d' | sed -e '1,2d' | sort -n -r | head -n1 | sed 's/  //')"
+	IOWaitMax="$(grep -E "MHz  |---  " "${MonitorLog}" | awk -F"%" '{print $5}' | sed '/^[[:space:]]*$/d' | sed -e '1,2d' | sort -n -r | head -n1 | sed 's/  //')"
+	SysMax="$(grep -E "MHz  |---  " "${MonitorLog}" | awk -F"%" '{print $2}' | sed '/^[[:space:]]*$/d' | sed -e '1,2d' | sort -n -r | head -n1 | sed 's/  //')"
 
 	# Prepare benchmark results
 	echo -e "\n##########################################################################\n" >>${ResultLog}
@@ -2555,14 +2559,14 @@ SummarizeResults() {
 
 	# add dmesg output since start of the benchmark if something relevant is there
 	TimeStamp="$(dmesg | tr -d '[' | tr -d ']' | awk -F" " '/sbc-bench started/ {print $1}' | tail -n1)"
-	dmesg | sed "/${TimeStamp}/,\$!d" | egrep -v 'sbc-bench started|started with executable stack' >"${TempDir}/dmesg"
+	dmesg | sed "/${TimeStamp}/,\$!d" | grep -E -v 'sbc-bench started|started with executable stack' >"${TempDir}/dmesg"
 	if [ -s "${TempDir}/dmesg" ]; then
 		echo -e "\n##########################################################################\n\ndmesg output while running the benchmarks:\n" >>${ResultLog}
 		cat "${TempDir}/dmesg" >>${ResultLog}
 	fi
 
 	echo -e "\n##########################################################################\n" >>${ResultLog}
-	echo -e "$(iostat | egrep -v "^loop|boot0|boot1")\n\n$(free -h)\n\n$(swapon -s)\n" | sed '/^$/N;/^\n$/D' >>${ResultLog}
+	echo -e "$(iostat | grep -E -v "^loop|boot0|boot1")\n\n$(free -h)\n\n$(swapon -s)\n" | sed '/^$/N;/^\n$/D' >>${ResultLog}
 	ShowZswapStats 2>/dev/null >>${ResultLog}
 	echo >>${ResultLog}
 	cat "${TempDir}/cpu-topology.log" >>${ResultLog}
@@ -2605,7 +2609,7 @@ LogEnvironment() {
 	# Log processor info if available and we're not running virtualized:
 	VirtWhat="$(systemd-detect-virt 2>/dev/null)"
 	if [ "X${VirtWhat}" = "X" -o "X${VirtWhat}" = "Xnone" ]; then
-		ProcessorInfo="$(dmidecode -t processor 2>/dev/null | egrep -v -i "^#|^Handle|Serial|O.E.M.|123456789|SMBIOS|: Not |Unknown|OUT OF SPEC|00 00 00 00 00 00 00 00|: None")"
+		ProcessorInfo="$(dmidecode -t processor 2>/dev/null | grep -E -v -i "^#|^Handle|Serial|O.E.M.|123456789|SMBIOS|: Not |Unknown|OUT OF SPEC|00 00 00 00 00 00 00 00|: None")"
 		if [ "X${ProcessorInfo}" != "X" ]; then
 			echo -e "\n${ProcessorInfo}\n"
 		fi
@@ -2627,7 +2631,7 @@ LogEnvironment() {
 	fi
 	# Log compiler version if not in Geekbench mode
 	if [ "X${MODE}" != "Xgb" ]; then
-		GCC_Info="$(${GCC} -v 2>&1 | egrep "^Target|^Configured")"
+		GCC_Info="$(${GCC} -v 2>&1 | grep -E "^Target|^Configured")"
 		echo -e " Compiler: ${GCC} ${GCC_Version} / $(awk -F": " '/^Target/ {print $2}' <<< "${GCC_Info}")"
 	fi
 	# Log userland architecture if available
@@ -2657,9 +2661,9 @@ LogEnvironment() {
 			while read ; do echo "           ${REPLY}"; done | sort -V
 	fi
 	# if available report the kernel's xor/raid6 choices
-	dmesg | awk -F"] " '/ raid6: | xor: / {print "           "$2}'
+	awk -F"] " '/ raid6: | xor: / {print "           "$2}' <<<"${DMESG}"
 	# with Rockchip BSP kernels try to report PVTM settings (Process-Voltage-Temperature Monitor)
-	dmesg | grep cpu.*pvtm | awk -F'] ' '{print "           "$2}'
+	grep cpu.*pvtm <<<"${DMESG}" | awk -F'] ' '{print "           "$2}'
 } # LogEnvironment
 
 UploadResults() {
@@ -2840,7 +2844,7 @@ ReportRPiHealth() {
 } # ReportRPiHealth
 
 CacheAndDIMMDetails() {
-	DIMMDetails="$(lshw -C memory 2>/dev/null | egrep "^          |-bank:" | grep -vi "serial:")"
+	DIMMDetails="$(lshw -C memory 2>/dev/null | grep -E "^          |-bank:" | grep -vi "serial:")"
 	if [ "X${DIMMDetails}" != "X" ]; then
 		if [ "X${VirtWhat}" = "X" -o "X${VirtWhat}" = "Xnone" ]; then
 			# only report DIMM config when running bare metal
@@ -2848,7 +2852,7 @@ CacheAndDIMMDetails() {
 			# unfortunately lshw only reports max clockspeeds of DIMM modules so we try to
 			# get configured speed via dmidecode as well
 			DIMMFilter="$(echo -e "\tLocator:|\tConfigured Memory Speed:|\tConfigured Clock Speed:")"
-			dmidecode --type 17 | egrep "${DIMMFilter}" | tr "\n" "|" | sed -e 's/|\tCon/:/g' -e 's/\ //g' | tr '|' '\n' | grep -vi "unknown$" | while read ; do
+			dmidecode --type 17 | grep -E "${DIMMFilter}" | tr "\n" "|" | sed -e 's/|\tCon/:/g' -e 's/\ //g' | tr '|' '\n' | grep -vi "unknown$" | while read ; do
 				Pattern="$(awk -F":" '{print $2}' <<<"${REPLY}")"
 				Insertion="$(awk -F":" '{print $4}' <<<"${REPLY}" | sed 's/\//\\\//')"
 				sed -i "s/^          slot: ${Pattern}$/          configured speed: ${Insertion}/g" "${TempDir}/dimms"
@@ -2920,6 +2924,7 @@ GuessARMSoC() {
 	#      Cortex-A15 / r3p3: Nvidia Tegra K1
 	#      Cortex-A17 / r0p1: Rockchip RK3288
 	#      Cortex-A35 / r0p2: NXP i.MX8QXP, Rockchip RK1808/RK3308/RK3326/PX30
+	#      Cortex-A35 / r1p0: Amlogic S905Y4/S805X2
 	#      Cortex-A53 / r0p0: Qualcomm Snapdragon 410 (MSM8916)
 	#      Cortex-A53 / r0p2: Marvell PXA1908, Qualcomm Snapdragon 810 (MSM8994)
 	#      Cortex-A53 / r0p3: HiSilicon Kirin 620/930, Nexell S5P6818, Snapdragon 808 / MSM8992
@@ -3170,11 +3175,11 @@ GuessARMSoC() {
 
 	CPUInfo="$(cat /proc/cpuinfo)"
 	HardwareInfo="$(awk -F': ' '/^Hardware/ {print $2}' <<< "${CPUInfo}" | tail -n1)"
-	RockchipGuess="$(dmesg | awk -F': ' '/rockchip-cpuinfo cpuinfo: SoC/ {print $3}'| head -n1)"
-	AmlogicGuess="Amlogic Meson$(dmesg | grep -i " detected$" | awk -F"Amlogic Meson" '/Amlogic Meson/ {print $2}' | head -n1)"
+	RockchipGuess="$(awk -F': ' '/rockchip-cpuinfo cpuinfo: SoC/ {print $3}' <<<"${DMESG}" | head -n1)"
+	AmlogicGuess="Amlogic Meson$(grep -i " detected$" <<<"${DMESG}" | awk -F"Amlogic Meson" '/Amlogic Meson/ {print $2}' | head -n1)"
 	
 	if [ "X${RockchipGuess}" != "X" ]; then
-		echo "Rockchip RK$(cut -c-4 <<<"${RockchipGuess}") (${RockchipGuess})"
+		echo "Rockchip RK$(cut -c-4 <<<"${RockchipGuess}") (${RockchipGuess})" | sed 's| RK3588 | RK3588/RK3588s |'
 	elif [ "X${AmlogicGuess}" != "XAmlogic Meson" ]; then
 		echo "${AmlogicGuess}" | sed -e 's/GXL (Unknown) Revision 21:b (2:2)/GXL (S905D) Revision 21:b (2:2)/' \
 		-e 's/GXL (Unknown) Revision 21:c (84:2)/GXL (S905X) Revision 21:c (84:2)/' \
@@ -3349,7 +3354,7 @@ GuessARMSoC() {
 								;;
 							37*)
 								# S4: S905Y4, S805X2
-								echo "S905Y4/S805X2"
+								echo "Amlogic S905Y4/S805X2"
 								;;
 							*)
 								# https://tinyurl.com/y85lsxsc:
@@ -4292,10 +4297,10 @@ IdentifyAllwinnerARMv8() {
 	grep -q axp806 /proc/interrupts && echo "Allwinner H616/H313"
 
 	# Maybe there's something in kernel ring buffer identifying the SoC
-	dmesg | egrep -q "sun50i-h616|sun50iw9" && echo "Allwinner H616/H313"
-	dmesg | grep -q sun50i-a64 && echo "Allwinner A64"
-	dmesg | grep -q sun50i-h5 && echo "Allwinner H5"
-	dmesg | grep -q sun50i-h6- && echo "Allwinner H6"
+	grep -E -q "sun50i-h616|sun50iw9" <<<"${DMESG}" && echo "Allwinner H616/H313"
+	grep -q sun50i-a64 <<<"${DMESG}" && echo "Allwinner A64"
+	grep -q sun50i-h5 <<<"${DMESG}" && echo "Allwinner H5"
+	grep -q sun50i-h6- <<<"${DMESG}" && echo "Allwinner H6"
 
 	# A64 is accompanied by AXP803 PMIC:
 	grep -q axp803 /proc/interrupts && echo "Allwinner A64"
@@ -4308,7 +4313,7 @@ IdentifyAllwinnerARMv8() {
 	lsmod | grep -i -q sy8106a && echo "Allwinner H5"
 
 	# Maybe there's something in kernel ring buffer identifying the SoC
-	dmesg | egrep -q "sun50i-h5|sun50iw2" && echo "Allwinner H5"
+	grep -E -q "sun50i-h5|sun50iw2" <<<"${DMESG}" && echo "Allwinner H5"
 
 	# if we end up here then print some generic BS
 	echo "Allwinner unidentified SoC"

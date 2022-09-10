@@ -84,6 +84,7 @@
 | [` Rokid RG-station`](https://browser.geekbench.com/v5/cpu/15000564) (19 May 2022) | 5.4.1 |    558 |    2411 | 4 Cores @ 1.80 GHz / 4 Cores @ 2.40 GHz  |
 | [` rk3588_s`](https://browser.geekbench.com/v5/cpu/15012503) (20 May 2022) | 5.4.1 |    632 |    2429 | 4 Cores @ 1.80 GHz / 4 Cores @ 2.40 GHz  |
 | [` rk3588s_s`](https://browser.geekbench.com/v5/cpu/15071066) (23 May 2022) | 5.4.4 |    520 |    2307 | 4 Cores @ 1.80 GHz / 4 Cores @ 2.40 GHz  |
+| [` Radxa ROCK 5B`](https://browser.geekbench.com/v5/cpu/15084394) (23 May 2022) | 5.4.3 |    584 |    2536 |  |
 | [` rk3588s_s`](https://browser.geekbench.com/v5/cpu/15125508) (26 May 2022) | 5.4.3 |    505 |    2279 | 4 Cores @ 1.80 GHz / 4 Cores @ 2.40 GHz  |
 | [` rk3588s_s`](https://browser.geekbench.com/v5/cpu/15125591) (26 May 2022) | 5.4.3 |    505 |    2286 | 4 Cores @ 1.80 GHz / 4 Cores @ 2.40 GHz  |
 | [` rk3588s_s`](https://browser.geekbench.com/v5/cpu/15125667) (26 May 2022) | 5.4.3 |    496 |    2262 | 4 Cores @ 1.80 GHz / 4 Cores @ 2.40 GHz  |
@@ -205,3 +206,4 @@
 | [` Firefly Station N1`](https://browser.geekbench.com/v5/cpu/15891651) (08 Jul 2022) | 5.4.1 |    496 |    1868 | 4 Cores @ 1.80 GHz / 2 Cores @ 2.26 GHz / 2 Cores @ 2.35 GHz  |
 | [` Firefly ROC-RK3588S-PC`](https://browser.geekbench.com/v5/cpu/15895473) (08 Jul 2022) | 5.4.4 |    495 |    2051 | 4 Cores @ 1.80 GHz / 2 Cores @ 2.26 GHz / 2 Cores @ 2.35 GHz  |
 | [` rk3588_s`](https://browser.geekbench.com/v5/cpu/15903734) (09 Jul 2022) | 5.4.1 |    533 |    2318 | 4 Cores @ 1.80 GHz / 4 Cores @ 2.35 GHz  |
+| [` Radxa ROCK 5B`](https://browser.geekbench.com/v5/cpu/16905066) (27 Aug 2022) | 5.4.4 |    671 |    2691 |  |

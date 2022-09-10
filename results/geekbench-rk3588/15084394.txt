@@ -1,0 +1,187 @@
+   Geekbench Browser 
+     * Geekbench 5
+       Top Single-Core Results Top Multi-Core Results Recent Results
+       Recent Compute Results
+     * Geekbench ML
+       Recent Results
+     * Benchmark Charts
+       Android Benchmark Chart iOS Benchmark Chart Mac Benchmark Chart
+       Processor Benchmark Chart
+       ML Benchmark Chart
+       CUDA Benchmark Chart Metal Benchmark Chart OpenCL Benchmark Chart
+       Vulkan Benchmark Chart
+       _____________________
+     * Account
+       Sign Up Log In
+
+                                 Radxa ROCK 5B
+
+  Geekbench 5 Score
+
+   584
+   Single-Core Score
+   2536
+   Multi-Core Score
+   Geekbench 5.4.3 Preview for Linux AArch64
+
+  Result Information
+
+   Upload Date Mon, 23 May 2022 19:03:15 +0000 
+   Views       16                              
+
+  System Information
+
+   System Information
+   Operating System Debian GNU/Linux 11 (bullseye) 
+   Model            Radxa ROCK 5B                  
+   Motherboard      N/A                            
+
+   CPU Information
+   Name           ARM ARMv8                      
+   Topology       1 Processor, 1 Core, 8 Threads 
+   Base Frequency 1.80 GHz                       
+
+   Memory Information
+   Memory   15.35 GB  
+
+  Single-Core Performance
+
+   Single-Core Score     584                 
+   Crypto Score          837                 
+   Integer Score         586                 
+   Floating Point Score  536                 
+   AES-XTS               837                   
+                         1.43 GB/sec         
+   Text Compression      504                   
+                         2.55 MB/sec         
+   Image Compression     634                   
+                         30.0 Mpixels/sec    
+   Navigation            492                   
+                         1.39 MTE/sec        
+   HTML5                 625                   
+                         734.3 KElements/sec 
+   SQLite                604                   
+                         189.3 Krows/sec     
+   PDF Rendering         635                   
+                         34.4 Mpixels/sec    
+   Text Rendering        630                   
+                         200.6 KB/sec        
+   Clang                 607                   
+                         4.73 Klines/sec     
+   Camera                568                   
+                         6.58 images/sec     
+   N-Body Physics        294                   
+                         368.0 Kpairs/sec    
+   Rigid Body Physics    814                   
+                         5043.6 FPS          
+   Gaussian Blur         196                   
+                         10.8 Mpixels/sec    
+   Face Detection        675                   
+                         5.19 images/sec     
+   Horizon Detection     662                   
+                         16.3 Mpixels/sec    
+   Image Inpainting      858                   
+                         42.1 Mpixels/sec    
+   HDR                   1036                  
+                         14.1 Mpixels/sec    
+   Ray Tracing           895                   
+                         718.5 Kpixels/sec   
+   Structure from Motion 569                   
+                         5.09 Kpixels/sec    
+   Speech Recognition    374                   
+                         12.0 Words/sec      
+   Machine Learning      295                   
+                         11.4 images/sec     
+
+  Multi-Core Performance
+
+   Multi-Core Score      2536               
+   Crypto Score          3352               
+   Integer Score         2454               
+   Floating Point Score  2576               
+   AES-XTS               3352                 
+                         5.71 GB/sec        
+   Text Compression      2287                 
+                         11.6 MB/sec        
+   Image Compression     3082                 
+                         145.8 Mpixels/sec  
+   Navigation            1534                 
+                         4.33 MTE/sec       
+   HTML5                 2699                 
+                         3.17 MElements/sec 
+   SQLite                2641                 
+                         827.6 Krows/sec    
+   PDF Rendering         3069                 
+                         166.5 Mpixels/sec  
+   Text Rendering        2291                 
+                         730.0 KB/sec       
+   Clang                 2718                 
+                         21.2 Klines/sec    
+   Camera                2194                 
+                         25.4 images/sec    
+   N-Body Physics        1980                 
+                         2.48 Mpairs/sec    
+   Rigid Body Physics    3587                 
+                         22224.4 FPS        
+   Gaussian Blur         2529                 
+                         139.0 Mpixels/sec  
+   Face Detection        2942                 
+                         22.7 images/sec    
+   Horizon Detection     2888                 
+                         71.2 Mpixels/sec   
+   Image Inpainting      3105                 
+                         152.3 Mpixels/sec  
+   HDR                   4616                 
+                         62.9 Mpixels/sec   
+   Ray Tracing           4966                 
+                         3.99 Mpixels/sec   
+   Structure from Motion 2648                 
+                         23.7 Kpixels/sec   
+   Speech Recognition    1241                 
+                         39.7 Words/sec     
+   Machine Learning      927                  
+                         35.8 images/sec    
+
+   Compare
+
+   Set Baseline
+
+   Share
+
+   Tweet
+   Geekbench ML now available for download
+
+        Products
+
+     * Geekbench 5
+     * Geekbench ML
+     * VoodooPad
+
+        Support
+
+     * Knowledge Base
+     * Lost License
+     * Contact
+     * Privacy Policy
+     * Terms of Use
+
+        News & Social
+
+     * Blog
+     * Twitter
+     * Discord
+     * Instagram
+     * YouTube
+
+        Company
+
+     * Corporate
+     * Jobs
+     * Media
+   [IMG]
+
+   1 Eglinton Avenue East, Suite 602
+   Toronto, Ontario, Canada
+   M4P 3A1
+
+   Copyright © 2004-2022 Primate Labs Inc.

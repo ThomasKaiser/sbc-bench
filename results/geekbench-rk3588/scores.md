@@ -85,6 +85,7 @@
 | [` Rokid RG-station`](https://browser.geekbench.com/v5/cpu/15000564) | 2.40 | schedutil | 558 | 822 | 554 | 521 | 2411 | 3512 | 2274 | 2524 | 
 | [` rk3588_s`](https://browser.geekbench.com/v5/cpu/15012503) | 2.40 | schedutil | 632 | 861 | 612 | 636 | 2429 | 3423 | 2305 | 2531 | 
 | [` rk3588s_s`](https://browser.geekbench.com/v5/cpu/15071066) | 2.40 | schedutil | 520 | 822 | 503 | 508 | 2307 | 3253 | 2173 | 2439 | 
+| [` Radxa ROCK 5B`](https://browser.geekbench.com/v5/cpu/15084394) | ** | Information | 584 | 837 | 586 | 536 | 2536 | 3352 | 2454 | 2576 | 
 | [` rk3588s_s`](https://browser.geekbench.com/v5/cpu/15125508) | 2.40 | schedutil | 505 | 796 | 498 | 470 | 2279 | 3314 | 2144 | 2398 | 
 | [` rk3588s_s`](https://browser.geekbench.com/v5/cpu/15125591) | 2.40 | schedutil | 505 | 778 | 501 | 467 | 2286 | 3461 | 2153 | 2378 | 
 | [` rk3588s_s`](https://browser.geekbench.com/v5/cpu/15125667) | 2.40 | schedutil | 496 | 771 | 488 | 468 | 2262 | 3400 | 2112 | 2398 | 
@@ -206,3 +207,4 @@
 | [` Firefly Station N1`](https://browser.geekbench.com/v5/cpu/15891651) | *2.35* | schedutil | 496 | 774 | 491 | 461 | 1868 | 3153 | 1734 | 1945 | 
 | [` Firefly ROC-RK3588S-PC`](https://browser.geekbench.com/v5/cpu/15895473) | *2.35* | schedutil | 495 | 813 | 488 | 458 | 2051 | 3345 | 1951 | 2053 | 
 | [` rk3588_s`](https://browser.geekbench.com/v5/cpu/15903734) | *2.35* | schedutil | 533 | 794 | 529 | 498 | 2318 | 3311 | 2204 | 2399 | 
+| [` Radxa ROCK 5B`](https://browser.geekbench.com/v5/cpu/16905066) | ** | Information | 671 | 857 | 650 | 685 | 2691 | 3437 | 2599 | 2766 | 

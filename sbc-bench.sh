@@ -1869,7 +1869,7 @@ InitialMonitoring() {
 		echo "Armbian info:   ${BOARD_NAME}, ${BOARDFAMILY}, ${LINUXFAMILY}, ${VERSION}, ${BUILD_REPOSITORY_URL}" | sed 's/,\ $//' >>${ResultLog}
 
 	# Log system info and BIOS/UEFI versions if available:
-	SystemInfo="$(dmidecode -t system 2>/dev/null | grep -E "Manufacturer: |Product Name: |Version: |Family: |SKU Number: " | grep -E -v ":  $|O.E.M.|123456789|: Not |Default|default|System Product Name|System manufacturer|System Version")"
+	SystemInfo="$(dmidecode -t system 2>/dev/null | grep -E "Manufacturer: |Product Name: |Version: |Family: |SKU Number: " | grep -E -v ":  $|O.E.M.|123456789|: Not |Default|default|System Product Name|System manufacturer|System Version|BAD INDEX")"
 	if [ "X${SystemInfo}" != "X" ]; then
 		# Skip worthless SMBIOS/DMI emulation on RPi
 		grep -i -q "raspberrypi" <<<"${SystemInfo}" || echo -e "\nDevice Info:\n${SystemInfo}" >>${ResultLog}
@@ -2993,7 +2993,7 @@ GuessARMSoC() {
 	# soc soc0: Amlogic Meson GXL (Unknown) Revision 21:c (e2:2) Detected <-- S905X on Khadas VIM
 	# soc soc0: Amlogic Meson GXL (S905D) Revision 21:d (0:2) Detected <-- Tanix TX3 Mini / Amlogic Meson GXL (S905W) P281 Development Board
 	# soc soc0: Amlogic Meson GXL (Unknown) Revision 21:d (4:2) Detected <-- Phicomm N1
-	# soc soc0: Amlogic Meson GXL (S905D) Revision 21:d (4:2) Detected <-- Phicomm N1
+	# soc soc0: Amlogic Meson GXL (S905D) Revision 21:d (4:2) Detected <-- Phicomm N1 / Amlogic Meson GXL (S905D) P231 Development Board
 	# soc soc0: Amlogic Meson GXL (S805X) Revision 21:d (34:2) Detected <-- Libre Computer AML-S805X-AC / Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:d (84:2) Detected <-- Khadas VIM / Libre Computer AML-S905X-CC / Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:d (85:2) Detected <-- Libre Computer AML-S905X-CC
@@ -3235,6 +3235,10 @@ GuessARMSoC() {
 								# - S905H: 1f:c (23:1)
 								echo "Amlogic S905/S905H/S905M"
 								;;
+							20*)
+								# GXTVBB
+								echo "unknown Amlogic GXTVBB SoC, serial $(cut -c-6 <<<"${AmLogicSerial}")..."
+								;;
 							21??3*)
 								# GXL: S805X: 21:d (34:2)
 								echo "Amlogic S805X"
@@ -3272,6 +3276,10 @@ GuessARMSoC() {
 							22*)
 								# GXM: S912: 22:a (82:2), 22:b (82:2)
 								echo "Amlogic S912"
+								;;
+							23*)
+								# TXL
+								echo "unknown Amlogic TXL SoC, serial $(cut -c-6 <<<"${AmLogicSerial}")..."
 								;;
 							24*)
 								# TXLX: T962X, T962E
@@ -3333,7 +3341,7 @@ GuessARMSoC() {
 								echo "Amlogic S905X3/S905D3/S905Y3"
 								;;
 							2c*)
-								# A1: A113L
+								# A1: A113L (dual A35: https://www.amlogic.com/#Products/408/index.html)
 								echo "Amlogic A113L"
 								;;
 							2e*)
@@ -3575,6 +3583,19 @@ GuessSoCbySignature() {
 					;;
 				*)
 					echo "Allwinner H3/H2+ or R40/V40 or A33/R16"
+					;;
+			esac
+			;;
+		00A7r0p5000000)
+			# Allwinner sun8i running with 3.x BSP kernel: could be Allwinner H3/H2+, R40/V40 or A33/R16 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
+			case "${DTCompatible}" in
+				*sun8i*)
+					# kernel 3.10 with device-tree support
+					echo "Allwinner R40/V40"
+					;;
+				*)
+					# kernel 3.4 w/o device-tree support
+					echo "Allwinner H3/H2+ or A33/R16"
 					;;
 			esac
 			;;

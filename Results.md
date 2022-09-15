@@ -30,6 +30,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Honeycomb LX2](http://ix.io/3Y4f) | 2200 MHz | 5.16 | **Fedora 35 aarch64** | 30690 | 418100 | 1251710 | 5050 | 16220 | 46.09 |
 | [Hugsun X99](http://ix.io/2ICt) | 2088/1800 MHz | 5.9 | Focal arm64 | 7710 | 412105 | 1184306 | 2270 | 5970 | - |
 | [HummingBoard Pulse i.MX8M Quad](http://ix.io/27FC) | 1500 MHz | 4.19 | Buster arm64 | 4330 | 97380 | 695540 | 2230 | 9900 | - |
+| [Jetson AGX Orin](http://ix.io/4ax9) | 2200 MHz | 5.10 | Focal arm64 | 39450 | 958140 | 1242940 | 10600 | 30350 | 59.96 |
 | [Jetson Nano](http://ix.io/1I4j) | 1430 MHz | 4.9 | Bionic arm64 | 5060 | 276890 | 513700 | 3680 | 8560 | 6.64 |
 | [Jetson Nano](http://ix.io/3Ufc) | 2000 MHz | 4.9 | Bionic arm64 | 6260 | 376900 | 717500 | 4100 | 11760 | 8.72 |
 | [Jetson Xavier NX](http://ix.io/3YWp) | 1890 MHz | 4.9 | Bionic arm64 | 13230 | 992690 | 706280 | 9190 | 18480 | - |

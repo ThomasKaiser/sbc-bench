@@ -3029,8 +3029,9 @@ GuessARMSoC() {
 	# soc soc0: Amlogic Meson SM1 (Unknown) Revision 2b:c (10:2) Detected <-- Khadas VIM3L / HK1 Box/Vontar X3
 	# soc soc0: Amlogic Meson SM1 (Unknown) Revision 2b:b (40:2) Detected <-- Khadas VIM3L
 	#
-	# With T7/A311D2 the string 'soc soc0:' is missing in Amlogic's BSP kernel, instead it's just
-	# 'Amlogic Meson T7 (A311D2) Revision 36:b (1:3) Detected' in dmesg output
+	# With T7/A311D2 the string 'soc soc0:' is missing in Amlogic's 5.4 BSP kernel, instead it's
+	# just 'Amlogic Meson T7 (A311D2) Revision 36:b (1:3) Detected' in dmesg output. 5.4 BSP
+	# kernel for S4 (S905Y4/S805X2) changes this into 'cpu_version: chip version = 37:B - 3:4'
 	#
 	# SoC IDs listed by Amlogic reference designs (ID pattern pretty obvious):
 	# - P200 Development Board (GXBB):
@@ -3151,6 +3152,7 @@ GuessARMSoC() {
 	#      4.9.0-yocto: Boot CPU: AArch64 Processor [411fd073] <- Cortex-A57 / r1p3 (Renesas R8A7795/R-Car H3)
 	#
 	# ...while starting with later 4.1x kernels and 5.x it looks like this:
+	# Booting Linux on physical CPU 0x0000000000 [0x411fd040]  <- Cortex-A35 / r1p0 (Amlogic S905Y4)
 	# Booting Linux on physical CPU 0x0000000000 [0x410fd030]  <- Cortex-A53 / r0p0 (Snapdragon 410 / MSM8916)
 	# Booting Linux on physical CPU 0x0000000000 [0x410fd032]  <- Cortex-A53 / r0p2 (Snapdragon 810 / MSM8994)
 	# Booting Linux on physical CPU 0x0000000000 [0x410fd034]  <- Cortex-A53 / r0p4
@@ -3177,6 +3179,7 @@ GuessARMSoC() {
 	HardwareInfo="$(awk -F': ' '/^Hardware/ {print $2}' <<< "${CPUInfo}" | tail -n1)"
 	RockchipGuess="$(awk -F': ' '/rockchip-cpuinfo cpuinfo: SoC/ {print $3}' <<<"${DMESG}" | head -n1)"
 	AmlogicGuess="Amlogic Meson$(grep -i " detected$" <<<"${DMESG}" | awk -F"Amlogic Meson" '/Amlogic Meson/ {print $2}' | head -n1)"
+	AMLS4Guess="$(awk -F"= " '/cpu_version: chip version/ {print $2}' <<<"${DMESG}")"
 	
 	if [ "X${RockchipGuess}" != "X" ]; then
 		echo "Rockchip RK$(cut -c-4 <<<"${RockchipGuess}") (${RockchipGuess})" | sed 's| RK3588 | RK3588/RK3588s |'
@@ -3188,11 +3191,22 @@ GuessARMSoC() {
 		-e 's/GXL (Unknown) Revision 21:d (4:2)/GXL (S905D) Revision 21:d (4:2)/' \
 		-e 's/GXL (Unknown) Revision 21:d (a4:2)/GXL (S905W) Revision 21:d (a4:2)/' \
 		-e 's/GXM (Unknown) Revision 22:a (82:2)/GXM (S912) Revision 22:a (82:2)/' \
+		-e 's/AXG (Unknown) Revision 25:b (43:2)/AXG (A113X) Revision 25:b (43:2)/' \
+		-e 's/AXG (Unknown) Revision 25:c (43:2)/AXG (A113X) Revision 25:c (43:2)/' \
 		-e 's/G12A (Unknown) Revision 28:b (30:2)/G12A (S905Y2) Revision 28:b (30:2)/' \
 		-e 's/G12A (Unknown) Revision 28:c (30:2)/G12A (S905Y2) Revision 28:c (30:2)/' \
 		-e 's/SM1 (Unknown) Revision 2b:b (1:2)/SM1 (S905D3) Revision 2b:b (1:2)/' \
 		-e 's/SM1 (Unknown) Revision 2b:c (10:2)/SM1 (S905X3) Revision 2b:c (10:2)/' \
 		-e 's/ Detected//' -e 's/ detected//'
+	elif [ "X${AMLS4Guess}" != "X" ]; then
+		case ${AMLS4Guess} in
+			*" 3:4")
+				echo "Amlogic Meson S4 (S905Y4) Revision ${AMLS4Guess}"
+				;;
+			*)
+				echo "Amlogic Meson S4 (S805X2/S905Y4) Revision ${AMLS4Guess}"
+				;;
+		esac
 	else
 		# Guessing by 'Hardware :' in /proc/cpuinfo is something that only reliably works
 		# with vendor's BSP kernels. With mainline kernel it's impossible to rely on this
@@ -3704,7 +3718,7 @@ GuessSoCbySignature() {
 										;;
 									*)
 										# GXL or G12A: 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
-										IdentifyGXLG12A
+										IdentifyAXGGXLG12A
 										;;
 								esac
 								;;
@@ -4243,15 +4257,15 @@ GetCPUSignature() {
 	esac
 } # GetCPUSignature
 
-IdentifyGXLG12A() {
-	# Amlogic GXL and G12A SoC families share same cluster details (quad A53 / r0p4).
-	# They differ in speed though: GXL usually fakes 1.5 GHz while being limited to
-	# 1.4 GHz (LibreComputer's La Frite and Jethub D1 being exceptions reporting 1416 MHz)
-	# but G12A (S905X2, S905D2, S905Y2) clocks higher and doesn't fake clockspeeds
+IdentifyAXGGXLG12A() {
+	# Amlogic AXG, GXL and G12A SoC families share same cluster details (quad A53 / r0p4).
+	# They differ in speed though: GXL usually fakes 1.5 GHz while being limited to 1.4 GHz
+	# (LibreComputer's La Frite and Jethub devices being the exceptions reporting the true
+	# 1416 MHz) but G12A (S905X2, S905D2, S905Y2) clocks higher and doesn't fake clockspeeds
 	MaxSpeed="$(sed -e '1,/^ CPU/ d' <<<"${CPUTopology}" | tail -n1 | awk -F" " '{print $5}')"
 	case ${MaxSpeed} in
 		15??|14??)
-			# GXL: 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid (running 32-bit: fp asimd evtstrm aes pmull sha1 sha2 crc32 wp half thumb fastmult vfp edsp neon vfpv3 tlsi vfpv4 idiva idivt)
+			# GXL or AXG: 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid (running 32-bit: fp asimd evtstrm aes pmull sha1 sha2 crc32 wp half thumb fastmult vfp edsp neon vfpv3 tlsi vfpv4 idiva idivt)
 			echo "Amlogic A113X/A113D, S805X, S805Y, S905X/S905D/S905L/S905L2/S905M2"
 			;;
 		12??)
@@ -4263,7 +4277,7 @@ IdentifyGXLG12A() {
 			echo "Amlogic S905X2/S905Y2/S905D2/T962X2"
 			;;
 	esac
-} # IdentifyGXLG12A
+} # IdentifyAXGGXLG12A
 
 IdentifyAllwinnerARMv8() {
 	# Allwinner sun50iw* except sun50iw11 are all quad A53 / r0p4. Today sun50iw1p

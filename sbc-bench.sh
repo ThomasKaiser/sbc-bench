@@ -362,6 +362,20 @@ GetCoreType() {
 					;;
 			esac
 			;;
+		loongarch*)
+			CoreGuess="$(awk -F"[()]" '/model name/ {print $2}' /proc/cpuinfo | sed -n $(( $1 + 1 ))p)"
+			if [ "X${CoreGuess}" = "X" ]; then
+				# fallback to cpu model
+				awk -F": " '/^cpu model/ {print $2}' /proc/cpuinfo | sed -n $(( $1 + 1 ))p
+			else
+				# we use model name or to be more presicely the part in brackets:
+				# model name : Loongson-3A R4 (Loongson-3A4000) @ 1500MHz
+				echo "${CoreGuess}"
+			fi
+			;;
+		mips*)
+			awk -F": " '/^cpu model/ {print $2}' /proc/cpuinfo | sed -n $(( $1 + 1 ))p
+			;;
 	esac
 } # GetCoreType
 
@@ -1372,10 +1386,11 @@ GetCPUClusters() {
 	elif [ -d /sys/devices/system/cpu/cpufreq/policy0 -a "${CPUArchitecture}" != "x86_64" -a "${CPUArchitecture}" != "i686" ]; then
 		# currently we do not trust into cpufreq support on RISC-V since Kendryte K510:
 		# https://github.com/ThomasKaiser/sbc-bench/issues/46#issuecomment-1175855473
-		if [ ${CPUArchitecture} == *riscv* ]; then
+		# Same story on Loongson: http://ix.io/4aIA
+		if [ ${CPUArchitecture} == *riscv* -o ${CPUArchitecture} == *loongarch* ]; then
 			echo "0"
 		else
-			# if cpufreq support exists on ARM we rely on this
+			# if cpufreq support exists on ARM or MIPS we rely on this
 			ls -ld /sys/devices/system/cpu/cpufreq/policy? | awk -F"policy" '{print $2}'
 		fi
 	elif [ ${CountOfSockets:-1} -gt 1 -a "${CPUArchitecture}" = "x86_64" ]; then
@@ -1526,6 +1541,10 @@ BasicSetup() {
 					DeviceName="${DMISysVendor} ${DMIProductName} ${DMIProductVersion} ${VirtWhat} VM"
 				fi
 			fi
+			;;
+		mips*|loongarch*)
+			# do nothing here and use what /proc/device-tree/model provides
+			:
 			;;
 		*)
 			echo "${CPUArchitecture} not supported. Aborting." >&2
@@ -1869,12 +1888,15 @@ InitialMonitoring() {
 		echo "Armbian info:   ${BOARD_NAME}, ${BOARDFAMILY}, ${LINUXFAMILY}, ${VERSION}, ${BUILD_REPOSITORY_URL}" | sed 's/,\ $//' >>${ResultLog}
 
 	# Log system info and BIOS/UEFI versions if available:
-	SystemInfo="$(dmidecode -t system 2>/dev/null | grep -E "Manufacturer: |Product Name: |Version: |Family: |SKU Number: " | grep -E -v ":  $|O.E.M.|123456789|: Not |Default|default|System Product Name|System manufacturer|System Version|BAD INDEX")"
+	command -v dmidecode >/dev/null 2>&1
+	if [ $? -eq 0 ]; then
+		SystemInfo="$(dmidecode -t system 2>/dev/null | grep -E "Manufacturer: |Product Name: |Version: |Family: |SKU Number: " | grep -E -v ":  $|O.E.M.|123456789|: Not |Default|default|System Product Name|System manufacturer|System Version|BAD INDEX")"
+		UEFIInfo="$(dmidecode -t bios 2>/dev/null | grep -E "Vendor:|Version:|Release Date:|Revision:")"
+	fi
 	if [ "X${SystemInfo}" != "X" ]; then
 		# Skip worthless SMBIOS/DMI emulation on RPi
 		grep -i -q "raspberrypi" <<<"${SystemInfo}" || echo -e "\nDevice Info:\n${SystemInfo}" >>${ResultLog}
 	fi
-	UEFIInfo="$(dmidecode -t bios 2>/dev/null | grep -E "Vendor:|Version:|Release Date:|Revision:")"
 	if [ "X${UEFIInfo}" != "X" ]; then
 		echo -e "\nBIOS/UEFI:\n${UEFIInfo}" >>${ResultLog}
 	fi
@@ -2609,7 +2631,8 @@ LogEnvironment() {
 	# Log processor info if available and we're not running virtualized:
 	VirtWhat="$(systemd-detect-virt 2>/dev/null)"
 	if [ "X${VirtWhat}" = "X" -o "X${VirtWhat}" = "Xnone" ]; then
-		ProcessorInfo="$(dmidecode -t processor 2>/dev/null | grep -E -v -i "^#|^Handle|Serial|O.E.M.|123456789|SMBIOS|: Not |Unknown|OUT OF SPEC|00 00 00 00 00 00 00 00|: None")"
+		command -v dmidecode >/dev/null 2>&1 && \
+			ProcessorInfo="$(dmidecode -t processor 2>/dev/null | grep -E -v -i "^#|^Handle|Serial|O.E.M.|123456789|SMBIOS|: Not |Unknown|OUT OF SPEC|00 00 00 00 00 00 00 00|: None")"
 		if [ "X${ProcessorInfo}" != "X" ]; then
 			echo -e "\n${ProcessorInfo}\n"
 		fi
@@ -2704,7 +2727,7 @@ UploadResults() {
 			if [ ${IOWaitAvg:-0} -le 2 -a ${IOWaitMax:-0} -le 5 -a ${SysMax:-0} -le 5 -a ! -f ${TempDir}/throttling_info.txt ]; then
 				# in case it's not x86/x64 then also suggest adding results to official list
 				case ${CPUArchitecture} in
-					arm*|aarch*|riscv*)
+					arm*|aarch*|riscv*|mips*|loongarch*)
 						# not running on x86/x64, neither throttling nor relevant swapping occured.
 						# Check whether SoC in question is already known since if true no more
 						# submissions to official results are needed
@@ -2852,7 +2875,7 @@ CacheAndDIMMDetails() {
 			# unfortunately lshw only reports max clockspeeds of DIMM modules so we try to
 			# get configured speed via dmidecode as well
 			DIMMFilter="$(echo -e "\tLocator:|\tConfigured Memory Speed:|\tConfigured Clock Speed:")"
-			dmidecode --type 17 | grep -E "${DIMMFilter}" | tr "\n" "|" | sed -e 's/|\tCon/:/g' -e 's/\ //g' | tr '|' '\n' | grep -vi "unknown$" | while read ; do
+			command -v dmidecode >/dev/null 2>&1 && dmidecode --type 17 | grep -E "${DIMMFilter}" | tr "\n" "|" | sed -e 's/|\tCon/:/g' -e 's/\ //g' | tr '|' '\n' | grep -vi "unknown$" | while read ; do
 				Pattern="$(awk -F":" '{print $2}' <<<"${REPLY}")"
 				Insertion="$(awk -F":" '{print $4}' <<<"${REPLY}" | sed 's/\//\\\//')"
 				sed -i "s/^          slot: ${Pattern}$/          configured speed: ${Insertion}/g" "${TempDir}/dimms"
@@ -3204,7 +3227,7 @@ GuessARMSoC() {
 				echo "Amlogic Meson S4 (S905Y4) Revision ${AMLS4Guess}"
 				;;
 			*)
-				echo "Amlogic Meson S4 (S805X2/S905Y4) Revision ${AMLS4Guess}"
+				echo "Amlogic Meson S4 (S805X2 or S905Y4) Revision ${AMLS4Guess}"
 				;;
 		esac
 	else
@@ -4244,12 +4267,20 @@ GuessSoCbySignature() {
 			# Qualcomm Snapdragon 865 or QRB5165: 4 x Qualcomm Kryo 4XX Silver / r13p14 + 3 x Cortex-A77 / r1p0 + 1 x Cortex-A77 / r1p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp asimdrdm lrcpc dcpop asimddp
 			echo "Qualcomm Snapdragon 865 / QRB5165"
 			;;
+		0?Loongson-3A10000?Loongson-3A10000?Loongson-3A10000?Loongson-3A1000)
+			# Loongson 3A1000: 4 x Loongson-3 V0.5 FPU V0.1 https://github.com/ThomasKaiser/sbc-bench/blob/master/results/Loongson-3A1000.cpuinfo
+			echo "Loongson 3A1000"
+			;;
+		0?Loongson-3A30000?Loongson-3A30000?Loongson-3A30000?Loongson-3A3000)
+			# Loongson 3A3000: 4 x Loongson-3 V0.9 FPU V0.1 https://github.com/ThomasKaiser/sbc-bench/blob/master/results/Loongson-3A3000-5.4.211-aosc-lemote.cpuinfo
+			echo "Loongson 3A3000"
+			;;
 	esac
 }
 
 GetCPUSignature() {
 	case ${CPUArchitecture} in
-		arm*|aarch*|riscv*)
+		arm*|aarch*|riscv*|mips*|loongarch*)
 			sed -e '1,/^ CPU/ d' -e 's/Cortex-//' <<<"${CPUTopology}" | while read ; do
 				echo -e "$(awk -F" " '{print $2$3$6$8$9$10}' <<<"${REPLY}" | sed -e 's/-//g' -e 's/\///g')\c"
 			done

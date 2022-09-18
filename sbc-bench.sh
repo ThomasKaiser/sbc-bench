@@ -2928,7 +2928,7 @@ GuessARMSoC() {
 	#       Cortex-A7 / r0p2: MediaTek MT6589/TMK6588
 	#       Cortex-A7 / r0p3: Allwinner A31, MediaTek MT6580/MT7623, Samsung Exynos 5422
 	#       Cortex-A7 / r0p4: Allwinner A20
-	#       Cortex-A7 / r0p5: Allwinner H3/H2+/R40/V40/A33/R16/A83T/H8/S3/V3/V3s, Broadcom BCM2836, HiSilicon Hi351x, Freescale/NXP i.MX7D/i.MX6 ULL, Microchip SAMA7G54, Qualcomm MDM9607, Renesas RZ/N1, Rockchip RK3229/RK3228A/RV1108/RV1109/RV1126, SigmaStar SSD201/SSD202D, STMicroelectronics STM32MP157
+	#       Cortex-A7 / r0p5: Allwinner A33/A83T/H2+/H3/H8/R16/R328/R40/S3/T113/V3/V3s/V40/V853, Broadcom BCM2836, Freescale/NXP i.MX7D/i.MX6 ULL, HiSilicon Hi351x, Microchip SAMA7G54, Qualcomm MDM9607, Renesas RZ/N1, Rockchip RK3229/RK3228A/RV1108/RV1109/RV1126, SigmaStar SSD201/SSD202D, STMicroelectronics STM32MP157
 	#       Cortex-A8 / r1p7: TI Sitara AM3517
 	#       Cortex-A8 / r2p5: Freescale/NXP i.MX515
 	#       Cortex-A8 / r3p2: Allwinner A10, TI OMAP3530/DM3730/AM335x
@@ -2947,11 +2947,11 @@ GuessARMSoC() {
 	#      Cortex-A15 / r3p3: Nvidia Tegra K1
 	#      Cortex-A17 / r0p1: Rockchip RK3288
 	#      Cortex-A35 / r0p2: NXP i.MX8QXP, Rockchip RK1808/RK3308/RK3326/PX30
-	#      Cortex-A35 / r1p0: Amlogic S905Y4/S805X2
+	#      Cortex-A35 / r1p0: Amlogic S805X2/S905Y4
 	#      Cortex-A53 / r0p0: Qualcomm Snapdragon 410 (MSM8916)
 	#      Cortex-A53 / r0p2: Marvell PXA1908, Qualcomm Snapdragon 810 (MSM8994)
 	#      Cortex-A53 / r0p3: HiSilicon Kirin 620/930, Nexell S5P6818, Snapdragon 808 / MSM8992
-	#      Cortex-A53 / r0p4: Allwinner A64/H313/H5/H6/H616/H64/R329/T507, Amlogic A113X/A113D/A311D/A311D2/S805X/S805Y/S905/S905X/S905D/S905W/S905L/S905M2/S905X2/S905Y2/S905D2/S912/S922X/T962X2, Broadcom BCM2837/BCM2709/BCM2710/RP3A0-AU (BCM2710A1), HiSilicon Kirin 960/970, Marvell Armada 37x0, Mediatek MT6762M/MT6765, NXP i.MX8M/i.MX8QM/LS1xx8, RealTek RTD129x/RTD139x, Rockchip RK3318/RK3328/RK3399, Snapdragon 650/652/653 / MSM8956/MSM8976/MSM8976PRO, Socionext LD20
+	#      Cortex-A53 / r0p4: Allwinner A100/A133/A53/A64/H313/H5/H6/H616/H64/R329/R818/T507/T509, Amlogic A113X/A113D/A311D/A311D2/S805X/S805Y/S905/S905X/S905D/S905W/S905L/S905M2/S905X2/S905Y2/S905D2/S912/S922X/T962X2, Broadcom BCM2837/BCM2709/BCM2710/RP3A0-AU (BCM2710A1), HiSilicon Kirin 960/970, Marvell Armada 37x0, Mediatek MT6762M/MT6765, NXP i.MX8M/i.MX8QM/LS1xx8, RealTek RTD129x/RTD139x, Rockchip RK3318/RK3328/RK3399, Snapdragon 650/652/653 / MSM8956/MSM8976/MSM8976PRO, Socionext LD20
 	#      Cortex-A55 / r1p0: Amlogic S905X3/S905D3/S905Y3/T962X3/T962E2
 	#      Cortex-A55 / r2p0: Amlogic S905X4/S905C2, Rockchip RK3566/RK3568/RK3588/RK3588s
 	#      Cortex-A57 / r1p1: Nvidia Tegra X1, Snapdragon 810 / MSM8994/MSM8994V
@@ -3192,7 +3192,7 @@ GuessARMSoC() {
 	# Booting Linux on physical CPU 0x0000000000 [0x611f0221]  <- Apple Icestorm / r1p1 (Apple M1)
 	# Booting Linux on physical CPU 0x0000000000 [0x611f0320]  <- Apple Blizzard / r1p0 (Apple M2)
 	#
-	# Additional ARMv8 cores show up in dmesg output like this (always exposing MIDR_EL1 except for Amlogic's T7 5.4 BSP kernel):
+	# Additional ARMv8 cores show up in dmesg output like this (always exposing MIDR_EL1 except for 5.4 kernels, e.g. Amlogic's for S4/T7):
 	# CPU4: Booted secondary processor [410fd082]                <- Cortex-A72 / r0p2 (RK3399 or i.MX8QM or Kunpeng-916 or LD20 or LS2088A)
 	# CPU2: Booted secondary processor 0x0000000100 [0x410fd092] <- Cortex-A73 / r0p2 (S922X/A311D)
 	# CPU7: Booted secondary processor 0x0000000700 [0x51df804e] <- Qualcomm Kryo 4XX Gold / r13p14 (Snapdragon 8cx)
@@ -3481,7 +3481,7 @@ GuessARMSoC() {
 				echo "Allwinner H616/H313"
 				;;
 			sun50iw10*)
-				echo "Allwinner A100/A133/A53/T509"
+				echo "Allwinner A100/A133/A53/R818/T509"
 				;;
 			sun50iw11*)
 				echo "Allwinner R329"
@@ -3568,7 +3568,7 @@ GuessSoCbySignature() {
 			esac
 			;;
 		00A7r0p5)
-			# Allwinner S3/V3/V3s, 1 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
+			# Allwinner S3/V3/V3s/V853, 1 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
 			# or maybe Microchip SAMA7G54, 1 x Cortex-A7 / r0p5
 			# or maybe Rockchip RV1108 | 1 x Cortex-A7 / r0p5
 			case "${DTCompatible}" in
@@ -3577,8 +3577,8 @@ GuessSoCbySignature() {
 					echo "Rockchip RV1108"
 					;;
 				*allwinner*)
-					# Allwinner S3/V3/V3s, 1 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
-					echo "Allwinner S3/V3/V3s"
+					# Allwinner S3/V3/V3s/V853, 1 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
+					echo "Allwinner S3/V3/V3s/V853"
 					;;
 				*)
 					# Microchip SAMA7G54, 1 x Cortex-A7 / r0p5
@@ -3675,7 +3675,7 @@ GuessSoCbySignature() {
 			;;
 		00A53r0p400A53r0p400A53r0p400A53r0p4)
 			# The boring quad Cortex-A53 done by every SoC vendor: 4 x Cortex-A53 / r0p4
-			# Allwinner A64/H5/H6, BCM2837/BCM2709, RK3318/RK3328, i.MX8 M, S905, S905X/S805X, S805Y, S905X/S905D/S905W/S905L/S905M2, S905X2/S905Y2/T962X2, Mediatek MT6762M/MT6765, RealTek RTD129x/RTD139x
+			# Allwinner A100/A133/A53/A64/H5/H6/H313/H616/R818/T507/T509, BCM2837/BCM2709, RK3318/RK3328, i.MX8 M, S905, S905X/S805X, S805Y, S905X/S905D/S905W/S905L/S905M2, S905X2/S905Y2/T962X2, Mediatek MT6762M/MT6765, RealTek RTD129x/RTD139x
 			case "${DeviceName}" in
 				"Raspberry Pi 2"*)
 					# 4 x Cortex-A53 / r0p4 / fp asimd evtstrm crc32
@@ -3716,8 +3716,26 @@ GuessSoCbySignature() {
 									*a64*)
 										echo "Allwinner A64"
 										;;
+									*h64*)
+										echo "Allwinner H64"
+										;;
 									*t507*)
 										echo "Allwinner T507"
+										;;
+									*t509*)
+										echo "Allwinner T509"
+										;;
+									*a100*)
+										echo "Allwinner A100"
+										;;
+									*a133*)
+										echo "Allwinner A133"
+										;;
+									*a53*)
+										echo "Allwinner A53"
+										;;
+									*r818*)
+										echo "Allwinner R818"
 										;;
 								esac
 								;;
@@ -3950,6 +3968,7 @@ GuessSoCbySignature() {
 			# SigmaStar SSD201/SSD202D | 2 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
 			# or Rockchip RV1109 | 2 x Cortex-A7 / r0p5
 			# or Renesas RZ/N1 | 2 x Cortex-A7 / r0p5
+			# or Allwinner R328/T113: 2 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm (https://whycan.com/t_7497.html -> ARMv7 Processor [410fc075] revision 5 (ARMv7), cr=10c5387d)
 			case "${DTCompatible}" in
 				*rockchip*)
 					echo "Rockchip RV1109"
@@ -3959,6 +3978,9 @@ GuessSoCbySignature() {
 					;;
 				*sstar*)
 					echo "SigmaStar SSD201/SSD202D"
+					;;
+				*sun*|*llwinner*)
+					echo "Allwinner R328/T113"
 					;;
 			esac
 			;;
@@ -4349,6 +4371,7 @@ IdentifyAllwinnerARMv8() {
 	grep -q h6 <<<"${DTCompatible}" && echo "Allwinner H6"
 	grep -q h5 <<<"${DTCompatible}" && echo "Allwinner H5"
 	grep -q a64 <<<"${DTCompatible}" && echo "Allwinner A64"
+	grep -q h64 <<<"${DTCompatible}" && echo "Allwinner H64"
 
 	# Check for USB3 first, mainline kernel:
 	grep -q "xhci" /proc/interrupts && echo "Allwinner H6"

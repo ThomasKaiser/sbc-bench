@@ -1857,11 +1857,19 @@ InitialMonitoring() {
 	echo -e "${CPUTopology}\n" >"${TempDir}/cpu-topology.log" &
 	CPUSignature="$(GetCPUSignature)"
 
-	# upload raw /proc/cpuinfo contents and device-tree compatible entry
-	DTCompatible="$(strings /proc/device-tree/compatible 2>/dev/null)"
-	(echo -e "/proc/cpuinfo\n\n$(uname -a) / ${DeviceName}\n" ; cat /proc/cpuinfo ; echo -e "\n${CPUTopology}\n\n${CPUSignature}\n\n${DTCompatible}") 2>/dev/null \
-		| curl -s -F 'f:1=<-' ix.io >/dev/null 2>&1 &
-	
+	# upload raw /proc/cpuinfo contents and device-tree compatible entry to ix.io
+	ping -c1 ix.io >/dev/null 2>&1
+	if [ $? -eq 0 ]; then
+		UploadScheme="f:1=<-"
+		UploadServer="ix.io"
+		DTCompatible="$(strings /proc/device-tree/compatible 2>/dev/null)"
+		(echo -e "/proc/cpuinfo\n\n$(uname -a) / ${DeviceName}\n" ; cat /proc/cpuinfo ; echo -e "\n${CPUTopology}\n\n${CPUSignature}\n\n${DTCompatible}") 2>/dev/null \
+			| curl -s -F ${UploadScheme} ${UploadServer} >/dev/null 2>&1 &
+	else
+		# upload location fallback to sprunge.us if possible
+		ping -c1 sprunge.us >/dev/null 2>&1 && UploadScheme="sprunge=<-" ; UploadServer="sprunge.us"
+	fi
+
 	# Log version and device info
 	read HostName </etc/hostname 2>/dev/null
 	if [ "X${MODE}" = "Xunattended" -o "X${MODE}" = "Xextensive" -o "X${MODE}" = "Xpts" -o "X${MODE}" = "Xgb" ]; then
@@ -2691,8 +2699,8 @@ LogEnvironment() {
 
 UploadResults() {
 	# upload results to ix.io and replace multiple empty lines with one. 2nd try if 1st does not succeed
-	UploadURL=$(sed '/^$/N;/^\n$/D' <${ResultLog} | curl -s -F 'f:1=<-' ix.io 2>/dev/null || \
-		sed '/^$/N;/^\n$/D' <${ResultLog} | curl -s -F 'f:1=<-' ix.io)
+	UploadURL=$(sed '/^$/N;/^\n$/D' <${ResultLog} | curl -s -F ${UploadScheme} ${UploadServer} 2>/dev/null || \
+		sed '/^$/N;/^\n$/D' <${ResultLog} | curl -s -F ${UploadScheme} ${UploadServer})
 
 	# Display benchmark results if not in PTS or GB mode
 	if [ "X${MODE}" != "Xpts" -a "X${MODE}" != "Xgb" ]; then
@@ -2722,7 +2730,7 @@ UploadResults() {
 		http*)
 			# uploading results worked, check sanity of results and environment
 			echo " ${UploadURL} |" >>${ResultLog}
-			echo -e "\nFull results uploaded to ${UploadURL}. \c"
+			echo -e "\nFull results uploaded to ${UploadURL}\c"
 			# check whether benchmark ran into a sane environment (no throttling and no swapping)
 			if [ ${IOWaitAvg:-0} -le 2 -a ${IOWaitMax:-0} -le 5 -a ${SysMax:-0} -le 5 -a ! -f ${TempDir}/throttling_info.txt ]; then
 				# in case it's not x86/x64 then also suggest adding results to official list
@@ -2742,14 +2750,14 @@ UploadResults() {
 						;;
 				esac
 			else
-				echo -e "Please check the log for anomalies (e.g. swapping\nor throttling happenend).\n"
+				echo -e ". Please check the log for anomalies (e.g. swapping\nor throttling happenend).\n"
 			fi
 			;;
 		*)
 			if [ "X${MODE}" != "Xunattended" ]; then
+				echo -e " |\n\n" >>${ResultLog}
 				echo -e "\nUnable to upload full test results. Please copy&paste the below stuff to pastebin.com and\nprovide the URL. Check the output for throttling and swapping please.\n\n"
 				sed '/^$/N;/^\n$/D' <${ResultLog}
-				echo -e "\n\n"
 			fi
 			;;
 	esac
@@ -2947,7 +2955,7 @@ GuessARMSoC() {
 	#      Cortex-A15 / r3p3: Nvidia Tegra K1
 	#      Cortex-A17 / r0p1: Rockchip RK3288
 	#      Cortex-A35 / r0p2: NXP i.MX8QXP, Rockchip RK1808/RK3308/RK3326/PX30
-	#      Cortex-A35 / r1p0: Amlogic S805X2/S905Y4
+	#      Cortex-A35 / r1p0: Amlogic S805X2/S905Y4/S905W2
 	#      Cortex-A53 / r0p0: Qualcomm Snapdragon 410 (MSM8916)
 	#      Cortex-A53 / r0p2: Marvell PXA1908, Qualcomm Snapdragon 810 (MSM8994)
 	#      Cortex-A53 / r0p3: HiSilicon Kirin 620/930, Nexell S5P6818, Snapdragon 808 / MSM8992
@@ -3046,9 +3054,9 @@ GuessARMSoC() {
 	# soc soc0: Amlogic Meson G12B (S922X) Revision 29:c (40:2) Detected <-- ODROID-N2+ ('S922X-B')
 	# soc soc0: Amlogic Meson Unknown (Unknown) Revision 2a:e (c5:2) Detected <-- Amlogic Meson GXL (S905L2) X7 5G Tv Box / Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson SM1 (S905D3) Revision 2b:b (1:2) Detected <-- AMedia X96 Max+ / SEI Robotics SEI610
-	# soc soc0: Amlogic Meson SM1 (Unknown) Revision 2b:b (1:2) Detected <-- Shenzhen Amediatech Technology Co. Ltd X96 Air / AMedia X96 Max+ / SEI Robotics SEI610
+	# soc soc0: Amlogic Meson SM1 (Unknown) Revision 2b:b (1:2) Detected <-- Shenzhen Amediatech Technology Co. Ltd X96 Air / AMedia X96 Max+ / SEI Robotics SEI610 / HK1 Box/Vontar X3
 	# soc soc0: Amlogic Meson SM1 (S905D3) Revision 2b:c (4:2) Detected <-- Khadas VIM3L / https://www.spinics.net/lists/arm-kernel/msg848718.html
-	# soc soc0: Amlogic Meson SM1 (S905X3) Revision 2b:c (10:2) Detected <-- AMedia X96 Max+ / H96 Max X3 / ODROID-C4 / ODROID-HC4 / HK1 Box / Vontar X3 / SEI Robotics SEI610 / Shenzhen Amediatech Technology Co. Ltd X96 Max/Air / Shenzhen CYX Industrial Co. Ltd A95XF3-AIR / Sinovoip BANANAPI-M5 / Tanix TX3 (QZ)
+	# soc soc0: Amlogic Meson SM1 (S905X3) Revision 2b:c (10:2) Detected <-- AMedia X96 Max+ / H96 Max X3 / ODROID-C4 / ODROID-HC4 / HK1 Box/Vontar X3 / SEI Robotics SEI610 / Shenzhen Amediatech Technology Co. Ltd X96 Max/Air / Shenzhen CYX Industrial Co. Ltd A95XF3-AIR / Sinovoip BANANAPI-M5 / Tanix TX3 (QZ) / Ugoos X3
 	# soc soc0: Amlogic Meson SM1 (Unknown) Revision 2b:c (10:2) Detected <-- Khadas VIM3L / HK1 Box/Vontar X3
 	# soc soc0: Amlogic Meson SM1 (Unknown) Revision 2b:b (40:2) Detected <-- Khadas VIM3L
 	#
@@ -3082,12 +3090,13 @@ GuessARMSoC() {
 	# - U200 Development Board (G12A):
 	#   - Unknown: 28:b (70:2), 28:c (70:2)
 	#
-	# If /proc/cpuinfo Hardware field is 'Amlogic' then chars 1-6 of 'AmLogic Serial'
+	# If /proc/cpuinfo Hardware field is 'Amlogic' then chars 1-8 of 'AmLogic Serial'
 	# and if not present 'Serial' have special meaning as it's the 'chip id':
 	# S905X:   '21:a (82:2)' / 210a820094e04a851342e1d007989aa7
 	# S912:    '22:a (82:2)' / 220a82006da41365fedf301742726826
 	# S922X:   '29:c (40:2)' / 290c4000012b1500000639314e315350
 	# A311D2:  '36:b (1:3)'  / 360b010300000000081d810911605690
+	# S905Y4:  '37:B - 3:4'  / 370b030400000000122d90041dc3d900
 	#
 	# Chars 1-2: meson family: 21=GXL, 22=GXM, 2b=SM1, 29=G12B, 36=T7 and so on, see below
 	# Chars 3-4: production batch: the earlier production run the lower (0a, 0b, 0c and so on)
@@ -3274,7 +3283,7 @@ GuessARMSoC() {
 								;;
 							20*)
 								# GXTVBB
-								echo "unknown Amlogic GXTVBB SoC, serial $(cut -c-6 <<<"${AmLogicSerial}")..."
+								echo "unknown Amlogic GXTVBB SoC, serial $(cut -c-8 <<<"${AmLogicSerial}")..."
 								;;
 							21??3*)
 								# GXL: S805X: 21:d (34:2)
@@ -3316,7 +3325,7 @@ GuessARMSoC() {
 								;;
 							23*)
 								# TXL
-								echo "unknown Amlogic TXL SoC, serial $(cut -c-6 <<<"${AmLogicSerial}")..."
+								echo "unknown Amlogic TXL SoC, serial $(cut -c-8 <<<"${AmLogicSerial}")..."
 								;;
 							24*)
 								# TXLX: T962X, T962E
@@ -3330,11 +3339,11 @@ GuessARMSoC() {
 							26*)
 								# GXLX, seems to be compatible to GXL since one occurence of ID '26:e (c1:2)'
 								# has been detected on 'Amlogic Meson GXL (S905X) P212 Development Board'
-								echo "unknown Amlogic GXLX SoC, serial $(cut -c-6 <<<"${AmLogicSerial}")..."
+								echo "unknown Amlogic GXLX SoC, serial $(cut -c-8 <<<"${AmLogicSerial}")..."
 								;;
 							27*)
 								# TXHD
-								echo "unknown Amlogic TXHD SoC, serial $(cut -c-6 <<<"${AmLogicSerial}")..."
+								echo "unknown Amlogic TXHD SoC, serial $(cut -c-8 <<<"${AmLogicSerial}")..."
 								;;
 							28??4*)
 								# G12A: S905X2: 28:b (40:2)
@@ -3378,7 +3387,7 @@ GuessARMSoC() {
 								echo "Amlogic S905X3/S905D3/S905Y3"
 								;;
 							2c*)
-								# A1: A113L (dual A35: https://www.amlogic.com/#Products/408/index.html)
+								# A1: A113L (dual A35: https://www.amlogic.com/#Products/408/index.html / meson-a1.dtsi)
 								echo "Amlogic A113L"
 								;;
 							2e*)
@@ -3387,7 +3396,7 @@ GuessARMSoC() {
 								;;
 							2f*)
 								# TM2: T962X3, T962E2
-								echo "Amlogic T962X3/T962E2, serial $(cut -c-6 <<<"${AmLogicSerial}")..."
+								echo "Amlogic T962X3/T962E2, serial $(cut -c-8 <<<"${AmLogicSerial}")..."
 								;;
 							32*)
 								# SC2: S905X4, S905C2
@@ -3398,14 +3407,16 @@ GuessARMSoC() {
 								echo "Amlogic A311D2"
 								;;
 							37*)
-								# S4: S905Y4, S805X2
-								echo "Amlogic S905Y4/S805X2"
+								# S4: S905Y4, S805X2, S905W2
+								echo "Amlogic S905Y4/S805X2/S905W2"
 								;;
 							*)
 								# https://tinyurl.com/y85lsxsc:
 								# T3 --> T982, T963D4, T965D4
 								# S4D --> S905C3, S905C3ENG (quad Cortex-A35): https://archive.md/4H6xM
-								echo "unknown Amlogic, serial $(cut -c-6 <<<"${AmLogicSerial}")..."
+								#         quad-core A55 according to Amlogic 5.4 BSP kernel: tinyurl.com/r598z7aa
+								# T5D --> T950D4, T950X4
+								echo "unknown Amlogic, serial $(cut -c-8 <<<"${AmLogicSerial}")..."
 								;;
 						esac
 						;;
@@ -3707,6 +3718,9 @@ GuessSoCbySignature() {
 									*h313*)
 										echo "Allwinner H313"
 										;;
+									*h64*)
+										echo "Allwinner H64"
+										;;
 									*h6*)
 										echo "Allwinner H6"
 										;;
@@ -3715,9 +3729,6 @@ GuessSoCbySignature() {
 										;;
 									*a64*)
 										echo "Allwinner A64"
-										;;
-									*h64*)
-										echo "Allwinner H64"
 										;;
 									*t507*)
 										echo "Allwinner T507"
@@ -3905,8 +3916,8 @@ GuessSoCbySignature() {
 			esac
 			;;
 		00A35r1p000A35r1p000A35r1p000A35r1p0)
-			# S905Y4/S805X2, 4 x Cortex-A35 / r1p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32
-			echo "Amlogic S905Y4/S805X2"
+			# S805X2/S905Y4/S905W2, 4 x Cortex-A35 / r1p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32
+			echo "Amlogic S805X2/S905Y4/S905W2"
 			;;
 		00A55r1p000A55r1p000A55r1p000A55r1p0)
 			# Amlogic S905X3, 4 x Cortex-A55 / r1p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp (with 5.4+ also 'asimddp asimdrdm cpuid dcpop lrcpc')
@@ -4368,10 +4379,10 @@ IdentifyAllwinnerARMv8() {
 	grep -q h616 <<<"${DTCompatible}" && echo "Allwinner H616/H313"
 	grep -q t507 <<<"${DTCompatible}" && echo "Allwinner T507"
 	grep -q h313 <<<"${DTCompatible}" && echo "Allwinner H313"
+	grep -q h64 <<<"${DTCompatible}" && echo "Allwinner H64"
 	grep -q h6 <<<"${DTCompatible}" && echo "Allwinner H6"
 	grep -q h5 <<<"${DTCompatible}" && echo "Allwinner H5"
 	grep -q a64 <<<"${DTCompatible}" && echo "Allwinner A64"
-	grep -q h64 <<<"${DTCompatible}" && echo "Allwinner H64"
 
 	# Check for USB3 first, mainline kernel:
 	grep -q "xhci" /proc/interrupts && echo "Allwinner H6"

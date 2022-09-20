@@ -33,3 +33,6 @@ CPU architecture: 8
 CPU variant	: 0x1
 CPU part	: 0xd04
 CPU revision	: 0
+
+Serial		: 370b030400000000122d90041dc3d900
+Hardware	: Khadas VIM1S

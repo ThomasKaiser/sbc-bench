@@ -37,7 +37,9 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Kendryte K510](http://ix.io/41Qa) | 790 MHz | 4.17 | Sid riscv64 | 690 | 6750 | 7410 | 280 | 440 | - |
 | [Khadas Edge/Captain](http://ix.io/1rYm) | 2000/1500 MHz | 4.4 | Bionic arm64 | 6550 | 402150 | 1130400 | 2810 | 4860 | 10.50 |
 | [Khadas Edge/Captain](http://ix.io/1uar) | 2000/1500 MHz | 4.4 | Stretch arm64 | 6600 | 269485 | 1127780 | 2860 | 4880 | 8.85 |
+| [Khadas Edge2](http://ix.io/4a5U) | 2260/1800 MHz | 5.10 | Jammy arm64 | 16470 | 641550 | 1287490 | 10860 | 29110 | - |
 | [Khadas VIM1](http://ix.io/3QLN) | 1415 MHz | 5.1 | Buster arm64 | 3860 | 90160 | 659460 | 1930 | 5900 | - |
+| [Khadas VIM1S](http://ix.io/4a2b) | 2000 MHz | 5.4 | Jammy arm64 | 3840 | 103430 | 436670 | 1320 | 4240 | - |
 | [Khadas VIM2](http://ix.io/1ixi) | 1415/1000 MHz | 4.9 | **Xenial** arm64 | 4800 | 177600 | 659000 | 1690 | 5610 | - |
 | [Khadas VIM2](http://ix.io/1iJ7) | 1415/1000 MHz | 4.17 | Bionic arm64 | 5450 | 126770 | 659600 | 1920 | 5920 | 8.59 |
 | [Khadas VIM3](http://ix.io/1MFD) | 2200/1800 MHz | 4.9 | Bionic arm64 | 8600 | 398370 | 1256910 | 4980 | 9300 | 13.12 |

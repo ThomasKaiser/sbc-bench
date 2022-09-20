@@ -1,10 +1,10 @@
 #!/bin/bash
 #
-# Archive sbc-bench results (just in case ix.io disappears).
-# To be executed from results dir. It also does some quick
-# validation of collected results afterwards.
+# Archive sbc-bench results (just in case ix.io or sprunge.us disappear).
+# To be executed from results dir. It also does some quick validation of
+# collected results afterwards.
 
-grep "http://ix.io" ../Results.md | awk -F"http://" '{print $2}' | cut -f1 -d')' | while read ; do
+grep -E "http://ix.io|http://sprunge.us" ../Results.md | awk -F"http://" '{print $2}' | cut -f1 -d')' | while read ; do
 	ResultFile="${REPLY##*/}.txt"
 	if [ -f "${ResultFile}" ]; then
 		grep -q "^tinymembench" "${ResultFile}" || (wget -q -O "${ResultFile}" "http://${REPLY}" ; sleep 5)

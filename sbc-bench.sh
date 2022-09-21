@@ -149,6 +149,7 @@ Main() {
 	[ -f /sys/devices/system/cpu/cpufreq/policy0/scaling_governor ] && \
 		read OriginalCPUFreqGovernor </sys/devices/system/cpu/cpufreq/policy0/scaling_governor 2>/dev/null
 	BasicSetup performance >/dev/null 2>&1
+	CheckGovernors
 	GetTempSensor
 	[ "X${MODE}" = "Xpts" ] && CheckPTS
 	InstallPrerequisits
@@ -437,6 +438,47 @@ BashBench(){
 			;;
 	esac
 } # BashBench
+
+CheckGovernors() {
+	# check and report governors that directly affect performance behaviour. Stuff like
+	# memory/GPU/NPU governors. On RK3588 for example:
+	#
+	# Status of performance relevant governors:
+	#                 dmc: dmc_ondemand (dmc_ondemand userspace powersave performance simple_ondemand)
+	#        fb000000.gpu: simple_ondemand (dmc_ondemand userspace powersave performance simple_ondemand)
+	#        fdab0000.npu: userspace (dmc_ondemand userspace powersave performance simple_ondemand)
+
+	Governors="$(find /sys -name "*governor" | grep -E -v '/sys/module|cpuidle|cpufreq/')"
+	if [ "X${Governors}" = "X" ]; then
+		return
+	fi
+	echo -e "Status of performance relevant governors:"
+	echo "${Governors}" | while read ; do
+		read Governor <"${REPLY}"
+		if [ "X${Governor}" != "X" ]; then
+			SysFSNode="$(sed 's/cpufreq\//cpufreq-/' <<<"${REPLY%/*}")"
+			AvailableGovernorsSysFSNode="$(ls -d "${REPLY%/*}"/*available_governors)"
+			if [ -f "${AvailableGovernorsSysFSNode}" ]; then
+				read AvailableGovernors <"${AvailableGovernorsSysFSNode}"
+				if [ "X${AvailableGovernors}" != "X${Governor}" ]; then
+					printf "%19s: %s" "${SysFSNode##*/}"
+					grep -q "performance" <<<"${AvailableGovernors}"
+					GovStatus=$?
+					if [ ${GovStatus} -eq 0 -a "X${Governor}" = "Xperformance" ]; then
+						echo -e "${LGREEN}performance${NC}"
+					elif [ ${GovStatus} -eq 0 -a "X${Governor}" != "Xperformance" ]; then
+						echo -e "${LRED}${Governor}${NC} (${AvailableGovernors})"
+					else
+						echo "${Governor} (${AvailableGovernors})"
+					fi
+				fi
+			else
+				printf "%19s: %s\n" "${SysFSNode##*/}" "${Governor}"
+			fi
+		fi
+	done | sort -n
+	echo ""
+} # CheckGovernors
 
 PlotPerformanceGraph() {
 	# function that walks through all cpufreq OPP and plots a performance graph using

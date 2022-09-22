@@ -443,16 +443,16 @@ CheckGovernors() {
 	# check and report governors that directly affect performance behaviour. Stuff like
 	# memory/GPU/NPU governors. On RK3588 for example:
 	#
-	# Status of performance relevant governors:
+	# Status of performance relevant governors below /sys/devices/
 	#                 dmc: dmc_ondemand (dmc_ondemand userspace powersave performance simple_ondemand)
 	#        fb000000.gpu: simple_ondemand (dmc_ondemand userspace powersave performance simple_ondemand)
 	#        fdab0000.npu: userspace (dmc_ondemand userspace powersave performance simple_ondemand)
 
-	Governors="$(find /sys -name "*governor" | grep -E -v '/sys/module|cpuidle|cpufreq/')"
+	Governors="$(find /sys -name "*governor" | grep -E -v '/sys/module|cpuidle|cpufreq/|watchdog')"
 	if [ "X${Governors}" = "X" ]; then
 		return
 	fi
-	echo -e "Status of performance relevant governors:"
+	echo -e "Status of performance relevant governors below /sys/devices/"
 	echo "${Governors}" | while read ; do
 		read Governor <"${REPLY}"
 		if [ "X${Governor}" != "X" ]; then
@@ -467,7 +467,7 @@ CheckGovernors() {
 					if [ ${GovStatus} -eq 0 -a "X${Governor}" = "Xperformance" ]; then
 						echo -e "${LGREEN}performance${NC}"
 					elif [ ${GovStatus} -eq 0 -a "X${Governor}" != "Xperformance" ]; then
-						echo -e "${LRED}${Governor}${NC} (${AvailableGovernors})"
+						echo -e "${LRED}${Governor}${NC} ($(sed "s/performance/\x1b\x5b1mperformance\x1b\x5b0m/" <<<"${AvailableGovernors}"))"
 					else
 						echo "${Governor} (${AvailableGovernors})"
 					fi
@@ -3055,7 +3055,7 @@ GuessARMSoC() {
 	# soc soc0: Amlogic Meson GXL (S905D) Revision 21:b (2:2) Detected <-- MeCool KI Pro, Phicomm N1
 	# soc soc0: Amlogic Meson GXL (Unknown) Revision 21:b (2:2) Detected <-- Phicomm N1
 	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:b (82:2) Detected <-- Libre Computer AML-S905X-CC / NEXBOX A95X (S905X) / Tanix TX3 Mini / Amlogic Meson GXL (S905X) P212 Development Board / Amlogic Meson GXL (S905W) P281 Development Board
-	# soc soc0: Amlogic Meson GXL (S905W) Revision 21:b (a2:2) Detected <-- Tanix TX3 Mini / Amlogic Meson GXL (S905X) P212 Development Board
+	# soc soc0: Amlogic Meson GXL (S905W) Revision 21:b (a2:2) Detected <-- Tanix TX3 Mini / Amlogic Meson GXL (S905X) P212 Development Board, Amlogic Meson GXL (S905W) P281 Development Board
 	# soc soc0: Amlogic Meson GXL (S905L) Revision 21:b (c2:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson GXL (S905M2) Revision 21:b (e2:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:c (84:2) Detected <-- Khadas VIM / Rureka / Amlogic Meson GXL (S905X) P212 Development Board

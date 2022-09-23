@@ -205,7 +205,7 @@
 | [466y](466y.txt) | v0.9.8 Mediatek MT6580 K9M1-test board | 0%/0% | 878Mi/683Mi | X | X | X | X | 1% | <span style=color:red>**14%**</span> | |
 | [46hs](46hs.txt) | v0.9.8 PXA1908 | 0.8%/1.0% | 661Mi/601Mi | X | X | X | X | <span style=color:red>**12%**</span> | 0% | |
 | [49kx](49kx.txt) | v0.9.8 Qualcomm Technologies, Inc. qrb5 | 0.9%/4.2% | 7.5G/7.0G | X | X | X | X | 1% | 0% | |
-| [4a2b](4a2b.txt) | v0.9.8 Khadas VIM1S | 0%/0% | 1.9Gi/1.4Gi | X | X | X | X | 2% | 1% | |
 | [4a3s](4a3s.txt) | v0.9.8 StarFive VisionFive V2 | 0.4%/0.1% | 3.8Gi/3.5Gi | X | X | X | X | 1% | 2% | |
 | [4a5U](4a5U.txt) | v0.9.8 Khadas Edge2 | 0%/0% | 15Gi/14Gi | X | X | X | X | 1% | 0% | |
 | [4ax9](4ax9.txt) | v0.9.8 NVIDIA Orin Jetson-Small Develop | 0%/0% | 29Gi/29Gi | X | X | X | X | 0% | 0% | |
+| [4bbv](4bbv.txt) | v0.9.8 Khadas VIM1S | 0.5%/1.1% | 1.9Gi/1.1Gi | X | X | X | X | 3% | 0% | |

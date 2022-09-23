@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.9.8
+Version=0.9.9
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -149,7 +149,7 @@ Main() {
 	[ -f /sys/devices/system/cpu/cpufreq/policy0/scaling_governor ] && \
 		read OriginalCPUFreqGovernor </sys/devices/system/cpu/cpufreq/policy0/scaling_governor 2>/dev/null
 	BasicSetup performance >/dev/null 2>&1
-	CheckGovernors
+	ReportGovernors
 	GetTempSensor
 	[ "X${MODE}" = "Xpts" ] && CheckPTS
 	InstallPrerequisits
@@ -439,20 +439,23 @@ BashBench(){
 	esac
 } # BashBench
 
-CheckGovernors() {
-	# check and report governors that directly affect performance behaviour. Stuff like
+ReportGovernors() {
+	# check and report governors that might affect performance behaviour. Stuff like
 	# memory/GPU/NPU governors. On RK3588 for example:
 	#
-	# Status of performance relevant governors below /sys/devices/
-	#                 dmc: dmc_ondemand (dmc_ondemand userspace powersave performance simple_ondemand)
-	#        fb000000.gpu: simple_ondemand (dmc_ondemand userspace powersave performance simple_ondemand)
-	#        fdab0000.npu: userspace (dmc_ondemand userspace powersave performance simple_ondemand)
+	# Status of probably performance related governors below /sys:
+	# dmc: dmc_ondemand (dmc_ondemand userspace powersave performance simple_ondemand)
+	# fb000000.gpu: simple_ondemand (dmc_ondemand userspace powersave performance simple_ondemand)
+	# fdab0000.npu: userspace (dmc_ondemand userspace powersave performance simple_ondemand)
+	#
+	# Note: cpufreq governors aren't reported since sbc-bench detects cpufreq policies and switches
+	# to performance cpufreq governor prior to benchmarking anyway.
 
 	Governors="$(find /sys -name "*governor" | grep -E -v '/sys/module|cpuidle|cpufreq/|watchdog')"
 	if [ "X${Governors}" = "X" ]; then
 		return
 	fi
-	echo -e "Status of performance relevant governors below /sys/devices/"
+	echo -e "Status of probably performance related governors below /sys:"
 	echo "${Governors}" | while read ; do
 		read Governor <"${REPLY}"
 		if [ "X${Governor}" != "X" ]; then
@@ -461,7 +464,7 @@ CheckGovernors() {
 			if [ -f "${AvailableGovernorsSysFSNode}" ]; then
 				read AvailableGovernors <"${AvailableGovernorsSysFSNode}"
 				if [ "X${AvailableGovernors}" != "X${Governor}" ]; then
-					printf "%19s: %s" "${SysFSNode##*/}"
+					printf "${SysFSNode##*/}: "
 					grep -q "performance" <<<"${AvailableGovernors}"
 					GovStatus=$?
 					if [ ${GovStatus} -eq 0 -a "X${Governor}" = "Xperformance" ]; then
@@ -473,12 +476,12 @@ CheckGovernors() {
 					fi
 				fi
 			else
-				printf "%19s: %s\n" "${SysFSNode##*/}" "${Governor}"
+				echo "${SysFSNode##*/}: ${Governor}"
 			fi
 		fi
 	done | sort -n
 	echo ""
-} # CheckGovernors
+} # ReportGovernors
 
 PlotPerformanceGraph() {
 	# function that walks through all cpufreq OPP and plots a performance graph using
@@ -1940,7 +1943,7 @@ InitialMonitoring() {
 	# Log system info and BIOS/UEFI versions if available:
 	command -v dmidecode >/dev/null 2>&1
 	if [ $? -eq 0 ]; then
-		SystemInfo="$(dmidecode -t system 2>/dev/null | grep -E "Manufacturer: |Product Name: |Version: |Family: |SKU Number: " | grep -E -v ":  $|O.E.M.|123456789|: Not |Default|default|System Product Name|System manufacturer|System Version|BAD INDEX")"
+		SystemInfo="$(dmidecode -t system 2>/dev/null | grep -E "Manufacturer: |Product Name: |Version: |Family: |SKU Number: " | grep -E -v ":  $|O.E.M.|123456789|0000000000000000|: Not |Default|default|System Product Name|System manufacturer|System Version|BAD INDEX")"
 		UEFIInfo="$(dmidecode -t bios 2>/dev/null | grep -E "Vendor:|Version:|Release Date:|Revision:")"
 	fi
 	if [ "X${SystemInfo}" != "X" ]; then
@@ -2597,6 +2600,19 @@ PrintCPUTopology() {
 	echo ""
 } # PrintCPUTopology
 
+CheckMemoryDevfreqTransitions() {
+	Transitions="$(find /sys/devices/platform -name trans_stat | grep -E "memory|dmc|ddr")"
+	if [ "X${Transitions}" = "X" ]; then
+		return
+	fi
+	echo -e "\n##########################################################################\n"
+	echo -e "Transitions since last boot:\n"
+	echo "${Transitions}" | while read ; do
+		echo -e "${REPLY%/*}:\n"
+		cat "${REPLY}"
+	done
+} # CheckMemoryDevfreqTransitions
+
 SummarizeResults() {
 	# report rounded up benchmark duration
 	BenchmarkFinishedTime=$(date +"%s")
@@ -2611,6 +2627,9 @@ SummarizeResults() {
 	IOWaitAvg=$(CheckIOWait)
 	IOWaitMax="$(grep -E "MHz  |---  " "${MonitorLog}" | awk -F"%" '{print $5}' | sed '/^[[:space:]]*$/d' | sed -e '1,2d' | sort -n -r | head -n1 | sed 's/  //')"
 	SysMax="$(grep -E "MHz  |---  " "${MonitorLog}" | awk -F"%" '{print $2}' | sed '/^[[:space:]]*$/d' | sed -e '1,2d' | sort -n -r | head -n1 | sed 's/  //')"
+
+	# if statistics about memory clockspeeds are available insert these now:
+	CheckMemoryDevfreqTransitions >>${ResultLog}
 
 	# Prepare benchmark results
 	echo -e "\n##########################################################################\n" >>${ResultLog}
@@ -2697,16 +2716,29 @@ LogEnvironment() {
 	else
 		echo ""
 	fi
+
+	# check whether it's a Rockchip BSP kernel with dmc enabled
+	DMCGovernor="$(find /sys -name governor | grep '/dmc/' | head -n1)"
+	[ -f "${DMCGovernor}" ] && echo -e "  DMC gov: $(cat "${DMCGovernor}")"
+
+	# check whether we're running on XU4/HC1/HC2 and if true try to report ddr_freq.
+	# Most probably this setting has no effect (any more) since 825 MHz vs. 933 MHz
+	# results in similar benchmark scores: http://ix.io/4b7q vs. http://ix.io/4b7V
+	[ -f /boot/boot.ini ] && ddr_freq="$(awk -F" " '/setenv ddr_freq/ {print $3}' /boot/boot.ini 2>/dev/null)"
+	[ "X${ddr_freq}" != "X" ] && echo -e " DDR freq: ${ddr_freq} MHz"
+
 	# log /proc/device-tree/compatible contents if available
 	if [ "X${DTCompatible}" != "X" ]; then
 		echo "DT compat: $(head -n1 <<<"${DTCompatible}")"
 		tail -n +2 <<<"${DTCompatible}" | sed -e 's/^/           /'
 	fi
+
 	# Log compiler version if not in Geekbench mode
 	if [ "X${MODE}" != "Xgb" ]; then
 		GCC_Info="$(${GCC} -v 2>&1 | grep -E "^Target|^Configured")"
 		echo -e " Compiler: ${GCC} ${GCC_Version} / $(awk -F": " '/^Target/ {print $2}' <<< "${GCC_Info}")"
 	fi
+
 	# Log userland architecture if available
 	[ "X${ARCH}" != "X" ] && echo " Userland: ${ARCH}"
 	# Log ThreadX version if available
@@ -2716,9 +2748,7 @@ LogEnvironment() {
 			echo "           ${REPLY}"
 		done
 	fi
-	# check whether it's a Rockchip BSP kernel with dmc enabled
-	DMCGovernor="$(find /sys -name governor | grep '/dmc/' | head -n1)"
-	[ -f "${DMCGovernor}" ] && echo -e "  DMC gov: $(cat "${DMCGovernor}")"
+
 	# check for VM/container mode to add this to kernel info
 	[ "X${VirtWhat}" != "X" -a "X${VirtWhat}" != "Xnone" ] && VirtOrContainer=" (${VirtWhat})"
 	# kernel info
@@ -2733,8 +2763,10 @@ LogEnvironment() {
 		[ -f /proc/config.gz ] && zgrep -E "^CONFIG_HZ|^CONFIG_PREEMPT" /proc/config.gz | \
 			while read ; do echo "           ${REPLY}"; done | sort -V
 	fi
+
 	# if available report the kernel's xor/raid6 choices
 	awk -F"] " '/ raid6: | xor: / {print "           "$2}' <<<"${DMESG}"
+
 	# with Rockchip BSP kernels try to report PVTM settings (Process-Voltage-Temperature Monitor)
 	grep cpu.*pvtm <<<"${DMESG}" | awk -F'] ' '{print "           "$2}'
 } # LogEnvironment
@@ -2978,7 +3010,7 @@ GuessARMSoC() {
 	#       Cortex-A7 / r0p2: MediaTek MT6589/TMK6588
 	#       Cortex-A7 / r0p3: Allwinner A31, MediaTek MT6580/MT7623, Samsung Exynos 5422
 	#       Cortex-A7 / r0p4: Allwinner A20
-	#       Cortex-A7 / r0p5: Allwinner A33/A83T/H2+/H3/H8/R16/R328/R40/S3/T113/V3/V3s/V40/V853, Broadcom BCM2836, Freescale/NXP i.MX7D/i.MX6 ULL, HiSilicon Hi351x, Microchip SAMA7G54, Qualcomm MDM9607, Renesas RZ/N1, Rockchip RK3229/RK3228A/RV1108/RV1109/RV1126, SigmaStar SSD201/SSD202D, STMicroelectronics STM32MP157
+	#       Cortex-A7 / r0p5: Allwinner A33/A83T/H2+/H3/H8/R16/R328/R40/S3/T113/V3/V3s/V40/V853, Broadcom BCM2836, Freescale/NXP i.MX7D/i.MX6 ULL, HiSilicon Hi351x/Hi3798M-V100, Microchip SAMA7G54, Qualcomm MDM9607, Renesas RZ/N1, Rockchip RK3229/RK3228A/RV1108/RV1109/RV1126, SigmaStar SSD201/SSD202D, STMicroelectronics STM32MP157
 	#       Cortex-A8 / r1p7: TI Sitara AM3517
 	#       Cortex-A8 / r2p5: Freescale/NXP i.MX515
 	#       Cortex-A8 / r3p2: Allwinner A10, TI OMAP3530/DM3730/AM335x
@@ -3048,7 +3080,7 @@ GuessARMSoC() {
 	# soc soc0: Amlogic Meson8m2 (S812) RevA (1d - 0:74E) detected <-- Akaso M8S / Tronsmart MXIII Plus
 	# soc soc0: Amlogic Meson GXBB (S905) Revision 1f:b (0:1) Detected <-- ODROID-C2
 	# soc soc0: Amlogic Meson GXBB (S905) Revision 1f:c (0:1) Detected <-- ODROID-C2
-	# soc soc0: Amlogic Meson GXBB (S905) Revision 1f:b (12:1) Detected <-- Beelink Mini MX
+	# soc soc0: Amlogic Meson GXBB (S905) Revision 1f:b (12:1) Detected <-- Beelink Mini MX / Amlogic Meson GXBB P201 Development Board
 	# soc soc0: Amlogic Meson GXBB (S905) Revision 1f:c (13:1) Detected <-- Beelink Mini MX / NanoPi K2 / NEXBOX A95X / Tronsmart Vega S95 Telos / WeTek Play 2 / Amlogic Meson GXBB P200 Development Board / Amlogic Meson GXBB P201 Development Board
 	# soc soc0: Amlogic Meson GXBB (S905H) Revision 1f:c (23:1) Detected <-- Amlogic Meson GXBB P201 Development Board
 	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:a (82:2) Detected <-- Khadas VIM / NEXBOX A95X (S905X) / Tanix TX3 Mini / Amlogic Meson GXL (S905X) P212 Development Board
@@ -3670,6 +3702,10 @@ GuessSoCbySignature() {
 				*sun8i-a33*|*sun8i-r16*)
 					# Allwinner A33/R16, 4 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
 					echo "Allwinner A33/R16"
+					;;
+				*hi3798*|*hisilicon*)
+					# HiSilicon Hi3798M-V100, 4 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae
+					echo "HiSilicon Hi3798M-V100"
 					;;
 				*)
 					echo "Allwinner H3/H2+ or R40/V40 or A33/R16"

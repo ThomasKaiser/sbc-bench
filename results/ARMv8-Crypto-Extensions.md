@@ -56,7 +56,7 @@ Crawling through [sbc-bench results collection](../Results.md) comparing +30 dif
 | :----: | ----:  | :----:  | :----:  |
 | Cortex-A35 | | | |
 | [RK3308](http://ix.io/1XKY) | 1300 | 282290 | 217 |
-| [S905Y4](http://ix.io/4a2b) | 2000 | 436670 | 218 |
+| [S905Y4](http://ix.io/4bbv) | 2000 | 436550 | 218 |
 | Apple Firestorm | | | |
 | [M1 Pro](http://ix.io/443N) | 3030 | 1064110 | 351 |
 | Cortex-A57 | | | |

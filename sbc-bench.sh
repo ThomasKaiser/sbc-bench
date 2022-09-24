@@ -1492,7 +1492,7 @@ BasicSetup() {
 	# https://github.com/ThomasKaiser/sbc-bench/issues/46
 	[ ${CPUCores} -eq 0 ] && CPUCores=$(grep -c '^hart' /proc/cpuinfo)
 
-	# try to bring CPU cores that were sent offline when idle back online
+	# try to bring CPU cores back online that were sent offline when idle
 	for i in $(seq 0 $(( ${CPUCores} - 1 )) ); do
 		taskset -c ${i} echo "" >/dev/null 2>&1
 	done
@@ -1528,7 +1528,7 @@ BasicSetup() {
 			DeviceName="VMware ${X86CPUName} VM"
 			;;
 		Alibaba*)
-			DeviceName="${DMIProductName} ${VirtWhat} VM"
+			DeviceName="${DMISysVendor} ${DMIProductName} ${VirtWhat} VM"
 			;;
 		Xen*)
 			DeviceName="Xen ${DMIProductVersion} ${X86CPUName} VM"
@@ -2605,8 +2605,9 @@ CheckMemoryDevfreqTransitions() {
 	if [ "X${Transitions}" = "X" ]; then
 		return
 	fi
+	UpTime=$(awk -F" " '{print $1*1000}' </proc/uptime)
 	echo -e "\n##########################################################################\n"
-	echo -e "Transitions since last boot:\n"
+	echo -e "Transitions since last boot (${UpTime}ms ago):\n"
 	echo "${Transitions}" | while read ; do
 		echo -e "${REPLY%/*}:\n"
 		cat "${REPLY}"
@@ -2718,8 +2719,15 @@ LogEnvironment() {
 	fi
 
 	# check whether it's a Rockchip BSP kernel with dmc enabled
-	DMCGovernor="$(find /sys -name governor | grep '/dmc/' | head -n1)"
-	[ -f "${DMCGovernor}" ] && echo -e "  DMC gov: $(cat "${DMCGovernor}")"
+	DMCGovernor="$(grep '/dmc/' <<<"${Governors}" | head -n1)"
+	if [ -f "${DMCGovernor}" -a -f "${DMCGovernor%/*}/upthreshold" ]; then
+		# report DMC governor and upthreshold value
+		read upthreshold <"${DMCGovernor%/*}/upthreshold"
+		echo -e "  DMC gov: $(cat "${DMCGovernor}") (upthreshold: ${upthreshold})"
+	elif [ -f "${DMCGovernor}" ]; then
+		# report only DMC governor
+		echo -e "  DMC gov: $(cat "${DMCGovernor}")"
+	fi
 
 	# check whether we're running on XU4/HC1/HC2 and if true try to report ddr_freq.
 	# Most probably this setting has no effect (any more) since 825 MHz vs. 933 MHz
@@ -3606,7 +3614,12 @@ GuessARMSoC() {
 			*)
 				# guess SoC based on CPU topology
 				SoCGuess="$(GuessSoCbySignature)"
-				[ "X${SoCGuess}" = "X" ] || echo "${SoCGuess}"
+				if [ "X${SoCGuess}" != "X" -a "X${VirtWhat}" != "X" -a "X${VirtWhat}" != "Xnone" ]; then
+					# add virtualization disclaimer
+					echo "${SoCGuess} / guess flawed since running in ${VirtWhat}"
+				elif [ "X${SoCGuess}" != "X" ]; then
+					echo "${SoCGuess}"
+				fi
 				;;
 		esac
 	fi
@@ -3864,6 +3877,10 @@ GuessSoCbySignature() {
 								# i.MX8M, 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 								echo "NXP i.MX8M"
 								;;
+							*rtd1395*)
+								# RealTek RTD1395, 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
+								echo "RealTek RTD1395"
+								;;
 							*realtek*)
 								# RealTek RTD129x/RTD139x, 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 								echo "RealTek RTD129x/RTD139x"
@@ -3928,19 +3945,19 @@ GuessSoCbySignature() {
 			;;
 		0A9r4p10A9r4p1|00A9r4p100A9r4p1)
 			# Armada 375/38x, 2 x Cortex-A9 / r4p1 / swp half thumb fastmult vfp edsp neon vfpv3 tls
-			echo "Armada 375/38x"
+			echo "Marvell Armada 375/38x"
 			;;
 		00A72r0p100A72r0p102A72r0p102A72r0p1)
 			# Armada 8040, 4 x Cortex-A72 / r0p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32
-			echo "Armada 8040"
+			echo "Marvell Armada 8040"
 			;;
 		00A72r0p100A72r0p1)
 			# Armada 8020, 2 x Cortex-A72 / r0p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32
-			echo "Armada 8020"
+			echo "Marvell Armada 8020"
 			;;
 		??A53r0p4??A53r0p4)
 			# Armada 3700, 2 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
-			echo "Armada 37x0"
+			echo "Marvell Armada 37x0"
 			;;
 		10ARM1176r0p7)
 			# BCM2835, 1 x ARM1176 / r0p7 / half thumb fastmult vfp edsp java tls

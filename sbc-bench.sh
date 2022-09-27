@@ -76,7 +76,7 @@ Main() {
 				[ "X${CPUList}" = "X" -o "X${CPUList}" = "Xall" -o "X${CPUList}" = "Xcores" -o "X${CPUList}" = "Xclusters" -o "X${CPUList}" = "Xcoreclusters" ] \
 					|| taskset -c ${CPUList} echo "foo" >/dev/null 2>&1
 				if [ $? -ne 0 ]; then
-					echo -e "\nInvalid option \"-p ${CPUList}\". Please check taskset manual page for --cpu-list format" >&2
+					echo -e "\nInvalid option \"-g ${CPUList}\". Please check taskset manual page for --cpu-list format" >&2
 					DisplayUsage
 					exit 1
 				fi
@@ -523,11 +523,7 @@ PlotPerformanceGraph() {
 		IdleTemp=$(ReadSoCTemp)
 		echo -e "\n##########################################################################\n\nIdle temperature: ${IdleTemp}°C, idle consumption: $(( $(awk '{printf ("%0.0f",$1/10); }' <<<"${IdleConsumption}" ) * 10 ))mW" >>${ResultLog}
 	fi
-	
-	# ramp up CPU clockspeeds and continue with normal consumption monitoring
-	for i in $(ls /sys/devices/system/cpu/cpufreq/policy?/scaling_governor); do
-		echo performance >${i}
-	done
+
 	CheckNetio
 
 	# check if cpulist parameter has been provided as well:
@@ -646,6 +642,10 @@ CheckPerformance() {
 		TasksetOptions="taskset -c ${3} "
 		if [ ${#3} -eq 1 ]; then
 			SevenZIPOptions="-mmt=1"
+		elif [ ${#3} -eq 3 ]; then
+			# something like 0-3 or 4-5, determine count of cpu cores:
+			HowManyCores=$(( $(( ${3:2:1} - ${3:0:1} )) + 1 ))
+			SevenZIPOptions="-mmt=${HowManyCores}"
 		else
 			SevenZIPOptions=""
 		fi
@@ -682,14 +682,16 @@ CheckPerformance() {
 
 	# adjust min and max speeds (set max speeds on unaffected clusters to min speed)
 	for Cluster in $(ls -d /sys/devices/system/cpu/cpufreq/policy?); do
+		echo userspace >${Cluster}/scaling_governor
 		read MinSpeed <${Cluster}/cpuinfo_min_freq
 		read MaxSpeed <${Cluster}/cpuinfo_max_freq
-		echo ${MinSpeed} >${Cluster}/scaling_max_freq
+		echo ${MinSpeed} >${Cluster}/scaling_setspeed
 	done
 	for Cluster in ${Clusters}; do
+		echo userspace >${Cluster}/scaling_governor
 		read MinSpeed <${Cluster}/cpuinfo_min_freq
 		read MaxSpeed <${Cluster}/cpuinfo_max_freq
-		echo ${MinSpeed} >${Cluster}/scaling_min_freq
+		echo ${MinSpeed} >${Cluster}/scaling_setspeed
 	done
 	
 	# now walk through higher cluster since this is supposed to provide more cpufreq OPP.
@@ -700,9 +702,9 @@ CheckPerformance() {
 		if [ $i -lt ${SkipBelow}000 ]; then
 			continue
 		fi
-		# try to set this speed on all clusters
-		for Cluster in ${Clusters}; do
-			echo ${i} >${Cluster}/scaling_max_freq
+		# try to set this speed on all affected cpufreq policies
+		for Cluster in $(seq ${3:0:1} ${3:2:1}); do
+			[ -f /sys/devices/system/cpu/cpufreq/policy${Cluster}/scaling_setspeed ] && echo ${i} >/sys/devices/system/cpu/cpufreq/policy${Cluster}/scaling_setspeed
 		done
 		sleep 0.1
 		
@@ -840,7 +842,7 @@ RenderPDF() {
 	</head>
 	<body>
 		<h3>sbc-bench v${Version} - ${DeviceName} - $(date)</h3>
-		sbc-bench has been called with <code>-p ${CPUList}</code>
+		sbc-bench has been called with <code>-g ${CPUList}</code>
 	EOF
 	
 	ls -r --time=atime "${TempDir}"/*.png | while read Graph ; do
@@ -1472,6 +1474,24 @@ GetCoreClusters() {
 	done
 } # GetCoreClusters
 
+ParseOPPTables() {
+	DVFS="$(ls -d /sys/firmware/devicetree/base/* | grep -E "opp-table|opp_table" | sort -n)"
+	if [ "X${DVFS}" = "X" ]; then
+		return
+	fi
+	echo -e "\n##########################################################################"
+	for OPPTable in ${DVFS}; do
+		read OPPTableName <"${OPPTable}/name"
+		echo -e "\n   ${OPPTableName}:"
+		find "${OPPTable}" -type d -name "opp*" | grep "${OPPTableName}/" | sort | while read ; do
+			[ -f "${REPLY}/opp-hz" ] && OPPHz="$(printf "%d\n" 0x$(od --endian=big -x <"${REPLY}/opp-hz" | cut -c9- | tr -d ' ') | sed 's/000000$//')" || OPPHz=""
+			[ -f "${REPLY}/opp-microvolt" ] && OPPVolt="$(printf "%d\n" 0x$(od --endian=big -x <"${REPLY}/opp-microvolt" | cut -c9- | tr -d ' ' | cut -c-8 | head -n1))" || OPPVolt=""
+			# echo "${OPPVolt}"
+			printf "%10s MHz %7s mV\n" ${OPPHz} $(awk '{printf ("%0.1f",$1/1000); }' <<<"${OPPVolt}")
+		done | sort -n
+	done
+} # ParseOPPTables
+
 BasicSetup() {
 	# set cpufreq governor based on $1 (defaults to ondemand if not provided)
 	if [ "$1" != "nochange" ]; then
@@ -1648,7 +1668,8 @@ CheckMissingPackages() {
 	command -v curl >/dev/null 2>&1 || echo -e "curl \c"
 	command -v dmidecode >/dev/null 2>&1 || echo -e "dmidecode \c"
 	command -v lshw >/dev/null 2>&1 || echo -e "lshw \c"
-	command -v powercap-info >/dev/null 2>&1 || [ -d /sys/devices/virtual/powercap ] && echo -e "powercap-utils \c"
+	command -v powercap-info >/dev/null 2>&1
+	[ $? -ne 0 -a -d /sys/devices/virtual/powercap ] && echo -e "powercap-utils \c"
 	if [ "X${MODE}" = "Xextensive" ]; then
 		command -v decode-dimms >/dev/null 2>&1 || echo -e "i2c-tools \c"
 	fi
@@ -2675,6 +2696,7 @@ SummarizeResults() {
 	echo "${LSCPU}" >>${ResultLog}
 	LogEnvironment >>${ResultLog}
 	CacheAndDIMMDetails >>${ResultLog}
+	[ "X${MODE}" = "Xextensive" ] && ParseOPPTables >>${ResultLog}
 
 	# Add a line suitable for Results.md on Github if not in efficiency plotting or PTS or GB mode
 	if [ "X${PlotCpufreqOPPs}" != "Xyes" -a "X${MODE}" != "Xpts" -a "X${MODE}" != "Xgb" ]; then

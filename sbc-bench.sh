@@ -1648,6 +1648,7 @@ CheckMissingPackages() {
 	command -v curl >/dev/null 2>&1 || echo -e "curl \c"
 	command -v dmidecode >/dev/null 2>&1 || echo -e "dmidecode \c"
 	command -v lshw >/dev/null 2>&1 || echo -e "lshw \c"
+	command -v powercap-info >/dev/null 2>&1 || [ -d /sys/devices/virtual/powercap ] && echo -e "powercap-utils \c"
 	if [ "X${MODE}" = "Xextensive" ]; then
 		command -v decode-dimms >/dev/null 2>&1 || echo -e "i2c-tools \c"
 	fi
@@ -1776,7 +1777,7 @@ InstallPrerequisits() {
 	fi
 	
 	# add needed repository and install all necessary packages
-	grep -E -q "sensors|gcc|git|sysstat|openssl|curl|dmidecode|i2c|lshw|p7zip|wget|links" <<<"${MissingPackages}"
+	grep -E -q "sensors|gcc|git|sysstat|openssl|curl|dmidecode|i2c|lshw|p7zip|wget|links|powercap" <<<"${MissingPackages}"
 	if [ $? -eq 0 ]; then
 		echo -e "\x08\x08 ${MissingPackages}...\c"
 		add-apt-repository -y universe >/dev/null 2>&1
@@ -2015,6 +2016,15 @@ CheckClockspeedsAndSensors() {
 					echo -e "\nIntel P-States: ${PStateStatus}" >>${ResultLog}
 				fi
 			fi
+			# if powercapping seems to be available on Intel then add a hint
+			# https://www.cnx-software.com/2022/09/08/how-to-check-tdp-pl1-and-pl2-power-limits-in-windows-and-linux/
+			if [ -d /sys/devices/virtual/powercap/intel-rapl ]; then
+				grep -q -i GenuineIntel /proc/cpuinfo && \
+				echo -e "\nPowercap present. You might want to check with \"powercap-info -p intel-rapl\"" >>${ResultLog}
+			fi
+			# if running on a Ryzen CPU add a hint to RyzenAdj
+			grep -q -i "AMD Ryzen" /proc/cpuinfo && \
+				echo -e "\nAMD Ryzen detected. For power limits visit https://github.com/FlyGoat/RyzenAdj" >>${ResultLog}
 		fi
 		if [ ${#ClusterConfig[@]} -eq 1 ]; then
 			# all CPU cores have same package id, we only need to test one core
@@ -2052,7 +2062,7 @@ CheckClockspeedsAndSensors() {
 	fi
 
 	# if lm-sensors is present and reports anything add this to results.log
-	LMSensorsOutput="$(sensors -A 2>/dev/null | sed -e 's/rpi_volt-isa-0000//' -e 's/in0:              N\/A  //')"
+	LMSensorsOutput="$(sensors -A 2>/dev/null | grep -v " +0.0 C" | sed -e 's/rpi_volt-isa-0000//' -e 's/in0:              N\/A  //')"
 	if [ "X${LMSensorsOutput}" != "X" ]; then
 		echo -e "\n##########################################################################\n" >>${ResultLog}
 		echo -e "Hardware sensors:\n\n${LMSensorsOutput}" >>${ResultLog}
@@ -3110,7 +3120,7 @@ GuessARMSoC() {
 	# soc soc0: Amlogic Meson GXL (S805X) Revision 21:d (34:2) Detected <-- Libre Computer AML-S805X-AC / Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:d (84:2) Detected <-- Khadas VIM / Libre Computer AML-S905X-CC / Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:d (85:2) Detected <-- Libre Computer AML-S905X-CC
-	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:e (85:2) Detected <-- Vermax UHD 300X
+	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:e (85:2) Detected <-- Vermax UHD 300X / Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson GXL (S905W) Revision 21:d (a4:2) Detected <-- Tanix TX3 Mini / Amlogic Meson GXL (S905X) P212 Development Board / Amlogic Meson GXL (S905W) P281 Development Board
 	# soc soc0: Amlogic Meson GXL (Unknown) Revision 21:d (a4:2) Detected <-- Khadas VIM / Tanix TX3 Mini / JetHome JetHub J80 / Amlogic Meson GXL (S905X) P212 Development Board / Amlogic Meson GXL (S905W) P281 Development Board
 	# soc soc0: Amlogic Meson GXL (S905L) Revision 21:d (c4:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board
@@ -3135,7 +3145,7 @@ GuessARMSoC() {
 	# soc soc0: Amlogic Meson G12B (S922X) Revision 29:b (40:2) Detected <-- Beelink GT-King Pro
 	# soc soc0: Amlogic Meson G12B (S922X) Revision 29:c (40:2) Detected <-- ODROID-N2+ ('S922X-B')
 	# soc soc0: Amlogic Meson Unknown (Unknown) Revision 2a:e (c5:2) Detected <-- Amlogic Meson GXL (S905L2) X7 5G Tv Box / Amlogic Meson GXL (S905X) P212 Development Board
-	# soc soc0: Amlogic Meson SM1 (S905D3) Revision 2b:b (1:2) Detected <-- AMedia X96 Max+ / SEI Robotics SEI610
+	# soc soc0: Amlogic Meson SM1 (S905D3) Revision 2b:b (1:2) Detected <-- AMedia X96 Max+/Air / HK1 Box/Vontar X3 / SEI Robotics SEI610
 	# soc soc0: Amlogic Meson SM1 (Unknown) Revision 2b:b (1:2) Detected <-- Shenzhen Amediatech Technology Co. Ltd X96 Air / AMedia X96 Max+ / SEI Robotics SEI610 / HK1 Box/Vontar X3
 	# soc soc0: Amlogic Meson SM1 (S905D3) Revision 2b:c (4:2) Detected <-- Khadas VIM3L / https://www.spinics.net/lists/arm-kernel/msg848718.html
 	# soc soc0: Amlogic Meson SM1 (S905X3) Revision 2b:c (10:2) Detected <-- AMedia X96 Max+ / H96 Max X3 / ODROID-C4 / ODROID-HC4 / HK1 Box/Vontar X3 / SEI Robotics SEI610 / Shenzhen Amediatech Technology Co. Ltd X96 Max/Air / Shenzhen CYX Industrial Co. Ltd A95XF3-AIR / Sinovoip BANANAPI-M5 / Tanix TX3 (QZ) / Ugoos X3

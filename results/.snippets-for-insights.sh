@@ -141,5 +141,13 @@ CheckcpufreqVSdistro() {
 	done
 } # CheckcpufreqVSdistro
 
+CheckRK3588sbc-bench-results() {
+	echo -e "# RK3588 sbc-bench results so far\n"
+	echo "| Device / details | Clockspeed | Kernel | Distro | dmc governor | 7-zip | memcpy | memset |"
+	echo "| ----- | :--------: | :----: | :----: |  :----: | ----: | ------: | ------: |"
+	grep -i "rk3588" *.txt | cut -f1 -d':' | sort | uniq | while read ; do Gov=$(grep "DMC gov" $REPLY | cut -c12-); echo -e "\n${Gov:-unknown}|$REPLY: \c"; tail -n1 $REPLY; done | grep ' | ' | grep -v ' | | | |' | sed -e 's/: |/ |/' -e 's/\.txt //' | awk -F'|' '{print "| ["$3"](http://ix.io/"$2") |"$4"|"$5"|"$6"| "$1" |"$7"|"$10"|"$11"|"}'
+} # CheckRK3588sbc-bench-results
+
 # CPUUtilization7ZIP >7-zip-cpu-utilisation.md
 # CheckRAID6PerfAndAlgo >raid6-perf-and-algo.md
+# CheckRK3588sbc-bench-results

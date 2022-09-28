@@ -1,0 +1,14 @@
+Processor	: AArch64 Processor rev 4 (aarch64)
+processor	: 0
+processor	: 1
+processor	: 2
+processor	: 3
+Features	: fp asimd evtstrm crc32 
+CPU implementer	: 0x41
+CPU architecture: AArch64
+CPU variant	: 0x0
+CPU part	: 0xd03
+CPU revision	: 4
+
+Hardware	: Amlogic
+Serial		: 1f0c13003209a3a13e9xxxxxxxxxxx

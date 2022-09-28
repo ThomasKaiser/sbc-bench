@@ -859,7 +859,8 @@ RenderPDF() {
 	htmldoc --charset utf-8 --headfootfont helvetica-oblique --headfootsize 7 --header ..c --tocheader . --firstpage c1 --quiet --browserwidth 900 --pagemode outline --fontsize 8 --format pdf14 --bodyfont helvetica --bottom 1cm --pagelayout single --left 2.5cm --right 2cm --top 1.7cm --linkstyle plain --linkcolor blue --textcolor black --bodycolor white --links --size 210x297mm --portrait --compression=9 --jpeg=95 --webpage -f "${TempDir}/report.pdf" "${TempDir}/report.html"
 	
 	if [ -s "${TempDir}/report.pdf" ]; then
-		FinalPDF="$(mktemp /tmp/sbc-bench.XXXXXX)"
+		PDFName="sbc-bench-v${Version}-$(tr ' ' '-' <<<"${DeviceName,,}")-${CPUList}"
+		FinalPDF="$(mktemp "/tmp/${PDFName}".XXXXXX)"
 		cat "${TempDir}/report.pdf" >"${FinalPDF}"
 		mv "${FinalPDF}" "${FinalPDF}.pdf"
 		chmod 644 "${FinalPDF}.pdf"
@@ -1486,8 +1487,7 @@ ParseOPPTables() {
 		find "${OPPTable}" -type d -name "opp*" | grep "${OPPTableName}/" | sort | while read ; do
 			[ -f "${REPLY}/opp-hz" ] && OPPHz="$(printf "%d\n" 0x$(od --endian=big -x <"${REPLY}/opp-hz" | cut -c9- | tr -d ' ') | sed 's/000000$//')" || OPPHz=""
 			[ -f "${REPLY}/opp-microvolt" ] && OPPVolt="$(printf "%d\n" 0x$(od --endian=big -x <"${REPLY}/opp-microvolt" | cut -c9- | tr -d ' ' | cut -c-8 | head -n1))" || OPPVolt=""
-			# echo "${OPPVolt}"
-			printf "%10s MHz %7s mV\n" ${OPPHz} $(awk '{printf ("%0.1f",$1/1000); }' <<<"${OPPVolt}")
+			[ "X${OPPHz}" != "X" ] && printf "%10s MHz %7s mV\n" ${OPPHz} $(awk '{printf ("%0.1f",$1/1000); }' <<<"${OPPVolt}")
 		done | sort -n
 	done
 } # ParseOPPTables
@@ -1930,7 +1930,7 @@ InitialMonitoring() {
 		UploadScheme="f:1=<-"
 		UploadServer="ix.io"
 		DTCompatible="$(strings /proc/device-tree/compatible 2>/dev/null)"
-		(echo -e "/proc/cpuinfo\n\n$(uname -a) / ${DeviceName}\n" ; cat /proc/cpuinfo ; echo -e "\n${CPUTopology}\n\n${CPUSignature}\n\n${DTCompatible}") 2>/dev/null \
+		(echo -e "/proc/cpuinfo\n\n$(uname -a) / ${DeviceName}\n" ; cat /proc/cpuinfo ; echo -e "\n${CPUTopology}\n\n${CPUSignature}\n\n${DTCompatible}" ; ParseOPPTables) 2>/dev/null \
 			| curl -s -F ${UploadScheme} ${UploadServer} >/dev/null 2>&1 &
 	else
 		# upload location fallback to sprunge.us if possible
@@ -2696,7 +2696,8 @@ SummarizeResults() {
 	echo "${LSCPU}" >>${ResultLog}
 	LogEnvironment >>${ResultLog}
 	CacheAndDIMMDetails >>${ResultLog}
-	[ "X${MODE}" = "Xextensive" ] && ParseOPPTables >>${ResultLog}
+	# Add OPP tables in extensive mode or when plotting efficiency graphs
+	[ "X${MODE}" = "Xextensive" -o "X${PlotCpufreqOPPs}" = "Xyes" ] && ParseOPPTables >>${ResultLog}
 
 	# Add a line suitable for Results.md on Github if not in efficiency plotting or PTS or GB mode
 	if [ "X${PlotCpufreqOPPs}" != "Xyes" -a "X${MODE}" != "Xpts" -a "X${MODE}" != "Xgb" ]; then
@@ -3000,7 +3001,9 @@ CacheAndDIMMDetails() {
 			command -v dmidecode >/dev/null 2>&1 && dmidecode --type 17 | grep -E "${DIMMFilter}" | tr "\n" "|" | sed -e 's/|\tCon/:/g' -e 's/\ //g' | tr '|' '\n' | grep -vi "unknown$" | while read ; do
 				Pattern="$(awk -F":" '{print $2}' <<<"${REPLY}")"
 				Insertion="$(awk -F":" '{print $4}' <<<"${REPLY}" | sed 's/\//\\\//')"
-				sed -i "s/^          slot: ${Pattern}$/          configured speed: ${Insertion}/g" "${TempDir}/dimms"
+				if [ "X${Insertion}" != "X" ]; then
+					sed -i "s/^          slot: ${Pattern}$/          configured speed: ${Insertion}/g" "${TempDir}/dimms"
+				fi
 			done
 			echo -e "\nDIMM configuration:"
 			cat "${TempDir}/dimms"
@@ -3121,7 +3124,7 @@ GuessARMSoC() {
 	# soc soc0: Amlogic Meson GXBB (S905) Revision 1f:b (0:1) Detected <-- ODROID-C2
 	# soc soc0: Amlogic Meson GXBB (S905) Revision 1f:c (0:1) Detected <-- ODROID-C2
 	# soc soc0: Amlogic Meson GXBB (S905) Revision 1f:b (12:1) Detected <-- Beelink Mini MX / Amlogic Meson GXBB P201 Development Board
-	# soc soc0: Amlogic Meson GXBB (S905) Revision 1f:c (13:1) Detected <-- Beelink Mini MX / NanoPi K2 / NEXBOX A95X / Tronsmart Vega S95 Telos / WeTek Play 2 / Amlogic Meson GXBB P200 Development Board / Amlogic Meson GXBB P201 Development Board
+	# soc soc0: Amlogic Meson GXBB (S905) Revision 1f:c (13:1) Detected <-- Beelink Mini MX / NanoPi K2 / NEXBOX A95X / Tronsmart Vega S95 Telos/Meta / WeTek Play 2 / Amlogic Meson GXBB P200 Development Board / Amlogic Meson GXBB P201 Development Board
 	# soc soc0: Amlogic Meson GXBB (S905H) Revision 1f:c (23:1) Detected <-- Amlogic Meson GXBB P201 Development Board
 	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:a (82:2) Detected <-- Khadas VIM / NEXBOX A95X (S905X) / Tanix TX3 Mini / Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson GXL (S905D) Revision 21:b (2:2) Detected <-- MeCool KI Pro, Phicomm N1
@@ -3807,7 +3810,7 @@ GuessSoCbySignature() {
 			# At least with vendor's 3.14 kernel CPU cores are sent offline when idle so detection of all cores might fail
 			echo "Marvell PXA1908"
 			;;
-		00A53r0p400A53r0p400A53r0p400A53r0p4)
+		00A53r0p400A53r0p400A53r0p400A53r0p4|??A53r0p4??????)
 			# The boring quad Cortex-A53 done by every SoC vendor: 4 x Cortex-A53 / r0p4
 			# Allwinner A100/A133/A53/A64/H5/H6/H313/H616/R818/T507/T509, BCM2837/BCM2709, RK3318/RK3328, i.MX8 M, S905, S905X/S805X, S805Y, S905X/S905D/S905W/S905L/S905M2, S905X2/S905Y2/T962X2, Mediatek MT6762M/MT6765, RealTek RTD129x/RTD139x
 			case "${DeviceName}" in

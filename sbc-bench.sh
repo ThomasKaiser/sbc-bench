@@ -285,6 +285,7 @@ GetARMCore() {
 	51/211:Qualcomm Kryo
 	51/800:Qualcomm Falkor V1/Kryo
 	51/801:Qualcomm Kryo V2
+	51/802:Qualcomm Kryo 3XX Gold
 	51/803:Qualcomm Kryo 3XX Silver
 	51/804:Qualcomm Kryo 4XX Gold
 	51/805:Qualcomm Kryo 4XX Silver
@@ -703,9 +704,15 @@ CheckPerformance() {
 			continue
 		fi
 		# try to set this speed on all affected cpufreq policies
-		for Cluster in $(seq ${3:0:1} ${3:2:1}); do
-			[ -f /sys/devices/system/cpu/cpufreq/policy${Cluster}/scaling_setspeed ] && echo ${i} >/sys/devices/system/cpu/cpufreq/policy${Cluster}/scaling_setspeed
-		done
+		if [ "X${3}" = "X" ]; then
+			for Cluster in $(ls -d /sys/devices/system/cpu/cpufreq/policy?); do
+				[ -f ${Cluster}/scaling_setspeed ] && echo ${i} >${Cluster}/scaling_setspeed
+			done
+		else
+			for Cluster in $(seq ${3:0:1} ${3:2:1}); do
+				[ -f /sys/devices/system/cpu/cpufreq/policy${Cluster}/scaling_setspeed ] && echo ${i} >/sys/devices/system/cpu/cpufreq/policy${Cluster}/scaling_setspeed
+			done
+		fi
 		sleep 0.1
 		
 		# if TasksetOptions is not provided measure clockspeed on highest core:
@@ -851,7 +858,7 @@ RenderPDF() {
 
 	cat <<- EOF >>${TempDir}/report.html
 		 
-		<pre>$(cat ${ResultLog})</pre>
+		<pre>$(sed '/^$/N;/^\n$/D' <${ResultLog})</pre>
 	</body>
 	</html>
 	EOF
@@ -1885,7 +1892,7 @@ InstallCpuminer() {
 		cd cpuminer-multi/ && ./build.sh >/dev/null 2>&1
 	fi
 	if [ ! -x "${InstallLocation}"/cpuminer-multi/cpuminer ]; then
-		echo -e "\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08(can't build cpuminer)   \c"
+		echo -e "\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08 (can't build cpuminer)  \c"
 	fi
 } # InstallCpuminer
 

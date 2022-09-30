@@ -53,6 +53,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [LeMaker Banana Pi](http://ix.io/3PLr) | 960 MHz | 5.10 | Bullseye armhf | 1040 | 15080 | 18640 | 440 | 2020 | - |
 | [Libre Computer AML-S912-PC](http://ix.io/40cj) | 1415/1000 MHz | 5.15 | Bullseye arm64 | 5980 | 91890 | 659290 | 1650 | 5170 | - |
 | [Lime A10](http://ix.io/1j1L) | 910 MHz | 4.14 | Stretch armhf | 550 | 25200 | 28250 | 440 | 1300 | - |
+| [MangoPi Mcore](http://ix.io/4bSf) | 1800 MHz | 5.19 | Jammy arm64 | 4100 | 133750 | 840270 | 990 | 2380 | - |
 | [Marvell PXA1908](http://ix.io/46hs) | 1245 MHz | 3.14 | Bullseye arm64 | 3180 | 81260 | 581840 | 740 | 2220 | - |
 | [MT6580 K9M1](http://ix.io/466y) | 1300 MHz | 5.19 | Sid armhf | 2930 | 21580 | 25300 | 1250 | 3300 | - |
 | [NanoPC T3+](http://ix.io/1iyp) | 1400 MHz | 4.4 | **Xenial armhf** | 6400 | 143800 | 651000 | 1650 | 3700 | - |
@@ -194,7 +195,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 * *kH/s* is a **multi threaded** cpuminer score showing the board's performance when executing NEON optimized code. To get the performance difference between big and little cores click the links in the left column
 * The Akaso M8S and Tronsmart MXIII Plus numbers may be representative for other Amlogic S812 devices (quad Cortex-A9 @ 1.2/1.55 GHz), Tronsmart S82 for other S802 devices (quad Cortex-A9 @ 1.6 GHz)
 * The Amazon a1.xlarge numbers represent a 1st gen Graviton CPU (64-bit 'ARM Neoverse') limited to four A72 cores and 8GB memory.
-* Cubietruck and 'LeMaker Banana Pi' numbers are more or less representative for all other Allwinner A20 devices, same with Lime for Allwinner A10, Olimex Teres-I for Allwinner A64, Orange Pi "PC Plus" and "Plus 2" for Allwinner H2+/H3 and NanoPi K1 Plus, Orange Pi "PC 2" and Prime for Allwinner H5. AMedia X96 Max+ numbers represent Amlogic S905X3 devices.
+* Cubietruck and 'LeMaker Banana Pi' numbers are more or less representative for all other Allwinner A20 devices, same with Lime for Allwinner A10, Olimex Teres-I for Allwinner A64, Orange Pi "PC Plus" and "Plus 2" for Allwinner H2+/H3 and NanoPi K1 Plus, Orange Pi "PC 2" and Prime for Allwinner H5, MangoPi Mcore for Allwinner H616. AMedia X96 Max+ numbers represent Amlogic S905X3 devices.
 * Honeycomb LX2 numbers (based on SolidRun's CEx7 LX2160A COM) might vary somewhat with memory configuration but are more or less representative for LX2160A in general.
 * Clearfog Pro and Helios4 use exactly same SoC (Armada 385), kernel and clockspeeds and the only reason why OpenSSL numbers differ is since Helios4 numbers were made using [Marvell's CESA crypto accelerator via cryptodev](https://forum.armbian.com/topic/7763-benchmarking-cpus/?do=findComment&comment=59569) which provides nice speed improvements with larger block sizes but also some initialization overhead with tiny block sizes. Also CPU utilization is way lower so the SoC is free for other stuff while performing better at the same time.
 * EspressoBin's boot BLOB claims to run at up to 1GHz while real clockspeeds are lower maxing out with this setting at 790MHz (obviously a kernel bug -- see [details](https://forum.armbian.com/topic/4089-espressobin-support-development-efforts/?do=findComment&comment=60082))

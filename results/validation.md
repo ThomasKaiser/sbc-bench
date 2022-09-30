@@ -208,4 +208,5 @@
 | [4a3s](4a3s.txt) | v0.9.8 StarFive VisionFive V2 | 0.4%/0.1% | 3.8Gi/3.5Gi | X | X | X | X | 1% | 2% | |
 | [4a5U](4a5U.txt) | v0.9.8 Khadas Edge2 | 0%/0% | 15Gi/14Gi | X | X | X | X | 1% | 0% | |
 | [4ax9](4ax9.txt) | v0.9.8 NVIDIA Orin Jetson-Small Develop | 0%/0% | 29Gi/29Gi | X | X | X | X | 0% | 0% | |
+| [4bSf](4bSf.txt) | v0.9.9 MangoPi Mcore | 0.4%/0% | 984Mi/789Mi | X | X | X | X | <span style=color:red>**63%**</span> | 1% | |
 | [4bbv](4bbv.txt) | v0.9.8 Khadas VIM1S | 0.5%/1.1% | 1.9Gi/1.1Gi | X | X | X | X | 3% | 0% | |

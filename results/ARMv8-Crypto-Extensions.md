@@ -88,6 +88,7 @@ Crawling through [sbc-bench results collection](../Results.md) comparing +30 dif
 | [i.MX8M Quad](http://ix.io/44Lq) | 1800 | 839321 | 466 |
 | [RK3399](http://ix.io/2ICt) | 1800| 839360 | 466 |
 | [Allwinner H6](http://ix.io/26Ph) | 1800 | 839870 | 466 |
+| [Allwinner H616](http://ix.io/4bSf) | 1800 | 840275 | 467 |
 | [A311D](http://ix.io/3VfL) | 2010 | 940425 | 467 |
 | [A311D2](http://ix.io/3Wq0) | 2010 | 941040 | 468 |
 | Cortex-A55 | | | |

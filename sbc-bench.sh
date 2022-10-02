@@ -1383,7 +1383,9 @@ CheckLoadAndDmesg() {
 	grep -q -E '] Booting Linux|] Linux version ' <<<"${DMESG}"
 	case $? in
 		1)
-			if [ "X${MODE}" != "Xunattended" ]; then
+			grep -q sunxi <<<"${DMESG}"
+			if [ "X${MODE}" != "Xunattended" -a $? -ne 0 ]; then
+				# print warning on other platforms than Allwinner and if MODE != unattended
 				echo -e "${LRED}${BOLD}WARNING: dmesg output does not contain early boot messages which\nhelp in identifying hardware details.${NC}\n"
 				echo -e "It is recommended to reboot now and then execute the benchmarks.\nPress ${BOLD}[ctrl]-[c]${NC} to stop or ${BOLD}[enter]${NC} to continue.\c"
 				read
@@ -1493,8 +1495,24 @@ ParseOPPTables() {
 		echo -e "\n   ${OPPTableName}:"
 		find "${OPPTable}" -type d -name "opp*" | grep "${OPPTableName}/" | sort | while read ; do
 			[ -f "${REPLY}/opp-hz" ] && OPPHz="$(printf "%d\n" 0x$(od --endian=big -x <"${REPLY}/opp-hz" | cut -c9- | tr -d ' ') | sed 's/000000$//')" || OPPHz=""
-			[ -f "${REPLY}/opp-microvolt" ] && OPPVolt="$(printf "%d\n" 0x$(od --endian=big -x <"${REPLY}/opp-microvolt" | cut -c9- | tr -d ' ' | cut -c-8 | head -n1))" || OPPVolt=""
-			[ "X${OPPHz}" != "X" ] && printf "%10s MHz %7s mV\n" ${OPPHz} $(awk '{printf ("%0.1f",$1/1000); }' <<<"${OPPVolt}")
+			if [ -f "${REPLY}/opp-microvolt" ]; then
+				OPPVolt="$(printf "%d\n" 0x$(od --endian=big -x <"${REPLY}/opp-microvolt" | cut -c9- | tr -d ' ' | cut -c-8 | head -n1))"
+				if [ -f "${REPLY}/opp-supported-hw" ]; then
+					OPPSupportedHW="0x$(od --endian=big -x <"${REPLY}/opp-supported-hw" | cut -c9- | tr -d ' ' | sed 's/^00*//' | head -n1)"
+					[ "X${OPPHz}" != "X" ] && printf "%10s MHz %8s mV (%s)\n" ${OPPHz} $(awk '{printf ("%0.1f",$1/1000); }' <<<"${OPPVolt}") "${OPPSupportedHW}"
+				else
+					[ "X${OPPHz}" != "X" ] && printf "%10s MHz %8s mV\n" ${OPPHz} $(awk '{printf ("%0.1f",$1/1000); }' <<<"${OPPVolt}")
+				fi
+			elif [ -f "${REPLY}/opp-microvolt-speed0" ]; then
+				printf "%10s MHz " ${OPPHz}
+				for SpeedBin in $(ls "${REPLY}"/opp-microvolt-speed* | sort -n) ; do
+					OPPVolt="$(printf "%d\n" 0x$(od --endian=big -x <"${SpeedBin}" | cut -c9- | tr -d ' ' | cut -c-8 | head -n1))"
+					[ "X${OPPHz}" != "X" ] && printf "%8s mV" $(awk '{printf ("%0.1f",$1/1000); }' <<<"${OPPVolt}")
+				done
+				echo ""
+			else
+				printf "%10s MHz    unknown\n" ${OPPHz}
+			fi
 		done | sort -n
 	done
 } # ParseOPPTables

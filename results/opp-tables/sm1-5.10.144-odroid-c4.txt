@@ -1,0 +1,11 @@
+  opp-table:
+     1000 MHz   770.0 mV
+     1200 MHz   780.0 mV
+     1404 MHz   790.0 mV
+     1500 MHz   800.0 mV
+     1608 MHz   810.0 mV
+     1704 MHz   850.0 mV
+     1800 MHz   900.0 mV
+     1908 MHz   950.0 mV
+     2016 MHz  1000.0 mV
+     2100 MHz  1022.0 mV

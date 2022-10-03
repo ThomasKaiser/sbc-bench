@@ -1,0 +1,17 @@
+  opp-table-0:
+      408 MHz   900.0 mV
+      600 MHz   900.0 mV
+      816 MHz   900.0 mV
+     1104 MHz   900.0 mV
+     1416 MHz   900.0 mV
+     1608 MHz   975.0 mV
+     1800 MHz  1050.0 mV
+     1992 MHz  1150.0 mV
+
+  opp-table-1:
+      200 MHz   825.0 mV
+      300 MHz   825.0 mV
+      400 MHz   825.0 mV
+      600 MHz   825.0 mV
+      700 MHz   900.0 mV
+      800 MHz  1000.0 mV

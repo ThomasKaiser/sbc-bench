@@ -1,0 +1,20 @@
+  dmc-opp-table:
+      786 MHz  1075.0 mV
+      798 MHz  1075.0 mV
+      840 MHz  1075.0 mV
+      924 MHz  1100.0 mV
+     1068 MHz  1175.0 mV
+
+  gpu-opp-table:
+      200 MHz  1050.0 mV
+      300 MHz  1050.0 mV
+      400 MHz  1050.0 mV
+      500 MHz  1150.0 mV
+
+  opp-table-0:
+      408 MHz   950.0 mV
+      600 MHz   950.0 mV
+      816 MHz  1000.0 mV
+     1008 MHz  1100.0 mV
+     1200 MHz  1225.0 mV
+     1296 MHz  1300.0 mV

@@ -1,0 +1,13 @@
+  cpu-opp-table:
+      480 MHz   820.0 mV
+      600 MHz   820.0 mV
+      792 MHz   860.0 mV
+     1008 MHz   900.0 mV
+     1200 MHz   960.0 mV
+     1296 MHz  1120.0 mV
+     1344 MHz  1120.0 mV
+     1416 MHz  1120.0 mV
+     1512 MHz  1120.0 mV
+     1608 MHz  1120.0 mV
+     1704 MHz  1120.0 mV
+     1800 MHz  1120.0 mV

@@ -1,0 +1,45 @@
+  opp_table0:
+      200 MHz   900.0 mV
+      300 MHz   900.0 mV
+      400 MHz   900.0 mV
+      500 MHz   900.0 mV
+      600 MHz   900.0 mV
+      700 MHz   900.0 mV
+      800 MHz   925.0 mV
+      900 MHz   950.0 mV
+     1000 MHz   975.0 mV
+     1100 MHz  1000.0 mV
+     1200 MHz  1050.0 mV
+     1300 MHz  1050.0 mV
+     1400 MHz  1062.5 mV
+     1500 MHz  1087.5 mV
+     1600 MHz  1125.0 mV
+     1700 MHz  1162.5 mV
+     1800 MHz  1200.0 mV
+     1900 MHz  1250.0 mV
+     2000 MHz  1312.5 mV
+
+  opp_table1:
+      200 MHz   900.0 mV
+      300 MHz   900.0 mV
+      400 MHz   900.0 mV
+      500 MHz   900.0 mV
+      600 MHz   950.0 mV
+      700 MHz   987.5 mV
+      800 MHz  1025.0 mV
+      900 MHz  1062.5 mV
+     1000 MHz  1100.0 mV
+     1100 MHz  1137.5 mV
+     1200 MHz  1175.0 mV
+     1300 MHz  1225.0 mV
+     1400 MHz  1275.0 mV
+
+  opp_table2:
+      165 MHz   875.0 mV
+      206 MHz   875.0 mV
+      275 MHz   875.0 mV
+      413 MHz   887.5 mV
+      543 MHz   937.5 mV
+      633 MHz  1012.5 mV
+      728 MHz  1037.5 mV
+      825 MHz  1050.0 mV

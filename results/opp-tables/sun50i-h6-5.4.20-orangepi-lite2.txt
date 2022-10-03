@@ -1,0 +1,10 @@
+   opp_table:
+       480 MHz    880.0 mV   820.0 mV   820.0 mV
+       720 MHz    880.0 mV   820.0 mV   820.0 mV
+       816 MHz    880.0 mV   820.0 mV   820.0 mV
+       888 MHz    880.0 mV   820.0 mV   820.0 mV
+      1080 MHz    940.0 mV   880.0 mV   880.0 mV
+      1320 MHz   1000.0 mV   940.0 mV   940.0 mV
+      1488 MHz   1060.0 mV  1000.0 mV  1000.0 mV
+      1640 MHz   1160.0 mV
+      1800 MHz   1160.0 mV  1100.0 mV  1100.0 mV

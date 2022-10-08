@@ -1,0 +1,2 @@
+   cpu-opp-table:
+      1008 MHz   1100.0 mV

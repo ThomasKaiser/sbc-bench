@@ -1517,6 +1517,21 @@ ParseOPPTables() {
 	done
 } # ParseOPPTables
 
+ParseRawOPPTables() {
+	DVFS="$(ls -d /sys/firmware/devicetree/base/* | grep -E "opp-table|opp_table" | sort -n)"
+	if [ "X${DVFS}" = "X" ]; then
+		return
+	fi
+	echo -e "\n##########################################################################"
+	for OPPTable in ${DVFS}; do
+		ls -laR "${OPPTable}"
+		echo ""
+		find "${OPPTable}" -type f | while read file ; do
+			echo -e "${file}\t$(od --endian=big -x <"${file}" | cut -c9- | tr -d ' ')"
+		done
+	done
+} # ParseRawOPPTables
+
 BasicSetup() {
 	# set cpufreq governor based on $1 (defaults to ondemand if not provided)
 	if [ "$1" != "nochange" ]; then
@@ -1955,7 +1970,7 @@ InitialMonitoring() {
 		UploadScheme="f:1=<-"
 		UploadServer="ix.io"
 		DTCompatible="$(strings /proc/device-tree/compatible 2>/dev/null)"
-		(echo -e "/proc/cpuinfo\n\n$(uname -a) / ${DeviceName}\n" ; cat /proc/cpuinfo ; echo -e "\n${CPUTopology}\n\n${CPUSignature}\n\n${DTCompatible}" ; ParseOPPTables) 2>/dev/null \
+		(echo -e "/proc/cpuinfo\n\n$(uname -a) / ${DeviceName}\n" ; cat /proc/cpuinfo ; echo -e "\n${CPUTopology}\n\n${CPUSignature}\n\n${DTCompatible}" ; ParseOPPTables ; ParseRawOPPTables) 2>/dev/null \
 			| curl -s -F ${UploadScheme} ${UploadServer} >/dev/null 2>&1 &
 	else
 		# upload location fallback to sprunge.us if possible

@@ -1,0 +1,34 @@
+  opp-table-0:
+     1000 MHz    761.0 mV
+     1200 MHz    781.0 mV
+     1398 MHz    811.0 mV
+     1512 MHz    861.0 mV
+     1608 MHz    901.0 mV
+     1704 MHz    951.0 mV
+     1800 MHz   1001.0 mV
+     1908 MHz   1030.0 mV
+     2016 MHz   1040.0 mV
+
+  opp-table-1:
+     1000 MHz    731.0 mV
+     1200 MHz    751.0 mV
+     1398 MHz    771.0 mV
+     1512 MHz    771.0 mV
+     1608 MHz    781.0 mV
+     1704 MHz    791.0 mV
+     1800 MHz    831.0 mV
+     1908 MHz    861.0 mV
+     2016 MHz    911.0 mV
+     2108 MHz    951.0 mV
+     2208 MHz   1011.0 mV
+     2304 MHz   1030.0 mV
+     2400 MHz   1040.0 mV
+
+  opp-table-gpu:
+      125 MHz    800.0 mV
+      250 MHz    800.0 mV
+      286 MHz    800.0 mV
+      400 MHz    800.0 mV
+      500 MHz    800.0 mV
+      667 MHz    800.0 mV
+      800 MHz    800.0 mV

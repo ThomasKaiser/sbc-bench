@@ -1494,11 +1494,11 @@ ParseOPPTables() {
 		read OPPTableName <"${OPPTable}/name"
 		echo -e "\n   ${OPPTableName}:"
 		find "${OPPTable}" -type d -name "opp*" | grep "${OPPTableName}/" | sort | while read ; do
-			[ -f "${REPLY}/opp-hz" ] && OPPHz="$(printf "%d\n" 0x$(od --endian=big -x <"${REPLY}/opp-hz" | cut -c9- | tr -d ' ') | sed 's/000000$//')" || OPPHz=""
+			[ -f "${REPLY}/opp-hz" ] && OPPHz="$(printf "%d\n" 0x$(od --endian=big -x <"${REPLY}/opp-hz" | cut -c9- | tr -d ' ') | awk '{printf ("%0.0f",$1/1000000); }')" || OPPHz=""
 			if [ -f "${REPLY}/opp-microvolt" ]; then
 				OPPVolt="$(printf "%d\n" 0x$(od --endian=big -x <"${REPLY}/opp-microvolt" | cut -c9- | tr -d ' ' | cut -c-8 | head -n1))"
 				if [ -f "${REPLY}/opp-supported-hw" ]; then
-					OPPSupportedHW="0x$(od --endian=big -x <"${REPLY}/opp-supported-hw" | cut -c9- | tr -d ' ' | sed 's/^00*//' | head -n1)"
+					OPPSupportedHW="$(od --endian=big -x <"${REPLY}/opp-supported-hw" | cut -c9- | sed 's/0000 //g' | head -n1)"
 					[ "X${OPPHz}" != "X" ] && printf "%10s MHz %8s mV (%s)\n" ${OPPHz} $(awk '{printf ("%0.1f",$1/1000); }' <<<"${OPPVolt}") "${OPPSupportedHW}"
 				else
 					[ "X${OPPHz}" != "X" ] && printf "%10s MHz %8s mV\n" ${OPPHz} $(awk '{printf ("%0.1f",$1/1000); }' <<<"${OPPVolt}")
@@ -1511,7 +1511,7 @@ ParseOPPTables() {
 				done
 				echo ""
 			else
-				printf "%10s MHz    unknown\n" ${OPPHz}
+				printf "%10s MHz       -\n" ${OPPHz}
 			fi
 		done | sort -n
 	done
@@ -3167,6 +3167,7 @@ GuessARMSoC() {
 	# soc soc0: Amlogic Meson GXBB (S905) Revision 1f:c (13:1) Detected <-- Beelink Mini MX / NanoPi K2 / NEXBOX A95X / Tronsmart Vega S95 Telos/Meta / WeTek Play 2 / Amlogic Meson GXBB P200 Development Board / Amlogic Meson GXBB P201 Development Board
 	# soc soc0: Amlogic Meson GXBB (S905H) Revision 1f:c (23:1) Detected <-- Amlogic Meson GXBB P201 Development Board
 	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:a (82:2) Detected <-- Khadas VIM / NEXBOX A95X (S905X) / Tanix TX3 Mini / Amlogic Meson GXL (S905X) P212 Development Board
+	# soc soc0: Amlogic Meson GXL (S905D) Revision 21:b (0:2) Detected <-- Amlogic Meson GXL (S905W) P281 Development Board
 	# soc soc0: Amlogic Meson GXL (S905D) Revision 21:b (2:2) Detected <-- MeCool KI Pro, Phicomm N1
 	# soc soc0: Amlogic Meson GXL (Unknown) Revision 21:b (2:2) Detected <-- Phicomm N1
 	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:b (82:2) Detected <-- Libre Computer AML-S905X-CC / NEXBOX A95X (S905X) / Tanix TX3 Mini / Amlogic Meson GXL (S905X) P212 Development Board / Amlogic Meson GXL (S905W) P281 Development Board
@@ -3193,7 +3194,7 @@ GuessARMSoC() {
 	# soc soc0: Amlogic Meson GXL (S905W) Revision 21:e (a5:2) Detected <-- Tanix TX3 Mini / JetHome JetHub J80 / Amlogic Meson GXL (S905X) P212 Development Board / Amlogic Meson GXL (S905W) P281 Development Board
 	# soc soc0: Amlogic Meson GXL (S905L) Revision 21:e (c5:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson GXM (Unknown) Revision 22:a (82:2) Detected <-- Amlogic Meson GXM (S912) Q201 Development Board
-	# soc soc0: Amlogic Meson GXM (S912) Revision 22:a (82:2) Detected <-- Beelink GT1 / Octopus Planet / Libre Computer AML-S912-PC / Khadas VIM2 / MeCool KIII Pro / Tronsmart Vega S96 / Amlogic Meson GXM (S912) Q200 Development Board / Amlogic Meson GXM (S912) Q201 Development Board
+	# soc soc0: Amlogic Meson GXM (S912) Revision 22:a (82:2) Detected <-- Beelink GT1 / Octopus Planet / Libre Computer AML-S912-PC / Khadas VIM2 / MeCool KIII Pro / Tronsmart Vega S96 / T95Z Plus / Amlogic Meson GXM (S912) Q200 Development Board / Amlogic Meson GXM (S912) Q201 Development Board
 	# soc soc0: Amlogic Meson GXM (S912) Revision 22:b (82:2) Detected <-- Beelink GT1 / Tronsmart Vega S96 / Octopus Planet / Amlogic Meson GXM (S912) Q201 Development Board
 	# soc soc0: Amlogic Meson AXG (Unknown) Revision 25:b (43:2) Detected <-- JetHome JetHub J100
 	# soc soc0: Amlogic Meson AXG (Unknown) Revision 25:c (43:2) Detected <-- JetHome JetHub J100

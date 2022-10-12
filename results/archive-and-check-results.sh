@@ -16,7 +16,7 @@ grep -E "http://ix.io|http://sprunge.us" ../Results.md | awk -F"http://" '{print
 done
 
 # create compressed archive with benchmark results and cpuinfo:
-tar Jcf results.tar.xz *.txt *.cpuinfo
+tar Jcf results.tar.xz *.txt *.cpuinfo opp-tables
 
 # check results files for anomalies and create a table
 cat <<EOF >validation.md

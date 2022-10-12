@@ -143,9 +143,14 @@ CheckcpufreqVSdistro() {
 
 CheckRK3588sbc-bench-results() {
 	echo -e "# RK3588 sbc-bench results so far\n"
-	echo "| Device / details | Clockspeed | Kernel | Distro | dmc governor | 7-zip | memcpy | memset |"
-	echo "| ----- | :--------: | :----: | :----: |  :----: | ----: | ------: | ------: |"
-	grep -i "rk3588" *.txt | cut -f1 -d':' | sort | uniq | while read ; do Gov=$(grep "DMC gov" $REPLY | cut -c12-); echo -e "\n${Gov:-unknown}|$REPLY: \c"; tail -n1 $REPLY; done | grep ' | ' | grep -v ' | | | |' | sed -e 's/: |/ |/' -e 's/\.txt //' | awk -F'|' '{print "| ["$3"](http://ix.io/"$2") |"$4"|"$5"|"$6"| "$1" |"$7"|"$10"|"$11"|"}'
+	echo "| Device / details | Clockspeed | idle temp | Kernel | Distro | dmc governor | 7-zip | memcpy | memset |"
+	echo "| ----- | :--------: | :----: | :----: | :----: |  :----: | ----: | ------: | ------: |"
+	grep -i "rk3588" *.txt | cut -f1 -d':' | sort | uniq | while read ; do
+		Gov=$(grep "DMC gov" $REPLY | cut -c12-)
+		IdleTemp=$(grep -A1 'soc_thermal-virtual-0' $REPLY | awk -F" " '/temp1/ {print $2}' | head -n1)
+		echo -e "\n${IdleTemp}|${Gov:-unknown}|$REPLY: \c"
+		tail -n1 $REPLY
+	done | grep ' | ' | grep -v ' | | | |' | sed -e 's/: |/ |/' -e 's/\.txt //' | awk -F'|' '{print "| ["$4"](http://ix.io/"$3") |"$5"| "$1" |"$6"|"$7"| "$2" |"$8"|"$11"|"$12"|"}'
 } # CheckRK3588sbc-bench-results
 
 # CPUUtilization7ZIP >7-zip-cpu-utilisation.md

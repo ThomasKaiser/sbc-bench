@@ -1,0 +1,7 @@
+   cpu0-opp-table:
+           MHz       -
+           MHz       -
+       408 MHz    950.0 mV
+       600 MHz    950.0 mV
+       816 MHz   1025.0 mV
+      1008 MHz   1125.0 mV

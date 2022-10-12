@@ -1,0 +1,159 @@
+  a53buck_opp_table0:
+      500 MHz    770.0 mV
+      666 MHz    770.0 mV
+     1000 MHz    770.0 mV
+     1200 MHz    770.0 mV
+     1392 MHz    770.0 mV
+     1512 MHz    810.0 mV
+     1608 MHz    840.0 mV
+     1704 MHz    870.0 mV
+     1800 MHz    910.0 mV
+     1896 MHz    950.0 mV
+     2016 MHz   1010.0 mV
+
+  a53buck_opp_table1:
+      500 MHz    770.0 mV
+      666 MHz    770.0 mV
+     1000 MHz    770.0 mV
+     1200 MHz    770.0 mV
+     1392 MHz    770.0 mV
+     1512 MHz    810.0 mV
+     1608 MHz    840.0 mV
+     1704 MHz    870.0 mV
+     1800 MHz    910.0 mV
+     1896 MHz    950.0 mV
+     2016 MHz   1010.0 mV
+
+  a53buck_opp_table2:
+      500 MHz    760.0 mV
+      666 MHz    760.0 mV
+     1000 MHz    760.0 mV
+     1200 MHz    760.0 mV
+     1392 MHz    770.0 mV
+     1512 MHz    790.0 mV
+     1608 MHz    800.0 mV
+     1704 MHz    830.0 mV
+     1800 MHz    860.0 mV
+     1896 MHz    900.0 mV
+     2016 MHz    950.0 mV
+
+  a53buck_opp_table3:
+      500 MHz    750.0 mV
+      666 MHz    750.0 mV
+     1000 MHz    750.0 mV
+     1200 MHz    750.0 mV
+     1392 MHz    770.0 mV
+     1512 MHz    780.0 mV
+     1608 MHz    790.0 mV
+     1704 MHz    810.0 mV
+     1800 MHz    830.0 mV
+     1896 MHz    860.0 mV
+     2016 MHz    920.0 mV
+
+  a53pwm_opp_table0:
+      500 MHz    769.0 mV
+      666 MHz    769.0 mV
+     1000 MHz    769.0 mV
+     1200 MHz    769.0 mV
+     1392 MHz    769.0 mV
+     1512 MHz    809.0 mV
+     1608 MHz    839.0 mV
+     1704 MHz    869.0 mV
+     1800 MHz    909.0 mV
+     1896 MHz    949.0 mV
+     2016 MHz   1009.0 mV
+
+  a53pwm_opp_table1:
+      500 MHz    769.0 mV
+      666 MHz    769.0 mV
+     1000 MHz    769.0 mV
+     1200 MHz    769.0 mV
+     1392 MHz    769.0 mV
+     1512 MHz    809.0 mV
+     1608 MHz    839.0 mV
+     1704 MHz    869.0 mV
+     1800 MHz    909.0 mV
+     1896 MHz    949.0 mV
+     2016 MHz   1009.0 mV
+
+  a53pwm_opp_table2:
+      500 MHz    759.0 mV
+      666 MHz    759.0 mV
+     1000 MHz    759.0 mV
+     1200 MHz    759.0 mV
+     1392 MHz    769.0 mV
+     1512 MHz    789.0 mV
+     1608 MHz    799.0 mV
+     1704 MHz    829.0 mV
+     1800 MHz    859.0 mV
+     1896 MHz    899.0 mV
+     2016 MHz    949.0 mV
+
+  a53pwm_opp_table3:
+      500 MHz    749.0 mV
+      666 MHz    749.0 mV
+     1000 MHz    749.0 mV
+     1200 MHz    749.0 mV
+     1392 MHz    769.0 mV
+     1512 MHz    779.0 mV
+     1608 MHz    789.0 mV
+     1704 MHz    809.0 mV
+     1800 MHz    829.0 mV
+     1896 MHz    859.0 mV
+     2016 MHz    919.0 mV
+
+  a73pwm_opp_table0:
+      500 MHz    819.0 mV
+      666 MHz    819.0 mV
+     1000 MHz    819.0 mV
+     1200 MHz    819.0 mV
+     1392 MHz    819.0 mV
+     1512 MHz    829.0 mV
+     1608 MHz    849.0 mV
+     1704 MHz    869.0 mV
+     1800 MHz    909.0 mV
+     1896 MHz    939.0 mV
+     2016 MHz    959.0 mV
+     2208 MHz   1009.0 mV
+
+  a73pwm_opp_table1:
+      500 MHz    819.0 mV
+      666 MHz    819.0 mV
+     1000 MHz    819.0 mV
+     1200 MHz    819.0 mV
+     1392 MHz    819.0 mV
+     1512 MHz    829.0 mV
+     1608 MHz    849.0 mV
+     1704 MHz    869.0 mV
+     1800 MHz    909.0 mV
+     1896 MHz    939.0 mV
+     2016 MHz    959.0 mV
+     2208 MHz   1009.0 mV
+
+  a73pwm_opp_table2:
+      500 MHz    799.0 mV
+      666 MHz    799.0 mV
+     1000 MHz    799.0 mV
+     1200 MHz    799.0 mV
+     1392 MHz    809.0 mV
+     1512 MHz    809.0 mV
+     1608 MHz    829.0 mV
+     1704 MHz    849.0 mV
+     1800 MHz    859.0 mV
+     1896 MHz    889.0 mV
+     2016 MHz    919.0 mV
+     2208 MHz    969.0 mV
+
+  a73pwm_opp_table3:
+      500 MHz    789.0 mV
+      666 MHz    789.0 mV
+     1000 MHz    789.0 mV
+     1200 MHz    789.0 mV
+     1392 MHz    809.0 mV
+     1512 MHz    809.0 mV
+     1608 MHz    819.0 mV
+     1704 MHz    829.0 mV
+     1800 MHz    849.0 mV
+     1896 MHz    859.0 mV
+     2016 MHz    879.0 mV
+     2208 MHz    919.0 mV

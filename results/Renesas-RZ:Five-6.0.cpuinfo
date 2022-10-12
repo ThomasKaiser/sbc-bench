@@ -1,0 +1,8 @@
+processor       : 0
+hart            : 0
+isa             : rv64imafdc
+mmu             : sv39
+uarch           : andestech,ax45mp
+mvendorid       : 0x31e
+marchid         : 0x8000000000008a45
+mimpid          : 0x500

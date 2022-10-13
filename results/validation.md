@@ -19,7 +19,7 @@
 | [1MFf](1MFf.txt) | v0.6.7 Raspberry Pi 4 Model B Rev 1.1 | 0.1%/0.2% | 3.8Gi/3.6Gi | X | X | X | X | 3% | 0% | [check log](1MFf.txt) |
 | [1Rnj](1Rnj.txt) | v0.6.8 icosa | 0.1%/0% | 3.4Gi/2.6Gi | X | X | X | X | 4% | <span style=color:red> 6%</span> | |
 | [1XKY](1XKY.txt) | v0.6.9 Radxa ROCK Pi S | 0%/0% | 425Mi/364Mi | X | X | | | 1% | 0% | |
-| [1iFa](1iFa.txt) | v0.4 Clearfog Pro | 0%/0.2% | 1.0G/913M | X | X | X | X | 2% | 0% | |
+| <del>[1iFa](1iFa.txt)</del> | <del>v0.4</del> | <del>0%/0.2%</del> | <del>1.0G/913M</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 2%</del> | <del> 0%</del> | |
 | [1iFf](1iFf.txt) | v0.4 Raspberry Pi 2 B+ | 0%/0.7% | 976M/872M | X | X | X | X | 2% | 0% | |
 | [1iFm](1iFm.txt) | v0.4 Rock64 | 0%/1.5% | 1.9G/1.6G | X | X | X | X | 2% | 0% | |
 | [1iFp](1iFp.txt) | v0.4 RockPro64 | 0%/0.7% | 3.8G/3.6G | X | X | X | X | 0% | 1% | |
@@ -210,3 +210,4 @@
 | [4ax9](4ax9.txt) | v0.9.8 NVIDIA Orin Jetson-Small Develop | 0%/0% | 29Gi/29Gi | X | X | X | X | 0% | 0% | |
 | [4bSf](4bSf.txt) | v0.9.9 MangoPi Mcore | 0.4%/0% | 984Mi/789Mi | X | X | X | X | <span style=color:red>**63%**</span> | 1% | |
 | [4bbv](4bbv.txt) | v0.9.8 Khadas VIM1S | 0.5%/1.1% | 1.9Gi/1.1Gi | X | X | X | X | 3% | 0% | |
+| [4d1U](4d1U.txt) | v0.9.9 SolidRun Clearfog A1 | 0%/0% | 1.0Gi/873Mi | X | X | X | X | 1% | 0% | |

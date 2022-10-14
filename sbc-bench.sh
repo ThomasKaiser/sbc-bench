@@ -1451,43 +1451,49 @@ GetCPUClusters() {
 		fi
 	elif [ "${CPUArchitecture}" = "x86_64" ]; then
 		# Try to get Alder Lake E-core/P-core clusters since they can't be differentiated
-		# by physical_package_id. Now relying on ark.intel.com: https://archive.ph/rvnvJ
+		# by physical_package_id relying on ark.intel.com: https://archive.ph/rvnvJ
+		# HFI might be an option but this requires most recent kernels: 
+		# https://docs.kernel.org/x86/intel-hfi.html
+
+		# Check for hyper threading first since affecting size of P logical cluster (the 1st)
+		[ -f /sys/devices/system/cpu/smt/active ] && read HT </sys/devices/system/cpu/smt/active || HT=0	
+		
 		case ${X86CPUName} in
 			i9-12900T*|i9-12900HX|i9-12950HX|i9-12900KS|i9-12900E|i9-12900F|i9-12900|i9-12900K*|i7-12850HX|i7-12800HX)
 				# 8/8, 24 threads
-				echo "0 16"
+				[ ${HT} -eq 1 ] && echo "0 16" || echo "0 8"
 				;;
 			i7-12700|i7-12700F|i7-12700E|i7-12700TE|i7-12700T|i7-12700K|i7-12700KF)
 				# 8/4, 20 threads
-				echo "0 16"
+				[ ${HT} -eq 1 ] && echo "0 16" || echo "0 8"
 				;;
 			i9-12900HK|i9-12900H|i7-12700HL|i7-12800HL|i7-12650HX|i7-1280P|i7-12700H|i7-12800H|i7-12800HE)
 				# 6/8, 20 threads
-				echo "0 12"
+				[ ${HT} -eq 1 ] && echo "0 12" || echo "0 6"
 				;;
 			i7-1270PE|i7-1270P|i7-1260P|i5-12600HL|i5-12500HL|i5-12600HX|i5-1250PE|i5-1250P|i5-1240P|i5-12600HE|i5-12500H|i5-12600H)
 				# 4/8, 16 threads
-				echo "0 8"
+				[ ${HT} -eq 1 ] && echo "0 8" || echo "0 4"
 				;;
 			i7-1265UL|i7-1255UL|i7-1265UE|i7-1260U|i7-1250U|i7-1255U|i7-1265U|i5-1245UL|i5-1235UL|i5-1245UE|i5-1230U|i5-1240U|i5-1235U|i5-1235U|i5-1245U|i3-1220P)
 				# 2/8, 12 threads
-				echo "0 4"
+				[ ${HT} -eq 1 ] && echo "0 4" || echo "0 2"
 				;;
 			i7-12650H|i5-12600K|i5-12600KF)
 				# 6/4, 16 threads
-				echo "0 12"
+				[ ${HT} -eq 1 ] && echo "0 12" || echo "0 6"
 				;;
 			i5-12450HX|i5-12450H|i3-12300HL|i3-1220PE|i3-12300HE)
 				# 4/4, 12 threads
-				echo "0 8"
+				[ ${HT} -eq 1 ] && echo "0 8" || echo "0 4"
 				;;
 			i3-1215UL|i3-1215UE|i3-1210U|i3-1215U|i3-1215U)
 				# 2/4, 8 threads
-				echo "0 4"
+				[ ${HT} -eq 1 ] && echo "0 4" || echo "0 2"
 				;;
 			*Gold*850*|*Celeron*730*)
 				# 1/4, 6 threads
-				echo "0 2"
+				[ ${HT} -eq 1 ] && echo "0 2" || echo "0 1"
 				;;
 			*)
 				# all cores of same type

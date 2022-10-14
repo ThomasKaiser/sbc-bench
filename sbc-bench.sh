@@ -1450,16 +1450,20 @@ GetCPUClusters() {
 			ls -ld /sys/devices/system/cpu/cpufreq/policy? | awk -F"policy" '{print $2}'
 		fi
 	elif [ "${CPUArchitecture}" = "x86_64" ]; then
-		# Try to get Alder Lake E-core/P-core clusters since they can't be differentiated
-		# by physical_package_id relying on ark.intel.com: https://archive.ph/rvnvJ
-		# HFI might be an option but this requires most recent kernels: 
-		# https://docs.kernel.org/x86/intel-hfi.html
+		# Get Alder/Raptor Lake E/P core clusters since they can't be differentiated by either
+		# CPU ID or physical_package_id so relying on ark.intel.com: https://archive.ph/rvnvJ
+		# and https://archive.ph/g8q16 -- HFI might be an option in the future but only with
+		# most recent kernels: https://docs.kernel.org/x86/intel-hfi.html
 
 		# Check for hyper threading first since affecting size of P logical cluster (the 1st)
 		[ -f /sys/devices/system/cpu/smt/active ] && read HT </sys/devices/system/cpu/smt/active || HT=0	
-		
+
 		case ${X86CPUName} in
-			i9-12900T*|i9-12900HX|i9-12950HX|i9-12900KS|i9-12900E|i9-12900F|i9-12900|i9-12900K*|i7-12850HX|i7-12800HX)
+			i9-13900K|i9-13900KF|i9-13900F|i9-13900T)
+				# 8/16, 32 threads
+				[ ${HT} -eq 1 ] && echo "0 16" || echo "0 8"
+				;;
+			i9-12900T|i9-12900TE|i9-12900HX|i9-12950HX|i9-12900KS|i9-12900E|i9-12900F|i9-12900|i9-12900K|i9-12900KS|i9-12900KF|i7-12850HX|i7-12800HX|i7-13700K|i7-13700KF|i7-13700F|i7-13700T)
 				# 8/8, 24 threads
 				[ ${HT} -eq 1 ] && echo "0 16" || echo "0 8"
 				;;
@@ -1467,7 +1471,7 @@ GetCPUClusters() {
 				# 8/4, 20 threads
 				[ ${HT} -eq 1 ] && echo "0 16" || echo "0 8"
 				;;
-			i9-12900HK|i9-12900H|i7-12700HL|i7-12800HL|i7-12650HX|i7-1280P|i7-12700H|i7-12800H|i7-12800HE)
+			i9-13900HK|i7-13700H|i9-12900HK|i9-12900H|i7-12700HL|i7-12800HL|i7-12650HX|i7-1280P|i7-12700H|i7-12800H|i7-12800HE|i5-13600K|i5-13600KF|i5-13500)
 				# 6/8, 20 threads
 				[ ${HT} -eq 1 ] && echo "0 12" || echo "0 6"
 				;;
@@ -1479,7 +1483,7 @@ GetCPUClusters() {
 				# 2/8, 12 threads
 				[ ${HT} -eq 1 ] && echo "0 4" || echo "0 2"
 				;;
-			i7-12650H|i5-12600K|i5-12600KF)
+			i7-12650H|i5-12600K|i5-12600KF|i5-13400|i5-13400F)
 				# 6/4, 16 threads
 				[ ${HT} -eq 1 ] && echo "0 12" || echo "0 6"
 				;;

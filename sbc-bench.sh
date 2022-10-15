@@ -1450,6 +1450,49 @@ GetCPUClusters() {
 			ls -ld /sys/devices/system/cpu/cpufreq/policy? | awk -F"policy" '{print $2}'
 		fi
 	elif [ "${CPUArchitecture}" = "x86_64" ]; then
+		Getx86ClusterDetails
+	else
+		# check for different CPU types based on package ids. This allows to test through
+		# different cores even on systems with no cpufreq support.
+		SYS=/sys/devices/system/cpu
+		for PKG_ID in $(cat "${SYS}"/cpu*/topology/physical_package_id | sort | uniq); do
+			dirname -- $(dirname -- $(grep "^${PKG_ID}$" "${SYS}"/cpu*/topology/physical_package_id | head -n1)) | tr -d -c '[:digit:]'
+			echo " "
+		done
+	fi
+} # GetCPUClusters
+
+GetCoreClusters() {
+	# function to determine clusters by CPU core type used by MODE=extensive
+	# and Geekbench mode
+	#
+	# With x86 we rely on name based cluster detection while on ARM and other
+	# platforms we 'bundle' CPU core types by occurence:
+	#
+	# Amlogic S912 for example contains 2 quad-core A53 clusters with different
+	# cpufreq scaling properties but it's just 8 boring A53 and no big.LITTLE
+	# so there's no reason to treat S912 as '2 clusters CPU'.
+	#
+	# RK3588 for example consists of 4 x A55 cores and 4 x A76 but the latter
+	# are handled as two different clusters sharing same properties except
+	# clockspeed and throttling differences for a reason called PVTM:
+	# https://github.com/ThomasKaiser/Knowledge/blob/master/articles/Quick_Preview_of_ROCK_5B.md#pvtm
+
+	if [ "${CPUArchitecture}" = "x86_64" ]; then
+		Getx86ClusterDetails
+	else
+		local i
+		for i in $(seq 0 $(( ${CPUCores} - 1 )) ) ; do
+			ThisCore="$(GetCPUInfo $i)"
+			if [ "X${ThisCore}" != "X${LastCore}" ]; then
+				echo "${i}"
+				LastCore="${ThisCore}"
+			fi
+		done
+	fi
+} # GetCoreClusters
+
+Getx86ClusterDetails() {
 		# Get Alder/Raptor Lake E/P core clusters since they can't be differentiated by either
 		# CPU ID or physical_package_id so relying on ark.intel.com: https://archive.ph/rvnvJ
 		# and https://archive.ph/g8q16 -- HFI might be an option in the future but only with
@@ -1504,35 +1547,7 @@ GetCPUClusters() {
 				echo "0"
 			;;
 		esac
-	else
-		# check for different CPU types based on package ids. This allows to test through
-		# different cores even on systems with no cpufreq support.
-		SYS=/sys/devices/system/cpu
-		for PKG_ID in $(cat "${SYS}"/cpu*/topology/physical_package_id | sort | uniq); do
-	 	   dirname -- $(dirname -- $(grep "^${PKG_ID}$" "${SYS}"/cpu*/topology/physical_package_id | head -n1)) | tr -d -c '[:digit:]'
-	 	   echo " "
-		done
-	fi
-} # GetCPUClusters
-
-GetCoreClusters() {
-	# function to determine clusters by CPU core type used by MODE=extensive
-	#
-	# Amlogic S912 for example contains 2 quad-core A53 clusters with different
-	# cpufreq scaling properties but it's just 8 boring A53 and no big.LITTLE
-	# so there's no reason to treat S912 as '2 clusters CPU'.
-	# RK3588 consists of 4 x A55 cores and 4 x A76 but the latter are handled
-	# as two different clusters sharing same properties for whatever reasons.
-
-	local i
-	for i in $(seq 0 $(( ${CPUCores} - 1 )) ) ; do
-		ThisCore="$(GetCPUInfo $i)"
-		if [ "X${ThisCore}" != "X${LastCore}" ]; then
-			echo "${i}"
-			LastCore="${ThisCore}"
-		fi
-	done
-} # GetCoreClusters
+} # Getx86ClusterDetails
 
 ParseOPPTables() {
 	DVFS="$(ls -d /sys/firmware/devicetree/base/* | grep -E "opp-table|opp_table" | sort -n)"
@@ -4694,7 +4709,7 @@ DisplayUsage() {
 	echo -e " ${0##*/} ${BOLD}-T${NC} [\$degree] runs thermal test heating up to this value\n"
 	echo -e " With a Netio powermeter accessible you can export ${BOLD}Netio=address/socket${NC}" to
 	echo -e " sbc-bench defining address and socket this device is plugged into. Requires"
-	echo -e " XML API enabled and read-only access w/o password. Use this ${BOLD}only${NC} with -p to"
+	echo -e " XML API enabled and read-only access w/o password. Use this ${BOLD}only${NC} with -g to"
 	echo -e " draw efficiency graphs since results will be slightly tampered by this mode."
 	echo -e "\n############################################################################\n"
 } # DisplayUsage

@@ -2,7 +2,7 @@
 
 SBC is a shortcut for [single-board computer](https://en.wikipedia.org/wiki/Single-board_computer) and this whole repository is about performance considerations around those devices (with an initial focus on energy efficient server tasks).
 
-![](pics/rockpro64-no-throttling.png)
+![](pics/rock5b-no-throttling.png)
 
 This small set of different CPU performance tests focuses on 'headless' operation only (no GPU/display stuff, no floating point number crunching). Unlike many other 'kitchen-sink benchmarks' it tries to produce insights instead of fancy graphs.
 

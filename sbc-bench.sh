@@ -1550,7 +1550,7 @@ Getx86ClusterDetails() {
 } # Getx86ClusterDetails
 
 ParseOPPTables() {
-	DVFS="$(ls -d /sys/firmware/devicetree/base/* | grep -E "opp-table|opp_table" | sort -n)"
+	[ -d /sys/firmware/devicetree/base ] && DVFS="$(ls -d /sys/firmware/devicetree/base/* | grep -E "opp-|opp_" | grep -E -- "-table|_table" | sort -n)"
 	if [ "X${DVFS}" = "X" ]; then
 		return
 	fi
@@ -2125,8 +2125,8 @@ InitialMonitoring() {
 } # InitialMonitoring
 
 CheckClockspeedsAndSensors() {
-	echo -e "\x08\x08 Done.\nChecking cpufreq OPP...\c"
 	if [ -x "${InstallLocation}"/mhz/mhz ]; then
+		echo -e "\x08\x08 Done.\nChecking cpufreq OPP again...\c"
 		echo -e "\n##########################################################################" >>${ResultLog}
 		if [ -f ${MonitorLog} ]; then
 			# 2nd check after most demanding benchmark has been run.
@@ -2135,11 +2135,29 @@ CheckClockspeedsAndSensors() {
 			grep ':' ${MonitorLog} | tail -n 1 >>"${TempDir}/systemhealth.now" >>${ResultLog}
 			OnlyCPUFreqMax=YES
 		else
-			# 1st check, try to get info about Intel P-States
+			echo -e "\x08\x08 Done.\nChecking cpufreq OPP...\c"
+			# 1st check, try to get info about Intel P-States and HFI (Hardware Feedback Interface)
 			if [ "${CPUArchitecture}" = "x86_64" ]; then
 				PStateStatus="$(journalctl -b 2>/dev/null | awk -F": " '/intel_pstate:/ {print $3}' | sed ':a;N;$!ba;s/\n/, /g')"
 				if [ "X${PStateStatus}" != "X" ]; then
 					echo -e "\nIntel P-States: ${PStateStatus}" >>${ResultLog}
+				fi
+				HFIEnabled=$(awk -F":" '/^flags/ {print $2}' </proc/cpuinfo | grep -c " hfi")
+				if [ ${HFIEnabled} -gt 0 ]; then
+					if [ -f /sys/devices/system/cpu/cpu0/acpi_cppc/nominal_perf ]; then
+						DifferentCores=$(cat /sys/devices/system/cpu/cpu*/acpi_cppc/nominal_perf | sort | uniq | wc -l)
+					else
+						DifferentCores=1
+					fi
+					if [ ${DifferentCores} -gt 1 ]; then
+						echo -e "\nIntel Hardware Feedback Interface enabled (${DifferentCores} core types)" >>${ResultLog}
+					else
+						echo -e "\nIntel Hardware Feedback Interface enabled" >>${ResultLog}
+					fi
+					echo "Please be aware that for reasons yet unknown single-threaded or multi-" >>${ResultLog}
+					echo "threaded workloads with less threads than available logical P cores always" >>${ResultLog}
+					echo "end up running on P cores even if pinned to E cores (taskset/cgroups seem" >>${ResultLog}
+					echo "to not working in the intended way on Alder/Raptor Lake)." >>${ResultLog}
 				fi
 			fi
 			# if powercapping seems to be available on Intel then add a hint

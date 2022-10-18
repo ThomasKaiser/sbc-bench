@@ -2157,7 +2157,7 @@ CheckClockspeedsAndSensors() {
 					echo "Please be aware that for reasons yet unknown single-threaded or multi-" >>${ResultLog}
 					echo "threaded workloads with less threads than available logical P cores always" >>${ResultLog}
 					echo "end up running on P cores even if pinned to E cores (taskset/cgroups seem" >>${ResultLog}
-					echo "to not working in the intended way on Alder/Raptor Lake)." >>${ResultLog}
+					echo "both to not work in the intended way on Alder/Raptor Lake)." >>${ResultLog}
 				fi
 			fi
 			# if powercapping seems to be available on Intel then add a hint

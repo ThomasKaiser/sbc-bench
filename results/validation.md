@@ -212,3 +212,5 @@
 | [4bbv](4bbv.txt) | v0.9.8 Khadas VIM1S | 0.5%/1.1% | 1.9Gi/1.1Gi | X | X | X | X | 3% | 0% | |
 | [4d1U](4d1U.txt) | v0.9.9 SolidRun Clearfog A1 | 0%/0% | 1.0Gi/873Mi | X | X | X | X | 1% | 0% | |
 | [4dd5](4dd5.txt) | v0.9.9 AAEON UP-APL03 V1.0 / Atom | 0%/0% | 3.7Gi/2.6Gi | X | X | X | X | 2% | 1% | |
+| [4dsC](4dsC.txt) | v0.9.9 QEMU KVM Virtual Machine virt-4. | 0%/0% | 15Gi/15Gi | X | X | X | X | 2% | 0% | |
+| [4dsX](4dsX.txt) | v0.9.9 StarFive VisionFive V2 | 0.1%/0% | 3.8Gi/3.6Gi | X | X | X | X | 1% | 0% | |

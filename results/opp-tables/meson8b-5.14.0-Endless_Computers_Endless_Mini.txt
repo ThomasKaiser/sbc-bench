@@ -1,0 +1,21 @@
+   gpu-opp-table:
+       255 MHz   1100.0 mV
+       364 MHz   1100.0 mV
+       425 MHz   1100.0 mV
+       510 MHz   1100.0 mV
+       638 MHz   1100.0 mV
+
+   opp-table:
+        96 MHz    860.0 mV
+       192 MHz    860.0 mV
+       312 MHz    860.0 mV
+       408 MHz    860.0 mV
+       504 MHz    860.0 mV
+       600 MHz    860.0 mV
+       720 MHz    860.0 mV
+       816 MHz    900.0 mV
+      1008 MHz   1140.0 mV
+      1200 MHz   1140.0 mV
+      1320 MHz   1140.0 mV
+      1488 MHz   1140.0 mV
+      1536 MHz   1140.0 mV

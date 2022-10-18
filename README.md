@@ -11,7 +11,7 @@ It has five **entirely different** usage modes:
 * Generate a rough CPU performance assessment for a specific SBC *in general* (under ideal conditions)
 * Show whether an *individual* SBC is able to perform the same and if not hopefully answering the question 'why?'
 * Help software developers and hardware designers to improve 'thermal performance' when using the `-t` and/or `-T` switches ([details/discussion](https://forum.armbian.com/topic/7819-sbc-bench/?do=findComment&comment=60873), [another example](https://forum.armbian.com/topic/8125-quick-review-of-nanopi-k1-plus/?do=findComment&comment=61300))
-* Plot thermal/consumption charts with `-p` to [measure efficiency of settings/devices](Efficiency_Graphing.md)
+* Graph thermal/consumption charts with `-g` to [measure efficiency of settings/devices](Efficiency_Graphing.md)
 * Provide basic CLI monitoring functionality through the `-m` switch
 
 The monitoring now also displays some hardware information when starting:
@@ -45,7 +45,7 @@ This tool therefore focuses on a controlled environment and intensive monitoring
 
 ## Execution
 
-You need an armhf or arm64 Debian Stretch/Buster/Bullseye or Ubuntu Bionic/Focal/Jammy install. Older variants are not supported (due to distro packages being way too outdated). Then it's
+You need Debian Stretch/Buster/Bullseye or Ubuntu Bionic/Focal/Jammy. Older variants are not supported (due to distro packages being way too outdated). Then it's
 
     wget https://raw.githubusercontent.com/ThomasKaiser/sbc-bench/master/sbc-bench.sh
     sudo /bin/bash ./sbc-bench.sh -c
@@ -58,7 +58,7 @@ I chose [mhz](https://github.com/wtarreau/mhz), [tinymembench](https://github.co
 
 ### [mhz](https://github.com/wtarreau/mhz)
 
-This tool is not a benchmark but instead calculates real CPU clockspeeds. This is helpful on platforms where cpufreq support is not available yet or we can not rely on the clockspeed values returned by the kernel. This applies to platforms where vendors are cheating (RPi, Amlogic) or where actual clockspeeds are set via jumpers while the clockspeeds available to the kernel are derived from device-tree (DT) entries. On a Clearfog Pro routerboard it will look like this for example (DT defines 666/1332 MHz while I configured 800/1600 MHz via jumper):
+This tool is not a benchmark but instead measures real CPU clockspeeds. This is helpful on platforms where cpufreq support is not available yet or we can not rely on the clockspeed values returned by the kernel. This applies to platforms where vendors are cheating (RPi, Amlogic) or where actual clockspeeds are set via jumpers while the clockspeeds available to the kernel are derived from device-tree (DT) entries. On a Clearfog Pro routerboard it will look like this for example (DT defines 666/1332 MHz while I configured 800/1600 MHz via jumper):
 
     Checking cpufreq OPP:
 

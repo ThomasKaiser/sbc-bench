@@ -1,0 +1,11 @@
+   opp-table2:
+       200 MHz   1050.0 mV
+       300 MHz   1050.0 mV
+       500 MHz   1150.0 mV
+
+   opp_table0:
+       408 MHz    950.0 mV
+       600 MHz    975.0 mV
+       816 MHz   1000.0 mV
+      1008 MHz   1175.0 mV
+      1200 MHz   1275.0 mV

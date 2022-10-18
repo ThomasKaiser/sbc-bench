@@ -1,0 +1,468 @@
+sbc-bench v0.9.9 QEMU KVM Virtual Machine virt-4.2 (Tue, 18 Oct 2022 02:51:50 +0000)
+
+Distributor ID:	Ubuntu
+Description:	Ubuntu 22.04.1 LTS
+Release:	22.04
+Codename:	jammy
+
+Device Info:
+	Manufacturer: QEMU
+	Product Name: KVM Virtual Machine
+	Version: virt-4.2
+
+BIOS/UEFI:
+	Vendor: EFI Development Kit II / OVMF
+	Version: 1.5.1
+	Release Date: 06/16/2021
+	BIOS Revision: 0.0
+
+/usr/bin/gcc (Ubuntu 11.2.0-19ubuntu1) 11.2.0
+
+Uptime: 02:51:50 up 7 days, 15:11,  3 users,  load average: 0.29, 0.07, 0.02,  0°C
+
+Linux 5.15.0-1018-oracle (instance-20220804-1721) 	10/18/22 	_aarch64_	(4 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+           0.07    0.00    0.08    0.02    0.00   99.82
+
+Device             tps    kB_read/s    kB_wrtn/s    kB_dscd/s    kB_read    kB_wrtn    kB_dscd
+sda               1.30         3.16        24.64         0.00    2081466   16247726          0
+
+               total        used        free      shared  buff/cache   available
+Mem:            15Gi       410Mi        14Gi       4.0Mi       518Mi        15Gi
+Swap:             0B          0B          0B
+
+##########################################################################
+
+Checking cpufreq OPP (Neoverse-N1):
+
+No cpufreq support available. Measured on cpu1: 2991 MHz (2991.650/2990.957/2990.749)
+
+##########################################################################
+
+Executing benchmark on cpu0 (Neoverse-N1):
+
+tinymembench v0.4.9 (simple benchmark for memory throughput and latency)
+
+==========================================================================
+== Memory bandwidth tests                                               ==
+==                                                                      ==
+== Note 1: 1MB = 1000000 bytes                                          ==
+== Note 2: Results for 'copy' tests show how many bytes can be          ==
+==         copied per second (adding together read and writen           ==
+==         bytes would have provided twice higher numbers)              ==
+== Note 3: 2-pass copy means that we are using a small temporary buffer ==
+==         to first fetch data into it, and only then write it to the   ==
+==         destination (source -> L1 cache, L1 cache -> destination)    ==
+== Note 4: If sample standard deviation exceeds 0.1%, it is shown in    ==
+==         brackets                                                     ==
+==========================================================================
+
+ C copy backwards                                     :  11393.4 MB/s (0.2%)
+ C copy backwards (32 byte blocks)                    :  11249.3 MB/s
+ C copy backwards (64 byte blocks)                    :  11269.5 MB/s (0.1%)
+ C copy                                               :  11374.2 MB/s
+ C copy prefetched (32 bytes step)                    :  11581.4 MB/s
+ C copy prefetched (64 bytes step)                    :  11615.4 MB/s
+ C 2-pass copy                                        :   7934.8 MB/s (0.2%)
+ C 2-pass copy prefetched (32 bytes step)             :   8401.7 MB/s
+ C 2-pass copy prefetched (64 bytes step)             :   8632.0 MB/s
+ C fill                                               :  46840.5 MB/s
+ C fill (shuffle within 16 byte blocks)               :  46860.3 MB/s
+ C fill (shuffle within 32 byte blocks)               :  46946.4 MB/s
+ C fill (shuffle within 64 byte blocks)               :  46770.4 MB/s
+ ---
+ standard memcpy                                      :  11909.9 MB/s
+ standard memset                                      :  47775.0 MB/s
+ ---
+ NEON LDP/STP copy                                    :  11985.0 MB/s (0.1%)
+ NEON LDP/STP copy pldl2strm (32 bytes step)          :  17090.5 MB/s (1.6%)
+ NEON LDP/STP copy pldl2strm (64 bytes step)          :  17581.2 MB/s (1.8%)
+ NEON LDP/STP copy pldl1keep (32 bytes step)          :  18181.7 MB/s (2.6%)
+ NEON LDP/STP copy pldl1keep (64 bytes step)          :  18220.0 MB/s (1.1%)
+ NEON LD1/ST1 copy                                    :  11998.2 MB/s
+ NEON STP fill                                        :  47795.3 MB/s
+ NEON STNP fill                                       :  47798.3 MB/s
+ ARM LDP/STP copy                                     :  12123.0 MB/s
+ ARM STP fill                                         :  47851.1 MB/s
+ ARM STNP fill                                        :  47764.1 MB/s
+
+==========================================================================
+== Framebuffer read tests.                                              ==
+==                                                                      ==
+== Many ARM devices use a part of the system memory as the framebuffer, ==
+== typically mapped as uncached but with write-combining enabled.       ==
+== Writes to such framebuffers are quite fast, but reads are much       ==
+== slower and very sensitive to the alignment and the selection of      ==
+== CPU instructions which are used for accessing memory.                ==
+==                                                                      ==
+== Many x86 systems allocate the framebuffer in the GPU memory,         ==
+== accessible for the CPU via a relatively slow PCI-E bus. Moreover,    ==
+== PCI-E is asymmetric and handles reads a lot worse than writes.       ==
+==                                                                      ==
+== If uncached framebuffer reads are reasonably fast (at least 100 MB/s ==
+== or preferably >300 MB/s), then using the shadow framebuffer layer    ==
+== is not necessary in Xorg DDX drivers, resulting in a nice overall    ==
+== performance improvement. For example, the xf86-video-fbturbo DDX     ==
+== uses this trick.                                                     ==
+==========================================================================
+
+ NEON LDP/STP copy (from framebuffer)                 :  12930.0 MB/s
+ NEON LDP/STP 2-pass copy (from framebuffer)          :   9932.1 MB/s
+ NEON LD1/ST1 copy (from framebuffer)                 :  12964.0 MB/s
+ NEON LD1/ST1 2-pass copy (from framebuffer)          :   8712.5 MB/s
+ ARM LDP/STP copy (from framebuffer)                  :  13060.0 MB/s (0.2%)
+ ARM LDP/STP 2-pass copy (from framebuffer)           :   9377.6 MB/s
+
+==========================================================================
+== Memory latency test                                                  ==
+==                                                                      ==
+== Average time is measured for random memory accesses in the buffers   ==
+== of different sizes. The larger is the buffer, the more significant   ==
+== are relative contributions of TLB, L1/L2 cache misses and SDRAM      ==
+== accesses. For extremely large buffer sizes we are expecting to see   ==
+== page table walk with several requests to SDRAM for almost every      ==
+== memory access (though 64MiB is not nearly large enough to experience ==
+== this effect to its fullest).                                         ==
+==                                                                      ==
+== Note 1: All the numbers are representing extra time, which needs to  ==
+==         be added to L1 cache latency. The cycle timings for L1 cache ==
+==         latency can be usually found in the processor documentation. ==
+== Note 2: Dual random read means that we are simultaneously performing ==
+==         two independent memory accesses at a time. In the case if    ==
+==         the memory subsystem can't handle multiple outstanding       ==
+==         requests, dual random read has the same timings as two       ==
+==         single reads performed one after another.                    ==
+==========================================================================
+
+block size : single random read / dual random read, [MADV_NOHUGEPAGE]
+      1024 :    0.0 ns          /     0.0 ns 
+      2048 :    0.0 ns          /     0.0 ns 
+      4096 :    0.0 ns          /     0.0 ns 
+      8192 :    0.0 ns          /     0.0 ns 
+     16384 :    0.0 ns          /     0.0 ns 
+     32768 :    0.0 ns          /     0.0 ns 
+     65536 :    0.0 ns          /     0.0 ns 
+    131072 :    1.2 ns          /     1.7 ns 
+    262144 :    2.2 ns          /     2.8 ns 
+    524288 :    3.2 ns          /     3.7 ns 
+   1048576 :    7.9 ns          /    11.7 ns 
+   2097152 :   19.2 ns          /    27.0 ns 
+   4194304 :   27.6 ns          /    33.2 ns 
+   8388608 :   40.6 ns          /    45.8 ns 
+  16777216 :   46.4 ns          /    52.6 ns 
+  33554432 :   61.6 ns          /    73.5 ns 
+  67108864 :   91.9 ns          /   113.9 ns 
+
+block size : single random read / dual random read, [MADV_HUGEPAGE]
+      1024 :    0.0 ns          /     0.0 ns 
+      2048 :    0.0 ns          /     0.0 ns 
+      4096 :    0.0 ns          /     0.0 ns 
+      8192 :    0.0 ns          /     0.0 ns 
+     16384 :    0.0 ns          /     0.0 ns 
+     32768 :    0.0 ns          /     0.0 ns 
+     65536 :    0.0 ns          /     0.0 ns 
+    131072 :    1.2 ns          /     1.7 ns 
+    262144 :    1.8 ns          /     2.2 ns 
+    524288 :    2.1 ns          /     2.4 ns 
+   1048576 :    2.6 ns          /     2.8 ns 
+   2097152 :   18.1 ns          /    25.9 ns 
+   4194304 :   25.7 ns          /    31.8 ns 
+   8388608 :   30.4 ns          /    34.6 ns 
+  16777216 :   33.1 ns          /    35.3 ns 
+  33554432 :   39.8 ns          /    41.2 ns 
+  67108864 :   70.6 ns          /    90.2 ns 
+
+##########################################################################
+
+Executing ramlat on cpu0 (Neoverse-N1), results in ns:
+
+       size:  1x32  2x32  1x64  2x64 1xPTR 2xPTR 4xPTR 8xPTR
+         4k: 1.338 1.337 1.337 1.337 1.337 1.338 1.337 2.544 
+         8k: 1.337 1.337 1.337 1.337 1.338 1.337 1.338 2.606 
+        16k: 1.337 1.337 1.337 1.337 1.338 1.337 1.337 2.605 
+        32k: 1.338 1.341 1.338 1.339 1.337 1.337 1.338 2.607 
+        64k: 1.340 1.339 1.341 1.340 1.340 1.340 1.340 2.612 
+       128k: 4.701 4.703 4.703 4.701 4.702 5.254 6.368 10.13 
+       256k: 5.349 5.501 5.353 5.496 5.349 5.374 6.523 10.14 
+       512k: 5.403 5.423 5.400 5.422 5.387 5.395 6.552 10.19 
+      1024k: 15.50 11.33 15.48 11.33 15.34 12.53 13.08 17.22 
+      2048k: 36.35 30.97 36.22 30.88 36.37 32.04 30.88 34.87 
+      4096k: 37.73 34.97 37.50 34.89 37.58 35.08 34.85 36.13 
+      8192k: 58.80 47.61 52.27 47.52 52.19 47.42 48.92 51.63 
+     16384k: 57.18 51.12 56.60 50.21 55.62 50.13 52.04 56.38 
+
+##########################################################################
+
+Executing benchmark twice on cluster 0 (Neoverse-N1)
+
+OpenSSL 3.0.2, built on 15 Mar 2022 (Library: OpenSSL 3.0.2 15 Mar 2022)
+type             16 bytes     64 bytes    256 bytes   1024 bytes   8192 bytes  16384 bytes
+aes-128-cbc     846345.85k  1688161.66k  2166582.02k  2321589.25k  2383500.63k  2388650.67k
+aes-128-cbc     847665.62k  1685302.21k  2166568.53k  2320926.38k  2381348.86k  2387192.49k
+aes-192-cbc     791764.98k  1480822.76k  1834909.27k  1932311.89k  1986065.75k  1990295.55k
+aes-192-cbc     789145.95k  1480497.47k  1835889.32k  1933159.42k  1987586.73k  1991764.65k
+aes-256-cbc     759765.50k  1315441.11k  1590348.37k  1671956.48k  1703679.32k  1706136.92k
+aes-256-cbc     761225.02k  1316275.56k  1590188.03k  1672106.67k  1703029.42k  1706169.69k
+
+##########################################################################
+
+Executing benchmark single-threaded on cpu0 (Neoverse-N1)
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C.UTF-8,Utf16=on,HugeFiles=on,64 bits,4 CPUs LE)
+
+LE
+CPU Freq: - - - - - - - - -
+
+RAM size:   15964 MB,  # CPU hardware threads:   4
+RAM usage:    435 MB,  # Benchmark threads:      1
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       4322   100   4205   4205  |      49260   100   4206   4206
+23:       3814   100   3887   3887  |      48582   100   4206   4205
+24:       3397   100   3653   3653  |      47864   100   4202   4202
+25:       3132   100   3577   3577  |      46516   100   4141   4140
+----------------------------------  | ------------------------------
+Avr:             100   3831   3830  |              100   4189   4188
+Tot:             100   4010   4009
+
+##########################################################################
+
+Executing benchmark 3 times multi-threaded on CPUs 0-3
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C.UTF-8,Utf16=on,HugeFiles=on,64 bits,4 CPUs LE)
+
+LE
+CPU Freq: - - - 64000000 - - - - -
+
+RAM size:   15964 MB,  # CPU hardware threads:   4
+RAM usage:    882 MB,  # Benchmark threads:      4
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:      16376   364   4380  15931  |     195462   397   4203  16676
+23:      15754   379   4236  16052  |     191619   396   4190  16580
+24:      14985   380   4235  16112  |     186796   396   4145  16398
+25:      13992   370   4323  15976  |     183194   397   4107  16304
+----------------------------------  | ------------------------------
+Avr:             373   4294  16018  |              396   4161  16489
+Tot:             385   4227  16254
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C.UTF-8,Utf16=on,HugeFiles=on,64 bits,4 CPUs LE)
+
+LE
+CPU Freq: 64000000 - - - - - - - -
+
+RAM size:   15964 MB,  # CPU hardware threads:   4
+RAM usage:    882 MB,  # Benchmark threads:      4
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:      16427   364   4390  15980  |     194790   396   4198  16619
+23:      15548   374   4231  15842  |     191848   397   4183  16600
+24:      14953   378   4253  16078  |     186249   395   4143  16350
+25:      14519   383   4333  16578  |     182807   395   4115  16269
+----------------------------------  | ------------------------------
+Avr:             375   4302  16120  |              396   4160  16459
+Tot:             385   4231  16289
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C.UTF-8,Utf16=on,HugeFiles=on,64 bits,4 CPUs LE)
+
+LE
+CPU Freq: - - - - 128000000 - - - -
+
+RAM size:   15964 MB,  # CPU hardware threads:   4
+RAM usage:    882 MB,  # Benchmark threads:      4
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:      16530   364   4418  16081  |     195270   396   4204  16660
+23:      15638   377   4224  15934  |     192115   397   4188  16623
+24:      14843   375   4257  15960  |     188178   397   4164  16519
+25:      14646   384   4358  16723  |     183086   396   4113  16294
+----------------------------------  | ------------------------------
+Avr:             375   4314  16174  |              397   4167  16524
+Tot:             386   4241  16349
+
+Compression: 16018,16120,16174
+Decompression: 16489,16459,16524
+Total: 16254,16289,16349
+
+##########################################################################
+
+Testing maximum cpufreq again, still under full load. System health now:
+
+Time      CPU n/a    load %cpu %sys %usr %nice %io %irq   Temp
+03:00:56:   ---      3.37  95%   2%  93%   0%   0%   0%     0°C
+
+Checking cpufreq OPP (Neoverse-N1):
+
+No cpufreq support available. Measured on cpu1: 2994 MHz (2995.120/2994.634/2994.148)
+
+##########################################################################
+
+System health while running tinymembench:
+
+Time      CPU n/a    load %cpu %sys %usr %nice %io %irq   Temp
+02:51:54:   ---      0.35   0%   0%   0%   0%   0%   0%    --
+02:52:34:   ---      0.66  25%   0%  25%   0%   0%   0%    --
+02:53:14:   ---      0.83  25%   0%  25%   0%   0%   0%    --
+02:53:54:   ---      0.91  25%   0%  25%   0%   0%   0%    --
+02:54:34:   ---      0.96  26%   0%  25%   0%   0%   0%    --
+02:55:14:   ---      0.98  25%   0%  25%   0%   0%   0%    --
+02:55:54:   ---      0.99  25%   0%  25%   0%   0%   0%    --
+02:56:34:   ---      1.00  25%   0%  25%   0%   0%   0%    --
+
+System health while running ramlat:
+
+Time      CPU n/a    load %cpu %sys %usr %nice %io %irq   Temp
+02:56:56:   ---      1.00   0%   0%   0%   0%   0%   0%    --
+02:56:59:   ---      1.00  25%   0%  25%   0%   0%   0%    --
+02:57:02:   ---      1.00  26%   0%  25%   0%   0%   0%    --
+02:57:05:   ---      1.00  26%   0%  25%   0%   0%   0%    --
+02:57:08:   ---      1.00  25%   0%  25%   0%   0%   0%    --
+02:57:11:   ---      1.00  25%   0%  25%   0%   0%   0%    --
+02:57:14:   ---      1.00  25%   0%  25%   0%   0%   0%    --
+02:57:17:   ---      1.00  25%   0%  25%   0%   0%   0%    --
+
+System health while running OpenSSL benchmark:
+
+Time      CPU n/a    load %cpu %sys %usr %nice %io %irq   Temp
+02:57:18:   ---      1.00   0%   0%   0%   0%   0%   0%    --
+02:57:34:   ---      1.08  25%   0%  25%   0%   0%   0%    --
+02:57:50:   ---      1.06  25%   0%  25%   0%   0%   0%    --
+02:58:07:   ---      1.05  25%   0%  25%   0%   0%   0%    --
+02:58:23:   ---      1.04  25%   0%  25%   0%   0%   0%    --
+02:58:39:   ---      1.03  25%   0%  25%   0%   0%   0%    --
+02:58:55:   ---      1.02  25%   0%  25%   0%   0%   0%    --
+
+System health while running 7-zip single core benchmark:
+
+Time      CPU n/a    load %cpu %sys %usr %nice %io %irq   Temp
+02:59:07:   ---      1.02   0%   0%   0%   0%   0%   0%    --
+02:59:12:   ---      1.01  25%   0%  25%   0%   0%   0%    --
+02:59:17:   ---      1.01  25%   0%  24%   0%   0%   0%    --
+02:59:22:   ---      1.01  25%   0%  25%   0%   0%   0%    --
+02:59:27:   ---      1.01  25%   0%  24%   0%   0%   0%    --
+02:59:32:   ---      1.01  25%   0%  24%   0%   0%   0%    --
+02:59:37:   ---      1.01  25%   0%  24%   0%   0%   0%    --
+02:59:42:   ---      1.01  25%   0%  24%   0%   0%   0%    --
+
+System health while running 7-zip multi core benchmark:
+
+Time      CPU n/a    load %cpu %sys %usr %nice %io %irq   Temp
+02:59:43:   ---      1.01   0%   0%   0%   0%   0%   0%    --
+02:59:54:   ---      1.47  97%   0%  96%   0%   0%   0%    --
+03:00:05:   ---      1.93  94%   1%  92%   0%   0%   0%    --
+03:00:15:   ---      2.46  95%   1%  93%   0%   0%   0%    --
+03:00:26:   ---      2.69  97%   1%  96%   0%   0%   0%    --
+03:00:36:   ---      2.90  93%   1%  91%   0%   0%   0%    --
+03:00:46:   ---      3.07  96%   0%  95%   0%   0%   0%    --
+03:00:56:   ---      3.37  95%   2%  93%   0%   0%   0%    --
+
+##########################################################################
+
+dmesg output while running the benchmarks:
+
+[659528.431159] [UFW BLOCK] IN=enp0s3 OUT= MAC=02:00:17:01:47:46:00:00:17:02:37:c6:08:00 SRC=92.63.197.131 DST=10.0.0.13 LEN=40 TOS=0x00 PREC=0x00 TTL=244 ID=60574 PROTO=TCP SPT=45960 DPT=35334 WINDOW=1024 RES=0x00 SYN URGP=0 
+[659554.862065] [UFW BLOCK] IN=enp0s3 OUT= MAC=02:00:17:01:47:46:00:00:17:02:37:c6:08:00 SRC=91.240.118.71 DST=10.0.0.13 LEN=40 TOS=0x00 PREC=0x00 TTL=247 ID=14492 PROTO=TCP SPT=49890 DPT=7998 WINDOW=1024 RES=0x00 SYN URGP=0 
+[659572.403282] [UFW BLOCK] IN=enp0s3 OUT= MAC=02:00:17:01:47:46:00:00:17:02:37:c6:08:00 SRC=64.225.15.53 DST=10.0.0.13 LEN=40 TOS=0x00 PREC=0x00 TTL=242 ID=56827 PROTO=TCP SPT=61953 DPT=2095 WINDOW=1024 RES=0x00 SYN URGP=0 
+[659605.840812] [UFW BLOCK] IN=enp0s3 OUT= MAC=02:00:17:01:47:46:00:00:17:02:37:c6:08:00 SRC=176.111.174.91 DST=10.0.0.13 LEN=40 TOS=0x00 PREC=0x00 TTL=248 ID=64916 PROTO=TCP SPT=48488 DPT=23194 WINDOW=1024 RES=0x00 SYN URGP=0 
+[659606.740348] [UFW BLOCK] IN=enp0s3 OUT= MAC=02:00:17:01:47:46:00:00:17:02:37:c6:08:00 SRC=87.246.7.49 DST=10.0.0.13 LEN=40 TOS=0x00 PREC=0x00 TTL=248 ID=32394 PROTO=TCP SPT=44388 DPT=4600 WINDOW=1024 RES=0x00 SYN URGP=0 
+[659633.727648] [UFW BLOCK] IN=enp0s3 OUT= MAC=02:00:17:01:47:46:00:00:17:02:37:c6:08:00 SRC=5.188.206.18 DST=10.0.0.13 LEN=40 TOS=0x00 PREC=0x00 TTL=248 ID=31483 PROTO=TCP SPT=41030 DPT=6509 WINDOW=1024 RES=0x00 SYN URGP=0 
+[659648.479718] [UFW BLOCK] IN=enp0s3 OUT= MAC=02:00:17:01:47:46:00:00:17:02:37:c6:08:00 SRC=123.160.221.60 DST=10.0.0.13 LEN=52 TOS=0x00 PREC=0x00 TTL=50 ID=39632 DF PROTO=TCP SPT=30893 DPT=8058 WINDOW=65535 RES=0x00 SYN URGP=0 
+[659667.298974] [UFW BLOCK] IN=enp0s3 OUT= MAC=02:00:17:01:47:46:00:00:17:02:37:c6:08:00 SRC=205.210.31.18 DST=10.0.0.13 LEN=44 TOS=0x00 PREC=0x00 TTL=253 ID=32466 PROTO=TCP SPT=53161 DPT=2121 WINDOW=1024 RES=0x00 SYN URGP=0 
+[659710.950370] [UFW BLOCK] IN=enp0s3 OUT= MAC=02:00:17:01:47:46:00:00:17:02:37:c6:08:00 SRC=192.241.212.192 DST=10.0.0.13 LEN=40 TOS=0x00 PREC=0x00 TTL=241 ID=54321 PROTO=TCP SPT=40907 DPT=555 WINDOW=65535 RES=0x00 SYN URGP=0 
+[659710.950407] [UFW BLOCK] IN=enp0s3 OUT= MAC=02:00:17:01:47:46:00:00:17:02:37:c6:08:00 SRC=192.241.212.192 DST=10.0.0.13 LEN=40 TOS=0x00 PREC=0x00 TTL=241 ID=54321 PROTO=TCP SPT=40907 DPT=555 WINDOW=65535 RES=0x00 SYN URGP=0 
+[659729.995004] [UFW BLOCK] IN=enp0s3 OUT= MAC=02:00:17:01:47:46:00:00:17:02:37:c6:08:00 SRC=107.152.37.65 DST=10.0.0.13 LEN=40 TOS=0x00 PREC=0x00 TTL=249 ID=14693 PROTO=TCP SPT=49486 DPT=5000 WINDOW=1024 RES=0x00 SYN URGP=0 
+[659791.899456] [UFW BLOCK] IN=enp0s3 OUT= MAC=02:00:17:01:47:46:00:00:17:02:37:c6:08:00 SRC=194.26.29.86 DST=10.0.0.13 LEN=40 TOS=0x00 PREC=0x00 TTL=246 ID=54871 PROTO=TCP SPT=50323 DPT=4442 WINDOW=1024 RES=0x00 SYN URGP=0 
+[659791.899484] [UFW BLOCK] IN=enp0s3 OUT= MAC=02:00:17:01:47:46:00:00:17:02:37:c6:08:00 SRC=194.26.29.86 DST=10.0.0.13 LEN=40 TOS=0x00 PREC=0x00 TTL=246 ID=54871 PROTO=TCP SPT=50323 DPT=4442 WINDOW=1024 RES=0x00 SYN URGP=0 
+[659791.899492] [UFW BLOCK] IN=enp0s3 OUT= MAC=02:00:17:01:47:46:00:00:17:02:37:c6:08:00 SRC=194.26.29.86 DST=10.0.0.13 LEN=40 TOS=0x00 PREC=0x00 TTL=246 ID=54871 PROTO=TCP SPT=50323 DPT=4442 WINDOW=1024 RES=0x00 SYN URGP=0 
+[659807.155771] [UFW BLOCK] IN=enp0s3 OUT= MAC=02:00:17:01:47:46:00:00:17:02:37:c6:08:00 SRC=45.79.134.67 DST=10.0.0.13 LEN=40 TOS=0x00 PREC=0x00 TTL=242 ID=48199 PROTO=TCP SPT=61000 DPT=25 WINDOW=1024 RES=0x00 SYN URGP=0 
+[659836.139063] [UFW BLOCK] IN=enp0s3 OUT= MAC=02:00:17:01:47:46:00:00:17:02:37:c6:08:00 SRC=87.246.7.198 DST=10.0.0.13 LEN=40 TOS=0x00 PREC=0x00 TTL=248 ID=33631 PROTO=TCP SPT=54292 DPT=13239 WINDOW=1024 RES=0x00 SYN URGP=0 
+[659860.025257] [UFW BLOCK] IN=enp0s3 OUT= MAC=02:00:17:01:47:46:00:00:17:02:37:c6:08:00 SRC=185.167.96.138 DST=10.0.0.13 LEN=40 TOS=0x08 PREC=0x20 TTL=249 ID=54321 PROTO=TCP SPT=56083 DPT=989 WINDOW=65535 RES=0x00 SYN URGP=0 
+[659875.081260] [UFW BLOCK] IN=enp0s3 OUT= MAC=02:00:17:01:47:46:00:00:17:02:37:c6:08:00 SRC=167.71.234.134 DST=10.0.0.13 LEN=40 TOS=0x00 PREC=0x00 TTL=242 ID=9751 PROTO=TCP SPT=43384 DPT=5686 WINDOW=1024 RES=0x00 SYN URGP=0 
+[659888.023813] [UFW BLOCK] IN=enp0s3 OUT= MAC=02:00:17:01:47:46:00:00:17:02:37:c6:08:00 SRC=205.210.31.6 DST=10.0.0.13 LEN=44 TOS=0x00 PREC=0x00 TTL=253 ID=54321 PROTO=TCP SPT=54508 DPT=9443 WINDOW=65535 RES=0x00 SYN URGP=0 
+[659908.186876] [UFW BLOCK] IN=enp0s3 OUT= MAC=02:00:17:01:47:46:00:00:17:02:37:c6:08:00 SRC=89.248.163.189 DST=10.0.0.13 LEN=40 TOS=0x00 PREC=0x00 TTL=243 ID=31286 PROTO=TCP SPT=56455 DPT=5133 WINDOW=1024 RES=0x00 SYN URGP=0 
+[659935.169804] [UFW BLOCK] IN=enp0s3 OUT= MAC=02:00:17:01:47:46:00:00:17:02:37:c6:08:00 SRC=205.210.31.56 DST=10.0.0.13 LEN=44 TOS=0x00 PREC=0x00 TTL=253 ID=54321 PROTO=TCP SPT=56802 DPT=2078 WINDOW=65535 RES=0x00 SYN URGP=0 
+[659954.424148] [UFW BLOCK] IN=enp0s3 OUT= MAC=02:00:17:01:47:46:00:00:17:02:37:c6:08:00 SRC=139.144.233.101 DST=10.0.0.13 LEN=40 TOS=0x00 PREC=0x00 TTL=242 ID=55296 PROTO=TCP SPT=61000 DPT=448 WINDOW=1024 RES=0x00 SYN URGP=0 
+[659970.863639] [UFW BLOCK] IN=enp0s3 OUT= MAC=02:00:17:01:47:46:00:00:17:02:37:c6:08:00 SRC=23.225.163.216 DST=10.0.0.13 LEN=44 TOS=0x00 PREC=0x00 TTL=51 ID=0 DF PROTO=TCP SPT=60858 DPT=49152 WINDOW=1024 RES=0x00 SYN URGP=0 
+[660002.104128] [UFW BLOCK] IN=enp0s3 OUT= MAC=02:00:17:01:47:46:00:00:17:02:37:c6:08:00 SRC=159.203.175.196 DST=10.0.0.13 LEN=48 TOS=0x00 PREC=0x00 TTL=115 ID=31930 PROTO=TCP SPT=49004 DPT=5900 WINDOW=65535 RES=0x00 SYN URGP=0 
+[660016.488992] [UFW BLOCK] IN=enp0s3 OUT= MAC=02:00:17:01:47:46:00:00:17:02:37:c6:08:00 SRC=179.106.190.223 DST=10.0.0.13 LEN=44 TOS=0x00 PREC=0x00 TTL=234 ID=24920 PROTO=TCP SPT=45607 DPT=1433 WINDOW=1024 RES=0x00 SYN URGP=0 
+[660032.396936] [UFW BLOCK] IN=enp0s3 OUT= MAC=02:00:17:01:47:46:00:00:17:02:37:c6:08:00 SRC=162.142.125.137 DST=10.0.0.13 LEN=44 TOS=0x00 PREC=0x00 TTL=42 ID=26073 PROTO=TCP SPT=20414 DPT=2222 WINDOW=1024 RES=0x00 SYN URGP=0 
+[660066.085440] [UFW BLOCK] IN=enp0s3 OUT= MAC=02:00:17:01:47:46:00:00:17:02:37:c6:08:00 SRC=185.177.25.224 DST=10.0.0.13 LEN=40 TOS=0x00 PREC=0x00 TTL=233 ID=5358 PROTO=TCP SPT=42005 DPT=3389 WINDOW=1024 RES=0x00 SYN URGP=0 
+
+##########################################################################
+
+Linux 5.15.0-1018-oracle (instance-20220804-1721) 	10/18/22 	_aarch64_	(4 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+           0.10    0.00    0.08    0.02    0.00   99.79
+
+Device             tps    kB_read/s    kB_wrtn/s    kB_dscd/s    kB_read    kB_wrtn    kB_dscd
+sda               1.30         3.17        24.74         0.00    2089822   16332990          0
+
+               total        used        free      shared  buff/cache   available
+Mem:            15Gi       419Mi        14Gi       4.0Mi       527Mi        15Gi
+Swap:             0B          0B          0B
+
+CPU sysfs topology (clusters, cpufreq members, clockspeeds)
+                 cpufreq   min    max
+ CPU    cluster  policy   speed  speed   core type
+  0        0        0       -      -     Neoverse-N1 / r3p1
+  1        0        0       -      -     Neoverse-N1 / r3p1
+  2        0        0       -      -     Neoverse-N1 / r3p1
+  3        0        0       -      -     Neoverse-N1 / r3p1
+
+Architecture:                    aarch64
+CPU op-mode(s):                  32-bit, 64-bit
+Byte Order:                      Little Endian
+CPU(s):                          4
+On-line CPU(s) list:             0-3
+Vendor ID:                       ARM
+Model name:                      Neoverse-N1
+Model:                           1
+Thread(s) per core:              1
+Core(s) per cluster:             4
+Socket(s):                       1
+Cluster(s):                      1
+Stepping:                        r3p1
+BogoMIPS:                        50.00
+Flags:                           fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp ssbs
+NUMA node(s):                    1
+NUMA node0 CPU(s):               0-3
+Vulnerability Itlb multihit:     Not affected
+Vulnerability L1tf:              Not affected
+Vulnerability Mds:               Not affected
+Vulnerability Meltdown:          Not affected
+Vulnerability Mmio stale data:   Not affected
+Vulnerability Retbleed:          Not affected
+Vulnerability Spec store bypass: Mitigation; Speculative Store Bypass disabled via prctl
+Vulnerability Spectre v1:        Mitigation; __user pointer sanitization
+Vulnerability Spectre v2:        Mitigation; CSV2, BHB
+Vulnerability Srbds:             Not affected
+Vulnerability Tsx async abort:   Not affected
+
+Signature: 00NeoverseN1r3p100NeoverseN1r3p100NeoverseN1r3p100NeoverseN1r3p1
+ Compiler: /usr/bin/gcc (Ubuntu 11.2.0-19ubuntu1) 11.2.0 / aarch64-linux-gnu
+ Userland: arm64
+   Kernel: 5.15.0-1018-oracle/aarch64 (kvm)
+           CONFIG_HZ=250
+           CONFIG_HZ_250=y
+           CONFIG_PREEMPT_NONE=y
+           CONFIG_PREEMPT_NOTIFIERS=y
+
+| QEMU KVM Virtual Machine virt-4.2 | ~3000 MHz | 5.15 | Ubuntu 22.04.1 LTS arm64 | 16300 | 847000 | 1706150 | 11910 | 47780 | - |

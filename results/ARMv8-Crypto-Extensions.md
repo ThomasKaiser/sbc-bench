@@ -116,6 +116,7 @@ Crawling through [sbc-bench results collection](../Results.md) comparing +30 dif
 | [A311D2](http://ix.io/3Wq0) | 2200 | 1252070 | 569 |
 | [A311D](http://ix.io/3VfL) | 2400 | 1365900 | 569 |
 | Neoverse-N1 | | | |
+| [Ampere Altra](http://ix.io/4dsC) | 3000 | 1706150 | 569 |
 | [Amazon m6g.8xlarge](http://ix.io/2FrG) | 2500 | 1424770 | 570 |
 | Cortex-A76 | | | |
 | [RK3588](http://ix.io/3XzI) | 985 | 560200 | 569 |
@@ -125,3 +126,5 @@ Crawling through [sbc-bench results collection](../Results.md) comparing +30 dif
 | [QRB5165](http://ix.io/49kx) | 2840 | 1598490 | 563 |
 | Cortex-A78AE | | | |
 | [NVIDIA Orin](http://ix.io/4ax9) | 2200 | 1242940 | 565 |
+
+

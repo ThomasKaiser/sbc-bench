@@ -1118,10 +1118,12 @@ MonitorBoard() {
 	else
 		LSCPU="$(lscpu)"
 		X86CPUName="$(sed 's/ \{1,\}/ /g' <<<"${LSCPU}" | awk -F": " '/^Model name/ {print $2}' | sed -e 's/1.th Gen //' -e 's/.th Gen //' -e 's/Core(TM) //' -e 's/ Processor//' -e 's/Intel(R) Xeon(R) CPU //' -e 's/Intel(R) //' -e 's/(R)//' -e 's/CPU //' -e 's/ 0 @/ @/' -e 's/AMD //' -e 's/Authentic //' -e 's/ with .*//')"
-		CPUArchitecture="$(lscpu | awk -F" " '/^Architecture/ {print $2}')"
+		CPUArchitecture="$(awk -F" " '/^Architecture/ {print $2}' <<<"${LSCPU}")"
 		ClusterConfig=($(GetCPUClusters))
-		read PCores <"${TempDir}/Pcores"
-		read ECores <"${TempDir}/Ecores"
+		if [ -f "${TempDir}/Pcores" ]; then
+			read PCores <"${TempDir}/Pcores"
+			read ECores <"${TempDir}/Ecores"
+		fi
 		[ ${#ClusterConfig[@]} -eq 0 ] && ClusterConfig=(0)
 	fi
 
@@ -1744,8 +1746,10 @@ BasicSetup() {
 	esac
 
 	ClusterConfig=($(GetCPUClusters))
-	read PCores <"${TempDir}/Pcores"
-	read ECores <"${TempDir}/Ecores"
+	if [ -f "${TempDir}/Pcores" ]; then
+		read PCores <"${TempDir}/Pcores"
+		read ECores <"${TempDir}/Ecores"
+	fi
 	[ ${#ClusterConfig[@]} -eq 0 ] && ClusterConfig=(0)
 	ClusterConfigByCoreType=($(GetCoreClusters))
 } # BasicSetup
@@ -2149,10 +2153,10 @@ InitialMonitoring() {
 
 CheckClockspeedsAndSensors() {
 	if [ -x "${InstallLocation}"/mhz/mhz ]; then
-		echo -e "\x08\x08 Done.\nChecking cpufreq OPP again...\c"
 		echo -e "\n##########################################################################" >>${ResultLog}
 		if [ -f ${MonitorLog} ]; then
 			# 2nd check after most demanding benchmark has been run.
+			echo -e "\x08\x08 Done.\nChecking cpufreq OPP again...\c"
 			echo -e "\nTesting maximum cpufreq again, still under full load. System health now:\n" >>${ResultLog}
 			grep 'Time' ${MonitorLog} | tail -n 1 >"${TempDir}/systemhealth.now" >>${ResultLog}
 			grep ':' ${MonitorLog} | tail -n 1 >>"${TempDir}/systemhealth.now" >>${ResultLog}

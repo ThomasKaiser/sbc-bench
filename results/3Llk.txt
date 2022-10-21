@@ -1,0 +1,492 @@
+sbc-bench v0.8.7 Raspberry Pi 4 Model B Rev 1.4 (Fri, 07 Jan 2022 19:48:26 +1000)
+
+Distributor ID:	Raspbian
+Description:	Raspbian GNU/Linux 11 (bullseye)
+Release:	11
+Codename:	bullseye
+Architecture:	armhf
+
+Raspberry Pi ThreadX version:
+Nov 18 2021 16:16:49 
+Copyright (c) 2012 Broadcom
+version d9b293558b4cef6aabedcc53c178e7604de90788 (clean) (release) (start)
+
+ThreadX configuration (/boot/config.txt):
+arm_freq=2147
+gpu_freq=750
+hdmi_force_hotplug=1
+hdmi_drive=2
+dtparam=audio=on
+camera_auto_detect=1
+display_auto_detect=1
+dtoverlay=vc4-fkms-v3d-pi4
+disable_overscan=1
+[cm4]
+otg_mode=1
+[all]
+[pi4]
+arm_boost=1
+[all]
+gpu_mem=128
+hdmi_enable_4kp60=1
+
+Actual ThreadX settings:
+arm_boost=1
+arm_freq=2147
+audio_pwm_mode=514
+camera_auto_detect=1
+config_hdmi_boost=5
+core_freq=550
+core_freq_min=220
+disable_commandline_tags=2
+disable_l2cache=1
+disable_overscan=1
+display_auto_detect=1
+display_hdmi_rotate=-1
+display_lcd_rotate=-1
+dvfs=3
+enable_gic=1
+force_eeprom_read=1
+force_pwm_open=1
+framebuffer_ignore_alpha=1
+framebuffer_swap=1
+gpu_freq=800
+gpu_freq_min=250
+h264_freq=550
+hdmi_enable_4kp60=1
+hdmi_samples_limit=0x1f4000
+hevc_freq=550
+init_uart_clock=0x2dc6c00
+isp_freq=550
+lcd_framerate=60
+mask_gpu_interrupt0=1024
+mask_gpu_interrupt1=0x10000
+max_framebuffer_height=2160
+max_framebuffer_width=3840
+max_framebuffers=-1
+over_voltage=6
+over_voltage_avs=-10000
+pause_burst_frames=1
+program_serial_random=1
+total_mem=4096
+v3d_freq=550
+hdmi_drive:0=2
+hdmi_force_cec_address:0=65535
+hdmi_force_cec_address:1=65535
+hdmi_force_hotplug:0=1
+hdmi_pixel_freq_limit:0=0x23c34600
+hdmi_pixel_freq_limit:1=0x9a7ec80
+
+/usr/bin/gcc (Raspbian 10.2.1-6+rpi1) 10.2.1 20210110
+
+Uptime: 19:48:26 up  1:05,  5 users,  load average: 0.30, 1.74, 4.51
+
+Linux 5.10.63-v7l+ (raspberrypi) 	01/07/22 	_armv7l_	(4 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+          28.07   39.39    9.69    0.23    0.00   22.62
+
+Device             tps    kB_read/s    kB_wrtn/s    kB_dscd/s    kB_read    kB_wrtn    kB_dscd
+mmcblk0           8.05       208.29        59.01         0.00     821352     232674          0
+
+               total        used        free      shared  buff/cache   available
+Mem:           3.7Gi       893Mi       2.3Gi       203Mi       491Mi       2.5Gi
+Swap:             0B          0B          0B
+
+
+
+##########################################################################
+
+Checking cpufreq OPP (Cortex-A72):
+
+Cpufreq OPP: 2200  ThreadX: 2148  Measured: 2145 @ 1.0200V
+Cpufreq OPP: 2100  ThreadX: 2101  Measured: 2100 @ 1.0200V
+Cpufreq OPP: 2000  ThreadX: 2000  Measured: 2000 @ 1.0200V
+Cpufreq OPP: 1900  ThreadX: 1900  Measured: 1900 @ 1.0200V
+Cpufreq OPP: 1800  ThreadX: 1800  Measured: 1800 @ 1.0200V
+Cpufreq OPP: 1700  ThreadX: 1700  Measured: 1695 @ 1.0200V
+Cpufreq OPP: 1600  ThreadX: 1600  Measured: 1590 @ 1.0200V
+Cpufreq OPP: 1500  ThreadX: 1500  Measured: 1490 @ 1.0200V
+Cpufreq OPP: 1400  ThreadX: 1400  Measured: 1390 @ 1.0200V
+Cpufreq OPP: 1300  ThreadX: 1300  Measured: 1275 @ 1.0200V
+Cpufreq OPP: 1200  ThreadX: 1200  Measured: 1185 @ 1.0200V
+Cpufreq OPP: 1100  ThreadX: 1100  Measured: 1095 @ 1.0200V
+Cpufreq OPP: 1000  ThreadX: 1000  Measured:  990 @ 1.0200V
+Cpufreq OPP:  900  ThreadX:  900  Measured:  890 @ 1.0200V
+Cpufreq OPP:  800  ThreadX:  800  Measured:  830 @ 1.0200V
+Cpufreq OPP:  700  ThreadX:  700  Measured:  700 @ 1.0200V
+Cpufreq OPP:  600  ThreadX:  600  Measured:  600 @ 1.0200V
+
+##########################################################################
+
+Executing benchmark on cpu0 (Cortex-A72):
+
+tinymembench v0.4.9 (simple benchmark for memory throughput and latency)
+
+==========================================================================
+== Memory bandwidth tests                                               ==
+==                                                                      ==
+== Note 1: 1MB = 1000000 bytes                                          ==
+== Note 2: Results for 'copy' tests show how many bytes can be          ==
+==         copied per second (adding together read and writen           ==
+==         bytes would have provided twice higher numbers)              ==
+== Note 3: 2-pass copy means that we are using a small temporary buffer ==
+==         to first fetch data into it, and only then write it to the   ==
+==         destination (source -> L1 cache, L1 cache -> destination)    ==
+== Note 4: If sample standard deviation exceeds 0.1%, it is shown in    ==
+==         brackets                                                     ==
+==========================================================================
+
+ C copy backwards                                     :   2430.6 MB/s (0.9%)
+ C copy backwards (32 byte blocks)                    :   2433.7 MB/s (9.1%)
+ C copy backwards (64 byte blocks)                    :   2434.5 MB/s (1.2%)
+ C copy                                               :   2411.0 MB/s (2.0%)
+ C copy prefetched (32 bytes step)                    :   2423.7 MB/s (1.0%)
+ C copy prefetched (64 bytes step)                    :   2422.2 MB/s (1.6%)
+ C 2-pass copy                                        :   2164.2 MB/s (1.3%)
+ C 2-pass copy prefetched (32 bytes step)             :   2216.5 MB/s
+ C 2-pass copy prefetched (64 bytes step)             :   2222.1 MB/s (0.8%)
+ C fill                                               :   3432.7 MB/s (3.9%)
+ C fill (shuffle within 16 byte blocks)               :   3426.6 MB/s
+ C fill (shuffle within 32 byte blocks)               :   3435.7 MB/s (1.6%)
+ C fill (shuffle within 64 byte blocks)               :   3435.9 MB/s (0.3%)
+ ---
+ standard memcpy                                      :   2417.1 MB/s (1.7%)
+ standard memset                                      :   3435.2 MB/s (0.4%)
+ ---
+ NEON read                                            :   4106.9 MB/s (1.8%)
+ NEON read prefetched (32 bytes step)                 :   4102.2 MB/s (0.6%)
+ NEON read prefetched (64 bytes step)                 :   4058.8 MB/s (1.9%)
+ NEON read 2 data streams                             :   3632.3 MB/s (1.2%)
+ NEON read 2 data streams prefetched (32 bytes step)  :   3611.4 MB/s (1.0%)
+ NEON read 2 data streams prefetched (64 bytes step)  :   3609.0 MB/s (1.1%)
+ NEON copy                                            :   2413.2 MB/s (1.1%)
+ NEON copy prefetched (32 bytes step)                 :   2424.0 MB/s (1.1%)
+ NEON copy prefetched (64 bytes step)                 :   2422.9 MB/s (0.8%)
+ NEON unrolled copy                                   :   2413.9 MB/s (1.8%)
+ NEON unrolled copy prefetched (32 bytes step)        :   2443.2 MB/s (0.9%)
+ NEON unrolled copy prefetched (64 bytes step)        :   2445.1 MB/s (0.8%)
+ NEON copy backwards                                  :   2435.2 MB/s (1.0%)
+ NEON copy backwards prefetched (32 bytes step)       :   2434.8 MB/s (0.9%)
+ NEON copy backwards prefetched (64 bytes step)       :   2437.1 MB/s (1.2%)
+ NEON 2-pass copy                                     :   2233.4 MB/s (0.7%)
+ NEON 2-pass copy prefetched (32 bytes step)          :   2228.7 MB/s (0.8%)
+ NEON 2-pass copy prefetched (64 bytes step)          :   2239.1 MB/s (0.5%)
+ NEON unrolled 2-pass copy                            :   2162.6 MB/s (1.3%)
+ NEON unrolled 2-pass copy prefetched (32 bytes step) :   2278.9 MB/s (1.3%)
+ NEON unrolled 2-pass copy prefetched (64 bytes step) :   2261.7 MB/s (0.6%)
+ NEON fill                                            :   3435.4 MB/s (0.5%)
+ NEON fill backwards                                  :   3434.5 MB/s (0.4%)
+ VFP copy                                             :   2409.5 MB/s (1.0%)
+ VFP 2-pass copy                                      :   2116.7 MB/s (1.0%)
+ ARM fill (STRD)                                      :   3439.8 MB/s (0.4%)
+ ARM fill (STM with 8 registers)                      :   3437.5 MB/s (0.5%)
+ ARM fill (STM with 4 registers)                      :   3436.3 MB/s (0.5%)
+ ARM copy prefetched (incr pld)                       :   2418.7 MB/s (1.0%)
+ ARM copy prefetched (wrap pld)                       :   2422.7 MB/s (0.6%)
+ ARM 2-pass copy prefetched (incr pld)                :   2223.5 MB/s (0.6%)
+ ARM 2-pass copy prefetched (wrap pld)                :   2191.8 MB/s (5.8%)
+
+==========================================================================
+== Framebuffer read tests.                                              ==
+==                                                                      ==
+== Many ARM devices use a part of the system memory as the framebuffer, ==
+== typically mapped as uncached but with write-combining enabled.       ==
+== Writes to such framebuffers are quite fast, but reads are much       ==
+== slower and very sensitive to the alignment and the selection of      ==
+== CPU instructions which are used for accessing memory.                ==
+==                                                                      ==
+== Many x86 systems allocate the framebuffer in the GPU memory,         ==
+== accessible for the CPU via a relatively slow PCI-E bus. Moreover,    ==
+== PCI-E is asymmetric and handles reads a lot worse than writes.       ==
+==                                                                      ==
+== If uncached framebuffer reads are reasonably fast (at least 100 MB/s ==
+== or preferably >300 MB/s), then using the shadow framebuffer layer    ==
+== is not necessary in Xorg DDX drivers, resulting in a nice overall    ==
+== performance improvement. For example, the xf86-video-fbturbo DDX     ==
+== uses this trick.                                                     ==
+==========================================================================
+
+ NEON read (from framebuffer)                         :   1320.7 MB/s (0.3%)
+ NEON copy (from framebuffer)                         :    811.1 MB/s (0.6%)
+ NEON 2-pass copy (from framebuffer)                  :    714.9 MB/s (0.2%)
+ NEON unrolled copy (from framebuffer)                :    720.9 MB/s
+ NEON 2-pass unrolled copy (from framebuffer)         :    616.9 MB/s (0.3%)
+ VFP copy (from framebuffer)                          :    791.6 MB/s (0.3%)
+ VFP 2-pass copy (from framebuffer)                   :    680.4 MB/s (0.2%)
+ ARM copy (from framebuffer)                          :    808.6 MB/s (0.5%)
+ ARM 2-pass copy (from framebuffer)                   :    708.1 MB/s (0.5%)
+
+==========================================================================
+== Memory latency test                                                  ==
+==                                                                      ==
+== Average time is measured for random memory accesses in the buffers   ==
+== of different sizes. The larger is the buffer, the more significant   ==
+== are relative contributions of TLB, L1/L2 cache misses and SDRAM      ==
+== accesses. For extremely large buffer sizes we are expecting to see   ==
+== page table walk with several requests to SDRAM for almost every      ==
+== memory access (though 64MiB is not nearly large enough to experience ==
+== this effect to its fullest).                                         ==
+==                                                                      ==
+== Note 1: All the numbers are representing extra time, which needs to  ==
+==         be added to L1 cache latency. The cycle timings for L1 cache ==
+==         latency can be usually found in the processor documentation. ==
+== Note 2: Dual random read means that we are simultaneously performing ==
+==         two independent memory accesses at a time. In the case if    ==
+==         the memory subsystem can't handle multiple outstanding       ==
+==         requests, dual random read has the same timings as two       ==
+==         single reads performed one after another.                    ==
+==========================================================================
+
+block size : single random read / dual random read
+      1024 :    0.0 ns          /     0.0 ns 
+      2048 :    0.0 ns          /     0.0 ns 
+      4096 :    0.0 ns          /     0.0 ns 
+      8192 :    0.0 ns          /     0.0 ns 
+     16384 :    0.0 ns          /     0.0 ns 
+     32768 :    1.0 ns          /     1.8 ns 
+     65536 :    4.0 ns          /     6.2 ns 
+    131072 :    6.0 ns          /     8.3 ns 
+    262144 :    8.6 ns          /    11.0 ns 
+    524288 :   10.2 ns          /    12.9 ns 
+   1048576 :   28.0 ns          /    44.0 ns 
+   2097152 :   78.2 ns          /   114.2 ns 
+   4194304 :  104.7 ns          /   136.7 ns 
+   8388608 :  123.5 ns          /   153.2 ns 
+  16777216 :  133.0 ns          /   160.4 ns 
+  33554432 :  138.0 ns          /   164.6 ns 
+  67108864 :  148.9 ns          /   180.4 ns 
+
+##########################################################################
+
+Executing benchmark twice on cluster 0 (Cortex-A72)
+
+OpenSSL 1.1.1k, built on 25 Mar 2021
+type             16 bytes     64 bytes    256 bytes   1024 bytes   8192 bytes  16384 bytes
+aes-128-cbc      88949.96k   109250.60k   118378.50k   120717.99k   121503.74k   121476.44k
+aes-128-cbc      88536.89k   109158.12k   117984.00k   120566.10k   121607.51k   121607.51k
+aes-192-cbc      79861.82k    95583.45k   102864.47k   104683.18k   105160.70k   105168.90k
+aes-192-cbc      79659.33k    95768.17k   102062.68k   104475.65k   104936.79k   104562.69k
+aes-256-cbc      72490.95k    85385.71k    90657.79k    92127.23k    92545.02k    92695.21k
+aes-256-cbc      72488.43k    85656.19k    90561.28k    92050.77k    92509.53k    92367.53k
+
+##########################################################################
+
+Executing benchmark single-threaded on cpu0 (Cortex-A72)
+
+7-Zip (a) [32] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,32 bits,4 CPUs LE)
+
+LE
+CPU Freq: 64000000 64000000 64000000 - 128000000 - - - -
+
+RAM size:    3787 MB,  # CPU hardware threads:   4
+RAM usage:    435 MB,  # Benchmark threads:      1
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       1701   100   1658   1655  |      33010   100   2824   2818
+23:       1578   100   1612   1608  |      32297   100   2797   2796
+24:       1500   100   1614   1613  |      31520   100   2768   2767
+25:       1393   100   1591   1591  |      30588   100   2723   2723
+----------------------------------  | ------------------------------
+Avr:             100   1619   1617  |              100   2778   2776
+Tot:             100   2198   2196
+
+##########################################################################
+
+Executing benchmark 3 times multi-threaded
+
+7-Zip (a) [32] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,32 bits,4 CPUs LE)
+
+LE
+CPU Freq: 64000000 32000000 32000000 64000000 128000000 256000000 512000000 1024000000 -
+
+RAM size:    3787 MB,  # CPU hardware threads:   4
+RAM usage:    882 MB,  # Benchmark threads:      4
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       4393   352   1215   4274  |     124437   392   2705  10616
+23:       4321   372   1183   4403  |     120738   391   2671  10447
+24:       3985   361   1189   4286  |     118295   393   2640  10385
+25:       3870   371   1193   4420  |     113445   390   2591  10096
+----------------------------------  | ------------------------------
+Avr:             364   1195   4346  |              392   2652  10386
+Tot:             378   1923   7366
+
+7-Zip (a) [32] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,32 bits,4 CPUs LE)
+
+LE
+CPU Freq: - 64000000 64000000 64000000 - - - - -
+
+RAM size:    3787 MB,  # CPU hardware threads:   4
+RAM usage:    882 MB,  # Benchmark threads:      4
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       4496   359   1218   4374  |     123932   390   2709  10573
+23:       4123   346   1215   4201  |     121756   393   2682  10535
+24:       4055   362   1203   4361  |     118426   393   2648  10396
+25:       3885   370   1199   4437  |     114737   393   2599  10211
+----------------------------------  | ------------------------------
+Avr:             359   1209   4343  |              392   2659  10429
+Tot:             376   1934   7386
+
+7-Zip (a) [32] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,32 bits,4 CPUs LE)
+
+LE
+CPU Freq: 64000000 - - - - - - 1024000000 2048000000
+
+RAM size:    3787 MB,  # CPU hardware threads:   4
+RAM usage:    882 MB,  # Benchmark threads:      4
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       4334   347   1214   4217  |     124776   393   2711  10645
+23:       4353   374   1188   4435  |     122359   395   2682  10587
+24:       4101   368   1199   4410  |     119222   396   2646  10466
+25:       3886   367   1210   4437  |     114728   394   2594  10211
+----------------------------------  | ------------------------------
+Avr:             364   1203   4375  |              394   2658  10477
+Tot:             379   1930   7426
+
+Compression: 4346,4343,4375
+Decompression: 10386,10429,10477
+Total: 7366,7386,7426
+
+##########################################################################
+
+Testing clockspeeds again. System health now:
+
+Time        fake/real   load %cpu %sys %usr %nice %io %irq   Temp    VCore
+20:05:21: 2147/2148MHz  3.51  92%   3%  89%   0%   0%   0%  70.1°C  1.0200V
+
+Checking cpufreq OPP (Cortex-A72):
+
+Cpufreq OPP: 2200  ThreadX: 2148  Measured: 2135 @ 1.0200V
+Cpufreq OPP: 2100  ThreadX: 2101  Measured: 2095 @ 1.0200V
+Cpufreq OPP: 2000  ThreadX: 2000  Measured: 1835 @ 1.0200V
+Cpufreq OPP: 1900  ThreadX: 1900  Measured: 1640 @ 1.0200V
+Cpufreq OPP: 1800  ThreadX: 1800  Measured: 1405 @ 1.0200V
+Cpufreq OPP: 1700  ThreadX: 1700  Measured: 1685 @ 1.0200V
+Cpufreq OPP: 1600  ThreadX: 1600  Measured: 1185 @ 1.0200V
+Cpufreq OPP: 1500  ThreadX: 1500  Measured: 1320 @ 1.0200V
+Cpufreq OPP: 1400  ThreadX: 1400  Measured: 1185 @ 1.0200V
+Cpufreq OPP: 1300  ThreadX: 1300  Measured: 1290 @ 1.0200V
+Cpufreq OPP: 1200  ThreadX: 1200  Measured: 1545 @ 1.0200V
+Cpufreq OPP: 1100  ThreadX: 1100  Measured:  775 @ 1.0200V
+Cpufreq OPP: 1000  ThreadX: 1000  Measured: 1005 @ 1.0200V
+Cpufreq OPP:  900  ThreadX:  900  Measured:  900 @ 1.0200V
+Cpufreq OPP:  800  ThreadX:  800  Measured:  785 @ 1.0200V
+Cpufreq OPP:  700  ThreadX:  700  Measured:  575 @ 1.0200V
+Cpufreq OPP:  600  ThreadX:  600  Measured:  600 @ 1.0200V
+
+##########################################################################
+
+System health while running tinymembench:
+
+Time        fake/real   load %cpu %sys %usr %nice %io %irq   Temp    VCore
+19:48:39: 2147/2148MHz  0.34  77%   9%  28%  39%   0%   0%  60.9°C  1.0200V
+19:50:09: 2147/2148MHz  0.87  27%   0%  26%   0%   0%   0%  62.8°C  1.0200V
+19:51:39: 2147/2148MHz  0.97  26%   0%  26%   0%   0%   0%  62.3°C  1.0200V
+19:53:10: 2147/2148MHz  1.14  26%   0%  26%   0%   0%   0%  64.3°C  1.0200V
+19:54:40: 2147/2148MHz  1.03  26%   0%  25%   0%   0%   0%  62.3°C  1.0200V
+19:56:10: 2147/2148MHz  1.15  26%   0%  25%   0%   0%   0%  60.4°C  1.0200V
+19:57:40: 2147/2148MHz  1.03  25%   0%  25%   0%   0%   0%  59.9°C  1.0200V
+19:59:10: 2147/2148MHz  1.00  25%   0%  25%   0%   0%   0%  58.9°C  1.0200V
+
+System health while running OpenSSL benchmark:
+
+Time        fake/real   load %cpu %sys %usr %nice %io %irq   Temp    VCore
+19:59:30: 2147/2148MHz  1.15  70%   8%  27%  33%   0%   0%  59.4°C  1.0200V
+19:59:50: 2147/2148MHz  1.11  26%   0%  25%   0%   0%   0%  61.8°C  1.0200V
+20:00:10: 2147/2148MHz  1.08  25%   0%  25%   0%   0%   0%  60.9°C  1.0200V
+20:00:30: 2147/2148MHz  1.05  25%   0%  25%   0%   0%   0%  60.9°C  1.0200V
+20:00:50: 2147/2148MHz  1.04  25%   0%  25%   0%   0%   0%  60.9°C  1.0200V
+20:01:10: 2147/2148MHz  1.03  25%   0%  25%   0%   0%   0%  61.3°C  1.0200V
+
+System health while running 7-zip single core benchmark:
+
+Time        fake/real   load %cpu %sys %usr %nice %io %irq   Temp    VCore
+20:01:18: 2147/2148MHz  1.02  69%   7%  27%  32%   0%   0%  62.3°C  1.0200V
+20:02:03: 2147/2148MHz  1.01  25%   0%  24%   0%   0%   0%  60.9°C  1.0200V
+
+System health while running 7-zip multi core benchmark:
+
+Time        fake/real   load %cpu %sys %usr %nice %io %irq   Temp    VCore
+20:02:29: 2147/2148MHz  1.00  68%   7%  27%  32%   0%   0%  60.9°C  1.0200V
+20:02:53: 2147/2148MHz  1.57  91%   1%  89%   0%   0%   0%  70.1°C  1.0200V
+20:03:13: 2147/2148MHz  2.57  90%   3%  86%   0%   0%   0%  67.7°C  1.0200V
+20:03:33: 2147/2148MHz  2.98  95%   3%  92%   0%   0%   0%  69.6°C  1.0200V
+20:03:54: 2147/2148MHz  3.12  94%   1%  92%   0%   0%   0%  72.5°C  1.0200V
+20:04:17: 2147/2148MHz  3.29  90%   3%  86%   0%   0%   0%  68.7°C  1.0200V
+20:04:38: 2147/2148MHz  3.31  90%   2%  87%   0%   0%   0%  70.1°C  1.0200V
+20:04:58: 2147/2148MHz  3.42  93%   2%  91%   0%   0%   0%  71.1°C  1.0200V
+20:05:21: 2147/2148MHz  3.51  92%   3%  89%   0%   0%   0%  70.1°C  1.0200V
+
+##########################################################################
+
+Querying ThreadX on RPi for thermal or undervoltage issues:
+
+11100000000000000000
+|||             |||_ under-voltage
+|||             ||_ currently throttled
+|||             |_ arm frequency capped
+|||_ under-voltage has occurred since last reboot
+||_ throttling has occurred since last reboot
+|_ arm frequency capped has occurred since last reboot
+
+##########################################################################
+
+Linux 5.10.63-v7l+ (raspberrypi) 	01/07/22 	_armv7l_	(4 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+          30.14   31.12    7.87    0.21    0.00   30.66
+
+Device             tps    kB_read/s    kB_wrtn/s    kB_dscd/s    kB_read    kB_wrtn    kB_dscd
+mmcblk0           7.08       168.32        51.96         0.00     839432     259126          0
+
+               total        used        free      shared  buff/cache   available
+Mem:           3.7Gi       925Mi       2.3Gi       203Mi       514Mi       2.5Gi
+Swap:             0B          0B          0B
+
+
+
+CPU topology (clusters, cpufreq members, clockspeeds)
+                 cpufreq   min    max
+ CPU    cluster  policy   speed  speed   core type
+  0        0        0      600    2200   Cortex-A72
+  1        0        0      600    2200   Cortex-A72
+  2        0        0      600    2200   Cortex-A72
+  3        0        0      600    2200   Cortex-A72
+
+Architecture:        armv7l
+Byte Order:          Little Endian
+CPU(s):              4
+On-line CPU(s) list: 0-3
+Thread(s) per core:  1
+Core(s) per socket:  4
+Socket(s):           1
+Vendor ID:           ARM
+Model:               3
+Model name:          Cortex-A72
+Stepping:            r0p3
+CPU max MHz:         2200.0000
+CPU min MHz:         600.0000
+BogoMIPS:            396.00
+Flags:               half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm crc32
+
+
+| Raspberry Pi 4 Model B Rev 1.4 | 2200 MHz | 5.10 | Bullseye armhf | 7390 | 88740 | 92530 | 2420 | 3440 | - | []() |

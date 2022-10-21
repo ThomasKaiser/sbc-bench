@@ -1,0 +1,111 @@
+   s805x2_opp_table0:
+       100 MHz    769.0 mV
+       250 MHz    769.0 mV
+       500 MHz    769.0 mV
+       666 MHz    769.0 mV
+      1000 MHz    769.0 mV
+      1200 MHz    769.0 mV
+      1404 MHz    799.0 mV
+      1500 MHz    829.0 mV
+      1608 MHz    869.0 mV
+      1704 MHz    909.0 mV
+      1800 MHz   1009.0 mV
+
+   s805x2_opp_table1:
+       100 MHz    769.0 mV
+       250 MHz    769.0 mV
+       500 MHz    769.0 mV
+       666 MHz    769.0 mV
+      1000 MHz    769.0 mV
+      1200 MHz    769.0 mV
+      1404 MHz    799.0 mV
+      1500 MHz    829.0 mV
+      1608 MHz    869.0 mV
+      1704 MHz    909.0 mV
+      1800 MHz   1009.0 mV
+
+   s805x2_opp_table2:
+       100 MHz    759.0 mV
+       250 MHz    759.0 mV
+       500 MHz    759.0 mV
+       666 MHz    759.0 mV
+      1000 MHz    759.0 mV
+      1200 MHz    759.0 mV
+      1404 MHz    759.0 mV
+      1500 MHz    769.0 mV
+      1608 MHz    799.0 mV
+      1704 MHz    829.0 mV
+      1800 MHz    999.0 mV
+
+   s805x2_opp_table3:
+       100 MHz    759.0 mV
+       250 MHz    759.0 mV
+       500 MHz    759.0 mV
+       666 MHz    759.0 mV
+      1000 MHz    759.0 mV
+      1200 MHz    759.0 mV
+      1404 MHz    759.0 mV
+      1500 MHz    759.0 mV
+      1608 MHz    769.0 mV
+      1704 MHz    809.0 mV
+      1800 MHz    939.0 mV
+
+   s905y4_opp_table0:
+       100 MHz    769.0 mV
+       250 MHz    769.0 mV
+       500 MHz    769.0 mV
+       666 MHz    769.0 mV
+      1000 MHz    769.0 mV
+      1200 MHz    769.0 mV
+      1404 MHz    799.0 mV
+      1500 MHz    829.0 mV
+      1608 MHz    869.0 mV
+      1704 MHz    909.0 mV
+      1800 MHz    959.0 mV
+      1908 MHz    979.0 mV
+      2004 MHz   1009.0 mV
+
+   s905y4_opp_table1:
+       100 MHz    769.0 mV
+       250 MHz    769.0 mV
+       500 MHz    769.0 mV
+       666 MHz    769.0 mV
+      1000 MHz    769.0 mV
+      1200 MHz    769.0 mV
+      1404 MHz    799.0 mV
+      1500 MHz    829.0 mV
+      1608 MHz    869.0 mV
+      1704 MHz    909.0 mV
+      1800 MHz    959.0 mV
+      1908 MHz    979.0 mV
+      2004 MHz   1009.0 mV
+
+   s905y4_opp_table2:
+       100 MHz    759.0 mV
+       250 MHz    759.0 mV
+       500 MHz    759.0 mV
+       666 MHz    759.0 mV
+      1000 MHz    759.0 mV
+      1200 MHz    759.0 mV
+      1404 MHz    759.0 mV
+      1500 MHz    769.0 mV
+      1608 MHz    799.0 mV
+      1704 MHz    829.0 mV
+      1800 MHz    929.0 mV
+      1908 MHz    959.0 mV
+      2004 MHz    999.0 mV
+
+   s905y4_opp_table3:
+       100 MHz    759.0 mV
+       250 MHz    759.0 mV
+       500 MHz    759.0 mV
+       666 MHz    759.0 mV
+      1000 MHz    759.0 mV
+      1200 MHz    759.0 mV
+      1404 MHz    759.0 mV
+      1500 MHz    759.0 mV
+      1608 MHz    769.0 mV
+      1704 MHz    809.0 mV
+      1800 MHz    889.0 mV
+      1908 MHz    909.0 mV
+      2004 MHz    939.0 mV

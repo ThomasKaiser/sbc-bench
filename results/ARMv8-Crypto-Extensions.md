@@ -38,7 +38,7 @@ It all boils down to type of ARM core and CPU clockspeed since the ratio between
   * Cortex-A53/A55: ~467, A53/A55 running at 1000 MHz will produce an ~467000k aes-256-cbc score (or ~935000k at 2000 MHz)
   * Cortex-A72/A73/A76: ~570, A72/A73/A76 running at 1000 MHz will produce an ~570000k aes-256-cbc score (or ~1140000k at 2000 MHz)
 
-Amazon's Graviton/Graviton2 ARM CPUs score identical to A72/A73/A76 and the custom FTC663 core inside the [Feiteng D2000 CPU](https://en.wikipedia.org/wiki/FeiTeng_(processor)#Future_processors) performs identical to an A57. NVidia's Carmel core performs marginally better than Cortex-A57 (~374, the Jetson Xavier NX numbers below). Qualcomm's Kryo 4XX Silver cores are based on A55 and perform exactly the same here.
+Amazon's Graviton/Graviton2 ARM CPUs score identical to A72/A73/A76 and the custom FTC663 core inside the [Feiteng D2000 CPU](https://en.wikipedia.org/wiki/FeiTeng_(processor)#Future_processors) performs identical to an A57. NVidia's Carmel core performs marginally better than Cortex-A57 (~374, the Jetson Xavier NX numbers below). Qualcomm's Kryo Silver cores are based on A55 and perform exactly the same here.
 
 ### Implications
 
@@ -70,6 +70,8 @@ Crawling through [sbc-bench results collection](../Results.md) comparing +30 dif
 | [Jetson Xavier NX](http://ix.io/3YWp) | 1890 | 706280 | 374 |
 | Apple Icestorm | | | |
 | [M1 Pro](http://ix.io/443N) | 2060 | 784430 | 381 |
+| Qualcomm Kryo 3XX Gold | | | |
+| [Snapdragon 845](http://ix.io/4dJV) | 2705 | 1059800 | 392 |
 | Cortex-A53 | | | |
 | [Armada 3700LP](http://ix.io/1kt2) | 790 | 368330 | 466 |
 | [S912](http://ix.io/1iJ7) | 1000 | 466780 | 466 |
@@ -103,6 +105,7 @@ Crawling through [sbc-bench results collection](../Results.md) comparing +30 dif
 | [RK3568](http://ix.io/3UXa) | 1950 | 911730 | 467 |
 | [S905X3](http://ix.io/2kaS) | 2010 | 941590 | 468 |
 | [S905X3](http://ix.io/3TQ2) | 2100 | 981940 | 467 |
+| [Snapdragon 845](http://ix.io/4dJV) | 1760 | 824640 | 469 |
 | Cortex-A72 | | | |
 | [RK3399](http://ix.io/1iWU) | 1800 | 1023600 | 568 |
 | [LX2160A](http://ix.io/1ET3) | 1900 | 1079480 | 568 |

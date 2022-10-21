@@ -1,0 +1,426 @@
+sbc-bench v0.9.9 Katyusha-Loongson (Wed, 19 Oct 2022 21:11:32 +0800)
+
+Distributor ID:	Loongnix
+Description:	Loongnix GNU/Linux 20 (DaoXiangHu)
+Release:	20
+Codename:	DaoXiangHu
+
+Device Info:
+	Manufacturer: Loongson
+	Product Name: Loongson-3A5000-HV-7A2000-1w-V0.1-EVB
+
+BIOS/UEFI:
+	Vendor: Loongson
+	Version: Loongson-UDK2018-V2.0.05269-beta8
+	Release Date: Unknown
+	BIOS Revision: 2.0
+
+/usr/bin/gcc (Loongnix 8.3.0-6.lnd.vec.32) 8.3.0
+
+Uptime: 21:11:32 up 5 days, 22:00,  1 user,  load average: 0.63, 0.17, 0.06,  0°C
+
+Linux 4.19.0-17-loongson-3 (Katyusha-Loongson) 	2022年10月19日 	_loongarch64_	(4 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+           0.23    0.00    0.11    0.00    0.00   99.66
+
+Device             tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn
+nvme0n1           0.83         1.27         6.96     648251    3559670
+sda               0.26         1.40         7.57     713604    3869016
+
+              total        used        free      shared  buff/cache   available
+Mem:           31Gi       616Mi        30Gi       284Mi       498Mi        29Gi
+Swap:            0B          0B          0B
+
+##########################################################################
+
+Checking cpufreq OPP:
+
+No cpufreq support available. Measured on cpu1: 2498 MHz (2498.984/2498.984/2498.924)
+
+##########################################################################
+
+Hardware sensors:
+
+cpu-hwmon-virtual-0
+CPU 0 Temperature:  +31.0 C  
+
+##########################################################################
+
+Executing benchmark on cpu0:
+
+tinymembench v0.4.9 (simple benchmark for memory throughput and latency)
+
+==========================================================================
+== Memory bandwidth tests                                               ==
+==                                                                      ==
+== Note 1: 1MB = 1000000 bytes                                          ==
+== Note 2: Results for 'copy' tests show how many bytes can be          ==
+==         copied per second (adding together read and writen           ==
+==         bytes would have provided twice higher numbers)              ==
+== Note 3: 2-pass copy means that we are using a small temporary buffer ==
+==         to first fetch data into it, and only then write it to the   ==
+==         destination (source -> L1 cache, L1 cache -> destination)    ==
+== Note 4: If sample standard deviation exceeds 0.1%, it is shown in    ==
+==         brackets                                                     ==
+==========================================================================
+
+ C copy backwards                                     :   6595.6 MB/s (0.7%)
+ C copy backwards (32 byte blocks)                    :   6596.1 MB/s (0.7%)
+ C copy backwards (64 byte blocks)                    :   6594.9 MB/s (0.6%)
+ C copy                                               :   6778.5 MB/s (0.7%)
+ C copy prefetched (32 bytes step)                    :   6777.4 MB/s (0.6%)
+ C copy prefetched (64 bytes step)                    :   6780.5 MB/s (0.7%)
+ C 2-pass copy                                        :   5492.2 MB/s (0.6%)
+ C 2-pass copy prefetched (32 bytes step)             :   5480.9 MB/s (0.5%)
+ C 2-pass copy prefetched (64 bytes step)             :   5480.8 MB/s (0.6%)
+ C fill                                               :  19161.0 MB/s (0.4%)
+ C fill (shuffle within 16 byte blocks)               :  19176.3 MB/s (0.5%)
+ C fill (shuffle within 32 byte blocks)               :  19170.4 MB/s (0.3%)
+ C fill (shuffle within 64 byte blocks)               :  19168.5 MB/s (0.4%)
+ ---
+ standard memcpy                                      :   6927.7 MB/s (0.6%)
+ standard memset                                      :  19165.1 MB/s (0.4%)
+
+==========================================================================
+== Memory latency test                                                  ==
+==                                                                      ==
+== Average time is measured for random memory accesses in the buffers   ==
+== of different sizes. The larger is the buffer, the more significant   ==
+== are relative contributions of TLB, L1/L2 cache misses and SDRAM      ==
+== accesses. For extremely large buffer sizes we are expecting to see   ==
+== page table walk with several requests to SDRAM for almost every      ==
+== memory access (though 64MiB is not nearly large enough to experience ==
+== this effect to its fullest).                                         ==
+==                                                                      ==
+== Note 1: All the numbers are representing extra time, which needs to  ==
+==         be added to L1 cache latency. The cycle timings for L1 cache ==
+==         latency can be usually found in the processor documentation. ==
+== Note 2: Dual random read means that we are simultaneously performing ==
+==         two independent memory accesses at a time. In the case if    ==
+==         the memory subsystem can't handle multiple outstanding       ==
+==         requests, dual random read has the same timings as two       ==
+==         single reads performed one after another.                    ==
+==========================================================================
+
+block size : single random read / dual random read, [MADV_NOHUGEPAGE]
+      1024 :    0.0 ns          /     0.0 ns 
+      2048 :    0.0 ns          /     0.0 ns 
+      4096 :    0.0 ns          /     0.0 ns 
+      8192 :    0.0 ns          /     0.0 ns 
+     16384 :    0.0 ns          /     0.0 ns 
+     32768 :    0.0 ns          /     0.0 ns 
+     65536 :    0.0 ns          /     0.0 ns 
+    131072 :    2.0 ns          /     2.9 ns 
+    262144 :    3.1 ns          /     3.7 ns 
+    524288 :    7.5 ns          /    10.2 ns 
+   1048576 :   11.0 ns          /    13.3 ns 
+   2097152 :   14.1 ns          /    15.8 ns 
+   4194304 :   15.7 ns          /    16.7 ns 
+   8388608 :   17.5 ns          /    17.1 ns 
+  16777216 :   30.1 ns          /    39.8 ns 
+  33554432 :   73.2 ns          /   104.5 ns 
+  67108864 :  100.0 ns          /   129.4 ns 
+
+block size : single random read / dual random read, [MADV_HUGEPAGE]
+      1024 :    0.0 ns          /     0.0 ns 
+      2048 :    0.0 ns          /     0.0 ns 
+      4096 :    0.0 ns          /     0.0 ns 
+      8192 :    0.0 ns          /     0.0 ns 
+     16384 :    0.0 ns          /     0.0 ns 
+     32768 :    0.0 ns          /     0.0 ns 
+     65536 :    0.0 ns          /     0.0 ns 
+    131072 :    2.0 ns          /     2.9 ns 
+    262144 :    3.1 ns          /     3.7 ns 
+    524288 :    7.5 ns          /    10.2 ns 
+   1048576 :   11.0 ns          /    13.3 ns 
+   2097152 :   13.0 ns          /    14.1 ns 
+   4194304 :   13.9 ns          /    14.3 ns 
+   8388608 :   15.3 ns          /    14.4 ns 
+  16777216 :   15.0 ns          /    15.9 ns 
+  33554432 :   72.2 ns          /   102.7 ns 
+  67108864 :   99.3 ns          /   127.9 ns 
+
+##########################################################################
+
+Executing ramlat on cpu0, results in ns:
+
+       size:  1x32  2x32  1x64  2x64 1xPTR 2xPTR 4xPTR 8xPTR
+         4k: 2.522 2.426 2.401 2.401 1.601 1.601 1.663 1.601 
+         8k: 2.426 2.426 2.401 2.401 1.664 1.601 1.601 1.601 
+        16k: 2.426 2.426 2.496 2.401 1.601 1.601 1.601 1.601 
+        32k: 2.521 2.426 2.401 2.401 1.605 1.601 1.664 1.601 
+        64k: 2.427 2.427 2.402 2.402 1.665 1.601 1.601 1.601 
+       128k: 6.428 6.428 6.654 6.403 5.603 5.603 7.203 10.43 
+       256k: 6.661 6.431 6.403 6.404 5.602 5.818 7.203 10.41 
+       512k: 17.24 17.24 17.23 18.23 17.18 17.75 18.41 20.69 
+      1024k: 17.53 18.68 17.53 18.05 17.50 18.12 18.62 21.58 
+      2048k: 18.99 19.33 18.97 19.30 19.01 18.70 19.99 23.30 
+      4096k: 19.21 19.60 19.97 19.60 18.44 18.80 20.23 23.96 
+      8192k: 23.57 23.02 22.75 23.18 21.91 23.06 22.99 25.68 
+     16384k: 76.72 84.29 79.05 81.30 75.47 81.48 70.89 76.97 
+
+##########################################################################
+
+Executing benchmark twice on cluster 0
+
+OpenSSL 1.1.1d, built on 10 Sep 2019
+type             16 bytes     64 bytes    256 bytes   1024 bytes   8192 bytes  16384 bytes
+aes-128-cbc     117229.55k   145969.37k   155227.82k   158356.14k   159214.25k   159279.79k
+aes-128-cbc     117030.41k   146034.41k   155250.52k   158362.62k   159186.94k   159274.33k
+aes-192-cbc     103578.11k   124891.16k   130763.43k   132952.41k   133573.29k   133649.75k
+aes-192-cbc     103408.58k   124875.95k   130752.68k   132954.11k   133576.02k   133627.90k
+aes-256-cbc      92527.70k   109609.98k   114722.73k   116418.90k   116867.07k   116916.22k
+aes-256-cbc      92537.95k   109614.70k   114625.37k   116180.65k   116853.42k   116894.38k
+
+##########################################################################
+
+Executing benchmark single-threaded on cpu0
+
+7-Zip (a) 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,4 CPUs LE)
+
+LE
+CPU Freq: 64000000 - - - - - - - -
+
+RAM size:   32467 MB,  # CPU hardware threads:   4
+RAM usage:    435 MB,  # Benchmark threads:      1
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       3418    99   3347   3325  |      32513    99   2794   2776
+23:       3081    99   3159   3140  |      32325    99   2816   2798
+24:       2881    99   3120   3098  |      32048    99   2830   2814
+25:       2768    99   3183   3161  |      31525    99   2827   2806
+----------------------------------  | ------------------------------
+Avr:              99   3202   3181  |               99   2817   2798
+Tot:              99   3010   2990
+
+##########################################################################
+
+Executing benchmark 3 times multi-threaded on CPUs 0-3
+
+7-Zip (a) 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,4 CPUs LE)
+
+LE
+CPU Freq: - - - - - 256000000 - - -
+
+RAM size:   32467 MB,  # CPU hardware threads:   4
+RAM usage:    882 MB,  # Benchmark threads:      4
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:      11019   338   3174  10720  |     129075   397   2777  11012
+23:      10492   338   3159  10691  |     127803   397   2784  11058
+24:      10807   362   3212  11620  |     125681   397   2779  11033
+25:      10668   366   3332  12181  |     124089   398   2778  11044
+----------------------------------  | ------------------------------
+Avr:             351   3219  11303  |              397   2780  11037
+Tot:             374   3000  11170
+
+7-Zip (a) 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,4 CPUs LE)
+
+LE
+CPU Freq: - - - - - - 512000000 - -
+
+RAM size:   32467 MB,  # CPU hardware threads:   4
+RAM usage:    882 MB,  # Benchmark threads:      4
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:      11070   340   3169  10770  |     128875   396   2776  10995
+23:      10879   351   3160  11085  |     127761   397   2785  11055
+24:      10545   352   3219  11339  |     125963   398   2780  11058
+25:      10185   349   3334  11629  |     123449   396   2776  10987
+----------------------------------  | ------------------------------
+Avr:             348   3220  11206  |              397   2779  11024
+Tot:             372   3000  11115
+
+7-Zip (a) 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,4 CPUs LE)
+
+LE
+CPU Freq: 64000000 - - - - 256000000 - - -
+
+RAM size:   32467 MB,  # CPU hardware threads:   4
+RAM usage:    882 MB,  # Benchmark threads:      4
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:      10935   335   3173  10638  |     129245   397   2778  11027
+23:      10155   327   3160  10347  |     127335   396   2782  11018
+24:      10723   359   3210  11530  |     125708   397   2780  11035
+25:      10397   357   3327  11872  |     124146   398   2777  11049
+----------------------------------  | ------------------------------
+Avr:             345   3218  11097  |              397   2779  11032
+Tot:             371   2998  11064
+
+Compression: 11303,11206,11097
+Decompression: 11037,11024,11032
+Total: 11170,11115,11064
+
+##########################################################################
+
+Testing maximum cpufreq again, still under full load. System health now:
+
+Time      CPU n/a    load %cpu %sys %usr %nice %io %irq   Temp
+21:21:35:   ---      3.36  96%   0%  95%   0%   0%   0%     0°C
+
+Checking cpufreq OPP:
+
+No cpufreq support available. Measured on cpu1: 2498 MHz (2498.984/2498.984/2498.924)
+
+##########################################################################
+
+Hardware sensors:
+
+cpu-hwmon-virtual-0
+CPU 0 Temperature:  +34.0 C  
+
+##########################################################################
+
+System health while running tinymembench:
+
+Time      CPU n/a    load %cpu %sys %usr %nice %io %irq   Temp
+21:11:36:   ---      0.66   0%   0%   0%   0%   0%   0%    --
+21:12:16:   ---      0.96  25%   0%  24%   0%   0%   0%    --
+21:12:56:   ---      1.03  25%   0%  24%   0%   0%   0%    --
+21:13:36:   ---      1.01  25%   0%  24%   0%   0%   0%    --
+21:14:16:   ---      1.01  25%   0%  24%   0%   0%   0%    --
+21:14:56:   ---      1.00  25%   0%  24%   0%   0%   0%    --
+21:15:36:   ---      1.00  25%   0%  24%   0%   0%   0%    --
+21:16:16:   ---      1.00  25%   0%  24%   0%   0%   0%    --
+
+System health while running ramlat:
+
+Time      CPU n/a    load %cpu %sys %usr %nice %io %irq   Temp
+21:16:44:   ---      1.00   0%   0%   0%   0%   0%   0%    --
+21:16:47:   ---      1.00  25%   0%  25%   0%   0%   0%    --
+21:16:50:   ---      1.00  25%   0%  24%   0%   0%   0%    --
+21:16:53:   ---      1.00  25%   0%  24%   0%   0%   0%    --
+21:16:56:   ---      1.00  25%   0%  24%   0%   0%   0%    --
+21:16:59:   ---      1.00  25%   0%  25%   0%   0%   0%    --
+21:17:02:   ---      1.00  25%   0%  24%   0%   0%   0%    --
+21:17:05:   ---      1.00  25%   0%  24%   0%   0%   0%    --
+
+System health while running OpenSSL benchmark:
+
+Time      CPU n/a    load %cpu %sys %usr %nice %io %irq   Temp
+21:17:06:   ---      1.00   0%   0%   0%   0%   0%   0%    --
+21:17:22:   ---      1.00  25%   0%  25%   0%   0%   0%    --
+21:17:38:   ---      1.00  25%   0%  25%   0%   0%   0%    --
+21:17:54:   ---      1.00  25%   0%  25%   0%   0%   0%    --
+21:18:10:   ---      1.00  25%   0%  25%   0%   0%   0%    --
+21:18:26:   ---      1.00  25%   0%  25%   0%   0%   0%    --
+21:18:42:   ---      1.00  25%   0%  25%   0%   0%   0%    --
+
+System health while running 7-zip single core benchmark:
+
+Time      CPU n/a    load %cpu %sys %usr %nice %io %irq   Temp
+21:18:54:   ---      1.00   0%   0%   0%   0%   0%   0%    --
+21:18:59:   ---      1.08  25%   0%  24%   0%   0%   0%    --
+21:19:04:   ---      1.15  25%   0%  24%   0%   0%   0%    --
+21:19:09:   ---      1.14  25%   0%  24%   0%   0%   0%    --
+21:19:14:   ---      1.13  25%   0%  24%   0%   0%   0%    --
+21:19:19:   ---      1.12  25%   0%  24%   0%   0%   0%    --
+21:19:24:   ---      1.11  25%   0%  25%   0%   0%   0%    --
+21:19:29:   ---      1.10  25%   0%  24%   0%   0%   0%    --
+21:19:34:   ---      1.09  25%   0%  24%   0%   0%   0%    --
+21:19:39:   ---      1.08  25%   0%  24%   0%   0%   0%    --
+
+System health while running 7-zip multi core benchmark:
+
+Time      CPU n/a    load %cpu %sys %usr %nice %io %irq   Temp
+21:19:42:   ---      1.08   0%   0%   0%   0%   0%   0%    --
+21:19:52:   ---      1.53  92%   0%  92%   0%   0%   0%    --
+21:20:02:   ---      1.83  94%   0%  94%   0%   0%   0%    --
+21:20:13:   ---      2.16  91%   0%  91%   0%   0%   0%    --
+21:20:23:   ---      2.20  94%   0%  94%   0%   0%   0%    --
+21:20:34:   ---      2.48  97%   0%  96%   0%   0%   0%    --
+21:20:44:   ---      2.72  94%   0%  94%   0%   0%   0%    --
+21:20:54:   ---      2.91  88%   0%  88%   0%   0%   0%    --
+21:21:05:   ---      3.00  94%   0%  94%   0%   0%   0%    --
+21:21:15:   ---      3.21  92%   0%  92%   0%   0%   0%    --
+21:21:25:   ---      3.33  91%   0%  91%   0%   0%   0%    --
+21:21:35:   ---      3.36  96%   0%  95%   0%   0%   0%    --
+
+##########################################################################
+
+Linux 4.19.0-17-loongson-3 (Katyusha-Loongson) 	2022年10月19日 	_loongarch64_	(4 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+           0.27    0.00    0.11    0.00    0.00   99.62
+
+Device             tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn
+nvme0n1           0.83         1.28         7.13     655115    3648538
+sda               0.26         1.39         7.56     713604    3869016
+
+              total        used        free      shared  buff/cache   available
+Mem:           31Gi       612Mi        30Gi       284Mi       509Mi        29Gi
+Swap:            0B          0B          0B
+
+CPU sysfs topology (clusters, cpufreq members, clockspeeds)
+                 cpufreq   min    max
+ CPU    cluster  policy   speed  speed   core type
+  0        0        0       -      -         -
+  1        0        0       -      -         -
+  2        0        0       -      -         -
+  3        0        0       -      -         -
+
+Architecture:        loongarch64
+Byte Order:          Little Endian
+CPU(s):              4
+On-line CPU(s) list: 0-3
+Thread(s) per core:  1
+Core(s) per socket:  4
+Socket(s):           1
+NUMA node(s):        1
+CPU family:          Loongson-64bit
+Model name:          Loongson-3A5000-HV
+BogoMIPS:            5000.00
+L1d cache:           64K
+L1i cache:           64K
+L2 cache:            256K
+L3 cache:            16384K
+NUMA node0 CPU(s):   0-3
+Flags:               cpucfg lam ual fpu lsx lasx complex crypto lvz lbt_x86 lbt_arm lbt_mips
+
+Processor Information
+	Socket Designation: CPU1
+	Type: Central Processor
+	Manufacturer: Loongson
+	ID: 33 41 35 30 30 30 2D 48
+	Version: Loongson-3A5000-HV
+	Voltage: 1.2 V
+	External Clock: 25 MHz
+	Max Speed: 2500 MHz
+	Current Speed: 2500 MHz
+	Status: Populated, Enabled
+	Core Count: 4
+	Core Enabled: 4
+	Thread Count: 4
+	Characteristics:
+		64-bit capable
+		Multi-Core
+		Hardware Thread
+
+Signature: 00000000
+ Compiler: /usr/bin/gcc (Loongnix 8.3.0-6.lnd.vec.32) 8.3.0 / loongarch64-linux-gnu
+ Userland: loongarch64
+   Kernel: 4.19.0-17-loongson-3/loongarch64
+           CONFIG_HZ=250
+           CONFIG_HZ_250=y
+           CONFIG_PREEMPT_NOTIFIERS=y
+           CONFIG_PREEMPT_VOLUNTARY=y
+
+| Katyusha-Loongson | ~2500 MHz | 4.19 | Loongnix GNU/Linux 20 (DaoXiangHu) loongarch64 | 11120 | 117130 | 116900 | 6930 | 19170 | - |

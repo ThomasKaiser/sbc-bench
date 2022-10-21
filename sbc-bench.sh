@@ -365,18 +365,33 @@ GetCoreType() {
 			esac
 			;;
 		loongarch*)
-			CoreGuess="$(awk -F"[()]" '/model name/ {print $2}' /proc/cpuinfo | sed -n $(( $1 + 1 ))p)"
-			if [ "X${CoreGuess}" = "X" ]; then
-				# fallback to cpu model
-				awk -F": " '/^cpu model/ {print $2}' /proc/cpuinfo | sed -n $(( $1 + 1 ))p
-			else
-				# we use model name or to be more presicely the part in brackets:
-				# model name : Loongson-3A R4 (Loongson-3A4000) @ 1500MHz
-				echo "${CoreGuess}"
-			fi
+			ModelName="$(awk -F": " '/^model name/ {print $2}' /proc/cpuinfo | sed -n $(( $1 + 1 ))p)"
+			case ${ModelName} in
+				"")
+					# fallback to cpu model if existing
+					grep -q 'cpu model' /proc/cpuinfo && awk -F": " '/^cpu model/ {print $2}' /proc/cpuinfo | sed -n $(( $1 + 1 ))p
+					;;
+				*\(*)
+					# we use just the part in brackets: Loongson-3A R4 (Loongson-3A4000) @ 1500MHz
+					awk -F"[()]" '{print $2}' <<<"${ModelName}"
+					;;
+				*)
+					echo "${ModelName}"
+					;;
+			esac
 			;;
 		mips*)
 			awk -F": " '/^cpu model/ {print $2}' /proc/cpuinfo | sed -n $(( $1 + 1 ))p
+			;;
+		x86_64)
+			# on hybrid x86 designs print core type
+			if [ ${#ClusterConfig[@]} -gt 1 ]; then
+				if [ $1 -lt ${ClusterConfig[1]} ]; then
+					echo "${PCores}"
+				else
+					echo "${ECores}"
+				fi
+			fi
 			;;
 	esac
 } # GetCoreType
@@ -1090,7 +1105,7 @@ MonitorBoard() {
 		CPUSignature="$(GetCPUSignature)"
 		DTCompatible="$(strings /proc/device-tree/compatible 2>/dev/null)"
 		CPUArchitecture="$(lscpu | awk -F" " '/^Architecture/ {print $2}')"
-		[ "${CPUArchitecture}" = "x86_64" ] || GuessedSoC="$(GuessARMSoC)"
+		[ "${CPUArchitecture}" = "x86_64" ] && GuessedSoC="${X86CPUName}" || GuessedSoC="$(GuessARMSoC)"
 		[ "X${GuessedSoC}" != "X" ] && echo -e "${GuessedSoC}, \c"
 		grep -q "BCM2711" <<<"${DeviceName}" && echo -e "${DeviceName}, \c"
 		command -v dpkg >/dev/null 2>&1 && Userland=", Userland: $(dpkg --print-architecture 2>/dev/null)"
@@ -1100,22 +1115,24 @@ MonitorBoard() {
 		if [ "X${TempInfo}" != "X" ]; then
 			echo -e "${TempInfo}\n"
 		fi
+	else
+		LSCPU="$(lscpu)"
+		X86CPUName="$(sed 's/ \{1,\}/ /g' <<<"${LSCPU}" | awk -F": " '/^Model name/ {print $2}' | sed -e 's/1.th Gen //' -e 's/.th Gen //' -e 's/Core(TM) //' -e 's/ Processor//' -e 's/Intel(R) Xeon(R) CPU //' -e 's/Intel(R) //' -e 's/(R)//' -e 's/CPU //' -e 's/ 0 @/ @/' -e 's/AMD //' -e 's/Authentic //' -e 's/ with .*//')"
+		CPUArchitecture="$(lscpu | awk -F" " '/^Architecture/ {print $2}')"
+		ClusterConfig=($(GetCPUClusters))
+		read PCores <"${TempDir}/Pcores"
+		read ECores <"${TempDir}/Ecores"
+		[ ${#ClusterConfig[@]} -eq 0 ] && ClusterConfig=(0)
 	fi
 
-	# Background monitoring
-
-	# Try to renice to 19 to not interfere with benchmark behaviour
+	# Background monitoring -- try to renice to 19 to not interfere with benchmark behaviour
 	renice 19 $BASHPID >/dev/null 2>&1
 
 	CpuFreqToQuery=cpuinfo_cur_freq
-	CPUArchitecture="$(lscpu | awk -F" " '/^Architecture/ {print $2}')"
-	ClusterConfig=($(GetCPUClusters))
-	[ ${#ClusterConfig[@]} -eq 0 ] && ClusterConfig=(0)
 
 	# check platform
 	case ${CPUArchitecture} in
 		x86*|i686)
-			IsIntel="yes"
 			if [ ! -f /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq ]; then
 				CpuFreqToQuery=scaling_cur_freq
 			fi
@@ -1493,10 +1510,12 @@ GetCoreClusters() {
 } # GetCoreClusters
 
 Getx86ClusterDetails() {
-		# Get Alder/Raptor Lake E/P core clusters since they can't be differentiated by either
-		# CPU ID or physical_package_id so relying on ark.intel.com: https://archive.ph/rvnvJ
+		# Since they can't be differentiated by either CPU ID or physical_package_id get
+		# Alder/Raptor Lake E/P core clusters from ark.intel.com: https://archive.ph/rvnvJ
 		# and https://archive.ph/g8q16 -- HFI might be an option in the future but only with
 		# most recent kernels: https://docs.kernel.org/x86/intel-hfi.html
+		# With different core types /sys/devices/system/cpu/cpu*/acpi_cppc/nominal_perf and
+		# most probably also cache sizes differ.
 
 		# Check for hyper threading first since affecting size of P logical cluster (the 1st)
 		[ -f /sys/devices/system/cpu/smt/active ] && read HT </sys/devices/system/cpu/smt/active || HT=0	
@@ -1547,6 +1566,8 @@ Getx86ClusterDetails() {
 				echo "0"
 			;;
 		esac
+		echo "Golden Cove" >"${TempDir}/Pcores"
+		echo "Gracemont" >"${TempDir}/Ecores"
 } # Getx86ClusterDetails
 
 ParseOPPTables() {
@@ -1583,7 +1604,7 @@ ParseOPPTables() {
 } # ParseOPPTables
 
 ParseRawOPPTables() {
-	DVFS="$(ls -d /sys/firmware/devicetree/base/* | grep -E "opp-table|opp_table" | sort -n)"
+	DVFS="$(ls -d /sys/firmware/devicetree/base/* | grep -E "opp-|opp_" | grep -E -- "-table|_table" | sort -n)"
 	if [ "X${DVFS}" = "X" ]; then
 		return
 	fi
@@ -1723,6 +1744,8 @@ BasicSetup() {
 	esac
 
 	ClusterConfig=($(GetCPUClusters))
+	read PCores <"${TempDir}/Pcores"
+	read ECores <"${TempDir}/Ecores"
 	[ ${#ClusterConfig[@]} -eq 0 ] && ClusterConfig=(0)
 	ClusterConfigByCoreType=($(GetCoreClusters))
 } # BasicSetup
@@ -2035,7 +2058,7 @@ InitialMonitoring() {
 		UploadScheme="f:1=<-"
 		UploadServer="ix.io"
 		DTCompatible="$(strings /proc/device-tree/compatible 2>/dev/null)"
-		(echo -e "/proc/cpuinfo\n\n$(uname -a) / ${DeviceName}\n" ; cat /proc/cpuinfo ; echo -e "\n${CPUTopology}\n\n${CPUSignature}\n\n${DTCompatible}" ; ParseOPPTables ; ParseRawOPPTables) 2>/dev/null \
+		(echo -e "/proc/cpuinfo\n\n$(uname -a) / ${DeviceName}\n" ; cat /proc/cpuinfo ; echo -e "\n${CPUTopology}\n\n${CPUSignature}\n\n${DTCompatible}" ; ParseOPPTables) 2>/dev/null \
 			| curl -s -F ${UploadScheme} ${UploadServer} >/dev/null 2>&1 &
 	else
 		# upload location fallback to sprunge.us if possible
@@ -2154,10 +2177,6 @@ CheckClockspeedsAndSensors() {
 					else
 						echo -e "\nIntel Hardware Feedback Interface enabled" >>${ResultLog}
 					fi
-					echo "Please be aware that for reasons yet unknown single-threaded or multi-" >>${ResultLog}
-					echo "threaded workloads with less threads than available logical P cores always" >>${ResultLog}
-					echo "end up running on P cores even if pinned to E cores (taskset/cgroups seem" >>${ResultLog}
-					echo "both to not work in the intended way on Alder/Raptor Lake)." >>${ResultLog}
 				fi
 			fi
 			# if powercapping seems to be available on Intel then add a hint
@@ -3215,6 +3234,8 @@ GuessARMSoC() {
 	#      Cortex-A76 / r4p0: Rockchip RK3588/RK3588s
 	#      Cortex-A77 / r1p0: Qualcomm Snapdragon 865 / QRB5165
 	#    Cortex-A78AE / r0p1: Nvidia Jetson Orin NX / AGX Orin
+	#   Kryo 3XX Gold / r6p13: Qualcomm Snapdragon 845
+	# Kryo 3XX Silver / r7p12: Qualcomm Snapdragon 845
 	#     Neoverse-N1 / r3p1: Ampere Altra, AWS Graviton2
 	#     Neoverse-V1 / r1p1: AWS Graviton3
 	#   NVidia Carmel / r0p0: Nvidia Tegra Xavier
@@ -3277,7 +3298,7 @@ GuessARMSoC() {
 	# soc soc0: Amlogic Meson GXL (S905W) Revision 21:e (a5:2) Detected <-- Tanix TX3 Mini / JetHome JetHub J80 / Amlogic Meson GXL (S905X) P212 Development Board / Amlogic Meson GXL (S905W) P281 Development Board
 	# soc soc0: Amlogic Meson GXL (S905L) Revision 21:e (c5:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson GXM (Unknown) Revision 22:a (82:2) Detected <-- Amlogic Meson GXM (S912) Q201 Development Board
-	# soc soc0: Amlogic Meson GXM (S912) Revision 22:a (82:2) Detected <-- Beelink GT1 / Octopus Planet / Libre Computer AML-S912-PC / Khadas VIM2 / MeCool KIII Pro / Tronsmart Vega S96 / T95Z Plus / Amlogic Meson GXM (S912) Q200 Development Board / Amlogic Meson GXM (S912) Q201 Development Board
+	# soc soc0: Amlogic Meson GXM (S912) Revision 22:a (82:2) Detected <-- Beelink GT1 / Octopus Planet / Libre Computer AML-S912-PC / Khadas VIM2 / MeCool KIII Pro / Tronsmart Vega S96 / T95Z Plus / Vontar X92 / Amlogic Meson GXM (S912) Q200 Development Board / Amlogic Meson GXM (S912) Q201 Development Board
 	# soc soc0: Amlogic Meson GXM (S912) Revision 22:b (82:2) Detected <-- Beelink GT1 / Tronsmart Vega S96 / Octopus Planet / Amlogic Meson GXM (S912) Q201 Development Board
 	# soc soc0: Amlogic Meson AXG (Unknown) Revision 25:b (43:2) Detected <-- JetHome JetHub J100
 	# soc soc0: Amlogic Meson AXG (Unknown) Revision 25:c (43:2) Detected <-- JetHome JetHub J100
@@ -4550,6 +4571,10 @@ GuessSoCbySignature() {
 			# StarFive JH7100: 2 x U74-MC https://doc-en.rvspace.org/Doc_Center/datasheet_7100.html
 			echo "StarFive JH7100"
 			;;
+		0?Qualcomm3XXSilver0?Qualcomm3XXSilver0?Qualcomm3XXSilver0?Qualcomm3XXSilver0?Qualcomm3XXGold0?Qualcomm3XXGold0?Qualcomm3XXGold0?Qualcomm3XXGold)
+			# Qualcomm Snapdragon 845: 4 x Qualcomm Kryo 3XX Silver / r7p12 + 4 x Qualcomm Kryo 3XX Gold / r6p13 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop
+			echo "Qualcomm Snapdragon 845"
+			;;
 		00Qualcomm4XXSilver00Qualcomm4XXSilver00Qualcomm4XXSilver00Qualcomm4XXSilver14A77r1p014A77r1p014A77r1p027A77r1p0)
 			# Qualcomm Snapdragon 865 or QRB5165: 4 x Qualcomm Kryo 4XX Silver / r13p14 + 3 x Cortex-A77 / r1p0 + 1 x Cortex-A77 / r1p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp asimdrdm lrcpc dcpop asimddp
 			echo "Qualcomm Snapdragon 865 / QRB5165"
@@ -4561,6 +4586,10 @@ GuessSoCbySignature() {
 		0?Loongson-3A30000?Loongson-3A30000?Loongson-3A30000?Loongson-3A3000)
 			# Loongson 3A3000: 4 x Loongson-3 V0.9 FPU V0.1 https://github.com/ThomasKaiser/sbc-bench/blob/master/results/Loongson-3A3000-5.4.211-aosc-lemote.cpuinfo
 			echo "Loongson 3A3000"
+			;;
+		0?Loongson-3A5000-HV0?Loongson-3A5000-HV0?Loongson-3A5000-HV0?Loongson-3A5000-HV)
+			# Loongson-3A5000-HV: 4 x LoongArch / loongarch32, loongarch64 / cpucfg lam ual fpu lsx lasx complex crypto lvz lbt_x86 lbt_arm lbt_mips https://github.com/ThomasKaiser/sbc-bench/blob/master/results/Loongson-3A5000-4.19.0-loongson-3.cpuinfo
+			echo "Loongson-3A5000-HV"
 			;;
 	esac
 }

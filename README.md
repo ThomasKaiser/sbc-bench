@@ -6,12 +6,13 @@ SBC is a shortcut for [single-board computer](https://en.wikipedia.org/wiki/Sing
 
 This small set of different CPU performance tests focuses on 'headless' operation only (no GPU/display stuff, no floating point number crunching). Unlike many other 'kitchen-sink benchmarks' it tries to produce insights instead of fancy graphs.
 
-It has five **entirely different** usage modes:
+It has six **entirely different** usage modes:
 
 * Generate a rough CPU performance assessment for a specific SBC *in general* (under ideal conditions)
 * Show whether an *individual* SBC is able to perform the same and if not hopefully answering the question 'why?'
 * Help software developers and hardware designers to improve 'thermal performance' when using the `-t` and/or `-T` switches ([details/discussion](https://forum.armbian.com/topic/7819-sbc-bench/?do=findComment&comment=60873), [another example](https://forum.armbian.com/topic/8125-quick-review-of-nanopi-k1-plus/?do=findComment&comment=61300))
 * Graph thermal/consumption charts with `-g` to [measure efficiency of settings/devices](Efficiency_Graphing.md)
+* Generate a controlled environment with appropriate settings for other benchmark suites like Geekbench (`sbc-bench -G`) or Phoronix (`sbc-bench -P`)
 * Provide basic CLI monitoring functionality through the `-m` switch
 
 The monitoring now also displays some hardware information when starting:
@@ -41,7 +42,7 @@ The monitoring now also displays some hardware information when starting:
 
 The SoCs (system-on-chip) used on today's SBC are that performant that heat dissipation when running full load for some time becomes an issue. The strategies to deal with the problem differ by platform and kernel. We've seen CPU cores being shut down when overheating (Allwinner boards running with original Allwinner software), we know platforms where throttling works pretty well but by switching to a different kernel performance is trashed on exactly the same hardware. Sometimes it's pretty easy to spot what's going on, sometimes vendors cheat on us and it takes some efforts to get a clue what's really happening.
 
-This tool therefore focuses on a controlled environment and intensive monitoring running in the background and being added to results output. The tool returns with a brief performance overview (see screenshot above) but the real information will be uploaded to an online pasteboard service ([RockPro64 example](http://ix.io/1lBC)). Without checking this detailed output numbers are worthless (since we always need to check what really happened).
+This tool therefore focuses on a controlled environment and intensive monitoring running in the background and being added to results output. The tool returns with a brief performance overview (see screenshot above) but the real information will be uploaded to an online pasteboard service ([Rock 5B example](http://ix.io/41BH)). Without checking this detailed output numbers are worthless (since we always need to check what really happened).
 
 ## Execution
 
@@ -65,13 +66,24 @@ This tool is not a benchmark but instead measures real CPU clockspeeds. This is 
     Cpufreq OPP: 1332    Measured: 1599 (1598.621/1598.759/1598.324) (+20%)
     Cpufreq OPP:  666    Measured:  799    (799.502/798.295/799.115) (+20%)
 
-We call `mhz` twice. At the begin of the benchmark with an idle and cold system and directly after the most demanding benchmark has finished with the device still under full load to see whether behaviour changes when SoC is overheated.
+We call `mhz` twice. At the begin of the benchmark with an idle and cold system walking through all cpufreq OPP and directly after the most demanding benchmark has finished with the device still under full load to see whether behaviour changes when SoC is overheated. This is on a [Thundercomm Dragonboard 845c](http://ix.io/4dJV). Prior to benchmark execution it looked like this:
+
+    Checking cpufreq OPP for cpu4-cpu7 (Qualcomm Kryo 3XX Gold):
+
+    Cpufreq OPP: 2803    Measured: 2704 (2705.057/2704.717/2704.717)     (-3.5%)
+    Cpufreq OPP: 2649    Measured: 2704 (2704.830/2704.717/2704.717)     (+2.1%)
+
+When running the multi-threaded 7zip benchmark, the SoC temperature exceeds 80°C and afterwards the 2803 MHz cpufreq OPP is gone while the reported 2649 MHz are in reality only ~1940:
+
+    Checking cpufreq OPP for cpu4-cpu7 (Qualcomm Kryo 3XX Gold):
+
+    Cpufreq OPP: 2649    Measured: 1940 (1955.570/1943.795/1922.274)    (-26.8%)
 
 ### [tinymembench](https://github.com/ssvb/tinymembench)
 
 Unlike other 'RAM benchmarks' *tinymembench* checks for both memory bandwidth **and** latency in a lot of variations so it's even possible to get some insights about internal cache sizes. It also measures multiple times and if sample standard deviation exceeds 0.1%, it is shown in brackets next to the result. So it's pretty easy to spot background activity ruining benchmark results.
 
-On big.LITTLE systems we pin execution one time to a little and one time to a big core to know the difference this makes. For the sake of simplicity we output *memcpy* and *memset* numbers at the end of the benchmark. On an *overclocked* RPi 3 B+ (arm_freq=1570, over_voltage=4, core_freq=500, sdram_freq=510, over_voltage_sdram=2) this will look like this
+On hybrid systems with different CPU cores (big.LITTLE, DynamicIQ, Alder/Raptor Lake) we pin execution one time to an efficiency/little and one time to a performance/big core to know the difference this makes. For the sake of simplicity we output *memcpy* and *memset* numbers at the end of the benchmark. On an *overclocked* RPi 3 B+ (arm_freq=1570, over_voltage=4, core_freq=500, sdram_freq=510, over_voltage_sdram=2) this will look like this
 
     Memory performance:
     memcpy: 1316.0 MB/s (0.8%)
@@ -97,11 +109,11 @@ Provides some insights about cache sizes/speed and memory latency/bandwidth. Stu
 
 This is the most demanding benchmark of the five and pretty efficient to check for appropriate heat dissipation and even instabilities under load. It makes heavy use of [SIMD optimizations](https://en.wikipedia.org/wiki/SIMD) (NEON on ARM and SSE on x86) therefore generating more heat than unoptimized 'standard' code.
 
-Heavy SIMD optimizations aren't really common and therefore this test is optional. Unless you execute `sbc-bench -c` it will be skipped since results can be misleading. So consider this being a load generator to check whether your board will start to throttle or becomes unstable but take the benchmark numbers with a grain of salt unless you're a programmer and know what [NEON](https://en.wikipedia.org/wiki/ARM_architecture#Advanced_SIMD_(NEON)) or [SSE](https://en.wikipedia.org/wiki/Streaming_SIMD_Extensions) really are and whether your application can make use of.
+Heavy SIMD optimizations aren't really common, the generated scores depend a lot on compiler version and therefore this test is optional. Unless you execute `sbc-bench -c` or with `MODE=extensive` it will be skipped since results can be misleading. So consider this being a load generator to check whether your board will start to throttle or becomes unstable but take the benchmark numbers with a grain of salt unless you're a programmer and know what [NEON](https://en.wikipedia.org/wiki/ARM_architecture#Advanced_SIMD_(NEON)) or [SSE](https://en.wikipedia.org/wiki/Streaming_SIMD_Extensions) really are and whether your application can make use of.
 
-A typical result (Rock64 with Armbian/Stretch) will look like this:
+A typical result (Rock 5B with Ubuntu Focal) will look like this:
 
-    Cpuminer total scores (5 minutes execution): 3.87,3.86,3.85,3.84,3.83,3.82,3.81,3.80 kH/s
+    Cpuminer total scores (5 minutes execution): 25.32,25.31,25.30,25.29,25.28,25.12 kH/s
 
 *(result variation in this case is ok since all results are more or less the same. If the board would've started throttling or heavy background activitiy would've happened the later numbers would be much lower than the first ones)*
 

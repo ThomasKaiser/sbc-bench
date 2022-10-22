@@ -1,0 +1,9 @@
+   opp-table:
+        98 MHz   1050.0 mV
+       198 MHz   1050.0 mV
+       398 MHz   1050.0 mV
+       598 MHz   1050.0 mV
+       748 MHz   1050.0 mV
+      1040 MHz   1150.0 mV
+      1196 MHz   1200.0 mV
+      1300 MHz   1300.0 mV

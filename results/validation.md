@@ -26,7 +26,7 @@
 | [1iFx](1iFx.txt) | v0.4 Renegade | 0.5%/0% | 3.8G/3.5G | X | X | X | X | 2% | 0% | |
 | [1iFz](1iFz.txt) | v0.4 NanoPC T4 | 0.2%/0.6% | 3.8G/3.5G | X | X | X | X | 0% | 0% | |
 | [1iGM](1iGM.txt) | v0.4 Raspberry Pi 3 B+ | 0%/0.2% | 927M/814M | X | X | X | X | 1% | <span style=color:red>**33%**</span> | |
-| [1iGV](1iGV.txt) | v0.4 BPi R2 | 0%/0% | 2.0G/1.8G | X | X | X | X | 1% | 0% | |
+| <del>[1iGV](1iGV.txt)</del> | <del>v0.4</del> | <del>0%/0%</del> | <del>2.0G/1.8G</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 1%</del> | <del> 0%</del> | |
 | [1iGW](1iGW.txt) | v0.4 Rock64 | 0%/0% | 1.9G/1.8G | X | X | X | X | 1% | <span style=color:red> 7%</span> | |
 | [1iGz](1iGz.txt) | v0.4 Raspberry Pi 3 B+ | 0.1%/0% | 927M/813M | X | X | X | X | 2% | <span style=color:red>**25%**</span> | |
 | [1iH0](1iH0.txt) | v0.4 Raspberry Pi 3 B+ | 0%/0% | 927M/819M | X | X | X | X | 2% | <span style=color:red>**30%**</span> | [check log](1iH0.txt) |
@@ -211,6 +211,8 @@
 | [4bSf](4bSf.txt) | v0.9.9 MangoPi Mcore | 0.4%/0% | 984Mi/789Mi | X | X | X | X | <span style=color:red>**63%**</span> | 1% | |
 | [4bbv](4bbv.txt) | v0.9.8 Khadas VIM1S | 0.5%/1.1% | 1.9Gi/1.1Gi | X | X | X | X | 3% | 0% | |
 | [4d1U](4d1U.txt) | v0.9.9 SolidRun Clearfog A1 | 0%/0% | 1.0Gi/873Mi | X | X | X | X | 1% | 0% | |
+| <del>[4dJV](4dJV.txt)</del> | <del>v0.9.9 Thundercomm Dragonboard 845c </del> | <del>3.8%/7.9%</del> | <del>7.4Gi/7.1Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 1%</del> | <del> 0%</del> | |
+| [4dO7](4dO7.txt) | v0.9.9 Bananapi BPI-R2 | 0%/0% | 2.0Gi/1.8Gi | X | X | X | X | 2% | <span style=color:red>** 8%**</span> | |
 | [4dd5](4dd5.txt) | v0.9.9 AAEON UP-APL03 V1.0 / Atom | 0%/0% | 3.7Gi/2.6Gi | X | X | X | X | 2% | 1% | |
 | [4dsC](4dsC.txt) | v0.9.9 QEMU KVM Virtual Machine virt-4. | 0%/0% | 15Gi/15Gi | X | X | X | X | 2% | 0% | |
 | [4dzX](4dzX.txt) | v0.9.9 Katyusha-Loongson | 0.6%/0.4% | 31Gi/29Gi | X | X | X | X | 0% | 0% | |

@@ -19,10 +19,10 @@
       1800 MHz    850.0 mV (00ff ffff)
       2016 MHz    925.0 mV (00ff ffff)
       2208 MHz    987.5 mV (00ff ffff)
-      2256 MHz   1000.0 mV (00ff 0013)
-      2304 MHz   1000.0 mV (00ff 0024)
-      2352 MHz   1000.0 mV (00ff 0048)
-      2400 MHz   1000.0 mV (00ff 0080)
+      2256 MHz   1000.0 mV (00ff 0000)
+      2304 MHz   1000.0 mV (00ff 0000)
+      2352 MHz   1000.0 mV (00ff 0000)
+      2400 MHz   1250.0 mV (00ff 00f0)
 
    cluster2-opp-table:
        408 MHz    675.0 mV (00ff ffff)
@@ -35,10 +35,10 @@
       1800 MHz    850.0 mV (00ff ffff)
       2016 MHz    925.0 mV (00ff ffff)
       2208 MHz    987.5 mV (00ff ffff)
-      2256 MHz   1000.0 mV (00ff 0013)
-      2304 MHz   1000.0 mV (00ff 0024)
-      2352 MHz   1000.0 mV (00ff 0048)
-      2400 MHz   1000.0 mV (00ff 0080)
+      2256 MHz   1000.0 mV (00ff 0000)
+      2304 MHz   1000.0 mV (00ff 0000)
+      2352 MHz   1000.0 mV (00ff 0000)
+      2400 MHz   1250.0 mV (00ff 00f0)
 
    dmc-opp-table:
        528 MHz    675.0 mV

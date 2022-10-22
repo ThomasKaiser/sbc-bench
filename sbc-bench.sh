@@ -928,7 +928,12 @@ GetTempSensor() {
 				NodeGuess=$(cat /sys/devices/virtual/thermal/thermal_zone?/type 2>/dev/null | sort -n | grep -E "cpu|soc|CPU-therm|x86_pkg_temp|thermal-fan-est" | head -n1)
 				if [ "X${NodeGuess}" != "X" ]; then
 					# let's use this thermal node instead
-					TempSource="$(mktemp /tmp/soctemp.XXXXXX)"
+					if [ -d "${TempDir}" ]; then
+						TempSource="${TempDir}/soctemp"
+					else
+						TempSource="$(mktemp /tmp/soctemp.XXXXXX)"
+						trap "rm -f \"${TempSource}\" ; exit 0" 0 1 2 3 15
+					fi
 					ThermalZone="$(GetThermalZone "${NodeGuess}")"
 					ln -fs ${ThermalZone}/temp ${TempSource}
 					# TempInfo="Thermal source: ${ThermalZone}/ (${NodeGuess} / Armbian would have chosen ${ThermalSource} instead)"
@@ -947,7 +952,12 @@ GetTempSensor() {
 				;;
 		esac
 	else
-		TempSource="$(mktemp /tmp/soctemp.XXXXXX)"
+		if [ -d "${TempDir}" ]; then
+			TempSource="${TempDir}/soctemp"
+		else
+			TempSource="$(mktemp /tmp/soctemp.XXXXXX)"
+			trap "rm -f \"${TempSource}\" ; exit 0" 0 1 2 3 15
+		fi
 
 		# check platform
 		case $(lscpu | awk -F" " '/^Architecture/ {print $2}') in
@@ -1397,6 +1407,15 @@ CheckRelease() {
 } # CheckRelease
 
 CheckLoadAndDmesg() {
+	# Create directory for temporary files
+	TempDir="$(mktemp -d /tmp/${0##*/}.XXXXXX)"
+	if [ ! -d "${TempDir}" ]; then
+		echo "Can not create temporary files below ${TempDir}. Aborting." >&2
+		exit 1
+	fi
+	export TempDir
+	trap "rm -rf \"${TempDir}\" ; exit 0" 0 1 2 3 15
+
 	# Check if kernel ring buffer contains boot messages. These help identifying HW.
 	DMESG="$(dmesg | grep -E "Linux| raid6: | xor: |pvtm|rockchip-cpuinfo|Amlogic Meson|sun50i")"
 	grep -q -E '] Booting Linux|] Linux version ' <<<"${DMESG}"
@@ -2040,16 +2059,9 @@ InitialMonitoring() {
 	fi
 
 	# Create temporary files
-	TempDir="$(mktemp -d /tmp/${0##*/}.XXXXXX)"
-	if [ ! -d "${TempDir}" ]; then
-		echo "Can not create temporary files below ${TempDir}. Aborting." >&2
-		exit 1
-	fi
-	export TempDir
 	TempLog="${TempDir}/temp.log"
 	ResultLog="${TempDir}/results.log"
 	MonitorLog="${TempDir}/monitor.log"
-	trap "rm -rf \"${TempDir}\" ; exit 0" 0 1 2 3 15
 
 	# collect CPU topology
 	CPUTopology="$(PrintCPUTopology)"

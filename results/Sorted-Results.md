@@ -1,6 +1,15 @@
+# sbc-bench results sorted
+
+  * [7-zip multi-threaded](#7-zip-mips-multi-threaded)
+  * [7-zip single-threaded](#7-zip-mips-single-threaded)
+  * [aes-256-cbc](#openssl-speed--elapsed--evp-aes-256-cbc)
+  * [memcpy](#memcpy)
+  * [memset](#memset)
+  * [clockspeed](#clockspeed)
+
 ## 7-zip MIPS multi-threaded
 
-| Device / details | Clockspeed | Kernel | Distro | 7-zip mt | 7-zip st | AES-256 | memcpy | memset | kH/s |
+| Device / details | Clockspeed | Kernel | Distro | 7-zip multi | 7-zip single | AES | memcpy | memset | kH/s |
 | ----- | :--------: | :----: | :----: | ----: | ------: | ------: | -----: | -----: | ---: |
 | [Gigabyte H270-T70](http://ix.io/3N5c) | 2000 Mhz | 5.16 | Sid arm64 | 107180 | 1826 | 340750 | 4180 | 17130 | - |
 | [Apple M1 Pro](http://ix.io/443N) | 3030/2060 MHz | 5.18 | Gentoo 2.8 arm64 | 43800 | 5010 | 1064450 | 27110 | 71910 | 48.28 |
@@ -178,7 +187,7 @@
 
 ## 7-zip MIPS single-threaded
 
-| Device / details | Clockspeed | Kernel | Distro | 7-zip mt | 7-zip st | AES-256 | memcpy | memset | kH/s |
+| Device / details | Clockspeed | Kernel | Distro | 7-zip multi | 7-zip single | AES | memcpy | memset | kH/s |
 | ----- | :--------: | :----: | :----: | ----: | ------: | ------: | -----: | -----: | ---: |
 | [Apple M1 Pro](http://ix.io/443N) | 3030/2060 MHz | 5.18 | Gentoo 2.8 arm64 | 43800 | 5010 | 1064450 | 27110 | 71910 | 48.28 |
 | [Pentium G4600](http://ix.io/2jVw) | 3600 MHz | 4.19 | Buster amd64 | 11810 | 4448 | 984820 | 15120 | 33380 | 21.88 |
@@ -356,7 +365,7 @@
 
 ## openssl speed -elapsed -evp aes-256-cbc
 
-| Device / details | Clockspeed | Kernel | Distro | 7-zip mt | 7-zip st | AES-256 | memcpy | memset | kH/s |
+| Device / details | Clockspeed | Kernel | Distro | 7-zip multi | 7-zip single | AES | memcpy | memset | kH/s |
 | ----- | :--------: | :----: | :----: | ----: | ------: | ------: | -----: | -----: | ---: |
 | [Ampere A1](http://ix.io/4dsC) | 3000 MHz | 5.15 | Jammy arm64 | 16300 | 4009 | 1706150 | 11910 | 47780 | - |
 | [Qualcomm QRB5165](http://ix.io/49kx) | 2840/2410/1790 MHz | 4.19 | Focal arm64 | 18860 | 3898 | 1598490 | 14470 | 23910 | 25.56 |
@@ -534,7 +543,7 @@
 
 ## memcpy
 
-| Device / details | Clockspeed | Kernel | Distro | 7-zip mt | 7-zip st | AES-256 | memcpy | memset | kH/s |
+| Device / details | Clockspeed | Kernel | Distro | 7-zip multi | 7-zip single | AES | memcpy | memset | kH/s |
 | ----- | :--------: | :----: | :----: | ----: | ------: | ------: | -----: | -----: | ---: |
 | [Apple M1 Pro](http://ix.io/443N) | 3030/2060 MHz | 5.18 | Gentoo 2.8 arm64 | 43800 | 5010 | 1064450 | 27110 | 71910 | 48.28 |
 | [Pentium G4600](http://ix.io/2jVw) | 3600 MHz | 4.19 | Buster amd64 | 11810 | 4448 | 984820 | 15120 | 33380 | 21.88 |
@@ -712,7 +721,7 @@
 
 ## memset
 
-| Device / details | Clockspeed | Kernel | Distro | 7-zip mt | 7-zip st | AES-256 | memcpy | memset | kH/s |
+| Device / details | Clockspeed | Kernel | Distro | 7-zip multi | 7-zip single | AES | memcpy | memset | kH/s |
 | ----- | :--------: | :----: | :----: | ----: | ------: | ------: | -----: | -----: | ---: |
 | [Apple M1 Pro](http://ix.io/443N) | 3030/2060 MHz | 5.18 | Gentoo 2.8 arm64 | 43800 | 5010 | 1064450 | 27110 | 71910 | 48.28 |
 | [Ampere A1](http://ix.io/4dsC) | 3000 MHz | 5.15 | Jammy arm64 | 16300 | 4009 | 1706150 | 11910 | 47780 | - |
@@ -888,9 +897,9 @@
 | [Kendryte K510](http://ix.io/41Qa) | 790 MHz | 4.17 | Sid riscv64 | 690 | 402 | 7410 | 280 | 440 | - |
 | [Cubox-i4](http://ix.io/4132) | 980 MHz | 5.15 | Jammy armhf | 2360 | 657 | 27000 | 340 | 340 | - |
 
-## openssl speed -elapsed -evp aes-256-cbc
+## clockspeed
 
-| Device / details | Clockspeed | Kernel | Distro | 7-zip mt | 7-zip st | AES-256 | memcpy | memset | kH/s |
+| Device / details | Clockspeed | Kernel | Distro | 7-zip multi | 7-zip single | AES | memcpy | memset | kH/s |
 | ----- | :--------: | :----: | :----: | ----: | ------: | ------: | -----: | -----: | ---: |
 | [Pentium G4600](http://ix.io/2jVw) | 3600 MHz | 4.19 | Buster amd64 | 11810 | 4448 | 984820 | 15120 | 33380 | 21.88 |
 | [Apple M1 Pro](http://ix.io/443N) | 3030/2060 MHz | 5.18 | Gentoo 2.8 arm64 | 43800 | 5010 | 1064450 | 27110 | 71910 | 48.28 |

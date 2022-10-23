@@ -8,11 +8,11 @@ So do **not** rely on collected numbers unless you carefully read through all th
 
 ## Some numbers
 
-*The below table is also available sorted in various ways [here](results/Sorted-Results.md).*
+*The below table is also available sorted: [7-zip multi-threaded](results/Sorted-Results.md#7-zip-mips-multi-threaded), [7-zip single-threaded](results/Sorted-Results.md#7-zip-mips-single-threaded), [aes-256-cbc](results/Sorted-Results.md#openssl-speed--elapsed--evp-aes-256-cbc), [memcpy](results/Sorted-Results.md#memcpy), [memset](results/Sorted-Results.md#memset) and [clockspeed](results/Sorted-Results.md#clockspeed).*
 
 *ODROID-M1, Quartz64, ROCK 3A, ROCK 5B, RK3568-ROC-PC and Khadas VIM4 numbers are preliminary since software support situation for RK3566/RK3568/RK3588 and A311D2 is still in a very early stage. Same applies to all RISC-V numbers and [Apple M1 Pro](https://github.com/ThomasKaiser/sbc-bench/issues/47#issue-1300572558). Please also note that with RK35xx devices so far [measured clockspeeds differ from what's defined in device-tree due to PVTM](https://github.com/ThomasKaiser/Knowledge/blob/master/articles/Quick_Preview_of_ROCK_5B.md#pvtm).*
 
-| Device / details | Clockspeed | Kernel | Distro | 7-zip mt | 7-zip st | AES-256 | memcpy | memset | kH/s |
+| Device / details | Clockspeed | Kernel | Distro | 7-zip multi | 7-zip single | AES | memcpy | memset | kH/s |
 | ----- | :--------: | :----: | :----: | ----: | ------: | ------: | -----: | -----: | ---: |
 | [Akaso M8S](http://ix.io/3R3N) | 1200 MHz | 5.10 | Buster armhf | 3050 | 885 | 32120 | 1160 | 3330 | - |
 | [Amazon a1.xlarge](http://ix.io/2iFY) | 2300 MHz | 4.15 | Bionic arm64 | 8610 | 2406 | 1297960 | 4280 | 14220 | - |
@@ -192,9 +192,9 @@ So do **not** rely on collected numbers unless you carefully read through all th
 
 ## Explanations
 
-* 1st *7-zip* number is an averaged **multi threaded** (mt) score from 3 consecutive `7z b` runs. Only relevant for server workloads where stuff happens in parallel.
-* 2nd *7-zip* number is a **single threaded** (st) score measured on the fastest core of all available clusters.
-* *AES-256* is a **single threaded** encryption score with rather huge chunks of data. On hybrid designs (big.LITTLE, DynamicIQ, Alder/Raptor Lake) numbers show big/performance core results. In case an ARM SoC supports ARMv8 Crypto Extensions [scores are pretty much predictable based on CPU clockspeeds](results/ARMv8-Crypto-Extensions.md).
+* The *7-zip multi* number is an averaged **multi threaded** score from 3 consecutive `7z b` runs. Only relevant for server workloads where stuff happens in parallel and scales well with count of threads.
+* The *7-zip single* number is a **single threaded** score measured on the fastest core of all available clusters.
+* *AES* is a **single threaded** encryption score with rather huge chunks of data (`openssl speed -elapsed -evp aes-256-cbc`). On hybrid designs (big.LITTLE, DynamicIQ, Alder/Raptor Lake) numbers show big/performance core results. In case an ARM SoC supports ARMv8 Crypto Extensions [scores are pretty much predictable based on CPU clockspeeds](results/ARMv8-Crypto-Extensions.md).
 * *memcpy* and *memset* are tinymembench measurements for memory bandwidth. On hybrid designs numbers show big/performance core results
 * *kH/s* is a **multi threaded** cpuminer score showing the board's performance when executing NEON optimized code. To get the performance difference between big and little cores click the links in the left column
 * The Akaso M8S and Tronsmart MXIII Plus numbers may be representative for other Amlogic S812 devices (quad Cortex-A9 @ 1.2/1.55 GHz), Tronsmart S82 for other S802 devices (quad Cortex-A9 @ 1.6 GHz)

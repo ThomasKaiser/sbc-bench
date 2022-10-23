@@ -153,6 +153,48 @@ CheckRK3588sbc-bench-results() {
 	done | grep ' | ' | grep -v ' | | | |' | sed -e 's/: |/ |/' -e 's/\.txt //' | awk -F'|' '{print "| ["$4"](http://ix.io/"$3") |"$5"| "$1" |"$6"|"$7"| "$2" |"$8"|"$11"|"$12"|"}'
 } # CheckRK3588sbc-bench-results
 
+GetSingleThreaded7ZIPScore() {
+	CountOfScores=$(grep -c '^Tot:' "$1")
+	case ${CountOfScores} in
+		1)
+			# single core board
+			awk -F" " '/^Tot:/ {print $4}' "$1"
+			;;
+		2)
+			# something went wrong
+			echo "-"
+			;;
+		3)
+			# single core board but old sbc-bench version
+			echo $(( $(awk -F" " '/^Tot:/ {s+=$4} END {printf "%.0f", s}' <"$1") / 3 ))
+			;;
+		4)
+			# multiple cores, one cluster
+			awk -F" " '/^Tot:/ {print $4}' "$1" | head -n1
+			;;
+		12)
+			# Rock 5B extended mode
+			awk -F" " '/^Tot:/ {print $4}' "$1" | head -n3 | sort -n | tail -n1
+			;;
+
+		*)
+			# multiple cores, more than one cluster
+			# head -n${#ClusterConfig[@]}
+			awk -F" " '/^Tot:/ {print $4}' "$1" | head -n$(( ${CountOfScores} - 3 )) | sort -n | tail -n1
+			;;
+	esac
+} # GetSingleThreaded7ZIPScore
+
+ReplaceAES128CoreWith7ZIPST() {
+	grep -E "http://ix.io|http://sprunge.us" ../Results.md | grep "^|" | while read ; do
+		ResultFile="$(awk -F"/" '{print $4}' <<<"${REPLY}" | cut -f1 -d')').txt"
+		STScore=$(GetSingleThreaded7ZIPScore "${ResultFile}")
+		Prefix="$(awk -F"|" '{print "|"$2"|"$3"|"$4"|"$5"|"$6}' <<<"${REPLY}")"
+		Suffix="$(awk -F"|" '{print $8"|"$9"|"$10"|"$11"|"}' <<<"${REPLY}")"
+		echo "${Prefix}| ${STScore} |${Suffix}"
+	done
+} # ReplaceAES128CoreWith7ZIPST
+
 # CPUUtilization7ZIP >7-zip-cpu-utilisation.md
 # CheckRAID6PerfAndAlgo >raid6-perf-and-algo.md
 # CheckRK3588sbc-bench-results

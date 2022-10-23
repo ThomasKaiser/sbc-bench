@@ -1,4 +1,4 @@
-sbc-bench v0.7.4  (Wed, 25 Nov 2020 16:12:12 +0000)
+sbc-bench v0.7.4 Amazon m6g.8xlarge (Wed, 25 Nov 2020 16:12:12 +0000)
 
 Distributor ID:	Ubuntu
 Description:	Ubuntu 20.04.1 LTS

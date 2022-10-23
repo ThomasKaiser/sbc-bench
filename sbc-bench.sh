@@ -2463,6 +2463,7 @@ Run7ZipBenchmark() {
 	kill ${MonitoringPID}
 	echo -e "\n##########################################################################" >>${ResultLog}
 	cat ${TempLog} >>${ResultLog}
+	ZipScoreSingleThreaded=$(awk -F" " '/^Tot:/ {print $4}' ${TempLog} | sort -n | tail -n1)
 	
 	if [ ${CPUCores} -gt 1 ]; then
 		# run multi-threaded test only if there's more than one CPU core
@@ -2578,7 +2579,7 @@ RunOpenSSLBenchmark() {
 	echo -e "$(openssl version | awk -F" " '{print $1" "$2", built on "$3" "$4" "$5" "$6" "$7" "$8" "$9" "$10" "$11" "$12" "$13" "$14" "$15}' | sed 's/ *$//')\n$(grep '^type' ${OpenSSLLog} | head -n1)" >>${ResultLog}
 	grep '^aes-' ${OpenSSLLog} >>${ResultLog}
 	# round result
-	OpenSSLScore="$(( $(awk '{printf ("%0.0f",$1/10); }' <<<"${AES128}") * 10 )) | $(( $(awk '{printf ("%0.0f",$1/10); }' <<<"${AES256}") * 10 ))"
+	OpenSSLScore="$(( $(awk '{printf ("%0.0f",$1/10); }' <<<"${AES256}") * 10 ))"
 
 	if [ "X${MODE}" = "Xextensive" ]; then
 		# in extensive mode run openssl benchmarks on all cores in parallel
@@ -2884,7 +2885,7 @@ SummarizeResults() {
 		else
 			DistroInfo="${OperatingSystem} ${KernelArch}/${ARCH}"
 		fi
-		echo -e "\n| ${DeviceName:-$HostName} | ${MHz} | ${KernelVersion} | ${DistroInfo} | ${ZipScore} | ${OpenSSLScore} | ${MemBenchScore} | ${CpuminerScore:-"-"} |\c" | sed 's/  / /g' >>${ResultLog}
+		echo -e "\n| ${DeviceName:-$HostName} | ${MHz} | ${KernelVersion} | ${DistroInfo} | ${ZipScore} | ${ZipScoreSingleThreaded} | ${OpenSSLScore} | ${MemBenchScore} | ${CpuminerScore:-"-"} |\c" | sed 's/  / /g' >>${ResultLog}
 	fi
 } # SummarizeResults
 
@@ -2983,7 +2984,7 @@ UploadResults() {
 		if [ "${ExecuteCpuminer}" = "yes" -a -x "${InstallLocation}"/cpuminer-multi/cpuminer ]; then
 			echo -e "\n${BOLD}Cpuminer total scores${NC} (5 minutes execution): $(awk -F"Total Scores: " '/^Total Scores: / {print $2}' ${ResultLog}) kH/s"
 		fi
-		echo -e "\n${BOLD}7-zip total scores${NC} (3 consecutive runs): $(awk -F" " '/^Total:/ {print $2}' ${ResultLog})"
+		echo -e "\n${BOLD}7-zip total scores${NC} (3 consecutive runs): $(awk -F" " '/^Total:/ {print $2}' ${ResultLog}), single-threaded: ${ZipScoreSingleThreaded}"
 		if [ -f ${OpenSSLLog} ]; then
 			echo -e "\n${BOLD}OpenSSL results${NC}${ClusterInfo}:\n$(grep '^type' ${OpenSSLLog} | head -n1)"
 			grep '^aes-...-cbc' ${OpenSSLLog}

@@ -79,7 +79,6 @@
 | [1qal](1qal.txt) | v0.6.2 Celeron J4105 | 0%/0.3% | 7.6G/7.2G | X | X | X | X | 1% | 0% | |
 | [1qb0](1qb0.txt) | v0.6.2 Celeron J4105 | 0%/0% | 31G/30G | X | X | X | X | 1% | 0% | |
 | [1rYm](1rYm.txt) | v0.6.2 Khadas Captain | 0.2%/0.2% | 3.7G/3.6G | X | X | X | X | 1% | 0% | [check log](1rYm.txt) |
-| [1rrO](1rrO.txt) | v0.6.2 ROCK PI 4B | 0.4%/0.3% | 1.9G/1.7G | X | X | X | X | 1% | 0% | [check log](1rrO.txt) |
 | [1tJg](1tJg.txt) | v0.6.2 Olimex A64 Teres-I | 0.6%/0.6% | 1.9G/1.6G | X | X | X | X | 2% | 0% | |
 | <del>[1u3W](1u3W.txt)</del> | <del>v0.6.2 Cubietech Cubietruck </del> | <del>0%/0%</del> | <del>2.0G/1.7G</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del><span style=color:red> 9%</span></del> | <del> 0%</del> | |
 | [1uTS](1uTS.txt) | v0.6.2 Celeron N4100 | 0%/2.1% | 3.7G/2.1G | X | X | X | X | 2% | 2% | |
@@ -91,9 +90,9 @@
 | [26Wy](26Wy.txt) | v0.6.9 Khadas VIM3L | 0%/0% | 1.8G/1.6G | X | X | X | X | 2% | 0% | |
 | [27FC](27FC.txt) | v0.6.9 SolidRun i.MX8MQ HummingBoard Pu | 1.3%/0.3% | 2.9Gi/2.7Gi | X | X | X | X | 0% | 0% | |
 | [2Cyi](2Cyi.txt) | v0.7.4 Raspberry Pi 400 Rev 1.0 | 0%/0.9% | 3.7Gi/3.4Gi | X | X | X | X | 3% | 0% | |
-| <del>[2FrG](2FrG.txt)</del> | <del>v0.7.4 </del> | <del>0%/0%</del> | <del>123Gi/121Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 0%</del> | <del> 0%</del> | |
-| <del>[2Gjg](2Gjg.txt)</del> | <del>v0.7.5 </del> | <del>0.3%/13.2%</del> | <del>1.9Gi/1.5Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 0%</del> | <del> 2%</del> | |
-| <del>[2Gtf](2Gtf.txt)</del> | <del>v0.7.5 </del> | <del>1.1%/1.4%</del> | <del>1.9Gi/1.5Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 4%</del> | <del> 1%</del> | |
+| <del>[2FrG](2FrG.txt)</del> | <del>v0.7.4 Amazon m6g.8xlarge </del> | <del>0%/0%</del> | <del>123Gi/121Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 0%</del> | <del> 0%</del> | |
+| <del>[2Gjg](2Gjg.txt)</del> | <del>v0.7.5 Apple M1 VM performance core </del> | <del>0.3%/13.2%</del> | <del>1.9Gi/1.5Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 0%</del> | <del> 2%</del> | |
+| <del>[2Gtf](2Gtf.txt)</del> | <del>v0.7.5 Apple M1 VM efficiency core @ 60</del> | <del>1.1%/1.4%</del> | <del>1.9Gi/1.5Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 4%</del> | <del> 1%</del> | |
 | [2ICt](2ICt.txt) | v0.7.5 Hugsun X99 TV BOX | 0%/0.7% | 3.7Gi/3.4Gi | X | X | X | X | 0% | 0% | |
 | [2Jdb](2Jdb.txt) | v0.7.2 x5-Z8350 | 0%/0% | 3.8Gi/2.6Gi | X | X | X | X | 4% | <span style=color:red>**21%**</span> | |
 | [2iFY](2iFY.txt) | v0.7.1 Amazon a1.xlarge | 0%/0% | 7.5G/7.2G | X | X | X | X | 1% | 0% | |

@@ -1,4 +1,4 @@
-sbc-bench v0.7.5  (Thu, 03 Dec 2020 09:54:03 +0000)
+sbc-bench v0.7.5 Apple M1 VM performance core (Thu, 03 Dec 2020 09:54:03 +0000)
 
 Distributor ID:	Ubuntu
 Description:	Ubuntu 20.10

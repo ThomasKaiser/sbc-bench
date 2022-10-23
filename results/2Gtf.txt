@@ -1,4 +1,4 @@
-sbc-bench v0.7.5  (Fri, 04 Dec 2020 10:54:08 +0000)
+sbc-bench v0.7.5 Apple M1 VM efficiency core @ 600 MHz (Fri, 04 Dec 2020 10:54:08 +0000)
 
 Distributor ID:	Ubuntu
 Description:	Ubuntu 20.10

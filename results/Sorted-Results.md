@@ -1,5 +1,7 @@
 # sbc-bench results sorted
 
+**WARNING: do NOT blindly trust into these numbers without reading [the explanations](../Results.md#explanations) first!**
+
   * [7-zip multi-threaded](#7-zip-mips-multi-threaded)
   * [7-zip single-threaded](#7-zip-mips-single-threaded)
   * [aes-256-cbc](#openssl-speed--elapsed--evp-aes-256-cbc)
@@ -185,6 +187,8 @@
 | [Raspberry Pi B](http://ix.io/3MGN) | 700 MHz | 5.10 | Raspberry Pi OS Bullseye | 320 | 320 | 11630 | 360 | 1420 | - |
 | [Raspberry Pi B](http://ix.io/3E7U) | 700 MHz | 5.10 | Raspberry Pi OS Buster | 310 | 310 | 11310 | 340 | 1400 | - |
 
+[(back to top of the page)](#sbc-bench-results-sorted)
+
 ## 7-zip MIPS single-threaded
 
 | Device / details | Clockspeed | Kernel | Distro | 7-zip multi | 7-zip single | AES | memcpy | memset | kH/s |
@@ -362,6 +366,8 @@
 | [Raspberry Pi B](http://ix.io/3E7U) | 700 MHz | 5.10 | Raspberry Pi OS Buster | 310 | 310 | 11310 | 340 | 1400 | - |
 | [ODROID-XU4](http://ix.io/1ixL) | 1900/1400 MHz | 3.10 | **Jessie** armhf | 6750 | - | 68200 | 2200 | 4800 | - |
 | [BPi M4](http://ix.io/1Dt1) | 1400 MHz | 4.9 | Bionic arm64 | 3500 | - | 651460 | 1010 | 4360 | 5.48 |
+
+[(back to top of the page)](#sbc-bench-results-sorted)
 
 ## openssl speed -elapsed -evp aes-256-cbc
 
@@ -541,6 +547,8 @@
 | [ClockworkPi R-01](http://ix.io/40BJ) | 1000 MHz | 5.4 | Focal riscv64 | 450 | 450 | 9040 | 1220 | 2640 | - |
 | [Kendryte K510](http://ix.io/41Qa) | 790 MHz | 4.17 | Sid riscv64 | 690 | 402 | 7410 | 280 | 440 | - |
 
+[(back to top of the page)](#sbc-bench-results-sorted)
+
 ## memcpy
 
 | Device / details | Clockspeed | Kernel | Distro | 7-zip multi | 7-zip single | AES | memcpy | memset | kH/s |
@@ -718,6 +726,8 @@
 | [Cubox-i4](http://ix.io/4132) | 980 MHz | 5.15 | Jammy armhf | 2360 | 657 | 27000 | 340 | 340 | - |
 | [Ugoos UT2](http://ix.io/408h) | 1560 MHz | 5.10 | Jammy armhf | 3320 | 994 | 43250 | 320 | 2020 | - |
 | [Kendryte K510](http://ix.io/41Qa) | 790 MHz | 4.17 | Sid riscv64 | 690 | 402 | 7410 | 280 | 440 | - |
+
+[(back to top of the page)](#sbc-bench-results-sorted)
 
 ## memset
 
@@ -897,6 +907,8 @@
 | [Kendryte K510](http://ix.io/41Qa) | 790 MHz | 4.17 | Sid riscv64 | 690 | 402 | 7410 | 280 | 440 | - |
 | [Cubox-i4](http://ix.io/4132) | 980 MHz | 5.15 | Jammy armhf | 2360 | 657 | 27000 | 340 | 340 | - |
 
+[(back to top of the page)](#sbc-bench-results-sorted)
+
 ## clockspeed
 
 | Device / details | Clockspeed | Kernel | Distro | 7-zip multi | 7-zip single | AES | memcpy | memset | kH/s |
@@ -1066,3 +1078,5 @@
 | [Raspberry Pi B](http://ix.io/3MGN) | 700 MHz | 5.10 | Raspberry Pi OS Bullseye | 320 | 320 | 11630 | 360 | 1420 | - |
 | [Raspberry Pi B](http://ix.io/3E7U) | 700 MHz | 5.10 | Raspberry Pi OS Buster | 310 | 310 | 11310 | 340 | 1400 | - |
 | [Raspberry Pi Zero 2](http://ix.io/3Dfo) | 600 MHz | 5.10 | Raspberry Pi OS Buster | 1900 | 529 | 18150 | 1040 | 1130 | - |
+
+[(back to top of the page)](#sbc-bench-results-sorted)

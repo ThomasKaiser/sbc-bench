@@ -90,7 +90,8 @@ Main() {
 			P)
 				# Phoronix Test Suite piggyback mode. PTS lacks sanity checks (measuring
 				# clockspeeds) and environment monitoring (too much background activity
-				# or throttling for example). You need to install PTS by yourself and run
+				# or throttling for example). You need to install Phoronix Test Suite by
+				# yourself (see https://www.phoronix-test-suite.com/?k=downloads) and run
 				# 'phoronix-test-suite batch-setup' once to configure batch operation mode:
 				#
 				# Save test results when in batch mode (Y/n): y
@@ -1387,18 +1388,18 @@ CheckRelease() {
 	command -v hostnamectl >/dev/null 2>&1 && OperatingSystem="$(hostnamectl | awk -F": " '/Operating System:/ {print $2}')"
 	grep -q -i Gentoo <<<"${OperatingSystem}" && read OperatingSystem </etc/gentoo-release
 
-	# Display warning when not executing on Debian Stretch/Buster/Bullseye or Ubuntu Bionic/Focal/Jammy
+	# Display warning when not executing on Debian Stretch/Buster/Bullseye or Ubuntu Bionic/Focal/Jammy/Kinetic
 	command -v lsb_release >/dev/null 2>&1 || apt -f -qq -y install lsb-release >/dev/null 2>&1
 	command -v lsb_release >/dev/null 2>&1 && \
 		Distro=$(lsb_release -c 2>/dev/null | awk -F" " '{print $2}' | tr '[:upper:]' '[:lower:]')
 	case ${Distro} in
-		stretch|bionic|buster|focal|bullseye|jammy)
+		stretch|bionic|buster|focal|bullseye|jammy|kinetic)
 			:
 			;;
 		*)
 			# only inform/ask user if $MODE != unattended
 			if [ "X${MODE}" != "Xunattended" ]; then
-				echo -e "${LRED}${BOLD}WARNING: This tool is meant to run only on Debian Stretch, Buster, Bullseye or Ubuntu Bionic, Focal, Jammy.${NC}\n"
+				echo -e "${LRED}${BOLD}WARNING: This tool is meant to run only on Debian Stretch, Buster, Bullseye or Ubuntu Bionic, Focal, Jammy, Kinetic.${NC}\n"
 				echo -e "When executed on ${BOLD}${OperatingSystem}${NC} results are partially meaningless.\nPress [ctrl]-[c] to stop or ${BOLD}[enter]${NC} to continue.\c"
 				read
 			fi
@@ -2321,39 +2322,46 @@ CheckCPUCluster() {
 			OPPtoCheck="${MaxSpeed} ${MinSpeed}"
 		fi
 		for i in ${OPPtoCheck} ; do
-			echo ${i} >/sys/devices/system/cpu/cpufreq/policy${1}/scaling_max_freq
-			# instead of 'sleep 0.1' fire up some real workload in a try to compensate for SoC
-			# firmwares that might do their own thing wrt clockspeeds (keep them low when idle)
-			taskset -c $1 "${InstallLocation}"/mhz/mhz 1 1000000 >/dev/null
-			MeasuredSpeed=$(taskset -c $1 "${InstallLocation}"/mhz/mhz 3 1000000 | awk -F" cpu_MHz=" '{print $2}' | awk -F" " '{print $1}' | sort -r -n | tr '\n' '/' | sed 's|/$||')
-			SpeedSum=$(tr '/' '\n' <<<"${MeasuredSpeed}" | tr -d '.' | awk '{s+=$1} END {printf "%.0f", s}')
-			RoundedSpeed=$(( ${SpeedSum} / 3000 ))
-			SysfsSpeed=$(( $i / 1000 ))
-			# report differences in cpufreq OPP ('advertised' clockspeed) and measured
-			# clockspeed if difference exceeds 1%
-			MeasuredDiff=$(awk '{printf ("%0.3f",$1/$2); }' <<<"${RoundedSpeed}000 ${SysfsSpeed}000" | tr -d '.')
-			if [ ${MeasuredDiff} -lt 990 ]; then
-				# measured clockspeed lower than 1% than cpufreq OPP
-				DiffPercentage=$(awk '{printf ("%0.0f",$1-$2); }' <<<"1000 ${MeasuredDiff}" | awk '{printf ("%0.1f",$1/10); }')
-				PrettyDiff="$(printf "%10s" \(-${DiffPercentage})%)"
-			elif [ ${MeasuredDiff} -gt 1010 ]; then
-				# measured clockspeed higher than 1% than cpufreq OPP
-				DiffPercentage=$(awk '{printf ("%0.0f",$1-$2); }' <<<"${MeasuredDiff} 1000" | awk '{printf ("%0.1f",$1/10); }')
-				PrettyDiff="$(printf "%10s" \(+${DiffPercentage})%)"
-			else
-				PrettyDiff=""
-			fi
+			# if MaxKHz environment variable is set then skip any higher cpufreq OPP
+			if [ ${i} -le ${MaxKHz:-90000000} ]; then
+				echo ${i} >/sys/devices/system/cpu/cpufreq/policy${1}/scaling_max_freq
+				# instead of 'sleep 0.1' fire up some real workload in a try to compensate for SoC
+				# firmwares that might do their own thing wrt clockspeeds (keep them low when idle)
+				taskset -c $1 "${InstallLocation}"/mhz/mhz 1 1000000 >/dev/null
+				MeasuredSpeed=$(taskset -c $1 "${InstallLocation}"/mhz/mhz 3 1000000 | awk -F" cpu_MHz=" '{print $2}' | awk -F" " '{print $1}' | sort -r -n | tr '\n' '/' | sed 's|/$||')
+				SpeedSum=$(tr '/' '\n' <<<"${MeasuredSpeed}" | tr -d '.' | awk '{s+=$1} END {printf "%.0f", s}')
+				RoundedSpeed=$(( ${SpeedSum} / 3000 ))
+				SysfsSpeed=$(( $i / 1000 ))
+				# report differences in cpufreq OPP ('advertised' clockspeed) and measured
+				# clockspeed if difference exceeds 1%
+				MeasuredDiff=$(awk '{printf ("%0.3f",$1/$2); }' <<<"${RoundedSpeed}000 ${SysfsSpeed}000" | tr -d '.')
+				if [ ${MeasuredDiff} -lt 990 ]; then
+					# measured clockspeed lower than 1% than cpufreq OPP
+					DiffPercentage=$(awk '{printf ("%0.0f",$1-$2); }' <<<"1000 ${MeasuredDiff}" | awk '{printf ("%0.1f",$1/10); }')
+					PrettyDiff="$(printf "%10s" \(-${DiffPercentage})%)"
+				elif [ ${MeasuredDiff} -gt 1010 ]; then
+					# measured clockspeed higher than 1% than cpufreq OPP
+					DiffPercentage=$(awk '{printf ("%0.0f",$1-$2); }' <<<"${MeasuredDiff} 1000" | awk '{printf ("%0.1f",$1/10); }')
+					PrettyDiff="$(printf "%10s" \(+${DiffPercentage})%)"
+				else
+					PrettyDiff=""
+				fi
 
-			if [ ${USE_VCGENCMD} = true ] ; then
-				# On RPi we query ThreadX about clockspeeds and Vcore voltage too
-				ThreadXFreq=$("${VCGENCMD}" measure_clock arm | awk -F"=" '{printf ("%0.0f",$2/1000000); }' )
-				CoreVoltage=$("${VCGENCMD}" measure_volts | cut -f2 -d= | sed 's/000//')
-				echo -e "Cpufreq OPP: $(printf "%4s" ${SysfsSpeed})  ThreadX: $(printf "%4s" ${ThreadXFreq})  Measured: $(printf "%4s" ${RoundedSpeed}) @ ${CoreVoltage}${PrettyDiff}"
-			else
-				echo -e "Cpufreq OPP: $(printf "%4s" ${SysfsSpeed})    Measured: $(printf "%4s" ${RoundedSpeed}) $(printf "%27s" \(${MeasuredSpeed}))${PrettyDiff}"
+				if [ ${USE_VCGENCMD} = true ] ; then
+					# On RPi we query ThreadX about clockspeeds and Vcore voltage too
+					ThreadXFreq=$("${VCGENCMD}" measure_clock arm | awk -F"=" '{printf ("%0.0f",$2/1000000); }' )
+					CoreVoltage=$("${VCGENCMD}" measure_volts | cut -f2 -d= | sed 's/000//')
+					echo -e "Cpufreq OPP: $(printf "%4s" ${SysfsSpeed})  ThreadX: $(printf "%4s" ${ThreadXFreq})  Measured: $(printf "%4s" ${RoundedSpeed}) @ ${CoreVoltage}${PrettyDiff}"
+				else
+					echo -e "Cpufreq OPP: $(printf "%4s" ${SysfsSpeed})    Measured: $(printf "%4s" ${RoundedSpeed}) $(printf "%27s" \(${MeasuredSpeed}))${PrettyDiff}"
+				fi
 			fi
 		done
-		echo ${MaxSpeed} >/sys/devices/system/cpu/cpufreq/policy${1}/scaling_max_freq
+		if [ "X${MaxKHz}" = "X" ]; then
+			echo ${MaxSpeed} >/sys/devices/system/cpu/cpufreq/policy${1}/scaling_max_freq
+		else
+			echo ${MaxKHz} >/sys/devices/system/cpu/cpufreq/policy${1}/scaling_max_freq
+		fi
 	else
 		# no cpufreq support: measure speeds on cpu0 on single core machines, otherwise on
 		# next cpu core to not interfere with probable bad IRQ/SMP affinitiy settings.
@@ -2620,6 +2628,52 @@ RunCpuminerBenchmark() {
 RunPTS() {
 	# executing phoronix-test-suite
 	echo -e "\x08\x08 Done.\nExecuting phoronix-test-suite...\c"
+
+	# if the CPU contains clusters of different CPU cores, test them individually first
+	if [ ${#ClusterConfigByCoreType[@]} -ne 1 ]; then
+		echo -e "\nSystem health while running Phoronix Test Suite cluster benchmarks:\n" >>${MonitorLog}
+		/bin/bash "${PathToMe}" -m $(( 60 * ${#ClusterConfigByCoreType[@]} )) >>${MonitorLog} &
+		MonitoringPID=$!
+
+		for i in $(seq 0 $(( ${#ClusterConfigByCoreType[@]} -1 )) ) ; do
+			CoresOnline ${ClusterConfigByCoreType[$i]}
+			if [ $? -eq 0 ]; then
+				FirstCore=${ClusterConfigByCoreType[$i]}
+				CPUInfo="$(GetCPUInfo ${FirstCore})"
+				LastCore=$(GetLastClusterCoreByType $(( $i + 1 )))
+				HowManyCores=$(( $(( ${LastCore} - ${FirstCore} )) + 1 ))
+				# try to send as much cores as possible offline (cpu0 can't be sent offline)
+				for o in $(seq ${FirstOfflineCPU} $(( ${CPUCores} - 1 )) ); do
+					if [ $o -lt ${FirstCore} -o $o -gt ${LastCore} ]; then
+						echo 0 > /sys/devices/system/cpu/cpu${o}/online 2>/dev/null
+					fi
+				done
+				PTS_SILENT_MODE=1 phoronix-test-suite batch-run ${PTSArguments} >${TempLog} 2>&1
+				ResultsURL="$(awk -F"https" '/Results Uploaded To/ {print $2}' <${TempLog})"
+				if [ "X${ResultsURL}" = "X" ]; then
+					echo -e "\x08\x08 Failed.\n$(cat ${TempLog})\n"
+					grep -q 'is not installed' ${TempLog} && \
+						echo -e "\nTry to manually resolve problems by \"phoronix-test-suite install ${PTSArguments}\""
+					exit 1
+				else
+					echo -e "\n##########################################################################\n" >>${ResultLog}
+					sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" <${TempLog} >>${ResultLog}
+				fi
+				# bring back offline cores
+				for o in $(seq ${FirstOfflineCPU} $(( ${CPUCores} - 1 )) ); do
+					echo 1 >/sys/devices/system/cpu/cpu${o}/online
+					[ -f /sys/devices/system/cpu/cpufreq/policy${o}/scaling_governor ] && \
+						echo performance >/sys/devices/system/cpu/cpufreq/policy${o}/scaling_governor 2>/dev/null
+					sleep 0.5
+					[ -f /sys/devices/system/cpu/cpufreq/policy${o}/scaling_governor ] && \
+						echo performance >/sys/devices/system/cpu/cpufreq/policy${o}/scaling_governor 2>/dev/null
+				done
+			fi
+		done
+
+		kill ${MonitoringPID}
+	fi
+
 	echo -e "\nSystem health while running Phoronix Test Suite:\n" >>${MonitorLog}
 	/bin/bash "${PathToMe}" -m 60 >>${MonitorLog} &
 	MonitoringPID=$!
@@ -3052,6 +3106,9 @@ CheckIOWait() {
 } # CheckIOWait
 
 CheckForThrottling() {
+	# skip this check if $MaxKHz is set
+	[ "X${MaxKHz}" != "X" ] && return
+
 	# Check for throttling on normal ARM or RISC-V SBC (on x86 cpufreq statistics are
 	# more or less irrelevant)
 	case ${CPUArchitecture} in
@@ -3123,14 +3180,16 @@ ReportCpufreqStatistics() {
 	if [ -f ${TempDir}/full_time_in_state_before_${1} ]; then
 		echo -e "\nThrottling statistics (time spent on each cpufreq OPP)${2}:\n" >>${TempDir}/throttling_info.txt
 		awk -F" " '{print $1}' <${TempDir}/full_time_in_state_before_${1} | sort -r -n | while read ; do
-			BeforeValue=$(awk -F" " "/^${REPLY} / {print \$2}" <${TempDir}/full_time_in_state_before_${1})
-			AfterValue=$(awk -F" " "/^${REPLY} / {print \$2}" <${TempDir}/full_time_in_state_after_${1})
-			if [ ${AfterValue} -eq ${BeforeValue} ]; then
-				Duration=0
-			else
-				Duration=$(awk '{printf ("%0.2f",$1/100); }' <<<$(( ${AfterValue} - ${BeforeValue} )) )
+			if [ ${REPLY} -le ${MaxKHz:-90000000} ]; then
+				BeforeValue=$(awk -F" " "/^${REPLY} / {print \$2}" <${TempDir}/full_time_in_state_before_${1})
+				AfterValue=$(awk -F" " "/^${REPLY} / {print \$2}" <${TempDir}/full_time_in_state_after_${1})
+				if [ ${AfterValue} -eq ${BeforeValue} ]; then
+					Duration=0
+				else
+					Duration=$(awk '{printf ("%0.2f",$1/100); }' <<<$(( ${AfterValue} - ${BeforeValue} )) )
+				fi
+				echo -e "$(printf "%4s" $(( ${REPLY} / 1000 )) ) MHz: $(printf "%7s" ${Duration}) sec" >>${TempDir}/throttling_info.txt
 			fi
-			echo -e "$(printf "%4s" $(( ${REPLY} / 1000 )) ) MHz: $(printf "%7s" ${Duration}) sec" >>${TempDir}/throttling_info.txt
 		done
 	fi
 } # ReportCpufreqStatistics
@@ -3209,7 +3268,7 @@ GuessARMSoC() {
 	#    ARM11 MPCore / r0p5: PLX NAS7820
 	#         ARM1176 / r0p7: Broadcom BCM2835
 	#       Cortex-A5 / r0p1: Amlogic S805
-	#       Cortex-A7 / r0p2: MediaTek MT6589/TMK6588
+	#       Cortex-A7 / r0p2: MediaTek MT6589/MT6588
 	#       Cortex-A7 / r0p3: Allwinner A31, MediaTek MT6580/MT7623, Samsung Exynos 5422
 	#       Cortex-A7 / r0p4: Allwinner A20
 	#       Cortex-A7 / r0p5: Allwinner A33/A83T/H2+/H3/H8/R16/R328/R40/S3/T113/V3/V3s/V40/V853, Broadcom BCM2836, Freescale/NXP i.MX7D/i.MX6 ULL, HiSilicon Hi351x/Hi3798M-V100, Microchip SAMA7G54, Qualcomm MDM9607, Renesas RZ/N1, Rockchip RK3229/RK3228A/RV1108/RV1109/RV1126, SigmaStar SSD201/SSD202D, STMicroelectronics STM32MP157
@@ -3976,7 +4035,11 @@ GuessSoCbySignature() {
 			# The boring quad Cortex-A53 done by every SoC vendor: 4 x Cortex-A53 / r0p4
 			# Allwinner A100/A133/A53/A64/H5/H6/H313/H616/R818/T507/T509, BCM2837/BCM2709, RK3318/RK3328, i.MX8 M, S905, S905X/S805X, S805Y, S905X/S905D/S905W/S905L/S905M2, S905X2/S905Y2/T962X2, Mediatek MT6762M/MT6765, RealTek RTD129x/RTD139x
 			case "${DeviceName}" in
-				"Raspberry Pi 2"*)
+				"Raspberry Pi Compute Module 3 Plus"*)
+					# 4 x Cortex-A53 / r0p4 / fp asimd evtstrm crc32
+					echo "BCM2837B0"
+					;;
+				"Raspberry Pi 2"*|"Raspberry Pi Compute Module 3"*)
 					# 4 x Cortex-A53 / r0p4 / fp asimd evtstrm crc32
 					echo "BCM2837 (BCM2709)"
 					;;

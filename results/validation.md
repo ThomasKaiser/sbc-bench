@@ -215,3 +215,4 @@
 | [4dd5](4dd5.txt) | v0.9.9 AAEON UP-APL03 V1.0 / Atom | 0%/0% | 3.7Gi/2.6Gi | X | X | X | X | 2% | 1% | |
 | [4dsC](4dsC.txt) | v0.9.9 QEMU KVM Virtual Machine virt-4. | 0%/0% | 15Gi/15Gi | X | X | X | X | 2% | 0% | |
 | [4dzX](4dzX.txt) | v0.9.9 Katyusha-Loongson | 0.6%/0.4% | 31Gi/29Gi | X | X | X | X | 0% | 0% | |
+| [4ebH](4ebH.txt) | v0.9.9 Jetson-AGX | 0.3%/0.6% | 31G/29G | X | X | X | X | 1% | 0% | |

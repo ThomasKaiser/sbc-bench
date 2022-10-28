@@ -1593,6 +1593,7 @@ Getx86ClusterDetails() {
 } # Getx86ClusterDetails
 
 ParseOPPTables() {
+	# TODO: parse/process opp-peak-kBps values
 	[ -d /sys/firmware/devicetree/base ] && DVFS="$(ls -d /sys/firmware/devicetree/base/* | grep -E "opp-|opp_" | grep -E -- "-table|_table" | sort -n)"
 	if [ "X${DVFS}" = "X" ]; then
 		return
@@ -3273,11 +3274,12 @@ GuessARMSoC() {
 	#       Cortex-A7 / r0p4: Allwinner A20
 	#       Cortex-A7 / r0p5: Allwinner A33/A83T/H2+/H3/H8/R16/R328/R40/S3/T113/V3/V3s/V40/V853, Broadcom BCM2836, Freescale/NXP i.MX7D/i.MX6 ULL, HiSilicon Hi351x/Hi3798M-V100, Microchip SAMA7G54, Qualcomm MDM9607, Renesas RZ/N1, Rockchip RK3229/RK3228A/RV1108/RV1109/RV1126, SigmaStar SSD201/SSD202D, STMicroelectronics STM32MP157
 	#       Cortex-A8 / r1p7: TI Sitara AM3517
+	#       Cortex-A8 / r2p2: Samsung Exynos 3110 (S5PC110)
 	#       Cortex-A8 / r2p5: Freescale/NXP i.MX515
 	#       Cortex-A8 / r3p2: Allwinner A10, TI OMAP3530/DM3730/AM335x
 	#       Cortex-A9 / r1p0: Nvidia Tegra 2
 	#       Cortex-A9 / r1p2: TI OMAP 4460
-	#       Cortex-A9 / r2p1: Comcerto 2000 AKA FreeScale/NXP QorIQ LS1024A -> https://github.com/Bonstra/c2000doc
+	#       Cortex-A9 / r2p1: Samsung Exynos 4210, Comcerto 2000 AKA FreeScale/NXP QorIQ LS1024A -> https://github.com/Bonstra/c2000doc
 	#       Cortex-A9 / r2p9: Nvidia Tegra 3
 	#       Cortex-A9 / r2p10: Freescale/NXP i.MX6 Dual/Quad
 	#       Cortex-A9 / r3p0: Amlogic 8726-MX, Calxeda Highbank, Cyclone V FPGA SoC, Mediatek MT5880, Rockchip RK3066/RK3188, Samsung Exynos 4412
@@ -3297,7 +3299,7 @@ GuessARMSoC() {
 	#      Cortex-A53 / r0p4: Allwinner A100/A133/A53/A64/H313/H5/H6/H616/H64/R329/R818/T507/T509, Amlogic A113X/A113D/A311D/A311D2/S805X/S805Y/S905/S905X/S905D/S905W/S905L/S905M2/S905X2/S905Y2/S905D2/S912/S922X/T962X2, Broadcom BCM2837/BCM2709/BCM2710/RP3A0-AU (BCM2710A1), HiSilicon Kirin 960/970, Marvell Armada 37x0, Mediatek MT6762M/MT6765, NXP i.MX8M/i.MX8QM/LS1xx8, RealTek RTD129x/RTD139x, Rockchip RK3318/RK3328/RK3399, Snapdragon 650/652/653 / MSM8956/MSM8976/MSM8976PRO, Socionext LD20
 	#      Cortex-A55 / r1p0: Amlogic S905X3/S905D3/S905Y3/T962X3/T962E2
 	#      Cortex-A55 / r2p0: Amlogic S905X4/S905C2, Rockchip RK3566/RK3568/RK3588/RK3588s
-	#      Cortex-A57 / r1p1: Nvidia Tegra X1, Snapdragon 810 / MSM8994/MSM8994V
+	#      Cortex-A57 / r1p1: Nvidia Tegra TX1, Snapdragon 810 / MSM8994/MSM8994V
 	#      Cortex-A57 / r1p2: AMD Opteron A1100, Snapdragon 808 / MSM8992
 	#      Cortex-A57 / r1p3: Nvidia Jetson TX2, Renesas R8A7795/R8A7796/R8A77965
 	#      Cortex-A72 / r0p0: Mediatek MT8173, Snapdragon 650/652/653 / MSM8956/MSM8976/MSM8976PRO
@@ -3324,6 +3326,7 @@ GuessARMSoC() {
 	#  Phytium FTC663 / r1p3: Phytium D2000
 	#  Qualcomm Krait / r1p0: Qualcomm Snapdragon S4 Plus (MSM8960)
 	#  Qualcomm Krait / r2p0: Qualcomm IPQ806x
+	#   Qualcomm Kryo / r2p1: Qualcomm MSM8996pro
 	#   Qualcomm Kryo / r13p14: Qualcomm Snapdragon 865 / QRB5165
 	#   ThunderX 88XX / r1p1: ThunderX CN8890
 	#  ThunderX2 99xx / r1p1: Cavium ThunderX2 CN9980
@@ -3528,7 +3531,7 @@ GuessARMSoC() {
 	# Booting Linux on physical CPU 0x0000000000 [0x410fd034]  <- Cortex-A53 / r0p4
 	# Booting Linux on physical CPU 0x0000000000 [0x411fd050]  <- Cortex-A55 / r1p0 (S905X3)
 	# Booting Linux on physical CPU 0x0000000000 [0x412fd050]  <- Cortex-A55 / r2p0 (RK3566/RK3568 or RK3588/RK3588s or S905X4)
-	# Booting Linux on physical CPU 0x0000000000 [0x411fd071]  <- Cortex-A57 / r1p1 (Tegra X1)
+	# Booting Linux on physical CPU 0x0000000000 [0x411fd071]  <- Cortex-A57 / r1p1 (Tegra TX1)
 	# Booting Linux on physical CPU 0x0000000000 [0x411fd072]  <- Cortex-A57 / r1p2 (AMD Opteron A1100)
 	# Booting Linux on physical CPU 0x0000000000 [0x410fd083]  <- Cortex-A72 / r0p3 (BCM2711 or LX2xx0A or Marvell Armada3900-A1 or AWS Graviton or Xilinx Versal)
 	# Booting Linux on physical CPU 0x0000080000 [0x481fd010]  <- HiSilicon Kunpeng-920 / r1p0
@@ -3894,6 +3897,10 @@ GuessSoCbySignature() {
 		??A8r1p7)
 			# TI Sitara AM35xx, Cortex-A8 / r1p7
 			echo "TI Sitara AM35xx"
+			;;
+		??A8r2p2)
+			# Samsung Exynos 3110 (S5PC110): 1 x Cortex-A8 / r2p2 / swp half thumb fastmult vfp edsp thumbee neon vfpv3
+			echo "Samsung Exynos 3110 (S5PC110)"
 			;;
 		??A8r2p5)
 			# Freescale/NXP i.MX515: 1 x Cortex-A8 / r2p5 / https://bench.cr.yp.to/computers.html
@@ -4359,12 +4366,12 @@ GuessSoCbySignature() {
 			echo "Nvidia Tegra 3"
 			;;
 		*A15r3p3*A15r3p3*A15r3p3*A15r3p3)
-			# Nvidia Tegra K1: 4 x Cortex-A15 / r3p3 / https://bench.cr.yp.to/computers.html
+			# Nvidia Tegra K1: 4 x Cortex-A15 / r3p3 / swp half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt
 			echo "Nvidia Tegra K1"
 			;;
 		00A57r1p100A57r1p100A57r1p100A57r1p1)
 			# Tegra X1, 4 x Cortex-A57 / r1p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32
-			echo "Nvidia Tegra X1"
+			echo "Nvidia Tegra TX1"
 			;;
 		*A57r1p3*)
 			# Jetson TX2, 1-4 x Cortex-A57 / r1p3 + 0-2 x Denver 2 / r0p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32
@@ -4455,7 +4462,8 @@ GuessSoCbySignature() {
 			;;
 		??A9r2p1??A9r2p1)
 			# FreeScale/NXP QorIQ LS1024A | 2 x Cortex-A9 / r2p1 / swp half thumb fastmult vfp edsp thumbee neon vfpv3 tls
-			echo "NXP QorIQ LS1024A"
+			# or Samsung Exynos 4210 | 2 x Cortex-A9 / r2p1 / swp half thumb fastmult vfp edsp neon vfpv3 tls
+			echo "NXP QorIQ LS1024A or Samsung Exynos 4210"
 			;;
 		??A9r1p2??A9r1p2)
 			# TI OMAP 4460 | 2 x Cortex-A9 / r1p2 / https://e2e.ti.com/support/processors-group/processors/f/processors-forum/243190/booting-problem-of-omap4460-pandaboard
@@ -4822,7 +4830,7 @@ ShowZswapStats() {
 } # ShowZswapStats
 
 DisplayUsage() {
-	echo -e "\nUsage: ${BOLD}${0##*/} [-c] [-p] [-h] [-m] [-t \$degree] [-T \$degree]${NC}\n"
+	echo -e "\nUsage: ${BOLD}${0##*/} [-c] [-g] [-G] [-h] [-m] [-P] [-t \$degree] [-T \$degree]${NC}\n"
 	echo -e "############################################################################"
 	echo -e "\n Use ${BOLD}${0##*/}${NC} for the following tasks:\n"
 	echo -e " ${0##*/} invoked without arguments runs a standard benchmark"
@@ -4834,9 +4842,12 @@ DisplayUsage() {
 	echo -e " ${0##*/} ${BOLD}-P${NC} Phoronix mode, ensures benchmark is properly monitored"
 	echo -e " ${0##*/} ${BOLD}-t${NC} [\$degree] runs thermal test waiting to cool down to this value"
 	echo -e " ${0##*/} ${BOLD}-T${NC} [\$degree] runs thermal test heating up to this value\n"
+	echo -e " The environment variable ${BOLD}MODE${NC} can be set to either ${BOLD}extensive${NC} or ${BOLD}unattended${NC}"
+	echo -e " prior to benchmark execution. Exporting ${BOLD}MaxKHz${NC} will also be honored, see here"
+	echo -e " for details: https://github.com/ThomasKaiser/sbc-bench#unattended-execution\n"
 	echo -e " With a Netio powermeter accessible you can export ${BOLD}Netio=address/socket${NC}" to
 	echo -e " sbc-bench defining address and socket this device is plugged into. Requires"
-	echo -e " XML API enabled and read-only access w/o password. Use this ${BOLD}only${NC} with -g to"
+	echo -e " XML API enabled and read-only access w/o password. Use this ${BOLD}only${NC} with ${BOLD}-g${NC} to"
 	echo -e " draw efficiency graphs since results will be slightly tampered by this mode."
 	echo -e "\n############################################################################\n"
 } # DisplayUsage

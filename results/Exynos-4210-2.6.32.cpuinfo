@@ -1,0 +1,17 @@
+Processor       : ARMv7 Processor rev 1 (v7l)
+processor       : 0
+BogoMIPS        : 1592.52
+
+processor       : 1
+BogoMIPS        : 2388.78
+
+Features        : swp half thumb fastmult vfp edsp neon vfpv3 tls
+CPU implementer : 0x41
+CPU architecture: 7
+CPU variant     : 0x2
+CPU part        : 0xc09
+CPU revision    : 1
+
+Hardware        : SMDK4210
+Revision        : 000c
+Serial          : 304d1975c227cb6e

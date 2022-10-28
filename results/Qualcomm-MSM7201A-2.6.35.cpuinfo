@@ -1,0 +1,12 @@
+Processor       : ARMv6-compatible processor rev 2 (v6l)
+BogoMIPS        : 613.41
+Features        : swp half thumb fastmult edsp java
+CPU implementer : 0x41
+CPU architecture: 6TEJ
+CPU variant     : 0x1
+CPU part        : 0xb36
+CPU revision    : 2
+
+Hardware        : sapphire
+Revision        : 0080
+Serial          : 0000000000000000

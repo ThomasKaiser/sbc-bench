@@ -195,6 +195,39 @@ ReplaceAES128CoreWith7ZIPST() {
 	done
 } # ReplaceAES128CoreWith7ZIPST
 
+CheckPVTMDistributionOnRK3588() {
+	grep 'cpu cpu6: pvtm-volt-sel' *.txt | cut -f1 -d':' | sort | uniq | while read file ; do
+		URL="http://ix.io/${file%.*}"
+		IdleTemp="$(awk -F", " '/^Uptime/ {print $6}' ${file})"
+		case ${IdleTemp} in
+			*C)
+				:
+				;;
+			*)
+				IdleTemp="$(awk -F", " '/^Uptime/ {print $7}' ${file})"
+				;;
+		esac
+		DeviceName="$(awk -F"," '/^DT compat: / {print $2}' ${file})"
+		CPU4Freq=$(grep -A2 'Checking cpufreq OPP for cpu4' ${file} | awk -F" " '/Cpufreq OPP/ {print $5}' | head -n1)
+		CPU4OPP=$(grep -A2 'Checking cpufreq OPP for cpu4' ${file} | awk -F" " '/Cpufreq OPP/ {print $3}' | head -n1)
+		CPU6Freq=$(grep -A2 'Checking cpufreq OPP for cpu6' ${file} | awk -F" " '/Cpufreq OPP/ {print $5}' | head -n1)
+		CPU6OPP=$(grep -A2 'Checking cpufreq OPP for cpu6' ${file} | awk -F" " '/Cpufreq OPP/ {print $3}' | head -n1)
+		CPU4PVTM=$(awk -F"=" '/cpu cpu4: pvtm=/ {print $2}' ${file})
+		CPU4PVTMVoltSel=$(awk -F"=" '/cpu cpu4: pvtm-volt-sel/ {print $2}' ${file})
+		CPU6PVTM=$(awk -F"=" '/cpu cpu6: pvtm=/ {print $2}' ${file})
+		CPU6PVTMVoltSel=$(awk -F"=" '/cpu cpu6: pvtm-volt-sel/ {print $2}' ${file})
+		grep -q "Linux 5.10.72" ${file}
+		if [ $? -eq 0 ]; then
+			# Filter out amazingfate's overvolting experiments
+			[ ${CPU4Freq} -lt 2300 ] && echo "| [${DeviceName}](${URL}) | ${CPU4PVTM} | ${CPU4PVTMVoltSel} | ${CPU4OPP} | ${CPU4Freq} |${IdleTemp} |"
+			[ ${CPU6Freq} -lt 2300 ] && echo "| [${DeviceName}](${URL}) | ${CPU6PVTM} | ${CPU6PVTMVoltSel} | ${CPU6OPP} | ${CPU6Freq} |${IdleTemp} |"
+		else
+			echo "| [${DeviceName}](${URL}) | ${CPU4PVTM} | ${CPU4PVTMVoltSel} | ${CPU4OPP} | ${CPU4Freq} |${IdleTemp} |"
+			echo "| [${DeviceName}](${URL}) | ${CPU6PVTM} | ${CPU6PVTMVoltSel} | ${CPU6OPP} | ${CPU6Freq} |${IdleTemp} |"
+		fi
+	done | grep -v ' |  |' | sed 's/,/./g' | sort -t '|' -k 3 -n
+} # CheckPVTMDistributionOnRK3588
+
 # CPUUtilization7ZIP >7-zip-cpu-utilisation.md
 # CheckRAID6PerfAndAlgo >raid6-perf-and-algo.md
 # CheckRK3588sbc-bench-results

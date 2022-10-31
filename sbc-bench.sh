@@ -1123,6 +1123,10 @@ MonitorBoard() {
 		[ "X${VirtWhat}" != "X" -a "X${VirtWhat}" != "Xnone" ] && VirtOrContainer=" / ${BOLD}${VirtWhat}${NC}"
 		echo -e "Kernel: ${CPUArchitecture}${VirtOrContainer}${Userland}"
 		echo -e "${CPUTopology}\n"
+		InputVoltage="$(GetInputVoltage)"
+		if [ "X${InputVoltage}" != "X" ]; then
+			echo -e "Input voltage: ${InputVoltage}V\n"
+		fi
 		if [ "X${TempInfo}" != "X" ]; then
 			echo -e "${TempInfo}\n"
 		fi
@@ -2142,7 +2146,12 @@ InitialMonitoring() {
 	fi
 
 	# Some basic system info needed to interpret system health later
-	echo -e "\nUptime:$(uptime),  ${InitialTemp}°C\n\n$(iostat | grep -E -v "^loop|boot0|boot1")\n\n$(free -h)\n\n$(swapon -s)\n" | sed '/^$/N;/^\n$/D' >>${ResultLog}
+	InputVoltage="$(GetInputVoltage)"
+	if [ "X${InputVoltage}" = "X" ]; then
+		echo -e "\nUptime:$(uptime),  ${InitialTemp}°C\n\n$(iostat | grep -E -v "^loop|boot0|boot1")\n\n$(free -h)\n\n$(swapon -s)\n" | sed '/^$/N;/^\n$/D' >>${ResultLog}
+	else
+		echo -e "\nUptime:$(uptime),  ${InitialTemp}°C,  ${InputVoltage}V\n\n$(iostat | grep -E -v "^loop|boot0|boot1")\n\n$(free -h)\n\n$(swapon -s)\n" | sed '/^$/N;/^\n$/D' >>${ResultLog}
+	fi
 	ShowZswapStats 2>/dev/null >>${ResultLog}
 	
 	# set up Netio consumption monitoring if requested. Device address and socket
@@ -2164,6 +2173,32 @@ InitialMonitoring() {
 	# log benchmark start in dmesg output
 	echo "sbc-bench started" >/dev/kmsg
 } # InitialMonitoring
+
+GetInputVoltage() {
+	if [ -f /sys/devices/iio_sysfs_trigger/subsystem/devices/iio\:device0/in_voltage6_raw ]; then
+		# Rock 5B
+		grep -q rock-5b <<<"${DTCompatible}" && awk '{printf ("%0.2f\n",$1/172.5); }' </sys/devices/iio_sysfs_trigger/subsystem/devices/iio\:device0/in_voltage6_raw
+	elif [ -f /sys/power/axp_pmu/vbus/voltage ]; then
+		# Allwinner A20 powered through USB running with mainline kernel + Armbian patches
+		awk '{printf ("%0.2f",$1/1000000); }' </sys/power/axp_pmu/vbus/voltage
+	elif [ -f /sys/devices/platform/sunxi-i2c.0/i2c-0/0-0034/axp20-supplyer.28/power_supply/usb/voltage_now ]; then
+		# Allwinner A20 powered through USB running 3.4 kernel
+		awk '{printf ("%0.2f",$1/1000000); }' </sys/devices/platform/sunxi-i2c.0/i2c-0/0-0034/axp20-supplyer.28/power_supply/usb/voltage_now
+	elif [ -f /sys/power/axp_pmu/ac/voltage ]; then
+		# Allwinner A20 powered via DC-IN running with mainline kernel + Armbian patches
+		awk '{printf ("%0.2f",$1/1000000); }' </sys/power/axp_pmu/ac/voltage
+	elif [ -f /sys/devices/platform/sunxi-i2c.0/i2c-0/0-0034/axp20-supplyer.28/power_supply/ac/voltage_now ]; then
+		# Allwinner A20 powered via DC-IN running 3.4 kernel
+		awk '{printf ("%0.2f",$1/1000000); }' </sys/devices/platform/sunxi-i2c.0/i2c-0/0-0034/axp20-supplyer.28/power_supply/ac/voltage_now
+	elif [ -f /sys/bus/iio/devices/iio\:device0/in_voltage2_raw ]; then
+		# Tinkerboard S
+		grep -q rk3288-tinker-s <<<"${DTCompatible}"
+		if [ $? -eq 0 ]; then
+			read -r RAWvoltage </sys/bus/iio/devices/iio\:device0/in_voltage2_raw
+			command -v bc >/dev/null 2>&1 && echo "(${RAWvoltage} / ((82.0/302.0) * 1023.0 / 1.8)) + 0.1" | bc -l | awk '{printf ("%0.2f\n",$1); }'
+		fi
+	fi
+} # GetInputVoltage
 
 CheckClockspeedsAndSensors() {
 	if [ -x "${InstallLocation}"/mhz/mhz ]; then

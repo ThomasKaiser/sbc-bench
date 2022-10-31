@@ -2969,8 +2969,8 @@ SummarizeResults() {
 	echo "${LSCPU}" >>${ResultLog}
 	LogEnvironment >>${ResultLog}
 	CacheAndDIMMDetails >>${ResultLog}
-	# Add OPP tables in extensive mode or when plotting efficiency graphs
-	[ "X${MODE}" = "Xextensive" -o "X${PlotCpufreqOPPs}" = "Xyes" ] && ParseOPPTables >>${ResultLog}
+	# Always include OPP tables
+	ParseOPPTables >>${ResultLog}
 
 	# Add a line suitable for Results.md on Github if not in efficiency plotting or PTS or GB mode
 	if [ "X${PlotCpufreqOPPs}" != "Xyes" -a "X${MODE}" != "Xpts" -a "X${MODE}" != "Xgb" ]; then

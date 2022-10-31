@@ -222,10 +222,12 @@ CheckPVTMDistributionOnRK3588() {
 			[ ${CPU4Freq} -lt 2300 ] && echo "| [${DeviceName}](${URL}) | ${CPU4PVTM} | ${CPU4PVTMVoltSel} | ${CPU4OPP} | ${CPU4Freq} |${IdleTemp} |"
 			[ ${CPU6Freq} -lt 2300 ] && echo "| [${DeviceName}](${URL}) | ${CPU6PVTM} | ${CPU6PVTMVoltSel} | ${CPU6OPP} | ${CPU6Freq} |${IdleTemp} |"
 		else
-			echo "| [${DeviceName}](${URL}) | ${CPU4PVTM} | ${CPU4PVTMVoltSel} | ${CPU4OPP} | ${CPU4Freq} |${IdleTemp} |"
-			echo "| [${DeviceName}](${URL}) | ${CPU6PVTM} | ${CPU6PVTMVoltSel} | ${CPU6OPP} | ${CPU6Freq} |${IdleTemp} |"
+			[ ${CPU4Freq} -le 2400 ] && echo "| [${DeviceName}](${URL}) | ${CPU4PVTM} | ${CPU4PVTMVoltSel} | ${CPU4OPP} | ${CPU4Freq} |${IdleTemp} |" \
+			|| echo "| [${DeviceName}](${URL}) | ${CPU4PVTM} | ${CPU4PVTMVoltSel} | ${CPU4OPP} | **${CPU4Freq}** |${IdleTemp} |"
+			[ ${CPU6Freq} -le 2400 ] && echo "| [${DeviceName}](${URL}) | ${CPU6PVTM} | ${CPU6PVTMVoltSel} | ${CPU6OPP} | ${CPU6Freq} |${IdleTemp} |" \
+			|| echo "| [${DeviceName}](${URL}) | ${CPU6PVTM} | ${CPU6PVTMVoltSel} | ${CPU6OPP} | **${CPU6Freq}** |${IdleTemp} |"
 		fi
-	done | grep -v ' |  |' | sed 's/,/./g' | sort -t '|' -k 3 -n
+	done | grep -v ' |  |' | grep -v '| 0 |' | sed 's/,/./g' | sort -t '|' -k 3 -n
 } # CheckPVTMDistributionOnRK3588
 
 # CPUUtilization7ZIP >7-zip-cpu-utilisation.md

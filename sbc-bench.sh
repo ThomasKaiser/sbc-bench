@@ -1103,6 +1103,9 @@ MonitorNetio() {
 MonitorBoard() {
 	[ "X${TempSource}" = "X" ] && GetTempSensor
 
+	DTCompatible="$(strings /proc/device-tree/compatible 2>/dev/null)"
+	VoltageSensor="$(GetVoltageSensor)"
+
 	if test -t 1; then
 		# when called from a terminal we print some system information first
 		[ -f /sys/devices/soc0/family ] && read SoC_Family </sys/devices/soc0/family
@@ -1114,7 +1117,6 @@ MonitorBoard() {
 		BasicSetup nochange
 		CPUTopology="$(PrintCPUTopology)"
 		CPUSignature="$(GetCPUSignature)"
-		DTCompatible="$(strings /proc/device-tree/compatible 2>/dev/null)"
 		CPUArchitecture="$(lscpu | awk -F" " '/^Architecture/ {print $2}')"
 		[ "${CPUArchitecture}" = "x86_64" ] && GuessedSoC="${X86CPUName}" || GuessedSoC="$(GuessARMSoC)"
 		[ "X${GuessedSoC}" != "X" ] && echo -e "${GuessedSoC}, \c"
@@ -1123,10 +1125,6 @@ MonitorBoard() {
 		[ "X${VirtWhat}" != "X" -a "X${VirtWhat}" != "Xnone" ] && VirtOrContainer=" / ${BOLD}${VirtWhat}${NC}"
 		echo -e "Kernel: ${CPUArchitecture}${VirtOrContainer}${Userland}"
 		echo -e "${CPUTopology}\n"
-		InputVoltage="$(GetInputVoltage)"
-		if [ "X${InputVoltage}" != "X" ]; then
-			echo -e "Input voltage: ${InputVoltage}V\n"
-		fi
 		if [ "X${TempInfo}" != "X" ]; then
 			echo -e "${TempInfo}\n"
 		fi
@@ -1171,15 +1169,18 @@ MonitorBoard() {
 	# check if we're in Netio consumption monitoring mode
 	[ -s "${NetioConsumptionFile}" ] && NetioHeader="     mW"
 
+	# check whether input voltage can be read
+	[ "X${VoltageSensor}" != "X" ] && VoltageHeader="   DC(V)"
+
 	if [ ${USE_VCGENCMD} = true ] ; then
-		DisplayHeader="Time        fake/real   load %cpu %sys %usr %nice %io %irq   Temp    VCore${NetioHeader}"
+		DisplayHeader="Time        fake/real   load %cpu %sys %usr %nice %io %irq   Temp    VCore${VoltageHeader}${NetioHeader}"
 		CPUs=raspberrypi
 	elif [ ${#ClusterConfig[@]} -eq 1 -a -f /sys/devices/system/cpu/cpufreq/policy0/${CpuFreqToQuery} ] ; then
-		DisplayHeader="Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp${NetioHeader}"
+		DisplayHeader="Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp${VoltageHeader}${NetioHeader}"
 		CPUs=singlecluster
 	elif [ -f /sys/devices/system/cpu/cpufreq/policy${ClusterConfig[1]}/${CpuFreqToQuery} ]; then
 		ClusterCount=$(( ${#ClusterConfig[@]} -1 ))
-		DisplayHeader="Time       big.LITTLE   load %cpu %sys %usr %nice %io %irq   Temp${NetioHeader}"
+		DisplayHeader="Time       big.LITTLE   load %cpu %sys %usr %nice %io %irq   Temp${VoltageHeader}${NetioHeader}"
 		read FirstCluster </sys/devices/system/cpu/cpufreq/policy${ClusterConfig[0]}/cpuinfo_max_freq
 		read LastCluster </sys/devices/system/cpu/cpufreq/policy${ClusterConfig[$ClusterCount]}/cpuinfo_max_freq
 		if [ ${LastCluster} -ge ${FirstCluster} ]; then
@@ -1188,7 +1189,7 @@ MonitorBoard() {
 			CPUs=littlebig
 		fi
 	else
-		DisplayHeader="Time      CPU n/a    load %cpu %sys %usr %nice %io %irq   Temp${NetioHeader}"
+		DisplayHeader="Time      CPU n/a    load %cpu %sys %usr %nice %io %irq   Temp${VoltageHeader}${NetioHeader}"
 		CPUs=notavailable
 	fi
 	[ -f "${TempSource}" ] || SocTemp='n/a'
@@ -1200,6 +1201,11 @@ MonitorBoard() {
 		fi
 
 		ProcessStats
+
+		if [ "X${VoltageSensor}" != "X" ]; then
+			InputVoltage="$(GetInputVoltage "${VoltageSensor}")"
+			VoltageColumn="  $(printf "%5s" ${InputVoltage})"
+		fi
 
 		if [ -s "${NetioConsumptionFile}" ]; then
 			read ConsumptionNow <"${NetioConsumptionFile}"
@@ -1216,19 +1222,19 @@ MonitorBoard() {
 			biglittle)
 				BigFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpufreq/policy${ClusterConfig[$ClusterCount]}/${CpuFreqToQuery} 2>/dev/null)
 				LittleFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpufreq/policy${ClusterConfig[0]}/${CpuFreqToQuery} 2>/dev/null)
-				echo -e "$(date "+%H:%M:%S"): $(printf "%4s" ${BigFreq})/$(printf "%4s" ${LittleFreq})MHz $(printf "%5s" ${LoadAvg}) ${procStats}  $(printf "%4s" ${SocTemp})°C${NetioColumn}"
+				echo -e "$(date "+%H:%M:%S"): $(printf "%4s" ${BigFreq})/$(printf "%4s" ${LittleFreq})MHz $(printf "%5s" ${LoadAvg}) ${procStats}  $(printf "%4s" ${SocTemp})°C${VoltageColumn}${NetioColumn}"
 				;;
 			littlebig)
 				BigFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpufreq/policy${ClusterConfig[0]}/${CpuFreqToQuery} 2>/dev/null)
 				LittleFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpufreq/policy${ClusterConfig[$ClusterCount]}/${CpuFreqToQuery} 2>/dev/null)
-				echo -e "$(date "+%H:%M:%S"): $(printf "%4s" ${BigFreq})/$(printf "%4s" ${LittleFreq})MHz $(printf "%5s" ${LoadAvg}) ${procStats}  $(printf "%4s" ${SocTemp})°C${NetioColumn}"
+				echo -e "$(date "+%H:%M:%S"): $(printf "%4s" ${BigFreq})/$(printf "%4s" ${LittleFreq})MHz $(printf "%5s" ${LoadAvg}) ${procStats}  $(printf "%4s" ${SocTemp})°C${VoltageColumn}${NetioColumn}"
 				;;
 			singlecluster)
 				CpuFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpufreq/policy0/${CpuFreqToQuery} 2>/dev/null)
-				echo -e "$(date "+%H:%M:%S"): $(printf "%4s" ${CpuFreq})MHz $(printf "%5s" ${LoadAvg}) ${procStats}  $(printf "%4s" ${SocTemp})°C${NetioColumn}"
+				echo -e "$(date "+%H:%M:%S"): $(printf "%4s" ${CpuFreq})MHz $(printf "%5s" ${LoadAvg}) ${procStats}  $(printf "%4s" ${SocTemp})°C${VoltageColumn}${NetioColumn}"
 				;;
 			notavailable)
-				echo -e "$(date "+%H:%M:%S"):   ---     $(printf "%5s" ${LoadAvg}) ${procStats}  $(printf "%4s" ${SocTemp})°C${NetioColumn}"
+				echo -e "$(date "+%H:%M:%S"):   ---     $(printf "%5s" ${LoadAvg}) ${procStats}  $(printf "%4s" ${SocTemp})°C${VoltageColumn}${NetioColumn}"
 				;;
 		esac
 		sleep ${SleepInterval}
@@ -2146,11 +2152,12 @@ InitialMonitoring() {
 	fi
 
 	# Some basic system info needed to interpret system health later
-	InputVoltage="$(GetInputVoltage)"
-	if [ "X${InputVoltage}" = "X" ]; then
-		echo -e "\nUptime:$(uptime),  ${InitialTemp}°C\n\n$(iostat | grep -E -v "^loop|boot0|boot1")\n\n$(free -h)\n\n$(swapon -s)\n" | sed '/^$/N;/^\n$/D' >>${ResultLog}
-	else
+	VoltageSensor="$(GetVoltageSensor)"
+	if [ "X${VoltageSensor}" != "X" ]; then
+		InputVoltage="$(GetInputVoltage "${VoltageSensor}")"
 		echo -e "\nUptime:$(uptime),  ${InitialTemp}°C,  ${InputVoltage}V\n\n$(iostat | grep -E -v "^loop|boot0|boot1")\n\n$(free -h)\n\n$(swapon -s)\n" | sed '/^$/N;/^\n$/D' >>${ResultLog}
+	else
+		echo -e "\nUptime:$(uptime),  ${InitialTemp}°C\n\n$(iostat | grep -E -v "^loop|boot0|boot1")\n\n$(free -h)\n\n$(swapon -s)\n" | sed '/^$/N;/^\n$/D' >>${ResultLog}
 	fi
 	ShowZswapStats 2>/dev/null >>${ResultLog}
 	
@@ -2174,30 +2181,47 @@ InitialMonitoring() {
 	echo "sbc-bench started" >/dev/kmsg
 } # InitialMonitoring
 
-GetInputVoltage() {
+GetVoltageSensor() {
 	if [ -f /sys/devices/iio_sysfs_trigger/subsystem/devices/iio\:device0/in_voltage6_raw ]; then
-		# Rock 5B
-		grep -q rock-5b <<<"${DTCompatible}" && awk '{printf ("%0.2f\n",$1/172.5); }' </sys/devices/iio_sysfs_trigger/subsystem/devices/iio\:device0/in_voltage6_raw
+		# Rock 5B running with Rockchip's 5.10 BSP kernel
+		grep -q rock-5b <<<"${DTCompatible}" && echo /sys/devices/iio_sysfs_trigger/subsystem/devices/iio\:device0/in_voltage6_raw
 	elif [ -f /sys/power/axp_pmu/vbus/voltage ]; then
 		# Allwinner A20 powered through USB running with mainline kernel + Armbian patches
-		awk '{printf ("%0.2f",$1/1000000); }' </sys/power/axp_pmu/vbus/voltage
+		echo /sys/power/axp_pmu/vbus/voltage
 	elif [ -f /sys/devices/platform/sunxi-i2c.0/i2c-0/0-0034/axp20-supplyer.28/power_supply/usb/voltage_now ]; then
 		# Allwinner A20 powered through USB running 3.4 kernel
-		awk '{printf ("%0.2f",$1/1000000); }' </sys/devices/platform/sunxi-i2c.0/i2c-0/0-0034/axp20-supplyer.28/power_supply/usb/voltage_now
+		echo /sys/devices/platform/sunxi-i2c.0/i2c-0/0-0034/axp20-supplyer.28/power_supply/usb/voltage_now
 	elif [ -f /sys/power/axp_pmu/ac/voltage ]; then
 		# Allwinner A20 powered via DC-IN running with mainline kernel + Armbian patches
-		awk '{printf ("%0.2f",$1/1000000); }' </sys/power/axp_pmu/ac/voltage
+		echo /sys/power/axp_pmu/ac/voltage
 	elif [ -f /sys/devices/platform/sunxi-i2c.0/i2c-0/0-0034/axp20-supplyer.28/power_supply/ac/voltage_now ]; then
 		# Allwinner A20 powered via DC-IN running 3.4 kernel
-		awk '{printf ("%0.2f",$1/1000000); }' </sys/devices/platform/sunxi-i2c.0/i2c-0/0-0034/axp20-supplyer.28/power_supply/ac/voltage_now
+		echo /sys/devices/platform/sunxi-i2c.0/i2c-0/0-0034/axp20-supplyer.28/power_supply/ac/voltage_now
 	elif [ -f /sys/bus/iio/devices/iio\:device0/in_voltage2_raw ]; then
 		# Tinkerboard S
 		grep -q rk3288-tinker-s <<<"${DTCompatible}"
 		if [ $? -eq 0 ]; then
-			read -r RAWvoltage </sys/bus/iio/devices/iio\:device0/in_voltage2_raw
-			command -v bc >/dev/null 2>&1 && echo "(${RAWvoltage} / ((82.0/302.0) * 1023.0 / 1.8)) + 0.1" | bc -l | awk '{printf ("%0.2f\n",$1); }'
+			command -v bc >/dev/null 2>&1 && echo /sys/bus/iio/devices/iio\:device0/in_voltage2_raw
 		fi
 	fi
+} # GetInputVoltage
+
+GetInputVoltage() {
+	case ${1##*/} in
+		in_voltage6_raw)
+			# Rock 5B running with Rockchip's 5.10 BSP kernel
+			awk '{printf ("%0.2f",$1/172.5); }' <"${1}"
+			;;
+		in_voltage2_raw)
+			# Tinkerboard S
+			read -r RAWvoltage <"${1}"
+			echo "(${RAWvoltage} / ((82.0/302.0) * 1023.0 / 1.8)) + 0.1" | bc -l | awk '{printf ("%0.2f",$1); }'
+			;;
+		voltage|voltage_now)
+			# Allwinner A20
+			awk '{printf ("%0.2f",$1/1000000); }' <"${1}"
+			;;
+	esac
 } # GetInputVoltage
 
 CheckClockspeedsAndSensors() {

@@ -1,0 +1,590 @@
+sbc-bench v0.9.9  / Athlon(tm) II X3 420e (Thu, 03 Nov 2022 09:13:59 +0100)
+
+Distributor ID:	Debian
+Description:	Debian GNU/Linux 10 (buster)
+Release:	10
+Codename:	buster
+
+BIOS/UEFI:
+	Vendor: American Megatrends Inc.
+	Version: P1.30
+	Release Date: 04/12/2010
+	BIOS Revision: 8.15
+
+/usr/bin/gcc (Debian 8.3.0-6) 8.3.0
+
+Uptime: 09:14:00 up  1:55,  3 users,  load average: 0.30, 0.19, 0.12,  23.0°C
+
+Linux 4.19.0-22-amd64 (D10H) 	11/03/22 	_x86_64_	(3 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+           3.31    0.05    1.37    0.28    0.00   94.99
+
+Device             tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn
+sda              11.12       252.82       136.11    1747389     940768
+dm-0             11.68       219.75        94.14    1518788     650688
+dm-1              3.40        30.84        42.22     213184     291796
+
+              total        used        free      shared  buff/cache   available
+Mem:          5.8Gi       1.4Gi       3.7Gi       115Mi       759Mi       4.1Gi
+Swap:            0B          0B          0B
+
+##########################################################################
+
+Checking cpufreq OPP:
+
+Cpufreq OPP: 2600    Measured: 2593 (2593.412/2593.360/2593.360)
+Cpufreq OPP: 2200    Measured: 2193 (2194.015/2193.968/2193.735)
+Cpufreq OPP: 1900    Measured: 1894 (1895.063/1894.927/1894.248)
+Cpufreq OPP:  800    Measured:  797    (797.287/797.268/797.230)
+
+##########################################################################
+
+Hardware sensors:
+
+w83627dhg-isa-0290
+Vcore:        +1.19 V  (min =  +0.00 V, max =  +1.74 V)
+in1:          +0.08 V  (min =  +0.95 V, max =  +1.25 V)  ALARM
+AVCC:         +3.28 V  (min =  +2.98 V, max =  +3.63 V)
++3.3V:        +3.28 V  (min =  +2.98 V, max =  +3.63 V)
+in4:          +1.64 V  (min =  +0.10 V, max =  +0.84 V)  ALARM
+in5:          +1.69 V  (min =  +0.26 V, max =  +0.50 V)  ALARM
+in6:          +1.86 V  (min =  +1.94 V, max =  +1.02 V)  ALARM
+3VSB:         +3.47 V  (min =  +2.98 V, max =  +3.63 V)
+Vbat:         +3.46 V  (min =  +2.70 V, max =  +3.63 V)
+fan1:        2136 RPM  (min = 1022 RPM, div = 8)
+fan2:        3125 RPM  (min = 2109 RPM, div = 8)
+fan3:        3183 RPM  (min = 4821 RPM, div = 8)  ALARM
+fan5:           0 RPM  (min =  937 RPM, div = 32)  ALARM
+temp1:        +30.0 C  (high = +69.0 C, hyst = -128.0 C)  sensor = thermistor
+temp2:        +31.5 C  (high = +80.0 C, hyst = +75.0 C)  sensor = thermistor
+temp3:        +31.5 C  (high = +80.0 C, hyst = +75.0 C)  sensor = thermistor
+intrusion0:  ALARM
+
+k10temp-pci-00c3
+temp1:        +24.0 C  (high = +70.0 C)
+
+/dev/sda:	22°C
+
+##########################################################################
+
+Executing benchmark on cpu0:
+
+tinymembench v0.4.9 (simple benchmark for memory throughput and latency)
+
+==========================================================================
+== Memory bandwidth tests                                               ==
+==                                                                      ==
+== Note 1: 1MB = 1000000 bytes                                          ==
+== Note 2: Results for 'copy' tests show how many bytes can be          ==
+==         copied per second (adding together read and writen           ==
+==         bytes would have provided twice higher numbers)              ==
+== Note 3: 2-pass copy means that we are using a small temporary buffer ==
+==         to first fetch data into it, and only then write it to the   ==
+==         destination (source -> L1 cache, L1 cache -> destination)    ==
+== Note 4: If sample standard deviation exceeds 0.1%, it is shown in    ==
+==         brackets                                                     ==
+==========================================================================
+
+ C copy backwards                                     :   2763.0 MB/s (0.4%)
+ C copy backwards (32 byte blocks)                    :   2761.6 MB/s (0.1%)
+ C copy backwards (64 byte blocks)                    :   2763.4 MB/s (2.6%)
+ C copy                                               :   2766.5 MB/s (3.1%)
+ C copy prefetched (32 bytes step)                    :   2790.6 MB/s (0.3%)
+ C copy prefetched (64 bytes step)                    :   2792.8 MB/s (0.2%)
+ C 2-pass copy                                        :   2065.1 MB/s (4.4%)
+ C 2-pass copy prefetched (32 bytes step)             :   2205.1 MB/s
+ C 2-pass copy prefetched (64 bytes step)             :   2246.8 MB/s
+ C fill                                               :   3889.4 MB/s (0.1%)
+ C fill (shuffle within 16 byte blocks)               :   3890.0 MB/s (1.8%)
+ C fill (shuffle within 32 byte blocks)               :   3877.0 MB/s (3.4%)
+ C fill (shuffle within 64 byte blocks)               :   3880.4 MB/s
+ ---
+ standard memcpy                                      :   4122.9 MB/s
+ standard memset                                      :   3874.9 MB/s (0.3%)
+ ---
+ MOVSB copy                                           :   2770.5 MB/s
+ MOVSD copy                                           :   2770.4 MB/s
+ SSE2 copy                                            :   2769.5 MB/s (6.2%)
+ SSE2 nontemporal copy                                :   3991.3 MB/s
+ SSE2 copy prefetched (32 bytes step)                 :   2793.0 MB/s
+ SSE2 copy prefetched (64 bytes step)                 :   2789.7 MB/s
+ SSE2 nontemporal copy prefetched (32 bytes step)     :   4233.9 MB/s
+ SSE2 nontemporal copy prefetched (64 bytes step)     :   4235.7 MB/s (6.4%)
+ SSE2 2-pass copy                                     :   2080.2 MB/s
+ SSE2 2-pass copy prefetched (32 bytes step)          :   2230.6 MB/s (0.2%)
+ SSE2 2-pass copy prefetched (64 bytes step)          :   2282.2 MB/s
+ SSE2 2-pass nontemporal copy                         :   1611.8 MB/s (4.5%)
+ SSE2 fill                                            :   3874.4 MB/s
+ SSE2 nontemporal fill                                :   6991.1 MB/s
+
+==========================================================================
+== Framebuffer read tests.                                              ==
+==                                                                      ==
+== Many ARM devices use a part of the system memory as the framebuffer, ==
+== typically mapped as uncached but with write-combining enabled.       ==
+== Writes to such framebuffers are quite fast, but reads are much       ==
+== slower and very sensitive to the alignment and the selection of      ==
+== CPU instructions which are used for accessing memory.                ==
+==                                                                      ==
+== Many x86 systems allocate the framebuffer in the GPU memory,         ==
+== accessible for the CPU via a relatively slow PCI-E bus. Moreover,    ==
+== PCI-E is asymmetric and handles reads a lot worse than writes.       ==
+==                                                                      ==
+== If uncached framebuffer reads are reasonably fast (at least 100 MB/s ==
+== or preferably >300 MB/s), then using the shadow framebuffer layer    ==
+== is not necessary in Xorg DDX drivers, resulting in a nice overall    ==
+== performance improvement. For example, the xf86-video-fbturbo DDX     ==
+== uses this trick.                                                     ==
+==========================================================================
+
+ MOVSD copy (from framebuffer)                        :      3.5 MB/s
+ MOVSD 2-pass copy (from framebuffer)                 :      3.5 MB/s
+ SSE2 copy (from framebuffer)                         :      4.7 MB/s
+ SSE2 2-pass copy (from framebuffer)                  :      4.7 MB/s
+
+==========================================================================
+== Memory latency test                                                  ==
+==                                                                      ==
+== Average time is measured for random memory accesses in the buffers   ==
+== of different sizes. The larger is the buffer, the more significant   ==
+== are relative contributions of TLB, L1/L2 cache misses and SDRAM      ==
+== accesses. For extremely large buffer sizes we are expecting to see   ==
+== page table walk with several requests to SDRAM for almost every      ==
+== memory access (though 64MiB is not nearly large enough to experience ==
+== this effect to its fullest).                                         ==
+==                                                                      ==
+== Note 1: All the numbers are representing extra time, which needs to  ==
+==         be added to L1 cache latency. The cycle timings for L1 cache ==
+==         latency can be usually found in the processor documentation. ==
+== Note 2: Dual random read means that we are simultaneously performing ==
+==         two independent memory accesses at a time. In the case if    ==
+==         the memory subsystem can't handle multiple outstanding       ==
+==         requests, dual random read has the same timings as two       ==
+==         single reads performed one after another.                    ==
+==========================================================================
+
+block size : single random read / dual random read, [MADV_NOHUGEPAGE]
+      1024 :    0.0 ns          /     0.0 ns 
+      2048 :    0.0 ns          /     0.0 ns 
+      4096 :    0.0 ns          /     0.0 ns 
+      8192 :    0.0 ns          /     0.0 ns 
+     16384 :    0.0 ns          /     0.0 ns 
+     32768 :    0.0 ns          /     0.0 ns 
+     65536 :    0.0 ns          /     0.0 ns 
+    131072 :    1.8 ns          /     3.7 ns 
+    262144 :    3.1 ns          /     5.8 ns 
+    524288 :    8.1 ns          /    14.6 ns 
+   1048576 :   35.0 ns          /    53.7 ns 
+   2097152 :   53.0 ns          /    69.5 ns 
+   4194304 :   70.1 ns          /    85.3 ns 
+   8388608 :   79.3 ns          /    96.1 ns 
+  16777216 :   85.4 ns          /   104.7 ns 
+  33554432 :   92.2 ns          /   115.4 ns 
+  67108864 :  103.1 ns          /   135.7 ns 
+
+block size : single random read / dual random read, [MADV_HUGEPAGE]
+      1024 :    0.0 ns          /     0.0 ns 
+      2048 :    0.0 ns          /     0.0 ns 
+      4096 :    0.0 ns          /     0.0 ns 
+      8192 :    0.0 ns          /     0.0 ns 
+     16384 :    0.0 ns          /     0.0 ns 
+     32768 :    0.0 ns          /     0.0 ns 
+     65536 :    0.0 ns          /     0.0 ns 
+    131072 :    1.8 ns          /     3.7 ns 
+    262144 :    2.6 ns          /     5.3 ns 
+    524288 :    3.1 ns          /     6.0 ns 
+   1048576 :   32.1 ns          /    51.1 ns 
+   2097152 :   50.2 ns          /    68.8 ns 
+   4194304 :   59.8 ns          /    73.1 ns 
+   8388608 :   64.1 ns          /    74.8 ns 
+  16777216 :   66.6 ns          /    75.5 ns 
+  33554432 :   67.8 ns          /    75.8 ns 
+  67108864 :   68.2 ns          /    75.9 ns 
+
+##########################################################################
+
+Executing ramlat on cpu0, results in ns:
+
+       size:  1x32  2x32  1x64  2x64 1xPTR 2xPTR 4xPTR 8xPTR
+         4k: 1.157 1.157 1.519 1.519 1.157 1.157 1.494 2.932 
+         8k: 1.157 1.157 1.520 1.519 1.158 1.157 1.482 2.929 
+        16k: 1.157 1.157 1.518 1.519 1.157 1.157 1.474 2.915 
+        32k: 1.157 1.157 1.519 1.520 1.157 1.157 1.477 2.914 
+        64k: 1.158 1.158 1.520 1.520 1.158 1.158 1.477 2.915 
+       128k: 12.34 13.93 6.748 14.50 12.34 12.86 13.68 25.78 
+       256k: 14.46 14.01 7.017 15.19 14.46 14.43 13.00 26.53 
+       512k: 15.51 14.06 7.168 15.19 15.54 15.49 13.19 26.75 
+      1024k: 84.35 81.75 84.01 93.67 85.87 80.85 81.50 110.6 
+      2048k: 81.89 85.08 81.85 84.47 81.85 77.26 81.95 110.4 
+      4096k: 81.84 84.41 81.77 82.91 81.75 77.74 78.96 112.6 
+      8192k: 79.62 87.19 79.80 86.75 79.63 80.78 82.32 116.3 
+     16384k: 76.62 87.02 76.68 86.74 76.85 80.29 82.22 117.8 
+
+##########################################################################
+
+Executing benchmark twice on cluster 0
+
+OpenSSL 1.1.1n, built on 15 Mar 2022
+type             16 bytes     64 bytes    256 bytes   1024 bytes   8192 bytes  16384 bytes
+aes-128-cbc     102474.21k   121918.98k   129654.95k   131942.06k   132516.52k   132557.48k
+aes-128-cbc     102224.82k   121840.15k   129818.62k   131889.15k   132481.02k   132497.41k
+aes-192-cbc      91107.06k   106455.57k   111542.27k   113629.87k   114292.05k   113923.41k
+aes-192-cbc      89921.48k   106697.26k   112388.27k   113923.07k   113983.11k   114414.93k
+aes-256-cbc      78706.93k    92609.00k    97605.55k    99035.14k    99426.30k    99445.42k
+aes-256-cbc      80260.51k    92673.02k    96778.92k    97920.68k    98222.08k    98233.00k
+
+##########################################################################
+
+Executing benchmark single-threaded on cpu0
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,3 CPUs AMD Athlon(tm) II X3 420e Processor (100F53),ASM)
+
+AMD Athlon(tm) II X3 420e Processor (100F53)
+CPU Freq:  2587  2588  2587  2587  2593  2592  2593  2591  2592
+
+RAM size:    5961 MB,  # CPU hardware threads:   3
+RAM usage:    435 MB,  # Benchmark threads:      1
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       2486   100   2419   2419  |      30043   100   2565   2565
+23:       2459   100   2505   2506  |      29493   100   2553   2553
+24:       2425   100   2607   2608  |      29001   100   2546   2546
+25:       2419   100   2762   2763  |      28835   100   2566   2567
+----------------------------------  | ------------------------------
+Avr:             100   2574   2574  |              100   2558   2558
+Tot:             100   2566   2566
+
+##########################################################################
+
+Executing benchmark 3 times multi-threaded on CPUs 0-2
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,3 CPUs AMD Athlon(tm) II X3 420e Processor (100F53),ASM)
+
+AMD Athlon(tm) II X3 420e Processor (100F53)
+CPU Freq:  2586  2591  2589  2585  2589  2592  2592  2592  2592
+
+RAM size:    5961 MB,  # CPU hardware threads:   3
+RAM usage:    441 MB,  # Benchmark threads:      3
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       4294   164   2555   4177  |      59209   199   2543   5055
+23:       4267   165   2639   4348  |      58441   199   2539   5059
+24:       4262   166   2761   4583  |      57538   199   2537   5051
+25:       4231   166   2908   4831  |      57298   199   2559   5100
+----------------------------------  | ------------------------------
+Avr:             165   2716   4485  |              199   2545   5066
+Tot:             182   2630   4776
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,3 CPUs AMD Athlon(tm) II X3 420e Processor (100F53),ASM)
+
+AMD Athlon(tm) II X3 420e Processor (100F53)
+CPU Freq:  2585  2588  2591  2593  2591  2593  2592  2592  2592
+
+RAM size:    5961 MB,  # CPU hardware threads:   3
+RAM usage:    441 MB,  # Benchmark threads:      3
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       4299   164   2556   4182  |      59662   200   2553   5094
+23:       4244   165   2629   4324  |      58951   200   2551   5103
+24:       4245   166   2758   4565  |      58072   200   2552   5098
+25:       4220   166   2900   4819  |      57544   200   2562   5122
+----------------------------------  | ------------------------------
+Avr:             165   2711   4473  |              200   2555   5104
+Tot:             182   2633   4788
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,3 CPUs AMD Athlon(tm) II X3 420e Processor (100F53),ASM)
+
+AMD Athlon(tm) II X3 420e Processor (100F53)
+CPU Freq:  2585  2589  2593  2593  2593  2592  2593  2592  2592
+
+RAM size:    5961 MB,  # CPU hardware threads:   3
+RAM usage:    441 MB,  # Benchmark threads:      3
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       4277   163   2548   4161  |      59737   200   2554   5100
+23:       4228   164   2623   4308  |      58884   200   2551   5097
+24:       4206   165   2741   4522  |      57875   200   2545   5081
+25:       4145   165   2872   4734  |      57335   199   2560   5103
+----------------------------------  | ------------------------------
+Avr:             164   2696   4431  |              200   2552   5095
+Tot:             182   2624   4763
+
+Compression: 4485,4473,4431
+Decompression: 5066,5104,5095
+Total: 4776,4788,4763
+
+##########################################################################
+
+Testing maximum cpufreq again, still under full load. System health now:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+09:25:42: 2600MHz  1.52  58%   1%  57%   0%   0%   0%  31.4°C
+
+Checking cpufreq OPP:
+
+Cpufreq OPP: 2600    Measured: 2593 (2593.465/2593.412/2593.360)
+
+##########################################################################
+
+Hardware sensors:
+
+w83627dhg-isa-0290
+Vcore:        +1.19 V  (min =  +0.00 V, max =  +1.74 V)
+in1:          +0.11 V  (min =  +0.95 V, max =  +1.25 V)  ALARM
+AVCC:         +3.28 V  (min =  +2.98 V, max =  +3.63 V)
++3.3V:        +3.28 V  (min =  +2.98 V, max =  +3.63 V)
+in4:          +1.64 V  (min =  +0.10 V, max =  +0.84 V)  ALARM
+in5:          +1.69 V  (min =  +0.26 V, max =  +0.50 V)  ALARM
+in6:          +1.86 V  (min =  +1.94 V, max =  +1.02 V)  ALARM
+3VSB:         +3.47 V  (min =  +2.98 V, max =  +3.63 V)
+Vbat:         +3.46 V  (min =  +2.70 V, max =  +3.63 V)
+fan1:        2136 RPM  (min = 1022 RPM, div = 8)
+fan2:        3125 RPM  (min = 2109 RPM, div = 8)
+fan3:        3183 RPM  (min = 4821 RPM, div = 8)  ALARM
+fan5:           0 RPM  (min =  958 RPM, div = 64)  ALARM
+temp1:        +30.0 C  (high = +69.0 C, hyst = -128.0 C)  sensor = thermistor
+temp2:        +38.0 C  (high = +80.0 C, hyst = +75.0 C)  sensor = thermistor
+temp3:        +32.0 C  (high = +80.0 C, hyst = +75.0 C)  sensor = thermistor
+intrusion0:  ALARM
+
+k10temp-pci-00c3
+temp1:        +29.5 C  (high = +70.0 C)
+
+/dev/sda:	22°C
+
+##########################################################################
+
+System health while running tinymembench:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+09:14:14: 2600MHz  0.81   5%   1%   3%   0%   0%   0%  24.2°C
+09:14:54: 2600MHz  0.90  35%   0%  34%   0%   0%   0%  25.5°C
+09:15:34: 2600MHz  0.95  35%   0%  33%   1%   0%   0%  26.5°C
+09:16:14: 2600MHz  1.03  37%   0%  33%   2%   0%   0%  27.5°C
+09:16:54: 2600MHz  1.09  35%   0%  33%   0%   0%   0%  26.5°C
+09:17:34: 2600MHz  1.05  34%   0%  33%   0%   0%   0%  27.0°C
+09:18:14: 2600MHz  1.02  35%   0%  33%   1%   0%   0%  27.5°C
+09:18:54: 2600MHz  1.01  34%   0%  33%   0%   0%   0%  27.0°C
+09:19:34: 2600MHz  1.00  35%   0%  33%   0%   0%   0%  27.0°C
+09:20:14: 2600MHz  1.00  34%   0%  33%   0%   0%   0%  26.5°C
+09:20:54: 2600MHz  1.09  35%   0%  33%   1%   0%   0%  27.0°C
+
+System health while running ramlat:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+09:21:09: 2600MHz  1.07   6%   1%   5%   0%   0%   0%  27.1°C
+09:21:12: 2600MHz  1.14  34%   0%  33%   0%   0%   0%  27.1°C
+09:21:15: 2600MHz  1.13  34%   0%  33%   0%   0%   0%  27.0°C
+09:21:18: 2600MHz  1.13  34%   0%  33%   0%   0%   0%  27.0°C
+09:21:21: 2600MHz  1.12  34%   0%  33%   0%   0%   0%  27.0°C
+09:21:25: 2600MHz  1.11  39%   0%  33%   4%   0%   0%  28.0°C
+09:21:28: 2600MHz  1.11  34%   0%  33%   0%   0%   0%  27.4°C
+09:21:31: 2600MHz  1.10  34%   0%  33%   0%   0%   0%  27.0°C
+
+System health while running OpenSSL benchmark:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+09:21:33: 2600MHz  1.10   6%   1%   5%   0%   0%   0%  27.5°C
+09:21:49: 2600MHz  1.07  36%   0%  33%   2%   0%   0%  28.0°C
+09:22:05: 2600MHz  1.06  33%   0%  33%   0%   0%   0%  28.0°C
+09:22:22: 2600MHz  1.04  33%   0%  33%   0%   0%   0%  28.0°C
+09:22:38: 2600MHz  1.03  33%   0%  33%   0%   0%   0%  28.5°C
+09:22:54: 2600MHz  1.02  34%   0%  33%   0%   0%   0%  28.5°C
+09:23:10: 2600MHz  1.02  34%   0%  33%   0%   0%   0%  29.0°C
+
+System health while running 7-zip single core benchmark:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+09:23:22: 2600MHz  1.09   7%   1%   5%   0%   0%   0%  29.0°C
+09:23:27: 2600MHz  1.08  34%   0%  33%   0%   0%   0%  28.5°C
+09:23:32: 2600MHz  1.07  33%   0%  33%   0%   0%   0%  28.5°C
+09:23:37: 2600MHz  1.07  34%   0%  33%   0%   0%   0%  28.6°C
+09:23:42: 2600MHz  1.06  33%   0%  33%   0%   0%   0%  28.4°C
+09:23:47: 2600MHz  1.06  33%   0%  33%   0%   0%   0%  28.5°C
+09:23:52: 2600MHz  1.05  34%   0%  33%   0%   0%   0%  28.5°C
+09:23:57: 2600MHz  1.05  34%   0%  33%   0%   0%   0%  28.5°C
+09:24:02: 2600MHz  1.04  33%   0%  33%   0%   0%   0%  28.5°C
+
+System health while running 7-zip multi core benchmark:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+09:24:06: 2600MHz  1.04   7%   1%   5%   0%   0%   0%  28.5°C
+09:24:18: 2600MHz  1.11  58%   0%  57%   0%   0%   0%  33.0°C
+09:24:30: 2600MHz  1.22  59%   1%  58%   0%   0%   0%  30.6°C
+09:24:42: 2600MHz  1.26  56%   1%  55%   0%   0%   0%  30.8°C
+09:24:54: 2600MHz  1.38  62%   0%  61%   0%   0%   0%  30.9°C
+09:25:06: 2600MHz  1.45  58%   1%  57%   0%   0%   0%  31.2°C
+09:25:18: 2600MHz  1.61  58%   0%  57%   0%   0%   0%  33.5°C
+09:25:30: 2600MHz  1.62  60%   0%  59%   0%   0%   0%  31.9°C
+09:25:42: 2600MHz  1.52  58%   1%  57%   0%   0%   0%  31.4°C
+
+##########################################################################
+
+Linux 4.19.0-22-amd64 (D10H) 	11/03/22 	_x86_64_	(3 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+           6.48    0.11    1.31    0.26    0.00   91.84
+
+Device             tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn
+sda              11.51       237.56       130.13    1810545     991724
+dm-0             11.95       206.86        90.61    1576516     690556
+dm-1              3.30        28.68        39.76     218612     303008
+
+              total        used        free      shared  buff/cache   available
+Mem:          5.8Gi       729Mi       4.4Gi        40Mi       747Mi       4.8Gi
+Swap:            0B          0B          0B
+
+CPU sysfs topology (clusters, cpufreq members, clockspeeds)
+                 cpufreq   min    max
+ CPU    cluster  policy   speed  speed   core type
+  0        0        0      800    2600   Athlon(tm) II X3 420e
+  1        0        1      800    2600   Athlon(tm) II X3 420e
+  2        0        2      800    2600   Athlon(tm) II X3 420e
+
+Architecture:        x86_64
+CPU op-mode(s):      32-bit, 64-bit
+Byte Order:          Little Endian
+Address sizes:       48 bits physical, 48 bits virtual
+CPU(s):              3
+On-line CPU(s) list: 0-2
+Thread(s) per core:  1
+Core(s) per socket:  3
+Socket(s):           1
+NUMA node(s):        1
+Vendor ID:           AuthenticAMD
+CPU family:          16
+Model:               5
+Model name:          AMD Athlon(tm) II X3 420e Processor
+Stepping:            3
+CPU MHz:             2600.000
+CPU max MHz:         2600.0000
+CPU min MHz:         800.0000
+BogoMIPS:            5188.76
+Virtualization:      AMD-V
+L1d cache:           64K
+L1i cache:           64K
+L2 cache:            512K
+NUMA node0 CPU(s):   0-2
+Flags:               fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm 3dnowext 3dnow constant_tsc rep_good nopl nonstop_tsc cpuid extd_apicid pni monitor cx16 popcnt lahf_lm cmp_legacy svm extapic cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw ibs skinit wdt hw_pstate vmmcall npt lbrv svm_lock nrip_save
+
+Processor Information
+	Socket Designation: CPUSocket
+	Type: Central Processor
+	Family: Athlon II
+	Manufacturer: AMD              
+	ID: 53 0F 10 00 FF FB 8B 17
+	Signature: Family 16, Model 5, Stepping 3
+	Flags:
+		FPU (Floating-point unit on-chip)
+		VME (Virtual mode extension)
+		DE (Debugging extension)
+		PSE (Page size extension)
+		TSC (Time stamp counter)
+		MSR (Model specific registers)
+		PAE (Physical address extension)
+		MCE (Machine check exception)
+		CX8 (CMPXCHG8 instruction supported)
+		APIC (On-chip APIC hardware supported)
+		SEP (Fast system call)
+		MTRR (Memory type range registers)
+		PGE (Page global enable)
+		MCA (Machine check architecture)
+		CMOV (Conditional move instruction supported)
+		PAT (Page attribute table)
+		PSE-36 (36-bit page size extension)
+		CLFSH (CLFLUSH instruction supported)
+		MMX (MMX technology supported)
+		FXSR (FXSAVE and FXSTOR instructions supported)
+		SSE (Streaming SIMD extensions)
+		SSE2 (Streaming SIMD extensions 2)
+		HTT (Multi-threading)
+	Version: AMD Athlon(tm) II X3 420e Processor                 
+	Voltage: 1.5 V
+	External Clock: 200 MHz
+	Max Speed: 2600 MHz
+	Current Speed: 2600 MHz
+	Status: Populated, Enabled
+	Upgrade: Socket 940
+	L1 Cache Handle: 0x0005
+	L2 Cache Handle: 0x0006
+	L3 Cache Handle: 0x0007
+	Core Count: 3
+	Core Enabled: 3
+	Characteristics:
+		64-bit capable
+
+ Compiler: /usr/bin/gcc (Debian 8.3.0-6) 8.3.0 / x86_64-linux-gnu
+ Userland: amd64
+   Kernel: 4.19.0-22-amd64/x86_64
+           CONFIG_HZ=250
+           CONFIG_HZ_250=y
+           CONFIG_PREEMPT_NOTIFIERS=y
+           CONFIG_PREEMPT_VOLUNTARY=y
+           raid6: sse2x1   gen()  3458 MB/s
+           raid6: sse2x1   xor()  3450 MB/s
+           raid6: sse2x2   gen()  5715 MB/s
+           raid6: sse2x2   xor()  5858 MB/s
+           raid6: sse2x4   gen()  6722 MB/s
+           raid6: sse2x4   xor()  3723 MB/s
+           raid6: using algorithm sse2x4 gen() 6722 MB/s
+           raid6: .... xor() 3723 MB/s, rmw enabled
+           raid6: using intx1 recovery algorithm
+           xor: measuring software checksum speed
+           xor: using function: prefetch64-sse (10168.000 MB/sec)
+
+DIMM configuration:
+     *-bank:0
+          description: DIMM DDR2 Synchronous 400 MHz (2.5 ns)
+          product: ModulePartNumber00
+          vendor: Manufacturer00
+          physical id: 0
+          slot: DIMM0
+          size: 1GiB
+          width: 64 bits
+          clock: 400MHz (2.5ns)
+     *-bank:1
+          description: DIMM DDR2 Synchronous 400 MHz (2.5 ns)
+          product: ModulePartNumber01
+          vendor: Manufacturer01
+          physical id: 1
+          slot: DIMM1
+          size: 1GiB
+          width: 64 bits
+          clock: 400MHz (2.5ns)
+     *-bank:2
+          description: DIMM DDR2 Synchronous 400 MHz (2.5 ns)
+          product: ModulePartNumber02
+          vendor: Manufacturer02
+          physical id: 2
+          slot: DIMM2
+          size: 2GiB
+          width: 64 bits
+          clock: 400MHz (2.5ns)
+     *-bank:3
+          description: DIMM DDR2 Synchronous 400 MHz (2.5 ns)
+          product: ModulePartNumber03
+          vendor: Manufacturer03
+          physical id: 3
+          slot: DIMM3
+          size: 2GiB
+          width: 64 bits
+          clock: 400MHz (2.5ns)
+
+|  / Athlon(tm) II X3 420e | 2600 MHz | 4.19 | Debian GNU/Linux 10 (buster) x86_64/amd64 | 4780 | 2566 | 98840 | 4120 | 3870 | - |

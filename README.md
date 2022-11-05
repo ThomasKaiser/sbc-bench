@@ -107,7 +107,7 @@ Provides some insights about cache sizes/speed and memory latency/bandwidth. Stu
 
 ### [cpuminer](https://github.com/tkinjo1985/cpuminer-multi.git)
 
-This is the most demanding benchmark of the five and pretty efficient to check for appropriate heat dissipation and even instabilities under load. It makes heavy use of [SIMD optimizations](https://en.wikipedia.org/wiki/SIMD) (NEON on ARM and SSE on x86) therefore generating more heat than unoptimized 'standard' code.
+On most platforms this is the most demanding benchmark of the five and pretty efficient to check for appropriate heat dissipation and even instabilities under load. It makes heavy use of [SIMD optimizations](https://en.wikipedia.org/wiki/SIMD) (NEON on ARM and SSE on x86) therefore generating more heat than unoptimized 'standard' code.
 
 Heavy SIMD optimizations aren't really common, the generated scores depend a lot on compiler version and therefore this test is optional. Unless you execute `sbc-bench -c` or with `MODE=extensive` it will be skipped since results can be misleading. So consider this being a load generator to check whether your board will start to throttle or becomes unstable but take the benchmark numbers with a grain of salt unless you're a programmer and know what [NEON](https://en.wikipedia.org/wiki/ARM_architecture#Advanced_SIMD_(NEON)) or [SSE](https://en.wikipedia.org/wiki/Streaming_SIMD_Extensions) really are and whether your application can make use of.
 

@@ -175,6 +175,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [x5-Z8300](http://ix.io/1lgD) | 1420 MHz | 4.9 | Stretch amd64 | 3900 | 950 | 178010 | 2380 | 2380 | 7.81 |
 | [Celeron 5205U](http://ix.io/4eiM) | 1900 MHz | 5.15 | Jammy amd64 | 4060 | 2171 | 521090 | 7350 | 16020 | 11.20 |
 | [x5-Z8350](http://ix.io/1HnC) | 1920/1680 MHz | 4.15 | Bionic amd64 | 4710 | 1272 | 207640 | 2740 | 3140 | - |
+| [Athlon II X3 420e](http://ix.io/4eOo) | 2600 MHz | 4.19 | Buster amd64 | 4780 | 2566 | 98840 | 4120 | 3870 | - |
 | [x5-Z8350](http://ix.io/2Jdb) | 1920/1680 MHz | 5.4 | Focal amd64 | 4790 | 1454 | 237230 | 3170 | 2960 | 9.38 |
 | [Celeron J1900](http://ix.io/41Kb) | 2000/1333 MHz | 5.4 | Focal amd64 | 5530 | 1536 | 28860 | 3550 | 3400 | - |
 | [Atom E3950](http://ix.io/4dd5) | 2000 MHz | 5.15 | Jammy amd64 | 6440 | 1636 | 374800 | 4400 | 4840 | - |
@@ -199,7 +200,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 * The *7-zip single* number is a **single threaded** score measured on the fastest core of all available clusters.
 * *AES* is a **single threaded** encryption score with rather huge chunks of data (`openssl speed -elapsed -evp aes-256-cbc`). On hybrid designs (big.LITTLE, DynamicIQ, Alder/Raptor Lake) numbers show big/performance core results. In case an ARM SoC supports ARMv8 Crypto Extensions [scores are pretty much predictable based on CPU clockspeeds](results/ARMv8-Crypto-Extensions.md).
 * *memcpy* and *memset* are tinymembench measurements for memory bandwidth. On hybrid designs big/performance core results are shown. Both numbers are way overrated with regard to 'general performance', see for example the two `Phytium D2000` scores comparing single/dual channel memory and how much of bandwidth difference results in other numbers changing
-* *kH/s* is a **multi threaded** cpuminer score showing the board's performance when executing NEON optimized code. To get the performance difference between big and little cores click the links in the left column
+* *kH/s* is a **multi threaded** cpuminer score showing the board's performance when executing NEON/SSE optimized code. To get the performance difference between big and little cores click the links in the left column
 * The Akaso M8S and Tronsmart MXIII Plus numbers may be representative for other Amlogic S812 devices (quad Cortex-A9 @ 1.2/1.55 GHz), Tronsmart S82 for other S802 devices (quad Cortex-A9 @ 1.6 GHz)
 * The Amazon a1.xlarge numbers represent a 1st gen Graviton CPU (64-bit 'ARM Neoverse') limited to four A72 cores and 8GB memory while the Ampere A1 numbers represent an Ampere Altra limited to four Neoverse-N1 cores.
 * Cubietruck and 'LeMaker Banana Pi' numbers are more or less representative for all other Allwinner A20 devices, same with Lime for Allwinner A10, Olimex Teres-I for Allwinner A64, Orange Pi "PC Plus" and "Plus 2" for Allwinner H2+/H3 and NanoPi K1 Plus, Orange Pi "PC 2" and Prime for Allwinner H5, MangoPi Mcore for Allwinner H616 (though clocked 300 MHz higher than usual). AMedia X96 Max+ numbers represent Amlogic S905X3 devices.

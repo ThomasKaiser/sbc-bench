@@ -2037,14 +2037,19 @@ InstallPrerequisits() {
 } # InstallPrerequisits
 
 InstallCpuminer() {
-	# get/build cpuminer if not already there
+	# get/(re)build cpuminer if not already there or based on tkinjo1985 version
+	[ -f "${InstallLocation}"/cpuminer-multi/.git/config ] && grep -q tkinjo1985 "${InstallLocation}"/cpuminer-multi/.git/config >/dev/null 2>&1
+	if [ $? -eq 0 ]; then
+		# remove the old installation
+		rm -rf "${InstallLocation}"/cpuminer-multi
+	fi
 	if [ ! -x "${InstallLocation}"/cpuminer-multi/cpuminer ]; then
 		echo -e "\x08\x08\x08, cpuminer...\c"
 		cd "${InstallLocation}"
 		zypper install -y automake autoconf pkg-config libcurl4-openssl-dev libjansson-dev libssl-dev libgmp-dev make g++ zlib1g-dev >/dev/null 2>&1
 		apt-get -f -qq -y install automake autoconf pkg-config libcurl4-openssl-dev libjansson-dev libssl-dev libgmp-dev make g++ zlib1g-dev >/dev/null 2>&1
 		pacman --noconfirm -Sq automake autoconf pkg-config libcurl4-openssl-dev libjansson-dev libssl-dev libgmp-dev make g++ zlib1g-dev >/dev/null 2>&1
-		git clone https://github.com/tkinjo1985/cpuminer-multi.git >/dev/null 2>&1
+		git clone https://github.com/tpruvot/cpuminer-multi >/dev/null 2>&1
 		cd cpuminer-multi/ && ./build.sh >/dev/null 2>&1
 	fi
 	if [ ! -x "${InstallLocation}"/cpuminer-multi/cpuminer ]; then
@@ -2074,6 +2079,7 @@ InitialMonitoring() {
 	TempLog="${TempDir}/temp.log"
 	ResultLog="${TempDir}/results.log"
 	MonitorLog="${TempDir}/monitor.log"
+	touch "${ResultLog}" "${MonitorLog}"
 
 	# collect CPU topology
 	CPUTopology="$(PrintCPUTopology)"
@@ -2227,7 +2233,7 @@ GetInputVoltage() {
 CheckClockspeedsAndSensors() {
 	if [ -x "${InstallLocation}"/mhz/mhz ]; then
 		echo -e "\n##########################################################################" >>${ResultLog}
-		if [ -f ${MonitorLog} ]; then
+		if [ -s ${MonitorLog} ]; then
 			# 2nd check after most demanding benchmark has been run.
 			echo -e "\x08\x08 Done.\nChecking cpufreq OPP again...\c"
 			echo -e "\nTesting maximum cpufreq again, still under full load. System health now:\n" >>${ResultLog}
@@ -3436,7 +3442,7 @@ GuessARMSoC() {
 	# soc soc0: Amlogic Meson GXL (S905W) Revision 21:e (a5:2) Detected <-- Tanix TX3 Mini / JetHome JetHub J80 / Amlogic Meson GXL (S905X) P212 Development Board / Amlogic Meson GXL (S905W) P281 Development Board
 	# soc soc0: Amlogic Meson GXL (S905L) Revision 21:e (c5:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson GXM (Unknown) Revision 22:a (82:2) Detected <-- Amlogic Meson GXM (S912) Q201 Development Board
-	# soc soc0: Amlogic Meson GXM (S912) Revision 22:a (82:2) Detected <-- Beelink GT1 / Octopus Planet / Libre Computer AML-S912-PC / Khadas VIM2 / MeCool KIII Pro / Tronsmart Vega S96 / T95Z Plus / Vontar X92 / Amlogic Meson GXM (S912) Q200 Development Board / Amlogic Meson GXM (S912) Q201 Development Board
+	# soc soc0: Amlogic Meson GXM (S912) Revision 22:a (82:2) Detected <-- Beelink GT1 / Beelink GT1 Ultimate / Octopus Planet / Libre Computer AML-S912-PC / Khadas VIM2 / MeCool KIII Pro / Tronsmart Vega S96 / T95Z Plus / Vontar X92 / Amlogic Meson GXM (S912) Q200 Development Board / Amlogic Meson GXM (S912) Q201 Development Board
 	# soc soc0: Amlogic Meson GXM (S912) Revision 22:b (82:2) Detected <-- Beelink GT1 / Tronsmart Vega S96 / Octopus Planet / Amlogic Meson GXM (S912) Q201 Development Board
 	# soc soc0: Amlogic Meson AXG (Unknown) Revision 25:b (43:2) Detected <-- JetHome JetHub J100
 	# soc soc0: Amlogic Meson AXG (Unknown) Revision 25:c (43:2) Detected <-- JetHome JetHub J100

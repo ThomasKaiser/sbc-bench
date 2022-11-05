@@ -230,7 +230,7 @@ CheckPVTMDistributionOnRK3588() {
 			[ ${CPU6Freq} -le 2400 ] && echo "| [${DeviceName}](${URL}) (${Date}) | ${CPU6PVTM} | ${CPU6PVTMVoltSel} | ${CPU6OPP} | ${CPU6Freq}/${CPU6Freq2} |${IdleTemp} |" \
 			|| echo "| [${DeviceName}](${URL}) (${Date}) | ${CPU6PVTM} | ${CPU6PVTMVoltSel} | ${CPU6OPP} | **${CPU6Freq}/${CPU6Freq2}** |${IdleTemp} |"
 		fi
-	done | grep -v ' |  |' | grep -v '| 0 |' | sed 's/,/./g' | sort -t '|' -k 3 -n
+	done | grep -v ' |  |' | grep -v '| 0/0 |' | sed 's/,/./g' | sort -t '|' -k 3 -n
 } # CheckPVTMDistributionOnRK3588
 
 # CPUUtilization7ZIP >7-zip-cpu-utilisation.md

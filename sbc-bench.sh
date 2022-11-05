@@ -460,7 +460,7 @@ ReportGovernors() {
 	# check and report governors that might affect performance behaviour. Stuff like
 	# memory/GPU/NPU governors. On RK3588 for example:
 	#
-	# Status of probably performance related governors below /sys:
+	# Status of performance related governors below /sys:
 	# dmc: dmc_ondemand (dmc_ondemand userspace powersave performance simple_ondemand)
 	# fb000000.gpu: simple_ondemand (dmc_ondemand userspace powersave performance simple_ondemand)
 	# fdab0000.npu: userspace (dmc_ondemand userspace powersave performance simple_ondemand)
@@ -472,7 +472,7 @@ ReportGovernors() {
 	if [ "X${Governors}" = "X" ]; then
 		return
 	fi
-	echo -e "Status of probably performance related governors below /sys:"
+	echo -e "Status of performance related governors below /sys:"
 	echo "${Governors}" | while read ; do
 		read Governor <"${REPLY}"
 		if [ "X${Governor}" != "X" ]; then
@@ -1609,6 +1609,25 @@ ParseOPPTables() {
 		return
 	fi
 	echo -e "\n##########################################################################"
+
+	# report I2C accessible microvolt readings first
+	Measurements="$(find /sys/devices/platform -name microvolts | grep -i i2c)"
+	if [ "X${Measurements}" != "X" ]; then
+		echo ""
+		echo "${Measurements}" | while read ; do
+			if [ -f "${REPLY%/*}/name" ]; then
+				read NodeName <"${REPLY%/*}/name"
+				MicroVolts=$(awk '{printf ("%0.0f",$1/1000); }' <"${REPLY}")
+				if [ -f "${REPLY%/*}/max_microvolts" ]; then
+					MaxMicroVolts=$(awk '{printf ("%0.0f",$1/1000); }' <"${REPLY%/*}/max_microvolts")
+					echo -e "   ${NodeName}: ${MicroVolts} mV (${MaxMicroVolts} mV max)"
+				else
+					echo -e "   ${NodeName}: ${MicroVolts} mV"
+				fi
+			fi
+		done
+	fi
+
 	for OPPTable in ${DVFS}; do
 		read OPPTableName <"${OPPTable}/name"
 		echo -e "\n   ${OPPTableName}:"
@@ -3098,7 +3117,7 @@ UploadResults() {
 
 	# Display benchmark results if not in PTS or GB mode
 	if [ "X${MODE}" != "Xpts" -a "X${MODE}" != "Xgb" ]; then
-		[ ${#ClusterConfig[@]} -gt 1 ] && ClusterInfo=" (different CPU cores measured individually)"
+		[ ${#ClusterConfig[@]} -gt 1 ] && ClusterInfo=" (all ${#ClusterConfig[@]} CPU clusters measured individually)"
 		echo -e "${BOLD}Memory performance${NC}${ClusterInfo}:"
 		awk -F" " '/^ standard/ {print $2": "$4" "$5" "$6}' <${ResultLog}
 		if [ "${ExecuteCpuminer}" = "yes" -a -x "${InstallLocation}"/cpuminer-multi/cpuminer ]; then

@@ -3122,9 +3122,21 @@ UploadResults() {
 
 	# Display benchmark results if not in PTS or GB mode
 	if [ "X${MODE}" != "Xpts" -a "X${MODE}" != "Xgb" ]; then
-		[ ${#ClusterConfig[@]} -gt 1 ] && ClusterInfo=" (all ${#ClusterConfig[@]} CPU clusters measured individually)"
-		echo -e "${BOLD}Memory performance${NC}${ClusterInfo}:"
-		awk -F" " '/^ standard/ {print $2": "$4" "$5" "$6}' <${ResultLog}
+		MemoryScores="$(awk -F" " '/^ standard/ {print $2": "$4" "$5" "$6}' <${ResultLog})"
+		CountOfMemoryScores=$(wc -l <<<"${MemoryScores}")
+		if [ ${#ClusterConfig[@]} -eq 1 -o $(( ${#ClusterConfig[@]} * 2 )) -ne ${CountOfMemoryScores} ]; then
+			# if only 1 CPU cluster or mismatch between count of memory scores and cluster members
+			# then report plain results
+			echo -e "${BOLD}Memory performance${NC}\n${MemoryScores}"
+		else
+			# suffix memory scores with core types if possible
+			echo -e "${BOLD}Memory performance${NC} (all ${#ClusterConfig[@]} CPU clusters measured individually):"
+			for i in $(seq 0 $(( ${#ClusterConfig[@]} -1 )) ) ; do
+				CPUInfo="$(GetCPUInfo ${ClusterConfig[$i]})"
+				echo "$(grep "^memcpy:" <<<"${MemoryScores}" | sed -n $(( ${i} + 1 ))p)${CPUInfo}"
+				echo "$(grep "^memset:" <<<"${MemoryScores}" | sed -n $(( ${i} + 1 ))p)${CPUInfo}"
+			done
+		fi
 		if [ "${ExecuteCpuminer}" = "yes" -a -x "${InstallLocation}"/cpuminer-multi/cpuminer ]; then
 			echo -e "\n${BOLD}Cpuminer total scores${NC} (5 minutes execution): $(awk -F"Total Scores: " '/^Total Scores: / {print $2}' ${ResultLog}) kH/s"
 		fi
@@ -3338,7 +3350,7 @@ CacheAndDIMMDetails() {
 				[ -f ${REPLY%/*}/level ] && echo -e ", level: $(cat ${REPLY%/*}/level)\c"
 				[ -f ${REPLY%/*}/type ] && echo -e ", type: $(cat ${REPLY%/*}/type)\c"
 			done
-		done | sed -e 's|/sys/devices/system/cpu/||' -e 's|cache/||' -e 's|/size||' | sort -n
+		done | sed -e 's|/sys/devices/system/cpu/||' -e 's|cache/||' -e 's|/size||' | sort -V
 	fi
 	echo ""
 } # CacheAndDIMMDetails

@@ -99,7 +99,7 @@ mv -f lscpu-arm.c lscpu-arm.old
 
 # generate sorted tables
 echo -e "# sbc-bench results sorted\n" >Sorted-Results.md
-echo -e "**WARNING: do NOT blindly trust into these numbers without reading [the explanations](../Results.md#explanations) first!**\n" >>Sorted-Results.md
+echo -e "**WARNING: Do NOT blindly trust into these numbers without reading [the explanations](../Results.md#explanations) first!**\n" >>Sorted-Results.md
 echo "  * [7-zip multi-threaded](#7-zip-mips-multi-threaded)" >>Sorted-Results.md
 echo "  * [7-zip single-threaded](#7-zip-mips-single-threaded)" >>Sorted-Results.md
 echo "  * [aes-256-cbc](#openssl-speed--elapsed--evp-aes-256-cbc)" >>Sorted-Results.md
@@ -109,37 +109,44 @@ echo "  * [clockspeed](#clockspeed)" >>Sorted-Results.md
 
 # sorted by 7-zip multi-threaded score:
 echo -e "\n## 7-zip MIPS multi-threaded\n" >>Sorted-Results.md
-echo "| Device / details | Clockspeed | Kernel | Distro | 7-zip multi | 7-zip single | AES | memcpy | memset | kH/s |" >>Sorted-Results.md
+echo "| Device / details | Clockspeed | Kernel | Distro | *7-zip multi* | 7-zip single | AES | memcpy | memset | kH/s |" >>Sorted-Results.md
 echo "| ----- | :--------: | :----: | :----: | ----: | ------: | ------: | -----: | -----: | ---: |" >>Sorted-Results.md
-grep -E "http://ix.io|http://sprunge.us" ../Results.md | grep "^|" | sort -r -t '|' -k 6 -n >>Sorted-Results.md
+grep -E "http://ix.io|http://sprunge.us" ../Results.md | grep "^|" | sed 's/\*\*//g'| sort -r -t '|' -k 6 -n \
+	| awk -F"|" '{print "|"$2"|"$3"|"$4"|"$5"|**"$6"**|"$7"|"$8"|"$9"|"$10"|"$11"|"}' | sed -e 's/|\*\* /| \*\*/' -e 's/ \*\*|/\*\* |/' >>Sorted-Results.md
 
 # sorted by 7-zip single-threaded score:
 echo -e "\n[(back to top of the page)](#sbc-bench-results-sorted)\n\n## 7-zip MIPS single-threaded\n" >>Sorted-Results.md
-echo "| Device / details | Clockspeed | Kernel | Distro | 7-zip multi | 7-zip single | AES | memcpy | memset | kH/s |" >>Sorted-Results.md
+echo "| Device / details | Clockspeed | Kernel | Distro | 7-zip multi | *7-zip single* | AES | memcpy | memset | kH/s |" >>Sorted-Results.md
 echo "| ----- | :--------: | :----: | :----: | ----: | ------: | ------: | -----: | -----: | ---: |" >>Sorted-Results.md
-grep -E "http://ix.io|http://sprunge.us" ../Results.md | grep "^|" | sort -r -t '|' -k 7 -n >>Sorted-Results.md
+grep -E "http://ix.io|http://sprunge.us" ../Results.md | grep "^|" | sed 's/\*\*//g'| sort -r -t '|' -k 7 -n \
+	| awk -F"|" '{print "|"$2"|"$3"|"$4"|"$5"|"$6"|**"$7"**|"$8"|"$9"|"$10"|"$11"|"}' | sed -e 's/|\*\* /| \*\*/' -e 's/ \*\*|/\*\* |/' >>Sorted-Results.md
 
 # sorted by openssl speed -elapsed -evp aes-256-cbc:
 echo -e "\n[(back to top of the page)](#sbc-bench-results-sorted)\n\n## openssl speed -elapsed -evp aes-256-cbc\n" >>Sorted-Results.md
-echo "| Device / details | Clockspeed | Kernel | Distro | 7-zip multi | 7-zip single | AES | memcpy | memset | kH/s |" >>Sorted-Results.md
+echo -e "(For an in-depth explanation of ARMv8 AES scores see [here](ARMv8-Crypto-Extensions.md))\n" >>Sorted-Results.md
+echo "| Device / details | Clockspeed | Kernel | Distro | 7-zip multi | 7-zip single | *AES* | memcpy | memset | kH/s |" >>Sorted-Results.md
 echo "| ----- | :--------: | :----: | :----: | ----: | ------: | ------: | -----: | -----: | ---: |" >>Sorted-Results.md
-grep -E "http://ix.io|http://sprunge.us" ../Results.md | grep "^|" | sort -r -t '|' -k 8 -n >>Sorted-Results.md
+grep -E "http://ix.io|http://sprunge.us" ../Results.md | grep "^|" | sed 's/\*\*//g'| sort -r -t '|' -k 8 -n \
+	| awk -F"|" '{print "|"$2"|"$3"|"$4"|"$5"|"$6"|"$7"|**"$8"**|"$9"|"$10"|"$11"|"}' | sed -e 's/|\*\* /| \*\*/' -e 's/ \*\*|/\*\* |/' >>Sorted-Results.md
 
 # sorted by memcpy:
 echo -e "\n[(back to top of the page)](#sbc-bench-results-sorted)\n\n## memcpy\n" >>Sorted-Results.md
-echo "| Device / details | Clockspeed | Kernel | Distro | 7-zip multi | 7-zip single | AES | memcpy | memset | kH/s |" >>Sorted-Results.md
+echo "| Device / details | Clockspeed | Kernel | Distro | 7-zip multi | 7-zip single | AES | *memcpy* | memset | kH/s |" >>Sorted-Results.md
 echo "| ----- | :--------: | :----: | :----: | ----: | ------: | ------: | -----: | -----: | ---: |" >>Sorted-Results.md
-grep -E "http://ix.io|http://sprunge.us" ../Results.md | grep "^|" | sort -r -t '|' -k 9 -n >>Sorted-Results.md
+grep -E "http://ix.io|http://sprunge.us" ../Results.md | grep "^|" | sed 's/\*\*//g'| sort -r -t '|' -k 9 -n \
+	| awk -F"|" '{print "|"$2"|"$3"|"$4"|"$5"|"$6"|"$7"|"$8"|**"$9"**|"$10"|"$11"|"}' | sed -e 's/|\*\* /| \*\*/' -e 's/ \*\*|/\*\* |/' >>Sorted-Results.md
 
 # sorted by memset:
 echo -e "\n[(back to top of the page)](#sbc-bench-results-sorted)\n\n## memset\n" >>Sorted-Results.md
-echo "| Device / details | Clockspeed | Kernel | Distro | 7-zip multi | 7-zip single | AES | memcpy | memset | kH/s |" >>Sorted-Results.md
+echo "| Device / details | Clockspeed | Kernel | Distro | 7-zip multi | 7-zip single | AES | memcpy | *memset* | kH/s |" >>Sorted-Results.md
 echo "| ----- | :--------: | :----: | :----: | ----: | ------: | ------: | -----: | -----: | ---: |" >>Sorted-Results.md
-grep -E "http://ix.io|http://sprunge.us" ../Results.md | grep "^|" | sort -r -t '|' -k 10 -n >>Sorted-Results.md
+grep -E "http://ix.io|http://sprunge.us" ../Results.md | grep "^|" | sed 's/\*\*//g'| sort -r -t '|' -k 10 -n \
+	| awk -F"|" '{print "|"$2"|"$3"|"$4"|"$5"|"$6"|"$7"|"$8"|"$9"|**"$10"**|"$11"|"}' | sed -e 's/|\*\* /| \*\*/' -e 's/ \*\*|/\*\* |/' >>Sorted-Results.md
 
 # sorted by clockspeed:
 echo -e "\n[(back to top of the page)](#sbc-bench-results-sorted)\n\n## clockspeed\n" >>Sorted-Results.md
-echo "| Device / details | Clockspeed | Kernel | Distro | 7-zip multi | 7-zip single | AES | memcpy | memset | kH/s |" >>Sorted-Results.md
+echo "| Device / details | *Clockspeed* | Kernel | Distro | 7-zip multi | 7-zip single | AES | memcpy | memset | kH/s |" >>Sorted-Results.md
 echo "| ----- | :--------: | :----: | :----: | ----: | ------: | ------: | -----: | -----: | ---: |" >>Sorted-Results.md
-grep -E "http://ix.io|http://sprunge.us" ../Results.md | grep "^|" | sort -r -t '|' -k 3 -n | grep MHz >>Sorted-Results.md
+grep -E "http://ix.io|http://sprunge.us" ../Results.md | grep "^|" | sed 's/\*\*//g'| sort -r -t '|' -k 3 -n | grep MHz \
+	| awk -F"|" '{print "|"$2"|**"$3"**|"$4"|"$5"|"$6"|"$7"|"$8"|"$9"|"$10"|"$11"|"}' | sed -e 's/|\*\* /| \*\*/' -e 's/ MHz \*\*|/\*\* MHz|/' >>Sorted-Results.md
 echo -e "\n[(back to top of the page)](#sbc-bench-results-sorted)" >>Sorted-Results.md

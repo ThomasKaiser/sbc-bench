@@ -134,7 +134,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Raspberry Pi 4 B](http://ix.io/3Gia) | 1800 MHz | 5.10 | Raspberry Pi OS Buster | 6550 | 1897 | 77830 | 2780 | 3080 | - |
 | [Raspberry Pi 4 B](http://ix.io/3N94) | 1800 MHz | 5.10 | Raspberry Pi OS Bullseye | 5940 | 1738 | 77670 | 2310 | 2690 | - |
 | [Raspberry Pi 4 B](http://ix.io/3F9C) | 1800 MHz | 5.10 | Raspberry Pi OS Buster **arm64** | 5760 | 1741 | 36240 | 2240 | 3120 | 9.46 |
-| [Raspberry Pi 4 B](http://ix.io/3OBF) | 1800 MHz | 5.10 | Raspberry Pi OS Bullseye arm64 **arm64** | 5790 | 1769 | 36260 | 2330 | 3120 | 8.74 |
+| [Raspberry Pi 4 B](http://ix.io/3OBF) | 1800 MHz | 5.10 | Raspberry Pi OS Bullseye **arm64** | 5790 | 1769 | 36260 | 2330 | 3120 | 8.74 |
 | [Raspberry Pi 4 B](http://ix.io/3InF) | 1800 MHz | 5.15 | Armbian **Jammy arm64** | 5640 | 1752 | 36260 | 2580 | 3110 | - |
 | [Raspberry Pi 4 B](http://ix.io/3VME) | 1800 MHz | 5.15 | Jammy armhf | 6300 | 1844 | 82750 | 1190 | 3110 | - |
 | [Raspberry Pi 400](http://ix.io/2Cyi) | 1800 MHz | 5.4 | Raspberry Pi OS Buster | 6550 | 1903 | 77890 | 2680 | 3110 | - |

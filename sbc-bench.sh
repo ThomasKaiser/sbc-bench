@@ -146,6 +146,7 @@ Main() {
 	done
 
 	[ "X${MODE}" = "Xpts" -o "X${MODE}" = "Xgb" ] || CheckRelease
+	CreateTempDir
 	CheckLoadAndDmesg
 	[ -f /sys/devices/system/cpu/cpufreq/policy0/scaling_governor ] && \
 		read OriginalCPUFreqGovernor </sys/devices/system/cpu/cpufreq/policy0/scaling_governor 2>/dev/null
@@ -1417,7 +1418,7 @@ CheckRelease() {
 	esac
 } # CheckRelease
 
-CheckLoadAndDmesg() {
+CreateTempDir() {
 	# Create directory for temporary files
 	TempDir="$(mktemp -d /tmp/${0##*/}.XXXXXX)"
 	if [ ! -d "${TempDir}" ]; then
@@ -1426,7 +1427,9 @@ CheckLoadAndDmesg() {
 	fi
 	export TempDir
 	trap "rm -rf \"${TempDir}\" ; exit 0" 0 1 2 3 15
+} # CreateTempDir
 
+CheckLoadAndDmesg() {
 	# Check if kernel ring buffer contains boot messages. These help identifying HW.
 	DMESG="$(dmesg | grep -E "Linux| raid6: | xor: |pvtm|rockchip-cpuinfo|Amlogic Meson|sun50i")"
 	grep -q -E '] Booting Linux|] Linux version ' <<<"${DMESG}"
@@ -2327,6 +2330,18 @@ CheckClockspeedsAndSensors() {
 				esac
 			done
 		fi
+		if [ "X${MODE}" = "Xextensive" ]; then
+			# in this mode we also check all CPU cores in parallel, 1st in idle
+			echo -e "\nChecking highest clockspeeds for all cores in parallel (idle):\n" >>${ResultLog}
+			CheckAllCores idle >>${ResultLog}
+			# measure maximum clockspeeds under full load again
+			if [ -x "${InstallLocation}"/cpuminer-multi/cpuminer ]; then
+				echo -e "\nChecking highest clockspeeds for all cores in parallel (full load):\n" >>${ResultLog}
+				timeout 15 "${InstallLocation}"/cpuminer-multi/cpuminer --benchmark --cpu-priority=2 >/dev/null &
+				sleep 10
+				CheckAllCores full-load >>${ResultLog}
+			fi			
+		fi
 	else
 		echo -e "\x08\x08\x08 not possible since ${InstallLocation}/mhz/mhz not executable...\c"
 	fi
@@ -2470,6 +2485,21 @@ CheckCPUCluster() {
 		echo -e "No cpufreq support available. Measured on cpu${CpuToCheck}: ${RoundedSpeed} MHz (${MeasuredSpeed})"
 	fi
 } # CheckCPUCluster
+
+CheckAllCores() {
+	for i in $(seq 0 $(( ${CPUCores} -1 )) ) ; do
+		taskset -c ${i} "${InstallLocation}"/mhz/mhz 3 1000000 >"${TempDir}/CheckAllCores-${1}.${i}" &
+	done
+	for job in $(jobs -p) ; do
+		wait ${job}
+	done
+	for i in $(seq 0 $(( ${CPUCores} -1 )) ) ; do
+		MeasuredSpeed=$(awk -F" cpu_MHz=" '{print $2}' <"${TempDir}/CheckAllCores-${1}.${i}" | awk -F" " '{print $1}' | sort -r -n | tr '\n' '/' | sed 's|/$||')
+		SpeedSum=$(tr '/' '\n' <<<"${MeasuredSpeed}" | tr -d '.' | awk '{s+=$1} END {printf "%.0f", s}')
+		RoundedSpeed=$(( ${SpeedSum} / 3000 ))
+		echo -e "Measured on cpu${i}: ${RoundedSpeed} MHz (${MeasuredSpeed})"
+	done
+} # CheckAllCores
 
 RunTinyMemBench() {
 	if [ "X${MODE}" = "Xextensive" ]; then
@@ -3122,7 +3152,7 @@ UploadResults() {
 
 	# Display benchmark results if not in PTS or GB mode
 	if [ "X${MODE}" != "Xpts" -a "X${MODE}" != "Xgb" ]; then
-		MemoryScores="$(awk -F" " '/^ standard/ {print $2": "$4" "$5" "$6}' <${ResultLog})"
+		MemoryScores="$(awk -F" " '/^ standard/ {print $2": "$4" "$5" "$6}' <${ResultLog} | awk -F'MB/s' '{print $1"MB/s"}')"
 		CountOfMemoryScores=$(wc -l <<<"${MemoryScores}")
 		if [ ${#ClusterConfig[@]} -eq 1 -o $(( ${#ClusterConfig[@]} * 2 )) -ne ${CountOfMemoryScores} ]; then
 			# if only 1 CPU cluster or mismatch between count of memory scores and cluster members
@@ -3130,7 +3160,8 @@ UploadResults() {
 			echo -e "${BOLD}Memory performance${NC}\n${MemoryScores}"
 		else
 			# suffix memory scores with core types if possible
-			echo -e "${BOLD}Memory performance${NC} (all ${#ClusterConfig[@]} CPU clusters measured individually):"
+			ClusterInfo=" (all ${#ClusterConfig[@]} CPU clusters measured individually)"
+			echo -e "${BOLD}Memory performance${NC}${ClusterInfo}:"
 			for i in $(seq 0 $(( ${#ClusterConfig[@]} -1 )) ) ; do
 				CPUInfo="$(GetCPUInfo ${ClusterConfig[$i]})"
 				echo "$(grep "^memcpy:" <<<"${MemoryScores}" | sed -n $(( ${i} + 1 ))p)${CPUInfo}"

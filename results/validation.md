@@ -219,3 +219,4 @@
 | [4ebH](4ebH.txt) | v0.9.9 Jetson-AGX | 0.3%/0.6% | 31G/29G | X | X | X | X | 1% | 0% | |
 | [4eg5](4eg5.txt) | v0.9.9 Hardkernel ODROID-C1 | 0.2%/2.3% | 990Mi/874Mi | X | X | X | X | 2% | 1% | |
 | [4eiM](4eiM.txt) | v0.9.9 / Celeron 5205U @ 1.90GHz | 0%/0% | 7.6Gi/6.4Gi | X | X | X | X | 1% | 0% | |
+| [4f3I](4f3I.txt) | v0.9.9 HARDKERNEL ODROID-H3 1.0 / Penti | 0%/0.5% | 31Gi/30Gi | X | X | X | X | 1% | 0% | |

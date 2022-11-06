@@ -1617,15 +1617,20 @@ ParseOPPTables() {
 		echo "${Measurements}" | while read ; do
 			if [ -f "${REPLY%/*}/name" ]; then
 				read NodeName <"${REPLY%/*}/name"
-				MicroVolts=$(awk '{printf ("%0.0f",$1/1000); }' <"${REPLY}")
-				if [ -f "${REPLY%/*}/max_microvolts" ]; then
-					MaxMicroVolts=$(awk '{printf ("%0.0f",$1/1000); }' <"${REPLY%/*}/max_microvolts")
-					echo -e "   ${NodeName}: ${MicroVolts} mV (${MaxMicroVolts} mV max)"
-				else
-					echo -e "   ${NodeName}: ${MicroVolts} mV"
-				fi
+				case ${NodeName} in
+					*cpu*|*gpu*|*center*|*npu*|*ddr*|*dmc*)
+						# try to report only performance relevant supply voltage readings
+						MicroVolts=$(awk '{printf ("%0.0f",$1/1000); }' <"${REPLY}")
+						if [ -f "${REPLY%/*}/max_microvolts" ]; then
+							MaxMicroVolts=$(awk '{printf ("%0.0f",$1/1000); }' <"${REPLY%/*}/max_microvolts")
+							echo -e "   ${NodeName}: ${MicroVolts} mV (${MaxMicroVolts} mV max)"
+						else
+							echo -e "   ${NodeName}: ${MicroVolts} mV"
+						fi
+					;;
+				esac
 			fi
-		done
+		done | sort -n
 	fi
 
 	for OPPTable in ${DVFS}; do

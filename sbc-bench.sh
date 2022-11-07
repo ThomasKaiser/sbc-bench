@@ -2330,13 +2330,13 @@ CheckClockspeedsAndSensors() {
 				esac
 			done
 		fi
-		if [ "X${MODE}" = "Xextensive" ]; then
+		if [ "X${MODE}" = "Xextensive" -a ! -s ${MonitorLog} ]; then
 			# in this mode we also check all CPU cores in parallel, 1st in idle
-			echo -e "\nChecking highest clockspeeds for all cores in parallel (idle):\n" >>${ResultLog}
+			echo -e "\nMeasuring highest clockspeeds for all cores in parallel (idle):\n" >>${ResultLog}
 			CheckAllCores idle >>${ResultLog}
 			# measure maximum clockspeeds under full load again
 			if [ -x "${InstallLocation}"/cpuminer-multi/cpuminer ]; then
-				echo -e "\nChecking highest clockspeeds for all cores in parallel (full load):\n" >>${ResultLog}
+				echo -e "\nMeasuring highest clockspeeds for all cores in parallel (full load):\n" >>${ResultLog}
 				timeout 15 "${InstallLocation}"/cpuminer-multi/cpuminer --benchmark --cpu-priority=2 >/dev/null &
 				sleep 10
 				CheckAllCores full-load >>${ResultLog}
@@ -2490,6 +2490,17 @@ CheckAllCores() {
 	for i in $(seq 0 $(( ${CPUCores} -1 )) ) ; do
 		taskset -c ${i} "${InstallLocation}"/mhz/mhz 3 1000000 >"${TempDir}/CheckAllCores-${1}.${i}" &
 	done
+	if [ -f /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq ]; then
+		CpuFreqToQuery=cpuinfo_cur_freq
+	elif [ -f /sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq ]; then
+		CpuFreqToQuery=scaling_cur_freq
+	fi
+	# if in full-load mode wait 8 seconds
+	[ "X${1}" = "Xfull-load" ] && sleep 8
+	for i in $(seq 0 $(( ${CPUCores} -1 )) ) ; do
+		[ -f /sys/devices/system/cpu/cpu${i}/cpufreq/${CpuFreqToQuery} ] && \
+			cat /sys/devices/system/cpu/cpu${i}/cpufreq/${CpuFreqToQuery} >"${TempDir}/Reported-${1}.${i}"
+	done
 	for job in $(jobs -p) ; do
 		wait ${job}
 	done
@@ -2497,7 +2508,12 @@ CheckAllCores() {
 		MeasuredSpeed=$(awk -F" cpu_MHz=" '{print $2}' <"${TempDir}/CheckAllCores-${1}.${i}" | awk -F" " '{print $1}' | sort -r -n | tr '\n' '/' | sed 's|/$||')
 		SpeedSum=$(tr '/' '\n' <<<"${MeasuredSpeed}" | tr -d '.' | awk '{s+=$1} END {printf "%.0f", s}')
 		RoundedSpeed=$(( ${SpeedSum} / 3000 ))
-		echo -e "Measured on cpu${i}: ${RoundedSpeed} MHz (${MeasuredSpeed})"
+		if [ -s "${TempDir}/Reported-${1}.${i}" ]; then
+			read ReportedSpeed <"${TempDir}/Reported-${1}.${i}"
+			echo -e "cpu${i}: ${RoundedSpeed}/$(( ${ReportedSpeed} / 1000 )) MHz (${MeasuredSpeed})"
+		else
+			echo -e "cpu${i}: ${RoundedSpeed} MHz (${MeasuredSpeed})"
+		fi
 	done
 } # CheckAllCores
 
@@ -3456,10 +3472,12 @@ GuessARMSoC() {
 	#     Marvell PJ4 / r1p1: Marvell Armada 370/XP
 	# Marvell PJ4B-MP / r2p2: Marvell PJ4Bv7
 	#  Phytium FTC663 / r1p3: Phytium D2000
+	# Qualcomm Falkor / r10p1: Qualcomm Snapdragon 835 / MSM8998
 	#  Qualcomm Krait / r1p0: Qualcomm Snapdragon S4 Plus (MSM8960)
 	#  Qualcomm Krait / r2p0: Qualcomm IPQ806x
 	#   Qualcomm Kryo / r2p1: Qualcomm MSM8996pro
 	#   Qualcomm Kryo / r13p14: Qualcomm Snapdragon 865 / QRB5165
+	# Qualcomm Kryo V2 / r10p4: Qualcomm Snapdragon 835 / MSM8998
 	#   ThunderX 88XX / r1p1: ThunderX CN8890
 	#  ThunderX2 99xx / r1p1: Cavium ThunderX2 CN9980
 	#
@@ -4164,6 +4182,10 @@ GuessSoCbySignature() {
 		*A53r0p2*A53r0p2*A53r0p2*A53r0p2*A57r1p1*A57r1p1*A57r1p1*A57r1p1)
 			# Snapdragon 810 / MSM8994/MSM8994V: 4 x Cortex-A53 / r0p2 + 4 x Cortex-A57 / r1p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			echo "Snapdragon 810"
+			;;
+		00QualcommV2r10p400QualcommV2r10p400QualcommV2r10p400QualcommV2r10p404QualcommV1Kryor10p104QualcommV1Kryor10p104QualcommV1Kryor10p104QualcommV1Kryor10p1)
+			# Snapdragon 835 / MSM8998: 4 x Qualcomm Kryo V2 / r10p4 + 4 x  Qualcomm Falkor V1/Kryo / r10p1 / fp asimd aes pmull sha1 sha2 crc32
+			echo "Snapdragon 835"
 			;;
 		*A53r0p2)
 			# Marvell PXA1908: 4 x Cortex-A53 / r0p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32  half thumb fastmult edsp tls vfp vfpv3 vfpv4 neon idiva idivt

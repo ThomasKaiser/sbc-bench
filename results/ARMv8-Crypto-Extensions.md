@@ -105,6 +105,7 @@ Crawling through [sbc-bench results collection](../Results.md) comparing +30 dif
 | [RK3568](http://ix.io/3UXa) | 1950 | 911730 | 467 |
 | [S905X3](http://ix.io/2kaS) | 2010 | 941590 | 468 |
 | [S905X3](http://ix.io/3TQ2) | 2100 | 981940 | 467 |
+| [Snapdragon 835](http://ix.io/4fdD) | 1900 | 883330 | 465 |
 | [Snapdragon 845](http://ix.io/4dJV) | 1760 | 824640 | 469 |
 | Cortex-A72 | | | |
 | [RK3399](http://ix.io/1iWU) | 1800 | 1023600 | 568 |

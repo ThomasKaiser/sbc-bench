@@ -1,0 +1,35 @@
+processor	: 0
+BogoMIPS	: 96.00
+Features	: fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
+CPU implementer	: 0x70
+CPU architecture: 8
+CPU variant	: 0x1
+CPU part	: 0x663
+CPU revision	: 3
+
+processor	: 1
+BogoMIPS	: 96.00
+Features	: fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
+CPU implementer	: 0x70
+CPU architecture: 8
+CPU variant	: 0x1
+CPU part	: 0x663
+CPU revision	: 3
+
+processor	: 2
+BogoMIPS	: 96.00
+Features	: fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
+CPU implementer	: 0x70
+CPU architecture: 8
+CPU variant	: 0x1
+CPU part	: 0x663
+CPU revision	: 3
+
+processor	: 3
+BogoMIPS	: 96.00
+Features	: fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
+CPU implementer	: 0x70
+CPU architecture: 8
+CPU variant	: 0x1
+CPU part	: 0x663
+CPU revision	: 3

@@ -3471,7 +3471,9 @@ GuessARMSoC() {
 	#     Marvell PJ4 / r0p5: Marvell Armada 510
 	#     Marvell PJ4 / r1p1: Marvell Armada 370/XP
 	# Marvell PJ4B-MP / r2p2: Marvell PJ4Bv7
-	#  Phytium FTC663 / r1p3: Phytium D2000
+	#  Phytium FTC660 / r1p1: Phytium FT1500A
+	#  Phytium FTC662 / r1p2: Phytium FT2000+/64
+	#  Phytium FTC663 / r1p3: Phytium FT2000/4 / FT2000A / D2000 / FT2500
 	# Qualcomm Falkor / r10p1: Qualcomm Snapdragon 835 / MSM8998
 	#  Qualcomm Krait / r1p0: Qualcomm Snapdragon S4 Plus (MSM8960)
 	#  Qualcomm Krait / r2p0: Qualcomm IPQ806x
@@ -4651,9 +4653,25 @@ GuessSoCbySignature() {
 			# PLX NAS7820: 2 x ARM11 MPCore / r0p5 / swp half thumb fastmult edsp java
 			echo "PLX NAS7820"
 			;;
+		*Phytiumr1p1*Phytiumr1p1*Phytiumr1p1*Phytiumr1p1)
+			# Phytium FT1500A: 4 x Phytium FTC660 / r1p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32 / https://openbenchmarking.org/s/Phytium+FT1500A
+			echo "Phytium FT1500A"
+			;;
+		*Phytiumr1p2*Phytiumr1p2*Phytiumr1p2*Phytiumr1p2*Phytiumr1p2*Phytiumr1p2*Phytiumr1p2*Phytiumr1p2*Phytiumr1p2*)
+			# PhytiumFT-2000+/64: 64 x Phytium FTC662 / r1p2 / fp asimd evtstrm crc32 / https://github.com/util-linux/util-linux/issues/1036
+			echo "FT-2000+/64"
+			;;
+		36?Phytiumr1p336?Phytiumr1p336?Phytiumr1p336?Phytiumr1p3)
+			# Phytium FT2000/4: 4 x Phytium FTC663 / r1p3 / fp asimd evtstrm aes pmull sha1 sha2 crc32 / https://www.phytium.com.cn/en/article/97
+			echo "Phytium FT2000/4"
+			;;
 		36?Phytiumr1p336?Phytiumr1p336?Phytiumr1p336?Phytiumr1p336?Phytiumr1p336?Phytiumr1p336?Phytiumr1p336?Phytiumr1p3)
 			# Phytium D2000: 8 x Phytium FTC663 / r1p3 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			echo "Phytium D2000"
+			;;
+		*Phytiumr1p3*Phytiumr1p3*Phytiumr1p3*Phytiumr1p3*Phytiumr1p3*Phytiumr1p3*Phytiumr1p3*Phytiumr1p3*Phytiumr1p3*)
+			# Phytium FT2500: 64 x Phytium FTC663 / r1p3 / fp asimd evtstrm aes pmull sha1 sha2 crc32
+			echo "$(( ${CPUCores} / 64 )) x Phytium FT2500"
 			;;
 		*A57r1p2*A57r1p2*A57r1p2*A57r1p2*A57r1p2*A57r1p2*A57r1p2*A57r1p2)
 			# AMD Opteron A1100: 8 x Cortex-A57 / r1p2 / https://bugzilla-attachments.redhat.com/attachment.cgi?id=1475897

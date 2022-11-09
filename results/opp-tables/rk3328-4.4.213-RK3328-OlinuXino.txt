@@ -1,0 +1,29 @@
+   cpu0-opp-table:
+       408 MHz    950.0 mV
+       600 MHz    950.0 mV
+       816 MHz   1050.0 mV
+      1008 MHz   1150.0 mV
+      1200 MHz   1275.0 mV
+      1296 MHz   1350.0 mV
+      1392 MHz   1350.0 mV
+      1512 MHz   1450.0 mV
+
+   dmc-opp-table:
+       400 MHz    950.0 mV
+       600 MHz   1025.0 mV
+       786 MHz   1075.0 mV
+       800 MHz   1075.0 mV
+       850 MHz   1075.0 mV
+       933 MHz   1100.0 mV
+      1066 MHz   1175.0 mV
+
+   gpu-opp-table:
+       200 MHz    950.0 mV
+       300 MHz    975.0 mV
+       400 MHz   1050.0 mV
+       500 MHz   1150.0 mV
+
+   rkvdec-opp-table:
+       100 MHz    975.0 mV
+       200 MHz    975.0 mV
+       500 MHz   1075.0 mV

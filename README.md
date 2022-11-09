@@ -147,16 +147,15 @@ If those 7-zip MIPS apply only to a few selected use cases as performance indica
   * Unlike many other kitchen-sink benchmarks RAM access / memory performance matters (`sysbench cpu` for example runs completely inside CPU caches). With this benchmark it's easy to spot memory performance issues like [this](https://github.com/armbian/build/issues/1744) (after switching bootloaders DDR4 RAM got clocked with just 333 instead of the former 1056 MHz). It's one of the 'cheapest' tools for regression testing but unfortunately not widely used there
   * the multi-core test is also nice to spot internal CPU/SoC bottlenecks and/or scheduler improvements
 
-A good example for the latter is Odroid XU4, four times tested with different kernel and OS versions (Jessie, Stretch, Bionic and Focal which all build packages with different GCC versions). Memory performance remained the same (for a way to quickly check this see [included script snippets](results/.snippets-for-insights.sh)) but for whatever reasons the performance fluctuated over time:
+A good example for the latter is Odroid XU4, three times tested with different kernel and OS versions (Stretch, Bionic and Focal which all build packages with different GCC versions). Memory performance remained the same (for a way to quickly check this see [included script snippets](results/.snippets-for-insights.sh)) but for whatever reasons only the *multi-threaded* performance fluctuated over time:
 
-| Kernel / Compiler | 7-zip MIPS | CPU utilisation compression | CPU utilisation decompression |
-| ----: | :----: | :----: | :----: |
-| [Kernel 3.10 / GCC 4.9](results/1ixL.txt) | 6730 | 88% | 82% |
-| [Kernel 4.9 / GCC 6.3](results/1iWL.txt) | 6370 | 64% | 78% |
-| [Kernel 4.14 / GCC 7.3](results/1iLy.txt) | 7100 | 64% | 78% |
-| [Kernel 5.4 / GCC 9.3](results/3GnC.txt) | 8980 | 94% | 84% |
+| Kernel / Compiler | 7-zip single | 7-zip multi | CPU utilisation compression | CPU utilisation decompression |
+| ----: | :----: |  :----: | :----: | :----: |
+| [Kernel 4.9 / GCC 6.3](http://ix.io/1iWL) | 1622 | 6370 | 64% | 78% |
+| [Kernel 4.14 / GCC 7.3](http://ix.io/1iLy) | 1633 | 7100 | 64% | 78% |
+| [Kernel 5.4 / GCC 9.3](http://ix.io/3GnC) | 1604 | 8980 | 94% | 84% |
 
-The 1st row with Jessie results should be taken with a grain of salt since using 7-zip 9.20 while all later results are made with 16.02. Asides that the 2 last columns show overall CPU utilisation with compression and decompression and might indicate a scheduler problem with kernel 4.x. Only more detailed tests with more kernel/GCC combinations or switching to [Active Benchmarking](https://www.brendangregg.com/activebenchmarking.html) could really tell.
+Smells like a scheduler problem with kernel 4.x. Only more detailed tests with more kernel/GCC combinations or switching to [Active Benchmarking](https://www.brendangregg.com/activebenchmarking.html) could really tell.
 
 ### [OpenSSL](https://www.openssl.org)
 

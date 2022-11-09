@@ -26,7 +26,14 @@ Main() {
 	if [ -z "${USE_VCGENCMD}" -a -x "${VCGENCMD}" ]; then
 		# this seems to be a Raspberry Pi where we need to query
 		# ThreadX on the VC via vcgencmd to get real information
-		USE_VCGENCMD=true
+		# Double check via device-tree compatible string:
+		[ -f /proc/device-tree/compatible ] && \
+			strings /proc/device-tree/compatible 2>/dev/null | grep -q raspberrypi
+		if [ $? -eq 0 ]; then
+			USE_VCGENCMD=true
+		else
+			USE_VCGENCMD=false
+		fi
 	else
 		USE_VCGENCMD=false
 	fi
@@ -2168,13 +2175,19 @@ InitialMonitoring() {
 	# On Raspberries we also collect 'firmware' information and on RPi 4 check SoC revision
 	# against config.txt contents:
 	if [ ${USE_VCGENCMD} = true ] ; then
-		ThreadXVersion="$("${VCGENCMD}" version)"
-		[ -f /boot/config.txt ] && ThreadXConfig=/boot/config.txt || ThreadXConfig=/boot/firmware/config.txt
-		grep -q "arm_boost=1" ${ThreadXConfig} 2>/dev/null || (grep -q "C0 or later" <<<"${DeviceName}" && \
-			echo -e "\nWarning: your Raspberry Pi is powered by BCM2711 Rev. ${BCM2711} but arm_boost=1\nis not set in ${ThreadXConfig}. Some (mis)information about what you are missing:\nhttps://www.raspberrypi.com/news/bullseye-bonus-1-8ghz-raspberry-pi-4/" >>${ResultLog})
-		echo -e "\nRaspberry Pi ThreadX version:\n${ThreadXVersion}" >>${ResultLog}
-		[ -f ${ThreadXConfig} ] && echo -e "\nThreadX configuration (${ThreadXConfig}):\n$(grep -v '#' ${ThreadXConfig} | sed '/^\s*$/d')" >>${ResultLog}
-		echo -e "\nActual ThreadX settings:\n$("${VCGENCMD}" get_config int)" >>${ResultLog}
+		ThreadXVersion="$("${VCGENCMD}" version 2>/dev/null)"
+		if [ "X${ThreadXVersion}" = "X" ]; then
+			# dealing with a fake vcgencmd not implementing version reporting
+			USE_VCGENCMD=false
+		else
+			# only report ThreadX stuff when 'vcgencmd version' outputs something
+			[ -f /boot/config.txt ] && ThreadXConfig=/boot/config.txt || ThreadXConfig=/boot/firmware/config.txt
+			grep -q "arm_boost=1" ${ThreadXConfig} 2>/dev/null || (grep -q "C0 or later" <<<"${DeviceName}" && \
+				echo -e "\nWarning: your Raspberry Pi is powered by BCM2711 Rev. ${BCM2711} but arm_boost=1\nis not set in ${ThreadXConfig}. Some (mis)information about what you are missing:\nhttps://www.raspberrypi.com/news/bullseye-bonus-1-8ghz-raspberry-pi-4/" >>${ResultLog})
+			echo -e "\nRaspberry Pi ThreadX version:\n${ThreadXVersion}" >>${ResultLog}
+			[ -f ${ThreadXConfig} ] && echo -e "\nThreadX configuration (${ThreadXConfig}):\n$(grep -v '#' ${ThreadXConfig} | sed '/^\s*$/d')" >>${ResultLog}
+			echo -e "\nActual ThreadX settings:\n$("${VCGENCMD}" get_config int)" >>${ResultLog}
+		fi
 	fi
 
 	# Log gcc version if not in Geekbench mode
@@ -3084,7 +3097,7 @@ LogEnvironment() {
 	VirtWhat="$(systemd-detect-virt 2>/dev/null)"
 	if [ "X${VirtWhat}" = "X" -o "X${VirtWhat}" = "Xnone" ]; then
 		command -v dmidecode >/dev/null 2>&1 && \
-			ProcessorInfo="$(dmidecode -t processor 2>/dev/null | grep -E -v -i "^#|^Handle|Serial|O.E.M.|123456789|SMBIOS|: Not |Unknown|OUT OF SPEC|00 00 00 00 00 00 00 00|: None")"
+			ProcessorInfo="$(dmidecode -t processor 2>/dev/null | grep -E -v -i "^#|^Handle|Serial|O.E.M.|1234567|SMBIOS|: Not |Unknown|OUT OF SPEC|00 00 00 00 00 00 00 00|: None")"
 		if [ "X${ProcessorInfo}" != "X" ]; then
 			echo -e "\n${ProcessorInfo}\n"
 		fi
@@ -3102,13 +3115,26 @@ LogEnvironment() {
 
 	# check whether it's a Rockchip BSP kernel with dmc enabled
 	DMCGovernor="$(grep '/dmc/' <<<"${Governors}" | head -n1)"
-	if [ -f "${DMCGovernor}" -a -f "${DMCGovernor%/*}/upthreshold" ]; then
-		# report DMC governor and upthreshold value
-		read upthreshold <"${DMCGovernor%/*}/upthreshold"
-		echo -e "  DMC gov: $(cat "${DMCGovernor}") (upthreshold: ${upthreshold})"
-	elif [ -f "${DMCGovernor}" ]; then
-		# report only DMC governor
-		echo -e "  DMC gov: $(cat "${DMCGovernor}")"
+	if [ -f "${DMCGovernor}" ]; then
+		read UsedDMCGovernor <"${DMCGovernor}"
+		case ${UsedDMCGovernor} in
+			userspace|powersave|performance)
+				# report also configured RAM clock
+				read DRAMClock <"${DMCGovernor%/*}/cur_freq"
+				echo -e "  DMC gov: ${UsedDMCGovernor} ($(( ${DRAMClock} / 1000000 )) MHz)"
+				;;
+			*)
+				# check whether an uptreshold value exists and if true report it
+				if [ -f "${DMCGovernor%/*}/upthreshold" ]; then
+					# report DMC governor and upthreshold value
+					read upthreshold <"${DMCGovernor%/*}/upthreshold"
+					echo -e "  DMC gov: ${UsedDMCGovernor} (upthreshold: ${upthreshold})"
+				else
+					# report only DMC governor
+					echo -e "  DMC gov: ${UsedDMCGovernor}"
+				fi
+				;;
+		esac
 	fi
 
 	# check whether we're running on XU4/HC1/HC2 and if true try to report ddr_freq.
@@ -4658,8 +4684,8 @@ GuessSoCbySignature() {
 			echo "Phytium FT1500A"
 			;;
 		*Phytiumr1p2*Phytiumr1p2*Phytiumr1p2*Phytiumr1p2*Phytiumr1p2*Phytiumr1p2*Phytiumr1p2*Phytiumr1p2*Phytiumr1p2*)
-			# PhytiumFT-2000+/64: 64 x Phytium FTC662 / r1p2 / fp asimd evtstrm crc32 / https://github.com/util-linux/util-linux/issues/1036
-			echo "FT-2000+/64"
+			# PhytiumFT2000+/64: 64 x Phytium FTC662 / r1p2 / fp asimd evtstrm crc32 / https://github.com/util-linux/util-linux/issues/1036
+			echo "FT2000+/64"
 			;;
 		36?Phytiumr1p336?Phytiumr1p336?Phytiumr1p336?Phytiumr1p3)
 			# Phytium FT2000/4: 4 x Phytium FTC663 / r1p3 / fp asimd evtstrm aes pmull sha1 sha2 crc32 / https://www.phytium.com.cn/en/article/97

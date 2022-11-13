@@ -55,7 +55,7 @@ Unfortunately to adjust the cpufreq governor and to collect monitoring data exec
 
 ## Which tools are used and why?
 
-I chose [mhz](https://github.com/wtarreau/mhz), [tinymembench](https://github.com/ssvb/tinymembench), [ramlat](https://github.com/wtarreau/ramspeed), [cpuminer](https://github.com/tkinjo1985/cpuminer-multi.git), [7-zip](https://www.7-cpu.com) and [OpenSSL](https://www.openssl.org)'s AES benchmarks for the following reasons:
+I chose [mhz](https://github.com/wtarreau/mhz), [tinymembench](https://github.com/ssvb/tinymembench), [ramlat](https://github.com/wtarreau/ramspeed), [cpuminer](https://github.com/tkinjo1985/cpuminer-multi.git), [stockfish](https://stockfishchess.org), [7-zip](https://www.7-cpu.com) and [OpenSSL](https://www.openssl.org)'s AES benchmarks for the following reasons:
 
 ### [mhz](https://github.com/wtarreau/mhz)
 
@@ -105,17 +105,23 @@ On ARM SoCs CPU and GPU/VPU usually share memory access so it's worth a try to e
 
 Provides some insights about cache sizes/speed and memory latency/bandwidth. Stuff [like this](https://www.cnx-software.com/2021/03/04/rockchip-rk3566-tv-box-h96-max-android-11/#comment-581346).
 
-### [cpuminer](https://github.com/tkinjo1985/cpuminer-multi.git)
+### [cpuminer](https://github.com/tpruvot/cpuminer-multi)
 
-On most platforms this is the most demanding benchmark of the five and pretty efficient to check for appropriate heat dissipation and even instabilities under load. It makes heavy use of [SIMD optimizations](https://en.wikipedia.org/wiki/SIMD) (NEON on ARM and SSE on x86) therefore generating more heat than unoptimized 'standard' code.
+Prior to adding [stockfish](#stockfish) on most platforms this was the most demanding benchmark of the six and pretty efficient to check for appropriate heat dissipation and even instabilities under load. It makes heavy use of [SIMD optimizations](https://en.wikipedia.org/wiki/SIMD) (NEON on ARM and SSE/AVX on x86) therefore generating more heat than unoptimized 'standard' code.
 
-Heavy SIMD optimizations aren't really common, the generated scores depend a lot on compiler version and therefore this test is optional. Unless you execute `sbc-bench -c` or with `MODE=extensive` it will be skipped since results can be misleading. So consider this being a load generator to check whether your board will start to throttle or becomes unstable but take the benchmark numbers with a grain of salt unless you're a programmer and know what [NEON](https://en.wikipedia.org/wiki/ARM_architecture#Advanced_SIMD_(NEON)) or [SSE](https://en.wikipedia.org/wiki/Streaming_SIMD_Extensions) really are and whether your application can make use of.
+Heavy SIMD optimizations aren't really common, the generated scores depend a lot on compiler version and therefore this test is optional. Unless you execute `sbc-bench -c` or with `MODE=extensive` it will be skipped since results can be misleading. So consider this being a load generator to check whether your board will start to throttle or becomes unstable but take the benchmark numbers with a grain of salt unless you're a programmer and know what [NEON](https://en.wikipedia.org/wiki/ARM_architecture#Advanced_SIMD_(NEON)),  [SSE](https://en.wikipedia.org/wiki/Streaming_SIMD_Extensions) and [AVX](https://en.wikipedia.org/wiki/Advanced_Vector_Extensions) really are and whether your application can make use of.
 
 A typical result (Rock 5B with Ubuntu Focal) will look like this:
 
     Cpuminer total scores (5 minutes execution): 25.32,25.31,25.30,25.29,25.28,25.12 kH/s
 
 *(result variation in this case is ok since all results are more or less the same. If the board would've started throttling or heavy background activitiy would've happened the later numbers would be much lower than the first ones)*
+
+### [stockfish](https://stockfishchess.org)
+
+Stockfish (open source chess engine) also makes heavy use of SIMD extensions but is heavy on memory access too putting even more load on devices than cpuminer which doesn't access RAM that much or at all since working set fits inside CPU caches.
+
+As with cpuminer this test is optional (`sbc-bench -s` or `MODE=extensive` needed) since not representing any broader use case but being more of a stressor / load generator exposing thermal and stability issues. Consumption figures are higher compared to cpuminer since stockfish also stresses the DRAM interface and at least it's sufficient to expose a reliability issue with Rock 5B (most probably RK3588 in general) since running this benchmark [reliably freezes Rock 5B at 2112 MHz DRAM clock](https://github.com/ThomasKaiser/sbc-bench/issues/55).
 
 ### [7-zip](https://www.7-cpu.com)
 
@@ -265,6 +271,8 @@ The detailed log then will contain information how much time (in milliseconds) h
 
 **Important:** to get throttling notifications running a kernel with `CONFIG_CPU_FREQ_STAT=y` is needed since otherwise cpufreq statistics are not available. And this will not work on Raspberries since there [cpufreq driver has not the slightest idea what's going on](https://github.com/raspberrypi/linux/issues/2512#issuecomment-382703153).
 
+And all of this doesn't work reliably on `x86_64`. Here you need to check `7-zip`, `cpuminer` or `stockfish` scores. If they got lower during execution your device ran into thermal or powercapping issues.
+
 ### Unattended execution
 
 If `sbc-bench` should benchmark in an automated fashion then exporting `MODE=unattended` prior to execution will prevent warning dialogs but of course `sbc-bench` will still check whether average load or CPU utilization is too high and refuse to start since benchmarking a busy system is useless.
@@ -278,7 +286,8 @@ Everything sent to `stdout` can be ignored (but parsing for 'check the log' is h
 When exporting `MODE=extensive` (not compatible with `MODE=unattended` so use either/or) then `sbc-bench` conducts additional tests:
 
   * the `openssl` benchmarks will also be executed in parallel on all CPU cores (takes an additional minute)
-  * the `cpuminer` test will be fired up (does not work on 32-bit ARM platforms and most recent Debian/Ubuntu distros so nothing changes here, otherwise 5 more minutes)
+  * the `cpuminer` test will be fired up (5 more minutes)
+  * the `stockfish` stress tester will be fired up 3 times to check further for throttling and stability issues
   * on ARM/RISC-V SoCs with clusters of different CPU cores (e.g. RK3399 with 4 x Cortex-A53 and 2 x Cortex-A72) additional multi-threaded `7-zip` tests per cluster are done (no duration estimate possible since depends on SoC architecture)
 
 This operation mode will be extended further over time to get insights into SoC internals.

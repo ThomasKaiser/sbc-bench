@@ -39,7 +39,7 @@ Main() {
 	fi
 	
 	# check in which mode we're supposed to run
-	while getopts 'chmtTgNPG' c ; do
+	while getopts 'chmtTsgNPG' c ; do
 		case ${c} in
 			m)
 				# monitoring mode
@@ -48,8 +48,12 @@ Main() {
 				exit 0
 				;;
 			c)
-				# Run Cpuminer test (NEON/SSE)
+				# Run Cpuminer test (NEON/SSE/AVX)
 				ExecuteCpuminer=yes
+				;;
+			s)
+				# Run Stockfish test (NEON/SSE/AVX/RAM)
+				ExecuteStockfish=yes
 				;;
 			h)
 				# print help
@@ -181,9 +185,20 @@ Main() {
 			Run7ZipBenchmark
 			if [ "${ExecuteCpuminer}" = "yes" -o "X${MODE}" = "Xextensive" ]; then
 				if [ -x "${InstallLocation}"/cpuminer-multi/cpuminer ]; then
+					ExecuteCpuminer=yes
 					RunCpuminerBenchmark
 				else
+					ExecuteCpuminer=no
 					echo -e "\x08\x08 Done.\n(${InstallLocation}/cpuminer-multi/cpuminer missing or not executable)...\c"
+				fi
+			fi
+			if [ "${ExecuteStockfish}" = "yes" -o "X${MODE}" = "Xextensive" ]; then
+				if [ -x "${InstallLocation}/Stockfish-sf_15/src/stockfish" ]; then
+					ExecuteStockfish=yes
+					RunStockfishBenchmark
+				else
+					ExecuteStockfish=no
+					echo -e "\x08\x08 Done.\n(${InstallLocation}/Stockfish-sf_15/src/stockfish missing or not executable)...\c"
 				fi
 			fi
 		fi
@@ -1433,7 +1448,8 @@ CreateTempDir() {
 		exit 1
 	fi
 	export TempDir
-	trap "rm -rf \"${TempDir}\" ; exit 0" 0 1 2 3 15
+	# delete $TempDir by default but not if in extensive mode:
+	[ "X${MODE}" = "Xextensive" ] || trap "rm -rf \"${TempDir}\" ; exit 0" 0 1 2 3 15
 } # CreateTempDir
 
 CheckLoadAndDmesg() {
@@ -2064,6 +2080,11 @@ InstallPrerequisits() {
 		fi
 	fi
 
+	# if called with -s or with MODE=extensive we also use stockfish
+	if [ "${ExecuteStockfish}" = "yes" -o "X${MODE}" = "Xextensive" ]; then
+		InstallStockfish
+	fi
+
 	# if called with -c or as 'sbc-bench neon' or with MODE=extensive we also use cpuminer
 	if [ "${ExecuteCpuminer}" = "yes" -o "X${MODE}" = "Xextensive" ]; then
 		InstallCpuminer
@@ -2091,6 +2112,71 @@ InstallCpuminer() {
 	fi
 } # InstallCpuminer
 
+InstallStockfish() {
+	# try to be compatible with Phoronix pts/stockfish-1.4.0 test profile as such grab
+	# https://github.com/official-stockfish/Stockfish/archive/refs/tags/sf_15.tar.gz
+	# and default net https://tests.stockfishchess.org/api/nn/nn-6877cd24400e.nnue
+
+	if [ ! -x "${InstallLocation}/Stockfish-sf_15/src/stockfish" ]; then
+		echo -e "\x08\x08\x08, stockfish...\c"
+		cd "${InstallLocation}"
+		wget -q -O "${InstallLocation}/sf_15.tar.gz" https://github.com/official-stockfish/Stockfish/archive/refs/tags/sf_15.tar.gz 2>/dev/null
+		[ -f "${InstallLocation}/sf_15.tar.gz" ] && tar xf sf_15.tar.gz
+		[ -d "${InstallLocation}/Stockfish-sf_15/src" ] && cd "${InstallLocation}/Stockfish-sf_15/src" || return
+		wget -q -O nn-6877cd24400e.nnue https://tests.stockfishchess.org/api/nn/nn-6877cd24400e.nnue 2>/dev/null
+
+		case ${CPUArchitecture} in
+			x86_64)
+				gcc_enabled=$(c++ -Q -march=native --help=target | grep "\[enabled\]")
+				gcc_arch=$(c++ -Q -march=native --help=target | grep "march")
+				if [[ "${gcc_enabled}" =~ "-mavx512vnni " && "${gcc_enabled}" =~ "-mavx512dq " && "${gcc_enabled}" =~ "-mavx512f " && "${gcc_enabled}" =~ "-mavx512bw " && "${gcc_enabled}" =~ "-mavx512vl " ]] ; then
+					ARCH="x86-64-vnni256"
+				elif [[ "${gcc_enabled}" =~ "-mavx512f " && "${gcc_enabled}" =~ "-mavx512bw " ]] ; then
+					ARCH="x86-64-avx512"
+				elif [[ "${gcc_enabled}" =~ "-mbmi2 " && ! "${gcc_arch}" =~ "znver1" && ! "${gcc_arch}" =~ "znver2" ]] ; then
+					ARCH="x86-64-bmi2"
+				elif [[ "${gcc_enabled}" =~ "-mavx2 " ]] ; then
+					ARCH="x86-64-avx2"
+				elif [[ "${gcc_enabled}" =~ "-mpopcnt " && "${gcc_enabled}" =~ "-msse4.1 " ]] ; then
+					ARCH="x86-64-modern"
+				elif [[ "${gcc_enabled}" =~ "-mssse 3 " ]] ; then
+					ARCH="x86-64-ssse3"
+				elif [[ "${gcc_enabled}" =~ "-mpopcnt " && "${gcc_enabled}" =~ "-msse3 " ]] ; then
+					ARCH="x86-64-sse3-popcnt"
+				else
+					ARCH="x86-64-avx2"
+				fi
+				;;
+			i686)
+				ARCH=x86-32
+				;;
+			ppc64)
+				ARCH=ppc-64
+				;;
+			armv7*)
+				ARCH=armv7-neon
+				;;
+			aarch*)
+				grep -q apple <<<"${DTCompatible}" && ARCH=apple-silicon || ARCH=armv8
+				;;
+			riscv64)
+				ARCH=riscv64
+				;;
+			*)
+				ARCH=general-64
+				;;
+		esac
+
+		make profile-build ARCH=${ARCH} >"${TempDir}/stockfish-install.log" 2>&1
+
+		if [ ! -x "${InstallLocation}/Stockfish-sf_15/src/stockfish" ]; then
+			echo -e "\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08 (can't build stockfish)  \c"
+		fi
+
+		[ -f "${InstallLocation}/sf_15.tar.gz" ] && rm "${InstallLocation}/sf_15.tar.gz"
+	fi
+} # InstallStockfish
+
 InitialMonitoring() {
 	# record start time
 	BenchmarkStartTime=$(date +"%s")
@@ -2100,7 +2186,7 @@ InitialMonitoring() {
 	# q&d performance assessment to estimate duration
 	QuickAndDirtyPerformance="$(BashBench)"
 	TinymembenchDuration=$(( $(( 5 + $(( ${QuickAndDirtyPerformance} / 150000000 )) )) * ${#ClusterConfig[@]} ))
-	RunHowManyTimes=3 # how many times should the multi-threaded 7-zip test be repeated
+	RunHowManyTimes=3 # how many times should the multi-threaded tests be repeated
 	SingleThreadedDuration=$(( 20 + $(( ${QuickAndDirtyPerformance} * ${#ClusterConfig[@]} / 5000000 )) ))
 	MultiThreadedDuration=$(( ${RunHowManyTimes} * $(( 20 + $(( ${QuickAndDirtyPerformance} / 5000000 )) )) / ${CPUCores} ))
 	if [ "${ExecuteCpuminer}" = "yes" -a -x "${InstallLocation}"/cpuminer-multi/cpuminer ]; then
@@ -2201,9 +2287,9 @@ InitialMonitoring() {
 	VoltageSensor="$(GetVoltageSensor)"
 	if [ "X${VoltageSensor}" != "X" ]; then
 		InputVoltage="$(GetInputVoltage "${VoltageSensor}")"
-		echo -e "\nUptime:$(uptime),  ${InitialTemp}°C,  ${InputVoltage}V\n\n$(iostat | grep -E -v "^loop|boot0|boot1")\n\n$(free -h)\n\n$(swapon -s)\n" | sed '/^$/N;/^\n$/D' >>${ResultLog}
+		echo -e "\nUptime:$(uptime),  ${InitialTemp}°C,  ${InputVoltage}V,  ${QuickAndDirtyPerformance}\n\n$(iostat | grep -E -v "^loop|boot0|boot1")\n\n$(free -h)\n\n$(swapon -s)\n" | sed '/^$/N;/^\n$/D' >>${ResultLog}
 	else
-		echo -e "\nUptime:$(uptime),  ${InitialTemp}°C\n\n$(iostat | grep -E -v "^loop|boot0|boot1")\n\n$(free -h)\n\n$(swapon -s)\n" | sed '/^$/N;/^\n$/D' >>${ResultLog}
+		echo -e "\nUptime:$(uptime),  ${InitialTemp}°C,  ${QuickAndDirtyPerformance}\n\n$(iostat | grep -E -v "^loop|boot0|boot1")\n\n$(free -h)\n\n$(swapon -s)\n" | sed '/^$/N;/^\n$/D' >>${ResultLog}
 	fi
 	ShowZswapStats 2>/dev/null >>${ResultLog}
 	
@@ -2231,20 +2317,38 @@ GetVoltageSensor() {
 	if [ -f /sys/devices/iio_sysfs_trigger/subsystem/devices/iio\:device0/in_voltage6_raw ]; then
 		# Rock 5B running with Rockchip's 5.10 BSP kernel
 		grep -q rock-5b <<<"${DTCompatible}" && echo /sys/devices/iio_sysfs_trigger/subsystem/devices/iio\:device0/in_voltage6_raw
+	elif [ -f /sys/power/axp_pmu/ac/voltage ]; then
+		# Allwinner A20 powered via DC-IN running with mainline kernel + Armbian patches
+		InputVoltage="$(GetInputVoltage /sys/power/axp_pmu/ac/voltage)"
+		case ${InputVoltage} in
+			0|0.*)
+				# board seems to be powered through either battery or USB, so report the latter
+				echo /sys/power/axp_pmu/vbus/voltage
+				;;
+			*)
+				echo /sys/power/axp_pmu/ac/voltage
+				;;
+		esac
+	elif [ -f /sys/devices/platform/sunxi-i2c.0/i2c-0/0-0034/axp20-supplyer.28/power_supply/ac/voltage_now ]; then
+		# Allwinner A20 powered via DC-IN running 3.4 kernel
+		InputVoltage="$(GetInputVoltage /sys/devices/platform/sunxi-i2c.0/i2c-0/0-0034/axp20-supplyer.28/power_supply/ac/voltage_now)"
+		case ${InputVoltage} in
+			0|0.*)
+				# board seems to be powered through either battery or USB, so report the latter
+				echo /sys/devices/platform/sunxi-i2c.0/i2c-0/0-0034/axp20-supplyer.28/power_supply/usb/voltage_now
+				;;
+			*)
+				echo /sys/devices/platform/sunxi-i2c.0/i2c-0/0-0034/axp20-supplyer.28/power_supply/ac/voltage_now
+				;;
+		esac
 	elif [ -f /sys/power/axp_pmu/vbus/voltage ]; then
 		# Allwinner A20 powered through USB running with mainline kernel + Armbian patches
 		echo /sys/power/axp_pmu/vbus/voltage
 	elif [ -f /sys/devices/platform/sunxi-i2c.0/i2c-0/0-0034/axp20-supplyer.28/power_supply/usb/voltage_now ]; then
 		# Allwinner A20 powered through USB running 3.4 kernel
 		echo /sys/devices/platform/sunxi-i2c.0/i2c-0/0-0034/axp20-supplyer.28/power_supply/usb/voltage_now
-	elif [ -f /sys/power/axp_pmu/ac/voltage ]; then
-		# Allwinner A20 powered via DC-IN running with mainline kernel + Armbian patches
-		echo /sys/power/axp_pmu/ac/voltage
-	elif [ -f /sys/devices/platform/sunxi-i2c.0/i2c-0/0-0034/axp20-supplyer.28/power_supply/ac/voltage_now ]; then
-		# Allwinner A20 powered via DC-IN running 3.4 kernel
-		echo /sys/devices/platform/sunxi-i2c.0/i2c-0/0-0034/axp20-supplyer.28/power_supply/ac/voltage_now
 	elif [ -f /sys/bus/iio/devices/iio\:device0/in_voltage2_raw ]; then
-		# Tinkerboard S
+		# test for Tinkerboard S and bc due to weird formula borrowed from @Tonymac32
 		grep -q rk3288-tinker-s <<<"${DTCompatible}"
 		if [ $? -eq 0 ]; then
 			command -v bc >/dev/null 2>&1 && echo /sys/bus/iio/devices/iio\:device0/in_voltage2_raw
@@ -2256,7 +2360,7 @@ GetInputVoltage() {
 	case ${1##*/} in
 		in_voltage6_raw)
 			# Rock 5B running with Rockchip's 5.10 BSP kernel
-			awk '{printf ("%0.2f",$1/172.5); }' <"${1}"
+			awk '{printf ("%0.2f",$1/172.5); }' <"${1}" | sed 's/,/./'
 			;;
 		in_voltage2_raw)
 			# Tinkerboard S
@@ -2265,7 +2369,7 @@ GetInputVoltage() {
 			;;
 		voltage|voltage_now)
 			# Allwinner A20
-			awk '{printf ("%0.2f",$1/1000000); }' <"${1}"
+			awk '{printf ("%0.2f",$1/1000000); }' <"${1}" | sed 's/,/./'
 			;;
 	esac
 } # GetInputVoltage
@@ -2531,8 +2635,8 @@ CheckAllCores() {
 } # CheckAllCores
 
 RunTinyMemBench() {
-	if [ "X${MODE}" = "Xextensive" ]; then
-		# extensive mode, do not print any duration estimates
+	if [ "X${MODE}" = "Xextensive" -o "X${ExecuteStockfish}" = "Xyes" ]; then
+		# extensive mode or yet unknown stockfish run time, do not print any duration estimates
 		echo -e "\x08\x08 Done."
 	else
 		echo -e "\x08\x08 Done (results will be available in $(( ${EstimatedDuration} * 120 / 100 ))-$(( ${EstimatedDuration} * 180 / 100 )) minutes)."
@@ -2635,7 +2739,6 @@ Run7ZipBenchmark() {
 		[ ${MonInterval:-0} -gt 30 ] && MonInterval=30
 		/bin/bash "${PathToMe}" -m ${MonInterval} >>${MonitorLog} &
 		MonitoringPID=$!
-		RunHowManyTimes=3
 		echo -e "Executing benchmark ${RunHowManyTimes} times multi-threaded on CPUs $(cat /sys/devices/system/cpu/online)" >>${TempLog}
 		for ((i=1;i<=RunHowManyTimes;i++)); do
 			"${SevenZip}" b ${DictSize} -mmt=${CPUCores} >>${TempLog}
@@ -2665,7 +2768,6 @@ Run7ZipBenchmark() {
 		# extensive mode: we're testing additionally through each CPU core cluster
 		echo -e "\nSystem health while running 7-zip cluster benchmarks:\n" >>${MonitorLog}
 		echo -e "\c" >${TempLog}
-		RunHowManyTimes=3
 		/bin/bash "${PathToMe}" -m $(( ${MonInterval} * ${#ClusterConfigByCoreType[@]} )) >>${MonitorLog} &
 		MonitoringPID=$!
 
@@ -2773,6 +2875,24 @@ RunCpuminerBenchmark() {
 	echo -e "\nTotal Scores: ${TotalScores}" >>${ResultLog}
 	CpuminerScore="$(awk -F"," '{print $2}' <<<"${TotalScores}")"
 } # RunCpuminerBenchmark
+
+RunStockfishBenchmark() {
+	echo -e "\x08\x08 Done.\nExecuting stockfish...\c"
+	echo -e "\nSystem health while running stockfish:\n" >>${MonitorLog}
+	/bin/bash "${PathToMe}" -m 60 >>${MonitorLog} &
+	MonitoringPID=$!
+	cd "${InstallLocation}/Stockfish-sf_15/src"
+	echo "" >${TempLog}
+	for ((i=1;i<=RunHowManyTimes;i++)); do
+		./stockfish bench 128 ${CPUCores} 24 default depth >/dev/null 2>>${TempLog}
+	done
+	kill ${MonitoringPID}
+	echo -e "\n##########################################################################\n" >>${ResultLog}
+	echo -e "Executing Stockfish 15 using nn-6877cd24400e.nnue ${RunHowManyTimes} times in a row:\n" >>${ResultLog}
+	sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" <${TempLog} | sed -e '/^$/d' -e '/^============/i \ ' -e '/second/a \ ' >>${ResultLog}
+	StockfishScores="$(awk -F": " '/^Nodes\/second/ {print $2}' <${TempLog} | tr '\n' ', ' | sed 's/,$//')"
+	echo -e "Total Scores: ${StockfishScores}" >>${ResultLog}
+} # RunStockfishBenchmark
 
 RunPTS() {
 	# executing phoronix-test-suite
@@ -3213,7 +3333,10 @@ UploadResults() {
 		if [ "${ExecuteCpuminer}" = "yes" -a -x "${InstallLocation}"/cpuminer-multi/cpuminer ]; then
 			echo -e "\n${BOLD}Cpuminer total scores${NC} (5 minutes execution): $(awk -F"Total Scores: " '/^Total Scores: / {print $2}' ${ResultLog}) kH/s"
 		fi
-		echo -e "\n${BOLD}7-zip total scores${NC} (3 consecutive runs): $(awk -F" " '/^Total:/ {print $2}' ${ResultLog}), single-threaded: ${ZipScoreSingleThreaded}"
+		if [ "${ExecuteStockfish}" = "yes" -a -x "${InstallLocation}/Stockfish-sf_15/src/stockfish" ]; then
+			echo -e "\n${BOLD}Stockfish scores${NC} (${RunHowManyTimes} consecutive runs): ${StockfishScores} nodes/second"
+		fi
+		echo -e "\n${BOLD}7-zip total scores${NC} (${RunHowManyTimes} consecutive runs): $(awk -F" " '/^Total:/ {print $2}' ${ResultLog}), single-threaded: ${ZipScoreSingleThreaded}"
 		if [ -f ${OpenSSLLog} ]; then
 			echo -e "\n${BOLD}OpenSSL results${NC}${ClusterInfo}:\n$(grep '^type' ${OpenSSLLog} | head -n1)"
 			grep '^aes-...-cbc' ${OpenSSLLog}
@@ -3470,7 +3593,7 @@ GuessARMSoC() {
 	#      Cortex-A53 / r0p0: Qualcomm Snapdragon 410 (MSM8916)
 	#      Cortex-A53 / r0p2: Marvell PXA1908, Qualcomm Snapdragon 810 (MSM8994)
 	#      Cortex-A53 / r0p3: HiSilicon Kirin 620/930, Nexell S5P6818, Snapdragon 808 / MSM8992
-	#      Cortex-A53 / r0p4: Allwinner A100/A133/A53/A64/H313/H5/H6/H616/H64/R329/R818/T507/T509, Amlogic A113X/A113D/A311D/A311D2/S805X/S805Y/S905/S905X/S905D/S905W/S905L/S905M2/S905X2/S905Y2/S905D2/S912/S922X/T962X2, Broadcom BCM2837/BCM2709/BCM2710/RP3A0-AU (BCM2710A1), HiSilicon Kirin 960/970, Marvell Armada 37x0, Mediatek MT6762M/MT6765, NXP i.MX8M/i.MX8QM/LS1xx8, RealTek RTD129x/RTD139x, Rockchip RK3318/RK3328/RK3399, Snapdragon 650/652/653 / MSM8956/MSM8976/MSM8976PRO, Socionext LD20
+	#      Cortex-A53 / r0p4: Allwinner A100/A133/A53/A64/H313/H5/H6/H616/H64/R329/R818/T507/T509, Amlogic A113X/A113D/A311D/A311D2/S805X/S805Y/S905/S905X/S905D/S905W/S905L/S905L3A/S905M2/S905X2/S905Y2/S905D2/S912/S922X/T962X2, Broadcom BCM2837/BCM2709/BCM2710/RP3A0-AU (BCM2710A1), HiSilicon Kirin 960/970, Marvell Armada 37x0, Mediatek MT6762M/MT6765, NXP i.MX8M/i.MX8QM/LS1xx8, RealTek RTD129x/RTD139x, Rockchip RK3318/RK3328/RK3399, Snapdragon 650/652/653 / MSM8956/MSM8976/MSM8976PRO, Socionext LD20
 	#      Cortex-A55 / r1p0: Amlogic S905X3/S905D3/S905Y3/T962X3/T962E2
 	#      Cortex-A55 / r2p0: Amlogic S905X4/S905C2, Rockchip RK3566/RK3568/RK3588/RK3588s
 	#      Cortex-A57 / r1p1: Nvidia Tegra TX1, Snapdragon 810 / MSM8994/MSM8994V
@@ -3499,7 +3622,7 @@ GuessARMSoC() {
 	# Marvell PJ4B-MP / r2p2: Marvell PJ4Bv7
 	#  Phytium FTC660 / r1p1: Phytium FT1500A
 	#  Phytium FTC662 / r1p2: Phytium FT2000+/64
-	#  Phytium FTC663 / r1p3: Phytium FT2000/4 / FT2000A / D2000 / FT2500
+	#  Phytium FTC663 / r1p3: Phytium FT2000/4 / FT2000A / D2000/8 / FT2500
 	# Qualcomm Falkor / r10p1: Qualcomm Snapdragon 835 / MSM8998
 	#  Qualcomm Krait / r1p0: Qualcomm Snapdragon S4 Plus (MSM8960)
 	#  Qualcomm Krait / r2p0: Qualcomm IPQ806x
@@ -3746,6 +3869,8 @@ GuessARMSoC() {
 		-e 's/AXG (Unknown) Revision 25:c (43:2)/AXG (A113X) Revision 25:c (43:2)/' \
 		-e 's/G12A (Unknown) Revision 28:b (30:2)/G12A (S905Y2) Revision 28:b (30:2)/' \
 		-e 's/G12A (Unknown) Revision 28:c (30:2)/G12A (S905Y2) Revision 28:c (30:2)/' \
+		-e 's/G12A (Unknown) Revision 28:b (70:2)/G12A (S905L3A) Revision 28:b (70:2)' \
+		-e 's/G12A (Unknown) Revision 28:c (70:2)/G12A (S905L3A) Revision 28:c (70:2)' \
 		-e 's/SM1 (Unknown) Revision 2b:b (1:2)/SM1 (S905D3) Revision 2b:b (1:2)/' \
 		-e 's/SM1 (Unknown) Revision 2b:c (10:2)/SM1 (S905X3) Revision 2b:c (10:2)/' \
 		-e 's/ Detected//' -e 's/ detected//'
@@ -3872,11 +3997,16 @@ GuessARMSoC() {
 								# G12A: S905Y2: 28:b (30:2)
 								echo "Amlogic S905Y2"
 								;;
+							28??7*)
+								# G12A: S905L3A: 28:b (70:2)
+								echo "Amlogic S905L3A"
+								;;
 							28*)
 								# G12A: S905X2, S905D2, S905Y2
 								# - S905X2: 28:b (40:2)
 								# - S905Y2: 28:b (30:2)
-								echo "Amlogic S905X2/S905D2/S905Y2"
+								# - S905L3A: 28:b (70:2)
+								echo "Amlogic S905X2/S905D2/S905Y2/S905L3A"
 								;;
 							29??1*)
 								# - G12B: A311D: 29:b (10:2)
@@ -4692,8 +4822,8 @@ GuessSoCbySignature() {
 			echo "Phytium FT2000/4"
 			;;
 		36?Phytiumr1p336?Phytiumr1p336?Phytiumr1p336?Phytiumr1p336?Phytiumr1p336?Phytiumr1p336?Phytiumr1p336?Phytiumr1p3)
-			# Phytium D2000: 8 x Phytium FTC663 / r1p3 / fp asimd evtstrm aes pmull sha1 sha2 crc32
-			echo "Phytium D2000"
+			# Phytium D2000/8: 8 x Phytium FTC663 / r1p3 / fp asimd evtstrm aes pmull sha1 sha2 crc32
+			echo "Phytium D2000/8"
 			;;
 		*Phytiumr1p3*Phytiumr1p3*Phytiumr1p3*Phytiumr1p3*Phytiumr1p3*Phytiumr1p3*Phytiumr1p3*Phytiumr1p3*Phytiumr1p3*)
 			# Phytium FT2500: 64 x Phytium FTC663 / r1p3 / fp asimd evtstrm aes pmull sha1 sha2 crc32
@@ -5028,18 +5158,19 @@ ShowZswapStats() {
 } # ShowZswapStats
 
 DisplayUsage() {
-	echo -e "\nUsage: ${BOLD}${0##*/} [-c] [-g] [-G] [-h] [-m] [-P] [-t \$degree] [-T \$degree]${NC}\n"
+	echo -e "\nUsage: ${BOLD}${0##*/} [-c] [-g] [-G] [-h] [-m] [-P] [-t \$degree] [-T \$degree] [-s]${NC}\n"
 	echo -e "############################################################################"
 	echo -e "\n Use ${BOLD}${0##*/}${NC} for the following tasks:\n"
 	echo -e " ${0##*/} invoked without arguments runs a standard benchmark"
-	echo -e " ${0##*/} ${BOLD}-c${NC} also executes cpuminer test (NEON/SSE)"
+	echo -e " ${0##*/} ${BOLD}-c${NC} also executes cpuminer stress tester (NEON/SSE/AVX)"
 	echo -e " ${0##*/} ${BOLD}-g${NC} graphs 7-zip MIPS for every cpufreq OPP"
 	echo -e " ${0##*/} ${BOLD}-G${NC} Geekbench mode, ensures benchmark is properly monitored"
 	echo -e " ${0##*/} ${BOLD}-h${NC} displays this help text"
 	echo -e " ${0##*/} ${BOLD}-m${NC} [\$seconds] provides CLI monitoring (5 sec default interval)"
 	echo -e " ${0##*/} ${BOLD}-P${NC} Phoronix mode, ensures benchmark is properly monitored"
 	echo -e " ${0##*/} ${BOLD}-t${NC} [\$degree] runs thermal test waiting to cool down to this value"
-	echo -e " ${0##*/} ${BOLD}-T${NC} [\$degree] runs thermal test heating up to this value\n"
+	echo -e " ${0##*/} ${BOLD}-T${NC} [\$degree] runs thermal test heating up to this value"
+	echo -e " ${0##*/} ${BOLD}-s${NC} also executes stockfish stress tester (NEON/SSE/AVX/RAM)\n"
 	echo -e " The environment variable ${BOLD}MODE${NC} can be set to either ${BOLD}extensive${NC} or ${BOLD}unattended${NC}"
 	echo -e " prior to benchmark execution. Exporting ${BOLD}MaxKHz${NC} will also be honored, see here"
 	echo -e " for details: https://github.com/ThomasKaiser/sbc-bench#unattended-execution\n"

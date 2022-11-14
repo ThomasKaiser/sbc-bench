@@ -3869,8 +3869,8 @@ GuessARMSoC() {
 		-e 's/AXG (Unknown) Revision 25:c (43:2)/AXG (A113X) Revision 25:c (43:2)/' \
 		-e 's/G12A (Unknown) Revision 28:b (30:2)/G12A (S905Y2) Revision 28:b (30:2)/' \
 		-e 's/G12A (Unknown) Revision 28:c (30:2)/G12A (S905Y2) Revision 28:c (30:2)/' \
-		-e 's/G12A (Unknown) Revision 28:b (70:2)/G12A (S905L3A) Revision 28:b (70:2)' \
-		-e 's/G12A (Unknown) Revision 28:c (70:2)/G12A (S905L3A) Revision 28:c (70:2)' \
+		-e 's/G12A (Unknown) Revision 28:b (70:2)/G12A (S905L3A) Revision 28:b (70:2)/' \
+		-e 's/G12A (Unknown) Revision 28:c (70:2)/G12A (S905L3A) Revision 28:c (70:2)/' \
 		-e 's/SM1 (Unknown) Revision 2b:b (1:2)/SM1 (S905D3) Revision 2b:b (1:2)/' \
 		-e 's/SM1 (Unknown) Revision 2b:c (10:2)/SM1 (S905X3) Revision 2b:c (10:2)/' \
 		-e 's/ Detected//' -e 's/ detected//'
@@ -4428,7 +4428,7 @@ GuessSoCbySignature() {
 										;;
 									*g12a*)
 										# G12A: 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
-										echo "Amlogic S905X2/S905Y2/S905D2"
+										echo "Amlogic S905X2/S905Y2/S905D2/S905L3A"
 										;;
 									*tl1*)
 										# TL1: 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
@@ -5037,7 +5037,7 @@ IdentifyAXGGXLG12A() {
 			;;
 		*)
 			# G12A/TL1: 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
-			echo "Amlogic S905X2/S905Y2/S905D2/T962X2"
+			echo "Amlogic S905X2/S905Y2/S905D2/S905L3A/T962X2"
 			;;
 	esac
 } # IdentifyAXGGXLG12A

@@ -1884,6 +1884,9 @@ CheckMissingPackages() {
 	command -v lshw >/dev/null 2>&1 || echo -e "lshw \c"
 	command -v powercap-info >/dev/null 2>&1
 	[ $? -ne 0 -a -d /sys/devices/virtual/powercap ] && echo -e "powercap-utils \c"
+	if [ "${ExecuteStockfish}" = "yes" ]; then
+		command -v g++ >/dev/null 2>&1 || echo -e "g++ \c"
+	fi
 	if [ "X${MODE}" = "Xextensive" ]; then
 		command -v decode-dimms >/dev/null 2>&1 || echo -e "i2c-tools \c"
 	fi
@@ -2012,7 +2015,7 @@ InstallPrerequisits() {
 	fi
 	
 	# add needed repository and install all necessary packages
-	grep -E -q "sensors|gcc|git|sysstat|openssl|curl|dmidecode|i2c|lshw|p7zip|wget|links|powercap" <<<"${MissingPackages}"
+	grep -E -q "sensors|gcc|git|sysstat|openssl|curl|dmidecode|i2c|lshw|p7zip|wget|links|powercap|g++" <<<"${MissingPackages}"
 	if [ $? -eq 0 ]; then
 		echo -e "\x08\x08 ${MissingPackages}...\c"
 		add-apt-repository -y universe >/dev/null 2>&1
@@ -2931,7 +2934,7 @@ RunStockfishBenchmark() {
 	cd "${InstallLocation}/Stockfish-sf_15/src"
 	echo "" >${TempLog}
 	for ((i=1;i<=RunHowManyTimes;i++)); do
-		echo -e "setoption name EvalFile value ${NeuralNetwork} \n bench 128 8 24 default depth" | ./stockfish 2>>${TempLog} >/dev/null
+		echo -e "setoption name EvalFile value ${NeuralNetwork} \n bench 128 ${CPUCores} 24 default depth" | ./stockfish 2>>${TempLog} >/dev/null
 	done
 	kill ${MonitoringPID}
 	echo -e "\n##########################################################################\n" >>${ResultLog}

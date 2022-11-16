@@ -121,7 +121,7 @@ A typical result (Rock 5B with Ubuntu Focal) will look like this:
 
 Stockfish (open source chess engine) also makes heavy use of SIMD extensions but is heavy on memory access too putting even more load on devices than cpuminer which doesn't access RAM that much or at all since working set fits inside CPU caches.
 
-As with cpuminer this test is optional (`sbc-bench -s` or `MODE=extensive` needed) since not representing any broader use case but being more of a stressor / load generator exposing thermal and stability issues. Consumption figures are higher compared to cpuminer since stockfish also stresses the DRAM interface and at least it's sufficient to expose a reliability issue with Rock 5B (most probably RK3588 in general) since running this benchmark [reliably freezes Rock 5B at 2112 MHz DRAM clock](https://github.com/ThomasKaiser/sbc-bench/issues/55).
+As with cpuminer this test is optional (`sbc-bench -s` or `MODE=extensive` needed) since not representing any broader use case but being more of a stressor / load generator exposing thermal and stability issues. Consumption figures are higher compared to cpuminer since stockfish also stresses the DRAM interface and at least it's sufficient to expose a reliability issue with Rock 5B (most probably today RK3588 in general) since running this benchmark [reliably freezes Rock 5B at 2112 MHz DRAM clock](https://github.com/ThomasKaiser/sbc-bench/issues/55).
 
 ### [7-zip](https://www.7-cpu.com)
 

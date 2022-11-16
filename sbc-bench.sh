@@ -53,6 +53,7 @@ Main() {
 				;;
 			s)
 				# Run Stockfish test (NEON/SSE/AVX/RAM)
+				NeuralNetwork=$2
 				ExecuteStockfish=yes
 				;;
 			h)
@@ -2082,7 +2083,7 @@ InstallPrerequisits() {
 
 	# if called with -s or with MODE=extensive we also use stockfish
 	if [ "${ExecuteStockfish}" = "yes" -o "X${MODE}" = "Xextensive" ]; then
-		InstallStockfish
+		InstallStockfish && DownloadNeuralNet
 	fi
 
 	# if called with -c or as 'sbc-bench neon' or with MODE=extensive we also use cpuminer
@@ -2123,7 +2124,6 @@ InstallStockfish() {
 		wget -q -O "${InstallLocation}/sf_15.tar.gz" https://github.com/official-stockfish/Stockfish/archive/refs/tags/sf_15.tar.gz 2>/dev/null
 		[ -f "${InstallLocation}/sf_15.tar.gz" ] && tar xf sf_15.tar.gz
 		[ -d "${InstallLocation}/Stockfish-sf_15/src" ] && cd "${InstallLocation}/Stockfish-sf_15/src" || return
-		wget -q -O nn-6877cd24400e.nnue https://tests.stockfishchess.org/api/nn/nn-6877cd24400e.nnue 2>/dev/null
 
 		case ${CPUArchitecture} in
 			x86_64)
@@ -2171,11 +2171,58 @@ InstallStockfish() {
 
 		if [ ! -x "${InstallLocation}/Stockfish-sf_15/src/stockfish" ]; then
 			echo -e "\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08 (can't build stockfish)  \c"
+			return 1
+		else
+			[ -f "${InstallLocation}/sf_15.tar.gz" ] && rm "${InstallLocation}/sf_15.tar.gz"
 		fi
-
-		[ -f "${InstallLocation}/sf_15.tar.gz" ] && rm "${InstallLocation}/sf_15.tar.gz"
 	fi
 } # InstallStockfish
+
+DownloadNeuralNet() {
+	if [ -d "${InstallLocation}/Stockfish-sf_15/src" ]; then
+		cd "${InstallLocation}/Stockfish-sf_15/src" || return 1
+		case ${NeuralNetwork} in
+			????????????)
+				# prefix with nn- and suffix with .nnue
+				NeuralNetwork="nn-${NeuralNetwork}.nnue"
+				;;
+			????????????.nnue)
+				# prefix with nn-
+				NeuralNetwork="nn-${NeuralNetwork}"
+				;;
+			nn-????????????)
+				# suffix with .nnue
+				NeuralNetwork="${NeuralNetwork}.nnue"
+				;;
+			nn-????????????.nnue)
+				# name fits already
+				:
+				;;
+			*)
+				# use default net
+				FallbackNotification=" (fallback default net)"
+				NeuralNetwork="nn-6877cd24400e.nnue"
+				;;
+		esac
+
+		# download neural network if missing
+		if [ ! -f "${NeuralNetwork}" ]; then
+			echo -e "\x08\x08\x08, stockfish NN...\c"
+			wget -q -O "${NeuralNetwork}" "https://tests.stockfishchess.org/api/nn/${NeuralNetwork}" 2>/dev/null
+		fi
+
+		# check neural network
+		if [ -f "${NeuralNetwork}" ]; then
+			NetHeader="$(od <"${NeuralNetwork}" | head -n1 | cut -c9-28)"
+			if [ "X${NetHeader}" != "X027440 075363 027362" ]; then
+				echo -e "\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08 (can't use ${NeuralNetwork}${FallbackNotification})  \c"
+				return
+			fi
+		else
+			echo -e "\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08 (can't download ${NeuralNetwork}${FallbackNotification})  \c"
+		fi
+	fi
+} # DownloadNeuralNet
 
 InitialMonitoring() {
 	# record start time
@@ -2884,14 +2931,14 @@ RunStockfishBenchmark() {
 	cd "${InstallLocation}/Stockfish-sf_15/src"
 	echo "" >${TempLog}
 	for ((i=1;i<=RunHowManyTimes;i++)); do
-		./stockfish bench 128 ${CPUCores} 24 default depth >/dev/null 2>>${TempLog}
+		echo -e "setoption name EvalFile value ${NeuralNetwork} \n bench 128 8 24 default depth" | ./stockfish 2>>${TempLog} >/dev/null
 	done
 	kill ${MonitoringPID}
 	echo -e "\n##########################################################################\n" >>${ResultLog}
-	echo -e "Executing Stockfish 15 using nn-6877cd24400e.nnue ${RunHowManyTimes} times in a row:\n" >>${ResultLog}
+	echo -e "Executing Stockfish 15 using ${NeuralNetwork} ${RunHowManyTimes} times in a row:\n" >>${ResultLog}
 	sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" <${TempLog} | sed -e '/^$/d' -e '/^============/i \ ' -e '/second/a \ ' >>${ResultLog}
 	StockfishScores="$(awk -F": " '/^Nodes\/second/ {print $2}' <${TempLog} | tr '\n' ', ' | sed 's/,$//')"
-	echo -e "Total Scores: ${StockfishScores}" >>${ResultLog}
+	echo -e "Total Scores (${NeuralNetwork}): ${StockfishScores}" >>${ResultLog}
 } # RunStockfishBenchmark
 
 RunPTS() {

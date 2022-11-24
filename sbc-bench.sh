@@ -2364,47 +2364,61 @@ InitialMonitoring() {
 } # InitialMonitoring
 
 GetVoltageSensor() {
-	if [ -f /sys/devices/iio_sysfs_trigger/subsystem/devices/iio\:device0/in_voltage6_raw ]; then
-		# Rock 5B running with Rockchip's 5.10 BSP kernel
-		grep -q rock-5b <<<"${DTCompatible}" && echo /sys/devices/iio_sysfs_trigger/subsystem/devices/iio\:device0/in_voltage6_raw
-	elif [ -f /sys/power/axp_pmu/ac/voltage ]; then
-		# Allwinner A20 powered via DC-IN running with mainline kernel + Armbian patches
-		InputVoltage="$(GetInputVoltage /sys/power/axp_pmu/ac/voltage)"
-		case ${InputVoltage} in
-			0|0.*)
-				# board seems to be powered through either battery or USB, so report the latter
+	case "${DTCompatible}" in
+		*rk3288-tinker-s*)
+			# test for Tinkerboard S and bc due to weird formula borrowed from @Tonymac32
+			if [ -f /sys/bus/iio/devices/iio\:device0/in_voltage2_raw ]; then
+				command -v bc >/dev/null 2>&1 && echo /sys/bus/iio/devices/iio\:device0/in_voltage2_raw
+			fi
+			;;
+		*nanopi-r6s*)
+			# NanoPi R6S running with Rockchip's 5.10 BSP kernel?
+			if [ -f /sys/devices/iio_sysfs_trigger/subsystem/devices/iio\:device0/in_voltage2_raw ]; then
+				echo /sys/devices/iio_sysfs_trigger/subsystem/devices/iio\:device0/in_voltage2_raw
+			fi
+			;;
+		*rock-5b*)
+			# Rock 5B running with Rockchip's 5.10 BSP kernel?
+			if [ -f /sys/devices/iio_sysfs_trigger/subsystem/devices/iio\:device0/in_voltage6_raw ]; then
+				echo /sys/devices/iio_sysfs_trigger/subsystem/devices/iio\:device0/in_voltage6_raw
+			fi
+			;;
+		*)
+			# test for Allwinner A20 + PMU			
+			if [ -f /sys/power/axp_pmu/ac/voltage ]; then
+				# Allwinner A20 powered via DC-IN running with mainline kernel + Armbian patches
+				InputVoltage="$(GetInputVoltage /sys/power/axp_pmu/ac/voltage)"
+				case ${InputVoltage} in
+					0|0.*)
+						# board seems to be powered through either battery or USB, so report the latter
+						echo /sys/power/axp_pmu/vbus/voltage
+						;;
+					*)
+						echo /sys/power/axp_pmu/ac/voltage
+						;;
+				esac
+			elif [ -f /sys/devices/platform/sunxi-i2c.0/i2c-0/0-0034/axp20-supplyer.28/power_supply/ac/voltage_now ]; then
+				# Allwinner A20 powered via DC-IN running 3.4 kernel
+				InputVoltage="$(GetInputVoltage /sys/devices/platform/sunxi-i2c.0/i2c-0/0-0034/axp20-supplyer.28/power_supply/ac/voltage_now)"
+				case ${InputVoltage} in
+					0|0.*)
+						# board seems to be powered through either battery or USB, so report the latter
+						echo /sys/devices/platform/sunxi-i2c.0/i2c-0/0-0034/axp20-supplyer.28/power_supply/usb/voltage_now
+						;;
+					*)
+						echo /sys/devices/platform/sunxi-i2c.0/i2c-0/0-0034/axp20-supplyer.28/power_supply/ac/voltage_now
+						;;
+				esac
+			elif [ -f /sys/power/axp_pmu/vbus/voltage ]; then
+				# Allwinner A20 powered through USB running with mainline kernel + Armbian patches
 				echo /sys/power/axp_pmu/vbus/voltage
-				;;
-			*)
-				echo /sys/power/axp_pmu/ac/voltage
-				;;
-		esac
-	elif [ -f /sys/devices/platform/sunxi-i2c.0/i2c-0/0-0034/axp20-supplyer.28/power_supply/ac/voltage_now ]; then
-		# Allwinner A20 powered via DC-IN running 3.4 kernel
-		InputVoltage="$(GetInputVoltage /sys/devices/platform/sunxi-i2c.0/i2c-0/0-0034/axp20-supplyer.28/power_supply/ac/voltage_now)"
-		case ${InputVoltage} in
-			0|0.*)
-				# board seems to be powered through either battery or USB, so report the latter
+			elif [ -f /sys/devices/platform/sunxi-i2c.0/i2c-0/0-0034/axp20-supplyer.28/power_supply/usb/voltage_now ]; then
+				# Allwinner A20 powered through USB running 3.4 kernel
 				echo /sys/devices/platform/sunxi-i2c.0/i2c-0/0-0034/axp20-supplyer.28/power_supply/usb/voltage_now
-				;;
-			*)
-				echo /sys/devices/platform/sunxi-i2c.0/i2c-0/0-0034/axp20-supplyer.28/power_supply/ac/voltage_now
-				;;
-		esac
-	elif [ -f /sys/power/axp_pmu/vbus/voltage ]; then
-		# Allwinner A20 powered through USB running with mainline kernel + Armbian patches
-		echo /sys/power/axp_pmu/vbus/voltage
-	elif [ -f /sys/devices/platform/sunxi-i2c.0/i2c-0/0-0034/axp20-supplyer.28/power_supply/usb/voltage_now ]; then
-		# Allwinner A20 powered through USB running 3.4 kernel
-		echo /sys/devices/platform/sunxi-i2c.0/i2c-0/0-0034/axp20-supplyer.28/power_supply/usb/voltage_now
-	elif [ -f /sys/bus/iio/devices/iio\:device0/in_voltage2_raw ]; then
-		# test for Tinkerboard S and bc due to weird formula borrowed from @Tonymac32
-		grep -q rk3288-tinker-s <<<"${DTCompatible}"
-		if [ $? -eq 0 ]; then
-			command -v bc >/dev/null 2>&1 && echo /sys/bus/iio/devices/iio\:device0/in_voltage2_raw
-		fi
-	fi
-} # GetInputVoltage
+			fi
+			;;
+	esac
+} # GetVoltageSensor
 
 GetInputVoltage() {
 	case ${1##*/} in
@@ -2413,9 +2427,17 @@ GetInputVoltage() {
 			awk '{printf ("%0.2f",$1/172.5); }' <"${1}" | sed 's/,/./'
 			;;
 		in_voltage2_raw)
-			# Tinkerboard S
-			read -r RAWvoltage <"${1}"
-			echo "(${RAWvoltage} / ((82.0/302.0) * 1023.0 / 1.8)) + 0.1" | bc -l | awk '{printf ("%0.2f",$1); }'
+			case "${DTCompatible}" in
+				*rk3288-tinker-s*)
+					# Tinkerboard S
+					read -r RAWvoltage <"${1}"
+					echo "(${RAWvoltage} / ((82.0/302.0) * 1023.0 / 1.8)) + 0.1" | bc -l | awk '{printf ("%0.2f",$1); }'
+					;;
+				*nanopi-r6s*)
+					# NaniPi R6S running with Rockchip's 5.10 BSP kernel
+					awk '{printf ("%0.2f",$1/206.2); }' <"${1}" | sed 's/,/./'
+					;;
+			esac
 			;;
 		voltage|voltage_now)
 			# Allwinner A20
@@ -3715,7 +3737,7 @@ GuessARMSoC() {
 	# soc soc0: Amlogic Meson GXL (S905L) Revision 21:c (c4:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson GXL (Unknown) Revision 21:c (e2:2) Detected <-- S905X on Khadas VIM
 	# soc soc0: Amlogic Meson GXL (S905D) Revision 21:d (0:2) Detected <-- Tanix TX3 Mini / Amlogic Meson GXL (S905W) P281 Development Board
-	# soc soc0: Amlogic Meson GXL (Unknown) Revision 21:d (4:2) Detected <-- Phicomm N1
+	# soc soc0: Amlogic Meson GXL (Unknown) Revision 21:d (4:2) Detected <-- Phicomm N1, Amlogic Meson GXL (S905D) P230 Development Board
 	# soc soc0: Amlogic Meson GXL (S905D) Revision 21:d (4:2) Detected <-- Phicomm N1 / Amlogic Meson GXL (S905D) P231 Development Board
 	# soc soc0: Amlogic Meson GXL (S805X) Revision 21:d (34:2) Detected <-- Libre Computer AML-S805X-AC / Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:d (84:2) Detected <-- Khadas VIM / Libre Computer AML-S905X-CC / Amlogic Meson GXL (S905X) P212 Development Board
@@ -5206,6 +5228,14 @@ ShowZswapStats() {
 		fi
 	fi
 } # ShowZswapStats
+
+BegForContribution() {
+	# ask user to submit results. TODO: how to identify results are not already uploaded
+	# w/o querying the github repo. 
+	cat <<- EOF
+	It seems your device ${DeviceName} is not represented in sbc-bench's results list.
+	EOF
+} # BegForContribution
 
 DisplayUsage() {
 	echo -e "\nUsage: ${BOLD}${0##*/} [-c] [-g] [-G] [-h] [-m] [-P] [-t \$degree] [-T \$degree] [-s]${NC}\n"

@@ -2380,12 +2380,6 @@ InitialMonitoring() {
 
 GetVoltageSensor() {
 	case "${DTCompatible}" in
-		*rk3288-tinker-s*)
-			# test for Tinkerboard S and bc due to weird formula borrowed from @Tonymac32
-			if [ -f /sys/bus/iio/devices/iio\:device0/in_voltage2_raw ]; then
-				command -v bc >/dev/null 2>&1 && echo /sys/bus/iio/devices/iio\:device0/in_voltage2_raw
-			fi
-			;;
 		*nanopi-r6s*)
 			# NanoPi R6S running with Rockchip's 5.10 BSP kernel?
 			if [ -f /sys/devices/iio_sysfs_trigger/subsystem/devices/iio\:device0/in_voltage2_raw ]; then
@@ -2443,11 +2437,6 @@ GetInputVoltage() {
 			;;
 		in_voltage2_raw)
 			case "${DTCompatible}" in
-				*rk3288-tinker-s*)
-					# Tinkerboard S
-					read -r RAWvoltage <"${1}"
-					echo "(${RAWvoltage} / ((82.0/302.0) * 1023.0 / 1.8)) + 0.1" | bc -l | awk '{printf ("%0.2f",$1); }'
-					;;
 				*nanopi-r6s*)
 					# NaniPi R6S running with Rockchip's 5.10 BSP kernel
 					awk '{printf ("%0.2f",$1/206.2); }' <"${1}" | sed 's/,/./'

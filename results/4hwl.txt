@@ -1,0 +1,575 @@
+sbc-bench v0.9.9 ASUSTeK Computer Inc. U32U 1.0    / E-450 APU (Fri, 02 Dec 2022 19:01:15 +0100)
+
+Distributor ID:	Ubuntu
+Description:	Ubuntu 22.04.1 LTS
+Release:	22.04
+Codename:	jammy
+
+Device Info:
+	Manufacturer: ASUSTeK Computer Inc.
+	Product Name: U32U
+	Version: 1.0       
+	SKU Number:                       
+	Family: U
+
+BIOS/UEFI:
+	Vendor: American Megatrends Inc.
+	Version: U32U.204
+	Release Date: 12/16/2011
+	BIOS Revision: 4.6
+
+/usr/bin/gcc (Ubuntu 11.3.0-1ubuntu1~22.04) 11.3.0
+
+Uptime: 19:01:15 up  1:58,  2 users,  load average: 0,87, 0,94, 0,82,  55,9°C,  376413270
+
+Linux 5.15.0-56-generic (mirek-u32u) 	2.12.2022 	_x86_64_	(2 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+          20,97    0,28    5,79    0,11    0,00   72,85
+
+Device             tps    kB_read/s    kB_wrtn/s    kB_dscd/s    kB_read    kB_wrtn    kB_dscd
+sda              14,43       244,19       198,05       141,31    1733769    1406142    1003276
+
+               total        used        free      shared  buff/cache   available
+Mem:           5,4Gi       1,9Gi       2,6Gi        94Mi       914Mi       3,2Gi
+Swap:          4,0Gi          0B       4,0Gi
+
+Filename				Type		Size		Used		Priority
+/swapfile                               file		4194300		0		10
+
+##########################################################################
+
+Checking cpufreq OPP:
+
+Cpufreq OPP: 1650    Measured: 1643 (1643.727/1643.360/1643.237)
+Cpufreq OPP: 1320    Measured: 1314 (1314.688/1314.328/1313.512)
+Cpufreq OPP:  825    Measured:  820    (820.656/820.536/820.477)
+
+##########################################################################
+
+Hardware sensors:
+
+asus-isa-0000
+cpu_fan:     4200 RPM
+temp1:        +60.0 C  
+
+radeon-pci-0008
+in0:         838.00 mV 
+temp1:        +60.0 C  (crit = +120.0 C, hyst = +90.0 C)
+
+k10temp-pci-00c3
+temp1:        +60.1 C  (high = +70.0 C)
+                       (crit = +100.0 C, hyst = +97.0 C)
+
+acpitz-acpi-0
+temp1:        +60.0 C  (crit = +103.0 C)
+
+##########################################################################
+
+Executing benchmark on cpu0:
+
+tinymembench v0.4.9 (simple benchmark for memory throughput and latency)
+
+==========================================================================
+== Memory bandwidth tests                                               ==
+==                                                                      ==
+== Note 1: 1MB = 1000000 bytes                                          ==
+== Note 2: Results for 'copy' tests show how many bytes can be          ==
+==         copied per second (adding together read and writen           ==
+==         bytes would have provided twice higher numbers)              ==
+== Note 3: 2-pass copy means that we are using a small temporary buffer ==
+==         to first fetch data into it, and only then write it to the   ==
+==         destination (source -> L1 cache, L1 cache -> destination)    ==
+== Note 4: If sample standard deviation exceeds 0.1%, it is shown in    ==
+==         brackets                                                     ==
+==========================================================================
+
+ C copy backwards                                     :   1241.8 MB/s (0.5%)
+ C copy backwards (32 byte blocks)                    :   1237.8 MB/s
+ C copy backwards (64 byte blocks)                    :   1238.2 MB/s (0.2%)
+ C copy                                               :   1269.9 MB/s (0.8%)
+ C copy prefetched (32 bytes step)                    :   1337.5 MB/s (0.5%)
+ C copy prefetched (64 bytes step)                    :   1324.1 MB/s (0.7%)
+ C 2-pass copy                                        :    990.6 MB/s
+ C 2-pass copy prefetched (32 bytes step)             :   1105.0 MB/s
+ C 2-pass copy prefetched (64 bytes step)             :   1080.6 MB/s
+ C fill                                               :   1721.2 MB/s
+ C fill (shuffle within 16 byte blocks)               :   1721.4 MB/s
+ C fill (shuffle within 32 byte blocks)               :   1657.3 MB/s (1.2%)
+ C fill (shuffle within 64 byte blocks)               :   1712.0 MB/s (1.6%)
+ ---
+ standard memcpy                                      :   1707.8 MB/s (0.4%)
+ standard memset                                      :   1743.0 MB/s (0.3%)
+ ---
+ MOVSB copy                                           :   1269.5 MB/s
+ MOVSD copy                                           :   1268.4 MB/s
+ SSE2 copy                                            :   1257.1 MB/s (0.2%)
+ SSE2 nontemporal copy                                :   1821.5 MB/s (0.4%)
+ SSE2 copy prefetched (32 bytes step)                 :   1335.4 MB/s
+ SSE2 copy prefetched (64 bytes step)                 :   1308.3 MB/s (0.6%)
+ SSE2 nontemporal copy prefetched (32 bytes step)     :   2143.2 MB/s (2.3%)
+ SSE2 nontemporal copy prefetched (64 bytes step)     :   2104.5 MB/s (0.4%)
+ SSE2 2-pass copy                                     :    972.1 MB/s
+ SSE2 2-pass copy prefetched (32 bytes step)          :   1106.7 MB/s (0.2%)
+ SSE2 2-pass copy prefetched (64 bytes step)          :   1072.6 MB/s
+ SSE2 2-pass nontemporal copy                         :    837.1 MB/s
+ SSE2 fill                                            :   1742.5 MB/s
+ SSE2 nontemporal fill                                :   2096.6 MB/s (0.5%)
+
+==========================================================================
+== Framebuffer read tests.                                              ==
+==                                                                      ==
+== Many ARM devices use a part of the system memory as the framebuffer, ==
+== typically mapped as uncached but with write-combining enabled.       ==
+== Writes to such framebuffers are quite fast, but reads are much       ==
+== slower and very sensitive to the alignment and the selection of      ==
+== CPU instructions which are used for accessing memory.                ==
+==                                                                      ==
+== Many x86 systems allocate the framebuffer in the GPU memory,         ==
+== accessible for the CPU via a relatively slow PCI-E bus. Moreover,    ==
+== PCI-E is asymmetric and handles reads a lot worse than writes.       ==
+==                                                                      ==
+== If uncached framebuffer reads are reasonably fast (at least 100 MB/s ==
+== or preferably >300 MB/s), then using the shadow framebuffer layer    ==
+== is not necessary in Xorg DDX drivers, resulting in a nice overall    ==
+== performance improvement. For example, the xf86-video-fbturbo DDX     ==
+== uses this trick.                                                     ==
+==========================================================================
+
+ MOVSD copy (from framebuffer)                        :     11.4 MB/s (0.6%)
+ MOVSD 2-pass copy (from framebuffer)                 :     11.4 MB/s
+ SSE2 copy (from framebuffer)                         :     22.0 MB/s
+ SSE2 2-pass copy (from framebuffer)                  :     22.2 MB/s (0.6%)
+
+==========================================================================
+== Memory latency test                                                  ==
+==                                                                      ==
+== Average time is measured for random memory accesses in the buffers   ==
+== of different sizes. The larger is the buffer, the more significant   ==
+== are relative contributions of TLB, L1/L2 cache misses and SDRAM      ==
+== accesses. For extremely large buffer sizes we are expecting to see   ==
+== page table walk with several requests to SDRAM for almost every      ==
+== memory access (though 64MiB is not nearly large enough to experience ==
+== this effect to its fullest).                                         ==
+==                                                                      ==
+== Note 1: All the numbers are representing extra time, which needs to  ==
+==         be added to L1 cache latency. The cycle timings for L1 cache ==
+==         latency can be usually found in the processor documentation. ==
+== Note 2: Dual random read means that we are simultaneously performing ==
+==         two independent memory accesses at a time. In the case if    ==
+==         the memory subsystem can't handle multiple outstanding       ==
+==         requests, dual random read has the same timings as two       ==
+==         single reads performed one after another.                    ==
+==========================================================================
+
+block size : single random read / dual random read, [MADV_NOHUGEPAGE]
+      1024 :    0.0 ns          /     0.0 ns 
+      2048 :    0.0 ns          /     0.0 ns 
+      4096 :    0.0 ns          /     0.0 ns 
+      8192 :    0.0 ns          /     0.0 ns 
+     16384 :    0.0 ns          /     0.0 ns 
+     32768 :    0.0 ns          /     0.0 ns 
+     65536 :    4.6 ns          /     7.7 ns 
+    131072 :    6.9 ns          /    10.6 ns 
+    262144 :    9.9 ns          /    14.5 ns 
+    524288 :   14.9 ns          /    22.4 ns 
+   1048576 :   62.8 ns          /    93.8 ns 
+   2097152 :   88.2 ns          /   117.5 ns 
+   4194304 :  109.1 ns          /   180.3 ns 
+   8388608 :  120.8 ns          /   220.8 ns 
+  16777216 :  128.0 ns          /   245.4 ns 
+  33554432 :  133.1 ns          /   261.4 ns 
+  67108864 :  143.6 ns          /   286.3 ns 
+
+block size : single random read / dual random read, [MADV_HUGEPAGE]
+      1024 :    0.0 ns          /     0.0 ns 
+      2048 :    0.0 ns          /     0.0 ns 
+      4096 :    0.0 ns          /     0.0 ns 
+      8192 :    0.0 ns          /     0.0 ns 
+     16384 :    0.0 ns          /     0.0 ns 
+     32768 :    0.0 ns          /     0.0 ns 
+     65536 :    4.6 ns          /     7.7 ns 
+    131072 :    6.9 ns          /    10.6 ns 
+    262144 :    8.0 ns          /    11.9 ns 
+    524288 :   10.0 ns          /    14.5 ns 
+   1048576 :   59.1 ns          /    91.2 ns 
+   2097152 :   84.3 ns          /   115.7 ns 
+   4194304 :   97.1 ns          /   124.5 ns 
+   8388608 :  101.9 ns          /   122.5 ns 
+  16777216 :  106.7 ns          /   129.7 ns 
+  33554432 :  109.0 ns          /   126.4 ns 
+  67108864 :  110.2 ns          /   126.0 ns 
+
+##########################################################################
+
+Executing ramlat on cpu0, results in ns:
+
+       size:  1x32  2x32  1x64  2x64 1xPTR 2xPTR 4xPTR 8xPTR
+         4k: 2.435 2.437 2.436 2.968 1.827 1.830 2.442 4.927 
+         8k: 2.435 2.436 2.435 2.970 1.826 1.849 2.438 4.892 
+        16k: 2.439 2.435 2.435 2.968 1.827 1.828 2.440 5.013 
+        32k: 2.441 2.440 2.440 2.973 1.841 1.831 2.455 4.996 
+        64k: 13.40 52.42 13.63 52.38 13.82 24.37 49.92 97.51 
+       128k: 20.25 53.48 20.00 48.86 18.93 24.37 49.79 97.47 
+       256k: 20.42 53.73 20.46 56.27 20.43 24.13 49.29 96.96 
+       512k: 78.83 61.53 78.37 62.84 77.54 80.94 91.27 135.4 
+      1024k: 116.2 120.9 116.5 120.0 116.7 120.5 134.9 199.8 
+      2048k: 117.5 131.1 117.6 131.1 116.4 121.8 137.0 203.7 
+      4096k: 131.6 225.6 130.4 229.8 129.7 219.4 404.7 777.0 
+      8192k: 131.8 235.7 131.8 236.0 131.1 222.4 411.5 789.9 
+     16384k: 131.8 232.6 133.4 241.4 131.1 222.9 411.4 789.3 
+
+##########################################################################
+
+Executing benchmark twice on cluster 0
+
+OpenSSL 3.0.2, built on 15 Mar 2022 (Library: OpenSSL 3.0.2 15 Mar 2022)
+type             16 bytes     64 bytes    256 bytes   1024 bytes   8192 bytes  16384 bytes
+aes-128-cbc      31033.27k    35901.40k    37757.01k    38220.80k    38354.94k    38344.02k
+aes-128-cbc      30588.78k    35781.29k    37714.26k    38210.22k    38349.48k    38338.56k
+aes-192-cbc      27024.27k    30405.40k    31483.99k    31848.45k    31962.45k    31894.19k
+aes-192-cbc      26704.99k    30346.28k    31581.70k    31905.79k    32003.41k    32003.41k
+aes-256-cbc      23534.67k    26300.57k    27152.81k    27389.61k    27443.20k    27454.12k
+aes-256-cbc      23494.50k    26227.84k    27147.43k    27387.22k    27456.85k    27454.12k
+
+##########################################################################
+
+Executing benchmark single-threaded on cpu0
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,2 CPUs AMD E-450 APU with Radeon(tm) HD Graphics (500F20),ASM)
+
+AMD E-450 APU with Radeon(tm) HD Graphics (500F20)
+CPU Freq: - 64000000 - - - - 512000000 1024000000 -
+
+RAM size:    5535 MB,  # CPU hardware threads:   2
+RAM usage:    435 MB,  # Benchmark threads:      1
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       1116   100   1088   1086  |      17057   100   1457   1456
+23:       1047   100   1068   1067  |      16738   100   1449   1449
+24:        993   100   1068   1068  |      16401   100   1440   1440
+25:        945   100   1079   1079  |      15976   100   1422   1422
+----------------------------------  | ------------------------------
+Avr:             100   1076   1075  |              100   1442   1442
+Tot:             100   1259   1258
+
+##########################################################################
+
+Executing benchmark 3 times multi-threaded on CPUs 0-1
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,2 CPUs AMD E-450 APU with Radeon(tm) HD Graphics (500F20),ASM)
+
+AMD E-450 APU with Radeon(tm) HD Graphics (500F20)
+CPU Freq: - - - - - - - - -
+
+RAM size:    5535 MB,  # CPU hardware threads:   2
+RAM usage:    441 MB,  # Benchmark threads:      2
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       2011   180   1085   1957  |      33186   196   1448   2833
+23:       2020   190   1084   2058  |      32760   197   1442   2836
+24:       1911   189   1088   2055  |      32160   197   1433   2823
+25:       1669   172   1106   1906  |      31150   196   1417   2773
+----------------------------------  | ------------------------------
+Avr:             183   1091   1994  |              196   1435   2816
+Tot:             190   1263   2405
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,2 CPUs AMD E-450 APU with Radeon(tm) HD Graphics (500F20),ASM)
+
+AMD E-450 APU with Radeon(tm) HD Graphics (500F20)
+CPU Freq: 64000000 - - - 128000000 - - - -
+
+RAM size:    5535 MB,  # CPU hardware threads:   2
+RAM usage:    441 MB,  # Benchmark threads:      2
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       2038   184   1078   1983  |      32929   194   1448   2811
+23:       2016   189   1085   2054  |      32842   197   1442   2843
+24:       1961   193   1095   2109  |      32110   197   1432   2819
+25:       1892   194   1115   2160  |      30894   194   1416   2750
+----------------------------------  | ------------------------------
+Avr:             190   1093   2077  |              196   1434   2806
+Tot:             193   1264   2441
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,2 CPUs AMD E-450 APU with Radeon(tm) HD Graphics (500F20),ASM)
+
+AMD E-450 APU with Radeon(tm) HD Graphics (500F20)
+CPU Freq: - - - - - - - - -
+
+RAM size:    5535 MB,  # CPU hardware threads:   2
+RAM usage:    441 MB,  # Benchmark threads:      2
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       2074   185   1090   2018  |      33360   197   1449   2848
+23:       2052   193   1084   2091  |      32554   196   1441   2818
+24:       1932   191   1090   2078  |      32084   197   1433   2817
+25:       1819   188   1106   2077  |      31129   196   1417   2771
+----------------------------------  | ------------------------------
+Avr:             189   1093   2066  |              196   1435   2813
+Tot:             193   1264   2440
+
+Compression: 1994,2077,2066
+Decompression: 2816,2806,2813
+Total: 2405,2441,2440
+
+##########################################################################
+
+Testing maximum cpufreq again, still under full load. System health now:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+19:19:04: 1650MHz  2.11  96%   1%  94%   0%   0%   0%  77,1°C
+
+Checking cpufreq OPP:
+
+Cpufreq OPP: 1650    Measured: 1643 (1643.400/1643.237/1643.196)
+
+##########################################################################
+
+Hardware sensors:
+
+asus-isa-0000
+cpu_fan:     4900 RPM
+temp1:        +73.0 C  
+
+radeon-pci-0008
+in0:         838.00 mV 
+temp1:        +71.0 C  (crit = +120.0 C, hyst = +90.0 C)
+
+k10temp-pci-00c3
+temp1:        +72.5 C  (high = +70.0 C)
+                       (crit = +100.0 C, hyst = +97.0 C)
+
+acpitz-acpi-0
+temp1:        +73.0 C  (crit = +103.0 C)
+
+##########################################################################
+
+System health while running tinymembench:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+19:01:26: 1650MHz  0.98  27%   5%  21%   0%   0%   0%  60,2°C
+19:02:06: 1650MHz  1.06  52%   0%  51%   0%   0%   0%  62,6°C
+19:02:47: 1650MHz  1.22  66%   1%  64%   0%   0%   0%  64,6°C
+19:03:27: 1650MHz  1.16  52%   0%  51%   0%   0%   0%  64,5°C
+19:04:07: 1650MHz  1.08  51%   0%  51%   0%   0%   0%  63,6°C
+19:04:47: 1650MHz  1.04  51%   0%  50%   0%   0%   0%  63,8°C
+19:05:27: 1650MHz  1.02  51%   0%  51%   0%   0%   0%  63,5°C
+19:06:07: 1650MHz  1.01  51%   0%  51%   0%   0%   0%  63,9°C
+19:06:47: 1650MHz  1.00  51%   0%  51%   0%   0%   0%  63,5°C
+19:07:27: 1650MHz  1.00  52%   0%  51%   0%   0%   0%  63,8°C
+19:08:07: 1650MHz  1.00  51%   0%  51%   0%   0%   0%  64,0°C
+19:08:47: 1650MHz  1.00  51%   0%  50%   0%   0%   0%  64,5°C
+19:09:27: 1650MHz  1.00  51%   0%  50%   0%   0%   0%  64,5°C
+19:10:07: 1650MHz  1.24  54%   0%  53%   0%   0%   0%  64,0°C
+19:10:47: 1650MHz  1.12  51%   0%  51%   0%   0%   0%  64,2°C
+
+System health while running ramlat:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+19:11:02: 1650MHz  1.10  29%   5%  23%   0%   0%   0%  64,6°C
+19:11:05: 1650MHz  1.09  51%   0%  50%   0%   0%   0%  64,6°C
+19:11:08: 1650MHz  1.09  51%   0%  50%   0%   0%   0%  64,5°C
+19:11:11: 1650MHz  1.09  54%   1%  52%   0%   0%   0%  64,8°C
+19:11:14: 1650MHz  1.08  51%   0%  50%   0%   0%   0%  64,6°C
+19:11:17: 1650MHz  1.07  52%   0%  50%   0%   0%   0%  64,5°C
+19:11:20: 1650MHz  1.07  51%   0%  50%   0%   0%   0%  64,5°C
+19:11:23: 1650MHz  1.07  51%   0%  50%   0%   0%   0%  64,5°C
+19:11:26: 1650MHz  1.07  52%   0%  50%   0%   0%   0%  64,5°C
+
+System health while running OpenSSL benchmark:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+19:11:28: 1650MHz  1.06  29%   5%  23%   0%   0%   0%  64,6°C
+19:11:45: 1650MHz  1.05  51%   0%  50%   0%   0%   0%  65,5°C
+19:12:01: 1650MHz  1.04  51%   0%  51%   0%   0%   0%  65,8°C
+19:12:17: 1650MHz  1.03  51%   0%  50%   0%   0%   0%  67,4°C
+19:12:33: 1650MHz  1.02  53%   1%  51%   0%   0%   0%  65,5°C
+19:12:49: 1650MHz  1.01  51%   0%  50%   0%   0%   0%  65,5°C
+19:13:05: 1650MHz  1.01  51%   0%  51%   0%   0%   0%  65,5°C
+
+System health while running 7-zip single core benchmark:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+19:13:17: 1650MHz  1.01  29%   5%  23%   0%   0%   0%  65,6°C
+19:13:28: 1650MHz  2.85  52%   0%  51%   0%   0%   0%  65,9°C
+19:13:39: 1650MHz  2.56  51%   0%  50%   0%   0%   0%  66,0°C
+19:13:50: 1650MHz  2.32  51%   1%  49%   0%   0%   0%  65,9°C
+19:14:01: 1650MHz  2.12  51%   0%  51%   0%   0%   0%  65,9°C
+19:14:12: 1650MHz  1.87  51%   1%  49%   0%   0%   0%  65,5°C
+19:14:23: 1650MHz  1.74  51%   1%  49%   0%   0%   0%  66,1°C
+19:14:34: 1650MHz  1.62  51%   1%  49%   0%   0%   0%  65,6°C
+19:14:45: 1650MHz  1.53  51%   1%  50%   0%   0%   0%  65,5°C
+19:14:56: 1650MHz  1.44  51%   1%  50%   0%   0%   0%  65,6°C
+19:15:07: 1650MHz  1.35  51%   1%  49%   0%   0%   0%  66,1°C
+
+System health while running 7-zip multi core benchmark:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+19:15:16: 1650MHz  1.32  29%   4%  24%   0%   0%   0%  67,0°C
+19:15:48: 1650MHz  1.59  97%   1%  96%   0%   0%   0%  75,5°C
+19:16:20: 1650MHz  1.95  96%   2%  94%   0%   0%   0%  75,5°C
+19:16:53: 1650MHz  2.08  97%   1%  95%   0%   0%   0%  76,6°C
+19:17:27: 1650MHz  2.09  98%   1%  96%   0%   0%   0%  77,0°C
+19:17:59: 1650MHz  2.18  98%   2%  95%   0%   0%   0%  77,6°C
+19:18:33: 1650MHz  2.11  97%   1%  96%   0%   0%   0%  78,5°C
+19:19:04: 1650MHz  2.11  96%   1%  94%   0%   0%   0%  77,1°C
+
+##########################################################################
+
+Linux 5.15.0-56-generic (mirek-u32u) 	2.12.2022 	_x86_64_	(2 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+          26,48    0,25    5,14    0,10    0,00   68,02
+
+Device             tps    kB_read/s    kB_wrtn/s    kB_dscd/s    kB_read    kB_wrtn    kB_dscd
+sda              13,15       220,27       191,67       129,78    1805172    1570794    1063556
+
+               total        used        free      shared  buff/cache   available
+Mem:           5,4Gi       1,9Gi       2,5Gi        94Mi       1,0Gi       3,2Gi
+Swap:          4,0Gi          0B       4,0Gi
+
+Filename				Type		Size		Used		Priority
+/swapfile                               file		4194300		0		10
+
+CPU sysfs topology (clusters, cpufreq members, clockspeeds)
+                 cpufreq   min    max
+ CPU    cluster  policy   speed  speed   core type
+  0        0        0      825    1650   E-450 APU
+  1        0        1      825    1650   E-450 APU
+
+Architecture:                    x86_64
+CPU op-mode(s):                  32-bit, 64-bit
+Address sizes:                   36 bits physical, 48 bits virtual
+Byte Order:                      Little Endian
+CPU(s):                          2
+On-line CPU(s) list:             0,1
+Vendor ID:                       AuthenticAMD
+Model name:                      AMD E-450 APU with Radeon(tm) HD Graphics
+CPU family:                      20
+Model:                           2
+Thread(s) per core:              1
+Core(s) per socket:              2
+Socket(s):                       1
+Stepping:                        0
+CPU max MHz:                     1650,0000
+CPU min MHz:                     825,0000
+BogoMIPS:                        3292.82
+Flags:                           fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm constant_tsc rep_good nopl nonstop_tsc cpuid extd_apicid aperfmperf pni monitor ssse3 cx16 popcnt lahf_lm cmp_legacy svm extapic cr8_legacy abm sse4a misalignsse 3dnowprefetch ibs skinit wdt hw_pstate vmmcall arat npt lbrv svm_lock nrip_save pausefilter
+Virtualization:                  AMD-V
+L1d cache:                       64 KiB (2 instances)
+L1i cache:                       64 KiB (2 instances)
+L2 cache:                        1 MiB (2 instances)
+NUMA node(s):                    1
+NUMA node0 CPU(s):               0,1
+Vulnerability Itlb multihit:     Not affected
+Vulnerability L1tf:              Not affected
+Vulnerability Mds:               Not affected
+Vulnerability Meltdown:          Not affected
+Vulnerability Mmio stale data:   Not affected
+Vulnerability Retbleed:          Not affected
+Vulnerability Spec store bypass: Vulnerable
+Vulnerability Spectre v1:        Mitigation; usercopy/swapgs barriers and __user pointer sanitization
+Vulnerability Spectre v2:        Mitigation; Retpolines, STIBP disabled, RSB filling, PBRSB-eIBRS Not affected
+Vulnerability Srbds:             Not affected
+Vulnerability Tsx async abort:   Not affected
+
+Processor Information
+	Socket Designation: CPU 1
+	Type: Central Processor
+	Family: E-Series
+	Manufacturer: AMD E-450 APU wit
+	ID: 20 0F 50 00 FF FB 8B 17
+	Signature: Family 20, Model 2, Stepping 0
+	Flags:
+		FPU (Floating-point unit on-chip)
+		VME (Virtual mode extension)
+		DE (Debugging extension)
+		PSE (Page size extension)
+		TSC (Time stamp counter)
+		MSR (Model specific registers)
+		PAE (Physical address extension)
+		MCE (Machine check exception)
+		CX8 (CMPXCHG8 instruction supported)
+		APIC (On-chip APIC hardware supported)
+		SEP (Fast system call)
+		MTRR (Memory type range registers)
+		PGE (Page global enable)
+		MCA (Machine check architecture)
+		CMOV (Conditional move instruction supported)
+		PAT (Page attribute table)
+		PSE-36 (36-bit page size extension)
+		CLFSH (CLFLUSH instruction supported)
+		MMX (MMX technology supported)
+		FXSR (FXSAVE and FXSTOR instructions supported)
+		SSE (Streaming SIMD extensions)
+		SSE2 (Streaming SIMD extensions 2)
+		HTT (Multi-threading)
+	Version: AMD E-450 APU with Radeon(tm) HD Graphics      
+	Voltage: 1.4 V
+	External Clock: 100 MHz
+	Max Speed: 1650 MHz
+	Current Speed: 1650 MHz
+	Status: Populated, Enabled
+	L1 Cache Handle: 0x0005
+	L2 Cache Handle: 0x0006
+	Core Count: 2
+	Core Enabled: 2
+	Characteristics:
+		64-bit capable
+
+ Compiler: /usr/bin/gcc (Ubuntu 11.3.0-1ubuntu1~22.04) 11.3.0 / x86_64-linux-gnu
+ Userland: amd64
+   Kernel: 5.15.0-56-generic/x86_64
+           CONFIG_HZ=250
+           CONFIG_HZ_250=y
+           CONFIG_PREEMPT_NOTIFIERS=y
+           CONFIG_PREEMPT_VOLUNTARY=y
+           raid6: sse2x4   gen()  2132 MB/s
+           raid6: sse2x4   xor()  1174 MB/s
+           raid6: sse2x2   gen()  2370 MB/s
+           raid6: sse2x2   xor()  1506 MB/s
+           raid6: sse2x1   gen()  1951 MB/s
+           raid6: sse2x1   xor()  1371 MB/s
+           raid6: using algorithm sse2x2 gen() 2370 MB/s
+           raid6: .... xor() 1506 MB/s, rmw enabled
+           raid6: using ssse3x2 recovery algorithm
+           xor: measuring software checksum speed
+           xor: using function: prefetch64-sse (3878 MB/sec)
+
+DIMM configuration:
+     *-bank:0
+          description: DIMM DDR3 Synchronous 1333 MHz (0,8 ns)
+          product: M471B5273CH0-CH9
+          vendor: Samsung
+          physical id: 0
+          slot: A1_DIMM0
+          size: 4GiB
+          width: 64 bits
+          clock: 1333MHz (0.8ns)
+     *-bank:1
+          description: DIMM DDR3 Synchronous 1333 MHz (0,8 ns)
+          product: AD73I1B1672EG
+          vendor: A-DATA
+          physical id: 1
+          slot: A1_DIMM1
+          size: 2GiB
+          width: 64 bits
+          clock: 1333MHz (0.8ns)
+
+| ASUSTeK Computer Inc. U32U 1.0    / E-450 APU | 1650 MHz | 5.15 | Ubuntu 22.04.1 LTS x86_64/amd64 | 2430 | 1258 | 27450 | 1710 | 1740 | - |

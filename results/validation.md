@@ -191,7 +191,7 @@
 | [4132](4132.txt) | v0.9.8 SolidRun Cubox-i Dual/Quad | 2.3%/0% | 2.0Gi/1.8Gi | X | X | X | X | 3% | <span style=color:red>** 9%**</span> | |
 | [41AB](41AB.txt) | v0.9.8 T-HEAD c910 ice | 0%/0.4% | 3.4Gi/3.3Gi | X | X | X | X | 3% | 1% | |
 | [41BH](41BH.txt) | v0.9.8 Radxa ROCK 5B extensive | 0%/0% | 15Gi/15Gi | X | X | X | X | 1% | 0% | [check log](41BH.txt) |
-| [41Kb](41Kb.txt) | v0.9.8 / Celeron J1900 @ 1.99GHz | 0%/0% | 7.7Gi/6.5Gi | X | X | X | X | 2% | 0% | |
+| <del>[41Kb](41Kb.txt)</del> | <del>v0.9.8 / Celeron J1900 @ 1.99GHz </del> | <del>0%/0%</del> | <del>7.7Gi/6.5Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 2%</del> | <del> 0%</del> | |
 | [41ML](41ML.txt) | v0.9.8 Tronsmart S82 | 0.8%/1.0% | 2.0Gi/1.7Gi | X | X | X | X | 2% | <span style=color:red> 7%</span> | |
 | [41Qa](41Qa.txt) | v0.9.8 canaan-creative,k510 | 0%/0% | 192Mi/131Mi | | | | | 4% | 1% | |
 | [443N](443N.txt) | v0.9.8 Apple MacBook Pro | 0.2%/8.9% | 15Gi/14Gi | X | X | X | X | 1% | 0% | |
@@ -221,3 +221,6 @@
 | [4eiM](4eiM.txt) | v0.9.9 / Celeron 5205U @ 1.90GHz | 0%/0% | 7.6Gi/6.4Gi | X | X | X | X | 1% | 0% | |
 | [4f3I](4f3I.txt) | v0.9.9 HARDKERNEL ODROID-H3 1.0 / Penti | 0%/0.5% | 31Gi/30Gi | X | X | X | X | 1% | 0% | |
 | [4fdD](4fdD.txt) | v0.9.9 OnePlus 5 | 2.7%/0.6% | 5.5Gi/5.2Gi | X | X | X | X | 1% | 1% | |
+| [4hKV](4hKV.txt) | v0.9.9 / Celeron J1900 @ 1.99GHz | 0%/0% | 7.7Gi/6.9Gi | X | X | X | X | 3% | 0% | |
+| [4hwl](4hwl.txt) | v0.9.9 ASUSTeK Computer Inc. U32U 1.0 | 0.4%/0.3% | 5,4Gi/3,2Gi | X | X | X | X | <span style=color:red> 5%</span> | 0% | |
+| [4hx0](4hx0.txt) | v0.9.9 NXP i.MX8MPlus EVK board | 1.5%/0.1% | 5.5Gi/4.9Gi | X | X | X | X | 2% | <span style=color:red> 6%</span> | |

@@ -211,6 +211,21 @@ Main() {
 	BasicSetup ${OriginalCPUFreqGovernor} >/dev/null 2>&1
 } # Main
 
+snore() {
+	# https://blog.dhampir.no/content/sleeping-without-a-subprocess-in-bash-and-how-to-sleep-forever
+    local IFS
+    [[ -n "${_snore_fd:-}" ]] || { exec {_snore_fd}<> <(:); } 2>/dev/null ||
+    {
+        # workaround for MacOS and similar systems
+        local fifo
+        fifo=$(mktemp -u)
+        mkfifo -m 700 "$fifo"
+        exec {_snore_fd}<>"$fifo"
+        rm "$fifo"
+    }
+    read ${1:+-t "$1"} -u $_snore_fd || :
+}
+
 GetARMCore() {
 	grep "${1}/${2}:" <<<"41:Arm
 	41/810:ARM810
@@ -558,7 +573,7 @@ PlotPerformanceGraph() {
 		/bin/bash "${PathToMe}" -m 30 >>${MonitorLog} &
 		MonitoringPID=$!
 
-		sleep 240
+		snore 240
 		read IdleConsumption <${NetioConsumptionFile}
 		kill ${NetioMonitoringPID} ${MonitoringPID}
 		IdleTemp=$(ReadSoCTemp)
@@ -753,7 +768,7 @@ CheckPerformance() {
 				[ -f /sys/devices/system/cpu/cpufreq/policy${Cluster}/scaling_setspeed ] && echo ${i} >/sys/devices/system/cpu/cpufreq/policy${Cluster}/scaling_setspeed
 			done
 		fi
-		sleep 0.1
+		snore 0.1
 		
 		# if TasksetOptions is not provided measure clockspeed on highest core:
 		if [ "X${TasksetOptions}" = "X" ]; then
@@ -1120,7 +1135,7 @@ MonitorNetio() {
 		SumOfEntries=$(awk '{s+=$1} END {printf "%.0f", s}' <${TempDir}/netio-socket-${NetioSocket})
 		AverageConsumption=$(( ${SumOfEntries} / ${CountOfEntries} ))
 		echo -n $(( $(awk '{printf ("%0.0f",$1/10); }' <<<"${AverageConsumption}" ) * 10 )) >"${ConsumptionFile}"
-		sleep ${SleepInterval}
+		snore ${SleepInterval}
 	done
 } # MonitorNetio
 
@@ -1261,7 +1276,7 @@ MonitorBoard() {
 				echo -e "$(date "+%H:%M:%S"):   ---     $(printf "%5s" ${LoadAvg}) ${procStats}  $(printf "%4s" ${SocTemp})°C${VoltageColumn}${NetioColumn}"
 				;;
 		esac
-		sleep ${SleepInterval}
+		snore ${SleepInterval}
 	done
 } # MonitorBoard
 
@@ -1320,7 +1335,7 @@ TempTest() {
 				while [ ${SocTemp} -le ${TargetTemp} ]; do
 					echo "Heating SoC from current ${SocTemp}°C to ${TargetTemp}°C. This may take some time..."
 					printf "\x1b[1A"
-					sleep 2
+					snore 2
 					SocTemp=$(ReadSoCTemp | cut -f1 -d'.')
 				done
 				echo -e "Heating SoC from current ${TargetTemp}°C to ${TargetTemp}°C. This may take some time...\c"
@@ -1338,7 +1353,7 @@ TempTest() {
 				while [ ${SocTemp} -gt ${TargetTemp} ]; do
 					echo "Waiting for the SoC cooling down from current ${SocTemp}°C to ${TargetTemp}°C. This may take some time..."
 					printf "\x1b[1A"
-					sleep 2
+					snore 2
 					SocTemp=$(ReadSoCTemp | cut -f1 -d'.')
 				done
 				echo -e "Waiting for the SoC cooling down from current ${SocTemp}°C to ${TargetTemp}°C. This may take some time...\c"
@@ -1495,7 +1510,7 @@ CheckLoadAndDmesg() {
 		/bin/bash "${PathToMe}" -m 5 >"${TempDir}/wait-for-loadavg.log" &
 		MonitoringPID=$!
 		while [ $AvgLoad1Min -ge 10 -a ${CPUSum:-100} -ge 10 ]; do
-			sleep 5
+			snore 5
 			CPUutilization="$(awk -F" " '/^[0-9]/ {print $4}' <"${TempDir}/wait-for-loadavg.log" | sed 's/%//' | tail -n6)"
 			LogLength=$(wc -l <<<"${CPUutilization}")
 			if [ ${LogLength} -gt 5 ]; then
@@ -2527,7 +2542,7 @@ CheckClockspeedsAndSensors() {
 			if [ -x "${InstallLocation}"/cpuminer-multi/cpuminer ]; then
 				echo -e "\nMeasuring highest clockspeeds for all cores in parallel (full load):\n" >>${ResultLog}
 				timeout 15 "${InstallLocation}"/cpuminer-multi/cpuminer --benchmark --cpu-priority=2 >/dev/null &
-				sleep 10
+				snore 10
 				CheckAllCores full-load >>${ResultLog}
 			fi			
 		fi
@@ -2619,7 +2634,7 @@ CheckCPUCluster() {
 			# if MaxKHz environment variable is set then skip any higher cpufreq OPP
 			if [ ${i} -le ${MaxKHz:-90000000} ]; then
 				echo ${i} >/sys/devices/system/cpu/cpufreq/policy${1}/scaling_max_freq
-				# instead of 'sleep 0.1' fire up some real workload in a try to compensate for SoC
+				# instead of 'snore 0.1' fire up some real workload in a try to compensate for SoC
 				# firmwares that might do their own thing wrt clockspeeds (keep them low when idle)
 				taskset -c $1 "${InstallLocation}"/mhz/mhz 1 1000000 >/dev/null
 				MeasuredSpeed=$(taskset -c $1 "${InstallLocation}"/mhz/mhz 3 1000000 | awk -F" cpu_MHz=" '{print $2}' | awk -F" " '{print $1}' | sort -r -n | tr '\n' '/' | sed 's|/$||')
@@ -2685,7 +2700,7 @@ CheckAllCores() {
 		CpuFreqToQuery=scaling_cur_freq
 	fi
 	# if in full-load mode wait 8 seconds
-	[ "X${1}" = "Xfull-load" ] && sleep 8
+	[ "X${1}" = "Xfull-load" ] && snore 8
 	for i in $(seq 0 $(( ${CPUCores} -1 )) ) ; do
 		[ -f /sys/devices/system/cpu/cpu${i}/cpufreq/${CpuFreqToQuery} ] && \
 			cat /sys/devices/system/cpu/cpu${i}/cpufreq/${CpuFreqToQuery} >"${TempDir}/Reported-${1}.${i}"
@@ -2723,7 +2738,7 @@ RunTinyMemBench() {
 		if [ $? -eq 0 ]; then
 			CPUInfo="$(GetCPUInfo ${ClusterConfig[$i]})"
 			echo -e "\nExecuting benchmark on cpu${ClusterConfig[$i]}${CPUInfo}:\n" >>${TempLog}
-			[ -s "${NetioConsumptionFile}" ] && sleep 10
+			[ -s "${NetioConsumptionFile}" ] && snore 10
 			taskset -c ${ClusterConfig[$i]} "${InstallLocation}"/tinymembench/tinymembench >>${TempLog} 2>&1
 		fi
 	done
@@ -2779,7 +2794,7 @@ Run7ZipBenchmark() {
 		# Only cpu0 or single CPU cluster
 		CPUInfo="$(GetCPUInfo 0)"
 		echo -e "\nExecuting benchmark single-threaded on cpu0${CPUInfo}" >>${TempLog}
-		[ -s "${NetioConsumptionFile}" ] && sleep 10
+		[ -s "${NetioConsumptionFile}" ] && snore 10
 		taskset -c 0 "${SevenZip}" b ${DictSize} -mmt=1 >>${TempLog}
 	else
 		# test each cluster individually
@@ -2788,7 +2803,7 @@ Run7ZipBenchmark() {
 			if [ $? -eq 0 ]; then
 				CPUInfo="$(GetCPUInfo ${ClusterConfig[$i]})"
 				echo -e "\nExecuting benchmark single-threaded on cpu${ClusterConfig[$i]}${CPUInfo}" >>${TempLog}
-				[ -s "${NetioConsumptionFile}" ] && sleep 10
+				[ -s "${NetioConsumptionFile}" ] && snore 10
 				taskset -c ${ClusterConfig[$i]} "${SevenZip}" b ${DictSize} -mmt=1 >>${TempLog}
 			fi
 		done
@@ -2920,11 +2935,11 @@ RunOpenSSLBenchmark() {
 		for ((o=1;o<=CPUCores;o++)); do
 			taskset -c $(( ${o} - 1 )) openssl speed -elapsed -evp aes-256-cbc 2>/dev/null >"${TempDir}"/openssl.log.cbc.${o} &
 		done
-		sleep 25
+		snore 25
 		for ((o=1;o<=CPUCores;o++)); do
 			taskset -c $(( ${o} - 1 )) openssl speed -elapsed -evp aes-256-gcm 2>/dev/null >"${TempDir}"/openssl.log.gcm.${o} &
 		done
-		sleep 25
+		snore 25
 		grep '^aes-256-cbc' "${TempDir}"/openssl.log.* | cut -f2 -d':' | sort -r -n | sed "/^aes/ s/$/ (fully parallel)/" >>${ResultLog}
 		grep '^aes-256-gcm' "${TempDir}"/openssl.log.* | cut -f2 -d':' | sort -r -n | sed "/^aes/ s/$/ (fully parallel)/" >>${ResultLog}
 		kill ${MonitoringPID}
@@ -2938,7 +2953,7 @@ RunCpuminerBenchmark() {
 	MonitoringPID=$!
 	"${InstallLocation}"/cpuminer-multi/cpuminer --benchmark --cpu-priority=2 >${TempLog} &
 	MinerPID=$!
-	sleep 300
+	snore 300
 	kill ${MinerPID} ${MonitoringPID}
 	echo -e "\n##########################################################################\n" >>${ResultLog}
 	sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" <${TempLog} >>${ResultLog}
@@ -3005,7 +3020,7 @@ RunPTS() {
 					echo 1 >/sys/devices/system/cpu/cpu${o}/online
 					[ -f /sys/devices/system/cpu/cpufreq/policy${o}/scaling_governor ] && \
 						echo performance >/sys/devices/system/cpu/cpufreq/policy${o}/scaling_governor 2>/dev/null
-					sleep 0.5
+					snore 0.5
 					[ -f /sys/devices/system/cpu/cpufreq/policy${o}/scaling_governor ] && \
 						echo performance >/sys/devices/system/cpu/cpufreq/policy${o}/scaling_governor 2>/dev/null
 				done
@@ -3081,7 +3096,7 @@ RunGB() {
 					echo 1 >/sys/devices/system/cpu/cpu${o}/online
 					[ -f /sys/devices/system/cpu/cpufreq/policy${o}/scaling_governor ] && \
 						echo performance >/sys/devices/system/cpu/cpufreq/policy${o}/scaling_governor 2>/dev/null
-					sleep 0.5
+					snore 0.5
 					[ -f /sys/devices/system/cpu/cpufreq/policy${o}/scaling_governor ] && \
 						echo performance >/sys/devices/system/cpu/cpufreq/policy${o}/scaling_governor 2>/dev/null
 				done

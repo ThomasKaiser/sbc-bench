@@ -213,18 +213,18 @@ Main() {
 
 snore() {
 	# https://blog.dhampir.no/content/sleeping-without-a-subprocess-in-bash-and-how-to-sleep-forever
-    local IFS
-    [[ -n "${_snore_fd:-}" ]] || { exec {_snore_fd}<> <(:); } 2>/dev/null ||
-    {
-        # workaround for MacOS and similar systems
-        local fifo
-        fifo=$(mktemp -u)
-        mkfifo -m 700 "$fifo"
-        exec {_snore_fd}<>"$fifo"
-        rm "$fifo"
-    }
-    read ${1:+-t "$1"} -u $_snore_fd || :
-}
+	local IFS
+	[[ -n "${_snore_fd:-}" ]] || { exec {_snore_fd}<> <(:); } 2>/dev/null ||
+	{
+		# workaround for MacOS and similar systems
+		local fifo
+		fifo=$(mktemp -u)
+		mkfifo -m 700 "$fifo"
+		exec {_snore_fd}<>"$fifo"
+		rm "$fifo"
+	}
+	read ${1:+-t "$1"} -u $_snore_fd || :
+} # snore
 
 GetARMCore() {
 	grep "${1}/${2}:" <<<"41:Arm
@@ -1182,16 +1182,12 @@ MonitorBoard() {
 	# Background monitoring -- try to renice to 19 to not interfere with benchmark behaviour
 	renice 19 $BASHPID >/dev/null 2>&1
 
-	CpuFreqToQuery=cpuinfo_cur_freq
-
-	# check platform
-	case ${CPUArchitecture} in
-		x86*|i686)
-			if [ ! -f /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq ]; then
-				CpuFreqToQuery=scaling_cur_freq
-			fi
-			;;
-	esac
+	# switch to scaling_cur_freq if cpuinfo_cur_freq is not readable
+	if [ -r /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq ]; then
+		CpuFreqToQuery=cpuinfo_cur_freq
+	else
+		CpuFreqToQuery=scaling_cur_freq
+	fi
 
 	LastUserStat=0
 	LastNiceStat=0
@@ -1214,10 +1210,10 @@ MonitorBoard() {
 	if [ ${USE_VCGENCMD} = true ] ; then
 		DisplayHeader="Time        fake/real   load %cpu %sys %usr %nice %io %irq   Temp    VCore${VoltageHeader}${NetioHeader}"
 		CPUs=raspberrypi
-	elif [ ${#ClusterConfig[@]} -eq 1 -a -f /sys/devices/system/cpu/cpufreq/policy0/${CpuFreqToQuery} ] ; then
+	elif [ ${#ClusterConfig[@]} -eq 1 -a -r /sys/devices/system/cpu/cpufreq/policy0/${CpuFreqToQuery} ] ; then
 		DisplayHeader="Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp${VoltageHeader}${NetioHeader}"
 		CPUs=singlecluster
-	elif [ -f /sys/devices/system/cpu/cpufreq/policy${ClusterConfig[1]}/${CpuFreqToQuery} ]; then
+	elif [ -r /sys/devices/system/cpu/cpufreq/policy${ClusterConfig[1]}/${CpuFreqToQuery} ]; then
 		ClusterCount=$(( ${#ClusterConfig[@]} -1 ))
 		DisplayHeader="Time       big.LITTLE   load %cpu %sys %usr %nice %io %irq   Temp${VoltageHeader}${NetioHeader}"
 		read FirstCluster </sys/devices/system/cpu/cpufreq/policy${ClusterConfig[0]}/cpuinfo_max_freq
@@ -3696,9 +3692,9 @@ GuessARMSoC() {
 	#     Marvell PJ4 / r0p5: Marvell Armada 510
 	#     Marvell PJ4 / r1p1: Marvell Armada 370/XP
 	# Marvell PJ4B-MP / r2p2: Marvell PJ4Bv7
-	#  Phytium FTC660 / r1p1: Phytium FT1500A
-	#  Phytium FTC662 / r1p2: Phytium FT2000+/64
-	#  Phytium FTC663 / r1p3: Phytium FT2000/4 / FT2000A / D2000/8 / FT2500
+	#  Phytium FTC660 / r1p1: Phytium FT-1500A
+	#  Phytium FTC662 / r1p2: Phytium FT-2000+/64
+	#  Phytium FTC663 / r1p3: Phytium FT-2000/4 / FT2000A / D2000/8 / FT2500
 	# Qualcomm Falkor / r10p1: Qualcomm Snapdragon 835 / MSM8998
 	#  Qualcomm Krait / r1p0: Qualcomm Snapdragon S4 Plus (MSM8960)
 	#  Qualcomm Krait / r2p0: Qualcomm IPQ806x
@@ -3739,7 +3735,8 @@ GuessARMSoC() {
 	# soc soc0: Amlogic Meson GXL (S905L) Revision 21:c (c2:2) Detected <-- PiBox by wdmomo
 	# soc soc0: Amlogic Meson GXL (Unknown) Revision 21:c (c2:2) Detected <-- S905L on "PiBox by wdmomo"
 	# soc soc0: Amlogic Meson GXL (S905L) Revision 21:c (c4:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board
-	# soc soc0: Amlogic Meson GXL (Unknown) Revision 21:c (e2:2) Detected <-- S905X on Khadas VIM
+	# soc soc0: Amlogic Meson GXL (S905M2) Revision 21:c (e2:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board
+	# soc soc0: Amlogic Meson GXL (Unknown) Revision 21:c (e2:2) Detected <-- Khadas VIM
 	# soc soc0: Amlogic Meson GXL (S905D) Revision 21:d (0:2) Detected <-- Tanix TX3 Mini / Amlogic Meson GXL (S905W) P281 Development Board
 	# soc soc0: Amlogic Meson GXL (Unknown) Revision 21:d (4:2) Detected <-- Phicomm N1, Amlogic Meson GXL (S905D) P230 Development Board
 	# soc soc0: Amlogic Meson GXL (S905D) Revision 21:d (4:2) Detected <-- Phicomm N1 / Amlogic Meson GXL (S905D) P231 Development Board
@@ -3907,7 +3904,7 @@ GuessARMSoC() {
 	# Booting Linux on physical CPU 0x0000000000 [0x410fd032]  <- Cortex-A53 / r0p2 (Snapdragon 810 / MSM8994)
 	# Booting Linux on physical CPU 0x0000000000 [0x410fd034]  <- Cortex-A53 / r0p4
 	# Booting Linux on physical CPU 0x0000000000 [0x411fd050]  <- Cortex-A55 / r1p0 (S905X3)
-	# Booting Linux on physical CPU 0x0000000000 [0x412fd050]  <- Cortex-A55 / r2p0 (RK3566/RK3568 or RK3588/RK3588s or S905X4)
+	# Booting Linux on physical CPU 0x0000000000 [0x412fd050]  <- Cortex-A55 / r2p0 (RK3566/RK3568 or RK3588/RK3588s or S905X4/S905C2)
 	# Booting Linux on physical CPU 0x0000000000 [0x411fd071]  <- Cortex-A57 / r1p1 (Tegra TX1)
 	# Booting Linux on physical CPU 0x0000000000 [0x411fd072]  <- Cortex-A57 / r1p2 (AMD Opteron A1100)
 	# Booting Linux on physical CPU 0x0000000000 [0x410fd083]  <- Cortex-A72 / r0p3 (BCM2711 or LX2xx0A or Marvell Armada3900-A1 or AWS Graviton or Xilinx Versal)
@@ -4674,11 +4671,11 @@ GuessSoCbySignature() {
 			echo "Amlogic S905X3"
 			;;
 		00A55r2p000A55r2p000A55r2p000A55r2p0)
-			# Amlogic S905X4 or RK3566/RK3568
+			# Amlogic S905X4/S905C2 or RK3566/RK3568
 			# 4 x Cortex-A55 / r2p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp asimdrdm lrcpc dcpop asimddp
 			case "${DTCompatible}" in
 				*amlogic*)
-					echo "Amlogic S905X4"
+					echo "Amlogic S905X4/S905C2"
 					;;
 				*rk3566*)
 					echo "Rockchip RK3566"
@@ -4886,24 +4883,24 @@ GuessSoCbySignature() {
 			echo "PLX NAS7820"
 			;;
 		*Phytiumr1p1*Phytiumr1p1*Phytiumr1p1*Phytiumr1p1)
-			# Phytium FT1500A: 4 x Phytium FTC660 / r1p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32 / https://openbenchmarking.org/s/Phytium+FT1500A
-			echo "Phytium FT1500A"
+			# Phytium FT-1500A: 4 x Phytium FTC660 / r1p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32 / https://openbenchmarking.org/s/Phytium+FT1500A
+			echo "Phytium FT-1500A"
 			;;
 		*Phytiumr1p2*Phytiumr1p2*Phytiumr1p2*Phytiumr1p2*Phytiumr1p2*Phytiumr1p2*Phytiumr1p2*Phytiumr1p2*Phytiumr1p2*)
-			# PhytiumFT2000+/64: 64 x Phytium FTC662 / r1p2 / fp asimd evtstrm crc32 / https://github.com/util-linux/util-linux/issues/1036
-			echo "FT2000+/64"
+			# Phytium FT-2000+/64: 64 x Phytium FTC662 / r1p2 / fp asimd evtstrm crc32 / https://github.com/util-linux/util-linux/issues/1036
+			echo "Phytium FT-2000+/64"
 			;;
-		36?Phytiumr1p336?Phytiumr1p336?Phytiumr1p336?Phytiumr1p3)
-			# Phytium FT2000/4: 4 x Phytium FTC663 / r1p3 / fp asimd evtstrm aes pmull sha1 sha2 crc32 / https://www.phytium.com.cn/en/article/97
-			echo "Phytium FT2000/4"
+		*Phytiumr1p3*Phytiumr1p3*Phytiumr1p3*Phytiumr1p3)
+			# Phytium FT-2000/4: 4 x Phytium FTC663 / r1p3 / fp asimd evtstrm aes pmull sha1 sha2 crc32 / https://www.phytium.com.cn/en/article/97
+			echo "Phytium FT-2000/4"
 			;;
-		36?Phytiumr1p336?Phytiumr1p336?Phytiumr1p336?Phytiumr1p336?Phytiumr1p336?Phytiumr1p336?Phytiumr1p336?Phytiumr1p3)
+		*Phytiumr1p3*Phytiumr1p3*Phytiumr1p3*Phytiumr1p3*Phytiumr1p3*Phytiumr1p3*Phytiumr1p3*Phytiumr1p3)
 			# Phytium D2000/8: 8 x Phytium FTC663 / r1p3 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			echo "Phytium D2000/8"
 			;;
 		*Phytiumr1p3*Phytiumr1p3*Phytiumr1p3*Phytiumr1p3*Phytiumr1p3*Phytiumr1p3*Phytiumr1p3*Phytiumr1p3*Phytiumr1p3*)
-			# Phytium FT2500: 64 x Phytium FTC663 / r1p3 / fp asimd evtstrm aes pmull sha1 sha2 crc32
-			echo "$(( ${CPUCores} / 64 )) x Phytium FT2500"
+			# Phytium FT-2500: 64 x Phytium FTC663 / r1p3 / fp asimd evtstrm aes pmull sha1 sha2 crc32
+			echo "$(( ${CPUCores} / 64 )) x Phytium FT-2500"
 			;;
 		*A57r1p2*A57r1p2*A57r1p2*A57r1p2*A57r1p2*A57r1p2*A57r1p2*A57r1p2)
 			# AMD Opteron A1100: 8 x Cortex-A57 / r1p2 / https://bugzilla-attachments.redhat.com/attachment.cgi?id=1475897

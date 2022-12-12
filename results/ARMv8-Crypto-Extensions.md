@@ -66,6 +66,7 @@ Crawling through [sbc-bench results collection](../Results.md) comparing +30 dif
 | [Nintendo Switch](http://ix.io/3Di2) | 2090 | 746680 | 357 |
 | FTC663 | | | |
 | [Phytium D2000](http://ix.io/3Sl9) | 2300 | 828520 | 360 |
+| [Phytium FT-2000](http://ix.io/4ioj) | 2600 | 936740 | 360 |
 | Carmel | | | |
 | [Jetson Xavier NX](http://ix.io/3YWp) | 1890 | 706280 | 374 |
 | Apple Icestorm | | | |

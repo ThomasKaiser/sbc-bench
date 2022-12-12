@@ -140,7 +140,7 @@
 | [3N1U](3N1U.txt) | v0.9.2 SBC2D70 | 1.1%/0% | 113Mi/32Mi | X | | | | 0% | 0% | |
 | [3N2z](3N2z.txt) | v0.9.2 FriendlyArm NanoPi M1 Plus | 0.7%/0% | 999M/836M | X | X | X | X | 2% | 0% | |
 | [3N5c](3N5c.txt) | v0.9.2 bigboy | 0%/0% | 31Gi/29Gi | X | X | X | X | 1% | 0% | |
-| [3N6Q](3N6Q.txt) | v0.9.2 Hardkernel ODROID-C2 | 0.7%/0.2% | 1.9Gi/1.6Gi | X | X | X | X | 1% | 0% | |
+| <del>[3N6Q](3N6Q.txt)</del> | <del>v0.9.2 Hardkernel ODROID-C2 </del> | <del>0.7%/0.2%</del> | <del>1.9Gi/1.6Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 1%</del> | <del> 0%</del> | |
 | [3N7H](3N7H.txt) | v0.9.2 FriendlyElec NanoPi K1 Plus | 0%/1.3% | 1.9Gi/1.7Gi | X | X | X | X | 2% | 0% | |
 | [3N94](3N94.txt) | v0.9.2 RPi 4 Model B Rev 1.4 / BCM2711 | 0%/0% | 7.7Gi/7.4Gi | X | X | X | X | 4% | <span style=color:red>**12%**</span> | |
 | [3Na5](3Na5.txt) | v0.9.2 Hardkernel ODROID-HC4 | 0%/0% | 3.7Gi/3.5Gi | X | X | X | X | 1% | 0% | |
@@ -222,5 +222,8 @@
 | [4f3I](4f3I.txt) | v0.9.9 HARDKERNEL ODROID-H3 1.0 / Penti | 0%/0.5% | 31Gi/30Gi | X | X | X | X | 1% | 0% | |
 | [4fdD](4fdD.txt) | v0.9.9 OnePlus 5 | 2.7%/0.6% | 5.5Gi/5.2Gi | X | X | X | X | 1% | 1% | |
 | [4hKV](4hKV.txt) | v0.9.9 / Celeron J1900 @ 1.99GHz | 0%/0% | 7.7Gi/6.9Gi | X | X | X | X | 3% | 0% | |
+| [4hOp](4hOp.txt) | v0.9.9 Hardkernel ODROID-C2 | 0.8%/0.4% | 1.9Gi/1.7Gi | X | X | X | X | 1% | 1% | |
 | [4hwl](4hwl.txt) | v0.9.9 ASUSTeK Computer Inc. U32U 1.0 | 0.4%/0.3% | 5,4Gi/3,2Gi | X | X | X | X | <span style=color:red> 5%</span> | 0% | |
 | [4hx0](4hx0.txt) | v0.9.9 NXP i.MX8MPlus EVK board | 1.5%/0.1% | 5.5Gi/4.9Gi | X | X | X | X | 2% | <span style=color:red> 6%</span> | |
+| [4ijy](4ijy.txt) | v0.9.9 Hardkernel ODROID-M1 | 0%/0% | 3.6Gi/3.3Gi | X | X | X | X | 1% | 0% | |
+| [4ioj](4ioj.txt) | v0.9.9 WEIBU F20A V1000 | 0%/1.6% | 15Gi/15Gi | X | X | X | X | 1% | 0% | |

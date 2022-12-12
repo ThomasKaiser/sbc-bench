@@ -1,0 +1,20 @@
+   opp-table-cpu:
+       480 MHz   1040.0 mV
+       648 MHz   1040.0 mV
+       816 MHz   1100.0 mV
+       960 MHz   1200.0 mV
+      1008 MHz   1200.0 mV
+      1056 MHz   1300.0 mV
+      1104 MHz   1300.0 mV
+      1152 MHz   1300.0 mV
+      1200 MHz   1300.0 mV
+      1224 MHz   1300.0 mV
+      1248 MHz   1300.0 mV
+      1296 MHz   1300.0 mV
+      1368 MHz   1300.0 mV
+
+   opp-table-gpu:
+       120 MHz       -
+       312 MHz       -
+       432 MHz       -
+       576 MHz       -

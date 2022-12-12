@@ -1,0 +1,500 @@
+sbc-bench v0.9.9 WEIBU F20A V1000 (Mon, 12 Dec 2022 13:26:23 +0800)
+
+Distributor ID:	Debian
+Description:	Debian GNU/Linux 11 (bullseye)
+Release:	11
+Codename:	bullseye
+
+Device Info:
+	Manufacturer: WEIBU
+	Product Name: F20A
+	Version: V1000
+
+BIOS/UEFI:
+	Vendor: Byosoft
+	Version: 0.0.1_
+	Release Date: 2022-07-04_13:43:29
+	BIOS Revision: 1.77
+	Firmware Revision: 1.22
+
+/usr/bin/gcc (Debian 10.2.1-6) 10.2.1 20210110
+
+Uptime: 13:26:23 up 24 min,  2 users,  load average: 0.10, 0.08, 0.09,  0°C,  109123675
+
+Linux 5.15.0-5-arm64 (acosail2) 	12/12/22 	_aarch64_	(4 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+           3.58    0.00    0.56    0.04    0.00   95.82
+
+Device             tps    kB_read/s    kB_wrtn/s    kB_dscd/s    kB_read    kB_wrtn    kB_dscd
+nvme0n1          19.25       274.72       218.17    162408.36     410221     325771  242509785
+
+               total        used        free      shared  buff/cache   available
+Mem:            15Gi       331Mi        15Gi       1.0Mi       146Mi        15Gi
+Swap:             0B          0B          0B
+
+##########################################################################
+
+Checking cpufreq OPP (Phytium FTC663):
+
+No cpufreq support available. Measured on cpu1: 2598 MHz (2598.893/2598.893/2598.736)
+
+##########################################################################
+
+Hardware sensors:
+
+nvme-pci-0100
+Composite:    +40.9 C  (low  = -273.1 C, high = +82.8 C)
+                       (crit = +84.8 C)
+
+radeon-pci-0400
+temp1:        +37.0 C  (crit = +120.0 C, hyst = +90.0 C)
+
+##########################################################################
+
+Executing benchmark on cpu0 (Phytium FTC663):
+
+tinymembench v0.4.9 (simple benchmark for memory throughput and latency)
+
+==========================================================================
+== Memory bandwidth tests                                               ==
+==                                                                      ==
+== Note 1: 1MB = 1000000 bytes                                          ==
+== Note 2: Results for 'copy' tests show how many bytes can be          ==
+==         copied per second (adding together read and writen           ==
+==         bytes would have provided twice higher numbers)              ==
+== Note 3: 2-pass copy means that we are using a small temporary buffer ==
+==         to first fetch data into it, and only then write it to the   ==
+==         destination (source -> L1 cache, L1 cache -> destination)    ==
+== Note 4: If sample standard deviation exceeds 0.1%, it is shown in    ==
+==         brackets                                                     ==
+==========================================================================
+
+ C copy backwards                                     :   3674.3 MB/s (0.1%)
+ C copy backwards (32 byte blocks)                    :   3648.4 MB/s
+ C copy backwards (64 byte blocks)                    :   3651.0 MB/s
+ C copy                                               :   3654.7 MB/s
+ C copy prefetched (32 bytes step)                    :   3881.0 MB/s
+ C copy prefetched (64 bytes step)                    :   3876.5 MB/s
+ C 2-pass copy                                        :   3446.4 MB/s
+ C 2-pass copy prefetched (32 bytes step)             :   3644.0 MB/s
+ C 2-pass copy prefetched (64 bytes step)             :   3655.6 MB/s
+ C fill                                               :  14560.7 MB/s (2.0%)
+ C fill (shuffle within 16 byte blocks)               :  14262.1 MB/s (0.8%)
+ C fill (shuffle within 32 byte blocks)               :  14154.3 MB/s (0.5%)
+ C fill (shuffle within 64 byte blocks)               :  14168.3 MB/s (0.6%)
+ ---
+ standard memcpy                                      :   3764.2 MB/s
+ standard memset                                      :  14540.3 MB/s (1.6%)
+ ---
+ NEON LDP/STP copy                                    :   3665.8 MB/s
+ NEON LDP/STP copy pldl2strm (32 bytes step)          :   1876.9 MB/s
+ NEON LDP/STP copy pldl2strm (64 bytes step)          :   1876.2 MB/s
+ NEON LDP/STP copy pldl1keep (32 bytes step)          :   4127.8 MB/s
+ NEON LDP/STP copy pldl1keep (64 bytes step)          :   4113.7 MB/s
+ NEON LD1/ST1 copy                                    :   3661.4 MB/s
+ NEON STP fill                                        :  14818.4 MB/s (2.1%)
+ NEON STNP fill                                       :  14008.2 MB/s (1.6%)
+ ARM LDP/STP copy                                     :   3666.8 MB/s
+ ARM STP fill                                         :  14678.3 MB/s (1.9%)
+ ARM STNP fill                                        :  13992.2 MB/s (0.5%)
+
+==========================================================================
+== Framebuffer read tests.                                              ==
+==                                                                      ==
+== Many ARM devices use a part of the system memory as the framebuffer, ==
+== typically mapped as uncached but with write-combining enabled.       ==
+== Writes to such framebuffers are quite fast, but reads are much       ==
+== slower and very sensitive to the alignment and the selection of      ==
+== CPU instructions which are used for accessing memory.                ==
+==                                                                      ==
+== Many x86 systems allocate the framebuffer in the GPU memory,         ==
+== accessible for the CPU via a relatively slow PCI-E bus. Moreover,    ==
+== PCI-E is asymmetric and handles reads a lot worse than writes.       ==
+==                                                                      ==
+== If uncached framebuffer reads are reasonably fast (at least 100 MB/s ==
+== or preferably >300 MB/s), then using the shadow framebuffer layer    ==
+== is not necessary in Xorg DDX drivers, resulting in a nice overall    ==
+== performance improvement. For example, the xf86-video-fbturbo DDX     ==
+== uses this trick.                                                     ==
+==========================================================================
+
+ NEON LDP/STP copy (from framebuffer)                 :     79.5 MB/s (1.2%)
+ NEON LDP/STP 2-pass copy (from framebuffer)          :     88.7 MB/s (0.2%)
+ NEON LD1/ST1 copy (from framebuffer)                 :    156.7 MB/s
+ NEON LD1/ST1 2-pass copy (from framebuffer)          :    154.3 MB/s (0.1%)
+ ARM LDP/STP copy (from framebuffer)                  :     43.9 MB/s (0.5%)
+ ARM LDP/STP 2-pass copy (from framebuffer)           :     47.6 MB/s (0.1%)
+
+==========================================================================
+== Memory latency test                                                  ==
+==                                                                      ==
+== Average time is measured for random memory accesses in the buffers   ==
+== of different sizes. The larger is the buffer, the more significant   ==
+== are relative contributions of TLB, L1/L2 cache misses and SDRAM      ==
+== accesses. For extremely large buffer sizes we are expecting to see   ==
+== page table walk with several requests to SDRAM for almost every      ==
+== memory access (though 64MiB is not nearly large enough to experience ==
+== this effect to its fullest).                                         ==
+==                                                                      ==
+== Note 1: All the numbers are representing extra time, which needs to  ==
+==         be added to L1 cache latency. The cycle timings for L1 cache ==
+==         latency can be usually found in the processor documentation. ==
+== Note 2: Dual random read means that we are simultaneously performing ==
+==         two independent memory accesses at a time. In the case if    ==
+==         the memory subsystem can't handle multiple outstanding       ==
+==         requests, dual random read has the same timings as two       ==
+==         single reads performed one after another.                    ==
+==========================================================================
+
+block size : single random read / dual random read, [MADV_NOHUGEPAGE]
+      1024 :    0.0 ns          /     0.0 ns 
+      2048 :    0.0 ns          /     0.0 ns 
+      4096 :    0.0 ns          /     0.0 ns 
+      8192 :    0.0 ns          /     0.0 ns 
+     16384 :    0.0 ns          /     0.0 ns 
+     32768 :    0.0 ns          /     0.0 ns 
+     65536 :    3.5 ns          /     5.4 ns 
+    131072 :    5.2 ns          /     7.2 ns 
+    262144 :    7.5 ns          /     9.5 ns 
+    524288 :    8.6 ns          /    10.8 ns 
+   1048576 :    9.3 ns          /    11.5 ns 
+   2097152 :   11.4 ns          /    14.7 ns 
+   4194304 :   18.6 ns          /    24.7 ns 
+   8388608 :   59.2 ns          /    91.7 ns 
+  16777216 :   99.4 ns          /   141.0 ns 
+  33554432 :  120.2 ns          /   160.3 ns 
+  67108864 :  136.0 ns          /   178.5 ns 
+
+block size : single random read / dual random read, [MADV_HUGEPAGE]
+      1024 :    0.0 ns          /     0.0 ns 
+      2048 :    0.0 ns          /     0.0 ns 
+      4096 :    0.0 ns          /     0.0 ns 
+      8192 :    0.0 ns          /     0.0 ns 
+     16384 :    0.0 ns          /     0.0 ns 
+     32768 :    0.0 ns          /     0.0 ns 
+     65536 :    3.5 ns          /     5.4 ns 
+    131072 :    5.2 ns          /     7.2 ns 
+    262144 :    6.1 ns          /     7.8 ns 
+    524288 :    6.6 ns          /     8.0 ns 
+   1048576 :    6.8 ns          /     8.2 ns 
+   2097152 :    7.7 ns          /     8.9 ns 
+   4194304 :   15.5 ns          /    20.8 ns 
+   8388608 :   49.3 ns          /    74.0 ns 
+  16777216 :   85.9 ns          /   115.4 ns 
+  33554432 :  105.0 ns          /   128.1 ns 
+  67108864 :  116.0 ns          /   133.2 ns 
+
+##########################################################################
+
+Executing benchmark twice on cluster 0 (Phytium FTC663)
+
+OpenSSL 1.1.1n, built on 15 Mar 2022
+type             16 bytes     64 bytes    256 bytes   1024 bytes   8192 bytes  16384 bytes
+aes-128-cbc     467141.56k   911633.02k  1196227.24k  1283702.78k  1328463.87k  1331467.61k
+aes-128-cbc     466872.34k   911606.36k  1196115.29k  1283473.07k  1328201.73k  1328917.16k
+aes-192-cbc     437668.46k   800345.43k  1009514.84k  1070540.46k  1100327.59k  1102817.96k
+aes-192-cbc     437562.03k   800214.27k  1009408.85k  1070004.57k  1101075.80k  1103178.41k
+aes-256-cbc     406987.51k   707652.10k   867878.14k   913013.08k   934245.72k   936558.59k
+aes-256-cbc     407026.66k   707539.29k   867841.54k   911707.82k   935231.49k   936913.58k
+
+##########################################################################
+
+Executing benchmark single-threaded on cpu0 (Phytium FTC663)
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,4 CPUs LE)
+
+LE
+CPU Freq: - - - - - - - - -
+
+RAM size:   15905 MB,  # CPU hardware threads:   4
+RAM usage:    435 MB,  # Benchmark threads:      1
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       2808   100   2733   2732  |      32275   100   2756   2756
+23:       2635   100   2686   2685  |      31923   100   2763   2763
+24:       2543   100   2735   2735  |      31480   100   2764   2764
+25:       2492   100   2846   2846  |      31031   100   2762   2762
+----------------------------------  | ------------------------------
+Avr:             100   2750   2749  |              100   2761   2761
+Tot:             100   2756   2755
+
+##########################################################################
+
+Executing benchmark 3 times multi-threaded on CPUs 0-3
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,4 CPUs LE)
+
+LE
+CPU Freq: - - - - - - - - -
+
+RAM size:   15905 MB,  # CPU hardware threads:   4
+RAM usage:    882 MB,  # Benchmark threads:      4
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       9149   344   2589   8900  |     124585   396   2684  10629
+23:       9492   359   2692   9672  |     122831   397   2680  10628
+24:       8558   348   2641   9202  |     120556   397   2668  10583
+25:       8814   355   2837  10064  |     118439   396   2662  10541
+----------------------------------  | ------------------------------
+Avr:             352   2690   9460  |              396   2673  10595
+Tot:             374   2682  10027
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,4 CPUs LE)
+
+LE
+CPU Freq: - - - - - - - - -
+
+RAM size:   15905 MB,  # CPU hardware threads:   4
+RAM usage:    882 MB,  # Benchmark threads:      4
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       9222   343   2619   8972  |     126469   397   2715  10790
+23:       8670   343   2576   8835  |     124740   398   2712  10793
+24:       8994   357   2707   9671  |     122273   397   2700  10734
+25:       8738   354   2822   9977  |     120548   399   2690  10728
+----------------------------------  | ------------------------------
+Avr:             349   2681   9364  |              398   2704  10761
+Tot:             373   2693  10063
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,4 CPUs LE)
+
+LE
+CPU Freq: - - - - - - - - -
+
+RAM size:   15905 MB,  # CPU hardware threads:   4
+RAM usage:    882 MB,  # Benchmark threads:      4
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       9214   345   2595   8963  |     124161   394   2689  10593
+23:       9124   352   2642   9297  |     122360   394   2685  10587
+24:       8731   352   2668   9388  |     119621   393   2675  10501
+25:       8721   354   2816   9958  |     117673   393   2666  10473
+----------------------------------  | ------------------------------
+Avr:             351   2680   9401  |              393   2679  10538
+Tot:             372   2680   9970
+
+Compression: 9460,9364,9401
+Decompression: 10595,10761,10538
+Total: 10027,10063,9970
+
+##########################################################################
+
+Testing maximum cpufreq again, still under full load. System health now:
+
+Time      CPU n/a    load %cpu %sys %usr %nice %io %irq   Temp
+13:36:14:   ---      3.51  96%   0%  95%   0%   0%   0%     0°C
+
+Checking cpufreq OPP (Phytium FTC663):
+
+No cpufreq support available. Measured on cpu1: 2598 MHz (2598.318/2598.266/2598.213)
+
+##########################################################################
+
+Hardware sensors:
+
+nvme-pci-0100
+Composite:    +40.9 C  (low  = -273.1 C, high = +82.8 C)
+                       (crit = +84.8 C)
+
+radeon-pci-0400
+temp1:        +37.5 C  (crit = +120.0 C, hyst = +90.0 C)
+
+##########################################################################
+
+System health while running tinymembench:
+
+Time      CPU n/a    load %cpu %sys %usr %nice %io %irq   Temp
+13:26:27:   ---      0.17   4%   0%   3%   0%   0%   0%    --
+13:27:07:   ---      0.58  25%   0%  25%   0%   0%   0%    --
+13:27:47:   ---      0.78  25%   0%  25%   0%   0%   0%    --
+13:28:27:   ---      0.89  25%   0%  25%   0%   0%   0%    --
+13:29:07:   ---      0.94  25%   0%  25%   0%   0%   0%    --
+13:29:47:   ---      0.97  25%   0%  25%   0%   0%   0%    --
+13:30:27:   ---      0.99  25%   0%  25%   0%   0%   0%    --
+13:31:07:   ---      1.00  25%   0%  25%   0%   0%   0%    --
+
+System health while running OpenSSL benchmark:
+
+Time      CPU n/a    load %cpu %sys %usr %nice %io %irq   Temp
+13:31:32:   ---      1.00   7%   0%   7%   0%   0%   0%    --
+13:31:48:   ---      1.00  25%   0%  25%   0%   0%   0%    --
+13:32:04:   ---      1.00  25%   0%  25%   0%   0%   0%    --
+13:32:20:   ---      1.00  25%   0%  25%   0%   0%   0%    --
+13:32:36:   ---      1.00  25%   0%  25%   0%   0%   0%    --
+13:32:52:   ---      1.00  25%   0%  25%   0%   0%   0%    --
+13:33:08:   ---      1.00  25%   0%  25%   0%   0%   0%    --
+
+System health while running 7-zip single core benchmark:
+
+Time      CPU n/a    load %cpu %sys %usr %nice %io %irq   Temp
+13:33:20:   ---      1.00   8%   0%   8%   0%   0%   0%    --
+13:33:25:   ---      1.00  25%   0%  25%   0%   0%   0%    --
+13:33:30:   ---      1.00  25%   0%  25%   0%   0%   0%    --
+13:33:35:   ---      1.00  25%   0%  25%   0%   0%   0%    --
+13:33:40:   ---      1.00  25%   0%  25%   0%   0%   0%    --
+13:33:45:   ---      1.00  25%   0%  24%   0%   0%   0%    --
+13:33:50:   ---      1.00  25%   0%  25%   0%   0%   0%    --
+13:33:55:   ---      1.00  25%   0%  24%   0%   0%   0%    --
+13:34:00:   ---      1.00  25%   0%  24%   0%   0%   0%    --
+13:34:05:   ---      1.00  25%   0%  24%   0%   0%   0%    --
+13:34:10:   ---      1.00  25%   0%  25%   0%   0%   0%    --
+
+System health while running 7-zip multi core benchmark:
+
+Time      CPU n/a    load %cpu %sys %usr %nice %io %irq   Temp
+13:34:11:   ---      1.00   9%   0%   8%   0%   0%   0%    --
+13:34:22:   ---      1.31  93%   0%  93%   0%   0%   0%    --
+13:34:33:   ---      1.98  93%   0%  93%   0%   0%   0%    --
+13:34:43:   ---      2.37  89%   0%  89%   0%   0%   0%    --
+13:34:53:   ---      2.62  95%   0%  95%   0%   0%   0%    --
+13:35:03:   ---      2.83  93%   0%  93%   0%   0%   0%    --
+13:35:14:   ---      3.01  94%   0%  93%   0%   0%   0%    --
+13:35:24:   ---      3.08  89%   0%  88%   0%   0%   0%    --
+13:35:34:   ---      3.30  96%   1%  95%   0%   0%   0%    --
+13:35:44:   ---      3.41  93%   0%  93%   0%   0%   0%    --
+13:35:54:   ---      3.50  93%   0%  92%   0%   0%   0%    --
+13:36:04:   ---      3.42  89%   0%  88%   0%   0%   0%    --
+13:36:14:   ---      3.51  96%   0%  95%   0%   0%   0%    --
+
+##########################################################################
+
+Linux 5.15.0-5-arm64 (acosail2) 	12/12/22 	_aarch64_	(4 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+          13.57    0.00    0.47    0.03    0.00   85.92
+
+Device             tps    kB_read/s    kB_wrtn/s    kB_dscd/s    kB_read    kB_wrtn    kB_dscd
+nvme0n1          14.61       201.08       159.88    116138.41     419877     333843  242509785
+
+               total        used        free      shared  buff/cache   available
+Mem:            15Gi       332Mi        15Gi       1.0Mi       158Mi        15Gi
+Swap:             0B          0B          0B
+
+CPU sysfs topology (clusters, cpufreq members, clockspeeds)
+                 cpufreq   min    max
+ CPU    cluster  policy   speed  speed   core type
+  0        0        0       -      -     Phytium FTC663 / r1p3
+  1        0        0       -      -     Phytium FTC663 / r1p3
+  2        0        0       -      -     Phytium FTC663 / r1p3
+  3        0        0       -      -     Phytium FTC663 / r1p3
+
+Architecture:                    aarch64
+CPU op-mode(s):                  32-bit, 64-bit
+Byte Order:                      Little Endian
+CPU(s):                          4
+On-line CPU(s) list:             0-3
+Thread(s) per core:              1
+Core(s) per socket:              4
+Socket(s):                       1
+NUMA node(s):                    1
+Vendor ID:                       0x70
+Model:                           3
+Stepping:                        0x1
+BogoMIPS:                        96.00
+NUMA node0 CPU(s):               0-3
+Vulnerability Itlb multihit:     Not affected
+Vulnerability L1tf:              Not affected
+Vulnerability Mds:               Not affected
+Vulnerability Meltdown:          Mitigation; PTI
+Vulnerability Mmio stale data:   Not affected
+Vulnerability Retbleed:          Not affected
+Vulnerability Spec store bypass: Not affected
+Vulnerability Spectre v1:        Mitigation; __user pointer sanitization
+Vulnerability Spectre v2:        Not affected
+Vulnerability Srbds:             Not affected
+Vulnerability Tsx async abort:   Not affected
+Flags:                           fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
+
+Processor Information
+	Socket Designation: FT2000_CPU
+	Type: Central Processor
+	Family: ARM
+	Manufacturer: Phytium
+	ID: 33 66 1F 70 00 00 00 00
+	Signature: Implementor 0x70, Variant 0x1, Architecture 15, Part 0x663, Revision 3
+	Version: FT-2000/4
+	Voltage: 0.8 V
+	External Clock: 48 MHz
+	Max Speed: 2600 MHz
+	Current Speed: 2600 MHz
+	Status: Populated, Enabled
+	L1 Cache Handle: 0x0001
+	L2 Cache Handle: 0x0002
+	L3 Cache Handle: 0x0003
+	Asset Tag: 57324D8F
+	Part Number: 14
+	Core Count: 4
+	Core Enabled: 4
+	Thread Count: 4
+	Characteristics:
+		64-bit capable
+		Multi-Core
+		Execute Protection
+		Enhanced Virtualization
+		Power/Performance Control
+
+Signature: 00Phytiumr1p300Phytiumr1p300Phytiumr1p300Phytiumr1p3
+ Compiler: /usr/bin/gcc (Debian 10.2.1-6) 10.2.1 20210110 / aarch64-linux-gnu
+ Userland: arm64
+   Kernel: 5.15.0-5-arm64/aarch64
+           CONFIG_HZ=250
+           CONFIG_HZ_250=y
+           CONFIG_PREEMPT_NOTIFIERS=y
+           CONFIG_PREEMPT_VOLUNTARY=y
+           raid6: neonx8   gen()  8082 MB/s
+           raid6: neonx8   xor()  6096 MB/s
+           raid6: neonx4   gen()  8343 MB/s
+           raid6: neonx4   xor()  6527 MB/s
+           raid6: neonx2   gen()  7026 MB/s
+           raid6: neonx2   xor()  5758 MB/s
+           raid6: neonx1   gen()  5354 MB/s
+           raid6: neonx1   xor()  4750 MB/s
+           raid6: int64x8  gen()  4485 MB/s
+           raid6: int64x8  xor()  2579 MB/s
+           raid6: int64x4  gen()  4645 MB/s
+           raid6: int64x4  xor()  2598 MB/s
+           raid6: int64x2  gen()  4287 MB/s
+           raid6: int64x2  xor()  2255 MB/s
+           raid6: int64x1  gen()  3163 MB/s
+           raid6: int64x1  xor()  1690 MB/s
+           raid6: using algorithm neonx4 gen() 8343 MB/s
+           raid6: .... xor() 6527 MB/s, rmw enabled
+           raid6: using neon recovery algorithm
+           xor: measuring software checksum speed
+           xor: using function: 32regs (11813 MB/sec)
+
+DIMM configuration:
+     *-bank:0
+          description: DIMM DDR4 Synchronous 2666 MHz (0.4 ns)
+          product: KBM16024UDX821-2666
+          vendor: KingboMars Technology Co. Ltd.
+          physical id: 0
+          configured speed: 2666MT/s
+          size: 16GiB
+          width: 64 bits
+          clock: 2666MHz (0.4ns)
+     *-bank:1
+          description: [empty]
+          product: NO DIMM
+          vendor: NO DIMM
+          physical id: 1
+          slot: DIMM1
+
+| WEIBU F20A V1000 | ~2600 MHz | 5.15 | Debian GNU/Linux 11 (bullseye) arm64 | 10020 | 2755 | 936740 | 3760 | 14540 | - |

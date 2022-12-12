@@ -1,0 +1,10 @@
+   cpudvs: 1062 mV (1188 mV max)
+   ddr: 1500 mV
+
+   gpu-opp-table-0:
+       300 MHz   1000.0 mV
+       400 MHz   1000.0 mV
+       500 MHz   1000.0 mV
+       600 MHz   1000.0 mV
+       700 MHz   1000.0 mV
+       750 MHz   1000.0 mV

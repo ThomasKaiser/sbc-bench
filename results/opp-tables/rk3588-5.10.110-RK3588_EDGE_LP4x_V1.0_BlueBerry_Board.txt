@@ -1,0 +1,45 @@
+   cluster0-opp-table:
+      1200 MHz    712.5 mV (00ff ffff)
+      1416 MHz    762.5 mV (00ff ffff)
+      1608 MHz    850.0 mV (00ff ffff)
+      1800 MHz    950.0 mV (00fd ffff)
+
+   cluster1-opp-table:
+      1200 MHz    675.0 mV (00ff ffff)
+      1416 MHz    725.0 mV (00ff ffff)
+      1608 MHz    762.5 mV (00ff ffff)
+      1800 MHz    850.0 mV (00ff ffff)
+      2016 MHz    925.0 mV (00ff ffff)
+      2208 MHz    987.5 mV (00fd ffff)
+
+   cluster2-opp-table:
+      1200 MHz    675.0 mV (00ff ffff)
+      1416 MHz    725.0 mV (00ff ffff)
+      1608 MHz    762.5 mV (00ff ffff)
+      1800 MHz    850.0 mV (00ff ffff)
+      2016 MHz    925.0 mV (00ff ffff)
+      2208 MHz    987.5 mV (00fd ffff)
+
+   dmc-opp-table:
+       528 MHz    675.0 mV
+      1068 MHz    725.0 mV
+      1560 MHz    800.0 mV
+      2750 MHz    875.0 mV
+
+   gpu-opp-table:
+       300 MHz    675.0 mV
+       400 MHz    675.0 mV
+       600 MHz    675.0 mV
+       700 MHz    700.0 mV
+       800 MHz    750.0 mV
+       900 MHz    800.0 mV
+
+   npu-opp-table:
+       300 MHz    700.0 mV
+       400 MHz    700.0 mV
+       500 MHz    700.0 mV
+       600 MHz    700.0 mV
+       700 MHz    700.0 mV
+       800 MHz    750.0 mV
+       900 MHz    800.0 mV
+      1000 MHz    850.0 mV

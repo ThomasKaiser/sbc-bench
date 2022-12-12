@@ -4890,17 +4890,17 @@ GuessSoCbySignature() {
 			# Phytium FT-2000+/64: 64 x Phytium FTC662 / r1p2 / fp asimd evtstrm crc32 / https://github.com/util-linux/util-linux/issues/1036
 			echo "Phytium FT-2000+/64"
 			;;
-		*Phytiumr1p3*Phytiumr1p3*Phytiumr1p3*Phytiumr1p3)
-			# Phytium FT-2000/4: 4 x Phytium FTC663 / r1p3 / fp asimd evtstrm aes pmull sha1 sha2 crc32 / https://www.phytium.com.cn/en/article/97
-			echo "Phytium FT-2000/4"
+		*Phytiumr1p3*Phytiumr1p3*Phytiumr1p3*Phytiumr1p3*Phytiumr1p3*Phytiumr1p3*Phytiumr1p3*Phytiumr1p3*Phytiumr1p3*)
+			# Phytium FT-2500: 64 x Phytium FTC663 / r1p3 / fp asimd evtstrm aes pmull sha1 sha2 crc32
+			echo "$(( ${CPUCores} / 64 )) x Phytium FT-2500"
 			;;
 		*Phytiumr1p3*Phytiumr1p3*Phytiumr1p3*Phytiumr1p3*Phytiumr1p3*Phytiumr1p3*Phytiumr1p3*Phytiumr1p3)
 			# Phytium D2000/8: 8 x Phytium FTC663 / r1p3 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			echo "Phytium D2000/8"
 			;;
-		*Phytiumr1p3*Phytiumr1p3*Phytiumr1p3*Phytiumr1p3*Phytiumr1p3*Phytiumr1p3*Phytiumr1p3*Phytiumr1p3*Phytiumr1p3*)
-			# Phytium FT-2500: 64 x Phytium FTC663 / r1p3 / fp asimd evtstrm aes pmull sha1 sha2 crc32
-			echo "$(( ${CPUCores} / 64 )) x Phytium FT-2500"
+		*Phytiumr1p3*Phytiumr1p3*Phytiumr1p3*Phytiumr1p3)
+			# Phytium FT-2000/4: 4 x Phytium FTC663 / r1p3 / fp asimd evtstrm aes pmull sha1 sha2 crc32 / https://www.phytium.com.cn/en/article/97
+			echo "Phytium FT-2000/4"
 			;;
 		*A57r1p2*A57r1p2*A57r1p2*A57r1p2*A57r1p2*A57r1p2*A57r1p2*A57r1p2)
 			# AMD Opteron A1100: 8 x Cortex-A57 / r1p2 / https://bugzilla-attachments.redhat.com/attachment.cgi?id=1475897

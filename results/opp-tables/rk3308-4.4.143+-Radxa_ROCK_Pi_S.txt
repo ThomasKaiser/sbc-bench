@@ -1,0 +1,24 @@
+   cpu0-opp-table:
+       408 MHz    950.0 mV
+       600 MHz    950.0 mV
+       816 MHz   1025.0 mV
+      1008 MHz   1125.0 mV
+      1200 MHz   1250.0 mV
+      1296 MHz   1300.0 mV
+
+   dmc-opp-table:
+       394 MHz    950.0 mV
+       452 MHz    975.0 mV
+       590 MHz   1000.0 mV
+
+   rk3308bs-cpu0-opp-table:
+       408 MHz    850.0 mV
+       600 MHz    900.0 mV
+       816 MHz   1000.0 mV
+      1008 MHz   1125.0 mV
+      1104 MHz   1200.0 mV
+
+   rk3308bs-dmc-opp-table:
+       394 MHz    900.0 mV
+       452 MHz    900.0 mV
+       590 MHz    900.0 mV

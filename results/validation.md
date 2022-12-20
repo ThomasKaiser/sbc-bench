@@ -225,5 +225,7 @@
 | [4hOp](4hOp.txt) | v0.9.9 Hardkernel ODROID-C2 | 0.8%/0.4% | 1.9Gi/1.7Gi | X | X | X | X | 1% | 1% | |
 | [4hwl](4hwl.txt) | v0.9.9 ASUSTeK Computer Inc. U32U 1.0 | 0.4%/0.3% | 5,4Gi/3,2Gi | X | X | X | X | <span style=color:red> 5%</span> | 0% | |
 | [4hx0](4hx0.txt) | v0.9.9 NXP i.MX8MPlus EVK board | 1.5%/0.1% | 5.5Gi/4.9Gi | X | X | X | X | 2% | <span style=color:red> 6%</span> | |
+| [4iDX](4iDX.txt) | v0.9.9 / Atom | 0%/0% | 3.7Gi/3.3Gi | X | X | X | X | 2% | 0% | |
 | [4ijy](4ijy.txt) | v0.9.9 Hardkernel ODROID-M1 | 0%/0% | 3.6Gi/3.3Gi | X | X | X | X | 1% | 0% | |
 | [4ioj](4ioj.txt) | v0.9.9 WEIBU F20A V1000 | 0%/1.6% | 15Gi/15Gi | X | X | X | X | 1% | 0% | |
+| [4j4o](4j4o.txt) | v0.9.9 Insyde CherryTrail Type1 - TBD b | 0.6%/0.6% | 3.7Gi/3.1Gi | X | X | X | X | 4% | 0% | |

@@ -3746,7 +3746,7 @@ GuessARMSoC() {
 	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:e (85:2) Detected <-- Vermax UHD 300X / Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson GXL (S905W) Revision 21:d (a4:2) Detected <-- Tanix TX3 Mini / Amlogic Meson GXL (S905X) P212 Development Board / Amlogic Meson GXL (S905W) P281 Development Board
 	# soc soc0: Amlogic Meson GXL (Unknown) Revision 21:d (a4:2) Detected <-- Khadas VIM / Tanix TX3 Mini / JetHome JetHub J80 / Amlogic Meson GXL (S905X) P212 Development Board / Amlogic Meson GXL (S905W) P281 Development Board
-	# soc soc0: Amlogic Meson GXL (S905L) Revision 21:d (c4:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board
+	# soc soc0: Amlogic Meson GXL (S905L) Revision 21:d (c4:2) Detected <-- X96 mini, Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson GXL (S905M2) Revision 21:d (e4:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board / Amlogic Meson GXL (S905W) P281 Development Board
 	# soc soc0: Amlogic Meson GXL (S905W) Revision 21:e (a5:2) Detected <-- Tanix TX3 Mini / JetHome JetHub J80 / Amlogic Meson GXL (S905X) P212 Development Board / Amlogic Meson GXL (S905W) P281 Development Board
 	# soc soc0: Amlogic Meson GXL (S905L) Revision 21:e (c5:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board
@@ -5068,16 +5068,20 @@ GuessSoCbySignature() {
 			# Qualcomm Snapdragon 865 or QRB5165: 4 x Qualcomm Kryo 4XX Silver / r13p14 + 3 x Cortex-A77 / r1p0 + 1 x Cortex-A77 / r1p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp asimdrdm lrcpc dcpop asimddp
 			echo "Qualcomm Snapdragon 865 / QRB5165"
 			;;
-		0?Loongson-3A10000?Loongson-3A10000?Loongson-3A10000?Loongson-3A1000)
+		0?Loongson3A10000?Loongson3A10000?Loongson3A10000?Loongson3A1000)
 			# Loongson 3A1000: 4 x Loongson-3 V0.5 FPU V0.1 https://github.com/ThomasKaiser/sbc-bench/blob/master/results/Loongson-3A1000.cpuinfo
 			echo "Loongson 3A1000"
 			;;
-		0?Loongson-3A30000?Loongson-3A30000?Loongson-3A30000?Loongson-3A3000)
+		0?Loongson3A30000?Loongson3A30000?Loongson3A30000?Loongson3A3000)
 			# Loongson 3A3000: 4 x Loongson-3 V0.9 FPU V0.1 https://github.com/ThomasKaiser/sbc-bench/blob/master/results/Loongson-3A3000-5.4.211-aosc-lemote.cpuinfo
 			echo "Loongson 3A3000"
 			;;
-		0?Loongson-3A5000-HV0?Loongson-3A5000-HV0?Loongson-3A5000-HV0?Loongson-3A5000-HV)
-			# Loongson-3A5000-HV: 4 x LoongArch / loongarch32, loongarch64 / cpucfg lam ual fpu lsx lasx complex crypto lvz lbt_x86 lbt_arm lbt_mips https://github.com/ThomasKaiser/sbc-bench/blob/master/results/Loongson-3A5000-4.19.0-loongson-3.cpuinfo
+		0?Loongson3A5000H0?Loongson3A5000H0?Loongson3A5000H0?Loongson3A5000H)
+			# Loongson-3A5000-H: 4 x LoongArch / loongarch32, loongarch64 / cpucfg lam ual fpu lsx lasx complex crypto lvz lbt_x86 lbt_arm lbt_mips https://github.com/ThomasKaiser/sbc-bench/blob/master/results/Loongson-3A5000-H-4.19.0-17-loongson-3.cpuinfo
+			echo "Loongson-3A5000-H"
+			;;
+		0?Loongson3A5000HV0?Loongson3A5000HV0?Loongson3A5000HV0?Loongson3A5000HV)
+			# Loongson-3A5000-HV: 4 x LoongArch / loongarch32, loongarch64 / cpucfg lam ual fpu lsx lasx complex crypto lvz lbt_x86 lbt_arm lbt_mips https://github.com/ThomasKaiser/sbc-bench/blob/master/results/Loongson-3A5000-HV-4.19.0-loongson-3.cpuinfo
 			echo "Loongson-3A5000-HV"
 			;;
 	esac

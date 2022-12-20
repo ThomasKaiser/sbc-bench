@@ -1,0 +1,61 @@
+system type		: generic-loongson-machine
+processor		: 0
+package			: 0
+core			: 0
+cpu family		: Loongson-64bit
+model name		: Loongson-3A5000-H
+CPU Revision		: 0x13
+FPU Revision		: 0x00
+CPU MHz			: 0.00
+BogoMIPS		: 0.00
+TLB entries		: 2112
+Address sizes		: 48 bits physical, 48 bits virtual
+isa			: loongarch32 loongarch64
+features		: cpucfg lam ual fpu lsx lasx complex crypto lvz lbt_x86 lbt_arm lbt_mips
+hardware watchpoint	: yes, iwatch count: 8, dwatch count: 8
+
+processor		: 1
+package			: 0
+core			: 0
+cpu family		: Loongson-64bit
+model name		: Loongson-3A5000-H
+CPU Revision		: 0x13
+FPU Revision		: 0x00
+CPU MHz			: 0.00
+BogoMIPS		: 0.00
+TLB entries		: 2112
+Address sizes		: 48 bits physical, 48 bits virtual
+isa			: loongarch32 loongarch64
+features		: cpucfg lam ual fpu lsx lasx complex crypto lvz lbt_x86 lbt_arm lbt_mips
+hardware watchpoint	: yes, iwatch count: 8, dwatch count: 8
+
+processor		: 2
+package			: 0
+core			: 0
+cpu family		: Loongson-64bit
+model name		: Loongson-3A5000-H
+CPU Revision		: 0x13
+FPU Revision		: 0x00
+CPU MHz			: 0.00
+BogoMIPS		: 0.00
+TLB entries		: 2112
+Address sizes		: 48 bits physical, 48 bits virtual
+isa			: loongarch32 loongarch64
+features		: cpucfg lam ual fpu lsx lasx complex crypto lvz lbt_x86 lbt_arm lbt_mips
+hardware watchpoint	: yes, iwatch count: 8, dwatch count: 8
+
+processor		: 3
+package			: 0
+core			: 0
+cpu family		: Loongson-64bit
+model name		: Loongson-3A5000-H
+CPU Revision		: 0x13
+FPU Revision		: 0x00
+CPU MHz			: 0.00
+BogoMIPS		: 0.00
+TLB entries		: 2112
+Address sizes		: 48 bits physical, 48 bits virtual
+isa			: loongarch32 loongarch64
+features		: cpucfg lam ual fpu lsx lasx complex crypto lvz lbt_x86 lbt_arm lbt_mips
+hardware watchpoint	: yes, iwatch count: 8, dwatch count: 8
+

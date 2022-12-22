@@ -82,6 +82,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [NanoPi NEO4](http://ix.io/1oim) | 2000/1500 MHz | 4.4| Stretch arm64 | 6520 | 1718 | 1123190 | 2280 | 4770 | 8.83 |
 | [NanoPi NEO4](http://ix.io/1p3T) | 2000/1500 MHz | 4.19 | Stretch arm64 | 6750 | 1814 | 1139850 | 2370 | 6110 | 8.84 |
 | [NanoPi NEO4](http://ix.io/3GmR) | 2016/1512 MHz | 5.10 | Focal arm64 | 6970 | 1906 | 1145030 | 2450 | 6190 | 11.36 |
+| [NanoPi R5S](http://ix.io/4jfZ) | 1992 MHz | 6.1 | Bullseye arm64 | 5030 | 1482 | 914340 | 2990 | 5970 | 7.33 |
 | [Nintendo Switch](http://ix.io/1Rnj) | 1780 MHz | 4.9 | **Fedora 30 arm-64** | 6170 | 1719 | 642670 | 2500 | 3570 | - |
 | [Nintendo Switch](http://ix.io/3Di2) | 2060 MHz | 4.9 | Bionic arm64 | 6720 | 1901 | 746680 | 2370 | 3670 | 9.25 |
 | [ODROID-C1](http://ix.io/4eg5) | 1500 MHz | 5.19 | Jammy armhf | 3010 | 878 | 29260 | 390 | 2910 | - |

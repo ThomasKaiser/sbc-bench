@@ -157,6 +157,13 @@ Main() {
 			esac
 	done
 
+	# ensure other sbc-bench instances are terminated
+	for PID in $( (pgrep -f "${PathToMe}" ; jobs -p) | sort | uniq -u) ; do
+		if [ ${PID} -ne $$ ]; then
+			kill ${PID} 2>/dev/null
+		fi
+	done
+
 	[ "X${MODE}" = "Xpts" -o "X${MODE}" = "Xgb" ] || CheckRelease
 	CreateTempDir
 	CheckLoadAndDmesg
@@ -1375,11 +1382,13 @@ TempTest() {
 } # TempTest
 
 ReadSoCTemp() {
-	read RawTemp <"${TempSource}"
-	if [ ${RawTemp} -ge 1000 ]; then
-		RawTemp=$(awk '{printf ("%0.1f",$1/1000); }' <<<${RawTemp})
+	if [ -h "${TempSource}" ]; then
+		read RawTemp <"${TempSource}"
+		if [ ${RawTemp:-0} -ge 1000 ]; then
+			RawTemp=$(awk '{printf ("%0.1f",$1/1000); }' <<<${RawTemp})
+		fi
+		echo -e ${RawTemp}
 	fi
-	echo -e ${RawTemp}
 } # ReadSoCTemp
 
 ProcessStats() {
@@ -4705,7 +4714,7 @@ GuessSoCbySignature() {
 			# TI Sitara AM572x: 2 x Cortex-A15 / r2p2 / half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
 			echo "TI Sitara AM572x"
 			;;
-		0?A55r2p00?A55r2p00?A55r2p00?A55r2p01?A76r4p01?A76r4p02?A76r4p02?A76r4p0)
+		0?A55r2p00?A55r2p00?A55r2p00?A55r2p0??A76r4p0??A76r4p0??A76r4p0??A76r4p0)
 			# RK3588, 4 x Cortex-A55 / r2p0 + 2 x Cortex-A76 / r4p0 / + 2 x Cortex-A76 / r4p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp asimdrdm lrcpc dcpop asimddp
 			echo "Rockchip RK3588/RK3588s"
 			;;

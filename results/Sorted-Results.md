@@ -26,7 +26,7 @@
 | [Phytium D2000 1xSO-DIMM](http://ix.io/445T) | 2300 MHz | 5.19 | Jammy arm64 | **16390** | 2220 | 827090 | 2820 | 6490 | - |
 | [Ampere A1](http://ix.io/4dsC) | 3000 MHz | 5.15 | Jammy arm64 | **16300** | 4009 | 1706150 | 11910 | 47780 | - |
 | [Jetson Xavier NX](http://ix.io/3YWp) | 1890 MHz | 4.9 | Bionic arm64 | **13230** | 2201 | 706280 | 9190 | 18480 | - |
-| [Khadas VIM4](http://ix.io/3Wq0) | 2200/2010 MHz | 5.4 | Jammy arm64 | **12100** | 2071 | 1252070 | 7800 | 11590 | - |
+| [Khadas VIM4](http://ix.io/4cHh) | 2200/2010 MHz | 5.4 | Jammy arm64 | **12120** | 2067 | 1254540 | 8180 | 11680 | - |
 | [Khadas VIM4](http://ix.io/3Wvv) | 2200/1970 MHz | 5.4 | Focal arm64 | **12090** | 2081 | 1253200 | 7810 | 11600 | - |
 | [Pentium G4600](http://ix.io/2jVw) | 3600 MHz | 4.19 | Buster amd64 | **11810** | 4448 | 984820 | 15120 | 33380 | 21.88 |
 | [Celeron N5105](http://ix.io/3Qf7) | 2900/2000 MHz | 5.13 | Focal amd64 | **11450** | 3059 | 811760 | 7710 | 9290 | 21.79 |
@@ -137,7 +137,7 @@
 | [x5-Z8300](http://ix.io/1lgD) | 1420 MHz | 4.9 | Stretch amd64 | **3900** | 950 | 178010 | 2380 | 2380 | 7.81 |
 | [Tronsmart MXIII Plus](http://ix.io/3S5U) | 1560 MHz | 5.10 | Buster armhf | **3880** | 1113 | 42570 | 1470 | 3430 | - |
 | [NanoPi K2](http://ix.io/3Qve) | 1480 MHz | 5.10 | Bullseye arm64 | **3880** | 1154 | 51490 | 1850 | 3790 | - |
-| [Khadas VIM1](http://ix.io/3QLN) | 1415 MHz | 5.1 | Buster arm64 | **3860** | 1136 | 659460 | 1930 | 5900 | - |
+| [Khadas VIM1](http://ix.io/4bee) | 1415 MHz | 5.1 | Buster arm64 | **3860** | 1136 | 660160 | 1940 | 5900 | - |
 | [NanoPi K2](http://ix.io/1iT1) | 1480 MHz | 4.14 | Stretch arm64 | **3850** | 1095 | 50370 | 1660 | 3870 | 4.61 |
 | [Le Potato](http://ix.io/1iSQ) | 1410 MHz | 4.18 | Stretch arm64 | **3780** | 1057 | 657200 | 1810 | 5730 | 3.92 |
 | [Renegade](http://ix.io/1iFx) | 1400 MHz | 4.4 | Stretch arm64 | **3710** | 1069 | 644200 | 1565 | 7435 | 3.92 |
@@ -243,7 +243,7 @@
 | [Celeron 5205U](http://ix.io/4eiM) | 1900 MHz | 5.15 | Jammy amd64 | 4060 | **2171** | 521090 | 7350 | 16020 | 11.20 |
 | [Pentium J4205](http://ix.io/1m5t) | 2560/1500 MHz | 4.17 | Stretch amd64 | 7570 | **2146** | 480640 | 5070 | 5170 | 18.82 |
 | [Khadas VIM4](http://ix.io/3Wvv) | 2200/1970 MHz | 5.4 | Focal arm64 | 12090 | **2081** | 1253200 | 7810 | 11600 | - |
-| [Khadas VIM4](http://ix.io/3Wq0) | 2200/2010 MHz | 5.4 | Jammy arm64 | 12100 | **2071** | 1252070 | 7800 | 11590 | - |
+| [Khadas VIM4](http://ix.io/4cHh) | 2200/2010 MHz | 5.4 | Jammy arm64 | 12120 | **2067** | 1254540 | 8180 | 11680 | - |
 | [Celeron J3455](http://ix.io/1m5p) | 2300/1500 MHz | 4.17 | Stretch amd64 | 7000 | **2037** | 429660 | 4090 | 4050 | 17.26 |
 | [Khadas VIM3](http://ix.io/1MFD) | 2200/1800 MHz | 4.9 | Bionic arm64 | 8600 | **2026** | 1256910 | 4980 | 9300 | 13.12 |
 | [ODROID-N2](http://ix.io/3MuT) | 2000/1900 MHz | 5.10 | Buster arm64 | 9090 | **2012** | 1085350 | 4260 | 9080 | - |
@@ -323,7 +323,7 @@
 | [ODROID-C2](http://ix.io/4hOp) | 1530 MHz | 5.19 | Jammy arm64 | 4020 | **1187** | 51390 | 1590 | 2730 | - |
 | [NanoPi K2](http://ix.io/3Qve) | 1480 MHz | 5.10 | Bullseye arm64 | 3880 | **1154** | 51490 | 1850 | 3790 | - |
 | [Khadas VIM1S](http://ix.io/4bbv) | 2000 MHz | 5.4 | Jammy arm64 | 4000 | **1148** | 436540 | 1970 | 7530 | - |
-| [Khadas VIM1](http://ix.io/3QLN) | 1415 MHz | 5.1 | Buster arm64 | 3860 | **1136** | 659460 | 1930 | 5900 | - |
+| [Khadas VIM1](http://ix.io/4bee) | 1415 MHz | 5.1 | Buster arm64 | 3860 | **1136** | 660160 | 1940 | 5900 | - |
 | [ODROID-C2](http://ix.io/1ixI) | 1750 MHz | 3.14 | Xenial arm64 | 4070 | **1128** | 48500 | 1750 | 3100 | - |
 | [Khadas VIM2](http://ix.io/1ixi) | 1415/1000 MHz | 4.9 | Xenial arm64 | 4800 | **1128** | 659000 | 1690 | 5610 | - |
 | [Tronsmart S82](http://ix.io/41ML) | 1600 MHz | 5.14 | Focal armhf | 3640 | **1114** | 43150 | 500 | 3200 | - |
@@ -416,8 +416,8 @@
 | [Amazon a1.xlarge](http://ix.io/2iFY) | 2300 MHz | 4.15 | Bionic arm64 | 8610 | 2406 | **1297960** | 4280 | 14220 | - |
 | [Khadas Edge2](http://ix.io/4a5U) | 2260/1800 MHz | 5.10 | Jammy arm64 | 16470 | 3096 | **1287490** | 10860 | 29110 | - |
 | [Khadas VIM3](http://ix.io/1MFD) | 2200/1800 MHz | 4.9 | Bionic arm64 | 8600 | 2026 | **1256910** | 4980 | 9300 | 13.12 |
+| [Khadas VIM4](http://ix.io/4cHh) | 2200/2010 MHz | 5.4 | Jammy arm64 | 12120 | 2067 | **1254540** | 8180 | 11680 | - |
 | [Khadas VIM4](http://ix.io/3Wvv) | 2200/1970 MHz | 5.4 | Focal arm64 | 12090 | 2081 | **1253200** | 7810 | 11600 | - |
-| [Khadas VIM4](http://ix.io/3Wq0) | 2200/2010 MHz | 5.4 | Jammy arm64 | 12100 | 2071 | **1252070** | 7800 | 11590 | - |
 | [Honeycomb LX2](http://ix.io/3Y4f) | 2200 MHz | 5.16 | Fedora 35 aarch64 | 30690 | 2288 | **1251710** | 5050 | 16220 | 46.09 |
 | [Jetson AGX Orin](http://ix.io/4ax9) | 2200 MHz | 5.10 | Focal arm64 | 39450 | 3187 | **1242940** | 10600 | 30350 | 59.96 |
 | [Hugsun X99](http://ix.io/2ICt) | 2088/1800 MHz | 5.9 | Focal arm64 | 7710 | 1927 | **1184306** | 2270 | 5970 | - |
@@ -484,8 +484,8 @@
 | [Celeron J4105](http://ix.io/1qb0) | 2400/1500 MHz | 4.15 | Bionic amd64 | 8960 | 2274 | **697080** | 5620 | 7650 | 19.13 |
 | [HummingBoard Pulse i.MX8M Quad](http://ix.io/27FC) | 1500 MHz | 4.19 | Buster arm64 | 4330 | 1201 | **695540** | 2230 | 9900 | - |
 | [Celeron N4100](http://ix.io/1uTS) | 2300/1100 MHz | 4.15 | Bionic amd64 | 8510 | 2222 | **669350** | 4750 | 5240 | 18.33 |
+| [Khadas VIM1](http://ix.io/4bee) | 1415 MHz | 5.1 | Buster arm64 | 3860 | 1136 | **660160** | 1940 | 5900 | - |
 | [Khadas VIM2](http://ix.io/1iJ7) | 1415/1000 MHz | 4.17 | Bionic arm64 | 5450 | 993 | **659600** | 1920 | 5920 | 8.59 |
-| [Khadas VIM1](http://ix.io/3QLN) | 1415 MHz | 5.1 | Buster arm64 | 3860 | 1136 | **659460** | 1930 | 5900 | - |
 | [Libre Computer AML-S912-PC](http://ix.io/40cj) | 1415/1000 MHz | 5.15 | Bullseye arm64 | 5980 | 1012 | **659290** | 1650 | 5170 | - |
 | [Khadas VIM2](http://ix.io/1ixi) | 1415/1000 MHz | 4.9 | Xenial arm64 | 4800 | 1128 | **659000** | 1690 | 5610 | - |
 | [Le Potato](http://ix.io/1iSQ) | 1410 MHz | 4.18 | Stretch arm64 | 3780 | 1057 | **657200** | 1810 | 5730 | 3.92 |
@@ -612,9 +612,9 @@
 | [Pentium N6005](http://ix.io/4f3I) | 3300/2000 MHz | 6.0 | Jammy amd64 | 10810 | 3485 | 922000 | **9600** | 11300 | 20.15 |
 | [Jetson Xavier NX](http://ix.io/3YWp) | 1890 MHz | 4.9 | Bionic arm64 | 13230 | 2201 | 706280 | **9190** | 18480 | - |
 | [Ryzen R1606G](http://ix.io/2tQQ) | 2600/1400 MHz | 5.4 | Focal amd64 | 7970 | 2854 | 700780 | **8230** | 5970 | 16.45 |
+| [Khadas VIM4](http://ix.io/4cHh) | 2200/2010 MHz | 5.4 | Jammy arm64 | 12120 | 2067 | 1254540 | **8180** | 11680 | - |
 | [Celeron N4500](http://ix.io/3HUU) | 2800/1100 MHz | 5.13 | Impish amd64 | 6300 | 3091 | 783840 | **8100** | 8350 | - |
 | [Khadas VIM4](http://ix.io/3Wvv) | 2200/1970 MHz | 5.4 | Focal arm64 | 12090 | 2081 | 1253200 | **7810** | 11600 | - |
-| [Khadas VIM4](http://ix.io/3Wq0) | 2200/2010 MHz | 5.4 | Jammy arm64 | 12100 | 2071 | 1252070 | **7800** | 11590 | - |
 | [Celeron N5100](http://ix.io/3IlQ) | 2800/1100 MHz | 5.13 | Focal amd64 | 10550 | 3088 | 783800 | **7750** | 8090 | 19.22 |
 | [Celeron N5105](http://ix.io/3Qf7) | 2900/2000 MHz | 5.13 | Focal amd64 | 11450 | 3059 | 811760 | **7710** | 9290 | 21.79 |
 | [Celeron 5205U](http://ix.io/4eiM) | 1900 MHz | 5.15 | Jammy amd64 | 4060 | 2171 | 521090 | **7350** | 16020 | 11.20 |
@@ -703,7 +703,7 @@
 | [ODROID-XU4](http://ix.io/1ixL) | 1900/1400 MHz | 3.10 | Jessie armhf | 6750 | - | 68200 | **2200** | 4800 | - |
 | [RockPro64](http://ix.io/1iFZ) | 1800/1400 MHz | 4.4 | Stretch armhf | 6250 | 1809 | 1000150 | **2000** | 4835 | - |
 | [Khadas VIM1S](http://ix.io/4bbv) | 2000 MHz | 5.4 | Jammy arm64 | 4000 | 1148 | 436540 | **1970** | 7530 | - |
-| [Khadas VIM1](http://ix.io/3QLN) | 1415 MHz | 5.1 | Buster arm64 | 3860 | 1136 | 659460 | **1930** | 5900 | - |
+| [Khadas VIM1](http://ix.io/4bee) | 1415 MHz | 5.1 | Buster arm64 | 3860 | 1136 | 660160 | **1940** | 5900 | - |
 | [Khadas VIM2](http://ix.io/1iJ7) | 1415/1000 MHz | 4.17 | Bionic arm64 | 5450 | 993 | 659600 | **1920** | 5920 | 8.59 |
 | [NanoPi K2](http://ix.io/3Qve) | 1480 MHz | 5.10 | Bullseye arm64 | 3880 | 1154 | 51490 | **1850** | 3790 | - |
 | [Le Potato](http://ix.io/1iSQ) | 1410 MHz | 4.18 | Stretch arm64 | 3780 | 1057 | 657200 | **1810** | 5730 | 3.92 |
@@ -815,8 +815,8 @@
 | [Clearfog CX](http://ix.io/4ju5) | 2000 MHz | 5.10 | Focal arm64 | 25260 | 2236 | 1136690 | 4460 | **12500** | - |
 | [i.MX8MPlus EVK board](http://ix.io/4hx0) | 1800 MHz | 5.15 | Focal arm64 | 4990 | 1348 | 837680 | 2740 | **12420** | 7.02 |
 | [Jetson Nano](http://ix.io/3Ufc) | 2000 MHz | 4.9 | Bionic arm64 | 6260 | 1977 | 717500 | 4100 | **11760** | 8.72 |
+| [Khadas VIM4](http://ix.io/4cHh) | 2200/2010 MHz | 5.4 | Jammy arm64 | 12120 | 2067 | 1254540 | 8180 | **11680** | - |
 | [Khadas VIM4](http://ix.io/3Wvv) | 2200/1970 MHz | 5.4 | Focal arm64 | 12090 | 2081 | 1253200 | 7810 | **11600** | - |
-| [Khadas VIM4](http://ix.io/3Wq0) | 2200/2010 MHz | 5.4 | Jammy arm64 | 12100 | 2071 | 1252070 | 7800 | **11590** | - |
 | [Pentium N6005](http://ix.io/4f3I) | 3300/2000 MHz | 6.0 | Jammy amd64 | 10810 | 3485 | 922000 | 9600 | **11300** | 20.15 |
 | [HummingBoard Pulse i.MX8M Quad](http://ix.io/27FC) | 1500 MHz | 4.19 | Buster arm64 | 4330 | 1201 | 695540 | 2230 | **9900** | - |
 | [Khadas VIM3](http://ix.io/1MFD) | 2200/1800 MHz | 4.9 | Bionic arm64 | 8600 | 2026 | 1256910 | 4980 | **9300** | 13.12 |
@@ -862,7 +862,7 @@
 | [Hugsun X99](http://ix.io/2ICt) | 2088/1800 MHz | 5.9 | Focal arm64 | 7710 | 1927 | 1184306 | 2270 | **5970** | - |
 | [ODROID-M1](http://ix.io/4ijy) | 2060 MHz | 5.18 | Bullseye arm64 | 5430 | 1567 | 961090 | 3310 | **5960** | 7.76 |
 | [Khadas VIM2](http://ix.io/1iJ7) | 1415/1000 MHz | 4.17 | Bionic arm64 | 5450 | 993 | 659600 | 1920 | **5920** | 8.59 |
-| [Khadas VIM1](http://ix.io/3QLN) | 1415 MHz | 5.1 | Buster arm64 | 3860 | 1136 | 659460 | 1930 | **5900** | - |
+| [Khadas VIM1](http://ix.io/4bee) | 1415 MHz | 5.1 | Buster arm64 | 3860 | 1136 | 660160 | 1940 | **5900** | - |
 | [Rock64](http://ix.io/1iHB) | 1300 MHz | 4.18 | Stretch arm64 | 3560 | 1002 | 603800 | 1340 | **5770** | 3.80 |
 | [Rock64](http://ix.io/1iH4) | 1300 MHz | 4.18 | Bionic arm64 | 3530 | 996 | 605250 | 1340 | **5770** | 4.65 |
 | [Le Potato](http://ix.io/1iSQ) | 1410 MHz | 4.18 | Stretch arm64 | 3780 | 1057 | 657200 | 1810 | **5730** | 3.92 |
@@ -1023,8 +1023,8 @@
 | [Amazon a1.xlarge](http://ix.io/2iFY) | **2300** MHz| 4.15 | Bionic arm64 | 8610 | 2406 | 1297960 | 4280 | 14220 | - |
 | [Khadas Edge2](http://ix.io/4a5U) | **2260/1800** MHz| 5.10 | Jammy arm64 | 16470 | 3096 | 1287490 | 10860 | 29110 | - |
 | [Jetson Xavier AGX](http://ix.io/4ebH) | **2250** MHz| 4.9 | Bionic arm64 | 21590 | 2742 | 853250 | 10910 | 22520 | 26.57 |
+| [Khadas VIM4](http://ix.io/4cHh) | **2200/2010** MHz| 5.4 | Jammy arm64 | 12120 | 2067 | 1254540 | 8180 | 11680 | - |
 | [Khadas VIM4](http://ix.io/3Wvv) | **2200/1970** MHz| 5.4 | Focal arm64 | 12090 | 2081 | 1253200 | 7810 | 11600 | - |
-| [Khadas VIM4](http://ix.io/3Wq0) | **2200/2010** MHz| 5.4 | Jammy arm64 | 12100 | 2071 | 1252070 | 7800 | 11590 | - |
 | [Khadas VIM3](http://ix.io/1MFD) | **2200/1800** MHz| 4.9 | Bionic arm64 | 8600 | 2026 | 1256910 | 4980 | 9300 | 13.12 |
 | [Jetson AGX Orin](http://ix.io/4ax9) | **2200** MHz| 5.10 | Focal arm64 | 39450 | 3187 | 1242940 | 10600 | 30350 | 59.96 |
 | [Honeycomb LX2](http://ix.io/3Y4f) | **2200** MHz| 5.16 | Fedora 35 aarch64 | 30690 | 2288 | 1251710 | 5050 | 16220 | 46.09 |
@@ -1119,7 +1119,7 @@
 | [Libre Computer AML-S912-PC](http://ix.io/40cj) | **1415/1000** MHz| 5.15 | Bullseye arm64 | 5980 | 1012 | 659290 | 1650 | 5170 | - |
 | [Khadas VIM2](http://ix.io/1ixi) | **1415/1000** MHz| 4.9 | Xenial arm64 | 4800 | 1128 | 659000 | 1690 | 5610 | - |
 | [Khadas VIM2](http://ix.io/1iJ7) | **1415/1000** MHz| 4.17 | Bionic arm64 | 5450 | 993 | 659600 | 1920 | 5920 | 8.59 |
-| [Khadas VIM1](http://ix.io/3QLN) | **1415** MHz| 5.1 | Buster arm64 | 3860 | 1136 | 659460 | 1930 | 5900 | - |
+| [Khadas VIM1](http://ix.io/4bee) | **1415** MHz| 5.1 | Buster arm64 | 3860 | 1136 | 660160 | 1940 | 5900 | - |
 | [Le Potato](http://ix.io/1iSQ) | **1410** MHz| 4.18 | Stretch arm64 | 3780 | 1057 | 657200 | 1810 | 5730 | 3.92 |
 | [Rock64](http://ix.io/1iwz) | **1400** MHz| 4.4 | Stretch armhf | 3620 | 1006 | 624000 | 1430 | 3620 | - |
 | [Rock64](http://ix.io/1iZj) | **1400** MHz| 4.4 | Stretch arm64 | 3590 | 1030 | 643700 | 1320 | 5640 | 4.40 |

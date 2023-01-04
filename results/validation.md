@@ -156,7 +156,7 @@
 | [3PLr](3PLr.txt) | v0.9.3 LeMaker Banana Pi | 8.2%/8.6% | 997Mi/862Mi | X | X | X | X | <span style=color:red> 7%</span> | 0% | |
 | [3PlT](3PlT.txt) | v0.9.3 Radxa Zero | 0.6%/0.5% | 3.7Gi/3.2Gi | X | X | X | X | 3% | 2% | |
 | [3Q2q](3Q2q.txt) | v0.9.3 Radxa ROCK Pi 4B | 0.2%/0.3% | 3.8Gi/3.5Gi | X | X | X | X | 2% | 0% | |
-| [3QLN](3QLN.txt) | v0.9.3 Khadas VIM | 0.8%/0% | 1.8Gi/1.5Gi | X | X | X | X | 1% | 0% | |
+| <del>[3QLN](3QLN.txt)</del> | <del>v0.9.3 Khadas VIM </del> | <del>0.8%/0%</del> | <del>1.8Gi/1.5Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 1%</del> | <del> 0%</del> | |
 | [3QOj](3QOj.txt) | v0.9.3 AMedia X96 Max+ | 0%/0.8% | 3.7Gi/3.4Gi | X | X | X | X | 1% | 0% | |
 | [3Qf7](3Qf7.txt) | v0.9.3 Celeron N5105 | 0%/0% | 7.5Gi/6.4Gi | X | X | X | X | 2% | 0% | |
 | [3Qve](3Qve.txt) | v0.9.3 FriendlyARM NanoPi K2 | 0.9%/0.9% | 1.9Gi/1.6Gi | X | X | X | X | 1% | 1% | |
@@ -173,7 +173,7 @@
 | [3VME](3VME.txt) | v0.9.3 RPi 4 Model B Rev 1.1 / BCM2711 | 1.9%/0.2% | 967Mi/807Mi | X | X | X | X | <span style=color:red>**12%**</span> | 0% | |
 | [3Vdt](3Vdt.txt) | v0.9.3 Khadas VIM3L | 0%/0% | 1.8Gi/1.1Gi | X | X | X | X | 4% | 3% | |
 | [3VfL](3VfL.txt) | v0.9.3 Khadas VIM3 | 0%/0.2% | 3.7Gi/2.7Gi | X | X | X | X | 1% | 0% | |
-| [3Wq0](3Wq0.txt) | v0.9.3 Khadas VIM4 | 0%/0.3% | 7.8Gi/6.0Gi | X | X | X | X | 2% | 0% | |
+| <del>[3Wq0](3Wq0.txt)</del> | <del>v0.9.3 Khadas VIM4 </del> | <del>0%/0.3%</del> | <del>7.8Gi/6.0Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 2%</del> | <del> 0%</del> | |
 | [3Wvv](3Wvv.txt) | v0.9.4 Khadas VIM4 | 0%/0.2% | 7.8Gi/6.6Gi | X | X | X | X | 2% | 0% | |
 | [3X9q](3X9q.txt) | v0.9.4 Rockchip RK3288 Asus Tinker Boar | 0.3%/0.2% | 2.0Gi/1.8Gi | X | X | X | X | 2% | 0% | |
 | <del>[3XYo](3XYo.txt)</del> | <del>v0.9.6 Radxa ROCK 5A </del> | <del>0%/0%</del> | <del>3.7Gi/3.3Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 1%</del> | <del> 0%</del> | |
@@ -209,6 +209,8 @@
 | [4ax9](4ax9.txt) | v0.9.8 NVIDIA Orin Jetson-Small Develop | 0%/0% | 29Gi/29Gi | X | X | X | X | 0% | 0% | |
 | [4bSf](4bSf.txt) | v0.9.9 MangoPi Mcore | 0.4%/0% | 984Mi/789Mi | X | X | X | X | <span style=color:red>**63%**</span> | 1% | |
 | [4bbv](4bbv.txt) | v0.9.8 Khadas VIM1S | 0.5%/1.1% | 1.9Gi/1.1Gi | X | X | X | X | 3% | 0% | |
+| [4bee](4bee.txt) | v0.9.9 Khadas VIM | 0.6%/0% | 801Mi/622Mi | X | X | X | X | 1% | 0% | |
+| [4cHh](4cHh.txt) | v0.9.9 Khadas VIM4 | 0%/0.3% | 7.8Gi/6.9Gi | X | X | X | X | 2% | 0% | |
 | [4d1U](4d1U.txt) | v0.9.9 SolidRun Clearfog A1 | 0%/0% | 1.0Gi/873Mi | X | X | X | X | 1% | 0% | |
 | <del>[4dJV](4dJV.txt)</del> | <del>v0.9.9 Thundercomm Dragonboard 845c </del> | <del>3.8%/7.9%</del> | <del>7.4Gi/7.1Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 1%</del> | <del> 0%</del> | |
 | [4dO7](4dO7.txt) | v0.9.9 Bananapi BPI-R2 | 0%/0% | 2.0Gi/1.8Gi | X | X | X | X | 2% | <span style=color:red>** 8%**</span> | |

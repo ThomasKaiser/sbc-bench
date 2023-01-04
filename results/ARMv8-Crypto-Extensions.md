@@ -131,7 +131,7 @@ Crawling through [sbc-bench results collection](../Results.md) comparing +30 dif
 | Qualcomm Falkor V1 | | | |
 | [Snapdragon 835](http://ix.io/4fea) | 2360 | 1342240 | 569 |
 | Neoverse-N1 | | | |
-| [Ampere Altra](http://ix.io/4dsC) | 3000 | 1706150 | 569 |
+| [Ampere Altra](http://ix.io/4kiu) | 3000 | 1710010 | 570 |
 | [Amazon m6g.8xlarge](http://ix.io/2FrG) | 2500 | 1424770 | 570 |
 
 

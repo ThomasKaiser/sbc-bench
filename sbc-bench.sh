@@ -1590,11 +1590,25 @@ GetCoreClusters() {
 
 Getx86ClusterDetails() {
 		# Since they can't be differentiated by either CPU ID or physical_package_id get
-		# Alder/Raptor Lake E/P core clusters from ark.intel.com: https://archive.ph/rvnvJ
-		# and https://archive.ph/g8q16 -- HFI might be an option in the future but only with
-		# most recent kernels: https://docs.kernel.org/x86/intel-hfi.html
+		# Alder/Raptor Lake E/P core clusters from ark.intel.com: https://archive.ph/TfYF2
+		# and https://archive.ph/dXja2 -- HFI might be an option in the future but only
+		# with most recent kernels: https://docs.kernel.org/x86/intel-hfi.html
 		# With different core types /sys/devices/system/cpu/cpu*/acpi_cppc/nominal_perf and
 		# most probably also cache sizes differ.
+		#
+		# Alder Lake SKUs:
+		# i9: 6-8 P cores, 8-16 E cores, 4.8-5.5 GHz, 24-30 MB "Smart Cache"
+		# i7: 2-8 P cores, 4-8 E cores, 4.6-5.0 GHz, 12-25 MB "Smart Cache"
+		# i5: 4-6 P cores, 4-8 E cores, 4.2-4.9 GHz, 12-20 MB "Smart Cache"
+		# i3: 2-4 P cores, 0-8 E cores, 4.0-4.3 GHz, 10-12 MB "Smart Cache"
+		# Pentium Gold 850*, Celeron 730*: 1 P core, 4 E cores, 8 MB "Smart Cache"
+		#
+		# Raptor Lake SKUs:
+		# i9: 6-8 P cores, 8-16 E cores, 5.0-5.8 GHz, 24-36 MB "Smart Cache"
+		# i7: 2-8 P cores, 4-12 E cores, 4.8-5.4 GHz, 12-30 MB "Smart Cache"
+		# i5: 4-6 P cores, 4-8 E cores, 4.4-5.1 GHz, 12-24 MB "Smart Cache"
+		# i3: 1-4 P cores, 0-8 E cores, 4.1-4.6 GHz, 10-12 MB "Smart Cache"
+		# U300*: 1 P core, 4 E cores, 8 MB "Smart Cache"
 
 		# Check for hyper threading first since affecting size of P logical cluster (the 1st)
 		[ -f /sys/devices/system/cpu/smt/active ] && read HT </sys/devices/system/cpu/smt/active || HT=0	
@@ -4999,7 +5013,7 @@ GuessSoCbySignature() {
 			# Kunpeng 916 in Huawei Taishan 100 2280 server: 2 x 32 x Cortex-A72 / r0p2 / https://gist.github.com/expipiplus1/bd48761b119e867d3c9ddabc2f677374
 			echo "$(( ${CPUCores} / 32 )) x Kunpeng 916"
 			;;
-		*Kunpeng-920r1p0*)
+		*Kunpeng920r1p0*)
 			# Kunpeng 920-6426 in Huawei Taishan 200 2280 V2 server: 2 x 64 x Kunpeng-920 / r1p0 / https://www.spinics.net/lists/linux-scsi/msg153166.html
 			# https://www.spec.org/cpu2017/results/res2020q2/cpu2017-20200529-22564.html / https://en.wikichip.org/wiki/hisilicon/microarchitectures/taishan_v110
 			case $(awk -F":" '/ per socket/ {print $2}' <<<"${LSCPU}") in
@@ -5047,7 +5061,7 @@ GuessSoCbySignature() {
 			# NXP LS1028A: 2 x Cortex-A72 / r0p3 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			echo "NXP LS1028A"
 			;;
-		*Neoverse-N1r3p1*)
+		*NeoverseN1r3p1*)
 			# Ampere Altra / Altra Max: 32/64/80/128 x Neoverse-N1 / r3p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp ssbs
 			# or AWS Graviton2: 1/2/4/8/16/32/48/64 vCPU Neoverse-N1 / r3p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp ssbs
 			# https://lore.kernel.org/all/alpine.DEB.2.22.394.2204131354190.3066615@ubuntu-linux-20-04-desktop/
@@ -5092,7 +5106,7 @@ GuessSoCbySignature() {
 				fi
 			fi
 			;;
-		*Neoverse-V1r1p1*)
+		*NeoverseV1r1p1*)
 			# AWS Graviton3: 1/2/4/8/16/32/48/64 vCPU Neoverse-V1 / r1p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 sve asimdfhm dit uscat ilrcpc flagm ssbs paca pacg dcpodp svei8mm svebf16 i8mm bf16 dgh rng
 			echo "AWS Graviton3"
 			;;

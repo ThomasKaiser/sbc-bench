@@ -233,3 +233,4 @@
 | [4j4o](4j4o.txt) | v0.9.9 Insyde CherryTrail Type1 - TBD b | 0.6%/0.6% | 3.7Gi/3.1Gi | X | X | X | X | 4% | 0% | |
 | [4jfZ](4jfZ.txt) | v0.9.9 FriendlyElec NanoPi R5S | 0%/0% | 3.7Gi/3.4Gi | X | X | X | X | 1% | 0% | |
 | [4ju5](4ju5.txt) | v0.9.9 SolidRun LX2160A Clearfog CX | 0%/0.7% | 5.7Gi/3.4Gi | X | X | X | X | 1% | 0% | |
+| [4kiu](4kiu.txt) | v0.9.9 HUAQIN P6410 HQ3110BR49000 | 0%/0% | 375Gi/370Gi | X | X | X | X | 0% | 0% | |

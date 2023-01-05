@@ -1,0 +1,313 @@
+sbc-bench v0.9.9 Allwinner D1 Nezha (Thu, 05 Jan 2023 08:45:45 +0300)
+
+Distributor ID:	Ubuntu
+Description:	Ubuntu 22.04.1 LTS
+Release:	22.04
+Codename:	jammy
+Armbian info:   Nezha, d1, d1, 22.08.0-trunk, https://github.com/150balbes/build.git
+
+/usr/bin/gcc (Ubuntu 11.3.0-1ubuntu1~22.04) 11.3.0
+
+Uptime: 08:45:48 up 51 min,  1 user,  load average: 2.91, 2.42, 1.69,  51.0°C,  1800013811
+
+Linux 5.19.0-rc1-d1 (nezha) 	01/05/23 	_riscv64_	(1 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+          46.43    2.19   10.90    3.02    0.00   37.46
+
+Device             tps    kB_read/s    kB_wrtn/s    kB_dscd/s    kB_read    kB_wrtn    kB_dscd
+mmcblk0           7.27       247.15       116.26         0.00     770716     362541          0
+zram0             0.67         0.18         6.39         0.00        552      19940          0
+
+               total        used        free      shared  buff/cache   available
+Mem:           980Mi        92Mi       799Mi        10Mi        88Mi       862Mi
+Swap:          2.0Gi          0B       2.0Gi
+
+Filename				Type		Size		Used		Priority
+/swapfile                               file		2097148		0		-2
+
+##########################################################################
+
+Checking cpufreq OPP (thead,c906):
+
+Cpufreq OPP: 1008    Measured: 1002  (1004.773/1003.272/999.669)
+
+##########################################################################
+
+Hardware sensors:
+
+cpu_thermal-virtual-0
+temp1:        +54.2 C  (crit = +110.0 C)
+
+##########################################################################
+
+Executing benchmark on cpu0 (thead,c906):
+
+tinymembench v0.4.9 (simple benchmark for memory throughput and latency)
+
+==========================================================================
+== Memory bandwidth tests                                               ==
+==                                                                      ==
+== Note 1: 1MB = 1000000 bytes                                          ==
+== Note 2: Results for 'copy' tests show how many bytes can be          ==
+==         copied per second (adding together read and writen           ==
+==         bytes would have provided twice higher numbers)              ==
+== Note 3: 2-pass copy means that we are using a small temporary buffer ==
+==         to first fetch data into it, and only then write it to the   ==
+==         destination (source -> L1 cache, L1 cache -> destination)    ==
+== Note 4: If sample standard deviation exceeds 0.1%, it is shown in    ==
+==         brackets                                                     ==
+==========================================================================
+
+ C copy backwards                                     :   1247.5 MB/s (10.3%)
+ C copy backwards (32 byte blocks)                    :    295.4 MB/s (4.6%)
+ C copy backwards (64 byte blocks)                    :    195.5 MB/s (6.8%)
+ C copy                                               :   1282.7 MB/s (5.8%)
+ C copy prefetched (32 bytes step)                    :   1282.3 MB/s (5.8%)
+ C copy prefetched (64 bytes step)                    :   1278.6 MB/s (5.7%)
+ C 2-pass copy                                        :    820.7 MB/s (6.6%)
+ C 2-pass copy prefetched (32 bytes step)             :    832.1 MB/s (6.8%)
+ C 2-pass copy prefetched (64 bytes step)             :    832.8 MB/s (7.0%)
+ C fill                                               :   2796.0 MB/s (6.1%)
+ C fill (shuffle within 16 byte blocks)               :    353.8 MB/s (5.6%)
+ C fill (shuffle within 32 byte blocks)               :    343.6 MB/s (6.7%)
+ C fill (shuffle within 64 byte blocks)               :    343.4 MB/s (6.2%)
+ ---
+ standard memcpy                                      :   1205.6 MB/s (8.3%)
+ standard memset                                      :   2796.7 MB/s (6.1%)
+
+==========================================================================
+== Memory latency test                                                  ==
+==                                                                      ==
+== Average time is measured for random memory accesses in the buffers   ==
+== of different sizes. The larger is the buffer, the more significant   ==
+== are relative contributions of TLB, L1/L2 cache misses and SDRAM      ==
+== accesses. For extremely large buffer sizes we are expecting to see   ==
+== page table walk with several requests to SDRAM for almost every      ==
+== memory access (though 64MiB is not nearly large enough to experience ==
+== this effect to its fullest).                                         ==
+==                                                                      ==
+== Note 1: All the numbers are representing extra time, which needs to  ==
+==         be added to L1 cache latency. The cycle timings for L1 cache ==
+==         latency can be usually found in the processor documentation. ==
+== Note 2: Dual random read means that we are simultaneously performing ==
+==         two independent memory accesses at a time. In the case if    ==
+==         the memory subsystem can't handle multiple outstanding       ==
+==         requests, dual random read has the same timings as two       ==
+==         single reads performed one after another.                    ==
+==========================================================================
+
+block size : single random read / dual random read
+      1024 :    0.0 ns          /     0.0 ns 
+      2048 :    0.0 ns          /     0.1 ns 
+      4096 :    0.0 ns          /     0.1 ns 
+      8192 :    0.3 ns          /     0.8 ns 
+     16384 :    0.1 ns          /     0.2 ns 
+     32768 :    0.6 ns          /     1.0 ns 
+     65536 :   74.0 ns          /   117.4 ns 
+    131072 :  110.7 ns          /   157.1 ns 
+    262144 :  129.0 ns          /   176.3 ns 
+    524288 :  137.5 ns          /   181.9 ns 
+   1048576 :  142.9 ns          /   184.8 ns 
+   2097152 :  173.1 ns          /   225.1 ns 
+   4194304 :  198.2 ns          /   259.3 ns 
+   8388608 :  226.3 ns          /   310.1 ns 
+  16777216 :  259.9 ns          /   387.2 ns 
+  33554432 :  288.1 ns          /   443.6 ns 
+  67108864 :  304.5 ns          /   476.2 ns 
+
+##########################################################################
+
+Executing ramlat on cpu0 (thead,c906), results in ns:
+
+       size:  1x32  2x32  1x64  2x64 1xPTR 2xPTR 4xPTR 8xPTR
+         4k: 4.249 5.262 4.124 5.085 2.036 2.190 6.329 8.555 
+         8k: 4.132 5.446 4.087 5.007 2.086 2.201 4.129 8.436 
+        16k: 4.228 8.190 4.108 5.037 2.051 2.154 4.222 8.433 
+        32k: 4.327 5.437 4.176 7.849 2.101 2.208 4.348 8.530 
+        64k: 156.1 177.2 154.4 225.0 155.1 158.5 161.0 217.7 
+       128k: 155.9 175.5 205.7 175.5 155.5 153.8 159.0 212.3 
+       256k: 157.1 215.9 153.1 172.3 153.5 154.1 161.0 315.4 
+       512k: 155.6 176.2 157.7 175.4 155.3 180.1 187.9 215.0 
+      1024k: 155.5 175.5 158.3 175.6 203.9 156.5 162.3 217.6 
+      2048k: 172.7 199.1 173.5 293.4 172.6 176.0 184.3 240.7 
+      4096k: 173.3 195.5 222.1 195.7 169.9 178.4 183.6 233.4 
+      8192k: 220.2 193.2 169.3 194.3 167.0 171.1 231.3 238.1 
+     16384k: 179.1 202.1 179.2 204.6 175.9 229.5 195.0 245.3 
+
+##########################################################################
+
+Executing benchmark twice on cluster 0 (thead,c906)
+
+OpenSSL 3.0.2, built on 15 Mar 2022 (Library: OpenSSL 3.0.2 15 Mar 2022)
+type             16 bytes     64 bytes    256 bytes   1024 bytes   8192 bytes  16384 bytes
+aes-128-cbc       8160.76k    10334.25k    11255.13k    11543.21k    11580.76k    11883.86k
+aes-128-cbc       8807.23k    10890.86k    11743.15k    11516.59k    11531.61k    11687.25k
+aes-192-cbc       7706.30k     9281.75k    10218.84k    10020.86k    10335.57k    10272.77k
+aes-192-cbc       7639.06k     9534.66k    10048.26k     9861.80k    10231.81k    10098.01k
+aes-256-cbc       6892.61k     8618.79k     9018.71k     8660.65k     8992.09k     8934.74k
+aes-256-cbc       6986.29k     8630.66k     9025.37k     8816.98k     9145.00k     9087.66k
+
+##########################################################################
+
+Executing benchmark single-threaded on cpu0 (thead,c906)
+
+7-Zip (a) 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,1 CPU LE)
+
+LE
+CPU Freq: 64000000 64000000 64000000 - - 256000000 512000000 1024000000 -
+
+RAM size:     980 MB,  # CPU hardware threads:   1
+RAM usage:    435 MB,  # Benchmark threads:      1
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:        302    94    314    295  |       6783    94    613    579
+23:        292    94    318    298  |       6677    94    612    578
+24:        291    94    334    314  |       6532    94    610    573
+25:        287    94    349    329  |       6324    94    600    563
+----------------------------------  | ------------------------------
+Avr:              94    329    309  |               94    609    573
+Tot:              94    469    441
+
+Compression: 309
+Decompression: 573
+Total: 441
+
+##########################################################################
+
+Testing maximum cpufreq again, still under full load. System health now:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+09:07:00: 1008MHz  1.96 100%   5%  94%   0%   0%   0%  55.8°C
+
+Checking cpufreq OPP (thead,c906):
+
+Cpufreq OPP: 1008    Measured: 1003 (1005.083/1004.654/1001.657)
+
+##########################################################################
+
+Hardware sensors:
+
+cpu_thermal-virtual-0
+temp1:        +55.1 C  (crit = +110.0 C)
+
+##########################################################################
+
+Thermal source: /sys/class/hwmon/hwmon0/ (cpu_thermal)
+
+System health while running tinymembench:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+08:46:03: 1008MHz  2.76  62%  10%  46%   2%   3%   0%  57.3°C
+08:46:54: 1008MHz  2.05 100%   2%  97%   0%   0%   0%  57.9°C
+08:47:45: 1008MHz  1.80 100%   2%  97%   0%   0%   0%  56.5°C
+08:48:36: 1008MHz  1.65 100%   3%  96%   0%   0%   0%  56.1°C
+08:49:27: 1008MHz  1.50 100%   2%  96%   0%   0%   0%  55.7°C
+08:50:19: 1008MHz  1.45 100%   2%  97%   0%   0%   0%  55.6°C
+08:51:10: 1008MHz  1.48 100%   3%  96%   0%   0%   0%  55.8°C
+08:52:01: 1008MHz  1.47 100%   2%  97%   0%   0%   0%  55.7°C
+08:52:52: 1008MHz  1.71 100%   2%  97%   0%   0%   0%  55.7°C
+08:53:43: 1008MHz  1.55 100%   2%  97%   0%   0%   0%  55.6°C
+08:54:34: 1008MHz  1.43 100%   2%  97%   0%   0%   0%  55.2°C
+08:55:26: 1008MHz  1.34 100%   3%  96%   0%   0%   0%  55.8°C
+08:56:17: 1008MHz  1.40 100%   2%  97%   0%   0%   0%  56.2°C
+08:57:08: 1008MHz  1.49 100%   3%  96%   0%   0%   0%  55.9°C
+08:57:59: 1008MHz  1.53 100%   2%  97%   0%   0%   0%  56.2°C
+
+System health while running ramlat:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+08:58:58: 1008MHz  1.57  70%   9%  56%   1%   2%   0%  56.0°C
+08:59:13: 1008MHz  1.65 100%   2%  96%   0%   0%   0%  56.1°C
+
+System health while running OpenSSL benchmark:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+08:59:31: 1008MHz  1.73  70%   9%  56%   1%   2%   0%  56.8°C
+08:59:57: 1008MHz  1.83 100%   3%  96%   0%   0%   0%  55.9°C
+09:00:24: 1008MHz  1.67 100%   3%  96%   0%   0%   0%  55.8°C
+09:00:51: 1008MHz  1.74 100%   3%  96%   0%   0%   0%  55.4°C
+
+System health while running 7-zip single core benchmark:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+09:01:20: 1008MHz  1.62  71%   8%  57%   1%   2%   0%  54.2°C
+09:01:46: 1008MHz  1.75 100%   3%  95%   0%   0%   0%  54.9°C
+09:02:12: 1008MHz  1.77 100%   3%  96%   0%   0%   0%  55.4°C
+09:02:38: 1008MHz  1.77 100%   3%  96%   0%   0%   0%  54.9°C
+09:03:05: 1008MHz  1.68 100%   4%  94%   0%   0%   0%  55.6°C
+09:03:31: 1008MHz  1.87 100%   3%  95%   0%   0%   0%  55.0°C
+09:03:57: 1008MHz  1.72 100%   5%  94%   0%   0%   0%  55.5°C
+09:04:23: 1008MHz  1.73 100%   4%  95%   0%   0%   0%  55.5°C
+09:04:49: 1008MHz  1.60 100%   3%  96%   0%   0%   0%  55.8°C
+09:05:16: 1008MHz  1.66 100%   7%  91%   0%   0%   0%  55.8°C
+09:05:42: 1008MHz  1.55 100%   5%  94%   0%   0%   0%  55.9°C
+09:06:08: 1008MHz  1.80 100%   4%  94%   0%   0%   0%  55.6°C
+09:06:34: 1008MHz  1.65 100%   4%  95%   0%   0%   0%  56.2°C
+09:07:00: 1008MHz  1.96 100%   5%  94%   0%   0%   0%  55.8°C
+
+##########################################################################
+
+Throttling statistics (time spent on each cpufreq OPP):
+
+1008 MHz: 1276.39 sec
+
+##########################################################################
+
+Linux 5.19.0-rc1-d1 (nezha) 	01/05/23 	_riscv64_	(1 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+          60.98    1.57    8.81    2.14    0.00   26.51
+
+Device             tps    kB_read/s    kB_wrtn/s    kB_dscd/s    kB_read    kB_wrtn    kB_dscd
+mmcblk0           5.23       176.40        82.49         0.00     776876     363289          0
+zram0             0.65         0.13         5.22         0.00        568      22968          0
+
+               total        used        free      shared  buff/cache   available
+Mem:           980Mi        94Mi       789Mi        10Mi        95Mi       859Mi
+Swap:          2.0Gi          0B       2.0Gi
+
+Filename				Type		Size		Used		Priority
+/swapfile                               file		2097148		0		-2
+
+CPU sysfs topology (clusters, cpufreq members, clockspeeds)
+                 cpufreq   min    max
+ CPU    cluster  policy   speed  speed   core type
+  0       -1        0     1008    1008   thead,c906
+
+Architecture:        riscv64
+Byte Order:          Little Endian
+CPU(s):              1
+On-line CPU(s) list: 0
+
+SoC guess: Allwinner D1
+DT compat: allwinner,d1-nezha
+           allwinner,sun20i-d1
+ Compiler: /usr/bin/gcc (Ubuntu 11.3.0-1ubuntu1~22.04) 11.3.0 / riscv64-linux-gnu
+ Userland: riscv
+   Kernel: 5.19.0-rc1-d1/riscv64
+           CONFIG_HZ=250
+           CONFIG_HZ_250=y
+           CONFIG_PREEMPT_COUNT=y
+           CONFIG_PREEMPT_VOLUNTARY=y
+           CONFIG_PREEMPT_VOLUNTARY_BUILD=y
+           raid6: int64x8  gen()   345 MB/s
+           raid6: int64x4  gen()   445 MB/s
+           raid6: int64x2  gen()   445 MB/s
+           raid6: int64x1  gen()   375 MB/s
+           raid6: using algorithm int64x2 gen() 445 MB/s
+           raid6: .... xor() 313 MB/s, rmw enabled
+           raid6: using intx1 recovery algorithm
+           xor: measuring software checksum speed
+           xor: using function: 8regs (1765 MB/sec)
+
+##########################################################################
+
+   cpu-opp-table:
+      1008 MHz   1100.0 mV
+
+| Allwinner D1 Nezha | 1008 MHz | 5.19 | Ubuntu 22.04.1 LTS riscv64/riscv | 440 | 441 | 9010 | 1210 | 2800 | - |

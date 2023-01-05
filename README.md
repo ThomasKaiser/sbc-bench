@@ -296,4 +296,4 @@ This operation mode will be extended further over time to get insights into SoC 
 
 If `$MaxKHz` is exported prior to benchmark execution (e.g. by `MODE=extensive MaxKHz=1416000 sbc-bench.sh`) then cpufreq OPP higher than this value are skipped. On many platforms this allows CPU core comparisons at same clockspeeds (e.g. limiting all cores to 1.8 GHz on RK3588 or 1.4 GHz on RK3399). For a list of available values check
 
-    cat /sys/devices/system/cpu/cpufreq/policy?/scaling_available_frequencies`
+    cat /sys/devices/system/cpu/cpufreq/policy?/scaling_available_frequencies

@@ -152,6 +152,7 @@
 | [Orange Pi Prime](http://ix.io/2kTH) | 1370 MHz | 5.4 | Buster | **3590** | 984 | 637980 | 1180 | 3540 | - |
 | [Rock64](http://ix.io/1iYK) | 1400 MHz | 4.4 | Stretch arm64 | **3580** | 1032 | 644380 | 1330 | 5680 | 4.63 |
 | [Rock64](http://ix.io/1iHB) | 1300 MHz | 4.18 | Stretch arm64 | **3560** | 1002 | 603800 | 1340 | 5770 | 3.80 |
+| [Orange Pi Zero 2](http://ix.io/4knM) | 1510 MHz | 4.9 | Buster arm64 | **3550** | 1067 | 703300 | 1190 | 2820 | 5.01 |
 | [Rock64](http://ix.io/1iH4) | 1300 MHz | 4.18 | Bionic arm64 | **3530** | 996 | 605250 | 1340 | 5770 | 4.65 |
 | [NanoPi K1 Plus](http://ix.io/3N7H) | 1370 MHz | 5.10 | Focal arm64 | **3520** | 1022 | 638880 | 1070 | 3680 | 5.50 |
 | [Orange Pi PC 2](http://ix.io/3MQJ) | 1370 MHz | 5.10 | Focal arm64 | **3500** | 1023 | 637410 | 1070 | 3680 | - |
@@ -160,9 +161,9 @@
 | [Rock64](http://ix.io/1iGW) | 1300 MHz | 4.4 | Bionic arm64 | **3410** | 945 | 601200 | 1310 | 5680 | 4.46 |
 | [Ugoos UT2](http://ix.io/408h) | 1560 MHz | 5.10 | Jammy armhf | **3320** | 994 | 43250 | 320 | 2020 | - |
 | [Raspberry Pi 3 B+](http://ix.io/1ism) | normal | 4.14 | Raspbian Stretch | **3240** | 914 | 36600 | 1130 | 1530 | - |
+| [RK3318 BOX](http://ix.io/3ZRD) | 1390 MHz | 6.0 | Jammy arm64 | **3200** | 867 | 644750 | 700 | 2460 | - |
 | [Marvell PXA1908](http://ix.io/46hs) | 1245 MHz | 3.14 | Bullseye arm64 | **3180** | 951 | 581840 | 740 | 2220 | - |
 | [Raspberry Pi 3 B+](http://ix.io/1iGz) | OC/normal | 4.14 | Raspbian Stretch | **3130** | 843 | 36620 | 1230 | 1780 | - |
-| [RK3318 BOX](http://ix.io/3ZRD) | 1300 MHz | 5.15 | Bullseye arm64 | **3120** | 822 | 603700 | 700 | 2510 | - |
 | [TRONFY MXQ S805](http://ix.io/3MiR) | 1536 MHz | 5.10 | Focal armhf | **3100** | 897 | 29080 | 980 | 2990 | - |
 | [Orange Pi PC Plus](http://ix.io/3MQV) | 1370 MHz | 5.10 | Focal armhf | **3060** | 879 | 26590 | 890 | 3450 | - |
 | [Akaso M8S](http://ix.io/3R3N) | 1200 MHz | 5.10 | Buster armhf | **3050** | 885 | 32120 | 1160 | 3330 | - |
@@ -175,12 +176,12 @@
 | [MT6580 K9M1](http://ix.io/466y) | 1300 MHz | 5.19 | Sid armhf | **2930** | 860 | 25300 | 1250 | 3300 | - |
 | [Orange Pi Plus 2](http://ix.io/1iX4) | 1300 MHz | 4.14 | Stretch armhf | **2890** | 812 | 25250 | 830 | 3240 | - |
 | [Teres-I](http://ix.io/1tJg) | 1050 MHz | 4.19 | Stretch arm64 | **2785** | 780 | 491590 | 1080 | 2820 | - |
+| [BPi M2U](http://ix.io/4kmM) | 1200 MHz | 6.0 | Bullseye armhf | **2690** | 767 | 23320 | 780 | 3010 | - |
 | [Rock Pi S](http://ix.io/1XKY) | 1300 MHz | 4.4 | Buster | **2590** | 716 | 282290 | 830 | 1880 | - |
 | [AMD E-450 APU](http://ix.io/4hwl) | 1650 MHz | 5.15 | Jammy amd64 | **2430** | 1258 | 27450 | 1710 | 1740 | - |
 | [Cubox-i4](http://ix.io/4132) | 980 MHz | 5.15 | Jammy armhf | **2360** | 657 | 27000 | 340 | 340 | - |
 | [RK3228A TV Box](http://ix.io/3M9F) | 1200 MHz | 4.4 | Buster armhf | **2310** | 710 | 23070 | 410 | 1230 | - |
 | [Clearfog A1](http://ix.io/4d1U) | 1600 MHz | 5.15 | Bullseye armhf | **2230** | 1239 | 44080 | 910 | 5060 | - |
-| [BPi M2U](http://ix.io/3TKh) | 1010 Mhz | 5.16 | Buster armhf | **2230** | 654 | 19540 | 790 | 2540 | - |
 | [Helios4](http://ix.io/1jCy) | 1600 MHz | 4.14 | Stretch armhf | **2210** | 1215 | 42500 &ast;98560 | 910 | 4840 | - |
 | [Raspberry Pi 2 B+](http://ix.io/3MGs) | 900 MHz | 5.10 | Raspberry Pi OS Bullseye | **2150** | 620 | 16500 | 1000 | 1180 | - |
 | [Atom E3826](http://ix.io/44pd) | 1460 MHz | 5.18 | Jammy amd64 | **2140** | 1112 | 182190 | 2840 | 2760 | - |
@@ -336,6 +337,7 @@
 | [NanoPi Fire3](http://ix.io/3ZxU) | 1400 MHz | 4.14 | Focal arm64 | 7350 | **1093** | 652640 | 1530 | 4590 | 11.18 |
 | [Raspberry Pi 3 B+](http://ix.io/1iI5) | original | 4.9 | Raspbian Stretch | 3600 | **1076** | 42700 | 1230 | 1640 | - |
 | [Renegade](http://ix.io/1iFx) | 1400 MHz | 4.4 | Stretch arm64 | 3710 | **1069** | 644200 | 1565 | 7435 | 3.92 |
+| [Orange Pi Zero 2](http://ix.io/4knM) | 1510 MHz | 4.9 | Buster arm64 | 3550 | **1067** | 703300 | 1190 | 2820 | 5.01 |
 | [Le Potato](http://ix.io/1iSQ) | 1410 MHz | 4.18 | Stretch arm64 | 3780 | **1057** | 657200 | 1810 | 5730 | 3.92 |
 | [NanoPC T3+](http://ix.io/1iRJ) | 1400 MHz | 4.14 | Bionic arm64 | 7480 | **1053** | 652600 | 1440 | 4540 | 10.99 |
 | [NanoPi Fire3](http://ix.io/1jjm) | 1400 MHz | 4.14 | Bionic arm64 | 7440 | **1052** | 653000 | 1560 | 4600 | 10.96 |
@@ -368,6 +370,7 @@
 | [Orange Pi PC Plus](http://ix.io/3MQV) | 1370 MHz | 5.10 | Focal armhf | 3060 | **879** | 26590 | 890 | 3450 | - |
 | [ODROID-C1](http://ix.io/4eg5) | 1500 MHz | 5.19 | Jammy armhf | 3010 | **878** | 29260 | 390 | 2910 | - |
 | [EspressoBin](http://ix.io/1lCe) | 1200 MHz | 4.18 | Stretch arm64 | 1630 | **869** | 544240 | 1000 | 2400 | 1.82 |
+| [RK3318 BOX](http://ix.io/3ZRD) | 1390 MHz | 6.0 | Jammy arm64 | 3200 | **867** | 644750 | 700 | 2460 | - |
 | [MT6580 K9M1](http://ix.io/466y) | 1300 MHz | 5.19 | Sid armhf | 2930 | **860** | 25300 | 1250 | 3300 | - |
 | [Raspberry Pi 3 B+](http://ix.io/1iH0) | UV/normal | 4.14 | Raspbian Stretch | 2100 | **856** | 36400 | 1040 | 1460 | - |
 | [Raspberry Pi 3 B+](http://ix.io/1iGM) | normal | 4.14 | Raspbian Stretch | 3040 | **856** | 36600 | 1050 | 1500 | - |
@@ -375,13 +378,12 @@
 | [Raspberry Pi 3 B+](http://ix.io/1iGz) | OC/normal | 4.14 | Raspbian Stretch | 3130 | **843** | 36620 | 1230 | 1780 | - |
 | [Raspberry Pi Zero 2](http://ix.io/3E85) | 1000 MHz | 5.10 | Raspberry Pi OS Buster | 3030 | **838** | 29860 | 1300 | 1570 | - |
 | [Atom N270](http://ix.io/461n) | 1600 MHz | 4.19 | Buster i386 | 1220 | **824** | 18760 | 1420 | 2840 | - |
-| [RK3318 BOX](http://ix.io/3ZRD) | 1300 MHz | 5.15 | Bullseye arm64 | 3120 | **822** | 603700 | 700 | 2510 | - |
 | [Orange Pi Plus 2](http://ix.io/1iX4) | 1300 MHz | 4.14 | Stretch armhf | 2890 | **812** | 25250 | 830 | 3240 | - |
 | [Teres-I](http://ix.io/1tJg) | 1050 MHz | 4.19 | Stretch arm64 | 2785 | **780** | 491590 | 1080 | 2820 | - |
+| [BPi M2U](http://ix.io/4kmM) | 1200 MHz | 6.0 | Bullseye armhf | 2690 | **767** | 23320 | 780 | 3010 | - |
 | [Rock Pi S](http://ix.io/1XKY) | 1300 MHz | 4.4 | Buster | 2590 | **716** | 282290 | 830 | 1880 | - |
 | [RK3228A TV Box](http://ix.io/3M9F) | 1200 MHz | 4.4 | Buster armhf | 2310 | **710** | 23070 | 410 | 1230 | - |
 | [Cubox-i4](http://ix.io/4132) | 980 MHz | 5.15 | Jammy armhf | 2360 | **657** | 27000 | 340 | 340 | - |
-| [BPi M2U](http://ix.io/3TKh) | 1010 Mhz | 5.16 | Buster armhf | 2230 | **654** | 19540 | 790 | 2540 | - |
 | [EspressoBin](http://ix.io/1kt2) | 800 MHz | 4.17 | Stretch arm64 | 1138 | **636** | 368330 | 1040 | 2490 | 1.23 |
 | [Raspberry Pi 2 B+](http://ix.io/3MGs) | 900 MHz | 5.10 | Raspberry Pi OS Bullseye | 2150 | **620** | 16500 | 1000 | 1180 | - |
 | [Raspberry Pi 2 B+](http://ix.io/1iFf) | 900 MHz | 4.14 | Debian Stretch | 2070 | **592** | 17450 | 615 | 1175 | - |
@@ -482,6 +484,7 @@
 | [Nintendo Switch](http://ix.io/3Di2) | 2060 MHz | 4.9 | Bionic arm64 | 6720 | 1901 | **746680** | 2370 | 3670 | 9.25 |
 | [Jetson Nano](http://ix.io/3Ufc) | 2000 MHz | 4.9 | Bionic arm64 | 6260 | 1977 | **717500** | 4100 | 11760 | 8.72 |
 | [Jetson Xavier NX](http://ix.io/3YWp) | 1890 MHz | 4.9 | Bionic arm64 | 13230 | 2201 | **706280** | 9190 | 18480 | - |
+| [Orange Pi Zero 2](http://ix.io/4knM) | 1510 MHz | 4.9 | Buster arm64 | 3550 | 1067 | **703300** | 1190 | 2820 | 5.01 |
 | [Ryzen R1606G](http://ix.io/2tQQ) | 2600/1400 MHz | 5.4 | Focal amd64 | 7970 | 2854 | **700780** | 8230 | 5970 | 16.45 |
 | [Celeron J4105](http://ix.io/1qal) | 2400/1500 MHz | 4.15 | Bionic amd64 | 9020 | 2290 | **697100** | 5500 | 7410 | 19.07 |
 | [Celeron J4105](http://ix.io/1qb0) | 2400/1500 MHz | 4.15 | Bionic amd64 | 8960 | 2274 | **697080** | 5620 | 7650 | 19.13 |
@@ -498,6 +501,7 @@
 | [BPi M4](http://ix.io/1Dt1) | 1400 MHz | 4.9 | Bionic arm64 | 3500 | - | **651460** | 1010 | 4360 | 5.48 |
 | [NanoPC T3+](http://ix.io/1iyp) | 1400 MHz | 4.4 | Xenial armhf | 6400 | 943 | **651000** | 1650 | 3700 | - |
 | [NanoPi Fire3](http://ix.io/1jiU) | 1380 MHz | 4.14 | Stretch arm64 | 7420 | 1038 | **645400** | 1520 | 4570 | 8.53 |
+| [RK3318 BOX](http://ix.io/3ZRD) | 1390 MHz | 6.0 | Jammy arm64 | 3200 | 867 | **644750** | 700 | 2460 | - |
 | [Rock64](http://ix.io/1iYK) | 1400 MHz | 4.4 | Stretch arm64 | 3580 | 1032 | **644380** | 1330 | 5680 | 4.63 |
 | [Rock64](http://ix.io/1iFm) | 1400 MHz | 4.4 | Stretch arm64 | 3610 | 1034 | **644250** | 1330 | 5700 | 3.85 |
 | [Renegade](http://ix.io/1iFx) | 1400 MHz | 4.4 | Stretch arm64 | 3710 | 1069 | **644200** | 1565 | 7435 | 3.92 |
@@ -509,7 +513,6 @@
 | [Rock64](http://ix.io/1iwz) | 1400 MHz | 4.4 | Stretch armhf | 3620 | 1006 | **624000** | 1430 | 3620 | - |
 | [Rock64](http://ix.io/1iH4) | 1300 MHz | 4.18 | Bionic arm64 | 3530 | 996 | **605250** | 1340 | 5770 | 4.65 |
 | [Rock64](http://ix.io/1iHB) | 1300 MHz | 4.18 | Stretch arm64 | 3560 | 1002 | **603800** | 1340 | 5770 | 3.80 |
-| [RK3318 BOX](http://ix.io/3ZRD) | 1300 MHz | 5.15 | Bullseye arm64 | 3120 | 822 | **603700** | 700 | 2510 | - |
 | [Rock64](http://ix.io/1iGW) | 1300 MHz | 4.4 | Bionic arm64 | 3410 | 945 | **601200** | 1310 | 5680 | 4.46 |
 | [Rock64](http://ix.io/1iHo) | 1300 MHz | 4.4 | Stretch arm64 | 3430 | 952 | **601000** | 1350 | 5680 | 3.64 |
 | [Marvell PXA1908](http://ix.io/46hs) | 1245 MHz | 3.14 | Bullseye arm64 | 3180 | 951 | **581840** | 740 | 2220 | - |
@@ -581,8 +584,8 @@
 | [MT6580 K9M1](http://ix.io/466y) | 1300 MHz | 5.19 | Sid armhf | 2930 | 860 | **25300** | 1250 | 3300 | - |
 | [BPi R2](http://ix.io/4dO7) | 1300 MHz | 4.19 | Focal armhf | 2990 | 854 | **25260** | 1550 | 3220 | - |
 | [Orange Pi Plus 2](http://ix.io/1iX4) | 1300 MHz | 4.14 | Stretch armhf | 2890 | 812 | **25250** | 830 | 3240 | - |
+| [BPi M2U](http://ix.io/4kmM) | 1200 MHz | 6.0 | Bullseye armhf | 2690 | 767 | **23320** | 780 | 3010 | - |
 | [RK3228A TV Box](http://ix.io/3M9F) | 1200 MHz | 4.4 | Buster armhf | 2310 | 710 | **23070** | 410 | 1230 | - |
-| [BPi M2U](http://ix.io/3TKh) | 1010 Mhz | 5.16 | Buster armhf | 2230 | 654 | **19540** | 790 | 2540 | - |
 | [Atom N270](http://ix.io/461n) | 1600 MHz | 4.19 | Buster i386 | 1220 | 824 | **18760** | 1420 | 2840 | - |
 | [Olimex A20-Lime2](http://ix.io/3EOw) | 960 MHz | 5.10 | Bullseye armhf | 1040 | 540 | **18670** | 460 | 2020 | - |
 | [LeMaker Banana Pi](http://ix.io/3PLr) | 960 MHz | 5.10 | Bullseye armhf | 1040 | 542 | **18640** | 440 | 2020 | - |
@@ -749,6 +752,7 @@
 | [Raspberry Pi 3 B+](http://ix.io/1iGz) | OC/normal | 4.14 | Raspbian Stretch | 3130 | 843 | 36620 | **1230** | 1780 | - |
 | [ClockworkPi R-01](http://ix.io/40BJ) | 1000 MHz | 5.4 | Focal riscv64 | 450 | 450 | 9040 | **1220** | 2640 | - |
 | [Raspberry Pi 4 B](http://ix.io/3VME) | 1800 MHz | 5.15 | Jammy armhf | 6300 | 1844 | 82750 | **1190** | 3110 | - |
+| [Orange Pi Zero 2](http://ix.io/4knM) | 1510 MHz | 4.9 | Buster arm64 | 3550 | 1067 | 703300 | **1190** | 2820 | 5.01 |
 | [Orange Pi Prime](http://ix.io/2kTH) | 1370 MHz | 5.4 | Buster | 3590 | 984 | 637980 | **1180** | 3540 | - |
 | [Star64](http://ix.io/4a3s) | 1750 MHz | 5.15 | Sid riscv64 | 4820 | 1396 | 28970 | **1170** | 1120 | - |
 | [Akaso M8S](http://ix.io/3R3N) | 1200 MHz | 5.10 | Buster armhf | 3050 | 885 | 32120 | **1160** | 3330 | - |
@@ -773,10 +777,10 @@
 | [Rock Pi S](http://ix.io/1XKY) | 1300 MHz | 4.4 | Buster | 2590 | 716 | 282290 | **830** | 1880 | - |
 | [Orange Pi Plus 2](http://ix.io/1iX4) | 1300 MHz | 4.14 | Stretch armhf | 2890 | 812 | 25250 | **830** | 3240 | - |
 | [NanoPi M1 Plus](http://ix.io/3N2z) | 1370 MHz | 4.19 | Bionic armhf | 3030 | 881 | 26660 | **830** | 3450 | - |
-| [BPi M2U](http://ix.io/3TKh) | 1010 Mhz | 5.16 | Buster armhf | 2230 | 654 | 19540 | **790** | 2540 | - |
+| [BPi M2U](http://ix.io/4kmM) | 1200 MHz | 6.0 | Bullseye armhf | 2690 | 767 | 23320 | **780** | 3010 | - |
 | [SBC2D70 (SSD202D)](http://ix.io/3N1U) | 1700 MHz | 5.16 | Sid armhf | 1960 | 1094 | 33120 | **770** | 3190 | - |
 | [Marvell PXA1908](http://ix.io/46hs) | 1245 MHz | 3.14 | Bullseye arm64 | 3180 | 951 | 581840 | **740** | 2220 | - |
-| [RK3318 BOX](http://ix.io/3ZRD) | 1300 MHz | 5.15 | Bullseye arm64 | 3120 | 822 | 603700 | **700** | 2510 | - |
+| [RK3318 BOX](http://ix.io/3ZRD) | 1390 MHz | 6.0 | Jammy arm64 | 3200 | 867 | 644750 | **700** | 2460 | - |
 | [Raspberry Pi 2 B+](http://ix.io/1iFf) | 900 MHz | 4.14 | Debian Stretch | 2070 | 592 | 17450 | **615** | 1175 | - |
 | [Tronsmart S82](http://ix.io/41ML) | 1600 MHz | 5.14 | Focal armhf | 3640 | 1114 | 43150 | **500** | 3200 | - |
 | [Olimex A20-Lime2](http://ix.io/3EOw) | 960 MHz | 5.10 | Bullseye armhf | 1040 | 540 | 18670 | **460** | 2020 | - |
@@ -944,18 +948,19 @@
 | [Raspberry Pi 4 B](http://ix.io/3InF) | 1800 MHz | 5.15 | Armbian Jammy arm64 | 5640 | 1752 | 36260 | 2580 | **3110** | - |
 | [ODROID-C2](http://ix.io/1ixI) | 1750 MHz | 3.14 | Xenial arm64 | 4070 | 1128 | 48500 | 1750 | **3100** | - |
 | [Raspberry Pi 4 B](http://ix.io/3Gia) | 1800 MHz | 5.10 | Raspberry Pi OS Buster | 6550 | 1897 | 77830 | 2780 | **3080** | - |
+| [BPi M2U](http://ix.io/4kmM) | 1200 MHz | 6.0 | Bullseye armhf | 2690 | 767 | 23320 | 780 | **3010** | - |
 | [TRONFY MXQ S805](http://ix.io/3MiR) | 1536 MHz | 5.10 | Focal armhf | 3100 | 897 | 29080 | 980 | **2990** | - |
 | [x5-Z8350](http://ix.io/2Jdb) | 1920/1680 MHz | 5.4 | Focal amd64 | 4790 | 1454 | 237230 | 3170 | **2960** | 9.38 |
 | [ODROID-C1](http://ix.io/4eg5) | 1500 MHz | 5.19 | Jammy armhf | 3010 | 878 | 29260 | 390 | **2910** | - |
 | [Atom N270](http://ix.io/461n) | 1600 MHz | 4.19 | Buster i386 | 1220 | 824 | 18760 | 1420 | **2840** | - |
 | [Teres-I](http://ix.io/1tJg) | 1050 MHz | 4.19 | Stretch arm64 | 2785 | 780 | 491590 | 1080 | **2820** | - |
+| [Orange Pi Zero 2](http://ix.io/4knM) | 1510 MHz | 4.9 | Buster arm64 | 3550 | 1067 | 703300 | 1190 | **2820** | 5.01 |
 | [Atom E3826](http://ix.io/44pd) | 1460 MHz | 5.18 | Jammy amd64 | 2140 | 1112 | 182190 | 2840 | **2760** | - |
 | [ODROID-C2](http://ix.io/4hOp) | 1530 MHz | 5.19 | Jammy arm64 | 4020 | 1187 | 51390 | 1590 | **2730** | - |
 | [Raspberry Pi 4 B](http://ix.io/3N94) | 1800 MHz | 5.10 | Raspberry Pi OS Bullseye | 5940 | 1738 | 77670 | 2310 | **2690** | - |
 | [ClockworkPi R-01](http://ix.io/40BJ) | 1000 MHz | 5.4 | Focal riscv64 | 450 | 450 | 9040 | 1220 | **2640** | - |
-| [BPi M2U](http://ix.io/3TKh) | 1010 Mhz | 5.16 | Buster armhf | 2230 | 654 | 19540 | 790 | **2540** | - |
-| [RK3318 BOX](http://ix.io/3ZRD) | 1300 MHz | 5.15 | Bullseye arm64 | 3120 | 822 | 603700 | 700 | **2510** | - |
 | [EspressoBin](http://ix.io/1kt2) | 800 MHz | 4.17 | Stretch arm64 | 1138 | 636 | 368330 | 1040 | **2490** | 1.23 |
+| [RK3318 BOX](http://ix.io/3ZRD) | 1390 MHz | 6.0 | Jammy arm64 | 3200 | 867 | 644750 | 700 | **2460** | - |
 | [EspressoBin](http://ix.io/1lCe) | 1200 MHz | 4.18 | Stretch arm64 | 1630 | 869 | 544240 | 1000 | **2400** | 1.82 |
 | [x5-Z8300](http://ix.io/4j4o) | 1840 MHz | 5.15 | Jammy amd64 | 4430 | 1368 | 227030 | 2270 | **2380** | 8.84 |
 | [x5-Z8300](http://ix.io/1lgD) | 1420 MHz | 4.9 | Stretch amd64 | 3900 | 950 | 178010 | 2380 | **2380** | 7.81 |
@@ -1113,6 +1118,7 @@
 | [Tronsmart MXIII Plus](http://ix.io/3S5U) | **1560** MHz| 5.10 | Buster armhf | 3880 | 1113 | 42570 | 1470 | 3430 | - |
 | [TRONFY MXQ S805](http://ix.io/3MiR) | **1536** MHz| 5.10 | Focal armhf | 3100 | 897 | 29080 | 980 | 2990 | - |
 | [ODROID-C2](http://ix.io/4hOp) | **1530** MHz| 5.19 | Jammy arm64 | 4020 | 1187 | 51390 | 1590 | 2730 | - |
+| [Orange Pi Zero 2](http://ix.io/4knM) | **1510** MHz| 4.9 | Buster arm64 | 3550 | 1067 | 703300 | 1190 | 2820 | 5.01 |
 | [Raspberry Pi 4 B](http://ix.io/3EgS) | **1500** MHz| 5.10 | Raspberry Pi OS Buster | 5750 | 1661 | 64930 | 2550 | 3430 | - |
 | [Raspberry Pi 4 B](http://ix.io/1MFf) | **1500** MHz| 4.19 | Raspbian Buster | 5500 | 1606 | 64860 | 2460 | 3170 | - |
 | [ODROID-C1](http://ix.io/4eg5) | **1500** MHz| 5.19 | Jammy armhf | 3010 | 878 | 29260 | 390 | 2910 | - |
@@ -1137,6 +1143,7 @@
 | [NanoPC T3+](http://ix.io/1iyp) | **1400** MHz| 4.4 | Xenial armhf | 6400 | 943 | 651000 | 1650 | 3700 | - |
 | [NanoPC T3+](http://ix.io/1iRJ) | **1400** MHz| 4.14 | Bionic arm64 | 7480 | 1053 | 652600 | 1440 | 4540 | 10.99 |
 | [BPi M4](http://ix.io/1Dt1) | **1400** MHz| 4.9 | Bionic arm64 | 3500 | - | 651460 | 1010 | 4360 | 5.48 |
+| [RK3318 BOX](http://ix.io/3ZRD) | **1390** MHz| 6.0 | Jammy arm64 | 3200 | 867 | 644750 | 700 | 2460 | - |
 | [NanoPi Fire3](http://ix.io/1jiU) | **1380** MHz| 4.14 | Stretch arm64 | 7420 | 1038 | 645400 | 1520 | 4570 | 8.53 |
 | [Orange Pi Prime](http://ix.io/2kTH) | **1370** MHz| 5.4 | Buster | 3590 | 984 | 637980 | 1180 | 3540 | - |
 | [Orange Pi PC Plus](http://ix.io/3MQV) | **1370** MHz| 5.10 | Focal armhf | 3060 | 879 | 26590 | 890 | 3450 | - |
@@ -1148,7 +1155,6 @@
 | [Rock64](http://ix.io/1iH4) | **1300** MHz| 4.18 | Bionic arm64 | 3530 | 996 | 605250 | 1340 | 5770 | 4.65 |
 | [Rock64](http://ix.io/1iGW) | **1300** MHz| 4.4 | Bionic arm64 | 3410 | 945 | 601200 | 1310 | 5680 | 4.46 |
 | [Rock Pi S](http://ix.io/1XKY) | **1300** MHz| 4.4 | Buster | 2590 | 716 | 282290 | 830 | 1880 | - |
-| [RK3318 BOX](http://ix.io/3ZRD) | **1300** MHz| 5.15 | Bullseye arm64 | 3120 | 822 | 603700 | 700 | 2510 | - |
 | [Orange Pi Plus 2](http://ix.io/1iX4) | **1300** MHz| 4.14 | Stretch armhf | 2890 | 812 | 25250 | 830 | 3240 | - |
 | [MT6580 K9M1](http://ix.io/466y) | **1300** MHz| 5.19 | Sid armhf | 2930 | 860 | 25300 | 1250 | 3300 | - |
 | [BPi R2](http://ix.io/4dO7) | **1300** MHz| 4.19 | Focal armhf | 2990 | 854 | 25260 | 1550 | 3220 | - |
@@ -1158,6 +1164,7 @@
 | [Raspberry Pi 3 B](http://ix.io/4hOP) | **1200** MHz| 5.15 | Raspbian Sid | 2970 | 977 | 36230 | 1110 | 1700 | 2.89 |
 | [RK3228A TV Box](http://ix.io/3M9F) | **1200** MHz| 4.4 | Buster armhf | 2310 | 710 | 23070 | 410 | 1230 | - |
 | [EspressoBin](http://ix.io/1lCe) | **1200** MHz| 4.18 | Stretch arm64 | 1630 | 869 | 544240 | 1000 | 2400 | 1.82 |
+| [BPi M2U](http://ix.io/4kmM) | **1200** MHz| 6.0 | Bullseye armhf | 2690 | 767 | 23320 | 780 | 3010 | - |
 | [Akaso M8S](http://ix.io/3R3N) | **1200** MHz| 5.10 | Buster armhf | 3050 | 885 | 32120 | 1160 | 3330 | - |
 | [Teres-I](http://ix.io/1tJg) | **1050** MHz| 4.19 | Stretch arm64 | 2785 | 780 | 491590 | 1080 | 2820 | - |
 | [Raspberry Pi Zero](http://ix.io/3Njz) | **1000** MHz| 5.10 | Bullseye armv6l/armhf | 460 | 460 | 17060 | 430 | 1670 | - |

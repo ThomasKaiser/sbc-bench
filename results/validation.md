@@ -165,7 +165,7 @@
 | [3R3N](3R3N.txt) | v0.9.3 Akaso M8S | 0%/0.4% | 986Mi/873Mi | X | X | X | X | 1% | <span style=color:red>**11%**</span> | [check log](3R3N.txt) |
 | [3Rsg](3Rsg.txt) | v0.9.3 Firefly RK3568-ROC-PC HDMI | 0%/0% | 3.7Gi/3.4Gi | X | X | X | X | 2% | 0% | |
 | [3S5U](3S5U.txt) | v0.9.3 Tronsmart MXIII Plus | 0%/0.4% | 2.0Gi/1.7Gi | X | X | X | X | 2% | 0% | |
-| [3TKh](3TKh.txt) | v0.9.3 Banana Pi BPI-M2-Ultra | 2.0%/0% | 2.0Gi/1.5Gi | X | X | X | X | 3% | 0% | |
+| <del>[3TKh](3TKh.txt)</del> | <del>v0.9.3 Banana Pi BPI-M2-Ultra </del> | <del>2.0%/0%</del> | <del>2.0Gi/1.5Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 3%</del> | <del> 0%</del> | |
 | [3TQ2](3TQ2.txt) | v0.9.3 Hardkernel ODROID-C4 | 0.3%/0% | 3.7Gi/3.2Gi | X | X | X | X | 4% | 0% | |
 | <del>[3UXa](3UXa.txt)</del> | <del>v0.9.3 Radxa ROCK 3 Model A </del> | <del>0%/0.3%</del> | <del>7.5Gi/7.2Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 2%</del> | <del> 0%</del> | |
 | [3Ufc](3Ufc.txt) | v0.9.3 NVIDIA Jetson Nano 2GB Developer | 1.3%/0.3% | 1.9G/1.5G | X | X | X | X | <span style=color:red> 5%</span> | 0% | |
@@ -234,3 +234,6 @@
 | [4jfZ](4jfZ.txt) | v0.9.9 FriendlyElec NanoPi R5S | 0%/0% | 3.7Gi/3.4Gi | X | X | X | X | 1% | 0% | |
 | [4ju5](4ju5.txt) | v0.9.9 SolidRun LX2160A Clearfog CX | 0%/0.7% | 5.7Gi/3.4Gi | X | X | X | X | 1% | 0% | |
 | [4kiu](4kiu.txt) | v0.9.9 HUAQIN P6410 HQ3110BR49000 | 0%/0% | 375Gi/370Gi | X | X | X | X | 0% | 0% | |
+| [4kmM](4kmM.txt) | v0.9.9 Banana Pi BPI-M2-Ultra | 0%/0.1% | 997Mi/874Mi | X | X | X | X | 2% | 0% | |
+| [4knM](4knM.txt) | v0.9.9 Orange Pi Zero 2 | 1.3%/0% | 960Mi/849Mi | X | X | X | X | <span style=color:red>**24%**</span> | <span style=color:red>** 8%**</span> | |
+| [4knR](4knR.txt) | v0.9.9 Allwinner D1 Nezha | 8.3%/6.1% | 980Mi/859Mi | X | X | X | X | <span style=color:red> 9%</span> | 2% | [check log](4knR.txt) |

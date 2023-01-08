@@ -17,6 +17,7 @@
 | [Gigabyte H270-T70](http://ix.io/3N5c) | 2000 Mhz | 5.16 | Sid arm64 | **107180** | 1826 | 340750 | 4180 | 17130 | - |
 | [Apple M1 Pro](http://ix.io/443N) | 3030/2060 MHz | 5.18 | Gentoo 2.8 arm64 | **43800** | 5010 | 1064450 | 27110 | 71910 | 48.28 |
 | [Jetson AGX Orin](http://ix.io/4ax9) | 2200 MHz | 5.10 | Focal arm64 | **39450** | 3187 | 1242940 | 10600 | 30350 | 59.96 |
+| [Qualcomm Snapdragon 8cx Gen 3](http://ix.io/4kEp) | 2980/? MHz | 5.15 | Jammy arm64 | **33600** | 4789 | 1679480 | 21010 | 41540 | 50.65 |
 | [Honeycomb LX2](http://ix.io/3Y4f) | 2200 MHz | 5.16 | Fedora 35 aarch64 | **30690** | 2288 | 1251710 | 5050 | 16220 | 46.09 |
 | [Clearfog CX](http://ix.io/4ju5) | 2000 MHz | 5.10 | Focal arm64 | **25260** | 2236 | 1136690 | 4460 | 12500 | - |
 | [Jetson Xavier AGX](http://ix.io/4ebH) | 2250 MHz | 4.9 | Bionic arm64 | **21590** | 2742 | 853250 | 10910 | 22520 | 26.57 |
@@ -161,7 +162,7 @@
 | [Rock64](http://ix.io/1iGW) | 1300 MHz | 4.4 | Bionic arm64 | **3410** | 945 | 601200 | 1310 | 5680 | 4.46 |
 | [Ugoos UT2](http://ix.io/408h) | 1560 MHz | 5.10 | Jammy armhf | **3320** | 994 | 43250 | 320 | 2020 | - |
 | [Raspberry Pi 3 B+](http://ix.io/1ism) | normal | 4.14 | Raspbian Stretch | **3240** | 914 | 36600 | 1130 | 1530 | - |
-| [RK3318 BOX](http://ix.io/3ZRD) | 1390 MHz | 6.0 | Jammy arm64 | **3200** | 867 | 644750 | 700 | 2460 | - |
+| [RK3318 BOX](http://ix.io/4kor) | 1390 MHz | 6.0 | Jammy arm64 | **3200** | 867 | 644750 | 700 | 2460 | - |
 | [Marvell PXA1908](http://ix.io/46hs) | 1245 MHz | 3.14 | Bullseye arm64 | **3180** | 951 | 581840 | 740 | 2220 | - |
 | [Raspberry Pi 3 B+](http://ix.io/1iGz) | OC/normal | 4.14 | Raspbian Stretch | **3130** | 843 | 36620 | 1230 | 1780 | - |
 | [TRONFY MXQ S805](http://ix.io/3MiR) | 1536 MHz | 5.10 | Focal armhf | **3100** | 897 | 29080 | 980 | 2990 | - |
@@ -211,6 +212,7 @@
 | Device / details | Clockspeed | Kernel | Distro | 7-zip multi | *7-zip single* | AES | memcpy | memset | kH/s |
 | ----- | :--------: | :----: | :----: | ----: | ------: | ------: | -----: | -----: | ---: |
 | [Apple M1 Pro](http://ix.io/443N) | 3030/2060 MHz | 5.18 | Gentoo 2.8 arm64 | 43800 | **5010** | 1064450 | 27110 | 71910 | 48.28 |
+| [Qualcomm Snapdragon 8cx Gen 3](http://ix.io/4kEp) | 2980/? MHz | 5.15 | Jammy arm64 | 33600 | **4789** | 1679480 | 21010 | 41540 | 50.65 |
 | [Pentium G4600](http://ix.io/2jVw) | 3600 MHz | 4.19 | Buster amd64 | 11810 | **4448** | 984820 | 15120 | 33380 | 21.88 |
 | [Huaqin P6410](http://ix.io/4kiu) | 3000 MHz | 5.4 | Focal arm64 | 430860 | **4211** | 1710010 | 13310 | 47970 | - |
 | [Ampere A1](http://ix.io/4dsC) | 3000 MHz | 5.15 | Jammy arm64 | 16300 | **4009** | 1706150 | 11910 | 47780 | - |
@@ -370,7 +372,7 @@
 | [Orange Pi PC Plus](http://ix.io/3MQV) | 1370 MHz | 5.10 | Focal armhf | 3060 | **879** | 26590 | 890 | 3450 | - |
 | [ODROID-C1](http://ix.io/4eg5) | 1500 MHz | 5.19 | Jammy armhf | 3010 | **878** | 29260 | 390 | 2910 | - |
 | [EspressoBin](http://ix.io/1lCe) | 1200 MHz | 4.18 | Stretch arm64 | 1630 | **869** | 544240 | 1000 | 2400 | 1.82 |
-| [RK3318 BOX](http://ix.io/3ZRD) | 1390 MHz | 6.0 | Jammy arm64 | 3200 | **867** | 644750 | 700 | 2460 | - |
+| [RK3318 BOX](http://ix.io/4kor) | 1390 MHz | 6.0 | Jammy arm64 | 3200 | **867** | 644750 | 700 | 2460 | - |
 | [MT6580 K9M1](http://ix.io/466y) | 1300 MHz | 5.19 | Sid armhf | 2930 | **860** | 25300 | 1250 | 3300 | - |
 | [Raspberry Pi 3 B+](http://ix.io/1iH0) | UV/normal | 4.14 | Raspbian Stretch | 2100 | **856** | 36400 | 1040 | 1460 | - |
 | [Raspberry Pi 3 B+](http://ix.io/1iGM) | normal | 4.14 | Raspbian Stretch | 3040 | **856** | 36600 | 1050 | 1500 | - |
@@ -411,6 +413,7 @@
 | ----- | :--------: | :----: | :----: | ----: | ------: | ------: | -----: | -----: | ---: |
 | [Huaqin P6410](http://ix.io/4kiu) | 3000 MHz | 5.4 | Focal arm64 | 430860 | 4211 | **1710010** | 13310 | 47970 | - |
 | [Ampere A1](http://ix.io/4dsC) | 3000 MHz | 5.15 | Jammy arm64 | 16300 | 4009 | **1706150** | 11910 | 47780 | - |
+| [Qualcomm Snapdragon 8cx Gen 3](http://ix.io/4kEp) | 2980/? MHz | 5.15 | Jammy arm64 | 33600 | 4789 | **1679480** | 21010 | 41540 | 50.65 |
 | [Qualcomm QRB5165](http://ix.io/49kx) | 2840/2410/1790 MHz | 4.19 | Focal arm64 | 18860 | 3898 | **1598490** | 14470 | 23910 | 25.56 |
 | [ODROID-N2+](http://ix.io/3DtN) | 2400/2015 MHz | 5.14 | Impish arm64 | 9790 | 2253 | **1366930** | 4300 | 7480 | - |
 | [ODROID-N2+](http://ix.io/3R1a) | 2400/2015 MHz | 5.10 | Focal arm64 | 9680 | 2372 | **1366730** | 4030 | 7120 | - |
@@ -501,7 +504,7 @@
 | [BPi M4](http://ix.io/1Dt1) | 1400 MHz | 4.9 | Bionic arm64 | 3500 | - | **651460** | 1010 | 4360 | 5.48 |
 | [NanoPC T3+](http://ix.io/1iyp) | 1400 MHz | 4.4 | Xenial armhf | 6400 | 943 | **651000** | 1650 | 3700 | - |
 | [NanoPi Fire3](http://ix.io/1jiU) | 1380 MHz | 4.14 | Stretch arm64 | 7420 | 1038 | **645400** | 1520 | 4570 | 8.53 |
-| [RK3318 BOX](http://ix.io/3ZRD) | 1390 MHz | 6.0 | Jammy arm64 | 3200 | 867 | **644750** | 700 | 2460 | - |
+| [RK3318 BOX](http://ix.io/4kor) | 1390 MHz | 6.0 | Jammy arm64 | 3200 | 867 | **644750** | 700 | 2460 | - |
 | [Rock64](http://ix.io/1iYK) | 1400 MHz | 4.4 | Stretch arm64 | 3580 | 1032 | **644380** | 1330 | 5680 | 4.63 |
 | [Rock64](http://ix.io/1iFm) | 1400 MHz | 4.4 | Stretch arm64 | 3610 | 1034 | **644250** | 1330 | 5700 | 3.85 |
 | [Renegade](http://ix.io/1iFx) | 1400 MHz | 4.4 | Stretch arm64 | 3710 | 1069 | **644200** | 1565 | 7435 | 3.92 |
@@ -607,6 +610,7 @@
 | Device / details | Clockspeed | Kernel | Distro | 7-zip multi | 7-zip single | AES | *memcpy* | memset | kH/s |
 | ----- | :--------: | :----: | :----: | ----: | ------: | ------: | -----: | -----: | ---: |
 | [Apple M1 Pro](http://ix.io/443N) | 3030/2060 MHz | 5.18 | Gentoo 2.8 arm64 | 43800 | 5010 | 1064450 | **27110** | 71910 | 48.28 |
+| [Qualcomm Snapdragon 8cx Gen 3](http://ix.io/4kEp) | 2980/? MHz | 5.15 | Jammy arm64 | 33600 | 4789 | 1679480 | **21010** | 41540 | 50.65 |
 | [Pentium G4600](http://ix.io/2jVw) | 3600 MHz | 4.19 | Buster amd64 | 11810 | 4448 | 984820 | **15120** | 33380 | 21.88 |
 | [Qualcomm QRB5165](http://ix.io/49kx) | 2840/2410/1790 MHz | 4.19 | Focal arm64 | 18860 | 3898 | 1598490 | **14470** | 23910 | 25.56 |
 | [Huaqin P6410](http://ix.io/4kiu) | 3000 MHz | 5.4 | Focal arm64 | 430860 | 4211 | 1710010 | **13310** | 47970 | - |
@@ -780,7 +784,7 @@
 | [BPi M2U](http://ix.io/4kmM) | 1200 MHz | 6.0 | Bullseye armhf | 2690 | 767 | 23320 | **780** | 3010 | - |
 | [SBC2D70 (SSD202D)](http://ix.io/3N1U) | 1700 MHz | 5.16 | Sid armhf | 1960 | 1094 | 33120 | **770** | 3190 | - |
 | [Marvell PXA1908](http://ix.io/46hs) | 1245 MHz | 3.14 | Bullseye arm64 | 3180 | 951 | 581840 | **740** | 2220 | - |
-| [RK3318 BOX](http://ix.io/3ZRD) | 1390 MHz | 6.0 | Jammy arm64 | 3200 | 867 | 644750 | **700** | 2460 | - |
+| [RK3318 BOX](http://ix.io/4kor) | 1390 MHz | 6.0 | Jammy arm64 | 3200 | 867 | 644750 | **700** | 2460 | - |
 | [Raspberry Pi 2 B+](http://ix.io/1iFf) | 900 MHz | 4.14 | Debian Stretch | 2070 | 592 | 17450 | **615** | 1175 | - |
 | [Tronsmart S82](http://ix.io/41ML) | 1600 MHz | 5.14 | Focal armhf | 3640 | 1114 | 43150 | **500** | 3200 | - |
 | [Olimex A20-Lime2](http://ix.io/3EOw) | 960 MHz | 5.10 | Bullseye armhf | 1040 | 540 | 18670 | **460** | 2020 | - |
@@ -806,6 +810,7 @@
 | [Apple M1 Pro](http://ix.io/443N) | 3030/2060 MHz | 5.18 | Gentoo 2.8 arm64 | 43800 | 5010 | 1064450 | 27110 | **71910** | 48.28 |
 | [Huaqin P6410](http://ix.io/4kiu) | 3000 MHz | 5.4 | Focal arm64 | 430860 | 4211 | 1710010 | 13310 | **47970** | - |
 | [Ampere A1](http://ix.io/4dsC) | 3000 MHz | 5.15 | Jammy arm64 | 16300 | 4009 | 1706150 | 11910 | **47780** | - |
+| [Qualcomm Snapdragon 8cx Gen 3](http://ix.io/4kEp) | 2980/? MHz | 5.15 | Jammy arm64 | 33600 | 4789 | 1679480 | 21010 | **41540** | 50.65 |
 | [Pentium G4600](http://ix.io/2jVw) | 3600 MHz | 4.19 | Buster amd64 | 11810 | 4448 | 984820 | 15120 | **33380** | 21.88 |
 | [Jetson AGX Orin](http://ix.io/4ax9) | 2200 MHz | 5.10 | Focal arm64 | 39450 | 3187 | 1242940 | 10600 | **30350** | 59.96 |
 | [Radxa ROCK 5B](http://ix.io/41BH) | 2350/1830 MHz | 5.10 | Focal arm64 | 16450 | 3146 | 1337540 | 10830 | **29220** | 25.31 |
@@ -960,7 +965,7 @@
 | [Raspberry Pi 4 B](http://ix.io/3N94) | 1800 MHz | 5.10 | Raspberry Pi OS Bullseye | 5940 | 1738 | 77670 | 2310 | **2690** | - |
 | [ClockworkPi R-01](http://ix.io/40BJ) | 1000 MHz | 5.4 | Focal riscv64 | 450 | 450 | 9040 | 1220 | **2640** | - |
 | [EspressoBin](http://ix.io/1kt2) | 800 MHz | 4.17 | Stretch arm64 | 1138 | 636 | 368330 | 1040 | **2490** | 1.23 |
-| [RK3318 BOX](http://ix.io/3ZRD) | 1390 MHz | 6.0 | Jammy arm64 | 3200 | 867 | 644750 | 700 | **2460** | - |
+| [RK3318 BOX](http://ix.io/4kor) | 1390 MHz | 6.0 | Jammy arm64 | 3200 | 867 | 644750 | 700 | **2460** | - |
 | [EspressoBin](http://ix.io/1lCe) | 1200 MHz | 4.18 | Stretch arm64 | 1630 | 869 | 544240 | 1000 | **2400** | 1.82 |
 | [x5-Z8300](http://ix.io/4j4o) | 1840 MHz | 5.15 | Jammy amd64 | 4430 | 1368 | 227030 | 2270 | **2380** | 8.84 |
 | [x5-Z8300](http://ix.io/1lgD) | 1420 MHz | 4.9 | Stretch amd64 | 3900 | 950 | 178010 | 2380 | **2380** | 7.81 |
@@ -1005,6 +1010,7 @@
 | [Apple M1 Pro](http://ix.io/443N) | **3030/2060** MHz| 5.18 | Gentoo 2.8 arm64 | 43800 | 5010 | 1064450 | 27110 | 71910 | 48.28 |
 | [Huaqin P6410](http://ix.io/4kiu) | **3000** MHz| 5.4 | Focal arm64 | 430860 | 4211 | 1710010 | 13310 | 47970 | - |
 | [Ampere A1](http://ix.io/4dsC) | **3000** MHz| 5.15 | Jammy arm64 | 16300 | 4009 | 1706150 | 11910 | 47780 | - |
+| [Qualcomm Snapdragon 8cx Gen 3](http://ix.io/4kEp) | **2980/?** MHz| 5.15 | Jammy arm64 | 33600 | 4789 | 1679480 | 21010 | 41540 | 50.65 |
 | [Celeron N5105](http://ix.io/3Qf7) | **2900/2000** MHz| 5.13 | Focal amd64 | 11450 | 3059 | 811760 | 7710 | 9290 | 21.79 |
 | [Qualcomm QRB5165](http://ix.io/49kx) | **2840/2410/1790** MHz| 4.19 | Focal arm64 | 18860 | 3898 | 1598490 | 14470 | 23910 | 25.56 |
 | [Celeron N5100](http://ix.io/3IlQ) | **2800/1100** MHz| 5.13 | Focal amd64 | 10550 | 3088 | 783800 | 7750 | 8090 | 19.22 |
@@ -1143,7 +1149,7 @@
 | [NanoPC T3+](http://ix.io/1iyp) | **1400** MHz| 4.4 | Xenial armhf | 6400 | 943 | 651000 | 1650 | 3700 | - |
 | [NanoPC T3+](http://ix.io/1iRJ) | **1400** MHz| 4.14 | Bionic arm64 | 7480 | 1053 | 652600 | 1440 | 4540 | 10.99 |
 | [BPi M4](http://ix.io/1Dt1) | **1400** MHz| 4.9 | Bionic arm64 | 3500 | - | 651460 | 1010 | 4360 | 5.48 |
-| [RK3318 BOX](http://ix.io/3ZRD) | **1390** MHz| 6.0 | Jammy arm64 | 3200 | 867 | 644750 | 700 | 2460 | - |
+| [RK3318 BOX](http://ix.io/4kor) | **1390** MHz| 6.0 | Jammy arm64 | 3200 | 867 | 644750 | 700 | 2460 | - |
 | [NanoPi Fire3](http://ix.io/1jiU) | **1380** MHz| 4.14 | Stretch arm64 | 7420 | 1038 | 645400 | 1520 | 4570 | 8.53 |
 | [Orange Pi Prime](http://ix.io/2kTH) | **1370** MHz| 5.4 | Buster | 3590 | 984 | 637980 | 1180 | 3540 | - |
 | [Orange Pi PC Plus](http://ix.io/3MQV) | **1370** MHz| 5.10 | Focal armhf | 3060 | 879 | 26590 | 890 | 3450 | - |

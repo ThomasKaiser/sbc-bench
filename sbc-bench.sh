@@ -391,7 +391,7 @@ GetARMCore() {
 } # GetARMCore
 
 GetCoreType() {
-	# function that returns name of ARM/RISC-V cores
+	# function that returns name of CPU cores on several platforms
 	# $1 is the CPU in question, 1st CPU is always cpu0
 	case ${CPUArchitecture} in
 		arm*|aarch*)
@@ -3776,6 +3776,8 @@ GuessARMSoC() {
 	#      Cortex-A76 / r4p0: Rockchip RK3588/RK3588s
 	#      Cortex-A77 / r1p0: Qualcomm Snapdragon 865 / QRB5165
 	#    Cortex-A78AE / r0p1: Nvidia Jetson Orin NX / AGX Orin
+	#     Cortex-A78C / r0p0: Qualcomm Snapdragon 8cx Gen 3
+	#      Cortex-X1C / r0p0: Qualcomm Snapdragon 8cx Gen 3
 	#   Kryo 3XX Gold / r6p13: Qualcomm Snapdragon 845
 	# Kryo 3XX Silver / r7p12: Qualcomm Snapdragon 845
 	#     Neoverse-N1 / r3p1: Ampere Altra, AWS Graviton2
@@ -5162,6 +5164,10 @@ GuessSoCbySignature() {
 		00Qualcomm4XXSilver00Qualcomm4XXSilver00Qualcomm4XXSilver00Qualcomm4XXSilver14A77r1p014A77r1p014A77r1p027A77r1p0)
 			# Qualcomm Snapdragon 865 or QRB5165: 4 x Qualcomm Kryo 4XX Silver / r13p14 + 3 x Cortex-A77 / r1p0 + 1 x Cortex-A77 / r1p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp asimdrdm lrcpc dcpop asimddp
 			echo "Qualcomm Snapdragon 865 / QRB5165"
+			;;
+		*A78Cr0p0*A78Cr0p0*A78Cr0p0*A78Cr0p0*X1Cr0p0*X1Cr0p0*X1Cr0p0*X1Cr0p0)
+			# Qualcomm Snapdragon 8cx Gen 3 : 4 x Cortex-A78C / r0p0 + 4 x Cortex-X1C / r0p0 / fp asimd aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp ilrcpc flagm
+			echo "Qualcomm Snapdragon 8cx Gen 3"
 			;;
 		0?Loongson3A10000?Loongson3A10000?Loongson3A10000?Loongson3A1000)
 			# Loongson 3A1000: 4 x Loongson-3 V0.5 FPU V0.1 https://github.com/ThomasKaiser/sbc-bench/blob/master/results/Loongson-3A1000.cpuinfo

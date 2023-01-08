@@ -180,7 +180,7 @@
 | <del>[3XzI](3XzI.txt)</del> | <del>v0.9.6 Firefly ITX-3588J HDMI</del> | <del>0.2%/0.4%</del> | <del>7.5Gi/6.5Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 3%</del> | <del> 0%</del> | |
 | [3Y4f](3Y4f.txt) | v0.9.6 keeper.lan | 0.3%/0% | 30Gi/29Gi | X | X | X | X | 2% | 0% | |
 | [3YWp](3YWp.txt) | v0.9.7 NVIDIA Jetson Xavier NX Develope | 1.9%/0.8% | 7.6G/5.2G | X | X | X | X | 2% | 0% | |
-| [3ZRD](3ZRD.txt) | v0.9.8 Rockchip RK3318 BOX | 0.3%/0.2% | 3.9Gi/3.7Gi | X | X | X | X | 2% | 0% | |
+| <del>[3ZRD](3ZRD.txt)</del> | <del>v0.9.8 Rockchip RK3318 BOX </del> | <del>0.3%/0.2%</del> | <del>3.9Gi/3.7Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 2%</del> | <del> 0%</del> | |
 | [3ZxU](3ZxU.txt) | v0.9.8 NanoPi Fire3 extensive | 0%/0% | 994Mi/853Mi | X | X | X | X | <span style=color:red> 8%</span> | 0% | |
 | [3rUb](3rUb.txt) | v0.7.7 Pine64 RK3566 Quartz64-A Board | 0%/0% | 3.8Gi/3.5Gi | X | X | X | X | 1% | 0% | |
 | [3wZn](3wZn.txt) | v0.7.7 Radxa Zero | 0.3%/0% | 3.7Gi/3.4Gi | X | X | X | X | 1% | 0% | |
@@ -198,8 +198,6 @@
 | [445T](445T.txt) | v0.9.8 PHYTIUM LTD D2000 | 0%/2.4% | 15Gi/15Gi | X | X | X | X | 2% | 0% | |
 | [446h](446h.txt) | v0.9.8 PHYTIUM LTD D2000 | 0%/3.3% | 31Gi/30Gi | X | X | X | X | 2% | 0% | |
 | [44pd](44pd.txt) | v0.9.8 Silicom Minnowboard Turbot D0/D1 | 3.1%/0% | 1.8Gi/1.6Gi | X | X | X | X | 2% | 0% | |
-| <del>[450U](450U.txt)</del> | <del>v0.9.8 Qualcomm Technologies, Inc. qrb5</del> | <del>0.7%/0%</del> | <del>7.5G/6.6G</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del><span style=color:red> 5%</span></del> | <del> 0%</del> | |
-| <del>[45TB](45TB.txt)</del> | <del>v0.9.8 Qualcomm Technologies, Inc. qrb5</del> | <del>0.5%/1.7%</del> | <del>7.5G/6.7G</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del><span style=color:red> 6%</span></del> | <del> 0%</del> | |
 | [461n](461n.txt) | v0.9.8 Dell Inc. Inspiron 1011 A06 / At | 2.9%/0.3% | 992Mi/668Mi | X | X | X | X | 2% | 2% | |
 | [466y](466y.txt) | v0.9.8 Mediatek MT6580 K9M1-test board | 0%/0% | 878Mi/683Mi | X | X | X | X | 1% | <span style=color:red>**14%**</span> | |
 | [46hs](46hs.txt) | v0.9.8 PXA1908 | 0.8%/1.0% | 661Mi/601Mi | X | X | X | X | <span style=color:red>**12%**</span> | 0% | |
@@ -233,7 +231,9 @@
 | [4j4o](4j4o.txt) | v0.9.9 Insyde CherryTrail Type1 - TBD b | 0.6%/0.6% | 3.7Gi/3.1Gi | X | X | X | X | 4% | 0% | |
 | [4jfZ](4jfZ.txt) | v0.9.9 FriendlyElec NanoPi R5S | 0%/0% | 3.7Gi/3.4Gi | X | X | X | X | 1% | 0% | |
 | [4ju5](4ju5.txt) | v0.9.9 SolidRun LX2160A Clearfog CX | 0%/0.7% | 5.7Gi/3.4Gi | X | X | X | X | 1% | 0% | |
+| [4kEp](4kEp.txt) | v0.9.9 volterra | 1.1%/0.5% | 15Gi/15Gi | X | X | X | X | 1% | 0% | |
 | [4kiu](4kiu.txt) | v0.9.9 HUAQIN P6410 HQ3110BR49000 | 0%/0% | 375Gi/370Gi | X | X | X | X | 0% | 0% | |
 | [4kmM](4kmM.txt) | v0.9.9 Banana Pi BPI-M2-Ultra | 0%/0.1% | 997Mi/874Mi | X | X | X | X | 2% | 0% | |
 | [4knM](4knM.txt) | v0.9.9 Orange Pi Zero 2 | 1.3%/0% | 960Mi/849Mi | X | X | X | X | <span style=color:red>**24%**</span> | <span style=color:red>** 8%**</span> | |
 | [4knR](4knR.txt) | v0.9.9 Allwinner D1 Nezha | 8.3%/6.1% | 980Mi/859Mi | X | X | X | X | <span style=color:red> 9%</span> | 2% | [check log](4knR.txt) |
+| [4kor](4kor.txt) | v0.9.9 Rockchip RK3318 BOX | 0%/2.1% | 1.9Gi/1.4Gi | X | X | X | X | 2% | 0% | |

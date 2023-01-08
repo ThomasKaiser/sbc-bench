@@ -10,7 +10,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 
 *The below table is also available sorted: [7-zip multi-threaded](results/Sorted-Results.md#7-zip-mips-multi-threaded), [7-zip single-threaded](results/Sorted-Results.md#7-zip-mips-single-threaded), [aes-256-cbc](results/Sorted-Results.md#openssl-speed--elapsed--evp-aes-256-cbc), [memcpy](results/Sorted-Results.md#memcpy), [memset](results/Sorted-Results.md#memset) and [clockspeed](results/Sorted-Results.md#clockspeed).*
 
-*ODROID-M1, Quartz64, ROCK 3A, ROCK 5B, RK3568-ROC-PC and Khadas VIM4 numbers are preliminary since software support situation for RK3566/RK3568/RK3588 and A311D2 is still in a very early stage. Same applies to all RISC-V numbers and [Apple M1 Pro](https://github.com/ThomasKaiser/sbc-bench/issues/47#issue-1300572558). Please also note that with RK35xx devices so far [measured clockspeeds differ from what's defined in device-tree due to PVTM](https://github.com/ThomasKaiser/Knowledge/blob/master/articles/Quick_Preview_of_ROCK_5B.md#pvtm).*
+*ODROID-M1, Quartz64, R5S, ROCK 3A, ROCK 5B, RK3568-ROC-PC and Khadas VIM4 numbers are preliminary since software support situation for RK3566/RK3568/RK3588 and A311D2 is still in a very early stage. Same applies to all RISC-V numbers and [Apple M1 Pro](https://github.com/ThomasKaiser/sbc-bench/issues/47#issue-1300572558). Please also note that with RK35xx devices so far [measured clockspeeds differ from what's defined in device-tree due to PVTM](https://github.com/ThomasKaiser/Knowledge/blob/master/articles/Quick_Preview_of_ROCK_5B.md#pvtm).*
 
 | Device / details | Clockspeed | Kernel | Distro | 7-zip multi | 7-zip single | AES | memcpy | memset | kH/s |
 | ----- | :--------: | :----: | :----: | ----: | ------: | ------: | -----: | -----: | ---: |
@@ -115,6 +115,8 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Phytium D2000 2xSO-DIMM](http://ix.io/446h) | 2300 MHz | 5.19 | Jammy arm64 | 16670 | 2252 | 828130 | 3480 | 16110 | - |
 | [PineH64](http://ix.io/1jEr) | 1800 MHz | 4.18 | Stretch arm64 | 4650 | 1274 | 836900 | 1380 | 5530 | 5.62 |
 | [PineH64](http://ix.io/26Ph) | 1800 MHz | 5.4 | Buster arm64 | 4710 | 1293 | 839870 | 1420 | 5560 | 7.10 |
+| [Qualcomm QRB5165](http://ix.io/49kx) | 2840/2410/1790 MHz | 4.19 | Focal arm64 | 18860 | 3898 | 1598490 | 14470 | 23910 | 25.56 |
+| [Qualcomm Snapdragon 8cx Gen 3](http://ix.io/4kEp) | 2980/? MHz | 5.15 | Jammy arm64 | 33600 | 4789 | 1679480 | 21010 | 41540 | 50.65 |
 | [Quartz64](http://ix.io/3rUb) | 1810 MHz | 5.13 | Buster arm64 | 4840 | 1353 | 845490 | 2980 | 7650| - |
 | [Radxa ROCK 3A](http://ix.io/40TX) | 2000 MHz | 5.18 | Bullseye arm64 | 5110 | 1450 | 935920 | 3150 | 6250 | 7.58 |
 | [Radxa ROCK 5B](http://ix.io/41BH) | 2350/1830 MHz | 5.10 | Focal arm64 | 16450 | 3146 | 1337540 | 10830 | 29220 | 25.31 |
@@ -149,7 +151,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Raspberry Pi 400](http://ix.io/2Cyi) | 1800 MHz | 5.4 | Raspberry Pi OS Buster | 6550 | 1903 | 77890 | 2680 | 3110 | - |
 | [RK3228A TV Box](http://ix.io/3M9F) | 1200 MHz | 4.4 | Buster armhf | 2310 | 710 | 23070 | 410 | 1230 | - |
 | [RK3568-ROC-PC](http://ix.io/3Rsg) | 1960 MHz | 4.19 | Bullseye arm64 | 5040 | 1424 | 912800 | 3130 | 6240 | - |
-| [RK3318 BOX](http://ix.io/3ZRD) | 1390 MHz | 6.0 | Jammy arm64 | 3200 | 867 | 644750 | 700 | 2460 | - |
+| [RK3318 BOX](http://ix.io/4kor) | 1390 MHz | 6.0 | Jammy arm64 | 3200 | 867 | 644750 | 700 | 2460 | - |
 | [Rock64](http://ix.io/1iGW) | 1300 MHz | 4.4 | Bionic arm64 | 3410 | 945 | 601200 | 1310 | 5680 | 4.46 |
 | [Rock64](http://ix.io/1iH4) | 1300 MHz | 4.18 | Bionic arm64 | 3530 | 996 | 605250 | 1340 | 5770 | 4.65 |
 | [Rock64](http://ix.io/1iHo) | 1300 MHz | 4.4 | Stretch arm64 | 3430 | 952 | 601000 | 1350 | 5680 | 3.64 |
@@ -169,7 +171,6 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [RockPro64](http://ix.io/2yIx) | 2010/1510 MHz | 5.8 | Bullseye arm64 | 7000 | 1833 | 1144950 | 3690 | 8360 | 11.08 |
 | [Star64](http://ix.io/4a3s) | 1750 MHz | 5.15 | Sid riscv64 | 4820 | 1396 | 28970 | 1170 | 1120 | - |
 | [SBC2D70 (SSD202D)](http://ix.io/3N1U) | 1700 MHz | 5.16 | Sid armhf | 1960 | 1094 | 33120 | 770 | 3190 | - |
-| [Qualcomm QRB5165](http://ix.io/49kx) | 2840/2410/1790 MHz | 4.19 | Focal arm64 | 18860 | 3898 | 1598490 | 14470 | 23910 | 25.56 |
 | [T-HEAD C910 RVB-ICE](http://ix.io/41AB) | 1200 MHz | 5.10 | Sid riscv64 | 1760 | 1007 | 26930 | 3340 | 6470 | - |
 | [Teres-I](http://ix.io/1tJg) | 1050 MHz | 4.19 | Stretch arm64 | 2785 | 780 | 491590 | 1080 | 2820 | - |
 | [Tinkerboard](http://ix.io/1iSX) | 1730 MHz | 4.14 | Stretch armhf | 5350 | 1563 | 66600 | 1480 | 3900 | - |
@@ -236,6 +237,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 * The highest clockspeeds listed for RPi 4/400 are 1800 MHz since this is what can be achieved with little overvoltage on early BCM2711B0 SoC revisions and is default _without overvolting_ on revision C0 or later. While it's possible to 'overclock' the RPi 4 to [2.15 GHz](http://ix.io/3Llk), [2.3 GHz](http://ix.io/3L37) and even [2.4 GHz](http://ix.io/3KVs) all of this requires overvolting the SoC up to `over_voltage=15`. Unfortunately the ThreadX DFVS ([Dynamic voltage and frequency scaling](https://developer.arm.com/documentation/100960/0100/Dynamic-Voltage-and-Frequency-Scaling)) implementation is rather primitive and as such this overvolting happens also when the CPU cores idle at low frequencies which pretty much fries the CPU cores all the time resulting in high(er) temperatures and consumption figures than necessary. That's why 1.8 GHz is considered the reasonable maximum here.
 * Last RockPro64 entry has been made after ayufan solved memory performance problem with Rockchip's 4.4 kernel on his images (see [discussion](https://forum.khadas.com/t/painlessly-usable-linux-distro/3124/24?u=tkaiser))
 * [SBC2D70](http://linux-chenxing.org/infinity2/ido-sbc2d70/) results are somewhat representative for [SigmaStar SSD201/SSD202D dual Cortex-A7](http://linux-chenxing.org/infinity2/#ssd201ssd202d) in general even though clockspeeds exceeding 1.3 GHz are considered boost frequencies and require appropriate cooling.
+* The Snapdragon 8cx Gen 3 numbers were generated on a Windows Dev Kit 2023 inside WSL2 (Windows subsystem for Linux 2). As such they suffer from minimal virtualization overhead losses and a scheduler speciality pinning single-threaded tasks always to the fastest core available (Cortex-X1C). So we have almost correct multi-threaded scores but single-threaded those for the Cortex-A78C are missing.
 * Ugoos UT2 might be representative for other RK3188 devices though memory performance with UT2 seems severely limited
 * Vim2 is somewhat special: not a real big.LITTLE design but two A53 clusters controlled by a firmware BLOB that allows cluster 0 to clock up to 1414 MHz (reported falsely as 1512 MHz) and cluster 1 able to reach 1 GHz ([details](https://forum.khadas.com/t/cpu-frequency-up-to-2ghz/2010/23?u=tkaiser))
 * All the RISC-V scores (ClockworkPi R-01 which scores identical to [Allwinner D1 Nezha](http://ix.io/4knR), Kendryte K510, Star64/JH7110, T-HEAD C910 RVB-ICE) suffer from missing software optimizations. For example the `openssl` benchmark is currently generic C on RISC-V vs. optimized assembler on ARM or even [ARMv8 Crypto Extensions](https://github.com/ThomasKaiser/sbc-bench/blob/master/results/ARMv8-Crypto-Extensions.md) or AES-NI on x64.

@@ -36,7 +36,7 @@ It all boils down to type of ARM core and CPU clockspeed since the ratio between
   * Cortex-A35: ~217, an A35 running at 1000 MHz will produce an ~217000k aes-256-cbc score (or ~434000k at 2000 MHz)
   * Cortex-A57: ~359, an A57 running at 1000 MHz will produce an ~359000k aes-256-cbc score (or ~718000k at 2000 MHz)
   * Cortex-A53/A55: ~467, A53/A55 running at 1000 MHz will produce an ~467000k aes-256-cbc score (or ~935000k at 2000 MHz)
-  * Cortex-A72/A73/A76/A77/A78: ~570, A72/A73/A76 running at 1000 MHz will produce an ~570000k aes-256-cbc score (or ~1140000k at 2000 MHz)
+  * Cortex-A72/A73/A76/A77/A78/X1: ~570, A72/A73/A76 running at 1000 MHz will produce an ~570000k aes-256-cbc score (or ~1140000k at 2000 MHz)
 
 Amazon's Graviton/Graviton2 ARM CPUs and Neoverse-N1 cores score identical to A72/A73/A76/A77/A78 and the custom FTC663 core inside the [Feiteng D2000 CPU](https://en.wikipedia.org/wiki/FeiTeng_(processor)#Future_processors) performs identical to an A57 ([another hint wrt similarity](https://github.com/martin-frbg/OpenBLAS/blob/b3b4672c30f613c0043ad0557d33a34ffa3bbd0d/kernel/arm64/KERNEL.FT2000)). NVidia's Carmel core performs marginally better than Cortex-A57 (~374, the Jetson Xavier NX numbers below). Qualcomm's Kryo Silver cores are based on A55 and perform exactly the same here while Qualcomm's Qualcomm Falkor V1 behaves like Cortex-A72 and onwards.
 
@@ -128,6 +128,8 @@ Crawling through [sbc-bench results collection](../Results.md) comparing +30 dif
 | [QRB5165](http://ix.io/49kx) | 2840 | 1598490 | 563 |
 | Cortex-A78AE | | | |
 | [NVIDIA Orin](http://ix.io/4ax9) | 2200 | 1242940 | 565 |
+| Cortex-X1C | | | |
+| [Snapdragon 8cx Gen 3](http://ix.io/4kEp) | 2980 | 1679480 | 564 |
 | Qualcomm Falkor V1 | | | |
 | [Snapdragon 835](http://ix.io/4fea) | 2360 | 1342240 | 569 |
 | Neoverse-N1 | | | |

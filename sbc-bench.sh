@@ -3351,12 +3351,18 @@ SummarizeResults() {
 	# Add a line suitable for Results.md on Github if not in efficiency plotting or PTS or GB mode
 	if [ "X${PlotCpufreqOPPs}" != "Xyes" -a "X${MODE}" != "Xpts" -a "X${MODE}" != "Xgb" ]; then
 		if [ -f /sys/devices/system/cpu/cpufreq/policy0/cpuinfo_max_freq ]; then
-			HighestClock=$(sort -n -r /sys/devices/system/cpu/cpufreq/policy?/cpuinfo_max_freq | head -n1 | sed -e 's/000$//')
-			LowestClock=$(sort -n -r /sys/devices/system/cpu/cpufreq/policy?/cpuinfo_max_freq | tail -n1 | sed -e 's/000$//')
-			if [ ${HighestClock} -eq ${LowestClock} ]; then
-				MHz="${HighestClock} MHz"
+			HighestClock=$(sort -n -r /sys/devices/system/cpu/cpufreq/policy?/cpuinfo_max_freq | head -n1)
+			LowestClock=$(sort -n -r /sys/devices/system/cpu/cpufreq/policy?/cpuinfo_max_freq | tail -n1)
+			MeasuredClockspeed=$(grep -A2 "^Checking cpufreq OPP" ${ResultLog} | awk -F" " '/Measured/ {print $5}' | head -n1)
+			ClockDifference=$(( 100 * MeasuredClockspeed / HighestClock ))
+			if [ ${ClockDifference:-100} -lt 98 -o ${ClockDifference:-100} -gt 102 ]; then
+				# if measured clockspeed differs by more than 2% compared to cpuinfo_max_freq
+				# then report this value slightly rounded instead of cpufreq sysfs entries
+				MHz="~$(( $(awk '{printf ("%0.0f",$1/10+0.5); }' <<<"${MeasuredClockspeed}") * 10 )) MHz"
+			elif [ ${HighestClock} -eq ${LowestClock} ]; then
+				MHz="$(( HighestClock / 1000 )) MHz"
 			else
-				MHz="${HighestClock}/${LowestClock} MHz"
+				MHz="$(( HighestClock / 1000 ))/$(( LowestClock / 1000 )) MHz"
 			fi
 		else
 			# no cpufreq support, we check first measured value and use it if available
@@ -5016,7 +5022,7 @@ GuessSoCbySignature() {
 			echo "$(( ${CPUCores} / 32 )) x Kunpeng 916"
 			;;
 		*Kunpeng920r1p0*)
-			# Kunpeng 920-6426 in Huawei Taishan 200 2280 V2 server: 2 x 64 x Kunpeng-920 / r1p0 / https://www.spinics.net/lists/linux-scsi/msg153166.html
+			# Kunpeng 920-6426 in Huawei Taishan 200 2280 V2 server: 2 x 64 x Kunpeng-920 / r1p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma dcpop asimddp asimdfhm ssbs
 			# https://www.spec.org/cpu2017/results/res2020q2/cpu2017-20200529-22564.html / https://en.wikichip.org/wiki/hisilicon/microarchitectures/taishan_v110
 			case $(awk -F":" '/ per socket/ {print $2}' <<<"${LSCPU}") in
 				*32)
@@ -5079,7 +5085,9 @@ GuessSoCbySignature() {
 			# share same core types, stepping, CPU flags and even cache sizes. Measured clockspeeds
 			# should differ (2.5 GHz for AWS vs. 3/3+ GHz for Altra while reviews mentioned little
 			# less). Altra Max (Mystique) could be identified by its smaller L3 cache.
-			MeasuredClockspeed=$(awk -F": " '/No cpufreq support available. Measured on cpu/ {print $2}' <${ResultLog} | cut -f1 -d' ' | head -n 1)
+			grep -q 'No cpufreq support available. Measured on cpu' ${ResultLog} && \
+				MeasuredClockspeed=$(awk -F": " '/No cpufreq support available. Measured on cpu/ {print $2}' <${ResultLog} | cut -f1 -d' ' | head -n 1) || \
+				MeasuredClockspeed=$(grep -A2 "^Checking cpufreq OPP" ${ResultLog} | awk -F" " '/Measured/ {print $5}' | head -n1)
 			if [ ${MeasuredClockspeed} -gt 2550 ]; then
 				# Lame assumption that cpufreq above 2.5GHz identifies Ampere Altra
 				case $(awk -F":" '/ per socket/ {print $2}' <<<"${LSCPU}") in

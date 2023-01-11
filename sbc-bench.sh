@@ -3351,14 +3351,23 @@ SummarizeResults() {
 	# Add a line suitable for Results.md on Github if not in efficiency plotting or PTS or GB mode
 	if [ "X${PlotCpufreqOPPs}" != "Xyes" -a "X${MODE}" != "Xpts" -a "X${MODE}" != "Xgb" ]; then
 		if [ -f /sys/devices/system/cpu/cpufreq/policy0/cpuinfo_max_freq ]; then
+			# Check for throttling for first:
+			MeasuredClockspeedStart=$(grep -A2 "^Checking cpufreq OPP" ${ResultLog} | awk -F" " '/Measured/ {print $5}' | sed -n ${#ClusterConfig[@]}p)
+			MeasuredClockspeedFinished=$(grep -A2 "^Checking cpufreq OPP" ${ResultLog} | awk -F" " '/Measured/ {print $5}' | sed -n $(( ${#ClusterConfig[@]} * 2 ))p)
+			MeasuredDifference=$(( 100 * MeasuredClockspeedStart / MeasuredClockspeedFinished ))
+			if [ ${MeasuredDifference:-100} -gt 103 -o -f "${TempDir}/throttling_info.txt" ]; then
+				# if measured clockspeed differs by more than 3% comparing begin and end of
+				# benchmarking or if throttling_info.txt exists, then add a throttling warning
+				ThrottlingWarning=" (throttled)"
+			fi
+
 			HighestClock=$(sort -n -r /sys/devices/system/cpu/cpufreq/policy?/cpuinfo_max_freq | head -n1)
 			LowestClock=$(sort -n -r /sys/devices/system/cpu/cpufreq/policy?/cpuinfo_max_freq | tail -n1)
-			MeasuredClockspeed=$(grep -A2 "^Checking cpufreq OPP" ${ResultLog} | awk -F" " '/Measured/ {print $5}' | head -n1)
-			ClockDifference=$(( 100 * MeasuredClockspeed / HighestClock ))
+			ClockDifference=$(( 100 * MeasuredClockspeedStart / HighestClock ))
 			if [ ${ClockDifference:-100} -lt 98 -o ${ClockDifference:-100} -gt 102 ]; then
 				# if measured clockspeed differs by more than 2% compared to cpuinfo_max_freq
 				# then report this value slightly rounded instead of cpufreq sysfs entries
-				MHz="~$(( $(awk '{printf ("%0.0f",$1/10+0.5); }' <<<"${MeasuredClockspeed}") * 10 )) MHz"
+				MHz="~$(( $(awk '{printf ("%0.0f",$1/10); }' <<<${MeasuredClockspeedStart} ) * 10 ))"
 			elif [ ${HighestClock} -eq ${LowestClock} ]; then
 				MHz="$(( HighestClock / 1000 )) MHz"
 			else
@@ -3366,12 +3375,20 @@ SummarizeResults() {
 			fi
 		else
 			# no cpufreq support, we check first measured value and use it if available
-			MeasuredClockspeed=$(awk -F": " '/No cpufreq support available. Measured on cpu/ {print $2}' <${ResultLog} | cut -f1 -d' ' | head -n 1)
-			if [ "X${MeasuredClockspeed}" = "X" ]; then
+			MeasuredClockspeedStart=$(awk -F": " '/No cpufreq support available. Measured on cpu/ {print $2}' <${ResultLog} | cut -f1 -d' ' | head -n 1)
+			if [ "X${MeasuredClockspeedStart}" = "X" ]; then
 				MHz="no cpufreq support"
 			else
 				# slightly round up measured clockspeed
-				MHz="~$(( $(awk '{printf ("%0.0f",$1/10+0.5); }' <<<"${MeasuredClockspeed}") * 10 )) MHz"
+				MHz="~$(( $(awk '{printf ("%0.0f",$1/10+0.5); }' <<<"${MeasuredClockspeedStart}") * 10 )) MHz"
+				# check additionally for throttling
+				MeasuredClockspeedFinished=$(awk -F": " '/No cpufreq support available. Measured on cpu/ {print $2}' <${ResultLog} | cut -f1 -d' ' | tail -n1)
+				MeasuredDifference=$(( 100 * MeasuredClockspeedStart / MeasuredClockspeedFinished ))
+				if [ ${MeasuredDifference:-100} -gt 103 ]; then
+					# if measured clockspeed differs by more than 3% comparing begin and end of
+					# benchmarking then add a throttling warning
+					ThrottlingWarning=" (throttled)"
+				fi
 			fi
 		fi
 		KernelVersion="$(awk -F"." '{print $1"."$2}' <<<"${KernelVersion}")"
@@ -3381,7 +3398,7 @@ SummarizeResults() {
 		else
 			DistroInfo="${OperatingSystem} ${KernelArch}/${ARCH}"
 		fi
-		echo -e "\n| ${DeviceName:-$HostName} | ${MHz} | ${KernelVersion} | ${DistroInfo} | ${ZipScore} | ${ZipScoreSingleThreaded} | ${OpenSSLScore} | ${MemBenchScore} | ${CpuminerScore:-"-"} |\c" | sed 's/  / /g' >>${ResultLog}
+		echo -e "\n| ${DeviceName:-$HostName} | ${MHz}${ThrottlingWarning} | ${KernelVersion} | ${DistroInfo} | ${ZipScore} | ${ZipScoreSingleThreaded} | ${OpenSSLScore} | ${MemBenchScore} | ${CpuminerScore:-"-"} |\c" | sed 's/  / /g' >>${ResultLog}
 	fi
 } # SummarizeResults
 
@@ -3515,7 +3532,7 @@ UploadResults() {
 			grep '^aes-...-cbc' ${OpenSSLLog}
 		fi
 	elif [ "X${MODE}" = "Xgb" ]; then
-		if [ ${IOWaitAvg:-0} -le 2 -a ${IOWaitMax:-0} -le 5 -a ${SysMax:-0} -le 5 -a ! -f ${TempDir}/throttling_info.txt ]; then
+		if [ ${IOWaitAvg:-0} -le 2 -a ${IOWaitMax:-0} -le 5 -a ${SysMax:-0} -le 5 -a ! -f "${TempDir}/throttling_info.txt" ]; then
 			echo -e "First run:\n"
 			grep ' Score ' ${TempLog} | sed '/Multi-Core*/i \ \ \ '
 			echo -e "\nSecond run:\n"
@@ -5087,7 +5104,7 @@ GuessSoCbySignature() {
 			# less). Altra Max (Mystique) could be identified by its smaller L3 cache.
 			grep -q 'No cpufreq support available. Measured on cpu' ${ResultLog} && \
 				MeasuredClockspeed=$(awk -F": " '/No cpufreq support available. Measured on cpu/ {print $2}' <${ResultLog} | cut -f1 -d' ' | head -n 1) || \
-				MeasuredClockspeed=$(grep -A2 "^Checking cpufreq OPP" ${ResultLog} | awk -F" " '/Measured/ {print $5}' | head -n1)
+				MeasuredClockspeed=$(grep -A2 "^Checking cpufreq OPP" ${ResultLog} | awk -F" " '/Measured/ {print $5}' | sort -r | head -n1)
 			if [ ${MeasuredClockspeed} -gt 2550 ]; then
 				# Lame assumption that cpufreq above 2.5GHz identifies Ampere Altra
 				case $(awk -F":" '/ per socket/ {print $2}' <<<"${LSCPU}") in

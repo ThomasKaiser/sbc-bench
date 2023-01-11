@@ -3363,7 +3363,7 @@ SummarizeResults() {
 
 			HighestClock=$(sort -n -r /sys/devices/system/cpu/cpufreq/policy?/cpuinfo_max_freq | head -n1)
 			LowestClock=$(sort -n -r /sys/devices/system/cpu/cpufreq/policy?/cpuinfo_max_freq | tail -n1)
-			ClockDifference=$(( 100 * MeasuredClockspeedStart / HighestClock ))
+			ClockDifference=$(( 100000 * MeasuredClockspeedStart / HighestClock ))
 			if [ ${ClockDifference:-100} -lt 98 -o ${ClockDifference:-100} -gt 102 ]; then
 				# if measured clockspeed differs by more than 2% compared to cpuinfo_max_freq
 				# then report this value slightly rounded instead of cpufreq sysfs entries

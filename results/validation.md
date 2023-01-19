@@ -232,7 +232,7 @@
 | [4jfZ](4jfZ.txt) | v0.9.9 FriendlyElec NanoPi R5S | 0%/0% | 3.7Gi/3.4Gi | X | X | X | X | 1% | 0% | |
 | [4ju5](4ju5.txt) | v0.9.9 SolidRun LX2160A Clearfog CX | 0%/0.7% | 5.7Gi/3.4Gi | X | X | X | X | 1% | 0% | |
 | [4kEp](4kEp.txt) | v0.9.9 volterra | 1.1%/0.5% | 15Gi/15Gi | X | X | X | X | 1% | 0% | |
-| [4kFQ](4kFQ.txt) | Atom E3825 | 0%/0% | / | | | | | % | % | |
+| [4kFQ](4kFQ.txt) | v0.9.9 10ZiG Technology. 44xx Type1 - T | 0%/0.2% | 1.8Gi/1.4Gi | X | X | X | X | 4% | <span style=color:red> 4%</span> | |
 | [4kHv](4kHv.txt) | v0.9.9 StarFive VisionFive V2 | 0.8%/1.2% | 3.8Gi/3.7Gi | X | X | X | X | 1% | 0% | |
 | [4kiu](4kiu.txt) | v0.9.9 HUAQIN P6410 HQ3110BR49000 | 0%/0% | 375Gi/370Gi | X | X | X | X | 0% | 0% | |
 | [4kmM](4kmM.txt) | v0.9.9 Banana Pi BPI-M2-Ultra | 0%/0.1% | 997Mi/874Mi | X | X | X | X | 2% | 0% | |

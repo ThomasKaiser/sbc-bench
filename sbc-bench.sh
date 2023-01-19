@@ -3785,7 +3785,7 @@ GuessARMSoC() {
 	#      Cortex-A53 / r0p3: HiSilicon Kirin 620/930, Nexell S5P6818, Snapdragon 808 / MSM8992
 	#      Cortex-A53 / r0p4: Allwinner A100/A133/A53/A64/H313/H5/H6/H616/H64/R329/R818/T507/T509, Amlogic A113X/A113D/A311D/A311D2/S805X/S805Y/S905/S905X/S905D/S905W/S905L/S905L3A/S905M2/S905X2/S905Y2/S905D2/S912/S922X/T962X2, Broadcom BCM2837/BCM2709/BCM2710/RP3A0-AU (BCM2710A1), HiSilicon Kirin 960/970, Marvell Armada 37x0, Mediatek MT6762M/MT6765, NXP i.MX8M/i.MX8QM/LS1xx8, RealTek RTD129x/RTD139x, Rockchip RK3318/RK3328/RK3399, Snapdragon 650/652/653 / MSM8956/MSM8976/MSM8976PRO, Socionext LD20
 	#      Cortex-A55 / r1p0: Amlogic S905X3/S905D3/S905Y3/T962X3/T962E2
-	#      Cortex-A55 / r2p0: Amlogic S905X4/S905C2, Rockchip RK3566/RK3568/RK3588/RK3588s
+	#      Cortex-A55 / r2p0: Amlogic S905X4/S905C2, NXP i.MX 93, Renesas RZG2UL/RZG2LC, Rockchip RK3566/RK3568/RK3588/RK3588s
 	#      Cortex-A57 / r1p1: Nvidia Tegra TX1, Snapdragon 810 / MSM8994/MSM8994V
 	#      Cortex-A57 / r1p2: AMD Opteron A1100, Snapdragon 808 / MSM8992
 	#      Cortex-A57 / r1p3: Nvidia Jetson TX2, Renesas R8A7795/R8A7796/R8A77965
@@ -3882,7 +3882,7 @@ GuessARMSoC() {
 	# soc soc0: Amlogic Meson G12A (S905X2) Revision 28:b (40:2) Detected <-- Shenzhen Amediatech Technology Co. / Ltd X96 Max / SEI Robotics SEI510 / Amlogic Meson G12A U200 Development Board
 	# soc soc0: Amlogic Meson G12A (S905X2) Revision 28:c (40:2) Detected <-- ZTE B860H V5
 	# soc soc0: Amlogic Meson G12A (Unknown) Revision 28:b (70:2) Detected <-- Amlogic Meson G12A U200 Development Board
-	# soc soc0: Amlogic Meson G12A (Unknown) Revision 28:c (70:2) Detected <-- Amlogic Meson G12A U200 Development Board / Skyworth E900V22C
+	# soc soc0: Amlogic Meson G12A (Unknown) Revision 28:c (70:2) Detected <-- Amlogic Meson G12A U200 Development Board / China Mobile M401A / Skyworth E900V22C
 	# soc soc0: Amlogic Meson G12B (S922X) Revision 29:a (40:2) Detected <-- ODROID-N2 / Beelink GT-King Pro
 	# soc soc0: Amlogic Meson G12B (A311D) Revision 29:b (10:2) Detected <-- Khadas VIM3 / Radxa Zero 2 / UnionPi Tiger
 	# soc soc0: Amlogic Meson G12B (S922X) Revision 29:b (40:2) Detected <-- Beelink GT-King Pro
@@ -3893,6 +3893,7 @@ GuessARMSoC() {
 	# soc soc0: Amlogic Meson SM1 (S905D3) Revision 2b:c (4:2) Detected <-- Khadas VIM3L / https://www.spinics.net/lists/arm-kernel/msg848718.html
 	# soc soc0: Amlogic Meson SM1 (S905X3) Revision 2b:c (10:2) Detected <-- AMedia X96 Max+ / H96 Max X3 / ODROID-C4 / ODROID-HC4 / HK1 Box/Vontar X3 / SEI Robotics SEI610 / Shenzhen Amediatech Technology Co. Ltd X96 Max/Air / Shenzhen CYX Industrial Co. Ltd A95XF3-AIR / Sinovoip BANANAPI-M5 / Tanix TX3 (QZ) / Ugoos X3
 	# soc soc0: Amlogic Meson SM1 (Unknown) Revision 2b:c (10:2) Detected <-- Khadas VIM3L / HK1 Box/Vontar X3
+	# soc soc0: Amlogic Meson SM1 (Unknown) Revision 2b:b (18:2) Detected <-- Shenzhen Amediatech Technology Co. Ltd X96 Air
 	# soc soc0: Amlogic Meson SM1 (Unknown) Revision 2b:b (40:2) Detected <-- Khadas VIM3L
 	#
 	# With T7/A311D2 the string 'soc soc0:' is missing in Amlogic's 5.4 BSP kernel, instead it's
@@ -4041,6 +4042,9 @@ GuessARMSoC() {
 	# CPU2: Booted secondary processor 0x0000000100 [0x410fd092] <- Cortex-A73 / r0p2 (S922X/A311D)
 	# CPU7: Booted secondary processor 0x0000000700 [0x51df804e] <- Qualcomm Kryo 4XX Gold / r13p14 (Snapdragon 8cx)
 	# CPU7: Booted secondary processor 0x0000010103 [0x611f0330] <- Apple Avalanche / r1p0 (Apple M2)
+	#
+	# If the kernel is recent enough MIDR_EL1 can be read out at runtime per core via
+	# /sys/devices/system/cpu/cpuN/regs/identification/midr_el1
 
 	CPUInfo="$(cat /proc/cpuinfo)"
 	HardwareInfo="$(awk -F': ' '/^Hardware/ {print $2}' <<< "${CPUInfo}" | tail -n1)"
@@ -4808,6 +4812,16 @@ GuessSoCbySignature() {
 					;;
 			esac
 			;;
+		*A55r2p0*A55r2p0)
+			# Renesas RZG2LC, 2 x Cortex-A55 / r2p0 / L1d 32K, L1i 32K, L2 0K, L3 256K (shared)
+			# or NXP i.MX 93, 2 x Cortex-A55 / r2p0 / L1d 32K, L1i 32K, L2 64K, L3 256K (shared)
+			grep -q nxp <<<"${DTCompatible}" && echo "NXP i.MX 93" || echo "Renesas RZG2LC"
+			;;
+		*A55r2p0)
+			# Renesas RZG2UL, 1 x Cortex-A55 / r2p0 / L1d 32K, L1i 32K, L2 0K, L3 256K (shared)
+			# or NXP i.MX 93, 1 x Cortex-A55 / r2p0 / L1d 32K, L1i 32K, L2 64K, L3 256K (shared)
+			grep -q nxp <<<"${DTCompatible}" && echo "NXP i.MX 93" || echo "Renesas RZG2LC"
+			;;
 		*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A72r0p2*A72r0p2)
 			# RK3399, 4 x Cortex-A53 / r0p4 + 2 x Cortex-A72 / r0p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32 (32-bit 4.4 BSP kernel: half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt lpae evtstrm aes pmull sha1 sha2 crc32)
 			# or maybe NXP i.MX8QM, 4 x Cortex-A53 / r0p4 + 2 x Cortex-A72 / r0p2
@@ -5070,6 +5084,11 @@ GuessSoCbySignature() {
 			# NXP LS2088A: 8 x Cortex-A72 / r0p2 / https://community.nxp.com/t5/QorIQ/LS2088-ETH1-connection/td-p/1024323
 			echo "NXP LS2088A"
 			;;
+		*A72r0p3*A72r0p3*A72r0p3*A72r0p3*A72r0p3*A72r0p3*A72r0p3*A72r0p3*A72r0p3*A72r0p3*A72r0p3*A72r0p3*A72r0p3*A72r0p3*A72r0p3*A72r0p3)
+			# NXP LX2160A: 16 x Cortex-A72 / r0p3 / fp asimd evtstrm aes pmull sha1 sha2 crc32
+			# or AWS Graviton, 16 x Cortex-A72 / r0p3 / fp asimd evtstrm aes pmull sha1 sha2 crc32 / L1d: 32K, L1i: 48K, L2: 2048K
+			grep -q "nxp" <<<"${DTCompatible}" && echo "NXP LX2160A" || echo "AWS Graviton"
+			;;
 		36?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p3)
 			# NXP LX2080A: 8 x Cortex-A72 / r0p3 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			echo "NXP LX2080A"
@@ -5078,17 +5097,13 @@ GuessSoCbySignature() {
 			# NXP LX2120A: 12 x Cortex-A72 / r0p3 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			echo "NXP LX2120A"
 			;;
-		36?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p3|00A72r0p300A72r0p312A72r0p312A72r0p324A72r0p324A72r0p336A72r0p336A72r0p348A72r0p348A72r0p3510A72r0p3510A72r0p3612A72r0p3612A72r0p3714A72r0p3714A72r0p3)
-			# NXP LX2160A: 16 x Cortex-A72 / r0p3 / fp asimd evtstrm aes pmull sha1 sha2 crc32
-			echo "NXP LX2160A"
-			;;
 		*A72r0p3*A72r0p3)
 			# NXP LS1028A: 2 x Cortex-A72 / r0p3 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			echo "NXP LS1028A"
 			;;
 		*NeoverseN1r3p1*)
 			# Ampere Altra / Altra Max: 32/64/80/128 x Neoverse-N1 / r3p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp ssbs
-			# or AWS Graviton2: 1/2/4/8/16/32/48/64 vCPU Neoverse-N1 / r3p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp ssbs
+			# or AWS Graviton2: 1/2/4/8/16/32/48/64 vCPU Neoverse-N1 / r3p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp ssbs / L1d 128K, L1i 128K, L2 2M, L3 32M
 			# https://lore.kernel.org/all/alpine.DEB.2.22.394.2204131354190.3066615@ubuntu-linux-20-04-desktop/
 			# https://www.spec.org/cpu2017/results/res2021q3/cpu2017-20210702-27694.pdf
 			# https://www.youtube.com/watch?v=4jImmuMqnwc&t=1111s
@@ -5099,9 +5114,11 @@ GuessSoCbySignature() {
 			# https://blog.cloudflare.com/arms-race-ampere-altra-takes-on-aws-graviton2/
 			#
 			# Distinguishing between Graviton2 and Ampere Altra (QuickSilver) isn't easy since they
-			# share same core types, stepping, CPU flags and even cache sizes. Measured clockspeeds
-			# should differ (2.5 GHz for AWS vs. 3/3+ GHz for Altra while reviews mentioned little
-			# less). Altra Max (Mystique) could be identified by its smaller L3 cache.
+			# share same core types, stepping, CPU flags and even cache sizes though this site here
+			# https://adam.younglogic.com/2022/05/building-linux-tip-of-tree-on-an-ampere-based-system/
+			# reports smaller cache sizes for Ampere Altra. Measured clockspeeds should differ (2.5 GHz
+			# for AWS vs. 3/3+ GHz for Altra while reviews mentioned little less). Altra Max (Mystique)
+			# could be identified by its smaller L3 cache.
 			grep -q 'No cpufreq support available. Measured on cpu' ${ResultLog} && \
 				MeasuredClockspeed=$(awk -F": " '/No cpufreq support available. Measured on cpu/ {print $2}' <${ResultLog} | cut -f1 -d' ' | head -n 1) || \
 				MeasuredClockspeed=$(grep -A2 "^Checking cpufreq OPP" ${ResultLog} | awk -F" " '/Measured/ {print $5}' | sort -r | head -n1)

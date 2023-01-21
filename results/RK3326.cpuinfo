@@ -1,0 +1,39 @@
+processor       : 0
+BogoMIPS        : 48.00
+Features        : fp asimd evtstrm aes pmull sha1 sha2 crc32
+CPU implementer : 0x41
+CPU architecture: 8
+CPU variant     : 0x0
+CPU part        : 0xd04
+CPU revision    : 2
+
+processor       : 1
+BogoMIPS        : 48.00
+Features        : fp asimd evtstrm aes pmull sha1 sha2 crc32
+CPU implementer : 0x41
+CPU architecture: 8
+CPU variant     : 0x0
+CPU part        : 0xd04
+CPU revision    : 2
+
+processor       : 2
+BogoMIPS        : 48.00
+Features        : fp asimd evtstrm aes pmull sha1 sha2 crc32
+CPU implementer : 0x41
+CPU architecture: 8
+CPU variant     : 0x0
+CPU part        : 0xd04
+CPU revision    : 2
+
+processor       : 3
+BogoMIPS        : 48.00
+Features        : fp asimd evtstrm aes pmull sha1 sha2 crc32
+CPU implementer : 0x41
+CPU architecture: 8
+CPU variant     : 0x0
+CPU part        : 0xd04
+CPU revision    : 2
+
+Hardware        : ODROID-GO2 for linux based on Rockchip rk3326
+Revision        : 0000
+Serial          : dcf4a571b373859e

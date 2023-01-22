@@ -234,6 +234,10 @@ snore() {
 } # snore
 
 GetARMCore() {
+	# List originally obtained from util-linux project but later appended by looking at
+	# https://github.com/gcc-mirror/gcc/blob/master/gcc/config/aarch64/aarch64-cores.def
+	# and https://github.com/llvm/llvm-project/blob/release/15.x/llvm/lib/Support/Host.cpp
+	# and https://elixir.bootlin.com/linux/v6.2-rc4/source/arch/arm64/include/asm/cputype.h
 	grep "${1}/${2}:" <<<"41:Arm
 	41/810:ARM810
 	41/920:ARM920
@@ -271,6 +275,7 @@ GetARMCore() {
 	41/d03:Cortex-A53
 	41/d04:Cortex-A35
 	41/d05:Cortex-A55
+	41/d06:Cortex-A65
 	41/d07:Cortex-A57
 	41/d08:Cortex-A72
 	41/d09:Cortex-A73
@@ -280,6 +285,7 @@ GetARMCore() {
 	41/d0d:Cortex-A77
 	41/d0e:Cortex-A76AE
 	41/d13:Cortex-R52
+	41/d15:Cortex-R82
 	41/d20:Cortex-M23
 	41/d21:Cortex-M33
 	41/d22:Cortex-M55
@@ -297,6 +303,7 @@ GetARMCore() {
 	41/d4c:Cortex-X1C
 	41/d4d:Cortex-A715
 	41/d4e:Cortex-X3
+	41/d4f:Neoverse-V2
 	42:Broadcom
 	42/00f:Broadcom Brahma B15
 	42/100:Broadcom Brahma B53
@@ -307,6 +314,14 @@ GetARMCore() {
 	43/0a2:Cavium ThunderX 81XX
 	43/0a3:Cavium ThunderX 83XX
 	43/0af:Cavium ThunderX2 99xx
+	43/0b0:Cavium OcteonTX2
+	43/0b1:Cavium OcteonTX2 98XX
+	43/0b2:Cavium OcteonTX2 96XX
+	43/0b3:Cavium OcteonTX2 95XX
+	43/0b4:Cavium OcteonTX2 95XXN
+	43/0b5:Cavium OcteonTX2 95XXMM
+	43/0b6:Cavium OcteonTX2 95XXO
+	43/0b8:Cavium ThunderX3T110
 	44:DEC
 	44/a10:DEC SA110
 	44/a11:DEC SA1100
@@ -390,7 +405,9 @@ GetARMCore() {
 	70/661:Phytium FTC661
 	70/662:Phytium FTC662
 	70/663:Phytium FTC663
-	c0:Ampere" | cut -f2 -d:
+	c0:Ampere
+	c0/ac3:Ampere Ampere-1
+	c0/ac4:Ampere Ampere-1a" | cut -f2 -d:
 } # GetARMCore
 
 GetCoreType() {
@@ -3791,7 +3808,7 @@ GuessARMSoC() {
 	#      Cortex-A53 / r0p3: ARM Juno r1, ARM Juno r2, HiSilicon Kirin 620/930, Nexell S5P6818, Samsung Exynos 7580, Snapdragon 808 / MSM8992
 	#      Cortex-A53 / r0p4: Allwinner A100/A133/A53/A64/H313/H5/H6/H616/H64/R329/R818/T507/T509, Amlogic A113X/A113D/A311D/A311D2/S805X/S805Y/S905/S905X/S905D/S905W/S905L/S905L3A/S905M2/S905X2/S905Y2/S905D2/S912/S922X/T962X2, Broadcom BCM2837/BCM2709/BCM2710/RP3A0-AU (BCM2710A1), HiSilicon Kirin 650/710/950/960/970, Marvell Armada 37x0, Mediatek MT6739WA/MT6762M/MT6765/MT6771V/MT6797T, NXP i.MX8M/i.MX8QM/LS1xx8, Qualcomm MSM8953, RealTek RTD129x/RTD139x, Rockchip RK3318/RK3328/RK3399, Samsung Exynos 7870/7885/8890/8895, Snapdragon 650/652/653 / MSM8956/MSM8976/MSM8976PRO, Socionext LD20, Xiaomi Surge S1
 	#      Cortex-A55 / r0p1: Samsung Exynos 9810
-	#      Cortex-A55 / r1p0: Amlogic S905X3/S905D3/S905Y3/T962X3/T962E2, HiSilicon Ascend 310 / Kirin 980, Samsung Exynos 9820
+	#      Cortex-A55 / r1p0: Amlogic S905X3/S905D3/S905Y3/T962X3/T962E2, HiSilicon Ascend 310 / Kirin 810/980, Samsung Exynos 9820
 	#      Cortex-A55 / r2p0: Amlogic S905X4/S905C2, NXP i.MX 93, Renesas RZG2UL/RZG2LC, Rockchip RK3566/RK3568/RK3588/RK3588s
 	#      Cortex-A57 / r0p0: ARM Juno r0
 	#      Cortex-A57 / r1p1: ARM Juno r1, Nvidia Tegra TX1, Snapdragon 810 / MSM8994/MSM8994V
@@ -3805,7 +3822,8 @@ GuessARMSoC() {
 	#      Cortex-A73 / r0p1: HiSilicon Kirin 960
 	#      Cortex-A73 / r0p2: Amlogic A311D/A311D2/S922X, HiSilicon Kirin 710/970, MediaTek Helio MT6771V/P60T, Samsung Exynos 7885
 	#      Cortex-A75 / r2p1: Samsung Exynos 9820
-	#      Cortex-A76 / r3p0: Exynos Auto V9
+	#      Cortex-A76 / r1p0: HiSilicon Kirin 980 (though with an own 0x48/0xd40 ID)
+	#      Cortex-A76 / r3p0: Exynos Auto V9, HiSilicon Kirin 810 (though with an own 0x48/0xd40 ID)
 	#      Cortex-A76 / r4p0: Rockchip RK3588/RK3588s
 	#      Cortex-A77 / r1p0: Qualcomm Snapdragon 865 / QRB5165
 	#    Cortex-A78AE / r0p1: Nvidia Jetson Orin NX / AGX Orin
@@ -4793,7 +4811,13 @@ GuessSoCbySignature() {
 			;;
 		*A55r1p0*A55r1p0*A55r1p0*A55r1p0*A76r1p0*A76r1p0*A76r1p0*A76r1p0)
 			# HiSilicon Kirin 980, 4 x Cortex-A55 / r1p0 + 4 x Cortex-A76 / r1p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp
+			# The big bores are marketed/documented as Cortex-A76 by HiSilicon but instead of the usual ARM core ID 0x41/0xd0b they have 0x48/0xd40
 			echo "HiSilicon Kirin 980"
+			;;
+		*A55r1p0*A55r1p0*A55r1p0*A55r1p0*A55r1p0*A55r1p0*A76r3p0*A76r3p0)
+			# HiSilicon Kirin 810, 6 x Cortex-A55 / r1p0 + 2 x Cortex-A76 / r3p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp asimdrdm lrcpc dcpop asimddp
+			# The big bores are marketed/documented as Cortex-A76 by HiSilicon but instead of the usual ARM core ID 0x41/0xd0b they have 0x48/0xd40
+			echo "HiSilicon Kirin 810"
 			;;
 		0A9r4p10A9r4p1|00A9r4p100A9r4p1)
 			# Armada 375/38x, 2 x Cortex-A9 / r4p1 / swp half thumb fastmult vfp edsp neon vfpv3 tls
@@ -5159,6 +5183,7 @@ GuessSoCbySignature() {
 			;;
 		*XGener3p2*)
 			# APM Emag 8180: 32 x Ampere X-Gene / r3p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
+			# Earlier X-Gene revisions than r3 lack CRC and crypto flags/features
 			echo "$(( ${CPUCores} / 32 )) x APM Emag 8180"
 			;;
 		*Xgener0p0*Xgener0p0*Xgener0p0*Xgener0p0*Xgener0p0*Xgener0p0*Xgener0p0*Xgener0p0*)

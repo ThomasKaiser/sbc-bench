@@ -38,6 +38,8 @@ Main() {
 		USE_VCGENCMD=false
 	fi
 	
+	ProcCPU="$(cat "${CPUINFOFILE:-/proc/cpuinfo}")"
+
 	# check in which mode we're supposed to run
 	while getopts 'chmtTsgNPG' c ; do
 		case ${c} in
@@ -238,6 +240,7 @@ GetARMCore() {
 	# https://github.com/gcc-mirror/gcc/blob/master/gcc/config/aarch64/aarch64-cores.def
 	# and https://github.com/llvm/llvm-project/blob/release/15.x/llvm/lib/Support/Host.cpp
 	# and https://elixir.bootlin.com/linux/v6.2-rc4/source/arch/arm64/include/asm/cputype.h
+	# and https://github.com/Dr-Noob/cpufetch/blob/master/src/arm/uarch.c
 	grep "${1}/${2}:" <<<"41:Arm
 	41/810:ARM810
 	41/920:ARM920
@@ -257,9 +260,10 @@ GetARMCore() {
 	41/c07:Cortex-A7
 	41/c08:Cortex-A8
 	41/c09:Cortex-A9
+	41/c0c:Cortex-A12
 	41/c0d:Cortex-A17
-	41/c0f:Cortex-A15
 	41/c0e:Cortex-A17
+	41/c0f:Cortex-A15
 	41/c14:Cortex-R4
 	41/c15:Cortex-R5
 	41/c17:Cortex-R7
@@ -321,7 +325,7 @@ GetARMCore() {
 	43/0b4:Cavium OcteonTX2 95XXN
 	43/0b5:Cavium OcteonTX2 95XXMM
 	43/0b6:Cavium OcteonTX2 95XXO
-	43/0b8:Cavium ThunderX3T110
+	43/0b8:Cavium ThunderX3 T110
 	44:DEC
 	44/a10:DEC SA110
 	44/a11:DEC SA1100
@@ -358,6 +362,7 @@ GetARMCore() {
 	53/001:Samsung Exynos-m1
 	53/002:Samsung Exynos-m3
 	53/003:Samsung Exynos-m4
+	53/004:Samsung Exynos-m5
 	56:Marvell
 	56/131:Marvell Feroceon 88FR131
 	56/581:Marvell PJ4/PJ4b
@@ -421,22 +426,22 @@ GetCoreType() {
 			;;
 		riscv*)
 			# relying on uarch doesn't work with older RISC-V kernels since missing
-			grep -q '^uarch' /proc/cpuinfo
+			grep -q '^uarch' <<< "${ProcCPU}"
 			case $? in
 				0)
-					awk -F": " '/^uarch/ {print $2}' /proc/cpuinfo | sed -n $(( $1 + 1 ))p
+					awk -F": " '/^uarch/ {print $2}' <<< "${ProcCPU}" | sed -n $(( $1 + 1 ))p
 					;;
 				*)
-					awk -F": " '/^isa/ {print $2}' /proc/cpuinfo | sed -n $(( $1 + 1 ))p
+					awk -F": " '/^isa/ {print $2}' <<< "${ProcCPU}" | sed -n $(( $1 + 1 ))p
 					;;
 			esac
 			;;
 		loongarch*)
-			ModelName="$(awk -F": " '/^model name/ {print $2}' /proc/cpuinfo | sed -n $(( $1 + 1 ))p)"
+			ModelName="$(awk -F": " '/^model name/ {print $2}' <<< "${ProcCPU}" | sed -n $(( $1 + 1 ))p)"
 			case ${ModelName} in
 				"")
 					# fallback to cpu model if existing
-					grep -q 'cpu model' /proc/cpuinfo && awk -F": " '/^cpu model/ {print $2}' /proc/cpuinfo | sed -n $(( $1 + 1 ))p
+					grep -q 'cpu model' <<< "${ProcCPU}" && awk -F": " '/^cpu model/ {print $2}' <<< "${ProcCPU}" | sed -n $(( $1 + 1 ))p
 					;;
 				*\(*)
 					# we use just the part in brackets: Loongson-3A R4 (Loongson-3A4000) @ 1500MHz
@@ -448,7 +453,7 @@ GetCoreType() {
 			esac
 			;;
 		mips*)
-			awk -F": " '/^cpu model/ {print $2}' /proc/cpuinfo | sed -n $(( $1 + 1 ))p
+			awk -F": " '/^cpu model/ {print $2}' <<< "${ProcCPU}" | sed -n $(( $1 + 1 ))p
 			;;
 		x86_64)
 			# on hybrid x86 designs print core type
@@ -1846,7 +1851,7 @@ BasicSetup() {
 	CPUCores=$(awk -F" " '/^CPU...:/ {print $2}' <<<"${LSCPU}")
 	# Might not work with RISC-V on old kernels, see
 	# https://github.com/ThomasKaiser/sbc-bench/issues/46
-	[ ${CPUCores} -eq 0 ] && CPUCores=$(grep -c '^hart' /proc/cpuinfo)
+	[ ${CPUCores} -eq 0 ] && CPUCores=$(grep -c '^hart' <<< "${ProcCPU}")
 
 	# try to bring CPU cores back online that were sent offline when idle
 	for i in $(seq 0 $(( ${CPUCores} - 1 )) ); do
@@ -1914,8 +1919,8 @@ BasicSetup() {
 	case ${CPUArchitecture} in
 		arm*|aarch*|riscv*)
 			[ "X${DeviceName}" = "Xsun20iw1p1" ] && DeviceName="Allwinner D1"
-			ARMTypes=($(awk -F"0x" '/^CPU implementer|^CPU part/ {print $2}' /proc/cpuinfo))
-			ARMStepping=($(awk -F": " '/^CPU variant|^CPU revision/ {print $2}' /proc/cpuinfo))
+			ARMTypes=($(awk -F"0x" '/^CPU implementer|^CPU part/ {print $2}' <<< "${ProcCPU}"))
+			ARMStepping=($(awk -F": " '/^CPU variant|^CPU revision/ {print $2}' <<< "${ProcCPU}"))
 			case ${DeviceName} in
 				"Raspberry Pi 4"*)
 					# https://github.com/raspberrypi/linux/issues/3210#issuecomment-680035201
@@ -2377,17 +2382,17 @@ InitialMonitoring() {
 	MonitorLog="${TempDir}/monitor.log"
 	touch "${ResultLog}" "${MonitorLog}"
 
-	# collect CPU topology
+	# collect CPU information
 	CPUTopology="$(PrintCPUTopology)"
 	echo -e "${CPUTopology}\n" >"${TempDir}/cpu-topology.log" &
 	CPUSignature="$(GetCPUSignature)"
+	DTCompatible="$(strings /proc/device-tree/compatible 2>/dev/null)"
 
 	# upload raw /proc/cpuinfo contents and device-tree compatible entry to ix.io
 	ping -c1 ix.io >/dev/null 2>&1
-	if [ $? -eq 0 ]; then
+	if [ $? -eq 0 -a "X${ProcCPU}" = "X/proc/cpuinfo" ]; then
 		UploadScheme="f:1=<-"
 		UploadServer="ix.io"
-		DTCompatible="$(strings /proc/device-tree/compatible 2>/dev/null)"
 		(echo -e "/proc/cpuinfo\n\n$(uname -a) / ${DeviceName}\n" ; cat /proc/cpuinfo ; echo -e "\n${CPUTopology}\n\n${CPUSignature}\n\n${DTCompatible}" ; ParseOPPTables) 2>/dev/null \
 			| curl -s -F ${UploadScheme} ${UploadServer} >/dev/null 2>&1 &
 	else
@@ -2579,7 +2584,7 @@ CheckClockspeedsAndSensors() {
 				if [ "X${PStateStatus}" != "X" ]; then
 					echo -e "\nIntel P-States: ${PStateStatus}" >>${ResultLog}
 				fi
-				HFIEnabled=$(awk -F":" '/^flags/ {print $2}' </proc/cpuinfo | grep -c " hfi")
+				HFIEnabled=$(awk -F":" '/^flags/ {print $2}' <<< "${ProcCPU}" | grep -c " hfi")
 				if [ ${HFIEnabled} -gt 0 ]; then
 					if [ -f /sys/devices/system/cpu/cpu0/acpi_cppc/nominal_perf ]; then
 						DifferentCores=$(cat /sys/devices/system/cpu/cpu*/acpi_cppc/nominal_perf | sort | uniq | wc -l)
@@ -2596,11 +2601,11 @@ CheckClockspeedsAndSensors() {
 			# if powercapping seems to be available on Intel then add a hint
 			# https://www.cnx-software.com/2022/09/08/how-to-check-tdp-pl1-and-pl2-power-limits-in-windows-and-linux/
 			if [ -d /sys/devices/virtual/powercap/intel-rapl ]; then
-				grep -q -i GenuineIntel /proc/cpuinfo && \
+				grep -q -i GenuineIntel <<< "${ProcCPU}" && \
 				echo -e "\nPowercap present. You might want to check with \"powercap-info -p intel-rapl\"" >>${ResultLog}
 			fi
 			# if running on a Ryzen CPU add a hint to RyzenAdj
-			grep -q -i "AMD Ryzen" /proc/cpuinfo && \
+			grep -q -i "AMD Ryzen" <<< "${ProcCPU}" && \
 				echo -e "\nAMD Ryzen detected. For power limits visit https://github.com/FlyGoat/RyzenAdj" >>${ResultLog}
 		fi
 		if [ ${#ClusterConfig[@]} -eq 1 ]; then
@@ -3778,18 +3783,19 @@ GuessARMSoC() {
 	#         ARM1176 / r0p7: Broadcom BCM2835
 	#       Cortex-A5 / r0p1: Amlogic S805
 	#       Cortex-A7 / r0p2: MediaTek MT6589/MT6588
-	#       Cortex-A7 / r0p3: Allwinner A31, MediaTek MT6580/MT7623, Samsung Exynos 5422
+	#       Cortex-A7 / r0p3: Allwinner A31, MediaTek MT6572/MT6580/MT6582/MT6589/MT7623/MT8127/MT8135, Samsung Exynos 5422
 	#       Cortex-A7 / r0p4: Allwinner A20
-	#       Cortex-A7 / r0p5: Allwinner A33/A83T/H2+/H3/H8/R16/R328/R40/S3/T113/V3/V3s/V40/V853, Broadcom BCM2836, Freescale/NXP i.MX7D/i.MX6 ULL, HiSilicon Hi351x/Hi3798M-V100, Microchip SAMA7G54, Qualcomm MDM9607, Renesas RZ/N1, Rockchip RK3229/RK3228A/RV1108/RV1109/RV1126, SigmaStar SSD201/SSD202D, STMicroelectronics STM32MP157
+	#       Cortex-A7 / r0p5: Allwinner A33/A83T/H2+/H3/H8/R16/R328/R40/S3/T113/V3/V3s/V40/V853, Broadcom BCM2836, Freescale/NXP i.MX7D/i.MX6 ULL, HiSilicon Hi351x/Hi3796M-V100/Hi3798M-V100, Microchip SAMA7G54, Qualcomm MDM9607/MSM8909, Renesas RZ/N1, Rockchip RK3128/RK3228A/RK3229/RV1108/RV1109/RV1126, SigmaStar SSD201/SSD202D, Spreadtrum SC7731, STMicroelectronics STM32MP157
 	#       Cortex-A8 / r1p7: TI Sitara AM3517
 	#       Cortex-A8 / r2p2: Samsung Exynos 3110 (S5PC110)
 	#       Cortex-A8 / r2p5: Freescale/NXP i.MX515
 	#       Cortex-A8 / r3p2: Allwinner A10, TI OMAP3530/DM3730/AM335x
 	#       Cortex-A9 / r1p0: Nvidia Tegra 2
 	#       Cortex-A9 / r1p2: TI OMAP 4460
+	#       Cortex-A9 / r1p3: TI OMAP 4430
 	#       Cortex-A9 / r2p1: Samsung Exynos 4210, Comcerto 2000 AKA FreeScale/NXP QorIQ LS1024A -> https://github.com/Bonstra/c2000doc
 	#       Cortex-A9 / r2p9: Nvidia Tegra 3
-	#       Cortex-A9 / r2p10: Freescale/NXP i.MX6 Dual/Quad
+	#       Cortex-A9 / r2p10: Freescale/NXP i.MX6 Dual/Quad, TI OMAP4470
 	#       Cortex-A9 / r3p0: Amlogic 8726-MX, Calxeda Highbank, Cyclone V FPGA SoC, Mediatek MT5880, Rockchip RK3066/RK3188, Samsung Exynos 4412
 	#       Cortex-A9 / r4p1: Amlogic S802/S812, Freescale/NXP i.MX6SLL, Marvell Armada 375/38x
 	#      Cortex-A15 / r0p4: Samsung Exynos 5 Dual 5250
@@ -3804,9 +3810,9 @@ GuessARMSoC() {
 	#      Cortex-A35 / r1p0: Amlogic S805X2/S905Y4/S905W2
 	#      Cortex-A53 / r0p0: ARM Juno r0, Qualcomm Snapdragon 410 (MSM8916)
 	#      Cortex-A53 / r0p1: Qualcomm MSM8939
-	#      Cortex-A53 / r0p2: Marvell PXA1908, Mediatek MT6752/MT6755/MT8173, Qualcomm Snapdragon 810 (MSM8994), Samsung Exynos 7420
-	#      Cortex-A53 / r0p3: ARM Juno r1, ARM Juno r2, HiSilicon Kirin 620/930, Nexell S5P6818, Samsung Exynos 7580, Snapdragon 808 / MSM8992
-	#      Cortex-A53 / r0p4: Allwinner A100/A133/A53/A64/H313/H5/H6/H616/H64/R329/R818/T507/T509, Amlogic A113X/A113D/A311D/A311D2/S805X/S805Y/S905/S905X/S905D/S905W/S905L/S905L3A/S905M2/S905X2/S905Y2/S905D2/S912/S922X/T962X2, Broadcom BCM2837/BCM2709/BCM2710/RP3A0-AU (BCM2710A1), HiSilicon Kirin 650/710/950/960/970, Marvell Armada 37x0, Mediatek MT6739WA/MT6762M/MT6765/MT6771V/MT6797T, NXP i.MX8M/i.MX8QM/LS1xx8, Qualcomm MSM8953, RealTek RTD129x/RTD139x, Rockchip RK3318/RK3328/RK3399, Samsung Exynos 7870/7885/8890/8895, Snapdragon 650/652/653 / MSM8956/MSM8976/MSM8976PRO, Socionext LD20, Xiaomi Surge S1
+	#      Cortex-A53 / r0p2: Marvell PXA1908, Mediatek MT6752/MT6738/MT6755/MT8173, Qualcomm Snapdragon 810 (MSM8994), Samsung Exynos 7420
+	#      Cortex-A53 / r0p3: ARM Juno r1, ARM Juno r2, HiSilicon Hi3751, Kirin 620/930, Mediatek MT8163/MT8173, Nexell S5P6818, Samsung Exynos 7580, Snapdragon 808 / MSM8992
+	#      Cortex-A53 / r0p4: Allwinner A100/A133/A53/A64/H313/H5/H6/H616/H64/R329/R818/T507/T509, Amlogic A113X/A113D/A311D/A311D2/S805X/S805Y/S905/S905X/S905D/S905W/S905L/S905L3A/S905M2/S905X2/S905Y2/S905D2/S912/S922X/T962X2, Broadcom BCM2837/BCM2709/BCM2710/RP3A0-AU (BCM2710A1), HiSilicon Hi3798C-V200, HiSilicon Kirin 650/710/950/960/970, Marvell Armada 37x0, Mediatek MT6739WA/MT6762M/MT6765/MT6771V/MT6797T/MT8183, NXP i.MX8M/i.MX8QM/LS1xx8, Qualcomm MSM8953//SDM439/SDM450, RealTek RTD129x/RTD139x, Rockchip RK3318/RK3328/RK3399, Samsung Exynos 7870/7885/8890/8895, Snapdragon 650/652/653 / MSM8956/MSM8976/MSM8976PRO, Socionext LD20, Xiaomi Surge S1
 	#      Cortex-A55 / r0p1: Samsung Exynos 9810
 	#      Cortex-A55 / r1p0: Amlogic S905X3/S905D3/S905Y3/T962X3/T962E2, HiSilicon Ascend 310 / Kirin 810/980, Samsung Exynos 9820
 	#      Cortex-A55 / r2p0: Amlogic S905X4/S905C2, NXP i.MX 93, Renesas RZG2UL/RZG2LC, Rockchip RK3566/RK3568/RK3588/RK3588s
@@ -3820,7 +3826,7 @@ GuessARMSoC() {
 	#      Cortex-A72 / r0p3: Broadcom BCM2711, NXP LS1028A, NXP LX2xx0A, Marvell Armada3900-A1, Xilinx Versal, AWS Graviton -> https://tinyurl.com/y47yz2f6
 	#      Cortex-A72 / r1p0: TI J721E (TDA4VM/DRA829V)
 	#      Cortex-A73 / r0p1: HiSilicon Kirin 960
-	#      Cortex-A73 / r0p2: Amlogic A311D/A311D2/S922X, HiSilicon Kirin 710/970, MediaTek Helio MT6771V/P60T, Samsung Exynos 7885
+	#      Cortex-A73 / r0p2: Amlogic A311D/A311D2/S922X, HiSilicon Kirin 710/970, MediaTek Helio MT6771V/MT8183/P60T, Samsung Exynos 7885
 	#      Cortex-A75 / r2p1: Samsung Exynos 9820
 	#      Cortex-A76 / r1p0: HiSilicon Kirin 980 (though with an own 0x48/0xd40 ID)
 	#      Cortex-A76 / r3p0: Exynos Auto V9, HiSilicon Kirin 810 (though with an own 0x48/0xd40 ID)
@@ -3829,6 +3835,9 @@ GuessARMSoC() {
 	#    Cortex-A78AE / r0p1: Nvidia Jetson Orin NX / AGX Orin
 	#     Cortex-A78C / r0p0: Qualcomm Snapdragon 8cx Gen 3
 	#      Cortex-X1C / r0p0: Qualcomm Snapdragon 8cx Gen 3
+	#     Cortex-A510 / r0p3: Qualcomm Snapdragon 8+ Gen1
+	#     Cortex-A710 / r2p0: Qualcomm Snapdragon 8+ Gen1
+	#       Cortex-X2 / r2p0: Qualcomm Snapdragon 8+ Gen1
 	#       Exynos-m1 / r1p1: Samsung Exynos 8890
 	#       Exynos-m1 / r4p0: Samsung Exynos 8895
 	#       Exynos-m3 / r1p0: Samsung Exynos 9810
@@ -3851,6 +3860,7 @@ GuessARMSoC() {
 	#  Phytium FTC663 / r1p3: Phytium FT-2000/4 / FT2000A / D2000/8 / FT2500
 	# Qualcomm Falkor / r10p1: Qualcomm Snapdragon 835 / MSM8998
 	#  Qualcomm Krait / r1p0: Qualcomm Snapdragon S4 Plus (MSM8960)
+	#  Qualcomm Krait / r1p4: Qualcomm MSM8627
 	#  Qualcomm Krait / r2p0: Qualcomm IPQ806x
 	#   Qualcomm Kryo / r1p2: Qualcomm MSM8996
 	#   Qualcomm Kryo / r2p1: Qualcomm MSM8996pro (Snapdragon 821)
@@ -3910,7 +3920,7 @@ GuessARMSoC() {
 	# soc soc0: Amlogic Meson GXM (S912) Revision 22:b (82:2) Detected <-- Beelink GT1 / Tronsmart Vega S96 / Octopus Planet / Amlogic Meson GXM (S912) Q201 Development Board
 	# soc soc0: Amlogic Meson AXG (Unknown) Revision 25:b (43:2) Detected <-- JetHome JetHub J100
 	# soc soc0: Amlogic Meson AXG (Unknown) Revision 25:c (43:2) Detected <-- JetHome JetHub J100
-	# soc soc0: Amlogic Meson GXLX (Unknown) Revision 26:e (c1:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board
+	# soc soc0: Amlogic Meson GXLX (Unknown) Revision 26:e (c1:2) Detected <-- IPBS9505-S905L2, Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson G12A (Unknown) Revision 28:b (30:2) Detected <-- S905Y2 on Radxa Zero
 	# soc soc0: Amlogic Meson G12A (Unknown) Revision 28:c (30:2) Detected <-- S905Y2 on Radxa Zero
 	# soc soc0: Amlogic Meson G12A (S905Y2) Revision 28:b (30:2) Detected <-- S905Y2 on Radxa Zero
@@ -4081,8 +4091,7 @@ GuessARMSoC() {
 	# If the kernel is recent enough MIDR_EL1 can be read out at runtime per core via
 	# /sys/devices/system/cpu/cpuN/regs/identification/midr_el1
 
-	CPUInfo="$(cat /proc/cpuinfo)"
-	HardwareInfo="$(awk -F': ' '/^Hardware/ {print $2}' <<< "${CPUInfo}" | tail -n1)"
+	HardwareInfo="$(awk -F': ' '/^Hardware/ {print $2}' <<< "${ProcCPU}" | tail -n1)"
 	RockchipGuess="$(awk -F': ' '/rockchip-cpuinfo cpuinfo: SoC/ {print $3}' <<<"${DMESG}" | head -n1)"
 	AmlogicGuess="Amlogic Meson$(grep -i " detected$" <<<"${DMESG}" | awk -F"Amlogic Meson" '/Amlogic Meson/ {print $2}' | head -n1)"
 	AMLS4Guess="$(awk -F"= " '/cpu_version: chip version/ {print $2}' <<<"${DMESG}")"
@@ -4120,15 +4129,15 @@ GuessARMSoC() {
 		# with vendor's BSP kernels. With mainline kernel it's impossible to rely on this
 		case ${HardwareInfo} in
 			Amlogic*)
-				ModelName="$(awk -F': ' '/^model name/ {print $2}' <<< "${CPUInfo}" | tail -n1)"
+				ModelName="$(awk -F': ' '/^model name/ {print $2}' <<< "${ProcCPU}" | tail -n1)"
 				case "${ModelName}" in
 					Amlogic*)
 						echo "${ModelName}"
 						;;
 					*)
-						AmLogicSerial="$(awk -F': ' '/^AmLogic Serial/ {print $2}' <<< "${CPUInfo}" | tail -n1)"
+						AmLogicSerial="$(awk -F': ' '/^AmLogic Serial/ {print $2}' <<< "${ProcCPU}" | tail -n1)"
 						if [ "X${AmLogicSerial}" = "X" ]; then
-							AmLogicSerial="$(awk -F': ' '/^Serial/ {print $2}' <<< "${CPUInfo}" | tail -n1)"
+							AmLogicSerial="$(awk -F': ' '/^Serial/ {print $2}' <<< "${ProcCPU}" | tail -n1)"
 						fi
 						case "${AmLogicSerial}" in
 							19*)
@@ -4214,7 +4223,8 @@ GuessARMSoC() {
 								;;
 							26*)
 								# GXLX, seems to be compatible to GXL since one occurence of ID '26:e (c1:2)'
-								# has been detected on 'Amlogic Meson GXL (S905X) P212 Development Board'
+								# has been detected with 'Amlogic Meson GXL (S905X) P212 Development Board'
+								# and same ID on IPBS9505 TV box
 								echo "unknown Amlogic GXLX SoC, serial $(cut -c-8 <<<"${AmLogicSerial}")..."
 								;;
 							27*)
@@ -4497,11 +4507,19 @@ GuessSoCbySignature() {
 			;;
 		00A7r0p500A7r0p500A7r0p500A7r0p5)
 			# Allwinner sun8i: could be Allwinner H3/H2+, R40/V40 or A33/R16 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
-			# or maybe Rockchip RV1126 | 4 x Cortex-A7 / r0p5
+			# or Spreadtrum SC7731 or Rockchip RV1126/RK3128
 			case "${DTCompatible}" in
-				*rockchip*)
+				*rv1126*)
 					# Rockchip RV1126 | 4 x Cortex-A7 / r0p5
 					echo "Rockchip RV1126"
+					;;
+				*rk3128*)
+					# Rockchip RK3128 | 4 x Cortex-A7 / r0p5
+					echo "Rockchip RK3128"
+					;;
+				*rockchip*)
+					# Rockchip RV1126 or RK3128 | 4 x Cortex-A7 / r0p5
+					echo "Rockchip RV1126 or RK3128"
 					;;
 				*sun8i-r40*)
 					# R40/V40, 4 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
@@ -4519,9 +4537,21 @@ GuessSoCbySignature() {
 					# Allwinner A33/R16, 4 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
 					echo "Allwinner A33/R16"
 					;;
-				*hi3798*|*hisilicon*)
+				*hi3796*)
+					# HiSilicon Hi3796M-V100, 4 x Cortex-A7 / r0p5 / swp half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt
+					echo "HiSilicon Hi3796M-V100"
+					;;
+				*hi3798*)
 					# HiSilicon Hi3798M-V100, 4 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae
 					echo "HiSilicon Hi3798M-V100"
+					;;
+				*hisilicon*)
+					# HiSilicon Hi3796M-V100 or Hi3798M-V100, 4 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae
+					echo "HiSilicon Hi3796M-V100 or Hi3798M-V100"
+					;;
+				*sc7731*)
+					# Spreadtrum SC7731: 4 x Cortex-A7 / r0p5 / swp half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32
+					echo "Spreadtrum SC7731"
 					;;
 				*)
 					echo "Allwinner H3/H2+ or R40/V40 or A33/R16"
@@ -4585,11 +4615,6 @@ GuessSoCbySignature() {
 			# Qualcomm MSM8996pro: 2 x Kryo r2p1 + 2 x Kryo r2p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			echo "Qualcomm MSM8996pro"
 			;;
-		*A53r0p2)
-			# Marvell PXA1908: 4 x Cortex-A53 / r0p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32  half thumb fastmult edsp tls vfp vfpv3 vfpv4 neon idiva idivt
-			# At least with vendor's 3.14 kernel CPU cores are sent offline when idle so detection of all cores might fail
-			echo "Marvell PXA1908"
-			;;
 		00A53r0p400A53r0p400A53r0p400A53r0p4|??A53r0p4??????)
 			# The boring quad Cortex-A53 done by every SoC vendor: 4 x Cortex-A53 / r0p4
 			# Allwinner A100/A133/A53/A64/H5/H6/H313/H616/R818/T507/T509, BCM2837/BCM2709, RK3318/RK3328, i.MX8 M, S905, S905X/S805X, S805Y, S905X/S905D/S905W/S905L/S905M2, S905X2/S905Y2/T962X2, Mediatek MT6762M/MT6765, RealTek RTD129x/RTD139x
@@ -4612,7 +4637,7 @@ GuessSoCbySignature() {
 					;;
 				*)
 					# No Raspberry, check for AES capabilities first
-					grep 'Features' /proc/cpuinfo | grep -q aes
+					grep 'Features' <<< "${ProcCPU}" | grep -q aes
 					if [ $? -ne 0 ]; then
 						# no ARMv8 Crypto Extensions licensed like RPi ARMv8 cores... then it's
 						# S905: 4 x Cortex-A53 / r0p4 / fp asimd evtstrm crc32
@@ -4720,6 +4745,10 @@ GuessSoCbySignature() {
 								# Xilinx XCZU9EG, 4 x Cortex-A53 / r0p4 / fp asimd aes pmull sha1 sha2 crc32
 								echo "Xilinx XCZU9EG"
 								;;
+							*hi3798*)
+								# HiSilicon Hi3798C-V200, 4 x Cortex-A53 / r0p4 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm (booting 32-bit)
+								echo "HiSilicon Hi3798C-V200"
+								;;
 						esac
 					fi
 					;;
@@ -4740,6 +4769,8 @@ GuessSoCbySignature() {
 			# or Samsung Exynos 7870: 8 x Cortex-A53 / r0p4 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt lpae evtstrm aes pmull sha1 sha2 crc32
 			# or HiSilicon Kirin 650: 8 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			# or Qualcomm MSM8953: 8 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
+			# or Qualcomm SDM439 / Snapdragon 439: 8 x Cortex-A53 / r0p4 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt lpae evtstrm aes pmull sha1 sha2 crc32
+			# or Qualcomm SDM450 / Snapdragon 450: 8 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			# or Xiaomi Surge S1: 8 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			case "${DTCompatible}" in
 				*amlogic*)
@@ -4753,6 +4784,12 @@ GuessSoCbySignature() {
 					;;
 				*msm8953*)
 					echo "Qualcomm MSM8953"
+					;;
+				*sdm439*)
+					echo "Qualcomm Snapdragon 439"
+					;;
+				*sdm450*)
+					echo "Qualcomm Snapdragon 450"
 					;;
 				*xiaomi*)
 					echo "Xiaomi Surge S1"
@@ -4776,6 +4813,7 @@ GuessSoCbySignature() {
 			;;
 		*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A73r0p2*A73r0p2*A73r0p2*A73r0p2)
 			# Mediatek MT6771V: 4 x Cortex-A53 / r0p4 + 4 x Cortex-A73 / r0p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32
+			# or Mediatek MT8183: 4 x Cortex-A53 / r0p4 + 4 x Cortex-A73 / r0p2 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt lpae evtstrm aes pmull sha1 sha2 crc32
 			# or HiSilicon Kirin 710: 4 x Cortex-A53 / r0p4 + 4 x Cortex-A73 / r0p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			# or HiSilicon Kirin 970: 4 x Cortex-A53 / r0p4 + 4 x Cortex-A73 / r0p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			case "${DTCompatible}" in
@@ -4790,6 +4828,9 @@ GuessSoCbySignature() {
 					;;
 				*mt6771*)
 					echo "Mediatek MT6771V"
+					;;
+				*mt8183*)
+					echo "Mediatek MT8183"
 					;;
 			esac
 			;;
@@ -4935,10 +4976,36 @@ GuessSoCbySignature() {
 			# Mediatek MT8173: 2 x Cortex-A53 / r0p2 + 2 x Cortex-A72 / r0p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			echo "Mediatek MT8173"
 			;;
+		*A53r0p3*A53r0p3)
+			# HiSilicon Hi3751: 4 x Cortex-A53 / r0p3 / swp half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt (booting 32-bit kernel)
+			echo "HiSilicon Hi3751"
+			;;
+		*A53r0p3*A53r0p3*A53r0p3*A53r0p3)
+			# Mediatek MT8163: 4 x Cortex-A53 / r0p3 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt lpae evtstrm aes pmull sha1 sha2 crc32
+			# or Mediatek MT8173: 4 x Cortex-A53 / r0p3 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt lpae evtstrm aes pmull sha1 sha2 crc32
+			# or HiSilicon Hi3751: 4 x Cortex-A53 / r0p3 / swp half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt (booting 32-bit kernel)
+			case "${DTCompatible}" in
+				*mt8163*)
+					echo "Mediatek MT8163"
+					;;
+				*mt8173*)
+					echo "Mediatek MT8173"
+					;;
+				*hi3751*)
+					echo "HiSilicon Hi3751"
+					;;
+			esac
+			;;
 		*A53r0p2*A53r0p2*A53r0p2*A53r0p2*A53r0p2*A53r0p2*A53r0p2*A53r0p2)
 			# Mediatek MT6752: 8 x Cortex-A53 / r0p2 / fp asimd aes pmull sha1 sha2 crc32
 			# Mediatek MT6755: 8 x Cortex-A53 / r0p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			echo "Mediatek MT6752/MT6755"
+			;;
+		*A53r0p2*A53r0p2*A53r0p2*A53r0p2|*A53r0p2)
+			# Mediatek MT6738: 4 x Cortex-A53 / r0p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32
+			# or Marvell PXA1908: 4 x Cortex-A53 / r0p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32 half thumb fastmult edsp tls vfp vfpv3 vfpv4 neon idiva idivt
+			# (at least with vendor's 3.14 kernel CPU cores are sent offline when idle so detection of all cores might fail)
+			grep -q mt6738 <<<"${DTCompatible}" && echo "Mediatek MT6738" || echo "Marvell PXA1908"
 			;;
 		*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A72r0p1*A72r0p1)
 			# Mediatek MT6797T: 4 x Cortex-A53 / r0p4 + 4 x Cortex-A53 / r0p4 + 2 x Cortex-A72 / r0p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32
@@ -5058,20 +5125,40 @@ GuessSoCbySignature() {
 			esac
 			;;
 		50A17r0p150A17r0p150A17r0p150A17r0p1)
-			# RK3288, 4 x Cortex-A17 / r0p1 / half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
+			# RK3288: 4 x Cortex-A17 / r0p1 / half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
 			echo "Rockchip RK3288"
 			;;
 		?0A7r0p2?0A7r0p2?0A7r0p2?0A7r0p2)
-			# MT6589, 4 x Cortex-A7 / r0p2 / https://gist.github.com/MaTBeu4uk/3a1bea6bf8c658829622f3ecbcf4b7eb
+			# MT6589: 4 x Cortex-A7 / r0p2 / https://gist.github.com/MaTBeu4uk/3a1bea6bf8c658829622f3ecbcf4b7eb
 			echo "Mediatek MT6589"
 			;;
+		?0A7r0p3?0A7r0p3)
+			# Mediatek MT6572: 2 x Cortex-A7 / r0p3 / swp half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpv4 idiva idivt
+			echo "Mediatek MT6572"
+			;;
 		?0A7r0p3?0A7r0p3?0A7r0p3?0A7r0p3)
-			# Allwinner A31, 4 x Cortex-A7 / r0p3 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
-			# MT7623, 4 x Cortex-A7 / r0p3 / half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
-			# MT6580, 4 x Cortex-A7 / r0p3 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae
+			# Allwinner A31: 4 x Cortex-A7 / r0p3 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
+			# MT7623: 4 x Cortex-A7 / r0p3 / half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
+			# MT6580: 4 x Cortex-A7 / r0p3 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae
+			# MT6582: 4 x Cortex-A7 / r0p3 / swp half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpv4 idiva idivt
+			# MT6589: 4 x Cortex-A7 / r0p3 / swp half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpv4 idiva idivt
+			# MT8127: 4 x Cortex-A7 / r0p3 / swp half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpv4 idiva idivt
+			# MT8135: 4 x Cortex-A7 / r0p3 / swp half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpv4 idiva idivt
 			case "${DTCompatible}" in
 				*mt6580*)
 					echo "Mediatek MT6580"
+					;;
+				*mt6582*)
+					echo "Mediatek MT6582"
+					;;
+				*mt6589*)
+					echo "Mediatek MT6589"
+					;;
+				*mt8127*)
+					echo "Mediatek MT8127"
+					;;
+				*mt8135*)
+					echo "Mediatek MT8135"
 					;;
 				*mt7623*)
 					echo "Mediatek MT7623"
@@ -5112,9 +5199,10 @@ GuessSoCbySignature() {
 			# NXP i.MX6 Quad | 4 x Cortex-A9 / r2p10 / swp half thumb fastmult vfp edsp thumbee neon vfpv3
 			echo "NXP i.MX6 Quad"
 			;;
-		??A9r2p10??A9r2p10)
+		*A9r2p10*A9r2p10)
 			# NXP i.MX6 Dual | 2 x Cortex-A9 / r2p10 / swp half thumb fastmult vfp edsp thumbee neon vfpv3
-			echo "NXP i.MX6 Dual"
+			# or TI OMAP4470: 2 x Cortex-A9 / r2p10 / swp half thumb fastmult vfp edsp thumbee neon vfpv3
+			grep -q "imx6" <<<"${DTCompatible}" && echo "NXP i.MX6 Dual" || echo "TI OMAP4470"
 			;;
 		??A9r2p1??A9r2p1)
 			# FreeScale/NXP QorIQ LS1024A | 2 x Cortex-A9 / r2p1 / swp half thumb fastmult vfp edsp thumbee neon vfpv3 tls
@@ -5124,6 +5212,10 @@ GuessSoCbySignature() {
 		??A9r1p2??A9r1p2)
 			# TI OMAP 4460 | 2 x Cortex-A9 / r1p2 / https://e2e.ti.com/support/processors-group/processors/f/processors-forum/243190/booting-problem-of-omap4460-pandaboard
 			echo "TI OMAP 4460"
+			;;
+		??A9r1p3??A9r1p3)
+			# TI OMAP 4430 | 2 x Cortex-A9 / r1p3 / swp half thumb fastmult vfp edsp thumbee neon vfpv3
+			echo "TI OMAP 4430"
 			;;
 		??A15r0p4??A15r0p4)
 			# Samsung Exynos 5 Dual 5250: 2 x Cortex-A15 / r0p4 / https://bench.cr.yp.to/computers.html
@@ -5389,6 +5481,10 @@ GuessSoCbySignature() {
 		*A78Cr0p0*A78Cr0p0*A78Cr0p0*A78Cr0p0*X1Cr0p0*X1Cr0p0*X1Cr0p0*X1Cr0p0)
 			# Qualcomm Snapdragon 8cx Gen 3 : 4 x Cortex-A78C / r0p0 + 4 x Cortex-X1C / r0p0 / fp asimd aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp ilrcpc flagm
 			echo "Qualcomm Snapdragon 8cx Gen 3"
+			;;
+		*A510r0p3*A510r0p3*A510r0p3*A510r0p3*A710r2p0*A710r2p0*A710r2p0*X2r2p0)
+			# Qualcomm Snapdragon 8+ Gen1: 4 x Cortex-A510 / r0p3 + 3 Cortex-A710 / r2p0 + 1 x Cortex-X2 / r2p0
+			echo "Qualcomm Snapdragon 8+ Gen1"
 			;;
 		0?Loongson3A10000?Loongson3A10000?Loongson3A10000?Loongson3A1000)
 			# Loongson 3A1000: 4 x Loongson-3 V0.5 FPU V0.1 https://github.com/ThomasKaiser/sbc-bench/blob/master/results/Loongson-3A1000.cpuinfo

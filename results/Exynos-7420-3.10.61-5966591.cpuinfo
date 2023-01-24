@@ -7,6 +7,7 @@ processor	: 4
 processor	: 5
 processor	: 6
 processor	: 7
+
 Features	: fp asimd aes pmull sha1 sha2 crc32 
 CPU implementer	: 0x41
 CPU architecture: AArch64

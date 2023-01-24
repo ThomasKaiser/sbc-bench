@@ -1,0 +1,43 @@
+Processor	: ARMv7 Processor rev 3 (v7l)
+processor	: 0
+BogoMIPS	: 31.81
+Features	: swp half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpv4 idiva idivt
+CPU implementer	: 0x41
+CPU architecture: 7
+CPU variant	: 0x0
+CPU part	: 0xc07
+CPU revision	: 3
+
+Processor	: ARMv7 Processor rev 3 (v7l)
+processor	: 1
+BogoMIPS	: 31.81
+Features	: swp half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpv4 idiva idivt
+CPU implementer	: 0x41
+CPU architecture: 7
+CPU variant	: 0x0
+CPU part	: 0xc07
+CPU revision	: 3
+
+Processor	: ARMv7 Processor rev 2 (v7l)
+processor	: 2
+BogoMIPS	: 35.06
+Features	: swp half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpv4 idiva idivt
+CPU implementer	: 0x41
+CPU architecture: 7
+CPU variant	: 0x3
+CPU part	: 0xc0f
+CPU revision	: 2
+
+Processor	: ARMv7 Processor rev 2 (v7l)
+processor	: 3
+BogoMIPS	: 35.06
+Features	: swp half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpv4 idiva idivt
+CPU implementer	: 0x41
+CPU architecture: 7
+CPU variant	: 0x3
+CPU part	: 0xc0f
+CPU revision	: 2
+
+Hardware	: MT8135
+Revision	: 0020 0086
+Serial		: 40dc44add6cda66a

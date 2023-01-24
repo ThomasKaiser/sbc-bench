@@ -38,7 +38,8 @@ Main() {
 		USE_VCGENCMD=false
 	fi
 	
-	ProcCPU="$(cat "${CPUINFOFILE:-/proc/cpuinfo}")"
+	ProcCPUFile="${CPUINFOFILE:-/proc/cpuinfo}"
+	ProcCPU="$(cat "${ProcCPUFile}")"
 
 	# check in which mode we're supposed to run
 	while getopts 'chmtTsgNPG' c ; do
@@ -2390,7 +2391,7 @@ InitialMonitoring() {
 
 	# upload raw /proc/cpuinfo contents and device-tree compatible entry to ix.io
 	ping -c1 ix.io >/dev/null 2>&1
-	if [ $? -eq 0 -a "X${ProcCPU}" = "X/proc/cpuinfo" ]; then
+	if [ $? -eq 0 -a "X${ProcCPUFile}" = "X/proc/cpuinfo" ]; then
 		UploadScheme="f:1=<-"
 		UploadServer="ix.io"
 		(echo -e "/proc/cpuinfo\n\n$(uname -a) / ${DeviceName}\n" ; cat /proc/cpuinfo ; echo -e "\n${CPUTopology}\n\n${CPUSignature}\n\n${DTCompatible}" ; ParseOPPTables) 2>/dev/null \
@@ -4977,7 +4978,7 @@ GuessSoCbySignature() {
 			echo "Mediatek MT8173"
 			;;
 		*A53r0p3*A53r0p3)
-			# HiSilicon Hi3751: 4 x Cortex-A53 / r0p3 / swp half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt (booting 32-bit kernel)
+			# HiSilicon Hi3751: 2 x Cortex-A53 / r0p3 / swp half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt (booting 32-bit kernel)
 			echo "HiSilicon Hi3751"
 			;;
 		*A53r0p3*A53r0p3*A53r0p3*A53r0p3)

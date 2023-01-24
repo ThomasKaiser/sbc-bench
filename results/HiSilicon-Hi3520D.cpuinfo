@@ -1,0 +1,12 @@
+Processor : ARMv7 Processor rev 1 (v7l)
+BogoMIPS : 1318.91
+Features : swp half fastmult edsp
+CPU implementer : 0x41
+CPU architecture: 7
+CPU variant : 0x4
+CPU part : 0xc09
+CPU revision : 1
+
+Hardware : hi3520d
+Revision : 0000
+Serial : 0000000000000000

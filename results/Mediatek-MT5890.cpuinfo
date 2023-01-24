@@ -1,0 +1,22 @@
+
+processor       : 0
+model name      : ARMv7 Processor rev 0 (v7l)
+Features        : swp half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt
+CPU implementer : 0x41
+CPU architecture: 7
+CPU variant     : 0x0
+CPU part        : 0xc0e
+CPU revision    : 0
+
+processor       : 1
+model name      : ARMv7 Processor rev 0 (v7l)
+Features        : swp half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt
+CPU implementer : 0x41
+CPU architecture: 7
+CPU variant     : 0x0
+CPU part        : 0xc0e
+CPU revision    : 0
+
+Hardware        : MT5890
+Revision        : 0000
+Serial          : 0000000000000000

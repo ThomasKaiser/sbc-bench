@@ -1,0 +1,12 @@
+Processor       : Marvell PJ4Bv7 Processor rev 1 (v7l)
+BogoMIPS        : 1196.85
+Features        : swp half thumb fastmult vfp edsp vfpv3 vfpv3d16
+CPU implementer : 0x56
+CPU architecture: 7
+CPU variant     : 0x1
+CPU part        : 0x581
+CPU revision    : 1
+
+Hardware        : Marvell Armada-370
+Revision        : 0000
+Serial          : 0000000000000000

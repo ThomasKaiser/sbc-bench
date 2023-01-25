@@ -1,0 +1,36 @@
+Processor	: ARMv7 Processor rev 4 (v7l)
+
+processor	: 0
+BogoMIPS	: 1679.36
+
+processor	: 1
+BogoMIPS	: 1679.36
+
+processor	: 2
+BogoMIPS	: 1679.36
+
+processor	: 3
+BogoMIPS	: 1679.36
+
+processor	: 4
+BogoMIPS	: 1679.36
+
+processor	: 5
+BogoMIPS	: 1679.36
+
+processor	: 6
+BogoMIPS	: 1679.36
+
+processor	: 7
+BogoMIPS	: 1679.36
+
+Features	: swp half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpv4 idiva idivt 
+CPU implementer	: 0x41
+CPU architecture: 7
+CPU variant	: 0x0
+CPU part	: 0xc07
+CPU revision	: 4
+
+Hardware	: MT6592
+Revision	: 0000
+Serial		: 0000000000000000

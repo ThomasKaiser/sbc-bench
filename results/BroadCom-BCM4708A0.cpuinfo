@@ -1,0 +1,17 @@
+Processor       : ARMv7 Processor rev 0 (v7l)
+processor       : 0
+BogoMIPS        : 1998.84
+
+processor       : 1
+BogoMIPS        : 1992.29
+
+Features        : swp half thumb fastmult edsp
+CPU implementer : 0x41
+CPU architecture: 7
+CPU variant     : 0x3
+CPU part        : 0xc09
+CPU revision    : 0
+
+Hardware        : Northstar Prototype
+Revision        : 0000
+Serial          : 0000000000000000

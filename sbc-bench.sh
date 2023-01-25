@@ -242,6 +242,7 @@ GetARMCore() {
 	# and https://github.com/llvm/llvm-project/blob/release/15.x/llvm/lib/Support/Host.cpp
 	# and https://elixir.bootlin.com/linux/v6.2-rc4/source/arch/arm64/include/asm/cputype.h
 	# and https://github.com/Dr-Noob/cpufetch/blob/master/src/arm/uarch.c
+	# and https://github.com/pytorch/cpuinfo/blob/main/src/arm/linux/midr.c
 	grep "${1}/${2}:" <<<"41:Arm
 	41/810:ARM810
 	41/920:ARM920
@@ -3782,13 +3783,13 @@ GuessARMSoC() {
 	# Apple Avalanche / r1p0: Apple M2
 	#    ARM11 MPCore / r0p5: PLX NAS7820
 	#         ARM1176 / r0p7: Broadcom BCM2835
-	#       Cortex-A5 / r0p1: Amlogic S805, Qualcomm MSM8625Q
+	#       Cortex-A5 / r0p1: Actions ATM8029, Amlogic S805, Qualcomm MSM8625Q
 	#       Cortex-A7 / r0p1: ARM Versatile Express V2P-CA15-CA7
 	#       Cortex-A7 / r0p2: MediaTek MT6589/MT6588
-	#       Cortex-A7 / r0p3: Allwinner A31, MediaTek MT6572/MT6580/MT6582/MT6589/MT7623/MT8127/MT8135, Qualcomm MSM8610 (Snapdragon 200), Samsung Exynos 5422
-	#       Cortex-A7 / r0p4: Allwinner A20
-	#       Cortex-A7 / r0p5: Allwinner A33/A83T/H2+/H3/H8/R16/R328/R40/S3/T113/V3/V3s/V40/V853, Broadcom BCM2836, Freescale/NXP i.MX7D/i.MX6 ULL, HiSilicon Hi351x/Hi3796M-V100/Hi3798M-V100, HiSilicon Kirin 920, Microchip SAMA7G54, Qualcomm MDM9607/MSM8909, Renesas RZ/N1, Rockchip RK3128/RK3228A/RK3229/RV1108/RV1109/RV1126, SigmaStar SSD201/SSD202D, Spreadtrum SC7731/SC8830, STMicroelectronics STM32MP157
-	#       Cortex-A8 / r1p3: TI OMAP3530
+	#       Cortex-A7 / r0p3: Allwinner A31, MediaTek MT6572/MT6580/MT6582/MT6589/MT7623/MT8127/MT8135, Qualcomm MSM8610 (Snapdragon 200) / MSM8226/MSM8926 (Snapdragon 400), Samsung Exynos 5422
+	#       Cortex-A7 / r0p4: Allwinner A20, Exynos 5430, Mediatek MT6592
+	#       Cortex-A7 / r0p5: Allwinner A33/A83T/H2+/H3/H8/R16/R328/R40/S3/T113/V3/V3s/V40/V853, Broadcom BCM2836, Freescale/NXP i.MX7D/i.MX6 ULL, HiSilicon Hi351x/Hi3796M-V100/Hi3798M-V100, HiSilicon Kirin 920/925/928, MediaTek MT6595, Microchip SAMA7G54, Qualcomm MDM9607/MSM8909, Renesas RZ/N1, Rockchip RK3128/RK3228A/RK3229/RV1108/RV1109/RV1126, SigmaStar SSD201/SSD202D, Spreadtrum SC7731/SC8830, STMicroelectronics STM32MP157
+	#       Cortex-A8 / r1p3: TI OMAP3530/AM3703
 	#       Cortex-A8 / r1p7: TI Sitara AM3517
 	#       Cortex-A8 / r2p2: Samsung Exynos 3110 (S5PC110)
 	#       Cortex-A8 / r2p5: Freescale/NXP i.MX515
@@ -3799,44 +3800,45 @@ GuessARMSoC() {
 	#       Cortex-A9 / r2p1: Samsung Exynos 4210, Comcerto 2000 AKA FreeScale/NXP QorIQ LS1024A -> https://github.com/Bonstra/c2000doc
 	#       Cortex-A9 / r2p9: Nvidia Tegra 3
 	#       Cortex-A9 / r2p10: Freescale/NXP i.MX6 Dual/Quad, TI OMAP4470
-	#       Cortex-A9 / r3p0: Amlogic 8726-MX, Calxeda Highbank, Cyclone V FPGA SoC, Mediatek MT5880, Rockchip RK3066/RK3188, Samsung Exynos 4412, ST Micro STiH415/STiH416, Xilinx Zynq 7000S
-	#       Cortex-A9 / r4p1: Amlogic S802/S812, Freescale/NXP i.MX6SLL, HiSilicon Hi3520D-V300, Marvell Armada 375/38x, MStar Infinity2
+	#       Cortex-A9 / r3p0: Amlogic 8726-MX, Calxeda Highbank, Cyclone V FPGA SoC, Marvell PXA988, Mediatek MT5880, Rockchip RK3066/RK3188, Samsung Exynos 4412, ST Micro STiH415/STiH416, Xilinx Zynq 7000S
+	#       Cortex-A9 / r4p1: Amlogic S802/S812, Freescale/NXP i.MX6SLL, HiSilicon Hi3520D-V300/Hi6620, Marvell Armada 375/38x, MStar Infinity2
 	#      Cortex-A15 / r0p4: Samsung Exynos 5 Dual 5250
 	#      Cortex-A15 / r2p1: ARM Versatile Express V2P-CA15-CA7
 	#      Cortex-A15 / r2p2: TI Sitara AM572x
 	#      Cortex-A15 / r2p3: Samsung Exynos 5422
 	#      Cortex-A15 / r2p4: AnnapurnaLabs Alpine
-	#      Cortex-A15 / r3p2: Renesas R8A7790
-	#      Cortex-A15 / r3p3: Nvidia Tegra K1 (Tegra124), HiSilicon Kirin 920
-	#      Cortex-A17 / r0p0: MediaTek MT5890
+	#      Cortex-A15 / r3p2: MediaTek MT8135, Renesas R8A7790
+	#      Cortex-A15 / r3p3: Exynos 5430, HiSilicon Kirin 920/925/928, Nvidia Tegra K1 (Tegra124)
+	#      Cortex-A17 / r0p0: MediaTek MT5890/MT6595
 	#      Cortex-A17 / r0p1: Rockchip RK3288
-	#      Cortex-A35 / r0p1: Mediatek MT8167B
+	#      Cortex-A35 / r0p1: Mediatek MT8167B/MT6799
 	#      Cortex-A35 / r0p2: NXP i.MX8QXP, Rockchip RK1808/RK3308/RK3326/PX30
 	#      Cortex-A35 / r1p0: Amlogic S805X2/S905Y4/S905W2
 	#      Cortex-A53 / r0p0: ARM Juno r0, Qualcomm Snapdragon 410 (MSM8916)
-	#      Cortex-A53 / r0p1: Qualcomm MSM8939
-	#      Cortex-A53 / r0p2: Marvell PXA1908, Mediatek MT6752/MT6738/MT6755/MT8173, Qualcomm Snapdragon 810 (MSM8994), Samsung Exynos 7420
-	#      Cortex-A53 / r0p3: ARM Juno r1, ARM Juno r2, HiSilicon Hi3751, Kirin 620/930, Mediatek MT6735/MT8163/MT8173, Nexell S5P6818, Samsung Exynos 7580, Snapdragon 808 / MSM8992
-	#      Cortex-A53 / r0p4: Allwinner A100/A133/A53/A64/H313/H5/H6/H616/H64/R329/R818/T507/T509, Amlogic A113X/A113D/A311D/A311D2/S805X/S805Y/S905/S905X/S905D/S905W/S905L/S905L3A/S905M2/S905X2/S905Y2/S905D2/S912/S922X/T962X2, Broadcom BCM2837/BCM2709/BCM2710/RP3A0-AU (BCM2710A1), HiSilicon Hi3798C-V200, HiSilicon Kirin 650/710/950/960/970, Marvell Armada 37x0, Mediatek MT6739WA/MT6762M/MT6765/MT6771V/MT6797T/MT8183, NXP i.MX8M/i.MX8QM/LS1xx8, Qualcomm MSM8937/MSM8952/MSM8953/SDM439/SDM450, RealTek RTD129x/RTD139x, Rockchip RK3318/RK3328/RK3399, Samsung Exynos 7870/7885/8890/8895, Snapdragon 650/652/653 / MSM8956/MSM8976/MSM8976PRO, Socionext LD20, Xiaomi Surge S1
+	#      Cortex-A53 / r0p1: Exynos 5433, Qualcomm MSM8939
+	#      Cortex-A53 / r0p2: Marvell PXA1908, Mediatek MT6752/MT6738/MT6755/MT8173/MT8176, Qualcomm Snapdragon 810 (MSM8994), Samsung Exynos 7420
+	#      Cortex-A53 / r0p3: ARM Juno r1, ARM Juno r2, HiSilicon Hi3751, Kirin 620/930, Mediatek MT6735/MT8163, Nexell S5P6818, Samsung Exynos 7580, Qualcomm MSM8992 (Snapdragon 808)
+	#      Cortex-A53 / r0p4: Allwinner A100/A133/A53/A64/H313/H5/H6/H616/H64/R329/R818/T507/T509, Amlogic A113X/A113D/A311D/A311D2/S805X/S805Y/S905/S905X/S905D/S905W/S905L/S905L3A/S905M2/S905X2/S905Y2/S905D2/S912/S922X/T962X2, Broadcom BCM2837/BCM2709/BCM2710/RP3A0-AU (BCM2710A1), HiSilicon Hi3798C-V200, Exynos 8890, HiSilicon Kirin 650/710/950/955/960/970, Marvell Armada 37x0, Mediatek MT6739WA/MT6762M/MT6765/MT6771V/MT6797/MT6797T/MT6799/MT8183/MT8735, NXP i.MX8M/i.MX8QM/LS1xx8, Qualcomm MSM8937/MSM8952/MSM8953/SDM439/SDM450, RealTek RTD129x/RTD139x, Rockchip RK3318/RK3328/RK3399, Samsung Exynos 7870/7885/8890/8895, Snapdragon 650/652/653 / MSM8956/MSM8976/MSM8976PRO, Socionext LD20, Xiaomi Surge S1
 	#      Cortex-A55 / r0p1: Samsung Exynos 9810
 	#      Cortex-A55 / r1p0: Amlogic S905X3/S905D3/S905Y3/T962X3/T962E2, HiSilicon Ascend 310 / Kirin 810/980, Samsung Exynos 9820
 	#      Cortex-A55 / r2p0: Amlogic S905X4/S905C2, NXP i.MX 93, Renesas RZG2UL/RZG2LC, Rockchip RK3566/RK3568/RK3588/RK3588s
 	#      Cortex-A57 / r0p0: ARM Juno r0
+	#      Cortex-A57 / r1p0: Exynos 5433/7420
 	#      Cortex-A57 / r1p1: ARM Juno r1, Nvidia Tegra TX1, Snapdragon 810 / MSM8994/MSM8994V
-	#      Cortex-A57 / r1p2: AMD Opteron A1100, Snapdragon 808 / MSM8992
+	#      Cortex-A57 / r1p2: AMD Opteron A1100, Qualcomm MSM8992 (Snapdragon 808)
 	#      Cortex-A57 / r1p3: Nvidia Jetson TX2, Renesas R8A7795/R8A7796/R8A77965
-	#      Cortex-A72 / r0p0: ARM Juno r2, HiSilicon Kirin 950, Mediatek MT8173, Snapdragon 650/652/653 / MSM8956/MSM8976/MSM8976PRO
-	#      Cortex-A72 / r0p1: Marvell Armada 8020/8040, Mediatek MT6797T
+	#      Cortex-A72 / r0p0: ARM Juno r2, HiSilicon Kirin 950/955, Mediatek MT8173/MT8176, Snapdragon 650/652/653 / Qualcomm MSM8956/MSM8976/MSM8976PRO
+	#      Cortex-A72 / r0p1: Marvell Armada 8020/8040, Mediatek MT6797/MT6797T
 	#      Cortex-A72 / r0p2: HiSilicon Kunpeng 916, NXP i.MX8QM/LS2xx8A, Rockchip RK3399, Socionext LD20, 
 	#      Cortex-A72 / r0p3: Broadcom BCM2711, NXP LS1028A, NXP LX2xx0A, Marvell Armada3900-A1, Xilinx Versal, AWS Graviton -> https://tinyurl.com/y47yz2f6
 	#      Cortex-A72 / r1p0: TI J721E (TDA4VM/DRA829V)
 	#      Cortex-A73 / r0p1: HiSilicon Kirin 960
-	#      Cortex-A73 / r0p2: Amlogic A311D/A311D2/S922X, HiSilicon Kirin 710/970, MediaTek Helio MT6771V/MT8183/P60T, Samsung Exynos 7885
+	#      Cortex-A73 / r0p2: Amlogic A311D/A311D2/S922X, HiSilicon Kirin 710/970, MediaTek Helio P60T/MT6771V/MT6799/MT8183, Samsung Exynos 7885
 	#      Cortex-A75 / r2p1: Samsung Exynos 9820
 	#      Cortex-A76 / r1p0: HiSilicon Kirin 980 (though with an own 0x48/0xd40 ID)
 	#      Cortex-A76 / r3p0: Exynos Auto V9, HiSilicon Kirin 810 (though with an own 0x48/0xd40 ID)
 	#      Cortex-A76 / r4p0: Rockchip RK3588/RK3588s
-	#      Cortex-A77 / r1p0: Qualcomm Snapdragon 865 / QRB5165
+	#      Cortex-A77 / r1p0: Qualcomm QRB5165 (Snapdragon 865)
 	#    Cortex-A78AE / r0p1: Nvidia Jetson Orin NX / AGX Orin
 	#     Cortex-A78C / r0p0: Qualcomm Snapdragon 8cx Gen 3
 	#      Cortex-X1C / r0p0: Qualcomm Snapdragon 8cx Gen 3
@@ -3863,15 +3865,16 @@ GuessARMSoC() {
 	#  Phytium FTC660 / r1p1: Phytium FT-1500A
 	#  Phytium FTC662 / r1p2: Phytium FT-2000+/64
 	#  Phytium FTC663 / r1p3: Phytium FT-2000/4 / FT2000A / D2000/8 / FT2500
-	# Qualcomm Falkor / r10p1: Qualcomm Snapdragon 835 / MSM8998
-	#  Qualcomm Krait / r1p0: Qualcomm Snapdragon S4 Plus (MSM8960), Qualcomm Snapdragon S4 Pro (APQ8064)
+	# Qualcomm Falkor / r10p1: Qualcomm MSM8998 (Snapdragon 835)
+	#  Qualcomm Krait / r0p2: Qualcomm APQ8064A
+	#  Qualcomm Krait / r1p0: Qualcomm MSM8960 (Snapdragon S4 Plus), Qualcomm APQ8064 (Snapdragon S4 Pro), Qualcomm APQ8064T (Snapdragon 600)
 	#  Qualcomm Krait / r1p4: Qualcomm MSM8627
-	#  Qualcomm Krait / r2p0: Qualcomm IPQ806x/MSM8974
+	#  Qualcomm Krait / r2p0: Qualcomm IPQ806x/MSM8974 (Snapdragon 800)
 	#  Qualcomm Krait / r2p1: Qualcomm MSM8974PRO (Snapdragon 801)
-	#   Qualcomm Kryo / r1p2: Qualcomm MSM8996
+	#   Qualcomm Kryo / r1p2: Qualcomm MSM8996 (Snapdragon 820)
 	#   Qualcomm Kryo / r2p1: Qualcomm MSM8996pro (Snapdragon 821)
-	#   Qualcomm Kryo / r13p14: Qualcomm Snapdragon 865 / QRB5165
-	# Qualcomm Kryo V2 / r10p4: Qualcomm Snapdragon 835 / MSM8998
+	#   Qualcomm Kryo / r13p14: Qualcomm QRB5165 (Snapdragon 865)
+	# Qualcomm Kryo V2 / r10p4: Qualcomm MSM8998 (Snapdragon 835)
 	#   ThunderX 88XX / r1p1: ThunderX CN8890
 	#  ThunderX2 99xx / r0p1: Cavium ThunderX2 CN9980
 	#
@@ -4606,13 +4609,25 @@ GuessSoCbySignature() {
 			echo "Allwinner A83T"
 			;;
 		20A5r0p120A5r0p120A5r0p120A5r0p1|2A5222|20A5r0p1202020)
+			# Actions ATM8029, 4 x Cortex-A5 / r0p1 / ?
 			# Amlogic S805/M805, 4 x Cortex-A5 / r0p1 / half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpv4 vfpd32 (3.10: swp half thumb fastmult vfp edsp neon vfpv3 tls vfpv4)
 			# or Qualcomm MSM8625Q: 4 x Cortex-A5 / r0p1 / scp half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpv4
-			grep -q -i amlogic <<<"${DTCompatible}" && echo "Amlogic S805" || echo "Qualcomm MSM8625Q"
+			case "${DTCompatible}" in
+				*amlogic*)
+					echo "Amlogic S805"
+					;;
+				*8625*)
+					echo "Qualcomm MSM8625Q"
+					;;
+				*)
+					echo "Actions ATM8029"
+					;;
+			esac
 			;;
 		20A9r4p120A9r4p120A9r4p120A9r4p1|2A9222)
-			# Amlogic S802/S812, 4 x Cortex-A9 / r4p1 / half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpd32
-			echo "Amlogic S802/S812"
+			# Amlogic S802/S812: 4 x Cortex-A9 / r4p1 / half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpd32
+			# or HiSilicon Hi6620: 4 x Cortex-A9 / r4p1 / swp half thumb fastmult vfp edsp thumbee neon vfpv3
+			grep -q -i amlogic <<<"${DTCompatible}" && echo "Amlogic S802/S812" || echo "HiSilicon Hi6620"
 			;;
 		*A53r0p0*A53r0p0*A53r0p0*A53r0p0)
 			# Snapdragon 410 / MSM8916/APQ8016: 4 x Cortex-A53 / r0p0 / fp asimd evtstrm crc32 cpuid
@@ -4772,6 +4787,10 @@ GuessSoCbySignature() {
 								# Mediatek MT6739WA, 4 x Cortex-A53 / r0p4 / fp asimd aes pmull sha1 sha2 crc32
 								echo "Mediatek MT6739WA"
 								;;
+							*mt8735*)
+								# Mediatek MT8735, 4 x Cortex-A53 / r0p4 / fp asimd aes pmull sha1 sha2 crc32
+								echo "Mediatek MT8735"
+								;;
 							*xlnx*|*zynqmp*|*zcu102*)
 								# Xilinx XCZU9EG, 4 x Cortex-A53 / r0p4 / fp asimd aes pmull sha1 sha2 crc32
 								echo "Xilinx XCZU9EG"
@@ -4878,8 +4897,8 @@ GuessSoCbySignature() {
 			echo "Amlogic A311D2"
 			;;
 		*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A72r0p0*A72r0p0*A72r0p0*A72r0p0)
-			# HiSilicon Kirin 950: 4 x Cortex-A53 / r0p4 + 4 x Cortex-A72 / r0p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32
-			grep -q hisilicon <<<"${DTCompatible}" && echo "HiSilicon Kirin 950"
+			# HiSilicon 950/955: 4 x Cortex-A53 / r0p4 + 4 x Cortex-A72 / r0p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32
+			grep -q hisilicon <<<"${DTCompatible}" && echo "HiSilicon Kirin 950/955"
 			;;
 		*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A73r0p1*A73r0p1*A73r0p1*A73r0p1)
 			# HiSilicon Kirin 960: 4 x Cortex-A53 / r0p4 + 4 x Cortex-A73 / r0p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32
@@ -4937,6 +4956,15 @@ GuessSoCbySignature() {
 			# Exynos 5422, 4 x Cortex-A7 / r0p3 + 4 x Cortex-A15 / r2p3 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae (with 5.x also evtstrm)
 			echo "Exynos 5422"
 			;;
+		10A7r0p410A7r0p410A7r0p410A7r0p404A15r3p304A15r3p304A15r3p304A15r3p3)
+			# Exynos 5430, 4 x Cortex-A7 / r0p4 + 4 x Cortex-A15 / r3p3 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae (with 5.x also evtstrm)
+			echo "Exynos 5430"
+			;;
+		*A7r0p4*A7r0p4*A7r0p4*A7r0p4*A7r0p4*A7r0p4*A7r0p4*A7r0p4|*A7r0p4*A7r0p4)
+			# Mediatek MT6592: 8 x Cortex-A7 / r0p4 / swp half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpv4 idiva idivt
+			# (with vendor kernel often only 2 cores show up in /proc/cpuinfo)
+			echo "Mediatek MT6592"
+			;;
 		??A9r3p0??A9r3p0)
 			# AML8726-MX, 2 x Cortex-A9 / r3p0 / half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpd32
 			# or RK3066, 2 x Cortex-A9 / r3p0 / swp half thumb fastmult vfp edsp neon vfpv3 / https://lore.kernel.org/all/CAAFQd5CN_xvkdD+Bf9A+Mc+_jVxtdOKosrYH_8bNNHkGQw7eGA@mail.gmail.com/T/
@@ -4949,6 +4977,10 @@ GuessSoCbySignature() {
 		00A35r0p100A35r0p100A35r0p100A35r0p1)
 			# Mediatek MT8167B: 4 x Cortex-A35 / r0p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			echo "Mediatek MT8167B"
+			;;
+		*A35r0p1*A35r0p1*A35r0p1*A35r0p1*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A73r0p2*A73r0p2|*A35r0p1*A53r0p4*A73r0p2)
+			# Mediatek MT6799: 4 x Cortex-A35 / r0p1 + 4 x Cortex-A53 / r0p4 + 2 x Cortex-A73 / r0p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32
+			echo "Mediatek MT6799"
 			;;
 		00A35r0p200A35r0p2)
 			# RK1808, 2 x Cortex-A35 / r0p2 / https://patchwork.kernel.org/project/linux-arm-kernel/patch/20210516230551.12469-6-afaerber@suse.de/#24199353
@@ -5016,6 +5048,10 @@ GuessSoCbySignature() {
 			# or maybe NXP i.MX8QM, 4 x Cortex-A53 / r0p4 + 2 x Cortex-A72 / r0p2
 			grep -q rockchip <<<"${DTCompatible}" && echo "Rockchip RK3399" || echo "NXP i.MX8QM"
 			;;
+		*A53r0p2*A53r0p2*A53r0p2*A53r0p2*A72r0p0*A72r0p0)
+			# Mediatek MT8176: 4 x Cortex-A53 / r0p2 + 2 x Cortex-A72 / r0p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32
+			echo "Mediatek MT8176"
+			;;
 		*A53r0p2*A53r0p2*A72r0p0*A72r0p0)
 			# Mediatek MT8173: 2 x Cortex-A53 / r0p2 + 2 x Cortex-A72 / r0p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			echo "Mediatek MT8173"
@@ -5027,7 +5063,6 @@ GuessSoCbySignature() {
 		*A53r0p3*A53r0p3*A53r0p3*A53r0p3)
 			# Mediatek MT6735: 4 x Cortex-A53 / r0p3 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm sha2 (booting 32-bit)
 			# or Mediatek MT8163: 4 x Cortex-A53 / r0p3 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt lpae evtstrm aes pmull sha1 sha2 crc32
-			# or Mediatek MT8173: 4 x Cortex-A53 / r0p3 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt lpae evtstrm aes pmull sha1 sha2 crc32
 			# or HiSilicon Hi3751: 4 x Cortex-A53 / r0p3 / swp half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt (booting 32-bit kernel)
 			case "${DTCompatible}" in
 				*mt6735*)
@@ -5035,9 +5070,6 @@ GuessSoCbySignature() {
 					;;
 				*mt8163*)
 					echo "Mediatek MT8163"
-					;;
-				*mt8173*)
-					echo "Mediatek MT8173"
 					;;
 				*hi3751*)
 					echo "HiSilicon Hi3751"
@@ -5056,8 +5088,8 @@ GuessSoCbySignature() {
 			grep -q mt6738 <<<"${DTCompatible}" && echo "Mediatek MT6738" || echo "Marvell PXA1908"
 			;;
 		*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A72r0p1*A72r0p1)
-			# Mediatek MT6797T: 4 x Cortex-A53 / r0p4 + 4 x Cortex-A53 / r0p4 + 2 x Cortex-A72 / r0p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32
-			echo "Mediatek MT6797T"
+			# Mediatek MT6797/MT6797T: 4 x Cortex-A53 / r0p4 + 4 x Cortex-A53 / r0p4 + 2 x Cortex-A72 / r0p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32
+			echo "Mediatek MT6797/MT6797T"
 			;;
 		*A57r0p0*A57r0p0*A53r0p0*A53r0p0*A53r0p0*A53r0p0)
 			# ARM Juno: 2 x Cortex-A57 / r0p0 + 4 x Cortex-A53 / r0p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32
@@ -5129,8 +5161,8 @@ GuessSoCbySignature() {
 			echo "Nvidia Tegra K1 (124)"
 			;;
 		*A7r0p5*A7r0p5*A7r0p5*A7r0p5*A15r3p3*A15r3p3*A15r3p3*A15r3p3)
-			# HiSilicon Kirin 920: 4 x Cortex-A7 / r0p5 + 4 x Cortex-A15 / r3p3 / swp half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt
-			echo "HiSilicon Kirin 920"
+			# HiSilicon Kirin 920/925/928: 4 x Cortex-A7 / r0p5 + 4 x Cortex-A15 / r3p3 / swp half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt
+			echo "HiSilicon Kirin 920/925/928"
 			;;
 		00A57r1p100A57r1p100A57r1p100A57r1p1)
 			# Tegra X1/TX1, 4 x Cortex-A57 / r1p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32
@@ -5182,7 +5214,12 @@ GuessSoCbySignature() {
 			;;
 		*A17r0p0*A17r0p0)
 			# MediaTek MT5890: 2 x Cortex-A17 / r0p0 / swp half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt
+			# though has been advertised as quad core (2 x A7 + 2 x A17): https://www.avforums.com/attachments/safari-27-jul-2018-at-09-23-pdf.1043417/
 			echo "MediaTek MT5890"
+			;;
+		*A7r0p5*A7r0p5*A7r0p5*A7r0p5*A17r0p0*A17r0p0*A17r0p0*A17r0p0)
+			# MediaTek MT6595: 4 x Cortex-A7 / r0p5 + 4 x Cortex-A17 / r0p0 / swp half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpv4 idiva idivt
+			echo "MediaTek MT6595"
 			;;
 		*A15r2p1*A15r2p1*A7r0p1*A7r0p1*A7r0p1)
 			# ARM Versatile V2P-CA15-CA7: 2 x Cortex-A15 / r2p1 + 3 x Cortex-A7 / r0p1 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
@@ -5192,7 +5229,7 @@ GuessSoCbySignature() {
 			# MT6589: 4 x Cortex-A7 / r0p2 / https://gist.github.com/MaTBeu4uk/3a1bea6bf8c658829622f3ecbcf4b7eb
 			echo "Mediatek MT6589"
 			;;
-		?0A7r0p3?0A7r0p3)
+		*A7r0p3*A7r0p3)
 			# Mediatek MT6572: 2 x Cortex-A7 / r0p3 / swp half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpv4 idiva idivt
 			# or Qualcomm MSM8610 (Snapdragon 200): 2 x Cortex-A7 / r0p3 / swp half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt 
 			case "${DTCompatible}" in
@@ -5206,14 +5243,18 @@ GuessSoCbySignature() {
 			;;
 			echo "Mediatek MT6572"
 			;;
-		?0A7r0p3?0A7r0p3?0A7r0p3?0A7r0p3)
+		*A7r0p3*A7r0p3*A15r3p2*A15r3p2)
+			# MT8135: 2 x Cortex-A7 / r0p3 + 2 x Cortex-A15 / r3p2 / swp half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpv4 idiva idivt
+				echo "Mediatek MT8135"
+				;;
+		*A7r0p3*A7r0p3*A7r0p3*A7r0p3)
 			# Allwinner A31: 4 x Cortex-A7 / r0p3 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
-			# MT7623: 4 x Cortex-A7 / r0p3 / half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
-			# MT6580: 4 x Cortex-A7 / r0p3 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae
-			# MT6582: 4 x Cortex-A7 / r0p3 / swp half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpv4 idiva idivt
-			# MT6589: 4 x Cortex-A7 / r0p3 / swp half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpv4 idiva idivt
-			# MT8127: 4 x Cortex-A7 / r0p3 / swp half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpv4 idiva idivt
-			# MT8135: 4 x Cortex-A7 / r0p3 / swp half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpv4 idiva idivt
+			# or MT7623: 4 x Cortex-A7 / r0p3 / half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
+			# or MT6580: 4 x Cortex-A7 / r0p3 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae
+			# or MT6582: 4 x Cortex-A7 / r0p3 / swp half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpv4 idiva idivt
+			# or MT6589: 4 x Cortex-A7 / r0p3 / swp half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpv4 idiva idivt
+			# or MT8127: 4 x Cortex-A7 / r0p3 / swp half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpv4 idiva idivt
+			# or Qualcomm MSM8226/MSM8926 (Snapdragon 400): 4 x Cortex-A7 / r0p3 / swp half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt
 			case "${DTCompatible}" in
 				*mt6580*)
 					echo "Mediatek MT6580"
@@ -5227,11 +5268,11 @@ GuessSoCbySignature() {
 				*mt8127*)
 					echo "Mediatek MT8127"
 					;;
-				*mt8135*)
-					echo "Mediatek MT8135"
-					;;
 				*mt7623*)
 					echo "Mediatek MT7623"
+					;;
+				*msm8226*|*msm8926*|*400*)
+					echo "Qualcomm MSM8226/MSM8926 (Snapdragon 400)"
 					;;
 				*)
 					echo "Allwinner A31"
@@ -5384,8 +5425,12 @@ GuessSoCbySignature() {
 			# Socionext UniPhier LD20: 2 x Cortex-A72 / r0p2 + 2 x Cortex-A53 / r0p4 / https://lore.kernel.org/all/CAM-ziR6N36F-2C7wHLEa4rUD1BpN+pAyMtnjCS9NWJWACZnwQA@mail.gmail.com/T/
 			echo "Socionext UniPhier LD20"
 			;;
-		*A53r0p2*A53r0p2*A53r0p2*A53r0p2*A57r*A57r*A57r*A57r)
-			# Samsung Exynos 7420: 4 x Cortex A53 / r0p2 + 4 x Cortex A57 / * / fp asimd aes pmull sha1 sha2 crc32
+		*A53r0p1*A53r0p1*A53r0p1*A53r0p1*A57r1p0*A57r1p0*A57r1p0*A57r1p0)
+			# Samsung Exynos 5433: 4 x Cortex A53 / r0p1 + 4 x Cortex A57 / r1p0 / ?
+			echo "Samsung Exynos 5433"
+			;;
+		*A53r0p2*A53r0p2*A53r0p2*A53r0p2*A57r1p0*A57r1p0*A57r1p0*A57r1p0)
+			# Samsung Exynos 7420: 4 x Cortex A53 / r0p2 + 4 x Cortex A57 / r1p0 / fp asimd aes pmull sha1 sha2 crc32
 			echo "Samsung Exynos 7420"
 			;;
 		*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A73r0p2*A73r0p2)

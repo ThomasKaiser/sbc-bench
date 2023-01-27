@@ -243,6 +243,7 @@ GetARMCore() {
 	# and https://elixir.bootlin.com/linux/v6.2-rc4/source/arch/arm64/include/asm/cputype.h
 	# and https://github.com/Dr-Noob/cpufetch/blob/master/src/arm/uarch.c
 	# and https://github.com/pytorch/cpuinfo/blob/main/src/arm/linux/midr.c
+	# and https://github.com/hrw/arm-socs-table/blob/main/data/cpu_cores.yml
 	grep "${1}/${2}:" <<<"41:Arm
 	41/810:ARM810
 	41/920:ARM920
@@ -3866,6 +3867,7 @@ GuessARMSoC() {
 	#  Phytium FTC662 / r1p2: Phytium FT-2000+/64
 	#  Phytium FTC663 / r1p3: Phytium FT-2000/4 / FT2000A / D2000/8 / FT2500
 	# Qualcomm Falkor / r10p1: Qualcomm MSM8998 (Snapdragon 835)
+	# Qualcomm Falkor / r10p2: Qualcomm SDM662 (Snapdragon 622)
 	#  Qualcomm Krait / r0p2: Qualcomm APQ8064A
 	#  Qualcomm Krait / r1p0: Qualcomm MSM8960 (Snapdragon S4 Plus), Qualcomm APQ8064 (Snapdragon S4 Pro), Qualcomm APQ8064T (Snapdragon 600)
 	#  Qualcomm Krait / r1p4: Qualcomm MSM8627
@@ -3874,7 +3876,7 @@ GuessARMSoC() {
 	#   Qualcomm Kryo / r1p2: Qualcomm MSM8996 (Snapdragon 820)
 	#   Qualcomm Kryo / r2p1: Qualcomm MSM8996pro (Snapdragon 821)
 	#   Qualcomm Kryo / r13p14: Qualcomm QRB5165 (Snapdragon 865)
-	# Qualcomm Kryo V2 / r10p4: Qualcomm MSM8998 (Snapdragon 835)
+	# Qualcomm Kryo V2 / r10p4: Qualcomm SDM662 (Snapdragon 622), Qualcomm MSM8998 (Snapdragon 835)
 	#   ThunderX 88XX / r1p1: ThunderX CN8890
 	#  ThunderX2 99xx / r0p1: Cavium ThunderX2 CN9980
 	#
@@ -5226,7 +5228,7 @@ GuessSoCbySignature() {
 			echo "ARM Versatile V2P-CA15-CA7"
 			;;
 		?0A7r0p2?0A7r0p2?0A7r0p2?0A7r0p2)
-			# MT6589: 4 x Cortex-A7 / r0p2 / https://gist.github.com/MaTBeu4uk/3a1bea6bf8c658829622f3ecbcf4b7eb
+			# MT6589: 4 x Cortex-A7 / r0p2 / https://gist.github.com/MaTBeu4uk/3a1bea6bf8c658829622f3ecbcf4b7eb which is in conflict to other sources who claim Cortex-A7 / r0p3
 			echo "Mediatek MT6589"
 			;;
 		*A7r0p3*A7r0p3)

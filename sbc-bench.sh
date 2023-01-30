@@ -1642,6 +1642,12 @@ Getx86ClusterDetails() {
 		[ -f /sys/devices/system/cpu/smt/active ] && read HT </sys/devices/system/cpu/smt/active || HT=0	
 
 		case ${X86CPUName} in
+			i3-L13G4|i5-L16G7)
+				# Lakefield: 1 P core w/o HT + 4 E cores
+				echo "Tremont" >"${TempDir}/Ecores"
+				echo "Sunny Cove" >"${TempDir}/Pcores"
+				[ ${HT} -eq 1 ] && echo "0 2" || echo "0 1"
+				;;
 			i9-13900K|i9-13900KF|i9-13900F|i9-13900T|i9-13900HX|i9-13950HX|i9-13980HX|i9-13900|i9-13900TE|i9-13900E)
 				# Raptor Lake, 8/16 cores, 32 threads
 				echo "Gracemont" >"${TempDir}/Ecores"
@@ -5249,8 +5255,6 @@ GuessSoCbySignature() {
 					echo "Qualcomm MSM8610 (Snapdragon 200)"
 					;;
 			esac
-			;;
-			echo "Mediatek MT6572"
 			;;
 		*A7r0p3*A7r0p3*A15r3p2*A15r3p2)
 			# MT8135: 2 x Cortex-A7 / r0p3 + 2 x Cortex-A15 / r3p2 / swp half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpv4 idiva idivt

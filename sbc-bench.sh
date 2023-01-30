@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.9.9
+Version=0.9.10
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -173,7 +173,8 @@ Main() {
 	[ -f /sys/devices/system/cpu/cpufreq/policy0/scaling_governor ] && \
 		read OriginalCPUFreqGovernor </sys/devices/system/cpu/cpufreq/policy0/scaling_governor 2>/dev/null
 	BasicSetup performance >/dev/null 2>&1
-	ReportGovernors
+	GovernorState="$(ReportGovernors)"
+	[ "X${GovernorState}" != "X" ] && echo -e "${GovernorState}\n"
 	GetTempSensor
 	[ "X${MODE}" = "Xpts" ] && CheckPTS
 	InstallPrerequisits
@@ -371,12 +372,30 @@ GetARMCore() {
 	56/581:Marvell PJ4/PJ4b
 	56/584:Marvell PJ4B-MP
 	61:Apple
+	61/000:Apple Swift
+	61/001:Apple Cyclone
+	61/002:Apple Typhoon
+	61/003:Apple Typhoon/Capri
+	61/004:Apple Twister
+	61/005:Apple Twister/Elba/Malta
+	61/006:Apple Hurricane
+	61/007:Apple Hurricane/Myst
+	61/008:Apple Monsoon
+	61/009:Apple Mistral
+	61/00b:Apple Vortex
+	61/00c:Apple Tempest
+	61/00f:Apple Tempest-M9
+	61/010:Apple Vortex-Aruba
+	61/011:Apple Tempest-Aruba
+	61/012:Apple Lightning
+	61/013:Apple Thunder
 	61/020:Apple Icestorm A14
 	61/021:Apple Firestorm A14
 	61/022:Apple Icestorm M1
 	61/023:Apple Firestorm M1
 	61/024:Apple Icestorm M1Pro
 	61/025:Apple Firestorm M1Pro
+	61/026:Apple Thunder-M10
 	61/028:Apple Icestorm M1Max
 	61/029:Apple Firestorm M1Max
 	61/030:Apple Blizzard A15
@@ -386,6 +405,8 @@ GetARMCore() {
 	66:Faraday
 	66/526:Faraday FA526
 	66/626:Faraday FA626
+	68:Huaxintong Semiconductor (HXT)
+	68/000:HXT Phecda
 	69:Intel
 	69/200:Intel i80200
 	69/210:Intel PXA250A
@@ -534,7 +555,7 @@ ReportGovernors() {
 	# check and report governors that might affect performance behaviour. Stuff like
 	# memory/GPU/NPU governors. On RK3588 for example:
 	#
-	# Status of performance related governors below /sys:
+	# Status of performance related governors found below /sys:
 	# dmc: dmc_ondemand (dmc_ondemand userspace powersave performance simple_ondemand)
 	# fb000000.gpu: simple_ondemand (dmc_ondemand userspace powersave performance simple_ondemand)
 	# fdab0000.npu: userspace (dmc_ondemand userspace powersave performance simple_ondemand)
@@ -546,7 +567,7 @@ ReportGovernors() {
 	if [ "X${Governors}" = "X" ]; then
 		return
 	fi
-	echo -e "Status of performance related governors below /sys:"
+	echo -e "Status of performance related governors found below /sys:"
 	echo "${Governors}" | while read ; do
 		read Governor <"${REPLY}"
 		if [ "X${Governor}" != "X" ]; then
@@ -571,7 +592,6 @@ ReportGovernors() {
 			fi
 		fi
 	done | sort -n
-	echo ""
 } # ReportGovernors
 
 PlotPerformanceGraph() {
@@ -1560,29 +1580,51 @@ CheckLoadAndDmesg() {
 } # CheckLoadAndDmesg
 
 GetCPUClusters() {
+	# try to report different CPU clusters. Cores of same type might be handled differently.
+	# For example on RK3588 with 4 x A55 and 4 x A76 the latter form two clusters that
+	# behave differently wrt clockspeeds due to PVTM (see below at GetCoreClusters function
+	# that reports all cores of same type as single cluster)
 	if [ "X${VirtWhat}" != "X" -a "X${VirtWhat}" != "Xnone" ]; then
 		# in virtualized environments we only check cpu0
 		echo "0"
-	elif [ -d /sys/devices/system/cpu/cpufreq/policy0 -a "${CPUArchitecture}" != "x86_64" -a "${CPUArchitecture}" != "i686" ]; then
-		# currently we do not trust into cpufreq support on RISC-V since Kendryte K510:
-		# https://github.com/ThomasKaiser/sbc-bench/issues/46#issuecomment-1175855473
-		# Same story on Loongson: http://ix.io/4aIA
-		if [ ${CPUArchitecture} == *riscv* -o ${CPUArchitecture} == *loongarch* ]; then
-			echo "0"
-		else
-			# if cpufreq support exists on ARM or MIPS we rely on this
-			ls -ld /sys/devices/system/cpu/cpufreq/policy? | awk -F"policy" '{print $2}'
-		fi
-	elif [ "${CPUArchitecture}" = "x86_64" ]; then
-		Getx86ClusterDetails
 	else
-		# check for different CPU types based on package ids. This allows to test through
-		# different cores even on systems with no cpufreq support.
-		SYS=/sys/devices/system/cpu
-		for PKG_ID in $(cat "${SYS}"/cpu*/topology/physical_package_id | sort | uniq); do
-			dirname -- $(dirname -- $(grep "^${PKG_ID}$" "${SYS}"/cpu*/topology/physical_package_id | head -n1)) | tr -d -c '[:digit:]'
-			echo " "
-		done
+		case ${CPUArchitecture} in
+			aarch*|arm*)
+				# currently we do not trust into cpufreq support on RISC-V since Kendryte K510:
+				# https://github.com/ThomasKaiser/sbc-bench/issues/46#issuecomment-1175855473
+				# Same story on Loongson: http://ix.io/4aIA
+				if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
+					ls -ld /sys/devices/system/cpu/cpufreq/policy? | awk -F"policy" '{print $2}'
+				else
+					# check for different CPU types based on package ids. This allows to test through
+					# different cores even on systems with no cpufreq support.
+					for PKG_ID in $(cat /sys/devices/system/cpu/cpu*/topology/physical_package_id | sort | uniq); do
+						dirname -- $(dirname -- $(grep "^${PKG_ID}$" /sys/devices/system/cpu/cpu*/topology/physical_package_id | head -n1)) | tr -d -c '[:digit:]'
+						echo " "
+					done
+				fi
+				;;
+			x86_64)
+				Getx86ClusterDetails
+				;;
+			*)
+				# check for different package ids and use if existent otherwise treat all
+				# CPU cores as identical
+				if [ -f /sys/devices/system/cpu/cpu0/topology/physical_package_id ]; then
+					CountOfPackageIDs=$(sort /sys/devices/system/cpu/cpu*/topology/physical_package_id | uniq | wc -l)
+					if [ ${CountOfPackageIDs} -gt 1 ]; then
+						for PKG_ID in $(cat /sys/devices/system/cpu/cpu*/topology/physical_package_id | sort | uniq); do
+							dirname -- $(dirname -- $(grep "^${PKG_ID}$" /sys/devices/system/cpu/cpu*/topology/physical_package_id | head -n1)) | tr -d -c '[:digit:]'
+							echo " "
+						done
+					else
+						echo "0"
+					fi
+				else
+					echo "0"
+				fi
+				;;
+		esac
 	fi
 } # GetCPUClusters
 
@@ -3529,6 +3571,12 @@ LogEnvironment() {
 
 	# with Rockchip BSP kernels try to report PVTM settings (Process-Voltage-Temperature Monitor)
 	grep cpu.*pvtm <<<"${DMESG}" | awk -F'] ' '{print "           "$2}'
+	
+	# report performance relevant governors if available:
+	if [ "X${GovernorState}" != "X" ]; then
+		echo ""
+		sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" <<<"${GovernorState}"
+	fi
 } # LogEnvironment
 
 UploadResults() {

@@ -93,9 +93,12 @@ for file in *.txt ; do
 done | sed -e 's/ \{2,\}/ /g' >>validation.md
 
 # check whether new ARM Core IDs appeared
-curl -O https://raw.githubusercontent.com/util-linux/util-linux/master/sys-utils/lscpu-arm.c
-[ -f lscpu-arm.old ] && diff lscpu-arm.c lscpu-arm.old
-mv -f lscpu-arm.c lscpu-arm.old
+for URL2Check in https://raw.githubusercontent.com/util-linux/util-linux/master/sys-utils/lscpu-arm.c https://raw.githubusercontent.com/hrw/arm-socs-table/main/data/cpu_cores.yml https://raw.githubusercontent.com/pytorch/cpuinfo/main/src/arm/linux/midr.c https://raw.githubusercontent.com/Dr-Noob/cpufetch/master/src/arm/uarch.c https://raw.githubusercontent.com/torvalds/linux/master/arch/arm64/include/asm/cputype.h ; do
+	echo "Checking ${URL2Check}"
+	curl -s -O "${URL2Check}"
+	[ -f "${URL2Check##*/}.old" ] && diff "${URL2Check##*/}" "${URL2Check##*/}.old"
+	mv -f "${URL2Check##*/}" "${URL2Check##*/}.old"
+done
 
 # generate sorted tables
 echo -e "# sbc-bench results sorted\n" >Sorted-Results.md

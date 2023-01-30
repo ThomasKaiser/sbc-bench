@@ -240,7 +240,7 @@ GetARMCore() {
 	# List originally obtained from util-linux project but later appended by looking at
 	# https://github.com/gcc-mirror/gcc/blob/master/gcc/config/aarch64/aarch64-cores.def
 	# and https://github.com/llvm/llvm-project/blob/release/15.x/llvm/lib/Support/Host.cpp
-	# and https://elixir.bootlin.com/linux/v6.2-rc4/source/arch/arm64/include/asm/cputype.h
+	# and https://github.com/torvalds/linux/blob/master/arch/arm64/include/asm/cputype.h
 	# and https://github.com/Dr-Noob/cpufetch/blob/master/src/arm/uarch.c
 	# and https://github.com/pytorch/cpuinfo/blob/main/src/arm/linux/midr.c
 	# and https://github.com/hrw/arm-socs-table/blob/main/data/cpu_cores.yml
@@ -3819,10 +3819,10 @@ GuessARMSoC() {
 	#      Cortex-A53 / r0p1: Exynos 5433, Qualcomm MSM8939
 	#      Cortex-A53 / r0p2: Marvell PXA1908, Mediatek MT6752/MT6738/MT6755/MT8173/MT8176, Qualcomm Snapdragon 810 (MSM8994), Samsung Exynos 7420
 	#      Cortex-A53 / r0p3: ARM Juno r1, ARM Juno r2, HiSilicon Hi3751, Kirin 620/930, Mediatek MT6735/MT8163, Nexell S5P6818, Samsung Exynos 7580, Qualcomm MSM8992 (Snapdragon 808)
-	#      Cortex-A53 / r0p4: Allwinner A100/A133/A53/A64/H313/H5/H6/H616/H64/R329/R818/T507/T509, Amlogic A113X/A113D/A311D/A311D2/S805X/S805Y/S905/S905X/S905D/S905W/S905L/S905L3A/S905M2/S905X2/S905Y2/S905D2/S912/S922X/T962X2, Broadcom BCM2837/BCM2709/BCM2710/RP3A0-AU (BCM2710A1), HiSilicon Hi3798C-V200, Exynos 8890, HiSilicon Kirin 650/710/950/955/960/970, Marvell Armada 37x0, Mediatek MT6739WA/MT6762M/MT6765/MT6771V/MT6797/MT6797T/MT6799/MT8183/MT8735, NXP i.MX8M/i.MX8QM/LS1xx8, Qualcomm MSM8937/MSM8952/MSM8953/SDM439/SDM450, RealTek RTD129x/RTD139x, Rockchip RK3318/RK3328/RK3399, Samsung Exynos 7870/7885/8890/8895, Snapdragon 650/652/653 / MSM8956/MSM8976/MSM8976PRO, Socionext LD20, Xiaomi Surge S1
+	#      Cortex-A53 / r0p4: Allwinner A100/A133/A53/A64/H313/H5/H6/H616/H64/R329/R818/T507/T509, Amlogic A113X/A113D/A311D/A311D2/S805X/S805Y/S905/S905X/S905D/S905W/S905L/S905L3A/S905M2/S905X2/S905Y2/S905D2/S912/S922X/T962X2, Broadcom BCM2837/BCM2709/BCM2710/RP3A0-AU (BCM2710A1), HiSilicon Hi3798C-V200, Exynos 8890, HiSilicon Kirin 650/710/950/955/960/970, Marvell Armada 37x0, Mediatek MT6739WA/MT6762M/MT6765/MT6771V/MT6797/MT6797T/MT6799/MT8183/MT8735, NXP i.MX8M/i.MX8QM/LS1xx8, Qualcomm MSM8937/MSM8952/MSM8953/MSM8956/MSM8976/MSM8976PRO/SDM439/SDM450, RealTek RTD129x/RTD139x, Rockchip RK3318/RK3328/RK3399, Samsung Exynos 7870/7885/8890/8895, Socionext LD20/SC2A11, Xiaomi Surge S1
 	#      Cortex-A55 / r0p1: Samsung Exynos 9810
 	#      Cortex-A55 / r1p0: Amlogic S905X3/S905D3/S905Y3/T962X3/T962E2, HiSilicon Ascend 310 / Kirin 810/980, Samsung Exynos 9820
-	#      Cortex-A55 / r2p0: Amlogic S905X4/S905C2, NXP i.MX 93, Renesas RZG2UL/RZG2LC, Rockchip RK3566/RK3568/RK3588/RK3588s
+	#      Cortex-A55 / r2p0: Amlogic S905X4/S905C2, NXP i.MX 93, Qualcomm SM8350 (Snapdragon 888), Renesas RZG2UL/RZG2LC, Rockchip RK3566/RK3568/RK3588/RK3588s
 	#      Cortex-A57 / r0p0: ARM Juno r0
 	#      Cortex-A57 / r1p0: Exynos 5433/7420
 	#      Cortex-A57 / r1p1: ARM Juno r1, Nvidia Tegra TX1, Snapdragon 810 / MSM8994/MSM8994V
@@ -3840,12 +3840,15 @@ GuessARMSoC() {
 	#      Cortex-A76 / r3p0: Exynos Auto V9, HiSilicon Kirin 810 (though with an own 0x48/0xd40 ID)
 	#      Cortex-A76 / r4p0: Rockchip RK3588/RK3588s
 	#      Cortex-A77 / r1p0: Qualcomm QRB5165 (Snapdragon 865)
+	#      Cortex-A78 / r1p0: Qualcomm SM8350 (Snapdragon 888)
 	#    Cortex-A78AE / r0p1: Nvidia Jetson Orin NX / AGX Orin
 	#     Cortex-A78C / r0p0: Qualcomm Snapdragon 8cx Gen 3
+	#       Cortex-X1 / r1p0: Qualcomm SM8350 (Snapdragon 888)
 	#      Cortex-X1C / r0p0: Qualcomm Snapdragon 8cx Gen 3
+	#     Cortex-A510 / r0p2: Qualcomm Snapdragon 8 Gen1
 	#     Cortex-A510 / r0p3: Qualcomm Snapdragon 8+ Gen1
-	#     Cortex-A710 / r2p0: Qualcomm Snapdragon 8+ Gen1
-	#       Cortex-X2 / r2p0: Qualcomm Snapdragon 8+ Gen1
+	#     Cortex-A710 / r2p0: Qualcomm Snapdragon 8 Gen1, Snapdragon 8+ Gen1
+	#       Cortex-X2 / r2p0: Qualcomm Snapdragon 8 Gen1, Snapdragon 8+ Gen1
 	#       Exynos-m1 / r1p1: Samsung Exynos 8890
 	#       Exynos-m1 / r4p0: Samsung Exynos 8895
 	#       Exynos-m3 / r1p0: Samsung Exynos 9810
@@ -3853,7 +3856,7 @@ GuessARMSoC() {
 	#   Kryo 3XX Gold / r6p13: Qualcomm Snapdragon 845
 	# Kryo 3XX Silver / r7p12: Qualcomm Snapdragon 845
 	#     Neoverse-N1 / r3p1: Ampere Altra, AWS Graviton2
-	#     Neoverse N2 / r0p0: Marvell Octeon 10
+	#     Neoverse-N2 / r0p0: Marvell Octeon 10, YiTian 710
 	#     Neoverse-V1 / r1p1: AWS Graviton3
 	#   NVidia Carmel / r0p0: Nvidia Tegra Xavier
 	#   NVidia Denver / r0p0: Nvidia Tegra K1 (Tegra132)
@@ -4640,7 +4643,7 @@ GuessSoCbySignature() {
 			echo "Snapdragon 650"
 			;;
 		*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A72r0p0*A72r0p0*A72r0p0*A72r0p0)
-			# Snapdragon 652/653 / MSM8976/MSM8976PRO: 4 x Cortex-A53 / r0p4 + 4 x Cortex-A72 / r0p0
+			# Snapdragon 652/653 / MSM8976/MSM8976PRO: 4 x Cortex-A53 / r0p4 + 4 x Cortex-A72 / r0p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			echo "Snapdragon 652/653"
 			;;
 		*A53r0p3*A53r0p3*A53r0p3*A53r0p3*A57r1p2*A57r1p2)
@@ -4662,6 +4665,10 @@ GuessSoCbySignature() {
 		*Kryor2p1*Kryor2p1*Kryor2p1*Kryor2p1)
 			# Qualcomm MSM8996pro: 2 x Kryo r2p1 + 2 x Kryo r2p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			echo "Qualcomm MSM8996pro"
+			;;
+		*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4)
+			# Socionext SC2A11: 24 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
+			echo "Socionext SC2A11"
 			;;
 		00A53r0p400A53r0p400A53r0p400A53r0p4|??A53r0p4??????)
 			# The boring quad Cortex-A53 done by every SoC vendor: 4 x Cortex-A53 / r0p4
@@ -5535,8 +5542,13 @@ GuessSoCbySignature() {
 			echo "AWS Graviton3"
 			;;
 		*NeoverseN2r0p0*)
-			# Marvell Octeon 10: 24 x Neoverse N2 / r0p0 / fp asimd aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 sve asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp sve2 sveaes svepmull svebitperm svesha3 svesm4 flagm2 frint rng / L1d 1.5M, L1i 1.5M, L2 24M, L3 48M
-			echo "Marvell Octeon 10"
+			# Marvell Octeon 10: 24 x Neoverse-N2 / r0p0 / fp asimd aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 sve asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp sve2 sveaes svepmull svebitperm svesha3 svesm4 flagm2 frint rng / L1d 1.5M, L1i 1.5M, L2 24M, L3 48M
+			# or Alibaba g8y/c8y/r8y VMs hosted on YiTian 710 CPUs: 1/2/4/8/16/32/64/128 x Neoverse-N2 / r0p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 sve asimdfhm dit uscat ilrcpc flagm ssbs sb dcpodp sve2 sveaes svepmull svebitperm svesha3 svesm4 flagm2 frint svei8mm svebf16 i8mm bf16 dgh bti
+			if [ ${CPUCores} -eq 24 ]; then
+				echo "Marvell Octeon 10"
+			else
+				echo "YiTian 710"
+			fi
 			;;
 		*AppleM1r0p0*AppleM1r0p0*AppleM1r0p0*AppleM1r0p0*AppleM1*AppleM1*AppleM1*AppleM1*|*AppleM1r1p1*AppleM1r1p1*AppleM1r1p1*AppleM1r1p1*AppleM1r1p1*AppleM1r1p1*AppleM1r1p1*AppleM1r1p1)
 			# Apple M1: 4 x Apple Icestorm / r1p1 + 4 x Apple Firestorm / r1p1 / https://gist.github.com/z4yx/13520bd2beef49019b1b7436e3b95ddd
@@ -5595,9 +5607,19 @@ GuessSoCbySignature() {
 			# Qualcomm SM8150: 4 x Qualcomm Kryo 4XX Silver / r13p14 + 4 x Qualcomm Kryo 4XX Gold / r13p14  / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp asimdrdm lrcpc dcpop asimddp
 			echo "Qualcomm SM8150"
 			;;
-		*A78Cr0p0*A78Cr0p0*A78Cr0p0*A78Cr0p0*X1Cr0p0*X1Cr0p0*X1Cr0p0*X1Cr0p0)
+		*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A78r1p0*A78r1p0*A78r1p0*X1r1p0)
+			# Qualcomm SM8350 (Snapdragon 888): 4 x Cortex-A55 / r2p0 + 3 x Cortex-A78 / r1p0 + 1 x Cortex-X1 / r1p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp
+			echo "Qualcomm SM8350 (Snapdragon 888)"
+			;;
+		*A78Cr0p0*A78Cr0p0*A78Cr0p0*A78Cr0p0*X1Cr0p0*X1Cr0p0*X1Cr0p0*X1Cr0p0|360X1Cr0p0360X1Cr0p0360X1Cr0p0360X1Cr0p0360X1Cr0p0360X1Cr0p0360X1Cr0p0360X1Cr0p0)
 			# Qualcomm Snapdragon 8cx Gen 3 : 4 x Cortex-A78C / r0p0 + 4 x Cortex-X1C / r0p0 / fp asimd aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp ilrcpc flagm
+			# When running Windows on this thing in WSL2 (Windows Subsystem for Linux 2) all 8 cores are presented as Cortex-X1C and from within Linux it's impossible
+			# to assign single-threaded tasks to an A78C since they end up on an X1C anyway: https://github.com/ThomasKaiser/sbc-bench/issues/58#issuecomment-1374900303
 			echo "Qualcomm Snapdragon 8cx Gen 3"
+			;;
+		*A510r0p2*A510r0p2*A510r0p2*A510r0p2*A710r2p0*A710r2p0*A710r2p0*X2r2p0)
+			# Qualcomm Snapdragon 8 Gen1: 4 x Cortex-A510 / r0p2 + 3 Cortex-A710 / r2p0 + 1 x Cortex-X2 / r2p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 sve asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp flagm2 frint i8mm bf16 bti / https://chimolog.co/wp-content/uploads/2022/12/samsung_SM-X800.html
+			echo "Qualcomm Snapdragon 8 Gen1"
 			;;
 		*A510r0p3*A510r0p3*A510r0p3*A510r0p3*A710r2p0*A710r2p0*A710r2p0*X2r2p0)
 			# Qualcomm Snapdragon 8+ Gen1: 4 x Cortex-A510 / r0p3 + 3 Cortex-A710 / r2p0 + 1 x Cortex-X2 / r2p0

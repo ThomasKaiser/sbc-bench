@@ -580,7 +580,7 @@ ReportGovernors() {
 					grep -q "performance" <<<"${AvailableGovernors}"
 					GovStatus=$?
 					if [ ${GovStatus} -eq 0 -a "X${Governor}" = "Xperformance" ]; then
-						echo -e "${LGREEN}performance${NC}"
+						echo -e "${LGREEN}performance${NC} (${AvailableGovernors})"
 					elif [ ${GovStatus} -eq 0 -a "X${Governor}" != "Xperformance" ]; then
 						echo -e "${LRED}${Governor}${NC} ($(sed "s/performance/\x1b\x5b1mperformance\x1b\x5b0m/" <<<"${AvailableGovernors}"))"
 					else
@@ -1213,7 +1213,7 @@ MonitorBoard() {
 		CPUSignature="$(GetCPUSignature)"
 		CPUArchitecture="$(lscpu | awk -F" " '/^Architecture/ {print $2}')"
 		[ "${CPUArchitecture}" = "x86_64" ] && GuessedSoC="${X86CPUName}" || GuessedSoC="$(GuessARMSoC)"
-		[ "X${GuessedSoC}" != "X" ] && echo -e "${GuessedSoC}, \c"
+		[ "X${GuessedSoC}" != "Xn/a" ] && echo -e "${GuessedSoC}, \c"
 		grep -q "BCM2711" <<<"${DeviceName}" && echo -e "${DeviceName}, \c"
 		command -v dpkg >/dev/null 2>&1 && Userland=", Userland: $(dpkg --print-architecture 2>/dev/null)"
 		[ "X${VirtWhat}" != "X" -a "X${VirtWhat}" != "Xnone" ] && VirtOrContainer=" / ${BOLD}${VirtWhat}${NC}"
@@ -2438,13 +2438,15 @@ InitialMonitoring() {
 	echo -e "${CPUTopology}\n" >"${TempDir}/cpu-topology.log" &
 	CPUSignature="$(GetCPUSignature)"
 	DTCompatible="$(strings /proc/device-tree/compatible 2>/dev/null)"
+	# try to identify ARM/RISC-V/Loongson SoCs
+	[ "${CPUArchitecture}" = "x86_64" ] || GuessedSoC="$(GuessARMSoC)"
 
 	# upload raw /proc/cpuinfo contents and device-tree compatible entry to ix.io
 	ping -c1 ix.io >/dev/null 2>&1
 	if [ $? -eq 0 -a "X${ProcCPUFile}" = "X/proc/cpuinfo" ]; then
 		UploadScheme="f:1=<-"
 		UploadServer="ix.io"
-		(echo -e "/proc/cpuinfo\n\n$(uname -a) / ${DeviceName}\n" ; cat /proc/cpuinfo ; echo -e "\n${CPUTopology}\n\n${CPUSignature}\n\n${DTCompatible}" ; ParseOPPTables) 2>/dev/null \
+		(echo -e "/proc/cpuinfo\n\n$(uname -a) / ${DeviceName}\n" ; cat /proc/cpuinfo ; echo -e "\n${CPUTopology}\n\n${CPUSignature} / ${GuessedSoC}\n\n${DTCompatible}" ; ParseOPPTables) 2>/dev/null \
 			| curl -s -F ${UploadScheme} ${UploadServer} >/dev/null 2>&1 &
 	else
 		# upload location fallback to sprunge.us if possible
@@ -3489,9 +3491,8 @@ LogEnvironment() {
 		fi
 	fi
 
-	# try to guess ARM/RISC-V SoCs and report if successful
-	[ "${CPUArchitecture}" = "x86_64" ] || GuessedSoC="$(GuessARMSoC)"
-	if [ "X${GuessedSoC}" != "X" ]; then
+	# report ARM/RISC-V/Loongson SoCs if possible
+	if [ "X${GuessedSoC}" != "Xn/a" ]; then
 		echo -e "\nSoC guess: ${GuessedSoC}"
 	elif [ "X${CPUSignature}" != "X" ]; then
 		echo -e "\nSignature: ${CPUSignature}"
@@ -3574,8 +3575,15 @@ LogEnvironment() {
 	
 	# report performance relevant governors if available:
 	if [ "X${GovernorState}" != "X" ]; then
-		echo ""
-		sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" <<<"${GovernorState}"
+		GovernorStateNow="$(ReportGovernors)"
+		if [ "X${GovernorState}" = "X${GovernorStateNow}" ]; then
+			echo ""; sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" <<<"${GovernorState}"
+		else
+			echo -e "\nConfigured governors changed while benchmarking!\n\nPrior to benchmark execution:"
+			grep -v "Status of" <<<"${GovernorState}" | sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" | awk -F' \(' '{print $1}'
+			echo -e "\nNow:"
+			grep -v "Status of" <<<"${GovernorStateNow}" | sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" | awk -F' \(' '{print $1}'
+		fi
 	fi
 } # LogEnvironment
 
@@ -3809,7 +3817,7 @@ CacheAndDIMMDetails() {
  		fi
  	fi
  
-	if [ ${#ClusterConfig[@]} -gt 1 -o ${CPUArchitecture} == *riscv* ]; then
+	if [ ${#ClusterConfig[@]} -gt 1 -o "${CPUArchitecture}" = "riscv64" ]; then
 		# only output individual cache sizes from sysfs on RISC-V or if more than 1 CPU
 		# cluster (since otherwise lscpu already reported the full picture)
 		find /sys/devices/system/cpu -name "cache" -type d | sort -V | while read ; do
@@ -4495,7 +4503,7 @@ GuessARMSoC() {
 					# add virtualization disclaimer
 					echo "${SoCGuess} / guess flawed since running in ${VirtWhat}"
 				elif [ "X${SoCGuess}" != "X" ]; then
-					echo "${SoCGuess}"
+					echo "${SoCGuess:-n/a}"
 				fi
 				;;
 		esac

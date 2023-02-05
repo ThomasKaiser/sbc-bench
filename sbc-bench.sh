@@ -3459,7 +3459,7 @@ SummarizeResults() {
 	ParseOPPTables >>${ResultLog}
 
 	# Add a line suitable for Results.md on Github if not in efficiency plotting or PTS or GB mode
-	if [ "X${PlotCpufreqOPPs}" != "Xyes" -a "X${MODE}" != "Xpts" -a "X${MODE}" != "Xgb" -a "X${MODE}" != "Xreview" ]; then
+	if [ "X${PlotCpufreqOPPs}" != "Xyes" -a "X${MODE}" != "Xpts" -a "X${MODE}" != "Xgb" ]; then
 		if [ -f /sys/devices/system/cpu/cpufreq/policy0/cpuinfo_max_freq ]; then
 			# Check for throttling for first:
 			MeasuredClockspeedStart=$(grep -A2 "^Checking cpufreq OPP" ${ResultLog} | awk -F" " '/Measured/ {print $5}' | sed -n ${#ClusterConfig[@]}p)
@@ -3501,14 +3501,14 @@ SummarizeResults() {
 				fi
 			fi
 		fi
-		KernelVersion="$(awk -F"." '{print $1"."$2}' <<<"${KernelVersion}")"
+		ShortKernelVersion="$(awk -F"." '{print $1"."$2}' <<<"${KernelVersion}")"
 		KernelArch="$(uname -m | sed -e 's/armv7l/armhf/' -e 's/aarch64/arm64/')"
 		if [ "X${KernelArch}" = "X" -o "X${KernelArch}" = "X${ARCH}" ]; then
 			DistroInfo="${OperatingSystem} ${ARCH}"
 		else
 			DistroInfo="${OperatingSystem} ${KernelArch}/${ARCH}"
 		fi
-		echo -e "\n| ${DeviceName:-$HostName} | ${MHz}${ThrottlingWarning} | ${KernelVersion} | ${DistroInfo} | ${ZipScore} | ${ZipScoreSingleThreaded} | ${OpenSSLScore} | ${MemBenchScore} | ${CpuminerScore:-"-"} |\c" | sed 's/  / /g' >>${ResultLog}
+		echo -e "\n| ${DeviceName:-$HostName} | ${MHz}${ThrottlingWarning} | ${ShortKernelVersion} | ${DistroInfo} | ${ZipScore} | ${ZipScoreSingleThreaded} | ${OpenSSLScore} | ${MemBenchScore} | ${CpuminerScore:-"-"} |\c" | sed 's/  / /g' >>${ResultLog}
 	fi
 } # SummarizeResults
 
@@ -5941,13 +5941,18 @@ ProvideReviewInfo() {
 	CheckTimeInState after
 	CheckClockspeedsAndSensors
 	ClockspeedsAfter="$(cat "${TempDir}/cpufreq" | sed -e 's/^/    /')"
+
+	[ -f /etc/os-release ] && OperatingSystem="$(awk -F'"' '/^PRETTY_NAME/ {print $2}' </etc/os-release)"
+	command -v hostnamectl >/dev/null 2>&1 && OperatingSystem="$(hostnamectl | awk -F": " '/Operating System:/ {print $2}')"
+	grep -q -i Gentoo <<<"${OperatingSystem}" && read OperatingSystem </etc/gentoo-release
+
 	SummarizeResults
 	UploadResults
 
 	if [ -z "${UploadURL}" ]; then
 		echo -e "\n\n\n\n# ${DeviceName:-$HostName}\n\nTested on $(date -R).\n\n## General information:\n"
 	else
-		echo -e "\n\n\n\n# ${DeviceName:-$HostName}\n\nTested on $(date -R). Full summary: [${UploadURL}](${UploadURL})\n\n## General information:\n"
+		echo -e "\n\n\n\n# ${DeviceName:-$HostName}\n\nTested on $(date -R). Full info: [${UploadURL}](${UploadURL})\n\n## General information:\n"
 	fi
 	sed -e 's/^/    /' <<<"${OriginalCPUInfo}"
 	echo -e "\n## Governors (tradeoff between performance and idle consumption):\n\nOriginal settings:\n"
@@ -5956,10 +5961,28 @@ ProvideReviewInfo() {
 	sed -e 's/^/    /' <<<"${TunedGovernorState}"
 	if [ -z ${InitialTemp} ]; then
 		# no thermal readouts possible
-		echo -e "\n## Clockspeeds:\n\nBefore:\n\n${ClockspeedsBefore}\n\nAfter:\n\n${ClockspeedsAfter}"
+		echo -e "\n## Clockspeeds${ThrottlingWarning}:\n\nBefore:\n\n${ClockspeedsBefore}\n\nAfter:\n\n${ClockspeedsAfter}"
 	else
-		echo -e "\n## Clockspeeds:\n\nBefore at ${InitialTemp}°C:\n\n${ClockspeedsBefore}\n\nAfter at ${TempNow}°C:\n\n${ClockspeedsAfter}"
+		echo -e "\n## Clockspeeds${ThrottlingWarning}:\n\nBefore at ${InitialTemp}°C:\n\n${ClockspeedsBefore}\n\nAfter at ${TempNow}°C:\n\n${ClockspeedsAfter}"
 	fi
+	
+	echo -e "\n## Software versions:\n"
+	case "${DistroInfo}" in
+		Armbian*)
+			RealDistro="$(awk -F":\t" '/^Description/ {print $2}' <${ResultLog})"
+			echo "${RealDistro} ${ARCH}" | sed -e 's/^/  * /'
+			;;
+		*)
+			echo "  * ${DistroInfo}"
+			;;
+	esac
+	ArmbianInfo="$(grep "^Armbian info:   " ${ResultLog} | sed 's/Armbian info:   /  * Armbian: /')"
+	[ -z "${ArmbianInfo}" ] || echo "${ArmbianInfo}"
+	grep -i "^ Compiler:" ${ResultLog} | sed -e 's/^/  */'
+	grep -i "^openssl" ${ResultLog} | sed -e 's/^/  * /'
+	CONFIGHZ="$(awk -F" " '/CONFIG_HZ=/ {print $1}' <${ResultLog})"
+	[ -z "${CONFIGHZ}" ] && echo "  * Kernel ${KernelVersion}" || echo "  * Kernel ${KernelVersion} / ${CONFIGHZ}"
+	CheckKernelVersion $(cut -f1 -d- <<<"${KernelVersion}")
 
 	cat <<- EOF
 	
@@ -5967,7 +5990,44 @@ ProvideReviewInfo() {
 	Once finished stop with [ctrl]-[c] to get info about throttling, frequency cap
 	and too high background activity all potentially invalidating benchmark scores.
 	EOF
+
+	trap "FinalReporting ; exit 0" 0 1 2 3 15
+	rm "${TempDir}"/*time_in_state*
+	CheckTimeInState before
+	/bin/bash "${PathToMe}" -m 60 >"${TempDir}/review" &
+	echo ""
+	tail -f "${TempDir}/review"
 } # ProvideReviewInfo
+
+FinalReporting() {
+	trap "rm -rf \"${TempDir}\" ; exit 0" 0 1 2 3 15
+	echo -e "\n\nCleaning up...\c"
+	CheckClockspeedsAndSensors
+	ClockspeedsNow="$(cat "${TempDir}/cpufreq" | sed -e 's/^/    /')"
+	CheckTimeInState after
+	if [ -z ${InitialTemp} ]; then
+		# no thermal readouts possible
+		echo -e "\x08\x08 Done.\n\nClockspeeds now:\n\n${ClockspeedsNow}\n"
+	else
+		echo -e "\x08\x08 Done.\n\nClockspeeds now at $(ReadSoCTemp)°C:\n\n${ClockspeedsNow}\n"
+	fi
+	CheckForThrottling | sed 's/ Check the log for details.//'
+	[ -f ${TempDir}/throttling_info.txt ] && cat ${TempDir}/throttling_info.txt
+} # FinalReporting
+
+CheckKernelVersion() {
+	# checks device's kernel version and compares with https://endoflife.date/linux
+	# Major challenge: identify those smelly vendor BSP kernels that show a version
+	# number similar to an official LTS kernel but are in reality forward ported since
+	# ages and can't be trusted AT ALL.
+	
+	case ${ShortKernelVersion} in
+		*)
+			:
+			;;
+	esac
+
+} # CheckKernelVersion
 
 DisplayUsage() {
 	echo -e "\nUsage: ${BOLD}${0##*/} [-c] [-g] [-G] [-h] [-m] [-P] [-t \$degree] [-T \$degree] [-s]${NC}\n"

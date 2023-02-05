@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.9.10
+Version=0.9.11
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -42,7 +42,7 @@ Main() {
 	ProcCPU="$(cat "${ProcCPUFile}")"
 
 	# check in which mode we're supposed to run
-	while getopts 'chmtTsgNPG' c ; do
+	while getopts 'chjmtTsgNPG' c ; do
 		case ${c} in
 			m)
 				# monitoring mode
@@ -62,6 +62,12 @@ Main() {
 			h)
 				# print help
 				DisplayUsage
+				exit 0
+				;;
+			j)
+				# Jeff Geerling or Jean-Luc Aufranc mode. Help in reviewing devices
+				MODE=review
+				ProvideReviewInfo
 				exit 0
 				;;
 			t|T)
@@ -173,7 +179,7 @@ Main() {
 	[ -f /sys/devices/system/cpu/cpufreq/policy0/scaling_governor ] && \
 		read OriginalCPUFreqGovernor </sys/devices/system/cpu/cpufreq/policy0/scaling_governor 2>/dev/null
 	BasicSetup performance >/dev/null 2>&1
-	GovernorState="$(ReportGovernors)"
+	GovernorState="$(HandleGovernors)"
 	[ "X${GovernorState}" != "X" ] && echo -e "${GovernorState}\n"
 	GetTempSensor
 	[ "X${MODE}" = "Xpts" ] && CheckPTS
@@ -193,7 +199,7 @@ Main() {
 		elif [ "X${MODE}" = "Xgb" ]; then
 			RunGB
 		else
-			RunOpenSSLBenchmark
+			RunOpenSSLBenchmark "128 192 256"
 			Run7ZipBenchmark
 			if [ "${ExecuteCpuminer}" = "yes" -o "X${MODE}" = "Xextensive" ]; then
 				if [ -x "${InstallLocation}"/cpuminer-multi/cpuminer ]; then
@@ -551,20 +557,26 @@ BashBench(){
 	esac
 } # BashBench
 
-ReportGovernors() {
+HandleGovernors() {
 	# check and report governors that might affect performance behaviour. Stuff like
 	# memory/GPU/NPU governors. On RK3588 for example:
 	#
 	# Status of performance related governors found below /sys:
+	# cpufreq-policy0: ondemand (conservative ondemand userspace powersave performance schedutil)
+	# cpufreq-policy4: ondemand (conservative ondemand userspace powersave performance schedutil)
+	# cpufreq-policy6: ondemand (conservative ondemand userspace powersave performance schedutil)
 	# dmc: dmc_ondemand (dmc_ondemand userspace powersave performance simple_ondemand)
 	# fb000000.gpu: simple_ondemand (dmc_ondemand userspace powersave performance simple_ondemand)
 	# fdab0000.npu: userspace (dmc_ondemand userspace powersave performance simple_ondemand)
-	#
-	# Note: cpufreq governors aren't reported since sbc-bench detects cpufreq policies and switches
-	# to performance cpufreq governor prior to benchmarking anyway.
 
-	Governors="$(find /sys -name "*governor" | grep -E -v '/sys/module|cpuidle|cpufreq/|watchdog')"
+	Governors="$(find /sys -name "*governor" | grep -E -v '/sys/module|cpuidle|watchdog')"
 	if [ "X${Governors}" = "X" ]; then
+		return
+	elif [ "X$1" = "Xtune" ]; then
+		# try to set all governors to performance
+		echo "${Governors}" | while read ; do
+			echo performance >"${REPLY}" 2>/dev/null
+		done
 		return
 	fi
 	echo -e "Status of performance related governors found below /sys:"
@@ -592,7 +604,7 @@ ReportGovernors() {
 			fi
 		fi
 	done | sort -n
-} # ReportGovernors
+} # HandleGovernors
 
 PlotPerformanceGraph() {
 	# function that walks through all cpufreq OPP and plots a performance graph using
@@ -1194,38 +1206,49 @@ MonitorNetio() {
 	done
 } # MonitorNetio
 
+PrintCPUInfo() {
+	BasicSetup nochange
+	[ -z "${DTCompatible}" ] && DTCompatible="$(strings /proc/device-tree/compatible 2>/dev/null)"
+	[ -z "${LSCPU}" ] && LSCPU="$(lscpu)"
+	[ -z "${CPUArchitecture}" ] && CPUArchitecture="$(awk -F" " '/^Architecture/ {print $2}' <<<"${LSCPU}")"
+	[ -z "${VoltageSensor}" ] && VoltageSensor="$(GetVoltageSensor)"
+	[ -z "${CPUTopology}" ] && CPUTopology="$(PrintCPUTopology)"
+	[ -z "${CPUSignature}" ] && CPUSignature="$(GetCPUSignature)"
+	[ -z "${X86CPUName}" ] && X86CPUName="$(sed 's/ \{1,\}/ /g' <<<"${LSCPU}" | awk -F": " '/^Model name/ {print $2}' | sed -e 's/1.th Gen //' -e 's/.th Gen //' -e 's/Core(TM) //' -e 's/ Processor//' -e 's/Intel(R) Xeon(R) CPU //' -e 's/Intel(R) //' -e 's/(R)//' -e 's/CPU //' -e 's/ 0 @/ @/' -e 's/AMD //' -e 's/Authentic //' -e 's/ with .*//')"
+
+	[ -f /sys/devices/soc0/family ] && read SoC_Family </sys/devices/soc0/family
+	[ -f /sys/devices/soc0/soc_id ] && read SoC_ID </sys/devices/soc0/soc_id
+	[ -f /sys/devices/soc0/revision ] && read SoC_Revision </sys/devices/soc0/revision
+	if [ -n "${SoC_Revision}" ]; then
+		echo -e "${SoC_Family} ${SoC_ID} rev ${SoC_Revision}, \c"
+	fi
+	[ "${CPUArchitecture}" = "x86_64" ] && GuessedSoC="${X86CPUName}" || GuessedSoC="$(GuessARMSoC)"
+	[ "X${GuessedSoC}" != "Xn/a" ] && echo -e "${GuessedSoC}, \c"
+	grep -q "BCM2711" <<<"${DeviceName}" && echo -e "${DeviceName}, \c"
+	command -v dpkg >/dev/null 2>&1 && Userland=", Userland: $(dpkg --print-architecture 2>/dev/null)"
+	[ "X${VirtWhat}" != "X" -a "X${VirtWhat}" != "Xnone" ] && VirtOrContainer=" / ${BOLD}${VirtWhat}${NC}"
+	echo -e "Kernel: ${CPUArchitecture}${VirtOrContainer}${Userland}"
+	echo -e "\n${CPUTopology}\n"
+	if [ "X${TempInfo}" != "X" ]; then
+		echo -e "${TempInfo}\n"
+	fi
+} # PrintCPUInfo
+
 MonitorBoard() {
-	[ "X${TempSource}" = "X" ] && GetTempSensor
-
-	DTCompatible="$(strings /proc/device-tree/compatible 2>/dev/null)"
-	VoltageSensor="$(GetVoltageSensor)"
-
+	BasicSetup nochange
+	[ -z "${TempSource}" ] && GetTempSensor
+	[ -z "${DTCompatible}" ] && DTCompatible="$(strings /proc/device-tree/compatible 2>/dev/null)"
+	[ -z "${LSCPU}" ] && LSCPU="$(lscpu)"
+	[ -z "${CPUArchitecture}" ] && CPUArchitecture="$(awk -F" " '/^Architecture/ {print $2}' <<<"${LSCPU}")"
+	[ -z "${VoltageSensor}" ] && VoltageSensor="$(GetVoltageSensor)"
+	[ -z "${CPUTopology}" ] && CPUTopology="$(PrintCPUTopology)"
+	[ -z "${CPUSignature}" ] && CPUSignature="$(GetCPUSignature)"
+	[ -z "${X86CPUName}" ] && X86CPUName="$(sed 's/ \{1,\}/ /g' <<<"${LSCPU}" | awk -F": " '/^Model name/ {print $2}' | sed -e 's/1.th Gen //' -e 's/.th Gen //' -e 's/Core(TM) //' -e 's/ Processor//' -e 's/Intel(R) Xeon(R) CPU //' -e 's/Intel(R) //' -e 's/(R)//' -e 's/CPU //' -e 's/ 0 @/ @/' -e 's/AMD //' -e 's/Authentic //' -e 's/ with .*//')"
+	
 	if test -t 1; then
 		# when called from a terminal we print some system information first
-		[ -f /sys/devices/soc0/family ] && read SoC_Family </sys/devices/soc0/family
-		[ -f /sys/devices/soc0/soc_id ] && read SoC_ID </sys/devices/soc0/soc_id
-		[ -f /sys/devices/soc0/revision ] && read SoC_Revision </sys/devices/soc0/revision
-		if [ -n "${SoC_Revision}" ]; then
-			echo -e "${SoC_Family} ${SoC_ID} rev ${SoC_Revision}, \c"
-		fi
-		BasicSetup nochange
-		CPUTopology="$(PrintCPUTopology)"
-		CPUSignature="$(GetCPUSignature)"
-		CPUArchitecture="$(lscpu | awk -F" " '/^Architecture/ {print $2}')"
-		[ "${CPUArchitecture}" = "x86_64" ] && GuessedSoC="${X86CPUName}" || GuessedSoC="$(GuessARMSoC)"
-		[ "X${GuessedSoC}" != "Xn/a" ] && echo -e "${GuessedSoC}, \c"
-		grep -q "BCM2711" <<<"${DeviceName}" && echo -e "${DeviceName}, \c"
-		command -v dpkg >/dev/null 2>&1 && Userland=", Userland: $(dpkg --print-architecture 2>/dev/null)"
-		[ "X${VirtWhat}" != "X" -a "X${VirtWhat}" != "Xnone" ] && VirtOrContainer=" / ${BOLD}${VirtWhat}${NC}"
-		echo -e "Kernel: ${CPUArchitecture}${VirtOrContainer}${Userland}"
-		echo -e "${CPUTopology}\n"
-		if [ "X${TempInfo}" != "X" ]; then
-			echo -e "${TempInfo}\n"
-		fi
+		PrintCPUInfo
 	else
-		LSCPU="$(lscpu)"
-		X86CPUName="$(sed 's/ \{1,\}/ /g' <<<"${LSCPU}" | awk -F": " '/^Model name/ {print $2}' | sed -e 's/1.th Gen //' -e 's/.th Gen //' -e 's/Core(TM) //' -e 's/ Processor//' -e 's/Intel(R) Xeon(R) CPU //' -e 's/Intel(R) //' -e 's/(R)//' -e 's/CPU //' -e 's/ 0 @/ @/' -e 's/AMD //' -e 's/Authentic //' -e 's/ with .*//')"
-		CPUArchitecture="$(awk -F" " '/^Architecture/ {print $2}' <<<"${LSCPU}")"
 		ClusterConfig=($(GetCPUClusters))
 		if [ -f "${TempDir}/Pcores" ]; then
 			read PCores <"${TempDir}/Pcores"
@@ -2064,6 +2087,7 @@ CheckMissingPackages() {
 	command -v curl >/dev/null 2>&1 || echo -e "curl \c"
 	command -v dmidecode >/dev/null 2>&1 || echo -e "dmidecode \c"
 	command -v lshw >/dev/null 2>&1 || echo -e "lshw \c"
+	command -v mbw >/dev/null 2>&1 || echo -e "mbw \c"
 	command -v powercap-info >/dev/null 2>&1
 	[ $? -ne 0 -a -d /sys/devices/virtual/powercap ] && echo -e "powercap-utils \c"
 	if [ "${ExecuteStockfish}" = "yes" ]; then
@@ -2455,7 +2479,7 @@ InitialMonitoring() {
 
 	# Log version and device info
 	read HostName </etc/hostname 2>/dev/null
-	if [ "X${MODE}" = "Xunattended" -o "X${MODE}" = "Xextensive" -o "X${MODE}" = "Xpts" -o "X${MODE}" = "Xgb" ]; then
+	if [ "X${MODE}" = "Xunattended" -o "X${MODE}" = "Xextensive" -o "X${MODE}" = "Xpts" -o "X${MODE}" = "Xgb" -o "X${MODE}" = "Xreview" ]; then
 		echo -e "sbc-bench v${Version} ${DeviceName:-$HostName} ${MODE} ($(date -R))\n" | sed 's/  / /g' >${ResultLog}
 	else
 		echo -e "sbc-bench v${Version} ${DeviceName:-$HostName} ($(date -R))\n" | sed 's/  / /g' >${ResultLog}
@@ -2622,6 +2646,7 @@ GetInputVoltage() {
 CheckClockspeedsAndSensors() {
 	if [ -x "${InstallLocation}"/mhz/mhz ]; then
 		echo -e "\n##########################################################################" >>${ResultLog}
+		echo -e "\c" >"${TempDir}/cpufreq"
 		if [ -s ${MonitorLog} ]; then
 			# 2nd check after most demanding benchmark has been run.
 			echo -e "\x08\x08 Done.\nChecking cpufreq OPP again...\c"
@@ -2665,6 +2690,7 @@ CheckClockspeedsAndSensors() {
 			# all CPU cores have same package id, we only need to test one core
 			CPUInfo="$(GetCPUInfo 0)"
 			echo -e "\nChecking cpufreq OPP${CPUInfo}:\n" >>${ResultLog}
+			echo -e "cpu0${CPUInfo}: \c" >>"${TempDir}/cpufreq"
 			CheckCPUCluster 0 >>${ResultLog}
 		else
 			# different package ids, we walk through all clusters
@@ -2677,8 +2703,10 @@ CheckClockspeedsAndSensors() {
 					0)
 						if [ ${FirstCore} -eq ${LastCore} ]; then
 							echo -e "\nChecking cpufreq OPP for cpu${FirstCore}${CPUInfo}:\n" >>${ResultLog}
+							echo -e "cpu${FirstCore}${CPUInfo}: \c" >>"${TempDir}/cpufreq"
 						else
 							echo -e "\nChecking cpufreq OPP for cpu${FirstCore}-cpu${LastCore}${CPUInfo}:\n" >>${ResultLog}
+							echo -e "cpu${FirstCore}-cpu${LastCore}${CPUInfo}: \c" >>"${TempDir}/cpufreq"
 						fi
 						CheckCPUCluster ${FirstCore} >>${ResultLog}
 						;;
@@ -2806,12 +2834,15 @@ CheckCPUCluster() {
 					# measured clockspeed lower than 1% than cpufreq OPP
 					DiffPercentage=$(awk '{printf ("%0.0f",$1-$2); }' <<<"1000 ${MeasuredDiff}" | awk '{printf ("%0.1f",$1/10); }')
 					PrettyDiff="$(printf "%10s" \(-${DiffPercentage})%)"
+					CpufreqPrefix="${LRED}"
 				elif [ ${MeasuredDiff} -gt 1010 ]; then
 					# measured clockspeed higher than 1% than cpufreq OPP
 					DiffPercentage=$(awk '{printf ("%0.0f",$1-$2); }' <<<"${MeasuredDiff} 1000" | awk '{printf ("%0.1f",$1/10); }')
 					PrettyDiff="$(printf "%10s" \(+${DiffPercentage})%)"
+					CpufreqPrefix="${LGREEN}"
 				else
 					PrettyDiff=""
+					CpufreqPrefix=""
 				fi
 
 				if [ ${USE_VCGENCMD} = true ] ; then
@@ -2819,8 +2850,10 @@ CheckCPUCluster() {
 					ThreadXFreq=$("${VCGENCMD}" measure_clock arm | awk -F"=" '{printf ("%0.0f",$2/1000000); }' )
 					CoreVoltage=$("${VCGENCMD}" measure_volts | cut -f2 -d= | sed 's/000//')
 					echo -e "Cpufreq OPP: $(printf "%4s" ${SysfsSpeed})  ThreadX: $(printf "%4s" ${ThreadXFreq})  Measured: $(printf "%4s" ${RoundedSpeed}) @ ${CoreVoltage}${PrettyDiff}"
+					[ $i -eq ${MaxSpeed} ] && echo -e "OPP: $(printf "%4s" ${SysfsSpeed}), ThreadX: $(printf "%4s" ${ThreadXFreq}), Measured: $(printf "%4s" ${RoundedSpeed}) ${CpufreqPrefix}${PrettyDiff}${NC}">>"${TempDir}/cpufreq"
 				else
 					echo -e "Cpufreq OPP: $(printf "%4s" ${SysfsSpeed})    Measured: $(printf "%4s" ${RoundedSpeed}) $(printf "%27s" \(${MeasuredSpeed}))${PrettyDiff}"
+					[ $i -eq ${MaxSpeed} ] && echo -e "OPP: $(printf "%4s" ${SysfsSpeed}), Measured: $(printf "%4s" ${RoundedSpeed}) ${CpufreqPrefix}${PrettyDiff}${NC}">>"${TempDir}/cpufreq"
 				fi
 			fi
 		done
@@ -2845,6 +2878,7 @@ CheckCPUCluster() {
 		SpeedSum=$(tr '/' '\n' <<<"${MeasuredSpeed}" | tr -d '.' | awk '{s+=$1} END {printf "%.0f", s}')
 		RoundedSpeed=$(( ${SpeedSum} / 3000 ))
 		echo -e "No cpufreq support available. Measured on cpu${CpuToCheck}: ${RoundedSpeed} MHz (${MeasuredSpeed})"
+		echo -e "Measured: $(printf "%4s" ${RoundedSpeed})">>"${TempDir}/cpufreq"
 	fi
 } # CheckCPUCluster
 
@@ -3051,18 +3085,17 @@ RunOpenSSLBenchmark() {
 		# all CPU cores have same package id, we execute openssl twice
 		CPUInfo="$(GetCPUInfo 0)"
 		echo -e "Executing benchmark twice on cluster 0${CPUInfo}\n" >>${ResultLog}
-		for bytelength in 128 192 256 ; do
+		for bytelength in $1 ; do
 			openssl speed -elapsed -evp aes-${bytelength}-cbc 2>/dev/null
 			openssl speed -elapsed -evp aes-${bytelength}-cbc 2>/dev/null
 		done | tr '[:upper:]' '[:lower:]' >${OpenSSLLog}
 		# add both scores and divide by two to get an average
-		AES128=$(( $(awk '/^aes-128-cbc/ {print $2}' <"${OpenSSLLog}" | awk -F"." '{s+=$1} END {printf "%.0f", s}') / 2 ))
 		AES256=$(( $(awk '/^aes-256-cbc/ {print $7}' <"${OpenSSLLog}" | awk -F"." '{s+=$1} END {printf "%.0f", s}') / 2 ))
 		[ "X${MODE}" = "Xextensive" ] && openssl speed -elapsed -evp aes-256-gcm 2>/dev/null | tr '[:upper:]' '[:lower:]' >>${OpenSSLLog}
 	else
 		# different package ids, we walk through all clusters
 		echo -e "Executing benchmark on each cluster individually\n" >>${ResultLog}
-		for bytelength in 128 192 256 ; do
+		for bytelength in $1 ; do
 			for i in $(seq 0 $(( ${#ClusterConfig[@]} -1 )) ) ; do
 				CoresOnline ${ClusterConfig[$i]}
 				if [ $? -eq 0 ]; then
@@ -3075,8 +3108,7 @@ RunOpenSSLBenchmark() {
 				fi
 			done
 		done >${OpenSSLLog}
-		# check scores and choose highest for reporting
-		AES128=$(awk '/^aes-128-cbc/ {print $2}' <"${OpenSSLLog}" | awk -F"." '{print $1}' | sort -n | tail -n1)
+		# check aes-256-cbc scores and choose highest for reporting
 		AES256=$(awk '/^aes-256-cbc/ {print $7}' <"${OpenSSLLog}" | awk -F"." '{print $1}' | sort -n | tail -n1)
 	fi
 	kill ${MonitoringPID}
@@ -3427,7 +3459,7 @@ SummarizeResults() {
 	ParseOPPTables >>${ResultLog}
 
 	# Add a line suitable for Results.md on Github if not in efficiency plotting or PTS or GB mode
-	if [ "X${PlotCpufreqOPPs}" != "Xyes" -a "X${MODE}" != "Xpts" -a "X${MODE}" != "Xgb" ]; then
+	if [ "X${PlotCpufreqOPPs}" != "Xyes" -a "X${MODE}" != "Xpts" -a "X${MODE}" != "Xgb" -a "X${MODE}" != "Xreview" ]; then
 		if [ -f /sys/devices/system/cpu/cpufreq/policy0/cpuinfo_max_freq ]; then
 			# Check for throttling for first:
 			MeasuredClockspeedStart=$(grep -A2 "^Checking cpufreq OPP" ${ResultLog} | awk -F" " '/Measured/ {print $5}' | sed -n ${#ClusterConfig[@]}p)
@@ -3575,15 +3607,8 @@ LogEnvironment() {
 	
 	# report performance relevant governors if available:
 	if [ "X${GovernorState}" != "X" ]; then
-		GovernorStateNow="$(ReportGovernors)"
-		if [ "X${GovernorState}" = "X${GovernorStateNow}" ]; then
-			echo ""; sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" <<<"${GovernorState}"
-		else
-			echo -e "\nConfigured governors changed while benchmarking!\n\nPrior to benchmark execution:"
-			grep -v "Status of" <<<"${GovernorState}" | sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" | awk -F' \(' '{print $1}'
-			echo -e "\nNow:"
-			grep -v "Status of" <<<"${GovernorStateNow}" | sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" | awk -F' \(' '{print $1}'
-		fi
+		GovernorStateNow="$(HandleGovernors)"
+		echo ""; sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" <<<"${GovernorStateNow}"
 	fi
 } # LogEnvironment
 
@@ -3592,8 +3617,8 @@ UploadResults() {
 	UploadURL=$(sed '/^$/N;/^\n$/D' <${ResultLog} | curl -s -F ${UploadScheme} ${UploadServer} 2>/dev/null || \
 		sed '/^$/N;/^\n$/D' <${ResultLog} | curl -s -F ${UploadScheme} ${UploadServer})
 
-	# Display benchmark results if not in PTS or GB mode
-	if [ "X${MODE}" != "Xpts" -a "X${MODE}" != "Xgb" ]; then
+	# Display benchmark results if not in PTS, GB or preview mode
+	if [ "X${MODE}" != "Xpts" -a "X${MODE}" != "Xgb" -a "X${MODE}" != "Xreview" ]; then
 		MemoryScores="$(awk -F" " '/^ standard/ {print $2": "$4" "$5" "$6}' <${ResultLog} | awk -F'MB/s' '{print $1"MB/s"}')"
 		CountOfMemoryScores=$(wc -l <<<"${MemoryScores}")
 		if [ ${#ClusterConfig[@]} -eq 1 -o $(( ${#ClusterConfig[@]} * 2 )) -ne ${CountOfMemoryScores} ]; then
@@ -3630,6 +3655,12 @@ UploadResults() {
 			echo -e "\n${CompareURL}"
 		else
 			echo "Scores not valid. Throttling occured and/or too much background activity."
+		fi
+	elif [ "X${MODE}" = "Xreview" ]; then
+		if [ ${IOWaitAvg:-0} -le 2 -a ${IOWaitMax:-0} -le 5 -a ${SysMax:-0} -le 5 -a ! -f "${TempDir}/throttling_info.txt" ]; then
+			echo -e "${LGREEN}It seems neither throttling occured nor too much background activity.${NC}"
+		else
+			echo -e "${LRED}${BOLD}Throttling occured and/or too much background activity.${NC}"
 		fi
 	fi
 	case ${UploadURL} in
@@ -3993,7 +4024,7 @@ GuessARMSoC() {
 	# soc soc0: Amlogic Meson GXL (S905L) Revision 21:e (c5:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson GXM (Unknown) Revision 22:a (82:2) Detected <-- Amlogic Meson GXM (S912) Q201 Development Board
 	# soc soc0: Amlogic Meson GXM (S912) Revision 22:a (82:2) Detected <-- Beelink GT1 / Beelink GT1 Ultimate / Octopus Planet / Libre Computer AML-S912-PC / Khadas VIM2 / MeCool KIII Pro / Tronsmart Vega S96 / T95Z Plus / Vontar X92 / Amlogic Meson GXM (S912) Q200 Development Board / Amlogic Meson GXM (S912) Q201 Development Board
-	# soc soc0: Amlogic Meson GXM (S912) Revision 22:b (82:2) Detected <-- Beelink GT1 / Tronsmart Vega S96 / Octopus Planet / Amlogic Meson GXM (S912) Q201 Development Board
+	# soc soc0: Amlogic Meson GXM (S912) Revision 22:b (82:2) Detected <-- Beelink GT1 / Tronsmart Vega S96 / Octopus Planet / Sunvell T95Z Plus / Amlogic Meson GXM (S912) Q201 Development Board
 	# soc soc0: Amlogic Meson AXG (Unknown) Revision 25:b (43:2) Detected <-- JetHome JetHub J100
 	# soc soc0: Amlogic Meson AXG (Unknown) Revision 25:c (43:2) Detected <-- JetHome JetHub J100
 	# soc soc0: Amlogic Meson GXLX (Unknown) Revision 26:e (c1:2) Detected <-- IPBS9505-S905L2, Amlogic Meson GXL (S905X) P212 Development Board
@@ -5859,6 +5890,85 @@ BegForContribution() {
 	EOF
 } # BegForContribution
 
+ProvideReviewInfo() {
+	# This function tries to collect as much performance relevant information
+	# possible based on sbc-bench being now 5 years used on lots of devices.
+	#
+	# Once it's ready collecting data (which includes some measurements of e.g.
+	# CPU clockspeeds and memory bandwidth/latency) it switches all performance
+	# relevant governors to performance, then remains in the background to 
+	# report throttling while the reviewer conducts tests with other benchmarks
+	#
+	# TODO:
+	#
+	# * warning if uneven count of DIMMs
+	# * ThreadX version, UEFI/BIOS version
+	
+	echo "Starting to examine hardware/software for review purposes..."
+
+	# ensure other sbc-bench instances are terminated
+	for PID in $( (pgrep -f "${PathToMe}" ; jobs -p) | sort | uniq -u) ; do
+		if [ ${PID} -ne $$ ]; then
+			kill ${PID} 2>/dev/null
+		fi
+	done
+
+	# prerequisits: create temp dir, ensure CPU utilization and/or average load is low
+	# enough to continue, collect information, set governors to performance
+	CreateTempDir
+	[ -f /sys/devices/system/cpu/cpufreq/policy0/scaling_governor ] && \
+		read OriginalCPUFreqGovernor </sys/devices/system/cpu/cpufreq/policy0/scaling_governor 2>/dev/null
+	GovernorState="$(HandleGovernors | grep -v Status)"
+	CheckLoadAndDmesg
+	HandleGovernors tune
+	OriginalCPUInfo="$(PrintCPUInfo)"
+	TunedGovernorState="$(HandleGovernors | grep -v Status | awk -F" \(" '{print $1}')"
+	BasicSetup performance >/dev/null 2>&1
+	GetTempSensor
+	InstallPrerequisits
+	InstallCpuminer
+	InitialMonitoring
+	CheckClockspeedsAndSensors
+	ClockspeedsBefore="$(cat "${TempDir}/cpufreq" | sed -e 's/^/    /')"
+	CheckTimeInState before
+	RunRamlat
+	RunOpenSSLBenchmark 256
+	if [ -x "${InstallLocation}"/cpuminer-multi/cpuminer ]; then
+		ExecuteCpuminer=yes
+		RunCpuminerBenchmark
+	fi
+	[ -z ${InitialTemp} ] || TempNow=$(ReadSoCTemp)
+	CheckTimeInState after
+	CheckClockspeedsAndSensors
+	ClockspeedsAfter="$(cat "${TempDir}/cpufreq" | sed -e 's/^/    /')"
+	SummarizeResults
+	UploadResults
+
+	if [ -z "${UploadURL}" ]; then
+		echo -e "\n\n\n\n# ${DeviceName:-$HostName}\n\nTested on $(date -R).\n\n## General information:\n"
+	else
+		echo -e "\n\n\n\n# ${DeviceName:-$HostName}\n\nTested on $(date -R). Full summary: [${UploadURL}](${UploadURL})\n\n## General information:\n"
+	fi
+	sed -e 's/^/    /' <<<"${OriginalCPUInfo}"
+	echo -e "\n## Governors (tradeoff between performance and idle consumption):\n\nOriginal settings:\n"
+	sed -e 's/^/    /' <<<"${GovernorState}"
+	echo -e "\nTuned settings:\n"
+	sed -e 's/^/    /' <<<"${TunedGovernorState}"
+	if [ -z ${InitialTemp} ]; then
+		# no thermal readouts possible
+		echo -e "\n## Clockspeeds:\n\nBefore:\n\n${ClockspeedsBefore}\n\nAfter:\n\n${ClockspeedsAfter}"
+	else
+		echo -e "\n## Clockspeeds:\n\nBefore at ${InitialTemp}°C:\n\n${ClockspeedsBefore}\n\nAfter at ${TempNow}°C:\n\n${ClockspeedsAfter}"
+	fi
+
+	cat <<- EOF
+	
+	All known settings adjusted for performance. System now ready for benchmarking.
+	Once finished stop with [ctrl]-[c] to get info about throttling, frequency cap
+	and too high background activity all potentially invalidating benchmark scores.
+	EOF
+} # ProvideReviewInfo
+
 DisplayUsage() {
 	echo -e "\nUsage: ${BOLD}${0##*/} [-c] [-g] [-G] [-h] [-m] [-P] [-t \$degree] [-T \$degree] [-s]${NC}\n"
 	echo -e "############################################################################"
@@ -5868,6 +5978,7 @@ DisplayUsage() {
 	echo -e " ${0##*/} ${BOLD}-g${NC} graphs 7-zip MIPS for every cpufreq OPP"
 	echo -e " ${0##*/} ${BOLD}-G${NC} Geekbench mode, ensures benchmark is properly monitored"
 	echo -e " ${0##*/} ${BOLD}-h${NC} displays this help text"
+	echo -e " ${0##*/} ${BOLD}-j${NC} Jeff Geerling mode. Don't use if you're not him"
 	echo -e " ${0##*/} ${BOLD}-m${NC} [\$seconds] provides CLI monitoring (5 sec default interval)"
 	echo -e " ${0##*/} ${BOLD}-P${NC} Phoronix mode, ensures benchmark is properly monitored"
 	echo -e " ${0##*/} ${BOLD}-t${NC} [\$degree] runs thermal test waiting to cool down to this value"

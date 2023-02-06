@@ -5927,9 +5927,11 @@ ProvideReviewInfo() {
 		fi
 	done
 
-	# prerequisits: create temp dir, ensure CPU utilization and/or average load is low
-	# enough to continue, collect information, set governors to performance
+	# prerequisits: create temp dir, download endoflife data, ensure CPU utilization and/or
+	# average load is low enough to continue, collect information, set governors to performance
 	CreateTempDir
+	curl -s -q --connect-timeout 10 https://raw.githubusercontent.com/endoflife-date/endoflife.date/master/products/linuxkernel.md \
+		>"${TempDir}/linuxkernel.md" &
 	[ -f /sys/devices/system/cpu/cpufreq/policy0/scaling_governor ] && \
 		read OriginalCPUFreqGovernor </sys/devices/system/cpu/cpufreq/policy0/scaling_governor 2>/dev/null
 	GovernorState="$(HandleGovernors | grep -v Status)"
@@ -6006,7 +6008,7 @@ ProvideReviewInfo() {
 	grep -i "^openssl" ${ResultLog} | sed -e 's/^/  * /'
 	CONFIGHZ="$(awk -F" " '/CONFIG_HZ=/ {print $1}' <${ResultLog})"
 	[ -z "${CONFIGHZ}" ] && echo "  * Kernel ${KernelVersion}" || echo "  * Kernel ${KernelVersion} / ${CONFIGHZ}"
-	CheckKernelVersion $(cut -f1 -d- <<<"${KernelVersion}")
+	CheckKernelVersion "${KernelVersion}"
 
 	cat <<- EOF
 	
@@ -6026,9 +6028,9 @@ ProvideReviewInfo() {
 FinalReporting() {
 	trap "rm -rf \"${TempDir}\" ; exit 0" 0 1 2 3 15
 	echo -e "\n\nCleaning up...\c"
+	CheckTimeInState after
 	CheckClockspeedsAndSensors
 	ClockspeedsNow="$(cat "${TempDir}/cpufreq" | sed -e 's/^/    /')"
-	CheckTimeInState after
 	if [ -z ${InitialTemp} ]; then
 		# no thermal readouts possible
 		echo -e "\x08\x08 Done.\n\nClockspeeds now:\n\n${ClockspeedsNow}\n"
@@ -6044,6 +6046,62 @@ CheckKernelVersion() {
 	# Major challenge: identify those smelly vendor BSP kernels that show a version
 	# number similar to an official LTS kernel but are in reality forward ported since
 	# ages and can't be trusted AT ALL.
+	
+	# check whether endoflife data has been downloaded, if not return
+	[ -r "${TempDir}/linuxkernel.md" ] || return
+
+	# check whether kernel version contains "-rc" and if true simply return to not
+	# bother devs developing/testing release candidate kernels
+	case $1 in
+		*-rc*)
+			return
+			;;
+	esac
+
+	KernelVersionDigitsOnly=$(cut -f1 -d- <<<"$1")
+	
+	# parse LTS kernel info, in February 2023 this looks like this for example with 5.10:
+	# eol: 2026-12-01
+	# lts: true
+	# latest: "5.10.166"
+	# latestReleaseDate: 2023-02-01
+	# releaseDate: 2020-12-13
+	KernelStatus="$(grep -A5 "releaseCycle: \"${ShortKernelVersion}\"" "${TempDir}/linuxkernel.md" | tail -n5)"
+	LatestKernelVersion="$(awk -F'"' '/latest:/ {print $2}' <<<"${KernelStatus}")"
+	LatestKernelDate="$(awk -F": " '/latestReleaseDate:/ {print $2}' <<<"${KernelStatus}")"
+	IsLTS="$(awk -F": " '/lts:/ {print $2}' <<<"${KernelStatus}")"
+	[ "X${IsLTS}" = "Xtrue" ] && KernelSuffix=" LTS"
+	
+	if [ -z "${KernelStatus}" ]; then
+		# some old kernel version neither being an LTS kernel nor any actively developed variant
+		echo -e "\n${LRED}${BOLD}Kernel version ${KernelVersionDigitsOnly} is not covered by any release cycle.${NC}\n"
+		echo -e "${LRED}${BOLD}Please check https://endoflife.date/linux for details. It is highly likely${NC}"
+		echo -e "${LRED}${BOLD}that countless exploitable vulnerabilities exist for this kernel as well as${NC}"
+		echo -e "${LRED}${BOLD}tons of unfixed bugs. Better upgrade to a supported version ASAP.${NC}"
+	elif [ "X${KernelVersionDigitsOnly}" != "X${LatestKernelVersion}" ]; then
+		# kernel version at least matches a supported kernel but is not most recent one
+		echo -e "\n${LRED}${BOLD}Kernel ${KernelVersionDigitsOnly} is not most recent ${ShortKernelVersion}${KernelSuffix}: ${LatestKernelVersion} released on ${LatestKernelDate}.${NC}\n"
+		echo -e "${LRED}${BOLD}Please check https://endoflife.date/linux for details. It is somewhat likely${NC}"
+		echo -e "${LRED}${BOLD}that a lot of exploitable vulnerabilities exist for this kernel as well as many${NC}"
+		echo -e "${LRED}${BOLD}unfixed bugs. Better upgrade to a supported version ASAP.${NC}"
+	else
+		# kernel version seems to match most recent upstream kernel.
+		Today="$(date "+%Y-%m-%d")"
+		EOLDate="$(awk -F": " '/eol:/ {print $2}' <<<"${KernelStatus}")"
+		if [ "X${IsLTS}" = "Xtrue" ]; then
+			# check EOL date vs. today
+			CheckEOL=$(echo -e "${Today}\n${EOLDate}" | sort -n | head -n1)
+			if [ "${CheckEOL}" = "${EOLDate}" ]; then
+				# EOL date is in the past
+				echo -e "\n${LRED}${BOLD}${ShortKernelVersion} LTS has reached end-of-life on ${EOLDate}. ${KernelVersionDigitsOnly} is unsupported now.${NC}"
+			else
+				echo -e "\n${LGREEN}According to https://endoflife.date/linux your kernel version is up to date.${NC}"
+				echo "The predicted end-of-life date for the ${ShortKernelVersion} LTS kernel is ${EOLDate}"
+			fi
+		else
+			echo -e "\n${LGREEN}According to https://endoflife.date/linux your kernel version is up to date.${NC}"
+		fi
+	fi
 	
 	case ${ShortKernelVersion} in
 		*)

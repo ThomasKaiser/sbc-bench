@@ -585,6 +585,20 @@ HandleGovernors() {
 		if [ "X${Governor}" != "X" ]; then
 			SysFSNode="$(sed 's/cpufreq\//cpufreq-/' <<<"${REPLY%/*}")"
 			AvailableGovernorsSysFSNode="$(ls -d "${REPLY%/*}"/*available_governors)"
+			if [ -r "${REPLY%/*}/cpuinfo_cur_freq" ]; then
+				Curfreq=" / $(awk '{printf ("%0.0f",$1/1000); }' <"${REPLY%/*}/cpuinfo_cur_freq") MHz"
+			elif [ -r "${REPLY%/*}/scaling_cur_freq" ]; then
+				Curfreq=" / $(awk '{printf ("%0.0f",$1/1000); }' <"${REPLY%/*}/scaling_cur_freq") MHz"
+			elif [ -r "${REPLY%/*}/cur_freq" ]; then
+				read Rawfreq <"${REPLY%/*}/cur_freq"
+				if [ ${Rawfreq} -gt 10000000 ]; then
+					Curfreq=" / $(awk '{printf ("%0.0f",$1/1000000); }' <<<"${Rawfreq}") MHz"
+				else
+					Curfreq=" / $(awk '{printf ("%0.0f",$1/1000); }' <<<"${Rawfreq}") MHz"
+				fi
+			else
+				Curfreq=""				
+			fi
 			if [ -f "${AvailableGovernorsSysFSNode}" ]; then
 				read AvailableGovernors <"${AvailableGovernorsSysFSNode}"
 				if [ "X${AvailableGovernors}" != "X${Governor}" ]; then
@@ -592,15 +606,15 @@ HandleGovernors() {
 					grep -q "performance" <<<"${AvailableGovernors}"
 					GovStatus=$?
 					if [ ${GovStatus} -eq 0 -a "X${Governor}" = "Xperformance" ]; then
-						echo -e "${LGREEN}performance${NC} (${AvailableGovernors})"
+						echo -e "${LGREEN}performance${NC}${Curfreq} (${AvailableGovernors})"
 					elif [ ${GovStatus} -eq 0 -a "X${Governor}" != "Xperformance" ]; then
-						echo -e "${LRED}${Governor}${NC} ($(sed "s/performance/\x1b\x5b1mperformance\x1b\x5b0m/" <<<"${AvailableGovernors}"))"
+						echo -e "${LRED}${Governor}${NC}${Curfreq} ($(sed "s/performance/\x1b\x5b1mperformance\x1b\x5b0m/" <<<"${AvailableGovernors}"))"
 					else
-						echo "${Governor} (${AvailableGovernors})"
+						echo "${Governor}${Curfreq} (${AvailableGovernors})"
 					fi
 				fi
 			else
-				echo "${SysFSNode##*/}: ${Governor}"
+				echo "${SysFSNode##*/}: ${Governor}${Curfreq}"
 			fi
 		fi
 	done | sort -n
@@ -5949,11 +5963,14 @@ ProvideReviewInfo() {
 	SummarizeResults
 	UploadResults
 
-	if [ -z "${UploadURL}" ]; then
-		echo -e "\n\n\n\n# ${DeviceName:-$HostName}\n\nTested on $(date -R).\n\n## General information:\n"
-	else
-		echo -e "\n\n\n\n# ${DeviceName:-$HostName}\n\nTested on $(date -R). Full info: [${UploadURL}](${UploadURL})\n\n## General information:\n"
-	fi
+	case "${UploadURL}" in
+		http*)
+			echo -e "\n\n\n\n# ${DeviceName:-$HostName}\n\nTested on $(date -R). Full info: [${UploadURL}](${UploadURL})\n\n## General information:\n"
+			;;
+		*)
+			echo -e "\n\n\n\n# ${DeviceName:-$HostName}\n\nTested on $(date -R).\n\n## General information:\n"
+			;;
+	esac
 	sed -e 's/^/    /' <<<"${OriginalCPUInfo}"
 	echo -e "\n## Governors (tradeoff between performance and idle consumption):\n\nOriginal settings:\n"
 	sed -e 's/^/    /' <<<"${GovernorState}"
@@ -5968,15 +5985,22 @@ ProvideReviewInfo() {
 	
 	echo -e "\n## Software versions:\n"
 	case "${DistroInfo}" in
-		Armbian*)
+		Armbian*|Orange*)
+			# Armbian went full megalomania in the meantime. They try to fool their users
+			# into running an 'Armbian 23.02.0-trunk.0072 Jammy' while in reality it's
+			# 'Ubuntu 22.04 Jammy' debootstraped with a certain version of Armbian's build
+			# scripts. The Xunlong copycats do something similarly stupid and report for
+			# example 'Orange Pi 1.0.6 Jammy' as distro. Let's fix this nonsense.
 			RealDistro="$(awk -F":\t" '/^Description/ {print $2}' <${ResultLog})"
-			echo "${RealDistro} ${ARCH}" | sed -e 's/^/  * /'
+			OSCodename="$(awk -F":\t" '/^Codename/ {print $2}' <${ResultLog})"
+			grep -q "${OSCodename}" <<<"${RealDistro}" && echo "  * ${RealDistro} ${ARCH}" \
+				|| echo "  * ${RealDistro} (${OSCodename}) ${ARCH}"
 			;;
 		*)
 			echo "  * ${DistroInfo}"
 			;;
 	esac
-	ArmbianInfo="$(grep "^Armbian info:   " ${ResultLog} | sed 's/Armbian info:   /  * Armbian: /')"
+	ArmbianInfo="$(grep "^Armbian info:   " ${ResultLog} | sed 's/Armbian info:   /  * Build scripts: /')"
 	[ -z "${ArmbianInfo}" ] || echo "${ArmbianInfo}"
 	grep -i "^ Compiler:" ${ResultLog} | sed -e 's/^/  */'
 	grep -i "^openssl" ${ResultLog} | sed -e 's/^/  * /'
@@ -6011,7 +6035,7 @@ FinalReporting() {
 	else
 		echo -e "\x08\x08 Done.\n\nClockspeeds now at $(ReadSoCTemp)°C:\n\n${ClockspeedsNow}\n"
 	fi
-	CheckForThrottling | sed 's/ Check the log for details.//'
+	CheckForThrottling | sed -e 's/ Check the log for details.//' -e 's/might have //' -e '/^[[:space:]]*$/d'
 	[ -f ${TempDir}/throttling_info.txt ] && cat ${TempDir}/throttling_info.txt
 } # FinalReporting
 

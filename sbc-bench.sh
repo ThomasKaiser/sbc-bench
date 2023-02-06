@@ -6216,7 +6216,7 @@ PrintBSPWarning() {
 			:
 			;;
 		*)
-			echo "${LRED}${BOLD}This device runs a vendor kernel most probably forward ported since ages.${NC}"
+			echo -e "${LRED}${BOLD}This device runs a vendor kernel most probably forward ported since ages.${NC}"
 			;;
 	esac
 } # PrintBSPWarning

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.9.11
+Version=0.9.12
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -570,7 +570,9 @@ HandleGovernors() {
 	# fdab0000.npu: userspace (dmc_ondemand userspace powersave performance simple_ondemand)
 
 	Governors="$(find /sys -name "*governor" | grep -E -v '/sys/module|cpuidle|watchdog')"
-	if [ "X${Governors}" = "X" ]; then
+	if [ "X${Governors}" = "X" -o "${CPUArchitecture}" = "x86_64" ]; then
+		# skip if no governors found or on x86 where lots of cpufreq governors are
+		# listed to no avail since the actual work is done layers below.
 		return
 	elif [ "X$1" = "Xtune" ]; then
 		# try to set all governors to performance
@@ -2448,6 +2450,10 @@ DownloadNeuralNet() {
 } # DownloadNeuralNet
 
 InitialMonitoring() {
+	# download Linux kernel end-of-life data
+	curl -s -q --connect-timeout 10 https://raw.githubusercontent.com/endoflife-date/endoflife.date/master/products/linuxkernel.md \
+		>"${TempDir}/linuxkernel.md" &
+
 	# record start time
 	BenchmarkStartTime=$(date +"%s")
 	# empty caches
@@ -2476,6 +2482,7 @@ InitialMonitoring() {
 	echo -e "${CPUTopology}\n" >"${TempDir}/cpu-topology.log" &
 	CPUSignature="$(GetCPUSignature)"
 	DTCompatible="$(strings /proc/device-tree/compatible 2>/dev/null)"
+	OPPTables="$(ParseOPPTables)"
 	# try to identify ARM/RISC-V/Loongson SoCs
 	[ "${CPUArchitecture}" = "x86_64" ] || GuessedSoC="$(GuessARMSoC)"
 
@@ -2484,7 +2491,7 @@ InitialMonitoring() {
 	if [ $? -eq 0 -a "X${ProcCPUFile}" = "X/proc/cpuinfo" ]; then
 		UploadScheme="f:1=<-"
 		UploadServer="ix.io"
-		(echo -e "/proc/cpuinfo\n\n$(uname -a) / ${DeviceName}\n" ; cat /proc/cpuinfo ; echo -e "\n${CPUTopology}\n\n${CPUSignature} / ${GuessedSoC}\n\n${DTCompatible}" ; ParseOPPTables) 2>/dev/null \
+		(echo -e "/proc/cpuinfo\n\n$(uname -a) / ${DeviceName}\n" ; cat /proc/cpuinfo ; echo -e "\n${CPUTopology}\n\n${CPUSignature} / ${GuessedSoC}\n\n${DTCompatible}\n\n${OPPTables}") 2>/dev/null \
 			| curl -s -F ${UploadScheme} ${UploadServer} >/dev/null 2>&1 &
 	else
 		# upload location fallback to sprunge.us if possible
@@ -3468,9 +3475,10 @@ SummarizeResults() {
 	cat "${TempDir}/cpu-topology.log" >>${ResultLog}
 	echo "${LSCPU}" >>${ResultLog}
 	LogEnvironment >>${ResultLog}
-	CacheAndDIMMDetails >>${ResultLog}
+	CacheAndDIMMs="$(CacheAndDIMMDetails)"
+	[ -z "${CacheAndDIMMs}" ] || echo -e "\n##########################################################################\n${CacheAndDIMMs}" >>${ResultLog}
 	# Always include OPP tables
-	ParseOPPTables >>${ResultLog}
+	echo -e "${OPPTables}" >>${ResultLog}
 
 	# Add a line suitable for Results.md on Github if not in efficiency plotting or PTS or GB mode
 	if [ "X${PlotCpufreqOPPs}" != "Xyes" -a "X${MODE}" != "Xpts" -a "X${MODE}" != "Xgb" ]; then
@@ -3515,7 +3523,6 @@ SummarizeResults() {
 				fi
 			fi
 		fi
-		ShortKernelVersion="$(awk -F"." '{print $1"."$2}' <<<"${KernelVersion}")"
 		KernelArch="$(uname -m | sed -e 's/armv7l/armhf/' -e 's/aarch64/arm64/')"
 		if [ "X${KernelArch}" = "X" -o "X${KernelArch}" = "X${ARCH}" ]; then
 			DistroInfo="${OperatingSystem} ${ARCH}"
@@ -3602,6 +3609,7 @@ LogEnvironment() {
 	[ "X${VirtWhat}" != "X" -a "X${VirtWhat}" != "Xnone" ] && VirtOrContainer=" (${VirtWhat})"
 	# kernel info
 	KernelVersion="$(uname -r)"
+	ShortKernelVersion="$(awk -F"." '{print $1"."$2}' <<<"${KernelVersion}")"
 	echo -e "   Kernel: ${KernelVersion}/${CPUArchitecture}${VirtOrContainer}"
 	# kernel config
 	KernelConfig="/boot/config-${KernelVersion}"
@@ -3618,12 +3626,18 @@ LogEnvironment() {
 
 	# with Rockchip BSP kernels try to report PVTM settings (Process-Voltage-Temperature Monitor)
 	grep cpu.*pvtm <<<"${DMESG}" | awk -F'] ' '{print "           "$2}'
-	
+
 	# report performance relevant governors if available:
 	if [ "X${GovernorState}" != "X" ]; then
 		GovernorStateNow="$(HandleGovernors)"
-		echo ""; sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" <<<"${GovernorStateNow}"
+		echo -e "\n##########################################################################\n"
+		sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" <<<"${GovernorStateNow}"
 	fi
+
+	# Add kernel version info / warnings
+	KernelInfo="$(CheckKernelVersion "${KernelVersion}")"
+	[ -z "${KernelInfo}" ] || echo -e "\n##########################################################################\n"; \
+		sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" <<<"${KernelInfo}"
 } # LogEnvironment
 
 UploadResults() {
@@ -4027,7 +4041,7 @@ GuessARMSoC() {
 	# soc soc0: Amlogic Meson GXL (Unknown) Revision 21:d (4:2) Detected <-- Phicomm N1, Amlogic Meson GXL (S905D) P230 Development Board
 	# soc soc0: Amlogic Meson GXL (S905D) Revision 21:d (4:2) Detected <-- Phicomm N1 / Amlogic Meson GXL (S905D) P231 Development Board
 	# soc soc0: Amlogic Meson GXL (S805X) Revision 21:d (34:2) Detected <-- Libre Computer AML-S805X-AC / Amlogic Meson GXL (S905X) P212 Development Board
-	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:d (84:2) Detected <-- Khadas VIM / Libre Computer AML-S905X-CC / Amlogic Meson GXL (S905X) P212 Development Board
+	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:d (84:2) Detected <-- Khadas VIM / Libre Computer AML-S905X-CC / ZTE B860H / Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:d (85:2) Detected <-- Libre Computer AML-S905X-CC
 	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:e (85:2) Detected <-- Vermax UHD 300X / Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson GXL (S905W) Revision 21:d (a4:2) Detected <-- Tanix TX3 Mini / Amlogic Meson GXL (S905X) P212 Development Board / Amlogic Meson GXL (S905W) P281 Development Board
@@ -5927,11 +5941,10 @@ ProvideReviewInfo() {
 		fi
 	done
 
-	# prerequisits: create temp dir, download endoflife data, ensure CPU utilization and/or
-	# average load is low enough to continue, collect information, set governors to performance
+	# prerequisits: create temp dir, ensure CPU utilization and/or average load is low
+	# enough to continue, collect information, set governors to performance
+
 	CreateTempDir
-	curl -s -q --connect-timeout 10 https://raw.githubusercontent.com/endoflife-date/endoflife.date/master/products/linuxkernel.md \
-		>"${TempDir}/linuxkernel.md" &
 	[ -f /sys/devices/system/cpu/cpufreq/policy0/scaling_governor ] && \
 		read OriginalCPUFreqGovernor </sys/devices/system/cpu/cpufreq/policy0/scaling_governor 2>/dev/null
 	GovernorState="$(HandleGovernors | grep -v Status)"
@@ -6008,7 +6021,7 @@ ProvideReviewInfo() {
 	grep -i "^openssl" ${ResultLog} | sed -e 's/^/  * /'
 	CONFIGHZ="$(awk -F" " '/CONFIG_HZ=/ {print $1}' <${ResultLog})"
 	[ -z "${CONFIGHZ}" ] && echo "  * Kernel ${KernelVersion}" || echo "  * Kernel ${KernelVersion} / ${CONFIGHZ}"
-	CheckKernelVersion "${KernelVersion}"
+	[ -z "${KernelInfo}" ] || echo -e "\n${KernelInfo}"
 
 	cat <<- EOF
 	
@@ -6058,6 +6071,10 @@ CheckKernelVersion() {
 			;;
 	esac
 
+	# skip this whole check on x86 where usually distro kernels are used that follow
+	# an own release schedule
+	[ "${CPUArchitecture}" = "x86_64" ] && return
+
 	KernelVersionDigitsOnly=$(cut -f1 -d- <<<"$1")
 	
 	# parse LTS kernel info, in February 2023 this looks like this for example with 5.10:
@@ -6074,42 +6091,135 @@ CheckKernelVersion() {
 	
 	if [ -z "${KernelStatus}" ]; then
 		# some old kernel version neither being an LTS kernel nor any actively developed variant
-		echo -e "\n${LRED}${BOLD}Kernel version ${KernelVersionDigitsOnly} is not covered by any release cycle.${NC}\n"
+		echo -e "${LRED}${BOLD}Kernel version ${KernelVersionDigitsOnly} is not covered by any release cycle.${NC}\n"
 		echo -e "${LRED}${BOLD}Please check https://endoflife.date/linux for details. It is highly likely${NC}"
 		echo -e "${LRED}${BOLD}that countless exploitable vulnerabilities exist for this kernel as well as${NC}"
 		echo -e "${LRED}${BOLD}tons of unfixed bugs. Better upgrade to a supported version ASAP.${NC}"
 	elif [ "X${KernelVersionDigitsOnly}" != "X${LatestKernelVersion}" ]; then
 		# kernel version at least matches a supported kernel but is not most recent one
-		echo -e "\n${LRED}${BOLD}Kernel ${KernelVersionDigitsOnly} is not most recent ${ShortKernelVersion}${KernelSuffix}: ${LatestKernelVersion} released on ${LatestKernelDate}.${NC}\n"
+		BSPDisclaimer="${LRED}${BOLD}But the version string doesn't matter that much since this device is not${NC}\n${LRED}${BOLD}running an official Linux from kernel.org.${NC}\n"
+		echo -e "${LRED}${BOLD}Kernel ${KernelVersionDigitsOnly} is not latest ${LatestKernelVersion}${KernelSuffix} that was released on ${LatestKernelDate}.${NC}\n"
 		echo -e "${LRED}${BOLD}Please check https://endoflife.date/linux for details. It is somewhat likely${NC}"
-		echo -e "${LRED}${BOLD}that a lot of exploitable vulnerabilities exist for this kernel as well as many${NC}"
-		echo -e "${LRED}${BOLD}unfixed bugs. Better upgrade to a supported version ASAP.${NC}"
+		echo -e "${LRED}${BOLD}that a lot of exploitable vulnerabilities exist for this kernel as well as${NC}"
+		echo -e "${LRED}${BOLD}many unfixed bugs. Better upgrade to a supported version ASAP.${NC}"
 	else
 		# kernel version seems to match most recent upstream kernel.
+		BSPDisclaimer="${LRED}${BOLD}But the version string doesn't matter that much since this device is not${NC}\n${LRED}${BOLD}running an official Linux from kernel.org.${NC}\n"
 		Today="$(date "+%Y-%m-%d")"
 		EOLDate="$(awk -F": " '/eol:/ {print $2}' <<<"${KernelStatus}")"
-		if [ "X${IsLTS}" = "Xtrue" ]; then
-			# check EOL date vs. today
-			CheckEOL=$(echo -e "${Today}\n${EOLDate}" | sort -n | head -n1)
-			if [ "${CheckEOL}" = "${EOLDate}" ]; then
-				# EOL date is in the past
-				echo -e "\n${LRED}${BOLD}${ShortKernelVersion} LTS has reached end-of-life on ${EOLDate}. ${KernelVersionDigitsOnly} is unsupported now.${NC}"
-			else
-				echo -e "\n${LGREEN}According to https://endoflife.date/linux your kernel version is up to date.${NC}"
+		# check EOL date vs. today
+		CheckEOL=$(echo -e "${Today}\n${EOLDate}" | sort -n | head -n1)
+		if [ "X${CheckEOL}" = "X${EOLDate}" -a "X${EOLDate}" != "Xfalse" ]; then
+			# EOL date is in the past
+			echo -e "${LRED}${BOLD}${ShortKernelVersion}${KernelSuffix} has reached end-of-life on ${EOLDate}. ${KernelVersionDigitsOnly} is unsupported now.${NC}"
+		else
+			echo -e "${LGREEN}According to https://endoflife.date/linux your kernel version is up to date.${NC}"
+			if [ "X${IsLTS}" = "Xtrue" ]; then
 				echo "The predicted end-of-life date for the ${ShortKernelVersion} LTS kernel is ${EOLDate}"
 			fi
-		else
-			echo -e "\n${LGREEN}According to https://endoflife.date/linux your kernel version is up to date.${NC}"
 		fi
 	fi
 	
-	case ${ShortKernelVersion} in
-		*)
+	case ${KernelVersionDigitsOnly} in
+		# we ignore all kernels that are not a supported LTS version any more
+		3.4.*)
+			# some SDKs/BSPs based on this version: Allwinner A10, A20, A83T, H2+/H3
 			:
 			;;
+		3.10.*)
+			# some SDKs/BSPs based on this version: Allwinner A64, H5, R40/V40, Amlogic S805 (Meson8b), Exynos 5422
+			:
+			;;
+		3.14.*)
+			# some SDKs/BSPs based on this version: Amlogic S905 (GXBB) / S805X/S805Y/S905X/S905D/S905W/S905L/S905L2/S905M2 (GXL)
+			:
+			;;
+		4.4.*)
+			# some SDKs/BSPs based on this version: Samsung/Nexell S5P6818, Rockchip RK3229/RK3228A/RK3288/RK3308/RK3328/RK3399
+			:
+			;;
+		4.9.*)
+			# some SDKs/BSPs based on this version: Allwinner H6, Allwinner H616/H313, Amlogic S905X3 (SM1) / S922X/A311D (G12B), Exynos 5422, Nvidia AGX Xavier / Nvidia Jetson Nano / Nvidia Tegra X1 / Nvidia Tegra Xavier, RealTek RTD129x/RTD139x
+			:
+			;;
+		"5.1.0"|"5.3.0"|"5.7.0"|"5.9.0"|"5.10.0"|"5.14.0")
+			# Popular kernels for all sorts of Amlogic SoCs from https://github.com/150balbes
+			# Unfortunately lots of devices still run with these ancient kernels lacking any fixes
+			:
+			;;
+		4.14.*)
+			# some SDKs/BSPs based on this version: Exynos 5422, NXP i.MX8x, Samsung/Nexell S5P6818
+			case ${GuessedSoC} in
+				*S5P6818*|"NXP i.MX8"*|*5422*)
+					PrintBSPWarning
+					;;
+			esac
+			;;
+		4.19.*)
+			# some SDKs/BSPs based on this version: Rockchip RK356x/RK3399
+			case ${GuessedSoC} in
+				*RK3566*|*RK3568*)
+					PrintBSPWarning
+					;;
+			esac
+			;;
+		5.4.*)
+			# some SDKs/BSPs based on this version: Allwinner D1, Amlogic A311D2 (T7), S805X2/S905Y4/S905W2 (S4), Exynos 5422
+			case ${GuessedSoC} in
+				"Allwinner D1"*|*A311D2*|*S805X2*|*S905Y4*|*S905W2*|*5422*)
+					PrintBSPWarning
+					;;
+			esac
+			;;
+		"5.4.125"|"5.4.180")
+			# New Amlogic SDK initially released with 5.4.125 and after some version string cosmetics
+			# stuck at 5.4.180
+			case ${GuessedSoC} in
+				*Amlogic*)
+					PrintBSPWarning
+					;;
+			esac
+			;;
+		5.10.*)
+			# some SDKs/BSPs based on this version: Nvidia Jetson AGX Orin, Rockchip RK3588/RK356x/RK3399
+			case ${GuessedSoC} in
+				"Nvidia Jetson AGX Orin"|*RK3588*)
+					PrintBSPWarning
+					;;
+				*RK3399*)
+					# With RK3399 we need to differentiate between mainline and BSP kernel, for
+					# example CONFIG_HZ (not reliable once someone gets the idea to switch BSP
+					# settings from 300 to 250) or microvolts entries below /sys/devices/platform/
+					grep -q vcc_ddr <<<"${OPPTables}" && PrintBSPWarning
+					;;
+				*RK3566*|*RK3568*)
+					# With RK3566/RK3568 same problem: how to differentiate between latest
+					# RK BSP based on 5.10.66/5.10.110 and former mainlining efforts?  Check
+					# dmesg output for PVTM for example
+					grep -q 'cpu cpu0: pvtm' <<<"${DMESG}" && PrintBSPWarning
+					;;
+			esac
+			;;
 	esac
-
 } # CheckKernelVersion
+
+PrintBSPWarning() {
+	echo -e "\n${BSPDisclaimer}"
+	case $1 in
+		Allwinner)
+			:
+			;;
+		Amlogic)
+			:
+			;;
+		Rockchip)
+			:
+			;;
+		*)
+			echo "${LRED}${BOLD}This device runs a vendor kernel most probably forward ported since ages.${NC}"
+			;;
+	esac
+} # PrintBSPWarning
 
 DisplayUsage() {
 	echo -e "\nUsage: ${BOLD}${0##*/} [-c] [-g] [-G] [-h] [-m] [-P] [-t \$degree] [-T \$degree] [-s]${NC}\n"

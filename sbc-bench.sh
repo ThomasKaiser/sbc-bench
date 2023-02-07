@@ -42,7 +42,7 @@ Main() {
 	ProcCPU="$(cat "${ProcCPUFile}")"
 
 	# check in which mode we're supposed to run
-	while getopts 'chjmtTsgNPG' c ; do
+	while getopts 'chjmtTrsgNPG' c ; do
 		case ${c} in
 			m)
 				# monitoring mode
@@ -64,7 +64,7 @@ Main() {
 				DisplayUsage
 				exit 0
 				;;
-			j)
+			j|r)
 				# Jeff Geerling or Jean-Luc Aufranc mode. Help in reviewing devices
 				MODE=review
 				ProvideReviewInfo
@@ -179,7 +179,7 @@ Main() {
 	[ -f /sys/devices/system/cpu/cpufreq/policy0/scaling_governor ] && \
 		read OriginalCPUFreqGovernor </sys/devices/system/cpu/cpufreq/policy0/scaling_governor 2>/dev/null
 	BasicSetup performance >/dev/null 2>&1
-	GovernorState="$(HandleGovernors)"
+	GovernorState="$(HandleGovernors | grep -v pcie_aspm)"
 	[ "X${GovernorState}" != "X" ] && echo -e "${GovernorState}\n"
 	GetTempSensor
 	[ "X${MODE}" = "Xpts" ] && CheckPTS
@@ -559,15 +559,18 @@ BashBench(){
 
 HandleGovernors() {
 	# check and report governors that might affect performance behaviour. Stuff like
-	# memory/GPU/NPU governors. On RK3588 for example:
+	# memory/GPU/NPU governors. Also include /sys/module/pcie_aspm/parameters/policy
+	# since this is overlooked way too often when testing/reviewing PCIe equipped SBC.
+	# On RK3588 looks like this for example:
 	#
-	# Status of performance related governors found below /sys:
-	# cpufreq-policy0: ondemand (conservative ondemand userspace powersave performance schedutil)
-	# cpufreq-policy4: ondemand (conservative ondemand userspace powersave performance schedutil)
-	# cpufreq-policy6: ondemand (conservative ondemand userspace powersave performance schedutil)
-	# dmc: dmc_ondemand (dmc_ondemand userspace powersave performance simple_ondemand)
-	# fb000000.gpu: simple_ondemand (dmc_ondemand userspace powersave performance simple_ondemand)
-	# fdab0000.npu: userspace (dmc_ondemand userspace powersave performance simple_ondemand)
+	# Status of performance related governors/policies found below /sys:
+	# cpufreq-policy0: ondemand / 408 MHz (conservative ondemand userspace powersave performance schedutil)
+	# cpufreq-policy4: ondemand / 408 MHz (conservative ondemand userspace powersave performance schedutil)
+	# cpufreq-policy6: ondemand / 408 MHz (conservative ondemand userspace powersave performance schedutil)
+	# dmc: dmc_ondemand / 528 MHz (dmc_ondemand userspace powersave performance simple_ondemand)
+	# fb000000.gpu: simple_ondemand / 300 MHz (dmc_ondemand userspace powersave performance simple_ondemand)
+	# fdab0000.npu: userspace / 1000 MHz (dmc_ondemand userspace powersave performance simple_ondemand)
+	# pcie_aspm: default performance [powersave] powersupersave
 
 	Governors="$(find /sys -name "*governor" | grep -E -v '/sys/module|cpuidle|watchdog')"
 	if [ "X${Governors}" = "X" -o "${CPUArchitecture}" = "x86_64" ]; then
@@ -579,9 +582,10 @@ HandleGovernors() {
 		echo "${Governors}" | while read ; do
 			echo $1 >"${REPLY}" 2>/dev/null
 		done
+		[ -w /sys/module/pcie_aspm/parameters/policy ] && echo $1 >/sys/module/pcie_aspm/parameters/policy 2>/dev/null
 		return
 	fi
-	echo -e "Status of performance related governors found below /sys:"
+	echo -e "Status of performance related governors/policies found below /sys:"
 	echo "${Governors}" | while read ; do
 		read Governor <"${REPLY}"
 		if [ "X${Governor}" != "X" ]; then
@@ -620,6 +624,20 @@ HandleGovernors() {
 			fi
 		fi
 	done | sort -n
+	if [ -r /sys/module/pcie_aspm/parameters/policy ]; then
+		read ASPM </sys/module/pcie_aspm/parameters/policy
+		case ${ASPM} in
+			*"[performance]"*)
+				echo -e "pcie_aspm: ${LGREEN}${ASPM}${NC}"
+				;;
+			*"[powersave]"*|*"[powersupersave]"*)
+				echo -e "pcie_aspm: ${LRED}${ASPM}${NC}"
+				;;
+			*)
+				echo -e "pcie_aspm: ${ASPM}"
+				;;
+		esac
+	fi
 } # HandleGovernors
 
 PlotPerformanceGraph() {

@@ -574,10 +574,10 @@ HandleGovernors() {
 		# skip if no governors found or on x86 where lots of cpufreq governors are
 		# listed to no avail since the actual work is done layers below.
 		return
-	elif [ "X$1" = "Xtune" ]; then
-		# try to set all governors to performance
+	elif [ "X$1" != "X" ]; then
+		# try to set all governors to $1
 		echo "${Governors}" | while read ; do
-			echo performance >"${REPLY}" 2>/dev/null
+			echo $1 >"${REPLY}" 2>/dev/null
 		done
 		return
 	fi
@@ -3476,8 +3476,8 @@ SummarizeResults() {
 	# Always include OPP tables
 	echo -e "${OPPTables}" >>${ResultLog}
 
-	# Add a line suitable for Results.md on Github if not in efficiency plotting or PTS or GB mode
-	if [ "X${PlotCpufreqOPPs}" != "Xyes" -a "X${MODE}" != "Xpts" -a "X${MODE}" != "Xgb" ]; then
+	# Add a line suitable for Results.md on Github if not in efficiency plotting or PTS, GB or review mode
+	if [ "X${PlotCpufreqOPPs}" != "Xyes" -a "X${MODE}" != "Xpts" -a "X${MODE}" != "Xgb" -a "X${MODE}" != "Xreview" ]; then
 		if [ -f /sys/devices/system/cpu/cpufreq/policy0/cpuinfo_max_freq ]; then
 			# Check for throttling for first:
 			MeasuredClockspeedStart=$(grep -A2 "^Checking cpufreq OPP" ${ResultLog} | awk -F" " '/Measured/ {print $5}' | sed -n ${#ClusterConfig[@]}p)
@@ -3541,7 +3541,7 @@ LogEnvironment() {
 	fi
 
 	# report ARM/RISC-V/Loongson SoCs if possible
-	if [ "X${GuessedSoC}" != "Xn/a" ]; then
+	if [ "X${GuessedSoC}" != "Xn/a" -o "X${GuessedSoC}" != "X" ]; then
 		echo -e "\nSoC guess: ${GuessedSoC}"
 	elif [ "X${CPUSignature}" != "X" ]; then
 		echo -e "\nSignature: ${CPUSignature}"
@@ -5945,10 +5945,16 @@ ProvideReviewInfo() {
 		read OriginalCPUFreqGovernor </sys/devices/system/cpu/cpufreq/policy0/scaling_governor 2>/dev/null
 	GovernorState="$(HandleGovernors | grep -v Status)"
 	CheckLoadAndDmesg
-	HandleGovernors tune
+	HandleGovernors powersave
+	if [ -f /sys/kernel/debug/clk/clk_summary ]; then
+		sleep 1
+		cat /sys/kernel/debug/clk/clk_summary >"${TempDir}/clk_summary.powersave"
+	fi
+	HandleGovernors performance
 	OriginalCPUInfo="$(PrintCPUInfo)"
 	TunedGovernorState="$(HandleGovernors | grep -v Status | awk -F" \(" '{print $1}')"
 	BasicSetup performance >/dev/null 2>&1
+	[ -f /sys/kernel/debug/clk/clk_summary ] && cat /sys/kernel/debug/clk/clk_summary >"${TempDir}/clk_summary.tuned"
 	GetTempSensor
 	InstallPrerequisits
 	InstallCpuminer
@@ -5972,6 +5978,13 @@ ProvideReviewInfo() {
 	grep -q -i Gentoo <<<"${OperatingSystem}" && read OperatingSystem </etc/gentoo-release
 
 	SummarizeResults
+	
+	if [ -f "${TempDir}/clk_summary.tuned" ]; then
+		echo -e "\n##########################################################################\n\n/sys/kernel/debug/clk/clk_summary diff between all governors set to powersave and performance:\n" >>${ResultLog}
+		head -n3 "${TempDir}/clk_summary.tuned" | sed -e 's/^/  /' >>${ResultLog}
+		diff "${TempDir}"/clk_summary.*  >>${ResultLog}
+	fi
+
 	UploadResults
 
 	case "${UploadURL}" in
@@ -5995,7 +6008,7 @@ ProvideReviewInfo() {
 	fi
 	
 	echo -e "\n## Software versions:\n"
-	case "${DistroInfo}" in
+	case "${OperatingSystem}" in
 		Armbian*|Orange*)
 			# Armbian went full megalomania in the meantime. They try to fool their users
 			# into running an 'Armbian 23.02.0-trunk.0072 Jammy' while in reality it's
@@ -6008,7 +6021,7 @@ ProvideReviewInfo() {
 				|| echo "  * ${RealDistro} (${OSCodename}) ${ARCH}"
 			;;
 		*)
-			echo "  * ${DistroInfo}"
+			echo "  * ${OperatingSystem}"
 			;;
 	esac
 	ArmbianInfo="$(grep "^Armbian info:   " ${ResultLog} | sed 's/Armbian info:   /  * Build scripts: /')"
@@ -6093,7 +6106,7 @@ CheckKernelVersion() {
 		echo -e "${LRED}${BOLD}tons of unfixed bugs. Better upgrade to a supported version ASAP.${NC}"
 	elif [ "X${KernelVersionDigitsOnly}" != "X${LatestKernelVersion}" ]; then
 		# kernel version at least matches a supported kernel but is not most recent one
-		BSPDisclaimer="${LRED}${BOLD}But the version string doesn't matter that much since this device is not${NC}\n${LRED}${BOLD}running an official${KernelSuffix} Linux from kernel.org.${NC}\n"
+		BSPDisclaimer="${LRED}${BOLD}But this version string doesn't matter that much since this device is not${NC}\n${LRED}${BOLD}running an official${KernelSuffix} Linux from kernel.org.${NC}\n"
 		echo -e "${LRED}${BOLD}Kernel ${KernelVersionDigitsOnly} is not latest ${LatestKernelVersion}${KernelSuffix} that was released on ${LatestKernelDate}.${NC}\n"
 		if [ "X${IsLTS}" = "Xtrue" ]; then
 			# warn about vulnerabilities only on LTS kernels since users of actively
@@ -6117,7 +6130,7 @@ CheckKernelVersion() {
 		fi
 	else
 		# kernel version seems to match most recent upstream kernel.
-		BSPDisclaimer="${LRED}${BOLD}But the version string doesn't matter that much since this device is not${NC}\n${LRED}${BOLD}running an official${KernelSuffix} Linux from kernel.org.${NC}\n"
+		BSPDisclaimer="${LRED}${BOLD}But this version string doesn't matter that much since this device is not${NC}\n${LRED}${BOLD}running an official${KernelSuffix} Linux from kernel.org.${NC}\n"
 		Today="$(date "+%Y-%m-%d")"
 		EOLDate="$(awk -F": " '/eol:/ {print $2}' <<<"${KernelStatus}")"
 		# check EOL date vs. today
@@ -6153,7 +6166,17 @@ CheckKernelVersion() {
 			;;
 		4.9.*)
 			# some SDKs/BSPs based on this version: Allwinner H6, Allwinner H616/H313, Amlogic S905X3 (SM1) / S922X/A311D (G12B), Exynos 5422, Nvidia AGX Xavier / Nvidia Jetson Nano / Nvidia Tegra X1 / Nvidia Tegra Xavier, RealTek RTD129x/RTD139x
-			:
+			case ${GuessedSoC} in
+				Allwinner*)			
+					PrintBSPWarning Allwinner
+					;;
+				Amlogic*)
+					PrintBSPWarning Amlogic
+					;;
+				*5422*|"RealTek RTD"*|Nvidia*)
+					PrintBSPWarning
+					;;
+			esac		
 			;;
 		"5.1.0"|"5.3.0"|"5.7.0"|"5.9.0"|"5.10.0"|"5.14.0")
 			# Popular kernels for all sorts of Amlogic SoCs from https://github.com/150balbes
@@ -6179,9 +6202,12 @@ CheckKernelVersion() {
 		5.4.*)
 			# some SDKs/BSPs based on this version: Allwinner D1, Amlogic A311D2 (T7), S805X2/S905Y4/S905W2 (S4), Exynos 5422
 			case ${GuessedSoC} in
-				"Allwinner D1"*|*A311D2*|*S805X2*|*S905Y4*|*S905W2*|*5422*)
-					PrintBSPWarning
+				"Allwinner D1"*)
+					PrintBSPWarning Allwinner
 					;;
+				*A311D2*|*S805X2*|*S905Y4*|*S905W2*|*5422*)
+					PrintBSPWarning Amlogic
+					;;			
 			esac
 			;;
 		"5.4.125"|"5.4.180")
@@ -6189,7 +6215,7 @@ CheckKernelVersion() {
 			# stuck at 5.4.180
 			case ${GuessedSoC} in
 				*Amlogic*)
-					PrintBSPWarning
+					PrintBSPWarning Amlogic
 					;;
 			esac
 			;;
@@ -6223,18 +6249,27 @@ PrintBSPWarning() {
 	echo -e "\n${BSPDisclaimer}"
 	case $1 in
 		Allwinner)
-			:
+			echo -e "${LRED}${BOLD}This device runs an Allwinner BSP kernel forward ported since ages based on${NC}"
+			echo -e "${LRED}${BOLD}unknown sources. While the version string suggests being a ${ShortKernelVersion} LTS release${NC}"
+			echo -e "${LRED}${BOLD}the code base differs way too much. Better expect tons of unfixed bugs and${NC}"
+			echo -e "${LRED}${BOLD}vulnerabilities hiding in this vendor kernel.${NC}"
 			;;
 		Amlogic)
-			:
+			echo -e "${LRED}${BOLD}This device runs an Amlogic BSP kernel based on an ancient Linux or Android${NC}"
+			echo -e "${LRED}${BOLD}kernel version that has been forward ported since ages. While the version${NC}"
+			echo -e "${LRED}${BOLD}string suggests being a ${ShortKernelVersion} LTS release the code base differs way too much.${NC}"
+			echo -e "${LRED}${BOLD}See https://tinyurl.com/y8k3af73 and https://tinyurl.com/ywtfec7n for details.${NC}"
 			;;
 		Rockchip)
 			echo -e "${LRED}${BOLD}This device runs a Rockchip BSP kernel based on a mixture of various sources${NC}"
 			echo -e "${LRED}${BOLD}being just forward ported since ages.${NC}"
 			;;
 		RockchipGKI)
-			echo -e "${LRED}${BOLD}This device runs a Rockchip BSP kernel based on a mixture of various sources${NC}"
-			echo -e "${LRED}${BOLD}amongst them Android GKI and others.${NC}"
+			echo -e "${LRED}${BOLD}This device runs a Rockchip BSP kernel based on a mixture of Android GKI and${NC}"
+			echo -e "${LRED}${BOLD}other sources. Also some community attempts to do version string cosmetics${NC}"
+			echo -e "${LRED}${BOLD}might have happened, see https://tinyurl.com/2p8fuubd for example. To examine${NC}"
+			echo -e "${LRED}${BOLD}how far away this ${KernelVersionDigitsOnly} is from an official LTS of same version someone${NC}"
+			echo -e "${LRED}${BOLD}would have to reapply Rockchip's thousands of patches to a clean ${KernelVersionDigitsOnly} LTS.${NC}"
 			;;
 		*)
 			echo -e "${LRED}${BOLD}This device runs a vendor kernel most probably forward ported since ages.${NC}"

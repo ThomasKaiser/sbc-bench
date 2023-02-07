@@ -1040,10 +1040,6 @@ GetTempSensor() {
 				# Seems like a good find
 				TempInfo="Thermal source: ${ThermalNode%/*}/ (${ThermalSource})"
 				;;
-			nvme|w1_slave_temp)
-				# Obviously wrong
-				TempInfo="Wrong thermal source: /etc/armbianmonitor/datasources/soctemp (${ThermalSource})"
-				;;
 			*)
 				# Quick results check within few months showed the following types which
 				# smell all not that good if it's about CPU or SoC temperatures:
@@ -6097,14 +6093,31 @@ CheckKernelVersion() {
 		echo -e "${LRED}${BOLD}tons of unfixed bugs. Better upgrade to a supported version ASAP.${NC}"
 	elif [ "X${KernelVersionDigitsOnly}" != "X${LatestKernelVersion}" ]; then
 		# kernel version at least matches a supported kernel but is not most recent one
-		BSPDisclaimer="${LRED}${BOLD}But the version string doesn't matter that much since this device is not${NC}\n${LRED}${BOLD}running an official Linux from kernel.org.${NC}\n"
+		BSPDisclaimer="${LRED}${BOLD}But the version string doesn't matter that much since this device is not${NC}\n${LRED}${BOLD}running an official${KernelSuffix} Linux from kernel.org.${NC}\n"
 		echo -e "${LRED}${BOLD}Kernel ${KernelVersionDigitsOnly} is not latest ${LatestKernelVersion}${KernelSuffix} that was released on ${LatestKernelDate}.${NC}\n"
-		echo -e "${LRED}${BOLD}Please check https://endoflife.date/linux for details. It is somewhat likely${NC}"
-		echo -e "${LRED}${BOLD}that a lot of exploitable vulnerabilities exist for this kernel as well as${NC}"
-		echo -e "${LRED}${BOLD}many unfixed bugs. Better upgrade to a supported version ASAP.${NC}"
+		if [ "X${IsLTS}" = "Xtrue" ]; then
+			# warn about vulnerabilities only on LTS kernels since users of actively
+			# developed kernel branches should know what they're doing.
+			UsedKernelRevision=$(cut -f3 -d. <<<"${KernelVersionDigitsOnly}")
+			LatestKernelRevision=$(cut -f3 -d. <<<"${LatestKernelVersion}")
+			RevisionDifference=$(( ${LatestKernelRevision:-0} - ${UsedKernelRevision:-0} ))
+			if [ ${RevisionDifference} -ge 50 ]; then
+				echo -e "${LRED}${BOLD}Please check https://endoflife.date/linux for details. It is somewhat likely${NC}"
+				echo -e "${LRED}${BOLD}that a lot of exploitable vulnerabilities exist for this kernel as well as${NC}"
+				echo -e "${LRED}${BOLD}many unfixed bugs. Better upgrade to a supported version ASAP.${NC}"
+			elif [ ${RevisionDifference} -ge 20 ]; then
+				echo -e "${LRED}${BOLD}Please check https://endoflife.date/linux for details. It is somewhat likely${NC}"
+				echo -e "${LRED}${BOLD}that some exploitable vulnerabilities exist for this kernel as well as many${NC}"
+				echo -e "${LRED}${BOLD}unfixed bugs. Better upgrade to a supported version.${NC}"
+			else
+				echo -e "${LRED}${BOLD}Please check https://endoflife.date/linux for details. It is somewhat likely${NC}"
+				echo -e "${LRED}${BOLD}some kernel bugs have been fixed in the meantime and maybe vulnerabilities${NC}"
+				echo -e "${LRED}${BOLD}as well.${NC}"
+			fi
+		fi
 	else
 		# kernel version seems to match most recent upstream kernel.
-		BSPDisclaimer="${LRED}${BOLD}But the version string doesn't matter that much since this device is not${NC}\n${LRED}${BOLD}running an official Linux from kernel.org.${NC}\n"
+		BSPDisclaimer="${LRED}${BOLD}But the version string doesn't matter that much since this device is not${NC}\n${LRED}${BOLD}running an official${KernelSuffix} Linux from kernel.org.${NC}\n"
 		Today="$(date "+%Y-%m-%d")"
 		EOLDate="$(awk -F": " '/eol:/ {print $2}' <<<"${KernelStatus}")"
 		# check EOL date vs. today
@@ -6159,7 +6172,7 @@ CheckKernelVersion() {
 			# some SDKs/BSPs based on this version: Rockchip RK356x/RK3399
 			case ${GuessedSoC} in
 				*RK3566*|*RK3568*)
-					PrintBSPWarning
+					PrintBSPWarning Rockchip
 					;;
 			esac
 			;;
@@ -6183,20 +6196,23 @@ CheckKernelVersion() {
 		5.10.*)
 			# some SDKs/BSPs based on this version: Nvidia Jetson AGX Orin, Rockchip RK3588/RK356x/RK3399
 			case ${GuessedSoC} in
-				"Nvidia Jetson AGX Orin"|*RK3588*)
+				"Nvidia Jetson AGX Orin")
 					PrintBSPWarning
+					;;
+				*RK3588*)
+					PrintBSPWarning RockchipGKI
 					;;
 				*RK3399*)
 					# With RK3399 we need to differentiate between mainline and BSP kernel, for
 					# example CONFIG_HZ (not reliable once someone gets the idea to switch BSP
 					# settings from 300 to 250) or microvolts entries below /sys/devices/platform/
-					grep -q vcc_ddr <<<"${OPPTables}" && PrintBSPWarning
+					grep -q vcc_ddr <<<"${OPPTables}" && PrintBSPWarning RockchipGKI
 					;;
 				*RK3566*|*RK3568*)
 					# With RK3566/RK3568 same problem: how to differentiate between latest
 					# RK BSP based on 5.10.66/5.10.110 and former mainlining efforts?  Check
 					# dmesg output for PVTM for example
-					grep -q 'cpu cpu0: pvtm' <<<"${DMESG}" && PrintBSPWarning
+					grep -q 'cpu cpu0: pvtm' <<<"${DMESG}" && PrintBSPWarning RockchipGKI
 					;;
 			esac
 			;;
@@ -6213,7 +6229,12 @@ PrintBSPWarning() {
 			:
 			;;
 		Rockchip)
-			:
+			echo -e "${LRED}${BOLD}This device runs a Rockchip BSP kernel based on a mixture of various sources${NC}"
+			echo -e "${LRED}${BOLD}being just forward ported since ages.${NC}"
+			;;
+		RockchipGKI)
+			echo -e "${LRED}${BOLD}This device runs a Rockchip BSP kernel based on a mixture of various sources${NC}"
+			echo -e "${LRED}${BOLD}amongst them Android GKI and others.${NC}"
 			;;
 		*)
 			echo -e "${LRED}${BOLD}This device runs a vendor kernel most probably forward ported since ages.${NC}"

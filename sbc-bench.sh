@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.9.12
+Version=0.9.13
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -5980,6 +5980,7 @@ ProvideReviewInfo() {
 	SummarizeResults
 	
 	if [ -f "${TempDir}/clk_summary.tuned" ]; then
+		# add clk_summary diff to results output
 		echo -e "\n##########################################################################\n\n/sys/kernel/debug/clk/clk_summary diff between all governors set to powersave and performance:\n" >>${ResultLog}
 		head -n3 "${TempDir}/clk_summary.tuned" | sed -e 's/^/  /' >>${ResultLog}
 		diff "${TempDir}"/clk_summary.*  >>${ResultLog}
@@ -6097,17 +6098,27 @@ CheckKernelVersion() {
 	LatestKernelDate="$(awk -F": " '/latestReleaseDate:/ {print $2}' <<<"${KernelStatus}")"
 	IsLTS="$(awk -F": " '/lts:/ {print $2}' <<<"${KernelStatus}")"
 	[ "X${IsLTS}" = "Xtrue" ] && KernelSuffix=" LTS"
-	
+	EOLDate="$(awk -F": " '/eol:/ {print $2}' <<<"${KernelStatus}")"
+	Today="$(date "+%Y-%m-%d")"
+	# check EOL date vs. today
+	CheckEOL=$(echo -e "${Today}\n${EOLDate}" | sort -n | head -n1)
+
 	if [ -z "${KernelStatus}" ]; then
 		# some old kernel version neither being an LTS kernel nor any actively developed variant
-		echo -e "${LRED}${BOLD}Kernel version ${KernelVersionDigitsOnly} is not covered by any release cycle.${NC}\n"
+		echo -e "${LRED}${BOLD}Kernel version ${KernelVersionDigitsOnly} is not covered by any release cycle any more.${NC}\n"
 		echo -e "${LRED}${BOLD}Please check https://endoflife.date/linux for details. It is highly likely${NC}"
 		echo -e "${LRED}${BOLD}that countless exploitable vulnerabilities exist for this kernel as well as${NC}"
 		echo -e "${LRED}${BOLD}tons of unfixed bugs. Better upgrade to a supported version ASAP.${NC}"
 	elif [ "X${KernelVersionDigitsOnly}" != "X${LatestKernelVersion}" ]; then
 		# kernel version at least matches a supported kernel but is not most recent one
-		BSPDisclaimer="${LRED}${BOLD}But this version string doesn't matter that much since this device is not${NC}\n${LRED}${BOLD}running an official${KernelSuffix} Linux from kernel.org.${NC}\n"
-		echo -e "${LRED}${BOLD}Kernel ${KernelVersionDigitsOnly} is not latest ${LatestKernelVersion}${KernelSuffix} that was released on ${LatestKernelDate}.${NC}\n"
+		BSPDisclaimer="\n${LRED}${BOLD}But this version string doesn't matter that much since this device is not${NC}\n${LRED}${BOLD}running an official${KernelSuffix} Linux from kernel.org.${NC}\n"
+		if [ "X${CheckEOL}" = "X${EOLDate}" -a "X${EOLDate}" != "Xfalse" ]; then
+			# EOL date is in the past
+			echo -e "${LRED}${BOLD}${ShortKernelVersion}${KernelSuffix} has reached end-of-life on ${EOLDate} with version ${LatestKernelVersion}.${NC}"
+			echo -e "${LRED}${BOLD}Your ${KernelVersionDigitsOnly} and all other ${ShortKernelVersion}${KernelSuffix} versions are unsupported since then.${NC}"
+		else
+			echo -e "${LRED}${BOLD}Kernel ${KernelVersionDigitsOnly} is not latest ${LatestKernelVersion}${KernelSuffix} that was released on ${LatestKernelDate}.${NC}\n"
+		fi
 		if [ "X${IsLTS}" = "Xtrue" ]; then
 			# warn about vulnerabilities only on LTS kernels since users of actively
 			# developed kernel branches should know what they're doing.
@@ -6130,14 +6141,10 @@ CheckKernelVersion() {
 		fi
 	else
 		# kernel version seems to match most recent upstream kernel.
-		BSPDisclaimer="${LRED}${BOLD}But this version string doesn't matter that much since this device is not${NC}\n${LRED}${BOLD}running an official${KernelSuffix} Linux from kernel.org.${NC}\n"
-		Today="$(date "+%Y-%m-%d")"
-		EOLDate="$(awk -F": " '/eol:/ {print $2}' <<<"${KernelStatus}")"
-		# check EOL date vs. today
-		CheckEOL=$(echo -e "${Today}\n${EOLDate}" | sort -n | head -n1)
+		BSPDisclaimer="\n${LRED}${BOLD}But this version string doesn't matter that much since this device is not${NC}\n${LRED}${BOLD}running an official${KernelSuffix} Linux from kernel.org.${NC}\n"
 		if [ "X${CheckEOL}" = "X${EOLDate}" -a "X${EOLDate}" != "Xfalse" ]; then
 			# EOL date is in the past
-			echo -e "${LRED}${BOLD}${ShortKernelVersion}${KernelSuffix} has reached end-of-life on ${EOLDate}. ${KernelVersionDigitsOnly} is unsupported now.${NC}"
+			echo -e "${LRED}${BOLD}${ShortKernelVersion}${KernelSuffix} has reached end-of-life on ${EOLDate}. ${KernelVersionDigitsOnly} is unsupported since then.${NC}"
 		else
 			echo -e "${LGREEN}According to https://endoflife.date/linux your kernel version is up to date.${NC}"
 			if [ "X${IsLTS}" = "Xtrue" ]; then
@@ -6147,22 +6154,29 @@ CheckKernelVersion() {
 	fi
 	
 	case ${KernelVersionDigitsOnly} in
-		# we ignore all kernels that are not a supported LTS version any more
+		# EOL notifications. But wrt BSP kernel warnings we ignore all kernels that are
+		# not a supported LTS version any more or for some time.
 		3.4.*)
 			# some SDKs/BSPs based on this version: Allwinner A10, A20, A83T, H2+/H3
-			:
+			echo -e "\n${LRED}${BOLD}The 3.4 series has reached end-of-life on 2016-10-26 with version 3.4.113.${NC}"
 			;;
 		3.10.*)
 			# some SDKs/BSPs based on this version: Allwinner A64, H5, R40/V40, Amlogic S805 (Meson8b), Exynos 5422
-			:
+			echo -e "\n${LRED}${BOLD}The 3.10 series has reached end-of-life on 2017-11-05 with version 3.10.108.${NC}"
 			;;
 		3.14.*)
-			# some SDKs/BSPs based on this version: Amlogic S905 (GXBB) / S805X/S805Y/S905X/S905D/S905W/S905L/S905L2/S905M2 (GXL)
-			:
+			echo -e "\n${LRED}${BOLD}The 3.14 series has reached end-of-life on 2016-09-11 with version 3.14.79.${NC}"
 			;;
 		4.4.*)
-			# some SDKs/BSPs based on this version: Samsung/Nexell S5P6818, Rockchip RK3229/RK3228A/RK3288/RK3308/RK3328/RK3399
-			:
+			case ${GuessedSoC} in
+				*RK3*|*Rockchip*)
+					PrintBSPWarning Rockchip
+					;;
+				*S5P6818*)
+					PrintBSPWarning
+					;;
+			esac
+			echo -e "\n${LRED}${BOLD}The 4.4 series has reached end-of-life on 2017-11-05 with version 4.4.302.${NC}"
 			;;
 		4.9.*)
 			# some SDKs/BSPs based on this version: Allwinner H6, Allwinner H616/H313, Amlogic S905X3 (SM1) / S922X/A311D (G12B), Exynos 5422, Nvidia AGX Xavier / Nvidia Jetson Nano / Nvidia Tegra X1 / Nvidia Tegra Xavier, RealTek RTD129x/RTD139x
@@ -6173,10 +6187,16 @@ CheckKernelVersion() {
 				Amlogic*)
 					PrintBSPWarning Amlogic
 					;;
-				*5422*|"RealTek RTD"*|Nvidia*)
+				*5422*|"RealTek RTD"*)
 					PrintBSPWarning
 					;;
-			esac		
+				Nvidia*)	
+					PrintBSPWarning Nvidia
+					;;
+			esac
+			# prepare 4.9 not listed any more on https://endoflife.date/linux
+			grep -q "releaseCycle: \"4.9\"" "${TempDir}/linuxkernel.md" || \
+				echo -e "\n${LRED}${BOLD}The 4.9 series has reached end-of-life on 2023-01-07 with version 4.9.337.${NC}"
 			;;
 		"5.1.0"|"5.3.0"|"5.7.0"|"5.9.0"|"5.10.0"|"5.14.0")
 			# Popular kernels for all sorts of Amlogic SoCs from https://github.com/150balbes
@@ -6223,7 +6243,7 @@ CheckKernelVersion() {
 			# some SDKs/BSPs based on this version: Nvidia Jetson AGX Orin, Rockchip RK3588/RK356x/RK3399
 			case ${GuessedSoC} in
 				"Nvidia Jetson AGX Orin")
-					PrintBSPWarning
+					PrintBSPWarning Nvidia
 					;;
 				*RK3588*)
 					PrintBSPWarning RockchipGKI
@@ -6246,7 +6266,7 @@ CheckKernelVersion() {
 } # CheckKernelVersion
 
 PrintBSPWarning() {
-	echo -e "\n${BSPDisclaimer}"
+	echo -e "${BSPDisclaimer}"
 	case $1 in
 		Allwinner)
 			echo -e "${LRED}${BOLD}This device runs an Allwinner BSP kernel forward ported since ages based on${NC}"
@@ -6259,6 +6279,9 @@ PrintBSPWarning() {
 			echo -e "${LRED}${BOLD}kernel version that has been forward ported since ages. While the version${NC}"
 			echo -e "${LRED}${BOLD}string suggests being a ${ShortKernelVersion} LTS release the code base differs way too much.${NC}"
 			echo -e "${LRED}${BOLD}See https://tinyurl.com/y8k3af73 and https://tinyurl.com/ywtfec7n for details.${NC}"
+			;;
+		Nvidia)
+			echo -e "${LRED}${BOLD}This device runs a Nvidia BSP kernel.${NC}"
 			;;
 		Rockchip)
 			echo -e "${LRED}${BOLD}This device runs a Rockchip BSP kernel based on a mixture of various sources${NC}"

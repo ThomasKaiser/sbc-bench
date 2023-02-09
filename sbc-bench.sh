@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.9.13
+Version=0.9.14
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -39,10 +39,10 @@ Main() {
 	fi
 	
 	ProcCPUFile="${CPUINFOFILE:-/proc/cpuinfo}"
-	ProcCPU="$(cat "${ProcCPUFile}")"
+	[ -r "${ProcCPUFile}" ] && ProcCPU="$(cat "${ProcCPUFile}")"
 
 	# check in which mode we're supposed to run
-	while getopts 'chjmtTrsgNPG' c ; do
+	while getopts 'chjkmtTrsgNPG' c ; do
 		case ${c} in
 			m)
 				# monitoring mode
@@ -68,6 +68,12 @@ Main() {
 				# Jeff Geerling or Jean-Luc Aufranc mode. Help in reviewing devices
 				MODE=review
 				ProvideReviewInfo
+				exit 0
+				;;
+			k)
+				# Kernel info. Check kernel version against https://endoflife.date/linux
+				# and issue warnings if used kernel is not an official one but vendor/BSP
+				PrintKernelInfo
 				exit 0
 				;;
 			t|T)
@@ -582,7 +588,7 @@ HandleGovernors() {
 		echo "${Governors}" | while read ; do
 			echo $1 >"${REPLY}" 2>/dev/null
 		done
-		[ -w /sys/module/pcie_aspm/parameters/policy ] && echo $1 >/sys/module/pcie_aspm/parameters/policy 2>/dev/null
+		[ -w /sys/module/pcie_aspm/parameters/policy -a -d /sys/bus/pci_express ] && echo $1 >/sys/module/pcie_aspm/parameters/policy 2>/dev/null
 		return
 	fi
 	echo -e "Status of performance related governors/policies found below /sys:"
@@ -624,7 +630,7 @@ HandleGovernors() {
 			fi
 		fi
 	done | sort -n
-	if [ -r /sys/module/pcie_aspm/parameters/policy ]; then
+	if [ -r /sys/module/pcie_aspm/parameters/policy -a -d /sys/bus/pci_express ]; then
 		read ASPM </sys/module/pcie_aspm/parameters/policy
 		case ${ASPM} in
 			*"[performance]"*)
@@ -1042,8 +1048,9 @@ GetTempSensor() {
 	# * http://ix.io/3MFz --> w1_slave_temp (1-wire sensor)
 	# * http://ix.io/411x --> gpu_thermal (obviously _not_ cpu_thermal)
 	# * http://ix.io/41IL --> iwlwifi_1 (Wi-Fi card)
+	# * http://ix.io/4nt8 --> acpitz (whatever sensor remaining at 26.8°C)
 
-	if [ -f /etc/armbianmonitor/datasources/soctemp ]; then
+	if [ -f /etc/armbianmonitor/datasources/soctemp -a "${CPUArchitecture}" != "x86_64" ]; then
 		TempSource=/etc/armbianmonitor/datasources/soctemp
 		ThermalNode="$(readlink /etc/armbianmonitor/datasources/soctemp)"
 		if [ -f "${ThermalNode%/*}/name" ]; then
@@ -1142,12 +1149,23 @@ GetTempSensor() {
 					read ThermalSource </sys/devices/platform/a20-tp-hwmon/name 2>/dev/null && \
 						TempInfo="Thermal source: /sys/devices/platform/a20-tp-hwmon/ (${ThermalSource})"
 				else
-					NodeGuess=$(cat /sys/devices/virtual/thermal/thermal_zone?/type 2>/dev/null | grep -E -i "aml_thermal|cpu|soc" | tail -n1)
-					if [ "X${NodeGuess}" != "X" ]; then
+					ThermalNodeGuess=$(cat /sys/devices/virtual/thermal/thermal_zone?/type 2>/dev/null | grep -E -i "aml_thermal|cpu|soc" | tail -n1)
+					HWMonNodeGuess=$(cat /sys/class/hwmon/hwmon?/name 2>/dev/null | grep -E -i "120e0000" | tail -n1)
+					if [ "X${ThermalNodeGuess}" != "X" ]; then
 						# let's use this thermal node
-						ThermalZone="$(GetThermalZone "${NodeGuess}")"
+						ThermalZone="$(GetThermalZone "${ThermalNodeGuess}")"
 						ln -fs ${ThermalZone}/temp ${TempSource}
-						TempInfo="Thermal source: ${ThermalZone}/ (${NodeGuess})"
+						TempInfo="Thermal source: ${ThermalZone}/ (${ThermalNodeGuess})"
+					elif [ "X${HWMonNodeGuess}" != "X" ]; then
+						# temporary hack to support thermal readouts on JH71x0 boards running
+						# StarVision vendor kernel
+						ThermalZone="$(GetHWNode "${HWMonNodeGuess}")"
+						if [ -r ${ThermalZone}/temp1_input ]; then
+							ln -fs ${ThermalZone}/temp1_input ${TempSource}
+							TempInfo="Thermal source: ${ThermalZone}/ (${HWMonNodeGuess})"
+						else
+							echo 0 >${TempSource}
+						fi
 					else
 						echo 0 >${TempSource}
 					fi
@@ -1171,6 +1189,19 @@ GetThermalZone() {
 		esac
 	done
 } # GetThermalZone
+
+GetHWNode() {
+	# get thermal zone for specific type string ($1)
+	for zone in /sys/class/hwmon/hwmon* ; do
+		grep -q "${1}" <"${zone}/name"
+		case $? in
+			0)
+				echo ${zone}
+				return
+				;;
+		esac
+	done
+} # GetHWNode
 
 CheckNetio() {
 	# Function that checks connection with a Netio powermeter if $Netio is set and if
@@ -1252,7 +1283,7 @@ PrintCPUInfo() {
 	if [ -n "${SoC_Revision}" ]; then
 		echo -e "${SoC_Family} ${SoC_ID} rev ${SoC_Revision}, \c"
 	fi
-	[ "${CPUArchitecture}" = "x86_64" ] && GuessedSoC="${X86CPUName}" || GuessedSoC="$(GuessARMSoC)"
+	[ "${CPUArchitecture}" = "x86_64" ] && GuessedSoC="${X86CPUName:-n/a}" || GuessedSoC="$(GuessARMSoC)"
 	[ "X${GuessedSoC}" != "Xn/a" ] && echo -e "${GuessedSoC}, \c"
 	grep -q "BCM2711" <<<"${DeviceName}" && echo -e "${DeviceName}, \c"
 	command -v dpkg >/dev/null 2>&1 && Userland=", Userland: $(dpkg --print-architecture 2>/dev/null)"
@@ -2498,14 +2529,14 @@ InitialMonitoring() {
 	DTCompatible="$(strings /proc/device-tree/compatible 2>/dev/null)"
 	OPPTables="$(ParseOPPTables)"
 	# try to identify ARM/RISC-V/Loongson SoCs
-	[ "${CPUArchitecture}" = "x86_64" ] || GuessedSoC="$(GuessARMSoC)"
+	[ "${CPUArchitecture}" = "x86_64" ] && GuessedSoC="n/a" || GuessedSoC="$(GuessARMSoC)"
 
 	# upload raw /proc/cpuinfo contents and device-tree compatible entry to ix.io
 	ping -c1 ix.io >/dev/null 2>&1
 	if [ $? -eq 0 -a "X${ProcCPUFile}" = "X/proc/cpuinfo" ]; then
 		UploadScheme="f:1=<-"
 		UploadServer="ix.io"
-		(echo -e "/proc/cpuinfo\n\n$(uname -a) / ${DeviceName}\n" ; cat /proc/cpuinfo ; echo -e "\n${CPUTopology}\n\n${CPUSignature} / ${GuessedSoC}\n\n${DTCompatible}\n\n${OPPTables}") 2>/dev/null \
+		(echo -e "/proc/cpuinfo\n\n$(uname -a) / ${DeviceName}\n" ; cat /proc/cpuinfo ; echo -e "\n${CPUTopology}\n\n${CPUSignature} / ${GuessedSoC}\n\n${DTCompatible}\n\n${OPPTables}\n\n$(grep . /sys/devices/virtual/thermal/thermal_zone?/* 2>/dev/null)\n\n$(grep . /sys/class/hwmon/hwmon?/* 2>/dev/null)") 2>/dev/null \
 			| curl -s -F ${UploadScheme} ${UploadServer} >/dev/null 2>&1 &
 	else
 		# upload location fallback to sprunge.us if possible
@@ -3559,7 +3590,7 @@ LogEnvironment() {
 	fi
 
 	# report ARM/RISC-V/Loongson SoCs if possible
-	if [ "X${GuessedSoC}" != "Xn/a" -o "X${GuessedSoC}" != "X" ]; then
+	if [ "X${GuessedSoC}" != "Xn/a" ]; then
 		echo -e "\nSoC guess: ${GuessedSoC}"
 	elif [ "X${CPUSignature}" != "X" ]; then
 		echo -e "\nSignature: ${CPUSignature}"
@@ -4575,7 +4606,7 @@ GuessARMSoC() {
 				if [ "X${SoCGuess}" != "X" -a "X${VirtWhat}" != "X" -a "X${VirtWhat}" != "Xnone" ]; then
 					# add virtualization disclaimer
 					echo "${SoCGuess} / guess flawed since running in ${VirtWhat}"
-				elif [ "X${SoCGuess}" != "X" ]; then
+				else
 					echo "${SoCGuess:-n/a}"
 				fi
 				;;
@@ -6151,10 +6182,15 @@ CheckKernelVersion() {
 				echo -e "${LRED}${BOLD}Please check https://endoflife.date/linux for details. It is somewhat likely${NC}"
 				echo -e "${LRED}${BOLD}that some exploitable vulnerabilities exist for this kernel as well as many${NC}"
 				echo -e "${LRED}${BOLD}unfixed bugs. Better upgrade to a supported version.${NC}"
-			else
+			elif [ ${RevisionDifference} -ge 5 ]; then
 				echo -e "${LRED}${BOLD}Please check https://endoflife.date/linux for details. It is somewhat likely${NC}"
 				echo -e "${LRED}${BOLD}some kernel bugs have been fixed in the meantime and maybe vulnerabilities${NC}"
 				echo -e "${LRED}${BOLD}as well.${NC}"
+			else
+				# Avoid annoying warnings if kernel revision difference is lower than 5.
+				# Happened eg. with 6.1.9 shortly after 6.1 became most recent LTS kernel as
+				# 'Kernel 6.1.9 is not latest 6.1.10 LTS that was released on 2023-02-06'
+				:
 			fi
 		fi
 	else
@@ -6172,20 +6208,50 @@ CheckKernelVersion() {
 	fi
 	
 	case ${KernelVersionDigitsOnly} in
-		# EOL notifications. But wrt BSP kernel warnings we ignore all kernels that are
-		# not a supported LTS version any more or for some time.
+		# EOL notifications and BSP kernel warnings
 		3.4.*)
 			# some SDKs/BSPs based on this version: Allwinner A10, A20, A83T, H2+/H3
+			case ${GuessedSoC} in
+				Allwinner*)
+					PrintBSPWarning Allwinner
+					;;
+			esac
 			echo -e "\n${LRED}${BOLD}The 3.4 series has reached end-of-life on 2016-10-26 with version 3.4.113.${NC}"
 			;;
 		3.10.*)
 			# some SDKs/BSPs based on this version: Allwinner A64, H5, R40/V40, Amlogic S805 (Meson8b), Exynos 5422
+			case ${GuessedSoC} in
+				Allwinner*)
+					PrintBSPWarning Allwinner
+					;;
+				Amlogic*)
+					PrintBSPWarning Amlogic
+					;;
+				*5422*)
+					PrintBSPWarning
+					;;
+			esac
 			echo -e "\n${LRED}${BOLD}The 3.10 series has reached end-of-life on 2017-11-05 with version 3.10.108.${NC}"
 			;;
 		3.14.*)
+			case ${GuessedSoC} in
+				Amlogic*)
+					PrintBSPWarning Amlogic
+					;;
+			esac
 			echo -e "\n${LRED}${BOLD}The 3.14 series has reached end-of-life on 2016-09-11 with version 3.14.79.${NC}"
 			;;
+		3.16.*)
+			# some SDKs/BSPs based on this version: Amlogic S905 (ODROID C2)
+			case ${GuessedSoC} in
+				Amlogic*)
+					PrintBSPWarning Amlogic
+					;;
+			esac
+			echo -e "\n${LRED}${BOLD}The 3.16 series has reached end-of-life on 2020-06-11 with version 3.16.85.${NC}"
+			;;
 		4.4.*)
+			# # some SDKs/BSPs based on this version: Rockchip RK32xx/RK33xx, Nexell S5P6818
 			case ${GuessedSoC} in
 				*RK3*|*Rockchip*)
 					PrintBSPWarning Rockchip
@@ -6212,7 +6278,7 @@ CheckKernelVersion() {
 					PrintBSPWarning Nvidia
 					;;
 			esac
-			# prepare 4.9 not listed any more on https://endoflife.date/linux
+			# prepare 4.9 not being listed any more on https://endoflife.date/linux
 			grep -q "releaseCycle: \"4.9\"" "${TempDir}/linuxkernel.md" || \
 				echo -e "\n${LRED}${BOLD}The 4.9 series has reached end-of-life on 2023-01-07 with version 4.9.337.${NC}"
 			;;
@@ -6318,6 +6384,35 @@ PrintBSPWarning() {
 	esac
 } # PrintBSPWarning
 
+PrintKernelInfo() {
+	# Kernel info: version number and vendor/BSP check
+	CreateTempDir
+	trap "rm -rf \"${TempDir}\" ; exit 0" 0 1 2 3 15
+	curl -s -q --connect-timeout 10 https://raw.githubusercontent.com/endoflife-date/endoflife.date/master/products/linuxkernel.md \
+		>"${TempDir}/linuxkernel.md"
+	BasicSetup nochange >/dev/null 2>&1
+	KernelVersion="$(uname -r)"
+	ShortKernelVersion="$(awk -F"." '{print $1"."$2}' <<<"${KernelVersion}")"
+	[ -z "${DTCompatible}" ] && DTCompatible="$(strings /proc/device-tree/compatible 2>/dev/null)"
+	[ -z "${LSCPU}" ] && LSCPU="$(lscpu)"
+	[ -z "${CPUArchitecture}" ] && CPUArchitecture="$(awk -F" " '/^Architecture/ {print $2}' <<<"${LSCPU}")"
+	[ -z "${VoltageSensor}" ] && VoltageSensor="$(GetVoltageSensor)"
+	[ -z "${CPUTopology}" ] && CPUTopology="$(PrintCPUTopology)"
+	[ -z "${CPUSignature}" ] && CPUSignature="$(GetCPUSignature)"
+	[ -z "${X86CPUName}" ] && X86CPUName="$(sed 's/ \{1,\}/ /g' <<<"${LSCPU}" | awk -F": " '/^Model name/ {print $2}' | sed -e 's/1.th Gen //' -e 's/.th Gen //' -e 's/Core(TM) //' -e 's/ Processor//' -e 's/Intel(R) Xeon(R) CPU //' -e 's/Intel(R) //' -e 's/(R)//' -e 's/CPU //' -e 's/ 0 @/ @/' -e 's/AMD //' -e 's/Authentic //' -e 's/ with .*//')"
+	[ "${CPUArchitecture}" = "x86_64" ] || GuessedSoC="$(GuessARMSoC)"
+	KernelInfo="$(CheckKernelVersion "${KernelVersion}")"
+	if [ -z "${KernelInfo}" ]; then
+		if [ "${CPUArchitecture}" = "x86_64" ]; then
+			echo -e "This tool does not yet implement distro kernel checks"
+		else
+			uname -a
+		fi
+	else
+		echo -e "$(uname -a)\n\n${KernelInfo}"
+	fi
+} # PrintKernelInfo
+
 DisplayUsage() {
 	echo -e "\nUsage: ${BOLD}${0##*/} [-c] [-g] [-G] [-h] [-m] [-P] [-t \$degree] [-T \$degree] [-s]${NC}\n"
 	echo -e "############################################################################"
@@ -6328,11 +6423,13 @@ DisplayUsage() {
 	echo -e " ${0##*/} ${BOLD}-G${NC} Geekbench mode, ensures benchmark is properly monitored"
 	echo -e " ${0##*/} ${BOLD}-h${NC} displays this help text"
 	echo -e " ${0##*/} ${BOLD}-j${NC} Jeff Geerling mode. Don't use if you're not him"
+	echo -e " ${0##*/} ${BOLD}-k${NC} Kernel info: version number and vendor/BSP check"
 	echo -e " ${0##*/} ${BOLD}-m${NC} [\$seconds] provides CLI monitoring (5 sec default interval)"
 	echo -e " ${0##*/} ${BOLD}-P${NC} Phoronix mode, ensures benchmark is properly monitored"
+	echo -e " ${0##*/} ${BOLD}-r${NC} Review mode: generate insights via benchmarking"
+	echo -e " ${0##*/} ${BOLD}-s${NC} also executes stockfish stress tester (NEON/SSE/AVX/RAM)"
 	echo -e " ${0##*/} ${BOLD}-t${NC} [\$degree] runs thermal test waiting to cool down to this value"
-	echo -e " ${0##*/} ${BOLD}-T${NC} [\$degree] runs thermal test heating up to this value"
-	echo -e " ${0##*/} ${BOLD}-s${NC} also executes stockfish stress tester (NEON/SSE/AVX/RAM)\n"
+	echo -e " ${0##*/} ${BOLD}-T${NC} [\$degree] runs thermal test heating up to this value\n"
 	echo -e " The environment variable ${BOLD}MODE${NC} can be set to either ${BOLD}extensive${NC} or ${BOLD}unattended${NC}"
 	echo -e " prior to benchmark execution. Exporting ${BOLD}MaxKHz${NC} will also be honored, see here"
 	echo -e " for details: https://github.com/ThomasKaiser/sbc-bench#unattended-execution\n"

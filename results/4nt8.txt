@@ -1,0 +1,534 @@
+sbc-bench v0.9.13 Beijin Cloud Times S13XS / Atom(TM) N2800 @ 1.86GHz (Wed, 08 Feb 2023 15:33:51 +0000)
+
+Distributor ID:	Debian
+Description:	Debian GNU/Linux 11 (bullseye)
+Release:	11
+Codename:	bullseye
+Armbian info:   UEFI x86, uefi-x86, x86, 22.11.1, https://github.com/armbian/build
+
+Device Info:
+	Manufacturer: Beijin Cloud Times
+	Product Name: S13XS
+
+BIOS/UEFI:
+	Vendor: American Megatrends Inc.
+	Version: 4.6.5
+	Release Date: 10/29/2013
+	BIOS Revision: 4.6
+
+/usr/bin/gcc (Debian 10.2.1-6) 10.2.1 20210110
+
+Uptime: 15:33:52 up 1 day, 55 min,  1 user,  load average: 0.18, 0.25, 0.11,  26.8°C,  412441664
+
+Linux 5.15.80-x86 (print) 	02/08/23 	_x86_64_	(4 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+           0.80    0.00    0.20    0.00    0.00   98.99
+
+Device             tps    kB_read/s    kB_wrtn/s    kB_dscd/s    kB_read    kB_wrtn    kB_dscd
+sda               0.22         4.95         7.42         0.00     443985     666153          0
+zram0             0.01         0.03         0.00         0.00       2376          4          0
+zram1             0.03         0.02         0.14         0.00       1436      12972          0
+
+               total        used        free      shared  buff/cache   available
+Mem:           3.8Gi       173Mi       3.6Gi       5.0Mi        83Mi       3.5Gi
+Swap:          1.9Gi          0B       1.9Gi
+
+Filename				Type		Size	Used	Priority
+/dev/zram0                             	partition	2006860	0	5
+
+##########################################################################
+
+Checking cpufreq OPP:
+
+Cpufreq OPP: 1862    Measured: 1857 (1858.553/1858.344/1856.882)
+Cpufreq OPP: 1596    Measured: 1858 (1858.762/1858.678/1858.469)    (+16.4%)
+Cpufreq OPP: 1330    Measured: 1858 (1858.803/1858.469/1858.051)    (+39.7%)
+Cpufreq OPP: 1064    Measured: 1858 (1858.929/1858.302/1857.717)    (+74.6%)
+Cpufreq OPP:  798    Measured: 1857 (1858.135/1857.926/1857.801)   (+132.7%)
+
+##########################################################################
+
+Hardware sensors:
+
+acpitz-acpi-0
+temp1:        +26.8 C  (crit = +100.0 C)
+
+coretemp-isa-0000
+Core 0:       +28.0 C  (crit = +100.0 C)
+Core 1:       +25.0 C  (crit = +100.0 C)
+
+/dev/sda:	40°C
+
+##########################################################################
+
+Executing benchmark on cpu0:
+
+tinymembench v0.4.9 (simple benchmark for memory throughput and latency)
+
+==========================================================================
+== Memory bandwidth tests                                               ==
+==                                                                      ==
+== Note 1: 1MB = 1000000 bytes                                          ==
+== Note 2: Results for 'copy' tests show how many bytes can be          ==
+==         copied per second (adding together read and writen           ==
+==         bytes would have provided twice higher numbers)              ==
+== Note 3: 2-pass copy means that we are using a small temporary buffer ==
+==         to first fetch data into it, and only then write it to the   ==
+==         destination (source -> L1 cache, L1 cache -> destination)    ==
+== Note 4: If sample standard deviation exceeds 0.1%, it is shown in    ==
+==         brackets                                                     ==
+==========================================================================
+
+ C copy backwards                                     :   1285.7 MB/s (2.9%)
+ C copy backwards (32 byte blocks)                    :   1282.9 MB/s
+ C copy backwards (64 byte blocks)                    :   1283.4 MB/s (0.2%)
+ C copy                                               :   1274.6 MB/s (0.2%)
+ C copy prefetched (32 bytes step)                    :   1068.5 MB/s
+ C copy prefetched (64 bytes step)                    :   1067.2 MB/s
+ C 2-pass copy                                        :   1241.7 MB/s (0.5%)
+ C 2-pass copy prefetched (32 bytes step)             :    948.2 MB/s (0.4%)
+ C 2-pass copy prefetched (64 bytes step)             :    935.8 MB/s (0.2%)
+ C fill                                               :   1563.6 MB/s (0.1%)
+ C fill (shuffle within 16 byte blocks)               :   1565.1 MB/s (0.1%)
+ C fill (shuffle within 32 byte blocks)               :   1565.5 MB/s (0.2%)
+ C fill (shuffle within 64 byte blocks)               :   1565.5 MB/s (0.7%)
+ ---
+ standard memcpy                                      :   2052.8 MB/s (0.2%)
+ standard memset                                      :   1565.8 MB/s (0.2%)
+ ---
+ MOVSB copy                                           :    764.2 MB/s (0.1%)
+ MOVSD copy                                           :   1271.0 MB/s (0.1%)
+ SSE2 copy                                            :   1274.6 MB/s (0.6%)
+ SSE2 nontemporal copy                                :   2060.8 MB/s (0.2%)
+ SSE2 copy prefetched (32 bytes step)                 :   1117.7 MB/s (0.1%)
+ SSE2 copy prefetched (64 bytes step)                 :   1118.2 MB/s
+ SSE2 nontemporal copy prefetched (32 bytes step)     :   1842.1 MB/s (0.2%)
+ SSE2 nontemporal copy prefetched (64 bytes step)     :   1845.0 MB/s (0.2%)
+ SSE2 2-pass copy                                     :   1287.7 MB/s (0.6%)
+ SSE2 2-pass copy prefetched (32 bytes step)          :   1035.1 MB/s
+ SSE2 2-pass copy prefetched (64 bytes step)          :   1033.3 MB/s
+ SSE2 2-pass nontemporal copy                         :   1015.0 MB/s
+ SSE2 fill                                            :   1565.3 MB/s (0.1%)
+ SSE2 nontemporal fill                                :   3779.3 MB/s
+
+==========================================================================
+== Memory latency test                                                  ==
+==                                                                      ==
+== Average time is measured for random memory accesses in the buffers   ==
+== of different sizes. The larger is the buffer, the more significant   ==
+== are relative contributions of TLB, L1/L2 cache misses and SDRAM      ==
+== accesses. For extremely large buffer sizes we are expecting to see   ==
+== page table walk with several requests to SDRAM for almost every      ==
+== memory access (though 64MiB is not nearly large enough to experience ==
+== this effect to its fullest).                                         ==
+==                                                                      ==
+== Note 1: All the numbers are representing extra time, which needs to  ==
+==         be added to L1 cache latency. The cycle timings for L1 cache ==
+==         latency can be usually found in the processor documentation. ==
+== Note 2: Dual random read means that we are simultaneously performing ==
+==         two independent memory accesses at a time. In the case if    ==
+==         the memory subsystem can't handle multiple outstanding       ==
+==         requests, dual random read has the same timings as two       ==
+==         single reads performed one after another.                    ==
+==========================================================================
+
+block size : single random read / dual random read, [MADV_NOHUGEPAGE]
+      1024 :    0.0 ns          /     0.0 ns 
+      2048 :    0.0 ns          /     0.0 ns 
+      4096 :    0.0 ns          /     0.0 ns 
+      8192 :    0.0 ns          /     0.0 ns 
+     16384 :    0.0 ns          /     0.0 ns 
+     32768 :    1.6 ns          /     3.3 ns 
+     65536 :    4.1 ns          /     8.1 ns 
+    131072 :    7.2 ns          /    14.3 ns 
+    262144 :    8.7 ns          /    17.4 ns 
+    524288 :   19.2 ns          /    38.1 ns 
+   1048576 :   60.4 ns          /   121.1 ns 
+   2097152 :   83.2 ns          /   167.7 ns 
+   4194304 :   96.1 ns          /   193.8 ns 
+   8388608 :  103.4 ns          /   209.4 ns 
+  16777216 :  108.7 ns          /   219.9 ns 
+  33554432 :  116.6 ns          /   236.1 ns 
+  67108864 :  142.2 ns          /   285.3 ns 
+
+block size : single random read / dual random read, [MADV_HUGEPAGE]
+      1024 :    0.0 ns          /     0.0 ns 
+      2048 :    0.0 ns          /     0.0 ns 
+      4096 :    0.0 ns          /     0.0 ns 
+      8192 :    0.0 ns          /     0.0 ns 
+     16384 :    0.0 ns          /     0.0 ns 
+     32768 :    1.6 ns          /     3.3 ns 
+     65536 :    4.1 ns          /     8.1 ns 
+    131072 :    7.2 ns          /    14.3 ns 
+    262144 :    8.7 ns          /    17.4 ns 
+    524288 :   10.1 ns          /    20.2 ns 
+   1048576 :   54.3 ns          /   107.6 ns 
+   2097152 :   76.4 ns          /   150.0 ns 
+   4194304 :   87.3 ns          /   168.9 ns 
+   8388608 :   93.1 ns          /   179.3 ns 
+  16777216 :   95.9 ns          /   184.3 ns 
+  33554432 :  105.8 ns          /   206.3 ns 
+  67108864 :  110.6 ns          /   217.4 ns 
+
+##########################################################################
+
+Executing ramlat on cpu0, results in ns:
+
+       size:  1x32  2x32  1x64  2x64 1xPTR 2xPTR 4xPTR 8xPTR
+         4k: 1.617 1.621 2.626 3.233 1.618 1.623 2.163 4.528 
+         8k: 1.617 1.621 2.626 3.234 1.617 1.620 2.204 4.539 
+        16k: 1.618 1.622 2.626 3.235 1.617 1.621 2.169 4.532 
+        32k: 8.080 15.91 8.959 16.14 8.081 14.19 27.89 55.77 
+        64k: 8.416 15.90 8.955 16.56 8.409 14.05 27.88 55.78 
+       128k: 11.84 15.91 12.88 20.30 11.85 15.19 27.91 56.81 
+       256k: 11.93 16.05 12.95 20.30 11.97 15.34 28.07 57.07 
+       512k: 73.34 105.2 73.63 102.1 72.67 120.6 211.4 396.8 
+      1024k: 111.5 149.8 111.8 152.3 111.4 197.5 335.5 633.3 
+      2048k: 112.0 150.5 112.8 153.9 112.0 188.4 348.3 636.9 
+      4096k: 114.1 152.3 113.8 155.0 113.5 190.9 343.6 660.9 
+      8192k: 114.2 153.3 114.9 155.9 114.8 192.2 346.5 664.0 
+     16384k: 119.4 162.0 119.5 164.0 119.4 194.5 350.3 673.4 
+
+##########################################################################
+
+Executing benchmark twice on cluster 0
+
+OpenSSL 1.1.1n, built on 15 Mar 2022
+type             16 bytes     64 bytes    256 bytes   1024 bytes   8192 bytes  16384 bytes
+aes-128-cbc      24993.67k    28872.62k    30152.02k    30551.38k    30657.19k    30659.93k
+aes-128-cbc      25063.78k    28894.23k    30203.73k    30532.61k    30635.35k    30638.08k
+aes-192-cbc      21624.41k    24427.29k    25027.75k    25582.25k    25662.81k    25668.27k
+aes-192-cbc      21636.43k    24449.69k    25369.51k    25604.10k    25681.92k    25684.65k
+aes-256-cbc      18997.78k    20915.61k    21509.21k    21690.71k    21733.38k    21768.87k
+aes-256-cbc      18993.06k    20918.02k    21525.33k    21715.29k    21766.14k    21796.18k
+
+##########################################################################
+
+Executing benchmark single-threaded on cpu0
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,4 CPUs Intel(R) Atom(TM) CPU N2800   @ 1.86GHz (30661),ASM)
+
+        Intel(R) Atom(TM) CPU N2800   @ 1.86GHz (30661)
+CPU Freq: - - - - - - - - -
+
+RAM size:    3919 MB,  # CPU hardware threads:   4
+RAM usage:    435 MB,  # Benchmark threads:      1
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:        880   100    857    856  |      13505   100   1153   1153
+23:        826   100    842    842  |      13350   100   1156   1156
+24:        792   100    852    852  |      13175   100   1157   1157
+25:        768   100    877    877  |      12940   100   1152   1152
+----------------------------------  | ------------------------------
+Avr:             100    857    857  |              100   1155   1154
+Tot:             100   1006   1006
+
+##########################################################################
+
+Executing benchmark 3 times multi-threaded on CPUs 0-3
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,4 CPUs Intel(R) Atom(TM) CPU N2800   @ 1.86GHz (30661),ASM)
+
+        Intel(R) Atom(TM) CPU N2800   @ 1.86GHz (30661)
+CPU Freq: - - - - - 256000000 - - -
+
+RAM size:    3919 MB,  # CPU hardware threads:   4
+RAM usage:    882 MB,  # Benchmark threads:      4
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       2361   326    705   2297  |      41767   399    894   3563
+23:       2286   332    701   2329  |      41324   399    897   3576
+24:       2254   342    709   2424  |      40788   398    900   3581
+25:       2212   349    723   2526  |      40186   398    898   3577
+----------------------------------  | ------------------------------
+Avr:             337    710   2394  |              398    897   3574
+Tot:             368    803   2984
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,4 CPUs Intel(R) Atom(TM) CPU N2800   @ 1.86GHz (30661),ASM)
+
+        Intel(R) Atom(TM) CPU N2800   @ 1.86GHz (30661)
+CPU Freq: 64000000 - - 64000000 - - - - -
+
+RAM size:    3919 MB,  # CPU hardware threads:   4
+RAM usage:    882 MB,  # Benchmark threads:      4
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       2288   321    694   2226  |      41347   394    895   3528
+23:       2286   333    700   2330  |      41295   399    897   3573
+24:       2261   342    711   2431  |      40794   399    899   3581
+25:       2209   350    721   2523  |      39809   394    899   3543
+----------------------------------  | ------------------------------
+Avr:             336    706   2377  |              396    897   3556
+Tot:             366    802   2967
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,4 CPUs Intel(R) Atom(TM) CPU N2800   @ 1.86GHz (30661),ASM)
+
+        Intel(R) Atom(TM) CPU N2800   @ 1.86GHz (30661)
+CPU Freq: - - - - - - 512000000 - -
+
+RAM size:    3919 MB,  # CPU hardware threads:   4
+RAM usage:    882 MB,  # Benchmark threads:      4
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       2294   321    695   2232  |      41713   398    894   3559
+23:       2304   335    701   2348  |      41304   399    897   3574
+24:       2257   342    709   2428  |      40777   398    899   3580
+25:       2162   343    720   2469  |      40158   398    898   3574
+----------------------------------  | ------------------------------
+Avr:             335    706   2369  |              398    897   3572
+Tot:             367    801   2970
+
+Compression: 2394,2377,2369
+Decompression: 3574,3556,3572
+Total: 2984,2967,2970
+
+##########################################################################
+
+Testing maximum cpufreq again, still under full load. System health now:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+15:56:01: 1862MHz  3.94  95%   1%  94%   0%   0%   0%  26.8°C
+
+Checking cpufreq OPP:
+
+Cpufreq OPP: 1862    Measured: 1858 (1858.678/1858.636/1858.636)
+
+##########################################################################
+
+Hardware sensors:
+
+acpitz-acpi-0
+temp1:        +26.8 C  (crit = +100.0 C)
+
+coretemp-isa-0000
+Core 0:       +34.0 C  (crit = +100.0 C)
+Core 1:       +31.0 C  (crit = +100.0 C)
+
+/dev/sda:	40°C
+
+##########################################################################
+
+Thermal source: /sys/class/hwmon/hwmon0/ (acpitz)
+
+System health while running tinymembench:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+15:34:10: 1862MHz  0.50   1%   0%   0%   0%   0%   0%  26.8°C
+15:34:50: 1862MHz  0.74  25%   0%  25%   0%   0%   0%  26.8°C
+15:35:30: 1862MHz  0.87  25%   0%  25%   0%   0%   0%  26.8°C
+15:36:10: 1862MHz  0.93  25%   0%  25%   0%   0%   0%  26.8°C
+15:36:51: 1862MHz  0.97  25%   0%  25%   0%   0%   0%  26.8°C
+15:37:31: 1862MHz  0.98  25%   0%  24%   0%   0%   0%  26.8°C
+15:38:11: 1862MHz  0.99  25%   0%  25%   0%   0%   0%  26.8°C
+15:38:51: 1862MHz  1.00  25%   0%  25%   0%   0%   0%  26.8°C
+15:39:31: 1862MHz  1.00  25%   0%  25%   0%   0%   0%  26.8°C
+15:40:11: 1862MHz  1.00  25%   0%  25%   0%   0%   0%  26.8°C
+15:40:51: 1862MHz  1.00  25%   0%  24%   0%   0%   0%  26.8°C
+15:41:31: 1862MHz  1.00  25%   0%  25%   0%   0%   0%  26.8°C
+15:42:11: 1862MHz  1.00  25%   0%  25%   0%   0%   0%  26.8°C
+15:42:51: 1862MHz  1.00  25%   0%  25%   0%   0%   0%  26.8°C
+15:43:31: 1862MHz  1.00  25%   0%  25%   0%   0%   0%  26.8°C
+15:44:11: 1862MHz  1.00  25%   0%  25%   0%   0%   0%  26.8°C
+
+System health while running ramlat:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+15:44:27: 1862MHz  1.00   1%   0%   0%   0%   0%   0%  26.8°C
+15:44:30: 1862MHz  1.00  25%   0%  24%   0%   0%   0%  26.8°C
+15:44:33: 1862MHz  1.00  25%   0%  25%   0%   0%   0%  26.8°C
+15:44:36: 1862MHz  1.00  25%   0%  25%   0%   0%   0%  26.8°C
+15:44:39: 1862MHz  1.00  25%   0%  25%   0%   0%   0%  26.8°C
+15:44:42: 1862MHz  1.00  25%   0%  25%   0%   0%   0%  26.8°C
+15:44:45: 1862MHz  1.00  25%   0%  25%   0%   0%   0%  26.8°C
+15:44:48: 1862MHz  1.00  25%   0%  25%   0%   0%   0%  26.8°C
+15:44:51: 1862MHz  1.00  25%   0%  25%   0%   0%   0%  26.8°C
+15:44:54: 1862MHz  1.00  25%   0%  25%   0%   0%   0%  26.8°C
+
+System health while running OpenSSL benchmark:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+15:44:55: 1862MHz  1.00   1%   0%   0%   0%   0%   0%  26.8°C
+15:45:11: 1862MHz  1.00  25%   0%  25%   0%   0%   0%  26.8°C
+15:45:27: 1862MHz  1.00  25%   0%  25%   0%   0%   0%  26.8°C
+15:45:43: 1862MHz  1.00  26%   0%  25%   0%   0%   0%  26.8°C
+15:45:59: 1862MHz  1.00  25%   0%  25%   0%   0%   0%  26.8°C
+15:46:15: 1862MHz  1.00  25%   0%  25%   0%   0%   0%  26.8°C
+15:46:31: 1862MHz  1.00  25%   0%  24%   0%   0%   0%  26.8°C
+
+System health while running 7-zip single core benchmark:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+15:46:43: 1862MHz  1.00   1%   0%   1%   0%   0%   0%  26.8°C
+15:46:55: 1862MHz  1.00  25%   0%  24%   0%   0%   0%  26.8°C
+15:47:07: 1862MHz  1.00  25%   0%  24%   0%   0%   0%  26.8°C
+15:47:19: 1862MHz  1.00  25%   0%  24%   0%   0%   0%  26.8°C
+15:47:31: 1862MHz  1.00  25%   0%  24%   0%   0%   0%  26.8°C
+15:47:43: 1862MHz  1.00  26%   1%  24%   0%   0%   0%  26.8°C
+15:47:55: 1862MHz  1.00  25%   0%  24%   0%   0%   0%  26.8°C
+15:48:07: 1862MHz  1.00  25%   0%  24%   0%   0%   0%  26.8°C
+15:48:19: 1862MHz  1.00  25%   0%  24%   0%   0%   0%  26.8°C
+15:48:31: 1862MHz  1.00  25%   0%  24%   0%   0%   0%  26.8°C
+15:48:43: 1862MHz  1.00  25%   0%  24%   0%   0%   0%  26.8°C
+15:48:56: 1862MHz  1.00  25%   0%  24%   0%   0%   0%  26.8°C
+
+System health while running 7-zip multi core benchmark:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+15:49:08: 1862MHz  1.00   1%   0%   1%   0%   0%   0%  26.8°C
+15:49:37: 1862MHz  1.84  93%   0%  92%   0%   0%   0%  26.8°C
+15:50:04: 1862MHz  2.69  95%   1%  93%   0%   0%   0%  26.8°C
+15:50:33: 1862MHz  3.15  90%   1%  88%   0%   0%   0%  26.8°C
+15:50:59: 1862MHz  3.48  85%   2%  83%   0%   0%   0%  26.8°C
+15:51:25: 1862MHz  3.54  96%   1%  95%   0%   0%   0%  26.8°C
+15:51:53: 1862MHz  3.62  91%   1%  89%   0%   0%   0%  26.8°C
+15:52:22: 1862MHz  3.99  94%   0%  93%   0%   0%   0%  26.8°C
+15:52:50: 1862MHz  4.17  90%   1%  89%   0%   0%   0%  26.8°C
+15:53:16: 1862MHz  3.91  86%   2%  84%   0%   0%   0%  26.8°C
+15:53:42: 1862MHz  3.90  96%   1%  94%   0%   0%   0%  26.8°C
+15:54:11: 1862MHz  3.93  90%   0%  89%   0%   0%   0%  26.8°C
+15:54:40: 1862MHz  4.01  95%   0%  94%   0%   0%   0%  26.8°C
+15:55:08: 1862MHz  3.94  90%   1%  88%   0%   0%   0%  26.8°C
+15:55:34: 1862MHz  3.83  85%   2%  83%   0%   0%   0%  26.8°C
+15:56:01: 1862MHz  3.94  95%   1%  94%   0%   0%   0%  26.8°C
+
+##########################################################################
+
+Linux 5.15.80-x86 (print) 	02/08/23 	_x86_64_	(4 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+           1.45    0.00    0.21    0.00    0.00   98.34
+
+Device             tps    kB_read/s    kB_wrtn/s    kB_dscd/s    kB_read    kB_wrtn    kB_dscd
+sda               0.22         4.95         7.33         0.00     451160     667513          0
+zram0             0.01         0.03         0.00         0.00       2376          4          0
+zram1             0.03         0.02         0.14         0.00       1512      13100          0
+
+               total        used        free      shared  buff/cache   available
+Mem:           3.8Gi       191Mi       3.6Gi       5.0Mi        91Mi       3.5Gi
+Swap:          1.9Gi          0B       1.9Gi
+
+Filename				Type		Size	Used	Priority
+/dev/zram0                             	partition	2006860	0	5
+
+CPU sysfs topology (clusters, cpufreq members, clockspeeds)
+                 cpufreq   min    max
+ CPU    cluster  policy   speed  speed   core type
+  0        0        0      798    1862   Atom(TM) N2800 @ 1.86GHz
+  1        0        1      798    1862   Atom(TM) N2800 @ 1.86GHz
+  2        0        2      798    1862   Atom(TM) N2800 @ 1.86GHz
+  3        0        3      798    1862   Atom(TM) N2800 @ 1.86GHz
+
+Architecture:                    x86_64
+CPU op-mode(s):                  32-bit, 64-bit
+Byte Order:                      Little Endian
+Address sizes:                   36 bits physical, 48 bits virtual
+CPU(s):                          4
+On-line CPU(s) list:             0-3
+Thread(s) per core:              2
+Core(s) per socket:              2
+Socket(s):                       1
+NUMA node(s):                    1
+Vendor ID:                       GenuineIntel
+CPU family:                      6
+Model:                           54
+Model name:                      Intel(R) Atom(TM) CPU N2800   @ 1.86GHz
+Stepping:                        1
+CPU MHz:                         1862.000
+CPU max MHz:                     1862.0000
+CPU min MHz:                     798.0000
+BogoMIPS:                        3724.10
+L1d cache:                       48 KiB
+L1i cache:                       64 KiB
+L2 cache:                        1 MiB
+NUMA node0 CPU(s):               0-3
+Vulnerability Itlb multihit:     Not affected
+Vulnerability L1tf:              Not affected
+Vulnerability Mds:               Not affected
+Vulnerability Meltdown:          Not affected
+Vulnerability Mmio stale data:   Not affected
+Vulnerability Retbleed:          Not affected
+Vulnerability Spec store bypass: Not affected
+Vulnerability Spectre v1:        Not affected
+Vulnerability Spectre v2:        Not affected
+Vulnerability Srbds:             Not affected
+Vulnerability Tsx async abort:   Not affected
+Flags:                           fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx lm constant_tsc arch_perfmon pebs bts nopl nonstop_tsc cpuid aperfmperf pni dtes64 monitor ds_cpl est tm2 ssse3 cx16 xtpr pdcm movbe lahf_lm dtherm arat
+
+Processor Information
+	Socket Designation: CPU 1
+	Type: Central Processor
+	Family: Other
+	Manufacturer: Intel            
+	ID: 61 06 03 00 FF FB EB BF
+	Version: Intel(R) Atom(TM) CPU N2800   @ 1.86GHz
+	Voltage: 1.0 V
+	External Clock: 533 MHz
+	Max Speed: 1865 MHz
+	Current Speed: 1865 MHz
+	Status: Populated, Enabled
+	Upgrade: Other
+	L1 Cache Handle: 0x0005
+	L2 Cache Handle: 0x0006
+	Core Count: 2
+	Core Enabled: 1
+	Thread Count: 2
+	Characteristics:
+		64-bit capable
+
+SoC guess: 
+ Compiler: /usr/bin/gcc (Debian 10.2.1-6) 10.2.1 20210110 / x86_64-linux-gnu
+ Userland: x86_64
+   Kernel: 5.15.80-x86/x86_64
+           CONFIG_HZ=250
+           CONFIG_HZ_250=y
+           CONFIG_PREEMPT_NOTIFIERS=y
+           CONFIG_PREEMPT_VOLUNTARY=y
+           raid6: sse2x4   gen()  2333 MB/s
+           raid6: sse2x4   xor()  1041 MB/s
+           raid6: sse2x2   gen()  2537 MB/s
+           raid6: sse2x2   xor()  1911 MB/s
+           raid6: sse2x1   gen()  1818 MB/s
+           raid6: sse2x1   xor()  1440 MB/s
+           raid6: using algorithm sse2x2 gen() 2537 MB/s
+           raid6: .... xor() 1911 MB/s, rmw enabled
+           raid6: using ssse3x2 recovery algorithm
+           xor: measuring software checksum speed
+           xor: using function: prefetch64-sse (7227 MB/sec)
+
+##########################################################################
+
+DIMM configuration:
+     *-bank:0
+          description: SODIMM [empty]
+          product: [Empty]
+          vendor: [Empty]
+          physical id: 0
+          slot: DIMM0
+     *-bank:1
+          description: SODIMM DDR3 Synchronous 1066 MHz (0.9 ns)
+          product: Tigo-1600Mhz-4G
+          vendor: Synertek
+          physical id: 1
+          slot: DIMM1
+          size: 4GiB
+          width: 64 bits
+          clock: 1066MHz (0.9ns)
+
+| Beijin Cloud Times S13XS / Atom(TM) N2800 @ 1.86GHz | 1862 MHz | 5.15 | Armbian 22.11.1 Bullseye x86_64 | 2970 | 1006 | 21780 | 2050 | 1570 | - |

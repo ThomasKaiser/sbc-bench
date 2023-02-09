@@ -239,3 +239,4 @@
 | [4knM](4knM.txt) | v0.9.9 Orange Pi Zero 2 | 1.3%/0% | 960Mi/849Mi | X | X | X | X | <span style=color:red>**24%**</span> | <span style=color:red>** 8%**</span> | |
 | [4knR](4knR.txt) | v0.9.9 Allwinner D1 Nezha | 8.3%/6.1% | 980Mi/859Mi | X | X | X | X | <span style=color:red> 9%</span> | 2% | [check log](4knR.txt) |
 | [4kor](4kor.txt) | v0.9.9 Rockchip RK3318 BOX | 0%/2.1% | 1.9Gi/1.4Gi | X | X | X | X | 2% | 0% | |
+| [4nt8](4nt8.txt) | v0.9.13 Beijin Cloud Times S13XS / Atom | 0.2%/0.2% | 3.8Gi/3.5Gi | X | X | X | X | 2% | 0% | |

@@ -6225,7 +6225,7 @@ CheckKernelVersion() {
 					PrintBSPWarning Amlogic
 					;;
 				*5422*)
-					PrintBSPWarning
+					PrintBSPWarning Samsung
 					;;
 			esac
 			echo -e "\n${LRED}${BOLD}The 3.10 series has reached end-of-life on 2017-11-05 with version 3.10.108.${NC}"
@@ -6254,7 +6254,7 @@ CheckKernelVersion() {
 					PrintBSPWarning Rockchip
 					;;
 				*S5P6818*)
-					PrintBSPWarning
+					PrintBSPWarning Samsung
 					;;
 			esac
 			echo -e "\n${LRED}${BOLD}The 4.4 series has reached end-of-life on 2017-11-05 with version 4.4.302.${NC}"
@@ -6262,14 +6262,17 @@ CheckKernelVersion() {
 		4.9.*)
 			# some SDKs/BSPs based on this version: Allwinner H6, Allwinner H616/H313, Amlogic S905X3 (SM1) / S922X/A311D (G12B), Exynos 5422, Nvidia AGX Xavier / Nvidia Jetson Nano / Nvidia Tegra X1 / Nvidia Tegra Xavier, RealTek RTD129x/RTD139x
 			case ${GuessedSoC} in
+				*5422*)
+					PrintBSPWarning Samsung
+					;;
 				Allwinner*)			
 					PrintBSPWarning Allwinner
 					;;
 				Amlogic*)
 					PrintBSPWarning Amlogic
 					;;
-				*5422*|"RealTek RTD"*)
-					PrintBSPWarning
+				"RealTek RTD"*)
+					PrintBSPWarning RealTek
 					;;
 				Nvidia*)	
 					PrintBSPWarning Nvidia
@@ -6285,10 +6288,13 @@ CheckKernelVersion() {
 			:
 			;;
 		4.14.*)
-			# some SDKs/BSPs based on this version: Exynos 5422, NXP i.MX8x, Samsung/Nexell S5P6818
+			# some SDKs/BSPs based on this version: Exynos 5422, NXP i.MX8x, Nexell S5P6818
 			case ${GuessedSoC} in
-				*S5P6818*|"NXP i.MX8"*|*5422*)
-					PrintBSPWarning
+				*S5P6818*|*5422*)
+					PrintBSPWarning Samsung
+					;;
+				"NXP i.MX8"*)
+					PrintBSPWarning NXP
 					;;
 			esac
 			;;
@@ -6300,23 +6306,26 @@ CheckKernelVersion() {
 					;;
 			esac
 			;;
-		5.4.*)
-			# some SDKs/BSPs based on this version: Allwinner D1, Amlogic A311D2 (T7), S805X2/S905Y4/S905W2 (S4), Exynos 5422
-			case ${GuessedSoC} in
-				"Allwinner D1"*)
-					PrintBSPWarning Allwinner
-					;;
-				*A311D2*|*S805X2*|*S905Y4*|*S905W2*|*5422*)
-					PrintBSPWarning Amlogic
-					;;			
-			esac
-			;;
 		"5.4.125"|"5.4.180")
 			# New Amlogic SDK initially released with 5.4.125 and after some version string cosmetics
 			# stuck at 5.4.180
 			case ${GuessedSoC} in
 				*Amlogic*)
 					PrintBSPWarning Amlogic
+					;;
+			esac
+			;;
+		5.4.*)
+			# some SDKs/BSPs based on this version: Allwinner D1, Amlogic A311D2 (T7), S805X2/S905Y4/S905W2 (S4), Exynos 5422
+			case ${GuessedSoC} in
+				"Allwinner D1"*)
+					PrintBSPWarning Allwinner
+					;;
+				*A311D2*|*S805X2*|*S905Y4*|*S905W2*)
+					PrintBSPWarning Amlogic
+					;;
+				*5422*)
+					PrintBSPWarning Samsung
 					;;
 			esac
 			;;
@@ -6361,8 +6370,8 @@ PrintBSPWarning() {
 			echo -e "${LRED}${BOLD}string suggests being a ${ShortKernelVersion} LTS release the code base differs way too much.${NC}"
 			echo -e "${LRED}${BOLD}See https://tinyurl.com/y8k3af73 and https://tinyurl.com/ywtfec7n for details.${NC}"
 			;;
-		Nvidia)
-			echo -e "${LRED}${BOLD}This device runs a Nvidia BSP kernel.${NC}"
+		Nvidia|NXP|RealTek|Samsung)
+			echo -e "${LRED}${BOLD}This device runs a $1 BSP kernel.${NC}"
 			;;
 		Rockchip)
 			echo -e "${LRED}${BOLD}This device runs a Rockchip BSP kernel based on a mixture of various sources${NC}"

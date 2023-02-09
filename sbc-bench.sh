@@ -1607,7 +1607,7 @@ CreateTempDir() {
 
 CheckLoadAndDmesg() {
 	# Check if kernel ring buffer contains boot messages. These help identifying HW.
-	DMESG="$(dmesg | grep -E "Linux| raid6: | xor: |pvtm|rockchip-cpuinfo|Amlogic Meson|sun50i")"
+	DMESG="$(dmesg | grep -E "Linux|pvtm|rockchip-cpuinfo|Amlogic Meson|sun50i")"
 	grep -q -E '] Booting Linux|] Linux version ' <<<"${DMESG}"
 	case $? in
 		1)
@@ -3666,11 +3666,13 @@ LogEnvironment() {
 			while read ; do echo "           ${REPLY}"; done | sort -V
 	fi
 
-	# if available report the kernel's xor/raid6 choices
-	awk -F"] " '/ raid6: | xor: / {print "           "$2}' <<<"${DMESG}"
-
 	# with Rockchip BSP kernels try to report PVTM settings (Process-Voltage-Temperature Monitor)
 	grep cpu.*pvtm <<<"${DMESG}" | awk -F'] ' '{print "           "$2}'
+
+	# Add kernel version info / warnings
+	KernelInfo="$(CheckKernelVersion "${KernelVersion}")"
+	[ -z "${KernelInfo}" ] || echo -e "\n##########################################################################\n"; \
+		sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" <<<"${KernelInfo}"
 
 	# report performance relevant governors if available:
 	if [ "X${GovernorState}" != "X" ]; then
@@ -3678,11 +3680,6 @@ LogEnvironment() {
 		echo -e "\n##########################################################################\n"
 		sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" <<<"${GovernorStateNow}"
 	fi
-
-	# Add kernel version info / warnings
-	KernelInfo="$(CheckKernelVersion "${KernelVersion}")"
-	[ -z "${KernelInfo}" ] || echo -e "\n##########################################################################\n"; \
-		sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" <<<"${KernelInfo}"
 } # LogEnvironment
 
 UploadResults() {

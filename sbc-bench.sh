@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.9.14
+Version=0.9.15
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -185,7 +185,7 @@ Main() {
 	[ -f /sys/devices/system/cpu/cpufreq/policy0/scaling_governor ] && \
 		read OriginalCPUFreqGovernor </sys/devices/system/cpu/cpufreq/policy0/scaling_governor 2>/dev/null
 	BasicSetup performance >/dev/null 2>&1
-	GovernorState="$(HandleGovernors | grep -v pcie_aspm)"
+	GovernorState="$(HandleGovernors | grep -v cpufreq-policy)"
 	[ "X${GovernorState}" != "X" ] && echo -e "${GovernorState}\n"
 	GetTempSensor
 	[ "X${MODE}" = "Xpts" ] && CheckPTS
@@ -565,18 +565,15 @@ BashBench(){
 
 HandleGovernors() {
 	# check and report governors that might affect performance behaviour. Stuff like
-	# memory/GPU/NPU governors. Also include /sys/module/pcie_aspm/parameters/policy
-	# since this is overlooked way too often when testing/reviewing PCIe equipped SBC.
-	# On RK3588 looks like this for example:
+	# memory/GPU/NPU governors. On RK3588 it looks like this for example:
 	#
-	# Status of performance related governors/policies found below /sys:
+	# Status of performance related governors found below /sys:
 	# cpufreq-policy0: ondemand / 408 MHz (conservative ondemand userspace powersave performance schedutil)
 	# cpufreq-policy4: ondemand / 408 MHz (conservative ondemand userspace powersave performance schedutil)
 	# cpufreq-policy6: ondemand / 408 MHz (conservative ondemand userspace powersave performance schedutil)
 	# dmc: dmc_ondemand / 528 MHz (dmc_ondemand userspace powersave performance simple_ondemand)
 	# fb000000.gpu: simple_ondemand / 300 MHz (dmc_ondemand userspace powersave performance simple_ondemand)
 	# fdab0000.npu: userspace / 1000 MHz (dmc_ondemand userspace powersave performance simple_ondemand)
-	# pcie_aspm: default performance [powersave] powersupersave
 
 	Governors="$(find /sys -name "*governor" | grep -E -v '/sys/module|cpuidle|watchdog')"
 	if [ "X${Governors}" = "X" -o "${CPUArchitecture}" = "x86_64" ]; then
@@ -588,10 +585,14 @@ HandleGovernors() {
 		echo "${Governors}" | while read ; do
 			echo $1 >"${REPLY}" 2>/dev/null
 		done
+		# If in adjust mode we also tune ASPM since this can massively affect performance
+		# of components behind PCIe buses (NVMe SSDs, PCIe attached HBAs, NICs and so on)
 		[ -w /sys/module/pcie_aspm/parameters/policy -a -d /sys/bus/pci_express ] && echo $1 >/sys/module/pcie_aspm/parameters/policy 2>/dev/null
 		return
 	fi
-	echo -e "Status of performance related governors/policies found below /sys:"
+	
+	# process governors:
+	echo -e "Status of performance related governors found below /sys:"
 	echo "${Governors}" | while read ; do
 		read Governor <"${REPLY}"
 		if [ "X${Governor}" != "X" ]; then
@@ -630,21 +631,57 @@ HandleGovernors() {
 			fi
 		fi
 	done | sort -n
-	if [ -r /sys/module/pcie_aspm/parameters/policy -a -d /sys/bus/pci_express ]; then
-		read ASPM </sys/module/pcie_aspm/parameters/policy
-		case ${ASPM} in
-			*"[performance]"*)
-				echo -e "pcie_aspm: ${LGREEN}${ASPM}${NC}"
-				;;
-			*"[powersave]"*|*"[powersupersave]"*)
-				echo -e "pcie_aspm: ${LRED}${ASPM}${NC}"
-				;;
-			*)
-				echo -e "pcie_aspm: ${ASPM}"
-				;;
-		esac
-	fi
 } # HandleGovernors
+
+HandlePolicies() {
+	# report available sysfs policies that might affect performance behaviour. Stuff like
+	# pcie_aspm, gpu/core_availability_policy, gpu/power_policy or iopolicy. With RK3588
+	# this might look like this for example:
+	#
+	# Status of performance related policies found below /sys:
+	# /sys/devices/platform/fb000000.gpu/power_policy: [coarse_demand] always_on
+	# /sys/module/pcie_aspm/parameters/policy: default performance [powersave] powersupersave
+
+	# process policies
+	SysFSPolicies="$(find /sys -name "*policy" | grep -E -v 'hotplug|cpufreq|thermal_zone|apparmor|hostap|/sys/kernel|/sys/devices/pci|mobile_lpm_policy')"
+	if [ "X${SysFSPolicies}" = "X" ]; then
+		# skip if no policies found
+		return
+	fi
+
+	echo "${SysFSPolicies}" | while read ; do
+		read Policy <"${REPLY}"
+		if [ "X${Policy}" != "X" ]; then
+			case "${REPLY}" in
+				*pcie_aspm*)
+					# PCIe's ASPM gets special treatment since values are standardized
+					# so we can use coloured output. We also need to check for 'pcie'
+					# occurences in kernel ring buffer since reporting ASPM settings on
+					# devices lacking PCIe capabilities is pointless
+					grep -q pcie <<<"${DMESG}"
+					PCIeInDmesg=$?
+					if [ -d /sys/bus/pci_express -a ${PCIeInDmesg} -eq 0 ]; then
+						case ${Policy} in
+							*"[performance]"*)
+								echo -e "${REPLY}: ${LGREEN}${Policy}${NC}"
+								;;
+							*"[powersave]"*|*"[powersupersave]"*)
+								echo -e "${REPLY}: ${LRED}${Policy}${NC}"
+								;;
+							*)
+								echo -e "${REPLY}: ${Policy}"
+								;;
+						esac
+					fi
+					;;
+				*)
+					# report policy if there is more than one value possible, otherwise skip
+					grep -q ' ' <<<"${Policy}" && echo -e "${REPLY}: ${Policy}"
+					;;
+			esac
+		fi
+	done | sort -n
+} # HandlePolicies
 
 PlotPerformanceGraph() {
 	# function that walks through all cpufreq OPP and plots a performance graph using
@@ -1607,7 +1644,7 @@ CreateTempDir() {
 
 CheckLoadAndDmesg() {
 	# Check if kernel ring buffer contains boot messages. These help identifying HW.
-	DMESG="$(dmesg | grep -E "Linux|pvtm|rockchip-cpuinfo|Amlogic Meson|sun50i")"
+	DMESG="$(dmesg | grep -E "Linux|pvtm|rockchip-cpuinfo|Amlogic Meson|sun50i|pcie")"
 	grep -q -E '] Booting Linux|] Linux version ' <<<"${DMESG}"
 	case $? in
 		1)
@@ -3463,7 +3500,7 @@ CheckMemoryDevfreqTransitions() {
 	fi
 	UpTime=$(awk -F" " '{print $1*1000}' </proc/uptime)
 	echo -e "\n##########################################################################\n"
-	echo -e "Transitions since last boot (${UpTime}ms ago):\n"
+	echo -e "DRAM clock transitions since last boot (${UpTime} ms ago):\n"
 	echo "${Transitions}" | while read ; do
 		echo -e "${REPLY%/*}:\n"
 		cat "${REPLY}"
@@ -3674,11 +3711,21 @@ LogEnvironment() {
 	[ -z "${KernelInfo}" ] || echo -e "\n##########################################################################\n"; \
 		sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" <<<"${KernelInfo}"
 
-	# report performance relevant governors if available:
-	if [ "X${GovernorState}" != "X" ]; then
-		GovernorStateNow="$(HandleGovernors)"
+	# add performance relevant governors/policies to results if available:
+	GovernorStateNow="$(HandleGovernors | grep -v cpufreq-policy)"
+	PolicyStateNow="$(HandlePolicies)"
+	if [ "X${GovernorStateNow}" != "X" -a "X${PolicyStateNow}" != "X" ]; then
 		echo -e "\n##########################################################################\n"
 		sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" <<<"${GovernorStateNow}"
+		echo -e "\nStatus of performance related policies found below /sys:"
+		sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" <<<"${PolicyStateNow}"
+	elif [ "X${GovernorStateNow}" != "X" ]; then
+		echo -e "\n##########################################################################\n"
+		sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" <<<"${GovernorStateNow}"
+	elif [ "X${PolicyStateNow}" != "X" ]; then
+		echo -e "\n##########################################################################\n"
+		echo -e "Status of performance related policies found below /sys:"
+		sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" <<<"${PolicyStateNow}"	
 	fi
 } # LogEnvironment
 
@@ -6026,14 +6073,18 @@ ProvideReviewInfo() {
 	SummarizeResults
 	
 	if [ -f "${TempDir}/clk_summary.tuned" ]; then
-		# add clk_summary diff to results output
-		echo -e "\n##########################################################################\n\n/sys/kernel/debug/clk/clk_summary diff between all governors set to powersave and performance:\n" >>${ResultLog}
-		head -n3 "${TempDir}/clk_summary.tuned" | sed -e 's/^/  /' >>${ResultLog}
-		diff "${TempDir}"/clk_summary.*  >>${ResultLog}
+		# add clk_summary diff to results output if something has changed
+		ClockDiff="$(diff "${TempDir}"/clk_summary.*)"
+		if [ $? -ne 0 ]; then
+			echo -e "\n##########################################################################\n\n/sys/kernel/debug/clk/clk_summary diff between all governors set to powersave and performance:\n" >>${ResultLog}
+			head -n3 "${TempDir}/clk_summary.tuned" | sed -e 's/^/  /' >>${ResultLog}
+			echo -e "${ClockDiff}" >>${ResultLog}
+		fi
 	fi
 
 	UploadResults
 
+	# Prepare device listing in Markdown friendly format
 	case "${UploadURL}" in
 		http*)
 			echo -e "\n\n\n\n# ${DeviceName:-$HostName}\n\nTested on $(date -R). Full info: [${UploadURL}](${UploadURL})\n\n## General information:\n"
@@ -6043,17 +6094,27 @@ ProvideReviewInfo() {
 			;;
 	esac
 	sed -e 's/^/    /' <<<"${OriginalCPUInfo}"
-	echo -e "\n## Governors (tradeoff between performance and idle consumption):\n\nOriginal settings:\n"
+
+	# report probably performance relevant governors and policies
+	echo -e "\n## Governors/policies (tradeoffs between performance and idle consumption):\n\nOriginal governor settings:\n"
 	sed -e 's/^/    /' <<<"${GovernorState}"
-	echo -e "\nTuned settings:\n"
+	echo -e "\nTuned governor settings:\n"
 	sed -e 's/^/    /' <<<"${TunedGovernorState}"
+	PolicyStateNow="$(HandlePolicies)"
+	if [ "X${PolicyStateNow}" != "X" ]; then
+		echo -e "\nStatus of performance related policies found below /sys:\n"
+		sed -e 's/^/    /' <<<"${PolicyStateNow}"
+	fi
+
+	# measured clockspeeds
 	if [ -z ${InitialTemp} ]; then
 		# no thermal readouts possible
 		echo -e "\n## Clockspeeds${ThrottlingWarning}:\n\nBefore:\n\n${ClockspeedsBefore}\n\nAfter:\n\n${ClockspeedsAfter}"
 	else
 		echo -e "\n## Clockspeeds${ThrottlingWarning}:\n\nBefore at ${InitialTemp}°C:\n\n${ClockspeedsBefore}\n\nAfter at ${TempNow}°C:\n\n${ClockspeedsAfter}"
 	fi
-	
+
+	# software versions
 	echo -e "\n## Software versions:\n"
 	case "${OperatingSystem}" in
 		Armbian*|Orange*)
@@ -6079,6 +6140,7 @@ ProvideReviewInfo() {
 	[ -z "${CONFIGHZ}" ] && echo "  * Kernel ${KernelVersion}" || echo "  * Kernel ${KernelVersion} / ${CONFIGHZ}"
 	[ -z "${KernelInfo}" ] || echo -e "\n${KernelInfo}"
 
+	# device now ready for benchmarking
 	cat <<- EOF
 	
 	All known settings adjusted for performance. System now ready for benchmarking.
@@ -6091,6 +6153,7 @@ ProvideReviewInfo() {
 	CheckTimeInState before
 	/bin/bash "${PathToMe}" -m 60 >"${TempDir}/review" &
 	echo ""
+	sleep 1
 	tail -f "${TempDir}/review"
 } # ProvideReviewInfo
 
@@ -6151,7 +6214,7 @@ CheckKernelVersion() {
 
 	if [ -z "${KernelStatus}" ]; then
 		# some old kernel version neither being an LTS kernel nor any actively developed variant
-		echo -e "${LRED}${BOLD}Kernel version ${KernelVersionDigitsOnly} is not covered by any release cycle any more.${NC}\n"
+		echo -e "${LRED}${BOLD}Kernel version ${KernelVersionDigitsOnly} is not covered by any active release cycle any more.${NC}\n"
 		echo -e "${LRED}${BOLD}Please check https://endoflife.date/linux for details. It is highly likely${NC}"
 		echo -e "${LRED}${BOLD}that countless exploitable vulnerabilities exist for this kernel as well as${NC}"
 		echo -e "${LRED}${BOLD}tons of unfixed bugs. Better upgrade to a supported version ASAP.${NC}"
@@ -6417,6 +6480,7 @@ PrintKernelInfo() {
 	else
 		echo -e "$(uname -a)\n\n${KernelInfo}"
 	fi
+	echo ""
 } # PrintKernelInfo
 
 DisplayUsage() {

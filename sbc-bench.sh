@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.9.16
+Version=0.9.17
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -2547,7 +2547,7 @@ InitialMonitoring() {
 	
 	# q&d performance assessment to estimate duration
 	QuickAndDirtyPerformance="$(BashBench)"
-	TinymembenchDuration=$(( $(( 5 + $(( ${QuickAndDirtyPerformance} / 150000000 )) )) * ${#ClusterConfig[@]} ))
+	TinymembenchDuration=$(( $(( 3 + $(( ${QuickAndDirtyPerformance} / 300000000 )) )) * ${#ClusterConfig[@]} ))
 	RunHowManyTimes=3 # how many times should the multi-threaded tests be repeated
 	SingleThreadedDuration=$(( 20 + $(( ${QuickAndDirtyPerformance} * ${#ClusterConfig[@]} / 5000000 )) ))
 	MultiThreadedDuration=$(( ${RunHowManyTimes} * $(( 20 + $(( ${QuickAndDirtyPerformance} / 5000000 )) )) / ${CPUCores} ))
@@ -2924,8 +2924,9 @@ CheckCPUCluster() {
 			OPPtoCheck="${MaxSpeed} ${MinSpeed}"
 		fi
 		for i in ${OPPtoCheck} ; do
-			# if MaxKHz environment variable is set then skip any higher cpufreq OPP
-			if [ ${i} -le ${MaxKHz:-90000000} ]; then
+			# if MaxKHz environment variable is set then skip any higher cpufreq OPP,
+			# works similar for MinKHz
+			if [ ${i} -le ${MaxKHz:-90000000} -a ${i} -ge ${MinKHz:-0} ]; then
 				echo ${i} >/sys/devices/system/cpu/cpufreq/policy${1}/scaling_max_freq
 				# instead of 'snore 0.1' fire up some real workload in a try to compensate for SoC
 				# firmwares that might do their own thing wrt clockspeeds (keep them low when idle)
@@ -3645,7 +3646,7 @@ LogEnvironment() {
 	fi
 
 	# check whether it's a Rockchip BSP kernel with dmc enabled
-	DMCGovernor="$(grep '/dmc/' <<<"${Governors}" | head -n1)"
+	DMCGovernor="/sys/devices/platform/dmc/devfreq/dmc/governor"
 	if [ -f "${DMCGovernor}" ]; then
 		read UsedDMCGovernor <"${DMCGovernor}"
 		case ${UsedDMCGovernor} in

@@ -6,13 +6,15 @@ SBC is a shortcut for [single-board computer](https://en.wikipedia.org/wiki/Sing
 
 This small set of different CPU performance tests focuses on 'headless' operation only (no GPU/display stuff, no floating point number crunching). Unlike many other 'kitchen-sink benchmarks' it tries to produce insights instead of fancy graphs.
 
-It has six **entirely different** usage modes:
+It has eight **entirely different** usage modes:
 
 * Generate a rough CPU performance assessment for a specific SBC *in general* (under ideal conditions)
 * Show whether an *individual* SBC is able to perform the same and if not hopefully answering the question 'why?'
 * Help software developers and hardware designers to improve 'thermal performance' when using the `-t` and/or `-T` switches ([details/discussion](https://forum.armbian.com/topic/7819-sbc-bench/?do=findComment&comment=60873), [another example](https://forum.armbian.com/topic/8125-quick-review-of-nanopi-k1-plus/?do=findComment&comment=61300))
 * Graph thermal/consumption charts with `-g` to [measure efficiency of settings/devices](Efficiency_Graphing.md)
 * Generate a controlled environment with appropriate settings for other benchmark suites like Geekbench (`sbc-bench -G`) or Phoronix (`sbc-bench -P`)
+* `sbc-bench -k` shows kernel version info. Stuff like: still supported? BSP or mainline?
+* The review mode (`-r`) is designed to help reviewers and participants of 'SBC debug parties' to quickly identify bottlenecks that need further attention: reports many performance relevant settings, switches them to max performance and lurks from then on in the background to monitor other benchmark executions. By comparing scores made with defaults we are able to directly identify settings that need adjustments
 * Provide basic CLI monitoring functionality through the `-m` switch
 
 The monitoring now also displays some hardware information when starting:
@@ -55,7 +57,7 @@ Unfortunately to adjust the cpufreq governor and to collect monitoring data exec
 
 ## Which tools are used and why?
 
-I chose [mhz](https://github.com/wtarreau/mhz), [tinymembench](https://github.com/ssvb/tinymembench), [ramlat](https://github.com/wtarreau/ramspeed), [cpuminer](https://github.com/tkinjo1985/cpuminer-multi.git), [stockfish](https://stockfishchess.org), [7-zip](https://www.7-cpu.com) and [OpenSSL](https://www.openssl.org)'s AES benchmarks for the following reasons:
+I chose [mhz](https://github.com/wtarreau/mhz), [tinymembench](https://github.com/nuumio/tinymembench), [ramlat](https://github.com/wtarreau/ramspeed), [cpuminer](https://github.com/tkinjo1985/cpuminer-multi.git), [stockfish](https://stockfishchess.org), [7-zip](https://www.7-cpu.com) and [OpenSSL](https://www.openssl.org)'s AES benchmarks for the following reasons:
 
 ### [mhz](https://github.com/wtarreau/mhz)
 
@@ -79,9 +81,9 @@ When running the multi-threaded 7zip benchmark, the SoC temperature exceeds 80°
 
     Cpufreq OPP: 2649    Measured: 1940 (1955.570/1943.795/1922.274)    (-26.8%)
 
-### [tinymembench](https://github.com/ssvb/tinymembench)
+### [tinymembench](https://github.com/nuumio/tinymembench)
 
-Unlike other 'RAM benchmarks' *tinymembench* checks for both memory bandwidth **and** latency in a lot of variations so it's even possible to get some insights about internal cache sizes. It also measures multiple times and if sample standard deviation exceeds 0.1%, it is shown in brackets next to the result. So it's pretty easy to spot background activity ruining benchmark results.
+Unlike other 'RAM benchmarks' *tinymembench* checks for both memory bandwidth **and** latency in a lot of variations so it's even possible to get some insights about internal cache sizes. It also measures each mode at least two times and if sample standard deviation exceeds 0.1%, it is shown in brackets next to the result. So it's pretty easy to spot background activity ruining benchmark results.
 
 On hybrid systems with different CPU cores (big.LITTLE, DynamicIQ, Alder/Raptor Lake) we pin execution one time to an efficiency/little and one time to a performance/big core to know the difference this makes. For the sake of simplicity we output *memcpy* and *memset* numbers at the end of the benchmark. On an *overclocked* RPi 3 B+ (arm_freq=1570, over_voltage=4, core_freq=500, sdram_freq=510, over_voltage_sdram=2) this will look like this
 

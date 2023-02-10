@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.9.15
+Version=0.9.16
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -186,7 +186,7 @@ Main() {
 		read OriginalCPUFreqGovernor </sys/devices/system/cpu/cpufreq/policy0/scaling_governor 2>/dev/null
 	BasicSetup performance >/dev/null 2>&1
 	GovernorState="$(HandleGovernors | grep -v cpufreq-policy)"
-	[ "X${GovernorState}" != "X" ] && echo -e "${GovernorState}\n"
+	[ "X${GovernorState}" != "X" ] && echo -e "Status of performance related governors found below /sys (w/o cpufreq):\n${GovernorState}\n"
 	GetTempSensor
 	[ "X${MODE}" = "Xpts" ] && CheckPTS
 	InstallPrerequisits
@@ -592,7 +592,6 @@ HandleGovernors() {
 	fi
 	
 	# process governors:
-	echo -e "Status of performance related governors found below /sys:"
 	echo "${Governors}" | while read ; do
 		read Governor <"${REPLY}"
 		if [ "X${Governor}" != "X" ]; then
@@ -2344,10 +2343,15 @@ InstallPrerequisits() {
 
 	# get/build tinymembench if not already there
 	[ -d "${InstallLocation}" ] || mkdir -p "${InstallLocation}"
+	if [ -f "${InstallLocation}/tinymembench/.git/config" ]; then
+		# exchange abandoned ssvb version with v0.4.9-nuumio
+		grep -q github.com/ssvb/tinymembench "${InstallLocation}/tinymembench/.git/config" && \
+			rm -rf "${InstallLocation}/tinymembench"
+	fi
 	if [ ! -x "${InstallLocation}"/tinymembench/tinymembench ]; then
 		echo -e "\x08\x08\x08, tinymembench...\c"
 		cd "${InstallLocation}"
-		git clone https://github.com/ssvb/tinymembench >/dev/null 2>&1
+		git clone https://github.com/nuumio/tinymembench >/dev/null 2>&1
 		cd tinymembench
 		make >/dev/null 2>&1
 		if [ ! -x "${InstallLocation}"/tinymembench/tinymembench ]; then
@@ -3023,6 +3027,11 @@ RunTinyMemBench() {
 	else
 		echo -e "\x08\x08 Done (results will be available in $(( ${EstimatedDuration} * 120 / 100 ))-$(( ${EstimatedDuration} * 180 / 100 )) minutes)."
 	fi
+
+	# if we're not running with MODE=extensive shorten tinymembench execution drastically.
+	# TODO: Adjust time estimates
+	[ "X${MODE}" = "Xextensive" ] || TMBOptions="-b 2 -B 3 -l 3 -c 1000000"
+
 	echo -e "Executing tinymembench...\c"
 	echo -e "System health while running tinymembench:\n" >${MonitorLog}
 	/bin/bash "${PathToMe}" -m $(( 40 * ${#ClusterConfig[@]} )) >>${MonitorLog} &
@@ -3034,14 +3043,14 @@ RunTinyMemBench() {
 			CPUInfo="$(GetCPUInfo ${ClusterConfig[$i]})"
 			echo -e "\nExecuting benchmark on cpu${ClusterConfig[$i]}${CPUInfo}:\n" >>${TempLog}
 			[ -s "${NetioConsumptionFile}" ] && snore 10
-			taskset -c ${ClusterConfig[$i]} "${InstallLocation}"/tinymembench/tinymembench >>${TempLog} 2>&1
+			taskset -c ${ClusterConfig[$i]} "${InstallLocation}"/tinymembench/tinymembench ${TMBOptions} >>${TempLog} 2>&1
 		fi
 	done
 	kill ${MonitoringPID}
 	echo -e "\n##########################################################################" >>${ResultLog}
 	cat ${TempLog} >>${ResultLog}
-	MemCpyScore="$(awk -F" " '/^ standard memcpy/ {print $4}' <${TempLog} | sort -n | tail -n1)"
-	MemSetScore="$(awk -F" " '/^ standard memset/ {print $4}' <${TempLog} | sort -n | tail -n1)"
+	MemCpyScore="$(awk -F" " '/^ libc memcpy copy/ {print $5}' <${TempLog} | sort -n | tail -n1)"
+	MemSetScore="$(awk -F" " '/^ libc memset fill/ {print $5}' <${TempLog} | sort -n | tail -n1)"
 	# round results
 	MemBenchScore="$(( $(awk '{printf ("%0.0f",$1/10); }' <<<"${MemCpyScore}" ) * 10 )) | $(( $(awk '{printf ("%0.0f",$1/10); }' <<<"${MemSetScore}" ) * 10 ))"
 } # RunTinyMemBench
@@ -3716,11 +3725,13 @@ LogEnvironment() {
 	PolicyStateNow="$(HandlePolicies)"
 	if [ "X${GovernorStateNow}" != "X" -a "X${PolicyStateNow}" != "X" ]; then
 		echo -e "\n##########################################################################\n"
+		echo -e "Status of performance related governors found below /sys (w/o cpufreq):"
 		sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" <<<"${GovernorStateNow}"
 		echo -e "\nStatus of performance related policies found below /sys:"
 		sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" <<<"${PolicyStateNow}"
 	elif [ "X${GovernorStateNow}" != "X" ]; then
 		echo -e "\n##########################################################################\n"
+		echo -e "Status of performance related governors found below /sys (w/o cpufreq):"
 		sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" <<<"${GovernorStateNow}"
 	elif [ "X${PolicyStateNow}" != "X" ]; then
 		echo -e "\n##########################################################################\n"
@@ -3736,7 +3747,7 @@ UploadResults() {
 
 	# Display benchmark results if not in PTS, GB or preview mode
 	if [ "X${MODE}" != "Xpts" -a "X${MODE}" != "Xgb" -a "X${MODE}" != "Xreview" ]; then
-		MemoryScores="$(awk -F" " '/^ standard/ {print $2": "$4" "$5" "$6}' <${ResultLog} | awk -F'MB/s' '{print $1"MB/s"}')"
+		MemoryScores="$(awk -F" " '/^ libc / {print $2": "$4" "$5" "$6}' <${ResultLog} | grep -E 'memcpy|memset' | awk -F'MB/s' '{print $1"MB/s"}')"
 		CountOfMemoryScores=$(wc -l <<<"${MemoryScores}")
 		if [ ${#ClusterConfig[@]} -eq 1 -o $(( ${#ClusterConfig[@]} * 2 )) -ne ${CountOfMemoryScores} ]; then
 			# if only 1 CPU cluster or mismatch between count of memory scores and cluster members
@@ -6036,7 +6047,7 @@ ProvideReviewInfo() {
 	CreateTempDir
 	[ -f /sys/devices/system/cpu/cpufreq/policy0/scaling_governor ] && \
 		read OriginalCPUFreqGovernor </sys/devices/system/cpu/cpufreq/policy0/scaling_governor 2>/dev/null
-	GovernorState="$(HandleGovernors | grep -v Status)"
+	GovernorState="$(HandleGovernors)"
 	CheckLoadAndDmesg
 	HandleGovernors powersave
 	if [ -f /sys/kernel/debug/clk/clk_summary ]; then
@@ -6045,7 +6056,7 @@ ProvideReviewInfo() {
 	fi
 	HandleGovernors performance
 	OriginalCPUInfo="$(PrintCPUInfo)"
-	TunedGovernorState="$(HandleGovernors | grep -v Status | awk -F" \(" '{print $1}')"
+	TunedGovernorState="$(HandleGovernors | awk -F" \(" '{print $1}')"
 	BasicSetup performance >/dev/null 2>&1
 	[ -f /sys/kernel/debug/clk/clk_summary ] && cat /sys/kernel/debug/clk/clk_summary >"${TempDir}/clk_summary.tuned"
 	GetTempSensor

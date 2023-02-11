@@ -1153,7 +1153,7 @@ GetTempSensor() {
 					*)
 						# try to get hwmon node based on thermal driver loaded (idea/feedback courtesy
 						# @linuxium and @dan-and: https://github.com/ThomasKaiser/sbc-bench/issues/33)
-						find /sys -name temp1_input -type f 2>/dev/null | while read ; do
+						find /sys -name temp?_input -type f 2>/dev/null | while read ; do
 							read NodeName <"${REPLY%/*}/name"
 							case "${NodeName}" in
 								k10temp|k8temp|coretemp)
@@ -1227,12 +1227,12 @@ GetThermalZone() {
 } # GetThermalZone
 
 GetHWNode() {
-	# get thermal zone for specific type string ($1)
-	for zone in /sys/class/hwmon/hwmon* ; do
-		grep -q "${1}" <"${zone}/name"
+	# get hwmon node for specific name string ($1)
+	for node in /sys/class/hwmon/hwmon* ; do
+		grep -q "${1}" <"${node}/name"
 		case $? in
 			0)
-				echo ${zone}
+				echo ${node}
 				return
 				;;
 		esac
@@ -6206,6 +6206,12 @@ CheckKernelVersion() {
 	# an own release schedule
 	[ "${CPUArchitecture}" = "x86_64" ] && return
 
+	# Avoid annoying users of latest bleeding edge kernels by ignoring anything with
+	# higher version number than 1st entry on endoflife.date
+	LastReleaseCycle="$(grep -A1 "^releases:$" "${TempDir}/linuxkernel.md" | awk -F'"' '/releaseCycle:/ {print $2}')"
+	CheckRelease=$(echo -e "${LastReleaseCycle}\n${ShortKernelVersion}" | sort -n | head -n1)
+	[ "${CheckRelease}" = "${LastReleaseCycle}" ] && return
+	
 	KernelVersionDigitsOnly=$(cut -f1 -d- <<<"$1")
 	
 	# parse LTS kernel info, in February 2023 this looks like this for example with 5.10:

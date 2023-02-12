@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.9.17
+Version=0.9.18
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -461,6 +461,11 @@ GetCoreType() {
 			fi
 			;;
 		riscv*)
+			# TODO: newer kernels now expose more information so we could use this in the future:
+			# mvendorid	: 0x5b7 (T-Head)
+			# marchid	: 0x0
+			# mimpid	: 0x0
+
 			# relying on uarch doesn't work with older RISC-V kernels since missing
 			grep -q '^uarch' <<< "${ProcCPU}"
 			case $? in
@@ -1116,8 +1121,19 @@ GetTempSensor() {
 					fi
 					ThermalZone="$(GetThermalZone "${NodeGuess}")"
 					ln -fs ${ThermalZone}/temp ${TempSource}
-					# TempInfo="Thermal source: ${ThermalZone}/ (${NodeGuess} / Armbian would have chosen ${ThermalSource} instead)"
-					TempInfo="Thermal source: ${ThermalZone}/ (${NodeGuess})\n                (Armbian wants to use ${ThermalNode%/*} instead, that\n                zone is named ${ThermalSource}. Please check and if wrong\n                file a bug here: https://github.com/armbian/build/issues/)"
+					if [ -f "${ThermalNode%/*}/temp1_label" ]; then
+						read TempLabel <"${ThermalNode%/*}/temp1_label"
+						case "${TempLabel}" in
+							aml_thermal|cpu|cpu_thermal*|cpu-thermal*|cpu0-thermal*|cpu0_thermal*|soc_thermal*|soc-thermal*|CPU-therm|x86_pkg_temp|k10temp|k8temp|coretemp)
+								# looks like a legit thermal sensor
+								TempInfo="Thermal source: ${ThermalZone}/ (${NodeGuess})"
+								;;
+							*)
+								# looks weird so print a warning
+								TempInfo="Thermal source: ${ThermalZone}/ (${NodeGuess})\n                (Armbian wants to use ${ThermalNode%/*} instead, that\n                zone is named ${ThermalSource}. Please check and if wrong\n                file a bug here: https://github.com/armbian/build/issues/)"
+								;;
+						esac
+					fi
 				else
 					# use Armbian's 'choice' since no better match was found
 					OtherTempZones="$(cat /sys/devices/virtual/thermal/thermal_zone?/type | grep -v "${ThermalSource}" | tr '\n' ',' | sed -e 's/,/, /g' -e 's/, $//')"
@@ -3022,8 +3038,8 @@ CheckAllCores() {
 } # CheckAllCores
 
 RunTinyMemBench() {
-	if [ "X${MODE}" = "Xextensive" -o "X${ExecuteStockfish}" = "Xyes" ]; then
-		# extensive mode or yet unknown stockfish run time, do not print any duration estimates
+	if [ "X${MODE}" = "Xextensive" -o "X${MODE}" = "Xreview" -o "X${ExecuteStockfish}" = "Xyes" ]; then
+		# extensive/review mode or yet unknown stockfish run time, do not print any duration estimates
 		echo -e "\x08\x08 Done."
 	else
 		echo -e "\x08\x08 Done (results will be available in $(( ${EstimatedDuration} * 120 / 100 ))-$(( ${EstimatedDuration} * 180 / 100 )) minutes)."
@@ -3822,8 +3838,8 @@ UploadResults() {
 		*)
 			if [ "X${MODE}" != "Xunattended" ]; then
 				echo -e " |\n\n" >>${ResultLog}
-				echo -e "\nUnable to upload full test results. Please copy&paste the below stuff to pastebin.com and\nprovide the URL. Check the output for throttling and swapping please.\n\n"
-				sed '/^$/N;/^\n$/D' <${ResultLog}
+				echo -e "\nUnable to upload full test results. Please copy&paste the below stuff to pastebin.com and\nprovide the URL. Check the output for throttling and swapping please.\n\n" >&2
+				sed '/^$/N;/^\n$/D' <${ResultLog} >&2
 			fi
 			;;
 	esac
@@ -4624,7 +4640,11 @@ GuessARMSoC() {
 			sun50iw11*)
 				echo "Allwinner R329"
 				;;
-			sun*|Allwinner*)
+			sun*)
+				SoCGuess="$(GuessSoCbySignature)"
+				[ "X${SoCGuess}" = "X" ] && echo "unknown Allwinner SoC" || echo "${SoCGuess}"
+				;;
+			Allwinner*)
 				SoCGuess="$(GuessSoCbySignature)"
 				[ "X${SoCGuess}" = "X" ] && sed -e 's/ board//' -e 's/ Family//' <<<"${HardwareInfo}" || echo "${SoCGuess}"
 				;;
@@ -5791,15 +5811,15 @@ GuessSoCbySignature() {
 			# Apple M2: 4 x Apple Blizzard / r1p0 + 4 x Apple Avalanche / r1p0 / https://piped.kavin.rocks/watch?v=SidIJkC5YN0 (7:10:02)
 			echo "Apple M2"
 			;;
-		10thead,c906|10)
+		*thead,c906|10)
 			# Allwinner D1: single T-Head C906 core
 			echo "Allwinner D1"
 			;;
-		10rv64i2p0m2p0a2p0f2p0d2p0c2p0xv50p011rv64i2p0m2p0a2p0f2p0d2p0c2p0xv50p0)
+		*rv64i2p0m2p0a2p0f2p0d2p0c2p0xv50p0*rv64i2p0m2p0a2p0f2p0d2p0c2p0xv50p0)
 			# Kendryte K510: Dual-core 64-bit RISC-V https://canaan.io/product/kendryte-k510
 			grep -q k510 <<<"${DTCompatible}" && echo "Kendryte K510"
 			;;
-		1?thead,c9101?thead,c910|1?1?|10rv64imafdcsu10rv64imafdcsu)
+		*thead,c910*thead,c910|1?1?|10rv64imafdcsu10rv64imafdcsu)
 			# T-Head C910: Dual-core XuanTieISA (compatible with RISC-V 64GC) https://www.t-head.cn/product/c910?lang=en
 			grep -q c910 <<<"${DTCompatible}" && echo "T-Head C910"
 			;;
@@ -6067,6 +6087,7 @@ ProvideReviewInfo() {
 	CheckClockspeedsAndSensors
 	ClockspeedsBefore="$(cat "${TempDir}/cpufreq" | sed -e 's/^/    /')"
 	CheckTimeInState before
+	RunTinyMemBench
 	RunRamlat
 	RunOpenSSLBenchmark 256
 	if [ -x "${InstallLocation}"/cpuminer-multi/cpuminer ]; then
@@ -6094,63 +6115,70 @@ ProvideReviewInfo() {
 		fi
 	fi
 
-	UploadResults
-
 	# Prepare device listing in Markdown friendly format
-	case "${UploadURL}" in
-		http*)
-			echo -e "\n\n\n\n# ${DeviceName:-$HostName}\n\nTested on $(date -R). Full info: [${UploadURL}](${UploadURL})\n\n## General information:\n"
-			;;
-		*)
-			echo -e "\n\n\n\n# ${DeviceName:-$HostName}\n\nTested on $(date -R).\n\n## General information:\n"
-			;;
-	esac
-	sed -e 's/^/    /' <<<"${OriginalCPUInfo}"
+	echo -e "# ${DeviceName:-$HostName}" >"${TempDir}/review"
+	echo -e "\nTested on $(date -R).\n\n### General information:\n" >>"${TempDir}/review"
+	sed -e 's/^/    /' <<<"${OriginalCPUInfo}" >>"${TempDir}/review"
 
 	# report probably performance relevant governors and policies
-	echo -e "\n## Governors/policies (tradeoffs between performance and idle consumption):\n\nOriginal governor settings:\n"
-	sed -e 's/^/    /' <<<"${GovernorState}"
-	echo -e "\nTuned governor settings:\n"
-	sed -e 's/^/    /' <<<"${TunedGovernorState}"
+	echo -e "\n### Governors/policies (performance vs. idle consumption):\n\nOriginal governor settings:\n" >>"${TempDir}/review"
+	sed -e 's/^/    /' <<<"${GovernorState}" >>"${TempDir}/review"
+	echo -e "\nTuned governor settings:\n" >>"${TempDir}/review"
+	sed -e 's/^/    /' <<<"${TunedGovernorState}" >>"${TempDir}/review"
 	PolicyStateNow="$(HandlePolicies)"
 	if [ "X${PolicyStateNow}" != "X" ]; then
-		echo -e "\nStatus of performance related policies found below /sys:\n"
-		sed -e 's/^/    /' <<<"${PolicyStateNow}"
+		echo -e "\nStatus of performance related policies found below /sys:\n" >>"${TempDir}/review"
+		sed -e 's/^/    /' <<<"${PolicyStateNow}" >>"${TempDir}/review"
 	fi
 
 	# measured clockspeeds
 	if [ -z ${InitialTemp} ]; then
 		# no thermal readouts possible
-		echo -e "\n## Clockspeeds${ThrottlingWarning}:\n\nBefore:\n\n${ClockspeedsBefore}\n\nAfter:\n\n${ClockspeedsAfter}"
+		echo -e "\n### Clockspeeds${ThrottlingWarning} (idle vs. heated up):\n\nBefore:\n\n${ClockspeedsBefore}\n\nAfter:\n\n${ClockspeedsAfter}" >>"${TempDir}/review"
 	else
-		echo -e "\n## Clockspeeds${ThrottlingWarning}:\n\nBefore at ${InitialTemp}°C:\n\n${ClockspeedsBefore}\n\nAfter at ${TempNow}°C:\n\n${ClockspeedsAfter}"
+		echo -e "\n### Clockspeeds${ThrottlingWarning} (idle vs. heated up):\n\nBefore at ${InitialTemp}°C:\n\n${ClockspeedsBefore}\n\nAfter at ${TempNow}°C:\n\n${ClockspeedsAfter}" >>"${TempDir}/review"
 	fi
 
 	# software versions
-	echo -e "\n## Software versions:\n"
+	echo -e "\n### Software versions:\n" >>"${TempDir}/review"
 	case "${OperatingSystem}" in
 		Armbian*|Orange*)
-			# Armbian went full megalomania in the meantime. They try to fool their users
-			# into running an 'Armbian 23.02.0-trunk.0072 Jammy' while in reality it's
+			# Armbian went full megalomania in the meantime. They try to trick their users
+			# into thinking to run an 'Armbian 23.02.0-trunk.0072 Jammy' while in reality it's
 			# 'Ubuntu 22.04 Jammy' debootstraped with a certain version of Armbian's build
 			# scripts. The Xunlong copycats do something similarly stupid and report for
 			# example 'Orange Pi 1.0.6 Jammy' as distro. Let's fix this nonsense.
 			RealDistro="$(awk -F":\t" '/^Description/ {print $2}' <${ResultLog})"
 			OSCodename="$(awk -F":\t" '/^Codename/ {print $2}' <${ResultLog})"
-			grep -q "${OSCodename}" <<<"${RealDistro}" && echo "  * ${RealDistro} ${ARCH}" \
-				|| echo "  * ${RealDistro} (${OSCodename}) ${ARCH}"
+			grep -q "${OSCodename}" <<<"${RealDistro}" && echo "  * ${RealDistro} ${ARCH}" >>"${TempDir}/review" \
+				|| echo "  * ${RealDistro} (${OSCodename}) ${ARCH}" >>"${TempDir}/review"
 			;;
 		*)
-			echo "  * ${OperatingSystem}"
+			echo "  * ${OperatingSystem}" >>"${TempDir}/review"
 			;;
 	esac
 	ArmbianInfo="$(grep "^Armbian info:   " ${ResultLog} | sed 's/Armbian info:   /  * Build scripts: /')"
-	[ -z "${ArmbianInfo}" ] || echo "${ArmbianInfo}"
-	grep -i "^ Compiler:" ${ResultLog} | sed -e 's/^/  */'
-	grep -i "^openssl" ${ResultLog} | sed -e 's/^/  * /'
+	[ -z "${ArmbianInfo}" ] || echo "${ArmbianInfo}" >>"${TempDir}/review"
+	grep -i "^ Compiler:" ${ResultLog} | sed -e 's/^/  */' >>"${TempDir}/review"
+	grep -i "^openssl" ${ResultLog} | sed -e 's/^/  * /' >>"${TempDir}/review"
 	CONFIGHZ="$(awk -F" " '/CONFIG_HZ=/ {print $1}' <${ResultLog})"
-	[ -z "${CONFIGHZ}" ] && echo "  * Kernel ${KernelVersion}" || echo "  * Kernel ${KernelVersion} / ${CONFIGHZ}"
-	[ -z "${KernelInfo}" ] || echo -e "\n${KernelInfo}"
+	[ -z "${CONFIGHZ}" ] && echo "  * Kernel ${KernelVersion}" >>"${TempDir}/review" || echo "  * Kernel ${KernelVersion} / ${CONFIGHZ}" >>"${TempDir}/review"
+	[ -z "${KernelInfo}" ] || echo -e "\n${KernelInfo}" >>"${TempDir}/review"
+
+	# add review info to full info
+	echo -e "\n##########################################################################\n" >>${ResultLog}
+	sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" <"${TempDir}/review" >>${ResultLog}
+	UploadResults 2>/dev/null
+	case "${UploadURL}" in
+		http*)
+			echo -e "\n\n\n\n# ${DeviceName:-$HostName}\n\nTested on $(date -R). Full info: [${UploadURL}](${UploadURL})"
+			tail -n +4 "${TempDir}/review"
+			;;
+		*)
+			echo -e "\n\n\n"
+			cat "${TempDir}/review"
+			;;
+	esac
 
 	# device now ready for benchmarking
 	cat <<- EOF
@@ -6284,13 +6312,13 @@ CheckKernelVersion() {
 			fi
 		fi
 	fi
-	
+
 	case ${KernelVersionDigitsOnly} in
 		# EOL notifications and BSP kernel warnings
 		3.4.*)
 			# some SDKs/BSPs based on this version: Allwinner A10, A20, A83T, H2+/H3
 			case ${GuessedSoC} in
-				Allwinner*)
+				*Allwinner*)
 					PrintBSPWarning Allwinner
 					;;
 			esac
@@ -6299,10 +6327,10 @@ CheckKernelVersion() {
 		3.10.*)
 			# some SDKs/BSPs based on this version: Allwinner A64, H5, R40/V40, Amlogic S805 (Meson8b), Exynos 5422
 			case ${GuessedSoC} in
-				Allwinner*)
+				*Allwinner*)
 					PrintBSPWarning Allwinner
 					;;
-				Amlogic*)
+				*Amlogic*)
 					PrintBSPWarning Amlogic
 					;;
 				*5422*)
@@ -6313,7 +6341,7 @@ CheckKernelVersion() {
 			;;
 		3.14.*)
 			case ${GuessedSoC} in
-				Amlogic*)
+				*Amlogic*)
 					PrintBSPWarning Amlogic
 					;;
 			esac
@@ -6322,7 +6350,7 @@ CheckKernelVersion() {
 		3.16.*)
 			# some SDKs/BSPs based on this version: Amlogic S905 (ODROID C2)
 			case ${GuessedSoC} in
-				Amlogic*)
+				*Amlogic*)
 					PrintBSPWarning Amlogic
 					;;
 			esac
@@ -6346,10 +6374,10 @@ CheckKernelVersion() {
 				*5422*)
 					PrintBSPWarning Samsung
 					;;
-				Allwinner*)			
+				*Allwinner*)
 					PrintBSPWarning Allwinner
 					;;
-				Amlogic*)
+				*Amlogic*)
 					PrintBSPWarning Amlogic
 					;;
 				"RealTek RTD"*)
@@ -6433,6 +6461,13 @@ CheckKernelVersion() {
 					;;
 			esac
 			;;
+		5.15.*starfive)
+			case ${GuessedSoC} in
+				StarFive*)
+					PrintBSPWarning StarFive
+					;;
+			esac
+			;;
 	esac
 } # CheckKernelVersion
 
@@ -6451,7 +6486,7 @@ PrintBSPWarning() {
 			echo -e "${LRED}${BOLD}string suggests being a ${ShortKernelVersion} LTS release the code base differs way too much.${NC}"
 			echo -e "${LRED}${BOLD}See https://tinyurl.com/y8k3af73 and https://tinyurl.com/ywtfec7n for details.${NC}"
 			;;
-		Nvidia|NXP|RealTek|Samsung)
+		Nvidia|NXP|RealTek|Samsung|StarFive)
 			echo -e "${LRED}${BOLD}This device runs a $1 BSP kernel.${NC}"
 			;;
 		Rockchip)

@@ -4125,10 +4125,15 @@ GuessARMSoC() {
 	# https://www.cnx-software.com/2021/12/10/starfive-dubhe-64-bit-risc-v-core-12nm-2-ghz-processors/#comment-588823
 	#
 	# Recent Rockchip BSP kernels include something like this in dmesg output:
-	# rockchip-cpuinfo cpuinfo: SoC            : 35661000 --> https://forum.pine64.org/showthread.php?tid=14457&pid=101319#pid101319
-	# rockchip-cpuinfo cpuinfo: SoC            : 35681000 --> https://dev.t-firefly.com/forum.php?mod=redirect&goto=findpost&ptid=104549&pid=280260
-	# rockchip-cpuinfo cpuinfo: SoC            : 35682000 --> https://forum.banana-pi.org/t/banana-pi-bpi-r2-pro-open-soruce-router-board-with-rockchip-rk3568-run-debian-linux/
-	# rockchip-cpuinfo cpuinfo: SoC            : 35880000 --> http://ix.io/3Ypr (RK3588), http://ix.io/3XYo (RK3588S)
+	# rockchip-cpuinfo cpuinfo: SoC            : 35661000 --> Quartz64, RK3566 EVB2 LP4X V10 Board, Firefly RK3566-ROC-PC
+	# rockchip-cpuinfo cpuinfo: SoC            : 35662000 --> http://ix.io/4aXR
+	# rockchip-cpuinfo cpuinfo: SoC            : 35681000 --> only early RK3568 devices showed this silicon revision (e.g. Firefly RK3568-ROC-PC/AIO-3568J)
+	# rockchip-cpuinfo cpuinfo: SoC            : 35682000 --> RK3568-ROC-PC, NanoPi R5S, ODROID-M1, Mrkaio M68S, OWLVisionTech rk3568 opc Board, Radxa ROCK3A,
+	#                                                         Rockemd R68K 2.5G
+	# rockchip-cpuinfo cpuinfo: SoC            : 35880000 --> 9Tripod X3588S Board, Firefly ITX-3588J/ROC-RK3588S-PC, NanoPi R6S, HINLINK OWL H88K, Khadas Edge2,
+	#                                                         Orange Pi 5, ROCK 5A/5B, EDGE LP4x V1.0 BlueBerry, CoolPi 4B, Shaggy013 LP4x V1.2 H96_Max_v58 Board,
+	#                                                         EVB4 LP4 V10 Board, OWL H88K
+	# rockchip-cpuinfo cpuinfo: SoC            : 35881000 --> http://ix.io/4nwf (RK3588S, majority of Orange Pi 5 has this silicon revision)
 	#
 	# Amlogic: dmesg | grep 'soc soc0:'
 	# soc soc0: Amlogic Meson8 (S802) RevC (19 - 0:27ED) detected <-- Tronsmart S82
@@ -5037,6 +5042,10 @@ GuessSoCbySignature() {
 							*mt6739wa*)
 								# Mediatek MT6739WA, 4 x Cortex-A53 / r0p4 / fp asimd aes pmull sha1 sha2 crc32
 								echo "Mediatek MT6739WA"
+								;;
+							*mt7986a*|*bpi-r3*)
+								# Mediatek MT7986A, 4 x Cortex-A53 / r0p4 / fp asimd aes pmull sha1 sha2 crc32
+								echo "Mediatek MT7986A"
 								;;
 							*mt8735*)
 								# Mediatek MT8735, 4 x Cortex-A53 / r0p4 / fp asimd aes pmull sha1 sha2 crc32
@@ -6267,19 +6276,17 @@ CheckKernelVersion() {
 	elif [ "X${KernelVersionDigitsOnly}" != "X${LatestKernelVersion}" ]; then
 		# kernel version at least matches a supported kernel but is not most recent one
 		BSPDisclaimer="\n${LRED}${BOLD}But this version string doesn't matter that much since this device is not${NC}\n${LRED}${BOLD}running an official${KernelSuffix} Linux from kernel.org.${NC}\n"
+		UsedKernelRevision=$(cut -f3 -d. <<<"${KernelVersionDigitsOnly}")
+		LatestKernelRevision=$(cut -f3 -d. <<<"${LatestKernelVersion}")
+		RevisionDifference=$(( ${LatestKernelRevision:-0} - ${UsedKernelRevision:-0} ))
 		if [ "X${CheckEOL}" = "X${EOLDate}" -a "X${EOLDate}" != "Xfalse" ]; then
 			# EOL date is in the past
 			echo -e "${LRED}${BOLD}${ShortKernelVersion}${KernelSuffix} has reached end-of-life on ${EOLDate} with version ${LatestKernelVersion}.${NC}"
 			echo -e "${LRED}${BOLD}Your ${KernelVersionDigitsOnly} and all other ${ShortKernelVersion}${KernelSuffix} versions are unsupported since then.${NC}"
-		else
-			echo -e "${LRED}${BOLD}Kernel ${KernelVersionDigitsOnly} is not latest ${LatestKernelVersion}${KernelSuffix} that was released on ${LatestKernelDate}.${NC}\n"
 		fi
 		if [ "X${IsLTS}" = "Xtrue" ]; then
 			# warn about vulnerabilities only on LTS kernels since users of actively
 			# developed kernel branches should know what they're doing.
-			UsedKernelRevision=$(cut -f3 -d. <<<"${KernelVersionDigitsOnly}")
-			LatestKernelRevision=$(cut -f3 -d. <<<"${LatestKernelVersion}")
-			RevisionDifference=$(( ${LatestKernelRevision:-0} - ${UsedKernelRevision:-0} ))
 			if [ ${RevisionDifference} -ge 50 ]; then
 				echo -e "${LRED}${BOLD}Please check https://endoflife.date/linux for details. It is somewhat likely${NC}"
 				echo -e "${LRED}${BOLD}that a lot of exploitable vulnerabilities exist for this kernel as well as${NC}"
@@ -6298,6 +6305,9 @@ CheckKernelVersion() {
 				# 'Kernel 6.1.9 is not latest 6.1.10 LTS that was released on 2023-02-06'
 				:
 			fi
+		elif [ ${RevisionDifference} -gt 5 ]; then
+			# on non LTS kernels report version mismatch only if kernel revision difference is greater than 5
+			echo -e "${BOLD}Kernel ${KernelVersionDigitsOnly} is not latest ${LatestKernelVersion} that was released on ${LatestKernelDate}.${NC}\n"
 		fi
 	else
 		# kernel version seems to match most recent upstream kernel.
@@ -6461,10 +6471,13 @@ CheckKernelVersion() {
 					;;
 			esac
 			;;
-		5.15.*starfive)
+		5.15.*)
 			case ${GuessedSoC} in
 				StarFive*)
 					PrintBSPWarning StarFive
+					;;
+				*MT7986A*)
+					PrintBSPWarning MediaTek
 					;;
 			esac
 			;;
@@ -6486,7 +6499,7 @@ PrintBSPWarning() {
 			echo -e "${LRED}${BOLD}string suggests being a ${ShortKernelVersion} LTS release the code base differs way too much.${NC}"
 			echo -e "${LRED}${BOLD}See https://tinyurl.com/y8k3af73 and https://tinyurl.com/ywtfec7n for details.${NC}"
 			;;
-		Nvidia|NXP|RealTek|Samsung|StarFive)
+		MediaTek|Nvidia|NXP|RealTek|Samsung|StarFive)
 			echo -e "${LRED}${BOLD}This device runs a $1 BSP kernel.${NC}"
 			;;
 		Rockchip)

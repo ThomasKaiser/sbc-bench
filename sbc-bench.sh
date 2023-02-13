@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.9.18
+Version=0.9.19
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -4027,7 +4027,7 @@ GuessARMSoC() {
 	#       Cortex-A7 / r0p2: MediaTek MT6589/MT6588
 	#       Cortex-A7 / r0p3: Allwinner A31, MediaTek MT6572/MT6580/MT6582/MT6589/MT7623/MT8127/MT8135, Qualcomm MSM8610 (Snapdragon 200) / MSM8226/MSM8926 (Snapdragon 400), Samsung Exynos 5422
 	#       Cortex-A7 / r0p4: Allwinner A20, Exynos 5430, Mediatek MT6592
-	#       Cortex-A7 / r0p5: Allwinner A33/A83T/H2+/H3/H8/R16/R328/R40/S3/T113/V3/V3s/V40/V853, Broadcom BCM2836, Freescale/NXP i.MX7D/i.MX6 ULL, HiSilicon Hi351x/Hi3796M-V100/Hi3798M-V100, HiSilicon Kirin 920/925/928, MediaTek MT6595, Microchip SAMA7G54, Qualcomm MDM9607/MSM8909, Renesas RZ/N1, Rockchip RK3128/RK3228A/RK3229/RV1108/RV1109/RV1126, SigmaStar SSD201/SSD202D, Spreadtrum SC7731/SC8830, STMicroelectronics STM32MP157
+	#       Cortex-A7 / r0p5: Allwinner A33/A83T/H2+/H3/H8/R16/R328/R40/S3/T113/V3/V3s/V40/V853, Broadcom BCM2836, Freescale/NXP i.MX7D/i.MX6 ULL, HiSilicon Hi351x/Hi3796M-V100/Hi3798M-V100, HiSilicon Kirin 920/925/928, MediaTek MT6595, Microchip SAMA7G54, Qualcomm MDM9607/MSM8909, Renesas RZ/N1, Rockchip RK3126/RK3126B/RK3126C/RK3128/RK3228A/RK3229/RV1108/RV1109/RV1126, SigmaStar SSD201/SSD202D, Spreadtrum SC7731/SC8830, STMicroelectronics STM32MP157
 	#       Cortex-A8 / r1p3: TI OMAP3530/AM3703
 	#       Cortex-A8 / r1p7: TI Sitara AM3517
 	#       Cortex-A8 / r2p2: Samsung Exynos 3110 (S5PC110)
@@ -4051,7 +4051,7 @@ GuessARMSoC() {
 	#      Cortex-A17 / r0p0: MediaTek MT5890/MT6595
 	#      Cortex-A17 / r0p1: Rockchip RK3288
 	#      Cortex-A35 / r0p1: Mediatek MT8167B/MT6799
-	#      Cortex-A35 / r0p2: NXP i.MX8QXP, Rockchip RK1808/RK3308/RK3326/PX30
+	#      Cortex-A35 / r0p2: NXP i.MX8QXP, Rockchip RK1808/RK3308/RK3326/PX30/PX30S
 	#      Cortex-A35 / r1p0: Amlogic S805X2/S905Y4/S905W2
 	#      Cortex-A53 / r0p0: ARM Juno r0, Qualcomm Snapdragon 410 (MSM8916)
 	#      Cortex-A53 / r0p1: Exynos 5433, Qualcomm MSM8939
@@ -4135,6 +4135,9 @@ GuessARMSoC() {
 	#                                                         EVB4 LP4 V10 Board, OWL H88K
 	# rockchip-cpuinfo cpuinfo: SoC            : 35881000 --> http://ix.io/4nwf (RK3588S, majority of Orange Pi 5 has this silicon revision)
 	#
+	# RK 'open source' SoCs according to https://github.com/rockchip-linux/kernel/blob/develop-5.10/drivers/soc/rockchip/rockchip-cpuinfo.c (at least RV1108 and RK3588/RK3588s missing)
+	# PX30, PX30S, RK3126, RK3126B, RK3126C, RK3128, RK3288, RK3288W, RK3308, RK3308B, RK3308BS, RK3566, RK3568, RV1103, RV1106, RV1109 and RV1126
+	#
 	# Amlogic: dmesg | grep 'soc soc0:'
 	# soc soc0: Amlogic Meson8 (S802) RevC (19 - 0:27ED) detected <-- Tronsmart S82
 	# soc soc0: Amlogic Meson8b (S805) RevA (1b - 0:B72) detected <-- ODROID-C1 / S805-onecloud / Endless Computers Endless Mini / TRONFY MXQ S805
@@ -4190,7 +4193,7 @@ GuessARMSoC() {
 	# soc soc0: Amlogic Meson G12B (S922X) Revision 29:b (40:2) Detected <-- Beelink GT-King Pro
 	# soc soc0: Amlogic Meson G12B (S922X) Revision 29:c (40:2) Detected <-- ODROID-N2+ ('S922X-B')
 	# soc soc0: Amlogic Meson Unknown (Unknown) Revision 2a:e (c5:2) Detected <-- Amlogic Meson GXL (S905L2) X7 5G Tv Box / Amlogic Meson GXL (S905X) P212 Development Board
-	# soc soc0: Amlogic Meson SM1 (S905D3) Revision 2b:b (1:2) Detected <-- AMedia X96 Max+/Air / HK1 Box/Vontar X3 / SEI Robotics SEI610
+	# soc soc0: Amlogic Meson SM1 (S905D3) Revision 2b:b (1:2) Detected <-- AMedia X96 Max+/Air / HK1 Box/Vontar X3 / SEI Robotics SEI610 / X96 Max Plus Q1
 	# soc soc0: Amlogic Meson SM1 (Unknown) Revision 2b:b (1:2) Detected <-- Shenzhen Amediatech Technology Co. Ltd X96 Air / AMedia X96 Max+ / SEI Robotics SEI610 / HK1 Box/Vontar X3
 	# soc soc0: Amlogic Meson SM1 (S905D3) Revision 2b:c (4:2) Detected <-- Khadas VIM3L / https://www.spinics.net/lists/arm-kernel/msg848718.html
 	# soc soc0: Amlogic Meson SM1 (S905X3) Revision 2b:c (10:2) Detected <-- AMedia X96 Max+ / H96 Max X3 / ODROID-C4 / ODROID-HC4 / HK1 Box/Vontar X3 / SEI Robotics SEI610 / Shenzhen Amediatech Technology Co. Ltd X96 Max/Air / Shenzhen CYX Industrial Co. Ltd A95XF3-AIR / Sinovoip BANANAPI-M5 / Tanix TX3 (QZ) / Ugoos X3
@@ -4788,19 +4791,31 @@ GuessSoCbySignature() {
 			;;
 		00A7r0p500A7r0p500A7r0p500A7r0p5)
 			# Allwinner sun8i: could be Allwinner H3/H2+, R40/V40 or A33/R16 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
-			# or Spreadtrum SC7731/SC8830 or Rockchip RV1126/RK3128
+			# or Spreadtrum SC7731/SC8830 or Rockchip RV1126/RK3126/RK3126B/RK3126C/RK3128
 			case "${DTCompatible}" in
 				*rv1126*)
 					# Rockchip RV1126 | 4 x Cortex-A7 / r0p5
 					echo "Rockchip RV1126"
+					;;
+				*rk3126b*)
+					# Rockchip RK3126B | 4 x Cortex-A7 / r0p5
+					echo "Rockchip RK3126B"
+					;;
+				*rk3126c*)
+					# Rockchip RK3126C | 4 x Cortex-A7 / r0p5
+					echo "Rockchip RK3126C"
+					;;
+				*rk3126*)
+					# Rockchip RK3126 | 4 x Cortex-A7 / r0p5
+					echo "Rockchip RK3126"
 					;;
 				*rk3128*)
 					# Rockchip RK3128 | 4 x Cortex-A7 / r0p5
 					echo "Rockchip RK3128"
 					;;
 				*rockchip*)
-					# Rockchip RV1126 or RK3128 | 4 x Cortex-A7 / r0p5
-					echo "Rockchip RV1126 or RK3128"
+					# Rockchip RV1126 or RK3126/RK3126B/RK3126C or RK3128 | 4 x Cortex-A7 / r0p5
+					echo "Rockchip RV1126 or RK3126/RK3126B/RK3126C or RK3128"
 					;;
 				*sun8i-r40*)
 					# R40/V40, 4 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
@@ -5247,7 +5262,7 @@ GuessSoCbySignature() {
 			echo "Rockchip RK1808"
 			;;
 		00A35r0p200A35r0p200A35r0p200A35r0p2)
-			# RK3308/RK3326/PX30, 4 x Cortex-A35 / r0p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32
+			# RK3308/RK3326/PX30/PX30S, 4 x Cortex-A35 / r0p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			# or i.MX8QXP, 4 x Cortex-A35 / r0p2 / https://gist.github.com/stravs/f82c8a0af276b2d1e6b57235d048f027
 			case "${DTCompatible}" in
 				*rk3308*)
@@ -5256,11 +5271,14 @@ GuessSoCbySignature() {
 				*rk3326*)
 					echo "Rockchip RK3326"
 					;;
+				*px30s*)
+					echo "Rockchip PX30S"
+					;;
 				*px30*)
-					echo "Rockchip PX30"
+					echo "Rockchip PX30/PX30S"
 					;;
 				*rockchip*)
-					echo "Rockchip RK3308/RK3326/PX30"
+					echo "Rockchip RK3308/RK3326/PX30/PX30S"
 					;;
 				*)
 					echo "NXP i.MX8QXP"
@@ -6275,7 +6293,7 @@ CheckKernelVersion() {
 		echo -e "${LRED}${BOLD}tons of unfixed bugs. Better upgrade to a supported version ASAP.${NC}"
 	elif [ "X${KernelVersionDigitsOnly}" != "X${LatestKernelVersion}" ]; then
 		# kernel version at least matches a supported kernel but is not most recent one
-		BSPDisclaimer="\n${LRED}${BOLD}But this version string doesn't matter that much since this device is not${NC}\n${LRED}${BOLD}running an official${KernelSuffix} Linux from kernel.org.${NC}\n"
+		BSPDisclaimer="\n${BOLD}But this version string doesn't matter that much since this device is not${NC}\n${BOLD}running an official${KernelSuffix} Linux from kernel.org.${NC}\n"
 		UsedKernelRevision=$(cut -f3 -d. <<<"${KernelVersionDigitsOnly}")
 		LatestKernelRevision=$(cut -f3 -d. <<<"${LatestKernelVersion}")
 		RevisionDifference=$(( ${LatestKernelRevision:-0} - ${UsedKernelRevision:-0} ))
@@ -6283,6 +6301,9 @@ CheckKernelVersion() {
 			# EOL date is in the past
 			echo -e "${LRED}${BOLD}${ShortKernelVersion}${KernelSuffix} has reached end-of-life on ${EOLDate} with version ${LatestKernelVersion}.${NC}"
 			echo -e "${LRED}${BOLD}Your ${KernelVersionDigitsOnly} and all other ${ShortKernelVersion}${KernelSuffix} versions are unsupported since then.${NC}"
+		elif [ ${RevisionDifference} -gt 5 ]; then
+			# report version mismatch only if kernel revision difference is greater than 5
+			echo -e "${BOLD}Kernel ${KernelVersionDigitsOnly} is not latest ${LatestKernelVersion}${KernelSuffix} that was released on ${LatestKernelDate}.${NC}\n"
 		fi
 		if [ "X${IsLTS}" = "Xtrue" ]; then
 			# warn about vulnerabilities only on LTS kernels since users of actively
@@ -6305,13 +6326,10 @@ CheckKernelVersion() {
 				# 'Kernel 6.1.9 is not latest 6.1.10 LTS that was released on 2023-02-06'
 				:
 			fi
-		elif [ ${RevisionDifference} -gt 5 ]; then
-			# on non LTS kernels report version mismatch only if kernel revision difference is greater than 5
-			echo -e "${BOLD}Kernel ${KernelVersionDigitsOnly} is not latest ${LatestKernelVersion} that was released on ${LatestKernelDate}.${NC}\n"
 		fi
 	else
 		# kernel version seems to match most recent upstream kernel.
-		BSPDisclaimer="\n${LRED}${BOLD}But this version string doesn't matter that much since this device is not${NC}\n${LRED}${BOLD}running an official${KernelSuffix} Linux from kernel.org.${NC}\n"
+		BSPDisclaimer="\n${BOLD}But this version string doesn't matter that much since this device is not${NC}\n${BOLD}running an official${KernelSuffix} Linux from kernel.org.${NC}\n"
 		if [ "X${CheckEOL}" = "X${EOLDate}" -a "X${EOLDate}" != "Xfalse" ]; then
 			# EOL date is in the past
 			echo -e "${LRED}${BOLD}${ShortKernelVersion}${KernelSuffix} has reached end-of-life on ${EOLDate}. ${KernelVersionDigitsOnly} is unsupported since then.${NC}"
@@ -6488,33 +6506,33 @@ PrintBSPWarning() {
 	echo -e "${BSPDisclaimer}"
 	case $1 in
 		Allwinner)
-			echo -e "${LRED}${BOLD}This device runs an Allwinner BSP kernel forward ported since ages based on${NC}"
-			echo -e "${LRED}${BOLD}unknown sources. While the version string suggests being a ${ShortKernelVersion} LTS release${NC}"
-			echo -e "${LRED}${BOLD}the code base differs way too much. Better expect tons of unfixed bugs and${NC}"
-			echo -e "${LRED}${BOLD}vulnerabilities hiding in this vendor kernel.${NC}"
+			echo -e "${BOLD}This device runs an Allwinner BSP kernel forward ported since ages based on${NC}"
+			echo -e "${BOLD}unknown sources. While the version string suggests being a ${ShortKernelVersion} LTS release${NC}"
+			echo -e "${BOLD}the code base differs way too much. Better expect tons of unfixed bugs and${NC}"
+			echo -e "${BOLD}vulnerabilities hiding in this vendor kernel.${NC}"
 			;;
 		Amlogic)
-			echo -e "${LRED}${BOLD}This device runs an Amlogic BSP kernel based on an ancient Linux or Android${NC}"
-			echo -e "${LRED}${BOLD}kernel version that has been forward ported since ages. While the version${NC}"
-			echo -e "${LRED}${BOLD}string suggests being a ${ShortKernelVersion} LTS release the code base differs way too much.${NC}"
-			echo -e "${LRED}${BOLD}See https://tinyurl.com/y8k3af73 and https://tinyurl.com/ywtfec7n for details.${NC}"
+			echo -e "${BOLD}This device runs an Amlogic BSP kernel based on an ancient Linux or Android${NC}"
+			echo -e "${BOLD}kernel version that has been forward ported since ages. While the version${NC}"
+			echo -e "${BOLD}string suggests being a ${ShortKernelVersion} LTS release the code base differs way too much.${NC}"
+			echo -e "${BOLD}See https://tinyurl.com/y8k3af73 and https://tinyurl.com/ywtfec7n for details.${NC}"
 			;;
 		MediaTek|Nvidia|NXP|RealTek|Samsung|StarFive)
-			echo -e "${LRED}${BOLD}This device runs a $1 BSP kernel.${NC}"
+			echo -e "${BOLD}This device runs a $1 BSP kernel.${NC}"
 			;;
 		Rockchip)
-			echo -e "${LRED}${BOLD}This device runs a Rockchip BSP kernel based on a mixture of various sources${NC}"
-			echo -e "${LRED}${BOLD}being just forward ported since ages.${NC}"
+			echo -e "${BOLD}This device runs a Rockchip BSP kernel based on a mixture of various sources${NC}"
+			echo -e "${BOLD}being just forward ported since ages.${NC}"
 			;;
 		RockchipGKI)
-			echo -e "${LRED}${BOLD}This device runs a Rockchip BSP kernel based on a mixture of Android GKI and${NC}"
-			echo -e "${LRED}${BOLD}other sources. Also some community attempts to do version string cosmetics${NC}"
-			echo -e "${LRED}${BOLD}might have happened, see https://tinyurl.com/2p8fuubd for example. To examine${NC}"
-			echo -e "${LRED}${BOLD}how far away this ${KernelVersionDigitsOnly} is from an official LTS of same version someone${NC}"
-			echo -e "${LRED}${BOLD}would have to reapply Rockchip's thousands of patches to a clean ${KernelVersionDigitsOnly} LTS.${NC}"
+			echo -e "${BOLD}This device runs a Rockchip BSP kernel based on a mixture of Android GKI and${NC}"
+			echo -e "${BOLD}other sources. Also some community attempts to do version string cosmetics${NC}"
+			echo -e "${BOLD}might have happened, see https://tinyurl.com/2p8fuubd for example. To examine${NC}"
+			echo -e "${BOLD}how far away this ${KernelVersionDigitsOnly} is from an official LTS of same version someone${NC}"
+			echo -e "${BOLD}would have to reapply Rockchip's thousands of patches to a clean ${KernelVersionDigitsOnly} LTS.${NC}"
 			;;
 		*)
-			echo -e "${LRED}${BOLD}This device runs a vendor kernel most probably forward ported since ages.${NC}"
+			echo -e "${BOLD}This device runs a vendor kernel most probably forward ported since ages.${NC}"
 			;;
 	esac
 } # PrintBSPWarning

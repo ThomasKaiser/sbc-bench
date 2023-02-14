@@ -2200,6 +2200,7 @@ CheckMissingPackages() {
 	command -v curl >/dev/null 2>&1 || echo -e "curl \c"
 	command -v dmidecode >/dev/null 2>&1 || echo -e "dmidecode \c"
 	command -v lshw >/dev/null 2>&1 || echo -e "lshw \c"
+	command -v strings >/dev/null 2>&1 || echo -e "binutils \c"
 	command -v mbw >/dev/null 2>&1 || echo -e "mbw \c"
 	command -v powercap-info >/dev/null 2>&1
 	[ $? -ne 0 -a -d /sys/devices/virtual/powercap ] && echo -e "powercap-utils \c"
@@ -6300,7 +6301,7 @@ CheckKernelVersion() {
 		if [ "X${CheckEOL}" = "X${EOLDate}" -a "X${EOLDate}" != "Xfalse" ]; then
 			# EOL date is in the past
 			echo -e "${LRED}${BOLD}${ShortKernelVersion}${KernelSuffix} has reached end-of-life on ${EOLDate} with version ${LatestKernelVersion}.${NC}"
-			echo -e "${LRED}${BOLD}Your ${KernelVersionDigitsOnly} and all other ${ShortKernelVersion}${KernelSuffix} versions are unsupported since then.${NC}"
+			echo -e "${LRED}${BOLD}Your ${KernelVersionDigitsOnly} and all other ${ShortKernelVersion}${KernelSuffix} revisions are unsupported since then.${NC}"
 		elif [ ${RevisionDifference} -gt 5 ]; then
 			# report version mismatch only if kernel revision difference is greater than 5
 			echo -e "${BOLD}Kernel ${KernelVersionDigitsOnly} is not latest ${LatestKernelVersion}${KernelSuffix} that was released on ${LatestKernelDate}.${NC}\n"
@@ -6479,13 +6480,13 @@ CheckKernelVersion() {
 					# With RK3399 we need to differentiate between mainline and BSP kernel, for
 					# example CONFIG_HZ (not reliable once someone gets the idea to switch BSP
 					# settings from 300 to 250) or microvolts entries below /sys/devices/platform/
-					grep -q vcc_ddr <<<"${OPPTables}" && PrintBSPWarning RockchipGKI
+					dmesg | grep -q pvtm-volt-sel && PrintBSPWarning RockchipGKI
 					;;
 				*RK3566*|*RK3568*)
 					# With RK3566/RK3568 same problem: how to differentiate between latest
 					# RK BSP based on 5.10.66/5.10.110 and former mainlining efforts?  Check
 					# dmesg output for PVTM for example
-					grep -q 'cpu cpu0: pvtm' <<<"${DMESG}" && PrintBSPWarning RockchipGKI
+					dmesg | grep -q 'cpu cpu0: pvtm' && PrintBSPWarning RockchipGKI
 					;;
 			esac
 			;;

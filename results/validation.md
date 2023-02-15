@@ -172,7 +172,7 @@
 | [3Ug9](3Ug9.txt) | v0.9.3 Hardkernel ODROID-M1 | 0%/0% | 7.3Gi/7.0Gi | X | X | X | X | 2% | 0% | |
 | [3VME](3VME.txt) | v0.9.3 RPi 4 Model B Rev 1.1 / BCM2711 | 1.9%/0.2% | 967Mi/807Mi | X | X | X | X | <span style=color:red>**12%**</span> | 0% | |
 | [3Vdt](3Vdt.txt) | v0.9.3 Khadas VIM3L | 0%/0% | 1.8Gi/1.1Gi | X | X | X | X | 4% | 3% | |
-| [3VfL](3VfL.txt) | v0.9.3 Khadas VIM3 | 0%/0.2% | 3.7Gi/2.7Gi | X | X | X | X | 1% | 0% | |
+| <del>[3VfL](3VfL.txt)</del> | <del>v0.9.3 Khadas VIM3 </del> | <del>0%/0.2%</del> | <del>3.7Gi/2.7Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 1%</del> | <del> 0%</del> | |
 | <del>[3Wq0](3Wq0.txt)</del> | <del>v0.9.3 Khadas VIM4 </del> | <del>0%/0.3%</del> | <del>7.8Gi/6.0Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 2%</del> | <del> 0%</del> | |
 | [3Wvv](3Wvv.txt) | v0.9.4 Khadas VIM4 | 0%/0.2% | 7.8Gi/6.6Gi | X | X | X | X | 2% | 0% | |
 | [3X9q](3X9q.txt) | v0.9.4 Rockchip RK3288 Asus Tinker Boar | 0.3%/0.2% | 2.0Gi/1.8Gi | X | X | X | X | 2% | 0% | |
@@ -240,3 +240,4 @@
 | [4knR](4knR.txt) | v0.9.9 Allwinner D1 Nezha | 8.3%/6.1% | 980Mi/859Mi | X | X | X | X | <span style=color:red> 9%</span> | 2% | [check log](4knR.txt) |
 | [4kor](4kor.txt) | v0.9.9 Rockchip RK3318 BOX | 0%/2.1% | 1.9Gi/1.4Gi | X | X | X | X | 2% | 0% | |
 | [4nt8](4nt8.txt) | v0.9.13 Beijin Cloud Times S13XS / Atom | 0.2%/0.2% | 3.8Gi/3.5Gi | X | X | X | X | 2% | 0% | |
+| [4o1A](4o1A.txt) | v0.9.19 Khadas VIM3 | 0%/0% | 3.7Gi/3.5Gi | X | X | X | X | 1% | 0% | |

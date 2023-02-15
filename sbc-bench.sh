@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.9.19
+Version=0.9.20
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -164,7 +164,7 @@ Main() {
 				# The last 2 arguments are optional: sleep time (defaults to 0.8) and
 				# count of samples (defaults to 30). The defaults already put significant
 				# load on the device (compare http://ix.io/3E91 and http://ix.io/3Ebd) so
-				# to monitor idle consumption better choose 5 and 30 and deal with a 150
+				# to monitor idle consumption better choose 4.8 and 30 and deal with a 150
 				# seconds average value.
 				MonitorNetio "$2" "$3" "$4" "$5" "$6"
 				exit 0
@@ -2755,7 +2755,7 @@ GetInputVoltage() {
 		in_voltage2_raw)
 			case "${DTCompatible}" in
 				*nanopi-r6s*)
-					# NaniPi R6S running with Rockchip's 5.10 BSP kernel
+					# NanoPi R6S running with Rockchip's 5.10 BSP kernel
 					awk '{printf ("%0.2f",$1/206.2); }' <"${1}" | sed 's/,/./'
 					;;
 			esac
@@ -3052,7 +3052,11 @@ RunTinyMemBench() {
 
 	echo -e "Executing tinymembench...\c"
 	echo -e "System health while running tinymembench:\n" >${MonitorLog}
-	/bin/bash "${PathToMe}" -m $(( 40 * ${#ClusterConfig[@]} )) >>${MonitorLog} &
+	if [ "X${MODE}" = "Xextensive" ]; then
+		/bin/bash "${PathToMe}" -m $(( 40 * ${#ClusterConfig[@]} )) >>${MonitorLog} &
+	else
+		/bin/bash "${PathToMe}" -m $(( 10 * ${#ClusterConfig[@]} )) >>${MonitorLog} &
+	fi
 	MonitoringPID=$!
 	echo -n "" >${TempLog}
 	for i in $(seq 0 $(( ${#ClusterConfig[@]} -1 )) ) ; do
@@ -3277,8 +3281,16 @@ RunCpuminerBenchmark() {
 	kill ${MinerPID} ${MonitoringPID}
 	echo -e "\n##########################################################################\n" >>${ResultLog}
 	sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" <${TempLog} >>${ResultLog}
-	# Summarized 'Total:' scores
-	TotalScores="$(awk -F" " '/Total:/ {print $4}' ${TempLog} | sort -r -n | uniq | tr '\n' ', ' | sed 's/,$//')"
+	# Summarized 'Total:' scores, we need to skip the 1st or even better the two first since
+	# sometimes significantly lower which could then be misinterpreted as silent throttling
+	MinerRuns=$(grep -c " Total:" ${TempLog})
+	if [ ${MinerRuns:-0} -ge 10 ]; then
+		# skip two first scores when more than 10 cpuminer scores could be generated
+		TotalScores="$(awk -F" " '/Total:/ {print $4}' ${TempLog} | tail -n +3 | sort -r -n | uniq | tr '\n' ', ' | sed 's/,$//')"
+	else
+		# skip only 1st score
+		TotalScores="$(awk -F" " '/Total:/ {print $4}' ${TempLog} | tail -n +2 | sort -r -n | uniq | tr '\n' ', ' | sed 's/,$//')"
+	fi
 	echo -e "\nTotal Scores: ${TotalScores}" >>${ResultLog}
 	CpuminerScore="$(awk -F"," '{print $2}' <<<"${TotalScores}")"
 } # RunCpuminerBenchmark
@@ -4357,7 +4369,7 @@ GuessARMSoC() {
 	AmlogicGuess="Amlogic Meson$(grep -i " detected$" <<<"${DMESG}" | awk -F"Amlogic Meson" '/Amlogic Meson/ {print $2}' | head -n1)"
 	AMLS4Guess="$(awk -F"= " '/cpu_version: chip version/ {print $2}' <<<"${DMESG}")"
 	
-	if [ "X${RockchipGuess}" != "X" ]; then
+	if [ "X${RockchipGuess}" != "X" -a "X${RockchipGuess}" != "X0" ]; then
 		echo "Rockchip RK$(cut -c-4 <<<"${RockchipGuess}") (${RockchipGuess})" | sed 's| RK3588 | RK3588/RK3588s |'
 	elif [ "X${AmlogicGuess}" != "XAmlogic Meson" ]; then
 		echo "${AmlogicGuess}" | sed -e 's/GXL (Unknown) Revision 21:b (2:2)/GXL (S905D) Revision 21:b (2:2)/' \
@@ -6208,6 +6220,21 @@ ProvideReviewInfo() {
 			;;
 	esac
 
+	# throttling check and routine waiting for the board to cool down since otherwise the
+	# next monitoring step will report throttling even if none happens from now on.
+	if [ -r /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq ]; then
+		cpuinfo_max_freq=$(cat /sys/devices/system/cpu/cpu?/cpufreq/cpuinfo_max_freq)
+		cpuinfo_cur_freq=$(cat /sys/devices/system/cpu/cpu?/cpufreq/cpuinfo_cur_freq)
+		[ "X${cpuinfo_max_freq}" != "X${cpuinfo_cur_freq}" ] && echo -e "\nWaiting for the device to cool down:     \c"
+		while [ "X${cpuinfo_max_freq}" != "X${cpuinfo_cur_freq}" ]; do
+			TempNow=$(ReadSoCTemp)
+			echo -e "\x08\x08\x08\x08\x08 ${TempNow}°C\c"
+			sleep 2
+			cpuinfo_max_freq=$(cat /sys/devices/system/cpu/cpu?/cpufreq/cpuinfo_max_freq)
+			cpuinfo_cur_freq=$(cat /sys/devices/system/cpu/cpu?/cpufreq/cpuinfo_cur_freq)
+		done
+	fi
+
 	# device now ready for benchmarking
 	cat <<- EOF
 	
@@ -6216,10 +6243,21 @@ ProvideReviewInfo() {
 	and too high background activity all potentially invalidating benchmark scores.
 	EOF
 
+	# Now switch to monitoring mode, report consumption if Netio powermeter is available
+	if [ -n "${OutputCurrent}" ]; then
+		# We are in Netio monitoring mode
+		NetioConsumptionFile="${TempDir}/netio.current"
+		echo -n $(( $(awk '{printf ("%0.0f",$1/10); }' <<<"${OutputCurrent[$(( ${NetioSocket} - 1 ))]}" ) * 10 )) >"${NetioConsumptionFile}"
+		export NetioConsumptionFile
+		/bin/bash "${PathToMe}" -N ${NetioDevice} ${NetioSocket} ${NetioConsumptionFile} "4.8" "30" >/dev/null 2>&1 &
+		NetioMonitoringPID=$!
+	fi
+
 	trap "FinalReporting ; exit 0" 0 1 2 3 15
 	rm "${TempDir}"/*time_in_state*
 	CheckTimeInState before
 	/bin/bash "${PathToMe}" -m 60 >"${TempDir}/review" &
+	MonitoringPID=$!
 	echo ""
 	sleep 1
 	tail -f "${TempDir}/review"
@@ -6228,6 +6266,7 @@ ProvideReviewInfo() {
 FinalReporting() {
 	trap "rm -rf \"${TempDir}\" ; exit 0" 0 1 2 3 15
 	echo -e "\n\nCleaning up...\c"
+	kill ${NetioMonitoringPID} ${MonitoringPID} 2>/dev/null
 	CheckTimeInState after
 	CheckClockspeedsAndSensors
 	ClockspeedsNow="$(cat "${TempDir}/cpufreq" | sed -e 's/^/    /')"
@@ -6317,7 +6356,7 @@ CheckKernelVersion() {
 				echo -e "${LRED}${BOLD}Please check https://endoflife.date/linux for details. It is somewhat likely${NC}"
 				echo -e "${LRED}${BOLD}that some exploitable vulnerabilities exist for this kernel as well as many${NC}"
 				echo -e "${LRED}${BOLD}unfixed bugs. Better upgrade to a supported version.${NC}"
-			elif [ ${RevisionDifference} -ge 5 ]; then
+			elif [ ${RevisionDifference} -gt 5 ]; then
 				echo -e "${LRED}${BOLD}Please check https://endoflife.date/linux for details. It is somewhat likely${NC}"
 				echo -e "${LRED}${BOLD}some kernel bugs have been fixed in the meantime and maybe vulnerabilities${NC}"
 				echo -e "${LRED}${BOLD}as well.${NC}"

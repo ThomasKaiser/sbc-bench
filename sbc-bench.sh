@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.9.20
+Version=0.9.21
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -42,7 +42,7 @@ Main() {
 	[ -r "${ProcCPUFile}" ] && ProcCPU="$(cat "${ProcCPUFile}")"
 
 	# check in which mode we're supposed to run
-	while getopts 'chjkmtTrsgNPG' c ; do
+	while getopts 'chjkmtTrsSgNPG' c ; do
 		case ${c} in
 			m)
 				# monitoring mode
@@ -58,6 +58,11 @@ Main() {
 				# Run Stockfish test (NEON/SSE/AVX/RAM)
 				NeuralNetwork=$2
 				ExecuteStockfish=yes
+				;;
+			S)
+				# check storage
+				CheckPCIeAndStorage | sort -n
+				exit 0
 				;;
 			h)
 				# print help
@@ -2213,6 +2218,11 @@ CheckMissingPackages() {
 	if [ "X${MODE}" = "Xgb" ]; then
 		command -v wget >/dev/null 2>&1 || echo -e "wget \c"
 		command -v links >/dev/null 2>&1 || echo -e "links \c"
+	fi
+	if [ "X${MODE}" = "Xreview" ]; then
+		command -v lspci >/dev/null 2>&1 || echo -e "pciutils \c"
+		command -v lsusb >/dev/null 2>&1 || echo -e "usbutils \c"
+		command -v smartctl >/dev/null 2>&1 || echo -e "smartmontools \c"
 	fi
 } # CheckMissingPackages
 
@@ -6179,6 +6189,18 @@ ProvideReviewInfo() {
 		echo -e "\n### Clockspeeds${ThrottlingWarning} (idle vs. heated up):\n\nBefore at ${InitialTemp}°C:\n\n${ClockspeedsBefore}\n\nAfter at ${TempNow}°C:\n\n${ClockspeedsAfter}" >>"${TempDir}/review"
 	fi
 
+	# PCIe and storage devices, important stuff like downgraded PCIe link width/speed,
+	# SMART errors, negotiated USB speeds, worn out SSDs and so on
+	PCIeAndStorage="$(CheckPCIeAndStorage | sort -n)"
+	if [ "X${PCIeAndStorage}" != "X" ]; then
+		grep -q -E "as /dev/sd|as /dev/nvme" <<<"${PCIeAndStorage}"
+		if [ $? -eq 0 ]; then
+			echo -e "\n### Attached PCIe and storage devices:\n\n${PCIeAndStorage}" >>"${TempDir}/review"
+		else
+			echo -e "\n### Attached PCIe devices:\n\n${PCIeAndStorage}" >>"${TempDir}/review"
+		fi
+	fi
+
 	# software versions
 	echo -e "\n### Software versions:\n" >>"${TempDir}/review"
 	case "${OperatingSystem}" in
@@ -6606,6 +6628,184 @@ PrintKernelInfo() {
 	fi
 	echo ""
 } # PrintKernelInfo
+
+CheckPCIeAndStorage() {
+	# update-smart-drivedb
+	lspci -Q -mm | grep controller | while read ; do
+		unset DeviceWarning
+		BusAddress="$(awk -F" " '{print $1}' <<<"${REPLY}")"
+		ControllerType="$(awk -F'"' '{print $2}' <<<"${REPLY}")"
+		case "${ControllerType}" in
+			"Encryption"*|"VGA compatible"*|"Serial bus"*|"Communication"*|"Signal processing"*|"Memory"*)
+				# ignore since internal mainboard components
+				:
+				;;
+			*)
+				# check device
+				DeviceName="$(sed 's/Advanced Micro Devices,/AMD/' <<<"${REPLY}" | awk -F'"' '{print $4}' | cut -f1 -d' ') $(awk -F'"' '{print $6}' <<<"${REPLY}" | sed -e 's/ SSD//' -e 's/ Controller//')"
+				PCIeDetails="$(lspci -vv -s ${BusAddress} 2>/dev/null)"
+				LnkSta="$(awk -F"\t" '/LnkSta:/ {print $4}' <<<"${PCIeDetails}" | awk -F", " '{print $1", "$2}')"
+				if [ "X${LnkSta}" != "X" ]; then
+					# only report devices for which a link state can be determined
+					if [ "X${ControllerType}" = "XNon-Volatile memory controller" ]; then
+						# omit driver information since it's nvme anyway
+						unset AdditionalInfo
+						# try to get nvme device node to query drive model by SMART
+						PathGuess="$(ls /dev/disk/by-path/*${BusAddress}-nvme-1)"
+						if [ -h "${PathGuess}" ]; then
+							# try to query via SMART
+							NVMeDevice="$(readlink "${PathGuess}")"
+							CheckSMARTData "/dev/${NVMeDevice##*/}"
+						fi
+					else
+						AdditionalInfo=", driver in use: $(awk -F": " '/Kernel driver in use:/ {print $2}' <<<"${PCIeDetails}")"
+					fi
+					if [ "X${DeviceWarning}" = "XTRUE" ]; then
+						echo -e "  * ${LRED}${DeviceName}: ${LnkSta}${AdditionalInfo}${NC}"
+					else
+						echo -e "  * ${DeviceName}: ${LnkSta}${AdditionalInfo}"
+					fi
+				fi
+				;;
+		esac
+	done
+	if [ -b /dev/sda ]; then
+		for SATAorUSB in /dev/sd? ; do
+			unset DeviceWarning
+			PathInfo="$(ls -l /dev/disk/by-path/ | grep "${SATAorUSB##*/}$")"
+			UdevInfo="$(udevadm info -a -n ${SATAorUSB} 2>/dev/null)"
+			Driver="$(awk -F'"' '/DRIVERS==/ {print $2}' <<<"${UdevInfo}" | grep -E 'uas|usb-storage|ahci')"
+			case "${Driver}" in
+				ahci)
+					# (S)ATA attached
+					CheckSMARTData "${SATAorUSB}"
+					;;
+				usb-storage|uas)
+					# USB attached
+					CheckSMARTData "${SATAorUSB}"
+					if [ "X${DeviceName}" = "X${DeviceToCheck}" ]; then
+						# no SMART support or SMART query failed, we need to find a fallback name
+						DeviceVendor="$(awk -F'"' '/ATTRS{vendor}/ {print $2}' <<<"${UdevInfo}" | awk '{$1=$1};1')"
+						if [ "X${DeviceVendor}" = "X" ]; then
+							# this doesn't work either so let's lookup IDs in usbutils' database
+							idProduct="$(awk -F'"' '/ATTRS{idProduct}/ {print $2}' <<<"${UdevInfo}" | head -n1)"
+							idVendor="$(awk -F'"' '/ATTRS{idVendor}/ {print $2}' <<<"${UdevInfo}" | head -n1)"
+							LsusbGuess="$(lsusb | awk -F"${idVendor}:${idProduct} " "/${idVendor}:${idProduct} / {print \$2}")"
+							if [ "X${LsusbGuess}" = "X" ]; then
+								DeviceName="[unknown device] as ${DeviceToCheck}"
+							else
+								DeviceName="${LsusbGuess} as ${DeviceToCheck}"
+							fi
+						else
+							# construct device name from ATTRS{vendor}+ATTRS{model} udev info
+							DeviceName="${DeviceVendor}$(awk -F'"' '/ATTRS{model}/ {print $2}' <<<"${UdevInfo}" | awk '{$1=$1};1') as ${DeviceToCheck}"
+						fi
+					fi
+					NegotiatedSpeed="$(awk -F'"' '/ATTRS{speed}/ {print $2}' <<<"${UdevInfo}" | head -n1)"
+					DeviceInfo="USB, Driver=${Driver}, ${NegotiatedSpeed}M"
+					;;
+			esac
+			if [ "X${DeviceWarning}" = "XTRUE" ]; then
+				echo -e "  * ${LRED}${DeviceName%%*( )}: ${DeviceInfo}${AdditionalInfo}${NC}"
+			else
+				echo -e "  * ${DeviceName%%*( )}: ${DeviceInfo}${AdditionalInfo}"
+			fi
+		done
+	fi
+} # CheckPCIeAndStorage
+
+CheckSMARTData() {
+	DeviceToCheck="$1"
+	SMARTInfo="$(smartctl -j -i ${DeviceToCheck} 2>/dev/null)"
+	grep -q "model_name" <<<"${SMARTInfo}"
+	if [ $? -eq 0 ]; then
+		# use SMART data
+		ProtocolInfo="$(awk -F'"' '/"info_name"/ {print $4}' <<<"${SMARTInfo}")"
+		Protocol="$(awk -F'"' '/"protocol"/ {print $4}' <<<"${SMARTInfo}")"
+		FirmwareVersion="$(awk -F'"' '/"firmware_version"/ {print $4}' <<<"${SMARTInfo}")"
+		case ${Protocol} in
+			NVMe)
+				# we can use the standardized NVMe SMART attributes
+				SMARTData="$(smartctl -j -a ${DeviceToCheck} 2>/dev/null)"
+				DeviceName="$(awk -F'"' '/"model_name"/ {print $4}' <<<"${SMARTInfo}") SSD as ${ProtocolInfo}"
+				PercentageUsed="$(awk -F": " '/"percentage_used"/ {print $2}' <<<"${SMARTData}" | sed 's/,//')"
+				MediaErrors="$(awk -F": " '/"media_errors"/ {print $2}' <<<"${SMARTData}" | sed 's/,//')"
+				ErrorLogEntries="$(awk -F": " '/"num_err_log_entries"/ {print $2}' <<<"${SMARTData}" | sed 's/,//')"
+				DriveTemp="$(grep -A1 '"temperature": {' <<<"${SMARTData}" | awk -F": " '/"current"/ {print $2}')"
+				Health="$(grep -A1 '"smart_status": {' <<<"${SMARTData}" | awk -F": " '/"passed"/ {print $2}')"
+				case "${Health}" in
+					true*)
+						AdditionalInfo=", ${PercentageUsed}% worn out, ${MediaErrors}/${ErrorLogEntries} errors, ${DriveTemp}°C"
+						;;
+					*)
+						# SMART health check returned failed. This SSD is about to pass away
+						AdditionalInfo=", ${PercentageUsed}% worn out, ${MediaErrors}/${ErrorLogEntries} errors, SMART health: FAILED, ${DriveTemp}°C"
+						DeviceWarning=TRUE
+						;;
+				esac
+				if [ ${PercentageUsed:-0} -gt 75 -o ${MediaErrors:-0} -gt 1 -o ${ErrorLogEntries:-0} -gt 1 ]; then
+					DeviceWarning=TRUE
+				fi
+				;;
+			ATA)
+				# it gets complicated since we need to deal with vendor specific attributes
+				# and need to differentiate between spinning rust and SSDs :(
+				SMARTData="$(smartctl -a ${DeviceToCheck})"
+				CRCErrors="$(awk -F": " '/^199 / {print $10}' <<<"${SMARTData}")"
+				[ ${CRCErrors:-0} -gt 0 ] && AdditionalInfo=", ${CRCErrors} CRC errors"
+				DriveTemp="$(awk -F" " '/Temperature/ {print $10" "$2}' <<<"${SMARTData}" | head -n1 | sed 's/_/ /g' | sed -e 's/ Airflow//' -e 's/ Temperature//' -e 's/ Celsius$/°C/' -e 's/ Cel$/°C/')"
+
+				SATAVersion="$(awk -F": " '/^SATA Version is/ {print $2": "$3}' <<<"${SMARTData}")"
+				if [ "X${SATAVersion}" = "X: " ]; then
+					DeviceInfo="SATA"
+				else
+					DeviceInfo="$(sed 's/^ *//g' <<<"${SATAVersion}")"
+				fi
+
+				# differentiate between HDDs and SSDs
+				RotationRate="$(awk -F": " '/^Rotation Rate/ {print $2}' <<<"${SMARTData}")"
+				case "${RotationRate}" in
+					*"Solid State Device"*)
+						# SSD
+						DeviceName="$(awk -F'"' '/"model_name"/ {print $4}' <<<"${SMARTInfo}") SSD as ${DeviceToCheck}"
+
+						# TODO: deal with the different wearout attributes
+						# 230 Media_Wearout_Indicator
+
+						;;
+					*)
+						# HDD
+						DeviceName="$(awk -F'"' '/"model_name"/ {print $4}' <<<"${SMARTInfo}") HDD as ${DeviceToCheck}"
+						;;
+				esac
+
+				Health="$(awk -F": " '/overall-health self-assessment test result/ {print $2}' <<<"${SMARTData}")"
+				case "${Health}" in
+					*PASSED*)
+						AdditionalInfo="${AdditionalInfo}, ${DriveTemp}"
+						;;
+					*)
+						# SMART health check returned failed. This SSD is about to pass away
+						AdditionalInfo="${AdditionalInfo}, SMART health: FAILED, ${DriveTemp}"
+						DeviceWarning=TRUE
+						;;
+				esac
+				;;
+		esac
+
+		# Add vendor name where missing from model string
+		case "${DeviceName}" in
+			CT*)
+				DeviceName="Crucial ${DeviceName}"
+				;;
+			TS*)
+				DeviceName="Transcend ${DeviceName}"
+				;;
+		esac
+	else
+		DeviceName="${DeviceToCheck}"
+	fi
+} # CheckSMARTData
 
 DisplayUsage() {
 	echo -e "\nUsage: ${BOLD}${0##*/} [-c] [-g] [-G] [-h] [-m] [-P] [-t \$degree] [-T \$degree] [-s]${NC}\n"

@@ -1,6 +1,6 @@
 # Radxa ROCK 5B
 
-Tested on Sun, 12 Feb 2023 10:13:06 +0100. Full info: [http://ix.io/4nPe](http://ix.io/4nPe)
+Tested on Thu, 16 Feb 2023 23:36:03 +0100. Full info: [http://ix.io/4ohT](http://ix.io/4ohT)
 
 ### General information:
 
@@ -22,7 +22,7 @@ Tested on Sun, 12 Feb 2023 10:13:06 +0100. Full info: [http://ix.io/4nPe](http:/
 
 Original governor settings:
 
-    cpufreq-policy0: ondemand / 1008 MHz (conservative ondemand userspace powersave performance schedutil)
+    cpufreq-policy0: ondemand / 1200 MHz (conservative ondemand userspace powersave performance schedutil)
     cpufreq-policy4: ondemand / 408 MHz (conservative ondemand userspace powersave performance schedutil)
     cpufreq-policy6: ondemand / 408 MHz (conservative ondemand userspace powersave performance schedutil)
     dmc: dmc_ondemand / 528 MHz (dmc_ondemand userspace powersave performance simple_ondemand)
@@ -45,17 +45,23 @@ Status of performance related policies found below /sys:
 
 ### Clockspeeds (idle vs. heated up):
 
-Before at 33.3°C:
+Before at 43.5°C:
 
-    cpu0-cpu3 (Cortex-A55): OPP: 1800, Measured: 1830      (+1.7%)
-    cpu4-cpu5 (Cortex-A76): OPP: 2400, Measured: 2346      (-2.2%)
-    cpu6-cpu7 (Cortex-A76): OPP: 2400, Measured: 2345      (-2.3%)
+    cpu0-cpu3 (Cortex-A55): OPP: 1800, Measured: 1821      (+1.2%)
+    cpu4-cpu5 (Cortex-A76): OPP: 2400, Measured: 2329      (-3.0%)
+    cpu6-cpu7 (Cortex-A76): OPP: 2400, Measured: 2328      (-3.0%)
 
-After at 69.3°C:
+After at 81.3°C:
 
-    cpu0-cpu3 (Cortex-A55): OPP: 1800, Measured: 1805 
-    cpu4-cpu5 (Cortex-A76): OPP: 2400, Measured: 2304      (-4.0%)
-    cpu6-cpu7 (Cortex-A76): OPP: 2400, Measured: 2305      (-4.0%)
+    cpu0-cpu3 (Cortex-A55): OPP: 1800, Measured: 1792 
+    cpu4-cpu5 (Cortex-A76): OPP: 2400, Measured: 2282      (-4.9%)
+    cpu6-cpu7 (Cortex-A76): OPP: 2400, Measured: 2282      (-4.9%)
+
+### Attached PCIe and storage devices:
+
+  * KXG50ZNV256G NVMe TOSHIBA 256GB SSD as /dev/nvme0n1: Speed 8GT/s, Width x4, 13% worn out, 0/0 errors, 67°C
+  * Realtek RTL8125 2.5GbE: Speed 5GT/s, Width x1, driver in use: r8125
+  * TS-RDF5SD Transcend as /dev/sda: USB, Driver=usb-storage, 5000M
 
 ### Software versions:
 
@@ -65,7 +71,7 @@ After at 69.3°C:
   * OpenSSL 3.0.5, built on 5 Jul 2022 (Library: OpenSSL 3.0.5 5 Jul 2022)
   * Kernel 5.10.72-rockchip-rk3588 / CONFIG_HZ=300
 
-Kernel 5.10.72 is not latest 5.10.166 LTS that was released on 2023-02-01.
+Kernel 5.10.72 is not latest 5.10.168 LTS that was released on 2023-02-15.
 
 Please check https://endoflife.date/linux for details. It is somewhat likely
 that a lot of exploitable vulnerabilities exist for this kernel as well as

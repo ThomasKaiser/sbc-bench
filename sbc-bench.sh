@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.9.22
+Version=0.9.23
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -61,7 +61,7 @@ Main() {
 				;;
 			S)
 				# check storage (and PCIe), only for testing, will disappear later
-				CheckPCIeAndStorage | sort -n
+				( CheckPCIe ; CheckStorage ) | sort -n
 				exit 0
 				;;
 			h)
@@ -996,7 +996,7 @@ PlotGraph() {
 			YLabel="7-Zip MIPS"
 			YRange=$(awk '{printf ("%0.0f",$1*1.2); }' <<<"${MaxMIPS}")
 			PlotCommand="plot '${CpufreqDat}' using 1:2 lt rgb 'blue' w l title '7-Zip MIPS ${1}' axis x1y1, '' using 1:3 lt rgb 'green' w l title 'SoC temp' axis x1y2"
-			;;			
+			;;
 		4)
 			# also consumption numbers so include them in the graph too
 			YLabel="7-Zip MIPS / mW"
@@ -1227,7 +1227,7 @@ GetTempSensor() {
 						echo 0 >${TempSource}
 					fi
 				fi
-				;;				
+				;;
 		esac
 	fi
 	export TempSource TempInfo
@@ -1842,7 +1842,7 @@ Getx86ClusterDetails() {
 				echo "Gracemont" >"${TempDir}/Ecores"
 				echo "Raptor Cove" >"${TempDir}/Pcores"
 				[ ${HT} -eq 1 ] && echo "0 16" || echo "0 8"
-				;;				
+				;;
 			i9-12900T|i9-12900TE|i9-12900HX|i9-12950HX|i9-12900KS|i9-12900E|i9-12900F|i9-12900|i9-12900K|i9-12900KS|i9-12900KF|i7-12850HX|i7-12800HX)
 				# Alder Lake, 8/8 cores, 24 threads
 				echo "Gracemont" >"${TempDir}/Ecores"
@@ -2121,6 +2121,17 @@ BasicSetup() {
 						grep -q 'c0000000000000000000000040' && BCM2711="B0" || BCM2711="C0 or later"
 					DeviceName="$(sed 's/Raspberry Pi/RPi/' <<<"${DeviceName}") / BCM2711 Rev ${BCM2711}"
 					;;
+				"nexell soc")
+					# FriendlyELEC SBC based on Nexell S5P6818
+					if [ -f /etc/armbian-release ]; then
+						. /etc/armbian-release
+						DeviceName="${BOARD_NAME}"
+					fi
+					;;
+				"FriendlyARM "*)
+					# Remove vendor string since outdated anyway
+					DeviceName="$(sed 's/FriendlyARM //' <<<"${DeviceName}")"
+					;;
 			esac
 			# if there's no device-tree support but DMI info available use this for DeviceName
 			[ ! -f /proc/device-tree/model -a "X${DMISysVendor}" != "X" ] && \
@@ -2222,6 +2233,7 @@ CheckMissingPackages() {
 	if [ "X${MODE}" = "Xreview" ]; then
 		command -v lspci >/dev/null 2>&1 || echo -e "pciutils \c"
 		command -v lsusb >/dev/null 2>&1 || echo -e "usbutils \c"
+		command -v mmc >/dev/null 2>&1 || echo -e "mmc-utils \c"
 		command -v smartctl >/dev/null 2>&1 || echo -e "smartmontools \c"
 		command -v udevadm >/dev/null 2>&1 || echo -e "udev \c"
 	fi
@@ -5382,26 +5394,6 @@ GuessSoCbySignature() {
 			# Mediatek MT8173: 2 x Cortex-A53 / r0p2 + 2 x Cortex-A72 / r0p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			echo "Mediatek MT8173"
 			;;
-		*A53r0p3*A53r0p3)
-			# HiSilicon Hi3751: 2 x Cortex-A53 / r0p3 / swp half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt (booting 32-bit kernel)
-			echo "HiSilicon Hi3751"
-			;;
-		*A53r0p3*A53r0p3*A53r0p3*A53r0p3)
-			# Mediatek MT6735: 4 x Cortex-A53 / r0p3 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm sha2 (booting 32-bit)
-			# or Mediatek MT8163: 4 x Cortex-A53 / r0p3 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt lpae evtstrm aes pmull sha1 sha2 crc32
-			# or HiSilicon Hi3751: 4 x Cortex-A53 / r0p3 / swp half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt (booting 32-bit kernel)
-			case "${DTCompatible}" in
-				*mt6735*)
-					echo "Mediatek MT6735"
-					;;
-				*mt8163*)
-					echo "Mediatek MT8163"
-					;;
-				*hi3751*)
-					echo "HiSilicon Hi3751"
-					;;
-			esac
-			;;
 		*A53r0p2*A53r0p2*A53r0p2*A53r0p2*A53r0p2*A53r0p2*A53r0p2*A53r0p2)
 			# Mediatek MT6752: 8 x Cortex-A53 / r0p2 / fp asimd aes pmull sha1 sha2 crc32
 			# Mediatek MT6755: 8 x Cortex-A53 / r0p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32
@@ -5625,6 +5617,26 @@ GuessSoCbySignature() {
 					echo "Samsung Exynos 7580"
 					;;
 			esac
+			;;
+		*A53r0p3*A53r0p3*A53r0p3*A53r0p3)
+			# Mediatek MT6735: 4 x Cortex-A53 / r0p3 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm sha2 (booting 32-bit)
+			# or Mediatek MT8163: 4 x Cortex-A53 / r0p3 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt lpae evtstrm aes pmull sha1 sha2 crc32
+			# or HiSilicon Hi3751: 4 x Cortex-A53 / r0p3 / swp half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt (booting 32-bit kernel)
+			case "${DTCompatible}" in
+				*mt6735*)
+					echo "Mediatek MT6735"
+					;;
+				*mt8163*)
+					echo "Mediatek MT8163"
+					;;
+				*hi3751*)
+					echo "HiSilicon Hi3751"
+					;;
+			esac
+			;;
+		*A53r0p3*A53r0p3)
+			# HiSilicon Hi3751: 2 x Cortex-A53 / r0p3 / swp half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt (booting 32-bit kernel)
+			echo "HiSilicon Hi3751"
 			;;
 		00Cavium88XXr1p1*)
 			# ThunderX CN8890, 48 x ThunderX 88XX / r1p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32
@@ -6217,20 +6229,20 @@ ProvideReviewInfo() {
 
 	# PCIe and storage devices, important stuff like downgraded PCIe link width/speed,
 	# SMART errors, negotiated USB speeds, (almost) worn out SSDs and so on
-	PCIeAndStorage="$(CheckPCIeAndStorage | sort -n)"
-	if [ "X${PCIeAndStorage}" != "X" ]; then
-		grep -q -E "as /dev/sd|as /dev/nvme" <<<"${PCIeAndStorage}"
-		if [ $? -eq 0 ]; then
-			echo -e "\n### Attached PCIe and storage devices:\n\n${PCIeAndStorage}" >>"${TempDir}/review"
-		else
-			echo -e "\n### Attached PCIe devices:\n\n${PCIeAndStorage}" >>"${TempDir}/review"
-		fi
+	PCIeStatus="$(CheckPCIe | sort -n)"
+	StorageStatus="$(CheckStorage | sort -n)"
+	if [ "X${PCIeStatus}" != "X" -a "X${StorageStatus}" != "X" ]; then
+		echo -e "\n### PCIe and storage devices:\n\n${PCIeStatus}\n${StorageStatus}" >>"${TempDir}/review"
+	elif [ "X${StorageStatus}" = "X" ]; then
+		echo -e "\n### PCIe devices:\n\n${PCIeStatus}" >>"${TempDir}/review"
+	elif [ "X${PCIeStatus}" = "X" ]; then
+		echo -e "\n### Storage devices:\n\n${StorageStatus}" >>"${TempDir}/review"
 	fi
 
 	# software versions
 	echo -e "\n### Software versions:\n" >>"${TempDir}/review"
 	case "${OperatingSystem}" in
-		Armbian*|Orange*)
+		Armbian*|"Orange Pi"*)
 			# Armbian went full megalomania in the meantime. They try to trick their users
 			# into thinking to run an 'Armbian 23.02.0-trunk.0072 Jammy' while in reality it's
 			# 'Ubuntu 22.04 Jammy' debootstraped with a certain version of Armbian's build
@@ -6249,11 +6261,12 @@ ProvideReviewInfo() {
 	[ -z "${BuildInfo}" ] || echo "${BuildInfo}" >>"${TempDir}/review"
 	grep -i "^ Compiler:" ${ResultLog} | sed -e 's/^/  */' >>"${TempDir}/review"
 	grep -i "^openssl" ${ResultLog} | sed -e 's/^/  * /' >>"${TempDir}/review"
+	[ -z "${ThreadXVersion}" ] || echo -e "  * ThreadX: $(tail -n1 <<<"${ThreadXVersion}" | cut -d' ' -f2) / $(head -n1 <<<"${ThreadXVersion}")" >>"${TempDir}/review"
 
 	# Kernel relevant settings / versions
 	echo -e "\n### Kernel info:\n" >>"${TempDir}/review"
 
-	[ -r /proc/cmdline ] && echo -e "  * `/proc/cmdline: $(</proc/cmdline)`" >>"${TempDir}/review"
+	[ -r /proc/cmdline ] && echo -e "  * \`/proc/cmdline: $(</proc/cmdline)\`" >>"${TempDir}/review"
 	grep "^Vulnerability" <<<"${LSCPU}" | grep -v 'Not affected' | sed -e 's/^/  * /' >>"${TempDir}/review"
 	CONFIGHZ="$(awk -F" " '/CONFIG_HZ=/ {print $1}' <${ResultLog})"
 	[ -z "${CONFIGHZ}" ] && echo "  * Kernel ${KernelVersion}" >>"${TempDir}/review" || echo "  * Kernel ${KernelVersion} / ${CONFIGHZ}" >>"${TempDir}/review"
@@ -6279,14 +6292,18 @@ ProvideReviewInfo() {
 	if [ -r /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq ]; then
 		cpuinfo_max_freq=$(cat /sys/devices/system/cpu/cpu?/cpufreq/cpuinfo_max_freq)
 		cpuinfo_cur_freq=$(cat /sys/devices/system/cpu/cpu?/cpufreq/cpuinfo_cur_freq)
-		[ "X${cpuinfo_max_freq}" != "X${cpuinfo_cur_freq}" ] && echo -e "\nWaiting for the device to cool down:     \c"
-		while [ "X${cpuinfo_max_freq}" != "X${cpuinfo_cur_freq}" ]; do
-			TempNow=$(ReadSoCTemp)
-			echo -e "\x08\x08\x08\x08\x08 ${TempNow}°C\c"
+		if [ "X${cpuinfo_max_freq}" != "X${cpuinfo_cur_freq}" ]; then
+			echo -e "\nWaiting for the device to cool down     \c"
+			while [ "X${cpuinfo_max_freq}" != "X${cpuinfo_cur_freq}" ]; do
+				TempNow=$(ReadSoCTemp)
+				echo -e "\x08\x08\x08\x08\x08\x08. ${TempNow}°C\c"
+				sleep 2
+				cpuinfo_max_freq=$(cat /sys/devices/system/cpu/cpu?/cpufreq/cpuinfo_max_freq)
+				cpuinfo_cur_freq=$(cat /sys/devices/system/cpu/cpu?/cpufreq/cpuinfo_cur_freq)
+			done
 			sleep 2
-			cpuinfo_max_freq=$(cat /sys/devices/system/cpu/cpu?/cpufreq/cpuinfo_max_freq)
-			cpuinfo_cur_freq=$(cat /sys/devices/system/cpu/cpu?/cpufreq/cpuinfo_cur_freq)
-		done
+			echo ""
+		fi
 	fi
 
 	# device now ready for benchmarking
@@ -6308,7 +6325,7 @@ ProvideReviewInfo() {
 	fi
 
 	trap "FinalReporting ; exit 0" 0 1 2 3 15
-	rm "${TempDir}"/*time_in_state*
+	rm "${TempDir}"/*time_in_state* "${TempDir}/throttling_info.txt" 2>/dev/null
 	CheckTimeInState before
 	/bin/bash "${PathToMe}" -m 60 >"${TempDir}/review" &
 	MonitoringPID=$!
@@ -6387,7 +6404,7 @@ CheckKernelVersion() {
 		echo -e "${LRED}${BOLD}tons of unfixed bugs. Better upgrade to a supported version ASAP.${NC}"
 	elif [ "X${KernelVersionDigitsOnly}" != "X${LatestKernelVersion}" ]; then
 		# kernel version at least matches a supported kernel but is not most recent one
-		BSPDisclaimer="\n${BOLD}But this version string doesn't matter that much since this device is not${NC}\n${BOLD}running an official${KernelSuffix} Linux from kernel.org.${NC}\n"
+		BSPDisclaimer="\n${BOLD}But this version string doesn't matter since this is not an official${KernelSuffix} Linux${NC}\n${BOLD}from kernel.org.${NC}\n"
 		UsedKernelRevision=$(cut -f3 -d. <<<"${KernelVersionDigitsOnly}")
 		LatestKernelRevision=$(cut -f3 -d. <<<"${LatestKernelVersion}")
 		RevisionDifference=$(( ${LatestKernelRevision:-0} - ${UsedKernelRevision:-0} ))
@@ -6423,7 +6440,7 @@ CheckKernelVersion() {
 		fi
 	else
 		# kernel version seems to match most recent upstream kernel.
-		BSPDisclaimer="\n${BOLD}But this version string doesn't matter that much since this device is not${NC}\n${BOLD}running an official${KernelSuffix} Linux from kernel.org.${NC}\n"
+		BSPDisclaimer="\n${BOLD}But this version string doesn't matter since this is not an official${KernelSuffix} Linux${NC}\n${BOLD}from kernel.org.${NC}\n"
 		if [ "X${CheckEOL}" = "X${EOLDate}" -a "X${EOLDate}" != "Xfalse" ]; then
 			# EOL date is in the past
 			echo -e "${LRED}${BOLD}${ShortKernelVersion}${KernelSuffix} has reached end-of-life on ${EOLDate}. ${KernelVersionDigitsOnly} is unsupported since then.${NC}"
@@ -6661,18 +6678,16 @@ PrintKernelInfo() {
 	echo ""
 } # PrintKernelInfo
 
-CheckPCIeAndStorage() {
-	# TODO:
-	# grep "^http" -- drive firmware update info
-	# maybe overtake CheckSMARTModes code from armbianmonitor
-	# maybe differentiate between general and SMART warnings to add smartctl suggestion
-	# reallocated/pending sectors with HDD
-	# different wearout attributes for AHCI SSDs
+CheckPCIe() {
+	# Examine devices on the PCI buses. Report link width/speed and whether those are
+	# downgraded or not. With NVMe devices try to query SMART data to report drive health,
+	# with other PCIe devices report driver (for example to spot the 'famous' RealTek NIC
+	# performance issues that go away once the appropriate driver is loaded)
 
 	# try to update SMART drive database
 	update-smart-drivedb >/dev/null 2>&1
 
-	lspci -Q -mm | grep controller | while read ; do
+	lspci -Q -mm 2>/dev/null | grep controller | while read ; do
 		unset DeviceWarning
 		BusAddress="$(awk -F" " '{print $1}' <<<"${REPLY}")"
 		ControllerType="$(awk -F'"' '{print $2}' <<<"${REPLY}")"
@@ -6710,50 +6725,187 @@ CheckPCIeAndStorage() {
 				;;
 		esac
 	done
-	if [ -b /dev/sda ]; then
-		for SATAorUSB in /dev/sd? ; do
-			unset DeviceName DeviceInfo DeviceWarning AdditionalInfo
-			UdevInfo="$(udevadm info -a -n ${SATAorUSB} 2>/dev/null)"
-			Driver="$(awk -F'"' '/DRIVERS==/ {print $2}' <<<"${UdevInfo}" | grep -E 'uas|usb-storage|ahci')"
-			case "${Driver}" in
-				ahci)
-					# (S)ATA attached
-					CheckSMARTData "${SATAorUSB}"
-					;;
-				usb-storage|uas)
-					# USB attached
-					CheckSMARTData "${SATAorUSB}"
-					if [ "X${DeviceName}" = "X${DeviceToCheck}" ]; then
-						# no SMART support or SMART query failed, we need to find a fallback name
-						# so let's try to lookup IDs in usbutils' database
-						idProduct="$(awk -F'"' '/ATTRS{idProduct}/ {print $2}' <<<"${UdevInfo}" | head -n1)"
-						idVendor="$(awk -F'"' '/ATTRS{idVendor}/ {print $2}' <<<"${UdevInfo}" | head -n1)"
-						LsusbGuess="$(lsusb | awk -F"${idVendor}:${idProduct} " "/${idVendor}:${idProduct} / {print \$2}")"
-						if [ "X${LsusbGuess}" != "X" ]; then
-							# Seems like a legit string, so use usbutils database info
-							DeviceName="${LsusbGuess} as ${DeviceToCheck}"
+} # CheckPCIe
+
+CheckStorage() {
+	# examine storage devices of these patterns: /dev/sd?, /dev/mtd? and /dev/mmcblk?
+	# With the more sophisticated ones (USB and SATA) try to report as much connection details
+	# as possible (e.g. USB/SATA speed, whether speed downgrades have happened, usb-storage
+	# vs. uas and so on)
+	#
+	# TODO:
+	# grep "^http" -- drive firmware update info
+	# maybe overtake CheckSMARTModes code from armbianmonitor
+	# maybe differentiate between general and SMART warnings to add smartctl suggestion
+	# reallocated/pending sectors with HDD
+	# different wearout attributes for AHCI SSDs
+
+	for StorageDevice in $(ls /dev/sd? 2>/dev/null) ; do
+		unset DeviceName DeviceInfo DeviceWarning AdditionalInfo
+		UdevInfo="$(udevadm info -a -n ${StorageDevice} 2>/dev/null)"
+		Driver="$(awk -F'"' '/DRIVERS==/ {print $2}' <<<"${UdevInfo}" | grep -E 'uas|usb-storage|ahci')"
+		case "${Driver}" in
+			ahci)
+				# (S)ATA attached
+				CheckSMARTData "${StorageDevice}"
+				;;
+			usb-storage|uas)
+				# USB attached
+				CheckSMARTData "${StorageDevice}"
+				if [ "X${DeviceName}" = "X${DeviceToCheck}" ]; then
+					# no SMART support or SMART query failed, we need to find a fallback name
+					# so let's try to lookup IDs in usbutils' database
+					idProduct="$(awk -F'"' '/ATTRS{idProduct}/ {print $2}' <<<"${UdevInfo}" | head -n1)"
+					idVendor="$(awk -F'"' '/ATTRS{idVendor}/ {print $2}' <<<"${UdevInfo}" | head -n1)"
+					LsusbGuess="$(lsusb | awk -F"${idVendor}:${idProduct} " "/${idVendor}:${idProduct} / {print \$2}")"
+					if [ "X${LsusbGuess}" != "X" ]; then
+						# Seems like a legit string, so use usbutils database info
+						DeviceName="${LsusbGuess}"
+					else
+						# try to construct device name from ATTRS{vendor}+ATTRS{model} udev info
+						DeviceVendor="$(awk -F'"' '/ATTRS{vendor}/ {print $2}' <<<"${UdevInfo}" | awk '{$1=$1};1')"
+						if [ "X${DeviceVendor}" != "X" ]; then
+							DeviceName="${DeviceVendor} $(awk -F'"' '/ATTRS{model}/ {print $2}' <<<"${UdevInfo}" | awk '{$1=$1};1')"
 						else
-							# try to construct device name from ATTRS{vendor}+ATTRS{model} udev info
-							DeviceVendor="$(awk -F'"' '/ATTRS{vendor}/ {print $2}' <<<"${UdevInfo}" | awk '{$1=$1};1')"
-							if [ "X${DeviceVendor}" != "X" ]; then
-								DeviceName="${DeviceVendor} $(awk -F'"' '/ATTRS{model}/ {print $2}' <<<"${UdevInfo}" | awk '{$1=$1};1') as ${DeviceToCheck}"
-							else
-								DeviceName="[unknown device] as ${DeviceToCheck}"
-							fi
+							DeviceName="[unknown device]"
 						fi
 					fi
-					NegotiatedSpeed="$(awk -F'"' '/ATTRS{speed}/ {print $2}' <<<"${UdevInfo}" | head -n1)"
-					DeviceInfo="USB, Driver=${Driver}, ${NegotiatedSpeed}M"
+				fi
+				NegotiatedSpeed="$(awk -F'"' '/ATTRS{speed}/ {print $2}' <<<"${UdevInfo}" | head -n1)"
+				DeviceInfo="USB, Driver=${Driver}, ${NegotiatedSpeed}M"
+				;;
+		esac
+		if [ "X${DeviceWarning}" = "XTRUE" ]; then
+			echo -e "  * ${LRED}${DeviceName%%*( )} as ${DeviceToCheck}: ${DeviceInfo}${AdditionalInfo}${NC}"
+		else
+			echo -e "  * ${DeviceName%%*( )} as ${DeviceToCheck}: ${DeviceInfo}${AdditionalInfo}"
+		fi
+	done
+
+	# MTD devices
+	for StorageDevice in $(ls /dev/mtd? 2>/dev/null) ; do
+		unset DeviceName DeviceInfo DeviceWarning AdditionalInfo Manufacturer
+		UdevInfo="$(udevadm info -a -n ${StorageDevice} 2>/dev/null)"
+		Driver="$(awk -F'"' '/DRIVERS==/ {print $2}' <<<"${UdevInfo}" | sed '/^$/d' | tr '\n' '/' | sed 's/\/$//')"
+		RawSize=$(awk -F'"' '/ATTR{size}/ {print $2}' <<<"${UdevInfo}")
+		[ "X${RawSize}" != "X" ] && FlashSize="$(( ${RawSize} / 1048576 ))MB "
+		case "${Driver}" in
+			*spi-nor*)
+				DeviceName="${FlashSize}SPI NOR flash"
+				;;
+			*)
+				DeviceName="${FlashSize}MTD device"
+			;;
+		esac
+		echo -e "  * ${DeviceName} as ${StorageDevice}, drivers in use: ${Driver}"
+	done
+
+	# MMC devices
+	LSBLK="$(lsblk -l -o NAME,SIZE 2>&1)"
+	for StorageDevice in $(ls /dev/mmcblk? 2>/dev/null) ; do
+		unset DeviceName DeviceInfo DeviceWarning AdditionalInfo
+		if [ -x /sys/block/${StorageDevice##*/}/device ]; then
+			cd /sys/block/${StorageDevice##*/}/device
+			# read in variables from sysfs in q&d style and prefix them all with "mmc_"
+			# Looks like this for example:
+			#
+			# mmc_cid=035344534c3038478049e841e30106dd
+			# mmc_csd=400e00325b5900003b377f800a4040af
+			# mmc_date=06/2016
+			# mmc_dsr=0x404
+			# mmc_erase_size=512
+			# mmc_fwrev=0x0
+			# mmc_hwrev=0x8
+			# mmc_manfid=0x000003
+			# mmc_name=SL08G
+			# mmc_ocr=0x00200000
+			# mmc_oemid=0x5344
+			# mmc_preferred_erase_size=4194304
+			# mmc_rca=0xaaaa
+			# mmc_scr=0235800100000000
+			# mmc_serial=0x49e841e3
+			# mmc_ssr=00000000030000000400900014050a00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+			# mmc_type=SD
+
+			eval $(grep . * 2>/dev/null | grep -v uevent | sed -e 's/:/=/' -e 's/^/mmc_/' -e 's/\ //g')
+
+			# Rely on human readable real storage sizes and not vendor claims:
+			# e.g. show 29.7GB for a '32GB' card:
+			mmc_size=$(awk -F" " "/${StorageDevice##*/} / {print \$2}" <<<"${LSBLK}")
+			[ "X${mmc_size}" != "X" ] && FlashSize="${mmc_size}B "
+
+			# Only add manufacturer info if really unique. Partially misleading since counterfeit
+			# cards were and still are an issue: https://www.bunniestudios.com/blog/?page_id=1022
+			case "${mmc_manfid}/${mmc_oemid}" in
+				0x000001*)
+					Manufacturer="Panasonic "
+					;;
+				0x000002*)
+					Manufacturer="Toshiba "
+					;;
+				0x000003/0x5344)
+					Manufacturer="SanDisk "
+					;;
+				0x000008*)
+					Manufacturer="Silicon Power "
+					;;
+				0x000018*)
+					Manufacturer="Infineon "
+					;;
+				0x000015*|0x00001b*|0x0000ce*)
+					Manufacturer="Samsung "
+					;;
+				0x00001d/0x4144)
+					Manufacturer="AData "
+					;;
+				0x000027*)
+					# AgfaPhoto, Delkin, Intenso, Integral, Lexar, Patriot, PNY, Polaroid, Sony, Verbatim
+					Manufacturer="Phison "
+					;;
+				0x000028*)
+					# Lexar, PNY, ProGrade
+					Manufacturer="Lexar "
+					;;
+				0x000041*)
+					Manufacturer="Kingston "
+					;;
+				0x000045*)
+					Manufacturer="SanDisk/Toshiba "
+					;;
+				0x000074*)
+					Manufacturer="Transcend "
+					;;
+				0x000088*)
+					Manufacturer="Foresee "
+					;;
+				0x0000ad*)
+					Manufacturer="SK Hynix "
+					;;
+				0x0000fe*)
+					Manufacturer="Micron-Numonyx "
+					;;
+				0x000074*)
+					Manufacturer="Transcend "
 					;;
 			esac
-			if [ "X${DeviceWarning}" = "XTRUE" ]; then
-				echo -e "  * ${LRED}${DeviceName%%*( )}: ${DeviceInfo}${AdditionalInfo}${NC}"
-			else
-				echo -e "  * ${DeviceName%%*( )}: ${DeviceInfo}${AdditionalInfo}"
-			fi
-		done
-	fi
-} # CheckPCIeAndStorage
+			case "${mmc_type}" in
+				SD)
+					echo -e "  * ${FlashSize}${Manufacturer}${mmc_name} SD card as ${StorageDevice}: date ${mmc_date}, man/oem ID: ${mmc_manfid}/${mmc_oemid}, hw/fw rev: ${mmc_hwrev}/${mmc_fwrev}"
+					;;
+				MMC)
+					# try to query additional info via mmc-utils (for now only MMC version)
+					ExtendedInfo="$(mmc extcsd read ${StorageDevice} 2>/dev/null)"
+					grep -q "Extended CSD rev" <<<"${ExtendedInfo}" && MMCVersion="$(awk -F"[()]" '/Extended CSD rev/ {print $2}' <<<"${ExtendedInfo}")"
+					if [ "X${MMCVersion}" = "X" ]; then
+						echo -e "  * ${FlashSize}${Manufacturer}${mmc_name} eMMC as ${StorageDevice}: date ${mmc_date}, man/oem ID: ${mmc_manfid}/${mmc_oemid}, hw/fw rev: ${mmc_hwrev}/${mmc_fwrev}"
+					else
+						echo -e "  * ${FlashSize}${Manufacturer}${mmc_name} e${MMCVersion} as ${StorageDevice}: date ${mmc_date}, man/oem ID: ${mmc_manfid}/${mmc_oemid}, hw/fw rev: ${mmc_hwrev}/${mmc_fwrev}"
+					fi
+					;;
+			esac
+		fi
+	done
+} # CheckStorage
 
 CheckSMARTData() {
 	DeviceToCheck="$1"

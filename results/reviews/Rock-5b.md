@@ -1,6 +1,6 @@
 # Radxa ROCK 5B
 
-Tested on Fri, 17 Feb 2023 13:22:37 +0100. Full info: [http://ix.io/4okG](http://ix.io/4okG)
+Tested on Sat, 18 Feb 2023 00:19:30 +0100. Full info: [http://ix.io/4ooc](http://ix.io/4ooc)
 
 ### General information:
 
@@ -45,24 +45,27 @@ Status of performance related policies found below /sys:
 
 ### Clockspeeds (idle vs. heated up):
 
-Before at 49.9°C:
+Before at 44.4°C:
 
-    cpu0-cpu3 (Cortex-A55): OPP: 1800, Measured: 1812 
-    cpu4-cpu5 (Cortex-A76): OPP: 2400, Measured: 2315      (-3.5%)
-    cpu6-cpu7 (Cortex-A76): OPP: 2400, Measured: 2314      (-3.6%)
+    cpu0-cpu3 (Cortex-A55): OPP: 1800, Measured: 1820      (+1.1%)
+    cpu4-cpu5 (Cortex-A76): OPP: 2400, Measured: 2328      (-3.0%)
+    cpu6-cpu7 (Cortex-A76): OPP: 2400, Measured: 2326      (-3.1%)
 
-After at 83.2°C:
+After at 82.2°C:
 
-    cpu0-cpu3 (Cortex-A55): OPP: 1800, Measured: 1789 
-    cpu4-cpu5 (Cortex-A76): OPP: 2400, Measured: 2278      (-5.1%)
-    cpu6-cpu7 (Cortex-A76): OPP: 2400, Measured: 2278      (-5.1%)
+    cpu0-cpu3 (Cortex-A55): OPP: 1800, Measured: 1790 
+    cpu4-cpu5 (Cortex-A76): OPP: 2400, Measured: 2280      (-5.0%)
+    cpu6-cpu7 (Cortex-A76): OPP: 2400, Measured: 2280      (-5.0%)
 
-### Attached PCIe and storage devices:
+### PCIe and storage devices:
 
-  * KXG50ZNV256G NVMe TOSHIBA 256GB SSD as /dev/nvme0n1: Speed 8GT/s (ok), Width x4 (ok), 13% worn out, 0/0 errors, 73°C
+  * KXG50ZNV256G NVMe TOSHIBA 256GB SSD as /dev/nvme0n1: Speed 8GT/s (ok), Width x4 (ok), 13% worn out, 0/0 errors, 67°C
   * Realtek RTL8125 2.5GbE: Speed 5GT/s (ok), Width x1 (ok), driver in use: r8125
+  * 14.5GB Foresee NCard eMMC 5.0 as /dev/mmcblk1: date 08/2016, man/oem ID: 0x000088/0x0103, hw/fw rev: 0x0/0x0100000000000000
+  * 16MB SPI NOR flash as /dev/mtd0, drivers in use: spi-nor/rockchip-sfc
+  * 7.4GB SanDisk SL08G SD card as /dev/mmcblk0: date 06/2016, man/oem ID: 0x000003/0x5344, hw/fw rev: 0x8/0x0
   * SanDisk Corp. Ultra Dual as /dev/sdb: USB, Driver=usb-storage, 480M
-  * TOSHIBA MK7559GSXF HDD as /dev/sda: USB, Driver=uas, 5000M, 25°C
+  * TOSHIBA MK7559GSXF HDD as /dev/sda as /dev/sda: USB, Driver=uas, 5000M, 23°C
 
 ### Software versions:
 
@@ -85,8 +88,8 @@ Please check https://endoflife.date/linux for details. It is somewhat likely
 that a lot of exploitable vulnerabilities exist for this kernel as well as
 many unfixed bugs. Better upgrade to a supported version ASAP.
 
-But this version string doesn't matter that much since this device is not
-running an official LTS Linux from kernel.org.
+But this version string doesn't matter since this is not an official LTS Linux
+from kernel.org.
 
 This device runs a Rockchip BSP kernel based on a mixture of Android GKI and
 other sources. Also some community attempts to do version string cosmetics

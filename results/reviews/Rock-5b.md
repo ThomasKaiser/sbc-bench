@@ -1,6 +1,6 @@
 # Radxa ROCK 5B
 
-Tested on Thu, 16 Feb 2023 23:36:03 +0100. Full info: [http://ix.io/4ohT](http://ix.io/4ohT)
+Tested on Fri, 17 Feb 2023 13:22:37 +0100. Full info: [http://ix.io/4okG](http://ix.io/4okG)
 
 ### General information:
 
@@ -22,12 +22,12 @@ Tested on Thu, 16 Feb 2023 23:36:03 +0100. Full info: [http://ix.io/4ohT](http:/
 
 Original governor settings:
 
-    cpufreq-policy0: ondemand / 1200 MHz (conservative ondemand userspace powersave performance schedutil)
+    cpufreq-policy0: ondemand / 1800 MHz (conservative ondemand userspace powersave performance schedutil)
     cpufreq-policy4: ondemand / 408 MHz (conservative ondemand userspace powersave performance schedutil)
     cpufreq-policy6: ondemand / 408 MHz (conservative ondemand userspace powersave performance schedutil)
-    dmc: dmc_ondemand / 528 MHz (dmc_ondemand userspace powersave performance simple_ondemand)
-    fb000000.gpu: simple_ondemand / 300 MHz (dmc_ondemand userspace powersave performance simple_ondemand)
-    fdab0000.npu: userspace / 1000 MHz (dmc_ondemand userspace powersave performance simple_ondemand)
+    dmc: dmc_ondemand / 528 MHz (rknpu_ondemand dmc_ondemand userspace powersave performance simple_ondemand)
+    fb000000.gpu: simple_ondemand / 300 MHz (rknpu_ondemand dmc_ondemand userspace powersave performance simple_ondemand)
+    fdab0000.npu: rknpu_ondemand / 1000 MHz (rknpu_ondemand dmc_ondemand userspace powersave performance simple_ondemand)
 
 Tuned governor settings:
 
@@ -45,33 +45,41 @@ Status of performance related policies found below /sys:
 
 ### Clockspeeds (idle vs. heated up):
 
-Before at 43.5°C:
+Before at 49.9°C:
 
-    cpu0-cpu3 (Cortex-A55): OPP: 1800, Measured: 1821      (+1.2%)
-    cpu4-cpu5 (Cortex-A76): OPP: 2400, Measured: 2329      (-3.0%)
-    cpu6-cpu7 (Cortex-A76): OPP: 2400, Measured: 2328      (-3.0%)
+    cpu0-cpu3 (Cortex-A55): OPP: 1800, Measured: 1812 
+    cpu4-cpu5 (Cortex-A76): OPP: 2400, Measured: 2315      (-3.5%)
+    cpu6-cpu7 (Cortex-A76): OPP: 2400, Measured: 2314      (-3.6%)
 
-After at 81.3°C:
+After at 83.2°C:
 
-    cpu0-cpu3 (Cortex-A55): OPP: 1800, Measured: 1792 
-    cpu4-cpu5 (Cortex-A76): OPP: 2400, Measured: 2282      (-4.9%)
-    cpu6-cpu7 (Cortex-A76): OPP: 2400, Measured: 2282      (-4.9%)
+    cpu0-cpu3 (Cortex-A55): OPP: 1800, Measured: 1789 
+    cpu4-cpu5 (Cortex-A76): OPP: 2400, Measured: 2278      (-5.1%)
+    cpu6-cpu7 (Cortex-A76): OPP: 2400, Measured: 2278      (-5.1%)
 
 ### Attached PCIe and storage devices:
 
-  * KXG50ZNV256G NVMe TOSHIBA 256GB SSD as /dev/nvme0n1: Speed 8GT/s, Width x4, 13% worn out, 0/0 errors, 67°C
-  * Realtek RTL8125 2.5GbE: Speed 5GT/s, Width x1, driver in use: r8125
-  * TS-RDF5SD Transcend as /dev/sda: USB, Driver=usb-storage, 5000M
+  * KXG50ZNV256G NVMe TOSHIBA 256GB SSD as /dev/nvme0n1: Speed 8GT/s (ok), Width x4 (ok), 13% worn out, 0/0 errors, 73°C
+  * Realtek RTL8125 2.5GbE: Speed 5GT/s (ok), Width x1 (ok), driver in use: r8125
+  * SanDisk Corp. Ultra Dual as /dev/sdb: USB, Driver=usb-storage, 480M
+  * TOSHIBA MK7559GSXF HDD as /dev/sda: USB, Driver=uas, 5000M, 25°C
 
 ### Software versions:
 
-  * Ubuntu 22.10 (kinetic) arm64
-  * Build scripts: Rock 5B, rockchip-rk3588, rockchip-rk3588, 22.11.0-trunk.0114, https://github.com/armbian/build
-  * Compiler: /usr/bin/gcc (Ubuntu 12.2.0-3ubuntu1) 12.2.0 / aarch64-linux-gnu
-  * OpenSSL 3.0.5, built on 5 Jul 2022 (Library: OpenSSL 3.0.5 5 Jul 2022)
-  * Kernel 5.10.72-rockchip-rk3588 / CONFIG_HZ=300
+  * Ubuntu 20.04.5 LTS (focal) arm64
+  * Build scripts: https://github.com/armbian/build, 22.11.4, Rock 5B, rockchip-rk3588, rockchip-rk3588
+  * Compiler: /usr/bin/gcc (Ubuntu 9.4.0-1ubuntu1~20.04.1) 9.4.0 / aarch64-linux-gnu
+  * OpenSSL 1.1.1f, built on 31 Mar 2020
 
-Kernel 5.10.72 is not latest 5.10.168 LTS that was released on 2023-02-15.
+### Kernel info:
+
+  * `/proc/cmdline: root=UUID=a98b51b6-4f19-4fbb-966d-e835e9b7eb15 rootwait rootfstype=ext4 console=ttyS2,1500000 console=tty1 consoleblank=0 loglevel=1 ubootpart=8917ce6a-4dc2-a145-b073-1492d425c2b8 usb-storage.quirks=0x2537:0x1066:u,0x2537:0x1068:u   cgroup_enable=cpuset cgroup_memory=1 cgroup_enable=memory swapaccount=1`
+  * Vulnerability Spec store bypass: Mitigation; Speculative Store Bypass disabled via prctl
+  * Vulnerability Spectre v1:        Mitigation; __user pointer sanitization
+  * Vulnerability Spectre v2:        Vulnerable: Unprivileged eBPF enabled
+  * Kernel 5.10.110-rockchip-rk3588 / CONFIG_HZ=300
+
+Kernel 5.10.110 is not latest 5.10.168 LTS that was released on 2023-02-15.
 
 Please check https://endoflife.date/linux for details. It is somewhat likely
 that a lot of exploitable vulnerabilities exist for this kernel as well as
@@ -83,5 +91,5 @@ running an official LTS Linux from kernel.org.
 This device runs a Rockchip BSP kernel based on a mixture of Android GKI and
 other sources. Also some community attempts to do version string cosmetics
 might have happened, see https://tinyurl.com/2p8fuubd for example. To examine
-how far away this 5.10.72 is from an official LTS of same version someone
-would have to reapply Rockchip's thousands of patches to a clean 5.10.72 LTS.
+how far away this 5.10.110 is from an official LTS of same version someone
+would have to reapply Rockchip's thousands of patches to a clean 5.10.110 LTS.

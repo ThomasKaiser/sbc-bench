@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.9.21
+Version=0.9.22
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -60,7 +60,7 @@ Main() {
 				ExecuteStockfish=yes
 				;;
 			S)
-				# check storage
+				# check storage (and PCIe), only for testing, will disappear later
 				CheckPCIeAndStorage | sort -n
 				exit 0
 				;;
@@ -2223,6 +2223,7 @@ CheckMissingPackages() {
 		command -v lspci >/dev/null 2>&1 || echo -e "pciutils \c"
 		command -v lsusb >/dev/null 2>&1 || echo -e "usbutils \c"
 		command -v smartctl >/dev/null 2>&1 || echo -e "smartmontools \c"
+		command -v udevadm >/dev/null 2>&1 || echo -e "udev \c"
 	fi
 } # CheckMissingPackages
 
@@ -2627,14 +2628,38 @@ InitialMonitoring() {
 
 	# Log Raspberry OS info if available
 	[ -f /etc/apt/sources.list.d/raspi.list ] && \
-		echo "Raspbian URL:   $(grep -v '#' /etc/apt/sources.list.d/raspi.list | head -n1)" >>${ResultLog}
+		echo "Build system:   $(grep -v '#' /etc/apt/sources.list.d/raspi.list | head -n1 | sed 's/deb //')" >>${ResultLog}
 	
-	# Log Armbian info if available
-	[ -f /etc/orangepi-release ] && ArmbianReleaseFile=/etc/orangepi-release
-	[ -f /etc/armbian-release ] && ArmbianReleaseFile=/etc/armbian-release
-	[ -f "${ArmbianReleaseFile}" ] && . "${ArmbianReleaseFile}"
+	# Log Build system info if available
+	if [ -r /etc/radxa_image_fingerprint ]; then
+		# Radxa's rbuild
+		. /etc/radxa_image_fingerprint
+		echo "Build system:   Radxa rbuild ${RBUILD_REVISION}, ${RBUILD_COMMAND#* }, ${RBUILD_UBOOT} ${RBUILD_UBOOT_VERSION}, $(awk -F" " '{print $2" "$3" "$4}' <<<"${RBUILD_BUILD_DATE}")" >>${ResultLog}
+	elif [ -r /etc/fenix-release ]; then
+		# Khadas' Fenix (mostly based on an old Armbian fork)
+		# they put image build information in /proc/cmdline like e.g.
+		# khadas_board=VIM3 hwver=VIM3.V12 coherent_pool=2M pci=pcie_bus_perf imagetype=EMMC_MBR uboottype=mainline
+		. /etc/fenix-release
+		if [ -r /proc/cmdline ]; then
+			read cmdline </proc/cmdline
+			khadas_board=${cmdline##*khadas_board=}
+			khadas_hwver=${cmdline##*hwver=}
+			khadas_pci=${cmdline##*pci=}
+			khadas_imagetype=${cmdline##*imagetype=}
+			khadas_uboottype=${cmdline##*uboottype=}
+			echo "Build system:  Khadas Fenix ${VERSION}, ${khadas_board%% *}/${khadas_hwver%% *}, u-boot type: ${khadas_uboottype%% *}, image type: ${khadas_imagetype%% *}" >>${ResultLog}
+		else
+			echo "Build system:  Khadas Fenix ${VERSION}" >>${ResultLog}
+		fi
+	elif [ -r /etc/orangepi-release ]; then
+		# Xunlong's forked Armbian scripts
+		. /etc/orangepi-release
+	elif [ -r /etc/armbian-release ]; then
+		# Armbian or other forks
+		. /etc/armbian-release
+	fi
 	[ "X${BOARD_NAME}" != "X" ] && \
-		echo "Armbian info:   ${BOARD_NAME}, ${BOARDFAMILY}, ${LINUXFAMILY}, ${VERSION}, ${BUILD_REPOSITORY_URL}" | sed 's/,\ $//' >>${ResultLog}
+		echo "Build system:   ${BUILD_REPOSITORY_URL:-https://github.com/armbian/build}, ${VERSION}, ${BOARD_NAME}, ${BOARDFAMILY}, ${LINUXFAMILY}" >>${ResultLog}
 
 	# Log system info and BIOS/UEFI versions if available:
 	command -v dmidecode >/dev/null 2>&1
@@ -6102,6 +6127,7 @@ ProvideReviewInfo() {
 	#
 	# * warning if uneven count of DIMMs
 	# * ThreadX version, UEFI/BIOS version
+	# * coherent_pool size
 	
 	echo "Starting to examine hardware/software for review purposes..."
 
@@ -6190,7 +6216,7 @@ ProvideReviewInfo() {
 	fi
 
 	# PCIe and storage devices, important stuff like downgraded PCIe link width/speed,
-	# SMART errors, negotiated USB speeds, worn out SSDs and so on
+	# SMART errors, negotiated USB speeds, (almost) worn out SSDs and so on
 	PCIeAndStorage="$(CheckPCIeAndStorage | sort -n)"
 	if [ "X${PCIeAndStorage}" != "X" ]; then
 		grep -q -E "as /dev/sd|as /dev/nvme" <<<"${PCIeAndStorage}"
@@ -6219,10 +6245,16 @@ ProvideReviewInfo() {
 			echo "  * ${OperatingSystem}" >>"${TempDir}/review"
 			;;
 	esac
-	ArmbianInfo="$(grep "^Armbian info:   " ${ResultLog} | sed 's/Armbian info:   /  * Build scripts: /')"
-	[ -z "${ArmbianInfo}" ] || echo "${ArmbianInfo}" >>"${TempDir}/review"
+	BuildInfo="$(grep "^Build system:   " ${ResultLog} | sed 's/Build system:   /  * Build scripts: /')"
+	[ -z "${BuildInfo}" ] || echo "${BuildInfo}" >>"${TempDir}/review"
 	grep -i "^ Compiler:" ${ResultLog} | sed -e 's/^/  */' >>"${TempDir}/review"
 	grep -i "^openssl" ${ResultLog} | sed -e 's/^/  * /' >>"${TempDir}/review"
+
+	# Kernel relevant settings / versions
+	echo -e "\n### Kernel info:\n" >>"${TempDir}/review"
+
+	[ -r /proc/cmdline ] && echo -e "  * `/proc/cmdline: $(</proc/cmdline)`" >>"${TempDir}/review"
+	grep "^Vulnerability" <<<"${LSCPU}" | grep -v 'Not affected' | sed -e 's/^/  * /' >>"${TempDir}/review"
 	CONFIGHZ="$(awk -F" " '/CONFIG_HZ=/ {print $1}' <${ResultLog})"
 	[ -z "${CONFIGHZ}" ] && echo "  * Kernel ${KernelVersion}" >>"${TempDir}/review" || echo "  * Kernel ${KernelVersion} / ${CONFIGHZ}" >>"${TempDir}/review"
 	[ -z "${KernelInfo}" ] || echo -e "\n${KernelInfo}" >>"${TempDir}/review"
@@ -6630,7 +6662,16 @@ PrintKernelInfo() {
 } # PrintKernelInfo
 
 CheckPCIeAndStorage() {
-	# update-smart-drivedb
+	# TODO:
+	# grep "^http" -- drive firmware update info
+	# maybe overtake CheckSMARTModes code from armbianmonitor
+	# maybe differentiate between general and SMART warnings to add smartctl suggestion
+	# reallocated/pending sectors with HDD
+	# different wearout attributes for AHCI SSDs
+
+	# try to update SMART drive database
+	update-smart-drivedb >/dev/null 2>&1
+
 	lspci -Q -mm | grep controller | while read ; do
 		unset DeviceWarning
 		BusAddress="$(awk -F" " '{print $1}' <<<"${REPLY}")"
@@ -6671,8 +6712,7 @@ CheckPCIeAndStorage() {
 	done
 	if [ -b /dev/sda ]; then
 		for SATAorUSB in /dev/sd? ; do
-			unset DeviceWarning
-			PathInfo="$(ls -l /dev/disk/by-path/ | grep "${SATAorUSB##*/}$")"
+			unset DeviceName DeviceInfo DeviceWarning AdditionalInfo
 			UdevInfo="$(udevadm info -a -n ${SATAorUSB} 2>/dev/null)"
 			Driver="$(awk -F'"' '/DRIVERS==/ {print $2}' <<<"${UdevInfo}" | grep -E 'uas|usb-storage|ahci')"
 			case "${Driver}" in
@@ -6685,20 +6725,21 @@ CheckPCIeAndStorage() {
 					CheckSMARTData "${SATAorUSB}"
 					if [ "X${DeviceName}" = "X${DeviceToCheck}" ]; then
 						# no SMART support or SMART query failed, we need to find a fallback name
-						DeviceVendor="$(awk -F'"' '/ATTRS{vendor}/ {print $2}' <<<"${UdevInfo}" | awk '{$1=$1};1')"
-						if [ "X${DeviceVendor}" = "X" ]; then
-							# this doesn't work either so let's lookup IDs in usbutils' database
-							idProduct="$(awk -F'"' '/ATTRS{idProduct}/ {print $2}' <<<"${UdevInfo}" | head -n1)"
-							idVendor="$(awk -F'"' '/ATTRS{idVendor}/ {print $2}' <<<"${UdevInfo}" | head -n1)"
-							LsusbGuess="$(lsusb | awk -F"${idVendor}:${idProduct} " "/${idVendor}:${idProduct} / {print \$2}")"
-							if [ "X${LsusbGuess}" = "X" ]; then
-								DeviceName="[unknown device] as ${DeviceToCheck}"
-							else
-								DeviceName="${LsusbGuess} as ${DeviceToCheck}"
-							fi
+						# so let's try to lookup IDs in usbutils' database
+						idProduct="$(awk -F'"' '/ATTRS{idProduct}/ {print $2}' <<<"${UdevInfo}" | head -n1)"
+						idVendor="$(awk -F'"' '/ATTRS{idVendor}/ {print $2}' <<<"${UdevInfo}" | head -n1)"
+						LsusbGuess="$(lsusb | awk -F"${idVendor}:${idProduct} " "/${idVendor}:${idProduct} / {print \$2}")"
+						if [ "X${LsusbGuess}" != "X" ]; then
+							# Seems like a legit string, so use usbutils database info
+							DeviceName="${LsusbGuess} as ${DeviceToCheck}"
 						else
-							# construct device name from ATTRS{vendor}+ATTRS{model} udev info
-							DeviceName="${DeviceVendor}$(awk -F'"' '/ATTRS{model}/ {print $2}' <<<"${UdevInfo}" | awk '{$1=$1};1') as ${DeviceToCheck}"
+							# try to construct device name from ATTRS{vendor}+ATTRS{model} udev info
+							DeviceVendor="$(awk -F'"' '/ATTRS{vendor}/ {print $2}' <<<"${UdevInfo}" | awk '{$1=$1};1')"
+							if [ "X${DeviceVendor}" != "X" ]; then
+								DeviceName="${DeviceVendor} $(awk -F'"' '/ATTRS{model}/ {print $2}' <<<"${UdevInfo}" | awk '{$1=$1};1') as ${DeviceToCheck}"
+							else
+								DeviceName="[unknown device] as ${DeviceToCheck}"
+							fi
 						fi
 					fi
 					NegotiatedSpeed="$(awk -F'"' '/ATTRS{speed}/ {print $2}' <<<"${UdevInfo}" | head -n1)"

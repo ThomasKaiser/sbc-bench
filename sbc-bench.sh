@@ -2234,6 +2234,7 @@ CheckMissingPackages() {
 		command -v lspci >/dev/null 2>&1 || echo -e "pciutils \c"
 		command -v lsusb >/dev/null 2>&1 || echo -e "usbutils \c"
 		command -v mmc >/dev/null 2>&1 || echo -e "mmc-utils \c"
+		command -v stress-ng >/dev/null 2>&1 || echo -e "stress-ng \c"
 		command -v smartctl >/dev/null 2>&1 || echo -e "smartmontools \c"
 		command -v udevadm >/dev/null 2>&1 || echo -e "udev \c"
 	fi
@@ -3341,6 +3342,18 @@ RunCpuminerBenchmark() {
 	echo -e "\nTotal Scores: ${TotalScores}" >>${ResultLog}
 	CpuminerScore="$(awk -F"," '{print $2}' <<<"${TotalScores}")"
 } # RunCpuminerBenchmark
+
+RunStressNG() {
+	echo -e "\x08\x08 Done.\nExecuting stress-ng. 5 more minutes to wait...\c"
+	echo -e "\nSystem health while running stress-ng:\n" >>${MonitorLog}
+	/bin/bash "${PathToMe}" -m 40 >>${MonitorLog} &
+	MonitoringPID=$!
+	echo -e "Executing \"stress-ng --matrix 0\" for 5 minutes:\n" >${TempLog}
+	stress-ng --matrix 0 -t 300 2>>${TempLog}
+	kill ${MonitoringPID}
+	echo -e "\n##########################################################################\n" >>${ResultLog}
+	sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" <${TempLog} >>${ResultLog}
+} # RunStressNG
 
 RunStockfishBenchmark() {
 	echo -e "\x08\x08 Done.\nExecuting stockfish...\c"
@@ -6181,6 +6194,8 @@ ProvideReviewInfo() {
 	if [ -x "${InstallLocation}"/cpuminer-multi/cpuminer ]; then
 		ExecuteCpuminer=yes
 		RunCpuminerBenchmark
+	else
+		RunStressNG
 	fi
 	[ -z ${InitialTemp} ] || TempNow=$(ReadSoCTemp)
 	CheckTimeInState after
@@ -6293,15 +6308,20 @@ ProvideReviewInfo() {
 		cpuinfo_max_freq=$(cat /sys/devices/system/cpu/cpu?/cpufreq/cpuinfo_max_freq)
 		cpuinfo_cur_freq=$(cat /sys/devices/system/cpu/cpu?/cpufreq/cpuinfo_cur_freq)
 		if [ "X${cpuinfo_max_freq}" != "X${cpuinfo_cur_freq}" ]; then
-			echo -e "\nWaiting for the device to cool down     \c"
+			echo -e "\nWaiting for the device to cool down       \c"
 			while [ "X${cpuinfo_max_freq}" != "X${cpuinfo_cur_freq}" ]; do
 				TempNow=$(ReadSoCTemp)
-				echo -e "\x08\x08\x08\x08\x08\x08. ${TempNow}°C\c"
+				echo -e "\x08\x08\x08\x08\x08\x08\x08. ${TempNow}°C\c"
 				sleep 2
 				cpuinfo_max_freq=$(cat /sys/devices/system/cpu/cpu?/cpufreq/cpuinfo_max_freq)
 				cpuinfo_cur_freq=$(cat /sys/devices/system/cpu/cpu?/cpufreq/cpuinfo_cur_freq)
 			done
-			sleep 2
+			# wait 20 more seconds for temperatures to stabilize
+			for i in {1..10} ; do
+				TempNow=$(ReadSoCTemp)
+				echo -e "\x08\x08\x08\x08\x08\x08\x08. ${TempNow}°C\c"
+				sleep 2
+			done
 			echo ""
 		fi
 	fi
@@ -6309,7 +6329,7 @@ ProvideReviewInfo() {
 	# device now ready for benchmarking
 	cat <<- EOF
 	
-	All known settings adjusted for performance. System now ready for benchmarking.
+	All known settings adjusted for performance. Device now ready for benchmarking.
 	Once finished stop with [ctrl]-[c] to get info about throttling, frequency cap
 	and too high background activity all potentially invalidating benchmark scores.
 	EOF
@@ -6404,7 +6424,7 @@ CheckKernelVersion() {
 		echo -e "${LRED}${BOLD}tons of unfixed bugs. Better upgrade to a supported version ASAP.${NC}"
 	elif [ "X${KernelVersionDigitsOnly}" != "X${LatestKernelVersion}" ]; then
 		# kernel version at least matches a supported kernel but is not most recent one
-		BSPDisclaimer="\n${BOLD}But this version string doesn't matter since this is not an official${KernelSuffix} Linux${NC}\n${BOLD}from kernel.org.${NC}\n"
+		BSPDisclaimer="\n${BOLD}But this version string doesn't matter since this is not an official${KernelSuffix} Linux${NC}\n${BOLD}from kernel.org.${NC} \c"
 		UsedKernelRevision=$(cut -f3 -d. <<<"${KernelVersionDigitsOnly}")
 		LatestKernelRevision=$(cut -f3 -d. <<<"${LatestKernelVersion}")
 		RevisionDifference=$(( ${LatestKernelRevision:-0} - ${UsedKernelRevision:-0} ))
@@ -6440,7 +6460,7 @@ CheckKernelVersion() {
 		fi
 	else
 		# kernel version seems to match most recent upstream kernel.
-		BSPDisclaimer="\n${BOLD}But this version string doesn't matter since this is not an official${KernelSuffix} Linux${NC}\n${BOLD}from kernel.org.${NC}\n"
+		BSPDisclaimer="\n${BOLD}But this version string doesn't matter since this is not an official${KernelSuffix} Linux${NC}\n${BOLD}from kernel.org.${NC} \c"
 		if [ "X${CheckEOL}" = "X${EOLDate}" -a "X${EOLDate}" != "Xfalse" ]; then
 			# EOL date is in the past
 			echo -e "${LRED}${BOLD}${ShortKernelVersion}${KernelSuffix} has reached end-of-life on ${EOLDate}. ${KernelVersionDigitsOnly} is unsupported since then.${NC}"
@@ -6617,33 +6637,36 @@ PrintBSPWarning() {
 	echo -e "${BSPDisclaimer}"
 	case $1 in
 		Allwinner)
-			echo -e "${BOLD}This device runs an Allwinner BSP kernel forward ported since ages based on${NC}"
-			echo -e "${BOLD}unknown sources. While the version string suggests being a ${ShortKernelVersion} LTS release${NC}"
-			echo -e "${BOLD}the code base differs way too much. Better expect tons of unfixed bugs and${NC}"
-			echo -e "${BOLD}vulnerabilities hiding in this vendor kernel.${NC}"
+			echo -e "${BOLD}This device runs an $1 vendor/BSP kernel.${NC}\n"
+			echo -e "${BOLD}This kernel has been forward ported since ages based on unknown sources. While${NC}"
+			echo -e "${BOLD}the version string suggests being a ${ShortKernelVersion} LTS release the code base differs way${NC}"
+			echo -e "${BOLD}too much. Better expect tons of unfixed bugs and vulnerabilities hiding in this${NC}"
+			echo -e "${BOLD}vendor kernel.${NC}"
 			;;
 		Amlogic)
-			echo -e "${BOLD}This device runs an Amlogic BSP kernel based on an ancient Linux or Android${NC}"
-			echo -e "${BOLD}kernel version that has been forward ported since ages. While the version${NC}"
-			echo -e "${BOLD}string suggests being a ${ShortKernelVersion} LTS release the code base differs way too much.${NC}"
-			echo -e "${BOLD}See https://tinyurl.com/y8k3af73 and https://tinyurl.com/ywtfec7n for details.${NC}"
+			echo -e "${BOLD}This device runs an $1 vendor/BSP kernel.${NC}\n"
+			echo -e "${BOLD}This kernel has been forward ported since ages based on unknown sources. While${NC}"
+			echo -e "${BOLD}the version string suggests being a ${ShortKernelVersion} LTS release the code base differs way${NC}"
+			echo -e "${BOLD}too much. Better expect tons of unfixed bugs and vulnerabilities hiding in this${NC}"
+			echo -e "${BOLD}vendor kernel. See https://tinyurl.com/y8k3af73 and https://tinyurl.com/ywtfec7n${NC}"
+			echo -e "${BOLD}for details.${NC}"
 			;;
 		MediaTek|Nvidia|NXP|RealTek|Samsung|StarFive)
-			echo -e "${BOLD}This device runs a $1 BSP kernel.${NC}"
+			echo -e "${BOLD}This device runs a $1 vendor/BSP kernel.${NC}"
 			;;
 		Rockchip)
-			echo -e "${BOLD}This device runs a Rockchip BSP kernel based on a mixture of various sources${NC}"
-			echo -e "${BOLD}being just forward ported since ages.${NC}"
+			echo -e "${BOLD}This device runs a forward ported $1 vendor/BSP kernel.${NC}"
 			;;
 		RockchipGKI)
-			echo -e "${BOLD}This device runs a Rockchip BSP kernel based on a mixture of Android GKI and${NC}"
-			echo -e "${BOLD}other sources. Also some community attempts to do version string cosmetics${NC}"
-			echo -e "${BOLD}might have happened, see https://tinyurl.com/2p8fuubd for example. To examine${NC}"
-			echo -e "${BOLD}how far away this ${KernelVersionDigitsOnly} is from an official LTS of same version someone${NC}"
-			echo -e "${BOLD}would have to reapply Rockchip's thousands of patches to a clean ${KernelVersionDigitsOnly} LTS.${NC}"
+			echo -e "${BOLD}This device runs a Rockchip vendor/BSP kernel.${NC}\n"
+			echo -e "${BOLD}This kernel is based on a mixture of Android GKI and other sources. Also some${NC}"
+			echo -e "${BOLD}community attempts to do version string cosmetics might have happened, see${NC}"
+			echo -e "${BOLD}https://tinyurl.com/2p8fuubd for example. To examine how far away this ${KernelVersionDigitsOnly}${NC}"
+			echo -e "${BOLD}is from an official LTS of same version someone would have to reapply Rockchip's${NC}"
+			echo -e "${BOLD}thousands of patches to a clean ${KernelVersionDigitsOnly} LTS.${NC}"
 			;;
 		*)
-			echo -e "${BOLD}This device runs a vendor kernel most probably forward ported since ages.${NC}"
+			echo -e "${BOLD}This device runs an unknown vendor/BSP/Android kernel.${NC}"
 			;;
 	esac
 } # PrintBSPWarning
@@ -6687,8 +6710,11 @@ CheckPCIe() {
 	# try to update SMART drive database
 	update-smart-drivedb >/dev/null 2>&1
 
+	# grab info about block devices
+	LSBLK="$(LC_ALL="C" lsblk -l -o SIZE,NAME,FSTYPE,LABEL,MOUNTPOINT 2>&1)"
+
 	lspci -Q -mm 2>/dev/null | grep controller | while read ; do
-		unset DeviceWarning
+		unset DeviceWarning DevizeSize
 		BusAddress="$(awk -F" " '{print $1}' <<<"${REPLY}")"
 		ControllerType="$(awk -F'"' '{print $2}' <<<"${REPLY}")"
 		case "${ControllerType}" in
@@ -6711,15 +6737,16 @@ CheckPCIe() {
 						if [ -h "${PathGuess}" ]; then
 							# try to query via SMART
 							NVMeDevice="$(readlink "${PathGuess}")"
-							CheckSMARTData "/dev/${NVMeDevice##*/}"
+							CheckSMARTData "/dev/${NVMeDevice##*/}" nvme
+							DevizeSize="$(GetDiskSize "/dev/${NVMeDevice##*/}" "${DeviceName}")"
 						fi
 					else
 						AdditionalInfo=", driver in use: $(awk -F": " '/Kernel driver in use:/ {print $2}' <<<"${PCIeDetails}")"
 					fi
 					if [ "X${DeviceWarning}" = "XTRUE" ]; then
-						echo -e "  * ${LRED}${DeviceName}: ${LnkSta}${AdditionalInfo}${NC}"
+						echo -e "  * ${LRED}${DevizeSize}${DeviceName}: ${LnkSta}${AdditionalInfo}${NC}"
 					else
-						echo -e "  * ${DeviceName}: ${LnkSta}${AdditionalInfo}"
+						echo -e "  * ${DevizeSize}${DeviceName}: ${LnkSta}${AdditionalInfo}"
 					fi
 				fi
 				;;
@@ -6741,44 +6768,88 @@ CheckStorage() {
 	# different wearout attributes for AHCI SSDs
 
 	for StorageDevice in $(ls /dev/sd? 2>/dev/null) ; do
-		unset DeviceName DeviceInfo DeviceWarning AdditionalInfo
+		unset DeviceName DeviceInfo DeviceWarning DevizeSize AdditionalInfo
+
 		UdevInfo="$(udevadm info -a -n ${StorageDevice} 2>/dev/null)"
 		Driver="$(awk -F'"' '/DRIVERS==/ {print $2}' <<<"${UdevInfo}" | grep -E 'uas|usb-storage|ahci')"
 		case "${Driver}" in
 			ahci)
 				# (S)ATA attached
-				CheckSMARTData "${StorageDevice}"
+				CheckSMARTData "${StorageDevice}" "${Driver}"
 				;;
 			usb-storage|uas)
 				# USB attached
-				CheckSMARTData "${StorageDevice}"
+				CheckSMARTData "${StorageDevice}" "${Driver}"
+
+				# try to lookup device ID in usbutils' database
+				idProduct="$(awk -F'"' '/ATTRS{idProduct}/ {print $2}' <<<"${UdevInfo}" | head -n1)"
+				idVendor="$(awk -F'"' '/ATTRS{idVendor}/ {print $2}' <<<"${UdevInfo}" | head -n1)"
+				LsusbGuess="$(lsusb | awk -F"${idVendor}:${idProduct} " "/${idVendor}:${idProduct} / {print \$2}")"
+
+				NegotiatedSpeed="$(awk -F'"' '/ATTRS{speed}/ {print $2}' <<<"${UdevInfo}" | head -n1)"
 				if [ "X${DeviceName}" = "X${DeviceToCheck}" ]; then
 					# no SMART support or SMART query failed, we need to find a fallback name
-					# so let's try to lookup IDs in usbutils' database
-					idProduct="$(awk -F'"' '/ATTRS{idProduct}/ {print $2}' <<<"${UdevInfo}" | head -n1)"
-					idVendor="$(awk -F'"' '/ATTRS{idVendor}/ {print $2}' <<<"${UdevInfo}" | head -n1)"
-					LsusbGuess="$(lsusb | awk -F"${idVendor}:${idProduct} " "/${idVendor}:${idProduct} / {print \$2}")"
 					if [ "X${LsusbGuess}" != "X" ]; then
 						# Seems like a legit string, so use usbutils database info
-						DeviceName="${LsusbGuess}"
+						DeviceName="\"${LsusbGuess}\" as ${StorageDevice}"
 					else
 						# try to construct device name from ATTRS{vendor}+ATTRS{model} udev info
 						DeviceVendor="$(awk -F'"' '/ATTRS{vendor}/ {print $2}' <<<"${UdevInfo}" | awk '{$1=$1};1')"
 						if [ "X${DeviceVendor}" != "X" ]; then
-							DeviceName="${DeviceVendor} $(awk -F'"' '/ATTRS{model}/ {print $2}' <<<"${UdevInfo}" | awk '{$1=$1};1')"
+							DeviceName="\"${DeviceVendor} $(awk -F'"' '/ATTRS{model}/ {print $2}' <<<"${UdevInfo}" | awk '{$1=$1};1')\" as ${StorageDevice}"
 						else
-							DeviceName="[unknown device]"
+							DeviceName="[unknown device] as ${StorageDevice}"
 						fi
 					fi
+					DeviceInfo="USB, Driver=${Driver}, ${NegotiatedSpeed}M"
+				else
+					# SMART data has been found, now try to determine bridge chip in between
+					# disk and USB host controller
+					case "${idVendor}:${idProduct}" in
+						152d:0578)
+							# JMS578 wrongly listed as JMS567 in usbutils database
+							DeviceInfo="behind JMicron JMS578 SATA 6Gb/s bridge, Driver=${Driver}, ${NegotiatedSpeed}M"
+							;;
+						152d*)
+							# JMicron bridge, let's replace the monstrous vendor string with JMicron
+							DeviceInfo="behind JMicron JM$(sed 's/JMicron//g' <<<"${LsusbGuess}" | awk -F" JM" '{print $2}'), Driver=${Driver}, ${NegotiatedSpeed}M"
+							;;
+						174c:55aa)
+							# the product ID has been used by ASMedia for a bunch of different chips and the usbutils name reads 'ASMedia Technology Inc. Name: ASM1051E SATA 6Gb/s bridge, ASM1053E SATA 6Gb/s bridge, ASM1153 SATA 3Gb/s bridge, ASM1153E SATA 6Gb/s bridge'
+							DeviceInfo="behind ASMedia SATA 6Gb/s bridge, Driver=${Driver}, ${NegotiatedSpeed}M"
+							;;
+						174c*)
+							# ASMedia bridge, let's replace the monstrous vendor string with ASMedia
+							DeviceInfo="behind ASMedia ASM$(sed 's/ASMedia//g' <<<"${LsusbGuess}" | awk -F" ASM" '{print $2}'), Driver=${Driver}, ${NegotiatedSpeed}M"
+							;;
+						2109:0715)
+							# VIA VL715/VL716 USB to SATA bridges, appear in usbutils as
+							# "VIA Labs, Inc. VLI Product String", VL715/VL716 differ by
+							# PHY but share same product ID
+							DeviceInfo="behind VIA Labs VL715/VL716 SATA 6Gb/s bridge, Driver=${Driver}, ${NegotiatedSpeed}M"
+							;;
+						2109:07*)
+							# any of the other VIA Labs bridges
+							DeviceInfo="behind VIA Labs VL${idProduct:1} SATA 6Gb/s bridge, Driver=${Driver}, ${NegotiatedSpeed}M"
+							;;
+						:)
+							# no IDs found, generic report
+							DeviceInfo="behind USB, Driver=${Driver}, ${NegotiatedSpeed}M"
+							;;
+						*)
+							# Use lsusb guess as pathetic as it might be (http://www.linux-usb.org/usb.ids)
+							DeviceInfo="behind \"${LsusbGuess}\", Driver=${Driver}, ${NegotiatedSpeed}M"
+							;;
+					esac
 				fi
-				NegotiatedSpeed="$(awk -F'"' '/ATTRS{speed}/ {print $2}' <<<"${UdevInfo}" | head -n1)"
-				DeviceInfo="USB, Driver=${Driver}, ${NegotiatedSpeed}M"
 				;;
 		esac
+
+		DevizeSize="$(GetDiskSize "${StorageDevice}" "${DeviceName}")"
 		if [ "X${DeviceWarning}" = "XTRUE" ]; then
-			echo -e "  * ${LRED}${DeviceName%%*( )} as ${DeviceToCheck}: ${DeviceInfo}${AdditionalInfo}${NC}"
+			echo -e "  * ${LRED}${DevizeSize}${DeviceName%%*( )}: ${DeviceInfo}${AdditionalInfo}${NC}"
 		else
-			echo -e "  * ${DeviceName%%*( )} as ${DeviceToCheck}: ${DeviceInfo}${AdditionalInfo}"
+			echo -e "  * ${DevizeSize}${DeviceName%%*( )}: ${DeviceInfo}${AdditionalInfo}"
 		fi
 	done
 
@@ -6801,12 +6872,15 @@ CheckStorage() {
 	done
 
 	# MMC devices
-	LSBLK="$(lsblk -l -o NAME,SIZE 2>&1)"
 	for StorageDevice in $(ls /dev/mmcblk? 2>/dev/null) ; do
-		unset DeviceName DeviceInfo DeviceWarning AdditionalInfo
+		unset DeviceName DeviceInfo DeviceWarning DevizeSize AdditionalInfo
 		if [ -x /sys/block/${StorageDevice##*/}/device ]; then
 			cd /sys/block/${StorageDevice##*/}/device
-			# read in variables from sysfs in q&d style and prefix them all with "mmc_"
+			# read in variables from sysfs in q&d style and prefix them all with "mmc_".
+			# We rely here on the kernel version being recent enough to decode CIS and CSD
+			# correctly. Should be double checked against https://tinyurl.com/29c8393f or
+			# https://gurumeditation.org/1342/sd-memory-card-register-decoder/
+			#
 			# Looks like this for example:
 			#
 			# mmc_cid=035344534c3038478049e841e30106dd
@@ -6831,7 +6905,7 @@ CheckStorage() {
 
 			# Rely on human readable real storage sizes and not vendor claims:
 			# e.g. show 29.7GB for a '32GB' card:
-			mmc_size=$(awk -F" " "/${StorageDevice##*/} / {print \$2}" <<<"${LSBLK}")
+			mmc_size=$(awk -F" " "/ ${StorageDevice##*/} / {print \$1}" <<<"${LSBLK}")
 			[ "X${mmc_size}" != "X" ] && FlashSize="${mmc_size}B "
 
 			# Only add manufacturer info if really unique. Partially misleading since counterfeit
@@ -6890,16 +6964,16 @@ CheckStorage() {
 			esac
 			case "${mmc_type}" in
 				SD)
-					echo -e "  * ${FlashSize}${Manufacturer}${mmc_name} SD card as ${StorageDevice}: date ${mmc_date}, man/oem ID: ${mmc_manfid}/${mmc_oemid}, hw/fw rev: ${mmc_hwrev}/${mmc_fwrev}"
+					echo -e "  * ${FlashSize}\"${Manufacturer}${mmc_name}\" SD card as ${StorageDevice}: date ${mmc_date}, man/oem ID: ${mmc_manfid}/${mmc_oemid}, hw/fw rev: ${mmc_hwrev}/${mmc_fwrev}"
 					;;
 				MMC)
 					# try to query additional info via mmc-utils (for now only MMC version)
 					ExtendedInfo="$(mmc extcsd read ${StorageDevice} 2>/dev/null)"
 					grep -q "Extended CSD rev" <<<"${ExtendedInfo}" && MMCVersion="$(awk -F"[()]" '/Extended CSD rev/ {print $2}' <<<"${ExtendedInfo}")"
 					if [ "X${MMCVersion}" = "X" ]; then
-						echo -e "  * ${FlashSize}${Manufacturer}${mmc_name} eMMC as ${StorageDevice}: date ${mmc_date}, man/oem ID: ${mmc_manfid}/${mmc_oemid}, hw/fw rev: ${mmc_hwrev}/${mmc_fwrev}"
+						echo -e "  * ${FlashSize}\"${Manufacturer}${mmc_name}\" eMMC as ${StorageDevice}: date ${mmc_date}, man/oem ID: ${mmc_manfid}/${mmc_oemid}, hw/fw rev: ${mmc_hwrev}/${mmc_fwrev}"
 					else
-						echo -e "  * ${FlashSize}${Manufacturer}${mmc_name} e${MMCVersion} as ${StorageDevice}: date ${mmc_date}, man/oem ID: ${mmc_manfid}/${mmc_oemid}, hw/fw rev: ${mmc_hwrev}/${mmc_fwrev}"
+						echo -e "  * ${FlashSize}\"${Manufacturer}${mmc_name}\" e${MMCVersion} as ${StorageDevice}: date ${mmc_date}, man/oem ID: ${mmc_manfid}/${mmc_oemid}, hw/fw rev: ${mmc_hwrev}/${mmc_fwrev}"
 					fi
 					;;
 			esac
@@ -6907,27 +6981,72 @@ CheckStorage() {
 	done
 } # CheckStorage
 
+GetDiskSize() {
+	# $1 device node
+	# $2 Device name obtained using SMART or usbutils
+	#
+	# returns an empty string if device name seems to consist of the capacity already
+	# (e.g. "Model Number: KXG50ZNV256G NVMe TOSHIBA 256GB") or the capacity reported
+	# by lsblk if lsblk lists the device
+
+	grep -q " ${1##*/} " <<<"${LSBLK}" || return
+	local disksize=$(awk -F" " "/ ${1##*/} / {print \$1}" <<<"${LSBLK}")
+	# grep -E -q "[0-9][0-9]GB| [0-9]TB" <<<"${2}" || echo "${disksize}B "
+	echo "${disksize}B "
+} # GetDiskSize
+
 CheckSMARTData() {
 	DeviceToCheck="$1"
-	SMARTInfo="$(smartctl -j -i ${DeviceToCheck} 2>/dev/null)"
-	grep -q "model_name" <<<"${SMARTInfo}"
+	LinuxDriver="$2"
+	SMARTInfo="$(smartctl -i ${DeviceToCheck} 2>/dev/null)"
+
+	# do nothing if $SMARTInfo either contains 'No Information Found' or no disk name
+	grep -q "No Information Found" <<<"${SMARTInfo}" && return
+	grep -E -q "Device Model:|Model Number:" <<<"${SMARTInfo}"
 	if [ $? -eq 0 ]; then
-		# use SMART data
-		ProtocolInfo="$(awk -F'"' '/"info_name"/ {print $4}' <<<"${SMARTInfo}")"
-		Protocol="$(awk -F'"' '/"protocol"/ {print $4}' <<<"${SMARTInfo}")"
-		FirmwareVersion="$(awk -F'"' '/"firmware_version"/ {print $4}' <<<"${SMARTInfo}")"
+		# use SMART data, we need to differentiate by Linux driver (ahci, nvme, uas, usb-storage)
+		case "${LinuxDriver}" in
+			ahci)
+				# native SATA
+				Protocol="ATA"
+				DeviceAddition=""
+				;;
+			nvme)
+				# directly PCIe accessible NVMe
+				Protocol="NVMe"
+				DeviceAddition=""
+				;;
+			usb-storage|uas)
+				# USB attached, so we need to see what's behind the bridge chip
+				grep -E -q "Device Model:" <<<"${SMARTInfo}"
+				case $? in
+					0)
+						# SATA behind an USB-to-SATA bridge
+						Protocol="ATA"
+						DeviceAddition=" [SATA]"
+						;;
+					*)
+						# USB-to-NVMe bridge remains then
+						Protocol="NVMe"
+						DeviceAddition=" [NVMe]"
+						;;
+				esac
+				;;
+		esac
+
 		case ${Protocol} in
 			NVMe)
-				# we can use the standardized NVMe SMART attributes
-				SMARTData="$(smartctl -j -a ${DeviceToCheck} 2>/dev/null)"
-				DeviceName="$(awk -F'"' '/"model_name"/ {print $4}' <<<"${SMARTInfo}") SSD as ${ProtocolInfo}"
-				PercentageUsed="$(awk -F": " '/"percentage_used"/ {print $2}' <<<"${SMARTData}" | sed 's/,//')"
-				MediaErrors="$(awk -F": " '/"media_errors"/ {print $2}' <<<"${SMARTData}" | sed 's/,//')"
-				ErrorLogEntries="$(awk -F": " '/"num_err_log_entries"/ {print $2}' <<<"${SMARTData}" | sed 's/,//')"
-				DriveTemp="$(grep -A1 '"temperature": {' <<<"${SMARTData}" | awk -F": " '/"current"/ {print $2}')"
-				Health="$(grep -A1 '"smart_status": {' <<<"${SMARTData}" | awk -F": " '/"passed"/ {print $2}')"
+				# we can use the standardized NVMe SMART attributes, use old text based
+				# output since JSON works only since smartmontools 7.x
+				SMARTData="$(smartctl -a ${DeviceToCheck} 2>/dev/null)"
+				DeviceName="\"$(awk -F": " "/^Model Number:/ {print \$2}" <<<"${SMARTData}" | sed 's/^ *//g')\" SSD as ${DeviceToCheck}${DeviceAddition}"
+				PercentageUsed="$(awk -F": " "/^Percentage Used:/ {print \$2}" <<<"${SMARTData}" | sed -e 's/^ *//g' -e 's/%//')"
+				MediaErrors="$(awk -F": " "/^Media and Data Integrity Errors:/ {print \$2}" <<<"${SMARTData}" | sed 's/^ *//g')"
+				ErrorLogEntries="$(awk -F": " "/^Error Information Log Entries:/ {print \$2}" <<<"${SMARTData}" | sed 's/^ *//g')"
+				DriveTemp="$(awk -F": " "/^Temperature:/ {print \$2}" <<<"${SMARTData}" | sed 's/^ *//g' | cut -f1 -d' ')"
+				Health="$(awk -F": " '/overall-health self-assessment test result/ {print $2}' <<<"${SMARTData}")"
 				case "${Health}" in
-					true*)
+					*PASSED*)
 						AdditionalInfo=", ${PercentageUsed}% worn out, ${MediaErrors}/${ErrorLogEntries} errors, ${DriveTemp}°C"
 						;;
 					*)
@@ -6944,15 +7063,31 @@ CheckSMARTData() {
 				# it gets complicated since we need to deal with vendor specific attributes
 				# and need to differentiate between spinning rust and SSDs :(
 				SMARTData="$(smartctl -a ${DeviceToCheck})"
+
+				# Check for available firmware upgrades
+				grep -q -A5 "A firmware update for this drive may be available" <<<"${SMARTData}"
+				if [ $? -eq 0 ]; then
+					FWUpdateURLs="$(grep -A5 "A firmware update for this drive may be available" <<<"${SMARTData}" | grep http | tr '\n' ' ' | sed 's/\ $//')"
+					FWVersion="$(awk -F": " '/Firmware Version:/ {print $2}' <<<"${SMARTData}" | sed 's/^ *//g')"
+					AdditionalInfo="${AdditionalInfo}, firmware version ${FWVersion}, updates may be available: ${FWUpdateURLs}"
+				fi
+
+				# Check for CRC errors. Usually caused by bad cables or jack contacts,
+				# goes along with retransmits and as such harms performance. Beware that
+				# this attribute records these issues over the drive's lifetime as such
+				# it's only an issue when the CRC error counter increases while writing to
+				# the drive
 				CRCErrors="$(awk -F": " '/^199 / {print $10}' <<<"${SMARTData}")"
 				[ ${CRCErrors:-0} -gt 0 ] && AdditionalInfo=", ${CRCErrors} CRC errors"
+
 				DriveTemp="$(awk -F" " '/Temperature/ {print $10" "$2}' <<<"${SMARTData}" | head -n1 | sed 's/_/ /g' | sed -e 's/ Airflow//' -e 's/ Temperature//' -e 's/ Celsius$/°C/' -e 's/ Cel$/°C/')"
 
-				SATAVersion="$(awk -F": " '/^SATA Version is/ {print $2": "$3}' <<<"${SMARTData}")"
+				SATAVersion="$(awk -F": " '/^SATA Version is/ {print $2": "$3}' <<<"${SMARTData}" | sed -e 's/^ *//g' -e 's/: $//')"
 				if [ "X${SATAVersion}" = "X: " ]; then
 					DeviceInfo="SATA"
 				else
-					DeviceInfo="$(sed 's/^ *//g' <<<"${SATAVersion}")"
+					DeviceInfo="${SATAVersion}"
+					[ "X${DeviceAddition}" != "X" ] && DeviceAddition="$(echo "${DeviceAddition}" | sed "s|SATA|${SATAVersion}|")"
 				fi
 
 				# differentiate between HDDs and SSDs
@@ -6960,7 +7095,7 @@ CheckSMARTData() {
 				case "${RotationRate}" in
 					*"Solid State Device"*)
 						# SSD
-						DeviceName="$(awk -F'"' '/"model_name"/ {print $4}' <<<"${SMARTInfo}") SSD as ${DeviceToCheck}"
+						DriveType="SSD"
 
 						# TODO: deal with the different wearout attributes
 						# 230 Media_Wearout_Indicator
@@ -6968,7 +7103,21 @@ CheckSMARTData() {
 						;;
 					*)
 						# HDD
-						DeviceName="$(awk -F'"' '/"model_name"/ {print $4}' <<<"${SMARTInfo}") HDD as ${DeviceToCheck}"
+						DriveType="HDD"
+						;;
+				esac
+
+				DeviceVendor="$(awk -F": " "/^Model Family:/ {print \$2}" <<<"${SMARTData}" | grep -E -v "Silicon Motion|Phison|SandForce|SK hynix|Marvell|JMicron|Apacer SSDs|Indilinx" | sed 's/^ *//g' | cut -f1 -d' ')"
+				DeviceModel="$(awk -F": " "/^Device Model:/ {print \$2}" <<<"${SMARTData}" | sed 's/^ *//g')"
+				grep -q "${DeviceVendor}" <<<"${DeviceModel}"
+				case $? in
+					0)
+						# drive vendor already part of device model string
+						DeviceName="\"${DeviceModel}\" ${DriveType} as ${DeviceToCheck}${DeviceAddition}"
+						;;
+					*)
+						# we add vendor to device name
+						DeviceName="\"${DeviceVendor} ${DeviceModel}\" ${DriveType} as ${DeviceToCheck}${DeviceAddition}"
 						;;
 				esac
 
@@ -6988,11 +7137,11 @@ CheckSMARTData() {
 
 		# Add vendor name where missing from model string
 		case "${DeviceName}" in
-			CT*)
-				DeviceName="Crucial ${DeviceName}"
+			"\"CT"*)
+				DeviceName="\"Crucial ${DeviceName:1}"
 				;;
-			TS*)
-				DeviceName="Transcend ${DeviceName}"
+			"\"TS"*)
+				DeviceName="\"Transcend ${DeviceName:1}"
 				;;
 		esac
 	else

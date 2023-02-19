@@ -6287,7 +6287,7 @@ ProvideReviewInfo() {
 	if [ $(( ${#ClusterConfig[@]} * 3 )) -eq ${CountOfMemoryScores} ]; then
 		# only report if all measurements finished successfully, add warning for
 		# NOTUNING operation mode.
-		[ "X${NOTUNING}" != "Xyes" ] && PerfWarning=" (NOTUNING=yes was set)"
+		[ "X${NOTUNING}" = "Xyes" ] && PerfWarning=" (NOTUNING=yes was set)"
 		echo -e "\n### Memory performance${PerfWarning}\n" >>"${TempDir}/review"
 		if [ ${#ClusterConfig[@]} -eq 1 ]; then
 			# only 1 CPU cluster, no differentiation between clusters/core types
@@ -6486,9 +6486,8 @@ CheckKernelVersion() {
 	if [ -z "${KernelStatus}" ]; then
 		# some old kernel version neither being an LTS kernel nor any actively developed variant
 		echo -e "${LRED}${BOLD}Kernel version ${KernelVersionDigitsOnly} is not covered by any active release cycle any more.${NC}\n"
-		echo -e "${LRED}${BOLD}Please check https://endoflife.date/linux for details. It is highly likely${NC}"
-		echo -e "${LRED}${BOLD}that countless exploitable vulnerabilities exist for this kernel as well as${NC}"
-		echo -e "${LRED}${BOLD}tons of unfixed bugs. Better upgrade to a supported version ASAP.${NC}"
+		echo -e "${LRED}${BOLD}See https://endoflife.date/linux for details. It is highly likely countless${NC}"
+		echo -e "${LRED}${BOLD}exploitable vulnerabilities do exist for this kernel as well as tons of bugs.${NC}"
 	elif [ "X${KernelVersionDigitsOnly}" != "X${LatestKernelVersion}" ]; then
 		# kernel version at least matches a supported kernel but is not most recent one
 		BSPDisclaimer="\n${BOLD}But this version string doesn't matter since this is not an official${KernelSuffix} Linux${NC}\n${BOLD}from kernel.org.${NC} \c"
@@ -6507,17 +6506,15 @@ CheckKernelVersion() {
 			# warn about vulnerabilities only on LTS kernels since users of actively
 			# developed kernel branches should know what they're doing.
 			if [ ${RevisionDifference} -ge 50 ]; then
-				echo -e "${LRED}${BOLD}Please check https://endoflife.date/linux for details. It is somewhat likely${NC}"
-				echo -e "${LRED}${BOLD}that a lot of exploitable vulnerabilities exist for this kernel as well as${NC}"
-				echo -e "${LRED}${BOLD}many unfixed bugs. Better upgrade to a supported version ASAP.${NC}"
+				echo -e "${LRED}${BOLD}See https://endoflife.date/linux for details. It is somewhat likely that${NC}"
+				echo -e "${LRED}${BOLD}a lot of exploitable vulnerabilities exist for this kernel as well as many${NC}"
+				echo -e "${LRED}${BOLD}unfixed bugs.${NC}"
 			elif [ ${RevisionDifference} -ge 20 ]; then
-				echo -e "${LRED}${BOLD}Please check https://endoflife.date/linux for details. It is somewhat likely${NC}"
-				echo -e "${LRED}${BOLD}that some exploitable vulnerabilities exist for this kernel as well as many${NC}"
-				echo -e "${LRED}${BOLD}unfixed bugs. Better upgrade to a supported version.${NC}"
+				echo -e "${LRED}${BOLD}See https://endoflife.date/linux for details. It is somewhat likely that some${NC}"
+				echo -e "${LRED}${BOLD}exploitable vulnerabilities exist for this kernel as well as many unfixed bugs.${NC}"
 			elif [ ${RevisionDifference} -gt 5 ]; then
-				echo -e "${LRED}${BOLD}Please check https://endoflife.date/linux for details. It is somewhat likely${NC}"
-				echo -e "${LRED}${BOLD}some kernel bugs have been fixed in the meantime and maybe vulnerabilities${NC}"
-				echo -e "${LRED}${BOLD}as well.${NC}"
+				echo -e "${LRED}${BOLD}See https://endoflife.date/linux for details. Perhaps some kernel bugs have${NC}"
+				echo -e "${LRED}${BOLD}been fixed in the meantime and maybe vulnerabilities as well.${NC}"
 			else
 				# Avoid annoying warnings if kernel revision difference is lower than 5.
 				# Happened eg. with 6.1.9 shortly after 6.1 became most recent LTS kernel as
@@ -6822,17 +6819,16 @@ CheckPCIe() {
 } # CheckPCIe
 
 CheckStorage() {
-	# examine storage devices of these patterns: /dev/sd?, /dev/mtd? and /dev/mmcblk?
+	# examine storage devices of these patterns: /dev/sd?, /dev/mmcblk? and /dev/mtd?
 	# With the more sophisticated ones (USB and SATA) try to report as much connection details
 	# as possible (e.g. USB/SATA speed, whether speed downgrades have happened, usb-storage
 	# vs. uas and so on)
 	#
 	# TODO:
-	# grep "^http" -- drive firmware update info
-	# maybe overtake CheckSMARTModes code from armbianmonitor
-	# maybe differentiate between general and SMART warnings to add smartctl suggestion
-	# reallocated/pending sectors with HDD
-	# different wearout attributes for AHCI SSDs
+	# * maybe overtake CheckSMARTModes code from armbianmonitor
+	# * maybe differentiate between general and SMART warnings to add smartctl suggestion
+	# * add warnings if a mounted filesystem is of type NTFS since usually performance
+	#   sucks horribly when accessed via FUSE
 
 	# grab info about block devices
 	[ -z "${LSBLK}" ] && LSBLK="$(LC_ALL="C" lsblk -l -o SIZE,NAME,FSTYPE,LABEL,MOUNTPOINT 2>&1)"
@@ -6876,6 +6872,11 @@ CheckStorage() {
 					# SMART data has been found, now try to determine bridge chip in between
 					# disk and USB host controller
 					case "${idVendor}:${idProduct}" in
+						1058:0a10)
+							# JMicron JMS56x USB-to-SATA bridge with integrated port multiplier
+							# that has been flashed with Western Digital branded firmware
+							DeviceInfo="behind JMicron JMS56x SATA 6Gb/s bridge, Driver=${Driver}, ${NegotiatedSpeed}M"
+							;;
 						152d:0578)
 							# JMS578 wrongly listed as JMS567 in usbutils database
 							DeviceInfo="behind JMicron JMS578 SATA 6Gb/s bridge, Driver=${Driver}, ${NegotiatedSpeed}M"
@@ -7121,6 +7122,7 @@ CheckSMARTData() {
 	DeviceToCheck="$1"
 	LinuxDriver="$2"
 	SMARTInfo="$(smartctl -i ${DeviceToCheck} 2>/dev/null)"
+	unset PercentageUsed DeviceWarning
 
 	# do nothing if $SMARTInfo either contains 'No Information Found' or no disk name
 	grep -q "No Information Found" <<<"${SMARTInfo}" && return
@@ -7163,17 +7165,20 @@ CheckSMARTData() {
 				SMARTData="$(smartctl -a ${DeviceToCheck} 2>/dev/null)"
 				DeviceName="\"$(awk -F": " "/^Model Number:/ {print \$2}" <<<"${SMARTData}" | sed 's/^ *//g')\" SSD as ${DeviceToCheck}${DeviceAddition}"
 				PercentageUsed="$(awk -F": " "/^Percentage Used:/ {print \$2}" <<<"${SMARTData}" | sed -e 's/^ *//g' -e 's/%//')"
-				MediaErrors="$(awk -F": " "/^Media and Data Integrity Errors:/ {print \$2}" <<<"${SMARTData}" | sed 's/^ *//g')"
-				ErrorLogEntries="$(awk -F": " "/^Error Information Log Entries:/ {print \$2}" <<<"${SMARTData}" | sed 's/^ *//g')"
+				AdditionalInfo=", ${PercentageUsed}% worn out"
+				MediaErrors=$(awk -F": " "/^Media and Data Integrity Errors:/ {print \$2}" <<<"${SMARTData}" | sed 's/^ *//g')
+				[ ${MediaErrors:-0} -gt 0 ] && AdditionalInfo="${AdditionalInfo}, ${MediaErrors} media errors"
+				ErrorLogEntries=$(awk -F": " "/^Error Information Log Entries:/ {print \$2}" <<<"${SMARTData}" | sed 's/^ *//g')
+				[ ${ErrorLogEntries:-0} -gt 0 ] && AdditionalInfo="${AdditionalInfo}, ${ErrorLogEntries} error log entries"
 				DriveTemp="$(awk -F": " "/^Temperature:/ {print \$2}" <<<"${SMARTData}" | sed 's/^ *//g' | cut -f1 -d' ')"
 				Health="$(awk -F": " '/overall-health self-assessment test result/ {print $2}' <<<"${SMARTData}")"
 				case "${Health}" in
 					*PASSED*)
-						AdditionalInfo=", ${PercentageUsed}% worn out, ${MediaErrors}/${ErrorLogEntries} errors, ${DriveTemp}°C"
+						AdditionalInfo="${AdditionalInfo}, ${DriveTemp}°C"
 						;;
 					*)
 						# SMART health check returned failed. This SSD is about to pass away
-						AdditionalInfo=", ${PercentageUsed}% worn out, ${MediaErrors}/${ErrorLogEntries} errors, SMART health: FAILED, ${DriveTemp}°C"
+						AdditionalInfo="${AdditionalInfo}, SMART health: FAILED, ${DriveTemp}°C"
 						DeviceWarning=TRUE
 						;;
 				esac
@@ -7219,15 +7224,57 @@ CheckSMARTData() {
 						# SSD
 						DriveType="SSD"
 
-						# TODO: deal with the different wearout attributes
-						# 230 Media_Wearout_Indicator
+						# TODO: deal with the different wearout attributes which is unreliable by definition:
+						# https://listi.jpberlin.de/pipermail/smartmontools-support/2021-February/000580.html
+						# so let's try ATA Device Statistics first
+						SMARTDevstat="$(smartctl -l devstat ${DeviceToCheck})"
+						PercentageUsed="$(awk -F" " '/Percentage Used Endurance Indicator/ {print $4}' <<<"${SMARTDevstat}")"
+						if [ "X${PercentageUsed}" = "X" ]; then
+							# not compliant to ATA Device Statistics so try to deal with the vendor
+							# attributes if in good mood sometimes in the future, for now only caring
+							# about 169
 
+							# Silicon Motion based SSDs / CT500BX100SSD1: 169, raw value decreasing from 100 to 0
+							# 169 Remaining_Lifetime_Perc 0x0000   100   100   000    Old_age   Offline      -       78
+							Remaining_Lifetime_Perc="$(awk -F": " '/^169 / {print $10}' <<<"${SMARTData}")"
+							if [ ${Remaining_Lifetime_Perc:-101} -lt 101 ]; then
+								PercentageUsed=$(( 100 - ${Remaining_Lifetime_Perc} ))
+								AdditionalInfo="${AdditionalInfo}, ${PercentageUsed}% worn out"
+							fi
+						
+							# 202 Percent_Lifetime_Remain
+
+							# 230 Media_Wearout_Indicator 0x0032   017   017   ---    Old_age   Always       -       0x11570e001157
+							# depends on drive's firmware version how values behave, as such unreliable by definition
+						else
+							# use 'Percentage Used Endurance Indicator'
+							AdditionalInfo="${AdditionalInfo}, ${PercentageUsed}% worn out"
+						fi
 						;;
 					*)
-						# HDD
+						# HDD, check for the most common fail indicators
 						DriveType="HDD"
+						#   5 Reallocated_Sector_Ct   0x0033   252   252   010    Pre-fail  Always       -       0
+						Reallocated_Sector_Ct="$(awk -F": " '/^  5 / {print $10}' <<<"${SMARTData}")"
+						[ ${Reallocated_Sector_Ct:-0} -gt 0 ] && AdditionalInfo="${AdditionalInfo}, ${Reallocated_Sector_Ct} Reallocated Sector Count"
+						# 195 Hardware_ECC_Recovered  0x003a   100   100   000    Old_age   Always       -       0
+						Hardware_ECC_Recovered="$(awk -F": " '/^195 / {print $10}' <<<"${SMARTData}")"
+						[ ${Hardware_ECC_Recovered:-0} -gt 0 ] && AdditionalInfo="${AdditionalInfo}, ${Hardware_ECC_Recovered} Hardware ECC Recovered"
+						# 196 Reallocated_Event_Count 0x0032   252   252   000    Old_age   Always       -       0
+						Reallocated_Event_Count="$(awk -F": " '/^196 / {print $10}' <<<"${SMARTData}")"
+						[ ${Reallocated_Event_Count:-0} -gt 0 ] && AdditionalInfo="${AdditionalInfo}, ${Reallocated_Event_Count} Reallocated Event Count"
+						# 197 Current_Pending_Sector  0x0032   252   252   000    Old_age   Always       -       0
+						Current_Pending_Sector="$(awk -F": " '/^197 / {print $10}' <<<"${SMARTData}")"
+						[ ${Current_Pending_Sector:-0} -gt 0 ] && AdditionalInfo="${AdditionalInfo}, ${Current_Pending_Sector} Current Pending Sector"
+						# 198 Offline_Uncorrectable   0x0030   252   252   000    Old_age   Offline      -       0
+						Offline_Uncorrectable="$(awk -F": " '/^197 / {print $10}' <<<"${SMARTData}")"
+						[ ${Offline_Uncorrectable:-0} -gt 0 ] && AdditionalInfo="${AdditionalInfo}, ${Offline_Uncorrectable} Offline Uncorrectable"
 						;;
 				esac
+
+				# 184 End-to-End_Error        0x0032   100   100   ---    Old_age   Always       -       0
+				EndtoEnd_Error="$(awk -F": " '/^184 / {print $10}' <<<"${SMARTData}")"
+				[ ${EndtoEnd_Error:-0} -gt 0 ] && AdditionalInfo="${AdditionalInfo}, ${EndtoEnd_Error} End-to-End errors"
 
 				DeviceVendor="$(awk -F": " "/^Model Family:/ {print \$2}" <<<"${SMARTData}" | grep -E -v "Silicon Motion|Phison|SandForce|SK hynix|Marvell|JMicron|Apacer SSDs|Indilinx" | sed 's/^ *//g' | cut -f1 -d' ')"
 				DeviceModel="$(awk -F": " "/^Device Model:/ {print \$2}" <<<"${SMARTData}" | sed 's/^ *//g')"
@@ -7254,6 +7301,10 @@ CheckSMARTData() {
 						DeviceWarning=TRUE
 						;;
 				esac
+
+				if [ ${PercentageUsed:-0} -gt 75 -o ${Reallocated_Sector_Ct:-0} -gt 1 -o ${Hardware_ECC_Recovered:-0} -gt 1 -o ${Reallocated_Event_Count:-0} -gt 1 -o ${Current_Pending_Sector:-0} -gt 1 -o ${Offline_Uncorrectable:-0} -gt 1 -o ${EndtoEnd_Error:-0} -gt 1 ]; then
+					DeviceWarning=TRUE
+				fi
 				;;
 		esac
 

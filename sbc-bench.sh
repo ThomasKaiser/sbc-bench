@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.9.24
+Version=0.9.25
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -70,7 +70,9 @@ Main() {
 						LRED='\e[0;91m'
 					fi
 				fi
-				( CheckPCIe ; CheckStorage ) | sort -n
+				DMESG="$(dmesg | grep "mmc")"
+				CheckPCIe
+				CheckStorage
 				exit 0
 				;;
 			h)
@@ -1699,9 +1701,9 @@ CheckLoadAndDmesg() {
 	# than 2.5% for 30 sec. Please note that average load on Linux is *not* the same as CPU
 	# utilization: https://www.brendangregg.com/blog/2017-08-08/linux-load-averages.html
 
-	# switch to performance cpufreq governor since this helps lowering load and CPU
-	# utilization in less time
-	if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
+	# switch to performance cpufreq governor in standard operation modes since this helps
+	# lowering load and CPU utilization in less time
+	if [ -d /sys/devices/system/cpu/cpufreq/policy0 -a "X${NOTUNING}" != "Xyes" ]; then
 		for Cluster in $(ls -d /sys/devices/system/cpu/cpufreq/policy?); do
 			[ -w ${Cluster}/scaling_governor ] && echo performance >${Cluster}/scaling_governor 2>/dev/null
 		done
@@ -2636,8 +2638,12 @@ InitialMonitoring() {
 
 	# Log version and device info
 	read HostName </etc/hostname 2>/dev/null
-	if [ "X${MODE}" = "Xunattended" -o "X${MODE}" = "Xextensive" -o "X${MODE}" = "Xpts" -o "X${MODE}" = "Xgb" -o "X${MODE}" = "Xreview" ]; then
+	if [ "X${MODE}" = "Xunattended" -o "X${MODE}" = "Xextensive" -o "X${MODE}" = "Xpts" -o "X${MODE}" = "Xgb" ]; then
 		echo -e "sbc-bench v${Version} ${DeviceName:-$HostName} ${MODE} ($(date -R))\n" | sed 's/  / /g' >${ResultLog}
+	elif [ "X${MODE}" = "Xreview" -a "X${NOTUNING}" != "Xyes" ]; then
+		echo -e "sbc-bench v${Version} ${DeviceName:-$HostName} ${MODE} ($(date -R))\n" | sed 's/  / /g' >${ResultLog}
+	elif [ "X${MODE}" = "Xreview" ]; then
+		echo -e "sbc-bench v${Version} ${DeviceName:-$HostName} NOTUNING review ($(date -R))\n" | sed 's/  / /g' >${ResultLog}
 	else
 		echo -e "sbc-bench v${Version} ${DeviceName:-$HostName} ($(date -R))\n" | sed 's/  / /g' >${ResultLog}
 	fi
@@ -3670,8 +3676,8 @@ SummarizeResults() {
 	# Always include OPP tables
 	echo -e "${OPPTables}" >>${ResultLog}
 
-	# Add a line suitable for Results.md on Github if not in efficiency plotting or PTS, GB or review mode
-	if [ "X${PlotCpufreqOPPs}" != "Xyes" -a "X${MODE}" != "Xpts" -a "X${MODE}" != "Xgb" -a "X${MODE}" != "Xreview" ]; then
+	# Throttling detection/reporting
+	if [ "X${PlotCpufreqOPPs}" != "Xyes" ]; then
 		if [ -f /sys/devices/system/cpu/cpufreq/policy0/cpuinfo_max_freq ]; then
 			# Check for throttling for first:
 			MeasuredClockspeedStart=$(grep -A2 "^Checking cpufreq OPP" ${ResultLog} | awk -F" " '/Measured/ {print $5}' | sed -n ${#ClusterConfig[@]}p)
@@ -3713,6 +3719,10 @@ SummarizeResults() {
 				fi
 			fi
 		fi
+	fi
+
+	# Add a line suitable for Results.md on Github if not in efficiency plotting or PTS, GB or review mode
+	if [ "X${PlotCpufreqOPPs}" != "Xyes" -a "X${MODE}" != "Xpts" -a "X${MODE}" != "Xgb" -a "X${MODE}" != "Xreview" ]; then
 		KernelArch="$(uname -m | sed -e 's/armv7l/armhf/' -e 's/aarch64/arm64/')"
 		if [ "X${KernelArch}" = "X" -o "X${KernelArch}" = "X${ARCH}" ]; then
 			DistroInfo="${OperatingSystem} ${ARCH}"
@@ -3846,7 +3856,7 @@ UploadResults() {
 
 	# Display benchmark results if not in PTS, GB or preview mode
 	if [ "X${MODE}" != "Xpts" -a "X${MODE}" != "Xgb" -a "X${MODE}" != "Xreview" ]; then
-		MemoryScores="$(awk -F" " '/^ libc / {print $2": "$4" "$5" "$6}' <${ResultLog} | grep -E 'memcpy|memset' | awk -F'MB/s' '{print $1"MB/s"}')"
+		MemoryScores="$(awk -F" " '/^ libc / {print $2$4" "$5" "$6}' <${ResultLog} | grep -E 'memcpy|memset' | awk -F'MB/s' '{print $1"MB/s"}')"
 		CountOfMemoryScores=$(wc -l <<<"${MemoryScores}")
 		if [ ${#ClusterConfig[@]} -eq 1 -o $(( ${#ClusterConfig[@]} * 2 )) -ne ${CountOfMemoryScores} ]; then
 			# if only 1 CPU cluster or mismatch between count of memory scores and cluster members
@@ -3883,7 +3893,7 @@ UploadResults() {
 		else
 			echo "Scores not valid. Throttling occured and/or too much background activity."
 		fi
-	elif [ "X${MODE}" = "Xreview" ]; then
+	elif [ "X${MODE}" = "Xreview" -a "X${NOTUNING}" != "Xyes" ]; then
 		if [ ${IOWaitAvg:-0} -le 2 -a ${IOWaitMax:-0} -le 5 -a ${SysMax:-0} -le 5 -a ! -f "${TempDir}/throttling_info.txt" ]; then
 			echo -e "${LGREEN}It seems neither throttling occured nor too much background activity.${NC}"
 		else
@@ -6180,23 +6190,31 @@ ProvideReviewInfo() {
 		read OriginalCPUFreqGovernor </sys/devices/system/cpu/cpufreq/policy0/scaling_governor 2>/dev/null
 	GovernorState="$(HandleGovernors)"
 	CheckLoadAndDmesg
-	HandleGovernors powersave
-	if [ -f /sys/kernel/debug/clk/clk_summary ]; then
-		sleep 1
-		cat /sys/kernel/debug/clk/clk_summary >"${TempDir}/clk_summary.powersave"
+
+	# Allow for a NOTUNING=yes operation mode to compare default with performance settings
+	if [ "X${NOTUNING}" != "Xyes" ]; then
+		HandleGovernors powersave
+		if [ -f /sys/kernel/debug/clk/clk_summary ]; then
+			sleep 1
+			cat /sys/kernel/debug/clk/clk_summary >"${TempDir}/clk_summary.powersave"
+		fi
+		HandleGovernors performance
+		OriginalCPUInfo="$(PrintCPUInfo)"
+		TunedGovernorState="$(HandleGovernors | awk -F" \(" '{print $1}')"
+		BasicSetup performance >/dev/null 2>&1
+		[ -f /sys/kernel/debug/clk/clk_summary ] && cat /sys/kernel/debug/clk/clk_summary >"${TempDir}/clk_summary.tuned"
+	else
+		BasicSetup nochange >/dev/null 2>&1
+		OriginalCPUInfo="$(PrintCPUInfo)"
 	fi
-	HandleGovernors performance
-	OriginalCPUInfo="$(PrintCPUInfo)"
-	TunedGovernorState="$(HandleGovernors | awk -F" \(" '{print $1}')"
-	BasicSetup performance >/dev/null 2>&1
-	[ -f /sys/kernel/debug/clk/clk_summary ] && cat /sys/kernel/debug/clk/clk_summary >"${TempDir}/clk_summary.tuned"
+
 	GetTempSensor
 	InstallPrerequisits
 	InstallCpuminer
 	InitialMonitoring
 	CheckClockspeedsAndSensors
 	ClockspeedsBefore="$(cat "${TempDir}/cpufreq" | sed -e 's/^/    /')"
-	CheckTimeInState before
+	[ "X${NOTUNING}" != "Xyes" ] && CheckTimeInState before
 	RunTinyMemBench
 	RunRamlat
 	RunOpenSSLBenchmark 256
@@ -6207,7 +6225,7 @@ ProvideReviewInfo() {
 		RunStressNG
 	fi
 	[ -z ${InitialTemp} ] || TempNow=$(ReadSoCTemp)
-	CheckTimeInState after
+	[ "X${NOTUNING}" != "Xyes" ] && CheckTimeInState after
 	CheckClockspeedsAndSensors
 	ClockspeedsAfter="$(cat "${TempDir}/cpufreq" | sed -e 's/^/    /')"
 
@@ -6229,14 +6247,26 @@ ProvideReviewInfo() {
 
 	# Prepare device listing in Markdown friendly format
 	echo -e "# ${DeviceName:-$HostName}" >"${TempDir}/review"
-	echo -e "\nTested on $(date -R).\n\n### General information:\n" >>"${TempDir}/review"
+	echo -e "\nTested with sbc-bench v${Version} on $(date -R).\n\n### General information:\n" >>"${TempDir}/review"
+
+	# add info about CPU cores, if more than 2 CPU clusters add info about them and core types
+	if [ ${#ClusterConfig[@]} -gt 1 -a ${#ClusterConfigByCoreType[@]} -eq 1 ]; then
+		echo -e "The CPU features ${#ClusterConfig[@]} clusters of same core type:\n" >>"${TempDir}/review"
+	elif [ ${#ClusterConfig[@]} -gt 1 -a ${#ClusterConfig[@]} -eq ${#ClusterConfigByCoreType[@]} ]; then
+		echo -e "The CPU features ${#ClusterConfig[@]} clusters of different core types:\n" >>"${TempDir}/review"
+	elif [ ${#ClusterConfig[@]} -gt 1 ]; then
+		echo -e "The CPU features ${#ClusterConfig[@]} clusters consisting of ${#ClusterConfigByCoreType[@]} different core types:\n" >>"${TempDir}/review"
+	fi
 	sed -e 's/^/    /' <<<"${OriginalCPUInfo}" >>"${TempDir}/review"
 
 	# report probably performance relevant governors and policies
 	echo -e "\n### Governors/policies (performance vs. idle consumption):\n\nOriginal governor settings:\n" >>"${TempDir}/review"
 	sed -e 's/^/    /' <<<"${GovernorState}" >>"${TempDir}/review"
-	echo -e "\nTuned governor settings:\n" >>"${TempDir}/review"
-	sed -e 's/^/    /' <<<"${TunedGovernorState}" >>"${TempDir}/review"
+	if [ "X${TunedGovernorState}" != "X" ]; then
+		# when running with NOTUNING=yes no before/after check will be performed
+		echo -e "\nTuned governor settings:\n" >>"${TempDir}/review"
+		sed -e 's/^/    /' <<<"${TunedGovernorState}" >>"${TempDir}/review"
+	fi
 	PolicyStateNow="$(HandlePolicies)"
 	if [ "X${PolicyStateNow}" != "X" ]; then
 		echo -e "\nStatus of performance related policies found below /sys:\n" >>"${TempDir}/review"
@@ -6246,15 +6276,41 @@ ProvideReviewInfo() {
 	# measured clockspeeds
 	if [ -z ${InitialTemp} ]; then
 		# no thermal readouts possible
-		echo -e "\n### Clockspeeds${ThrottlingWarning} (idle vs. heated up):\n\nBefore:\n\n${ClockspeedsBefore}\n\nAfter:\n\n${ClockspeedsAfter}" >>"${TempDir}/review"
+		echo -e "\n### Clockspeeds (idle vs. heated up):\n\nBefore:\n\n${ClockspeedsBefore}\n\nAfter:\n\n${ClockspeedsAfter}" >>"${TempDir}/review"
 	else
-		echo -e "\n### Clockspeeds${ThrottlingWarning} (idle vs. heated up):\n\nBefore at ${InitialTemp}°C:\n\n${ClockspeedsBefore}\n\nAfter at ${TempNow}°C:\n\n${ClockspeedsAfter}" >>"${TempDir}/review"
+		echo -e "\n### Clockspeeds (idle vs. heated up):\n\nBefore at ${InitialTemp}°C:\n\n${ClockspeedsBefore}\n\nAfter at ${TempNow}°C${ThrottlingWarning}:\n\n${ClockspeedsAfter}" >>"${TempDir}/review"
+	fi
+
+	# memory performance:
+	MemoryScores="$(awk -F" " '/^ libc / {print $2$4" "$5" "$6}' <${ResultLog} | grep -E 'memcpy|memchr|memset' | awk -F'MB/s' '{print $1"MB/s"}')"
+	CountOfMemoryScores=$(wc -l <<<"${MemoryScores}")
+	if [ $(( ${#ClusterConfig[@]} * 3 )) -eq ${CountOfMemoryScores} ]; then
+		# only report if all measurements finished successfully, add warning for
+		# NOTUNING operation mode.
+		[ "X${NOTUNING}" != "Xyes" ] && PerfWarning=" (NOTUNING=yes was set)"
+		echo -e "\n### Memory performance${PerfWarning}\n" >>"${TempDir}/review"
+		if [ ${#ClusterConfig[@]} -eq 1 ]; then
+			# only 1 CPU cluster, no differentiation between clusters/core types
+			echo -e "  * $(grep "^memcpy:" <<<"${MemoryScores}"), $(grep "^memchr:" <<<"${MemoryScores}"), $(grep "^memset:" <<<"${MemoryScores}")" >>"${TempDir}/review"
+			grep "^     16384k:" ${ResultLog} | sed 's/     16384k:/  * 16M latency:/' >>"${TempDir}/review"
+		else
+			# list individual CPUs and suffix memory scores with core types if possible
+			for i in $(seq 0 $(( ${#ClusterConfig[@]} -1 )) ) ; do
+				CPUInfo="$(GetCPUInfo ${ClusterConfig[$i]})"
+				echo -e "  * cpu${ClusterConfig[$i]}${CPUInfo}: $(grep "^memcpy:" <<<"${MemoryScores}" | sed -n $(( ${i} + 1 ))p), $(grep "^memchr:" <<<"${MemoryScores}" | sed -n $(( ${i} + 1 ))p), $(grep "^memset:" <<<"${MemoryScores}" | sed -n $(( ${i} + 1 ))p)"  >>"${TempDir}/review"
+			done
+			for i in $(seq 0 $(( ${#ClusterConfig[@]} -1 )) ) ; do
+				CPUInfo="$(GetCPUInfo ${ClusterConfig[$i]})"
+				echo -e "  * cpu${ClusterConfig[$i]}${CPUInfo} 16M latency: $(grep "^     16384k:" ${ResultLog} | sed -n $(( ${i} + 1 ))p | sed 's/     16384k: //')" >>"${TempDir}/review"
+			done
+		fi
 	fi
 
 	# PCIe and storage devices, important stuff like downgraded PCIe link width/speed,
-	# SMART errors, negotiated USB speeds, (almost) worn out SSDs and so on
-	PCIeStatus="$(CheckPCIe | sort -n)"
-	StorageStatus="$(CheckStorage | sort -n)"
+	# SMART errors and suspectible values, SD card counterfeit and speed negotiation
+	# issues, negotiated USB and SATA speeds, (almost) worn out SSDs and so on
+	PCIeStatus="$(CheckPCIe)"
+	StorageStatus="$(CheckStorage)"
 	if [ "X${PCIeStatus}" != "X" -a "X${StorageStatus}" != "X" ]; then
 		echo -e "\n### PCIe and storage devices:\n\n${PCIeStatus}\n${StorageStatus}" >>"${TempDir}/review"
 	elif [ "X${StorageStatus}" = "X" ]; then
@@ -6302,7 +6358,7 @@ ProvideReviewInfo() {
 	UploadResults 2>/dev/null
 	case "${UploadURL}" in
 		http*)
-			echo -e "\n\n\n\n# ${DeviceName:-$HostName}\n\nTested on $(date -R). Full info: [${UploadURL}](${UploadURL})"
+			echo -e "\n\n\n\n# ${DeviceName:-$HostName}\n\nTested with sbc-bench v${Version} on $(date -R). Full info: [${UploadURL}](${UploadURL})"
 			tail -n +4 "${TempDir}/review"
 			;;
 		*)
@@ -6311,37 +6367,39 @@ ProvideReviewInfo() {
 			;;
 	esac
 
-	# throttling check and routine waiting for the board to cool down since otherwise the
-	# next monitoring step will report throttling even if none happens from now on.
-	if [ -r /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq ]; then
-		cpuinfo_max_freq=$(cat /sys/devices/system/cpu/cpu?/cpufreq/cpuinfo_max_freq)
-		cpuinfo_cur_freq=$(cat /sys/devices/system/cpu/cpu?/cpufreq/cpuinfo_cur_freq)
-		if [ "X${cpuinfo_max_freq}" != "X${cpuinfo_cur_freq}" ]; then
-			echo -e "\nWaiting for the device to cool down       \c"
-			while [ "X${cpuinfo_max_freq}" != "X${cpuinfo_cur_freq}" ]; do
-				TempNow=$(ReadSoCTemp)
-				echo -e "\x08\x08\x08\x08\x08\x08\x08. ${TempNow}°C\c"
-				sleep 2
-				cpuinfo_max_freq=$(cat /sys/devices/system/cpu/cpu?/cpufreq/cpuinfo_max_freq)
-				cpuinfo_cur_freq=$(cat /sys/devices/system/cpu/cpu?/cpufreq/cpuinfo_cur_freq)
-			done
-			# wait 20 more seconds for temperatures to stabilize
-			for i in {1..10} ; do
-				TempNow=$(ReadSoCTemp)
-				echo -e "\x08\x08\x08\x08\x08\x08\x08. ${TempNow}°C\c"
-				sleep 2
-			done
-			echo ""
+	if [ "X${NOTUNING}" != "Xyes" ]; then
+		# throttling check and routine waiting for the board to cool down since otherwise the
+		# next monitoring step will report throttling even if none happens from now on.
+		if [ -r /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq ]; then
+			cpuinfo_max_freq=$(cat /sys/devices/system/cpu/cpu?/cpufreq/cpuinfo_max_freq)
+			cpuinfo_cur_freq=$(cat /sys/devices/system/cpu/cpu?/cpufreq/cpuinfo_cur_freq)
+			if [ "X${cpuinfo_max_freq}" != "X${cpuinfo_cur_freq}" ]; then
+				echo -e "\nWaiting for the device to cool down       \c"
+				while [ "X${cpuinfo_max_freq}" != "X${cpuinfo_cur_freq}" ]; do
+					TempNow=$(ReadSoCTemp)
+					echo -e "\x08\x08\x08\x08\x08\x08\x08. ${TempNow}°C\c"
+					sleep 2
+					cpuinfo_max_freq=$(cat /sys/devices/system/cpu/cpu?/cpufreq/cpuinfo_max_freq)
+					cpuinfo_cur_freq=$(cat /sys/devices/system/cpu/cpu?/cpufreq/cpuinfo_cur_freq)
+				done
+				# wait 20 more seconds for temperatures to stabilize
+				for i in {1..10} ; do
+					TempNow=$(ReadSoCTemp)
+					echo -e "\x08\x08\x08\x08\x08\x08\x08. ${TempNow}°C\c"
+					sleep 2
+				done
+				echo ""
+			fi
 		fi
-	fi
-
-	# device now ready for benchmarking
-	cat <<- EOF
 	
-	All known settings adjusted for performance. Device now ready for benchmarking.
-	Once finished stop with [ctrl]-[c] to get info about throttling, frequency cap
-	and too high background activity all potentially invalidating benchmark scores.
-	EOF
+		# device now ready for benchmarking
+		cat <<- EOF
+		
+		All known settings adjusted for performance. Device now ready for benchmarking.
+		Once finished stop with [ctrl]-[c] to get info about throttling, frequency cap
+		and too high background activity all potentially invalidating benchmark scores.
+		EOF
+	fi
 
 	# Now switch to monitoring mode, report consumption if Netio powermeter is available
 	if [ -n "${OutputCurrent}" ]; then
@@ -6531,7 +6589,7 @@ CheckKernelVersion() {
 					PrintBSPWarning Rockchip
 					;;
 				*S5P6818*)
-					PrintBSPWarning Samsung
+					PrintBSPWarning Nexell
 					;;
 			esac
 			echo -e "\n${LRED}${BOLD}The 4.4 series has reached end-of-life on 2017-11-05 with version 4.4.302.${NC}"
@@ -6660,7 +6718,7 @@ PrintBSPWarning() {
 			echo -e "${BOLD}vendor kernel. See https://tinyurl.com/y8k3af73 and https://tinyurl.com/ywtfec7n${NC}"
 			echo -e "${BOLD}for details.${NC}"
 			;;
-		MediaTek|Nvidia|NXP|RealTek|Samsung|StarFive)
+		MediaTek|Nexell|Nvidia|NXP|RealTek|Samsung|StarFive)
 			echo -e "${BOLD}This device runs a $1 vendor/BSP kernel.${NC}"
 			;;
 		Rockchip)
@@ -6716,11 +6774,11 @@ CheckPCIe() {
 	# with other PCIe devices report driver (for example to spot the 'famous' RealTek NIC
 	# performance issues that go away once the appropriate driver is loaded)
 
-	# try to update SMART drive database
-	update-smart-drivedb >/dev/null 2>&1
+	# try to update SMART drive database if SMART capable devices may exist
+	[ -b /dev/nvme0n1 -o -b /dev/sda ] && update-smart-drivedb >/dev/null 2>&1
 
 	# grab info about block devices
-	LSBLK="$(LC_ALL="C" lsblk -l -o SIZE,NAME,FSTYPE,LABEL,MOUNTPOINT 2>&1)"
+	[ -z "${LSBLK}" ] && LSBLK="$(LC_ALL="C" lsblk -l -o SIZE,NAME,FSTYPE,LABEL,MOUNTPOINT 2>&1)"
 
 	lspci -Q -mm 2>/dev/null | grep controller | while read ; do
 		unset DeviceWarning DevizeSize
@@ -6775,6 +6833,9 @@ CheckStorage() {
 	# maybe differentiate between general and SMART warnings to add smartctl suggestion
 	# reallocated/pending sectors with HDD
 	# different wearout attributes for AHCI SSDs
+
+	# grab info about block devices
+	[ -z "${LSBLK}" ] && LSBLK="$(LC_ALL="C" lsblk -l -o SIZE,NAME,FSTYPE,LABEL,MOUNTPOINT 2>&1)"
 
 	for StorageDevice in $(ls /dev/sd? 2>/dev/null) ; do
 		unset DeviceName DeviceInfo DeviceWarning DevizeSize AdditionalInfo
@@ -6862,24 +6923,6 @@ CheckStorage() {
 		fi
 	done
 
-	# MTD devices
-	for StorageDevice in $(ls /dev/mtd? 2>/dev/null) ; do
-		unset DeviceName DeviceInfo DeviceWarning AdditionalInfo Manufacturer
-		UdevInfo="$(udevadm info -a -n ${StorageDevice} 2>/dev/null)"
-		Driver="$(awk -F'"' '/DRIVERS==/ {print $2}' <<<"${UdevInfo}" | sed '/^$/d' | tr '\n' '/' | sed 's/\/$//')"
-		RawSize=$(awk -F'"' '/ATTR{size}/ {print $2}' <<<"${UdevInfo}")
-		[ "X${RawSize}" != "X" ] && FlashSize="$(( ${RawSize} / 1048576 ))MB "
-		case "${Driver}" in
-			*spi-nor*)
-				DeviceName="${FlashSize}SPI NOR flash"
-				;;
-			*)
-				DeviceName="${FlashSize}MTD device"
-			;;
-		esac
-		echo -e "  * ${DeviceName} as ${StorageDevice}, drivers in use: ${Driver}"
-	done
-
 	# MMC devices
 	for StorageDevice in $(ls /dev/mmcblk? 2>/dev/null) ; do
 		unset DeviceName DeviceInfo DeviceWarning DevizeSize DeviceType DmesgInfo AdditionalInfo CountOfProblems TuningProblems
@@ -6929,7 +6972,8 @@ CheckStorage() {
 				0x000001*)
 					Manufacturer="Panasonic "
 					;;
-				0x000002*)
+				0x000002/0x544d)
+					# 0x544d -> "TM"
 					Manufacturer="Toshiba "
 					;;
 				0x000003/0x5344)
@@ -6938,6 +6982,15 @@ CheckStorage() {
 					;;
 				0x000008*)
 					Manufacturer="Silicon Power "
+					;;
+				0x000012/0x3456)
+					# 0x3456 -> "4V", used by at least the following brands: EssentielB, Extrememory,
+					# fake Kingston: https://www.bunniestudios.com/blog/?page_id=1022
+					:
+					;;
+				0x000012*)
+					# fake Samsung PRO Endurance: https://tinyurl.com/ytd8hmka
+					Manufacturer="Definite counterfeit "
 					;;
 				0x000018*)
 					Manufacturer="Infineon "
@@ -6967,6 +7020,10 @@ CheckStorage() {
 				0x000045*)
 					Manufacturer="SanDisk/Toshiba "
 					;;
+				0x000073/0x4247)
+					# 0x4247 -> "BG", used by at least the following brands: Fugi, Hama, V-Gen
+					:
+					;;
 				0x000074/0x4a45)
 					# 0x4a45 -> "JE"
 					Manufacturer="Transcend "
@@ -6989,21 +7046,19 @@ CheckStorage() {
 					;;
 			esac
 
-			# check dmesg output to gather further info like spec and problems detection.
-			MMCNode="$(grep "] ${StorageDevice##*/}: " <<<"${DMESG}" | grep "iB" | awk -F":" "/ ${mmc_name} / {print \$2}")"
+			# check dmesg output to gather further info like negotiation problems and errors.
+			MMCNode="$(grep "] ${StorageDevice##*/}: " <<<"${DMESG}" | grep "iB" | awk -F":" "/ ${mmc_name} / {print \$2}" | head -n1)"
 			if [ "X${MMCNode}" != "X" ]; then
-				DmesgInfo="$(awk -F" new " "/]${MMCNode}: new/ {print \$2}" <<<"${DMESG}" | awk -F" at " '{print $1}')"
-				CountOfProblems="$(grep "]${MMCNode}: " <<<"${DMESG}" | grep -c error)"
-				TuningProblems="$(grep -c "]${MMCNode}: tuning execution failed" <<<"${DMESG}")"
-				if [ ${CountOfProblems:-0} -gt 0 -a ${TuningProblems:-0} -gt 0 ]; then
+				DmesgInfo="$(awk -F' new ' "/]${MMCNode}: new/ {print \$2}" <<<"${DMESG}" | awk -F' at ' '{print $1}')"
+				CountOfProblems=$(grep "]${MMCNode}: " <<<"${DMESG}" | grep -c error)
+				TuningProblems=$(grep -c "]${MMCNode}: tuning execution failed" <<<"${DMESG}")
+				if [ ${CountOfProblems} -gt 0 -a ${TuningProblems} -gt 0 ]; then
 					AdditionalInfo=" (speed negotiation problems and errors, check dmesg)"
 					DeviceWarning=TRUE
-				elif [ ${CountOfProblems:-0} -gt 0 ]; then
-					grep -q "" <<<"${DMESG}"
+				elif [ ${CountOfProblems} -gt 0 -a ${TuningProblems} -eq 0 ]; then
 					AdditionalInfo=" (various errors occured, check dmesg)"
 					DeviceWarning=TRUE
-				elif [ ${TuningProblems:-0} -gt 0 ]; then
-					grep -q "" <<<"${DMESG}"
+				elif [ ${CountOfProblems} -eq 0 -a ${TuningProblems} -gt 0 ]; then
 					AdditionalInfo=" (speed negotiation problems, check dmesg)"
 					DeviceWarning=TRUE
 				fi
@@ -7027,6 +7082,24 @@ CheckStorage() {
 				echo -e "  * ${FlashSize}\"${Manufacturer}${mmc_name}\" ${DeviceType}${AdditionalInfo} as ${StorageDevice}: date ${mmc_date}, manfid/oemid: ${mmc_manfid}/${mmc_oemid}, hw/fw rev: ${mmc_hwrev}/${mmc_fwrev}"
 			fi
 		fi
+	done
+
+	# MTD devices
+	for StorageDevice in $(ls /dev/mtd? 2>/dev/null) ; do
+		unset DeviceName DeviceInfo DeviceWarning AdditionalInfo Manufacturer
+		UdevInfo="$(udevadm info -a -n ${StorageDevice} 2>/dev/null)"
+		Driver="$(awk -F'"' '/DRIVERS==/ {print $2}' <<<"${UdevInfo}" | sed '/^$/d' | tr '\n' '/' | sed 's/\/$//')"
+		RawSize=$(awk -F'"' '/ATTR{size}/ {print $2}' <<<"${UdevInfo}")
+		[ "X${RawSize}" != "X" ] && FlashSize="$(( ${RawSize} / 1048576 ))MB "
+		case "${Driver}" in
+			*spi-nor*)
+				DeviceName="${FlashSize}SPI NOR flash"
+				;;
+			*)
+				DeviceName="${FlashSize}MTD device"
+			;;
+		esac
+		echo -e "  * ${DeviceName} as ${StorageDevice}, drivers in use: ${Driver}"
 	done
 } # CheckStorage
 

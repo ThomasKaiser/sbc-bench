@@ -1,8 +1,10 @@
 # Radxa ROCK Pi 4B
 
-Tested on Sat, 18 Feb 2023 18:52:57 +0000. Full info: [http://ix.io/4otm](http://ix.io/4otm)
+Tested on Sun, 19 Feb 2023 17:51:55 +0000. Full info: [http://ix.io/4ozG](http://ix.io/4ozG)
 
 ### General information:
+
+The CPU features 2 clusters of different core types:
 
     Rockchip RK3399, Kernel: aarch64, Userland: arm64
     
@@ -34,21 +36,28 @@ Status of performance related policies found below /sys:
 
 ### Clockspeeds (idle vs. heated up):
 
-Before at 43.3°C:
+Before at 30.0°C:
 
     cpu0-cpu3 (Cortex-A53): OPP: 1416, Measured: 1413 
     cpu4-cpu5 (Cortex-A72): OPP: 1800, Measured: 1798 
 
-After at 80.0°C:
+After at 73.9°C:
 
     cpu0-cpu3 (Cortex-A53): OPP: 1416, Measured: 1413 
     cpu4-cpu5 (Cortex-A72): OPP: 1800, Measured: 1798 
+
+### Memory performance
+
+  * cpu0 (Cortex-A53): memcpy: 2043.8 MB/s, memchr: 2208.3 MB/s, memset: 8443.2 MB/s
+  * cpu4 (Cortex-A72): memcpy: 4262.3 MB/s, memchr: 7090.2 MB/s, memset: 9204.4 MB/s
+  * cpu0 (Cortex-A53) 16M latency: 163.7 167.4 163.5 166.4 163.5 166.0 203.7 389.9 
+  * cpu4 (Cortex-A72) 16M latency: 169.8 171.9 170.0 171.5 170.5 174.5 177.9 205.0 
 
 ### Storage devices:
 
-  * "ST3000DM001-9YN166" HDD as /dev/sda: USB, Driver=usb-storage, 5000M, firmware version CC4B, updates may be available: http://knowledge.seagate.com/articles/en_US/FAQ/207931en http://knowledge.seagate.com/articles/en_US/FAQ/223651en, 32°C
-  * "ST3000DM001-9YN166" HDD as /dev/sdb: USB, Driver=usb-storage, 5000M, firmware version CC4B, updates may be available: http://knowledge.seagate.com/articles/en_US/FAQ/207931en http://knowledge.seagate.com/articles/en_US/FAQ/223651en, 32°C
-  * "SanDisk/Toshiba DG4008" eMMC 5.1 as /dev/mmcblk2: date 04/2018, man/oem ID: 0x000045/0x0100, hw/fw rev: 0x0/0x3733313033353137
+  * 2.7TB "Seagate ST3000DM001-9YN166" HDD as /dev/sda [SATA 3.0, 6.0 Gb/s (current: 6.0 Gb/s)]: behind "Western Digital Technologies, Inc. ", Driver=usb-storage, 5000M, firmware version CC4B, updates may be available: http://knowledge.seagate.com/articles/en_US/FAQ/207931en http://knowledge.seagate.com/articles/en_US/FAQ/223651en, 24°C
+  * 2.7TB "Seagate ST3000DM001-9YN166" HDD as /dev/sdb [SATA 3.0, 6.0 Gb/s (current: 6.0 Gb/s)]: behind "Western Digital Technologies, Inc. ", Driver=usb-storage, 5000M, firmware version CC4B, updates may be available: http://knowledge.seagate.com/articles/en_US/FAQ/207931en http://knowledge.seagate.com/articles/en_US/FAQ/223651en, 24°C
+  * 7.3GB "SanDisk/Toshiba DG4008" HS400 Enhanced strobe eMMC 5.1 card as /dev/mmcblk2: date 04/2018, manfid/oemid: 0x000045/0x0100, hw/fw rev: 0x0/0x3733313033353137
 
 ### Software versions:
 

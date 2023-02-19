@@ -1,6 +1,6 @@
 # RPi 4 Model B Rev 1.1 / BCM2711 Rev B0
 
-Tested on Fri, 17 Feb 2023 22:54:24 +0100. Full info: [http://ix.io/4onR](http://ix.io/4onR)
+Tested on Sun, 19 Feb 2023 17:45:28 +0100. Full info: [http://ix.io/4oz7](http://ix.io/4oz7)
 
 ### General information:
 
@@ -26,18 +26,25 @@ Tuned governor settings:
 
 ### Clockspeeds (idle vs. heated up):
 
-Before at 35.0°C:
+Before at 36.5°C:
 
     cpu0 (Cortex-A72): OPP: 1500, ThreadX: 1500, Measured: 1499 
 
-After at 47.7°C:
+After at 51.1°C:
 
     cpu0 (Cortex-A72): OPP: 1500, ThreadX: 1500, Measured: 1499 
+
+### Memory performance
+
+  * memcpy: 2543.3 MB/s, memchr: 1289.6 MB/s, memset: 3384.8 MB/s
+  * 16M latency: 152.7 155.7 154.0 155.6 154.0 155.3 177.6 189.1 
 
 ### PCIe and storage devices:
 
   * VIA VL805/806 xHCI USB 3.0: Speed 5GT/s (ok), Width x1 (ok), driver in use: xhci_hcd
-  * 59.5GB SanDisk SR64G SD card as /dev/mmcblk0: date 08/2018, man/oem ID: 0x000003/0x5344, hw/fw rev: 0x8/0x0
+  * 7.3GB "Silicon Motion, Inc. - Taiwan (formerly Feiya Technology Corp.) Flash Drive" as /dev/sda: USB, Driver=usb-storage, 480M
+  * 14.4GB "Genesys Logic, Inc. GL827L SD/MMC/MS Flash Card Reader" as /dev/sdb: USB, Driver=usb-storage, 480M
+  * 59.5GB "SanDisk SR64G" UHS DDR50 SDXC card as /dev/mmcblk0: date 08/2018, manfid/oemid: 0x000003/0x5344, hw/fw rev: 0x8/0x0
 
 ### Software versions:
 

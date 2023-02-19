@@ -1,6 +1,6 @@
 # NanoPi Fire3
 
-Tested on Fri, 17 Feb 2023 23:54:37 +0100. Full info: [http://ix.io/4oo7](http://ix.io/4oo7)
+Tested on Sun, 19 Feb 2023 18:33:21 +0100. Full info: [http://ix.io/4ozy](http://ix.io/4ozy)
 
 ### General information:
 
@@ -22,7 +22,7 @@ Tested on Fri, 17 Feb 2023 23:54:37 +0100. Full info: [http://ix.io/4oo7](http:/
 
 Original governor settings:
 
-    cpufreq-policy0: ondemand / 1100 MHz (conservative userspace powersave ondemand performance schedutil)
+    cpufreq-policy0: ondemand / 1400 MHz (conservative userspace powersave ondemand performance schedutil)
 
 Tuned governor settings:
 
@@ -30,18 +30,23 @@ Tuned governor settings:
 
 ### Clockspeeds (idle vs. heated up):
 
-Before at 72.0°C:
+Before at 37.0°C:
 
     cpu0 (Cortex-A53): OPP: 1400, Measured: 1397 
 
-After at 86.0°C:
+After at 85.0°C (throttled):
 
-    cpu0 (Cortex-A53): OPP: 1400, Measured:  997     (-28.8%)
+    cpu0 (Cortex-A53): OPP: 1400, Measured: 1197     (-14.5%)
+
+### Memory performance
+
+  * memcpy: 1524.0 MB/s, memchr: 1975.8 MB/s, memset: 4584.2 MB/s
+  * 16M latency: 174.3 175.4 172.9 175.3 172.6 175.6 237.1 448.2 
 
 ### Storage devices:
 
-  * 7.4GB SanDisk SU08G SD card as /dev/mmcblk2: date 06/2013, man/oem ID: 0x000003/0x5344, hw/fw rev: 0x8/0x0
-  * TOSHIBA MK7559GSXF HDD as /dev/sda as /dev/sda: USB, Driver=uas, 480M, 22°C
+  * 14.4GB "Genesys Logic, Inc. GL827L SD/MMC/MS Flash Card Reader" as /dev/sda: USB, Driver=usb-storage, 480M
+  * 7.4GB "SanDisk SU08G" HS SD card as /dev/mmcblk2: date 06/2013, manfid/oemid: 0x000003/0x5344, hw/fw rev: 0x8/0x0
 
 ### Software versions:
 
@@ -63,6 +68,4 @@ that a lot of exploitable vulnerabilities exist for this kernel as well as
 many unfixed bugs. Better upgrade to a supported version ASAP.
 
 But this version string doesn't matter since this is not an official LTS Linux
-from kernel.org.
-
-This device runs a Samsung BSP kernel.
+from kernel.org. This device runs a Samsung vendor/BSP kernel.

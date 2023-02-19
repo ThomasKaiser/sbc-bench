@@ -1,8 +1,10 @@
 # Hardkernel Odroid XU4
 
-Tested on Sat, 18 Feb 2023 11:55:37 +0100. Full info: [http://ix.io/4oqR](http://ix.io/4oqR)
+Tested with sbc-bench v0.9.24 on Sun, 19 Feb 2023 18:25:59 +0100.
 
 ### General information:
+
+The CPU features 2 clusters of different core types:
 
     Samsung Exynos EXYNOS5800 rev 1, Exynos 5422, Kernel: armv7l, Userland: armhf
     
@@ -25,7 +27,7 @@ Original governor settings:
     cpufreq-policy0: ondemand / 1400 MHz (powersave userspace conservative ondemand performance schedutil)
     cpufreq-policy4: ondemand / 2000 MHz (powersave userspace conservative ondemand performance schedutil)
     soc:bus_wcore: simple_ondemand / 84 MHz (userspace powersave performance simple_ondemand)
-    10c20000.memory-controller: simple_ondemand / 413 MHz (userspace powersave performance simple_ondemand)
+    10c20000.memory-controller: simple_ondemand / 825 MHz (userspace powersave performance simple_ondemand)
 
 Tuned governor settings:
 
@@ -40,20 +42,28 @@ Status of performance related policies found below /sys:
 
 ### Clockspeeds (idle vs. heated up):
 
-Before at 49.0°C:
+Before at 47.0°C:
+
+    cpu0-cpu3 (Cortex-A7): OPP: 1400, Measured: 1397 
+    cpu4-cpu7 (Cortex-A15): OPP: 2000, Measured: 1996 
+
+After at 77.0°C (throttled):
 
     cpu0-cpu3 (Cortex-A7): OPP: 1400, Measured: 1396 
     cpu4-cpu7 (Cortex-A15): OPP: 2000, Measured: 1996 
 
-After at 77.0°C:
+### Memory performance
 
-    cpu0-cpu3 (Cortex-A7): OPP: 1400, Measured: 1396 
-    cpu4-cpu7 (Cortex-A15): OPP: 2000, Measured: 1996 
+  * cpu0 (Cortex-A7): memcpy: 323.3 MB/s, memchr: 414.7 MB/s, memset: 799.3 MB/s
+  * cpu4 (Cortex-A15): memcpy: 2289.5 MB/s, memchr: 3061.7 MB/s, memset: 4830.5 MB/s
+  * cpu0 (Cortex-A7) 16M latency: 159.8 164.6 159.8 165.7 159.8 165.7 296.6 568.2 
+  * cpu4 (Cortex-A15) 16M latency: 174.9 175.7 174.9 175.6 175.0 175.8 175.3 203.0 
 
 ### Storage devices:
 
-  * 14.9GB SanDisk SC16G SD card as /dev/mmcblk1: date 06/2019, man/oem ID: 0x000003/0x5344, hw/fw rev: 0x8/0x0
-  * HGST HDN724040ALE640 HDD as /dev/sda as /dev/sda: USB, Driver=uas, 5000M, 40°C
+  * 111.8GB "Samsung SSD 750 EVO 120GB" SSD as /dev/sda [SATA 3.1, 6.0 Gb/s (current: 6.0 Gb/s)]: behind ASMedia SATA 6Gb/s bridge, Driver=uas, 480M, 26°C
+  * 3.7TB "HGST HDN724040ALE640" HDD as /dev/sdb [SATA 3.0, 6.0 Gb/s (current: 6.0 Gb/s)]: behind JMicron JMS578 SATA 6Gb/s bridge, Driver=uas, 5000M, 36°C
+  * 14.9GB "SanDisk SC16G" UHS SDR104 SD card as /dev/mmcblk1: date 06/2019, manfid/oemid: 0x000003/0x5344, hw/fw rev: 0x8/0x0
 
 ### Software versions:
 

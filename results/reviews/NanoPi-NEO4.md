@@ -1,8 +1,10 @@
 # NanoPi NEO4
 
-Tested on Fri, 17 Feb 2023 18:59:01 +0100. Full info: [http://ix.io/4omz](http://ix.io/4omz)
+Tested with sbc-bench v0.9.24 on Sun, 19 Feb 2023 18:16:01 +0100.
 
 ### General information:
+
+The CPU features 2 clusters of different core types:
 
     Rockchip RK3399, Kernel: aarch64, Userland: arm64
     
@@ -36,19 +38,27 @@ Status of performance related policies found below /sys:
 
 ### Clockspeeds (idle vs. heated up):
 
-Before at 53.3°C:
+Before at 26.2°C:
 
     cpu0-cpu3 (Cortex-A53): OPP: 1512, Measured: 1509 
     cpu4-cpu5 (Cortex-A72): OPP: 2016, Measured: 2014 
 
-After at 81.1°C:
+After at 69.4°C:
 
     cpu0-cpu3 (Cortex-A53): OPP: 1512, Measured: 1509 
     cpu4-cpu5 (Cortex-A72): OPP: 2016, Measured: 2014 
+
+### Memory performance
+
+  * cpu0 (Cortex-A53): memcpy: 1717.7 MB/s, memchr: 2063.0 MB/s, memset: 6107.3 MB/s
+  * cpu4 (Cortex-A72): memcpy: 2448.2 MB/s, memchr: 5995.6 MB/s, memset: 6126.3 MB/s
+  * cpu0 (Cortex-A53) 16M latency: 171.3 171.6 169.1 171.4 169.0 171.4 206.2 402.3 
+  * cpu4 (Cortex-A72) 16M latency: 173.2 175.5 174.8 175.3 174.5 175.0 177.5 211.4 
 
 ### Storage devices:
 
-  * 7.3GB Samsung 8WPD3R eMMC as /dev/mmcblk2: date 09/2017, man/oem ID: 0x000015/0x0100, hw/fw rev: 0x0/0x0000000000000000
+  * 7.3GB "Silicon Motion, Inc. - Taiwan (formerly Feiya Technology Corp.) Flash Drive" as /dev/sda: USB, Driver=usb-storage, 480M
+  * 7.3GB "Samsung 8WPD3R" HS200 eMMC 5.0 card as /dev/mmcblk2: date 09/2017, manfid/oemid: 0x000015/0x0100, hw/fw rev: 0x0/0x0000000000000000
 
 ### Software versions:
 
@@ -70,7 +80,3 @@ Kernel 5.10.63 is not latest 5.10.168 LTS that was released on 2023-02-15.
 Please check https://endoflife.date/linux for details. It is somewhat likely
 that a lot of exploitable vulnerabilities exist for this kernel as well as
 many unfixed bugs. Better upgrade to a supported version ASAP.
-
-All known settings adjusted for performance. System now\033[0m ready for benchmarking.
-Once finished stop with [ctrl]-[c] to get info about throttling, frequency cap
-and too high background activity all potentially invalidating benchmark scores.

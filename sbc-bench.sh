@@ -6944,11 +6944,11 @@ CheckStorage() {
 					Manufacturer="Corsair "
 					;;
 				0x000027/0x5048)
-					# 0x5048 -> "PH", used by following brands: AgfaPhoto, Delkin, Intenso, Integral, Lexar, Patriot, PNY, Polaroid, Sony, Verbatim
+					# 0x5048 -> "PH", used by at least the following brands: AgfaPhoto, Delkin, Intenso, Integral, Lexar, Patriot, PNY, Polaroid, Sony, Verbatim
 					Manufacturer="Phison "
 					;;
 				0x000028/0x4245)
-					# 0x4245 -> "BE", used by following brands: Lexar, PNY, ProGrade
+					# 0x4245 -> "BE", used by at least the following brands: Lexar, PNY, ProGrade
 					Manufacturer="Lexar "
 					;;
 				0x000041/0x3432)
@@ -6964,6 +6964,10 @@ CheckStorage() {
 					;;
 				0x000088/0x0103)
 					Manufacturer="Foresee "
+					;;
+				0x00009f/0x5449)
+					# 0x5449 -> "TI"
+					Manufacturer="Texas Instruments "
 					;;
 				0x0000ad*)
 					Manufacturer="SK Hynix "
@@ -6988,7 +6992,7 @@ CheckStorage() {
 
 			case "${mmc_type}" in
 				SD)
-					DeviceType="${DmesgInfo:-SD card}"
+					DeviceType="$(sed -e 's/ultra /U/' -e 's/high speed/HS/' -e 's/SDHC /SD /' <<<"${DmesgInfo:-SDHC card}")"
 					;;
 				MMC)
 					# try to query additional info via mmc-utils (for now only MMC version)

@@ -61,6 +61,7 @@ Main() {
 				;;
 			S)
 				# check storage (and PCIe), only for testing, will disappear later
+				DMESG="$(dmesg | grep "mmc")"
 				( CheckPCIe ; CheckStorage ) | sort -n
 				exit 0
 				;;
@@ -1664,7 +1665,7 @@ CreateTempDir() {
 
 CheckLoadAndDmesg() {
 	# Check if kernel ring buffer contains boot messages. These help identifying HW.
-	DMESG="$(dmesg | grep -E "Linux|pvtm|rockchip-cpuinfo|Amlogic Meson|sun50i|pcie")"
+	DMESG="$(dmesg | grep -E "Linux|pvtm|rockchip-cpuinfo|Amlogic Meson|sun50i|pcie|mmc")"
 	grep -q -E '] Booting Linux|] Linux version ' <<<"${DMESG}"
 	case $? in
 		1)
@@ -6873,7 +6874,7 @@ CheckStorage() {
 
 	# MMC devices
 	for StorageDevice in $(ls /dev/mmcblk? 2>/dev/null) ; do
-		unset DeviceName DeviceInfo DeviceWarning DevizeSize AdditionalInfo
+		unset DeviceName DeviceInfo DeviceWarning DevizeSize DeviceType DmesgInfo AdditionalInfo CountOfProblems
 		if [ -x /sys/block/${StorageDevice##*/}/device ]; then
 			cd /sys/block/${StorageDevice##*/}/device
 			# read in variables from sysfs in q&d style and prefix them all with "mmc_".
@@ -6903,14 +6904,19 @@ CheckStorage() {
 
 			eval $(grep . * 2>/dev/null | grep -v uevent | sed -e 's/:/=/' -e 's/^/mmc_/' -e 's/\ //g')
 
-			# Rely on human readable real storage sizes and not vendor claims:
+			# Rely on human readable real storage sizes and not marketing 'sizes':
 			# e.g. show 29.7GB for a '32GB' card:
 			mmc_size=$(awk -F" " "/ ${StorageDevice##*/} / {print \$1}" <<<"${LSBLK}")
 			[ "X${mmc_size}" != "X" ] && FlashSize="${mmc_size}B "
 
+			Manufacturer="Probable counterfeit "
 			# Only add manufacturer info if really unique. Partially misleading since counterfeit
 			# cards were and still are an issue: https://www.bunniestudios.com/blog/?page_id=1022
 			case "${mmc_manfid}/${mmc_oemid}" in
+				0x000000/0x0000)
+					# counterfeit card
+					Manufacturer="Definite counterfeit "
+					;;
 				0x000001*)
 					Manufacturer="Panasonic "
 					;;
@@ -6918,6 +6924,7 @@ CheckStorage() {
 					Manufacturer="Toshiba "
 					;;
 				0x000003/0x5344)
+					# 0x5344 -> "SD"
 					Manufacturer="SanDisk "
 					;;
 				0x000008*)
@@ -6926,30 +6933,36 @@ CheckStorage() {
 				0x000018*)
 					Manufacturer="Infineon "
 					;;
-				0x000015*|0x00001b*|0x0000ce*)
+				0x000015/0x0100|0x00001b*|0x0000ce*)
 					Manufacturer="Samsung "
 					;;
 				0x00001d/0x4144)
+					# 0x4144 -> "AD"
 					Manufacturer="AData "
 					;;
-				0x000027*)
-					# AgfaPhoto, Delkin, Intenso, Integral, Lexar, Patriot, PNY, Polaroid, Sony, Verbatim
+				0x00001d*)
+					Manufacturer="Corsair "
+					;;
+				0x000027/0x5048)
+					# 0x5048 -> "PH", used by following brands: AgfaPhoto, Delkin, Intenso, Integral, Lexar, Patriot, PNY, Polaroid, Sony, Verbatim
 					Manufacturer="Phison "
 					;;
-				0x000028*)
-					# Lexar, PNY, ProGrade
+				0x000028/0x4245)
+					# 0x4245 -> "BE", used by following brands: Lexar, PNY, ProGrade
 					Manufacturer="Lexar "
 					;;
-				0x000041*)
+				0x000041/0x3432)
+					# 0x3432 -> "42"
 					Manufacturer="Kingston "
 					;;
 				0x000045*)
 					Manufacturer="SanDisk/Toshiba "
 					;;
-				0x000074*)
+				0x000074/0x4a45)
+					# 0x4a45 -> "JE"
 					Manufacturer="Transcend "
 					;;
-				0x000088*)
+				0x000088/0x0103)
 					Manufacturer="Foresee "
 					;;
 				0x0000ad*)
@@ -6962,21 +6975,30 @@ CheckStorage() {
 					Manufacturer="Transcend "
 					;;
 			esac
+
+			# check dmesg output to gather further info like spec and problems detection.
+			MMCNode="$(grep "] ${StorageDevice##*/}: " <<<"${DMESG}" | grep "iB" | awk -F":" "/ ${mmc_name} / {print \$2}")"
+			if [ "X${MMCNode}" != "X" ]; then
+				DmesgInfo="$(awk -F" new " "/]${MMCNode}: new/ {print \$2}" <<<"${DMESG}" | awk -F" at " '{print $1}')"
+				CountOfProblems="$(grep -c -E "]${MMCNode}: error|]${MMCNode}: tuning execution failed" <<<"${DMESG}")"
+				if [ ${CountOfProblems:-0} -gt 0 ]; then
+					AdditionalInfo=" (negotiation problems, check dmesg)"
+				fi
+			fi
+
 			case "${mmc_type}" in
 				SD)
-					echo -e "  * ${FlashSize}\"${Manufacturer}${mmc_name}\" SD card as ${StorageDevice}: date ${mmc_date}, man/oem ID: ${mmc_manfid}/${mmc_oemid}, hw/fw rev: ${mmc_hwrev}/${mmc_fwrev}"
+					DeviceType="${DmesgInfo:-SD card}"
 					;;
 				MMC)
 					# try to query additional info via mmc-utils (for now only MMC version)
 					ExtendedInfo="$(mmc extcsd read ${StorageDevice} 2>/dev/null)"
 					grep -q "Extended CSD rev" <<<"${ExtendedInfo}" && MMCVersion="$(awk -F"[()]" '/Extended CSD rev/ {print $2}' <<<"${ExtendedInfo}")"
-					if [ "X${MMCVersion}" = "X" ]; then
-						echo -e "  * ${FlashSize}\"${Manufacturer}${mmc_name}\" eMMC as ${StorageDevice}: date ${mmc_date}, man/oem ID: ${mmc_manfid}/${mmc_oemid}, hw/fw rev: ${mmc_hwrev}/${mmc_fwrev}"
-					else
-						echo -e "  * ${FlashSize}\"${Manufacturer}${mmc_name}\" e${MMCVersion} as ${StorageDevice}: date ${mmc_date}, man/oem ID: ${mmc_manfid}/${mmc_oemid}, hw/fw rev: ${mmc_hwrev}/${mmc_fwrev}"
-					fi
+					DeviceType="$(sed "s/MMC/e${MMCVersion:-MMC}/" <<<"${DmesgInfo:-MMC}")"
 					;;
 			esac
+
+			echo -e "  * ${FlashSize}\"${Manufacturer}${mmc_name}\" ${DeviceType}${AdditionalInfo} as ${StorageDevice}: date ${mmc_date}, manfid/oemid: ${mmc_manfid}/${mmc_oemid}, hw/fw rev: ${mmc_hwrev}/${mmc_fwrev}"
 		fi
 	done
 } # CheckStorage

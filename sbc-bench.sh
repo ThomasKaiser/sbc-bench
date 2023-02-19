@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.9.23
+Version=0.9.24
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -61,7 +61,15 @@ Main() {
 				;;
 			S)
 				# check storage (and PCIe), only for testing, will disappear later
-				DMESG="$(dmesg | grep "mmc")"
+				if test -t 1; then
+					ncolors=$(tput colors)
+					if test -n "$ncolors" && test $ncolors -ge 8; then
+						BOLD="$(tput bold)"
+						NC='\033[0m' # No Color
+						LGREEN='\033[1;32m'
+						LRED='\e[0;91m'
+					fi
+				fi
 				( CheckPCIe ; CheckStorage ) | sort -n
 				exit 0
 				;;
@@ -4203,7 +4211,7 @@ GuessARMSoC() {
 	# rockchip-cpuinfo cpuinfo: SoC            : 35662000 --> http://ix.io/4aXR
 	# rockchip-cpuinfo cpuinfo: SoC            : 35681000 --> only early RK3568 devices showed this silicon revision (e.g. Firefly RK3568-ROC-PC/AIO-3568J)
 	# rockchip-cpuinfo cpuinfo: SoC            : 35682000 --> RK3568-ROC-PC, NanoPi R5S, ODROID-M1, Mrkaio M68S, OWLVisionTech rk3568 opc Board, Radxa ROCK3A,
-	#                                                         Rockemd R68K 2.5G
+	#                                                         Rockemd R68K 2.5G, Hinlink H68K
 	# rockchip-cpuinfo cpuinfo: SoC            : 35880000 --> 9Tripod X3588S Board, Firefly ITX-3588J/ROC-RK3588S-PC, NanoPi R6S, HINLINK OWL H88K, Khadas Edge2,
 	#                                                         Orange Pi 5, ROCK 5A/5B, EDGE LP4x V1.0 BlueBerry, CoolPi 4B, Shaggy013 LP4x V1.2 H96_Max_v58 Board,
 	#                                                         EVB4 LP4 V10 Board, OWL H88K
@@ -6874,7 +6882,7 @@ CheckStorage() {
 
 	# MMC devices
 	for StorageDevice in $(ls /dev/mmcblk? 2>/dev/null) ; do
-		unset DeviceName DeviceInfo DeviceWarning DevizeSize DeviceType DmesgInfo AdditionalInfo CountOfProblems
+		unset DeviceName DeviceInfo DeviceWarning DevizeSize DeviceType DmesgInfo AdditionalInfo CountOfProblems TuningProblems
 		if [ -x /sys/block/${StorageDevice##*/}/device ]; then
 			cd /sys/block/${StorageDevice##*/}/device
 			# read in variables from sysfs in q&d style and prefix them all with "mmc_".
@@ -6916,6 +6924,7 @@ CheckStorage() {
 				0x000000/0x0000)
 					# counterfeit card
 					Manufacturer="Definite counterfeit "
+					DeviceWarning=TRUE
 					;;
 				0x000001*)
 					Manufacturer="Panasonic "
@@ -6984,9 +6993,19 @@ CheckStorage() {
 			MMCNode="$(grep "] ${StorageDevice##*/}: " <<<"${DMESG}" | grep "iB" | awk -F":" "/ ${mmc_name} / {print \$2}")"
 			if [ "X${MMCNode}" != "X" ]; then
 				DmesgInfo="$(awk -F" new " "/]${MMCNode}: new/ {print \$2}" <<<"${DMESG}" | awk -F" at " '{print $1}')"
-				CountOfProblems="$(grep -c -E "]${MMCNode}: error|]${MMCNode}: tuning execution failed" <<<"${DMESG}")"
-				if [ ${CountOfProblems:-0} -gt 0 ]; then
-					AdditionalInfo=" (negotiation problems, check dmesg)"
+				CountOfProblems="$(grep "]${MMCNode}: " <<<"${DMESG}" | grep -c error)"
+				TuningProblems="$(grep -c "]${MMCNode}: tuning execution failed" <<<"${DMESG}")"
+				if [ ${CountOfProblems:-0} -gt 0 -a ${TuningProblems:-0} -gt 0 ]; then
+					AdditionalInfo=" (speed negotiation problems and errors, check dmesg)"
+					DeviceWarning=TRUE
+				elif [ ${CountOfProblems:-0} -gt 0 ]; then
+					grep -q "" <<<"${DMESG}"
+					AdditionalInfo=" (various errors occured, check dmesg)"
+					DeviceWarning=TRUE
+				elif [ ${TuningProblems:-0} -gt 0 ]; then
+					grep -q "" <<<"${DMESG}"
+					AdditionalInfo=" (speed negotiation problems, check dmesg)"
+					DeviceWarning=TRUE
 				fi
 			fi
 
@@ -7002,7 +7021,11 @@ CheckStorage() {
 					;;
 			esac
 
-			echo -e "  * ${FlashSize}\"${Manufacturer}${mmc_name}\" ${DeviceType}${AdditionalInfo} as ${StorageDevice}: date ${mmc_date}, manfid/oemid: ${mmc_manfid}/${mmc_oemid}, hw/fw rev: ${mmc_hwrev}/${mmc_fwrev}"
+			if [ "X${DeviceWarning}" = "XTRUE" ]; then
+				echo -e "  * ${LRED}${FlashSize}\"${Manufacturer}${mmc_name}\" ${DeviceType}${AdditionalInfo} as ${StorageDevice}: date ${mmc_date}, manfid/oemid: ${mmc_manfid}/${mmc_oemid}, hw/fw rev: ${mmc_hwrev}/${mmc_fwrev}${NC}"
+			else
+				echo -e "  * ${FlashSize}\"${Manufacturer}${mmc_name}\" ${DeviceType}${AdditionalInfo} as ${StorageDevice}: date ${mmc_date}, manfid/oemid: ${mmc_manfid}/${mmc_oemid}, hw/fw rev: ${mmc_hwrev}/${mmc_fwrev}"
+			fi
 		fi
 	done
 } # CheckStorage

@@ -1,6 +1,6 @@
 # Radxa ROCK Pi 4A
 
-Tested on Sun, 19 Feb 2023 17:12:04 +0000. Full info: [http://ix.io/4ozm](http://ix.io/4ozm)
+Tested with sbc-bench v0.9.25 on Mon, 20 Feb 2023 18:39:31 +0000. Full info: [http://ix.io/4oHE](http://ix.io/4oHE)
 
 ### General information:
 
@@ -22,7 +22,7 @@ The CPU features 2 clusters of different core types:
 
 Original governor settings:
 
-    cpufreq-policy0: ondemand / 1008 MHz (ondemand performance schedutil)
+    cpufreq-policy0: ondemand / 1200 MHz (ondemand performance schedutil)
     cpufreq-policy4: ondemand / 408 MHz (ondemand performance schedutil)
     dmc: dmc_ondemand / 856 MHz (dmc_ondemand simple_ondemand)
     ff9a0000.gpu: simple_ondemand / 200 MHz (dmc_ondemand simple_ondemand)
@@ -42,7 +42,7 @@ Status of performance related policies found below /sys:
 
 ### Clockspeeds (idle vs. heated up):
 
-Before at 45.6°C:
+Before at 41.1°C:
 
     cpu0-cpu3 (Cortex-A53): OPP: 1416, Measured: 1412 
     cpu4-cpu5 (Cortex-A72): OPP: 1800, Measured: 1797 
@@ -50,14 +50,14 @@ Before at 45.6°C:
 After at 81.7°C (throttled):
 
     cpu0-cpu3 (Cortex-A53): OPP: 1416, Measured: 1412 
-    cpu4-cpu5 (Cortex-A72): OPP: 1800, Measured: 1462     (-18.8%)
+    cpu4-cpu5 (Cortex-A72): OPP: 1800, Measured: 1444     (-19.8%)
 
 ### Memory performance
 
-  * cpu0 (Cortex-A53): memcpy: 1660.6 MB/s, memchr: 1879.6 MB/s, memset: 8470.1 MB/s
-  * cpu4 (Cortex-A72): memcpy: 3595.9 MB/s, memchr: 6755.7 MB/s, memset: 8622.2 MB/s
-  * cpu0 (Cortex-A53) 16M latency: 190.7 193.8 189.5 193.4 189.6 193.7 237.7 452.7 
-  * cpu4 (Cortex-A72) 16M latency: 197.4 200.4 200.0 198.6 199.1 202.1 204.0 239.4 
+  * cpu0 (Cortex-A53): memcpy: 1778.7 MB/s, memchr: 1931.7 MB/s, memset: 8480.5 MB/s
+  * cpu4 (Cortex-A72): memcpy: 3583.8 MB/s, memchr: 6771.7 MB/s, memset: 8567.9 MB/s
+  * cpu0 (Cortex-A53) 16M latency: 186.4 189.6 185.8 189.3 186.2 189.4 234.6 450.2 
+  * cpu4 (Cortex-A72) 16M latency: 197.6 199.1 200.3 199.2 199.6 202.4 203.4 246.8 
 
 ### Storage devices:
 
@@ -79,9 +79,9 @@ After at 81.7°C (throttled):
 
 Kernel 5.10.110 is not latest 5.10.168 LTS that was released on 2023-02-15.
 
-Please check https://endoflife.date/linux for details. It is somewhat likely
-that a lot of exploitable vulnerabilities exist for this kernel as well as
-many unfixed bugs. Better upgrade to a supported version ASAP.
+See https://endoflife.date/linux for details. It is somewhat likely that
+a lot of exploitable vulnerabilities exist for this kernel as well as many
+unfixed bugs.
 
 But this version string doesn't matter since this is not an official LTS Linux
 from kernel.org. This device runs a Rockchip vendor/BSP kernel.

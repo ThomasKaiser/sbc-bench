@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.9.25
+Version=0.9.26
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -664,7 +664,7 @@ HandlePolicies() {
 	# /sys/module/pcie_aspm/parameters/policy: default performance [powersave] powersupersave
 
 	# process policies
-	SysFSPolicies="$(find /sys -name "*policy" | grep -E -v 'hotplug|cpufreq|thermal_zone|apparmor|hostap|/sys/kernel|/sys/devices/pci|mobile_lpm_policy')"
+	SysFSPolicies="$(find /sys -name "*policy" | grep -E -v 'hotplug|cpufreq|thermal_zone|apparmor|hostap|/sys/kernel|/sys/devices/pci|mobile_lpm_|xmit_hash_')"
 	if [ "X${SysFSPolicies}" = "X" ]; then
 		# skip if no policies found
 		return
@@ -6371,6 +6371,7 @@ ProvideReviewInfo() {
 	if [ "X${NOTUNING}" != "Xyes" ]; then
 		# throttling check and routine waiting for the board to cool down since otherwise the
 		# next monitoring step will report throttling even if none happens from now on.
+		[ "X${ThrottlingWarning}" != "X" ] && sleep 3
 		if [ -r /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq ]; then
 			cpuinfo_max_freq=$(cat /sys/devices/system/cpu/cpu?/cpufreq/cpuinfo_max_freq)
 			cpuinfo_cur_freq=$(cat /sys/devices/system/cpu/cpu?/cpufreq/cpuinfo_cur_freq)
@@ -6412,6 +6413,7 @@ ProvideReviewInfo() {
 		NetioMonitoringPID=$!
 	fi
 
+	echo "sbc-bench review mode started" >/dev/kmsg
 	trap "FinalReporting ; exit 0" 0 1 2 3 15
 	rm "${TempDir}"/*time_in_state* "${TempDir}/throttling_info.txt" 2>/dev/null
 	CheckTimeInState before
@@ -6428,6 +6430,17 @@ FinalReporting() {
 	kill ${NetioMonitoringPID} ${MonitoringPID} 2>/dev/null
 	CheckTimeInState after
 	CheckClockspeedsAndSensors
+
+	# collect dmesg output since start of monitoring to spot anomalies
+	TimeStamp="$(dmesg | tr -d '[' | tr -d ']' | awk -F" " '/sbc-bench review mode started/ {print $1}' | tail -n1)"
+	DMESGSinceStart="$(dmesg | sed "/${TimeStamp}/,\$!d" | grep -E -v 'sbc-bench review mode started|started with executable stack|UFW BLOCK| EDID ')"
+	DMESGLines=$(wc -l <<<"${DMESGSinceStart}")
+
+	# check PCIe and storage devices again to spot disconnects or link
+	# degradation and stuff like this
+	PCIeStatusNow="$(CheckPCIe again)"
+	StorageStatusNow="$(CheckStorage)"
+
 	ClockspeedsNow="$(cat "${TempDir}/cpufreq" | sed -e 's/^/    /')"
 	if [ -z ${InitialTemp} ]; then
 		# no thermal readouts possible
@@ -6437,6 +6450,32 @@ FinalReporting() {
 	fi
 	CheckForThrottling | sed -e 's/ Check the log for details.//' -e 's/might have //' -e '/^[[:space:]]*$/d'
 	[ -f ${TempDir}/throttling_info.txt ] && cat ${TempDir}/throttling_info.txt
+
+	# print warnings if count or details of attached PCIe or storage devices has changed.
+	# Possible reasons: cable/connector problems, other transmission errors and so on...
+	if [ "X${StorageStatus}" != "X${StorageStatusNow}" -a "X${PCIeStatus}" != "X${PCIeStatusNow}" ]; then
+		echo -e "${LRED}${BOLD}ATTENTION:${NC} ${LRED}list of PCIe and storage devices has changed:${NC}\n"
+		diff  <(echo "${StorageStatus}" ) <(echo "${StorageStatusNow}")
+		diff  <(echo "${PCIeStatus}" ) <(echo "${PCIeStatusNow}")
+		echo ""
+	elif [ "X${StorageStatus}" != "X${StorageStatusNow}" ]; then
+		echo -e "${LRED}${BOLD}ATTENTION:${NC} ${LRED}list of storage devices has changed:${NC}\n"
+		diff  <(echo "${StorageStatus}" ) <(echo "${StorageStatusNow}")
+		echo ""
+	elif [ "X${PCIeStatus}" != "X${PCIeStatusNow}" ]; then
+		echo -e "${LRED}${BOLD}ATTENTION:${NC} ${LRED}list of PCIe devices has changed:${NC}\n"
+		diff  <(echo "${PCIeStatus}" ) <(echo "${PCIeStatusNow}")
+		echo ""
+	fi
+
+	# print warnings if kernel ring buffer contains messages since start of monitoring:
+	if [ ${DMESGLines:-0} -gt 20 ]; then
+		echo -e "${LRED}${BOLD}ATTENTION:${NC} ${LRED}lots of noise in kernel ring buffer since start of monitoring:${NC}\n"
+		echo -e "${DMESGSinceStart}\n"
+	elif [ ${DMESGLines:-0} -gt 0 ]; then
+		echo -e "${BOLD}ATTENTION:${NC} some noise in kernel ring buffer since start of monitoring:\n"
+		echo -e "${DMESGSinceStart}\n"
+	fi
 } # FinalReporting
 
 CheckKernelVersion() {
@@ -6772,8 +6811,9 @@ CheckPCIe() {
 	# with other PCIe devices report driver (for example to spot the 'famous' RealTek NIC
 	# performance issues that go away once the appropriate driver is loaded)
 
-	# try to update SMART drive database if SMART capable devices may exist
-	[ -b /dev/nvme0n1 -o -b /dev/sda ] && update-smart-drivedb >/dev/null 2>&1
+	# try to update SMART drive database if SMART capable devices may exist and this
+	# function hasn't been called with again
+	[ -b /dev/nvme0n1 -o -b /dev/sda -a "$1" != "again" ] && update-smart-drivedb >/dev/null 2>&1
 
 	# grab info about block devices
 	[ -z "${LSBLK}" ] && LSBLK="$(LC_ALL="C" lsblk -l -o SIZE,NAME,FSTYPE,LABEL,MOUNTPOINT 2>&1)"
@@ -6878,6 +6918,10 @@ CheckStorage() {
 							# that has been flashed with Western Digital branded firmware
 							DeviceInfo="behind JMicron JMS56x SATA 6Gb/s bridge, Driver=${Driver}, ${NegotiatedSpeed}M"
 							;;
+						152d:0561)
+							# Listed as "JMS551 - Sharkoon SATA QuickPort Duo"
+							DeviceInfo="behind JMicron JMS561 dual SATA 6Gb/s bridge, Driver=${Driver}, ${NegotiatedSpeed}M"
+							;;
 						152d:0576)
 							# Listed as "JMicron Technology Corp. / JMicron USA Technology Corp. Gen1 SATA 6Gb/s Bridge"
 							DeviceInfo="behind JMicron JMS576 SATA 6Gb/s bridge, Driver=${Driver}, ${NegotiatedSpeed}M"
@@ -6886,6 +6930,9 @@ CheckStorage() {
 							# JMS578 wrongly listed as JMS567 in usbutils database, though there are some JMS567 that
 							# can be flashed with a firmware that then results in them identifying as product ID 0578
 							DeviceInfo="behind JMicron JMS578 SATA 6Gb/s bridge, Driver=${Driver}, ${NegotiatedSpeed}M"
+							;;
+						152d:0580)
+							DeviceInfo="behind JMicron JMS580 SATA 6Gb/s bridge, Driver=${Driver}, ${NegotiatedSpeed}M"
 							;;
 						152d*)
 							# JMicron bridge, let's replace the monstrous vendor string with JMicron

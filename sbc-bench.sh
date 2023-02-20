@@ -6319,6 +6319,19 @@ ProvideReviewInfo() {
 	elif [ "X${PCIeStatus}" = "X" ]; then
 		echo -e "\n### Storage devices:\n\n${StorageStatus}" >>"${TempDir}/review"
 	fi
+	
+	# check whether NTFS filesystems are attached (do not need to be mounted yet)
+	NTFSdevices="$(awk -F" " '/ ntfs / {print $2}' <<< "${LSBLK}" | tr '\n' ',' | sed 's/,$//')"
+	if [ -z "${NTFSdevices}" ]; then
+		echo -e "\n### Challenging filesystems:\n\nThe following partitions contain NTFS filesystems: ${NTFSdevices}\n" >>"${TempDir}/review"
+		cat >>"${TempDir}/review" <<- EOF
+		When this OS uses FUSE/userland methods to access NTFS filesystems performance
+		will be significantly harmed or at least likely be bottlenecked by maxing out
+		one or more CPU cores. It is highly advised when benchmarking with any NTFS to
+		monitor closely CPU utilization or better switch to a 'Linux native' filesystem
+		like ext4 since representing 'storage performance' more closely.
+		EOF
+	fi
 
 	# software versions
 	echo -e "\n### Software versions:\n" >>"${TempDir}/review"
@@ -6452,20 +6465,19 @@ FinalReporting() {
 	[ -f ${TempDir}/throttling_info.txt ] && cat ${TempDir}/throttling_info.txt
 
 	# print warnings if count or details of attached PCIe or storage devices has changed.
+	# We need to strip of everything after last comma since temperatures are subject to change.
 	# Possible reasons: cable/connector problems, other transmission errors and so on...
-	if [ "X${StorageStatus}" != "X${StorageStatusNow}" -a "X${PCIeStatus}" != "X${PCIeStatusNow}" ]; then
+	StorageDiff="$(diff  <(echo "${StorageStatus}" | sed 's/,[^,]*$//') <(echo "${StorageStatusNow}" | sed 's/,[^,]*$//') )"
+	PCIeDiff="$(diff  <(echo "${PCIeStatus}" | sed 's/,[^,]*$//') <(echo "${PCIeStatusNow}" | sed 's/,[^,]*$//') )"
+	if [ "X${StorageDiff}" != "X" -a "X${PCIeDiff}" != "X" ]; then
 		echo -e "${LRED}${BOLD}ATTENTION:${NC} ${LRED}list of PCIe and storage devices has changed:${NC}\n"
-		diff  <(echo "${StorageStatus}" ) <(echo "${StorageStatusNow}")
-		diff  <(echo "${PCIeStatus}" ) <(echo "${PCIeStatusNow}")
-		echo ""
-	elif [ "X${StorageStatus}" != "X${StorageStatusNow}" ]; then
+		echo -e "${PCIeDiff}\n${StorageDiff}\n"
+	elif [ "X${StorageDiff}" != "X" ]; then
 		echo -e "${LRED}${BOLD}ATTENTION:${NC} ${LRED}list of storage devices has changed:${NC}\n"
-		diff  <(echo "${StorageStatus}" ) <(echo "${StorageStatusNow}")
-		echo ""
-	elif [ "X${PCIeStatus}" != "X${PCIeStatusNow}" ]; then
+		echo -e "${StorageDiff}\n"
+	elif [ "X${PCIeDiff}" != "X" ]; then
 		echo -e "${LRED}${BOLD}ATTENTION:${NC} ${LRED}list of PCIe devices has changed:${NC}\n"
-		diff  <(echo "${PCIeStatus}" ) <(echo "${PCIeStatusNow}")
-		echo ""
+		echo -e "${PCIeDiff}\n"
 	fi
 
 	# print warnings if kernel ring buffer contains messages since start of monitoring:
@@ -6867,9 +6879,8 @@ CheckStorage() {
 	# vs. uas and so on)
 	#
 	# TODO:
-	# * maybe overtake CheckSMARTModes code from armbianmonitor
-	# * add warnings if a mounted filesystem is of type NTFS since usually performance
-	#   sucks horribly when accessed via FUSE
+	# * maybe overtake CheckSMARTModes code from armbianmonitor to query picky/old USB
+	#   bridges in all possible ways.
 
 	# grab info about block devices
 	[ -z "${LSBLK}" ] && LSBLK="$(LC_ALL="C" lsblk -l -o SIZE,NAME,FSTYPE,LABEL,MOUNTPOINT 2>&1)"

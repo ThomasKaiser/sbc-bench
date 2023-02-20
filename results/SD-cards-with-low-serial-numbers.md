@@ -1,29 +1,34 @@
-Based on the _assumption__ SD card serial numbers are sequential serial numbers starting with 1 (which [sometimes is a problem](https://en.wikipedia.org/wiki/German_tank_problem)) low serial numbers look suspicious as in "SD card fraud".
+# Fight Flash Fraud 
 
 Counterfeit SD cards are (still) a massive problems most users are not aware of. Fraudsters insert faked cards somewhere into the supply chain that fake a higher capacity and often show worse performance compared to genuine flash products from trustworthy vendors.
 
-Using the q&d script attached at the bottom of this page I crawled through a few thousand `armbianmonitor -u` outputs to generate some data for all serial numbers between 0x00000000 and 0x0000ffff.
+The only way to really check for flash fraud is to test the full card's capacity using tools like eg. [f3](https://fight-flash-fraud.readthedocs.io/en/latest/).
+
+But since fraudsters often don't care that much about hiding their fakes we can also use the card's metadata available as so called CID and CSD (you can check both [here](https://gurumeditation.org/1342/sd-memory-card-register-decoder/)).
+
+Based on the _assumption_ SD card serial numbers are sequential numbers starting with 1 (which [sometimes is a problem](https://en.wikipedia.org/wiki/German_tank_problem) and should be avoided) low serial numbers look suspicious as in "SD card fraud".
+
+Using the q&d script attached at the bottom of this page I crawled through a few thousand `armbianmonitor -u` outputs to generate some data for all serial numbers between 0x00000000 and 0x0000ffff found with the SD cards of Armbian users all over the world.
 
 The capacity in the 2nd column is reported by the kernel but solely based on a few bits in the card's CSD 'register'. The _name_ (limited to 5 bytes by specification), _Manufacturer ID_, _OEM ID_, _hw revision_ and _sw revision_ values are from the card's CID. At the right is the device the specific card was in when the info got extracted.
 
-Only some _Manufacturer ID_ are defined (registered at JEDEC today) and usually they go along with a specific _OEM ID_, for example genuine Toshiba cards all use the combination `0x000002/0x544d` where `0x000002` is the _Manufacturer ID_ and the `0x544d` in ASCII represents `TM`. With AData it's `0x00001d/0x4144` (the `0x4144` for `AD`).
+Only some _Manufacturer ID's_ are defined (registered at JEDEC today) and usually they go along with a specific _OEM ID_, for example genuine Toshiba cards all use the combination `0x000002/0x544d` where `0x000002` is the _Manufacturer ID_ and `0x544d` in ASCII represents `TM` which isn't surprising when thinking about 'Toshiba Memory'. With AData it's for example `0x00001d/0x4144` (the `0x4144` for `AD`).
 
-With `0x000027/0x5048` (Phison, most OEM cards are based on these controllers, e.g. AgfaPhoto, Delkin, Intenso, Integral, Lexar, Patriot, PNY, Polaroid, Sony, Verbatim and many more) low serial numbers look OK. The names all match capacity (`SD08G` is 7.28/7.44 GiB, `SD16G` is 14.5/14.6 GiB, `SD32G` = 28.8/28.9/29.1 GiB and so on). With AData it seems similar: 18 on the list with the usual device names `SD` and `USD`.
+Low serial numbers look OK with `0x000027/0x5048` (Phison, most OEM cards are based on these controllers, e.g. AgfaPhoto, Delkin, Intenso, Integral, Lexar, Patriot, PNY, Polaroid, Sony, Verbatim and many more). The names all match capacity (`SD08G` is 7.28/7.44 GiB, `SD16G` is 14.5/14.6 GiB, `SD32G` = 28.8/28.9/29.1 GiB and so on). With AData it seems similar: 18 on the list with the usual device names `SD` and `USD`.
 
-But there are +150 other cards with the name `SD08G`, `SD16G`, `SD32G` and `SD64G` that mostly look suspicious. 33 identify as Kingston (`0x000041/0x3432`) but capacity almost never matches the name, e.g. `SD16G` claiming 29.5 GiB. Those are probably all fakes.
+But there are +150 other cards also with the names `SD08G`, `SD16G`, `SD32G` and `SD64G` that mostly look suspicious. 33 identify as Kingston (`0x000041/0x3432`) but capacity almost never matches the name, e.g. `SD16G` claiming 29.5 GiB. Those are probably all fakes.
 
-Then there are another 106 combining the _OEM ID_ used by Kingston (`0x3432 -> "42"`) with _Manufacturer ID's_ like `0x000000`, `0x000012/0x3432`, `0x00009f/0x3432`, `0x0000f1`, `0x0000ff`, `0x0000fe` where name and capacity almost never matches. So it's save to assume that the combination of Kingston's _OEM ID_ with a different _Manufacturer ID_ than `0x000041` is fraud indication.
+Then there are another 106 combining the _OEM ID_ used by Kingston (`0x3432 -> "42"`) with bogus _Manufacturer ID's_ like `0x000000`, `0x000012`, `0x00009f`, `0x0000f1`, `0x0000ff` and `0x0000fe` where name and capacity almost never matches. So it's save to assume that the combination of Kingston's _OEM ID_ with a different _Manufacturer ID_ than `0x000041` is counterfeit indication.
 
 Then there are 9 that identify as Transcend (`0x000074` though with a different _OEM ID_ as usual :`0x4a60`). Only one of them shows an inadequate capacity (`SD16G` reporting 7.44 GiB). This one card shows _hw revision_ `0x2` while all the other are `0x6`.
 
-Then there's 23 times cards with `0x000012/0x3456` which is a known counterfeit combination. And another 16 with `0x000012/0x5678`, the majority of them named `ASTC` which is also often the name of other counterfeit products using a bogus _Manufacturer ID_. Checking for `name=ASTC` might be another reliable fraud detector (TBC). A bunch of those `ASTC` named cards identifies as bogus `0x0000fe/0x3456` and the same goes for cards with name `00000` so let us add this name to the list.
+Then there's 23 times cards with `0x000012/0x3456` which is a known counterfeit combination. And another 16 with `0x000012/0x5678`, the majority of them named `ASTC` which is also often the name of other counterfeit products using a bogus _Manufacturer ID_. Checking for `name=ASTC` might be another reliable counterfeit detector. A bunch of those `ASTC` named cards identifies as bogus `0x0000fe/0x3456` and the same goes for cards with name `00000` so let us add this name to the list.
 
-Then there are 13 that identify as SanDisk (`0x000003/0x5344`) all showing the name `AS` which is untypical for real SanDisk devices (5 bytes starting with S and ending with G with capacity in between). Similarly suspicious name is `SMI` which appears 21 times on this list all the time with silly serial `0x00000000` combined with bogus ID combinations (`0x00006f/0x0013`, `0x000025/0x1708` or `0x0000df/0x2109`)
+Then there are 13 that identify as SanDisk (`0x000003/0x5344`) all showing the name `AS` which is untypical for real SanDisk devices (all 5 bytes used and names starting with S and ending with G with capacity in between). Similarly suspicious name is `SMI` which appears 21 times on this list all the time with silly serial `0x00000000` combined with bogus ID combinations (`0x00006f/0x0013`, `0x000025/0x1708` or `0x0000df/0x2109` for example).
 
-TODO: check OEM IDs for 0x000074 
+The details as follows:
 
-
-| serial | capacity | name | manfid/oemid | date | hwrev/fwrev | device |
+| serial n° | capacity | name | manfid/oemid | date | hwrev/fwrev | device |
 | :----- | -------: | :----: | :-------: | :----: | ------: | :----- |
 | 0x00000000 | 14.6 GiB | SMI | 0x000000/0x0000 | 11/2020 | 0x0/0x0 | Orange Pi Zero |
 | 0x00000000 | 14.7 GiB | N/A | 0x000000/0x2020 | 12/2017 | 0x1/0x0 | Orange Pi Plus 2E |
@@ -215,7 +220,7 @@ TODO: check OEM IDs for 0x000074
 | 0x00000260 | 29.2 GiB | SD16G | 0x000041/0x3432 | 01/2019 | 0x2/0x0600000000000000 | Orange Pi 3 |
 | 0x00000268 | 14.4 GiB | SD16G | 0x000000/0x3432 | 03/2021 | 0x2/0x0 | Orange Pi Zero |
 | 0x0000026b | 7.44 GiB | ASTC | 0x000012/0x5678 | 12/2016 | 0x3/0xf400000000000000 | SEI Robotics SEI610 |
-| 0x0000026e | 28.9 GiB | SD32G | 0x000027/0x5048 | 07/2021 | 0x6/0x0200000000000000 | Libre Computer AML-S905X-CC |
+| 0x0000026e | 28.9 GiB | SD32G | 0x000027/0x5048 | 07/2021 | 0x6/0x0200000000000000 | AML-S905X-CC |
 | 0x0000029c | 28.9 GiB | SD32G | 0x000027/0x5048 | 10/2021 | 0x6/0x0600000000000000 | OrangePi 4 LTS |
 | 0x0000029c | 29.5 GiB | ASTC | 0x000012/0x5678 | 02/2019 | 0x3/0x0 | RPi 3B Plus Rev 1.3 |
 | 0x000002a6 | 29.8 GiB | SD16G | 0x0000fe/0x3432 | 07/2021 | 0x2/0x0600000000000000 | OrangePi Zero2 |
@@ -227,8 +232,8 @@ TODO: check OEM IDs for 0x000074
 | 0x000002fa | 29.1 GiB | SD32G | 0x000027/0x5048 | 12/2020 | 0x1/0x0600000000000000 | OPI 3 LTS |
 | 0x00000317 | 29.1 GiB | SD16G | 0x0000fe/0x3432 | 03/2022 | 0x2/0x0 | Tanix TX6 |
 | 0x00000329 | 28.9 GiB | SD32G | 0x000027/0x5048 | 07/2021 | 0x6/0x0 | Orange Pi Zero |
-| 0x0000032d | 28.9 GiB | SD32G | 0x000027/0x5048 | 07/2021 | 0x6/0x0 | Libre Computer AML-S905X-CC |
-| 0x0000033a | 28.9 GiB | SD32G | 0x000027/0x5048 | 07/2021 | 0x6/0x0 | Libre Computer AML-S905X-CC |
+| 0x0000032d | 28.9 GiB | SD32G | 0x000027/0x5048 | 07/2021 | 0x6/0x0 | AML-S905X-CC |
+| 0x0000033a | 28.9 GiB | SD32G | 0x000027/0x5048 | 07/2021 | 0x6/0x0 | AML-S905X-CC |
 | 0x00000343 | 14.6 GiB | SD16G | 0x0000fe/0x3432 | 01/2021 | 0x2/0x0 | Orange Pi Zero |
 | 0x00000343 | 14.9 GiB | ASTC | 0x000074/0x4a60 | 04/2021 | 0x2/0x0 | NanoPi R4S |
 | 0x0000034a | 30.0 GiB | USD | 0x00009f/0x5449 | 02/2022 | 0x1/0x0 | Orange Pi One+ |
@@ -261,7 +266,7 @@ TODO: check OEM IDs for 0x000074
 | 0x00000455 | 7.44 GiB | SD16G | 0x0000fe/0x3432 | 03/2021 | 0x2/0x0 | Orange Pi One |
 | 0x0000045e | 58.9 GiB | ASTC | 0x00009f/0x5449 | 12/2021 | 0x2/0x0 | Asus Tinker Board S |
 | 0x0000047f | 28.9 GiB | SD32G | 0x000027/0x5048 | 11/2021 | 0x6/0x0 | Orange Pi Zero2 |
-| 0x00000486 | 58.2 GiB | 00000 | 0x00009f/0x5449 | 07/2022 | 0x0/0x0 | Libre Computer AML-S905X-CC |
+| 0x00000486 | 58.2 GiB | 00000 | 0x00009f/0x5449 | 07/2022 | 0x0/0x0 | AML-S905X-CC |
 | 0x00000496 | 14.6 GiB | SD16G | 0x0000fe/0x3432 | 01/2021 | 0x2/0x0 | Orange Pi Zero |
 | 0x0000049c | 14.6 GiB | SD16G | 0x0000fe/0x3432 | 01/2021 | 0x2/0x0 | Orange Pi Zero |
 | 0x000004b2 | 7.32 GiB | ASTC | 0x000012/0x5678 | 03/2016 | 0x3/0x0100000000000000 | Q201 Board |
@@ -319,7 +324,7 @@ TODO: check OEM IDs for 0x000074
 | 0x0000084d | 14.8 GiB | SD16G | 0x0000fe/0x3432 | 07/2021 | 0x2/0x0600000000000000 | Orange Pi 3 LTS |
 | 0x00000853 | 7.45 GiB | ASTC | 0x000041/0x3432 | 11/2020 | 0x2/0x0 | rockpi4b |
 | 0x00000862 | 29.8 GiB | SD32G | 0x00009f/0x5449 | 12/2021 | 0x2/0x0 | RockPro 64 |
-| 0x00000867 | 7.44 GiB | SD16G | 0x000000/0x3432 | 11/2021 | 0x2/0x0 | Libre Computer AML-S905X-CC |
+| 0x00000867 | 7.44 GiB | SD16G | 0x000000/0x3432 | 11/2021 | 0x2/0x0 | AML-S905X-CC |
 | 0x0000087a | 14.7 GiB | SD | 0x000012/0x3456 | 04/2016 | 0x0/0x0 | P212 Board |
 | 0x0000089e | 29.1 GiB | SD16G | 0x000000/0x3432 | 09/2020 | 0x2/0x1 | ODROID-HC4 |
 | 0x000008ab | 14.6 GiB | ASTC | 0x000012/0x3456 | 01/2022 | 0x0/0x0 | Orange Pi Zero |
@@ -467,7 +472,7 @@ TODO: check OEM IDs for 0x000074
 | 0x0000b7c8 | 3.72 GiB | AS | 0x000003/0x5344 | 04/2015 | 0xf/0xf | Orange Pi Zero |
 | 0x0000bfed | 14.9 GiB | 00000 | 0x000019/0x4459 | 03/2016 | 0xf/0xf | Orange Pi Lite |
 | 0x0000cc56 | 14.9 GiB | USD | 0x00001d/0x4144 | 03/2021 | 0x1/0x0 | Orange Pi One |
-| 0x0000d322 | 14.9 GiB | USD | 0x00001d/0x4144 | 02/2022 | 0x1/0x0 | Libre Computer AML-S905X-CC |
+| 0x0000d322 | 14.9 GiB | USD | 0x00001d/0x4144 | 02/2022 | 0x1/0x0 | AML-S905X-CC |
 | 0x0000d6f9 | 14.5 GiB | 00000 | 0x00009f/0x5449 | 04/2022 | 0x0/0x0 | BPI-M2-Zero |
 | 0x0000de40 | 7.32 GiB | 00000 | 0x000019/0x4459 | 08/2016 | 0xf/0xf | Orange Pi Lite |
 | 0x0000de9d | 57.0 GiB | SD16G | 0x0000fe/0x3432 | 08/2021 | 0x2/0x0 | Orange Pi Plus / Plus 2 |

@@ -6791,7 +6791,7 @@ CheckPCIe() {
 				# check device
 				DeviceName="$(sed 's/Advanced Micro Devices,/AMD/' <<<"${REPLY}" | awk -F'"' '{print $4}' | cut -f1 -d' ') $(awk -F'"' '{print $6}' <<<"${REPLY}" | sed -e 's/ SSD//' -e 's/ Controller//')"
 				PCIeDetails="$(lspci -vv -s ${BusAddress} 2>/dev/null)"
-				LnkSta="$(awk -F"\t" '/LnkSta:/ {print $4}' <<<"${PCIeDetails}" | awk -F", " '{print $1", "$2}')"
+				LnkSta="$(awk -F"\t" '/LnkSta:/ {print $4}' <<<"${PCIeDetails}" | awk -F", " '{print $1", "$2}' | head -n1)"
 				if [ "X${LnkSta}" != "X" ]; then
 					# only report devices for which a link state can be determined
 					if [ "X${ControllerType}" = "XNon-Volatile memory controller" ]; then
@@ -6983,51 +6983,69 @@ CheckStorage() {
 			mmc_size=$(awk -F" " "/ ${StorageDevice##*/} / {print \$1}" <<<"${LSBLK}")
 			[ "X${mmc_size}" != "X" ] && FlashSize="${mmc_size}B "
 
-			Manufacturer="Probable counterfeit "
+			# check serial number since low serial numbers are suspicious, might be overriden
+			# one step later since some OEM cards (AData, Phison) seem to use low serial numbers.
+			# https://github.com/ThomasKaiser/sbc-bench/blob/master/results/SD-cards-with-low-serial-numbers.md
+			case "${mmc_serial}" in
+				0x0000*)
+					# probable fake card
+					Manufacturer="Probable counterfeit "
+					;;
+			esac
+
 			# Only add manufacturer info if really unique. Partially misleading since counterfeit
 			# cards were and still are an issue: https://www.bunniestudios.com/blog/?page_id=1022
 			case "${mmc_manfid}/${mmc_oemid}" in
-				0x000000/0x0000)
+				0x000000*)
 					# counterfeit card
 					Manufacturer="Definite counterfeit "
 					DeviceWarning=TRUE
 					;;
 				0x000001*)
-					Manufacturer="Panasonic "
+					Manufacturer="${Manufacturer}Panasonic "
 					;;
 				0x000002/0x544d)
 					# 0x544d -> "TM"
-					Manufacturer="Toshiba "
+					Manufacturer="${Manufacturer}Toshiba "
 					;;
 				0x000003/0x5344)
 					# 0x5344 -> "SD"
-					Manufacturer="SanDisk "
+					Manufacturer="${Manufacturer}SanDisk "
 					;;
 				0x000008*)
-					Manufacturer="Silicon Power "
+					Manufacturer="${Manufacturer}Silicon Power "
 					;;
 				0x000012/0x3456)
 					# 0x3456 -> "4V", used by at least the following brands: EssentielB, Extrememory,
 					# fake Kingston: https://www.bunniestudios.com/blog/?page_id=1022
-					:
+					# show up with very low serial numbers as "ASTC", "SD" or "F0F0", fake
+					Manufacturer="Definite counterfeit "
+					DeviceWarning=TRUE
+					;;
+				0x000012/0x5678)
+					# 0x5678 -> "Vx", show up with very low serial numbers as "ASTC", "MS", fake
+					Manufacturer="Definite counterfeit "
+					DeviceWarning=TRUE
 					;;
 				0x000012*)
 					# fake Samsung PRO Endurance: https://tinyurl.com/ytd8hmka
+					# this manufacturer ID is definitely a counterfeit indicator
 					Manufacturer="Definite counterfeit "
 					DeviceWarning=TRUE
 					;;
 				0x000018*)
-					Manufacturer="Infineon "
+					Manufacturer="${Manufacturer}Infineon "
 					;;
-				0x000015/0x0100|0x00001b*|0x0000ce*)
-					Manufacturer="Samsung "
+				0x000015/0x0100|0x00001b/0x534d|0x0000ce*)
+					# 0x534d -> "SM"
+					Manufacturer="${Manufacturer}Samsung "
 					;;
 				0x00001d/0x4144)
 					# 0x4144 -> "AD"
 					Manufacturer="AData "
 					;;
 				0x00001d*)
-					Manufacturer="Corsair "
+					Manufacturer="${Manufacturer}Corsair "
 					;;
 				0x000027/0x5048)
 					# 0x5048 -> "PH", used by at least the following brands: AgfaPhoto, Delkin, Intenso, Integral, Lexar, Patriot, PNY, Polaroid, Sony, Verbatim
@@ -7035,14 +7053,19 @@ CheckStorage() {
 					;;
 				0x000028/0x4245)
 					# 0x4245 -> "BE", used by at least the following brands: Lexar, PNY, ProGrade
-					Manufacturer="Lexar "
+					Manufacturer="${Manufacturer}Lexar "
 					;;
 				0x000041/0x3432)
 					# 0x3432 -> "42"
-					Manufacturer="Kingston "
+					Manufacturer="${Manufacturer}Kingston "
+					;;
+				*/0x3432)
+					# 0x3432 -> "42" but differing manfid from Kingston's
+					Manufacturer="Definite counterfeit "
+					DeviceWarning=TRUE
 					;;
 				0x000045*)
-					Manufacturer="SanDisk/Toshiba "
+					Manufacturer="${Manufacturer}SanDisk/Toshiba "
 					;;
 				0x000073/0x4247)
 					# 0x4247 -> "BG", used by at least the following brands: Fugi, Hama, V-Gen
@@ -7050,25 +7073,52 @@ CheckStorage() {
 					;;
 				0x000074/0x4a45)
 					# 0x4a45 -> "JE"
-					Manufacturer="Transcend "
+					case ${mmc_date} in
+						*200*|*2010|*2011|*2012)
+							# low serial number is fine dating back then
+							Manufacturer="Transcend "
+							;;
+						*)
+							Manufacturer="${Manufacturer}Transcend "
+							;;
+					esac
+					;;
+				0x000074/0x4a60)
+					# 0x4a60 -> "J`", combination used with some cards showing low serial numbers,
+					# bogus names like 00000/ASTC or name/capacity mismatch: SD16G with 7.44 GiB
+					Manufacturer="${Manufacturer}Transcend "
+					;;
+				0x000084/0x5446)
+					# 0x5446 -> "TF", http://strontium.biz/products/memory-cards/mobile-memory-cards/#seven
+					:
 					;;
 				0x000088/0x0103)
-					Manufacturer="Foresee "
+					Manufacturer="${Manufacturer}Foresee "
 					;;
 				0x00009f/0x5449)
-					# 0x5449 -> "TI"
-					Manufacturer="Texas Instruments "
+					# 0x5449 -> "TI", found with maybe counterfeit Kingston SDC10G2 (name:SD16G): https://wiki.kobol.io/helios4/sdcard/#kingston-mobile-card-microsdhc-16gb
+					# or as "Kingston Canvas Select Plus, SDCS2/32GB" "SD32G", date 10/2020, hw/fw rev: 0x6/0x1
+					Manufacturer="${Manufacturer}Texas Instruments "
 					;;
 				0x0000ad*)
-					Manufacturer="SK Hynix "
+					Manufacturer="${Manufacturer}SK Hynix "
 					;;
 				0x0000fe*)
-					Manufacturer="Micron-Numonyx "
+					Manufacturer="${Manufacturer}Micron-Numonyx "
 					;;
-				0x000074*)
-					Manufacturer="Transcend "
+				0x0000ff/0x0000|0x00006f/0x0013|0x000025/0x1708|0x0000df*|0x0000fe/0x3456)
+					# fake
+					Manufacturer="Definite counterfeit "
+					DeviceWarning=TRUE
 					;;
 			esac
+
+			# check certain fraud criteria again to switch from 'Probable counterfeit' (low
+			# serial number) to 'Definite counterfeit'
+			if [ "${mmc_serial}" = "0x00000000" -o "${mmc_name}" = "00000" -o "${mmc_name}" = "SMI" -o "${mmc_name}" = "ASTC" -o "${mmc_name}" = "AS" ]; then
+				Manufacturer="Definite counterfeit "
+				DeviceWarning=TRUE
+			fi
 
 			# check dmesg output to gather further info like negotiation problems and errors.
 			MMCNode="$(grep "] ${StorageDevice##*/}: " <<<"${DMESG}" | grep "iB" | awk -F":" "/ ${mmc_name} / {print \$2}" | head -n1)"

@@ -71,6 +71,7 @@ Main() {
 					fi
 				fi
 				DMESG="$(dmesg | grep "mmc")"
+				CreateTempDir
 				CheckPCIe
 				CheckStorage
 				exit 0
@@ -6001,7 +6002,7 @@ GuessSoCbySignature() {
 			echo "Loongson-3A5000-HV"
 			;;
 	esac
-}
+} # GuessSoCbySignature
 
 GetCPUSignature() {
 	case ${CPUArchitecture} in
@@ -6808,6 +6809,7 @@ CheckPCIe() {
 						AdditionalInfo=", driver in use: $(awk -F": " '/Kernel driver in use:/ {print $2}' <<<"${PCIeDetails}")"
 					fi
 					if [ "X${DeviceWarning}" = "XTRUE" ]; then
+						touch "${TempDir}/check-smart"
 						echo -e "  * ${LRED}${DevizeSize}${DeviceName}: ${LnkSta}${AdditionalInfo}${NC}"
 					else
 						echo -e "  * ${DevizeSize}${DeviceName}: ${LnkSta}${AdditionalInfo}"
@@ -6826,7 +6828,6 @@ CheckStorage() {
 	#
 	# TODO:
 	# * maybe overtake CheckSMARTModes code from armbianmonitor
-	# * maybe differentiate between general and SMART warnings to add smartctl suggestion
 	# * add warnings if a mounted filesystem is of type NTFS since usually performance
 	#   sucks horribly when accessed via FUSE
 
@@ -6918,6 +6919,7 @@ CheckStorage() {
 
 		DevizeSize="$(GetDiskSize "${StorageDevice}" "${DeviceName}")"
 		if [ "X${DeviceWarning}" = "XTRUE" ]; then
+			touch "${TempDir}/check-smart"
 			echo -e "  * ${LRED}${DevizeSize}${DeviceName%%*( )}: ${DeviceInfo}${AdditionalInfo}${NC}"
 		else
 			echo -e "  * ${DevizeSize}${DeviceName%%*( )}: ${DeviceInfo}${AdditionalInfo}"
@@ -6992,6 +6994,7 @@ CheckStorage() {
 				0x000012*)
 					# fake Samsung PRO Endurance: https://tinyurl.com/ytd8hmka
 					Manufacturer="Definite counterfeit "
+					DeviceWarning=TRUE
 					;;
 				0x000018*)
 					Manufacturer="Infineon "
@@ -7102,6 +7105,10 @@ CheckStorage() {
 		esac
 		echo -e "  * ${DeviceName} as ${StorageDevice}, drivers in use: ${Driver}"
 	done
+
+	if [ -f "${TempDir}/check-smart" ]; then
+		echo -e "\n\"smartctl -x \$device\" should be used to get further information about the aforementioned issues."
+	fi
 } # CheckStorage
 
 GetDiskSize() {
@@ -7276,6 +7283,7 @@ CheckSMARTData() {
 				EndtoEnd_Error="$(awk -F": " '/^184 / {print $10}' <<<"${SMARTData}")"
 				[ ${EndtoEnd_Error:-0} -gt 0 ] && AdditionalInfo="${AdditionalInfo}, ${EndtoEnd_Error} End-to-End errors"
 
+				# Check whether drive model name already contains vendor and if not try to add it
 				DeviceVendor="$(awk -F": " "/^Model Family:/ {print \$2}" <<<"${SMARTData}" | grep -E -v "Silicon Motion|Phison|SandForce|SK hynix|Marvell|JMicron|Apacer SSDs|Indilinx" | sed 's/^ *//g' | cut -f1 -d' ')"
 				DeviceModel="$(awk -F": " "/^Device Model:/ {print \$2}" <<<"${SMARTData}" | sed 's/^ *//g')"
 				grep -q "${DeviceVendor}" <<<"${DeviceModel}"

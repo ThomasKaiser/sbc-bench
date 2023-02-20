@@ -6878,31 +6878,51 @@ CheckStorage() {
 							# that has been flashed with Western Digital branded firmware
 							DeviceInfo="behind JMicron JMS56x SATA 6Gb/s bridge, Driver=${Driver}, ${NegotiatedSpeed}M"
 							;;
+						152d:0576)
+							# Listed as "JMicron Technology Corp. / JMicron USA Technology Corp. Gen1 SATA 6Gb/s Bridge"
+							DeviceInfo="behind JMicron JMS576 SATA 6Gb/s bridge, Driver=${Driver}, ${NegotiatedSpeed}M"
+							;;
 						152d:0578)
-							# JMS578 wrongly listed as JMS567 in usbutils database
+							# JMS578 wrongly listed as JMS567 in usbutils database, though there are some JMS567 that
+							# can be flashed with a firmware that then results in them identifying as product ID 0578
 							DeviceInfo="behind JMicron JMS578 SATA 6Gb/s bridge, Driver=${Driver}, ${NegotiatedSpeed}M"
 							;;
 						152d*)
 							# JMicron bridge, let's replace the monstrous vendor string with JMicron
-							DeviceInfo="behind JMicron JM$(sed 's/JMicron//g' <<<"${LsusbGuess}" | awk -F" JM" '{print $2}'), Driver=${Driver}, ${NegotiatedSpeed}M"
+							DeviceInfo="behind $(sed 's|JMicron Technology Corp. / JMicron USA Technology Corp.|JMicron|' <<<"${LsusbGuess}"), Driver=${Driver}, ${NegotiatedSpeed}M"
 							;;
 						174c:55aa)
-							# the product ID has been used by ASMedia for a bunch of different chips and the usbutils name reads 'ASMedia Technology Inc. Name: ASM1051E SATA 6Gb/s bridge, ASM1053E SATA 6Gb/s bridge, ASM1153 SATA 3Gb/s bridge, ASM1153E SATA 6Gb/s bridge'
+							# the product ID has been used by ASMedia for a bunch of different bridges and the usbutils name reads
+							# 'ASMedia Technology Inc. Name: ASM1051E SATA 6Gb/s bridge, ASM1053E SATA 6Gb/s bridge, ASM1153 SATA 3Gb/s bridge, ASM1153E SATA 6Gb/s bridge'
+							# ASM1153 is fine in general while the older ASM105x thingies are known to be buggy. Connected via
+							# USB3 it would be possible to identify the different bridges but if they're behind USB2 then there's
+							# no chance. So we live with a generic string (that isn't that long/useless as lsusb output).
+							# ASM1153 is also used in many USB disks (e.g. Seagate) but with different firmware and then appears
+							# not with 174c vendor ID.
 							DeviceInfo="behind ASMedia SATA 6Gb/s bridge, Driver=${Driver}, ${NegotiatedSpeed}M"
 							;;
 						174c*)
-							# ASMedia bridge, let's replace the monstrous vendor string with ASMedia
-							DeviceInfo="behind ASMedia ASM$(sed 's/ASMedia//g' <<<"${LsusbGuess}" | awk -F" ASM" '{print $2}'), Driver=${Driver}, ${NegotiatedSpeed}M"
+							# ASMedia bridges, let's replace the monstrous vendor string with ASMedia
+							DeviceInfo="behind $(sed 's|ASMedia Technology Inc.|ASMedia|' <<<"${LsusbGuess}"), Driver=${Driver}, ${NegotiatedSpeed}M"
 							;;
 						2109:0715)
 							# VIA VL715/VL716 USB to SATA bridges, appear in usbutils as
-							# "VIA Labs, Inc. VLI Product String", VL715/VL716 differ by
-							# PHY but share same product ID
+							# "VIA Labs, Inc. VLI Product String" or "VL817 SATA Adaptor"
+							# while VL817 is a hub! VL715/VL716 differ by PHY (VL716 USB-C)
+							# but share same product ID since otherwise identical
 							DeviceInfo="behind VIA Labs VL715/VL716 SATA 6Gb/s bridge, Driver=${Driver}, ${NegotiatedSpeed}M"
 							;;
+						2109:070*)
+							# SATA 3Gb/s bridges: VL700/VL701
+							DeviceInfo="behind VIA Labs VL${idProduct:1} SATA 3Gb/s bridge, Driver=${Driver}, ${NegotiatedSpeed}M"
+							;;
 						2109:07*)
-							# any of the other VIA Labs bridges
+							# any of the other VIA Labs SATA 6Gb/s bridges (that may follow)
 							DeviceInfo="behind VIA Labs VL${idProduct:1} SATA 6Gb/s bridge, Driver=${Driver}, ${NegotiatedSpeed}M"
+							;;
+						0bda*)
+							# RealTek bridges, let's replace the vendor string with Realtek
+							DeviceInfo="behind $(sed 's|Realtek Semiconductor Corp.|Realtek|' <<<"${LsusbGuess}"), Driver=${Driver}, ${NegotiatedSpeed}M"
 							;;
 						:)
 							# no IDs found, generic report
@@ -7304,7 +7324,7 @@ CheckSMARTData() {
 						AdditionalInfo="${AdditionalInfo}, ${DriveTemp}"
 						;;
 					*)
-						# SMART health check returned failed. This SSD is about to pass away
+						# SMART health check returned failed. This drive is about to pass away
 						AdditionalInfo="${AdditionalInfo}, SMART health: FAILED, ${DriveTemp}"
 						DeviceWarning=TRUE
 						;;

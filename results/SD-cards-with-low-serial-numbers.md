@@ -26,6 +26,8 @@ Then there's 23 times cards with `0x000012/0x3456` which is a known counterfeit 
 
 Then there are 13 that identify as SanDisk (`0x000003/0x5344`) all showing the name `AS` which is untypical for real SanDisk devices (all 5 bytes used and names starting with S and ending with G with capacity in between). Similarly suspicious name is `SMI` which appears 21 times on this list all the time with silly serial `0x00000000` combined with bogus ID combinations (`0x00006f/0x0013`, `0x000025/0x1708` or `0x0000df/0x2109` for example).
 
+All of the above checks are now part of `sbc-bench` and are performed in review mode (`-r`).
+
 The details as follows:
 
 | serial n° | capacity | name | manfid/oemid | date | hwrev/fwrev | device |

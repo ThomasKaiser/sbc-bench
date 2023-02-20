@@ -1,6 +1,6 @@
 # Radxa ROCK 5B
 
-Tested on Sun, 19 Feb 2023 18:14:45 +0100. Full info: [http://ix.io/4ozp](http://ix.io/4ozp)
+Tested with sbc-bench v0.9.26 on Mon, 20 Feb 2023 20:59:09 +0100. Full info: [http://ix.io/4oI7](http://ix.io/4oI7)
 
 ### General information:
 
@@ -25,7 +25,7 @@ The CPU features 3 clusters consisting of 2 different core types:
 Original governor settings:
 
     cpufreq-policy0: ondemand / 1800 MHz (conservative ondemand userspace powersave performance schedutil)
-    cpufreq-policy4: ondemand / 2400 MHz (conservative ondemand userspace powersave performance schedutil)
+    cpufreq-policy4: ondemand / 408 MHz (conservative ondemand userspace powersave performance schedutil)
     cpufreq-policy6: ondemand / 408 MHz (conservative ondemand userspace powersave performance schedutil)
     dmc: dmc_ondemand / 528 MHz (rknpu_ondemand dmc_ondemand userspace powersave performance simple_ondemand)
     fb000000.gpu: simple_ondemand / 300 MHz (rknpu_ondemand dmc_ondemand userspace powersave performance simple_ondemand)
@@ -47,35 +47,45 @@ Status of performance related policies found below /sys:
 
 ### Clockspeeds (idle vs. heated up):
 
-Before at 50.8°C:
+Before at 42.5°C:
 
-    cpu0-cpu3 (Cortex-A55): OPP: 1800, Measured: 1815 
-    cpu4-cpu5 (Cortex-A76): OPP: 2400, Measured: 2319      (-3.4%)
-    cpu6-cpu7 (Cortex-A76): OPP: 2400, Measured: 2318      (-3.4%)
+    cpu0-cpu3 (Cortex-A55): OPP: 1800, Measured: 1821      (+1.2%)
+    cpu4-cpu5 (Cortex-A76): OPP: 2400, Measured: 2329      (-3.0%)
+    cpu6-cpu7 (Cortex-A76): OPP: 2400, Measured: 2327      (-3.0%)
 
 After at 82.2°C (throttled):
 
-    cpu0-cpu3 (Cortex-A55): OPP: 1800, Measured: 1790 
+    cpu0-cpu3 (Cortex-A55): OPP: 1800, Measured: 1789 
     cpu4-cpu5 (Cortex-A76): OPP: 2400, Measured: 2279      (-5.0%)
     cpu6-cpu7 (Cortex-A76): OPP: 2400, Measured: 2279      (-5.0%)
 
 ### Memory performance
 
-  * cpu0 (Cortex-A55): memcpy: 5683.4 MB/s, memchr: 3281.8 MB/s, memset: 22001.1 MB/s
-  * cpu4 (Cortex-A76): memcpy: 9655.8 MB/s, memchr: 12991.0 MB/s, memset: 28950.3 MB/s
-  * cpu6 (Cortex-A76): memcpy: 9666.6 MB/s, memchr: 12998.2 MB/s, memset: 28572.4 MB/s
-  * cpu0 (Cortex-A55) 16M latency: 117.5 119.9 117.4 120.4 116.3 126.1 212.7 395.7 
-  * cpu4 (Cortex-A76) 16M latency: 119.9 110.0 118.8 122.0 118.8 107.5 108.7 110.4 
-  * cpu6 (Cortex-A76) 16M latency: 123.5 111.0 118.8 109.1 118.4 105.6 103.6 107.6 
+  * cpu0 (Cortex-A55): memcpy: 5659.3 MB/s, memchr: 3287.4 MB/s, memset: 22066.3 MB/s
+  * cpu4 (Cortex-A76): memcpy: 9689.5 MB/s, memchr: 13270.0 MB/s, memset: 28958.1 MB/s
+  * cpu6 (Cortex-A76): memcpy: 9709.3 MB/s, memchr: 13271.5 MB/s, memset: 28790.0 MB/s
+  * cpu0 (Cortex-A55) 16M latency: 120.1 121.7 118.8 121.7 119.2 127.6 217.8 393.4 
+  * cpu4 (Cortex-A76) 16M latency: 119.3 120.1 121.4 110.5 119.3 110.5 110.4 111.3 
+  * cpu6 (Cortex-A76) 16M latency: 119.1 109.9 118.3 109.2 118.6 111.5 109.1 112.1 
 
 ### PCIe and storage devices:
 
-  * 238.5GB "KXG50ZNV256G NVMe TOSHIBA 256GB" SSD as /dev/nvme0n1: Speed 8GT/s (ok), Width x4 (ok), 13% worn out, 0/0 errors, 67°C
+  * 238.5GB "KXG50ZNV256G NVMe TOSHIBA 256GB" SSD as /dev/nvme0n1: Speed 8GT/s (ok), Width x4 (ok), 13% worn out, 67°C
   * Realtek RTL8125 2.5GbE: Speed 5GT/s (ok), Width x1 (ok), driver in use: r8125
-  * 465.8GB "SAMSUNG HM500JI" HDD as /dev/sda [SATA 2.6, 3.0 Gb/s]: behind VIA Labs VL715/VL716 SATA 6Gb/s bridge, Driver=uas, 5000M, 22°C
+  * 111.8GB "Samsung SSD 840 EVO 120GB" SSD as /dev/sda [SATA 3.1, 6.0 Gb/s (current: 6.0 Gb/s)]: behind ASMedia SATA 6Gb/s bridge, Driver=uas, 5000M, 22°C
   * 7.4GB "SanDisk SL08G" UHS SDR50 SD card as /dev/mmcblk0: date 06/2016, manfid/oemid: 0x000003/0x5344, hw/fw rev: 0x8/0x0
-  * 14.5GB "Foresee NCard" HS200 eMMC 5.0 card as /dev/mmcblk1: date 08/2016, manfid/oemid: 0x000088/0x0103, hw/fw rev: 0x0/0x0100000000000000
+  * 14.5GB "SanDisk Foresee NCard" HS200 eMMC 5.0 card as /dev/mmcblk1: date 08/2016, manfid/oemid: 0x000088/0x0103, hw/fw rev: 0x0/0x0100000000000000
   * 16MB SPI NOR flash as /dev/mtd0, drivers in use: spi-nor/rockchip-sfc
+
+### Challenging filesystems:
+
+The following partitions contain NTFS filesystems: nvme0n1p1
+
+When this OS uses FUSE/userland methods to access NTFS filesystems performance
+will be significantly harmed or at least likely be bottlenecked by maxing out
+one or more CPU cores. It is highly advised when benchmarking with any NTFS to
+monitor closely CPU utilization or better switch to a 'Linux native' filesystem
+like ext4 since representing 'storage performance' more closely.
 
 ### Software versions:
 
@@ -94,9 +104,9 @@ After at 82.2°C (throttled):
 
 Kernel 5.10.110 is not latest 5.10.168 LTS that was released on 2023-02-15.
 
-Please check https://endoflife.date/linux for details. It is somewhat likely
-that a lot of exploitable vulnerabilities exist for this kernel as well as
-many unfixed bugs. Better upgrade to a supported version ASAP.
+See https://endoflife.date/linux for details. It is somewhat likely that
+a lot of exploitable vulnerabilities exist for this kernel as well as many
+unfixed bugs.
 
 But this version string doesn't matter since this is not an official LTS Linux
 from kernel.org. This device runs a Rockchip vendor/BSP kernel.

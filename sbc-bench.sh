@@ -6321,8 +6321,9 @@ ProvideReviewInfo() {
 	fi
 	
 	# check whether NTFS filesystems are attached (do not need to be mounted yet)
+	[ -z "${LSBLK}" ] && LSBLK="$(LC_ALL="C" lsblk -l -o SIZE,NAME,FSTYPE,LABEL,MOUNTPOINT 2>&1)"
 	NTFSdevices="$(awk -F" " '/ ntfs / {print $2}' <<< "${LSBLK}" | tr '\n' ',' | sed 's/,$//')"
-	if [ -z "${NTFSdevices}" ]; then
+	if [ "X${NTFSdevices}" != "X" ]; then
 		echo -e "\n### Challenging filesystems:\n\nThe following partitions contain NTFS filesystems: ${NTFSdevices}\n" >>"${TempDir}/review"
 		cat >>"${TempDir}/review" <<- EOF
 		When this OS uses FUSE/userland methods to access NTFS filesystems performance

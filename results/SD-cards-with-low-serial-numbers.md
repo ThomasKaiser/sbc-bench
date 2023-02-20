@@ -1,14 +1,14 @@
 # Fight Flash Fraud 
 
-Counterfeit SD cards are (still) a massive problems most users are not aware of. Fraudsters insert faked cards somewhere into the supply chain that fake a higher capacity and often show worse performance compared to genuine flash products from trustworthy vendors.
+Counterfeit SD cards are (still) a massive problem most users are not aware of. Fraudsters insert faked cards somewhere into the supply chain that fake a higher capacity and often show worse performance compared to genuine flash products from trustworthy vendors.
 
-The only way to really check for flash fraud is to test the full card's capacity using tools like eg. [f3](https://fight-flash-fraud.readthedocs.io/en/latest/).
+The only way to really check for flash fraud is to test the card's full capacity using tools like eg. [f3](https://fight-flash-fraud.readthedocs.io/en/latest/).
 
 But since fraudsters often don't care that much about hiding their fakes we can also use the card's metadata available as so called CID and CSD (you can check both [here](https://gurumeditation.org/1342/sd-memory-card-register-decoder/)).
 
 Based on the _assumption_ SD card serial numbers are sequential numbers starting with 1 (which [sometimes is a problem](https://en.wikipedia.org/wiki/German_tank_problem) and should be avoided) low serial numbers look suspicious as in "SD card fraud".
 
-Using the q&d script attached at the bottom of this page I crawled through a few thousand `armbianmonitor -u` outputs to generate some data for all serial numbers between 0x00000000 and 0x0000ffff found with the SD cards of Armbian users all over the world.
+Using the q&d script attached to the bottom of this page I crawled through a few thousand `armbianmonitor -u` outputs to generate some data for all serial numbers between 0x00000000 and 0x0000ffff found with the SD cards of Armbian users all over the world.
 
 The capacity in the 2nd column is reported by the kernel but solely based on a few bits in the card's CSD 'register'. The _name_ (limited to 5 bytes by specification), _Manufacturer ID_, _OEM ID_, _hw revision_ and _sw revision_ values are from the card's CID. At the right is the device the specific card was in when the info got extracted.
 

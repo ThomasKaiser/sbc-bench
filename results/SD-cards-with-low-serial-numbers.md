@@ -12,7 +12,7 @@ Using the q&d script attached to the bottom of this page I crawled through a few
 
 The capacity in the 2nd column is reported by the kernel but solely based on a few bits in the card's CSD 'register'. The _name_ (limited to 5 bytes by specification), _Manufacturer ID_, _OEM ID_, _hw revision_ and _sw revision_ values are from the card's CID. At the right is the device the specific card was in when the info got extracted.
 
-Only some _Manufacturer ID's_ are defined (registered at JEDEC today) and usually they go along with a specific _OEM ID_, for example genuine Toshiba cards all use the combination `0x000002/0x544d` where `0x000002` is the _Manufacturer ID_ and `0x544d` in ASCII represents `TM` which isn't surprising when thinking about 'Toshiba Memory'. With AData it's for example `0x00001d/0x4144` (the `0x4144` for `AD`).
+Only some _Manufacturer ID's_ are defined (registered at SD Assoication (SD-3C LLC) or JEDEC today) and usually they go along with a specific _OEM ID_, for example genuine Toshiba cards all use the combination `0x000002/0x544d` where `0x000002` is the _Manufacturer ID_ and `0x544d` in ASCII represents `TM` which isn't surprising when thinking about 'Toshiba Memory'. With AData it's for example `0x00001d/0x4144` (the `0x4144` for `AD`).
 
 Low serial numbers look OK with `0x000027/0x5048` (Phison, most OEM cards are based on these controllers, e.g. AgfaPhoto, Delkin, Intenso, Integral, Lexar, Patriot, PNY, Polaroid, Sony, Verbatim and many more). The names all match capacity (`SD08G` is 7.28/7.44 GiB, `SD16G` is 14.5/14.6 GiB, `SD32G` = 28.8/28.9/29.1 GiB and so on). With AData it seems similar: 18 on the list with the usual device names `SD` and `USD`.
 

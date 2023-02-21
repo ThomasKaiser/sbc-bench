@@ -1,6 +1,6 @@
 # Radxa ROCK Pi 4A
 
-Tested with sbc-bench v0.9.25 on Mon, 20 Feb 2023 18:39:31 +0000. Full info: [http://ix.io/4oHE](http://ix.io/4oHE)
+Tested with sbc-bench v0.9.27 on Tue, 21 Feb 2023 17:02:14 +0000. Full info: [http://ix.io/4oOM](http://ix.io/4oOM)
 
 ### General information:
 
@@ -22,10 +22,10 @@ The CPU features 2 clusters of different core types:
 
 Original governor settings:
 
-    cpufreq-policy0: ondemand / 1200 MHz (ondemand performance schedutil)
-    cpufreq-policy4: ondemand / 408 MHz (ondemand performance schedutil)
-    dmc: dmc_ondemand / 856 MHz (dmc_ondemand simple_ondemand)
-    ff9a0000.gpu: simple_ondemand / 200 MHz (dmc_ondemand simple_ondemand)
+    cpufreq-policy0: ondemand / 1008 MHz (powersave ondemand performance schedutil / 408 600 816 1008 1200 1416)
+    cpufreq-policy4: ondemand / 408 MHz (powersave ondemand performance schedutil / 408 600 816 1008 1200 1416 1608 1800)
+    dmc: dmc_ondemand / 856 MHz (performance powersave dmc_ondemand simple_ondemand / 328 416 666 856)
+    ff9a0000.gpu: dmc_ondemand / 800 MHz (performance powersave dmc_ondemand simple_ondemand / 200 300 400 600 800)
 
 Tuned governor settings:
 
@@ -42,25 +42,28 @@ Status of performance related policies found below /sys:
 
 ### Clockspeeds (idle vs. heated up):
 
-Before at 41.1°C:
+Before at 55.6°C:
 
     cpu0-cpu3 (Cortex-A53): OPP: 1416, Measured: 1412 
     cpu4-cpu5 (Cortex-A72): OPP: 1800, Measured: 1797 
 
-After at 81.7°C (throttled):
+After at 83.3°C (throttled):
 
-    cpu0-cpu3 (Cortex-A53): OPP: 1416, Measured: 1412 
-    cpu4-cpu5 (Cortex-A72): OPP: 1800, Measured: 1444     (-19.8%)
+    cpu0-cpu3 (Cortex-A53): OPP: 1416, Measured: 1411 
+    cpu4-cpu5 (Cortex-A72): OPP: 1800, Measured: 1041     (-42.2%)
 
 ### Memory performance
 
-  * cpu0 (Cortex-A53): memcpy: 1778.7 MB/s, memchr: 1931.7 MB/s, memset: 8480.5 MB/s
-  * cpu4 (Cortex-A72): memcpy: 3583.8 MB/s, memchr: 6771.7 MB/s, memset: 8567.9 MB/s
-  * cpu0 (Cortex-A53) 16M latency: 186.4 189.6 185.8 189.3 186.2 189.4 234.6 450.2 
-  * cpu4 (Cortex-A72) 16M latency: 197.6 199.1 200.3 199.2 199.6 202.4 203.4 246.8 
+  * cpu0 (Cortex-A53): memcpy: 1744.6 MB/s, memchr: 1870.0 MB/s, memset: 8460.1 MB/s
+  * cpu4 (Cortex-A72): memcpy: 3471.2 MB/s, memchr: 5653.6 MB/s, memset: 8386.5 MB/s
+  * cpu0 (Cortex-A53) 16M latency: 188.7 192.0 187.7 191.2 187.5 191.5 236.7 453.3 
+  * cpu4 (Cortex-A72) 16M latency: 197.7 199.7 199.3 199.2 199.1 202.3 205.1 240.3 
 
 ### Storage devices:
 
+  * 111.8GB "Samsung SSD 750 EVO 120GB" SSD as /dev/sda [SATA 3.1, 6.0 Gb/s (current: 6.0 Gb/s)]: behind ASMedia SATA 6Gb/s bridge, 3% worn out, 24°C, Driver=uas, 5000Mbps (capable of 12Mbps, 480Mbps, 5Gbps)
+  * 7.3GB "Silicon Motion Flash Drive" as /dev/sdb: USB, Driver=usb-storage, 480Mbps
+  * 7.3TB "Toshiba TOSHIBA HDWF180" HDD as /dev/sdc [SATA 3.3, 6.0 Gb/s (current: 6.0 Gb/s)]: behind ASMedia SATA 6Gb/s bridge, 26°C, Driver=usb-storage, 5000Mbps (capable of 12Mbps, 480Mbps, 5Gbps)
   * 29.7GB "SanDisk SE32G" HS SD card (speed negotiation problems, check dmesg) as /dev/mmcblk0: date 10/2017, manfid/oemid: 0x000003/0x5344, hw/fw rev: 0x8/0x0
 
 ### Software versions:

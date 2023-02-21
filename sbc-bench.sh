@@ -72,6 +72,7 @@ Main() {
 				fi
 				DMESG="$(dmesg | grep "mmc")"
 				CreateTempDir
+				command -v smartctl >/dev/null 2>&1 || echo -e "${BOLD}Warning: smartmontools not installed${NC}\n"
 				CheckPCIe
 				CheckStorage
 				exit 0
@@ -619,6 +620,7 @@ HandleGovernors() {
 		if [ "X${Governor}" != "X" ]; then
 			SysFSNode="$(sed 's/cpufreq\//cpufreq-/' <<<"${REPLY%/*}")"
 			AvailableGovernorsSysFSNode="$(ls -d "${REPLY%/*}"/*available_governors)"
+			AvailableFrequenciesSysFSNode="$(ls -d "${REPLY%/*}"/*available_frequencies)"
 			if [ -r "${REPLY%/*}/cpuinfo_cur_freq" ]; then
 				Curfreq=" / $(awk '{printf ("%0.0f",$1/1000); }' <"${REPLY%/*}/cpuinfo_cur_freq") MHz"
 			elif [ -r "${REPLY%/*}/scaling_cur_freq" ]; then
@@ -633,18 +635,28 @@ HandleGovernors() {
 			else
 				Curfreq=""				
 			fi
-			if [ -f "${AvailableGovernorsSysFSNode}" ]; then
+			case "${REPLY}" in
+				*cpufreq*)
+					# remove 000 from frequencies to get MHz
+					[ -r "${AvailableFrequenciesSysFSNode}" ] && AvailableFrequencies=" / $(tr ' ' '\n' <"${AvailableFrequenciesSysFSNode}" | sort -n | sed 's/000$//' | tr '\n' ' ' | sed -e 's/\ $//' -e 's/^ //')" || AvailableFrequencies=""
+					;;
+				*)
+					# remove 000000 from frequencies to get MHz
+					[ -r "${AvailableFrequenciesSysFSNode}" ] && AvailableFrequencies=" / $(tr ' ' '\n' <"${AvailableFrequenciesSysFSNode}" | sort -n | sed 's/000000$//' | tr '\n' ' ' | sed 's/\ $//')" || AvailableFrequencies=""
+					;;
+			esac
+			if [ -r "${AvailableGovernorsSysFSNode}" ]; then
 				read AvailableGovernors <"${AvailableGovernorsSysFSNode}"
 				if [ "X${AvailableGovernors}" != "X${Governor}" ]; then
 					printf "${SysFSNode##*/}: "
 					grep -q "performance" <<<"${AvailableGovernors}"
 					GovStatus=$?
 					if [ ${GovStatus} -eq 0 -a "X${Governor}" = "Xperformance" ]; then
-						echo -e "${LGREEN}performance${NC}${Curfreq} (${AvailableGovernors})"
+						echo -e "${LGREEN}performance${NC}${Curfreq} (${AvailableGovernors}${AvailableFrequencies})"
 					elif [ ${GovStatus} -eq 0 -a "X${Governor}" != "Xperformance" ]; then
-						echo -e "${LRED}${Governor}${NC}${Curfreq} ($(sed "s/performance/\x1b\x5b1mperformance\x1b\x5b0m/" <<<"${AvailableGovernors}"))"
+						echo -e "${LRED}${Governor}${NC}${Curfreq} ($(sed "s/performance/\x1b\x5b1mperformance\x1b\x5b0m/" <<<"${AvailableGovernors}")${AvailableFrequencies})"
 					else
-						echo "${Governor}${Curfreq} (${AvailableGovernors})"
+						echo "${Governor}${Curfreq} (${AvailableGovernors}${AvailableFrequencies})"
 					fi
 				fi
 			else
@@ -2381,8 +2393,8 @@ InstallPrerequisits() {
 		MissingPackages="${MissingPackages} p7zip"
 	fi
 	
-	# add needed repository and install all necessary packages
-	grep -E -q "sensors|gcc|git|sysstat|openssl|curl|dmidecode|i2c|lshw|p7zip|wget|links|powercap|g++" <<<"${MissingPackages}"
+	# add needed repository and install all necessary packages in a batch
+	grep -E -q "sensors|gcc|git|sysstat|openssl|curl|dmidecode|i2c|lshw|p7zip|wget|links|powercap|g++|pciutils|usbutils|mmc-utils|stress-ng|smartmontools|udev" <<<"${MissingPackages}"
 	if [ $? -eq 0 ]; then
 		echo -e "\x08\x08 ${MissingPackages}...\c"
 		add-apt-repository -y universe >/dev/null 2>&1
@@ -6213,7 +6225,7 @@ ProvideReviewInfo() {
 		fi
 		HandleGovernors performance
 		OriginalCPUInfo="$(PrintCPUInfo)"
-		TunedGovernorState="$(HandleGovernors | awk -F" \(" '{print $1}')"
+		TunedGovernorState="$(HandleGovernors | awk -F" " '{print $1" "$2" "$3" "$4" "$5}')"
 		BasicSetup performance >/dev/null 2>&1
 		[ -f /sys/kernel/debug/clk/clk_summary ] && cat /sys/kernel/debug/clk/clk_summary >"${TempDir}/clk_summary.tuned"
 	else
@@ -6398,7 +6410,7 @@ ProvideReviewInfo() {
 	if [ "X${NOTUNING}" != "Xyes" ]; then
 		# throttling check and routine waiting for the board to cool down since otherwise the
 		# next monitoring step will report throttling even if none happens from now on.
-		[ "X${ThrottlingWarning}" != "X" ] && sleep 3
+		[ "X${ThrottlingWarning}" != "X" ] && sleep 5
 		if [ -r /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq ]; then
 			cpuinfo_max_freq=$(cat /sys/devices/system/cpu/cpu?/cpufreq/cpuinfo_max_freq)
 			cpuinfo_cur_freq=$(cat /sys/devices/system/cpu/cpu?/cpufreq/cpuinfo_cur_freq)
@@ -6427,6 +6439,8 @@ ProvideReviewInfo() {
 		All known settings adjusted for performance. Device now ready for benchmarking.
 		Once finished stop with [ctrl]-[c] to get info about throttling, frequency cap
 		and too high background activity all potentially invalidating benchmark scores.
+		All changes with storage and PCIe devices as well as suspicious dmesg contents
+		will be reported too.
 		EOF
 	fi
 
@@ -6484,13 +6498,13 @@ FinalReporting() {
 	StorageDiff="$(diff  <(echo "${StorageStatus}" | sed 's/,[^,]*$//') <(echo "${StorageStatusNow}" | sed 's/,[^,]*$//') )"
 	PCIeDiff="$(diff  <(echo "${PCIeStatus}" | sed 's/,[^,]*$//') <(echo "${PCIeStatusNow}" | sed 's/,[^,]*$//') )"
 	if [ "X${StorageDiff}" != "X" -a "X${PCIeDiff}" != "X" ]; then
-		echo -e "${LRED}${BOLD}ATTENTION:${NC} ${LRED}list of PCIe and storage devices has changed:${NC}\n"
+		echo -e "\n${LRED}${BOLD}ATTENTION:${NC} ${LRED}list of PCIe and storage devices has changed:${NC}\n"
 		echo -e "${PCIeDiff}\n${StorageDiff}\n"
 	elif [ "X${StorageDiff}" != "X" ]; then
-		echo -e "${LRED}${BOLD}ATTENTION:${NC} ${LRED}list of storage devices has changed:${NC}\n"
+		echo -e "\n${LRED}${BOLD}ATTENTION:${NC} ${LRED}list of storage devices has changed:${NC}\n"
 		echo -e "${StorageDiff}\n"
 	elif [ "X${PCIeDiff}" != "X" ]; then
-		echo -e "${LRED}${BOLD}ATTENTION:${NC} ${LRED}list of PCIe devices has changed:${NC}\n"
+		echo -e "\n${LRED}${BOLD}ATTENTION:${NC} ${LRED}list of PCIe devices has changed:${NC}\n"
 		echo -e "${PCIeDiff}\n"
 	fi
 
@@ -6498,7 +6512,7 @@ FinalReporting() {
 	if [ ${DMESGLines:-0} -gt 20 ]; then
 		echo -e "${LRED}${BOLD}ATTENTION:${NC} ${LRED}lots of noise in kernel ring buffer since start of monitoring:${NC}\n"
 		echo -e "${DMESGSinceStart}\n"
-	elif [ ${DMESGLines:-0} -gt 0 ]; then
+	elif [ ${DMESGLines:-0} -gt 1 ]; then
 		echo -e "${BOLD}ATTENTION:${NC} some noise in kernel ring buffer since start of monitoring:\n"
 		echo -e "${DMESGSinceStart}\n"
 	fi
@@ -6845,7 +6859,7 @@ CheckPCIe() {
 	[ -z "${LSBLK}" ] && LSBLK="$(LC_ALL="C" lsblk -l -o SIZE,NAME,FSTYPE,LABEL,MOUNTPOINT 2>&1)"
 
 	lspci -Q -mm 2>/dev/null | grep controller | while read ; do
-		unset DeviceWarning DevizeSize AdditionalInfo AdditionalSMARTInfo
+		unset DeviceWarning DevizeSize AdditionalInfo AdditionalSMARTInfo RawDiskTemp DriveTemp
 		BusAddress="$(awk -F" " '{print $1}' <<<"${REPLY}")"
 		ControllerType="$(awk -F'"' '{print $2}' <<<"${REPLY}")"
 		case "${ControllerType}" in
@@ -6876,9 +6890,9 @@ CheckPCIe() {
 					fi
 					if [ "X${DeviceWarning}" = "XTRUE" ]; then
 						touch "${TempDir}/check-smart"
-						echo -e "  * ${LRED}${DevizeSize}${DeviceName}: ${LnkSta}${AdditionalSMARTInfo}${AdditionalInfo}${NC}"
+						echo -e "  * ${LRED}${DevizeSize}${DeviceName}: ${LnkSta}${AdditionalSMARTInfo}${AdditionalInfo}${DriveTemp}${NC}"
 					else
-						echo -e "  * ${DevizeSize}${DeviceName}: ${LnkSta}${AdditionalSMARTInfo}${AdditionalInfo}"
+						echo -e "  * ${DevizeSize}${DeviceName}: ${LnkSta}${AdditionalSMARTInfo}${AdditionalInfo}${DriveTemp}"
 					fi
 				fi
 				;;
@@ -6895,12 +6909,16 @@ CheckStorage() {
 	# TODO:
 	# * maybe overtake CheckSMARTModes code from armbianmonitor to query picky/old USB
 	#   bridges in all possible ways.
+	# * evaluate checking NVMe devices starting from /dev/nvme? nodes since by walking
+	#   along udev tree it might be possible to distinguish between PCIe link/width
+	#   downgrades by design (e.g. only 1 or 2 lanes routed to an M.2 slot) and those
+	#   by accident (e.g. dusty/dirty contacts in the M.2 slot and as such x1 instead of x4)
 
 	# grab info about block devices
 	[ -z "${LSBLK}" ] && LSBLK="$(LC_ALL="C" lsblk -l -o SIZE,NAME,FSTYPE,LABEL,MOUNTPOINT 2>&1)"
 
 	for StorageDevice in $(ls /dev/sd? 2>/dev/null) ; do
-		unset DeviceName DeviceInfo DeviceWarning DevizeSize AdditionalInfo AdditionalSMARTInfo ProductName VendorName SpeedInfo SupportedSpeeds
+		unset DeviceName DeviceInfo DeviceWarning DevizeSize AdditionalInfo AdditionalSMARTInfo ProductName VendorName SpeedInfo SupportedSpeeds RawDiskTemp DriveTemp
 
 		UdevInfo="$(udevadm info -a -n ${StorageDevice} 2>/dev/null)"
 		Driver="$(awk -F'"' '/DRIVERS==/ {print $2}' <<<"${UdevInfo}" | grep -E 'uas|usb-storage|ahci')"
@@ -6947,8 +6965,14 @@ CheckStorage() {
 				if [ "X${DeviceName}" = "X${DeviceToCheck}" ]; then
 					# no SMART support or SMART query failed, we need to find a fallback name
 					if [ "X${LsusbGuess}" != "X" ]; then
-						# Seems like a legit string, so use usbutils database info
-						DeviceName="\"${LsusbGuess}\" as ${StorageDevice}"
+						# Seems like a legit string, so use usbutils database but doublecheck
+						# against our exception list first to avoid lengthy or wrong names
+						BetterNameAvailable="$(GetUSBSataBridgeName "${idVendor}" "${idProduct}" "${LsusbGuess}")"
+							if [ "X${BetterNameAvailable}" = "X" ]; then
+								DeviceName="\"${LsusbGuess}\" as ${StorageDevice}"
+							else
+								DeviceName="\"${BetterNameAvailable}\" as ${StorageDevice}"
+							fi
 					else
 						# try to construct device name from ATTRS{vendor}+ATTRS{model} udev info
 						DeviceVendor="$(awk -F'"' '/ATTRS{vendor}/ {print $2}' <<<"${UdevInfo}" | awk '{$1=$1};1')"
@@ -6963,70 +6987,26 @@ CheckStorage() {
 					# SMART data has been found, now try to determine bridge chip in between
 					# disk and USB host controller
 					case "${idVendor}:${idProduct}" in
-						1058:0a10)
-							# JMicron JMS56x USB-to-SATA bridge with integrated port multiplier
-							# that has been flashed with Western Digital branded firmware
-							DeviceInfo="behind JMicron JMS56x SATA 6Gb/s bridge"
-							;;
-						152d:0561)
-							# Listed as "JMS551 - Sharkoon SATA QuickPort Duo"
-							DeviceInfo="behind JMicron JMS561 dual SATA 6Gb/s bridge"
-							;;
-						152d:0576)
-							# Listed as "JMicron Technology Corp. / JMicron USA Technology Corp. Gen1 SATA 6Gb/s Bridge"
-							DeviceInfo="behind JMicron JMS576 SATA 6Gb/s bridge"
-							;;
-						152d:0578)
-							# JMS578 wrongly listed as JMS567 in usbutils database, though there are some JMS567 that
-							# can be flashed with a firmware that then results in them identifying as product ID 0578
-							DeviceInfo="behind JMicron JMS578 SATA 6Gb/s bridge"
-							;;
-						152d:0580)
-							DeviceInfo="behind JMicron JMS580 SATA 6Gb/s bridge"
-							;;
-						152d*)
-							# JMicron bridge, let's replace the monstrous vendor string with JMicron
-							DeviceInfo="behind $(sed 's|JMicron Technology Corp. / JMicron USA Technology Corp.|JMicron|' <<<"${LsusbGuess}")"
-							;;
-						174c:55aa)
-							# the product ID has been used by ASMedia for a bunch of different bridges and the usbutils name reads
-							# 'ASMedia Technology Inc. Name: ASM1051E SATA 6Gb/s bridge, ASM1053E SATA 6Gb/s bridge, ASM1153 SATA 3Gb/s bridge, ASM1153E SATA 6Gb/s bridge'
-							# ASM1153 is fine in general while the older ASM105x thingies are known to be buggy. Connected via
-							# USB3 it would be possible to identify the different bridges but if they're behind USB2 then there's
-							# no chance. So we live with a generic string (that isn't that long/useless as lsusb output).
-							# ASM1153 is also used in many USB disks (e.g. Seagate) but with different firmware and then appears
-							# not with 174c vendor ID.
-							DeviceInfo="behind ASMedia SATA 6Gb/s bridge"
-							;;
-						174c*)
-							# ASMedia bridges, let's replace the monstrous vendor string with ASMedia
-							DeviceInfo="behind $(sed 's|ASMedia Technology Inc.|ASMedia|' <<<"${LsusbGuess}")"
-							;;
-						2109:0715)
-							# VIA VL715/VL716 USB to SATA bridges, appear in usbutils as
-							# "VIA Labs, Inc. VLI Product String" or "VL817 SATA Adaptor"
-							# while VL817 is a hub! VL715/VL716 differ by PHY (VL716 USB-C)
-							# but share same product ID since otherwise identical
-							DeviceInfo="behind VIA Labs VL715/VL716 SATA 6Gb/s bridge"
-							;;
-						2109:070*)
-							# SATA 3Gb/s bridges: VL700/VL701
-							DeviceInfo="behind VIA Labs VL${idProduct:1} SATA 3Gb/s bridge"
-							;;
-						2109:07*)
-							# any of the other VIA Labs SATA 6Gb/s bridges (that may follow)
-							DeviceInfo="behind VIA Labs VL${idProduct:1} SATA 6Gb/s bridge"
-							;;
-						0bda*)
-							# RealTek bridges, let's replace the vendor string with Realtek
-							DeviceInfo="behind $(sed 's|Realtek Semiconductor Corp.|Realtek|' <<<"${LsusbGuess}")"
-							;;
 						:)
 							# no IDs found, generic report
 							DeviceInfo="behind USB"
 							;;
+						152d*|174c*|2109*|0bda*|1058:0a10)
+							# USB-to-SATA bridge vendors: JMicron, ASMedia, VIA Labs, Realtek
+							BetterNameAvailable="$(GetUSBSataBridgeName "${idVendor}" "${idProduct}" "${LsusbGuess}")"
+							if [ "X${BetterNameAvailable}" = "X" ]; then
+								DeviceInfo="behind \"${LsusbGuess}\""
+							else
+								DeviceInfo="behind ${BetterNameAvailable}"
+							fi
+							;;
+						0bc2*|1058*|04e8*|0781*|0930*|0fce*|054c*|0411*|17ef*|07ab*|0718*|2009*|18a5*)
+							# vendor IDs of disk manufacturers that use USB SATA bridges with
+							# branded firmwares like Seagate, WD, Samsung, SanDisk, Toshiba,
+							# Sony, Buffalo, Lenovo, Freecom, Imation, iStorage, Verbatim
+							DeviceInfo="in \"${LsusbGuess}\""
+							;;
 						*)
-							# Use lsusb guess as pathetic as it might be (http://www.linux-usb.org/usb.ids)
 							DeviceInfo="behind \"${LsusbGuess}\""
 							;;
 					esac
@@ -7038,9 +7018,9 @@ CheckStorage() {
 		DevizeSize="$(GetDiskSize "${StorageDevice}" "${DeviceName}")"
 		if [ "X${DeviceWarning}" = "XTRUE" ]; then
 			touch "${TempDir}/check-smart"
-			echo -e "  * ${LRED}${DevizeSize}${DeviceName%%*( )}: ${DeviceInfo}${AdditionalSMARTInfo}${AdditionalInfo}${NC}"
+			echo -e "  * ${LRED}${DevizeSize}${DeviceName%%*( )}: ${DeviceInfo}${AdditionalSMARTInfo}${AdditionalInfo}${DriveTemp}${NC}"
 		else
-			echo -e "  * ${DevizeSize}${DeviceName%%*( )}: ${DeviceInfo}${AdditionalSMARTInfo}${AdditionalInfo}"
+			echo -e "  * ${DevizeSize}${DeviceName%%*( )}: ${DeviceInfo}${AdditionalSMARTInfo}${AdditionalInfo}${DriveTemp}"
 		fi
 	done
 
@@ -7094,7 +7074,7 @@ CheckStorage() {
 			# Only add manufacturer info if really unique. Partially misleading since counterfeit
 			# cards were and still are an issue: https://www.bunniestudios.com/blog/?page_id=1022
 			case "${mmc_manfid}/${mmc_oemid}" in
-				0x000000*)
+				0x000000*|0x0000ff/0x0000|0x00006f/0x0013|0x000025/0x1708|0x0000df*|0x0000fe/0x3456)
 					# counterfeit card
 					Manufacturer="Definite counterfeit "
 					DeviceWarning=TRUE
@@ -7186,11 +7166,15 @@ CheckStorage() {
 					# bogus names like 00000/ASTC or name/capacity mismatch: SD16G with 7.44 GiB
 					Manufacturer="${Manufacturer}Transcend "
 					;;
+				0x000082/0x4a54)
+					# 0x4a54 -> "JT"
+					Manufacturer="${Manufacturer}Sony "
+					;;
 				0x000084/0x5446)
 					# 0x5446 -> "TF", http://strontium.biz/products/memory-cards/mobile-memory-cards/#seven
 					:
 					;;
-				0x000088/0x0103)
+				0x000088/0x0103|0x0000d6/0x0103)
 					Manufacturer="${Manufacturer}Foresee "
 					;;
 				0x00009f/0x5449)
@@ -7203,11 +7187,6 @@ CheckStorage() {
 					;;
 				0x0000fe*)
 					Manufacturer="${Manufacturer}Micron-Numonyx "
-					;;
-				0x0000ff/0x0000|0x00006f/0x0013|0x000025/0x1708|0x0000df*|0x0000fe/0x3456)
-					# fake
-					Manufacturer="Definite counterfeit "
-					DeviceWarning=TRUE
 					;;
 			esac
 
@@ -7279,6 +7258,72 @@ CheckStorage() {
 	fi
 } # CheckStorage
 
+GetUSBSataBridgeName() {
+	# function wants USB vendor and product ID as $1 and $2 and the name guessed by
+	# usbutils as $3. Returns nicer and/or more correct name for the USB-to-SATA bridge
+	case "${1}:${2}" in
+		1058:0a10)
+			# JMicron JMS56x USB-to-SATA bridge with integrated port multiplier
+			# that has been flashed with Western Digital branded firmware
+			DeviceInfo="JMicron JMS56x SATA 6Gb/s bridge"
+			;;
+		152d:0561)
+			# Listed as "JMS551 - Sharkoon SATA QuickPort Duo"
+			DeviceInfo="JMicron JMS561 dual SATA 6Gb/s bridge"
+			;;
+		152d:0576)
+			# Listed as "JMicron Technology Corp. / JMicron USA Technology Corp. Gen1 SATA 6Gb/s Bridge"
+			DeviceInfo="JMicron JMS576 SATA 6Gb/s bridge"
+			;;
+		152d:0578)
+			# JMS578 wrongly listed as JMS567 in usbutils database, though there are some JMS567 that
+			# can be flashed with a firmware that then results in them identifying as product ID 0578
+			DeviceInfo="JMicron JMS578 SATA 6Gb/s bridge"
+			;;
+		152d:0580)
+			DeviceInfo="JMicron JMS580 SATA 6Gb/s bridge"
+			;;
+		152d*)
+			# JMicron bridge, let's replace the monstrous vendor string with JMicron
+			DeviceInfo="$(sed 's|JMicron Technology Corp. / JMicron USA Technology Corp.|JMicron|' <<<"${3}")"
+			;;
+		174c:55aa)
+			# the product ID has been used by ASMedia for a bunch of different bridges and the usbutils name reads
+			# 'ASMedia Technology Inc. Name: ASM1051E SATA 6Gb/s bridge, ASM1053E SATA 6Gb/s bridge, ASM1153 SATA 3Gb/s bridge, ASM1153E SATA 6Gb/s bridge'
+			# ASM1153 is fine in general while the older ASM105x thingies are known to be buggy. Connected via
+			# USB3 it would be possible to identify the different bridges but if they're behind USB2 then there's
+			# no chance. So we live with a generic string (that isn't that long/useless as lsusb output).
+			# ASM1153 is also used in many USB disks (e.g. Seagate) but with different firmware and then appears
+			# not with 174c vendor ID.
+			DeviceInfo="ASMedia SATA 6Gb/s bridge"
+			;;
+		174c*)
+			# ASMedia bridges, let's replace the monstrous vendor string with ASMedia
+			DeviceInfo="$(sed 's|ASMedia Technology Inc.|ASMedia|' <<<"${3}")"
+			;;
+		2109:0715)
+			# VIA VL715/VL716 USB to SATA bridges, appear in usbutils as
+			# "VIA Labs, Inc. VLI Product String" or "VL817 SATA Adaptor"
+			# while VL817 is a hub! VL715/VL716 differ by PHY (VL716 USB-C)
+			# but share same product ID since otherwise identical
+			DeviceInfo="VIA Labs VL715/VL716 SATA 6Gb/s bridge"
+			;;
+		2109:070*)
+			# SATA 3Gb/s bridges: VL700/VL701
+			DeviceInfo="VIA Labs VL${idProduct:1} SATA 3Gb/s bridge"
+			;;
+		2109:07*)
+			# any of the other VIA Labs SATA 6Gb/s bridges (that may follow)
+			DeviceInfo="VIA Labs VL${idProduct:1} SATA 6Gb/s bridge"
+			;;
+		0bda*)
+			# RealTek bridges, let's replace the vendor string with Realtek
+			DeviceInfo="$(sed 's|Realtek Semiconductor Corp.|Realtek|' <<<"${3}")"
+			;;
+	esac
+	echo "${DeviceInfo}"
+} # GetUSBSataBridgeName
+
 GetDiskSize() {
 	# $1 device node
 	# $2 Device name obtained using SMART or usbutils
@@ -7345,18 +7390,16 @@ CheckSMARTData() {
 				[ ${MediaErrors:-0} -gt 0 ] && AdditionalSMARTInfo="${AdditionalSMARTInfo}, ${MediaErrors} media errors"
 				ErrorLogEntries=$(awk -F": " "/^Error Information Log Entries:/ {print \$2}" <<<"${SMARTData}" | sed 's/^ *//g')
 				[ ${ErrorLogEntries:-0} -gt 0 ] && AdditionalSMARTInfo="${AdditionalSMARTInfo}, ${ErrorLogEntries} error log entries"
-				DriveTemp="$(awk -F": " "/^Temperature:/ {print \$2}" <<<"${SMARTData}" | sed 's/^ *//g' | cut -f1 -d' ')"
+				RawDiskTemp="$(awk -F": " "/^Temperature:/ {print \$2}" <<<"${SMARTData}" | sed 's/^ *//g' | cut -f1 -d' ')"
+				if [ "X${RawDiskTemp}" != "X" ]; then
+					DriveTemp=", ${RawDiskTemp}°C"
+					[ ${RawDiskTemp} -gt 60 ] && DeviceWarning=TRUE
+				fi
 				Health="$(awk -F": " '/overall-health self-assessment test result/ {print $2}' <<<"${SMARTData}")"
-				case "${Health}" in
-					*PASSED*)
-						AdditionalSMARTInfo="${AdditionalSMARTInfo}, ${DriveTemp}°C"
-						;;
-					*)
-						# SMART health check returned failed. This SSD is about to pass away
-						AdditionalSMARTInfo="${AdditionalSMARTInfo}, SMART health: **FAILED**, ${DriveTemp}°C"
-						DeviceWarning=TRUE
-						;;
-				esac
+				if [ "X${Health}" != "XPASSED" ]; then
+					AdditionalSMARTInfo="${AdditionalSMARTInfo}, SMART health: **FAILED**"
+					DeviceWarning=TRUE
+				fi
 				if [ ${PercentageUsed:-0} -gt 75 -o ${MediaErrors:-0} -gt 1 -o ${ErrorLogEntries:-0} -gt 1 ]; then
 					DeviceWarning=TRUE
 				fi
@@ -7382,8 +7425,6 @@ CheckSMARTData() {
 				CRCErrors="$(awk -F": " '/^199 / {print $10}' <<<"${SMARTData}")"
 				[ ${CRCErrors:-0} -gt 0 ] && AdditionalSMARTInfo=", ${CRCErrors} CRC errors"
 
-				DriveTemp="$(awk -F" " '/Temperature/ {print $10" "$2}' <<<"${SMARTData}" | head -n1 | sed 's/_/ /g' | sed -e 's/ Airflow//' -e 's/ Temperature//' -e 's/ Celsius$/°C/' -e 's/ Cel$/°C/')"
-
 				SATAVersion="$(awk -F": " '/^SATA Version is/ {print $2": "$3}' <<<"${SMARTData}" | sed -e 's/^ *//g' -e 's/: $//')"
 				if [ "X${SATAVersion}" = "X: " ]; then
 					DeviceInfo="SATA"
@@ -7398,6 +7439,7 @@ CheckSMARTData() {
 					*"Solid State Device"*)
 						# SSD
 						DriveType="SSD"
+						TempTreshold=60
 
 						# Dealing with custom vendor attributes is unreliable by definition,
 						# so let's try ATA Device Statistics first
@@ -7438,6 +7480,8 @@ CheckSMARTData() {
 					*)
 						# HDD, check for the most common fail indicators
 						DriveType="HDD"
+						TempTreshold=45
+
 						#   5 Reallocated_Sector_Ct   0x0033   252   252   010    Pre-fail  Always       -       0
 						Reallocated_Sector_Ct="$(awk -F": " '/^  5 / {print $10}' <<<"${SMARTData}")"
 						[ ${Reallocated_Sector_Ct:-0} -gt 0 ] && AdditionalSMARTInfo="${AdditionalSMARTInfo}, ${Reallocated_Sector_Ct} Reallocated Sector Count"
@@ -7455,6 +7499,12 @@ CheckSMARTData() {
 						[ ${Offline_Uncorrectable:-0} -gt 0 ] && AdditionalSMARTInfo="${AdditionalSMARTInfo}, ${Offline_Uncorrectable} Offline Uncorrectable"
 						;;
 				esac
+
+				RawDiskTemp="$(awk -F" " '/Temperature/ {print $10" "$2}' <<<"${SMARTData}" | head -n1 | sed 's/_/ /g' | sed -e 's/ Airflow//' -e 's/ Temperature//' -e 's/ Celsius$/°C/' -e 's/ Cel$/°C/')"
+				if [ "X${RawDiskTemp}" != "X" ]; then
+					DriveTemp=", ${RawDiskTemp}°C"
+					[ ${RawDiskTemp} -gt ${TempTreshold} ] && DeviceWarning=TRUE
+				fi
 
 				# 184 End-to-End_Error        0x0032   100   100   ---    Old_age   Always       -       0
 				EndtoEnd_Error="$(awk -F": " '/^184 / {print $10}' <<<"${SMARTData}")"
@@ -7476,17 +7526,10 @@ CheckSMARTData() {
 				esac
 
 				Health="$(awk -F": " '/overall-health self-assessment test result/ {print $2}' <<<"${SMARTData}")"
-				case "${Health}" in
-					*PASSED*)
-						AdditionalSMARTInfo="${AdditionalSMARTInfo}, ${DriveTemp}"
-						;;
-					*)
-						# SMART health check returned failed. This drive is about to pass away
-						AdditionalSMARTInfo="${AdditionalSMARTInfo}, SMART health: **FAILED**, ${DriveTemp}"
-						DeviceWarning=TRUE
-						;;
-				esac
-
+				if [ "X${Health}" != "XPASSED" ]; then
+					AdditionalSMARTInfo="${AdditionalSMARTInfo}, SMART health: **FAILED**"
+					DeviceWarning=TRUE
+				fi
 				if [ ${PercentageUsed:-0} -gt 75 -o ${Reallocated_Sector_Ct:-0} -gt 1 -o ${Hardware_ECC_Recovered:-0} -gt 1 -o ${Reallocated_Event_Count:-0} -gt 1 -o ${Current_Pending_Sector:-0} -gt 1 -o ${Offline_Uncorrectable:-0} -gt 1 -o ${EndtoEnd_Error:-0} -gt 1 ]; then
 					DeviceWarning=TRUE
 				fi

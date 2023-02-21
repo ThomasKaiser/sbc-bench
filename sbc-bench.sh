@@ -6845,7 +6845,7 @@ CheckPCIe() {
 	[ -z "${LSBLK}" ] && LSBLK="$(LC_ALL="C" lsblk -l -o SIZE,NAME,FSTYPE,LABEL,MOUNTPOINT 2>&1)"
 
 	lspci -Q -mm 2>/dev/null | grep controller | while read ; do
-		unset DeviceWarning DevizeSize
+		unset DeviceWarning DevizeSize AdditionalInfo AdditionalSMARTInfo
 		BusAddress="$(awk -F" " '{print $1}' <<<"${REPLY}")"
 		ControllerType="$(awk -F'"' '{print $2}' <<<"${REPLY}")"
 		case "${ControllerType}" in
@@ -6900,7 +6900,7 @@ CheckStorage() {
 	[ -z "${LSBLK}" ] && LSBLK="$(LC_ALL="C" lsblk -l -o SIZE,NAME,FSTYPE,LABEL,MOUNTPOINT 2>&1)"
 
 	for StorageDevice in $(ls /dev/sd? 2>/dev/null) ; do
-		unset DeviceName DeviceInfo DeviceWarning DevizeSize AdditionalInfo ProductName VendorName SpeedInfo SupportedSpeeds
+		unset DeviceName DeviceInfo DeviceWarning DevizeSize AdditionalInfo AdditionalSMARTInfo ProductName VendorName SpeedInfo SupportedSpeeds
 
 		UdevInfo="$(udevadm info -a -n ${StorageDevice} 2>/dev/null)"
 		Driver="$(awk -F'"' '/DRIVERS==/ {print $2}' <<<"${UdevInfo}" | grep -E 'uas|usb-storage|ahci')"
@@ -7031,15 +7031,16 @@ CheckStorage() {
 							;;
 					esac
 				fi
+				AdditionalInfo=", Driver=${Driver}, ${NegotiatedSpeed}Mbps${SpeedInfo}${AdditionalInfo}"
 				;;
 		esac
 
 		DevizeSize="$(GetDiskSize "${StorageDevice}" "${DeviceName}")"
 		if [ "X${DeviceWarning}" = "XTRUE" ]; then
 			touch "${TempDir}/check-smart"
-			echo -e "  * ${LRED}${DevizeSize}${DeviceName%%*( )}: ${DeviceInfo}${AdditionalSMARTInfo}, Driver=${Driver}, ${NegotiatedSpeed}Mbps${SpeedInfo}${AdditionalInfo}${NC}"
+			echo -e "  * ${LRED}${DevizeSize}${DeviceName%%*( )}: ${DeviceInfo}${AdditionalSMARTInfo}${AdditionalInfo}${NC}"
 		else
-			echo -e "  * ${DevizeSize}${DeviceName%%*( )}: ${DeviceInfo}${AdditionalSMARTInfo}, Driver=${Driver}, ${NegotiatedSpeed}Mbps${SpeedInfo}${AdditionalInfo}"
+			echo -e "  * ${DevizeSize}${DeviceName%%*( )}: ${DeviceInfo}${AdditionalSMARTInfo}${AdditionalInfo}"
 		fi
 	done
 
@@ -7352,7 +7353,7 @@ CheckSMARTData() {
 						;;
 					*)
 						# SMART health check returned failed. This SSD is about to pass away
-						AdditionalSMARTInfo="${AdditionalSMARTInfo}, SMART health: FAILED, ${DriveTemp}°C"
+						AdditionalSMARTInfo="${AdditionalSMARTInfo}, SMART health: **FAILED**, ${DriveTemp}°C"
 						DeviceWarning=TRUE
 						;;
 				esac
@@ -7481,7 +7482,7 @@ CheckSMARTData() {
 						;;
 					*)
 						# SMART health check returned failed. This drive is about to pass away
-						AdditionalSMARTInfo="${AdditionalSMARTInfo}, SMART health: FAILED, ${DriveTemp}"
+						AdditionalSMARTInfo="${AdditionalSMARTInfo}, SMART health: **FAILED**, ${DriveTemp}"
 						DeviceWarning=TRUE
 						;;
 				esac

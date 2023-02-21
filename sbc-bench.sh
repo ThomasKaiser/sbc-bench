@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.9.26
+Version=0.9.27
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -2275,14 +2275,20 @@ CheckGB() {
 		read
 	fi
 
-	# get latest version string from blog
-	GBVersion="$(links -dump "https://www.geekbench.com/blog/" | awk -F" " '/ Geekbench [5-6].[0-9]/ {print $2}' | head -n1)"
+	# get latest version string from blog, new major versions are advertised as e.g.
+	# 'Geekbench 6' and not 'Geekbench 6.0' which makes version string guessing a bit
+	# tricky
+	GBBlogContents="$(links -dump "https://www.geekbench.com/blog/")"
+	NewMajorVersion="$(grep "Geekbench [567]$" <<<"${GBBlogContents}" | head -n1 | awk -F" " '{print $2}').0"
+	LatestMinorVersion="$(awk -F" " '/ Geekbench [567].[0-9]/ {print $2}' <<<"${GBBlogContents}" | head -n1)"
+	GBVersion="$(echo -e "${NewMajorVersion}\n${LatestMinorVersion}" | sort -V | tail -n1)"
+
 	case ${GBVersion} in
-		6*)
-			echo -e "\x08\x08 No support for Geekbench 6 yet. Exiting"
+		7*)
+			echo -e "\x08\x08 No support for Geekbench ${GBVersion} yet. Exiting"
 			exit 1
 			;;
-		5*)
+		5*|6*)
 			:
 			;;
 		*)
@@ -2293,8 +2299,11 @@ CheckGB() {
 
 	# check platform since download URLs differ:
 	# RISC-V: https://cdn.geekbench.com/Geekbench-5.4.4-LinuxRISCVPreview.tar.gz
-	# ARM: https://cdn.geekbench.com/Geekbench-5.4.4-LinuxARMPreview.tar.gz
-	# x86: https://cdn.geekbench.com/Geekbench-5.4.4-Linux.tar.gz
+	#         404
+	# ARM:    https://cdn.geekbench.com/Geekbench-5.4.4-LinuxARMPreview.tar.gz
+	#         https://cdn.geekbench.com/Geekbench-6.0.0-LinuxARMPreview.tar.gz
+	# x86:    https://cdn.geekbench.com/Geekbench-5.4.4-Linux.tar.gz
+	#         https://cdn.geekbench.com/Geekbench-6.0.0-Linux.tar.gz
 
 	ARCH=$(dpkg --print-architecture 2>/dev/null) || \
 	ARCH=$(awk -F'"' '/^CARCH/ {print $2}' /etc/makepkg.conf 2>/dev/null) || \
@@ -2306,20 +2315,22 @@ CheckGB() {
 			DLSuffix="LinuxARMPreview"
 			GBBinaryName="geekbench_armv7"
 			FirstOfflineCPU=1
+			GBVersion="5.5" # latest version for this platform
 			;;
 		arm*)
 			DLSuffix="LinuxARMPreview"
-			GBBinaryName="geekbench5"
-			FirstOfflineCPU=0
+			GBBinaryName="geekbench${GBVersion:0:1}"
+			FirstOfflineCPU=1
 			;;
 		riscv64)
 			DLSuffix="LinuxRISCVPreview"
 			GBBinaryName="geekbench_riscv64"
 			FirstOfflineCPU=1
+			GBVersion="5.5" # latest version for this platform
 			;;
 		amd64|*x86*)
 			DLSuffix="Linux"
-			GBBinaryName="geekbench5"
+			GBBinaryName="geekbench${GBVersion:0:1}"
 			FirstOfflineCPU=1
 			;;
 		*)
@@ -2938,7 +2949,8 @@ CheckClockspeedsAndSensors() {
 			for Disk in ${Disks} ; do
 				case ${Disk} in
 					/dev/sd*)
-						echo -e "${Disk}:\t$(smartctl -a ${Disk} | awk -F" " '/Temperature/ {print $10" "$2}' | head -n1 | sed 's/_/ /g')"
+						DiskTemp="$(smartctl -a ${Disk} | awk -F" " '/Temperature/ {print $10" "$2}' | head -n1 | sed -e 's/_/ /g' -e 's/^ *//g')"
+						[ "X${DiskTemp}" != "X" ] && echo -e "${Disk}:\t${DiskTemp}"
 						;;
 					/dev/nvme*)
 						echo -e "${Disk}:\t$(smartctl -a ${Disk} | awk -F" " '/Temperature:/ {print $2" "$3}' | head -n1)" 
@@ -6324,13 +6336,14 @@ ProvideReviewInfo() {
 	[ -z "${LSBLK}" ] && LSBLK="$(LC_ALL="C" lsblk -l -o SIZE,NAME,FSTYPE,LABEL,MOUNTPOINT 2>&1)"
 	NTFSdevices="$(awk -F" " '/ ntfs / {print $2}' <<< "${LSBLK}" | tr '\n' ',' | sed 's/,$//')"
 	if [ "X${NTFSdevices}" != "X" ]; then
-		echo -e "\n### Challenging filesystems:\n\nThe following partitions contain NTFS filesystems: ${NTFSdevices}\n" >>"${TempDir}/review"
+		echo -e "\n### Challenging filesystems:\n\nThe following partitions are NTFS: ${NTFSdevices}\n" >>"${TempDir}/review"
 		cat >>"${TempDir}/review" <<- EOF
 		When this OS uses FUSE/userland methods to access NTFS filesystems performance
 		will be significantly harmed or at least likely be bottlenecked by maxing out
 		one or more CPU cores. It is highly advised when benchmarking with any NTFS to
 		monitor closely CPU utilization or better switch to a 'Linux native' filesystem
-		like ext4 since representing 'storage performance' more closely.
+		like ext4 since representing 'storage performance' a lot more than 'somewhat 
+		dealing with a foreign filesystem' as with NTFS.
 		EOF
 	fi
 
@@ -6843,7 +6856,7 @@ CheckPCIe() {
 			*)
 				# check device
 				DeviceName="$(sed 's/Advanced Micro Devices,/AMD/' <<<"${REPLY}" | awk -F'"' '{print $4}' | cut -f1 -d' ') $(awk -F'"' '{print $6}' <<<"${REPLY}" | sed -e 's/ SSD//' -e 's/ Controller//')"
-				PCIeDetails="$(lspci -vv -s ${BusAddress} 2>/dev/null)"
+				PCIeDetails="$(lspci -vv -s "${BusAddress}" 2>/dev/null)"
 				LnkSta="$(awk -F"\t" '/LnkSta:/ {print $4}' <<<"${PCIeDetails}" | awk -F", " '{print $1", "$2}' | head -n1)"
 				if [ "X${LnkSta}" != "X" ]; then
 					# only report devices for which a link state can be determined
@@ -6863,9 +6876,9 @@ CheckPCIe() {
 					fi
 					if [ "X${DeviceWarning}" = "XTRUE" ]; then
 						touch "${TempDir}/check-smart"
-						echo -e "  * ${LRED}${DevizeSize}${DeviceName}: ${LnkSta}${AdditionalInfo}${NC}"
+						echo -e "  * ${LRED}${DevizeSize}${DeviceName}: ${LnkSta}${AdditionalSMARTInfo}${AdditionalInfo}${NC}"
 					else
-						echo -e "  * ${DevizeSize}${DeviceName}: ${LnkSta}${AdditionalInfo}"
+						echo -e "  * ${DevizeSize}${DeviceName}: ${LnkSta}${AdditionalSMARTInfo}${AdditionalInfo}"
 					fi
 				fi
 				;;
@@ -6887,7 +6900,7 @@ CheckStorage() {
 	[ -z "${LSBLK}" ] && LSBLK="$(LC_ALL="C" lsblk -l -o SIZE,NAME,FSTYPE,LABEL,MOUNTPOINT 2>&1)"
 
 	for StorageDevice in $(ls /dev/sd? 2>/dev/null) ; do
-		unset DeviceName DeviceInfo DeviceWarning DevizeSize AdditionalInfo
+		unset DeviceName DeviceInfo DeviceWarning DevizeSize AdditionalInfo ProductName VendorName SpeedInfo SupportedSpeeds
 
 		UdevInfo="$(udevadm info -a -n ${StorageDevice} 2>/dev/null)"
 		Driver="$(awk -F'"' '/DRIVERS==/ {print $2}' <<<"${UdevInfo}" | grep -E 'uas|usb-storage|ahci')"
@@ -6903,7 +6916,32 @@ CheckStorage() {
 				# try to lookup device ID in usbutils' database
 				idProduct="$(awk -F'"' '/ATTRS{idProduct}/ {print $2}' <<<"${UdevInfo}" | head -n1)"
 				idVendor="$(awk -F'"' '/ATTRS{idVendor}/ {print $2}' <<<"${UdevInfo}" | head -n1)"
-				LsusbGuess="$(lsusb | awk -F"${idVendor}:${idProduct} " "/${idVendor}:${idProduct} / {print \$2}")"
+				USBBus="$(awk -F'"' '/ATTRS{busnum}/ {print $2}' <<<"${UdevInfo}" | head -n1)"
+				USBDevice="$(awk -F'"' '/ATTRS{devnum}/ {print $2}' <<<"${UdevInfo}" | head -n1)"
+				LsusbInfo="$(lsusb -v -s ${USBBus}:${USBDevice} 2>/dev/null)"
+
+				# Check device capabilities and speeds that could be negotiated to spot downgrading
+				# With SuperSpeed it looks like this:
+				#       Device can operate at Full Speed (12Mbps)
+				#       Device can operate at High Speed (480Mbps)
+				#       Device can operate at SuperSpeed (5Gbps)
+				# With SuperSpeed Plus like this:
+				#       Speed Attribute ID: 0 10Gb/s Symmetric RX SuperSpeedPlus
+				#       Speed Attribute ID: 0 10Gb/s Symmetric TX SuperSpeedPlus
+				SupportedSpeeds="$(awk -F"[()]" '/Device can operate at/ {print $2}' <<<"${LsusbInfo}" | tr '\n' ',' | sed -e 's/,/, /g' -e 's/, $//')"
+				SupportedSuperSpeeds="$(awk -F": " '/Speed Attribute ID/ {print $2}' <<<"${LsusbInfo}" | cut -c3- | sort | uniq | grep -E "^10G|^20G|^40G" | tr '\n' ',' | sed -e 's/,/, /g' -e 's/, $//')"
+				if [ "X${SupportedSpeeds}" != "X" -a "X${SupportedSuperSpeeds}" != "X" ]; then
+					SpeedInfo=" (capable of ${SupportedSpeeds}, ${SupportedSuperSpeeds})"
+				elif [ "X${SupportedSpeeds}" != "X" ]; then
+					SpeedInfo=" (capable of ${SupportedSpeeds})"
+				fi
+				ProductName="$(awk -F"${idProduct} " "/0x${idProduct} / {print \$2}" <<<"${LsusbInfo}")"
+				VendorName="$(awk -F"${idVendor} " "/0x${idVendor} / {print \$2}" <<<"${LsusbInfo}" | cut -f1 -d',')"
+				if [ "X${ProductName}" != "X" -a "X${VendorName}" != "X" ]; then
+					LsusbGuess="${VendorName} ${ProductName}"
+				else
+					LsusbGuess="$(lsusb -s ${USBBus}:${USBDevice} 2>/dev/null | awk -F"${idVendor}:${idProduct} " "/${idVendor}:${idProduct} / {print \$2}")"
+				fi
 
 				NegotiatedSpeed="$(awk -F'"' '/ATTRS{speed}/ {print $2}' <<<"${UdevInfo}" | head -n1)"
 				if [ "X${DeviceName}" = "X${DeviceToCheck}" ]; then
@@ -6920,7 +6958,7 @@ CheckStorage() {
 							DeviceName="[unknown device] as ${StorageDevice}"
 						fi
 					fi
-					DeviceInfo="USB, Driver=${Driver}, ${NegotiatedSpeed}M"
+					DeviceInfo="USB"
 				else
 					# SMART data has been found, now try to determine bridge chip in between
 					# disk and USB host controller
@@ -6928,27 +6966,27 @@ CheckStorage() {
 						1058:0a10)
 							# JMicron JMS56x USB-to-SATA bridge with integrated port multiplier
 							# that has been flashed with Western Digital branded firmware
-							DeviceInfo="behind JMicron JMS56x SATA 6Gb/s bridge, Driver=${Driver}, ${NegotiatedSpeed}M"
+							DeviceInfo="behind JMicron JMS56x SATA 6Gb/s bridge"
 							;;
 						152d:0561)
 							# Listed as "JMS551 - Sharkoon SATA QuickPort Duo"
-							DeviceInfo="behind JMicron JMS561 dual SATA 6Gb/s bridge, Driver=${Driver}, ${NegotiatedSpeed}M"
+							DeviceInfo="behind JMicron JMS561 dual SATA 6Gb/s bridge"
 							;;
 						152d:0576)
 							# Listed as "JMicron Technology Corp. / JMicron USA Technology Corp. Gen1 SATA 6Gb/s Bridge"
-							DeviceInfo="behind JMicron JMS576 SATA 6Gb/s bridge, Driver=${Driver}, ${NegotiatedSpeed}M"
+							DeviceInfo="behind JMicron JMS576 SATA 6Gb/s bridge"
 							;;
 						152d:0578)
 							# JMS578 wrongly listed as JMS567 in usbutils database, though there are some JMS567 that
 							# can be flashed with a firmware that then results in them identifying as product ID 0578
-							DeviceInfo="behind JMicron JMS578 SATA 6Gb/s bridge, Driver=${Driver}, ${NegotiatedSpeed}M"
+							DeviceInfo="behind JMicron JMS578 SATA 6Gb/s bridge"
 							;;
 						152d:0580)
-							DeviceInfo="behind JMicron JMS580 SATA 6Gb/s bridge, Driver=${Driver}, ${NegotiatedSpeed}M"
+							DeviceInfo="behind JMicron JMS580 SATA 6Gb/s bridge"
 							;;
 						152d*)
 							# JMicron bridge, let's replace the monstrous vendor string with JMicron
-							DeviceInfo="behind $(sed 's|JMicron Technology Corp. / JMicron USA Technology Corp.|JMicron|' <<<"${LsusbGuess}"), Driver=${Driver}, ${NegotiatedSpeed}M"
+							DeviceInfo="behind $(sed 's|JMicron Technology Corp. / JMicron USA Technology Corp.|JMicron|' <<<"${LsusbGuess}")"
 							;;
 						174c:55aa)
 							# the product ID has been used by ASMedia for a bunch of different bridges and the usbutils name reads
@@ -6958,38 +6996,38 @@ CheckStorage() {
 							# no chance. So we live with a generic string (that isn't that long/useless as lsusb output).
 							# ASM1153 is also used in many USB disks (e.g. Seagate) but with different firmware and then appears
 							# not with 174c vendor ID.
-							DeviceInfo="behind ASMedia SATA 6Gb/s bridge, Driver=${Driver}, ${NegotiatedSpeed}M"
+							DeviceInfo="behind ASMedia SATA 6Gb/s bridge"
 							;;
 						174c*)
 							# ASMedia bridges, let's replace the monstrous vendor string with ASMedia
-							DeviceInfo="behind $(sed 's|ASMedia Technology Inc.|ASMedia|' <<<"${LsusbGuess}"), Driver=${Driver}, ${NegotiatedSpeed}M"
+							DeviceInfo="behind $(sed 's|ASMedia Technology Inc.|ASMedia|' <<<"${LsusbGuess}")"
 							;;
 						2109:0715)
 							# VIA VL715/VL716 USB to SATA bridges, appear in usbutils as
 							# "VIA Labs, Inc. VLI Product String" or "VL817 SATA Adaptor"
 							# while VL817 is a hub! VL715/VL716 differ by PHY (VL716 USB-C)
 							# but share same product ID since otherwise identical
-							DeviceInfo="behind VIA Labs VL715/VL716 SATA 6Gb/s bridge, Driver=${Driver}, ${NegotiatedSpeed}M"
+							DeviceInfo="behind VIA Labs VL715/VL716 SATA 6Gb/s bridge"
 							;;
 						2109:070*)
 							# SATA 3Gb/s bridges: VL700/VL701
-							DeviceInfo="behind VIA Labs VL${idProduct:1} SATA 3Gb/s bridge, Driver=${Driver}, ${NegotiatedSpeed}M"
+							DeviceInfo="behind VIA Labs VL${idProduct:1} SATA 3Gb/s bridge"
 							;;
 						2109:07*)
 							# any of the other VIA Labs SATA 6Gb/s bridges (that may follow)
-							DeviceInfo="behind VIA Labs VL${idProduct:1} SATA 6Gb/s bridge, Driver=${Driver}, ${NegotiatedSpeed}M"
+							DeviceInfo="behind VIA Labs VL${idProduct:1} SATA 6Gb/s bridge"
 							;;
 						0bda*)
 							# RealTek bridges, let's replace the vendor string with Realtek
-							DeviceInfo="behind $(sed 's|Realtek Semiconductor Corp.|Realtek|' <<<"${LsusbGuess}"), Driver=${Driver}, ${NegotiatedSpeed}M"
+							DeviceInfo="behind $(sed 's|Realtek Semiconductor Corp.|Realtek|' <<<"${LsusbGuess}")"
 							;;
 						:)
 							# no IDs found, generic report
-							DeviceInfo="behind USB, Driver=${Driver}, ${NegotiatedSpeed}M"
+							DeviceInfo="behind USB"
 							;;
 						*)
 							# Use lsusb guess as pathetic as it might be (http://www.linux-usb.org/usb.ids)
-							DeviceInfo="behind \"${LsusbGuess}\", Driver=${Driver}, ${NegotiatedSpeed}M"
+							DeviceInfo="behind \"${LsusbGuess}\""
 							;;
 					esac
 				fi
@@ -6999,15 +7037,15 @@ CheckStorage() {
 		DevizeSize="$(GetDiskSize "${StorageDevice}" "${DeviceName}")"
 		if [ "X${DeviceWarning}" = "XTRUE" ]; then
 			touch "${TempDir}/check-smart"
-			echo -e "  * ${LRED}${DevizeSize}${DeviceName%%*( )}: ${DeviceInfo}${AdditionalInfo}${NC}"
+			echo -e "  * ${LRED}${DevizeSize}${DeviceName%%*( )}: ${DeviceInfo}${AdditionalSMARTInfo}, Driver=${Driver}, ${NegotiatedSpeed}Mbps${SpeedInfo}${AdditionalInfo}${NC}"
 		else
-			echo -e "  * ${DevizeSize}${DeviceName%%*( )}: ${DeviceInfo}${AdditionalInfo}"
+			echo -e "  * ${DevizeSize}${DeviceName%%*( )}: ${DeviceInfo}${AdditionalSMARTInfo}, Driver=${Driver}, ${NegotiatedSpeed}Mbps${SpeedInfo}${AdditionalInfo}"
 		fi
 	done
 
 	# MMC devices
 	for StorageDevice in $(ls /dev/mmcblk? 2>/dev/null) ; do
-		unset DeviceName DeviceInfo DeviceWarning DevizeSize DeviceType DmesgInfo AdditionalInfo CountOfProblems TuningProblems
+		unset DeviceName DeviceInfo DeviceWarning DevizeSize DeviceType DmesgInfo AdditionalInfo CountOfProblems TuningProblems Manufacturer
 		if [ -x /sys/block/${StorageDevice##*/}/device ]; then
 			cd /sys/block/${StorageDevice##*/}/device
 			# read in variables from sysfs in q&d style and prefix them all with "mmc_".
@@ -7236,7 +7274,7 @@ CheckStorage() {
 	done
 
 	if [ -f "${TempDir}/check-smart" ]; then
-		echo -e "\n\"smartctl -x \$device\" should be used to get further information about the aforementioned issues."
+		echo -e "\n\"smartctl -x \$device\" could be used to get further information about the aforementioned issues."
 	fi
 } # CheckStorage
 
@@ -7301,20 +7339,20 @@ CheckSMARTData() {
 				SMARTData="$(smartctl -a ${DeviceToCheck} 2>/dev/null)"
 				DeviceName="\"$(awk -F": " "/^Model Number:/ {print \$2}" <<<"${SMARTData}" | sed 's/^ *//g')\" SSD as ${DeviceToCheck}${DeviceAddition}"
 				PercentageUsed="$(awk -F": " "/^Percentage Used:/ {print \$2}" <<<"${SMARTData}" | sed -e 's/^ *//g' -e 's/%//')"
-				AdditionalInfo=", ${PercentageUsed}% worn out"
+				AdditionalSMARTInfo=", ${PercentageUsed}% worn out"
 				MediaErrors=$(awk -F": " "/^Media and Data Integrity Errors:/ {print \$2}" <<<"${SMARTData}" | sed 's/^ *//g')
-				[ ${MediaErrors:-0} -gt 0 ] && AdditionalInfo="${AdditionalInfo}, ${MediaErrors} media errors"
+				[ ${MediaErrors:-0} -gt 0 ] && AdditionalSMARTInfo="${AdditionalSMARTInfo}, ${MediaErrors} media errors"
 				ErrorLogEntries=$(awk -F": " "/^Error Information Log Entries:/ {print \$2}" <<<"${SMARTData}" | sed 's/^ *//g')
-				[ ${ErrorLogEntries:-0} -gt 0 ] && AdditionalInfo="${AdditionalInfo}, ${ErrorLogEntries} error log entries"
+				[ ${ErrorLogEntries:-0} -gt 0 ] && AdditionalSMARTInfo="${AdditionalSMARTInfo}, ${ErrorLogEntries} error log entries"
 				DriveTemp="$(awk -F": " "/^Temperature:/ {print \$2}" <<<"${SMARTData}" | sed 's/^ *//g' | cut -f1 -d' ')"
 				Health="$(awk -F": " '/overall-health self-assessment test result/ {print $2}' <<<"${SMARTData}")"
 				case "${Health}" in
 					*PASSED*)
-						AdditionalInfo="${AdditionalInfo}, ${DriveTemp}°C"
+						AdditionalSMARTInfo="${AdditionalSMARTInfo}, ${DriveTemp}°C"
 						;;
 					*)
 						# SMART health check returned failed. This SSD is about to pass away
-						AdditionalInfo="${AdditionalInfo}, SMART health: FAILED, ${DriveTemp}°C"
+						AdditionalSMARTInfo="${AdditionalSMARTInfo}, SMART health: FAILED, ${DriveTemp}°C"
 						DeviceWarning=TRUE
 						;;
 				esac
@@ -7332,16 +7370,16 @@ CheckSMARTData() {
 				if [ $? -eq 0 ]; then
 					FWUpdateURLs="$(grep -A5 "A firmware update for this drive may be available" <<<"${SMARTData}" | grep http | tr '\n' ' ' | sed 's/\ $//')"
 					FWVersion="$(awk -F": " '/Firmware Version:/ {print $2}' <<<"${SMARTData}" | sed 's/^ *//g')"
-					AdditionalInfo="${AdditionalInfo}, firmware version ${FWVersion}, updates may be available: ${FWUpdateURLs}"
+					AdditionalSMARTInfo="${AdditionalSMARTInfo}, firmware version ${FWVersion}, updates may be available: ${FWUpdateURLs}"
 				fi
 
 				# Check for CRC errors. Usually caused by bad cables or jack contacts,
 				# goes along with retransmits and as such harms performance. Beware that
 				# this attribute records these issues over the drive's lifetime as such
-				# it's only an issue when the CRC error counter increases while writing to
+				# it's only an issue when the CRC error counter increases while accessing
 				# the drive
 				CRCErrors="$(awk -F": " '/^199 / {print $10}' <<<"${SMARTData}")"
-				[ ${CRCErrors:-0} -gt 0 ] && AdditionalInfo=", ${CRCErrors} CRC errors"
+				[ ${CRCErrors:-0} -gt 0 ] && AdditionalSMARTInfo=", ${CRCErrors} CRC errors"
 
 				DriveTemp="$(awk -F" " '/Temperature/ {print $10" "$2}' <<<"${SMARTData}" | head -n1 | sed 's/_/ /g' | sed -e 's/ Airflow//' -e 's/ Temperature//' -e 's/ Celsius$/°C/' -e 's/ Cel$/°C/')"
 
@@ -7360,31 +7398,40 @@ CheckSMARTData() {
 						# SSD
 						DriveType="SSD"
 
-						# TODO: deal with the different wearout attributes which is unreliable by definition:
-						# https://listi.jpberlin.de/pipermail/smartmontools-support/2021-February/000580.html
+						# Dealing with custom vendor attributes is unreliable by definition,
 						# so let's try ATA Device Statistics first
 						SMARTDevstat="$(smartctl -l devstat ${DeviceToCheck})"
 						PercentageUsed="$(awk -F" " '/Percentage Used Endurance Indicator/ {print $4}' <<<"${SMARTDevstat}")"
-						if [ "X${PercentageUsed}" = "X" ]; then
-							# not compliant to ATA Device Statistics so try to deal with the vendor
+						if [ "X${PercentageUsed}" != "X" ]; then
+							# use 'Percentage Used Endurance Indicator'
+							AdditionalSMARTInfo="${AdditionalSMARTInfo}, ${PercentageUsed}% worn out"
+						else
+							# not compliant with ATA Device Statistics so try to deal with the vendor
 							# attributes if in good mood sometimes in the future, for now only caring
-							# about 169
+							# about 169, 177 and 202
 
 							# Silicon Motion based SSDs / CT500BX100SSD1: 169, raw value decreasing from 100 to 0
 							# 169 Remaining_Lifetime_Perc 0x0000   100   100   000    Old_age   Offline      -       78
-							Remaining_Lifetime_Perc="$(awk -F": " '/^169 / {print $10}' <<<"${SMARTData}")"
-							if [ ${Remaining_Lifetime_Perc:-101} -lt 101 ]; then
-								PercentageUsed=$(( 100 - ${Remaining_Lifetime_Perc} ))
-								AdditionalInfo="${AdditionalInfo}, ${PercentageUsed}% worn out"
-							fi
-						
-							# 202 Percent_Lifetime_Remain
+							[ -z "${SMARTValue}" ] && SMARTValue="$(awk -F" " '/^169 / {print $10}' <<<"${SMARTData}" | sed 's/^0*//')"
 
+							# Samsung SSDs that don't support ATA Device Statistics, normalized value decreasing from 100 to 0
+							# 177 Wear_Leveling_Count     0x0013   095   095   000    Pre-fail  Always       -       57
+							[ -z "${SMARTValue}" ] && SMARTValue="$(awk -F" " '/^177 / {print $4}' <<<"${SMARTData}" | sed 's/^0*//')"
+
+							# Crucial SSDs not relying on Silicon Motion controllers, normalized value decreasing from 100 to 0
+							# 202 Percent_Lifetime_Remain 0x0030   092   092   001    Old_age   Offline      -       8
+							[ -z "${SMARTValue}" ] && SMARTValue="$(awk -F" " '/^202 / {print $4}' <<<"${SMARTData}" | sed 's/^0*//')"
+
+							# WD/SanDisk use 230
 							# 230 Media_Wearout_Indicator 0x0032   017   017   ---    Old_age   Always       -       0x11570e001157
-							# depends on drive's firmware version how values behave, as such unreliable by definition
-						else
-							# use 'Percentage Used Endurance Indicator'
-							AdditionalInfo="${AdditionalInfo}, ${PercentageUsed}% worn out"
+							# depends on drive's firmware version how values have to be interpreted,
+							# as such unreliable by definition:
+							# https://listi.jpberlin.de/pipermail/smartmontools-support/2021-February/000580.html
+
+							if [ ${SMARTValue:-101} -lt 101 ]; then
+								PercentageUsed=$(( 100 - ${SMARTValue} ))
+								AdditionalSMARTInfo="${AdditionalSMARTInfo}, ${PercentageUsed}% worn out"
+							fi
 						fi
 						;;
 					*)
@@ -7392,25 +7439,25 @@ CheckSMARTData() {
 						DriveType="HDD"
 						#   5 Reallocated_Sector_Ct   0x0033   252   252   010    Pre-fail  Always       -       0
 						Reallocated_Sector_Ct="$(awk -F": " '/^  5 / {print $10}' <<<"${SMARTData}")"
-						[ ${Reallocated_Sector_Ct:-0} -gt 0 ] && AdditionalInfo="${AdditionalInfo}, ${Reallocated_Sector_Ct} Reallocated Sector Count"
+						[ ${Reallocated_Sector_Ct:-0} -gt 0 ] && AdditionalSMARTInfo="${AdditionalSMARTInfo}, ${Reallocated_Sector_Ct} Reallocated Sector Count"
 						# 195 Hardware_ECC_Recovered  0x003a   100   100   000    Old_age   Always       -       0
 						Hardware_ECC_Recovered="$(awk -F": " '/^195 / {print $10}' <<<"${SMARTData}")"
-						[ ${Hardware_ECC_Recovered:-0} -gt 0 ] && AdditionalInfo="${AdditionalInfo}, ${Hardware_ECC_Recovered} Hardware ECC Recovered"
+						[ ${Hardware_ECC_Recovered:-0} -gt 0 ] && AdditionalSMARTInfo="${AdditionalSMARTInfo}, ${Hardware_ECC_Recovered} Hardware ECC Recovered"
 						# 196 Reallocated_Event_Count 0x0032   252   252   000    Old_age   Always       -       0
 						Reallocated_Event_Count="$(awk -F": " '/^196 / {print $10}' <<<"${SMARTData}")"
-						[ ${Reallocated_Event_Count:-0} -gt 0 ] && AdditionalInfo="${AdditionalInfo}, ${Reallocated_Event_Count} Reallocated Event Count"
+						[ ${Reallocated_Event_Count:-0} -gt 0 ] && AdditionalSMARTInfo="${AdditionalSMARTInfo}, ${Reallocated_Event_Count} Reallocated Event Count"
 						# 197 Current_Pending_Sector  0x0032   252   252   000    Old_age   Always       -       0
 						Current_Pending_Sector="$(awk -F": " '/^197 / {print $10}' <<<"${SMARTData}")"
-						[ ${Current_Pending_Sector:-0} -gt 0 ] && AdditionalInfo="${AdditionalInfo}, ${Current_Pending_Sector} Current Pending Sector"
+						[ ${Current_Pending_Sector:-0} -gt 0 ] && AdditionalSMARTInfo="${AdditionalSMARTInfo}, ${Current_Pending_Sector} Current Pending Sector"
 						# 198 Offline_Uncorrectable   0x0030   252   252   000    Old_age   Offline      -       0
 						Offline_Uncorrectable="$(awk -F": " '/^197 / {print $10}' <<<"${SMARTData}")"
-						[ ${Offline_Uncorrectable:-0} -gt 0 ] && AdditionalInfo="${AdditionalInfo}, ${Offline_Uncorrectable} Offline Uncorrectable"
+						[ ${Offline_Uncorrectable:-0} -gt 0 ] && AdditionalSMARTInfo="${AdditionalSMARTInfo}, ${Offline_Uncorrectable} Offline Uncorrectable"
 						;;
 				esac
 
 				# 184 End-to-End_Error        0x0032   100   100   ---    Old_age   Always       -       0
 				EndtoEnd_Error="$(awk -F": " '/^184 / {print $10}' <<<"${SMARTData}")"
-				[ ${EndtoEnd_Error:-0} -gt 0 ] && AdditionalInfo="${AdditionalInfo}, ${EndtoEnd_Error} End-to-End errors"
+				[ ${EndtoEnd_Error:-0} -gt 0 ] && AdditionalSMARTInfo="${AdditionalSMARTInfo}, ${EndtoEnd_Error} End-to-End errors"
 
 				# Check whether drive model name already contains vendor and if not try to add it
 				DeviceVendor="$(awk -F": " "/^Model Family:/ {print \$2}" <<<"${SMARTData}" | grep -E -v "Silicon Motion|Phison|SandForce|SK hynix|Marvell|JMicron|Apacer SSDs|Indilinx" | sed 's/^ *//g' | cut -f1 -d' ')"
@@ -7430,11 +7477,11 @@ CheckSMARTData() {
 				Health="$(awk -F": " '/overall-health self-assessment test result/ {print $2}' <<<"${SMARTData}")"
 				case "${Health}" in
 					*PASSED*)
-						AdditionalInfo="${AdditionalInfo}, ${DriveTemp}"
+						AdditionalSMARTInfo="${AdditionalSMARTInfo}, ${DriveTemp}"
 						;;
 					*)
 						# SMART health check returned failed. This drive is about to pass away
-						AdditionalInfo="${AdditionalInfo}, SMART health: FAILED, ${DriveTemp}"
+						AdditionalSMARTInfo="${AdditionalSMARTInfo}, SMART health: FAILED, ${DriveTemp}"
 						DeviceWarning=TRUE
 						;;
 				esac

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.9.27
+Version=0.9.28
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -42,7 +42,7 @@ Main() {
 	[ -r "${ProcCPUFile}" ] && ProcCPU="$(cat "${ProcCPUFile}")"
 
 	# check in which mode we're supposed to run
-	while getopts 'chjkmtTrsSgNPG' c ; do
+	while getopts 'chjkmtTrsSguNPG' c ; do
 		case ${c} in
 			m)
 				# monitoring mode
@@ -80,6 +80,11 @@ Main() {
 			h)
 				# print help
 				DisplayUsage
+				exit 0
+				;;
+			u)
+				# replace script with latest version from Github
+				UpdateMe
 				exit 0
 				;;
 			j|r)
@@ -251,6 +256,31 @@ Main() {
 	UploadResults
 	BasicSetup ${OriginalCPUFreqGovernor} >/dev/null 2>&1
 } # Main
+
+UpdateMe() {
+	# function to replace this script with latest version from here:
+	# https://raw.githubusercontent.com/ThomasKaiser/sbc-bench/master/sbc-bench.sh
+
+	[ -w "${PathToMe}" ] || (echo "Permission problem accessing ${PathToMe}. Wrong user?" >&2 ; exit 1)
+	command -v curl >/dev/null 2>&1 || (echo "curl not found. Please install and try again." >&2 ; exit 1)
+	TempFile="$(mktemp /tmp/update-sbc-bench.XXXXXX)"
+	[ -w "${TempFile}" ] || (echo "Temp file creation not possible. Aborting" >&2 ; exit 1)
+	curl -s "https://raw.githubusercontent.com/ThomasKaiser/sbc-bench/master/sbc-bench.sh" >"${TempFile}" \
+		|| (echo "Can not access Github. Network problem? Updating not possible" >&2 ; exit 1)
+	VersionFromInternet="$(head "${TempFile}" | awk -F"=" '/^Version/ {print $2}')"
+	VersionCompare="$(echo -e "${VersionFromInternet}\n${Version}" | sort -V 2>/dev/null | tail -n1)"
+	if [ "X${VersionFromInternet}" = "X" ]; then
+		echo -e "Not able to download from Github. Updating not possible." >&2 ; exit 1
+	elif [ "X${Version}" = "X${VersionFromInternet}" ]; then
+		echo -e "Replaced ${Version} with ${Version} from Github...\c"
+	elif [ "X${VersionCompare}" = "X${VersionFromInternet}" ]; then
+		echo -e "Upgraded from ${Version} to ${VersionFromInternet}...\c"
+	elif [ "X${VersionCompare}" = "X${Version}" ]; then
+		echo -e "Downgraded from ${Version} to ${VersionFromInternet}...\c"
+	fi
+	cat "${TempFile}" >"${PathToMe}" && rm "${TempFile}"
+	echo -e "\x08\x08 Done."
+} # UpdateMe
 
 snore() {
 	# https://blog.dhampir.no/content/sleeping-without-a-subprocess-in-bash-and-how-to-sleep-forever
@@ -623,28 +653,22 @@ HandleGovernors() {
 			AvailableFrequenciesSysFSNode="$(ls -d "${REPLY%/*}"/*available_frequencies)"
 			if [ -r "${REPLY%/*}/cpuinfo_cur_freq" ]; then
 				Curfreq=" / $(awk '{printf ("%0.0f",$1/1000); }' <"${REPLY%/*}/cpuinfo_cur_freq") MHz"
+				[ -r "${AvailableFrequenciesSysFSNode}" ] && AvailableFrequencies=" / $(tr ' ' '\n' <"${AvailableFrequenciesSysFSNode}" | sort -n | sed 's/000$//' | tr '\n' ' ' | sed -e 's/\ $//' -e 's/^ //')" || AvailableFrequencies=""
 			elif [ -r "${REPLY%/*}/scaling_cur_freq" ]; then
 				Curfreq=" / $(awk '{printf ("%0.0f",$1/1000); }' <"${REPLY%/*}/scaling_cur_freq") MHz"
+				[ -r "${AvailableFrequenciesSysFSNode}" ] && AvailableFrequencies=" / $(tr ' ' '\n' <"${AvailableFrequenciesSysFSNode}" | sort -n | sed 's/000$//' | tr '\n' ' ' | sed -e 's/\ $//' -e 's/^ //')" || AvailableFrequencies=""
 			elif [ -r "${REPLY%/*}/cur_freq" ]; then
 				read Rawfreq <"${REPLY%/*}/cur_freq"
 				if [ ${Rawfreq} -gt 10000000 ]; then
 					Curfreq=" / $(awk '{printf ("%0.0f",$1/1000000); }' <<<"${Rawfreq}") MHz"
+				[ -r "${AvailableFrequenciesSysFSNode}" ] && AvailableFrequencies=" / $(tr ' ' '\n' <"${AvailableFrequenciesSysFSNode}" | sort -n | sed 's/000000$//' | tr '\n' ' ' | sed -e 's/\ $//' -e 's/^ //')" || AvailableFrequencies=""
 				else
 					Curfreq=" / $(awk '{printf ("%0.0f",$1/1000); }' <<<"${Rawfreq}") MHz"
+				[ -r "${AvailableFrequenciesSysFSNode}" ] && AvailableFrequencies=" / $(tr ' ' '\n' <"${AvailableFrequenciesSysFSNode}" | sort -n | sed 's/000$//' | tr '\n' ' ' | sed -e 's/\ $//' -e 's/^ //')" || AvailableFrequencies=""
 				fi
 			else
 				Curfreq=""				
 			fi
-			case "${REPLY}" in
-				*cpufreq*)
-					# remove 000 from frequencies to get MHz
-					[ -r "${AvailableFrequenciesSysFSNode}" ] && AvailableFrequencies=" / $(tr ' ' '\n' <"${AvailableFrequenciesSysFSNode}" | sort -n | sed 's/000$//' | tr '\n' ' ' | sed -e 's/\ $//' -e 's/^ //')" || AvailableFrequencies=""
-					;;
-				*)
-					# remove 000000 from frequencies to get MHz
-					[ -r "${AvailableFrequenciesSysFSNode}" ] && AvailableFrequencies=" / $(tr ' ' '\n' <"${AvailableFrequenciesSysFSNode}" | sort -n | sed 's/000000$//' | tr '\n' ' ' | sed 's/\ $//')" || AvailableFrequencies=""
-					;;
-			esac
 			if [ -r "${AvailableGovernorsSysFSNode}" ]; then
 				read AvailableGovernors <"${AvailableGovernorsSysFSNode}"
 				if [ "X${AvailableGovernors}" != "X${Governor}" ]; then
@@ -7566,7 +7590,8 @@ DisplayUsage() {
 	echo -e " ${0##*/} ${BOLD}-r${NC} Review mode: generate insights via benchmarking"
 	echo -e " ${0##*/} ${BOLD}-s${NC} also executes stockfish stress tester (NEON/SSE/AVX/RAM)"
 	echo -e " ${0##*/} ${BOLD}-t${NC} [\$degree] runs thermal test waiting to cool down to this value"
-	echo -e " ${0##*/} ${BOLD}-T${NC} [\$degree] runs thermal test heating up to this value\n"
+	echo -e " ${0##*/} ${BOLD}-T${NC} [\$degree] runs thermal test heating up to this value"
+	echo -e " ${0##*/} ${BOLD}-u${NC} update sbc-bench to latest version from Github\n"
 	echo -e " The environment variable ${BOLD}MODE${NC} can be set to either ${BOLD}extensive${NC} or ${BOLD}unattended${NC}"
 	echo -e " prior to benchmark execution. Exporting ${BOLD}MaxKHz${NC} will also be honored, see here"
 	echo -e " for details: https://github.com/ThomasKaiser/sbc-bench#unattended-execution\n"

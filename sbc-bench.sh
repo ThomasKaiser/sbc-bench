@@ -260,17 +260,20 @@ Main() {
 UpdateMe() {
 	# function to replace this script with latest version from here:
 	# https://raw.githubusercontent.com/ThomasKaiser/sbc-bench/master/sbc-bench.sh
+	# Also check/update the github projects except of stockfish since there we use
+	#  a static and not latest version
 
-	[ -w "${PathToMe}" ] || (echo "Permission problem accessing ${PathToMe}. Wrong user?" >&2 ; exit 1)
-	command -v curl >/dev/null 2>&1 || (echo "curl not found. Please install and try again." >&2 ; exit 1)
+	[ -w "${PathToMe}" ] || { echo "Permission problem accessing ${PathToMe}. Wrong user? Aborting." >&2 ; exit 1 ; }
+	command -v curl >/dev/null 2>&1 || { echo "curl not found. Please install and try again. Aborting." >&2 ; exit 1 ; }
 	TempFile="$(mktemp /tmp/update-sbc-bench.XXXXXX)"
-	[ -w "${TempFile}" ] || (echo "Temp file creation not possible. Aborting" >&2 ; exit 1)
+	[ -w "${TempFile}" ] || { echo "Temp file creation not possible. Aborting." >&2 ; exit 1 ; }
 	curl -s "https://raw.githubusercontent.com/ThomasKaiser/sbc-bench/master/sbc-bench.sh" >"${TempFile}" \
-		|| (echo "Can not access Github. Network problem? Updating not possible" >&2 ; exit 1)
+		|| { echo "Can not access Github. Network problem? Aborting." >&2 ; exit 1 ; }
 	VersionFromInternet="$(head "${TempFile}" | awk -F"=" '/^Version/ {print $2}')"
 	VersionCompare="$(echo -e "${VersionFromInternet}\n${Version}" | sort -V 2>/dev/null | tail -n1)"
 	if [ "X${VersionFromInternet}" = "X" ]; then
-		echo -e "Not able to download from Github. Updating not possible." >&2 ; exit 1
+		echo -e "Not able to download from Github. Updating not possible." >&2
+		exit 1
 	elif [ "X${Version}" = "X${VersionFromInternet}" ]; then
 		echo -e "Replaced ${Version} with ${Version} from Github...\c"
 	elif [ "X${VersionCompare}" = "X${VersionFromInternet}" ]; then
@@ -280,6 +283,39 @@ UpdateMe() {
 	fi
 	cat "${TempFile}" >"${PathToMe}" && rm "${TempFile}"
 	echo -e "\x08\x08 Done."
+
+	# Only try to update git projects if git is already installed
+	command -v git >/dev/null 2>&1 || exit 0
+	
+	for GitProject in mhz ramspeed tinymembench cpuminer-multi ; do
+		if [ -x "${InstallLocation}/${GitProject}" ]; then
+			if [ -r "${InstallLocation}/${GitProject}/.git/config" ]; then
+				GitURL="$(awk -F" = " '/url = / {print $2}' "${InstallLocation}/${GitProject}/.git/config")"
+				echo -e "Checking/updating ${GitURL}...\c"
+			else
+				echo -e "Checking/updating ${GitProject} from Github...\c"
+			fi
+			cd "${InstallLocation}/${GitProject}"
+			GitResult="$(git pull 2>/dev/null)"
+			case "${GitResult}" in
+				*"up to date"*)
+					echo -e "\x08\x08 ${GitResult}"
+					;;
+				*)
+					case ${GitProject} in
+						cpuminer-multi)
+							./build.sh >/dev/null 2>&1
+							echo -e "\x08\x08 Done."
+							;;
+						*)
+							make clean >/dev/null 2>&1
+							make >/dev/null 2>&1
+							echo -e "\x08\x08 Done."
+							;;
+					esac
+			esac
+		fi
+	done
 } # UpdateMe
 
 snore() {
@@ -621,12 +657,12 @@ HandleGovernors() {
 	# memory/GPU/NPU governors. On RK3588 it looks like this for example:
 	#
 	# Status of performance related governors found below /sys:
-	# cpufreq-policy0: ondemand / 408 MHz (conservative ondemand userspace powersave performance schedutil)
-	# cpufreq-policy4: ondemand / 408 MHz (conservative ondemand userspace powersave performance schedutil)
-	# cpufreq-policy6: ondemand / 408 MHz (conservative ondemand userspace powersave performance schedutil)
-	# dmc: dmc_ondemand / 528 MHz (dmc_ondemand userspace powersave performance simple_ondemand)
-	# fb000000.gpu: simple_ondemand / 300 MHz (dmc_ondemand userspace powersave performance simple_ondemand)
-	# fdab0000.npu: userspace / 1000 MHz (dmc_ondemand userspace powersave performance simple_ondemand)
+	# cpufreq-policy0: ondemand / 408 MHz (conservative ondemand userspace powersave performance schedutil / 408 600 816 1008 1200 1416 1608 1800)
+	# cpufreq-policy4: ondemand / 408 MHz (conservative ondemand userspace powersave performance schedutil / 408 600 816 1008 1200 1416 1608 1800 2016 2208 2256 2304 2352 2400)
+	# cpufreq-policy6: ondemand / 408 MHz (conservative ondemand userspace powersave performance schedutil / 408 600 816 1008 1200 1416 1608 1800 2016 2208 2256 2304 2352 2400)
+	# dmc: dmc_ondemand / 528 MHz (rknpu_ondemand dmc_ondemand userspace powersave performance simple_ondemand / 528 1068 1560 2112)
+	# fb000000.gpu: simple_ondemand / 300 MHz (rknpu_ondemand dmc_ondemand userspace powersave performance simple_ondemand / 300 400 500 600 700 800 900 1000)
+	# fdab0000.npu: rknpu_ondemand / 1000 MHz (rknpu_ondemand dmc_ondemand userspace powersave performance simple_ondemand / 300 400 500 600 700 800 900 1000)
 
 	Governors="$(find /sys -name "*governor" | grep -E -v '/sys/module|cpuidle|watchdog')"
 	if [ "X${Governors}" = "X" -o "${CPUArchitecture}" = "x86_64" ]; then
@@ -1525,7 +1561,7 @@ TempTest() {
 
 	SocTemp=$(ReadSoCTemp 2>/dev/null | cut -f1 -d'.')
 	[ "X${SocTemp}" = "X" ] && \
-		(echo -e "${LRED}${BOLD}WARNING: No temperature source found. Aborting.${NC}" >&2 ; exit 1)
+		{ echo -e "${LRED}${BOLD}WARNING: No temperature source found. Aborting.${NC}" >&2 ; exit 1 ; }
 	[ ${SocTemp} -lt 20 ] && \
 		echo -e "${LRED}${BOLD}WARNING: sysfs thermal readout is ominously low: ${SocTemp}°C.${NC}\n" >&2
 
@@ -2395,6 +2431,9 @@ CheckGB() {
 			rm "${Downloadfile}"
 		fi
 	done
+
+	# create symlink with version number, to keep different major versions on same install
+	ln -sf "${InstallLocation}/${GBDir}/${GBBinaryName}" "/usr/local/bin/geekbench${GBVersion:0:1}"
 } # CheckGB
 
 InstallPrerequisits() {
@@ -2532,7 +2571,7 @@ InstallStockfish() {
 	if [ ! -x "${InstallLocation}/Stockfish-sf_15/src/stockfish" ]; then
 		echo -e "\x08\x08\x08, stockfish...\c"
 		cd "${InstallLocation}"
-		wget -q -O "${InstallLocation}/sf_15.tar.gz" https://github.com/official-stockfish/Stockfish/archive/refs/tags/sf_15.tar.gz 2>/dev/null
+		curl -s https://github.com/official-stockfish/Stockfish/archive/refs/tags/sf_15.tar.gz >"${InstallLocation}/sf_15.tar.gz" 2>/dev/null
 		[ -f "${InstallLocation}/sf_15.tar.gz" ] && tar xf sf_15.tar.gz
 		[ -d "${InstallLocation}/Stockfish-sf_15/src" ] && cd "${InstallLocation}/Stockfish-sf_15/src" || return
 
@@ -7575,7 +7614,7 @@ CheckSMARTData() {
 } # CheckSMARTData
 
 DisplayUsage() {
-	echo -e "\nUsage: ${BOLD}${0##*/} [-c] [-g] [-G] [-h] [-m] [-P] [-t \$degree] [-T \$degree] [-s]${NC}\n"
+	echo -e "\nUsage: ${BOLD}${0##*/} [-c] [-g] [-G] [-h] [-m] [-P] [-r] [-s] [-t \$degree] [-T \$degree] [-u]${NC}\n"
 	echo -e "############################################################################"
 	echo -e "\n Use ${BOLD}${0##*/}${NC} for the following tasks:\n"
 	echo -e " ${0##*/} invoked without arguments runs a standard benchmark"

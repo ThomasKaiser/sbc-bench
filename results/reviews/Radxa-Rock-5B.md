@@ -1,6 +1,6 @@
 # Radxa ROCK 5B
 
-Tested with sbc-bench v0.9.29 on Thu, 23 Feb 2023 16:10:47 +0100. Full info: [http://ix.io/4oZ7](http://ix.io/4oZ7)
+Tested with sbc-bench v0.9.29 on Fri, 24 Feb 2023 00:39:01 +0100. Full info: [http://ix.io/4p1u](http://ix.io/4p1u)
 
 ### General information:
 
@@ -25,8 +25,8 @@ The CPU features 3 clusters consisting of 2 different core types:
 Original governor settings:
 
     cpufreq-policy0: ondemand / 1800 MHz (conservative ondemand userspace powersave performance schedutil / 408 600 816 1008 1200 1416 1608 1800)
-    cpufreq-policy4: ondemand / 408 MHz (conservative ondemand userspace powersave performance schedutil / 408 600 816 1008 1200 1416 1608 1800 2016 2208 2256 2304 2352 2400)
-    cpufreq-policy6: ondemand / 408 MHz (conservative ondemand userspace powersave performance schedutil / 408 600 816 1008 1200 1416 1608 1800 2016 2208 2256 2304 2352 2400)
+    cpufreq-policy4: ondemand / 2400 MHz (conservative ondemand userspace powersave performance schedutil / 408 600 816 1008 1200 1416 1608 1800 2016 2208 2256 2304 2352 2400)
+    cpufreq-policy6: ondemand / 600 MHz (conservative ondemand userspace powersave performance schedutil / 408 600 816 1008 1200 1416 1608 1800 2016 2208 2256 2304 2352 2400)
     dmc: dmc_ondemand / 528 MHz (rknpu_ondemand dmc_ondemand userspace powersave performance simple_ondemand / 528 1068 1560 2112)
     fb000000.gpu: simple_ondemand / 300 MHz (rknpu_ondemand dmc_ondemand userspace powersave performance simple_ondemand / 300 400 500 600 700 800 900 1000)
     fdab0000.npu: rknpu_ondemand / 1000 MHz (rknpu_ondemand dmc_ondemand userspace powersave performance simple_ondemand / 300 400 500 600 700 800 900 1000)
@@ -47,36 +47,37 @@ Status of performance related policies found below /sys:
 
 ### Clockspeeds (idle vs. heated up):
 
-Before at 50.8°C:
+Before at 57.3°C:
 
-    cpu0-cpu3 (Cortex-A55): OPP: 1800, Measured: 1815 
-    cpu4-cpu5 (Cortex-A76): OPP: 2400, Measured: 2319      (-3.4%)
-    cpu6-cpu7 (Cortex-A76): OPP: 2400, Measured: 2318      (-3.4%)
+    cpu0-cpu3 (Cortex-A55): OPP: 1800, Measured: 1809 
+    cpu4-cpu5 (Cortex-A76): OPP: 2400, Measured: 2309      (-3.8%)
+    cpu6-cpu7 (Cortex-A76): OPP: 2400, Measured: 2309      (-3.8%)
 
-After at 82.2°C (throttled):
+After at 84.1°C (throttled):
 
-    cpu0-cpu3 (Cortex-A55): OPP: 1800, Measured: 1790 
-    cpu4-cpu5 (Cortex-A76): OPP: 2400, Measured: 2280      (-5.0%)
-    cpu6-cpu7 (Cortex-A76): OPP: 2400, Measured: 2280      (-5.0%)
+    cpu0-cpu3 (Cortex-A55): OPP: 1800, Measured: 1788 
+    cpu4-cpu5 (Cortex-A76): OPP: 2400, Measured: 2277      (-5.1%)
+    cpu6-cpu7 (Cortex-A76): OPP: 2400, Measured: 2277      (-5.1%)
 
 ### Memory performance
 
-  * cpu0 (Cortex-A55): memcpy: 5853.7 MB/s, memchr: 3279.8 MB/s, memset: 22022.8 MB/s
-  * cpu4 (Cortex-A76): memcpy: 10062.2 MB/s, memchr: 14305.6 MB/s, memset: 28951.3 MB/s
-  * cpu6 (Cortex-A76): memcpy: 10039.7 MB/s, memchr: 14337.7 MB/s, memset: 28900.5 MB/s
-  * cpu0 (Cortex-A55) 16M latency: 117.2 119.9 116.9 120.1 115.8 125.3 206.3 382.0 
-  * cpu4 (Cortex-A76) 16M latency: 119.9 109.6 118.9 120.9 120.0 108.9 112.0 115.1 
-  * cpu6 (Cortex-A76) 16M latency: 120.1 110.1 118.8 109.5 118.4 108.2 107.4 108.6 
+  * cpu0 (Cortex-A55): memcpy: 5886.7 MB/s, memchr: 3272.0 MB/s, memset: 21961.5 MB/s
+  * cpu4 (Cortex-A76): memcpy: 10054.2 MB/s, memchr: 14382.3 MB/s, memset: 28542.6 MB/s
+  * cpu6 (Cortex-A76): memcpy: 10051.9 MB/s, memchr: 14361.9 MB/s, memset: 28694.3 MB/s
+  * cpu0 (Cortex-A55) 16M latency: 117.6 119.8 116.7 119.9 115.9 125.5 204.5 367.8 
+  * cpu4 (Cortex-A76) 16M latency: 119.7 110.7 121.2 118.0 118.4 106.9 107.9 108.7 
+  * cpu6 (Cortex-A76) 16M latency: 120.3 110.7 118.5 109.1 118.6 107.1 104.1 107.8 
 
 ### PCIe and storage devices:
 
-  * 238.5GB "KXG50ZNV256G NVMe TOSHIBA 256GB" SSD as /dev/nvme0n1: Speed 8GT/s (ok), Width x4 (ok), 13% worn out, 67°C
   * Realtek RTL8125 2.5GbE: Speed 5GT/s (ok), Width x1 (ok), driver in use: r8125
+  * 238.5GB "KXG50ZNV256G NVMe TOSHIBA 256GB" SSD as /dev/nvme0: Speed 8GT/s (ok), Width x4 (ok), 13% worn out, unhealthy drive temp: 69°C
+  * 115.7GB "SanDisk Corp. Ultra Dual" as /dev/sda: USB, Driver=usb-storage, 5000Mbps (capable of 12Mbps, 480Mbps, 5Gbps)
   * 7.4GB "SanDisk SL08G" UHS SDR50 SD card as /dev/mmcblk0: date 06/2016, manfid/oemid: 0x000003/0x5344, hw/fw rev: 0x8/0x0
   * 14.5GB "Foresee NCard" HS200 eMMC 5.0 card as /dev/mmcblk1: date 08/2016, manfid/oemid: 0x000088/0x0103, hw/fw rev: 0x0/0x0100000000000000
   * 16MB SPI NOR flash, drivers in use: spi-nor/rockchip-sfc
 
-"smartctl -x $device" could be used to get further information about the reported issues.
+"smartctl -x /dev/nvme0" could be used to get further information about the reported issues.
 
 ### Challenging filesystems:
 
@@ -86,7 +87,7 @@ When this OS uses FUSE/userland methods to access NTFS filesystems performance
 will be significantly harmed or at least likely be bottlenecked by maxing out
 one or more CPU cores. It is highly advised when benchmarking with any NTFS to
 monitor closely CPU utilization or better switch to a 'Linux native' filesystem
-like ext4 since representing 'storage performance' a lot more than 'somewhat 
+like ext4 since representing 'storage performance' a lot more than 'somewhat
 dealing with a foreign filesystem' as with NTFS.
 
 ### Software versions:

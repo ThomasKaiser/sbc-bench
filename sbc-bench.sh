@@ -60,7 +60,7 @@ Main() {
 				ExecuteStockfish=yes
 				;;
 			S)
-				# check storage (and PCIe), only for testing, will disappear later
+				# check storage, only for testing, will disappear later
 				if test -t 1; then
 					ncolors=$(tput colors)
 					if test -n "$ncolors" && test $ncolors -ge 8; then
@@ -73,7 +73,6 @@ Main() {
 				DMESG="$(dmesg | grep "mmc")"
 				CreateTempDir
 				command -v smartctl >/dev/null 2>&1 || echo -e "${BOLD}Warning: smartmontools not installed${NC}\n"
-				CheckPCIe
 				CheckStorage
 				exit 0
 				;;
@@ -304,8 +303,16 @@ UpdateMe() {
 				*)
 					case ${GitProject} in
 						cpuminer-multi)
+							rm "${InstallLocation}"/cpuminer-multi/.do-not-try-to-build-again 2>/dev/null
 							./build.sh >/dev/null 2>&1
-							echo -e "\x08\x08 Done."
+							case $? in
+								0)
+									echo -e "\x08\x08 Done."
+									;;
+								*)
+									echo -e "\x08\x08 Failed."
+									;;
+							esac
 							;;
 						*)
 							make clean >/dev/null 2>&1
@@ -2549,7 +2556,7 @@ InstallCpuminer() {
 		# remove the old installation
 		rm -rf "${InstallLocation}"/cpuminer-multi
 	fi
-	if [ ! -x "${InstallLocation}"/cpuminer-multi/cpuminer ]; then
+	if [ ! -x "${InstallLocation}"/cpuminer-multi/cpuminer -a ! -f "${InstallLocation}"/cpuminer-multi/.do-not-try-to-build-again ]; then
 		echo -e "\x08\x08\x08, cpuminer...\c"
 		cd "${InstallLocation}"
 		zypper install -y automake autoconf pkg-config libcurl4-openssl-dev libjansson-dev libssl-dev libgmp-dev make g++ zlib1g-dev >/dev/null 2>&1
@@ -2560,6 +2567,7 @@ InstallCpuminer() {
 	fi
 	if [ ! -x "${InstallLocation}"/cpuminer-multi/cpuminer ]; then
 		echo -e "\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08 (can't build cpuminer)  \c"
+		touch "${InstallLocation}"/cpuminer-multi/.do-not-try-to-build-again
 	fi
 } # InstallCpuminer
 
@@ -6420,6 +6428,10 @@ ProvideReviewInfo() {
 		echo -e "\n### Storage devices:\n\n${StorageStatus}" >>"${TempDir}/review"
 	fi
 	
+	# In preparation of before/after diff remove sane drive temperatures to keep only "unhealthy drive temp"
+	PCIeStatus="$(echo "${PCIeStatus}" | awk -F", drive temp: " '{print $1"X"}' | sed -e 's/X$//' -e '/^$/d' | grep -v smartctl)"
+	StorageStatus="$(echo "${StorageStatus}" | awk -F", drive temp: " '{print $1"X"}' | sed -e 's/X$//' -e '/^$/d' | grep -v smartctl)"
+
 	# check whether NTFS filesystems are attached (do not need to be mounted yet)
 	[ -z "${LSBLK}" ] && LSBLK="$(LC_ALL="C" lsblk -l -o SIZE,NAME,FSTYPE,LABEL,MOUNTPOINT 2>&1)"
 	NTFSdevices="$(awk -F" " '/ ntfs / {print $2}' <<< "${LSBLK}" | tr '\n' ',' | sed 's/,$//')"
@@ -6556,10 +6568,10 @@ FinalReporting() {
 	DMESGSinceStart="$(dmesg | sed "/${TimeStamp}/,\$!d" | grep -E -v 'sbc-bench review mode started|started with executable stack|UFW BLOCK| EDID ')"
 	DMESGLines=$(wc -l <<<"${DMESGSinceStart}")
 
-	# check PCIe and storage devices again to spot disconnects or link
-	# degradation and stuff like this
-	PCIeStatusNow="$(CheckPCIe again)"
-	StorageStatusNow="$(CheckStorage)"
+	# check PCIe and storage devices again to spot disconnects or link degradation and
+	# stuff like this. Strip off sane drive temps so we only compare unhealthy ones
+	PCIeStatusNow="$(CheckPCIe again | awk -F", drive temp: " '{print $1"X"}' | sed -e 's/X$//' -e '/^$/d' | grep -v smartctl)"
+	StorageStatusNow="$(CheckStorage | awk -F", drive temp: " '{print $1"X"}' | sed -e 's/X$//' -e '/^$/d' | grep -v smartctl)"
 
 	ClockspeedsNow="$(cat "${TempDir}/cpufreq" | sed -e 's/^/    /')"
 	if [ -z ${InitialTemp} ]; then
@@ -6571,8 +6583,7 @@ FinalReporting() {
 	CheckForThrottling | sed -e 's/ Check the log for details.//' -e '/^[[:space:]]*$/d'
 	[ -f ${TempDir}/throttling_info.txt ] && cat ${TempDir}/throttling_info.txt
 
-	# print warnings if count or details of attached PCIe or storage devices has changed.
-	# We need to strip of everything after last comma since temperatures are subject to change.
+	# Print warnings if count or details of attached PCIe or storage devices has changed.
 	# Possible reasons: cable/connector problems, other transmission errors and so on...
 	StorageDiff="$(diff  <(echo "${StorageStatus}" | sed 's/,[^,]*$//') <(echo "${StorageStatusNow}" | sed 's/,[^,]*$//') )"
 	PCIeDiff="$(diff  <(echo "${PCIeStatus}" | sed 's/,[^,]*$//') <(echo "${PCIeStatusNow}" | sed 's/,[^,]*$//') )"
@@ -6942,8 +6953,8 @@ CheckPCIe() {
 		BusAddress="$(awk -F" " '{print $1}' <<<"${REPLY}")"
 		ControllerType="$(awk -F'"' '{print $2}' <<<"${REPLY}")"
 		case "${ControllerType}" in
-			"Encryption"*|"VGA compatible"*|"Serial bus"*|"Communication"*|"Signal processing"*|"Memory"*)
-				# ignore since internal mainboard components
+			"Encryption"*|"VGA compatible"*|"Serial bus"*|"Communication"*|"Signal processing"*|"Memory"*|"Non-Volatile memory"*)
+				# ignore since internal mainboard components or NVMe SSDs
 				:
 				;;
 			*)
@@ -6968,7 +6979,7 @@ CheckPCIe() {
 						AdditionalInfo=", driver in use: $(awk -F": " '/Kernel driver in use:/ {print $2}' <<<"${PCIeDetails}")"
 					fi
 					if [ "X${DeviceWarning}" = "XTRUE" ]; then
-						touch "${TempDir}/check-smart"
+						echo -e "smartctl -x /dev/${NVMeDevice##*/} ; \c" >>"${TempDir}/check-smart"
 						echo -e "  * ${LRED}${DevizeSize}${DeviceName}: ${LnkSta}${AdditionalSMARTInfo}${AdditionalInfo}${DriveTemp}${NC}"
 					else
 						echo -e "  * ${DevizeSize}${DeviceName}: ${LnkSta}${AdditionalSMARTInfo}${AdditionalInfo}${DriveTemp}"
@@ -6988,22 +6999,25 @@ CheckStorage() {
 	# TODO:
 	# * maybe overtake CheckSMARTModes code from armbianmonitor to query picky/old USB
 	#   bridges in all possible ways.
-	# * evaluate checking NVMe devices starting from /dev/nvme? nodes since by walking
-	#   along udev tree it might be possible to distinguish between PCIe link/width
-	#   downgrades by design (e.g. only 1 or 2 lanes routed to an M.2 slot) and those
-	#   by accident (e.g. dusty/dirty contacts in the M.2 slot and as such x1 instead of x4)
 
 	# grab info about block devices
 	[ -z "${LSBLK}" ] && LSBLK="$(LC_ALL="C" lsblk -l -o SIZE,NAME,FSTYPE,LABEL,MOUNTPOINT 2>&1)"
 
-	for StorageDevice in $(ls /dev/sd? 2>/dev/null) ; do
-		unset DeviceName DeviceInfo DeviceWarning DevizeSize AdditionalInfo AdditionalSMARTInfo ProductName VendorName SpeedInfo SupportedSpeeds RawDiskTemp DriveTemp
+	for StorageDevice in $(ls /dev/sd? /dev/nvme? 2>/dev/null | sort) ; do
+		unset DeviceName DeviceInfo DeviceWarning DevizeSize AdditionalInfo AdditionalSMARTInfo ProductName VendorName SpeedInfo SupportedSpeeds RawDiskTemp DriveTemp LnkSta
 
 		UdevInfo="$(udevadm info -a -n ${StorageDevice} 2>/dev/null)"
-		Driver="$(awk -F'"' '/DRIVERS==/ {print $2}' <<<"${UdevInfo}" | grep -E 'uas|usb-storage|ahci')"
+		Driver="$(awk -F'"' '/DRIVERS==/ {print $2}' <<<"${UdevInfo}" | grep -E 'uas|usb-storage|ahci|nvme')"
 		case "${Driver}" in
 			ahci)
 				# (S)ATA attached
+				CheckSMARTData "${StorageDevice}" "${Driver}"
+				;;
+			nvme)
+				# NVMe, we need to determine bus address to check PCIe link width/speed
+				BusAddress="$(awk -F'"' '/ATTR{address}/ {print $2}' <<<"${UdevInfo}" | head -n1)"
+				PCIeDetails="$(lspci -vv -s "${BusAddress}" 2>/dev/null)"
+				LnkSta="$(awk -F"\t" '/LnkSta:/ {print $4}' <<<"${PCIeDetails}" | awk -F", " '{print $1", "$2}' | head -n1)"
 				CheckSMARTData "${StorageDevice}" "${Driver}"
 				;;
 			usb-storage|uas)
@@ -7096,10 +7110,10 @@ CheckStorage() {
 
 		DevizeSize="$(GetDiskSize "${StorageDevice}" "${DeviceName}")"
 		if [ "X${DeviceWarning}" = "XTRUE" ]; then
-			touch "${TempDir}/check-smart"
-			echo -e "  * ${LRED}${DevizeSize}${DeviceName%%*( )}: ${DeviceInfo}${AdditionalSMARTInfo}${AdditionalInfo}${DriveTemp}${NC}"
+			echo -e "smartctl -x ${StorageDevice} ; \c" >>"${TempDir}/check-smart"
+			echo -e "  * ${LRED}${DevizeSize}${DeviceName%%*( )}: ${DeviceInfo}${LnkSta}${AdditionalSMARTInfo}${AdditionalInfo}${DriveTemp}${NC}"
 		else
-			echo -e "  * ${DevizeSize}${DeviceName%%*( )}: ${DeviceInfo}${AdditionalSMARTInfo}${AdditionalInfo}${DriveTemp}"
+			echo -e "  * ${DevizeSize}${DeviceName%%*( )}: ${DeviceInfo}${LnkSta}${AdditionalSMARTInfo}${AdditionalInfo}${DriveTemp}"
 		fi
 	done
 
@@ -7360,7 +7374,8 @@ CheckStorage() {
 	done
 
 	if [ -f "${TempDir}/check-smart" ]; then
-		echo -e "\n\"smartctl -x \$device\" could be used to get further information about the reported issues."
+		echo -e "\n\"$(sed 's/ ; $//' <"${TempDir}/check-smart")\" could be used to get further information about the reported issues."
+		rm "${TempDir}/check-smart"
 	fi
 } # CheckStorage
 
@@ -7453,8 +7468,8 @@ GetDiskSize() {
 	# (e.g. "Model Number: KXG50ZNV256G NVMe TOSHIBA 256GB") or the capacity reported
 	# by lsblk if lsblk lists the device
 
-	grep -q " ${1##*/} " <<<"${LSBLK}" || return
-	local disksize=$(awk -F" " "/ ${1##*/} / {print \$1}" <<<"${LSBLK}")
+	grep -q " ${1##*/}" <<<"${LSBLK}" || return
+	local disksize=$(awk -F" " "/ ${1##*/}/ {print \$1}" <<<"${LSBLK}" | head -n1)
 	# grep -E -q "[0-9][0-9]GB| [0-9]TB" <<<"${2}" || echo "${disksize}B "
 	echo "${disksize}B "
 } # GetDiskSize
@@ -7506,19 +7521,32 @@ CheckSMARTData() {
 				SMARTData="$(smartctl -a ${DeviceToCheck} 2>/dev/null)"
 				DeviceName="\"$(awk -F": " "/^Model Number:/ {print \$2}" <<<"${SMARTData}" | sed 's/^ *//g')\" SSD as ${DeviceToCheck}${DeviceAddition}"
 				PercentageUsed="$(awk -F": " "/^Percentage Used:/ {print \$2}" <<<"${SMARTData}" | sed -e 's/^ *//g' -e 's/%//')"
-				AdditionalSMARTInfo=", ${PercentageUsed}% worn out"
+
+				if [ ${PercentageUsed:-0} -gt 75 ]; then
+					AdditionalSMARTInfo="${AdditionalSMARTInfo}, ${BOLD}${PercentageUsed}% worn out${NC}${LRED}"
+				else
+					AdditionalSMARTInfo="${AdditionalSMARTInfo}, ${PercentageUsed}% worn out"
+				fi
 				MediaErrors=$(awk -F": " "/^Media and Data Integrity Errors:/ {print \$2}" <<<"${SMARTData}" | sed 's/^ *//g')
-				[ ${MediaErrors:-0} -gt 0 ] && AdditionalSMARTInfo="${AdditionalSMARTInfo}, ${MediaErrors} media errors"
+				[ ${MediaErrors:-0} -gt 0 ] && AdditionalSMARTInfo="${AdditionalSMARTInfo}, ${BOLD}${MediaErrors} media errors${NC}${LRED}"
 				ErrorLogEntries=$(awk -F": " "/^Error Information Log Entries:/ {print \$2}" <<<"${SMARTData}" | sed 's/^ *//g')
-				[ ${ErrorLogEntries:-0} -gt 0 ] && AdditionalSMARTInfo="${AdditionalSMARTInfo}, ${ErrorLogEntries} error log entries"
+				if [ ${ErrorLogEntries:-0} -gt 0 ]; then
+					AdditionalSMARTInfo="${AdditionalSMARTInfo}, ${BOLD}${ErrorLogEntries} error log entries${NC}${LRED}"
+					echo -e "nvme error-log ${DeviceToCheck} ; \c" >>"${TempDir}/check-smart"
+				fi
 				RawDiskTemp="$(awk -F": " "/^Temperature:/ {print \$2}" <<<"${SMARTData}" | sed 's/^ *//g' | cut -f1 -d' ')"
+				TempTreshold=60
 				if [ "X${RawDiskTemp}" != "X" ]; then
-					DriveTemp=", ${RawDiskTemp}°C"
-					[ ${RawDiskTemp} -gt 60 ] && DeviceWarning=TRUE
+					if [ ${RawDiskTemp} -gt ${TempTreshold} ]; then
+						DeviceWarning=TRUE
+						DriveTemp=", ${BOLD}unhealthy drive temp: ${RawDiskTemp}°C${NC}"
+					else
+						DriveTemp=", drive temp: ${RawDiskTemp}°C"
+					fi
 				fi
 				Health="$(awk -F": " '/overall-health self-assessment test result/ {print $2}' <<<"${SMARTData}")"
 				if [ "X${Health}" != "XPASSED" ]; then
-					AdditionalSMARTInfo="${AdditionalSMARTInfo}, SMART health: **FAILED**"
+					AdditionalSMARTInfo="${AdditionalSMARTInfo}, ${BOLD}SMART health: **FAILED**${NC}${LRED}"
 					DeviceWarning=TRUE
 				fi
 				if [ ${PercentageUsed:-0} -gt 75 -o ${MediaErrors:-0} -gt 1 -o ${ErrorLogEntries:-0} -gt 1 ]; then
@@ -7544,7 +7572,7 @@ CheckSMARTData() {
 				# it's only an issue when the CRC error counter increases while accessing
 				# the drive
 				CRCErrors="$(awk -F": " '/^199 / {print $10}' <<<"${SMARTData}")"
-				[ ${CRCErrors:-0} -gt 0 ] && AdditionalSMARTInfo=", ${CRCErrors} CRC errors"
+				[ ${CRCErrors:-0} -gt 0 ] && AdditionalSMARTInfo=", ${BOLD}${CRCErrors} CRC errors${NC}${LRED}"
 
 				SATAVersion="$(awk -F": " '/^SATA Version is/ {print $2": "$3}' <<<"${SMARTData}" | sed -e 's/^ *//g' -e 's/: $//')"
 				if [ "X${SATAVersion}" = "X: " ]; then
@@ -7594,7 +7622,11 @@ CheckSMARTData() {
 
 							if [ ${SMARTValue:-101} -lt 101 ]; then
 								PercentageUsed=$(( 100 - ${SMARTValue} ))
-								AdditionalSMARTInfo="${AdditionalSMARTInfo}, ${PercentageUsed}% worn out"
+								if [ ${PercentageUsed:-0} -gt 75 ]; then
+									AdditionalSMARTInfo="${AdditionalSMARTInfo}, ${BOLD}${PercentageUsed}% worn out${NC}${LRED}"
+								else
+									AdditionalSMARTInfo="${AdditionalSMARTInfo}, ${PercentageUsed}% worn out"
+								fi
 							fi
 						fi
 						;;
@@ -7605,31 +7637,35 @@ CheckSMARTData() {
 
 						#   5 Reallocated_Sector_Ct   0x0033   252   252   010    Pre-fail  Always       -       0
 						Reallocated_Sector_Ct="$(awk -F": " '/^  5 / {print $10}' <<<"${SMARTData}")"
-						[ ${Reallocated_Sector_Ct:-0} -gt 0 ] && AdditionalSMARTInfo="${AdditionalSMARTInfo}, ${Reallocated_Sector_Ct} Reallocated Sector Count"
+						[ ${Reallocated_Sector_Ct:-0} -gt 0 ] && AdditionalSMARTInfo="${AdditionalSMARTInfo}, ${BOLD}${Reallocated_Sector_Ct} Reallocated Sector Count${NC}${LRED}"
 						# 195 Hardware_ECC_Recovered  0x003a   100   100   000    Old_age   Always       -       0
 						Hardware_ECC_Recovered="$(awk -F": " '/^195 / {print $10}' <<<"${SMARTData}")"
-						[ ${Hardware_ECC_Recovered:-0} -gt 0 ] && AdditionalSMARTInfo="${AdditionalSMARTInfo}, ${Hardware_ECC_Recovered} Hardware ECC Recovered"
+						[ ${Hardware_ECC_Recovered:-0} -gt 0 ] && AdditionalSMARTInfo="${AdditionalSMARTInfo}, ${BOLD}${Hardware_ECC_Recovered} Hardware ECC Recovered${NC}${LRED}"
 						# 196 Reallocated_Event_Count 0x0032   252   252   000    Old_age   Always       -       0
 						Reallocated_Event_Count="$(awk -F": " '/^196 / {print $10}' <<<"${SMARTData}")"
-						[ ${Reallocated_Event_Count:-0} -gt 0 ] && AdditionalSMARTInfo="${AdditionalSMARTInfo}, ${Reallocated_Event_Count} Reallocated Event Count"
+						[ ${Reallocated_Event_Count:-0} -gt 0 ] && AdditionalSMARTInfo="${AdditionalSMARTInfo}, ${BOLD}${Reallocated_Event_Count} Reallocated Event Count${NC}${LRED}"
 						# 197 Current_Pending_Sector  0x0032   252   252   000    Old_age   Always       -       0
 						Current_Pending_Sector="$(awk -F": " '/^197 / {print $10}' <<<"${SMARTData}")"
-						[ ${Current_Pending_Sector:-0} -gt 0 ] && AdditionalSMARTInfo="${AdditionalSMARTInfo}, ${Current_Pending_Sector} Current Pending Sector"
+						[ ${Current_Pending_Sector:-0} -gt 0 ] && AdditionalSMARTInfo="${AdditionalSMARTInfo}, ${BOLD}${Current_Pending_Sector} Current Pending Sector${NC}${LRED}"
 						# 198 Offline_Uncorrectable   0x0030   252   252   000    Old_age   Offline      -       0
 						Offline_Uncorrectable="$(awk -F": " '/^197 / {print $10}' <<<"${SMARTData}")"
-						[ ${Offline_Uncorrectable:-0} -gt 0 ] && AdditionalSMARTInfo="${AdditionalSMARTInfo}, ${Offline_Uncorrectable} Offline Uncorrectable"
+						[ ${Offline_Uncorrectable:-0} -gt 0 ] && AdditionalSMARTInfo="${AdditionalSMARTInfo}, ${BOLD}${Offline_Uncorrectable} Offline Uncorrectable${NC}${LRED}"
 						;;
 				esac
 
-				RawDiskTemp="$(awk -F" " '/Temperature/ {print $10" "$2}' <<<"${SMARTData}" | head -n1 | sed 's/_/ /g' | sed -e 's/ Airflow//' -e 's/ Temperature//' -e 's/ Celsius$/°C/' -e 's/ Cel$/°C/')"
+				RawDiskTemp="$(awk -F" " '/Temperature/ {print $10" "$2}' <<<"${SMARTData}" | head -n1 | sed 's/_/ /g' | sed -e 's/ Airflow//' -e 's/ Temperature//' | tr -d -c '[:digit:]')"
 				if [ "X${RawDiskTemp}" != "X" ]; then
-					DriveTemp=", ${RawDiskTemp}°C"
-					[ ${RawDiskTemp} -gt ${TempTreshold} ] && DeviceWarning=TRUE
+					if [ ${RawDiskTemp} -gt ${TempTreshold} ]; then
+						DeviceWarning=TRUE
+						DriveTemp=", ${BOLD}unhealthy drive temp: ${RawDiskTemp}°C${NC}"
+					else
+						DriveTemp=", drive temp: ${RawDiskTemp}°C"
+					fi
 				fi
 
 				# 184 End-to-End_Error        0x0032   100   100   ---    Old_age   Always       -       0
 				EndtoEnd_Error="$(awk -F": " '/^184 / {print $10}' <<<"${SMARTData}")"
-				[ ${EndtoEnd_Error:-0} -gt 0 ] && AdditionalSMARTInfo="${AdditionalSMARTInfo}, ${EndtoEnd_Error} End-to-End errors"
+				[ ${EndtoEnd_Error:-0} -gt 0 ] && AdditionalSMARTInfo="${AdditionalSMARTInfo}, ${BOLD}${EndtoEnd_Error} End-to-End errors${NC}${LRED}"
 
 				# Check whether drive model name already contains vendor and if not try to add it
 				DeviceVendor="$(awk -F": " "/^Model Family:/ {print \$2}" <<<"${SMARTData}" | grep -E -v "Silicon Motion|Phison|SandForce|SK hynix|Marvell|JMicron|Apacer SSDs|Indilinx" | sed 's/^ *//g' | cut -f1 -d' ')"
@@ -7648,7 +7684,7 @@ CheckSMARTData() {
 
 				Health="$(awk -F": " '/overall-health self-assessment test result/ {print $2}' <<<"${SMARTData}")"
 				if [ "X${Health}" != "XPASSED" ]; then
-					AdditionalSMARTInfo="${AdditionalSMARTInfo}, SMART health: **FAILED**"
+					AdditionalSMARTInfo="${AdditionalSMARTInfo}, ${BOLD}SMART health: **FAILED**${NC}${LRED}"
 					DeviceWarning=TRUE
 				fi
 				if [ ${PercentageUsed:-0} -gt 75 -o ${Reallocated_Sector_Ct:-0} -gt 1 -o ${Hardware_ECC_Recovered:-0} -gt 1 -o ${Reallocated_Event_Count:-0} -gt 1 -o ${Current_Pending_Sector:-0} -gt 1 -o ${Offline_Uncorrectable:-0} -gt 1 -o ${EndtoEnd_Error:-0} -gt 1 ]; then

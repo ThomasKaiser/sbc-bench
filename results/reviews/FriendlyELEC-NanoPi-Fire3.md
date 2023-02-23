@@ -1,6 +1,6 @@
 # NanoPi Fire3
 
-Tested on Sun, 19 Feb 2023 18:33:21 +0100. Full info: [http://ix.io/4ozy](http://ix.io/4ozy)
+Tested with sbc-bench v0.9.29 on Thu, 23 Feb 2023 16:05:18 +0100. Full info: [http://ix.io/4oZ3](http://ix.io/4oZ3)
 
 ### General information:
 
@@ -22,7 +22,7 @@ Tested on Sun, 19 Feb 2023 18:33:21 +0100. Full info: [http://ix.io/4ozy](http:/
 
 Original governor settings:
 
-    cpufreq-policy0: ondemand / 1400 MHz (conservative userspace powersave ondemand performance schedutil)
+    cpufreq-policy0: ondemand / 1400 MHz (conservative userspace powersave ondemand performance schedutil / 400 500 600 700 800 900 1000 1100 1200 1300 1400)
 
 Tuned governor settings:
 
@@ -30,22 +30,21 @@ Tuned governor settings:
 
 ### Clockspeeds (idle vs. heated up):
 
-Before at 37.0°C:
+Before at 56.0°C:
 
-    cpu0 (Cortex-A53): OPP: 1400, Measured: 1397 
+    cpu0 (Cortex-A53): OPP: 1400, Measured: 1396 
 
 After at 85.0°C (throttled):
 
-    cpu0 (Cortex-A53): OPP: 1400, Measured: 1197     (-14.5%)
+    cpu0 (Cortex-A53): OPP: 1400, Measured: 1196     (-14.6%)
 
 ### Memory performance
 
-  * memcpy: 1524.0 MB/s, memchr: 1975.8 MB/s, memset: 4584.2 MB/s
-  * 16M latency: 174.3 175.4 172.9 175.3 172.6 175.6 237.1 448.2 
+  * memcpy: 1525.2 MB/s, memchr: 1989.5 MB/s, memset: 4582.8 MB/s
+  * 16M latency: 175.9 176.3 174.6 176.4 174.6 176.9 237.3 448.6 
 
 ### Storage devices:
 
-  * 14.4GB "Genesys Logic, Inc. GL827L SD/MMC/MS Flash Card Reader" as /dev/sda: USB, Driver=usb-storage, 480M
   * 7.4GB "SanDisk SU08G" HS SD card as /dev/mmcblk2: date 06/2013, manfid/oemid: 0x000003/0x5344, hw/fw rev: 0x8/0x0
 
 ### Software versions:
@@ -61,11 +60,11 @@ After at 85.0°C (throttled):
   * Vulnerability Spectre v1:        Mitigation; __user pointer sanitization
   * Kernel 4.14.180-s5p6818 / CONFIG_HZ=250
 
-Kernel 4.14.180 is not latest 4.14.305 LTS that was released on 2023-02-06.
+Kernel 4.14.180 is not latest 4.14.306 LTS that was released on 2023-02-22.
 
-Please check https://endoflife.date/linux for details. It is somewhat likely
-that a lot of exploitable vulnerabilities exist for this kernel as well as
-many unfixed bugs. Better upgrade to a supported version ASAP.
+See https://endoflife.date/linux for details. It is somewhat likely that
+a lot of exploitable vulnerabilities exist for this kernel as well as many
+unfixed bugs.
 
 But this version string doesn't matter since this is not an official LTS Linux
 from kernel.org. This device runs a Samsung vendor/BSP kernel.

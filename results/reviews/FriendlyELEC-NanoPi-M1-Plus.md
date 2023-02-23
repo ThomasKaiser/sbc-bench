@@ -1,6 +1,6 @@
 # FriendlyArm NanoPi M1 Plus
 
-Tested with sbc-bench v0.9.24 on Sun, 19 Feb 2023 17:14:27 +0100.
+Tested with sbc-bench v0.9.29 on Thu, 23 Feb 2023 16:08:45 +0100. Full info: [http://ix.io/4oZ5](http://ix.io/4oZ5)
 
 ### General information:
 
@@ -18,26 +18,26 @@ Tested with sbc-bench v0.9.24 on Sun, 19 Feb 2023 17:14:27 +0100.
 
 Original governor settings:
 
-    cpufreq-policy0: ondemand / 1200 MHz (conservative userspace powersave ondemand performance schedutil)
+    cpufreq-policy0: ondemand / 816 MHz (conservative userspace powersave ondemand performance schedutil / 120 240 480 648 816 960 1008 1056 1104 1152 1200 1224 1248 1296 1344 1368)
 
 Tuned governor settings:
 
-    cpufreq-policy0: performance / 1200 MHz
+    cpufreq-policy0: performance / 1368 MHz
 
 ### Clockspeeds (idle vs. heated up):
 
-Before at 43.8°C:
+Before at 43.7°C:
 
     cpu0 (Cortex-A7): OPP: 1368, Measured: 1365 
 
-After at 75.9°C:
+After at 75.0°C (throttled):
 
     cpu0 (Cortex-A7): OPP: 1368, Measured: 1365 
 
 ### Memory performance
 
-  * memcpy: 825.1 MB/s, memchr: 1200.3 MB/s, memset: 3452.2 MB/s
-  * 16M latency: 184.3 190.8 186.2 195.5 184.3 189.0 374.8 754.1 
+  * memcpy: 814.7 MB/s, memchr: 1200.3 MB/s, memset: 3451.9 MB/s
+  * 16M latency: 184.4 192.2 186.3 197.2 184.5 190.4 374.5 755.3 
 
 ### Storage devices:
 
@@ -55,8 +55,8 @@ After at 75.9°C:
   * `/proc/cmdline: root=UUID=f6baaacc-6ee9-4203-9933-e61afdd231a0 rootwait rootfstype=ext4 console=tty1 console=ttyS0,115200 hdmi.audio=EDID:0 disp.screen0_output_mode=1920x1080p60 panic=10 consoleblank=0 loglevel=1 ubootpart= ubootsource=mmc usb-storage.quirks=0x2537:0x1066:u,0x2537:0x1068:u   sunxi_ve_mem_reserve=0 sunxi_g2d_mem_reserve=0 sunxi_fb_mem_reserve=16 cgroup_enable=memory swapaccount=1`
   * Kernel 4.19.62-sunxi / CONFIG_HZ=250
 
-Kernel 4.19.62 is not latest 4.19.272 LTS that was released on 2023-02-06.
+Kernel 4.19.62 is not latest 4.19.273 LTS that was released on 2023-02-22.
 
-Please check https://endoflife.date/linux for details. It is somewhat likely
-that a lot of exploitable vulnerabilities exist for this kernel as well as
-many unfixed bugs. Better upgrade to a supported version ASAP.
+See https://endoflife.date/linux for details. It is somewhat likely that
+a lot of exploitable vulnerabilities exist for this kernel as well as many
+unfixed bugs.

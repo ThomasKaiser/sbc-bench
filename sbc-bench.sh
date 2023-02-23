@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.9.28
+Version=0.9.29
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -2843,6 +2843,9 @@ InitialMonitoring() {
 
 	# log benchmark start in dmesg output
 	echo "sbc-bench started" >/dev/kmsg
+
+	# get status of swap devices to spot swapping activity ruining benchmark scores
+	SwapBefore="$(awk -F" " '{print $4}' </proc/swaps | grep -v -i Used)"
 } # InitialMonitoring
 
 GetVoltageSensor() {
@@ -3422,7 +3425,11 @@ RunOpenSSLBenchmark() {
 } # RunOpenSSLBenchmark
 
 RunCpuminerBenchmark() {
-	echo -e "\x08\x08 Done.\nExecuting cpuminer. 5 more minutes to wait...\c"
+	if [ "X${MODE}" = "Xreview" ]; then
+		echo -e "\x08\x08 Done.\nThrottling test: heating up the device, 5 more minutes to wait...\c"
+	else
+		echo -e "\x08\x08 Done.\nExecuting cpuminer. 5 more minutes to wait...\c"
+	fi
 	echo -e "\nSystem health while running cpuminer:\n" >>${MonitorLog}
 	/bin/bash "${PathToMe}" -m 40 >>${MonitorLog} &
 	MonitoringPID=$!
@@ -3447,7 +3454,11 @@ RunCpuminerBenchmark() {
 } # RunCpuminerBenchmark
 
 RunStressNG() {
-	echo -e "\x08\x08 Done.\nExecuting stress-ng. 5 more minutes to wait...\c"
+	if [ "X${MODE}" = "Xreview" ]; then
+		echo -e "\x08\x08 Done.\nThrottling test: heating up the device, 5 more minutes to wait...\c"
+	else
+		echo -e "\x08\x08 Done.\nExecuting stress-ng. 5 more minutes to wait...\c"
+	fi
 	echo -e "\nSystem health while running stress-ng:\n" >>${MonitorLog}
 	/bin/bash "${PathToMe}" -m 40 >>${MonitorLog} &
 	MonitoringPID=$!
@@ -3716,6 +3727,8 @@ SummarizeResults() {
 	echo -e "\x08\x08 Done (${BenchmarkDuration} minutes elapsed).\n\007\007\007"
 
 	# only check for throttling in normal mode and not when plotting performance/mhz graphs
+	SwapNow="$(awk -F" " '{print $4}' </proc/swaps | grep -v -i Used)"
+	[ "X${SwapBefore}" != "X${SwapNow}" ] && SwapWarning=" and swapping" || SwapWarning=""
 	[ "X${PlotCpufreqOPPs}" = "Xyes" ] || CheckForThrottling
 
 	# Check %iowait and %sys percentage as an indication of swapping or too much background
@@ -3774,7 +3787,7 @@ SummarizeResults() {
 			if [ ${MeasuredDifference:-100} -gt 103 -o -f "${TempDir}/throttling_info.txt" ]; then
 				# if measured clockspeed differs by more than 3% comparing begin and end of
 				# benchmarking or if throttling_info.txt exists, then add a throttling warning
-				ThrottlingWarning=" (throttled)"
+				ThrottlingWarning="${LRED}${BOLD} (throttled)${NC}"
 			fi
 
 			HighestClock=$(sort -n -r /sys/devices/system/cpu/cpufreq/policy?/cpuinfo_max_freq | head -n1)
@@ -3803,7 +3816,7 @@ SummarizeResults() {
 				if [ ${MeasuredDifference:-100} -gt 103 ]; then
 					# if measured clockspeed differs by more than 3% comparing begin and end of
 					# benchmarking then add a throttling warning
-					ThrottlingWarning=" (throttled)"
+					ThrottlingWarning="${LRED}${BOLD} (throttled)${NC}"
 				fi
 			fi
 		fi
@@ -3972,20 +3985,20 @@ UploadResults() {
 			grep '^aes-...-cbc' ${OpenSSLLog}
 		fi
 	elif [ "X${MODE}" = "Xgb" ]; then
-		if [ ${IOWaitAvg:-0} -le 2 -a ${IOWaitMax:-0} -le 5 -a ${SysMax:-0} -le 5 -a ! -f "${TempDir}/throttling_info.txt" ]; then
+		if [ ${IOWaitAvg:-0} -le 2 -a ${IOWaitMax:-0} -le 5 -a ${SysMax:-0} -le 5 -a ! -f "${TempDir}/throttling_info.txt" -a "${SwapWarning}" = "" ]; then
 			echo -e "First run:\n"
 			grep ' Score ' ${TempLog} | sed '/Multi-Core*/i \ \ \ '
 			echo -e "\nSecond run:\n"
 			grep ' Score ' ${TempLog2} | sed '/Multi-Core*/i \ \ \ '
 			echo -e "\n${CompareURL}"
 		else
-			echo "Scores not valid. Throttling occured and/or too much background activity."
+			echo "Scores not valid. Throttling${SwapWarning} occured and/or too much background activity."
 		fi
 	elif [ "X${MODE}" = "Xreview" -a "X${NOTUNING}" != "Xyes" ]; then
-		if [ ${IOWaitAvg:-0} -le 2 -a ${IOWaitMax:-0} -le 5 -a ${SysMax:-0} -le 5 -a ! -f "${TempDir}/throttling_info.txt" ]; then
+		if [ ${IOWaitAvg:-0} -le 2 -a ${IOWaitMax:-0} -le 5 -a ${SysMax:-0} -le 5 -a ! -f "${TempDir}/throttling_info.txt" -a "${SwapWarning}" = "" ]; then
 			echo -e "${LGREEN}It seems neither throttling occured nor too much background activity.${NC}"
 		else
-			echo -e "${LRED}${BOLD}Throttling occured and/or too much background activity.${NC}"
+			echo -e "${LRED}${BOLD}Throttling${SwapWarning} occured and/or too much background activity invalidating benchmark scores.${NC}"
 		fi
 	fi
 	case ${UploadURL} in
@@ -4011,8 +4024,6 @@ UploadResults() {
 						echo
 						;;
 				esac
-			else
-				echo -e ". Please check the log for anomalies (e.g. swapping\nor throttling happenend).\n"
 			fi
 			;;
 		*)
@@ -4055,8 +4066,10 @@ CheckForThrottling() {
 						if [ ${#ClusterConfig[@]} -eq 1 ]; then
 							# all CPU cores have same cpufreq policies, we report globally
 							ReportCpufreqStatistics ${Number}
-							echo -e "${LRED}${BOLD}ATTENTION: Throttling might have occured. Check the log for details.${NC}\n"
+							echo -e "${LRED}${BOLD}ATTENTION: Throttling${SwapWarning} occured. Check the log for details.${NC}\n"
 						else
+							# separate swapping warning:
+							[ "${SwapWarning}" = "" ] || echo -e "${LRED}${BOLD}ATTENTION: Swapping has occured invalidating benchmark scores.${NC}\n"
 							# report affected cluster
 							for i in $(seq 0 $(( ${#ClusterConfig[@]} -1 )) ) ; do
 								if [ ${ClusterConfig[$i]} -eq ${Number} ]; then
@@ -4064,7 +4077,7 @@ CheckForThrottling() {
 									LastCore=$(GetLastClusterCore $(( ${i} + 1 )))
 									CPUInfo="$(GetCPUInfo ${Number})"
 									ReportCpufreqStatistics ${Number} " for CPUs ${FirstCore}-${LastCore}${CPUInfo}"
-									echo -e "${LRED}${BOLD}ATTENTION: Throttling might have occured on CPUs ${FirstCore}-${LastCore}${CPUInfo}. Check the log for details.${NC}\n"
+									echo -e "${LRED}${BOLD}ATTENTION: Throttling occured on CPUs ${FirstCore}-${LastCore}${CPUInfo}. Check the log for details.${NC}\n"
 								fi
 							done
 						fi
@@ -4087,15 +4100,15 @@ CheckForThrottling() {
 				[ ${HealthLength} -eq 19 ] && Health="0${Health}"
 				case ${Health} in
 					10*)
-						Warning="ATTENTION: Frequency capping to 600 MHz has occured. Check the log for details."
+						Warning="ATTENTION: Frequency capping to 600 MHz${SwapWarning} has occured. Check the log for details."
 						ReportRPiHealth ${Health} >>${TempDir}/throttling_info.txt
 						;;
 					01*)
-						Warning="ATTENTION: Throttling has occured. Check the log for details."
+						Warning="ATTENTION: Throttling${SwapWarning} has occured. Check the log for details."
 						ReportRPiHealth ${Health} >>${TempDir}/throttling_info.txt
 						;;
 					11*)
-						Warning="ATTENTION: Throttling and frequency capping has occured. Check the log for details."
+						Warning="ATTENTION: Throttling and frequency capping${SwapWarning} has occured. Check the log for details."
 						ReportRPiHealth ${Health} >>${TempDir}/throttling_info.txt
 						;;
 				esac
@@ -6417,7 +6430,7 @@ ProvideReviewInfo() {
 		will be significantly harmed or at least likely be bottlenecked by maxing out
 		one or more CPU cores. It is highly advised when benchmarking with any NTFS to
 		monitor closely CPU utilization or better switch to a 'Linux native' filesystem
-		like ext4 since representing 'storage performance' a lot more than 'somewhat 
+		like ext4 since representing 'storage performance' a lot more than 'somewhat
 		dealing with a foreign filesystem' as with NTFS.
 		EOF
 	fi
@@ -6520,6 +6533,7 @@ ProvideReviewInfo() {
 	echo "sbc-bench review mode started" >/dev/kmsg
 	trap "FinalReporting ; exit 0" 0 1 2 3 15
 	rm "${TempDir}"/*time_in_state* "${TempDir}/throttling_info.txt" 2>/dev/null
+	SwapBefore="${SwapNow}"
 	CheckTimeInState before
 	/bin/bash "${PathToMe}" -m 60 >"${TempDir}/review" &
 	MonitoringPID=$!
@@ -6532,6 +6546,8 @@ FinalReporting() {
 	trap "rm -rf \"${TempDir}\" ; exit 0" 0 1 2 3 15
 	echo -e "\n\nCleaning up...\c"
 	kill ${NetioMonitoringPID} ${MonitoringPID} 2>/dev/null
+	SwapNow="$(awk -F" " '{print $4}' </proc/swaps | grep -v -i Used)"
+	[ "X${SwapBefore}" != "X${SwapNow}" ] && SwapWarning=" and swapping" || SwapWarning=""
 	CheckTimeInState after
 	CheckClockspeedsAndSensors
 
@@ -6552,7 +6568,7 @@ FinalReporting() {
 	else
 		echo -e "\x08\x08 Done.\n\nClockspeeds now at $(ReadSoCTemp)°C:\n\n${ClockspeedsNow}\n"
 	fi
-	CheckForThrottling | sed -e 's/ Check the log for details.//' -e 's/might have //' -e '/^[[:space:]]*$/d'
+	CheckForThrottling | sed -e 's/ Check the log for details.//' -e '/^[[:space:]]*$/d'
 	[ -f ${TempDir}/throttling_info.txt ] && cat ${TempDir}/throttling_info.txt
 
 	# print warnings if count or details of attached PCIe or storage devices has changed.
@@ -7344,7 +7360,7 @@ CheckStorage() {
 	done
 
 	if [ -f "${TempDir}/check-smart" ]; then
-		echo -e "\n\"smartctl -x \$device\" could be used to get further information about the aforementioned issues."
+		echo -e "\n\"smartctl -x \$device\" could be used to get further information about the reported issues."
 	fi
 } # CheckStorage
 
@@ -7358,7 +7374,7 @@ CheckMTD() {
 		FlashPartName="$(awk -F'"' '/\/partname}==/ {print $2}' <<<"${UdevInfo}" | head -n1)"
 		RawSize=$(awk -F'"' '/ATTR{size}/ {print $2}' <<<"${UdevInfo}" | head -n1)
 		[ "X${RawSize}" != "X" ] && FlashSize="$(( ${RawSize} / 1024 ))"
-		DeviceLabel=$(awk -F'"' '/ATTR{name}/ {print $2}' <<<"${UdevInfo}" | head -n1)
+		DeviceLabel="$(awk -F'"' '/ATTR{name}/ {print $2}' <<<"${UdevInfo}" | head -n1)"
 		echo -e "${DevicePath%/*}|${Driver}|${JedecID}|$(tr '[:lower:]' '[:upper:]' <<<"${FlashManufacturer:0:1}")${FlashManufacturer:1}|${FlashPartName^^}|${FlashSize}|${DeviceLabel}"
 	done
 } # CheckMTD

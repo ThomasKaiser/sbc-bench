@@ -7298,28 +7298,70 @@ CheckStorage() {
 		fi
 	done
 
-	# MTD devices
-	for StorageDevice in $(ls /dev/mtd? 2>/dev/null) ; do
-		unset DeviceName DeviceInfo DeviceWarning AdditionalInfo Manufacturer
-		UdevInfo="$(udevadm info -a -n ${StorageDevice} 2>/dev/null)"
-		Driver="$(awk -F'"' '/DRIVERS==/ {print $2}' <<<"${UdevInfo}" | sed '/^$/d' | tr '\n' '/' | sed 's/\/$//')"
-		RawSize=$(awk -F'"' '/ATTR{size}/ {print $2}' <<<"${UdevInfo}")
-		[ "X${RawSize}" != "X" ] && FlashSize="$(( ${RawSize} / 1048576 ))MB "
-		case "${Driver}" in
-			*spi-nor*)
-				DeviceName="${FlashSize}SPI NOR flash"
+	# MTD devices: partitions appear as single mtd devices so different logic is needed
+	# to deal with devices
+
+	MTDDevices="$(CheckMTD)"
+	echo -n "${MTDDevices}" | cut -f1 -d'|' | sort | uniq | sed '/^$/d' | while read ; do
+		unset RawSize
+		DeviceInfo="$(grep "^${REPLY}" <<<"${MTDDevices}")"
+		PartitionCount=$(wc -l <<<"${DeviceInfo}")
+		case ${PartitionCount} in
+			1)
+				# device seems not to be partitioned, report raw size
+				RawSize=$(cut -f6 -d'|' <<<"${DeviceInfo}")
+				[ "X${RawSize}" != "X" ] && FlashSize="$(( ${RawSize} / 1024 ))MB "
+				PartitionInfo=""
 				;;
 			*)
-				DeviceName="${FlashSize}MTD device"
+				# partitions, we report the individual partitions (label/size)
+				PartitionInfo=" (${PartitionCount} partitions: $(awk -F"|" '{print $7": "$6"KB"}' <<<"${DeviceInfo}" | tr '\n' ',' | sed -e 's/,/, /g' -e 's/, $//'))"
+				FlashSize=""
+				;;
+		esac
+
+		Driver=$(cut -f2 -d'|' <<<"${DeviceInfo}" | head -n1)
+		FlashManufacturer=$(cut -f4 -d'|' <<<"${DeviceInfo}" | head -n1)
+		FlashPartName=$(cut -f5 -d'|' <<<"${DeviceInfo}" | head -n1)
+		[ "X${FlashManufacturer}" != "X" -a "X${FlashPartName}" != "X" ] && DeviceName="${FlashManufacturer} ${FlashPartName} "
+
+		# Maybe TODO: parse lists like https://github.com/Ruimusume/DiM_BACKUP/blob/main/chiplist.xml to show device size
+		JedecID=$(cut -f3 -d'|' <<<"${DeviceInfo}" | head -n1)
+
+		case "${Driver}" in
+			*spi-nor*)
+				echo -e "  * ${DeviceName}${FlashSize}SPI NOR flash${PartitionInfo}, drivers in use: ${Driver}"
+				;;
+			*nand*)
+				grep -q "spi" <<<"${Driver}" \
+					&& echo -e "  * ${DeviceName}${FlashSize}SPI NAND flash${PartitionInfo}, drivers in use: ${Driver}" \
+					|| echo -e "  * ${DeviceName}${FlashSize}NAND flash${PartitionInfo}, drivers in use: ${Driver}" \
+				;;
+			*)
+				echo -e "  * ${DeviceName}${FlashSize}MTD device${PartitionInfo}, drivers in use: ${Driver}"
 			;;
 		esac
-		echo -e "  * ${DeviceName} as ${StorageDevice}, drivers in use: ${Driver}"
 	done
 
 	if [ -f "${TempDir}/check-smart" ]; then
 		echo -e "\n\"smartctl -x \$device\" could be used to get further information about the aforementioned issues."
 	fi
 } # CheckStorage
+
+CheckMTD() {
+	for StorageDevice in $(ls /dev/mtd? 2>/dev/null) ; do
+		UdevInfo="$(udevadm info -a -n ${StorageDevice} 2>/dev/null)"
+		DevicePath="$(awk -F"'" '/looking at device/ {print $2}' <<<"${UdevInfo}")"
+		Driver="$(awk -F'"' '/DRIVERS==/ {print $2}' <<<"${UdevInfo}" | sed '/^$/d' | tr '\n' '/' | sed 's/\/$//')"
+		JedecID="$(awk -F'"' '/\/jedec_id}==/ {print $2}' <<<"${UdevInfo}" | head -n1)"
+		FlashManufacturer="$(awk -F'"' '/\/manufacturer}==/ {print $2}' <<<"${UdevInfo}" | head -n1)"
+		FlashPartName="$(awk -F'"' '/\/partname}==/ {print $2}' <<<"${UdevInfo}" | head -n1)"
+		RawSize=$(awk -F'"' '/ATTR{size}/ {print $2}' <<<"${UdevInfo}" | head -n1)
+		[ "X${RawSize}" != "X" ] && FlashSize="$(( ${RawSize} / 1024 ))"
+		DeviceLabel=$(awk -F'"' '/ATTR{name}/ {print $2}' <<<"${UdevInfo}" | head -n1)
+		echo -e "${DevicePath%/*}|${Driver}|${JedecID}|$(tr '[:lower:]' '[:upper:]' <<<"${FlashManufacturer:0:1}")${FlashManufacturer:1}|${FlashPartName^^}|${FlashSize}|${DeviceLabel}"
+	done
+} # CheckMTD
 
 GetUSBSataBridgeName() {
 	# function wants USB vendor and product ID as $1 and $2 and the name guessed by

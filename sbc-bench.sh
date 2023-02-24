@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.9.29
+Version=0.9.30
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -1457,7 +1457,8 @@ PrintCPUInfo() {
 	[ -f /sys/devices/soc0/family ] && read SoC_Family </sys/devices/soc0/family
 	[ -f /sys/devices/soc0/soc_id ] && read SoC_ID </sys/devices/soc0/soc_id
 	[ -f /sys/devices/soc0/revision ] && read SoC_Revision </sys/devices/soc0/revision
-	if [ -n "${SoC_Revision}" ]; then
+	if [ -n "${SoC_Revision}" -a "${SoC_Family}" != "jep106:091e" ]; then
+		# Only report this stuff if it's not related to ARM's SMCCC
 		echo -e "${SoC_Family} ${SoC_ID} rev ${SoC_Revision}, \c"
 	fi
 	[ "${CPUArchitecture}" = "x86_64" ] && GuessedSoC="${X86CPUName:-n/a}" || GuessedSoC="$(GuessARMSoC)"
@@ -1788,9 +1789,12 @@ CheckLoadAndDmesg() {
 	grep -q -E '] Booting Linux|] Linux version ' <<<"${DMESG}"
 	case $? in
 		1)
-			grep -q sunxi <<<"${DMESG}"
-			if [ "X${MODE}" != "Xunattended" -a $? -ne 0 ]; then
-				# print warning on other platforms than Allwinner and if MODE != unattended
+			grep -q "sunxi" <<<"${DMESG}"
+			IsAllwinner=$?
+			grep -q -E "AuthenticAMD|GenuineIntel" <<<"${ProcCPU}"
+			IsX86=$?
+			if [ "X${MODE}" != "Xunattended" -a ${IsAllwinner} -ne 0 -a ${IsX86} -ne 0 ]; then
+				# print warning on other platforms than Allwinner/x86 and if MODE != unattended
 				echo -e "${LRED}${BOLD}WARNING: dmesg output does not contain early boot messages which\nhelp in identifying hardware details.${NC}\n"
 				echo -e "It is recommended to reboot now and then execute the benchmarks.\nPress ${BOLD}[ctrl]-[c]${NC} to stop or ${BOLD}[enter]${NC} to continue.\c"
 				read
@@ -2428,13 +2432,16 @@ CheckGB() {
 		arm*)
 			DLSuffix="LinuxARMPreview"
 			GBBinaryName="geekbench${GBVersion:0:1}"
-			FirstOfflineCPU=1
+			FirstOfflineCPU=0
 			;;
 		riscv64)
 			DLSuffix="LinuxRISCVPreview"
 			GBBinaryName="geekbench_riscv64"
 			FirstOfflineCPU=1
-			GBVersion="5.5" # latest version for this platform
+			# check whether Geekbench-6.0.0-LinuxRISCVPreview.tar.gz exists. If 404 is
+			# returned do a fallback to last known 5.5 version
+			curl -s -I https://cdn.geekbench.com/Geekbench-6.0.0-LinuxRISCVPreview.tar.gz 2>/dev/null | grep -q 404
+			[ $? -eq 0 ] && GBVersion="5.5"
 			;;
 		amd64|*x86*)
 			DLSuffix="Linux"
@@ -2469,7 +2476,7 @@ CheckGB() {
 	done
 
 	# create symlink with version number, to keep different major versions on same install
-	ln -sf "${InstallLocation}/${GBDir}/${GBBinaryName}" "/usr/local/bin/geekbench${GBVersion:0:1}"
+	ln -sf "${GBBinary}" "/usr/local/bin/geekbench${GBVersion:0:1}"
 } # CheckGB
 
 InstallPrerequisits() {
@@ -3061,8 +3068,8 @@ CheckClockspeedsAndSensors() {
 		Disks="$(ls /dev/sd? /dev/nvme? 2>/dev/null | sort)"
 		if [ "X${SmartCtl}" != "X" -a "X${Disks}" != "X" ]; then
 			echo "" >>${ResultLog}
-			# try to restrict SMART queries to 5 sec duration due to buggy devices
-			command -v timeout >/dev/null 2>&1 && SmartCtl="timeout 5 ${SmartCtl}"
+			# try to restrict SMART queries to 10 sec duration due to buggy devices
+			command -v timeout >/dev/null 2>&1 && SmartCtl="timeout 10 ${SmartCtl}"
 			for Disk in ${Disks} ; do
 				case ${Disk} in
 					/dev/sd*)
@@ -3631,9 +3638,18 @@ RunGB() {
 					fi
 					echo -e "\n  https${ResultsURL}\n" >>${ResultLog}
 					links -dump "https${ResultsURL}" >${TempLog}
-					grep ' Score ' ${TempLog} | sed '/Multi-Core*/i \ \ \ ' | sed 's/^\ //' >>${ResultList}
-					echo -e "\n  Single-Core Performance" >>${ResultList}
-					sed '1,/^  Single-Core Performance$/d' ${TempLog} | grep -v -E '/sec| FPS| Score' | head -n46 >>${ResultList}
+					case ${GBVersion} in
+						5.*)
+							grep ' Score ' ${TempLog} | sed '/Multi-Core*/i \ \ \ ' | sed 's/^\ //' >>${ResultList}
+							echo -e "\n  Single-Core Performance" >>${ResultList}
+							sed '1,/^  Single-Core Performance$/d' ${TempLog} | grep -v -E '/sec| FPS| Score' | head -n46 >>${ResultList}
+							;;
+						6.*)
+							grep ' Score ' ${TempLog} | sed 's/^\ //' >>${ResultList}
+							echo -e "\n  Single-Core Performance" >>${ResultList}
+							sed '1,/^  Single-Core Performance$/d' ${TempLog} | grep -v -E '/sec| FPS| Score' | head -n36 >>${ResultList}
+							;;
+					esac
 					cat ${ResultList} >>${ResultLog}
 				fi
 				# bring back offline cores
@@ -3656,36 +3672,58 @@ RunGB() {
 	/bin/bash "${PathToMe}" -m ${MonitorInterval} >>${MonitorLog} &
 	MonitoringPID=$!
 	"${GBBinary}" >${TempLog} 2>&1
+	GBFullString="$(awk -F" : " "/^Geekbench ${GBVersion}./ {print \$1}" ${TempLog})"
+	GBSystemInfo="$(grep -A25 "Gathering system information" ${TempLog} | tail -n +2 | grep -B25 " Size ")"
 	TempLog2="${TempDir}/temp2.log"
 	"${GBBinary}" >${TempLog2} 2>&1
 	kill ${MonitoringPID}
 	ResultsURL="$(awk -F"https" '/browser.geekbench.com/ {print $2}' <${TempLog} | head -n1)"
 	ResultsURL2="$(awk -F"https" '/browser.geekbench.com/ {print $2}' <${TempLog2} | head -n1)"
+	ClaimURL="$(awk -F"https" '/browser.geekbench.com/ {print $2}' <${TempLog2} | tail -n1)"
 	if [ "X${ResultsURL}" = "X" -o "X${ResultsURL2}" = "X" ]; then
 		echo -e "\x08\x08 Failed.\c..."
 	else
 		echo -e "\n##########################################################################\n" >>${ResultLog}
 		echo -e "Executing Geekbench on all cores twice\n" >>${ResultLog}
 		ResultList="${TempDir}/all-1st.lst"
-		sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" <${TempLog} | sed '/add this result to your profile/,+3 d' | \
-			sed '/Geekbench 5 license/,+4 d' | sed '/active Internet connection/,+2 d' | \
-			sed '/preview build/,+1 d' | sed '/Single-Core/,+22 d' | sed '/Multi-Core/,+22 d' | \
-			sed '/Uploading results/,+4 d' | sed 's|: https://www.geekbench.com/||' >>${ResultLog}
 		links -dump "https${ResultsURL}" >${TempLog}
-		grep ' Score ' ${TempLog} | sed '/Multi-Core*/i \ \ \ ' | sed 's/^\ //' >${ResultList}
-		echo -e "\n  Single-Core Performance" >>${ResultList}
-		sed '1,/^  Single-Core Performance$/d' ${TempLog} | grep -v -E '/sec| FPS| Score' | head -n46 >>${ResultList}
-		cat ${ResultList} >>${ResultLog}
-		ResultList="${TempDir}/all-2nd.lst"
-		echo -e "\n  https${ResultsURL2}\n" >>${ResultLog}
 		links -dump "https${ResultsURL2}" >${TempLog2}
-		grep ' Score ' ${TempLog2} | sed '/Multi-Core*/i \ \ \ ' | sed 's/^\ //' >${ResultList}
-		echo -e "\n  Single-Core Performance" >>${ResultList}
-		sed '1,/^  Single-Core Performance$/d' ${TempLog2} | grep -v -E '/sec| FPS| Score' | head -n46 >>${ResultList}
-		cat ${ResultList} >>${ResultLog}
-		# create a results table
-		CreateGBResultsTable | sed 's/ HTML /HTML5 /' >>${ResultLog}
-		CompareURL="https://browser.geekbench.com/v5/cpu/compare/${ResultsURL##*/}?baseline=${ResultsURL2##*/}"
+		case ${GBVersion} in
+			5.*)
+				sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" <${TempLog} | sed '/add this result to your profile/,+3 d' | \
+					sed '/Geekbench 5 license/,+4 d' | sed '/active Internet connection/,+2 d' | \
+					sed '/preview build/,+1 d' | sed '/Single-Core/,+22 d' | sed '/Multi-Core/,+22 d' | \
+					sed '/Uploading results/,+4 d' | sed 's|: https://www.geekbench.com/||' >>${ResultLog}
+				grep ' Score ' ${TempLog} | sed '/Multi-Core*/i \ \ \ ' | sed 's/^\ //' >${ResultList}
+				echo -e "\n  Single-Core Performance" >>${ResultList}
+				sed '1,/^  Single-Core Performance$/d' ${TempLog} | grep -v -E '/sec| FPS| Score' | head -n46 >>${ResultList}
+				cat ${ResultList} >>${ResultLog}
+				ResultList="${TempDir}/all-2nd.lst"
+				echo -e "\n  https${ClaimURL}\n" >>${ResultLog}
+				grep ' Score ' ${TempLog2} | sed '/Multi-Core*/i \ \ \ ' | sed 's/^\ //' >${ResultList}
+				echo -e "\n  Single-Core Performance" >>${ResultList}
+				sed '1,/^  Single-Core Performance$/d' ${TempLog2} | grep -v -E '/sec| FPS| Score' | head -n46 >>${ResultList}
+				cat ${ResultList} >>${ResultLog}
+				;;
+			6.*)
+				echo -e "${GBFullString}\n\n${GBSystemInfo}\n" >>${ResultLog}
+				grep ' Score ' ${TempLog} | sed 's/^\ //' >${ResultList}
+				echo -e "\n  Single-Core Performance" >>${ResultList}
+				sed '1,/^  Single-Core Performance$/d' ${TempLog} | grep -v -E '/sec| FPS| Score' | head -n36 >>${ResultList}
+				cat ${ResultList} >>${ResultLog}
+				ResultList="${TempDir}/all-2nd.lst"
+				echo -e "\n  https${ClaimURL}\n" >>${ResultLog}
+				grep ' Score ' ${TempLog2} | sed 's/^\ //' >${ResultList}
+				echo -e "\n  Single-Core Performance" >>${ResultList}
+				sed '1,/^  Single-Core Performance$/d' ${TempLog2} | grep -v -E '/sec| FPS| Score' | head -n36 >>${ResultList}
+				cat ${ResultList} >>${ResultLog}
+				;;
+		esac
+		# create a results table on SoCs with different clusters
+		if [ ${#ClusterConfigByCoreType[@]} -ne 1 ]; then
+			CreateGBResultsTable | sed 's/ HTML /HTML5 /' >>${ResultLog}
+		fi
+		CompareURL="https://browser.geekbench.com/v${GBVersion:0:1}/cpu/compare/${ResultsURL##*/}?baseline=${ResultsURL2##*/}"
 		echo -e "\n\n${CompareURL}" >>${ResultLog}
 	fi
 } # RunGB
@@ -3870,7 +3908,7 @@ SummarizeResults() {
 		else
 			DistroInfo="${OperatingSystem} ${KernelArch}/${ARCH}"
 		fi
-		echo -e "\n| ${DeviceName:-$HostName} | ${MHz}${ThrottlingWarning} | ${ShortKernelVersion} | ${DistroInfo} | ${ZipScore} | ${ZipScoreSingleThreaded} | ${OpenSSLScore} | ${MemBenchScore} | ${CpuminerScore:-"-"} |\c" | sed 's/  / /g' >>${ResultLog}
+		echo -e "\n| ${DeviceName:-$HostName} | ${MHz}${ThrottlingWarning} | ${ShortKernelVersion} | ${DistroInfo} | ${ZipScore} | ${ZipScoreSingleThreaded} | ${OpenSSLScore} | ${MemBenchScore} | ${CpuminerScore:-"-"} |\c" | sed -e 's/  / /g' -e "s,\x1B\[[0-9;]*[a-zA-Z],,g" >>${ResultLog}
 	fi
 } # SummarizeResults
 
@@ -4027,9 +4065,18 @@ UploadResults() {
 	elif [ "X${MODE}" = "Xgb" ]; then
 		if [ ${IOWaitAvg:-0} -le 2 -a ${IOWaitMax:-0} -le 5 -a ${SysMax:-0} -le 5 -a ! -f "${TempDir}/throttling_info.txt" -a "${SwapWarning}" = "" ]; then
 			echo -e "First run:\n"
-			grep ' Score ' ${TempLog} | sed '/Multi-Core*/i \ \ \ '
-			echo -e "\nSecond run:\n"
-			grep ' Score ' ${TempLog2} | sed '/Multi-Core*/i \ \ \ '
+			case ${GBVersion} in
+				5.*)
+					grep ' Score ' ${TempLog} | sed '/Multi-Core*/i \ \ \ '
+					echo -e "\nSecond run:\n"
+					grep ' Score ' ${TempLog2} | sed '/Multi-Core*/i \ \ \ '
+					;;
+				6.*)
+					grep ' Score ' ${TempLog}
+					echo -e "\nSecond run:\n"
+					grep ' Score ' ${TempLog2}
+					;;
+			esac
 			echo -e "\n${CompareURL}"
 		else
 			echo "Scores not valid. Throttling${SwapWarning} occured and/or too much background activity."
@@ -5203,6 +5250,9 @@ GuessSoCbySignature() {
 									*h313*)
 										echo "Allwinner H313"
 										;;
+									*pine-h64*)
+										echo "Allwinner H6"
+										;;
 									*h64*)
 										echo "Allwinner H64"
 										;;
@@ -6212,6 +6262,7 @@ IdentifyAllwinnerARMv8() {
 	grep -q h616 <<<"${DTCompatible}" && echo "Allwinner H616/H313"
 	grep -q t507 <<<"${DTCompatible}" && echo "Allwinner T507"
 	grep -q h313 <<<"${DTCompatible}" && echo "Allwinner H313"
+	grep -q pine-h64 <<<"${DTCompatible}" && echo "Allwinner H6"
 	grep -q h64 <<<"${DTCompatible}" && echo "Allwinner H64"
 	grep -q h6 <<<"${DTCompatible}" && echo "Allwinner H6"
 	grep -q h5 <<<"${DTCompatible}" && echo "Allwinner H5"
@@ -6399,6 +6450,9 @@ ProvideReviewInfo() {
 		echo -e "The CPU features ${#ClusterConfig[@]} clusters consisting of ${#ClusterConfigByCoreType[@]} different core types:\n" >>"${TempDir}/review"
 	fi
 	sed -e 's/^/    /' <<<"${OriginalCPUInfo}" >>"${TempDir}/review"
+
+	AvailableMem=$(free | awk -F" " '/^Mem:   / {print $2}' | tail -n1)
+	echo -e "\n$(( ${AvailableMem} / 1024 ))KB available RAM" >>"${TempDir}/review"
 
 	# report probably performance relevant governors and policies
 	echo -e "\n### Governors/policies (performance vs. idle consumption):\n\nOriginal governor settings:\n" >>"${TempDir}/review"
@@ -6619,8 +6673,8 @@ FinalReporting() {
 
 	# Print warnings if count or details of attached PCIe or storage devices have changed.
 	# Possible reasons: cable/connector problems, overheating, other transmission errors and so on...
-	StorageDiff="$(diff  <(echo "${StorageStatus}" | sed 's/,[^,]*$//') <(echo "${StorageStatusNow}" | sed 's/,[^,]*$//') )"
-	PCIeDiff="$(diff  <(echo "${PCIeStatus}" | sed 's/,[^,]*$//') <(echo "${PCIeStatusNow}" | sed 's/,[^,]*$//') )"
+	StorageDiff="$(diff <(echo "${StorageStatus}") <(echo "${StorageStatusNow}") )"
+	PCIeDiff="$(diff <(echo "${PCIeStatus}") <(echo "${PCIeStatusNow}") )"
 	if [ "X${StorageDiff}" != "X" -a "X${PCIeDiff}" != "X" ]; then
 		echo -e "\n${LRED}${BOLD}ATTENTION:${NC} ${LRED}list of PCIe and storage devices has changed:${NC}\n"
 		echo -e "${PCIeDiff}\n${StorageDiff}\n"
@@ -7055,9 +7109,9 @@ CheckStorage() {
 	# update-smart-drivedb
 	[ -b /dev/nvme0 -o -b /dev/sda -a "$1" = "update-smart-drivedb" ] && update-smart-drivedb >/dev/null 2>&1
 
-	# try to restrict SMART queries to 5 sec duration due to buggy USB-to-SATA bridges
+	# try to restrict SMART queries to 10 sec duration due to buggy USB-to-SATA bridges
 	SmartCtl="$(command -v smartctl 2>/dev/null)"
-	command -v timeout >/dev/null 2>&1 && SmartCtl="timeout 5 ${SmartCtl}"
+	command -v timeout >/dev/null 2>&1 && SmartCtl="timeout 10 ${SmartCtl}"
 
 	# grab info about block devices
 	[ -z "${LSBLK}" ] && LSBLK="$(LC_ALL="C" lsblk -l -o SIZE,NAME,FSTYPE,LABEL,MOUNTPOINT 2>&1)"
@@ -7460,7 +7514,7 @@ GetUSBSataBridgeName() {
 		1058:0a10)
 			# JMicron JMS56x USB-to-SATA bridge with integrated port multiplier
 			# that has been flashed with Western Digital branded firmware
-			DeviceInfo="JMicron JMS56x SATA 6Gb/s bridge"
+			DeviceInfo="JMicron JMS56x dual SATA 6Gb/s bridge"
 			;;
 		152d:0561)
 			# Listed as "JMS551 - Sharkoon SATA QuickPort Duo"

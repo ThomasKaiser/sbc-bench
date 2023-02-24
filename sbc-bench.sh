@@ -71,7 +71,6 @@ Main() {
 					fi
 				fi
 				DMESG="$(dmesg | grep "mmc")"
-				CreateTempDir
 				command -v smartctl >/dev/null 2>&1 || echo -e "${BOLD}Warning: smartmontools not installed${NC}\n"
 				CheckStorage
 				exit 0
@@ -6416,10 +6415,11 @@ ProvideReviewInfo() {
 	fi
 
 	# PCIe and storage devices, important stuff like downgraded PCIe link width/speed,
-	# SMART errors and suspectible values, SD card counterfeit and speed negotiation
-	# issues, negotiated USB and SATA speeds, (almost) worn out SSDs and so on
+	# SMART errors and suspectible values, counterfeit SD card and speed negotiation
+	# issues, negotiated PCIe, USB and SATA speeds, (almost) worn out SSDs, unhealthy drive
+	# temps (most SSDs start to throttle above a certain thermal treshold) and so on
 	PCIeStatus="$(CheckPCIe)"
-	StorageStatus="$(CheckStorage)"
+	StorageStatus="$(CheckStorage update-smart-drivedb)"
 	if [ "X${PCIeStatus}" != "X" -a "X${StorageStatus}" != "X" ]; then
 		echo -e "\n### PCIe and storage devices:\n\n${PCIeStatus}\n${StorageStatus}" >>"${TempDir}/review"
 	elif [ "X${StorageStatus}" = "X" ]; then
@@ -6429,7 +6429,6 @@ ProvideReviewInfo() {
 	fi
 	
 	# In preparation of before/after diff remove sane drive temperatures to keep only "unhealthy drive temp"
-	PCIeStatus="$(echo "${PCIeStatus}" | awk -F", drive temp: " '{print $1"X"}' | sed -e 's/X$//' -e '/^$/d' | grep -v smartctl)"
 	StorageStatus="$(echo "${StorageStatus}" | awk -F", drive temp: " '{print $1"X"}' | sed -e 's/X$//' -e '/^$/d' | grep -v smartctl)"
 
 	# check whether NTFS filesystems are attached (do not need to be mounted yet)
@@ -6570,7 +6569,7 @@ FinalReporting() {
 
 	# check PCIe and storage devices again to spot disconnects or link degradation and
 	# stuff like this. Strip off sane drive temps so we only compare unhealthy ones
-	PCIeStatusNow="$(CheckPCIe again | awk -F", drive temp: " '{print $1"X"}' | sed -e 's/X$//' -e '/^$/d' | grep -v smartctl)"
+	PCIeStatusNow="$(CheckPCIe)"
 	StorageStatusNow="$(CheckStorage | awk -F", drive temp: " '{print $1"X"}' | sed -e 's/X$//' -e '/^$/d' | grep -v smartctl)"
 
 	ClockspeedsNow="$(cat "${TempDir}/cpufreq" | sed -e 's/^/    /')"
@@ -6583,8 +6582,8 @@ FinalReporting() {
 	CheckForThrottling | sed -e 's/ Check the log for details.//' -e '/^[[:space:]]*$/d'
 	[ -f ${TempDir}/throttling_info.txt ] && cat ${TempDir}/throttling_info.txt
 
-	# Print warnings if count or details of attached PCIe or storage devices has changed.
-	# Possible reasons: cable/connector problems, other transmission errors and so on...
+	# Print warnings if count or details of attached PCIe or storage devices have changed.
+	# Possible reasons: cable/connector problems, overheating, other transmission errors and so on...
 	StorageDiff="$(diff  <(echo "${StorageStatus}" | sed 's/,[^,]*$//') <(echo "${StorageStatusNow}" | sed 's/,[^,]*$//') )"
 	PCIeDiff="$(diff  <(echo "${PCIeStatus}" | sed 's/,[^,]*$//') <(echo "${PCIeStatusNow}" | sed 's/,[^,]*$//') )"
 	if [ "X${StorageDiff}" != "X" -a "X${PCIeDiff}" != "X" ]; then
@@ -6606,6 +6605,7 @@ FinalReporting() {
 		echo -e "${BOLD}ATTENTION:${NC} some noise in kernel ring buffer since start of monitoring:\n"
 		echo -e "${DMESGSinceStart}\n"
 	fi
+	BasicSetup ${OriginalCPUFreqGovernor} >/dev/null 2>&1
 } # FinalReporting
 
 CheckKernelVersion() {
@@ -6940,10 +6940,11 @@ CheckPCIe() {
 	# downgraded or not. With NVMe devices try to query SMART data to report drive health,
 	# with other PCIe devices report driver (for example to spot the 'famous' RealTek NIC
 	# performance issues that go away once the appropriate driver is loaded)
+	#
+	# If $1 is "nvme" then try to update smartmontools device database if needed and report
+	# also NVMe devices found on the PCIe buses
 
-	# try to update SMART drive database if SMART capable devices may exist and this
-	# function hasn't been called with again
-	[ -b /dev/nvme0n1 -o -b /dev/sda -a "$1" != "again" ] && update-smart-drivedb >/dev/null 2>&1
+	[ -b /dev/nvme0 -a "$1" = "nvme" ] && { update-smart-drivedb >/dev/null 2>&1 ; [ -z "${TempDir}" ] && CreateTempDir ; }
 
 	# grab info about block devices
 	[ -z "${LSBLK}" ] && LSBLK="$(LC_ALL="C" lsblk -l -o SIZE,NAME,FSTYPE,LABEL,MOUNTPOINT 2>&1)"
@@ -6953,8 +6954,8 @@ CheckPCIe() {
 		BusAddress="$(awk -F" " '{print $1}' <<<"${REPLY}")"
 		ControllerType="$(awk -F'"' '{print $2}' <<<"${REPLY}")"
 		case "${ControllerType}" in
-			"Encryption"*|"VGA compatible"*|"Serial bus"*|"Communication"*|"Signal processing"*|"Memory"*|"Non-Volatile memory"*)
-				# ignore since internal mainboard components or NVMe SSDs
+			"Encryption"*|"VGA compatible"*|"Serial bus"*|"Communication"*|"Signal processing"*|"Memory"*)
+				# ignore since internal mainboard components
 				:
 				;;
 			*)
@@ -6965,24 +6966,28 @@ CheckPCIe() {
 				if [ "X${LnkSta}" != "X" ]; then
 					# only report devices for which a link state can be determined
 					if [ "X${ControllerType}" = "XNon-Volatile memory controller" ]; then
-						# omit driver information since it's nvme anyway
-						unset AdditionalInfo
-						# try to get nvme device node to query drive model by SMART
-						PathGuess="$(ls /dev/disk/by-path/*${BusAddress}-nvme-1)"
-						if [ -h "${PathGuess}" ]; then
-							# try to query via SMART
-							NVMeDevice="$(readlink "${PathGuess}")"
-							CheckSMARTData "/dev/${NVMeDevice##*/}" nvme
-							DevizeSize="$(GetDiskSize "/dev/${NVMeDevice##*/}" "${DeviceName}")"
+						# only report NVMe devices when $1 is nvme
+						if [ "$1" = "nvme" ]; then
+							# omit driver information since it's nvme anyway
+							unset AdditionalInfo
+							# try to get nvme device node to query drive model by SMART
+							PathGuess="$(ls /dev/disk/by-path/*${BusAddress}-nvme-1)"
+							if [ -h "${PathGuess}" ]; then
+								# try to query via SMART
+								NVMeDevice="$(readlink "${PathGuess}")"
+								CheckSMARTData "/dev/${NVMeDevice##*/}" nvme
+								DevizeSize="$(GetDiskSize "/dev/${NVMeDevice##*/}" "${DeviceName}")"
+								if [ "X${DeviceWarning}" = "XTRUE" ]; then
+									echo -e "smartctl -x /dev/${NVMeDevice##*/} ; \c" >>"${TempDir}/check-smart"
+									echo -e "  * ${LRED}${DevizeSize}${DeviceName}: ${LnkSta}${AdditionalSMARTInfo}${AdditionalInfo}${DriveTemp}${NC}"
+								else
+									echo -e "  * ${DevizeSize}${DeviceName}: ${LnkSta}${AdditionalSMARTInfo}${AdditionalInfo}${DriveTemp}"
+								fi
+							fi
 						fi
 					else
 						AdditionalInfo=", driver in use: $(awk -F": " '/Kernel driver in use:/ {print $2}' <<<"${PCIeDetails}")"
-					fi
-					if [ "X${DeviceWarning}" = "XTRUE" ]; then
-						echo -e "smartctl -x /dev/${NVMeDevice##*/} ; \c" >>"${TempDir}/check-smart"
-						echo -e "  * ${LRED}${DevizeSize}${DeviceName}: ${LnkSta}${AdditionalSMARTInfo}${AdditionalInfo}${DriveTemp}${NC}"
-					else
-						echo -e "  * ${DevizeSize}${DeviceName}: ${LnkSta}${AdditionalSMARTInfo}${AdditionalInfo}${DriveTemp}"
+						echo -e "  * ${DeviceName}: ${LnkSta}${AdditionalInfo}"
 					fi
 				fi
 				;;
@@ -6999,6 +7004,12 @@ CheckStorage() {
 	# TODO:
 	# * maybe overtake CheckSMARTModes code from armbianmonitor to query picky/old USB
 	#   bridges in all possible ways.
+
+	[ -z "${TempDir}" ] && CreateTempDir
+
+	# try to update SMART drive database if SMART capable devices exist and $1 is set to
+	# update-smart-drivedb
+	[ -b /dev/nvme0 -o -b /dev/sda -a "$1" = "update-smart-drivedb" ] && update-smart-drivedb >/dev/null 2>&1
 
 	# grab info about block devices
 	[ -z "${LSBLK}" ] && LSBLK="$(LC_ALL="C" lsblk -l -o SIZE,NAME,FSTYPE,LABEL,MOUNTPOINT 2>&1)"
@@ -7596,7 +7607,11 @@ CheckSMARTData() {
 						PercentageUsed="$(awk -F" " '/Percentage Used Endurance Indicator/ {print $4}' <<<"${SMARTDevstat}")"
 						if [ "X${PercentageUsed}" != "X" ]; then
 							# use 'Percentage Used Endurance Indicator'
-							AdditionalSMARTInfo="${AdditionalSMARTInfo}, ${PercentageUsed}% worn out"
+							if [ ${PercentageUsed:-0} -gt 75 ]; then
+								AdditionalSMARTInfo="${AdditionalSMARTInfo}, ${BOLD}${PercentageUsed}% worn out${NC}${LRED}"
+							else
+								AdditionalSMARTInfo="${AdditionalSMARTInfo}, ${PercentageUsed}% worn out"
+							fi
 						else
 							# not compliant with ATA Device Statistics so try to deal with the vendor
 							# attributes if in good mood sometimes in the future, for now only caring

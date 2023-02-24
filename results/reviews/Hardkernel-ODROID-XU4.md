@@ -1,6 +1,6 @@
 # Hardkernel Odroid XU4
 
-Tested with sbc-bench v0.9.24 on Sun, 19 Feb 2023 18:25:59 +0100.
+Tested with sbc-bench v0.9.29 on Fri, 24 Feb 2023 10:15:52 +0100. Full info: [http://ix.io/4p3d](http://ix.io/4p3d)
 
 ### General information:
 
@@ -24,10 +24,10 @@ The CPU features 2 clusters of different core types:
 
 Original governor settings:
 
-    cpufreq-policy0: ondemand / 1400 MHz (powersave userspace conservative ondemand performance schedutil)
-    cpufreq-policy4: ondemand / 2000 MHz (powersave userspace conservative ondemand performance schedutil)
-    soc:bus_wcore: simple_ondemand / 84 MHz (userspace powersave performance simple_ondemand)
-    10c20000.memory-controller: simple_ondemand / 825 MHz (userspace powersave performance simple_ondemand)
+    cpufreq-policy0: ondemand / 1400 MHz (powersave userspace conservative ondemand performance schedutil / 200 300 400 500 600 700 800 900 1000 1100 1200 1300 1400)
+    cpufreq-policy4: ondemand / 2000 MHz (powersave userspace conservative ondemand performance schedutil / 200 300 400 500 600 700 800 900 1000 1100 1200 1300 1400 1500 1600 1700 1800 1900 2000)
+    soc:bus_wcore: simple_ondemand / 84 MHz (userspace powersave performance simple_ondemand / 84 111 222 333 400)
+    10c20000.memory-controller: simple_ondemand / 825 MHz (userspace powersave performance simple_ondemand / 165 206 275 413 543 633 728 825)
 
 Tuned governor settings:
 
@@ -42,27 +42,26 @@ Status of performance related policies found below /sys:
 
 ### Clockspeeds (idle vs. heated up):
 
-Before at 47.0°C:
+Before at 34.0°C:
 
-    cpu0-cpu3 (Cortex-A7): OPP: 1400, Measured: 1397 
+    cpu0-cpu3 (Cortex-A7): OPP: 1400, Measured: 1396 
     cpu4-cpu7 (Cortex-A15): OPP: 2000, Measured: 1996 
 
-After at 77.0°C (throttled):
+After at 75.0°C (throttled):
 
     cpu0-cpu3 (Cortex-A7): OPP: 1400, Measured: 1396 
     cpu4-cpu7 (Cortex-A15): OPP: 2000, Measured: 1996 
 
 ### Memory performance
 
-  * cpu0 (Cortex-A7): memcpy: 323.3 MB/s, memchr: 414.7 MB/s, memset: 799.3 MB/s
-  * cpu4 (Cortex-A15): memcpy: 2289.5 MB/s, memchr: 3061.7 MB/s, memset: 4830.5 MB/s
-  * cpu0 (Cortex-A7) 16M latency: 159.8 164.6 159.8 165.7 159.8 165.7 296.6 568.2 
-  * cpu4 (Cortex-A15) 16M latency: 174.9 175.7 174.9 175.6 175.0 175.8 175.3 203.0 
+  * cpu0 (Cortex-A7): memcpy: 333.3 MB/s, memchr: 424.8 MB/s, memset: 799.6 MB/s
+  * cpu4 (Cortex-A15): memcpy: 2283.8 MB/s, memchr: 3060.4 MB/s, memset: 4832.9 MB/s
+  * cpu0 (Cortex-A7) 16M latency: 159.7 164.1 159.9 165.4 159.7 165.3 293.9 570.5 
+  * cpu4 (Cortex-A15) 16M latency: 174.8 175.6 174.8 175.6 176.2 173.9 174.7 203.1 
 
 ### Storage devices:
 
-  * 111.8GB "Samsung SSD 750 EVO 120GB" SSD as /dev/sda [SATA 3.1, 6.0 Gb/s (current: 6.0 Gb/s)]: behind ASMedia SATA 6Gb/s bridge, Driver=uas, 480M, 26°C
-  * 3.7TB "HGST HDN724040ALE640" HDD as /dev/sdb [SATA 3.0, 6.0 Gb/s (current: 6.0 Gb/s)]: behind JMicron JMS578 SATA 6Gb/s bridge, Driver=uas, 5000M, 36°C
+  * 3.7TB "HGST HDN724040ALE640" HDD as /dev/sda [SATA 3.0, 6.0 Gb/s (current: 6.0 Gb/s)]: behind JMicron JMS578 SATA 6Gb/s bridge, Driver=uas, 5000Mbps (capable of 12Mbps, 480Mbps, 5Gbps), drive temp: 28°C
   * 14.9GB "SanDisk SC16G" UHS SDR104 SD card as /dev/mmcblk1: date 06/2019, manfid/oemid: 0x000003/0x5344, hw/fw rev: 0x8/0x0
 
 ### Software versions:
@@ -77,11 +76,11 @@ After at 77.0°C (throttled):
   * `/proc/cmdline: console=ttySAC2,115200n8 console=tty1 consoleblank=0 loglevel=1 root=UUID=57f06418-7fe0-4d7a-89b9-31dcc07b8b27 rootfstype=ext4 rootwait rw  smsc95xx.macaddr=00:1e:06:61:7a:55 governor=performance hdmi_tx_amp_lvl=31 hdmi_tx_lvl_ch0=3 hdmi_tx_lvl_ch1=3 hdmi_tx_lvl_ch2=3 hdmi_tx_emp_lvl=6 hdmi_clk_amp_lvl=31 hdmi_tx_res=0 HPD=true vout=hdmi usb-storage.quirks= `
   * Kernel 5.4.151-odroidxu4 / CONFIG_HZ=100
 
-Kernel 5.4.151 is not latest 5.4.231 LTS that was released on 2023-02-06.
+Kernel 5.4.151 is not latest 5.4.232 LTS that was released on 2023-02-22.
 
-Please check https://endoflife.date/linux for details. It is somewhat likely
-that a lot of exploitable vulnerabilities exist for this kernel as well as
-many unfixed bugs. Better upgrade to a supported version ASAP.
+See https://endoflife.date/linux for details. It is somewhat likely that
+a lot of exploitable vulnerabilities exist for this kernel as well as many
+unfixed bugs.
 
 But this version string doesn't matter since this is not an official LTS Linux
 from kernel.org. This device runs a Samsung vendor/BSP kernel.

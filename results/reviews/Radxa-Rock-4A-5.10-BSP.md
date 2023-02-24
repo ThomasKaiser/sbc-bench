@@ -1,6 +1,6 @@
 # Radxa ROCK Pi 4A
 
-Tested with sbc-bench v0.9.27 on Tue, 21 Feb 2023 17:02:14 +0000. Full info: [http://ix.io/4oOM](http://ix.io/4oOM)
+Tested with sbc-bench v0.9.29 on Fri, 24 Feb 2023 09:20:30 +0000. Full info: [http://ix.io/4p3e](http://ix.io/4p3e)
 
 ### General information:
 
@@ -22,10 +22,10 @@ The CPU features 2 clusters of different core types:
 
 Original governor settings:
 
-    cpufreq-policy0: ondemand / 1008 MHz (powersave ondemand performance schedutil / 408 600 816 1008 1200 1416)
-    cpufreq-policy4: ondemand / 408 MHz (powersave ondemand performance schedutil / 408 600 816 1008 1200 1416 1608 1800)
-    dmc: dmc_ondemand / 856 MHz (performance powersave dmc_ondemand simple_ondemand / 328 416 666 856)
-    ff9a0000.gpu: dmc_ondemand / 800 MHz (performance powersave dmc_ondemand simple_ondemand / 200 300 400 600 800)
+    cpufreq-policy0: ondemand / 1200 MHz (ondemand performance schedutil / 408 600 816 1008 1200 1416)
+    cpufreq-policy4: ondemand / 408 MHz (ondemand performance schedutil / 408 600 816 1008 1200 1416 1608 1800)
+    dmc: dmc_ondemand / 856 MHz (powersave performance dmc_ondemand simple_ondemand / 328 416 666 856)
+    ff9a0000.gpu: simple_ondemand / 200 MHz (powersave performance dmc_ondemand simple_ondemand / 200 300 400 600 800)
 
 Tuned governor settings:
 
@@ -42,28 +42,27 @@ Status of performance related policies found below /sys:
 
 ### Clockspeeds (idle vs. heated up):
 
-Before at 55.6°C:
+Before at 49.4°C:
 
     cpu0-cpu3 (Cortex-A53): OPP: 1416, Measured: 1412 
     cpu4-cpu5 (Cortex-A72): OPP: 1800, Measured: 1797 
 
-After at 83.3°C (throttled):
+After at 80.6°C (throttled):
 
-    cpu0-cpu3 (Cortex-A53): OPP: 1416, Measured: 1411 
-    cpu4-cpu5 (Cortex-A72): OPP: 1800, Measured: 1041     (-42.2%)
+    cpu0-cpu3 (Cortex-A53): OPP: 1416, Measured: 1412 
+    cpu4-cpu5 (Cortex-A72): OPP: 1800, Measured: 1413     (-21.5%)
 
 ### Memory performance
 
-  * cpu0 (Cortex-A53): memcpy: 1744.6 MB/s, memchr: 1870.0 MB/s, memset: 8460.1 MB/s
-  * cpu4 (Cortex-A72): memcpy: 3471.2 MB/s, memchr: 5653.6 MB/s, memset: 8386.5 MB/s
-  * cpu0 (Cortex-A53) 16M latency: 188.7 192.0 187.7 191.2 187.5 191.5 236.7 453.3 
-  * cpu4 (Cortex-A72) 16M latency: 197.7 199.7 199.3 199.2 199.1 202.3 205.1 240.3 
+  * cpu0 (Cortex-A53): memcpy: 1780.9 MB/s, memchr: 1885.0 MB/s, memset: 8492.4 MB/s
+  * cpu4 (Cortex-A72): memcpy: 3585.2 MB/s, memchr: 6225.3 MB/s, memset: 8386.5 MB/s
+  * cpu0 (Cortex-A53) 16M latency: 189.6 192.3 188.4 191.5 188.5 192.1 236.2 449.4 
+  * cpu4 (Cortex-A72) 16M latency: 197.5 198.8 199.5 198.7 199.3 203.0 203.5 239.2 
 
 ### Storage devices:
 
-  * 111.8GB "Samsung SSD 750 EVO 120GB" SSD as /dev/sda [SATA 3.1, 6.0 Gb/s (current: 6.0 Gb/s)]: behind ASMedia SATA 6Gb/s bridge, 3% worn out, 24°C, Driver=uas, 5000Mbps (capable of 12Mbps, 480Mbps, 5Gbps)
+  * 111.8GB "Samsung SSD 750 EVO 120GB" SSD as /dev/sda [SATA 3.1, 6.0 Gb/s (current: 6.0 Gb/s)]: behind ASMedia SATA 6Gb/s bridge, 3% worn out, Driver=uas, 5000Mbps (capable of 12Mbps, 480Mbps, 5Gbps), drive temp: 24°C
   * 7.3GB "Silicon Motion Flash Drive" as /dev/sdb: USB, Driver=usb-storage, 480Mbps
-  * 7.3TB "Toshiba TOSHIBA HDWF180" HDD as /dev/sdc [SATA 3.3, 6.0 Gb/s (current: 6.0 Gb/s)]: behind ASMedia SATA 6Gb/s bridge, 26°C, Driver=usb-storage, 5000Mbps (capable of 12Mbps, 480Mbps, 5Gbps)
   * 29.7GB "SanDisk SE32G" HS SD card (speed negotiation problems, check dmesg) as /dev/mmcblk0: date 10/2017, manfid/oemid: 0x000003/0x5344, hw/fw rev: 0x8/0x0
 
 ### Software versions:
@@ -80,7 +79,7 @@ After at 83.3°C (throttled):
   * Vulnerability Spectre v2:        Vulnerable
   * Kernel 5.10.110-1-rockchip / CONFIG_HZ=300
 
-Kernel 5.10.110 is not latest 5.10.168 LTS that was released on 2023-02-15.
+Kernel 5.10.110 is not latest 5.10.169 LTS that was released on 2023-02-22.
 
 See https://endoflife.date/linux for details. It is somewhat likely that
 a lot of exploitable vulnerabilities exist for this kernel as well as many

@@ -8,16 +8,8 @@ Main() {
 	PathToMe="$( cd "$(dirname "$0")" ; pwd -P )/${0##*/}"
 	unset LC_ALL LC_MESSAGES LANGUAGE LANG 2>/dev/null # prevent localisation of decimal points and similar stuff
 
-	# Check if we're outputting to a terminal. If yes try to use bold and colors for messages
-	if test -t 1; then
-		ncolors=$(tput colors)
-		if test -n "$ncolors" && test $ncolors -ge 8; then
-			BOLD="$(tput bold)"
-			NC='\033[0m' # No Color
-			LGREEN='\033[1;32m'
-			LRED='\e[0;91m'
-		fi
-	fi
+	# use colours and bold when outputting to a terminal
+	CheckTerminal
 
 	# The following allows to use sbc-bench on real ARM devices where for
 	# whatever reasons a fake /usr/bin/vcgencmd is lying around -- see for
@@ -42,7 +34,7 @@ Main() {
 	[ -r "${ProcCPUFile}" ] && ProcCPU="$(cat "${ProcCPUFile}")"
 
 	# check in which mode we're supposed to run
-	while getopts 'chjkmtTrsSguNPG' c ; do
+	while getopts 'uSchjkmtTrsgNPG' c ; do
 		case ${c} in
 			m)
 				# monitoring mode
@@ -254,6 +246,19 @@ Main() {
 	UploadResults
 	BasicSetup ${OriginalCPUFreqGovernor} >/dev/null 2>&1
 } # Main
+
+CheckTerminal() {
+	# Check if we're outputting to a terminal. If yes try to use bold and colors for messages
+	if test -t 1; then
+		ncolors=$(tput colors)
+		if test -n "$ncolors" && test $ncolors -ge 8; then
+			BOLD="$(tput bold)"
+			NC='\033[0m' # No Color
+			LGREEN='\033[1;32m'
+			LRED='\e[0;91m'
+		fi
+	fi
+} # CheckTerminal
 
 UpdateMe() {
 	# function to replace this script with latest version from here:
@@ -670,6 +675,9 @@ HandleGovernors() {
 	# fb000000.gpu: simple_ondemand / 300 MHz (rknpu_ondemand dmc_ondemand userspace powersave performance simple_ondemand / 300 400 500 600 700 800 900 1000)
 	# fdab0000.npu: rknpu_ondemand / 1000 MHz (rknpu_ondemand dmc_ondemand userspace powersave performance simple_ondemand / 300 400 500 600 700 800 900 1000)
 
+	# use colours and bold when outputting to a terminal
+	[ -z "${BOLD}" ] && CheckTerminal
+
 	Governors="$(find /sys -name "*governor" | grep -E -v '/sys/module|cpuidle|watchdog')"
 	if [ "X${Governors}" = "X" -o "${CPUArchitecture}" = "x86_64" ]; then
 		# skip if no governors found or on x86 where lots of cpufreq governors are
@@ -682,7 +690,10 @@ HandleGovernors() {
 		done
 		# If in adjust mode we also tune ASPM since this can massively affect performance
 		# of components behind PCIe buses (NVMe SSDs, PCIe attached HBAs, NICs and so on)
-		[ -w /sys/module/pcie_aspm/parameters/policy -a -d /sys/bus/pci_express ] && echo $1 >/sys/module/pcie_aspm/parameters/policy 2>/dev/null
+		if [ -w /sys/module/pcie_aspm/parameters/policy -a -d /sys/bus/pci_express ]; then
+			read OriginalASPMSetting </sys/module/pcie_aspm/parameters/policy
+			echo $1 >/sys/module/pcie_aspm/parameters/policy 2>/dev/null
+		fi
 		return
 	fi
 	
@@ -712,6 +723,19 @@ HandleGovernors() {
 				Curfreq=""				
 			fi
 			if [ -r "${AvailableGovernorsSysFSNode}" ]; then
+				# with some kernels powersave and performance are only listed as available
+				# after the governor itself has been set to these. So try this just not
+				# with cpufreq since there it always works as designed
+				case "${SysFSNode##*/}" in
+					*cpufreq*)
+						:
+						;;
+					*)
+						echo performance >"${REPLY}" 2>/dev/null
+						echo powersave >"${REPLY}" 2>/dev/null
+						echo "${Governor}" >"${REPLY}" 2>/dev/null
+						;;
+				esac
 				read AvailableGovernors <"${AvailableGovernorsSysFSNode}"
 				if [ "X${AvailableGovernors}" != "X${Governor}" ]; then
 					printf "${SysFSNode##*/}: "
@@ -740,6 +764,12 @@ HandlePolicies() {
 	# Status of performance related policies found below /sys:
 	# /sys/devices/platform/fb000000.gpu/power_policy: [coarse_demand] always_on
 	# /sys/module/pcie_aspm/parameters/policy: default performance [powersave] powersupersave
+
+	# use colours and bold when outputting to a terminal
+	[ -z "${BOLD}" ] && CheckTerminal
+
+	# If script is sourced we need to read in relevant dmesg contents
+	[ -z "${DMESG}" ] && DMESG="$(dmesg | grep pcie)"
 
 	# process policies
 	SysFSPolicies="$(find /sys -name "*policy" | grep -E -v 'hotplug|cpufreq|thermal_zone|apparmor|hostap|/sys/kernel|/sys/devices/pci|mobile_lpm_|xmit_hash_')"
@@ -1890,156 +1920,156 @@ GetCoreClusters() {
 } # GetCoreClusters
 
 Getx86ClusterDetails() {
-		# Since they can't be differentiated by either CPU ID or physical_package_id get
-		# Alder/Raptor Lake E/P core clusters from ark.intel.com: https://archive.ph/TfYF2
-		# and https://archive.ph/dXja2 -- HFI might be an option in the future but only
-		# with most recent kernels: https://docs.kernel.org/x86/intel-hfi.html
-		# With different core types /sys/devices/system/cpu/cpu*/acpi_cppc/nominal_perf and
-		# most probably also cache sizes differ.
-		#
-		# Alder Lake SKUs:
-		# i9: 6-8 P cores, 8-16 E cores, 4.8-5.5 GHz, 24-30 MB "Smart Cache"
-		# i7: 2-8 P cores, 4-8 E cores, 4.6-5.0 GHz, 12-25 MB "Smart Cache"
-		# i5: 4-6 P cores, 4-8 E cores, 4.2-4.9 GHz, 12-20 MB "Smart Cache"
-		# i3: 2-4 P cores, 0-8 E cores, 4.0-4.3 GHz, 10-12 MB "Smart Cache"
-		# Pentium Gold 850*, Celeron 730*: 1 P core, 4 E cores, 8 MB "Smart Cache"
-		#
-		# Raptor Lake SKUs:
-		# i9: 6-8 P cores, 8-16 E cores, 5.0-5.8 GHz, 24-36 MB "Smart Cache"
-		# i7: 2-8 P cores, 4-12 E cores, 4.8-5.4 GHz, 12-30 MB "Smart Cache"
-		# i5: 4-6 P cores, 4-8 E cores, 4.4-5.1 GHz, 12-24 MB "Smart Cache"
-		# i3: 1-4 P cores, 0-8 E cores, 4.1-4.6 GHz, 10-12 MB "Smart Cache"
-		# U300*: 1 P core, 4 E cores, 8 MB "Smart Cache"
+	# Since they can't be differentiated by either CPU ID or physical_package_id get
+	# Alder/Raptor Lake E/P core clusters from ark.intel.com: https://archive.ph/TfYF2
+	# and https://archive.ph/dXja2 -- HFI might be an option in the future but only
+	# with most recent kernels: https://docs.kernel.org/x86/intel-hfi.html
+	# With different core types /sys/devices/system/cpu/cpu*/acpi_cppc/nominal_perf and
+	# most probably also cache sizes differ.
+	#
+	# Alder Lake SKUs:
+	# i9: 6-8 P cores, 8-16 E cores, 4.8-5.5 GHz, 24-30 MB "Smart Cache"
+	# i7: 2-8 P cores, 4-8 E cores, 4.6-5.0 GHz, 12-25 MB "Smart Cache"
+	# i5: 4-6 P cores, 4-8 E cores, 4.2-4.9 GHz, 12-20 MB "Smart Cache"
+	# i3: 2-4 P cores, 0-8 E cores, 4.0-4.3 GHz, 10-12 MB "Smart Cache"
+	# Pentium Gold 850*, Celeron 730*: 1 P core, 4 E cores, 8 MB "Smart Cache"
+	#
+	# Raptor Lake SKUs:
+	# i9: 6-8 P cores, 8-16 E cores, 5.0-5.8 GHz, 24-36 MB "Smart Cache"
+	# i7: 2-8 P cores, 4-12 E cores, 4.8-5.4 GHz, 12-30 MB "Smart Cache"
+	# i5: 4-6 P cores, 4-8 E cores, 4.4-5.1 GHz, 12-24 MB "Smart Cache"
+	# i3: 1-4 P cores, 0-8 E cores, 4.1-4.6 GHz, 10-12 MB "Smart Cache"
+	# U300*: 1 P core, 4 E cores, 8 MB "Smart Cache"
 
-		# Check for hyper threading first since affecting size of P logical cluster (the 1st)
-		[ -f /sys/devices/system/cpu/smt/active ] && read HT </sys/devices/system/cpu/smt/active || HT=0	
+	# Check for hyper threading first since affecting size of P logical cluster (the 1st)
+	[ -f /sys/devices/system/cpu/smt/active ] && read HT </sys/devices/system/cpu/smt/active || HT=0
 
-		case ${X86CPUName} in
-			i3-L13G4|i5-L16G7)
-				# Lakefield: 1 P core w/o HT + 4 E cores
-				echo "Tremont" >"${TempDir}/Ecores"
-				echo "Sunny Cove" >"${TempDir}/Pcores"
-				[ ${HT} -eq 1 ] && echo "0 2" || echo "0 1"
-				;;
-			i9-13900K|i9-13900KF|i9-13900F|i9-13900T|i9-13900HX|i9-13950HX|i9-13980HX|i9-13900|i9-13900TE|i9-13900E)
-				# Raptor Lake, 8/16 cores, 32 threads
-				echo "Gracemont" >"${TempDir}/Ecores"
-				echo "Raptor Cove" >"${TempDir}/Pcores"
-				[ ${HT} -eq 1 ] && echo "0 16" || echo "0 8"
-				;;
-			i7-13850HX)
-				# Raptor Lake, 8/12 cores, 28 threads
-				echo "Gracemont" >"${TempDir}/Ecores"
-				echo "Raptor Cove" >"${TempDir}/Pcores"
-				[ ${HT} -eq 1 ] && echo "0 16" || echo "0 8"
-				;;
-			i9-12900T|i9-12900TE|i9-12900HX|i9-12950HX|i9-12900KS|i9-12900E|i9-12900F|i9-12900|i9-12900K|i9-12900KS|i9-12900KF|i7-12850HX|i7-12800HX)
-				# Alder Lake, 8/8 cores, 24 threads
-				echo "Gracemont" >"${TempDir}/Ecores"
-				echo "Golden Cove" >"${TempDir}/Pcores"
-				[ ${HT} -eq 1 ] && echo "0 16" || echo "0 8"
-				;;
-			i7-13700K|i7-13700KF|i7-13700F|i7-13700T|i7-13700HX|i7-13700E|i7-13700T|i7-13700|i7-13700TE)
-				# Raptor Lake, 8/8 cores, 24 threads
-				echo "Gracemont" >"${TempDir}/Ecores"
-				echo "Raptor Cove" >"${TempDir}/Pcores"
-				[ ${HT} -eq 1 ] && echo "0 16" || echo "0 8"
-				;;
-			i7-12700|i7-12700F|i7-12700E|i7-12700TE|i7-12700T|i7-12700K|i7-12700KF)
-				# Alder Lake, 8/4 cores, 20 threads
-				echo "Gracemont" >"${TempDir}/Ecores"
-				echo "Golden Cove" >"${TempDir}/Pcores"
-				[ ${HT} -eq 1 ] && echo "0 16" || echo "0 8"
-				;;
-			i9-12900HK|i9-12900H|i7-12700HL|i7-12800HL|i7-12650HX|i7-1280P|i7-12700H|i7-12800H|i7-12800HE)
-				# Alder Lake, 6/8 cores, 20 threads
-				echo "Gracemont" >"${TempDir}/Ecores"
-				echo "Golden Cove" >"${TempDir}/Pcores"
-				[ ${HT} -eq 1 ] && echo "0 12" || echo "0 6"
-				;;
-			i9-13900HK|i7-13700H|i5-13600K|i5-13600KF|i5-13500|i9-13905H|i9-13900HK|i9-13900H|i7-13800H|i7-1370P|i7-13700H|i7-13705H|i7-13650HX|i5-13500HX|i5-13600HX|i7-1370PE|i7-13800HE|i5-13500T|i5-13500E|i5-13500TE|i5-13500|i5-13600|i5-13600T)
-				# Raptor Lake, 6/8 cores, 20 threads
-				echo "Gracemont" >"${TempDir}/Ecores"
-				echo "Raptor Cove" >"${TempDir}/Pcores"
-				[ ${HT} -eq 1 ] && echo "0 12" || echo "0 6"
-				;;
-			i7-1270PE|i7-1270P|i7-1260P|i5-12600HL|i5-12500HL|i5-12600HX|i5-1250PE|i5-1250P|i5-1240P|i5-12600HE|i5-12500H|i5-12600H)
-				# Alder Lake, 4/8 cores, 16 threads
-				echo "Gracemont" >"${TempDir}/Ecores"
-				echo "Golden Cove" >"${TempDir}/Pcores"
-				[ ${HT} -eq 1 ] && echo "0 8" || echo "0 4"
-				;;
-			i7-1360P|i5-13500H|i5-13500H|i5-13600H|i5-1340P|i5-13505H|i5-1350P|i5-1340PE|i5-13600HE|i5-1350PE)
-				# Raptor Lake, 4/8 cores, 16 threads
-				echo "Gracemont" >"${TempDir}/Ecores"
-				echo "Raptor Cove" >"${TempDir}/Pcores"
-				[ ${HT} -eq 1 ] && echo "0 8" || echo "0 4"
-				;;
-			i7-1265UL|i7-1255UL|i7-1265UE|i7-1260U|i7-1250U|i7-1255U|i7-1265U|i5-1245UL|i5-1235UL|i5-1245UE|i5-1230U|i5-1240U|i5-1235U|i5-1235U|i5-1245U|i3-1220P)
-				# Alder Lake, 2/8 cores, 12 threads
-				echo "Gracemont" >"${TempDir}/Ecores"
-				echo "Golden Cove" >"${TempDir}/Pcores"
-				[ ${HT} -eq 1 ] && echo "0 4" || echo "0 2"
-				;;
-			i7-1355U|i7-1365U|i5-1335U|i5-1334U|i5-1345U|i7-1365UE|i5-1335UE|i5-1345UE)
-				# Raptor Lake, 2/8 cores, 12 threads
-				echo "Gracemont" >"${TempDir}/Ecores"
-				echo "Raptor Cove" >"${TempDir}/Pcores"
-				[ ${HT} -eq 1 ] && echo "0 4" || echo "0 2"
-				;;
-			i7-12650H|i5-12600K|i5-12600KF)
-				# Alder Lake, 6/4 cores, 16 threads
-				echo "Gracemont" >"${TempDir}/Ecores"
-				echo "Golden Cove" >"${TempDir}/Pcores"
-				[ ${HT} -eq 1 ] && echo "0 12" || echo "0 6"
-				;;
-			i5-13400|i5-13400F|i7-13620H|i5-13450HX|i5-13400|i5-13400E|i5-13400T)
-				# Raptor Lake, 6/4 cores, 16 threads
-				echo "Gracemont" >"${TempDir}/Ecores"
-				echo "Raptor Cove" >"${TempDir}/Pcores"
-				[ ${HT} -eq 1 ] && echo "0 12" || echo "0 6"
-				;;
-			i5-12450HX|i5-12450H|i3-12300HL|i3-1220PE|i3-12300HE)
-				# Alder Lake, 4/4 cores, 12 threads
-				echo "Gracemont" >"${TempDir}/Ecores"
-				echo "Golden Cove" >"${TempDir}/Pcores"
-				[ ${HT} -eq 1 ] && echo "0 8" || echo "0 4"
-				;;
-			i5-13420H|i3-1320PE|i3-13300HE)
-				# Raptor Lake, 4/4 cores, 12 threads
-				echo "Gracemont" >"${TempDir}/Ecores"
-				echo "Raptor Cove" >"${TempDir}/Pcores"
-				[ ${HT} -eq 1 ] && echo "0 8" || echo "0 4"
-				;;
-			i3-1215UL|i3-1215UE|i3-1210U|i3-1215U|i3-1215U)
-				# Alder Lake, 2/4 cores, 8 threads
-				echo "Gracemont" >"${TempDir}/Ecores"
-				echo "Golden Cove" >"${TempDir}/Pcores"
-				[ ${HT} -eq 1 ] && echo "0 4" || echo "0 2"
-				;;
-			i3-1315U|i3-1315UE)
-				# Raptor Lake, 2/4 cores, 8 threads
-				echo "Gracemont" >"${TempDir}/Ecores"
-				echo "Raptor Cove" >"${TempDir}/Pcores"
-				[ ${HT} -eq 1 ] && echo "0 4" || echo "0 2"
-				;;
-			*Gold*850*|*Celeron*730*)
-				# Alder Lake, 1/4 cores, 6 threads
-				echo "Gracemont" >"${TempDir}/Ecores"
-				echo "Golden Cove" >"${TempDir}/Pcores"
-				[ ${HT} -eq 1 ] && echo "0 2" || echo "0 1"
-				;;
-			i3-1305U|U300|U300E)
-				# Raptor Lake, 1/4 cores, 6 threads
-				echo "Gracemont" >"${TempDir}/Ecores"
-				echo "Raptor Cove" >"${TempDir}/Pcores"
-				[ ${HT} -eq 1 ] && echo "0 2" || echo "0 1"
-				;;
-			*)
-				# all cores of same type
-				echo "0"
+	case ${X86CPUName} in
+		i3-L13G4|i5-L16G7)
+			# Lakefield: 1 P core w/o HT + 4 E cores
+			echo "Tremont" >"${TempDir}/Ecores"
+			echo "Sunny Cove" >"${TempDir}/Pcores"
+			[ ${HT} -eq 1 ] && echo "0 2" || echo "0 1"
 			;;
-		esac
+		i9-13900K|i9-13900KF|i9-13900F|i9-13900T|i9-13900HX|i9-13950HX|i9-13980HX|i9-13900|i9-13900TE|i9-13900E)
+			# Raptor Lake, 8/16 cores, 32 threads
+			echo "Gracemont" >"${TempDir}/Ecores"
+			echo "Raptor Cove" >"${TempDir}/Pcores"
+			[ ${HT} -eq 1 ] && echo "0 16" || echo "0 8"
+			;;
+		i7-13850HX)
+			# Raptor Lake, 8/12 cores, 28 threads
+			echo "Gracemont" >"${TempDir}/Ecores"
+			echo "Raptor Cove" >"${TempDir}/Pcores"
+			[ ${HT} -eq 1 ] && echo "0 16" || echo "0 8"
+			;;
+		i9-12900T|i9-12900TE|i9-12900HX|i9-12950HX|i9-12900KS|i9-12900E|i9-12900F|i9-12900|i9-12900K|i9-12900KS|i9-12900KF|i7-12850HX|i7-12800HX)
+			# Alder Lake, 8/8 cores, 24 threads
+			echo "Gracemont" >"${TempDir}/Ecores"
+			echo "Golden Cove" >"${TempDir}/Pcores"
+			[ ${HT} -eq 1 ] && echo "0 16" || echo "0 8"
+			;;
+		i7-13700K|i7-13700KF|i7-13700F|i7-13700T|i7-13700HX|i7-13700E|i7-13700T|i7-13700|i7-13700TE)
+			# Raptor Lake, 8/8 cores, 24 threads
+			echo "Gracemont" >"${TempDir}/Ecores"
+			echo "Raptor Cove" >"${TempDir}/Pcores"
+			[ ${HT} -eq 1 ] && echo "0 16" || echo "0 8"
+			;;
+		i7-12700|i7-12700F|i7-12700E|i7-12700TE|i7-12700T|i7-12700K|i7-12700KF)
+			# Alder Lake, 8/4 cores, 20 threads
+			echo "Gracemont" >"${TempDir}/Ecores"
+			echo "Golden Cove" >"${TempDir}/Pcores"
+			[ ${HT} -eq 1 ] && echo "0 16" || echo "0 8"
+			;;
+		i9-12900HK|i9-12900H|i7-12700HL|i7-12800HL|i7-12650HX|i7-1280P|i7-12700H|i7-12800H|i7-12800HE)
+			# Alder Lake, 6/8 cores, 20 threads
+			echo "Gracemont" >"${TempDir}/Ecores"
+			echo "Golden Cove" >"${TempDir}/Pcores"
+			[ ${HT} -eq 1 ] && echo "0 12" || echo "0 6"
+			;;
+		i9-13900HK|i7-13700H|i5-13600K|i5-13600KF|i5-13500|i9-13905H|i9-13900HK|i9-13900H|i7-13800H|i7-1370P|i7-13700H|i7-13705H|i7-13650HX|i5-13500HX|i5-13600HX|i7-1370PE|i7-13800HE|i5-13500T|i5-13500E|i5-13500TE|i5-13500|i5-13600|i5-13600T)
+			# Raptor Lake, 6/8 cores, 20 threads
+			echo "Gracemont" >"${TempDir}/Ecores"
+			echo "Raptor Cove" >"${TempDir}/Pcores"
+			[ ${HT} -eq 1 ] && echo "0 12" || echo "0 6"
+			;;
+		i7-1270PE|i7-1270P|i7-1260P|i5-12600HL|i5-12500HL|i5-12600HX|i5-1250PE|i5-1250P|i5-1240P|i5-12600HE|i5-12500H|i5-12600H)
+			# Alder Lake, 4/8 cores, 16 threads
+			echo "Gracemont" >"${TempDir}/Ecores"
+			echo "Golden Cove" >"${TempDir}/Pcores"
+			[ ${HT} -eq 1 ] && echo "0 8" || echo "0 4"
+			;;
+		i7-1360P|i5-13500H|i5-13500H|i5-13600H|i5-1340P|i5-13505H|i5-1350P|i5-1340PE|i5-13600HE|i5-1350PE)
+			# Raptor Lake, 4/8 cores, 16 threads
+			echo "Gracemont" >"${TempDir}/Ecores"
+			echo "Raptor Cove" >"${TempDir}/Pcores"
+			[ ${HT} -eq 1 ] && echo "0 8" || echo "0 4"
+			;;
+		i7-1265UL|i7-1255UL|i7-1265UE|i7-1260U|i7-1250U|i7-1255U|i7-1265U|i5-1245UL|i5-1235UL|i5-1245UE|i5-1230U|i5-1240U|i5-1235U|i5-1235U|i5-1245U|i3-1220P)
+			# Alder Lake, 2/8 cores, 12 threads
+			echo "Gracemont" >"${TempDir}/Ecores"
+			echo "Golden Cove" >"${TempDir}/Pcores"
+			[ ${HT} -eq 1 ] && echo "0 4" || echo "0 2"
+			;;
+		i7-1355U|i7-1365U|i5-1335U|i5-1334U|i5-1345U|i7-1365UE|i5-1335UE|i5-1345UE)
+			# Raptor Lake, 2/8 cores, 12 threads
+			echo "Gracemont" >"${TempDir}/Ecores"
+			echo "Raptor Cove" >"${TempDir}/Pcores"
+			[ ${HT} -eq 1 ] && echo "0 4" || echo "0 2"
+			;;
+		i7-12650H|i5-12600K|i5-12600KF)
+			# Alder Lake, 6/4 cores, 16 threads
+			echo "Gracemont" >"${TempDir}/Ecores"
+			echo "Golden Cove" >"${TempDir}/Pcores"
+			[ ${HT} -eq 1 ] && echo "0 12" || echo "0 6"
+			;;
+		i5-13400|i5-13400F|i7-13620H|i5-13450HX|i5-13400|i5-13400E|i5-13400T)
+			# Raptor Lake, 6/4 cores, 16 threads
+			echo "Gracemont" >"${TempDir}/Ecores"
+			echo "Raptor Cove" >"${TempDir}/Pcores"
+			[ ${HT} -eq 1 ] && echo "0 12" || echo "0 6"
+			;;
+		i5-12450HX|i5-12450H|i3-12300HL|i3-1220PE|i3-12300HE)
+			# Alder Lake, 4/4 cores, 12 threads
+			echo "Gracemont" >"${TempDir}/Ecores"
+			echo "Golden Cove" >"${TempDir}/Pcores"
+			[ ${HT} -eq 1 ] && echo "0 8" || echo "0 4"
+			;;
+		i5-13420H|i3-1320PE|i3-13300HE)
+			# Raptor Lake, 4/4 cores, 12 threads
+			echo "Gracemont" >"${TempDir}/Ecores"
+			echo "Raptor Cove" >"${TempDir}/Pcores"
+			[ ${HT} -eq 1 ] && echo "0 8" || echo "0 4"
+			;;
+		i3-1215UL|i3-1215UE|i3-1210U|i3-1215U|i3-1215U)
+			# Alder Lake, 2/4 cores, 8 threads
+			echo "Gracemont" >"${TempDir}/Ecores"
+			echo "Golden Cove" >"${TempDir}/Pcores"
+			[ ${HT} -eq 1 ] && echo "0 4" || echo "0 2"
+			;;
+		i3-1315U|i3-1315UE)
+			# Raptor Lake, 2/4 cores, 8 threads
+			echo "Gracemont" >"${TempDir}/Ecores"
+			echo "Raptor Cove" >"${TempDir}/Pcores"
+			[ ${HT} -eq 1 ] && echo "0 4" || echo "0 2"
+			;;
+		*Gold*850*|*Celeron*730*)
+			# Alder Lake, 1/4 cores, 6 threads
+			echo "Gracemont" >"${TempDir}/Ecores"
+			echo "Golden Cove" >"${TempDir}/Pcores"
+			[ ${HT} -eq 1 ] && echo "0 2" || echo "0 1"
+			;;
+		i3-1305U|U300|U300E)
+			# Raptor Lake, 1/4 cores, 6 threads
+			echo "Gracemont" >"${TempDir}/Ecores"
+			echo "Raptor Cove" >"${TempDir}/Pcores"
+			[ ${HT} -eq 1 ] && echo "0 2" || echo "0 1"
+			;;
+		*)
+			# all cores of same type
+			echo "0"
+		;;
+	esac
 } # Getx86ClusterDetails
 
 ParseOPPTables() {
@@ -3028,17 +3058,19 @@ CheckClockspeedsAndSensors() {
 	
 		# if temperature sensors can be read from disks, report them
 		SmartCtl="$(command -v smartctl 2>/dev/null)"
-		Disks="$(ls /dev/sd? 2>/dev/null ; ls /dev/nvme?n1 2>/dev/null)"
+		Disks="$(ls /dev/sd? /dev/nvme? 2>/dev/null | sort)"
 		if [ "X${SmartCtl}" != "X" -a "X${Disks}" != "X" ]; then
 			echo "" >>${ResultLog}
+			# try to restrict SMART queries to 5 sec duration due to buggy devices
+			command -v timeout >/dev/null 2>&1 && SmartCtl="timeout 5 ${SmartCtl}"
 			for Disk in ${Disks} ; do
 				case ${Disk} in
 					/dev/sd*)
-						DiskTemp="$(smartctl -a ${Disk} | awk -F" " '/Temperature/ {print $10" "$2}' | head -n1 | sed -e 's/_/ /g' -e 's/^ *//g')"
+						DiskTemp="$(${SmartCtl} -a ${Disk} | awk -F" " '/Temperature/ {print $10" "$2}' | head -n1 | sed -e 's/_/ /g' -e 's/^ *//g')"
 						[ "X${DiskTemp}" != "X" ] && echo -e "${Disk}:\t${DiskTemp}"
 						;;
 					/dev/nvme*)
-						echo -e "${Disk}:\t$(smartctl -a ${Disk} | awk -F" " '/Temperature:/ {print $2" "$3}' | head -n1)" 
+						echo -e "${Disk}:\t$(${SmartCtl} -a ${Disk} | awk -F" " '/Temperature:/ {print $2" "$3}' | head -n1)"
 						;;
 				esac
 			done | sed -e 's/ Airflow//' -e 's/ Temperature//' -e 's/ Celsius$/°C/' -e 's/ Cel$/°C/' >>${ResultLog}
@@ -3762,6 +3794,7 @@ SummarizeResults() {
 	if [ -f ${TempDir}/throttling_info.txt ]; then
 		echo -e "\n##########################################################################" >>${ResultLog}
 		cat ${TempDir}/throttling_info.txt >>${ResultLog}
+		ThrottlingWarning="${LRED}${BOLD} (throttled)${NC}"
 	fi
 
 	# add dmesg output since start of the benchmark if something relevant is there
@@ -6221,7 +6254,7 @@ IdentifyAllwinnerARMv8() {
 
 ShowZswapStats() {
 	# https://www.kernel.org/doc/Documentation/vm/zswap.txt
-	ZswapEnabled="$(sed 's/Y/1/' </sys/module/zswap/parameters/enabled)"
+	[ -r /sys/module/zswap/parameters/enabled ] && ZswapEnabled="$(sed 's/Y/1/' </sys/module/zswap/parameters/enabled)"
 	if [ "${ZswapEnabled}" = "1" ]; then
 		# check whether zswap is in conflict with zram. If both are combined together
 		# once swapping occurs performance will be trashed, see sbc-bench results from
@@ -6303,7 +6336,7 @@ ProvideReviewInfo() {
 	if [ "X${NOTUNING}" != "Xyes" ]; then
 		HandleGovernors powersave
 		if [ -f /sys/kernel/debug/clk/clk_summary ]; then
-			sleep 1
+			snore 1
 			cat /sys/kernel/debug/clk/clk_summary >"${TempDir}/clk_summary.powersave"
 		fi
 		HandleGovernors performance
@@ -6497,7 +6530,7 @@ ProvideReviewInfo() {
 	if [ "X${NOTUNING}" != "Xyes" ]; then
 		# throttling check and routine waiting for the board to cool down since otherwise the
 		# next monitoring step will report throttling even if none happens from now on.
-		[ "X${ThrottlingWarning}" != "X" ] && sleep 5
+		[ "X${ThrottlingWarning}" != "X" ] && snore 5
 		if [ -r /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq ]; then
 			cpuinfo_max_freq=$(cat /sys/devices/system/cpu/cpu?/cpufreq/cpuinfo_max_freq)
 			cpuinfo_cur_freq=$(cat /sys/devices/system/cpu/cpu?/cpufreq/cpuinfo_cur_freq)
@@ -6506,7 +6539,7 @@ ProvideReviewInfo() {
 				while [ "X${cpuinfo_max_freq}" != "X${cpuinfo_cur_freq}" ]; do
 					TempNow=$(ReadSoCTemp)
 					echo -e "\x08\x08\x08\x08\x08\x08\x08. ${TempNow}°C\c"
-					sleep 2
+					snore 2
 					cpuinfo_max_freq=$(cat /sys/devices/system/cpu/cpu?/cpufreq/cpuinfo_max_freq)
 					cpuinfo_cur_freq=$(cat /sys/devices/system/cpu/cpu?/cpufreq/cpuinfo_cur_freq)
 				done
@@ -6514,7 +6547,7 @@ ProvideReviewInfo() {
 				for i in {1..10} ; do
 					TempNow=$(ReadSoCTemp)
 					echo -e "\x08\x08\x08\x08\x08\x08\x08. ${TempNow}°C\c"
-					sleep 2
+					snore 2
 				done
 				echo ""
 			fi
@@ -6549,7 +6582,7 @@ ProvideReviewInfo() {
 	/bin/bash "${PathToMe}" -m 60 >"${TempDir}/review" &
 	MonitoringPID=$!
 	echo ""
-	sleep 1
+	snore 1
 	tail -f "${TempDir}/review"
 } # ProvideReviewInfo
 
@@ -6605,7 +6638,10 @@ FinalReporting() {
 		echo -e "${BOLD}ATTENTION:${NC} some noise in kernel ring buffer since start of monitoring:\n"
 		echo -e "${DMESGSinceStart}\n"
 	fi
+
+	# revert at least cpufreq and PCIe ASPM settings
 	BasicSetup ${OriginalCPUFreqGovernor} >/dev/null 2>&1
+	[ -w /sys/module/pcie_aspm/parameters/policy ] && echo "${OriginalASPMSetting}" >/sys/module/pcie_aspm/parameters/policy >/dev/null 2>&1
 } # FinalReporting
 
 CheckKernelVersion() {
@@ -6944,6 +6980,9 @@ CheckPCIe() {
 	# If $1 is "nvme" then try to update smartmontools device database if needed and report
 	# also NVMe devices found on the PCIe buses
 
+	# use colours and bold when outputting to a terminal
+	[ -z "${BOLD}" ] && CheckTerminal
+
 	[ -b /dev/nvme0 -a "$1" = "nvme" ] && { update-smart-drivedb >/dev/null 2>&1 ; [ -z "${TempDir}" ] && CreateTempDir ; }
 
 	# grab info about block devices
@@ -7005,11 +7044,18 @@ CheckStorage() {
 	# * maybe overtake CheckSMARTModes code from armbianmonitor to query picky/old USB
 	#   bridges in all possible ways.
 
+	# use colours and bold when outputting to a terminal
+	[ -z "${BOLD}" ] && CheckTerminal
+
 	[ -z "${TempDir}" ] && CreateTempDir
 
 	# try to update SMART drive database if SMART capable devices exist and $1 is set to
 	# update-smart-drivedb
 	[ -b /dev/nvme0 -o -b /dev/sda -a "$1" = "update-smart-drivedb" ] && update-smart-drivedb >/dev/null 2>&1
+
+	# try to restrict SMART queries to 5 sec duration due to buggy USB-to-SATA bridges
+	SmartCtl="$(command -v smartctl 2>/dev/null)"
+	command -v timeout >/dev/null 2>&1 && SmartCtl="timeout 5 ${SmartCtl}"
 
 	# grab info about block devices
 	[ -z "${LSBLK}" ] && LSBLK="$(LC_ALL="C" lsblk -l -o SIZE,NAME,FSTYPE,LABEL,MOUNTPOINT 2>&1)"
@@ -7488,7 +7534,7 @@ GetDiskSize() {
 CheckSMARTData() {
 	DeviceToCheck="$1"
 	LinuxDriver="$2"
-	SMARTInfo="$(smartctl -i ${DeviceToCheck} 2>/dev/null)"
+	SMARTInfo="$(${SmartCtl} -i ${DeviceToCheck} 2>/dev/null)"
 	unset PercentageUsed DeviceWarning
 
 	# do nothing if $SMARTInfo either contains 'No Information Found' or no disk name
@@ -7529,7 +7575,7 @@ CheckSMARTData() {
 			NVMe)
 				# we can use the standardized NVMe SMART attributes, use old text based
 				# output since JSON works only since smartmontools 7.x
-				SMARTData="$(smartctl -a ${DeviceToCheck} 2>/dev/null)"
+				SMARTData="$(${SmartCtl} -a ${DeviceToCheck} 2>/dev/null)"
 				DeviceName="\"$(awk -F": " "/^Model Number:/ {print \$2}" <<<"${SMARTData}" | sed 's/^ *//g')\" SSD as ${DeviceToCheck}${DeviceAddition}"
 				PercentageUsed="$(awk -F": " "/^Percentage Used:/ {print \$2}" <<<"${SMARTData}" | sed -e 's/^ *//g' -e 's/%//')"
 
@@ -7543,7 +7589,7 @@ CheckSMARTData() {
 				ErrorLogEntries=$(awk -F": " "/^Error Information Log Entries:/ {print \$2}" <<<"${SMARTData}" | sed 's/^ *//g')
 				if [ ${ErrorLogEntries:-0} -gt 0 ]; then
 					AdditionalSMARTInfo="${AdditionalSMARTInfo}, ${BOLD}${ErrorLogEntries} error log entries${NC}${LRED}"
-					echo -e "nvme error-log ${DeviceToCheck} ; \c" >>"${TempDir}/check-smart"
+					grep -q "/dev/nvme" <<<"${DeviceToCheck}" && echo -e "nvme error-log ${DeviceToCheck} ; \c" >>"${TempDir}/check-smart"
 				fi
 				RawDiskTemp="$(awk -F": " "/^Temperature:/ {print \$2}" <<<"${SMARTData}" | sed 's/^ *//g' | cut -f1 -d' ')"
 				TempTreshold=60
@@ -7560,14 +7606,14 @@ CheckSMARTData() {
 					AdditionalSMARTInfo="${AdditionalSMARTInfo}, ${BOLD}SMART health: **FAILED**${NC}${LRED}"
 					DeviceWarning=TRUE
 				fi
-				if [ ${PercentageUsed:-0} -gt 75 -o ${MediaErrors:-0} -gt 1 -o ${ErrorLogEntries:-0} -gt 1 ]; then
+				if [ ${PercentageUsed:-0} -gt 75 -o ${MediaErrors:-0} -gt 0 -o ${ErrorLogEntries:-0} -gt 0 ]; then
 					DeviceWarning=TRUE
 				fi
 				;;
 			ATA)
 				# it gets complicated since we need to deal with vendor specific attributes
 				# and need to differentiate between spinning rust and SSDs :(
-				SMARTData="$(smartctl -a ${DeviceToCheck})"
+				SMARTData="$(${SmartCtl} -a ${DeviceToCheck})"
 
 				# Check for available firmware upgrades
 				grep -q -A5 "A firmware update for this drive may be available" <<<"${SMARTData}"
@@ -7603,7 +7649,7 @@ CheckSMARTData() {
 
 						# Dealing with custom vendor attributes is unreliable by definition,
 						# so let's try ATA Device Statistics first
-						SMARTDevstat="$(smartctl -l devstat ${DeviceToCheck})"
+						SMARTDevstat="$(${SmartCtl} -l devstat ${DeviceToCheck})"
 						PercentageUsed="$(awk -F" " '/Percentage Used Endurance Indicator/ {print $4}' <<<"${SMARTDevstat}")"
 						if [ "X${PercentageUsed}" != "X" ]; then
 							# use 'Percentage Used Endurance Indicator'

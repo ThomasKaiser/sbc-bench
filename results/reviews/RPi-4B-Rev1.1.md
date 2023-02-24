@@ -1,6 +1,6 @@
 # RPi 4 Model B Rev 1.1 / BCM2711 Rev B0
 
-Tested on Sun, 19 Feb 2023 17:45:28 +0100. Full info: [http://ix.io/4oz7](http://ix.io/4oz7)
+Tested with sbc-bench v0.9.29 on Fri, 24 Feb 2023 10:12:45 +0100. Full info: [http://ix.io/4p3b](http://ix.io/4p3b)
 
 ### General information:
 
@@ -18,7 +18,7 @@ Tested on Sun, 19 Feb 2023 17:45:28 +0100. Full info: [http://ix.io/4oz7](http:/
 
 Original governor settings:
 
-    cpufreq-policy0: ondemand / 1500 MHz (conservative ondemand userspace powersave performance schedutil)
+    cpufreq-policy0: ondemand / 1500 MHz (conservative ondemand userspace powersave performance schedutil / 600 700 800 900 1000 1100 1200 1300 1400 1500)
 
 Tuned governor settings:
 
@@ -26,24 +26,23 @@ Tuned governor settings:
 
 ### Clockspeeds (idle vs. heated up):
 
-Before at 36.5°C:
+Before at 26.8°C:
 
     cpu0 (Cortex-A72): OPP: 1500, ThreadX: 1500, Measured: 1499 
 
-After at 51.1°C:
+After at 45.3°C:
 
     cpu0 (Cortex-A72): OPP: 1500, ThreadX: 1500, Measured: 1499 
 
 ### Memory performance
 
-  * memcpy: 2543.3 MB/s, memchr: 1289.6 MB/s, memset: 3384.8 MB/s
-  * 16M latency: 152.7 155.7 154.0 155.6 154.0 155.3 177.6 189.1 
+  * memcpy: 2545.3 MB/s, memchr: 1289.8 MB/s, memset: 3388.7 MB/s
+  * 16M latency: 153.1 154.2 153.8 154.1 153.6 158.1 170.5 189.0 
 
 ### PCIe and storage devices:
 
   * VIA VL805/806 xHCI USB 3.0: Speed 5GT/s (ok), Width x1 (ok), driver in use: xhci_hcd
-  * 7.3GB "Silicon Motion, Inc. - Taiwan (formerly Feiya Technology Corp.) Flash Drive" as /dev/sda: USB, Driver=usb-storage, 480M
-  * 14.4GB "Genesys Logic, Inc. GL827L SD/MMC/MS Flash Card Reader" as /dev/sdb: USB, Driver=usb-storage, 480M
+  * 14.4GB "Genesys Logic GL827L SD/MMC/MS Flash Card Reader" as /dev/sda: USB, Driver=usb-storage, 480Mbps
   * 59.5GB "SanDisk SR64G" UHS DDR50 SDXC card as /dev/mmcblk0: date 08/2018, manfid/oemid: 0x000003/0x5344, hw/fw rev: 0x8/0x0
 
 ### Software versions:
@@ -61,8 +60,7 @@ After at 51.1°C:
   * Vulnerability Spectre v2:        Vulnerable
   * Kernel 5.15.84-v7l+ / CONFIG_HZ=100
 
-Kernel 5.15.84 is not latest 5.15.94 LTS that was released on 2023-02-14.
+Kernel 5.15.84 is not latest 5.15.95 LTS that was released on 2023-02-22.
 
-Please check https://endoflife.date/linux for details. It is somewhat likely
-some kernel bugs have been fixed in the meantime and maybe vulnerabilities
-as well.
+See https://endoflife.date/linux for details. Perhaps some kernel bugs have
+been fixed in the meantime and maybe vulnerabilities as well.

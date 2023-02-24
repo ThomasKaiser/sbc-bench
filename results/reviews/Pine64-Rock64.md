@@ -1,6 +1,6 @@
 # Pine64 Rock64
 
-Tested on Sun, 19 Feb 2023 18:02:01 +0000. Full info: [http://ix.io/4ozL](http://ix.io/4ozL)
+Tested with sbc-bench v0.9.29 on Fri, 24 Feb 2023 08:53:57 +0000. Full info: [http://ix.io/4p2X](http://ix.io/4p2X)
 
 ### General information:
 
@@ -18,7 +18,8 @@ Tested on Sun, 19 Feb 2023 18:02:01 +0000. Full info: [http://ix.io/4ozL](http:/
 
 Original governor settings:
 
-    cpufreq-policy0: ondemand / 1296 MHz (conservative ondemand userspace powersave performance schedutil)
+    cpufreq-policy0: ondemand / 1296 MHz (conservative ondemand userspace powersave performance schedutil / 408 600 816 1008 1200 1296 1392 1512)
+    ff300000.gpu: simple_ondemand / 200 MHz (powersave performance simple_ondemand / 200 300 400 500)
 
 Tuned governor settings:
 
@@ -27,23 +28,24 @@ Tuned governor settings:
 
 ### Clockspeeds (idle vs. heated up):
 
-Before at 44.5°C:
+Before at 43.2°C:
 
     cpu0 (Cortex-A53): OPP: 1512, Measured: 1509 
 
-After at 81.9°C (throttled):
+After at 83.5°C (throttled):
 
     cpu0 (Cortex-A53): OPP: 1512, Measured: 1509 
 
 ### Memory performance
 
-  * memcpy: 1384.6 MB/s, memchr: 2446.5 MB/s, memset: 5884.7 MB/s
-  * 16M latency: 145.6 148.0 144.7 150.1 144.8 147.3 172.7 322.2 
+  * memcpy: 1384.2 MB/s, memchr: 2396.7 MB/s, memset: 5913.9 MB/s
+  * 16M latency: 145.5 147.6 146.4 148.2 144.7 147.2 172.0 322.9 
 
 ### Storage devices:
 
-  * 14.9GB "SanDisk SP16G" HS SD card as /dev/mmcblk0: date 07/2015, manfid/oemid: 0x000003/0x5344, hw/fw rev: 0x8/0x0
-  * 16MB SPI NOR flash as /dev/mtd0, drivers in use: spi-nor/rockchip-spi
+  * 14.4GB "Genesys Logic GL827L SD/MMC/MS Flash Card Reader" as /dev/sda: USB, Driver=usb-storage, 480Mbps
+  * 14.9GB "SanDisk SP16G" HS SD card as /dev/mmcblk1: date 07/2015, manfid/oemid: 0x000003/0x5344, hw/fw rev: 0x8/0x0
+  * 16MB SPI NOR flash, drivers in use: spi-nor/rockchip-spi
 
 ### Software versions:
 
@@ -58,8 +60,8 @@ After at 81.9°C (throttled):
   * Vulnerability Spectre v1:        Mitigation; __user pointer sanitization
   * Kernel 5.10.63-rockchip64 / CONFIG_HZ=250
 
-Kernel 5.10.63 is not latest 5.10.168 LTS that was released on 2023-02-15.
+Kernel 5.10.63 is not latest 5.10.169 LTS that was released on 2023-02-22.
 
-Please check https://endoflife.date/linux for details. It is somewhat likely
-that a lot of exploitable vulnerabilities exist for this kernel as well as
-many unfixed bugs. Better upgrade to a supported version ASAP.
+See https://endoflife.date/linux for details. It is somewhat likely that
+a lot of exploitable vulnerabilities exist for this kernel as well as many
+unfixed bugs.

@@ -6449,8 +6449,10 @@ ProvideReviewInfo() {
 
 	# PCIe and storage devices, important stuff like downgraded PCIe link width/speed,
 	# SMART errors and suspectible values, counterfeit SD card and speed negotiation
-	# issues, negotiated PCIe, USB and SATA speeds, (almost) worn out SSDs, unhealthy drive
-	# temps (most SSDs start to throttle above a certain thermal treshold) and so on
+	# issues, (almost) worn out SSDs, unhealthy drive temps (most SSDs start to throttle
+	# above a certain thermal treshold), negotiated USB and SATA speeds relating to e.g.
+	# underpowering (https://github.com/raspberrypi/linux/issues/4130#issuecomment-787826273)
+	# and so on...
 	PCIeStatus="$(CheckPCIe)"
 	StorageStatus="$(CheckStorage update-smart-drivedb)"
 	if [ "X${PCIeStatus}" != "X" -a "X${StorageStatus}" != "X" ]; then
@@ -7480,6 +7482,9 @@ GetUSBSataBridgeName() {
 			# JMicron bridge, let's replace the monstrous vendor string with JMicron
 			DeviceInfo="$(sed 's|JMicron Technology Corp. / JMicron USA Technology Corp.|JMicron|' <<<"${3}")"
 			;;
+		174c:2362)
+			DeviceInfo="ASMedia ASM2362 NVMe bridge (SuperSpeed Plus / Gen3 x2)"
+			;;
 		174c:55aa)
 			# the product ID has been used by ASMedia for a bunch of different bridges and the usbutils name reads
 			# 'ASMedia Technology Inc. Name: ASM1051E SATA 6Gb/s bridge, ASM1053E SATA 6Gb/s bridge, ASM1153 SATA 3Gb/s bridge, ASM1153E SATA 6Gb/s bridge'
@@ -7508,6 +7513,11 @@ GetUSBSataBridgeName() {
 		2109:07*)
 			# any of the other VIA Labs SATA 6Gb/s bridges (that may follow)
 			DeviceInfo="VIA Labs VL${idProduct:1} SATA 6Gb/s bridge"
+			;;
+		0bda:9210)
+			# Listed as 'RTL9210 M.2 NVME Adapter' in usbutils database but the RTL9210B-CG
+			# variant supports both NVMe and SATA with auto detection
+			DeviceInfo="Realtek RTL9210 NVMe/SATA bridge (SuperSpeed Plus / Gen3 x2 / 6Gb/s)"
 			;;
 		0bda*)
 			# RealTek bridges, let's replace the vendor string with Realtek

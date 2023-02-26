@@ -135,5 +135,5 @@ Crawling through [sbc-bench results collection](../Results.md) comparing +30 dif
 | Neoverse-N1 | | | |
 | [Ampere Altra](http://ix.io/4kiu) | 3000 | 1710010 | 570 |
 | [Amazon m6g.8xlarge](http://ix.io/2FrG) | 2500 | 1424770 | 570 |
-
-
+| Cortex-A510 | | | |
+| [Snapdragon 8 Gen1](http://ix.io/4pgq) | 1515 | 1405500 | 928 |

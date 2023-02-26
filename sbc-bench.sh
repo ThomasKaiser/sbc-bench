@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.9.30
+Version=0.9.31
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -706,18 +706,18 @@ HandleGovernors() {
 			AvailableFrequenciesSysFSNode="$(ls -d "${REPLY%/*}"/*available_frequencies)"
 			if [ -r "${REPLY%/*}/cpuinfo_cur_freq" ]; then
 				Curfreq=" / $(awk '{printf ("%0.0f",$1/1000); }' <"${REPLY%/*}/cpuinfo_cur_freq") MHz"
-				[ -r "${AvailableFrequenciesSysFSNode}" ] && AvailableFrequencies=" / $(tr ' ' '\n' <"${AvailableFrequenciesSysFSNode}" | sort -n | sed 's/000$//' | tr '\n' ' ' | sed -e 's/\ $//' -e 's/^ //')" || AvailableFrequencies=""
+				Divider=1000
 			elif [ -r "${REPLY%/*}/scaling_cur_freq" ]; then
 				Curfreq=" / $(awk '{printf ("%0.0f",$1/1000); }' <"${REPLY%/*}/scaling_cur_freq") MHz"
-				[ -r "${AvailableFrequenciesSysFSNode}" ] && AvailableFrequencies=" / $(tr ' ' '\n' <"${AvailableFrequenciesSysFSNode}" | sort -n | sed 's/000$//' | tr '\n' ' ' | sed -e 's/\ $//' -e 's/^ //')" || AvailableFrequencies=""
+				Divider=1000
 			elif [ -r "${REPLY%/*}/cur_freq" ]; then
 				read Rawfreq <"${REPLY%/*}/cur_freq"
 				if [ ${Rawfreq} -gt 10000000 ]; then
 					Curfreq=" / $(awk '{printf ("%0.0f",$1/1000000); }' <<<"${Rawfreq}") MHz"
-				[ -r "${AvailableFrequenciesSysFSNode}" ] && AvailableFrequencies=" / $(tr ' ' '\n' <"${AvailableFrequenciesSysFSNode}" | sort -n | sed 's/000000$//' | tr '\n' ' ' | sed -e 's/\ $//' -e 's/^ //')" || AvailableFrequencies=""
+					Divider=1000000
 				else
 					Curfreq=" / $(awk '{printf ("%0.0f",$1/1000); }' <<<"${Rawfreq}") MHz"
-				[ -r "${AvailableFrequenciesSysFSNode}" ] && AvailableFrequencies=" / $(tr ' ' '\n' <"${AvailableFrequenciesSysFSNode}" | sort -n | sed 's/000$//' | tr '\n' ' ' | sed -e 's/\ $//' -e 's/^ //')" || AvailableFrequencies=""
+					Divider=1000
 				fi
 			else
 				Curfreq=""				
@@ -738,6 +738,9 @@ HandleGovernors() {
 				esac
 				read AvailableGovernors <"${AvailableGovernorsSysFSNode}"
 				if [ "X${AvailableGovernors}" != "X${Governor}" ]; then
+					[ -r "${AvailableFrequenciesSysFSNode}" ] \
+						&& AvailableFrequencies=" / $(tr ' ' '\n' <"${AvailableFrequenciesSysFSNode}" | sort -n | sed '/^$/d' | awk "{printf (\"%0.0f\\n\",\$1/${Divider}); }" | tr '\n' ' ' | sed -e 's/\ $//' -e 's/^ //')" \
+						|| AvailableFrequencies=""
 					printf "${SysFSNode##*/}: "
 					grep -q "performance" <<<"${AvailableGovernors}"
 					GovStatus=$?
@@ -2845,7 +2848,7 @@ InitialMonitoring() {
 			# only report ThreadX stuff when 'vcgencmd version' outputs something
 			[ -f /boot/config.txt ] && ThreadXConfig=/boot/config.txt || ThreadXConfig=/boot/firmware/config.txt
 			grep -q "arm_boost=1" ${ThreadXConfig} 2>/dev/null || (grep -q "C0 or later" <<<"${DeviceName}" && \
-				echo -e "\nWarning: your Raspberry Pi is powered by BCM2711 Rev. ${BCM2711} but arm_boost=1\nis not set in ${ThreadXConfig}. Some (mis)information about what you are missing:\nhttps://www.raspberrypi.com/news/bullseye-bonus-1-8ghz-raspberry-pi-4/" >>${ResultLog})
+				echo -e "\nWarning: this Raspberry Pi is powered by BCM2711 Rev. ${BCM2711} but arm_boost=1\nis not set in ${ThreadXConfig}. Some (mis)information about what you are missing:\nhttps://www.raspberrypi.com/news/bullseye-bonus-1-8ghz-raspberry-pi-4/" >>${ResultLog})
 			echo -e "\nRaspberry Pi ThreadX version:\n${ThreadXVersion}" >>${ResultLog}
 			[ -f ${ThreadXConfig} ] && echo -e "\nThreadX configuration (${ThreadXConfig}):\n$(grep -v '#' ${ThreadXConfig} | sed '/^\s*$/d')" >>${ResultLog}
 			echo -e "\nActual ThreadX settings:\n$("${VCGENCMD}" get_config int)" >>${ResultLog}
@@ -3069,7 +3072,7 @@ CheckClockspeedsAndSensors() {
 		if [ "X${SmartCtl}" != "X" -a "X${Disks}" != "X" ]; then
 			echo "" >>${ResultLog}
 			# try to restrict SMART queries to 10 sec duration due to buggy devices
-			command -v timeout >/dev/null 2>&1 && SmartCtl="timeout 10 ${SmartCtl}"
+			command -v timeout >/dev/null 2>&1 && SmartCtl="timeout 15 ${SmartCtl}"
 			for Disk in ${Disks} ; do
 				case ${Disk} in
 					/dev/sd*)
@@ -3956,12 +3959,6 @@ LogEnvironment() {
 		esac
 	fi
 
-	# check whether we're running on XU4/HC1/HC2 and if true try to report ddr_freq.
-	# Most probably this setting has no effect (any more) since 825 MHz vs. 933 MHz
-	# results in similar benchmark scores: http://ix.io/4b7q vs. http://ix.io/4b7V
-	[ -f /boot/boot.ini ] && ddr_freq="$(awk -F" " '/setenv ddr_freq/ {print $3}' /boot/boot.ini 2>/dev/null)"
-	[ "X${ddr_freq}" != "X" ] && echo -e " DDR freq: ${ddr_freq} MHz"
-
 	# log /proc/device-tree/compatible contents if available
 	if [ "X${DTCompatible}" != "X" ]; then
 		echo "DT compat: $(head -n1 <<<"${DTCompatible}")"
@@ -3993,12 +3990,13 @@ LogEnvironment() {
 	# kernel config
 	KernelConfig="/boot/config-${KernelVersion}"
 	if [ -f "${KernelConfig}" ] ; then
-		grep -E "^CONFIG_HZ|^CONFIG_PREEMPT" "${KernelConfig}" | while read ; do echo "           ${REPLY}"; done | sort -V
+		grep -E "^CONFIG_HZ|^CONFIG_PREEMPT" "${KernelConfig}" | sed -e 's/^/           /' | sort -V
 	else
 		modprobe configs 2>/dev/null
-		[ -f /proc/config.gz ] && zgrep -E "^CONFIG_HZ|^CONFIG_PREEMPT" /proc/config.gz | \
-			while read ; do echo "           ${REPLY}"; done | sort -V
+		[ -f /proc/config.gz ] && zgrep -E "^CONFIG_HZ|^CONFIG_PREEMPT" /proc/config.gz | sed -e 's/^/           /' | sort -V
 	fi
+	# report kernel vulnerabilities since affecting performance:
+	grep "^Vulnerability" <<<"${LSCPU}" | grep -v 'Not affected' | tr -s ' ' | sed -e 's/^/           /'
 
 	# with Rockchip BSP kernels try to report PVTM settings (Process-Voltage-Temperature Monitor)
 	grep cpu.*pvtm <<<"${DMESG}" | awk -F'] ' '{print "           "$2}'
@@ -4027,6 +4025,12 @@ LogEnvironment() {
 		sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" <<<"${PolicyStateNow}"	
 	fi
 } # LogEnvironment
+
+ValidateExecution() {
+	# function that checks whether throttling (and frequency capping on RPi), swapping
+	# and too much background activity has happened, also reports bogus clockspeeds
+	:
+} # ValidateExecution
 
 UploadResults() {
 	# upload results to ix.io and replace multiple empty lines with one. 2nd try if 1st does not succeed
@@ -5996,20 +6000,20 @@ GuessSoCbySignature() {
 			# Samsung Exynos 7885: 6 x Cortex A53 / r0p4 + 2 Cortex A73 / r0p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			echo "Samsung Exynos 7885"
 			;;
-		*A53r0p4*A53r0p4*A53r0p4*A53r0p4*Exynosm1r1p1*Exynosm1r1p1*Exynosm1r1p1*Exynosm1r1p1)
+		*A53r0p4*A53r0p4*A53r0p4*A53r0p4*Samsungr1p1*Samsungr1p1*Samsungr1p1*Samsungr1p1)
 			# Samsung Exynos 8890: 4 x Cortex A53 / r0p4 + 2 or 4 x Exynos-m1 / r1p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			echo "Samsung Exynos 8890"
 			;;
-		*A53r0p4*A53r0p4*A53r0p4*A53r0p4*Exynosm1r4p0*Exynosm1r4p0*Exynosm1r4p0*Exynosm1r4p0)
+		*A53r0p4*A53r0p4*A53r0p4*A53r0p4*Samsungr4p0*Samsungr4p0*Samsungr4p0*Samsungr4p0)
 			# Samsung Exynos 8895: 4 x Cortex A53 / r0p4 + 4 x Exynos-m1 / r4p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			# The cores are called M2 (Mongoose 2) but share same core ID with M1 and only stepping differs
 			echo "Samsung Exynos 8895"
 			;;
-		*A55r0p1*A55r0p1*A55r0p1*A55r0p1*Exynosm3r1p0*Exynosm3r1p0*Exynosm3r1p0*Exynosm3r1p0)
+		*A55r0p1*A55r0p1*A55r0p1*A55r0p1*Samsungr1p0*Samsungr1p0*Samsungr1p0*Samsungr1p0)
 			# Samsung Exynos 9810: 4 x Cortex A55 / r0p1 + 4 x Exynos-m3 / r1p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp
 			echo "Samsung Exynos 9810"
 			;;
-		*A55r1p0*A55r1p0*A55r1p0*A55r1p0*A75r2p1*A75r2p1*Exynosm4r1p0*Exynosm4r1p0)
+		*A55r1p0*A55r1p0*A55r1p0*A55r1p0*A75r2p1*A75r2p1*Samsungr1p0*Samsungr1p0)
 			# Samsung Exynos 9820: 4 x Cortex A55 / r1p0 + 2 x Cortex-A75 / r2p1 + 2 x Exynos-m4 / r1p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm dcpop asimddp
 			echo "Samsung Exynos 9820"
 			;;
@@ -6168,7 +6172,7 @@ GuessSoCbySignature() {
 			echo "Qualcomm Snapdragon 8cx Gen 3"
 			;;
 		*A510r0p2*A510r0p2*A510r0p2*A510r0p2*A710r2p0*A710r2p0*A710r2p0*X2r2p0)
-			# Qualcomm Snapdragon 8 Gen1: 4 x Cortex-A510 / r0p2 + 3 Cortex-A710 / r2p0 + 1 x Cortex-X2 / r2p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 sve asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp flagm2 frint i8mm bf16 bti / https://chimolog.co/wp-content/uploads/2022/12/samsung_SM-X800.html
+			# Qualcomm Snapdragon 8 Gen1: 4 x Cortex-A510 / r0p2 + 3 Cortex-A710 / r2p0 + 1 x Cortex-X2 / r2p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 sve asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp sve2 sveaes svepmull svebitperm svesha3 svesm4 flagm2 frint svei8mm svebf16 i8mm bf16 bti
 			echo "Qualcomm Snapdragon 8 Gen1"
 			;;
 		*A510r0p3*A510r0p3*A510r0p3*A510r0p3*A710r2p0*A710r2p0*A710r2p0*X2r2p0)
@@ -6759,7 +6763,7 @@ CheckKernelVersion() {
 		if [ "X${CheckEOL}" = "X${EOLDate}" -a "X${EOLDate}" != "Xfalse" ]; then
 			# EOL date is in the past
 			echo -e "${LRED}${BOLD}${ShortKernelVersion}${KernelSuffix} has reached end-of-life on ${EOLDate} with version ${LatestKernelVersion}.${NC}"
-			echo -e "${LRED}${BOLD}Your ${KernelVersionDigitsOnly} and all other ${ShortKernelVersion}${KernelSuffix} revisions are unsupported since then.${NC}"
+			echo -e "${LRED}${BOLD}This ${KernelVersionDigitsOnly} and all other ${ShortKernelVersion}${KernelSuffix} revisions are unsupported since then.${NC}"
 		elif [ ${RevisionDifference} -gt 5 ]; then
 			# report version mismatch only if kernel revision difference is greater than 5
 			echo -e "${BOLD}Kernel ${KernelVersionDigitsOnly} is not latest ${LatestKernelVersion}${KernelSuffix} that was released on ${LatestKernelDate}.${NC}\n"
@@ -6791,7 +6795,7 @@ CheckKernelVersion() {
 			# EOL date is in the past
 			echo -e "${LRED}${BOLD}${ShortKernelVersion}${KernelSuffix} has reached end-of-life on ${EOLDate}. ${KernelVersionDigitsOnly} is unsupported since then.${NC}"
 		else
-			echo -e "${LGREEN}According to https://endoflife.date/linux your kernel version is up to date.${NC}"
+			echo -e "${LGREEN}According to https://endoflife.date/linux this kernel version is up to date.${NC}"
 			if [ "X${IsLTS}" = "Xtrue" ]; then
 				echo "The predicted end-of-life date for the ${ShortKernelVersion} LTS kernel is ${EOLDate}"
 			fi
@@ -6882,9 +6886,9 @@ CheckKernelVersion() {
 			:
 			;;
 		4.14.*)
-			# some SDKs/BSPs based on this version: Exynos 5422, NXP i.MX8x, Nexell S5P6818
+			# some SDKs/BSPs based on this version: Exynos 5422/9820, NXP i.MX8x, Nexell S5P6818
 			case ${GuessedSoC} in
-				*S5P6818*|*5422*)
+				*S5P6818*|*5422*|"Samsung Exynos 9820")
 					PrintBSPWarning Samsung
 					;;
 				"NXP i.MX8"*)
@@ -6944,6 +6948,9 @@ CheckKernelVersion() {
 					# dmesg output for PVTM for example
 					dmesg | grep -q 'cpu cpu0: pvtm' && PrintBSPWarning RockchipGKI
 					;;
+				"Qualcomm Snapdragon 8 Gen1"|"Qualcomm Snapdragon 8+ Gen1")
+					PrintBSPWarning Qualcomm
+					;;
 			esac
 			;;
 		5.15.*)
@@ -6977,7 +6984,7 @@ PrintBSPWarning() {
 			echo -e "${BOLD}vendor kernel. See https://tinyurl.com/y8k3af73 and https://tinyurl.com/ywtfec7n${NC}"
 			echo -e "${BOLD}for details.${NC}"
 			;;
-		MediaTek|Nexell|Nvidia|NXP|RealTek|Samsung|StarFive)
+		MediaTek|Nexell|Nvidia|NXP|Qualcomm|RealTek|Samsung|StarFive)
 			echo -e "${BOLD}This device runs a $1 vendor/BSP kernel.${NC}"
 			;;
 		Rockchip)
@@ -7111,7 +7118,7 @@ CheckStorage() {
 
 	# try to restrict SMART queries to 10 sec duration due to buggy USB-to-SATA bridges
 	SmartCtl="$(command -v smartctl 2>/dev/null)"
-	command -v timeout >/dev/null 2>&1 && SmartCtl="timeout 10 ${SmartCtl}"
+	command -v timeout >/dev/null 2>&1 && SmartCtl="timeout 15 ${SmartCtl}"
 
 	# grab info about block devices
 	[ -z "${LSBLK}" ] && LSBLK="$(LC_ALL="C" lsblk -l -o SIZE,NAME,FSTYPE,LABEL,MOUNTPOINT 2>&1)"
@@ -7530,24 +7537,67 @@ GetUSBSataBridgeName() {
 			DeviceInfo="JMicron JMS578 SATA 6Gb/s bridge"
 			;;
 		152d:0580)
-			DeviceInfo="JMicron JMS580 SATA 6Gb/s bridge"
+			DeviceInfo="JMicron JMS580 SATA bridge (SuperSpeed Plus / 6Gb/s)"
+			;;
+		152d:0581)
+			# SuperSpeed Plus bridge, one of the following:
+			# JMS581LT NVMe/SATA/SD7.1 bridge (SuperSpeed Plus / Gen3 x2 / 6Gb/s)
+			# JMS581D NVMe/SATA bridge (SuperSpeed Plus / Gen3 x2 / 6Gb/s)
+			# JMS581SD SD7.1/SD8.0 bridge (SuperSpeed Plus)
+			#
+			# To properly differentiate maybe bcdDevice can be used but at least to get
+			# negotiated device type ATTRS{model} can be used. Reads for example 'Generic
+			# SD70' with a ADATA Premier Extreme SD7.0 Express card: https://archive.md/h51hS
+			unset BridgeModel
+			BridgeModel="$(awk -F'"' '/ATTRS{model}/ {print $2}' <<<"${UdevInfo}" | head -n1 | tr -s ' ' | sed -e 's/\ $//' -e 's/^ //')"
+			DeviceInfo="JMicron JMS581 ${BridgeModel} bridge (SuperSpeed Plus)"
+			;;
+		152d:0583)
+			DeviceInfo="JMicron JMS583 NVMe bridge (SuperSpeed Plus / Gen3 x2)"
+			;;
+		152d:0586)
+			DeviceInfo="JMicron JMS586 NVMe bridge (SuperSpeed Plus 20Gbps / Gen3 x2)"
+			;;
+		152d:0901)
+			DeviceInfo="JMicron JMS901 UFS 2.1/UHS-I bridge"
 			;;
 		152d*)
 			# JMicron bridge, let's replace the monstrous vendor string with JMicron
 			DeviceInfo="$(sed 's|JMicron Technology Corp. / JMicron USA Technology Corp.|JMicron|' <<<"${3}")"
 			;;
+		174c:1352|174c:1356)
+			DeviceInfo="ASMedia ASM1352R SATA bridge (SuperSpeed Plus / 6Gb/s)"
+			;;
+		174c:225c)
+			DeviceInfo="ASMedia ASM225CM SATA 6Gb/s bridge"
+			;;
 		174c:2362)
 			DeviceInfo="ASMedia ASM2362 NVMe bridge (SuperSpeed Plus / Gen3 x2)"
 			;;
+		174c:2364)
+			DeviceInfo="ASMedia ASM2362 NVMe bridge (SuperSpeed Plus 20Gbps / Gen3 x4)"
+			;;
 		174c:55aa)
-			# the product ID has been used by ASMedia for a bunch of different bridges and the usbutils name reads
+			# The product ID has been used by ASMedia for a bunch of different bridges and the usbutils name reads
 			# 'ASMedia Technology Inc. Name: ASM1051E SATA 6Gb/s bridge, ASM1053E SATA 6Gb/s bridge, ASM1153 SATA 3Gb/s bridge, ASM1153E SATA 6Gb/s bridge'
 			# ASM1153 is fine in general while the older ASM105x thingies are known to be buggy. Connected via
 			# USB3 it would be possible to identify the different bridges but if they're behind USB2 then there's
 			# no chance. So we live with a generic string (that isn't that long/useless as lsusb output).
 			# ASM1153 is also used in many USB disks (e.g. Seagate) but with different firmware and then appears
-			# not with 174c vendor ID.
-			DeviceInfo="ASMedia SATA 6Gb/s bridge"
+			# not with 174c vendor ID. Same ID is also used with ASM1156 and ASM235CM so it needs to query product string
+			unset ProductString
+			ProductString="$(awk -F'"' '/ATTRS{product}/ {print $2}' <<<"${UdevInfo}" | head -n1 | tr -s ' ' | sed -e 's/\ $//' -e 's/^ //')"
+			case "${ProductString}" in
+				ASM235*)
+					DeviceInfo="ASMedia ${ProductString} SATA bridge (SuperSpeed Plus / 6Gb/s)"
+					;;
+				ASM105*|ASM115*)
+					DeviceInfo="ASMedia ${ProductString} SATA 6Gb/s bridge"
+					;;
+				*)
+					DeviceInfo="ASMedia SATA 6Gb/s bridge"
+					;;
+			esac
 			;;
 		174c*)
 			# ASMedia bridges, let's replace the monstrous vendor string with ASMedia
@@ -7564,9 +7614,9 @@ GetUSBSataBridgeName() {
 			# SATA 3Gb/s bridges: VL700/VL701
 			DeviceInfo="VIA Labs VL${idProduct:1} SATA 3Gb/s bridge"
 			;;
-		2109:07*)
-			# any of the other VIA Labs SATA 6Gb/s bridges (that may follow)
-			DeviceInfo="VIA Labs VL${idProduct:1} SATA 6Gb/s bridge"
+		2109:071*)
+			# any of the other VIA Labs VL71* SATA 6Gb/s bridges (that may follow)
+			DeviceInfo="VIA Labs VL${idProduct:1} SATA bridge (SuperSpeed Plus / 6Gb/s)"
 			;;
 		0bda:9210)
 			# Listed as 'RTL9210 M.2 NVME Adapter' in usbutils database but the RTL9210B-CG

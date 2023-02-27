@@ -1,3 +1,5 @@
+While below the device is called "ROCK Pi 4B" since using an image/dtb for this, in reality the hardware is a [ROCK960 Enterprise Edition "Ficus" prototype board](https://www.youtube.com/watch?v=2UYcmhbKyP4) Tom Cubie sent me 5 years ago. It provides two onboard SATA ports via a soldered JMS561 USB3-to-SATA bridge with integrated SATA port multiplier and flashed with a buggy firmware that identifies as unknown Western Digital device and chokes after SMART queries.
+
 # Radxa ROCK Pi 4B
 
 Tested on Sun, 19 Feb 2023 17:51:55 +0000. Full info: [http://ix.io/4ozG](http://ix.io/4ozG)

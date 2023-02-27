@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.9.32
+Version=0.9.33
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -1072,7 +1072,7 @@ CheckPerformance() {
 		echo -n "" >"${TempDir}/plotvalues"
 		for check in $(seq 1 ${Repetitions}) ; do
 			# run 7-zip benchmark
-			${TasksetOptions} "${SevenZip}" b ${SevenZIPOptions} >${TempLog}
+			${TasksetOptions} "${SevenZip}" b ${SevenZIPOptions} >${TempLog} 2>/dev/null
 			if [ -s "${NetioConsumptionFile}" ]; then
 				read ConsumptionNow <"${NetioConsumptionFile}"
 			fi
@@ -1589,7 +1589,7 @@ MonitorBoard() {
 				echo -e "$(date "+%H:%M:%S"): $(printf "%4s" ${CpuFreq})MHz $(printf "%5s" ${LoadAvg}) ${procStats}  $(printf "%4s" ${SocTemp})°C${VoltageColumn}${NetioColumn}"
 				;;
 			notavailable)
-				echo -e "$(date "+%H:%M:%S"):   ---     $(printf "%5s" ${LoadAvg}) ${procStats}  $(printf "%4s" ${SocTemp})°C${VoltageColumn}${NetioColumn}"
+				echo -e "$(date "+%H:%M:%S"): n/a MHz   $(printf "%5s" ${LoadAvg}) ${procStats}  $(printf "%4s" ${SocTemp})°C${VoltageColumn}${NetioColumn}"
 				;;
 		esac
 		snore ${SleepInterval}
@@ -3325,7 +3325,7 @@ Run7ZipBenchmark() {
 		CPUInfo="$(GetCPUInfo 0)"
 		echo -e "\nExecuting benchmark single-threaded on cpu0${CPUInfo}" >>${TempLog}
 		[ -s "${NetioConsumptionFile}" ] && snore 10
-		taskset -c 0 "${SevenZip}" b ${DictSize} -mmt=1 >>${TempLog}
+		taskset -c 0 "${SevenZip}" b ${DictSize} -mmt=1 >>${TempLog} 2>/dev/null
 	else
 		# test each cluster individually
 		for i in $(seq 0 $(( ${#ClusterConfig[@]} -1 )) ) ; do
@@ -3334,7 +3334,7 @@ Run7ZipBenchmark() {
 				CPUInfo="$(GetCPUInfo ${ClusterConfig[$i]})"
 				echo -e "\nExecuting benchmark single-threaded on cpu${ClusterConfig[$i]}${CPUInfo}" >>${TempLog}
 				[ -s "${NetioConsumptionFile}" ] && snore 10
-				taskset -c ${ClusterConfig[$i]} "${SevenZip}" b ${DictSize} -mmt=1 >>${TempLog}
+				taskset -c ${ClusterConfig[$i]} "${SevenZip}" b ${DictSize} -mmt=1 >>${TempLog} 2>/dev/null
 			fi
 		done
 	fi	
@@ -3358,7 +3358,7 @@ Run7ZipBenchmark() {
 		MonitoringPID=$!
 		echo -e "Executing benchmark ${RunHowManyTimes} times multi-threaded on CPUs $(cat /sys/devices/system/cpu/online)" >>${TempLog}
 		for ((i=1;i<=RunHowManyTimes;i++)); do
-			"${SevenZip}" b ${DictSize} -mmt=${CPUCores} >>${TempLog}
+			"${SevenZip}" b ${DictSize} -mmt=${CPUCores} >>${TempLog} 2>/dev/null
 		done
 		kill ${MonitoringPID}
 		echo -e "\n##########################################################################\n" >>${ResultLog}
@@ -3401,7 +3401,7 @@ Run7ZipBenchmark() {
 					echo -e "\nExecuting benchmark ${RunHowManyTimes} times multi-threaded on CPUs ${FirstCore}-${LastCore}${CPUInfo}" >>${TempLog}
 				fi
 				for ((o=1;o<=RunHowManyTimes;o++)); do
-					taskset -c ${FirstCore}-${LastCore} "${SevenZip}" b ${DictSize} -mmt=${HowManyCores} >>${TempLog}
+					taskset -c ${FirstCore}-${LastCore} "${SevenZip}" b ${DictSize} -mmt=${HowManyCores} >>${TempLog} 2>/dev/null
 				done
 			fi
 		done
@@ -3810,7 +3810,7 @@ SummarizeResults() {
 	# only check for throttling in normal mode and not when plotting performance/mhz graphs
 	SwapNow="$(awk -F" " '{print $4}' </proc/swaps | grep -v -i Used)"
 	[ "X${SwapBefore}" != "X${SwapNow}" ] && SwapWarning=" and swapping" || SwapWarning=""
-	[ "X${PlotCpufreqOPPs}" = "Xyes" ] || { ThrottlingCheck="$(CheckForThrottling)" ; echo -e "${ThrottlingCheck}\n" ; }
+	[ "X${PlotCpufreqOPPs}" = "Xyes" ] || ThrottlingCheck="$(CheckForThrottling)"
 
 	# Check %iowait and %sys percentage as an indication of swapping or too much background
 	# activity
@@ -3996,8 +3996,6 @@ LogEnvironment() {
 		modprobe configs 2>/dev/null
 		[ -f /proc/config.gz ] && zgrep -E "^CONFIG_HZ|^CONFIG_PREEMPT" /proc/config.gz | sed -e 's/^/           /' | sort -V
 	fi
-	# report kernel vulnerabilities since affecting performance:
-	lscpu | grep "^Vulnerability" | grep -v 'Not affected' | tr -s ' ' | sed -e 's/^/           /'
 
 	# with Rockchip BSP kernels try to report PVTM settings (Process-Voltage-Temperature Monitor)
 	grep cpu.*pvtm <<<"${DMESG}" | awk -F'] ' '{print "           "$2}'
@@ -4037,38 +4035,59 @@ ValidateResults() {
 	# Frequency capping happened
 	# Swapping happened
 	# Too much background activity
+	# oom-killer invocations
 	# Bogus clockspeeds
 	# Inappropriate settings for benchmarking
 	# Silly settings (for example: arm_boost not set on RPi4, zswap on top of zram)
 
-	# Throttling?
-	[ "${ThrottlingWarning}" = "" ] && echo -e "${LGREEN}No throttling${NC}" || echo -e "${LRED}${BOLD}Throttling occured${NC}"
-
-	# Frequency capping on RPi
+	# Throttling and frequency capping on RPi?
 	if [ "${USE_VCGENCMD}" = "true" ]; then
 		case "${ThrottlingCheck}" in
 			*"requency capping"*)
-				echo -e "${LRED}${BOLD}Frequency capping occured${NC}"
+				[ "${ThrottlingWarning}" = "" ] && echo -e "${LRED}${BOLD}Frequency capping occured${NC}" || echo -e "${LRED}${BOLD}Throttling / frequency capping occured${NC}"
 				;;
 			*)
-				echo -e "${LGREEN}No frequency capping${NC}"
+				[ "${ThrottlingWarning}" = "" ] && echo -e "${LGREEN}No throttling${NC}" || echo -e "${LRED}${BOLD}Throttling occured${NC}"
 				;;
 		esac
+	else
+		# Throttling on all other systems?
+		if [ "${ThrottlingWarning}" = "" ]; then
+			echo -e "${LGREEN}No throttling${NC}"
+		else
+			# we need to check whether we're running in Geekbench or PTS mode since the
+			# cluster tests on CPUs with different core types end up with the CPUs remaining
+			# on lower clockspeeds for a fraction of time when bringing them back online
+			# which then results in stats/time_in_state cpufreq statistics showing the cores
+			# not all the time at maximum clockspeed.
+			if [ ${#ClusterConfig[@]} -eq 1 -a "X${MODE}" != "Xpts" -a "X${MODE}" != "Xgb" ]; then
+				echo -e "${LRED}${BOLD}Throttling occured${NC}"
+			else
+				echo -e "Throttling might have occured"
+			fi
+		fi
 	fi
 
 	# Swapping?
 	[ "${SwapWarning}" = "" ] && echo -e "${LGREEN}No swapping${NC}" || echo -e "${LRED}${BOLD}Swapping occured${NC}"
 
-	# Too high %sys utilization?
-	[ ${SysMax:-0} -le 2 ] && echo -e "${LGREEN}%system/background activity OK${NC}" || echo -e "${LRED}${BOLD}Too much %system/background activity:${SysMax}%${NC}" | tr -s ' '
+	# Too high %system utilization (mostly caused by swapping on zram enabled systems)?
+	UtilizationValues="$(grep -A2000 -E "^System health while running tinymembench|^System health while running ramlat" "${MonitorLog}" | sed '/^Time/,+1 d' | awk -F"MHz " '/^[0-9]/ {print $2}' | awk -F" " '{print $3}' | sed 's/%//')"
+	PeakSysUtilization=$(sort -n -r <<<"${UtilizationValues}" | head -n1)
+	LogLength=$(wc -l <<<"${UtilizationValues}")
+	UtilizationSum=$(awk '{s+=$1} END {printf "%.0f", s}' <<<"${UtilizationValues}")
+	AverageSysUtilization=$(( ${UtilizationSum} / ${LogLength} ))
+	[ ${PeakSysUtilization:-0} -gt 15 -o ${AverageSysUtilization:-0} -gt 0 ] \
+		&& echo -e "${LRED}${BOLD}Too much background activity (%system): ${AverageSysUtilization}% avg, ${PeakSysUtilization}% max${NC}" \
+		|| echo -e "${LGREEN}Background activity (%system) OK${NC}"
 
 	# Too high overall CPU utilization with single threaded benchmarks? This is an indication
-	# of background activities needing to much CPU ressources. Skip in MODE=extensive/gb/pts
+	# of background activities needing too much CPU ressources. Skip in MODE=extensive/gb/pts
 	# Skip also if count of CPU cores is 1 or $1 is review
 
 	if [ "X${MODE}" != "Xextensive" -a "X${MODE}" != "Xpts" -a "X${MODE}" != "Xgb" -a ${CPUCores} -gt 1 -a "X$1" != "Xreview" ]; then
 		IdealUtilization=$(( 100 / ${CPUCores} ))
-		UtilizationValues="$(grep -A2000 "^System health while running tinymembench" "${MonitorLog}" | grep -B2000 -E " 7-zip multi |  7-zip cluster | cpuminer:| stress-ng:| stockfish:" | sed '/^Time/,+1 d' | awk -F" " '/^[0-9]/ {print $4}' | sed 's/%//' | while read ; do [ ${REPLY} -ge ${IdealUtilization} ] && echo ${REPLY} ; done)"
+		UtilizationValues="$(grep -A2000 "^System health while running tinymembench" "${MonitorLog}" | grep -B2000 -E " 7-zip multi |  7-zip cluster | cpuminer:| stress-ng:| stockfish:" | sed '/^Time/,+1 d' | awk -F"MHz " '/^[0-9]/ {print $2}' | awk -F" " '{print $2}' | sed 's/%//' | while read ; do [ ${REPLY} -ge ${IdealUtilization} ] && echo ${REPLY} ; done)"
 		PeakCPUUtilization=$(sort -n -r <<<"${UtilizationValues}" | head -n1)
 		LogLength=$(wc -l <<<"${UtilizationValues}")
 		UtilizationSum=$(awk '{s+=$1} END {printf "%.0f", s}' <<<"${UtilizationValues}")
@@ -4078,26 +4097,34 @@ ValidateResults() {
 		case ${CPUCores} in
 			2)
 				# 8% peak and 2% average is acceptable
-				[ ${PeakDiff} -gt 8 -o ${AverageDiff} -gt 2 ] && echo -e "${LRED}${BOLD}Too much general background activity: ${AverageDiff}% avg, ${PeakDiff}% max${NC}"
+				[ ${PeakDiff} -gt 8 -o ${AverageDiff} -gt 2 ] && echo -e "${LRED}${BOLD}Too much other background activity: ${AverageDiff}% avg, ${PeakDiff}% max${NC}"
 				;;
 			4)
 				# 5% peak and 1% average is acceptable
-				[ ${PeakDiff} -gt 5 -o ${AverageDiff} -gt 1 ] && echo -e "${LRED}${BOLD}Too much general background activity: ${AverageDiff}% avg, ${PeakDiff}% max${NC}"
+				[ ${PeakDiff} -gt 5 -o ${AverageDiff} -gt 1 ] && echo -e "${LRED}${BOLD}Too much other background activity: ${AverageDiff}% avg, ${PeakDiff}% max${NC}"
 				;;
-			6)
+			5|6)
 				# 3% peak and 1% average is acceptable
-				[ ${PeakDiff} -gt 3 -o ${AverageDiff} -gt 1 ] && echo -e "${LRED}${BOLD}Too much general background activity: ${AverageDiff}% avg, ${PeakDiff}% max${NC}"
+				[ ${PeakDiff} -gt 3 -o ${AverageDiff} -gt 1 ] && echo -e "${LRED}${BOLD}Too much other background activity: ${AverageDiff}% avg, ${PeakDiff}% max${NC}"
 				;;
 			8)
 				# 2% peak and 0% average is acceptable
-				[ ${PeakDiff} -gt 2 -o ${AverageDiff} -gt 0 ] && echo -e "${LRED}${BOLD}Too much general background activity: ${AverageDiff}% avg, ${PeakDiff}% max${NC}"
+				[ ${PeakDiff} -gt 2 -o ${AverageDiff} -gt 0 ] && echo -e "${LRED}${BOLD}Too much other background activity: ${AverageDiff}% avg, ${PeakDiff}% max${NC}"
 				;;
 			*)
 				# With more CPU cores it's impossible to detect 'sane environment' so only
 				# notify if average utilization is off by more than 0%
-				[ ${AverageDiff} -gt 0 ] && echo -e "${LRED}${BOLD}Too much general background activity: ${AverageDiff}% avg, ${PeakDiff}% max${NC}"
+				[ ${AverageDiff} -gt 0 ] && echo -e "${LRED}${BOLD}Too much other background activity: ${AverageDiff}% avg, ${PeakDiff}% max${NC}"
 				;;
 		esac
+	fi
+
+	# check for out of memory events (oom-killer invocations)
+	if [ -s "${TempDir}/dmesg" ]; then
+		OOMCount="$(grep -c "oom-killer" "${TempDir}/dmesg")"
+		if [ ${OOMCount:-0} -gt 0 ]; then
+			echo -e "${LRED}${BOLD}${OOMCount} oom-killer invocations (system too low on RAM)${NC}"
+		fi
 	fi
 } # ValidateResults
 
@@ -4137,30 +4164,22 @@ UploadResults() {
 			grep '^aes-...-cbc' ${OpenSSLLog}
 		fi
 	elif [ "X${MODE}" = "Xgb" ]; then
-		if [ ${IOWaitAvg:-0} -le 2 -a ${IOWaitMax:-0} -le 5 -a ${SysMax:-0} -le 5 -a ! -f "${TempDir}/throttling_info.txt" -a "${SwapWarning}" = "" ]; then
-			echo -e "First run:\n"
-			case ${GBVersion} in
-				5.*)
-					grep ' Score ' ${TempLog} | sed '/Multi-Core*/i \ \ \ '
-					echo -e "\nSecond run:\n"
-					grep ' Score ' ${TempLog2} | sed '/Multi-Core*/i \ \ \ '
-					;;
-				6.*)
-					grep ' Score ' ${TempLog}
-					echo -e "\nSecond run:\n"
-					grep ' Score ' ${TempLog2}
-					;;
-			esac
-			echo -e "\n${CompareURL}"
-		else
-			echo "\nScores not valid. Throttling${SwapWarning} occured and/or too much background activity."
-		fi
+		echo -e "First run:\n"
+		case ${GBVersion} in
+			5.*)
+				grep ' Score ' ${TempLog} | sed '/Multi-Core*/i \ \ \ '
+				echo -e "\nSecond run:\n"
+				grep ' Score ' ${TempLog2} | sed '/Multi-Core*/i \ \ \ '
+				;;
+			6.*)
+				grep ' Score ' ${TempLog}
+				echo -e "\nSecond run:\n"
+				grep ' Score ' ${TempLog2}
+				;;
+		esac
+		echo -e "\n${CompareURL}\n\nResults validation:\n\n${IsValid}"
 	elif [ "X${MODE}" = "Xreview" -a "X${NOTUNING}" != "Xyes" ]; then
-		if [ ${IOWaitAvg:-0} -le 2 -a ${IOWaitMax:-0} -le 5 -a ${SysMax:-0} -le 5 -a ! -f "${TempDir}/throttling_info.txt" -a "${SwapWarning}" = "" ]; then
-			echo -e "${LGREEN}It seems neither throttling occured nor too much background activity.${NC}"
-		else
-			echo -e "${LRED}${BOLD}Throttling${SwapWarning} occured and/or too much background activity invalidating benchmark scores.${NC}"
-		fi
+		echo -e "Results validation:\n\n${IsValid}"
 	fi
 	case ${UploadURL} in
 		http*)
@@ -4283,7 +4302,7 @@ CheckForThrottling() {
 						;;
 				esac
 				if [ "X${Warning}" = "X" ]; then
-					echo -e "${LGREEN}It seems neither throttling nor frequency capping has occured.${NC}\n"
+					echo -e "${LGREEN}No downclocking of CPU cores occured.${NC}\n"
 				else
 					echo -e "${LRED}${BOLD}${Warning}${NC}\n"
 				fi
@@ -5533,6 +5552,10 @@ GuessSoCbySignature() {
 					;;
 			esac
 			;;
+		*A55*A55*A55*A55*A76r?p?|*A76r?p?*A55*A55*A55*A55r?p?)
+			# Amlogic S928X, 4 x Cortex-A55 + 1 x Cortex-A76: https://browser.geekbench.com/v5/cpu/compare/19788026?baseline=20656779
+			echo "Amlogic S928X"
+			;;
 		00A73r0p200A73r0p200A73r0p200A73r0p214A53r0p414A53r0p414A53r0p414A53r0p4)
 			# Amlogic A311D2, 4 x Cortex-A73 / r0p2 + 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			echo "Amlogic A311D2"
@@ -6753,8 +6776,6 @@ FinalReporting() {
 		echo -e "\x08\x08 Done.\n\nClockspeeds now at $(ReadSoCTemp)°C:\n\n${ClockspeedsNow}\n"
 	fi
 	ThrottlingCheck="$(CheckForThrottling | sed -e 's/ Check the log for details.//' -e '/^[[:space:]]*$/d')"
-	echo -e "${ThrottlingCheck}"
-	[ -f ${TempDir}/throttling_info.txt ] && cat ${TempDir}/throttling_info.txt
 
 	# Print warnings if count or details of attached PCIe or storage devices have changed.
 	# Possible reasons: cable/connector problems, overheating, other transmission errors and so on...
@@ -6965,7 +6986,7 @@ CheckKernelVersion() {
 			grep -q "releaseCycle: \"4.9\"" "${TempDir}/linuxkernel.md" || \
 				echo -e "\n${LRED}${BOLD}The 4.9 series has reached end-of-life on 2023-01-07 with version 4.9.337.${NC}"
 			;;
-		"5.1.0"|"5.3.0"|"5.7.0"|"5.9.0"|"5.10.0"|"5.14.0")
+		"5.1.0"|"5.3.0"|"5.3.11"|"5.7.0"|"5.9.0"|"5.10.0"|"5.14.0")
 			# Popular kernels for all sorts of Amlogic SoCs from https://github.com/150balbes
 			# Unfortunately lots of devices still run with these ancient kernels lacking any fixes
 			:
@@ -7004,7 +7025,7 @@ CheckKernelVersion() {
 				"Allwinner D1"*)
 					PrintBSPWarning Allwinner
 					;;
-				*A311D2*|*S805X2*|*S905Y4*|*S905W2*)
+				*A311D2*|*S805X2*|*S905Y4*|*S905W2*|*S928X*)
 					PrintBSPWarning Amlogic
 					;;
 				*5422*)
@@ -7036,6 +7057,9 @@ CheckKernelVersion() {
 				"Qualcomm Snapdragon 8 Gen1"|"Qualcomm Snapdragon 8+ Gen1")
 					PrintBSPWarning Qualcomm
 					;;
+				*S928X*)
+					PrintBSPWarning Amlogic
+					;;
 			esac
 			;;
 		5.15.*)
@@ -7045,6 +7069,16 @@ CheckKernelVersion() {
 					;;
 				*MT7986A*)
 					PrintBSPWarning MediaTek
+					;;
+				*S928X*)
+					PrintBSPWarning Amlogic
+					;;
+			esac
+			;;
+		*)
+			case ${GuessedSoC} in
+				*S928X*)
+					PrintBSPWarning Amlogic
 					;;
 			esac
 			;;
@@ -7498,7 +7532,7 @@ CheckStorage() {
 			# check dmesg output to gather further info like negotiation problems and errors.
 			MMCNode="$(grep "] ${StorageDevice##*/}: " <<<"${DMESG}" | grep "iB" | awk -F":" "/ ${mmc_name} / {print \$2}" | head -n1)"
 			if [ "X${MMCNode}" != "X" ]; then
-				DmesgInfo="$(awk -F' new ' "/]${MMCNode}: new/ {print \$2}" <<<"${DMESG}" | awk -F' at ' '{print $1}')"
+				DmesgInfo="$(awk -F' new ' "/]${MMCNode}: new/ {print \$2}" <<<"${DMESG}" | awk -F' at ' '{print $1}' | tail -n1)"
 				CountOfProblems=$(grep "]${MMCNode}: " <<<"${DMESG}" | grep -c error)
 				TuningProblems=$(grep -c "]${MMCNode}: tuning execution failed" <<<"${DMESG}")
 				if [ ${CountOfProblems} -gt 0 -a ${TuningProblems} -gt 0 ]; then

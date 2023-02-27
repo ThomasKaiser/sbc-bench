@@ -4123,8 +4123,22 @@ ValidateResults() {
 	if [ -s "${TempDir}/dmesg" ]; then
 		OOMCount="$(grep -c "oom-killer" "${TempDir}/dmesg")"
 		if [ ${OOMCount:-0} -gt 0 ]; then
-			echo -e "${LRED}${BOLD}${OOMCount} oom-killer invocations (system too low on RAM)${NC}"
+			ProcSwapLines=$(wc -l </proc/swaps)
+			case ${ProcSwapLines} in
+				1)
+					echo -e "${LRED}${BOLD}${OOMCount} oom-killer invocations (system too low on RAM and no ZRAM configured)${NC}"
+					;;
+				*)
+					echo -e "${LRED}${BOLD}${OOMCount} oom-killer invocations (system too low on RAM and insufficient swap configured)${NC}"
+					;;
+			esac
 		fi
+	fi
+
+	# check whether zswap sits on top of zram
+	[ -r /sys/module/zswap/parameters/enabled ] && ZswapEnabled="$(sed 's/Y/1/' </sys/module/zswap/parameters/enabled)"
+	if [ "${ZswapEnabled}" = "1" ]; then
+		grep -q '/dev/zram' /proc/swaps && echo -e "${LRED}${BOLD}Zswap combined with ZRAM. Swapping performance severely harmed${NC}"
 	fi
 } # ValidateResults
 

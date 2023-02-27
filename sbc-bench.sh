@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.9.31
+Version=0.9.32
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -2345,6 +2345,7 @@ CheckMissingPackages() {
 	command -v lshw >/dev/null 2>&1 || echo -e "lshw \c"
 	command -v strings >/dev/null 2>&1 || echo -e "binutils \c"
 	command -v mbw >/dev/null 2>&1 || echo -e "mbw \c"
+	command -v uptime >/dev/null 2>&1 || echo -e "procps \c"
 	command -v powercap-info >/dev/null 2>&1
 	[ $? -ne 0 -a -d /sys/devices/virtual/powercap ] && echo -e "powercap-utils \c"
 	if [ "${ExecuteStockfish}" = "yes" ]; then
@@ -3809,7 +3810,7 @@ SummarizeResults() {
 	# only check for throttling in normal mode and not when plotting performance/mhz graphs
 	SwapNow="$(awk -F" " '{print $4}' </proc/swaps | grep -v -i Used)"
 	[ "X${SwapBefore}" != "X${SwapNow}" ] && SwapWarning=" and swapping" || SwapWarning=""
-	[ "X${PlotCpufreqOPPs}" = "Xyes" ] || CheckForThrottling
+	[ "X${PlotCpufreqOPPs}" = "Xyes" ] || { ThrottlingCheck="$(CheckForThrottling)" ; echo -e "${ThrottlingCheck}\n" ; }
 
 	# Check %iowait and %sys percentage as an indication of swapping or too much background
 	# activity
@@ -3996,7 +3997,7 @@ LogEnvironment() {
 		[ -f /proc/config.gz ] && zgrep -E "^CONFIG_HZ|^CONFIG_PREEMPT" /proc/config.gz | sed -e 's/^/           /' | sort -V
 	fi
 	# report kernel vulnerabilities since affecting performance:
-	grep "^Vulnerability" <<<"${LSCPU}" | grep -v 'Not affected' | tr -s ' ' | sed -e 's/^/           /'
+	lscpu | grep "^Vulnerability" | grep -v 'Not affected' | tr -s ' ' | sed -e 's/^/           /'
 
 	# with Rockchip BSP kernels try to report PVTM settings (Process-Voltage-Temperature Monitor)
 	grep cpu.*pvtm <<<"${DMESG}" | awk -F'] ' '{print "           "$2}'
@@ -4006,31 +4007,99 @@ LogEnvironment() {
 	[ -z "${KernelInfo}" ] || echo -e "\n##########################################################################\n"; \
 		sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" <<<"${KernelInfo}"
 
+	# results validation:
+	IsValid="$(ValidateResults | sed -e 's/^/  * /')"
+	echo -e "\n##########################################################################\n"
+	echo -e "Results validation:\n\n${IsValid}\n" | sed "s,\x1B\[[0-9;]*[a-zA-Z],,g"
+
 	# add performance relevant governors/policies to results if available:
 	GovernorStateNow="$(HandleGovernors | grep -v cpufreq-policy)"
 	PolicyStateNow="$(HandlePolicies)"
 	if [ "X${GovernorStateNow}" != "X" -a "X${PolicyStateNow}" != "X" ]; then
-		echo -e "\n##########################################################################\n"
-		echo -e "Status of performance related governors found below /sys (w/o cpufreq):"
-		sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" <<<"${GovernorStateNow}"
-		echo -e "\nStatus of performance related policies found below /sys:"
-		sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" <<<"${PolicyStateNow}"
+		echo -e "Status of performance related governors found below /sys (w/o cpufreq):\n"
+		sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" <<<"${GovernorStateNow}" | sed -e 's/^/  * /'
+		echo -e "\nStatus of performance related policies found below /sys:\n"
+		sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" <<<"${PolicyStateNow}" | sed -e 's/^/  * /'
 	elif [ "X${GovernorStateNow}" != "X" ]; then
-		echo -e "\n##########################################################################\n"
-		echo -e "Status of performance related governors found below /sys (w/o cpufreq):"
-		sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" <<<"${GovernorStateNow}"
+		echo -e "Status of performance related governors found below /sys (w/o cpufreq):\n"
+		sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" <<<"${GovernorStateNow}" | sed -e 's/^/  * /'
 	elif [ "X${PolicyStateNow}" != "X" ]; then
-		echo -e "\n##########################################################################\n"
-		echo -e "Status of performance related policies found below /sys:"
-		sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" <<<"${PolicyStateNow}"	
+		echo -e "Status of performance related policies found below /sys:\n"
+		sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" <<<"${PolicyStateNow}"	| sed -e 's/^/  * /'
 	fi
 } # LogEnvironment
 
-ValidateExecution() {
-	# function that checks whether throttling (and frequency capping on RPi), swapping
-	# and too much background activity has happened, also reports bogus clockspeeds
-	:
-} # ValidateExecution
+ValidateResults() {
+	# function that checks whether benchmark scores have been invalidated by the following
+	# events:
+	#
+	# Thermal throttling happened
+	# Frequency capping happened
+	# Swapping happened
+	# Too much background activity
+	# Bogus clockspeeds
+	# Inappropriate settings for benchmarking
+	# Silly settings (for example: arm_boost not set on RPi4, zswap on top of zram)
+
+	# Throttling?
+	[ "${ThrottlingWarning}" = "" ] && echo -e "${LGREEN}No throttling${NC}" || echo -e "${LRED}${BOLD}Throttling occured${NC}"
+
+	# Frequency capping on RPi
+	if [ "${USE_VCGENCMD}" = "true" ]; then
+		case "${ThrottlingCheck}" in
+			*"requency capping"*)
+				echo -e "${LRED}${BOLD}Frequency capping occured${NC}"
+				;;
+			*)
+				echo -e "${LGREEN}No frequency capping${NC}"
+				;;
+		esac
+	fi
+
+	# Swapping?
+	[ "${SwapWarning}" = "" ] && echo -e "${LGREEN}No swapping${NC}" || echo -e "${LRED}${BOLD}Swapping occured${NC}"
+
+	# Too high %sys utilization?
+	[ ${SysMax:-0} -le 2 ] && echo -e "${LGREEN}%system/background activity OK${NC}" || echo -e "${LRED}${BOLD}Too much %system/background activity:${SysMax}%${NC}" | tr -s ' '
+
+	# Too high overall CPU utilization with single threaded benchmarks? This is an indication
+	# of background activities needing to much CPU ressources. Skip in MODE=extensive/gb/pts
+	# Skip also if count of CPU cores is 1 or $1 is review
+
+	if [ "X${MODE}" != "Xextensive" -a "X${MODE}" != "Xpts" -a "X${MODE}" != "Xgb" -a ${CPUCores} -gt 1 -a "X$1" != "Xreview" ]; then
+		IdealUtilization=$(( 100 / ${CPUCores} ))
+		UtilizationValues="$(grep -A2000 "^System health while running tinymembench" "${MonitorLog}" | grep -B2000 -E " 7-zip multi |  7-zip cluster | cpuminer:| stress-ng:| stockfish:" | sed '/^Time/,+1 d' | awk -F" " '/^[0-9]/ {print $4}' | sed 's/%//' | while read ; do [ ${REPLY} -ge ${IdealUtilization} ] && echo ${REPLY} ; done)"
+		PeakCPUUtilization=$(sort -n -r <<<"${UtilizationValues}" | head -n1)
+		LogLength=$(wc -l <<<"${UtilizationValues}")
+		UtilizationSum=$(awk '{s+=$1} END {printf "%.0f", s}' <<<"${UtilizationValues}")
+		AverageCPUUtilization=$(( ${UtilizationSum} / ${LogLength} ))
+		PeakDiff=$(( ${PeakCPUUtilization} - ${IdealUtilization} ))
+		AverageDiff=$(( ${AverageCPUUtilization} - ${IdealUtilization} ))
+		case ${CPUCores} in
+			2)
+				# 8% peak and 2% average is acceptable
+				[ ${PeakDiff} -gt 8 -o ${AverageDiff} -gt 2 ] && echo -e "${LRED}${BOLD}Too much general background activity: ${AverageDiff}% avg, ${PeakDiff}% max${NC}"
+				;;
+			4)
+				# 5% peak and 1% average is acceptable
+				[ ${PeakDiff} -gt 5 -o ${AverageDiff} -gt 1 ] && echo -e "${LRED}${BOLD}Too much general background activity: ${AverageDiff}% avg, ${PeakDiff}% max${NC}"
+				;;
+			6)
+				# 3% peak and 1% average is acceptable
+				[ ${PeakDiff} -gt 3 -o ${AverageDiff} -gt 1 ] && echo -e "${LRED}${BOLD}Too much general background activity: ${AverageDiff}% avg, ${PeakDiff}% max${NC}"
+				;;
+			8)
+				# 2% peak and 0% average is acceptable
+				[ ${PeakDiff} -gt 2 -o ${AverageDiff} -gt 0 ] && echo -e "${LRED}${BOLD}Too much general background activity: ${AverageDiff}% avg, ${PeakDiff}% max${NC}"
+				;;
+			*)
+				# With more CPU cores it's impossible to detect 'sane environment' so only
+				# notify if average utilization is off by more than 0%
+				[ ${AverageDiff} -gt 0 ] && echo -e "${LRED}${BOLD}Too much general background activity: ${AverageDiff}% avg, ${PeakDiff}% max${NC}"
+				;;
+		esac
+	fi
+} # ValidateResults
 
 UploadResults() {
 	# upload results to ix.io and replace multiple empty lines with one. 2nd try if 1st does not succeed
@@ -4039,6 +4108,7 @@ UploadResults() {
 
 	# Display benchmark results if not in PTS, GB or preview mode
 	if [ "X${MODE}" != "Xpts" -a "X${MODE}" != "Xgb" -a "X${MODE}" != "Xreview" ]; then
+		echo -e "Results validation:\n\n${IsValid}\n"
 		MemoryScores="$(awk -F" " '/^ libc / {print $2$4" "$5" "$6}' <${ResultLog} | grep -E 'memcpy|memset' | awk -F'MB/s' '{print $1"MB/s"}')"
 		CountOfMemoryScores=$(wc -l <<<"${MemoryScores}")
 		if [ ${#ClusterConfig[@]} -eq 1 -o $(( ${#ClusterConfig[@]} * 2 )) -ne ${CountOfMemoryScores} ]; then
@@ -4083,7 +4153,7 @@ UploadResults() {
 			esac
 			echo -e "\n${CompareURL}"
 		else
-			echo "Scores not valid. Throttling${SwapWarning} occured and/or too much background activity."
+			echo "\nScores not valid. Throttling${SwapWarning} occured and/or too much background activity."
 		fi
 	elif [ "X${MODE}" = "Xreview" -a "X${NOTUNING}" != "Xyes" ]; then
 		if [ ${IOWaitAvg:-0} -le 2 -a ${IOWaitMax:-0} -le 5 -a ${SysMax:-0} -le 5 -a ! -f "${TempDir}/throttling_info.txt" -a "${SwapWarning}" = "" ]; then
@@ -4140,6 +4210,15 @@ CheckIOWait() {
 	IOWaitSum="$(awk '{s+=$1} END {printf "%.0f", s}' <<<"${IOWait}")"
 	echo $(( ${IOWaitSum} * 10 / ${LogLength} ))
 } # CheckIOWait
+
+CheckCPUUtilization() {
+	# $1 is the CPU utilization w/o any disturbing background tasks, e.g. 50% on a dual
+	# core system, 12% on an octa core, %25 on a quad core and so on
+	IOWait="$(awk -F" " '/^[0-9]/ {print $8}' <"${MonitorLog}" | sed 's/%//')"
+	LogLength=$(wc -l <<<"${IOWait}")
+	IOWaitSum="$(awk '{s+=$1} END {printf "%.0f", s}' <<<"${IOWait}")"
+	echo $(( ${IOWaitSum} * 10 / ${LogLength} ))
+} # CheckCPUUtilization
 
 CheckForThrottling() {
 	# skip this check if $MaxKHz is set
@@ -4480,7 +4559,7 @@ GuessARMSoC() {
 	# soc soc0: Amlogic Meson SM1 (S905D3) Revision 2b:b (1:2) Detected <-- AMedia X96 Max+/Air / HK1 Box/Vontar X3 / SEI Robotics SEI610 / X96 Max Plus Q1
 	# soc soc0: Amlogic Meson SM1 (Unknown) Revision 2b:b (1:2) Detected <-- Shenzhen Amediatech Technology Co. Ltd X96 Air / AMedia X96 Max+ / SEI Robotics SEI610 / HK1 Box/Vontar X3
 	# soc soc0: Amlogic Meson SM1 (S905D3) Revision 2b:c (4:2) Detected <-- Khadas VIM3L / https://www.spinics.net/lists/arm-kernel/msg848718.html
-	# soc soc0: Amlogic Meson SM1 (S905X3) Revision 2b:c (10:2) Detected <-- AMedia X96 Max+ / H96 Max X3 / ODROID-C4 / ODROID-HC4 / HK1 Box/Vontar X3 / SEI Robotics SEI610 / Shenzhen Amediatech Technology Co. Ltd X96 Max/Air / Shenzhen CYX Industrial Co. Ltd A95XF3-AIR / Sinovoip BANANAPI-M5 / Tanix TX3 (QZ) / Ugoos X3
+	# soc soc0: Amlogic Meson SM1 (S905X3) Revision 2b:c (10:2) Detected <-- AMedia X96 Max+ / H96 Max X3 / ODROID-C4 / ODROID-HC4 / HK1 Box/Vontar X3 / SEI Robotics SEI610 / Shenzhen Amediatech Technology Co. Ltd X96 Max/Air / Shenzhen CYX Industrial Co. Ltd A95XF3-AIR / Sinovoip BANANAPI-M5 / Skyworth LB2004-A4091 / Tanix TX3 (QZ) / Ugoos X3
 	# soc soc0: Amlogic Meson SM1 (Unknown) Revision 2b:c (10:2) Detected <-- Khadas VIM3L / HK1 Box/Vontar X3
 	# soc soc0: Amlogic Meson SM1 (Unknown) Revision 2b:b (18:2) Detected <-- Shenzhen Amediatech Technology Co. Ltd X96 Air
 	# soc soc0: Amlogic Meson SM1 (Unknown) Revision 2b:b (40:2) Detected <-- Khadas VIM3L
@@ -6456,7 +6535,7 @@ ProvideReviewInfo() {
 	sed -e 's/^/    /' <<<"${OriginalCPUInfo}" >>"${TempDir}/review"
 
 	AvailableMem=$(free | awk -F" " '/^Mem:   / {print $2}' | tail -n1)
-	echo -e "\n$(( ${AvailableMem} / 1024 ))KB available RAM" >>"${TempDir}/review"
+	echo -e "\n$(( ${AvailableMem} / 1024 )) KB available RAM" >>"${TempDir}/review"
 
 	# report probably performance relevant governors and policies
 	echo -e "\n### Governors/policies (performance vs. idle consumption):\n\nOriginal governor settings:\n" >>"${TempDir}/review"
@@ -6636,6 +6715,7 @@ ProvideReviewInfo() {
 
 	echo "sbc-bench review mode started" >/dev/kmsg
 	trap "FinalReporting ; exit 0" 0 1 2 3 15
+	unset ThrottlingWarning ThrottlingCheck SwapWarning
 	rm "${TempDir}"/*time_in_state* "${TempDir}/throttling_info.txt" 2>/dev/null
 	SwapBefore="${SwapNow}"
 	CheckTimeInState before
@@ -6672,7 +6752,8 @@ FinalReporting() {
 	else
 		echo -e "\x08\x08 Done.\n\nClockspeeds now at $(ReadSoCTemp)°C:\n\n${ClockspeedsNow}\n"
 	fi
-	CheckForThrottling | sed -e 's/ Check the log for details.//' -e '/^[[:space:]]*$/d'
+	ThrottlingCheck="$(CheckForThrottling | sed -e 's/ Check the log for details.//' -e '/^[[:space:]]*$/d')"
+	echo -e "${ThrottlingCheck}"
 	[ -f ${TempDir}/throttling_info.txt ] && cat ${TempDir}/throttling_info.txt
 
 	# Print warnings if count or details of attached PCIe or storage devices have changed.
@@ -6698,6 +6779,10 @@ FinalReporting() {
 		echo -e "${BOLD}ATTENTION:${NC} some noise in kernel ring buffer since start of monitoring:\n"
 		echo -e "${DMESGSinceStart}\n"
 	fi
+
+	# output execution validation
+	IsValid="$(ValidateResults review | sed -e 's/^/  * /')"
+	echo -e "Results validation:\n\n${IsValid}${NC}\n"
 
 	# revert at least cpufreq and PCIe ASPM settings
 	BasicSetup ${OriginalCPUFreqGovernor} >/dev/null 2>&1

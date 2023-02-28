@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.9.33
+Version=0.9.34
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -34,7 +34,7 @@ Main() {
 	[ -r "${ProcCPUFile}" ] && ProcCPU="$(cat "${ProcCPUFile}")"
 
 	# check in which mode we're supposed to run
-	while getopts 'uSchjkmtTrsgNPG' c ; do
+	while getopts 'uSchjkmtTrRsgNPG' c ; do
 		case ${c} in
 			m)
 				# monitoring mode
@@ -63,7 +63,12 @@ Main() {
 					fi
 				fi
 				DMESG="$(dmesg | grep "mmc")"
-				command -v smartctl >/dev/null 2>&1 || echo -e "${BOLD}Warning: smartmontools not installed${NC}\n"
+				SMARTDrives="$(ls /dev/sd* /dev/nvme* 2>/dev/null)"
+				if [ "X${SMARTDrives}" != "X" ]; then
+					# warn about absence of smartctl and running not as root only when needed
+					command -v smartctl >/dev/null 2>&1 || echo -e "${BOLD}Warning: smartmontools not installed${NC}\n" >&2
+					[ $UID = 0 ] || echo -e "${BOLD}Warning: to query all drive info this tool needs to be run as root${NC}\n" >&2
+				fi
 				CheckStorage
 				exit 0
 				;;
@@ -80,6 +85,15 @@ Main() {
 			j|r)
 				# Jeff Geerling or Jean-Luc Aufranc mode. Help in reviewing devices
 				MODE=review
+				RunBenchmarks=TRUE
+				[ $UID = 0 ] || echo -e "${BOLD}Warning: for useable results this tool needs to be run as root${NC}\n" >&2
+				ProvideReviewInfo
+				exit 0
+				;;
+			R)
+				# Review mode w/o basic benchmarking and thermal throttling tests
+				MODE=review
+				[ $UID = 0 ] || echo -e "${BOLD}Warning: for useable results this tool needs to be run as root${NC}\n" >&2
 				ProvideReviewInfo
 				exit 0
 				;;
@@ -94,6 +108,7 @@ Main() {
 				# 2nd argument (integer in degree C) is the value we wait for the board to cool
 				# down prior to next test
 				TargetTemp=${2:-50}
+				[ $UID = 0 ] || echo -e "${BOLD}Warning: for useable results this tool needs to be run as root${NC}\n" >&2
 				TempTest
 				exit 0
 				;;
@@ -184,6 +199,8 @@ Main() {
 				;;
 			esac
 	done
+
+	[ $UID = 0 ] || echo -e "${BOLD}Warning: when not being executed as root some scores will be severely off${NC}\n" >&2
 
 	# ensure other sbc-bench instances are terminated
 	for PID in $( (pgrep -f "${PathToMe}" ; jobs -p) | sort | uniq -u) ; do
@@ -2344,7 +2361,6 @@ CheckMissingPackages() {
 	command -v dmidecode >/dev/null 2>&1 || echo -e "dmidecode \c"
 	command -v lshw >/dev/null 2>&1 || echo -e "lshw \c"
 	command -v strings >/dev/null 2>&1 || echo -e "binutils \c"
-	command -v mbw >/dev/null 2>&1 || echo -e "mbw \c"
 	command -v uptime >/dev/null 2>&1 || echo -e "procps \c"
 	command -v powercap-info >/dev/null 2>&1
 	[ $? -ne 0 -a -d /sys/devices/virtual/powercap ] && echo -e "powercap-utils \c"
@@ -2504,7 +2520,7 @@ InstallPrerequisits() {
 	fi
 	
 	# add needed repository and install all necessary packages in a batch
-	grep -E -q "sensors|gcc|git|sysstat|openssl|curl|dmidecode|i2c|lshw|p7zip|wget|links|powercap|g++|pciutils|usbutils|mmc-utils|stress-ng|smartmontools|udev" <<<"${MissingPackages}"
+	grep -E -q "sensors|gcc|git|sysstat|openssl|curl|dmidecode|i2c|lshw|binutils|procps|p7zip|wget|links|powercap|g++|pciutils|usbutils|mmc-utils|stress-ng|smartmontools|udev" <<<"${MissingPackages}"
 	if [ $? -eq 0 ]; then
 		echo -e "\x08\x08 ${MissingPackages}...\c"
 		add-apt-repository -y universe >/dev/null 2>&1
@@ -2619,8 +2635,8 @@ InstallStockfish() {
 	if [ ! -x "${InstallLocation}/Stockfish-sf_15/src/stockfish" ]; then
 		echo -e "\x08\x08\x08, stockfish...\c"
 		cd "${InstallLocation}"
-		curl -s https://github.com/official-stockfish/Stockfish/archive/refs/tags/sf_15.tar.gz >"${InstallLocation}/sf_15.tar.gz" 2>/dev/null
-		[ -f "${InstallLocation}/sf_15.tar.gz" ] && tar xf sf_15.tar.gz
+		wget -q -O "${InstallLocation}/sf_15.tar.gz" https://github.com/official-stockfish/Stockfish/archive/refs/tags/sf_15.tar.gz 2>/dev/null
+		[ -s "${InstallLocation}/sf_15.tar.gz" ] && tar xf sf_15.tar.gz
 		[ -d "${InstallLocation}/Stockfish-sf_15/src" ] && cd "${InstallLocation}/Stockfish-sf_15/src" || return
 
 		case ${CPUArchitecture} in
@@ -3605,7 +3621,7 @@ RunPTS() {
 
 RunGB() {
 	# executing geekbench5 in a sane and monitored environment
-	echo -e "\x08\x08 Done.\nExecuting Geekbench...\c"
+	echo -e "\x08\x08 Done.\nExecuting Geekbench...\n"
 	MonitorInterval=$(( ${QuickAndDirtyPerformance} / 10000000 ))
 
 	# if the CPU contains clusters of different CPU cores, test them individually first
@@ -3627,7 +3643,8 @@ RunGB() {
 						echo 0 > /sys/devices/system/cpu/cpu${o}/online 2>/dev/null
 					fi
 				done
-				taskset -c ${FirstCore}-${LastCore} "${GBBinary}" >${TempLog} 2>&1
+				echo -e "\n${BOLD}Executing on cores ${FirstCore}-${LastCore}${NC}\n"
+				taskset -c ${FirstCore}-${LastCore} "${GBBinary}" 2>&1 | tee ${TempLog}
 				ResultsURL="$(awk -F"https" '/browser.geekbench.com/ {print $2}' <${TempLog} | head -n1)"
 				if [ "X${ResultsURL}" = "X" ]; then
 					echo -e "\x08\x08 Failed...\c"
@@ -3675,11 +3692,14 @@ RunGB() {
 	echo -e "\nSystem health while running Geekbench on all cores:\n" >>${MonitorLog}
 	/bin/bash "${PathToMe}" -m ${MonitorInterval} >>${MonitorLog} &
 	MonitoringPID=$!
-	"${GBBinary}" >${TempLog} 2>&1
+	echo -e "\n${BOLD}Executing on all cores 1st time${NC}\n"
+	"${GBBinary}" 2>&1 | tee ${TempLog}
+	echo ""
 	GBFullString="$(awk -F" : " "/^Geekbench ${GBVersion}./ {print \$1}" ${TempLog})"
 	GBSystemInfo="$(grep -A25 "Gathering system information" ${TempLog} | tail -n +2 | grep -B25 " Size ")"
 	TempLog2="${TempDir}/temp2.log"
-	"${GBBinary}" >${TempLog2} 2>&1
+	echo -e "${BOLD}Executing on all cores 2nd time${NC}\n"
+	"${GBBinary}" 2>&1 | tee ${TempLog2}
 	kill ${MonitoringPID}
 	ResultsURL="$(awk -F"https" '/browser.geekbench.com/ {print $2}' <${TempLog} | head -n1)"
 	ResultsURL2="$(awk -F"https" '/browser.geekbench.com/ {print $2}' <${TempLog2} | head -n1)"
@@ -3730,6 +3750,7 @@ RunGB() {
 		CompareURL="https://browser.geekbench.com/v${GBVersion:0:1}/cpu/compare/${ResultsURL##*/}?baseline=${ResultsURL2##*/}"
 		echo -e "\n\n${CompareURL}" >>${ResultLog}
 	fi
+	echo -e "\nGeekbench execution...\c"
 } # RunGB
 
 CreateGBResultsTable() {
@@ -3809,7 +3830,7 @@ SummarizeResults() {
 
 	# only check for throttling in normal mode and not when plotting performance/mhz graphs
 	SwapNow="$(awk -F" " '{print $4}' </proc/swaps | grep -v -i Used)"
-	[ "X${SwapBefore}" != "X${SwapNow}" ] && SwapWarning=" and swapping" || SwapWarning=""
+	[ ${SwapNow:-0} -gt ${SwapBefore:-0} ] && SwapWarning=" and swapping" || SwapWarning=""
 	[ "X${PlotCpufreqOPPs}" = "Xyes" ] || ThrottlingCheck="$(CheckForThrottling)"
 
 	# Check %iowait and %sys percentage as an indication of swapping or too much background
@@ -4040,36 +4061,11 @@ ValidateResults() {
 	# Inappropriate settings for benchmarking
 	# Silly settings (for example: arm_boost not set on RPi4, zswap on top of zram)
 
-	# Throttling and frequency capping on RPi?
-	if [ "${USE_VCGENCMD}" = "true" ]; then
-		case "${ThrottlingCheck}" in
-			*"requency capping"*)
-				[ "${ThrottlingWarning}" = "" ] && echo -e "${LRED}${BOLD}Frequency capping occured${NC}" || echo -e "${LRED}${BOLD}Throttling / frequency capping occured${NC}"
-				;;
-			*)
-				[ "${ThrottlingWarning}" = "" ] && echo -e "${LGREEN}No throttling${NC}" || echo -e "${LRED}${BOLD}Throttling occured${NC}"
-				;;
-		esac
-	else
-		# Throttling on all other systems?
-		if [ "${ThrottlingWarning}" = "" ]; then
-			echo -e "${LGREEN}No throttling${NC}"
-		else
-			# we need to check whether we're running in Geekbench or PTS mode since the
-			# cluster tests on CPUs with different core types end up with the CPUs remaining
-			# on lower clockspeeds for a fraction of time when bringing them back online
-			# which then results in stats/time_in_state cpufreq statistics showing the cores
-			# not all the time at maximum clockspeed.
-			if [ ${#ClusterConfig[@]} -eq 1 -a "X${MODE}" != "Xpts" -a "X${MODE}" != "Xgb" ]; then
-				echo -e "${LRED}${BOLD}Throttling occured${NC}"
-			else
-				echo -e "Throttling might have occured"
-			fi
-		fi
+	# Swapping? Skip if there's no swap configured
+	ProcSwapLines=$(wc -l </proc/swaps)
+	if [ ${ProcSwapLines} -gt 1 ]; then
+		[ "${SwapWarning}" = "" ] && echo -e "${LGREEN}No swapping${NC}" || echo -e "${LRED}${BOLD}Swapping occured${NC}"
 	fi
-
-	# Swapping?
-	[ "${SwapWarning}" = "" ] && echo -e "${LGREEN}No swapping${NC}" || echo -e "${LRED}${BOLD}Swapping occured${NC}"
 
 	# Too high %system utilization (mostly caused by swapping on zram enabled systems)?
 	UtilizationValues="$(grep -A2000 -E "^System health while running tinymembench|^System health while running ramlat" "${MonitorLog}" | sed '/^Time/,+1 d' | awk -F"MHz " '/^[0-9]/ {print $2}' | awk -F" " '{print $3}' | sed 's/%//')"
@@ -4087,7 +4083,7 @@ ValidateResults() {
 
 	if [ "X${MODE}" != "Xextensive" -a "X${MODE}" != "Xpts" -a "X${MODE}" != "Xgb" -a ${CPUCores} -gt 1 -a "X$1" != "Xreview" ]; then
 		IdealUtilization=$(( 100 / ${CPUCores} ))
-		UtilizationValues="$(grep -A2000 "^System health while running tinymembench" "${MonitorLog}" | grep -B2000 -E " 7-zip multi |  7-zip cluster | cpuminer:| stress-ng:| stockfish:" | sed '/^Time/,+1 d' | awk -F"MHz " '/^[0-9]/ {print $2}' | awk -F" " '{print $2}' | sed 's/%//' | while read ; do [ ${REPLY} -ge ${IdealUtilization} ] && echo ${REPLY} ; done)"
+		UtilizationValues="$(grep -A2000 "^System health while running tinymembench" "${MonitorLog}" | grep -B2000 -E " 7-zip multi | 7-zip cluster " | sed '/^Time/,+1 d' | awk -F"MHz " '/^[0-9]/ {print $2}' | awk -F" " '{print $2}' | sed 's/%//' | while read ; do [ ${REPLY} -ge ${IdealUtilization} ] && echo ${REPLY} ; done)"
 		PeakCPUUtilization=$(sort -n -r <<<"${UtilizationValues}" | head -n1)
 		LogLength=$(wc -l <<<"${UtilizationValues}")
 		UtilizationSum=$(awk '{s+=$1} END {printf "%.0f", s}' <<<"${UtilizationValues}")
@@ -4123,7 +4119,6 @@ ValidateResults() {
 	if [ -s "${TempDir}/dmesg" ]; then
 		OOMCount="$(grep -c "oom-killer" "${TempDir}/dmesg")"
 		if [ ${OOMCount:-0} -gt 0 ]; then
-			ProcSwapLines=$(wc -l </proc/swaps)
 			case ${ProcSwapLines} in
 				1)
 					echo -e "${LRED}${BOLD}${OOMCount} oom-killer invocations (system too low on RAM and no ZRAM configured)${NC}"
@@ -4139,6 +4134,34 @@ ValidateResults() {
 	[ -r /sys/module/zswap/parameters/enabled ] && ZswapEnabled="$(sed 's/Y/1/' </sys/module/zswap/parameters/enabled)"
 	if [ "${ZswapEnabled}" = "1" ]; then
 		grep -q '/dev/zram' /proc/swaps && echo -e "${LRED}${BOLD}Zswap combined with ZRAM. Swapping performance severely harmed${NC}"
+	fi
+
+	# Throttling and frequency capping on RPi?
+	if [ "${USE_VCGENCMD}" = "true" ]; then
+		case "${ThrottlingCheck}" in
+			*"requency capping"*)
+				[ "${ThrottlingWarning}" = "" ] && echo -e "${LRED}${BOLD}Frequency capping occured${NC}" || echo -e "${LRED}${BOLD}Throttling / frequency capping occured${NC}"
+				;;
+			*)
+				[ "${ThrottlingWarning}" = "" ] && echo -e "${LGREEN}No throttling${NC}" || echo -e "${LRED}${BOLD}Throttling occured${NC}"
+				;;
+		esac
+	else
+		# Throttling on all other systems?
+		if [ "${ThrottlingWarning}" = "" ]; then
+			echo -e "${LGREEN}No throttling${NC}"
+		else
+			# we need to check whether we're running in Geekbench or PTS mode since the
+			# cluster tests on CPUs with different core types end up with the CPUs remaining
+			# on lower clockspeeds for a fraction of time when bringing them back online
+			# which then results in stats/time_in_state cpufreq statistics showing the cores
+			# not all the time at maximum clockspeed.
+			if [ ${#ClusterConfig[@]} -eq 1 -a "X${MODE}" != "Xpts" -a "X${MODE}" != "Xgb" ]; then
+				echo -e "${LRED}${BOLD}Throttling occured${NC}"
+			else
+				echo -e "Throttling might have occured"
+			fi
+		fi
 	fi
 } # ValidateResults
 
@@ -5566,10 +5589,6 @@ GuessSoCbySignature() {
 					;;
 			esac
 			;;
-		*A55*A55*A55*A55*A76r?p?|*A76r?p?*A55*A55*A55*A55r?p?)
-			# Amlogic S928X, 4 x Cortex-A55 + 1 x Cortex-A76: https://browser.geekbench.com/v5/cpu/compare/19788026?baseline=20656779
-			echo "Amlogic S928X"
-			;;
 		00A73r0p200A73r0p200A73r0p200A73r0p214A53r0p414A53r0p414A53r0p414A53r0p4)
 			# Amlogic A311D2, 4 x Cortex-A73 / r0p2 + 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			echo "Amlogic A311D2"
@@ -6311,6 +6330,10 @@ GuessSoCbySignature() {
 			# Loongson-3A5000-HV: 4 x LoongArch / loongarch32, loongarch64 / cpucfg lam ual fpu lsx lasx complex crypto lvz lbt_x86 lbt_arm lbt_mips https://github.com/ThomasKaiser/sbc-bench/blob/master/results/Loongson-3A5000-HV-4.19.0-loongson-3.cpuinfo
 			echo "Loongson-3A5000-HV"
 			;;
+		*A55*A55*A55*A55*A76r?p?|*A76r?p?*A55*A55*A55*A55r?p?)
+			# Amlogic S928X, 4 x Cortex-A55 + 1 x Cortex-A76: https://browser.geekbench.com/v5/cpu/compare/19788026?baseline=20656779
+			echo "Amlogic S928X"
+			;;
 	esac
 } # GuessSoCbySignature
 
@@ -6501,7 +6524,7 @@ ProvideReviewInfo() {
 	[ -f /sys/devices/system/cpu/cpufreq/policy0/scaling_governor ] && \
 		read OriginalCPUFreqGovernor </sys/devices/system/cpu/cpufreq/policy0/scaling_governor 2>/dev/null
 	GovernorState="$(HandleGovernors)"
-	CheckLoadAndDmesg
+	[ "X${RunBenchmarks}" = "XTRUE" ] && CheckLoadAndDmesg || echo ""
 
 	# Allow for a NOTUNING=yes operation mode to compare default with performance settings
 	if [ "X${NOTUNING}" != "Xyes" ]; then
@@ -6524,29 +6547,42 @@ ProvideReviewInfo() {
 	InstallPrerequisits
 	InstallCpuminer
 	InitialMonitoring
-	CheckClockspeedsAndSensors
-	ClockspeedsBefore="$(cat "${TempDir}/cpufreq" | sed -e 's/^/    /')"
-	[ "X${NOTUNING}" != "Xyes" ] && CheckTimeInState before
-	RunTinyMemBench
-	RunRamlat
-	RunOpenSSLBenchmark 256
+	[ "X${RunBenchmarks}" = "XTRUE" ] && CheckClockspeedsAndSensors || echo -e "\x08\x08 Done.\nNow quickly examining OS, settings and hardware..."
+	[ "X${RunBenchmarks}" = "XTRUE" ] && ClockspeedsBefore="$(cat "${TempDir}/cpufreq" | sed -e 's/^/    /')"
+	[ "X${NOTUNING}" != "Xyes" -a "X${RunBenchmarks}" = "XTRUE" ] && CheckTimeInState before
+	[ "X${RunBenchmarks}" = "XTRUE" ] && RunTinyMemBench
+	[ "X${RunBenchmarks}" = "XTRUE" ] && RunRamlat
+	[ "X${RunBenchmarks}" = "XTRUE" ] && RunOpenSSLBenchmark 256
+	[ "X${RunBenchmarks}" = "XTRUE" ] && Run7ZipBenchmark
 	if [ -x "${InstallLocation}"/cpuminer-multi/cpuminer ]; then
 		ExecuteCpuminer=yes
-		RunCpuminerBenchmark
+		[ "X${RunBenchmarks}" = "XTRUE" ] && RunCpuminerBenchmark
 	else
-		RunStressNG
+		[ "X${RunBenchmarks}" = "XTRUE" ] && RunStressNG
 	fi
 	[ -z ${InitialTemp} ] || TempNow=$(ReadSoCTemp)
-	[ "X${NOTUNING}" != "Xyes" ] && CheckTimeInState after
-	CheckClockspeedsAndSensors
-	ClockspeedsAfter="$(cat "${TempDir}/cpufreq" | sed -e 's/^/    /')"
+	[ "X${NOTUNING}" != "Xyes" -a "X${RunBenchmarks}" = "XTRUE" ] && CheckTimeInState after
+	[ "X${RunBenchmarks}" = "XTRUE" ] && CheckClockspeedsAndSensors
+	[ "X${RunBenchmarks}" = "XTRUE" ] && ClockspeedsAfter="$(cat "${TempDir}/cpufreq" | sed -e 's/^/    /')"
 
 	[ -f /etc/os-release ] && OperatingSystem="$(awk -F'"' '/^PRETTY_NAME/ {print $2}' </etc/os-release)"
 	command -v hostnamectl >/dev/null 2>&1 && OperatingSystem="$(hostnamectl | awk -F": " '/Operating System:/ {print $2}')"
 	grep -q -i Gentoo <<<"${OperatingSystem}" && read OperatingSystem </etc/gentoo-release
 
-	SummarizeResults
-	
+	if [ "X${RunBenchmarks}" = "XTRUE" ]; then
+		SummarizeResults
+	else
+		echo -e "\n##########################################################################\n" >>${ResultLog}
+		echo -e "$(iostat | grep -E -v "^loop|boot0|boot1")\n\n$(free -h)\n\n$(swapon -s)\n" | sed '/^$/N;/^\n$/D' >>${ResultLog}
+		ShowZswapStats 2>/dev/null >>${ResultLog}
+		echo >>${ResultLog}
+		cat "${TempDir}/cpu-topology.log" >>${ResultLog}
+		echo "${LSCPU}" >>${ResultLog}
+		LogEnvironment >>${ResultLog}
+		CacheAndDIMMs="$(CacheAndDIMMDetails)"
+		[ -z "${CacheAndDIMMs}" ] || echo -e "\n##########################################################################\n${CacheAndDIMMs}" >>${ResultLog}
+	fi
+
 	if [ -f "${TempDir}/clk_summary.tuned" ]; then
 		# add clk_summary diff to results output if something has changed
 		ClockDiff="$(diff "${TempDir}"/clk_summary.*)"
@@ -6588,36 +6624,38 @@ ProvideReviewInfo() {
 		sed -e 's/^/    /' <<<"${PolicyStateNow}" >>"${TempDir}/review"
 	fi
 
-	# measured clockspeeds
-	if [ -z ${InitialTemp} ]; then
-		# no thermal readouts possible
-		echo -e "\n### Clockspeeds (idle vs. heated up):\n\nBefore:\n\n${ClockspeedsBefore}\n\nAfter:\n\n${ClockspeedsAfter}" >>"${TempDir}/review"
-	else
-		echo -e "\n### Clockspeeds (idle vs. heated up):\n\nBefore at ${InitialTemp}°C:\n\n${ClockspeedsBefore}\n\nAfter at ${TempNow}°C${ThrottlingWarning}:\n\n${ClockspeedsAfter}" >>"${TempDir}/review"
-	fi
-
-	# memory performance:
-	MemoryScores="$(awk -F" " '/^ libc / {print $2$4" "$5" "$6}' <${ResultLog} | grep -E 'memcpy|memchr|memset' | awk -F'MB/s' '{print $1"MB/s"}')"
-	CountOfMemoryScores=$(wc -l <<<"${MemoryScores}")
-	if [ $(( ${#ClusterConfig[@]} * 3 )) -eq ${CountOfMemoryScores} ]; then
-		# only report if all measurements finished successfully, add warning for
-		# NOTUNING operation mode.
-		[ "X${NOTUNING}" = "Xyes" ] && PerfWarning=" (NOTUNING=yes was set)"
-		echo -e "\n### Memory performance${PerfWarning}\n" >>"${TempDir}/review"
-		if [ ${#ClusterConfig[@]} -eq 1 ]; then
-			# only 1 CPU cluster, no differentiation between clusters/core types
-			echo -e "  * $(grep "^memcpy:" <<<"${MemoryScores}"), $(grep "^memchr:" <<<"${MemoryScores}"), $(grep "^memset:" <<<"${MemoryScores}")" >>"${TempDir}/review"
-			grep "^     16384k:" ${ResultLog} | sed 's/     16384k:/  * 16M latency:/' >>"${TempDir}/review"
+	if [ "X${RunBenchmarks}" = "XTRUE" ]; then
+		# measured clockspeeds
+		if [ -z ${InitialTemp} ]; then
+			# no thermal readouts possible
+			echo -e "\n### Clockspeeds (idle vs. heated up):\n\nBefore:\n\n${ClockspeedsBefore}\n\nAfter:\n\n${ClockspeedsAfter}" >>"${TempDir}/review"
 		else
-			# list individual CPUs and suffix memory scores with core types if possible
-			for i in $(seq 0 $(( ${#ClusterConfig[@]} -1 )) ) ; do
-				CPUInfo="$(GetCPUInfo ${ClusterConfig[$i]})"
-				echo -e "  * cpu${ClusterConfig[$i]}${CPUInfo}: $(grep "^memcpy:" <<<"${MemoryScores}" | sed -n $(( ${i} + 1 ))p), $(grep "^memchr:" <<<"${MemoryScores}" | sed -n $(( ${i} + 1 ))p), $(grep "^memset:" <<<"${MemoryScores}" | sed -n $(( ${i} + 1 ))p)"  >>"${TempDir}/review"
-			done
-			for i in $(seq 0 $(( ${#ClusterConfig[@]} -1 )) ) ; do
-				CPUInfo="$(GetCPUInfo ${ClusterConfig[$i]})"
-				echo -e "  * cpu${ClusterConfig[$i]}${CPUInfo} 16M latency: $(grep "^     16384k:" ${ResultLog} | sed -n $(( ${i} + 1 ))p | sed 's/     16384k: //')" >>"${TempDir}/review"
-			done
+			echo -e "\n### Clockspeeds (idle vs. heated up):\n\nBefore at ${InitialTemp}°C:\n\n${ClockspeedsBefore}\n\nAfter at ${TempNow}°C${ThrottlingWarning}:\n\n${ClockspeedsAfter}" >>"${TempDir}/review"
+		fi
+
+		# memory performance:
+		MemoryScores="$(awk -F" " '/^ libc / {print $2$4" "$5" "$6}' <${ResultLog} | grep -E 'memcpy|memchr|memset' | awk -F'MB/s' '{print $1"MB/s"}')"
+		CountOfMemoryScores=$(wc -l <<<"${MemoryScores}")
+		if [ $(( ${#ClusterConfig[@]} * 3 )) -eq ${CountOfMemoryScores} ]; then
+			# only report if all measurements finished successfully, add warning for
+			# NOTUNING operation mode.
+			[ "X${NOTUNING}" = "Xyes" ] && PerfWarning=" (NOTUNING=yes was set)"
+			echo -e "\n### Memory performance${PerfWarning}\n" >>"${TempDir}/review"
+			if [ ${#ClusterConfig[@]} -eq 1 ]; then
+				# only 1 CPU cluster, no differentiation between clusters/core types
+				echo -e "  * $(grep "^memcpy:" <<<"${MemoryScores}"), $(grep "^memchr:" <<<"${MemoryScores}"), $(grep "^memset:" <<<"${MemoryScores}")" >>"${TempDir}/review"
+				grep "^     16384k:" ${ResultLog} | sed 's/     16384k:/  * 16M latency:/' >>"${TempDir}/review"
+			else
+				# list individual CPUs and suffix memory scores with core types if possible
+				for i in $(seq 0 $(( ${#ClusterConfig[@]} -1 )) ) ; do
+					CPUInfo="$(GetCPUInfo ${ClusterConfig[$i]})"
+					echo -e "  * cpu${ClusterConfig[$i]}${CPUInfo}: $(grep "^memcpy:" <<<"${MemoryScores}" | sed -n $(( ${i} + 1 ))p), $(grep "^memchr:" <<<"${MemoryScores}" | sed -n $(( ${i} + 1 ))p), $(grep "^memset:" <<<"${MemoryScores}" | sed -n $(( ${i} + 1 ))p)"  >>"${TempDir}/review"
+				done
+				for i in $(seq 0 $(( ${#ClusterConfig[@]} -1 )) ) ; do
+					CPUInfo="$(GetCPUInfo ${ClusterConfig[$i]})"
+					echo -e "  * cpu${ClusterConfig[$i]}${CPUInfo} 16M latency: $(grep "^     16384k:" ${ResultLog} | sed -n $(( ${i} + 1 ))p | sed 's/     16384k: //')" >>"${TempDir}/review"
+				done
+			fi
 		fi
 	fi
 
@@ -6676,7 +6714,10 @@ ProvideReviewInfo() {
 	BuildInfo="$(grep "^Build system:   " ${ResultLog} | sed 's/Build system:   /  * Build scripts: /')"
 	[ -z "${BuildInfo}" ] || echo "${BuildInfo}" >>"${TempDir}/review"
 	grep -i "^ Compiler:" ${ResultLog} | sed -e 's/^/  */' >>"${TempDir}/review"
-	grep -i "^openssl" ${ResultLog} | sed -e 's/^/  * /' >>"${TempDir}/review"
+	# skip OpenSSL version reporting on ARMv8 systems with Crypto Extensions since irrelevant:
+	# https://github.com/ThomasKaiser/sbc-bench/blob/master/results/ARMv8-Crypto-Extensions.md
+	grep -q "aes pmull sha1 sha2" <<<"${ProcCPU}" || \
+		openssl version | awk -F" " '{print "  * "$1" "$2", built on "$3" "$4" "$5" "$6" "$7" "$8" "$9" "$10" "$11" "$12" "$13" "$14" "$15}' >>"${TempDir}/review"
 	[ -z "${ThreadXVersion}" ] || echo -e "  * ThreadX: $(tail -n1 <<<"${ThreadXVersion}" | cut -d' ' -f2) / $(head -n1 <<<"${ThreadXVersion}")" >>"${TempDir}/review"
 
 	# Kernel relevant settings / versions
@@ -6691,7 +6732,7 @@ ProvideReviewInfo() {
 	# add review info to full info
 	echo -e "\n##########################################################################\n" >>${ResultLog}
 	sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" <"${TempDir}/review" >>${ResultLog}
-	UploadResults 2>/dev/null
+	[ "X${RunBenchmarks}" = "XTRUE" ] && UploadResults 2>/dev/null || UploadResults >/dev/null 2>&1
 	case "${UploadURL}" in
 		http*)
 			echo -e "\n\n\n\n# ${DeviceName:-$HostName}\n\nTested with sbc-bench v${Version} on $(date -R). Full info: [${UploadURL}](${UploadURL})"
@@ -6703,7 +6744,7 @@ ProvideReviewInfo() {
 			;;
 	esac
 
-	if [ "X${NOTUNING}" != "Xyes" ]; then
+	if [ "X${NOTUNING}" != "Xyes" -a "X${RunBenchmarks}" = "XTRUE" ]; then
 		# throttling check and routine waiting for the board to cool down since otherwise the
 		# next monitoring step will report throttling even if none happens from now on.
 		[ "X${ThrottlingWarning}" != "X" ] && snore 5
@@ -6728,17 +6769,20 @@ ProvideReviewInfo() {
 				echo ""
 			fi
 		fi
-	
-		# device now ready for benchmarking
-		cat <<- EOF
-		
-		All known settings adjusted for performance. Device now ready for benchmarking.
-		Once finished stop with [ctrl]-[c] to get info about throttling, frequency cap
-		and too high background activity all potentially invalidating benchmark scores.
-		All changes with storage and PCIe devices as well as suspicious dmesg contents
-		will be reported too.
-		EOF
 	fi
+
+	# drop caches
+	echo 3 >/proc/sys/vm/drop_caches
+
+	# device now ready for benchmarking
+	cat <<- EOF
+	
+	All known settings adjusted for performance. Device now ready for benchmarking.
+	Once finished stop with [ctrl]-[c] to get info about throttling, frequency cap
+	and too high background activity all potentially invalidating benchmark scores.
+	All changes with storage and PCIe devices as well as suspicious dmesg contents
+	will be reported too.
+	EOF
 
 	# Now switch to monitoring mode, report consumption if Netio powermeter is available
 	if [ -n "${OutputCurrent}" ]; then
@@ -6754,13 +6798,13 @@ ProvideReviewInfo() {
 	trap "FinalReporting ; exit 0" 0 1 2 3 15
 	unset ThrottlingWarning ThrottlingCheck SwapWarning
 	rm "${TempDir}"/*time_in_state* "${TempDir}/throttling_info.txt" 2>/dev/null
-	SwapBefore="${SwapNow}"
+	SwapBefore="$(awk -F" " '{print $4}' </proc/swaps | grep -v -i Used)"
 	CheckTimeInState before
-	/bin/bash "${PathToMe}" -m 60 >"${TempDir}/review" &
+	/bin/bash "${PathToMe}" -m 60 >"${MonitorLog}" &
 	MonitoringPID=$!
 	echo ""
 	snore 1
-	tail -f "${TempDir}/review"
+	tail -f "${MonitorLog}"
 } # ProvideReviewInfo
 
 FinalReporting() {
@@ -6768,28 +6812,37 @@ FinalReporting() {
 	echo -e "\n\nCleaning up...\c"
 	kill ${NetioMonitoringPID} ${MonitoringPID} 2>/dev/null
 	SwapNow="$(awk -F" " '{print $4}' </proc/swaps | grep -v -i Used)"
-	[ "X${SwapBefore}" != "X${SwapNow}" ] && SwapWarning=" and swapping" || SwapWarning=""
+	[ ${SwapNow:-0} -gt ${SwapBefore:-0} ] && SwapWarning=" and swapping" || SwapWarning=""
 	CheckTimeInState after
-	CheckClockspeedsAndSensors
+	[ "X${RunBenchmarks}" = "XTRUE" ] && CheckClockspeedsAndSensors || echo -e "\x08\x08 Done.\n"
 
 	# collect dmesg output since start of monitoring to spot anomalies
 	TimeStamp="$(dmesg | tr -d '[' | tr -d ']' | awk -F" " '/sbc-bench review mode started/ {print $1}' | tail -n1)"
 	DMESGSinceStart="$(dmesg | sed "/${TimeStamp}/,\$!d" | grep -E -v 'sbc-bench review mode started|started with executable stack|UFW BLOCK| EDID ')"
 	DMESGLines=$(wc -l <<<"${DMESGSinceStart}")
+	echo "${DMESGSinceStart}" >"${TempDir}/dmesg"
 
 	# check PCIe and storage devices again to spot disconnects or link degradation and
 	# stuff like this. Strip off sane drive temps so we only compare unhealthy ones
 	PCIeStatusNow="$(CheckPCIe)"
 	StorageStatusNow="$(CheckStorage | awk -F", drive temp: " '{print $1"X"}' | sed -e 's/X$//' -e '/^$/d' | grep -v smartctl)"
 
-	ClockspeedsNow="$(cat "${TempDir}/cpufreq" | sed -e 's/^/    /')"
-	if [ -z ${InitialTemp} ]; then
-		# no thermal readouts possible
-		echo -e "\x08\x08 Done.\n\nClockspeeds now:\n\n${ClockspeedsNow}\n"
-	else
-		echo -e "\x08\x08 Done.\n\nClockspeeds now at $(ReadSoCTemp)°C:\n\n${ClockspeedsNow}\n"
+	if [ "X${RunBenchmarks}" = "XTRUE" ]; then
+		ClockspeedsNow="$(cat "${TempDir}/cpufreq" | sed -e 's/^/    /')"
+		if [ -z ${InitialTemp} ]; then
+			# no thermal readouts possible
+			echo -e "\x08\x08 Done.\n\nClockspeeds now:\n\n${ClockspeedsNow}\n"
+		else
+			echo -e "\x08\x08 Done.\n\nClockspeeds now at $(ReadSoCTemp)°C:\n\n${ClockspeedsNow}\n"
+		fi
 	fi
+
+	# check for throttling
 	ThrottlingCheck="$(CheckForThrottling | sed -e 's/ Check the log for details.//' -e '/^[[:space:]]*$/d')"
+	if [ -f ${TempDir}/throttling_info.txt ]; then
+		ThrottlingWarning="${LRED}${BOLD} (throttled)${NC}"
+		ThrottlingDetails=$(<${TempDir}/throttling_info.txt)
+	fi
 
 	# Print warnings if count or details of attached PCIe or storage devices have changed.
 	# Possible reasons: cable/connector problems, overheating, other transmission errors and so on...
@@ -6815,9 +6868,10 @@ FinalReporting() {
 		echo -e "${DMESGSinceStart}\n"
 	fi
 
-	# output execution validation
+	# output execution validation, fake ClusterConfig to get definitive throttling warning
+	ClusterConfig=(0)
 	IsValid="$(ValidateResults review | sed -e 's/^/  * /')"
-	echo -e "Results validation:\n\n${IsValid}${NC}\n"
+	echo -e "Results validation:\n\n${IsValid}${NC}\n${ThrottlingDetails}"
 
 	# revert at least cpufreq and PCIe ASPM settings
 	BasicSetup ${OriginalCPUFreqGovernor} >/dev/null 2>&1
@@ -8016,7 +8070,7 @@ CheckSMARTData() {
 } # CheckSMARTData
 
 DisplayUsage() {
-	echo -e "\nUsage: ${BOLD}${0##*/} [-c] [-g] [-G] [-h] [-m] [-P] [-r] [-s] [-t \$degree] [-T \$degree] [-u]${NC}\n"
+	echo -e "\nUsage: ${BOLD}${0##*/} [-c] [-g] [-G] [-h] [-m] [-P] [-r] [-R] [-s] [-t \$degree] [-T \$degree] [-u]${NC}\n"
 	echo -e "############################################################################"
 	echo -e "\n Use ${BOLD}${0##*/}${NC} for the following tasks:\n"
 	echo -e " ${0##*/} invoked without arguments runs a standard benchmark"
@@ -8029,6 +8083,7 @@ DisplayUsage() {
 	echo -e " ${0##*/} ${BOLD}-m${NC} [\$seconds] provides CLI monitoring (5 sec default interval)"
 	echo -e " ${0##*/} ${BOLD}-P${NC} Phoronix mode, ensures benchmark is properly monitored"
 	echo -e " ${0##*/} ${BOLD}-r${NC} Review mode: generate insights via benchmarking"
+	echo -e " ${0##*/} ${BOLD}-R${NC} Review mode w/o baseline benchmarks for further testing"
 	echo -e " ${0##*/} ${BOLD}-s${NC} also executes stockfish stress tester (NEON/SSE/AVX/RAM)"
 	echo -e " ${0##*/} ${BOLD}-t${NC} [\$degree] runs thermal test waiting to cool down to this value"
 	echo -e " ${0##*/} ${BOLD}-T${NC} [\$degree] runs thermal test heating up to this value"

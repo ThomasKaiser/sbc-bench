@@ -67,7 +67,7 @@ Main() {
 				if [ "X${SMARTDrives}" != "X" ]; then
 					# warn about absence of smartctl and running not as root only when needed
 					command -v smartctl >/dev/null 2>&1 || echo -e "${BOLD}Warning: smartmontools not installed${NC}\n" >&2
-					[ $UID = 0 ] || echo -e "${BOLD}Warning: to query all drive info this tool needs to be run as root${NC}\n" >&2
+					[ ${UID} = 0 ] || echo -e "${BOLD}Warning: to query all drive info this tool needs to be run as root${NC}\n" >&2
 				fi
 				CheckStorage
 				exit 0
@@ -86,14 +86,14 @@ Main() {
 				# Jeff Geerling or Jean-Luc Aufranc mode. Help in reviewing devices
 				MODE=review
 				RunBenchmarks=TRUE
-				[ $UID = 0 ] || echo -e "${BOLD}Warning: for useable results this tool needs to be run as root${NC}\n" >&2
+				[ ${UID} = 0 ] || { echo -e "${BOLD}Warning: for useable results this tool needs to be run as root${NC}\n" >&2 ; exit 1 ; }
 				ProvideReviewInfo
 				exit 0
 				;;
 			R)
 				# Review mode w/o basic benchmarking and thermal throttling tests
 				MODE=review
-				[ $UID = 0 ] || echo -e "${BOLD}Warning: for useable results this tool needs to be run as root${NC}\n" >&2
+				[ ${UID} = 0 ] || { echo -e "${BOLD}Warning: for useable results this tool needs to be run as root${NC}\n" >&2 ; exit 1 ; }
 				ProvideReviewInfo
 				exit 0
 				;;
@@ -108,7 +108,7 @@ Main() {
 				# 2nd argument (integer in degree C) is the value we wait for the board to cool
 				# down prior to next test
 				TargetTemp=${2:-50}
-				[ $UID = 0 ] || echo -e "${BOLD}Warning: for useable results this tool needs to be run as root${NC}\n" >&2
+				[ ${UID} = 0 ] || { echo -e "${BOLD}Warning: for useable results this tool needs to be run as root${NC}\n" >&2 ; exit 1 ; }
 				TempTest
 				exit 0
 				;;
@@ -200,7 +200,7 @@ Main() {
 			esac
 	done
 
-	[ $UID = 0 ] || echo -e "${BOLD}Warning: when not being executed as root some scores will be severely off${NC}\n" >&2
+	[ ${UID} = 0 ] || echo -e "${BOLD}Warning: when not being executed as root strange things will happen${NC}\n" >&2
 
 	# ensure other sbc-bench instances are terminated
 	for PID in $( (pgrep -f "${PathToMe}" ; jobs -p) | sort | uniq -u) ; do
@@ -6849,13 +6849,13 @@ FinalReporting() {
 	StorageDiff="$(diff <(echo "${StorageStatus}") <(echo "${StorageStatusNow}") )"
 	PCIeDiff="$(diff <(echo "${PCIeStatus}") <(echo "${PCIeStatusNow}") )"
 	if [ "X${StorageDiff}" != "X" -a "X${PCIeDiff}" != "X" ]; then
-		echo -e "\n${LRED}${BOLD}ATTENTION:${NC} ${LRED}list of PCIe and storage devices has changed:${NC}\n"
+		echo -e "\n${LRED}${BOLD}ATTENTION:${NC} list of PCIe and storage devices has changed:${NC}\n"
 		echo -e "${PCIeDiff}\n${StorageDiff}\n"
 	elif [ "X${StorageDiff}" != "X" ]; then
-		echo -e "\n${LRED}${BOLD}ATTENTION:${NC} ${LRED}list of storage devices has changed:${NC}\n"
+		echo -e "\n${LRED}${BOLD}ATTENTION:${NC} list of storage devices has changed:${NC}\n"
 		echo -e "${StorageDiff}\n"
 	elif [ "X${PCIeDiff}" != "X" ]; then
-		echo -e "\n${LRED}${BOLD}ATTENTION:${NC} ${LRED}list of PCIe devices has changed:${NC}\n"
+		echo -e "\n${LRED}${BOLD}ATTENTION:${NC} list of PCIe devices has changed:${NC}\n"
 		echo -e "${PCIeDiff}\n"
 	fi
 
@@ -6864,7 +6864,7 @@ FinalReporting() {
 		echo -e "${LRED}${BOLD}ATTENTION:${NC} ${LRED}lots of noise in kernel ring buffer since start of monitoring:${NC}\n"
 		echo -e "${DMESGSinceStart}\n"
 	elif [ ${DMESGLines:-0} -gt 1 ]; then
-		echo -e "${BOLD}ATTENTION:${NC} some noise in kernel ring buffer since start of monitoring:\n"
+		echo -e "${LRED}${BOLD}ATTENTION:${NC} some noise in kernel ring buffer since start of monitoring:\n"
 		echo -e "${DMESGSinceStart}\n"
 	fi
 

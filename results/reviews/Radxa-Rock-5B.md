@@ -1,6 +1,6 @@
 # Radxa ROCK 5B
 
-Tested with sbc-bench v0.9.29 on Fri, 24 Feb 2023 08:47:21 +0100. Full info: [http://ix.io/4p2K](http://ix.io/4p2K)
+Tested with sbc-bench v0.9.34 on Tue, 28 Feb 2023 22:48:59 +0100. Full info: [http://ix.io/4pwy](http://ix.io/4pwy)
 
 ### General information:
 
@@ -20,23 +20,25 @@ The CPU features 3 clusters consisting of 2 different core types:
       6        2        6      408    2400   Cortex-A76 / r4p0
       7        2        6      408    2400   Cortex-A76 / r4p0
 
+15719 KB available RAM
+
 ### Governors/policies (performance vs. idle consumption):
 
 Original governor settings:
 
-    cpufreq-policy0: ondemand / 1800 MHz (conservative ondemand userspace powersave performance schedutil / 408 600 816 1008 1200 1416 1608 1800)
+    cpufreq-policy0: ondemand / 1416 MHz (conservative ondemand userspace powersave performance schedutil / 408 600 816 1008 1200 1416 1608 1800)
     cpufreq-policy4: ondemand / 408 MHz (conservative ondemand userspace powersave performance schedutil / 408 600 816 1008 1200 1416 1608 1800 2016 2208 2256 2304 2352 2400)
     cpufreq-policy6: ondemand / 408 MHz (conservative ondemand userspace powersave performance schedutil / 408 600 816 1008 1200 1416 1608 1800 2016 2208 2256 2304 2352 2400)
-    dmc: dmc_ondemand / 528 MHz (rknpu_ondemand dmc_ondemand userspace powersave performance simple_ondemand / 528 1068 1560 2112)
+    dmc: simple_ondemand / 528 MHz (rknpu_ondemand dmc_ondemand userspace powersave performance simple_ondemand / 528 1068 1560 2112)
     fb000000.gpu: simple_ondemand / 300 MHz (rknpu_ondemand dmc_ondemand userspace powersave performance simple_ondemand / 300 400 500 600 700 800 900 1000)
-    fdab0000.npu: rknpu_ondemand / 1000 MHz (rknpu_ondemand dmc_ondemand userspace powersave performance simple_ondemand / 300 400 500 600 700 800 900 1000)
+    fdab0000.npu: simple_ondemand / 300 MHz (rknpu_ondemand dmc_ondemand userspace powersave performance simple_ondemand / 300 400 500 600 700 800 900 1000)
 
 Tuned governor settings:
 
     cpufreq-policy0: performance / 1800 MHz
     cpufreq-policy4: performance / 2400 MHz
     cpufreq-policy6: performance / 2400 MHz
-    dmc: performance / 2112 MHz
+    dmc: performance / 1560 MHz
     fb000000.gpu: performance / 1000 MHz
     fdab0000.npu: performance / 1000 MHz
 
@@ -47,31 +49,35 @@ Status of performance related policies found below /sys:
 
 ### Clockspeeds (idle vs. heated up):
 
-Before at 53.6°C:
+Before at 43.5°C:
 
-    cpu0-cpu3 (Cortex-A55): OPP: 1800, Measured: 1813 
-    cpu4-cpu5 (Cortex-A76): OPP: 2400, Measured: 2316      (-3.5%)
-    cpu6-cpu7 (Cortex-A76): OPP: 2400, Measured: 2314      (-3.6%)
+    cpu0-cpu3 (Cortex-A55): OPP: 1800, Measured: 1821      (+1.2%)
+    cpu4-cpu5 (Cortex-A76): OPP: 2400, Measured: 2330      (-2.9%)
+    cpu6-cpu7 (Cortex-A76): OPP: 2400, Measured: 2329      (-3.0%)
 
-After at 83.2°C (throttled):
+After at 80.4°C (throttled):
 
-    cpu0-cpu3 (Cortex-A55): OPP: 1800, Measured: 1789 
-    cpu4-cpu5 (Cortex-A76): OPP: 2400, Measured: 2277      (-5.1%)
-    cpu6-cpu7 (Cortex-A76): OPP: 2400, Measured: 2278      (-5.1%)
+    cpu0-cpu3 (Cortex-A55): OPP: 1800, Measured: 1794 
+    cpu4-cpu5 (Cortex-A76): OPP: 2400, Measured: 2286      (-4.7%)
+    cpu6-cpu7 (Cortex-A76): OPP: 2400, Measured: 2286      (-4.7%)
 
-### Memory performance
+### Performance baseline (throttled)
 
-  * cpu0 (Cortex-A55): memcpy: 5549.7 MB/s, memchr: 3275.6 MB/s, memset: 21993.2 MB/s
-  * cpu4 (Cortex-A76): memcpy: 9601.8 MB/s, memchr: 13033.5 MB/s, memset: 28799.6 MB/s
-  * cpu6 (Cortex-A76): memcpy: 9583.2 MB/s, memchr: 13010.7 MB/s, memset: 28616.5 MB/s
-  * cpu0 (Cortex-A55) 16M latency: 118.0 120.4 117.3 120.3 116.2 126.4 212.3 393.7 
-  * cpu4 (Cortex-A76) 16M latency: 119.7 109.7 121.4 118.0 118.3 108.2 110.5 109.0 
-  * cpu6 (Cortex-A76) 16M latency: 119.7 111.0 119.3 110.1 118.7 106.8 106.2 108.8 
+  * cpu0 (Cortex-A55): memcpy: 5545.0 MB/s, memchr: 3265.3 MB/s, memset: 22091.1 MB/s
+  * cpu4 (Cortex-A76): memcpy: 8215.6 MB/s, memchr: 12202.0 MB/s, memset: 24474.2 MB/s
+  * cpu6 (Cortex-A76): memcpy: 8216.7 MB/s, memchr: 12187.0 MB/s, memset: 24335.9 MB/s
+  * cpu0 (Cortex-A55) 16M latency: 128.4 131.9 128.3 131.8 127.5 138.0 231.7 413.6 
+  * cpu4 (Cortex-A76) 16M latency: 131.2 119.8 139.1 124.1 130.0 116.0 119.3 120.9 
+  * cpu6 (Cortex-A76) 16M latency: 132.4 120.6 130.1 119.2 130.1 118.1 116.9 120.6 
+  * 7-zip MIPS (3 consecutive runs): 15770, 15770, 15717 (15750 avg), single-threaded: 3034
+  * aes-256-cbc     160328.80k   408013.44k   670348.46k   799270.23k   846845.27k   850575.36k (Cortex-A55)
+  * aes-256-cbc     648061.45k  1052252.76k  1247105.71k  1298163.71k  1320954.54k  1323532.29k (Cortex-A76)
+  * aes-256-cbc     645249.70k  1055372.52k  1245333.33k  1297883.14k  1320422.06k  1322855.08k (Cortex-A76)
 
 ### PCIe and storage devices:
 
   * Realtek RTL8125 2.5GbE: Speed 5GT/s (ok), Width x1 (ok), driver in use: r8125
-  * 238.5GB "KXG50ZNV256G NVMe TOSHIBA 256GB" SSD as /dev/nvme0: Speed 8GT/s (ok), Width x4 (ok), 13% worn out, unhealthy drive temp: 68°C
+  * 238.5GB "KXG50ZNV256G NVMe TOSHIBA 256GB" SSD as /dev/nvme0: Speed 8GT/s (ok), Width x4 (ok), 13% worn out, unhealthy drive temp: 61°C
   * 115.7GB "SanDisk Corp. Ultra Dual" as /dev/sda: USB, Driver=usb-storage, 5000Mbps (capable of 12Mbps, 480Mbps, 5Gbps)
   * 7.4GB "SanDisk SL08G" UHS SDR50 SD card as /dev/mmcblk0: date 06/2016, manfid/oemid: 0x000003/0x5344, hw/fw rev: 0x8/0x0
   * 14.5GB "Foresee NCard" HS200 eMMC 5.0 card as /dev/mmcblk1: date 08/2016, manfid/oemid: 0x000088/0x0103, hw/fw rev: 0x0/0x0100000000000000
@@ -95,7 +101,6 @@ dealing with a foreign filesystem' as with NTFS.
   * Ubuntu 20.04.5 LTS (focal) arm64
   * Build scripts: https://github.com/armbian/build, 22.11.4, Rock 5B, rockchip-rk3588, rockchip-rk3588
   * Compiler: /usr/bin/gcc (Ubuntu 9.4.0-1ubuntu1~20.04.1) 9.4.0 / aarch64-linux-gnu
-  * OpenSSL 1.1.1f, built on 31 Mar 2020
 
 ### Kernel info:
 
@@ -105,7 +110,7 @@ dealing with a foreign filesystem' as with NTFS.
   * Vulnerability Spectre v2:        Vulnerable: Unprivileged eBPF enabled
   * Kernel 5.10.110-rockchip-rk3588 / CONFIG_HZ=300
 
-Kernel 5.10.110 is not latest 5.10.169 LTS that was released on 2023-02-22.
+Kernel 5.10.110 is not latest 5.10.170 LTS that was released on 2023-02-25.
 
 See https://endoflife.date/linux for details. It is somewhat likely that
 a lot of exploitable vulnerabilities exist for this kernel as well as many

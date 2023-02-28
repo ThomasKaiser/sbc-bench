@@ -1,6 +1,6 @@
 # Pine H64 model A
 
-Tested with sbc-bench v0.9.29 on Fri, 24 Feb 2023 22:55:44 +0100. Full info: [http://ix.io/4p79](http://ix.io/4p79)
+Tested with sbc-bench v0.9.34 on Tue, 28 Feb 2023 22:19:41 +0100. Full info: [http://ix.io/4pvX](http://ix.io/4pvX)
 
 ### General information:
 
@@ -14,13 +14,13 @@ Tested with sbc-bench v0.9.29 on Fri, 24 Feb 2023 22:55:44 +0100. Full info: [ht
       2        0        0      480    1800   Cortex-A53 / r0p4
       3        0        0      480    1800   Cortex-A53 / r0p4
 
-1989KB available RAM
+1989 KB available RAM
 
 ### Governors/policies (performance vs. idle consumption):
 
 Original governor settings:
 
-    cpufreq-policy0: schedutil / 1320 MHz (conservative ondemand userspace powersave performance schedutil / 480 720 816 888 1080 1320 1488 1608 1704 1800)
+    cpufreq-policy0: ondemand / 1488 MHz (conservative ondemand userspace powersave performance schedutil / 480 720 816 888 1080 1320 1488 1608 1704 1800)
 
 Tuned governor settings:
 
@@ -28,18 +28,21 @@ Tuned governor settings:
 
 ### Clockspeeds (idle vs. heated up):
 
-Before at 46.4°C:
-
-    cpu0 (Cortex-A53): OPP: 1800, Measured: 1798 
-
-After at 85.3°C (throttled):
+Before at 41.2°C:
 
     cpu0 (Cortex-A53): OPP: 1800, Measured: 1797 
 
-### Memory performance
+After at 75.1°C (throttled):
 
-  * memcpy: 1414.0 MB/s, memchr: 1880.9 MB/s, memset: 5549.5 MB/s
-  * 16M latency: 157.3 159.8 158.3 159.0 156.3 158.8 222.1 435.4 
+    cpu0 (Cortex-A53): OPP: 1800, Measured: 1798 
+
+### Performance baseline
+
+  * memcpy: 1412.4 MB/s, memchr: 1868.5 MB/s, memset: 5555.9 MB/s
+  * 16M latency: 161.9 164.6 163.3 164.1 161.6 164.1 225.2 440.9 
+  * 7-zip MIPS (3 consecutive runs): 4526, 4430, 4369 (4440 avg), single-threaded: 1328
+  * `aes-256-cbc     123361.64k   338878.95k   604878.85k   769394.35k   835190.78k   839445.16k`
+  * `aes-256-cbc     123423.07k   338379.29k   604895.49k   769360.21k   835207.17k   840258.90k`
 
 ### Storage devices:
 
@@ -50,7 +53,6 @@ After at 85.3°C (throttled):
   * Armbian 23.02.0-trunk Sid (bookworm) arm64
   * Build scripts: https://github.com/armbian/build, 23.02.0-trunk, Pine H64, sun50iw6, sunxi64
   * Compiler: /usr/bin/gcc (Debian 12.2.0-14) 12.2.0 / aarch64-linux-gnu
-  * OpenSSL 3.0.8, built on 7 Feb 2023 (Library: OpenSSL 3.0.8 7 Feb 2023)
 
 ### Kernel info:
 

@@ -2909,7 +2909,7 @@ InitialMonitoring() {
 	echo "sbc-bench started" >/dev/kmsg
 
 	# get status of swap devices to spot swapping activity ruining benchmark scores
-	SwapBefore="$(awk -F" " '{print $4}' </proc/swaps | grep -v -i Used)"
+	SwapBefore="$(awk -F" " '{print $4}' </proc/swaps | grep -v -i Used | awk '{s+=$1} END {printf "%.0f", s}')"
 } # InitialMonitoring
 
 GetVoltageSensor() {
@@ -3829,7 +3829,7 @@ SummarizeResults() {
 	echo -e "\x08\x08 Done (${BenchmarkDuration} minutes elapsed).\n\007\007\007"
 
 	# only check for throttling in normal mode and not when plotting performance/mhz graphs
-	SwapNow="$(awk -F" " '{print $4}' </proc/swaps | grep -v -i Used)"
+	SwapNow="$(awk -F" " '{print $4}' </proc/swaps | grep -v -i Used | awk '{s+=$1} END {printf "%.0f", s}')"
 	[ ${SwapNow:-0} -gt ${SwapBefore:-0} ] && SwapWarning=" and swapping" || SwapWarning=""
 	[ "X${PlotCpufreqOPPs}" = "Xyes" ] || ThrottlingCheck="$(CheckForThrottling)"
 
@@ -6633,14 +6633,14 @@ ProvideReviewInfo() {
 			echo -e "\n### Clockspeeds (idle vs. heated up):\n\nBefore at ${InitialTemp}°C:\n\n${ClockspeedsBefore}\n\nAfter at ${TempNow}°C${ThrottlingWarning}:\n\n${ClockspeedsAfter}" >>"${TempDir}/review"
 		fi
 
-		# memory performance:
+		# Performance baseline:
 		MemoryScores="$(awk -F" " '/^ libc / {print $2$4" "$5" "$6}' <${ResultLog} | grep -E 'memcpy|memchr|memset' | awk -F'MB/s' '{print $1"MB/s"}')"
 		CountOfMemoryScores=$(wc -l <<<"${MemoryScores}")
 		if [ $(( ${#ClusterConfig[@]} * 3 )) -eq ${CountOfMemoryScores} ]; then
 			# only report if all measurements finished successfully, add warning for
 			# NOTUNING operation mode.
 			[ "X${NOTUNING}" = "Xyes" ] && PerfWarning=" (NOTUNING=yes was set)"
-			echo -e "\n### Memory performance${PerfWarning}\n" >>"${TempDir}/review"
+			echo -e "\n### Performance baseline${PerfWarning}\n" >>"${TempDir}/review"
 			if [ ${#ClusterConfig[@]} -eq 1 ]; then
 				# only 1 CPU cluster, no differentiation between clusters/core types
 				echo -e "  * $(grep "^memcpy:" <<<"${MemoryScores}"), $(grep "^memchr:" <<<"${MemoryScores}"), $(grep "^memset:" <<<"${MemoryScores}")" >>"${TempDir}/review"
@@ -6656,6 +6656,10 @@ ProvideReviewInfo() {
 					echo -e "  * cpu${ClusterConfig[$i]}${CPUInfo} 16M latency: $(grep "^     16384k:" ${ResultLog} | sed -n $(( ${i} + 1 ))p | sed 's/     16384k: //')" >>"${TempDir}/review"
 				done
 			fi
+			ZIPResults="$(awk -F" " '/^Total:/ {print $2}' ${ResultLog} | sed -e 's/,/, /g' -e 's/, $//')"
+			[ "X${ZIPResults}" != "X" ] && echo -e "  * 7-zip MIPS (${RunHowManyTimes} consecutive runs): ${ZIPResults} (${ZipScore} avg), single-threaded: ${ZipScoreSingleThreaded}" >>"${TempDir}/review"
+			OpenSSLResults="$(grep '^aes-256-cbc' ${OpenSSLLog})"
+			[ "X${OpenSSLResults}" != "X" ] && echo -e "${OpenSSLResults}" | sed -e 's/^/  * `/' -e 's/$/`/' >>"${TempDir}/review"
 		fi
 	fi
 
@@ -6798,7 +6802,7 @@ ProvideReviewInfo() {
 	trap "FinalReporting ; exit 0" 0 1 2 3 15
 	unset ThrottlingWarning ThrottlingCheck SwapWarning
 	rm "${TempDir}"/*time_in_state* "${TempDir}/throttling_info.txt" 2>/dev/null
-	SwapBefore="$(awk -F" " '{print $4}' </proc/swaps | grep -v -i Used)"
+	SwapBefore="$(awk -F" " '{print $4}' </proc/swaps | grep -v -i Used | awk '{s+=$1} END {printf "%.0f", s}')"
 	CheckTimeInState before
 	/bin/bash "${PathToMe}" -m 60 >"${MonitorLog}" &
 	MonitoringPID=$!
@@ -6811,7 +6815,7 @@ FinalReporting() {
 	trap "rm -rf \"${TempDir}\" ; exit 0" 0 1 2 3 15
 	echo -e "\n\nCleaning up...\c"
 	kill ${NetioMonitoringPID} ${MonitoringPID} 2>/dev/null
-	SwapNow="$(awk -F" " '{print $4}' </proc/swaps | grep -v -i Used)"
+	SwapNow="$(awk -F" " '{print $4}' </proc/swaps | grep -v -i Used | awk '{s+=$1} END {printf "%.0f", s}')"
 	[ ${SwapNow:-0} -gt ${SwapBefore:-0} ] && SwapWarning=" and swapping" || SwapWarning=""
 	CheckTimeInState after
 	[ "X${RunBenchmarks}" = "XTRUE" ] && CheckClockspeedsAndSensors || echo -e "\x08\x08 Done.\n"
@@ -6849,13 +6853,13 @@ FinalReporting() {
 	StorageDiff="$(diff <(echo "${StorageStatus}") <(echo "${StorageStatusNow}") )"
 	PCIeDiff="$(diff <(echo "${PCIeStatus}") <(echo "${PCIeStatusNow}") )"
 	if [ "X${StorageDiff}" != "X" -a "X${PCIeDiff}" != "X" ]; then
-		echo -e "\n${LRED}${BOLD}ATTENTION:${NC} list of PCIe and storage devices has changed:${NC}\n"
+		echo -e "\n${LRED}${BOLD}ATTENTION:${NC} status of PCIe and storage devices has changed:${NC}\n"
 		echo -e "${PCIeDiff}\n${StorageDiff}\n"
 	elif [ "X${StorageDiff}" != "X" ]; then
-		echo -e "\n${LRED}${BOLD}ATTENTION:${NC} list of storage devices has changed:${NC}\n"
+		echo -e "\n${LRED}${BOLD}ATTENTION:${NC} status of storage devices has changed:${NC}\n"
 		echo -e "${StorageDiff}\n"
 	elif [ "X${PCIeDiff}" != "X" ]; then
-		echo -e "\n${LRED}${BOLD}ATTENTION:${NC} list of PCIe devices has changed:${NC}\n"
+		echo -e "\n${LRED}${BOLD}ATTENTION:${NC} status of PCIe devices has changed:${NC}\n"
 		echo -e "${PCIeDiff}\n"
 	fi
 
@@ -7640,7 +7644,7 @@ CheckStorage() {
 
 	MTDDevices="$(CheckMTD)"
 	echo -n "${MTDDevices}" | cut -f1 -d'|' | sort | uniq | sed '/^$/d' | while read ; do
-		unset RawSize
+		unset RawSize DeviceName Driver FlashManufacturer FlashPartName
 		DeviceInfo="$(grep "^${REPLY}" <<<"${MTDDevices}")"
 		PartitionCount=$(wc -l <<<"${DeviceInfo}")
 		case ${PartitionCount} in

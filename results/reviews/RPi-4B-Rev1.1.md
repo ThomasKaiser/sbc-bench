@@ -1,6 +1,6 @@
 # RPi 4 Model B Rev 1.1 / BCM2711 Rev B0
 
-Tested with sbc-bench v0.9.29 on Fri, 24 Feb 2023 10:12:45 +0100. Full info: [http://ix.io/4p3b](http://ix.io/4p3b)
+Tested with sbc-bench v0.9.34 on Tue, 28 Feb 2023 22:19:27 +0100. Full info: [http://ix.io/4pvW](http://ix.io/4pvW)
 
 ### General information:
 
@@ -14,11 +14,13 @@ Tested with sbc-bench v0.9.29 on Fri, 24 Feb 2023 10:12:45 +0100. Full info: [ht
       2        0        0      600    1500   Cortex-A72 / r0p3
       3        0        0      600    1500   Cortex-A72 / r0p3
 
+921 KB available RAM
+
 ### Governors/policies (performance vs. idle consumption):
 
 Original governor settings:
 
-    cpufreq-policy0: ondemand / 1500 MHz (conservative ondemand userspace powersave performance schedutil / 600 700 800 900 1000 1100 1200 1300 1400 1500)
+    cpufreq-policy0: ondemand / 1100 MHz (conservative ondemand userspace powersave performance schedutil / 600 700 800 900 1000 1100 1200 1300 1400 1500)
 
 Tuned governor settings:
 
@@ -26,18 +28,21 @@ Tuned governor settings:
 
 ### Clockspeeds (idle vs. heated up):
 
-Before at 26.8°C:
+Before at 35.5°C:
 
     cpu0 (Cortex-A72): OPP: 1500, ThreadX: 1500, Measured: 1499 
 
-After at 45.3°C:
+After at 50.1°C:
 
     cpu0 (Cortex-A72): OPP: 1500, ThreadX: 1500, Measured: 1499 
 
-### Memory performance
+### Performance baseline
 
-  * memcpy: 2545.3 MB/s, memchr: 1289.8 MB/s, memset: 3388.7 MB/s
-  * 16M latency: 153.1 154.2 153.8 154.1 153.6 158.1 170.5 189.0 
+  * memcpy: 2514.6 MB/s, memchr: 1289.8 MB/s, memset: 3383.6 MB/s
+  * 16M latency: 152.4 155.4 153.9 155.7 154.1 159.1 170.6 188.9 
+  * 7-zip MIPS (3 consecutive runs): 5498, 5447, 5480 (5480 avg), single-threaded: 1660
+  * `aes-256-cbc      49720.77k    59913.51k    63515.22k    64476.84k    64768.68k    64629.42k`
+  * `aes-256-cbc      50913.13k    59922.54k    63524.10k    64485.72k    64651.26k    64700.42k`
 
 ### PCIe and storage devices:
 
@@ -60,7 +65,7 @@ After at 45.3°C:
   * Vulnerability Spectre v2:        Vulnerable
   * Kernel 5.15.84-v7l+ / CONFIG_HZ=100
 
-Kernel 5.15.84 is not latest 5.15.95 LTS that was released on 2023-02-22.
+Kernel 5.15.84 is not latest 5.15.96 LTS that was released on 2023-02-25.
 
 See https://endoflife.date/linux for details. Perhaps some kernel bugs have
 been fixed in the meantime and maybe vulnerabilities as well.

@@ -1,6 +1,6 @@
 # FriendlyArm NanoPi M1 Plus
 
-Tested with sbc-bench v0.9.34 on Tue, 28 Feb 2023 22:55:40 +0100. Full info: [http://ix.io/4pwB](http://ix.io/4pwB)
+Tested with sbc-bench v0.9.35 on Wed, 01 Mar 2023 10:56:09 +0100. Full info: [http://ix.io/4pzf](http://ix.io/4pzf)
 
 ### General information:
 
@@ -28,25 +28,32 @@ Tuned governor settings:
 
 ### Clockspeeds (idle vs. heated up):
 
-Before at 44.4°C:
+Before at 45.5°C:
 
     cpu0 (Cortex-A7): OPP: 1368, Measured: 1365 
 
 After at 75.3°C (throttled):
 
-    cpu0 (Cortex-A7): OPP: 1368, Measured: 1365 
+    cpu0 (Cortex-A7): OPP: 1368, Measured: 1338      (-2.2%)
 
 ### Performance baseline
 
-  * memcpy: 823.3 MB/s, memchr: 1200.0 MB/s, memset: 3453.1 MB/s
-  * 16M latency: 190.8 195.8 187.7 210.0 191.4 198.2 393.2 777.6 
-  * 7-zip MIPS (3 consecutive runs): 3042, 3046, 3039 (3040 avg), single-threaded: 882
-  * `aes-256-cbc      20685.05k    24787.50k    26177.71k    26503.17k    26662.23k    26645.85k`
-  * `aes-256-cbc      20683.96k    24822.83k    26189.82k    26507.95k    26664.96k    26651.31k`
+  * memcpy: 825.3 MB/s, memchr: 1200.6 MB/s, memset: 3450.1 MB/s
+  * 16M latency: 189.8 195.5 189.7 204.1 189.6 195.2 385.8 763.4 
+  * 7-zip MIPS (3 consecutive runs): 3052, 2997, 3038 (3030 avg), single-threaded: 881
+  * `aes-256-cbc      20321.13k    24785.41k    26176.77k    26549.25k    26662.23k    26613.08k`
+  * `aes-256-cbc      20674.86k    24812.46k    26183.17k    26555.73k    26615.81k    26667.69k`
 
 ### Storage devices:
 
   * 7.3GB "Samsung 8WPD3R" DDR eMMC 5.0 card as /dev/mmcblk1: date 10/2016, manfid/oemid: 0x000015/0x0100, hw/fw rev: 0x0/0x0000000000000000
+
+### Swap configuration:
+
+  * /dev/zram1: 124.9M (4.0M used, lzo, 4 streams, 3.9M data, 1.8M compressed, 2.3M total)
+  * /dev/zram2: 124.9M (3.8M used, lzo, 4 streams, 3.7M data, 1.6M compressed, 2.1M total)
+  * /dev/zram3: 124.9M (3.9M used, lzo, 4 streams, 3.6M data, 2M compressed, 2.4M total)
+  * /dev/zram4: 124.9M (3.5M used, lzo, 4 streams, 3.3M data, 1.7M compressed, 2.2M total)
 
 ### Software versions:
 
@@ -65,3 +72,9 @@ Kernel 4.19.62 is not latest 4.19.274 LTS that was released on 2023-02-25.
 See https://endoflife.date/linux for details. It is somewhat likely that
 a lot of exploitable vulnerabilities exist for this kernel as well as many
 unfixed bugs.
+
+All known settings adjusted for performance. Device now ready for benchmarking.
+Once finished stop with [ctrl]-[c] to get info about throttling, frequency cap
+and too high background activity all potentially invalidating benchmark scores.
+All changes with storage and PCIe devices as well as suspicious dmesg contents
+will be reported too.

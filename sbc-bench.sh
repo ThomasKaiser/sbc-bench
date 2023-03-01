@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.9.34
+Version=0.9.35
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -4060,11 +4060,18 @@ ValidateResults() {
 	# Bogus clockspeeds
 	# Inappropriate settings for benchmarking
 	# Silly settings (for example: arm_boost not set on RPi4, zswap on top of zram)
+	# if swapping happened check type of swap and warn when on HDD, SD card or MMC
 
 	# Swapping? Skip if there's no swap configured
 	ProcSwapLines=$(wc -l </proc/swaps)
 	if [ ${ProcSwapLines} -gt 1 ]; then
-		[ "${SwapWarning}" = "" ] && echo -e "${LGREEN}No swapping${NC}" || echo -e "${LRED}${BOLD}Swapping occured${NC}"
+		if [ "${SwapWarning}" = "" ]; then
+			echo -e "${LGREEN}No swapping${NC}"
+		else
+			echo -e "${LRED}${BOLD}Swapping occured${NC}"
+			SlowSwap="$(ListSwapDevices | sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" | awk -F") on " '{print $2}' | sed '/^$/d' | tr '\n' ',' | sed -e 's/,/, /g' -e 's/, $//')"
+			[ -z "${SlowSwap}" ] || echo -e "${LRED}${BOLD}Swap configured on ${SlowSwap}${NC}"
+		fi
 	fi
 
 	# Too high %system utilization (mostly caused by swapping on zram enabled systems)?
@@ -4164,6 +4171,92 @@ ValidateResults() {
 		fi
 	fi
 } # ValidateResults
+
+ListSwapDevices() {
+	# function to list swap devices
+
+	grep -q "/dev/zram" /proc/swaps && ZRAMCtl="$(zramctl -n -o NAME,DISKSIZE,ALGORITHM,STREAMS,DATA,COMPR,TOTAL)"
+	[ -r /sys/module/zswap/parameters/enabled ] && ZswapEnabled="$(sed 's/Y/1/' </sys/module/zswap/parameters/enabled)"
+	[ "${ZswapEnabled}" = "1" ] && ZswapWarning=" ${LRED}slowed down by zswap${NC}"
+	tail -n +2 /proc/swaps | while read ; do
+		unset DeviceWarning
+		SwapDevice="${REPLY%% *}"
+		SwapType="$(awk -F" " '{print $2}' <<<"${REPLY}")"
+		SwapSizeRaw="$(awk -F" " '{print $3}' <<<"${REPLY}")"
+		SwapSize=$(HumanReadableSize "${SwapSizeRaw:-}")
+		SwapUsedRaw="$(awk -F" " '{print $4}' <<<"${REPLY}")"
+		SwapUsed=$(HumanReadableSize "${SwapUsedRaw:-}")
+
+		case "${SwapType}" in
+			partition)
+				case "${SwapDevice}" in
+					/dev/zram*)
+						# ZRAM
+						awk -F" " "/${SwapDevice##*/} / {print \"  * \"\$1\": \"\$2\" (${SwapUsed} used, \"\$3\", \"\$4\" streams, \"\$5\" data, \"\$6\" compressed, \"\$7\" total)${ZswapWarning}\"}" <<<"${ZRAMCtl}"
+						;;
+					/dev/*)
+						# other partition, find the block device it's residing on and check
+						# whether it's flash storage or spinning rust
+						DeviceWarning="$(CheckSwapPartition "${SwapDevice}")"
+						echo -e "  * ${SwapDevice}: ${SwapSize} (${SwapUsed} used)${DeviceWarning}"
+						;;
+				esac
+				;;
+			file)
+				# try to find out on which block device it's residing
+				# findmnt -J -U "$(stat --printf=%m /swapfile)" -> {"target": "/", "source": "/dev/mmcblk1p1", "fstype": "ext4", "options": "rw,noatime,nodiratime,errors=remount-ro,commit=600"} -> /sys/block/mmcblk1/device/type (SD or MMC)
+				SwapDeviceInfo="$(findmnt -J -U "$(stat --printf=%m ${SwapDevice})")"
+				SwapDevice="$(awk -F'"' '/\dev/ {print $8}' <<<"$SwapDeviceInfo")"
+				DeviceWarning="$(CheckSwapPartition "${SwapDevice}")"
+				echo -e "  * ${SwapDevice}: ${SwapSize} (${SwapUsed} used)${DeviceWarning}"
+				;;
+			*)
+				# something else
+				echo -e "  * ${SwapDevice}: ${SwapSize} (${SwapUsed} used)"
+				;;
+		esac
+	done
+} # ListSwapDevices
+
+CheckSwapPartition() {
+	# function that determines block device for given partition and examines it wrt
+	# HDD or flash storage and if the latter prints warnings when SD or MMC
+	BlockDevice="$(basename "$(realpath /sys/class/block/${1##*/}/..)")"
+	if [ -f /sys/block/${BlockDevice}/queue/rotational ]; then
+		case $(</sys/block/${BlockDevice}/queue/rotational) in
+			1)
+				# spinning rust
+				echo -e " ${LRED}${BOLD}on ultra slow HDD storage${NC}"
+				;;
+			*)
+				# flash storage, get device node
+				if [ /sys/block/${BlockDevice}/device/type ]; then
+					case $(</sys/block/${BlockDevice}/device/type) in
+						SD)
+							echo -e " ${LRED}${BOLD}on ultra slow SD card storage${NC}"
+							;;
+						MMC)
+							echo -e " on MMC storage"
+							;;
+					esac
+				fi
+				;;
+		esac
+	fi
+} # CheckSwapPartition
+
+HumanReadableSize() {
+	# transforms storage sizes provided in KB (/proc/swaps for example) into human readable units
+	if [ $1 -gt 1273741824 ]; then
+		awk '{printf ("%0.1fT",$1/1073741824); }' <<<$1
+	elif [ $1 -gt 1248576 ]; then
+		awk '{printf ("%0.1fG",$1/1048576); }' <<<$1
+	elif [ $1 -gt 1080 ]; then
+		awk '{printf ("%0.1fM",$1/1024); }' <<<$1
+	else
+		echo "${1}K"
+	fi
+} # HumanReadableSize
 
 UploadResults() {
 	# upload results to ix.io and replace multiple empty lines with one. 2nd try if 1st does not succeed
@@ -6695,6 +6788,12 @@ ProvideReviewInfo() {
 		like ext4 since representing 'storage performance' a lot more than 'somewhat
 		dealing with a foreign filesystem' as with NTFS.
 		EOF
+	fi
+
+	# check swap devices/files/partitions
+	SwapDevices="$(ListSwapDevices)"
+	if [ "X${SwapDevices}" != "X" ]; then
+		echo -e "\n### Swap configuration:\n\n${SwapDevices}" >>"${TempDir}/review"
 	fi
 
 	# software versions

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.9.35
+Version=0.9.36
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -3875,10 +3875,6 @@ SummarizeResults() {
 	cat "${TempDir}/cpu-topology.log" >>${ResultLog}
 	echo "${LSCPU}" >>${ResultLog}
 	LogEnvironment >>${ResultLog}
-	CacheAndDIMMs="$(CacheAndDIMMDetails)"
-	[ -z "${CacheAndDIMMs}" ] || echo -e "\n##########################################################################\n${CacheAndDIMMs}" >>${ResultLog}
-	# Always include OPP tables
-	echo -e "${OPPTables}" >>${ResultLog}
 
 	# Throttling detection/reporting
 	if [ "X${PlotCpufreqOPPs}" != "Xyes" ]; then
@@ -4026,6 +4022,13 @@ LogEnvironment() {
 	[ -z "${KernelInfo}" ] || echo -e "\n##########################################################################\n"; \
 		sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" <<<"${KernelInfo}"
 
+	# cache and DIMM info
+	CacheAndDIMMs="$(CacheAndDIMMDetails)"
+	[ -z "${CacheAndDIMMs}" ] || echo -e "\n##########################################################################\n${CacheAndDIMMs}" >>${ResultLog}
+
+	# Always include OPP tables
+	echo -e "${OPPTables}" >>${ResultLog}
+
 	# results validation:
 	IsValid="$(ValidateResults | sed -e 's/^/  * /')"
 	echo -e "\n##########################################################################\n"
@@ -4052,15 +4055,59 @@ ValidateResults() {
 	# function that checks whether benchmark scores have been invalidated by the following
 	# events:
 	#
-	# Thermal throttling happened
-	# Frequency capping happened
-	# Swapping happened
-	# Too much background activity
-	# oom-killer invocations
-	# Bogus clockspeeds
+	# Bogus clockspeeds [x]
+	# Swapping happened [x]
+	# if swapping happened check type of swap and warn when on HDD, SD card or MMC [x]
+	# Silly settings (for example: arm_boost not set on RPi4, zswap on top of zram) [x]
+	# Too much background activity [x]
+	# oom-killer invocations [x]
 	# Inappropriate settings for benchmarking
-	# Silly settings (for example: arm_boost not set on RPi4, zswap on top of zram)
-	# if swapping happened check type of swap and warn when on HDD, SD card or MMC
+	# Thermal throttling happened [x]
+	# Frequency capping happened [x]
+
+	# report significant mismatches between measured and 'advertised' clockspeeds from
+	# 1st measurement prior to benchmarking (to rule out later possible throttling effects)
+	if [ "X${USE_VCGENCMD}" = "Xtrue" ]; then
+		ClockspeedMismatch="$(grep -B1000 "^Executing ramlat" "${ResultLog}" | grep -A2 "^Checking cpufreq OPP " | awk -F"[()]" '/^Cpufreq OPP:/ {print $2}' | grep "^-" | sort -n | head -n1)"
+	else
+		ClockspeedMismatch="$(grep -B1000 "^Executing ramlat" "${ResultLog}" | grep -A2 "^Checking cpufreq OPP " | awk -F"[()]" '/^Cpufreq OPP:/ {print $4}' | grep "^-" | sort -n | head -n1)"
+	fi
+	if [ "X${ClockspeedMismatch}" != "X" ]; then
+		OneOrTwoDigits=$(wc -c <<<"${ClockspeedMismatch}")
+		if [ ${OneOrTwoDigits:-6} -gt 6 ]; then
+			# mismatch greater than 9%, print warning in red and bold
+			echo -e "${LRED}${BOLD}Advertised vs. measured max CPU clockspeed: ${ClockspeedMismatch}${NC}"
+		else
+			echo -e "Advertised vs. measured max CPU clockspeed: ${ClockspeedMismatch}"
+		fi
+	elif [ -f /sys/devices/system/cpu/cpufreq/policy0/scaling_governor ]; then
+		# cpufreq scaling supported, check we've measured cpufreq before to report 'no mismatch'
+		grep -q "^Checking cpufreq OPP" "${ResultLog}" && \
+			echo -e "${LGREEN}No mismatch between advertised and measured max CPU clockspeed${NC}"
+	fi
+
+	# Check whether arm_boost=1 is missing with BCM2711 rev C0 or later. Armbian 'experts'
+	# ship with such silly settings but set over_voltage=2 and arm_freq=1800 at the same
+	# time as such RPi 4 with BCM2711 rev C0 or later running with Armbian will waste more
+	# energy and starts to throttle earlier since the ARM cores are being fed unnecessarily
+	# with higher supply voltages than necessary and all of this just due to the usual
+	# amount of ignorance over at Armbian.
+	# https://github.com/armbian/build/issues/3400#issuecomment-1011435796
+	if [ -r "${ThreadXConfig}" ]; then
+		grep -q "arm_boost=1" "${ThreadXConfig}"
+		if [ $? -ne 0 -a "${BCM2711}" = "C0 or later" ]; then
+			grep -q "arm_freq=1800" "${ThreadXConfig}"
+			case $? in
+				0)
+					# Armbian settings
+					echo -e "${LRED}${BOLD}Silly settings: \"arm_boost=1\" missing but \"arm_freq=1800\" set in ${ThreadXConfig}${NC}"
+					;;
+				*)
+					echo -e "${LRED}${BOLD}\"arm_boost=1\" missing in ${ThreadXConfig}${NC}"
+					;;
+			esac
+		fi
+	fi
 
 	# Swapping? Skip if there's no swap configured
 	ProcSwapLines=$(wc -l </proc/swaps)
@@ -4068,9 +4115,15 @@ ValidateResults() {
 		if [ "${SwapWarning}" = "" ]; then
 			echo -e "${LGREEN}No swapping${NC}"
 		else
-			echo -e "${LRED}${BOLD}Swapping occured${NC}"
-			SlowSwap="$(ListSwapDevices | sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" | awk -F") on " '{print $2}' | sed '/^$/d' | tr '\n' ',' | sed -e 's/,/, /g' -e 's/, $//')"
-			[ -z "${SlowSwap}" ] || echo -e "${LRED}${BOLD}Swap configured on ${SlowSwap}${NC}"
+			NoZRAM=$(tail -n +2 /proc/swaps | grep -v '^/dev/zram' | wc -l)
+			if [ ${NoZRAM} -eq 0 ]; then
+				echo -e "${LRED}${BOLD}Swapping (ZRAM) occured${NC}"
+				[ "${ZswapEnabled}" = "1" ] && echo -e "${LRED}${BOLD}Zswap configured on top of zram. Swap performance harmed${NC}"
+			else
+				echo -e "${LRED}${BOLD}Swapping occured${NC}"
+				SlowSwap="$(ListSwapDevices | sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" | awk -F") on " '{print $2}' | sed '/^$/d' | tr '\n' ',' | sed -e 's/,/, /g' -e 's/, $//')"
+				[ -z "${SlowSwap}" ] || echo -e "${LRED}${BOLD}Swap configured on ${SlowSwap}${NC}"
+			fi
 		fi
 	fi
 
@@ -4177,7 +4230,7 @@ ListSwapDevices() {
 
 	grep -q "/dev/zram" /proc/swaps && ZRAMCtl="$(zramctl -n -o NAME,DISKSIZE,ALGORITHM,STREAMS,DATA,COMPR,TOTAL)"
 	[ -r /sys/module/zswap/parameters/enabled ] && ZswapEnabled="$(sed 's/Y/1/' </sys/module/zswap/parameters/enabled)"
-	[ "${ZswapEnabled}" = "1" ] && ZswapWarning=" ${LRED}slowed down by zswap${NC}"
+	[ "${ZswapEnabled}" = "1" ] && ZswapWarning=", ${LRED}slowed down by zswap${NC}"
 	tail -n +2 /proc/swaps | while read ; do
 		unset DeviceWarning
 		SwapDevice="${REPLY%% *}"
@@ -4192,7 +4245,7 @@ ListSwapDevices() {
 				case "${SwapDevice}" in
 					/dev/zram*)
 						# ZRAM
-						awk -F" " "/${SwapDevice##*/} / {print \"  * \"\$1\": \"\$2\" (${SwapUsed} used, \"\$3\", \"\$4\" streams, \"\$5\" data, \"\$6\" compressed, \"\$7\" total)${ZswapWarning}\"}" <<<"${ZRAMCtl}"
+						awk -F" " "/${SwapDevice##*/} / {print \"  * \"\$1\": \"\$2\" (${SwapUsed} used, \"\$3\", \"\$4\" streams, \"\$5\" data, \"\$6\" compressed, \"\$7\" total${ZswapWarning})\"}" <<<"${ZRAMCtl}"
 						;;
 					/dev/*)
 						# other partition, find the block device it's residing on and check
@@ -6672,8 +6725,6 @@ ProvideReviewInfo() {
 		cat "${TempDir}/cpu-topology.log" >>${ResultLog}
 		echo "${LSCPU}" >>${ResultLog}
 		LogEnvironment >>${ResultLog}
-		CacheAndDIMMs="$(CacheAndDIMMDetails)"
-		[ -z "${CacheAndDIMMs}" ] || echo -e "\n##########################################################################\n${CacheAndDIMMs}" >>${ResultLog}
 	fi
 
 	if [ -f "${TempDir}/clk_summary.tuned" ]; then

@@ -14,7 +14,7 @@ It has eight **entirely different** usage modes:
 * Graph thermal/consumption charts with `-g` to [measure efficiency of settings/devices](Efficiency_Graphing.md)
 * Generate a controlled environment with appropriate settings for other benchmark suites like Geekbench (`sbc-bench -G`) or Phoronix (`sbc-bench -P`)
 * `sbc-bench -k` shows kernel version info. Stuff like: still supported? BSP or mainline?
-* The review mode (`-r`) is designed to help reviewers and participants of 'SBC debug parties' to quickly identify bottlenecks that need further attention: reports many performance relevant settings, switches them to max performance and lurks from then on in the background to monitor other benchmark executions. By comparing scores made with defaults we are able to directly identify settings that need adjustments
+* The review modes (`-r` and `-R`) are designed to help reviewers and participants of 'SBC debug parties' to quickly identify tunables and bottlenecks that need further attention: reports many performance relevant settings, switches them to max performance and lurks from then on in the background to monitor other benchmark executions and tests. By comparing scores made with defaults we are able to directly identify settings that need adjustments
 * Provide basic CLI monitoring functionality through the `-m` switch
 
 The monitoring now also displays some hardware information when starting:

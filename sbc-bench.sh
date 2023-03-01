@@ -4068,17 +4068,20 @@ ValidateResults() {
 	# report significant mismatches between measured and 'advertised' clockspeeds from
 	# 1st measurement prior to benchmarking (to rule out later possible throttling effects)
 	if [ "X${USE_VCGENCMD}" = "Xtrue" ]; then
-		ClockspeedMismatch="$(grep -B1000 "^Executing ramlat" "${ResultLog}" | grep -A2 "^Checking cpufreq OPP " | awk -F"[()]" '/^Cpufreq OPP:/ {print $2}' | grep "^-" | sort -n | head -n1)"
+		ClockspeedMismatchBefore="$(grep -B1000 "^Executing ramlat" "${ResultLog}" | grep -A2 "^Checking cpufreq OPP " | awk -F"[()]" '/^Cpufreq OPP:/ {print $2}' | grep "^-" | sort -n | head -n1)"
+		ClockspeedMismatchAfter="$(grep -A200 "^Testing maximum cpufreq again" "${ResultLog}" | grep -A2 "^Checking cpufreq OPP " | awk -F"[()]" '/^Cpufreq OPP:/ {print $2}' | grep "^-" | sort -n | head -n1)"
 	else
-		ClockspeedMismatch="$(grep -B1000 "^Executing ramlat" "${ResultLog}" | grep -A2 "^Checking cpufreq OPP " | awk -F"[()]" '/^Cpufreq OPP:/ {print $4}' | grep "^-" | sort -n | head -n1)"
+		ClockspeedMismatchBefore="$(grep -B1000 "^Executing ramlat" "${ResultLog}" | grep -A2 "^Checking cpufreq OPP " | awk -F"[()]" '/^Cpufreq OPP:/ {print $4}' | grep "^-" | sort -n | head -n1)"
+		ClockspeedMismatchAfter="$(grep -A200 "^Testing maximum cpufreq again" "${ResultLog}" | grep -A2 "^Checking cpufreq OPP " | awk -F"[()]" '/^Cpufreq OPP:/ {print $4}' | grep "^-" | sort -n | head -n1)"
 	fi
-	if [ "X${ClockspeedMismatch}" != "X" ]; then
-		OneOrTwoDigits=$(wc -c <<<"${ClockspeedMismatch}")
-		if [ ${OneOrTwoDigits:-6} -gt 6 ]; then
+	if [ "X${ClockspeedMismatchBefore}" != "X" ]; then
+		OneOrTwoDigitsBefore=$(wc -c <<<"${ClockspeedMismatchBefore}")
+		OneOrTwoDigitsAfter=$(wc -c <<<"${OneOrTwoDigitsAfter}")
+		if [ ${OneOrTwoDigitsBefore:-6} -gt 6 -o ${OneOrTwoDigitsAfter:-6} -gt 6 ]; then
 			# mismatch greater than 9%, print warning in red and bold
-			echo -e "${LRED}${BOLD}Advertised vs. measured max CPU clockspeed: ${ClockspeedMismatch}${NC}"
+			echo -e "${LRED}${BOLD}Advertised vs. measured max CPU clockspeed: ${ClockspeedMismatchBefore} before, ${ClockspeedMismatchAfter} after${NC}"
 		else
-			echo -e "Advertised vs. measured max CPU clockspeed: ${ClockspeedMismatch}"
+			echo -e "Advertised vs. measured max CPU clockspeed: ${ClockspeedMismatchBefore} before, ${ClockspeedMismatchAfter} after"
 		fi
 	elif [ -f /sys/devices/system/cpu/cpufreq/policy0/scaling_governor ]; then
 		# cpufreq scaling supported, check we've measured cpufreq before to report 'no mismatch'
@@ -4805,7 +4808,7 @@ GuessARMSoC() {
 	# S905Y4:  '37:B - 3:4'  / 370b030400000000122d90041dc3d900
 	#
 	# Chars 1-2: meson family: 21=GXL, 22=GXM, 2b=SM1, 29=G12B, 36=T7 and so on, see below
-	# Chars 3-4: production batch: the earlier production run the lower (0a, 0b, 0c and so on)
+	# Chars 3-4: SoC revision: SoCs start with RevA, then RevB and so on (0a, 0b, 0c and so on)
 	# Chars 5-6: SKU differentiation: see GXL case construct below starting at '21??3*')
 	#
 	# https://github.com/CoreELEC/bl301/blob/1b435f3e20160d50fc01c3ef616f1dbd9ff26be8/arch/arm/include/asm/cpu_id.h#L21-L42

@@ -1,6 +1,6 @@
 # Radxa ROCK Pi 4A
 
-Tested with sbc-bench v0.9.29 on Fri, 24 Feb 2023 09:20:30 +0000. Full info: [http://ix.io/4p3e](http://ix.io/4p3e)
+Tested with sbc-bench v0.9.36 on Wed, 01 Mar 2023 18:43:15 +0000. Full info: [http://ix.io/4pCM](http://ix.io/4pCM)
 
 ### General information:
 
@@ -18,11 +18,13 @@ The CPU features 2 clusters of different core types:
       4        1        4      408    1800   Cortex-A72 / r0p2
       5        1        4      408    1800   Cortex-A72 / r0p2
 
+1985 KB available RAM
+
 ### Governors/policies (performance vs. idle consumption):
 
 Original governor settings:
 
-    cpufreq-policy0: ondemand / 1200 MHz (ondemand performance schedutil / 408 600 816 1008 1200 1416)
+    cpufreq-policy0: ondemand / 1416 MHz (ondemand performance schedutil / 408 600 816 1008 1200 1416)
     cpufreq-policy4: ondemand / 408 MHz (ondemand performance schedutil / 408 600 816 1008 1200 1416 1608 1800)
     dmc: dmc_ondemand / 856 MHz (powersave performance dmc_ondemand simple_ondemand / 328 416 666 856)
     ff9a0000.gpu: simple_ondemand / 200 MHz (powersave performance dmc_ondemand simple_ondemand / 200 300 400 600 800)
@@ -42,34 +44,40 @@ Status of performance related policies found below /sys:
 
 ### Clockspeeds (idle vs. heated up):
 
-Before at 49.4°C:
+Before at 33.9°C:
 
     cpu0-cpu3 (Cortex-A53): OPP: 1416, Measured: 1412 
     cpu4-cpu5 (Cortex-A72): OPP: 1800, Measured: 1797 
 
-After at 80.6°C (throttled):
+After at 81.1°C (throttled):
 
     cpu0-cpu3 (Cortex-A53): OPP: 1416, Measured: 1412 
-    cpu4-cpu5 (Cortex-A72): OPP: 1800, Measured: 1413     (-21.5%)
+    cpu4-cpu5 (Cortex-A72): OPP: 1800, Measured: 1435     (-20.3%)
 
-### Memory performance
+### Performance baseline
 
-  * cpu0 (Cortex-A53): memcpy: 1780.9 MB/s, memchr: 1885.0 MB/s, memset: 8492.4 MB/s
-  * cpu4 (Cortex-A72): memcpy: 3585.2 MB/s, memchr: 6225.3 MB/s, memset: 8386.5 MB/s
-  * cpu0 (Cortex-A53) 16M latency: 189.6 192.3 188.4 191.5 188.5 192.1 236.2 449.4 
-  * cpu4 (Cortex-A72) 16M latency: 197.5 198.8 199.5 198.7 199.3 203.0 203.5 239.2 
+  * cpu0 (Cortex-A53): memcpy: 1769.2 MB/s, memchr: 1887.2 MB/s, memset: 8481.9 MB/s
+  * cpu4 (Cortex-A72): memcpy: 3554.4 MB/s, memchr: 6741.6 MB/s, memset: 8560.8 MB/s
+  * cpu0 (Cortex-A53) 16M latency: 188.6 191.9 187.4 191.1 187.4 191.5 236.2 452.7 
+  * cpu4 (Cortex-A72) 16M latency: 197.0 199.3 200.0 198.9 199.2 203.2 204.1 239.8 
+  * 7-zip MIPS (3 consecutive runs): 5071, 4060, 3738 (4290 avg), single-threaded: 1719
+  * `aes-256-cbc      85738.82k   246789.29k   458258.26k   597282.13k   655114.24k   653852.67k (Cortex-A53)`
+  * `aes-256-cbc     293469.96k   639138.92k   891824.13k   975417.34k  1016567.13k  1020766.89k (Cortex-A72)`
 
 ### Storage devices:
 
   * 111.8GB "Samsung SSD 750 EVO 120GB" SSD as /dev/sda [SATA 3.1, 6.0 Gb/s (current: 6.0 Gb/s)]: behind ASMedia SATA 6Gb/s bridge, 3% worn out, Driver=uas, 5000Mbps (capable of 12Mbps, 480Mbps, 5Gbps), drive temp: 24°C
   * 7.3GB "Silicon Motion Flash Drive" as /dev/sdb: USB, Driver=usb-storage, 480Mbps
-  * 29.7GB "SanDisk SE32G" HS SD card (speed negotiation problems, check dmesg) as /dev/mmcblk0: date 10/2017, manfid/oemid: 0x000003/0x5344, hw/fw rev: 0x8/0x0
+  * 29.7GB "SanDisk SE32G" HS SD card (speed negotiation problems and errors, check dmesg) as /dev/mmcblk0: date 10/2017, manfid/oemid: 0x000003/0x5344, hw/fw rev: 0x8/0x0
+
+### Swap configuration:
+
+  * /dev/zram0: 1G (0K used, zstd, 6 streams, 4K data, 58B compressed, 4K total)
 
 ### Software versions:
 
   * Debian GNU/Linux 11 (bullseye)
   * Compiler: /usr/bin/gcc (Debian 10.2.1-6) 10.2.1 20210110 / aarch64-linux-gnu
-  * OpenSSL 1.1.1n, built on 15 Mar 2022
 
 ### Kernel info:
 
@@ -79,7 +87,7 @@ After at 80.6°C (throttled):
   * Vulnerability Spectre v2:        Vulnerable
   * Kernel 5.10.110-1-rockchip / CONFIG_HZ=300
 
-Kernel 5.10.110 is not latest 5.10.169 LTS that was released on 2023-02-22.
+Kernel 5.10.110 is not latest 5.10.170 LTS that was released on 2023-02-25.
 
 See https://endoflife.date/linux for details. It is somewhat likely that
 a lot of exploitable vulnerabilities exist for this kernel as well as many

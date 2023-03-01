@@ -7432,7 +7432,7 @@ CheckPCIe() {
 							fi
 						fi
 					else
-						AdditionalInfo=", driver in use: $(awk -F": " '/Kernel driver in use:/ {print $2}' <<<"${PCIeDetails}")"
+						AdditionalInfo=", driver in use: $(awk -F": " '/Kernel driver in use:/ {print $2}' <<<"${PCIeDetails}" | head -n1)"
 						echo -e "  * ${DeviceName}: ${LnkSta}${AdditionalInfo}"
 					fi
 				fi

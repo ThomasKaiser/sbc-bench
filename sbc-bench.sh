@@ -4595,7 +4595,7 @@ GuessARMSoC() {
 	#       Cortex-A7 / r0p2: MediaTek MT6589/MT6588
 	#       Cortex-A7 / r0p3: Allwinner A31, MediaTek MT6572/MT6580/MT6582/MT6589/MT7623/MT8127/MT8135, Qualcomm MSM8610 (Snapdragon 200) / MSM8226/MSM8926 (Snapdragon 400), Samsung Exynos 5422
 	#       Cortex-A7 / r0p4: Allwinner A20, Exynos 5430, Mediatek MT6592
-	#       Cortex-A7 / r0p5: Allwinner A33/A83T/H2+/H3/H8/R16/R328/R40/S3/T113/V3/V3s/V40/V853, Broadcom BCM2836, Freescale/NXP i.MX7D/i.MX6 ULL, HiSilicon Hi351x/Hi3796M-V100/Hi3798M-V100, HiSilicon Kirin 920/925/928, MediaTek MT6595, Microchip SAMA7G54, Qualcomm MDM9607/MSM8909, Renesas RZ/N1, Rockchip RK3126/RK3126B/RK3126C/RK3128/RK3228A/RK3229/RV1108/RV1109/RV1126, SigmaStar SSD201/SSD202D, Spreadtrum SC7731/SC8830, STMicroelectronics STM32MP157
+	#       Cortex-A7 / r0p5: Allwinner A33/A50/A83T/H2+/H3/H8/R16/R328/R40/S3/T113/V3/V3s/V40/V853, Broadcom BCM2836, Freescale/NXP i.MX7D/i.MX6 ULL, HiSilicon Hi351x/Hi3796M-V100/Hi3798M-V100, HiSilicon Kirin 920/925/928, MediaTek MT6595, Microchip SAMA7G54, Qualcomm MDM9607/MSM8909, Renesas RZ/N1, Rockchip RK3126/RK3126B/RK3126C/RK3128/RK3228A/RK3229/RV1108/RV1109/RV1126, SigmaStar SSD201/SSD202D, Spreadtrum SC7731/SC8830, STMicroelectronics STM32MP157
 	#       Cortex-A8 / r1p3: TI OMAP3530/AM3703
 	#       Cortex-A8 / r1p7: TI Sitara AM3517
 	#       Cortex-A8 / r2p2: Samsung Exynos 3110 (S5PC110)
@@ -5153,6 +5153,9 @@ GuessARMSoC() {
 			sun8iw11*)
 				echo "Allwinner R40/V40/T3/A40i"
 				;;
+			sun8iw15*)
+				echo "Allwinner A50"
+				;;
 			sun50iw1p*)
 				# Since Armbian patched arch/arm64/kernel/cpuinfo.c since Aug 2016 every
 				# other Allwinner ARMv8 SoC (H5/H6/H616) will identify itself as sun50iw1p1
@@ -5358,7 +5361,7 @@ GuessSoCbySignature() {
 			echo "Allwinner A20"
 			;;
 		00A7r0p500A7r0p500A7r0p500A7r0p5)
-			# Allwinner sun8i: could be Allwinner H3/H2+, R40/V40 or A33/R16 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
+			# Allwinner sun8i: could be Allwinner H3/H2+, R40/V40 or A33/R16 or A50 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
 			# or Spreadtrum SC7731/SC8830 or Rockchip RV1126/RK3126/RK3126B/RK3126C/RK3128
 			case "${DTCompatible}" in
 				*rv1126*)
@@ -5401,6 +5404,10 @@ GuessSoCbySignature() {
 					# Allwinner A33/R16, 4 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
 					echo "Allwinner A33/R16"
 					;;
+				*sun8iw15p1*|*sun8i-a50*)
+					# Allwinner A50, 4 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
+					echo "Allwinner A50"
+					;;
 				*hi3796*)
 					# HiSilicon Hi3796M-V100, 4 x Cortex-A7 / r0p5 / swp half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt
 					echo "HiSilicon Hi3796M-V100"
@@ -5422,7 +5429,7 @@ GuessSoCbySignature() {
 					echo "Spreadtrum SC8830"
 					;;
 				*)
-					echo "Allwinner H3/H2+ or R40/V40 or A33/R16"
+					echo "Allwinner H3/H2+ or R40/V40 or A33/R16 or A50"
 					;;
 			esac
 			;;
@@ -7189,7 +7196,7 @@ CheckKernelVersion() {
 			echo -e "\n${LRED}${BOLD}The 4.4 series has reached end-of-life on 2017-11-05 with version 4.4.302.${NC}"
 			;;
 		4.9.*)
-			# some SDKs/BSPs based on this version: Allwinner H6, Allwinner H616/H313, Amlogic S905X3 (SM1) / S922X/A311D (G12B), Exynos 5422, Nvidia AGX Xavier / Nvidia Jetson Nano / Nvidia Tegra X1 / Nvidia Tegra Xavier, RealTek RTD129x/RTD139x
+			# some SDKs/BSPs based on this version: Allwinner A50/H6, Allwinner H616/H313, Amlogic S905X3 (SM1) / S922X/A311D (G12B), Exynos 5422, Nvidia AGX Xavier / Nvidia Jetson Nano / Nvidia Tegra X1 / Nvidia Tegra Xavier, RealTek RTD129x/RTD139x
 			case ${GuessedSoC} in
 				*5422*)
 					PrintBSPWarning Samsung

@@ -4595,7 +4595,7 @@ GuessARMSoC() {
 	#       Cortex-A7 / r0p2: MediaTek MT6589/MT6588
 	#       Cortex-A7 / r0p3: Allwinner A31, MediaTek MT6572/MT6580/MT6582/MT6589/MT7623/MT8127/MT8135, Qualcomm MSM8610 (Snapdragon 200) / MSM8226/MSM8926 (Snapdragon 400), Samsung Exynos 5422
 	#       Cortex-A7 / r0p4: Allwinner A20, Exynos 5430, Mediatek MT6592
-	#       Cortex-A7 / r0p5: Allwinner A33/A50/A83T/H2+/H3/H8/R16/R328/R40/S3/T113/V3/V3s/V40/V853, Broadcom BCM2836, Freescale/NXP i.MX7D/i.MX6 ULL, HiSilicon Hi351x/Hi3796M-V100/Hi3798M-V100, HiSilicon Kirin 920/925/928, MediaTek MT6595, Microchip SAMA7G54, Qualcomm MDM9607/MSM8909, Renesas RZ/N1, Rockchip RK3126/RK3126B/RK3126C/RK3128/RK3228A/RK3229/RV1108/RV1109/RV1126, SigmaStar SSD201/SSD202D, Spreadtrum SC7731/SC8830, STMicroelectronics STM32MP157
+	#       Cortex-A7 / r0p5: Allwinner A33/A50/MR133/R311/A83T/H2+/H3/H8/R16/R328/R40/S3/T113/V3/V3s/V40/V853, Broadcom BCM2836, Freescale/NXP i.MX7D/i.MX6 ULL, HiSilicon Hi351x/Hi3796M-V100/Hi3798M-V100, HiSilicon Kirin 920/925/928, MediaTek MT6595, Microchip SAMA7G54, Qualcomm MDM9607/MSM8909, Renesas RZ/N1, Rockchip RK3126/RK3126B/RK3126C/RK3128/RK3228A/RK3229/RV1108/RV1109/RV1126, SigmaStar SSD201/SSD202D, Spreadtrum SC7731/SC8830, STMicroelectronics STM32MP157
 	#       Cortex-A8 / r1p3: TI OMAP3530/AM3703
 	#       Cortex-A8 / r1p7: TI Sitara AM3517
 	#       Cortex-A8 / r2p2: Samsung Exynos 3110 (S5PC110)
@@ -5147,14 +5147,47 @@ GuessARMSoC() {
 			sun7iw2*)
 				echo "Allwinner A20"
 				;;
+			sun8iw3*)
+				echo "Allwinner A23"
+				;;
+			sun8iw5*)
+				echo "Allwinner A33/R16"
+				;;
+			sun8iw6*)
+				echo "Allwinner A83T/H8/H80/V66/R58"
+				;;
 			sun8iw7*)
 				echo "Allwinner H3/H2+"
+				;;
+			sun8iw8*)
+				echo "Allwinner V3/S3/V3s"
+				;;
+			sun8iw10*)
+				echo "Allwinner B288/B100"
 				;;
 			sun8iw11*)
 				echo "Allwinner R40/V40/T3/A40i"
 				;;
+			sun8iw12*)
+				echo "Allwinner V5/V100"
+				;;
 			sun8iw15*)
-				echo "Allwinner A50"
+				echo "Allwinner A50/MR133/R311"
+				;;
+			sun8iw16*)
+				echo "Allwinner V313/V316/V526/V536/V5V200"
+				;;
+			sun8iw17*)
+				echo "Allwinner T7"
+				;;
+			sun8iw19*)
+				echo "Allwinner V533/V833/V831"
+				;;
+			sun8iw20*)
+				echo "Allwinner R528/T113"
+				;;
+			sun8iw21*)
+				echo "Allwinner V853"
 				;;
 			sun50iw1p*)
 				# Since Armbian patched arch/arm64/kernel/cpuinfo.c since Aug 2016 every
@@ -5211,13 +5244,19 @@ GuessARMSoC() {
 				echo "Allwinner H6"
 				;;
 			sun50iw9*)
-				echo "Allwinner H616/H313"
+				echo "Allwinner H313/H503/H513/H616/H618/H700/T507/T517"
 				;;
 			sun50iw10*)
 				echo "Allwinner A100/A133/A53/R818/T509"
 				;;
 			sun50iw11*)
 				echo "Allwinner R329"
+				;;
+			sun50iw12*)
+				echo "Allwinner TV303"
+				;;
+			sun55iw3*)
+				echo "Allwinner A523/T527"
 				;;
 			sun*)
 				SoCGuess="$(GuessSoCbySignature)"
@@ -5361,7 +5400,7 @@ GuessSoCbySignature() {
 			echo "Allwinner A20"
 			;;
 		00A7r0p500A7r0p500A7r0p500A7r0p5)
-			# Allwinner sun8i: could be Allwinner H3/H2+, R40/V40 or A33/R16 or A50 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
+			# Allwinner sun8i: could be Allwinner H3/H2+, R40/V40 or A33/R16 or A50/MR133/R311 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
 			# or Spreadtrum SC7731/SC8830 or Rockchip RV1126/RK3126/RK3126B/RK3126C/RK3128
 			case "${DTCompatible}" in
 				*rv1126*)
@@ -5405,8 +5444,8 @@ GuessSoCbySignature() {
 					echo "Allwinner A33/R16"
 					;;
 				*sun8iw15p1*|*sun8i-a50*)
-					# Allwinner A50, 4 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
-					echo "Allwinner A50"
+					# Allwinner A50/MR133/R311, 4 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
+					echo "Allwinner A50/MR133/R311"
 					;;
 				*hi3796*)
 					# HiSilicon Hi3796M-V100, 4 x Cortex-A7 / r0p5 / swp half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt
@@ -5429,7 +5468,7 @@ GuessSoCbySignature() {
 					echo "Spreadtrum SC8830"
 					;;
 				*)
-					echo "Allwinner H3/H2+ or R40/V40 or A33/R16 or A50"
+					echo "Allwinner H3/H2+ or R40/V40 or A33/R16 or A50/MR133/R311"
 					;;
 			esac
 			;;
@@ -5949,7 +5988,14 @@ GuessSoCbySignature() {
 			;;
 		0?A55r2p00?A55r2p00?A55r2p00?A55r2p0??A76r4p0??A76r4p0??A76r4p0??A76r4p0)
 			# RK3588, 4 x Cortex-A55 / r2p0 + 2 x Cortex-A76 / r4p0 / + 2 x Cortex-A76 / r4p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp asimdrdm lrcpc dcpop asimddp
-			echo "Rockchip RK3588/RK3588s"
+			if [ -f /sys/devices/system/cpu/cpufreq/policy7/cpuinfo_max_freq ]; then
+				# According to this site RK3588M is limited to 2.1 GHz
+				# https://techacute.com/rockchip-launched-flagship-smart-vehicle-solution-rk3588m-with-360-panoramic-view-function/
+				read MaxRK3588Freq </sys/devices/system/cpu/cpufreq/policy7/cpuinfo_max_freq
+				[ ${MaxRK3588Freq:-0} -eq 2100000 ] && echo "Rockchip RK3588M" || echo "Rockchip RK3588/RK3588s"
+			else
+				echo "Rockchip RK3588/RK3588s"
+			fi
 			;;
 		150A7r0p5150A7r0p5150A7r0p5150A7r0p5)
 			case "${DeviceName}" in
@@ -7196,7 +7242,7 @@ CheckKernelVersion() {
 			echo -e "\n${LRED}${BOLD}The 4.4 series has reached end-of-life on 2017-11-05 with version 4.4.302.${NC}"
 			;;
 		4.9.*)
-			# some SDKs/BSPs based on this version: Allwinner A50/H6, Allwinner H616/H313, Amlogic S905X3 (SM1) / S922X/A311D (G12B), Exynos 5422, Nvidia AGX Xavier / Nvidia Jetson Nano / Nvidia Tegra X1 / Nvidia Tegra Xavier, RealTek RTD129x/RTD139x
+			# some SDKs/BSPs based on this version: Allwinner A50/MR133/R311/H6, Allwinner H616/H313, Amlogic S905X3 (SM1) / S922X/A311D (G12B), Exynos 5422, Nvidia AGX Xavier / Nvidia Jetson Nano / Nvidia Tegra X1 / Nvidia Tegra Xavier, RealTek RTD129x/RTD139x
 			case ${GuessedSoC} in
 				*5422*)
 					PrintBSPWarning Samsung
@@ -7252,9 +7298,10 @@ CheckKernelVersion() {
 			esac
 			;;
 		5.4.*)
-			# some SDKs/BSPs based on this version: Allwinner D1, Amlogic A311D2 (T7), S805X2/S905Y4/S905W2 (S4), Exynos 5422
+			# some SDKs/BSPs based on this version: Allwinner A64/D1/R528/T113/H5/H6, Amlogic A311D2 (T7), S805X2/S905Y4/S905W2 (S4), Exynos 5422
 			case ${GuessedSoC} in
-				"Allwinner D1"*)
+				Allwinner*)
+					# highly unlikely that there's any Allwinner A64/H5/H6 out in the wild still running a _mainline_ 5.4 version
 					PrintBSPWarning Allwinner
 					;;
 				*A311D2*|*S805X2*|*S905Y4*|*S905W2*|*S928X*)

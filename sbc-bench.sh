@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.9.36
+Version=0.9.37
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -85,6 +85,7 @@ Main() {
 			j|r)
 				# Jeff Geerling or Jean-Luc Aufranc mode. Help in reviewing devices
 				MODE=review
+				interval=$2
 				RunBenchmarks=TRUE
 				[ ${UID} = 0 ] || { echo -e "${BOLD}Warning: for useable results this tool needs to be run as root${NC}\n" >&2 ; exit 1 ; }
 				ProvideReviewInfo
@@ -93,6 +94,7 @@ Main() {
 			R)
 				# Review mode w/o basic benchmarking and thermal throttling tests
 				MODE=review
+				interval=$2
 				[ ${UID} = 0 ] || { echo -e "${BOLD}Warning: for useable results this tool needs to be run as root${NC}\n" >&2 ; exit 1 ; }
 				ProvideReviewInfo
 				exit 0
@@ -2868,7 +2870,8 @@ InitialMonitoring() {
 				echo -e "\nWarning: this Raspberry Pi is powered by BCM2711 Rev. ${BCM2711} but arm_boost=1\nis not set in ${ThreadXConfig}. Some (mis)information about what you are missing:\nhttps://www.raspberrypi.com/news/bullseye-bonus-1-8ghz-raspberry-pi-4/" >>${ResultLog})
 			echo -e "\nRaspberry Pi ThreadX version:\n${ThreadXVersion}" >>${ResultLog}
 			[ -f ${ThreadXConfig} ] && echo -e "\nThreadX configuration (${ThreadXConfig}):\n$(grep -v '#' ${ThreadXConfig} | sed '/^\s*$/d')" >>${ResultLog}
-			echo -e "\nActual ThreadX settings:\n$("${VCGENCMD}" get_config int)" >>${ResultLog}
+			ActualThreadXsettings="$("${VCGENCMD}" get_config int)"
+			echo -e "\nActual ThreadX settings:\n${ActualThreadXsettings}" >>${ResultLog}
 		fi
 	fi
 
@@ -4062,6 +4065,7 @@ ValidateResults() {
 	# Too much background activity [x]
 	# oom-killer invocations [x]
 	# Inappropriate settings for benchmarking
+	# Powercapping on Intel [x]
 	# Thermal throttling happened [x]
 	# Frequency capping happened [x]
 
@@ -4089,14 +4093,15 @@ ValidateResults() {
 			echo -e "${LGREEN}No mismatch between advertised and measured max CPU clockspeed${NC}"
 	fi
 
-	# Check whether arm_boost=1 is missing with BCM2711 rev C0 or later. Armbian 'experts'
-	# ship with such silly settings but set over_voltage=2 and arm_freq=1800 at the same
-	# time as such RPi 4 with BCM2711 rev C0 or later running with Armbian will waste more
-	# energy and starts to throttle earlier since the ARM cores are being fed unnecessarily
-	# with higher supply voltages than necessary and all of this just due to the usual
-	# amount of ignorance over at Armbian.
-	# https://github.com/armbian/build/issues/3400#issuecomment-1011435796
+	# check for certain RPi specifics
 	if [ -r "${ThreadXConfig}" ]; then
+    	# Check whether arm_boost=1 is missing with BCM2711 rev C0 or later. Armbian 'experts'
+    	# ship with such silly settings but set over_voltage=2 and arm_freq=1800 at the same
+    	# time as such RPi 4 with BCM2711 rev C0 or later running with Armbian will waste more
+    	# energy and starts to throttle earlier since the ARM cores are being fed unnecessarily
+    	# with higher supply voltages than necessary and all of this just due to the usual
+    	# amount of ignorance over at Armbian.
+    	# https://github.com/armbian/build/issues/3400#issuecomment-1011435796
 		grep -q "arm_boost=1" "${ThreadXConfig}"
 		if [ $? -ne 0 -a "${BCM2711}" = "C0 or later" ]; then
 			grep -q "arm_freq=1800" "${ThreadXConfig}"
@@ -4110,6 +4115,18 @@ ValidateResults() {
 					;;
 			esac
 		fi
+
+		# check whether temp_soft_limit is defined since otherwise on certain RPi models
+		# the max clockspeed is silently lowered from 1400 to 1200 MHz once 60°C are hit
+		case "${DeviceName}" in
+			"Raspberry Pi 3 Model B Plus"*|"Raspberry Pi 3 Model A Plus"*|"Raspberry Pi Compute Module 3 Plus"*)
+				grep -q "arm_freq=1200" <<<"${ActualThreadXsettings}"
+				LimitedTo1200=$?
+				grep -q "temp_soft_limit" "${ThreadXConfig}"
+				TempSoftLimitSet=$?
+				[ ${LimitedTo1200} -ne 0 -a ${TempSoftLimitSet} -ne 0 ] && echo "\"temp_soft_limit\" not set in ${ThreadXConfig}"
+				;;
+		esac
 	fi
 
 	# Swapping? Skip if there's no swap configured
@@ -4197,6 +4214,11 @@ ValidateResults() {
 	[ -r /sys/module/zswap/parameters/enabled ] && ZswapEnabled="$(sed 's/Y/1/' </sys/module/zswap/parameters/enabled)"
 	if [ "${ZswapEnabled}" = "1" ]; then
 		grep -q '/dev/zram' /proc/swaps && echo -e "${LRED}${BOLD}Zswap combined with ZRAM. Swapping performance severely harmed${NC}"
+	fi
+
+	# powercap on Intel?
+	if [ -d /sys/devices/virtual/powercap/intel-rapl ]; then
+		grep -q -i GenuineIntel <<< "${ProcCPU}" && echo -e "  * Powercap detected. Details: \"powercap-info -p intel-rapl\""
 	fi
 
 	# Throttling and frequency capping on RPi?
@@ -7010,7 +7032,7 @@ ProvideReviewInfo() {
 	rm "${TempDir}"/*time_in_state* "${TempDir}/throttling_info.txt" 2>/dev/null
 	SwapBefore="$(awk -F" " '{print $4}' </proc/swaps | grep -v -i Used | awk '{s+=$1} END {printf "%.0f", s}')"
 	CheckTimeInState before
-	/bin/bash "${PathToMe}" -m 60 >"${MonitorLog}" &
+	/bin/bash "${PathToMe}" -m ${interval:-60} >"${MonitorLog}" &
 	MonitoringPID=$!
 	echo ""
 	snore 1
@@ -7264,7 +7286,7 @@ CheckKernelVersion() {
 			grep -q "releaseCycle: \"4.9\"" "${TempDir}/linuxkernel.md" || \
 				echo -e "\n${LRED}${BOLD}The 4.9 series has reached end-of-life on 2023-01-07 with version 4.9.337.${NC}"
 			;;
-		"5.1.0"|"5.3.0"|"5.3.11"|"5.7.0"|"5.9.0"|"5.10.0"|"5.14.0")
+		"3.10.33"|"3.10.108"|"4.16.1"|"4.18.7"|"5.0.2"|"5.1.0"|"5.3.0"|"5.3.11"|"5.5.0"|"5.6.0"|"5.7."*|"5.8."*|"5.9."*|"5.10.0"|"5.14.0")
 			# Popular kernels for all sorts of Amlogic SoCs from https://github.com/150balbes
 			# Unfortunately lots of devices still run with these ancient kernels lacking any fixes
 			:

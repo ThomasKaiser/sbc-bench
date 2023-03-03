@@ -1,6 +1,6 @@
 # NanoPi Fire3
 
-Tested with sbc-bench v0.9.29 on Thu, 23 Feb 2023 16:05:18 +0100. Full info: [http://ix.io/4oZ3](http://ix.io/4oZ3)
+Tested with sbc-bench v0.9.36 on Fri, 03 Mar 2023 11:32:37 +0100. Full info: [http://ix.io/4pMk](http://ix.io/4pMk)
 
 ### General information:
 
@@ -18,6 +18,8 @@ Tested with sbc-bench v0.9.29 on Thu, 23 Feb 2023 16:05:18 +0100. Full info: [ht
       6        1        0      400    1400   Cortex-A53 / r0p3
       7        1        0      400    1400   Cortex-A53 / r0p3
 
+994 KB available RAM
+
 ### Governors/policies (performance vs. idle consumption):
 
 Original governor settings:
@@ -30,29 +32,35 @@ Tuned governor settings:
 
 ### Clockspeeds (idle vs. heated up):
 
-Before at 56.0°C:
+Before at 54.0°C:
 
-    cpu0 (Cortex-A53): OPP: 1400, Measured: 1396 
+    cpu0 (Cortex-A53): OPP: 1400, Measured: 1397 
 
 After at 85.0°C (throttled):
 
-    cpu0 (Cortex-A53): OPP: 1400, Measured: 1196     (-14.6%)
+    cpu0 (Cortex-A53): OPP: 1400, Measured: 1197     (-14.5%)
 
-### Memory performance
+### Performance baseline
 
-  * memcpy: 1525.2 MB/s, memchr: 1989.5 MB/s, memset: 4582.8 MB/s
-  * 16M latency: 175.9 176.3 174.6 176.4 174.6 176.9 237.3 448.6 
+  * memcpy: 1523.8 MB/s, memchr: 1991.6 MB/s, memset: 4587.8 MB/s
+  * 16M latency: 174.2 175.3 173.1 175.1 172.5 175.4 236.7 447.8 
+  * 7-zip MIPS (3 consecutive runs): 7390, 7362, 7057 (7270 avg), single-threaded: 1094
+  * `aes-256-cbc     108972.64k   291903.17k   495047.68k   606357.69k   651935.74k   648621.33k`
+  * `aes-256-cbc     109702.61k   290881.79k   494551.98k   607953.24k   648417.21k   653246.46k`
 
 ### Storage devices:
 
   * 7.4GB "SanDisk SU08G" HS SD card as /dev/mmcblk2: date 06/2013, manfid/oemid: 0x000003/0x5344, hw/fw rev: 0x8/0x0
+
+### Swap configuration:
+
+  * /dev/zram0: 497.2M (48.5M used, lzo, 8 streams, 43M data, 14.5M compressed, 17.3M total)
 
 ### Software versions:
 
   * Ubuntu 20.04.3 LTS
   * Build scripts: https://github.com/armbian/build, 21.02.1, NanoPi Fire3, s5p6818, s5p6818
   * Compiler: /usr/bin/gcc (Ubuntu 9.3.0-17ubuntu1~20.04) 9.3.0 / aarch64-linux-gnu
-  * OpenSSL 1.1.1f, built on 31 Mar 2020
 
 ### Kernel info:
 
@@ -60,7 +68,7 @@ After at 85.0°C (throttled):
   * Vulnerability Spectre v1:        Mitigation; __user pointer sanitization
   * Kernel 4.14.180-s5p6818 / CONFIG_HZ=250
 
-Kernel 4.14.180 is not latest 4.14.306 LTS that was released on 2023-02-22.
+Kernel 4.14.180 is not latest 4.14.307 LTS that was released on 2023-02-25.
 
 See https://endoflife.date/linux for details. It is somewhat likely that
 a lot of exploitable vulnerabilities exist for this kernel as well as many

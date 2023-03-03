@@ -211,7 +211,15 @@ Main() {
 		fi
 	done
 
-	[ "X${MODE}" = "Xpts" -o "X${MODE}" = "Xgb" ] || CheckRelease
+	# do a normal release check only if not in PTS or GB mode, in review mode warn if
+	# distro is not rather recent
+	if [ "X${MODE}" = "Xpts" -o "X${MODE}" = "Xgb" ]; then
+		:
+	elif [ "X${MODE}" = "Xreview" ]; then
+		CheckOSReleaseForReview
+	else
+		CheckOSRelease
+	fi
 	CreateTempDir
 	CheckLoadAndDmesg
 	[ -f /sys/devices/system/cpu/cpufreq/policy0/scaling_governor ] && \
@@ -1768,7 +1776,7 @@ ProcessStats() {
 	procStats=$(echo -e "$(printf "%3s" ${CPULoad})%$(printf "%4s" ${SystemLoad})%$(printf "%4s" ${UserLoad})%$(printf "%4s" ${NiceLoad})%$(printf "%4s" ${IOWaitLoad})%$(printf "%4s" ${IrqCombinedLoad})%")
 } # ProcessStats
 
-CheckRelease() {
+CheckOSRelease() {
 	# check OS
 	[ -f /etc/os-release ] && OperatingSystem="$(awk -F'"' '/^PRETTY_NAME/ {print $2}' </etc/os-release)"
 	command -v hostnamectl >/dev/null 2>&1 && OperatingSystem="$(hostnamectl | awk -F": " '/Operating System:/ {print $2}')"
@@ -1779,7 +1787,7 @@ CheckRelease() {
 	command -v lsb_release >/dev/null 2>&1 && \
 		Distro=$(lsb_release -c 2>/dev/null | awk -F" " '{print $2}' | tr '[:upper:]' '[:lower:]')
 	case ${Distro} in
-		stretch|bionic|buster|focal|bullseye|jammy|kinetic)
+		stretch|bionic|buster|focal|bullseye|jammy|kinetic|lunar)
 			:
 			;;
 		*)
@@ -1791,7 +1799,29 @@ CheckRelease() {
 			fi
 			;;
 	esac
-} # CheckRelease
+} # CheckOSRelease
+
+CheckOSReleaseForReview() {
+	# check OS to issue a warning if OS is too old for a review
+	[ -f /etc/os-release ] && OperatingSystem="$(awk -F'"' '/^PRETTY_NAME/ {print $2}' </etc/os-release)"
+	command -v hostnamectl >/dev/null 2>&1 && OperatingSystem="$(hostnamectl | awk -F": " '/Operating System:/ {print $2}')"
+	grep -q -i Gentoo <<<"${OperatingSystem}" && read OperatingSystem </etc/gentoo-release
+
+	# Display warning when not executing on Debian Stretch/Buster/Bullseye or Ubuntu Bionic/Focal/Jammy/Kinetic
+	command -v lsb_release >/dev/null 2>&1 || apt -f -qq -y install lsb-release >/dev/null 2>&1
+	command -v lsb_release >/dev/null 2>&1 && \
+		Distro=$(lsb_release -c 2>/dev/null | awk -F" " '{print $2}' | tr '[:upper:]' '[:lower:]')
+	case ${Distro} in
+		precise|quantal|raring|saucy|trusty|utopic|vivid|wily|xenial|yakkety|zesty|artful|bionic|cosmic|disco|eoan|focal|groovy|hirsute|impish|jessie|lenny|squeeze|wheezy|stretch|buster)
+			# only inform/ask user if $MODE != unattended
+			if [ "X${MODE}" != "Xunattended" ]; then
+				echo -e "${LRED}${BOLD}WARNING: This tool is meant to assist with device reviews but ${OperatingSystem} seems a bit too old for this.${NC}\n"
+				echo -e "Press [ctrl]-[c] to stop or ${BOLD}[enter]${NC} to continue.\c"
+				read
+			fi
+			;;
+	esac
+} # CheckOSReleaseForReview
 
 CreateTempDir() {
 	# Create directory for temporary files
@@ -2379,10 +2409,17 @@ CheckMissingPackages() {
 	if [ "X${MODE}" = "Xreview" ]; then
 		command -v lspci >/dev/null 2>&1 || echo -e "pciutils \c"
 		command -v lsusb >/dev/null 2>&1 || echo -e "usbutils \c"
-		command -v mmc >/dev/null 2>&1 || echo -e "mmc-utils \c"
 		command -v stress-ng >/dev/null 2>&1 || echo -e "stress-ng \c"
 		command -v smartctl >/dev/null 2>&1 || echo -e "smartmontools \c"
 		command -v udevadm >/dev/null 2>&1 || echo -e "udev \c"
+		command -v mmc >/dev/null 2>&1
+		if [ $? -ne 0 ]; then
+			case ${Distro} in
+				stretch|buster|bullseye|bookworm|bionic|focal|jammy|kinetic|lunar)
+				echo -e "mmc-utils \c"
+				;;
+			esac
+		fi
 	fi
 } # CheckMissingPackages
 

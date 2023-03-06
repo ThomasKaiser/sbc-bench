@@ -1793,7 +1793,7 @@ CheckOSRelease() {
 		*)
 			# only inform/ask user if $MODE != unattended
 			if [ "X${MODE}" != "Xunattended" ]; then
-				echo -e "${LRED}${BOLD}WARNING: This tool is meant to run only on Debian Stretch, Buster, Bullseye or Ubuntu Bionic, Focal, Jammy, Kinetic.${NC}\n"
+				echo -e "${LRED}${BOLD}WARNING: This tool is meant to run only on Debian Stretch, Buster, Bullseye or Ubuntu Bionic, Focal, Jammy, Kinetic, Lunar.${NC}\n"
 				echo -e "When executed on ${BOLD}${OperatingSystem}${NC} results are partially meaningless.\nPress [ctrl]-[c] to stop or ${BOLD}[enter]${NC} to continue.\c"
 				read
 			fi
@@ -1815,7 +1815,7 @@ CheckOSReleaseForReview() {
 		precise|quantal|raring|saucy|trusty|utopic|vivid|wily|xenial|yakkety|zesty|artful|bionic|cosmic|disco|eoan|focal|groovy|hirsute|impish|jessie|lenny|squeeze|wheezy|stretch|buster)
 			# only inform/ask user if $MODE != unattended
 			if [ "X${MODE}" != "Xunattended" ]; then
-				echo -e "${LRED}${BOLD}WARNING: This tool is meant to assist with device reviews but ${OperatingSystem} seems a bit too old for this.${NC}\n"
+				echo -e "${LRED}${BOLD}WARNING: This tool is meant to assist with device reviews but ${OperatingSystem} seems a bit too old for this.${NC}"
 				echo -e "Press [ctrl]-[c] to stop or ${BOLD}[enter]${NC} to continue.\c"
 				read
 			fi
@@ -2211,11 +2211,11 @@ BasicSetup() {
 		fi
 	fi
 
-	# try to derive DeviceName from device-tree if available
-	[ -f /proc/device-tree/model ] && read DeviceName </proc/device-tree/model
-
 	# detect environment
 	LSCPU="$(lscpu)"
+	CPUArchitecture="$(awk -F" " '/^Architecture/ {print $2}' <<<"${LSCPU}")"
+	X86CPUName="$(sed 's/ \{1,\}/ /g' <<<"${LSCPU}" | awk -F": " '/^Model name/ {print $2}' | sed -e 's/1.th Gen //' -e 's/.th Gen //' -e 's/Core(TM) //' -e 's/ Processor//' -e 's/Intel(R) Xeon(R) CPU //' -e 's/Intel(R) //' -e 's/(R)//' -e 's/CPU //' -e 's/ 0 @/ @/' -e 's/AMD //' -e 's/Authentic //' -e 's/ with .*//')"
+	VirtWhat="$(systemd-detect-virt 2>/dev/null)"
 	CPUCores=$(awk -F" " '/^CPU...:/ {print $2}' <<<"${LSCPU}")
 	# Might not work with RISC-V on old kernels, see
 	# https://github.com/ThomasKaiser/sbc-bench/issues/46
@@ -2226,64 +2226,68 @@ BasicSetup() {
 		taskset -c ${i} echo "" >/dev/null 2>&1
 	done
 
-	X86CPUName="$(sed 's/ \{1,\}/ /g' <<<"${LSCPU}" | awk -F": " '/^Model name/ {print $2}' | sed -e 's/1.th Gen //' -e 's/.th Gen //' -e 's/Core(TM) //' -e 's/ Processor//' -e 's/Intel(R) Xeon(R) CPU //' -e 's/Intel(R) //' -e 's/(R)//' -e 's/CPU //' -e 's/ 0 @/ @/' -e 's/AMD //' -e 's/Authentic //' -e 's/ with .*//')"
-	VirtWhat="$(systemd-detect-virt 2>/dev/null)"
-	[ -f /sys/class/dmi/id/sys_vendor ] && DMIInfo="$(grep -R . /sys/class/dmi/id/ 2>/dev/null)"
-	DMISysVendor="$(awk -F":" '/sys_vendor:/ {print $2}' <<<"${DMIInfo}" | grep -E -v "O.E.M.|System manufacturer|Default|default|Not ")"
-	DMIProductName="$(awk -F":" '/product_name:/ {print $2}' <<<"${DMIInfo}" | grep -E -v "O.E.M.|Product Name|Default|default|Not ")"
-	DMIProductVersion="$(awk -F":" '/product_version:/ {print $2}' <<<"${DMIInfo}" | grep -E -v "O.E.M.|123456789|Not |Default|System Product Name|System Version")"
+	# try to derive DeviceName from device-tree if available
+	if [ -f /proc/device-tree/model ]; then
+		read DeviceName </proc/device-tree/model
+	elif [ -f /sys/class/dmi/id/sys_vendor ]; then
+		# read DMI data
+		DMIInfo="$(grep -R . /sys/class/dmi/id/ 2>/dev/null)"
+		DMISysVendor="$(awk -F":" '/sys_vendor:/ {print $2}' <<<"${DMIInfo}" | grep -E -v "O.E.M.|System manufacturer|Default|default|Not ")"
+		DMIProductName="$(awk -F":" '/product_name:/ {print $2}' <<<"${DMIInfo}" | grep -E -v "O.E.M.|Product Name|Default|default|Not ")"
+		DMIProductVersion="$(awk -F":" '/product_version:/ {print $2}' <<<"${DMIInfo}" | grep -E -v "O.E.M.|123456789|Not |Default|System Product Name|System Version")"
 
-	# Overwrite DeviceName in virtualized environments with hypervisor info
-	case ${DMISysVendor} in
-		# https://github.com/chef-boneyard/dmidecode_collection
-		Amazon*)
-			# older systemd versions fail on AWS/arm64: https://github.com/systemd/systemd/issues/18929
-			VirtWhat="kvm"
-			DeviceName="AWS ${DMIProductName} ${VirtWhat} VM"
-			;;
-		Hetzner*)
-			DeviceName="Hetzner ${X86CPUName} ${VirtWhat} VM"
-			;;
-		QEMU*)
-			DeviceName="${DMIProductName} ${VirtWhat}/QEMU VM"
-			;;
-		Parallels*)
-			DeviceName="Parallels $(awk -F":" '/bios_version:/ {print $2}' <<<"${DMIInfo}") VM"
-			;;
-		innotek*|Innotek*|Oracle*)
-			grep -q "VirtualBox" <<<"${DMIProductName}" && DeviceName="VirtualBox ${X86CPUName} VM"
-			;;
-		VMware*)
-			DeviceName="VMware ${X86CPUName} VM"
-			;;
-		Alibaba*)
-			DeviceName="${DMISysVendor} ${DMIProductName} ${VirtWhat} VM"
-			;;
-		Xen*)
-			DeviceName="Xen ${DMIProductVersion} ${X86CPUName} VM"
-			;;
-		Microsoft*)
-			grep -q "Virtual" <<<"${DMIProductName}" && DeviceName="Hyper-V ${DMIProductVersion} VM"
-			;;
-		OpenStack*)
-			DeviceName="OpenStack ${DMIProductVersion} VM"
-			;;
-		"Red Hat"*)
-			case ${DMIProductName} in
-				OpenStack*)
-					DeviceName="OpenStack ${DMIProductVersion} VM"
-					;;
-				"RHEV Hypervisor"*)
-					DeviceName="RHEV Hypervisor ${DMIProductVersion} VM"
-					;;
-			esac
-			;;
-		RDO*)
-			grep -q "OpenStack" <<<"${DMIProductName}" && DeviceName="OpenStack ${DMIProductVersion} VM"
-			;;
-	esac
+		# Define DeviceName in virtualized environments based on hypervisor info
+		case ${DMISysVendor} in
+			# https://github.com/chef-boneyard/dmidecode_collection
+			Amazon*)
+				# older systemd versions fail on AWS/arm64: https://github.com/systemd/systemd/issues/18929
+				VirtWhat="kvm"
+				DeviceName="AWS ${DMIProductName} ${VirtWhat} VM"
+				;;
+			Hetzner*)
+				DeviceName="Hetzner ${X86CPUName} ${VirtWhat} VM"
+				;;
+			QEMU*)
+				DeviceName="${DMIProductName} ${VirtWhat}/QEMU VM"
+				;;
+			Parallels*)
+				DeviceName="Parallels $(awk -F":" '/bios_version:/ {print $2}' <<<"${DMIInfo}") VM"
+				;;
+			innotek*|Innotek*|Oracle*)
+				grep -q "VirtualBox" <<<"${DMIProductName}" && DeviceName="VirtualBox ${X86CPUName} VM"
+				;;
+			VMware*)
+				DeviceName="VMware ${X86CPUName} VM"
+				;;
+			Alibaba*)
+				DeviceName="${DMISysVendor} ${DMIProductName} ${VirtWhat} VM"
+				;;
+			Xen*)
+				DeviceName="Xen ${DMIProductVersion} ${X86CPUName} VM"
+				;;
+			Microsoft*)
+				grep -q "Virtual" <<<"${DMIProductName}" && DeviceName="Hyper-V ${DMIProductVersion} VM"
+				;;
+			OpenStack*)
+				DeviceName="OpenStack ${DMIProductVersion} VM"
+				;;
+			"Red Hat"*)
+				case ${DMIProductName} in
+					OpenStack*)
+						DeviceName="OpenStack ${DMIProductVersion} VM"
+						;;
+					"RHEV Hypervisor"*)
+						DeviceName="RHEV Hypervisor ${DMIProductVersion} VM"
+						;;
+				esac
+				;;
+			RDO*)
+				grep -q "OpenStack" <<<"${DMIProductName}" && DeviceName="OpenStack ${DMIProductVersion} VM"
+				;;
+		esac
+	fi
 
-	CPUArchitecture="$(awk -F" " '/^Architecture/ {print $2}' <<<"${LSCPU}")"
+	# do some device name cosmetics based on platform / device
 	case ${CPUArchitecture} in
 		arm*|aarch*|riscv*)
 			[ "X${DeviceName}" = "Xsun20iw1p1" ] && DeviceName="Allwinner D1"
@@ -2298,7 +2302,7 @@ BasicSetup() {
 					DeviceName="$(sed 's/Raspberry Pi/RPi/' <<<"${DeviceName}") / BCM2711 Rev ${BCM2711}"
 					;;
 				"nexell soc")
-					# FriendlyELEC SBC based on Nexell S5P6818
+					# FriendlyELEC SBC based on Nexell S5P6818, on Armbian use BOARD_NAME
 					if [ -f /etc/armbian-release ]; then
 						. /etc/armbian-release
 						DeviceName="${BOARD_NAME}"
@@ -2310,7 +2314,7 @@ BasicSetup() {
 					;;
 			esac
 			# if there's no device-tree support but DMI info available use this for DeviceName
-			[ ! -f /proc/device-tree/model -a "X${DMISysVendor}" != "X" ] && \
+			[ ! -f /proc/device-tree/model -a "X${DMISysVendor}" != "X" -a -z "${DeviceName}" ] && \
 				DeviceName="${DMISysVendor} ${DMIProductName} ${DMIProductVersion}"
 			;;
 		x86*|i686)
@@ -2414,11 +2418,7 @@ CheckMissingPackages() {
 		command -v udevadm >/dev/null 2>&1 || echo -e "udev \c"
 		command -v mmc >/dev/null 2>&1
 		if [ $? -ne 0 ]; then
-			case ${Distro} in
-				stretch|buster|bullseye|bookworm|bionic|focal|jammy|kinetic|lunar)
-				echo -e "mmc-utils \c"
-				;;
-			esac
+			apt-cache show mmc-utils >/dev/null 2>&1 && echo -e "mmc-utils \c"
 		fi
 	fi
 } # CheckMissingPackages
@@ -4255,7 +4255,7 @@ ValidateResults() {
 
 	# powercap on Intel?
 	if [ -d /sys/devices/virtual/powercap/intel-rapl ]; then
-		grep -q -i GenuineIntel <<< "${ProcCPU}" && echo -e "  * Powercap detected. Details: \"powercap-info -p intel-rapl\""
+		grep -q -i GenuineIntel <<< "${ProcCPU}" && echo -e "Powercap detected. Details: \"sudo powercap-info -p intel-rapl\""
 	fi
 
 	# Throttling and frequency capping on RPi?
@@ -4340,8 +4340,8 @@ CheckSwapPartition() {
 	if [ -f /sys/block/${BlockDevice}/queue/rotational ]; then
 		case $(</sys/block/${BlockDevice}/queue/rotational) in
 			1)
-				# spinning rust
-				echo -e " ${LRED}${BOLD}on ultra slow HDD storage${NC}"
+				# spinning rust, detection works only when not running inside VM/container
+				[ "X${VirtWhat}" = "X" -o "X${VirtWhat}" = "Xnone" ] && echo -e " ${LRED}${BOLD}on ultra slow HDD storage${NC}"
 				;;
 			*)
 				# flash storage, get device node
@@ -7164,9 +7164,20 @@ CheckKernelVersion() {
 			;;
 	esac
 
-	# skip this whole check on x86 where usually distro kernels are used that follow
-	# an own release schedule
-	[ "${CPUArchitecture}" = "x86_64" ] && return
+	# skip this whole check on x86 and in aarch64 VMs where usually distro kernels are
+	# used that follow an own release schedule
+	case "${CPUArchitecture}" in
+		x86_64)
+			return
+			;;
+		aarch64)
+			case ${VirtWhat} in
+				kvm|parallels|vmware|wsl|xen)
+					return
+					;;
+			esac
+			;;
+	esac
 
 	# Avoid annoying users of latest bleeding edge kernels by ignoring anything with
 	# higher version number than 1st entry on endoflife.date

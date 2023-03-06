@@ -179,6 +179,7 @@
 | [MT6580 K9M1](http://ix.io/466y) | 1300 MHz | 5.19 | Sid armhf | **2930** | 860 | 25300 | 1250 | 3300 | - |
 | [Orange Pi Plus 2](http://ix.io/1iX4) | 1300 MHz | 4.14 | Stretch armhf | **2890** | 812 | 25250 | 830 | 3240 | - |
 | [Teres-I](http://ix.io/1tJg) | 1050 MHz | 4.19 | Stretch arm64 | **2785** | 780 | 491590 | 1080 | 2820 | - |
+| [Celeron N2830](http://ix.io/4pEc) | 2160 MHz | 5.19 | Jammy amd64 | **2760** | 1664 | 31270 | 3780 | 3520 | 6.10 |
 | [BPi M2U](http://ix.io/4kmM) | 1200 MHz | 6.0 | Bullseye armhf | **2690** | 767 | 23320 | 780 | 3010 | - |
 | [Rock Pi S](http://ix.io/1XKY) | 1300 MHz | 4.4 | Buster | **2590** | 716 | 282290 | 830 | 1880 | - |
 | [AMD E-450 APU](http://ix.io/4hwl) | 1650 MHz | 5.15 | Jammy amd64 | **2430** | 1258 | 27450 | 1710 | 1740 | - |
@@ -293,6 +294,7 @@
 | [RockPro64](http://ix.io/1ub9) | 1800/1400 MHz | 4.4 | Stretch arm64 | 6420 | **1673** | 1018480 | 3720 | 8400 | 8.24 |
 | [ODROID-HC4](http://ix.io/3Na5) | 2100 MHz | 5.10 | Buster arm64 | 5730 | **1672** | 980970 | 3540 | 5150 | - |
 | [ODROID-N2](http://ix.io/1BsF) | 1800/1900 MHz | 4.9 | Bionic arm64 | 8140 | **1669** | 1024680 | 4120 | 8610 | 11.39 |
+| [Celeron N2830](http://ix.io/4pEc) | 2160 MHz | 5.19 | Jammy amd64 | 2760 | **1664** | 31270 | 3780 | 3520 | 6.10 |
 | [Raspberry Pi 4 B](http://ix.io/3EgS) | 1500 MHz | 5.10 | Raspberry Pi OS Buster | 5750 | **1661** | 64930 | 2550 | 3430 | - |
 | [Atom E3950](http://ix.io/4dd5) | 2000 MHz | 5.15 | Jammy amd64 | 6440 | **1636** | 374800 | 4400 | 4840 | - |
 | [ODROID-XU4](http://ix.io/1iWL) | 2000/1400 MHz | 4.9 | Stretch armhf | 6400 | **1622** | 72075 | 2230 | 4850 | - |
@@ -581,6 +583,7 @@
 | [Celeron J1900](http://ix.io/4hKV) | 2415/1333 MHz | 5.4 | Focal amd64 | 6560 | 1806 | **34900** | 3780 | 3390 | - |
 | [SBC2D70 (SSD202D)](http://ix.io/3N1U) | 1700 MHz | 5.16 | Sid armhf | 1960 | 1094 | **33120** | 770 | 3190 | - |
 | [Akaso M8S](http://ix.io/3R3N) | 1200 MHz | 5.10 | Buster armhf | 3050 | 885 | **32120** | 1160 | 3330 | - |
+| [Celeron N2830](http://ix.io/4pEc) | 2160 MHz | 5.19 | Jammy amd64 | 2760 | 1664 | **31270** | 3780 | 3520 | 6.10 |
 | [Raspberry Pi Zero 2](http://ix.io/3E85) | 1000 MHz | 5.10 | Raspberry Pi OS Buster | 3030 | 838 | **29860** | 1300 | 1570 | - |
 | [ODROID-C1](http://ix.io/4eg5) | 1500 MHz | 5.19 | Jammy armhf | 3010 | 878 | **29260** | 390 | 2910 | - |
 | [TRONFY MXQ S805](http://ix.io/3MiR) | 1536 MHz | 5.10 | Focal armhf | 3100 | 897 | **29080** | 980 | 2990 | - |
@@ -665,6 +668,7 @@
 | [NanoPi M4](http://ix.io/1lzP) | 2000/1500 MHz | 4.19 | Stretch arm64 | 6400 | 1835 | 1128330 | **4080** | 8270 | 8.86 |
 | [ODROID-N2+](http://ix.io/3R1a) | 2400/2015 MHz | 5.10 | Focal arm64 | 9680 | 2372 | 1366730 | **4030** | 7120 | - |
 | [ODROID-N2+](http://ix.io/3LoH) | 2400/2015 MHz | 5.14 | Hirsute arm64 | 9780 | 2386 | 1366090 | **4030** | 7120 | - |
+| [Celeron N2830](http://ix.io/4pEc) | 2160 MHz | 5.19 | Jammy amd64 | 2760 | 1664 | 31270 | **3780** | 3520 | 6.10 |
 | [Celeron J1900](http://ix.io/4hKV) | 2415/1333 MHz | 5.4 | Focal amd64 | 6560 | 1806 | 34900 | **3780** | 3390 | - |
 | [Phytium FT-2000/4 1xSO-DIMM](http://ix.io/4ioj) | 2600 MHz | 5.15 | Bullseye arm64 | 10020 | 2755 | 936740 | **3760** | 14540 | - |
 | [RockPro64](http://ix.io/1ub9) | 1800/1400 MHz | 4.4 | Stretch arm64 | 6420 | 1673 | 1018480 | **3720** | 8400 | 8.24 |
@@ -944,6 +948,7 @@
 | [x7-Z8700](http://ix.io/4iDX) | 2400 MHz | 5.15 | Bullseye amd64 | 6580 | 1784 | 296680 | 3510 | **3580** | - |
 | [Nintendo Switch](http://ix.io/1Rnj) | 1780 MHz | 4.9 | Fedora 30 arm-64 | 6170 | 1719 | 642670 | 2500 | **3570** | - |
 | [Orange Pi Prime](http://ix.io/2kTH) | 1370 MHz | 5.4 | Buster | 3590 | 984 | 637980 | 1180 | **3540** | - |
+| [Celeron N2830](http://ix.io/4pEc) | 2160 MHz | 5.19 | Jammy amd64 | 2760 | 1664 | 31270 | 3780 | **3520** | 6.10 |
 | [Tinkerboard](http://ix.io/3Lir) | 1800 MHz | 4.4 | Buster armhf | 5440 | 1693 | 66300 | 1340 | **3510** | - |
 | [Orange Pi PC Plus](http://ix.io/3MQV) | 1370 MHz | 5.10 | Focal armhf | 3060 | 879 | 26590 | 890 | **3450** | - |
 | [NanoPi M1 Plus](http://ix.io/3N2z) | 1370 MHz | 4.19 | Bionic armhf | 3030 | 881 | 26660 | 830 | **3450** | - |
@@ -1060,6 +1065,7 @@
 | [Khadas VIM3](http://ix.io/1MFD) | **2200/1800** MHz| 4.9 | Bionic arm64 | 8600 | 2026 | 1256910 | 4980 | 9300 | 13.12 |
 | [Jetson AGX Orin](http://ix.io/4ax9) | **2200** MHz| 5.10 | Focal arm64 | 39450 | 3187 | 1242940 | 10600 | 30350 | 59.96 |
 | [Honeycomb LX2](http://ix.io/3Y4f) | **2200** MHz| 5.16 | Fedora 35 aarch64 | 30690 | 2288 | 1251710 | 5050 | 16220 | 46.09 |
+| [Celeron N2830](http://ix.io/4pEc) | **2160** MHz| 5.19 | Jammy amd64 | 2760 | 1664 | 31270 | 3780 | 3520 | 6.10 |
 | [ODROID-HC4](http://ix.io/3Na5) | **2100** MHz| 5.10 | Buster arm64 | 5730 | 1672 | 980970 | 3540 | 5150 | - |
 | [ODROID-C4](http://ix.io/3TQ2) | **2100** MHz| 5.10 | Buster arm64 | 5770 | 1679 | 981940 | 3540 | 5150 | - |
 | [AMedia X96 Max+](http://ix.io/3QOj) | **2100** MHz| 5.15 | Focal arm64 | 5270 | 1330 | 981830 | 2630 | 5150 | - |

@@ -4333,7 +4333,7 @@ ListSwapDevices() {
 				# try to find out on which block device it's residing
 				# findmnt -J -U "$(stat --printf=%m /swapfile)" -> {"target": "/", "source": "/dev/mmcblk1p1", "fstype": "ext4", "options": "rw,noatime,nodiratime,errors=remount-ro,commit=600"} -> /sys/block/mmcblk1/device/type (SD or MMC)
 				SwapDeviceInfo="$(findmnt -J -U "$(stat --printf=%m ${SwapDevice})")"
-				SwapDevice="$(awk -F'"' '/\dev/ {print $8}' <<<"$SwapDeviceInfo")"
+				SwapDevice="$(awk -F'"' '/\/dev/ {print $8}' <<<"$SwapDeviceInfo")"
 				DeviceWarning="$(CheckSwapPartition "${SwapDevice}")"
 				echo -e "  * ${SwapDevice}: ${SwapSize} (${SwapUsed} used)${DeviceWarning}"
 				;;
@@ -7338,7 +7338,7 @@ CheckKernelVersion() {
 					PrintBSPWarning Nexell
 					;;
 			esac
-			echo -e "\n${LRED}${BOLD}The 4.4 series has reached end-of-life on 2017-11-05 with version 4.4.302.${NC}"
+			echo -e "\n${LRED}${BOLD}The 4.4 series has reached end-of-life on 2022-02-03 with version 4.4.302.${NC}"
 			;;
 		4.9.*)
 			# some SDKs/BSPs based on this version: Allwinner A50/MR133/R311/H6, Allwinner H616/H313, Amlogic S905X3 (SM1) / S922X/A311D (G12B), Exynos 5422, Nvidia AGX Xavier / Nvidia Jetson Nano / Nvidia Tegra X1 / Nvidia Tegra Xavier, RealTek RTD129x/RTD139x
@@ -7363,7 +7363,7 @@ CheckKernelVersion() {
 			grep -q "releaseCycle: \"4.9\"" "${TempDir}/linuxkernel.md" || \
 				echo -e "\n${LRED}${BOLD}The 4.9 series has reached end-of-life on 2023-01-07 with version 4.9.337.${NC}"
 			;;
-		"3.10.33"|"3.10.108"|"4.16.1"|"4.18.7"|"5.0.2"|"5.1.0"|"5.3.0"|"5.3.11"|"5.5.0"|"5.6.0"|"5.7."*|"5.8."*|"5.9."*|"5.10.0"|"5.14.0")
+		"3.10.33"|"4.16.1"|"4.18.7"|"5.0.2"|"5.1.0"|"5.3.0"|"5.3.11"|"5.5.0"|"5.6.0"|"5.7."*|"5.8."*|"5.9."*|"5.10.0"|"5.14.0")
 			# Popular kernels for all sorts of Amlogic SoCs from https://github.com/150balbes
 			# Unfortunately lots of devices still run with these ancient kernels lacking any fixes
 			:

@@ -3175,6 +3175,12 @@ CheckTimeInState() {
 
 	if [ -f /sys/devices/system/cpu/cpufreq/policy0/stats/time_in_state ]; then
 		for StatFile in $(ls /sys/devices/system/cpu/cpufreq/policy?/stats/time_in_state) ; do
+			case ${1} in
+				before)
+					# reset statistics if possible
+					[ -w "${StatFile%/*}/reset" ] && echo 1 >"${StatFile%/*}/reset"
+					;;
+			esac
 			Number=$(tr -c -d '[:digit:]' <<<${StatFile})
 			read MaxSpeed </sys/devices/system/cpu/cpufreq/policy${Number}/cpuinfo_max_freq
 			sort -n <${StatFile} | while read ; do
@@ -4284,7 +4290,7 @@ ValidateResults() {
 			# on lower clockspeeds for a fraction of time when bringing them back online
 			# which then results in stats/time_in_state cpufreq statistics showing the cores
 			# not all the time at maximum clockspeed.
-			if [ ${#ClusterConfig[@]} -eq 1 -a "X${MODE}" != "Xpts" -a "X${MODE}" != "Xgb" ]; then
+			if [ "X${MODE}" != "Xpts" -a "X${MODE}" != "Xgb" ]; then
 				echo -e "${LRED}${BOLD}Throttling occured${NC}"
 			else
 				echo -e "Throttling might have occured"
@@ -7323,12 +7329,12 @@ CheckKernelVersion() {
 			echo -e "\n${LRED}${BOLD}The 3.16 series has reached end-of-life on 2020-06-11 with version 3.16.85.${NC}"
 			;;
 		4.4.*)
-			# # some SDKs/BSPs based on this version: Rockchip RK32xx/RK33xx, Nexell S5P6818
+			# some SDKs/BSPs based on this version: Rockchip RK32xx/RK33xx, Nexell S5P4418/S5P6818
 			case ${GuessedSoC} in
 				*RK3*|*Rockchip*)
 					PrintBSPWarning Rockchip
 					;;
-				*S5P6818*)
+				*Nexell*)
 					PrintBSPWarning Nexell
 					;;
 			esac
@@ -7363,9 +7369,12 @@ CheckKernelVersion() {
 			:
 			;;
 		4.14.*)
-			# some SDKs/BSPs based on this version: Exynos 5422/9820, NXP i.MX8x, Nexell S5P6818
+			# some SDKs/BSPs based on this version: Exynos 5422/9820, NXP i.MX8x, Nexell S5P4418/S5P6818
 			case ${GuessedSoC} in
-				*S5P6818*|*5422*|"Samsung Exynos 9820")
+				*Nexell*)
+					PrintBSPWarning Nexell
+					;;
+				*5422*|"Samsung Exynos 9820")
 					PrintBSPWarning Samsung
 					;;
 				"NXP i.MX8"*)

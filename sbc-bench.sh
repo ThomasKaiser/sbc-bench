@@ -2313,14 +2313,20 @@ BasicSetup() {
 					DeviceName="$(sed 's/FriendlyARM //' <<<"${DeviceName}")"
 					;;
 			esac
-			# if there's no device-tree support but DMI info available use this for DeviceName
-			[ ! -f /proc/device-tree/model -a "X${DMISysVendor}" != "X" -a -z "${DeviceName}" ] && \
+			if [ "${VirtWhat}" = "wsl" ]; then
+				# Differentiate between WSL and WSL2 VMs
+				uname -r | grep -q WSL2 && DeviceName="${HostName} WSL2 VM" || DeviceName="${HostName} WSL VM"
+			elif [ ! -f /proc/device-tree/model -a "X${DMISysVendor}" != "X" -a -z "${DeviceName}" ]; then
+				# if there's no device-tree support but DMI info available use this for DeviceName
 				DeviceName="${DMISysVendor} ${DMIProductName} ${DMIProductVersion}"
+			fi
 			;;
 		x86*|i686)
 			# if no DeviceName is already assigned then try to construct it from DMI data
 			if [ -z "${DeviceName}" ]; then
-				if [ "X${VirtWhat}" = "X" -o "X${VirtWhat}" = "Xnone" ]; then
+				if [ "${VirtWhat}" = "wsl" ]; then
+					uname -r | grep -q WSL2 && DeviceName="${X86CPUName} WSL2 VM" || DeviceName="${X86CPUName} WSL VM"
+				elif [ "X${VirtWhat}" = "X" -o "X${VirtWhat}" = "Xnone" ]; then
 					# seems bare metal, but we double check
 					grep -q -i "Virtual" <<<"${DMIProductName}" && \
 						DeviceName="${DMISysVendor} ${DMIProductName} ${DMIProductVersion} VM" || \
@@ -4666,7 +4672,7 @@ GuessARMSoC() {
 	#       Cortex-A9 / r2p1: Samsung Exynos 4210, Comcerto 2000 AKA FreeScale/NXP QorIQ LS1024A -> https://github.com/Bonstra/c2000doc
 	#       Cortex-A9 / r2p9: Nvidia Tegra 3
 	#       Cortex-A9 / r2p10: Freescale/NXP i.MX6 Dual/Quad, TI OMAP4470
-	#       Cortex-A9 / r3p0: Amlogic 8726-MX, Calxeda Highbank, Cyclone V FPGA SoC, Marvell PXA988, Mediatek MT5880, Rockchip RK3066/RK3188, Samsung Exynos 4412, ST Micro STiH415/STiH416, Xilinx Zynq 7000S
+	#       Cortex-A9 / r3p0: Amlogic 8726-MX, Calxeda Highbank, Cyclone V FPGA SoC, Marvell PXA988, Mediatek MT5880, Nexell S5P4418, Rockchip RK3066/RK3188, Samsung Exynos 4412, ST Micro STiH415/STiH416, Xilinx Zynq 7000S
 	#       Cortex-A9 / r4p1: Amlogic S802/S812, Freescale/NXP i.MX6SLL, HiSilicon Hi3520D-V300/Hi6620, Marvell Armada 375/38x, MStar Infinity2
 	#      Cortex-A15 / r0p4: Samsung Exynos 5 Dual 5250
 	#      Cortex-A15 / r2p1: ARM Versatile Express V2P-CA15-CA7
@@ -5434,9 +5440,35 @@ GuessSoCbySignature() {
 					;;
 			esac
 			;;
-		*A9r3p0*A9r3p0)
-			# ST Micro STiH415: 2 x Cortex-A9 / r3p0 / swp half thumb fastmult vfp edsp neon vfpv3 tls
-			echo "ST Micro STiH416"
+		??A9r3p0??A9r3p0??A9r3p0??A9r3p0)
+			# RK3188 or Exynos 4412 or Nexell S5P4418, 4 x Cortex-A9 / r3p0 / half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpd32
+			case "${DTCompatible}" in
+				*s5p4418*)
+					echo "Nexell S5P4418"
+					;;
+				*samsung*)
+					echo "Exynos 4412"
+					;;
+				*rk3188*)
+					echo "Rockchip RK3188"
+					;;
+			esac
+			;;
+		??A9r3p0??A9r3p0)
+			# AML8726-MX, 2 x Cortex-A9 / r3p0 / half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpd32
+			# or RK3066, 2 x Cortex-A9 / r3p0 / swp half thumb fastmult vfp edsp neon vfpv3 / https://lore.kernel.org/all/CAAFQd5CN_xvkdD+Bf9A+Mc+_jVxtdOKosrYH_8bNNHkGQw7eGA@mail.gmail.com/T/
+			# or ST Micro STiH415, 2 x Cortex-A9 / r3p0 / swp half thumb fastmult vfp edsp neon vfpv3 tls
+			case "${DTCompatible}" in
+				*amlogic*)
+					echo "Amlogic AML8726-MX"
+					;;
+				*rk3066*)
+					echo "Rockchip RK3066"
+					;;
+				*)
+					echo "ST Micro STiH416"
+					;;
+			esac
 			;;
 		*A9r3p0)
 			# Mediatek MT5880, 1 x Cortex-A9 / r3p0 / swp half thumb fastmult vfp edsp vfpv3 vfpv3d16
@@ -5915,15 +5947,6 @@ GuessSoCbySignature() {
 			# Mediatek MT6592: 8 x Cortex-A7 / r0p4 / swp half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpv4 idiva idivt
 			# (with vendor kernel often only 2 cores show up in /proc/cpuinfo)
 			echo "Mediatek MT6592"
-			;;
-		??A9r3p0??A9r3p0)
-			# AML8726-MX, 2 x Cortex-A9 / r3p0 / half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpd32
-			# or RK3066, 2 x Cortex-A9 / r3p0 / swp half thumb fastmult vfp edsp neon vfpv3 / https://lore.kernel.org/all/CAAFQd5CN_xvkdD+Bf9A+Mc+_jVxtdOKosrYH_8bNNHkGQw7eGA@mail.gmail.com/T/
-			grep -q amlogic <<<"${DTCompatible}" && echo "Amlogic AML8726-MX" || echo "Rockchip RK3066"
-			;;
-		??A9r3p0??A9r3p0??A9r3p0??A9r3p0)
-			# RK3188 or Exynos 4412, 4 x Cortex-A9 / r3p0 / half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpd32
-			grep -q samsung <<<"${DTCompatible}" && echo "Exynos 4412" || echo "Rockchip RK3188"
 			;;
 		00A35r0p100A35r0p100A35r0p100A35r0p1)
 			# Mediatek MT8167B: 4 x Cortex-A35 / r0p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32

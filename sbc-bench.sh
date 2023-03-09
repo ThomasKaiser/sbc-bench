@@ -220,6 +220,7 @@ Main() {
 	else
 		CheckOSRelease
 	fi
+	unset SPACING
 	CreateTempDir
 	CheckLoadAndDmesg
 	[ -f /sys/devices/system/cpu/cpufreq/policy0/scaling_governor ] && \
@@ -1515,8 +1516,10 @@ MonitorBoard() {
 	[ -z "${X86CPUName}" ] && X86CPUName="$(sed 's/ \{1,\}/ /g' <<<"${LSCPU}" | awk -F": " '/^Model name/ {print $2}' | sed -e 's/1.th Gen //' -e 's/.th Gen //' -e 's/Core(TM) //' -e 's/ Processor//' -e 's/Intel(R) Xeon(R) CPU //' -e 's/Intel(R) //' -e 's/(R)//' -e 's/CPU //' -e 's/ 0 @/ @/' -e 's/AMD //' -e 's/Authentic //' -e 's/ with .*//')"
 	
 	if test -t 1; then
-		# when called from a terminal we print some system information first
+		# when called from a terminal we print some system information first and insert
+		# empty line + header every 15 lines
 		PrintCPUInfo
+		SPACING=yes
 	else
 		ClusterConfig=($(GetCPUClusters))
 		if [ -f "${TempDir}/Pcores" ]; then
@@ -1576,7 +1579,16 @@ MonitorBoard() {
 	fi
 	[ -f "${TempSource}" ] || SocTemp='n/a'
 	echo -e "${DisplayHeader}"
+	Counter=0
 	while true ; do
+		if [ "$SPACING" == "yes" ]; then
+			# if SPACING is defined as yes insert an empty line + header every 15 lines
+			let Counter++
+			if [ ${Counter} -eq 15 ]; then
+				echo -e "\n${DisplayHeader}"
+				Counter=0
+			fi
+		fi
 		LoadAvg=$(cut -f1 -d" " </proc/loadavg)
 		if [ "X${SocTemp}" != "Xn/a" ]; then
 			SocTemp=$(ReadSoCTemp)
@@ -4333,10 +4345,17 @@ ListSwapDevices() {
 				# try to find out on which block device it's residing
 				# findmnt -J -U "$(stat --printf=%m /swapfile)" -> {"target": "/", "source": "/dev/mmcblk1p1", "fstype": "ext4", "options": "rw,noatime,nodiratime,errors=remount-ro,commit=600"} -> /sys/block/mmcblk1/device/type (SD or MMC)
 				SwapDevicePartition="$(findmnt -U "$(stat --printf=%m ${SwapDevice})" | grep "^/" | awk -F" " '{print $2}')"
-				if [ "X${SwapDevicePartition}" != "X" ]; then
+				if [ "X${SwapDevicePartition}" = "Xoverlay" -a -r /proc/cmdline ]; then
+					# FriendlyELEC images using overlayfs: https://wiki.friendlyelec.com/wiki/index.php/How_to_use_overlayfs_on_Linux
+					RootPartition="$(tr ' ' '\n' </proc/cmdline | awk -F"=" '/^root=/ {print $2}')"
+					[ -z "${RootPartition}" ] || DeviceWarning="$(CheckSwapPartition "${RootPartition}")"
+					echo -e "  * ${SwapDevice} on ${RootPartition}: ${SwapSize} (${SwapUsed} used)${DeviceWarning}"
+				elif [ "X${SwapDevicePartition}" != "X" ]; then
+					# check partition whether it's flash storage or spinning rust
 					DeviceWarning="$(CheckSwapPartition "${SwapDevicePartition}")"
 					echo -e "  * ${SwapDevice} on ${SwapDevicePartition}: ${SwapSize} (${SwapUsed} used)${DeviceWarning}"
 				else
+					# no partition found or overlayFS
 					echo -e "  * ${SwapDevice}: ${SwapSize} (${SwapUsed} used)"
 				fi
 				;;
@@ -4827,7 +4846,7 @@ GuessARMSoC() {
 	# soc soc0: Amlogic Meson G12A (Unknown) Revision 28:c (30:2) Detected <-- S905Y2 on Radxa Zero
 	# soc soc0: Amlogic Meson G12A (S905Y2) Revision 28:b (30:2) Detected <-- S905Y2 on Radxa Zero
 	# soc soc0: Amlogic Meson G12A (S905X2) Revision 28:b (40:2) Detected <-- Shenzhen Amediatech Technology Co. / Ltd X96 Max / SEI Robotics SEI510 / Amlogic Meson G12A U200 Development Board
-	# soc soc0: Amlogic Meson G12A (S905X2) Revision 28:c (40:2) Detected <-- ZTE B860H V5
+	# soc soc0: Amlogic Meson G12A (S905X2) Revision 28:c (40:2) Detected <-- ZTE B860H V5, SEI Robotics SEI500TR
 	# soc soc0: Amlogic Meson G12A (Unknown) Revision 28:b (70:2) Detected <-- Amlogic Meson G12A U200 Development Board
 	# soc soc0: Amlogic Meson G12A (Unknown) Revision 28:c (70:2) Detected <-- Amlogic Meson G12A U200 Development Board / China Mobile M401A / Skyworth E900V22C
 	# soc soc0: Amlogic Meson G12B (S922X) Revision 29:a (40:2) Detected <-- ODROID-N2 / Beelink GT-King Pro
@@ -6923,6 +6942,7 @@ ProvideReviewInfo() {
 	InstallPrerequisits
 	InstallCpuminer
 	InitialMonitoring
+	unset SPACING
 	[ "X${RunBenchmarks}" = "XTRUE" ] && CheckClockspeedsAndSensors || echo -e "\x08\x08 Done.\nNow quickly examining OS, settings and hardware..."
 	[ "X${RunBenchmarks}" = "XTRUE" ] && ClockspeedsBefore="$(cat "${TempDir}/cpufreq" | sed -e 's/^/    /')"
 	[ "X${NOTUNING}" != "Xyes" -a "X${RunBenchmarks}" = "XTRUE" ] && CheckTimeInState before
@@ -7184,6 +7204,7 @@ ProvideReviewInfo() {
 	rm "${TempDir}"/*time_in_state* "${TempDir}/throttling_info.txt" 2>/dev/null
 	SwapBefore="$(awk -F" " '{print $4}' </proc/swaps | grep -v -i Used | awk '{s+=$1} END {printf "%.0f", s}')"
 	CheckTimeInState before
+	export SPACING=yes
 	/bin/bash "${PathToMe}" -m ${interval:-60} >"${MonitorLog}" &
 	MonitoringPID=$!
 	echo ""

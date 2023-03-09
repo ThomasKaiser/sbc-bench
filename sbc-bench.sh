@@ -4332,10 +4332,13 @@ ListSwapDevices() {
 			file)
 				# try to find out on which block device it's residing
 				# findmnt -J -U "$(stat --printf=%m /swapfile)" -> {"target": "/", "source": "/dev/mmcblk1p1", "fstype": "ext4", "options": "rw,noatime,nodiratime,errors=remount-ro,commit=600"} -> /sys/block/mmcblk1/device/type (SD or MMC)
-				SwapDeviceInfo="$(findmnt -J -U "$(stat --printf=%m ${SwapDevice})")"
-				SwapDevice="$(awk -F'"' '/\/dev/ {print $8}' <<<"$SwapDeviceInfo")"
-				DeviceWarning="$(CheckSwapPartition "${SwapDevice}")"
-				echo -e "  * ${SwapDevice}: ${SwapSize} (${SwapUsed} used)${DeviceWarning}"
+				SwapDevicePartition="$(findmnt -U "$(stat --printf=%m ${SwapDevice})" | grep "^/" | awk -F" " '{print $2}')"
+				if [ "X${SwapDevicePartition}" != "X" ]; then
+					DeviceWarning="$(CheckSwapPartition "${SwapDevicePartition}")"
+					echo -e "  * ${SwapDevice} on ${SwapDevicePartition}: ${SwapSize} (${SwapUsed} used)${DeviceWarning}"
+				else
+					echo -e "  * ${SwapDevice}: ${SwapSize} (${SwapUsed} used)"
+				fi
 				;;
 			*)
 				# something else

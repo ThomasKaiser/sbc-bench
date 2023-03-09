@@ -4127,7 +4127,7 @@ ValidateResults() {
 		ClockspeedMismatchBefore="$(grep -B1000 "^Executing ramlat" "${ResultLog}" | grep -A2 "^Checking cpufreq OPP " | awk -F"[()]" '/^Cpufreq OPP:/ {print $4}' | grep "^-" | sort -n | head -n1)"
 		ClockspeedMismatchAfter="$(grep -A200 "^Testing maximum cpufreq again" "${ResultLog}" | grep -A2 "^Checking cpufreq OPP " | awk -F"[()]" '/^Cpufreq OPP:/ {print $4}' | grep "^-" | sort -n | head -n1)"
 	fi
-	if [ "X${ClockspeedMismatchBefore}" != "X" ]; then
+	if [ "X${ClockspeedMismatchBefore}" != "X" -a "X${ClockspeedMismatchAfter}" != "X" ]; then
 		OneOrTwoDigitsBefore=$(wc -c <<<"${ClockspeedMismatchBefore}")
 		OneOrTwoDigitsAfter=$(wc -c <<<"${OneOrTwoDigitsAfter}")
 		if [ ${OneOrTwoDigitsBefore:-6} -gt 6 -o ${OneOrTwoDigitsAfter:-6} -gt 6 ]; then
@@ -4696,7 +4696,7 @@ GuessARMSoC() {
 	#      Cortex-A53 / r0p1: Exynos 5433, Qualcomm MSM8939
 	#      Cortex-A53 / r0p2: Marvell PXA1908, Mediatek MT6752/MT6738/MT6755/MT8173/MT8176, Qualcomm Snapdragon 810 (MSM8994), Samsung Exynos 7420
 	#      Cortex-A53 / r0p3: ARM Juno r1, ARM Juno r2, HiSilicon Hi3751, Kirin 620/930, Mediatek MT6735/MT8163, Nexell S5P6818, Samsung Exynos 7580, Qualcomm MSM8992 (Snapdragon 808)
-	#      Cortex-A53 / r0p4: Allwinner A100/A133/A53/A64/H313/H5/H6/H616/H64/R329/R818/T507/T509, Amlogic A113X/A113D/A311D/A311D2/S805X/S805Y/S905/S905X/S905D/S905W/S905L/S905L3A/S905M2/S905X2/S905Y2/S905D2/S912/S922X/T962X2, Broadcom BCM2837/BCM2709/BCM2710/RP3A0-AU (BCM2710A1), HiSilicon Hi3798C-V200, Exynos 8890, HiSilicon Kirin 650/710/950/955/960/970, Marvell Armada 37x0, Mediatek MT6739WA/MT6762M/MT6765/MT6771V/MT6797/MT6797T/MT6799/MT8183/MT8735, NXP i.MX8M/i.MX8QM/LS1xx8, Qualcomm MSM8937/MSM8952/MSM8953/MSM8956/MSM8976/MSM8976PRO/SDM439/SDM450, RealTek RTD129x/RTD139x, Rockchip RK3318/RK3328/RK3399, Samsung Exynos 7870/7885/8890/8895, Socionext LD20/SC2A11, Xiaomi Surge S1
+	#      Cortex-A53 / r0p4: Allwinner A100/A133/A53/A64/H313/H5/H6/H616/H64/R329/R818/T507/T509, Amlogic A113X/A113D/A311D/A311D2/S805X/S805Y/S905/S905X/S905D/S905W/S905L/S905L3A/S905M2/S905X2/S905Y2/S905D2/S912/S922X/T962X2, Broadcom BCM2837/BCM2709/BCM2710/RP3A0-AU (BCM2710A1), HiSilicon Hi3798C-V200, Exynos 8890, HiSilicon Kirin 650/710/950/955/960/970, Marvell Armada 37x0, Mediatek MT6739WA/MT6762M/MT6765/MT6771V/MT6797/MT6797T/MT6799/MT8183/MT8735, NXP i.MX8M/i.MX8QM/LS1xx8, Qualcomm MSM8937/MSM8952/MSM8953/MSM8956/MSM8976/MSM8976PRO/SDM439/SDM450, RealTek RTD129x/RTD139x, Rockchip RK3318/RK3328/RK3399, Samsung Exynos 7870/7885/8890/8895, Socionext LD20/SC2A11, TI K3 AM623/AM625/AM62A/AM642/AM654, Xiaomi Surge S1
 	#      Cortex-A55 / r0p1: Samsung Exynos 9810
 	#      Cortex-A55 / r1p0: Amlogic S905X3/S905D3/S905Y3/T962X3/T962E2, HiSilicon Ascend 310 / Kirin 810/980, Samsung Exynos 9820
 	#      Cortex-A55 / r2p0: Amlogic S905X4/S905C2, NXP i.MX 93, Qualcomm SM8350 (Snapdragon 888), Renesas RZG2UL/RZG2LC, Rockchip RK3566/RK3568/RK3588/RK3588s
@@ -5215,52 +5215,77 @@ GuessARMSoC() {
 			sun20iw1*)
 				echo "Allwinner D1 (1xC906 RISC-V)"
 				;;
+			sun4i*)
+				# SoC ID: 0x1623
+				echo "Allwinner A10"
+				;;
+			sun5i*)
+				# SoC ID: 0x1625
+				echo "Allwinner A10s/A13/R8"
+				;;
+			sun6i*)
+				# SoC ID: 0x1633
+				echo "Allwinner A31/A31s"
+				;;
 			sun7iw2*)
+				# SoC ID: 0x1651
 				echo "Allwinner A20"
 				;;
 			sun8iw3*)
+				# SoC ID: 0x1650
 				echo "Allwinner A23"
 				;;
 			sun8iw5*)
+				# SoC ID: 0x1667
 				echo "Allwinner A33/R16"
 				;;
 			sun8iw6*)
+				# SoC ID: 0x1673
 				echo "Allwinner A83T/H8/H80/V66/R58"
 				;;
 			sun8iw7*)
+				# SoC ID: 0x1680
 				echo "Allwinner H3/H2+"
 				;;
 			sun8iw8*)
+				# SoC ID: 0x1681
 				echo "Allwinner V3/S3/V3s"
 				;;
 			sun8iw10*)
 				echo "Allwinner B288/B100"
 				;;
 			sun8iw11*)
+				# SoC ID: 0x1701
 				echo "Allwinner R40/V40/T3/A40i"
 				;;
 			sun8iw12*)
+				# SoC ID: 0x1721
 				echo "Allwinner V5/V100"
 				;;
 			sun8iw15*)
 				echo "Allwinner A50/MR133/R311"
 				;;
 			sun8iw16*)
+				# SoC ID: 0x1816
 				echo "Allwinner V313/V316/V526/V536/V5V200"
 				;;
 			sun8iw17*)
 				echo "Allwinner T7"
 				;;
 			sun8iw19*)
+				# SoC ID: 0x1817
 				echo "Allwinner V533/V833/V831"
 				;;
 			sun8iw20*)
+				# SoC ID: 0x1859
 				echo "Allwinner R528/T113"
 				;;
 			sun8iw21*)
+				# SoC ID: 0x1886
 				echo "Allwinner V853"
 				;;
 			sun50iw1p*)
+				# SoC ID: 0x1689
 				# Since Armbian patched arch/arm64/kernel/cpuinfo.c since Aug 2016 every
 				# other Allwinner ARMv8 SoC (H5/H6/H616) will identify itself as sun50iw1p1
 				# when kernel has been tampered with by Armbian.
@@ -5306,21 +5331,26 @@ GuessARMSoC() {
 				esac
 				;;
 			sun50iw2*)
+				# SoC ID: 0x1718
 				echo "Allwinner H5"
 				;;
 			sun50iw3*)
+				# SoC ID: 0x1719
 				echo "Allwinner A63"
 				;;
 			sun50iw6*)
+				# SoC ID: 0x1728
 				echo "Allwinner H6"
 				;;
 			sun50iw9*)
+				# SoC ID: 0x1823
 				echo "Allwinner H313/H503/H513/H616/H618/H700/T507/T517"
 				;;
 			sun50iw10*)
 				echo "Allwinner A100/A133/A53/R818/T509"
 				;;
 			sun50iw11*)
+				# SoC ID: 0x1851
 				echo "Allwinner R329"
 				;;
 			sun50iw12*)
@@ -5328,6 +5358,10 @@ GuessARMSoC() {
 				;;
 			sun55iw3*)
 				echo "Allwinner A523/T527"
+				;;
+			sun9i*)
+				# SoC ID: 0x1639
+				echo "Allwinner A80"
 				;;
 			sun*)
 				SoCGuess="$(GuessSoCbySignature)"
@@ -5788,6 +5822,22 @@ GuessSoCbySignature() {
 								# HiSilicon Hi3798C-V200, 4 x Cortex-A53 / r0p4 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm (booting 32-bit)
 								echo "HiSilicon Hi3798C-V200"
 								;;
+							*am623*)
+								# Texas Instruments K3 AM623, 4 x Cortex-A53 / r0p4
+								echo "Texas Instruments K3 AM6234"
+								;;
+							*am625*)
+								# Texas Instruments K3 AM625, 4 x Cortex-A53 / r0p4
+								echo "Texas Instruments K3 AM6254"
+								;;
+							*am62a7*)
+								# Texas Instruments K3 AM62A, 4 x Cortex-A53 / r0p4
+								echo "Texas Instruments K3 AM62A7"
+								;;
+							*am654*)
+								# Texas Instruments K3 AM654, 4 x Cortex-A53 / r0p4
+								echo "Texas Instruments K3 AM654"
+								;;
 						esac
 					fi
 					;;
@@ -5796,11 +5846,44 @@ GuessSoCbySignature() {
 		00A53r0p400A53r0p4)
 			# Allwinner R329, 2 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			# or Armada 3720, 2 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
-			grep -q armada37 <<<"${DTCompatible}" && echo "Marvell Armada 3720" || echo "Allwinner R329"
+			# or Texas Instruments K3 AM62x, 2 x Cortex-A53 / r0p4
+			# or Texas Instruments K3 AM642, 2 x Cortex-A53 / r0p4
+			# or Texas Instruments K3 AM652, 2 x Cortex-A53 / r0p4
+			case "${DTCompatible}" in
+				*armada37*)
+					echo "Marvell Armada 3720"
+					;;
+				*am623*)
+					echo "Texas Instruments K3 AM6232"
+					;;
+				*am625*)
+					echo "Texas Instruments K3 AM6252"
+					;;
+				*am642*)
+					echo "Texas Instruments K3 AM642"
+					;;
+				*am652*)
+					echo "Texas Instruments K3 AM652"
+					;;
+				*r329*)
+					echo "Allwinner R329"
+					;;
+			esac
 			;;
 		00A53r0p4)
 			# Armada 3710, 1 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
-			grep -q armada37 <<<"${DTCompatible}" && echo "Marvell Armada 3710"
+			# or Texas Instruments K3 AM62x, 1 x Cortex-A53 / r0p4
+			case "${DTCompatible}" in
+				*armada37*)
+					echo "Marvell Armada 3710"
+					;;
+				*am623*)
+					echo "Texas Instruments K3 AM6231"
+					;;
+				*am625*)
+					echo "Texas Instruments K3 AM6251"
+					;;
+			esac
 			;;
 		??A53r0p4??A53r0p4??A53r0p4??A53r0p4??A53r0p4??A53r0p4??A53r0p4??A53r0p4)
 			# Amlogic S912, 4 x Cortex-A53 / r0p4 + 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32

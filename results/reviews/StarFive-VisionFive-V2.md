@@ -4,15 +4,15 @@ Tested with sbc-bench v0.9.36 on Wed, 01 Mar 2023 15:24:08 +0000.. Full info: [h
 
 ### General information:
 
-   StarFive JH7110, Kernel: riscv64, Userland: riscv64
+    StarFive JH7110, Kernel: riscv64, Userland: riscv64
 
-   CPU sysfs topology (clusters, cpufreq members, clockspeeds)
-                    cpufreq   min    max
-    CPU    cluster  policy   speed  speed   core type
-     0       -1        0      375    1500   sifive,u74-mc
-     1       -1        0      375    1500   sifive,u74-mc
-     2       -1        0      375    1500   sifive,u74-mc
-     3       -1        0      375    1500   sifive,u74-mc
+    CPU sysfs topology (clusters, cpufreq members, clockspeeds)
+                     cpufreq   min    max
+     CPU    cluster  policy   speed  speed   core type
+      0       -1        0      375    1500   sifive,u74-mc
+      1       -1        0      375    1500   sifive,u74-mc
+      2       -1        0      375    1500   sifive,u74-mc
+      3       -1        0      375    1500   sifive,u74-mc
 
 7927 KB available RAM
 
@@ -20,21 +20,21 @@ Tested with sbc-bench v0.9.36 on Wed, 01 Mar 2023 15:24:08 +0000.. Full info: [h
 
 Original governor settings:
 
-   cpufreq-policy0: performance / 1500 MHz (conservative ondemand userspace powersave performance schedutil / 375 500 750 1500)
+    cpufreq-policy0: performance / 1500 MHz (conservative ondemand userspace powersave performance schedutil / 375 500 750 1500)
 
 Tuned governor settings:
 
-   cpufreq-policy0: performance / 1500 MHz
+    cpufreq-policy0: performance / 1500 MHz
 
 ### Clockspeeds (idle vs. heated up):
 
 Before at 39.0°C:
 
-   cpu0 (sifive,u74-mc): OPP: 1500, Measured: 1498 
+    cpu0 (sifive,u74-mc): OPP: 1500, Measured: 1498 
 
 After at 44.1°C:
 
-   cpu0 (sifive,u74-mc): OPP: 1500, Measured: 1498 
+    cpu0 (sifive,u74-mc): OPP: 1500, Measured: 1498 
 
 ### Performance baseline
 
@@ -70,3 +70,4 @@ unfixed bugs.
 
 But this version string doesn't matter since this is not an official LTS Linux
 from kernel.org. This device runs a StarFive vendor/BSP kernel.
+	

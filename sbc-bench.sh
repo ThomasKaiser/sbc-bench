@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.9.37
+Version=0.9.38
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -1790,9 +1790,7 @@ ProcessStats() {
 
 CheckOSRelease() {
 	# check OS
-	[ -f /etc/os-release ] && OperatingSystem="$(awk -F'"' '/^PRETTY_NAME/ {print $2}' </etc/os-release)"
-	command -v hostnamectl >/dev/null 2>&1 && OperatingSystem="$(hostnamectl | awk -F": " '/Operating System:/ {print $2}')"
-	grep -q -i Gentoo <<<"${OperatingSystem}" && read OperatingSystem </etc/gentoo-release
+	OperatingSystem="$(GetOSRelease)"
 
 	# Display warning when not executing on Debian Stretch/Buster/Bullseye or Ubuntu Bionic/Focal/Jammy/Kinetic
 	command -v lsb_release >/dev/null 2>&1 || apt -f -qq -y install lsb-release >/dev/null 2>&1
@@ -1815,9 +1813,7 @@ CheckOSRelease() {
 
 CheckOSReleaseForReview() {
 	# check OS to issue a warning if OS is too old for a review
-	[ -f /etc/os-release ] && OperatingSystem="$(awk -F'"' '/^PRETTY_NAME/ {print $2}' </etc/os-release)"
-	command -v hostnamectl >/dev/null 2>&1 && OperatingSystem="$(hostnamectl | awk -F": " '/Operating System:/ {print $2}')"
-	grep -q -i Gentoo <<<"${OperatingSystem}" && read OperatingSystem </etc/gentoo-release
+	OperatingSystem="$(GetOSRelease)"
 
 	# Display warning when not executing on Debian Stretch/Buster/Bullseye or Ubuntu Bionic/Focal/Jammy/Kinetic
 	command -v lsb_release >/dev/null 2>&1 || apt -f -qq -y install lsb-release >/dev/null 2>&1
@@ -1834,6 +1830,37 @@ CheckOSReleaseForReview() {
 			;;
 	esac
 } # CheckOSReleaseForReview
+
+GetOSRelease() {
+	# try to get human friendly OS release name
+	command -v hostnamectl >/dev/null 2>&1
+	if [ $? -eq 0 ]; then
+		OS="$(hostnamectl | awk -F": " '/Operating System:/ {print $2}')"
+	elif [ -f /etc/os-release ]; then
+		OS="$(awk -F'"' '/^PRETTY_NAME/ {print $2}' </etc/os-release)"
+	fi
+	case "${OS}" in
+		Armbian*|"Orange Pi"*)
+			# After replacing Canonical's advertising behaviour with own advertisings
+			# (https://github.com/armbian/build/pull/4303) the distro clowns over at 
+			# Armbian now even start to manipulate base files of the operating systems
+			# their images base on most probably to fool their users into believing Armbian
+			# would be an operating system just like Debian or Ubuntu instead of just a
+			# build system. They simply overwrite the PRETTY_NAME definition in Debian's
+			# and Ubuntu's /etc/os-release file with some nonsense that will break certain
+			# 3rd party installation routines and confuse users. But that's what you get
+			# when a project is driven by 'ignorance and stupidity'. Fix that by restoring
+			# the operating system's own files (which will happen sooner or later anyway
+			# just by updating Debian/Ubuntu once the base-files package gets updated):
+			apt-get -f -qq -y --reinstall install base-files >/dev/null 2>&1
+			hostnamectl | awk -F": " '/Operating System:/ {print $2}'
+			;;
+		*)
+			grep -q -i Gentoo <<<"${OS}" && read OS </etc/gentoo-release
+			echo "${OS}"
+			;;
+	esac
+} # GetOSRelease
 
 CreateTempDir() {
 	# Create directory for temporary files
@@ -3946,7 +3973,7 @@ SummarizeResults() {
 			# Check for throttling for first:
 			MeasuredClockspeedStart=$(grep -A2 "^Checking cpufreq OPP" ${ResultLog} | awk -F" " '/Measured/ {print $5}' | sed -n ${#ClusterConfig[@]}p)
 			MeasuredClockspeedFinished=$(grep -A2 "^Checking cpufreq OPP" ${ResultLog} | awk -F" " '/Measured/ {print $5}' | sed -n $(( ${#ClusterConfig[@]} * 2 ))p)
-			MeasuredDifference=$(( 100 * MeasuredClockspeedStart / MeasuredClockspeedFinished ))
+			MeasuredDifference=$(( 100 * MeasuredClockspeedStart / ${MeasuredClockspeedFinished:-MeasuredClockspeedStart} ))
 			if [ ${MeasuredDifference:-100} -gt 103 -o -f "${TempDir}/throttling_info.txt" ]; then
 				# if measured clockspeed differs by more than 3% comparing begin and end of
 				# benchmarking or if throttling_info.txt exists, then add a throttling warning
@@ -4835,6 +4862,7 @@ GuessARMSoC() {
 	# soc soc0: Amlogic Meson GXL (S905L) Revision 21:d (c4:2) Detected <-- X96 mini, Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson GXL (S905M2) Revision 21:d (e4:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board / Amlogic Meson GXL (S905W) P281 Development Board
 	# soc soc0: Amlogic Meson GXL (S905W) Revision 21:e (a5:2) Detected <-- Tanix TX3 Mini / JetHome JetHub J80 / Amlogic Meson GXL (S905X) P212 Development Board / Amlogic Meson GXL (S905W) P281 Development Board
+	# soc soc0: Amlogic Meson GXL (S905L) Revision 21:e (c2:2) Detected <-- NEXBOX A95X (S905X)
 	# soc soc0: Amlogic Meson GXL (S905L) Revision 21:e (c5:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson GXM (Unknown) Revision 22:a (82:2) Detected <-- Amlogic Meson GXM (S912) Q201 Development Board
 	# soc soc0: Amlogic Meson GXM (S912) Revision 22:a (82:2) Detected <-- Beelink GT1 / Beelink GT1 Ultimate / Octopus Planet / Libre Computer AML-S912-PC / Khadas VIM2 / MeCool KIII Pro / Tronsmart Vega S96 / T95Z Plus / Vontar X92 / Amlogic Meson GXM (S912) Q200 Development Board / Amlogic Meson GXM (S912) Q201 Development Board
@@ -6961,9 +6989,7 @@ ProvideReviewInfo() {
 	[ "X${RunBenchmarks}" = "XTRUE" ] && CheckClockspeedsAndSensors
 	[ "X${RunBenchmarks}" = "XTRUE" ] && ClockspeedsAfter="$(cat "${TempDir}/cpufreq" | sed -e 's/^/    /')"
 
-	[ -f /etc/os-release ] && OperatingSystem="$(awk -F'"' '/^PRETTY_NAME/ {print $2}' </etc/os-release)"
-	command -v hostnamectl >/dev/null 2>&1 && OperatingSystem="$(hostnamectl | awk -F": " '/Operating System:/ {print $2}')"
-	grep -q -i Gentoo <<<"${OperatingSystem}" && read OperatingSystem </etc/gentoo-release
+	OperatingSystem="$(GetOSRelease)"
 
 	if [ "X${RunBenchmarks}" = "XTRUE" ]; then
 		SummarizeResults

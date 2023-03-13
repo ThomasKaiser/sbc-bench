@@ -4241,9 +4241,12 @@ ValidateResults() {
 	LogLength=$(wc -l <<<"${UtilizationValues}")
 	UtilizationSum=$(awk '{s+=$1} END {printf "%.0f", s}' <<<"${UtilizationValues}")
 	AverageSysUtilization=$(( ${UtilizationSum} / ${LogLength} ))
-	[ ${PeakSysUtilization:-0} -gt 15 -o ${AverageSysUtilization:-0} -gt 0 ] \
-		&& echo -e "${LRED}${BOLD}Too much background activity (%system): ${AverageSysUtilization}% avg, ${PeakSysUtilization}% max${NC}" \
-		|| echo -e "${LGREEN}Background activity (%system) OK${NC}"
+	if [ ${PeakSysUtilization:-0} -gt 15 -o ${AverageSysUtilization:-0} -gt 0 ]; then
+		echo -e "${LRED}${BOLD}Too much background activity (%system): ${AverageSysUtilization}% avg, ${PeakSysUtilization}% max${NC}"
+	else
+		# only report background activity being ok when not running inside a VM/container
+		[ "X${VirtWhat}" = "X" -o "X${VirtWhat}" = "Xnone" ] && echo -e "${LGREEN}Background activity (%system) OK${NC}"
+	fi
 
 	# Too high overall CPU utilization with single threaded benchmarks? This is an indication
 	# of background activities needing too much CPU ressources. Skip in MODE=extensive/gb/pts
@@ -4322,7 +4325,8 @@ ValidateResults() {
 	else
 		# Throttling on all other systems?
 		if [ "${ThrottlingWarning}" = "" ]; then
-			echo -e "${LGREEN}No throttling${NC}"
+			# only report 'no throttling' when not running inside a VM/container
+			[ "X${VirtWhat}" = "X" -o "X${VirtWhat}" = "Xnone" ] && echo -e "${LGREEN}No throttling${NC}"
 		else
 			# we need to check whether we're running in Geekbench or PTS mode since the
 			# cluster tests on CPUs with different core types end up with the CPUs remaining

@@ -126,7 +126,8 @@ Crawling through [sbc-bench results collection](../Results.md) comparing +30 dif
 | Cortex-A77 | | | |
 | [QRB5165](http://ix.io/49kx) | 2410 | 1348440 | 560 |
 | [QRB5165](http://ix.io/49kx) | 2840 | 1598490 | 563 |
-| Cortex-A78AE | | | |
+| Cortex-A78C/A78AE | | | |
+| [Snapdragon 8cx Gen 3](http://ix.io/4qG1) | 2430 | 1373790 | 565 |
 | [NVIDIA Orin](http://ix.io/4ax9) | 2200 | 1242940 | 565 |
 | Cortex-X1C | | | |
 | [Snapdragon 8cx Gen 3](http://ix.io/4qG1) | 3000 | 1694260 | 565 |

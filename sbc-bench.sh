@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.9.38
+Version=0.9.39
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -3400,7 +3400,7 @@ RunRamlat() {
 			if [ $? -eq 0 ]; then
 				CPUInfo="$(GetCPUInfo ${ClusterConfig[$i]})"
 				echo -e "\nExecuting ramlat on cpu${ClusterConfig[$i]}${CPUInfo}, results in ns:\n" >>${TempLog}
-				taskset -c ${ClusterConfig[$i]} "${InstallLocation}"/ramspeed/ramlat -s -n 200 \
+				taskset -c ${ClusterConfig[$i]} "${InstallLocation}"/ramspeed/ramlat -n -w "12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27" 200 \
 					| sed -e 's/^/    /' >>${TempLog} 2>&1
 			fi
 		done
@@ -7069,6 +7069,7 @@ ProvideReviewInfo() {
 				# only 1 CPU cluster, no differentiation between clusters/core types
 				echo -e "  * $(grep "^memcpy:" <<<"${MemoryScores}"), $(grep "^memchr:" <<<"${MemoryScores}"), $(grep "^memset:" <<<"${MemoryScores}")" >>"${TempDir}/review"
 				grep "^     16384k:" ${ResultLog} | sed 's/     16384k:/  * 16M latency:/' >>"${TempDir}/review"
+				grep "^    131072k:" ${ResultLog} | sed 's/    131072k:/  * 128M latency:/' >>"${TempDir}/review"
 			else
 				# list individual CPUs and suffix memory scores with core types if possible
 				for i in $(seq 0 $(( ${#ClusterConfig[@]} -1 )) ) ; do
@@ -7078,6 +7079,10 @@ ProvideReviewInfo() {
 				for i in $(seq 0 $(( ${#ClusterConfig[@]} -1 )) ) ; do
 					CPUInfo="$(GetCPUInfo ${ClusterConfig[$i]})"
 					echo -e "  * cpu${ClusterConfig[$i]}${CPUInfo} 16M latency: $(grep "^     16384k:" ${ResultLog} | sed -n $(( ${i} + 1 ))p | sed 's/     16384k: //')" >>"${TempDir}/review"
+				done
+				for i in $(seq 0 $(( ${#ClusterConfig[@]} -1 )) ) ; do
+					CPUInfo="$(GetCPUInfo ${ClusterConfig[$i]})"
+					echo -e "  * cpu${ClusterConfig[$i]}${CPUInfo} 128M latency: $(grep "^    131072k:" ${ResultLog} | sed -n $(( ${i} + 1 ))p | sed 's/    131072k: //')" >>"${TempDir}/review"
 				done
 			fi
 			ZIPResults="$(awk -F" " '/^Total:/ {print $2}' ${ResultLog} | sed -e 's/,/, /g' -e 's/, $//')"

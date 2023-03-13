@@ -129,7 +129,7 @@ Crawling through [sbc-bench results collection](../Results.md) comparing +30 dif
 | Cortex-A78AE | | | |
 | [NVIDIA Orin](http://ix.io/4ax9) | 2200 | 1242940 | 565 |
 | Cortex-X1C | | | |
-| [Snapdragon 8cx Gen 3](http://ix.io/4kEp) | 2980 | 1679480 | 564 |
+| [Snapdragon 8cx Gen 3](http://ix.io/4qG1) | 3000 | 1694260 | 565 |
 | Qualcomm Falkor V1 | | | |
 | [Snapdragon 835](http://ix.io/4fea) | 2360 | 1342240 | 569 |
 | Neoverse-N1 | | | |

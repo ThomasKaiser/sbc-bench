@@ -6971,7 +6971,7 @@ ProvideReviewInfo() {
 	InstallCpuminer
 	InitialMonitoring
 	unset SPACING
-	[ "X${RunBenchmarks}" = "XTRUE" ] && CheckClockspeedsAndSensors || echo -e "\x08\x08 Done.\nNow quickly examining OS, settings and hardware..."
+	[ "X${RunBenchmarks}" = "XTRUE" ] && CheckClockspeedsAndSensors || echo -e "\x08\x08 Done.\nNow quickly examining OS, settings and hardware...\c"
 	[ "X${RunBenchmarks}" = "XTRUE" ] && ClockspeedsBefore="$(cat "${TempDir}/cpufreq" | sed -e 's/^/    /')"
 	[ "X${NOTUNING}" != "Xyes" -a "X${RunBenchmarks}" = "XTRUE" ] && CheckTimeInState before
 	[ "X${RunBenchmarks}" = "XTRUE" ] && RunTinyMemBench
@@ -7159,6 +7159,51 @@ ProvideReviewInfo() {
 	[ -z "${CONFIGHZ}" ] && echo "  * Kernel ${KernelVersion}" >>"${TempDir}/review" || echo "  * Kernel ${KernelVersion} / ${CONFIGHZ}" >>"${TempDir}/review"
 	[ -z "${KernelInfo}" ] || echo -e "\n${KernelInfo}" >>"${TempDir}/review"
 
+	# if in NetIO mode then measure idle consumption walking through available governors and PCIe ASPM
+	if [ -n "${OutputCurrent}" ]; then
+		CountOfGovernors=$(wc -l <<<"${GovernorState}")
+		[ "X${RunBenchmarks}" = "XTRUE" ] || echo -e "\x08\x08 Done."
+		echo -e "Now measuring idle consumption ($(( 2 + ${CountOfGovernors} * 2 )) more minutes)...\c"
+		NetioConsumptionFile="${TempDir}/netio.current"
+		echo -n $(( $(awk '{printf ("%0.0f",$1/10); }' <<<"${OutputCurrent[$(( ${NetioSocket} - 1 ))]}" ) * 10 )) >"${NetioConsumptionFile}"
+		export NetioConsumptionFile
+		HandleGovernors powersave
+		/bin/bash "${PathToMe}" -N ${NetioDevice} ${NetioSocket} ${NetioConsumptionFile} "1.8" "55" >/dev/null 2>&1 &
+		NetioMonitoringPID=$!
+		sleep 120
+		read IdleConsumption <${NetioConsumptionFile}
+		if [ ${CountOfGovernors} -eq 1 ]; then
+			echo -e "\n### Idle consumption (measured with Netio ${NetioModel}, FW v${Firmware}): ${IdleConsumption} mW" >>"${TempDir}/review"
+		else
+			echo -e "\n### Idle consumption (measured with Netio ${NetioModel}, FW v${Firmware}):\n" >>"${TempDir}/review"
+			echo -e "  * everything set to powersave: ${IdleConsumption} mW" >>"${TempDir}/review"
+			FormerIdleConsumption=${IdleConsumption}
+			find /sys -name "*governor" | grep -E -v '/sys/module|cpuidle|watchdog' | sort -n | while read ; do
+				echo performance >"${REPLY}"
+				case $? in
+					0)
+						sleep 120
+						read IdleConsumption <${NetioConsumptionFile}
+						ConsumptionDiff=$(( ${IdleConsumption} - ${FormerIdleConsumption} ))
+						FormerIdleConsumption=${IdleConsumption}
+						echo -e "  * ${REPLY%/*} set to performance: ${IdleConsumption} mW" >>"${TempDir}/review"
+						;;
+					*)
+						echo -e "  * Not able to set ${REPLY%/*} to performance" >>"${TempDir}/review"
+						;;
+				esac
+			done
+		fi
+		if [ -w /sys/module/pcie_aspm/parameters/policy -a -d /sys/bus/pci_express ]; then
+			echo performance >/sys/module/pcie_aspm/parameters/policy
+			sleep 120
+			read IdleConsumption <${NetioConsumptionFile}
+			echo -e "  * /sys/module/pcie_aspm/parameters/policy set to performance: ${IdleConsumption} mW" >>"${TempDir}/review"
+		fi
+		kill ${NetioMonitoringPID} 2>/dev/null
+		echo -e "\x08\x08 Done."
+	fi
+
 	# add review info to full info
 	echo -e "\n##########################################################################\n" >>${ResultLog}
 	sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" <"${TempDir}/review" >>${ResultLog}
@@ -7216,10 +7261,7 @@ ProvideReviewInfo() {
 
 	# Now switch to monitoring mode, report consumption if Netio powermeter is available
 	if [ -n "${OutputCurrent}" ]; then
-		# We are in Netio monitoring mode
-		NetioConsumptionFile="${TempDir}/netio.current"
-		echo -n $(( $(awk '{printf ("%0.0f",$1/10); }' <<<"${OutputCurrent[$(( ${NetioSocket} - 1 ))]}" ) * 10 )) >"${NetioConsumptionFile}"
-		export NetioConsumptionFile
+		# We are in Netio monitoring mode as such provide consumption info as well
 		/bin/bash "${PathToMe}" -N ${NetioDevice} ${NetioSocket} ${NetioConsumptionFile} "4.8" "30" >/dev/null 2>&1 &
 		NetioMonitoringPID=$!
 	fi
@@ -7383,6 +7425,8 @@ CheckKernelVersion() {
 		elif [ ${RevisionDifference} -gt 5 ]; then
 			# report version mismatch only if kernel revision difference is greater than 5
 			echo -e "${BOLD}Kernel ${KernelVersionDigitsOnly} is not latest ${LatestKernelVersion}${KernelSuffix} that was released on ${LatestKernelDate}.${NC}\n"
+		else
+			BSPDisclaimer="\n${BOLD}The ${KernelVersionDigitsOnly} kernel version string doesn't matter since this is not an official${NC}\n${BOLD}${KernelSuffix} Linux from kernel.org.${NC} \c"
 		fi
 		if [ "X${IsLTS}" = "Xtrue" ]; then
 			# warn about vulnerabilities only on LTS kernels since users of actively

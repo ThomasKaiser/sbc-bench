@@ -861,10 +861,8 @@ PlotPerformanceGraph() {
 
 	if [ -n "${OutputCurrent}" ]; then
 		# We are in Netio monitoring mode, so measure idle consumption first,
-		# set CPUs to lowest clockspeed
-		for i in $(ls /sys/devices/system/cpu/cpufreq/policy?/scaling_governor); do
-			echo powersave >${i}
-		done
+		# set all governors and PCIe ASPM to lowest clockspeed / powersave
+		HandleGovernors powersave
 
 		NetioConsumptionFile="${TempDir}/netio.current"
 		echo -n $(( $(awk '{printf ("%0.0f",$1/10); }' <<<"${OutputCurrent[$(( ${NetioSocket} - 1 ))]}" ) * 10 )) >"${NetioConsumptionFile}"

@@ -243,3 +243,4 @@
 | [4o1A](4o1A.txt) | v0.9.19 Khadas VIM3 | 0%/0% | 3.7Gi/3.5Gi | X | X | X | X | 1% | 0% | |
 | [4pEc](4pEc.txt) | v0.9.36 / Celeron N2830 @ 2.16GHz | 0%/0% | 3.7Gi/3.2Gi | X | X | X | X | <span style=color:red> 6%</span> | <span style=color:red>**32%**</span> | [check log](4pEc.txt) |
 | [4qG1](4qG1.txt) | v0.9.38 Microsoft Devkit 2023 | 0%/0% | 30Gi/30Gi | X | X | X | X | 0% | <span style=color:red>** 8%**</span> | [check log](4qG1.txt) |
+| [4qJF](4qJF.txt) | v0.9.39 Pine64 RK3566 Quartz64-A Board | 0%/0% | 7.5Gi/7.2Gi | X | X | X | X | 1% | 0% | [check log](4qJF.txt) |

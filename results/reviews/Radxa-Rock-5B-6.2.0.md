@@ -1,6 +1,6 @@
 # Radxa ROCK 5 Model B
 
-Tested with sbc-bench v0.9.38 on Mon, 13 Mar 2023 09:59:29 +0100. Full info: [http://ix.io/4qHs](http://ix.io/4qHs)
+Tested with sbc-bench v0.9.39 on Mon, 13 Mar 2023 18:31:36 +0100. Full info: [http://ix.io/4qJG](http://ix.io/4qJG)
 
 ### General information:
 
@@ -42,30 +42,33 @@ Status of performance related policies found below /sys:
 
 ### Clockspeeds (idle vs. heated up):
 
-Before at 57.3°C:
+Before at 39.8°C:
 
-    cpu0-cpu3 (Cortex-A55): OPP: 1800, Measured: 1914      (+6.3%)
-    cpu4-cpu5 (Cortex-A76): OPP: 2208, Measured: 2181      (-1.2%)
-    cpu6-cpu7 (Cortex-A76): OPP: 2208, Measured: 2183      (-1.1%)
+    cpu0-cpu3 (Cortex-A55): OPP: 1800, Measured: 1934      (+7.4%)
+    cpu4-cpu5 (Cortex-A76): OPP: 2208, Measured: 2200 
+    cpu6-cpu7 (Cortex-A76): OPP: 2208, Measured: 2200 
 
-After at 74.8°C (throttled):
+After at 73.9°C (throttled):
 
-    cpu0-cpu3 (Cortex-A55): OPP: 1800, Measured: 1900      (+5.6%)
+    cpu0-cpu3 (Cortex-A55): OPP: 1800, Measured: 1901      (+5.6%)
     cpu4-cpu5 (Cortex-A76): OPP: 2208, Measured: 2165      (-1.9%)
     cpu6-cpu7 (Cortex-A76): OPP: 2208, Measured: 2166      (-1.9%)
 
 ### Performance baseline
 
-  * cpu0 (Cortex-A55): memcpy: 5979.1 MB/s, memchr: 2932.0 MB/s, memset: 23281.8 MB/s
-  * cpu4 (Cortex-A76): memcpy: 9457.3 MB/s, memchr: 12676.2 MB/s, memset: 29438.6 MB/s
-  * cpu6 (Cortex-A76): memcpy: 9425.7 MB/s, memchr: 12666.3 MB/s, memset: 29566.5 MB/s
-  * cpu0 (Cortex-A55) 16M latency: 115.5 118.1 115.9 118.5 114.3 123.7 209.1 377.4 
-  * cpu4 (Cortex-A76) 16M latency: 118.9 109.2 118.5 119.9 117.9 107.8 109.0 107.8 
-  * cpu6 (Cortex-A76) 16M latency: 120.2 110.0 119.7 109.9 119.8 110.2 106.3 107.9 
-  * 7-zip MIPS (3 consecutive runs): 15657, 15806, 15774 (15740 avg), single-threaded: 2967
-  * `aes-256-cbc     149535.40k   398629.65k   683161.69k   834064.73k   891655.51k   896237.57k (Cortex-A55)`
-  * `aes-256-cbc     506252.57k   932121.17k  1148119.30k  1215015.94k  1240331.61k  1242966.70k (Cortex-A76)`
-  * `aes-256-cbc     509503.30k   931815.47k  1148465.15k  1214641.83k  1241025.19k  1243600.21k (Cortex-A76)`
+  * cpu0 (Cortex-A55): memcpy: 6304.2 MB/s, memchr: 2953.1 MB/s, memset: 23443.4 MB/s
+  * cpu4 (Cortex-A76): memcpy: 11010.9 MB/s, memchr: 15649.1 MB/s, memset: 29903.2 MB/s
+  * cpu6 (Cortex-A76): memcpy: 10960.2 MB/s, memchr: 15558.6 MB/s, memset: 29896.8 MB/s
+  * cpu0 (Cortex-A55) 16M latency: 118.6 119.4 116.7 119.4 115.4 120.5 195.2 355.9 
+  * cpu4 (Cortex-A76) 16M latency: 119.9 108.8 117.2 108.7 118.2 109.7 110.9 107.7 
+  * cpu6 (Cortex-A76) 16M latency: 121.4 109.3 117.9 108.9 118.9 112.2 108.3 107.5 
+  * cpu0 (Cortex-A55) 128M latency: 143.3 144.0 143.0 143.9 141.9 143.8 216.7 374.7 
+  * cpu4 (Cortex-A76) 128M latency: 139.8 140.1 139.5 139.9 139.7 139.1 135.7 140.2 
+  * cpu6 (Cortex-A76) 128M latency: 137.7 137.3 137.6 137.0 137.3 136.2 133.4 138.4 
+  * 7-zip MIPS (3 consecutive runs): 16080, 16167, 15941 (16060 avg), single-threaded: 2989
+  * `aes-256-cbc     150078.27k   398867.56k   683696.21k   836602.20k   894814.89k   899366.91k (Cortex-A55)`
+  * `aes-256-cbc     507982.99k   935091.14k  1152068.18k  1219231.40k  1244585.98k  1247040.85k (Cortex-A76)`
+  * `aes-256-cbc     506464.87k   935066.86k  1152521.05k  1218229.59k  1244987.39k  1247494.14k (Cortex-A76)`
 
 ### PCIe and storage devices:
 
@@ -93,8 +96,8 @@ After at 74.8°C (throttled):
 
 ### Idle consumption (measured with Netio 4KF, FW v3.2.0):
 
-  * everything set to powersave: 3610 mW
-  * /sys/devices/system/cpu/cpufreq/policy0 set to performance: 3570 mW
-  * /sys/devices/system/cpu/cpufreq/policy4 set to performance: 3570 mW
-  * /sys/devices/system/cpu/cpufreq/policy6 set to performance: 3560 mW
-  * /sys/module/pcie_aspm/parameters/policy set to performance: 3710 mW
+  * everything set to powersave: 3590 mW
+  * /sys/devices/system/cpu/cpufreq/policy0 set to performance: 3620 mW
+  * /sys/devices/system/cpu/cpufreq/policy4 set to performance: 3530 mW
+  * /sys/devices/system/cpu/cpufreq/policy6 set to performance: 3480 mW
+  * /sys/module/pcie_aspm/parameters/policy set to performance: 3690 mW

@@ -1,0 +1,1233 @@
+sbc-bench v0.9.37 WeiBu ADL-N / i3-N305 extensive (Fri, 10 Mar 2023 16:35:09 +1100)
+
+Distributor ID:	Ubuntu
+Description:	Ubuntu 22.04.2 LTS
+Release:	22.04
+Codename:	jammy
+
+Device Info:
+	Manufacturer: WeiBu
+	Product Name: ADL-N
+
+BIOS/UEFI:
+	Vendor: American Megatrends International, LLC.
+	Version: 5.27
+	Release Date: 01/03/2023
+	BIOS Revision: 5.27
+
+/usr/bin/gcc (Ubuntu 11.3.0-1ubuntu1~22.04) 11.3.0
+
+Uptime: 16:35:09 up 27 min,  2 users,  load average: 0.06, 0.57, 0.61,  51.0°C,  33043414
+
+Linux 5.19.0-35-generic (N10) 	03/10/23 	_x86_64_	(8 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+           7.16    0.02    0.27    0.05    0.00   92.50
+
+Device             tps    kB_read/s    kB_wrtn/s    kB_dscd/s    kB_read    kB_wrtn    kB_dscd
+nvme0n1         875.38      8525.52      9768.56         0.00   13915015   15943853          0
+
+               total        used        free      shared  buff/cache   available
+Mem:           7.5Gi       853Mi       5.8Gi       549Mi       868Mi       5.9Gi
+Swap:             0B          0B          0B
+
+##########################################################################
+
+Intel P-States: Intel P-state driver initializing, HWP enabled
+
+Powercap present. You might want to check with "powercap-info -p intel-rapl"
+
+Checking cpufreq OPP:
+
+Cpufreq OPP: 3800    Measured: 3789 (3789.693/3789.159/3788.714)
+Cpufreq OPP:  800    Measured:  808    (810.380/808.252/807.365)
+
+Measuring highest clockspeeds for all cores in parallel (idle):
+
+cpu0: 2991/2999 MHz (2991.997/2991.789/2991.720)
+cpu1: 2992/2999 MHz (2992.205/2992.136/2991.997)
+cpu2: 2994/2999 MHz (2998.876/2992.136/2992.066)
+cpu3: 2992/2997 MHz (2992.690/2992.136/2992.066)
+cpu4: 2992/2999 MHz (2992.066/2992.066/2992.066)
+cpu5: 2992/2999 MHz (2993.245/2992.066/2992.066)
+cpu6: 2992/2999 MHz (2992.552/2992.205/2992.066)
+cpu7: 2992/2999 MHz (2993.662/2992.205/2992.136)
+
+Measuring highest clockspeeds for all cores in parallel (full load):
+
+cpu0: 2990/1800 MHz (2991.081/2990.255/2989.430)
+cpu1: 2991/1800 MHz (2992.917/2992.917/2988.885)
+cpu2: 2987/1800 MHz (2991.639/2986.888/2983.466)
+cpu3: 1474/1800 MHz (1617.840/1403.184/1402.951)
+cpu4: 1402/1800 MHz (1403.556/1402.672/1402.439)
+cpu5: 1474/3767 MHz (1617.655/1403.556/1402.579)
+cpu6: 1474/1800 MHz (1616.481/1403.137/1402.811)
+cpu7: 1473/1800 MHz (1614.815/1402.811/1402.532)
+
+##########################################################################
+
+Hardware sensors:
+
+iwlwifi_1-virtual-0
+temp1:        +50.0 C  
+
+acpitz-acpi-0
+temp1:        +27.8 C  (crit = +110.0 C)
+
+coretemp-isa-0000
+Package id 0:  +54.0 C  (high = +105.0 C, crit = +105.0 C)
+Core 0:        +48.0 C  (high = +105.0 C, crit = +105.0 C)
+Core 1:        +48.0 C  (high = +105.0 C, crit = +105.0 C)
+Core 2:        +48.0 C  (high = +105.0 C, crit = +105.0 C)
+Core 3:        +48.0 C  (high = +105.0 C, crit = +105.0 C)
+Core 4:        +54.0 C  (high = +105.0 C, crit = +105.0 C)
+Core 5:        +54.0 C  (high = +105.0 C, crit = +105.0 C)
+Core 6:        +54.0 C  (high = +105.0 C, crit = +105.0 C)
+Core 7:        +54.0 C  (high = +105.0 C, crit = +105.0 C)
+
+nvme-pci-0100
+Composite:    +50.9 C  (low  = -273.1 C, high = +82.8 C)
+                       (crit = +84.8 C)
+
+##########################################################################
+
+Executing benchmark on cpu0:
+
+tinymembench v0.4.9-nuumio (simple benchmark for memory throughput and latency)
+
+CFLAGS: 
+bandwidth test min repeats (-b): 3
+bandwidth test max repeats (-B): 10
+bandwidth test mem realloc (-M): no      (-m for realloc)
+      latency test repeats (-l): 10
+        latency test count (-c): 10000000
+
+==========================================================================
+== Memory bandwidth tests                                               ==
+==                                                                      ==
+== Note 1: 1MB = 1000000 bytes                                          ==
+== Note 2: Test result is the best of repeated runs. Number of repeats  ==
+==         is shown in brackets                                         ==
+== Note 3: Results for 'copy' tests show how many bytes can be          ==
+==         copied per second (adding together read and writen           ==
+==         bytes would have provided twice higher numbers)              ==
+== Note 4: 2-pass copy means that we are using a small temporary buffer ==
+==         to first fetch data into it, and only then write it to the   ==
+==         destination (source -> L1 cache, L1 cache -> destination)    ==
+== Note 5: If sample standard deviation exceeds 0.1%, it is shown in    ==
+==         brackets                                                     ==
+==========================================================================
+
+ C copy backwards                                 :   6536.9 MB/s (10, 0.9%)
+ C copy backwards (32 byte blocks)                :   6531.9 MB/s (4)
+ C copy backwards (64 byte blocks)                :   6522.2 MB/s (3)
+ C copy                                           :   6533.2 MB/s (10, 0.1%)
+ C copy prefetched (32 bytes step)                :   5089.0 MB/s (3)
+ C copy prefetched (64 bytes step)                :   5179.8 MB/s (3)
+ C 2-pass copy                                    :   6176.5 MB/s (3)
+ C 2-pass copy prefetched (32 bytes step)         :   3936.5 MB/s (3)
+ C 2-pass copy prefetched (64 bytes step)         :   3938.3 MB/s (3)
+ C scan 8                                         :   2951.7 MB/s (3)
+ C scan 16                                        :   5743.5 MB/s (3)
+ C scan 32                                        :   9553.3 MB/s (3)
+ C scan 64                                        :  13456.1 MB/s (3)
+ C fill                                           :   8941.5 MB/s (9)
+ C fill (shuffle within 16 byte blocks)           :   8959.4 MB/s (3)
+ C fill (shuffle within 32 byte blocks)           :   8958.0 MB/s (3)
+ C fill (shuffle within 64 byte blocks)           :   8958.6 MB/s (8)
+ ---
+ libc memcpy copy                                 :   9949.4 MB/s (3)
+ libc memchr scan                                 :  16662.7 MB/s (3)
+ libc memset fill                                 :   8991.6 MB/s (3)
+ ---
+ MOVSB copy                                       :   6616.5 MB/s (3)
+ MOVSD copy                                       :   6614.0 MB/s (3)
+ STOSB fill                                       :   8995.5 MB/s (3)
+ SSE2 copy                                        :   6625.5 MB/s (3)
+ SSE2 nontemporal copy                            :  10595.4 MB/s (3)
+ SSE2 copy prefetched (32 bytes step)             :   6115.7 MB/s (3)
+ SSE2 copy prefetched (64 bytes step)             :   6180.7 MB/s (4)
+ SSE2 nontemporal copy prefetched (32 bytes step) :   8320.4 MB/s (10, 0.1%)
+ SSE2 nontemporal copy prefetched (64 bytes step) :   8570.3 MB/s (3)
+ SSE2 2-pass copy                                 :   6028.7 MB/s (3)
+ SSE2 2-pass copy prefetched (32 bytes step)      :   4970.9 MB/s (9)
+ SSE2 2-pass copy prefetched (64 bytes step)      :   5168.0 MB/s (3)
+ SSE2 2-pass nontemporal copy                     :   3834.1 MB/s (3)
+ SSE2 fill                                        :   9018.1 MB/s (3)
+ SSE2 nontemporal fill                            :  21998.9 MB/s (5)
+
+==========================================================================
+== Framebuffer read tests.                                              ==
+==                                                                      ==
+== Many ARM devices use a part of the system memory as the framebuffer, ==
+== typically mapped as uncached but with write-combining enabled.       ==
+== Writes to such framebuffers are quite fast, but reads are much       ==
+== slower and very sensitive to the alignment and the selection of      ==
+== CPU instructions which are used for accessing memory.                ==
+==                                                                      ==
+== Many x86 systems allocate the framebuffer in the GPU memory,         ==
+== accessible for the CPU via a relatively slow PCI-E bus. Moreover,    ==
+== PCI-E is asymmetric and handles reads a lot worse than writes.       ==
+==                                                                      ==
+== If uncached framebuffer reads are reasonably fast (at least 100 MB/s ==
+== or preferably >300 MB/s), then using the shadow framebuffer layer    ==
+== is not necessary in Xorg DDX drivers, resulting in a nice overall    ==
+== performance improvement. For example, the xf86-video-fbturbo DDX     ==
+== uses this trick.                                                     ==
+==========================================================================
+
+ MOVSD copy (from framebuffer)                    :     54.7 MB/s (3)
+ MOVSD 2-pass copy (from framebuffer)             :     54.7 MB/s (3)
+ SSE2 copy (from framebuffer)                     :     54.8 MB/s (3)
+ SSE2 2-pass copy (from framebuffer)              :     54.8 MB/s (3)
+
+==========================================================================
+== Memory latency test                                                  ==
+==                                                                      ==
+== Average time is measured for random memory accesses in the buffers   ==
+== of different sizes. The larger is the buffer, the more significant   ==
+== are relative contributions of TLB, L1/L2 cache misses and SDRAM      ==
+== accesses. For extremely large buffer sizes we are expecting to see   ==
+== page table walk with several requests to SDRAM for almost every      ==
+== memory access (though 64MiB is not nearly large enough to experience ==
+== this effect to its fullest).                                         ==
+==                                                                      ==
+== Note 1: All the numbers are representing extra time, which needs to  ==
+==         be added to L1 cache latency. The cycle timings for L1 cache ==
+==         latency can be usually found in the processor documentation. ==
+== Note 2: Dual random read means that we are simultaneously performing ==
+==         two independent memory accesses at a time. In the case if    ==
+==         the memory subsystem can't handle multiple outstanding       ==
+==         requests, dual random read has the same timings as two       ==
+==         single reads performed one after another.                    ==
+==========================================================================
+
+block size : single random read / dual random read, [MADV_NOHUGEPAGE]
+      1024 :    0.0 ns          /     0.0 ns 
+      2048 :    0.0 ns          /     0.0 ns 
+      4096 :    0.0 ns          /     0.0 ns 
+      8192 :    0.0 ns          /     0.0 ns 
+     16384 :    0.0 ns          /     0.0 ns 
+     32768 :    0.0 ns          /     0.0 ns 
+     65536 :    2.2 ns          /     3.3 ns 
+    131072 :    3.4 ns          /     4.2 ns 
+    262144 :    4.5 ns          /     5.3 ns 
+    524288 :    5.7 ns          /     6.4 ns 
+   1048576 :    6.3 ns          /     6.7 ns 
+   2097152 :    7.9 ns          /     9.1 ns 
+   4194304 :   13.1 ns          /    16.7 ns 
+   8388608 :   26.5 ns          /    38.3 ns 
+  16777216 :   63.0 ns          /    87.2 ns 
+  33554432 :   85.7 ns          /   105.6 ns 
+  67108864 :   98.0 ns          /   112.3 ns 
+
+block size : single random read / dual random read, [MADV_HUGEPAGE]
+      1024 :    0.0 ns          /     0.0 ns 
+      2048 :    0.0 ns          /     0.0 ns 
+      4096 :    0.0 ns          /     0.0 ns 
+      8192 :    0.0 ns          /     0.0 ns 
+     16384 :    0.0 ns          /     0.0 ns 
+     32768 :    0.0 ns          /     0.0 ns 
+     65536 :    2.2 ns          /     3.3 ns 
+    131072 :    3.4 ns          /     4.2 ns 
+    262144 :    3.9 ns          /     4.4 ns 
+    524288 :    4.2 ns          /     4.5 ns 
+   1048576 :    4.4 ns          /     4.5 ns 
+   2097152 :    4.5 ns          /     4.6 ns 
+   4194304 :    9.9 ns          /    12.6 ns 
+   8388608 :   21.8 ns          /    31.7 ns 
+  16777216 :   56.5 ns          /    79.9 ns 
+  33554432 :   76.8 ns          /    96.5 ns 
+  67108864 :   86.6 ns          /   101.2 ns 
+
+##########################################################################
+
+Executing ramlat on cpu0, results in ns:
+
+       size:  1x32  2x32  1x64  2x64 1xPTR 2xPTR 4xPTR 8xPTR
+         4k: 1.057 1.056 1.303 1.305 0.792 0.792 0.792 1.056 
+         8k: 1.056 1.056 1.303 1.303 0.797 0.792 0.792 1.056 
+        16k: 1.056 1.056 1.304 1.303 0.792 0.792 0.792 1.056 
+        32k: 1.057 1.056 1.304 1.312 0.792 0.793 0.792 1.056 
+        64k: 5.545 5.542 5.789 5.793 5.278 5.278 5.284 5.532 
+       128k: 5.542 5.547 5.835 5.791 5.284 5.280 5.282 5.607 
+       256k: 7.919 7.907 8.168 8.159 7.650 7.655 7.064 7.098 
+       512k: 7.977 7.925 8.168 8.179 7.657 7.660 7.068 7.099 
+      1024k: 7.924 7.921 8.165 8.173 7.654 7.653 7.073 7.152 
+      2048k: 11.60 10.88 11.80 11.12 11.40 10.58 10.80 12.56 
+      4096k: 21.91 19.14 22.26 19.43 21.67 19.14 20.83 24.36 
+      8192k: 58.03 44.26 58.72 44.28 58.40 41.84 42.63 50.41 
+     16384k: 105.9 93.48 106.6 93.99 104.8 92.10 93.98 99.40 
+
+##########################################################################
+
+Executing benchmark twice on cluster 0
+
+OpenSSL 3.0.2, built on 15 Mar 2022 (Library: OpenSSL 3.0.2 15 Mar 2022)
+type             16 bytes     64 bytes    256 bytes   1024 bytes   8192 bytes  16384 bytes
+aes-128-cbc    1108497.97k  1782661.12k  1865171.88k  1886801.58k  1892982.78k  1892810.75k
+aes-128-cbc    1115451.47k  1782321.58k  1864934.74k  1887205.38k  1892936.36k  1893225.81k
+aes-192-cbc    1082632.67k  1515631.23k  1574436.35k  1589849.09k  1593898.33k  1594518.19k
+aes-192-cbc    1082677.18k  1515284.63k  1574064.90k  1589446.66k  1594534.57k  1594791.25k
+aes-256-cbc    1045029.97k  1317460.46k  1361964.97k  1373695.32k  1377031.51k  1377348.27k
+aes-256-cbc    1045036.36k  1317701.87k  1361509.97k  1373669.72k  1377140.74k  1377211.73k
+aes-256-gcm     600839.25k  1517993.26k  3419281.58k  4500974.25k  5259269.46k  5335607.98k
+
+##########################################################################
+
+Executing benchmark single-threaded on cpu0
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,8 CPUs Intel(R) Core(TM) i3-N305 (B06E0),ASM,AES-NI)
+
+Intel(R) Core(TM) i3-N305 (B06E0)
+CPU Freq: - - - - - - - - -
+
+RAM size:    7657 MB,  # CPU hardware threads:   8
+RAM usage:    435 MB,  # Benchmark threads:      1
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       4781   100   4653   4651  |      50721   100   4331   4331
+23:       4301   100   4384   4383  |      50413   100   4364   4364
+24:       4037   100   4342   4342  |      49824   100   4375   4374
+25:       3847   100   4394   4393  |      48812   100   4345   4345
+----------------------------------  | ------------------------------
+Avr:             100   4443   4442  |              100   4354   4353
+Tot:             100   4399   4398
+
+##########################################################################
+
+Executing benchmark 3 times multi-threaded on CPUs 0-7
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,8 CPUs Intel(R) Core(TM) i3-N305 (B06E0),ASM,AES-NI)
+
+Intel(R) Core(TM) i3-N305 (B06E0)
+CPU Freq: - - - - - - - - -
+
+RAM size:    7657 MB,  # CPU hardware threads:   8
+RAM usage:   1765 MB,  # Benchmark threads:      8
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:      25534   760   3267  24840  |     315188   797   3372  26884
+23:      23140   762   3093  23577  |     233330   793   2545  20192
+24:      11276   745   1627  12125  |     230039   796   2536  20190
+25:      10866   749   1657  12407  |     222455   794   2492  19798
+----------------------------------  | ------------------------------
+Avr:             754   2411  18237  |              795   2736  21766
+Tot:             775   2574  20002
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,8 CPUs Intel(R) Core(TM) i3-N305 (B06E0),ASM,AES-NI)
+
+Intel(R) Core(TM) i3-N305 (B06E0)
+CPU Freq: - - - - - - - - -
+
+RAM size:    7657 MB,  # CPU hardware threads:   8
+RAM usage:   1765 MB,  # Benchmark threads:      8
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:      13062   754   1685  12708  |     244772   796   2624  20878
+23:      12098   745   1655  12327  |     238363   796   2590  20627
+24:      11458   748   1646  12320  |     231234   796   2549  20295
+25:      10875   744   1670  12417  |     223087   796   2495  19854
+----------------------------------  | ------------------------------
+Avr:             748   1664  12443  |              796   2565  20414
+Tot:             772   2114  16428
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,8 CPUs Intel(R) Core(TM) i3-N305 (B06E0),ASM,AES-NI)
+
+Intel(R) Core(TM) i3-N305 (B06E0)
+CPU Freq: - - - - - - - - -
+
+RAM size:    7657 MB,  # CPU hardware threads:   8
+RAM usage:   1765 MB,  # Benchmark threads:      8
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:      13131   752   1698  12774  |     243984   796   2616  20811
+23:      12198   756   1643  12429  |     237597   796   2582  20561
+24:      11414   747   1642  12273  |     230717   795   2546  20250
+25:      10848   742   1670  12386  |     222886   796   2493  19836
+----------------------------------  | ------------------------------
+Avr:             749   1663  12465  |              796   2559  20364
+Tot:             773   2111  16415
+
+Compression: 18237,12443,12465
+Decompression: 21766,20414,20364
+Total: 20002,16428,16415
+
+##########################################################################
+
+** cpuminer-multi 1.3.7 by tpruvot@github **
+BTC donation address: 1FhDPLPpw18X4srecguG3MxJYe4a1JsZnd (tpruvot)
+
+[2023-03-10 16:46:09] 8 miner threads started, using 'scrypt' algorithm.
+[2023-03-10 16:46:09] CPU #0: 5.07 kH/s
+[2023-03-10 16:46:09] CPU #1: 5.01 kH/s
+[2023-03-10 16:46:09] CPU #2: 4.81 kH/s
+[2023-03-10 16:46:09] CPU #3: 4.98 kH/s
+[2023-03-10 16:46:09] CPU #5: 4.99 kH/s
+[2023-03-10 16:46:09] CPU #4: 4.77 kH/s
+[2023-03-10 16:46:09] CPU #6: 4.30 kH/s
+[2023-03-10 16:46:09] CPU #7: 4.47 kH/s
+[2023-03-10 16:46:09] Total: 38.40 kH/s
+[2023-03-10 16:46:13] Total: 39.71 kH/s
+[2023-03-10 16:46:14] Total: 39.74 kH/s
+[2023-03-10 16:46:18] CPU #4: 5.18 kH/s
+[2023-03-10 16:46:19] CPU #2: 5.08 kH/s
+[2023-03-10 16:46:19] CPU #5: 5.11 kH/s
+[2023-03-10 16:46:19] CPU #1: 5.07 kH/s
+[2023-03-10 16:46:19] CPU #3: 4.98 kH/s
+[2023-03-10 16:46:19] CPU #0: 5.04 kH/s
+[2023-03-10 16:46:19] CPU #6: 5.19 kH/s
+[2023-03-10 16:46:19] CPU #7: 5.03 kH/s
+[2023-03-10 16:46:19] Total: 40.69 kH/s
+[2023-03-10 16:46:24] Total: 39.91 kH/s
+[2023-03-10 16:46:25] CPU #4: 5.00 kH/s
+[2023-03-10 16:46:29] CPU #2: 5.00 kH/s
+[2023-03-10 16:46:29] CPU #5: 5.06 kH/s
+[2023-03-10 16:46:29] CPU #1: 5.04 kH/s
+[2023-03-10 16:46:29] CPU #3: 4.96 kH/s
+[2023-03-10 16:46:29] CPU #0: 4.99 kH/s
+[2023-03-10 16:46:29] CPU #6: 5.14 kH/s
+[2023-03-10 16:46:29] CPU #7: 5.02 kH/s
+[2023-03-10 16:46:29] Total: 40.28 kH/s
+[2023-03-10 16:46:34] CPU #4: 5.05 kH/s
+[2023-03-10 16:46:34] Total: 40.34 kH/s
+[2023-03-10 16:46:39] CPU #2: 5.05 kH/s
+[2023-03-10 16:46:39] CPU #5: 5.17 kH/s
+[2023-03-10 16:46:39] CPU #1: 5.13 kH/s
+[2023-03-10 16:46:39] CPU #3: 5.08 kH/s
+[2023-03-10 16:46:39] CPU #0: 4.99 kH/s
+[2023-03-10 16:46:39] CPU #6: 5.15 kH/s
+[2023-03-10 16:46:39] CPU #7: 5.06 kH/s
+[2023-03-10 16:46:39] Total: 40.69 kH/s
+[2023-03-10 16:46:44] CPU #4: 5.07 kH/s
+[2023-03-10 16:46:44] Total: 40.92 kH/s
+[2023-03-10 16:46:49] CPU #2: 4.96 kH/s
+[2023-03-10 16:46:49] CPU #1: 5.03 kH/s
+[2023-03-10 16:46:49] CPU #5: 5.02 kH/s
+[2023-03-10 16:46:49] CPU #3: 4.97 kH/s
+[2023-03-10 16:46:49] CPU #0: 4.95 kH/s
+[2023-03-10 16:46:49] CPU #6: 5.11 kH/s
+[2023-03-10 16:46:49] CPU #7: 5.06 kH/s
+[2023-03-10 16:46:49] Total: 40.23 kH/s
+[2023-03-10 16:46:54] Total: 40.39 kH/s
+[2023-03-10 16:46:54] CPU #4: 5.15 kH/s
+[2023-03-10 16:46:59] CPU #2: 4.92 kH/s
+[2023-03-10 16:46:59] CPU #5: 5.05 kH/s
+[2023-03-10 16:46:59] CPU #1: 4.97 kH/s
+[2023-03-10 16:46:59] CPU #3: 4.91 kH/s
+[2023-03-10 16:46:59] CPU #0: 4.91 kH/s
+[2023-03-10 16:46:59] CPU #6: 5.14 kH/s
+[2023-03-10 16:46:59] CPU #7: 5.13 kH/s
+[2023-03-10 16:46:59] Total: 40.19 kH/s
+[2023-03-10 16:47:04] Total: 40.61 kH/s
+[2023-03-10 16:47:05] CPU #4: 5.00 kH/s
+[2023-03-10 16:47:09] CPU #2: 4.97 kH/s
+[2023-03-10 16:47:09] CPU #1: 5.15 kH/s
+[2023-03-10 16:47:09] CPU #5: 5.08 kH/s
+[2023-03-10 16:47:09] CPU #3: 5.02 kH/s
+[2023-03-10 16:47:09] CPU #0: 5.02 kH/s
+[2023-03-10 16:47:09] CPU #6: 5.16 kH/s
+[2023-03-10 16:47:09] CPU #7: 5.10 kH/s
+[2023-03-10 16:47:09] Total: 40.52 kH/s
+[2023-03-10 16:47:13] CPU #4: 5.09 kH/s
+[2023-03-10 16:47:14] Total: 40.81 kH/s
+[2023-03-10 16:47:19] CPU #2: 5.09 kH/s
+[2023-03-10 16:47:19] CPU #1: 5.27 kH/s
+[2023-03-10 16:47:19] CPU #5: 5.10 kH/s
+[2023-03-10 16:47:19] CPU #0: 5.11 kH/s
+[2023-03-10 16:47:19] CPU #3: 5.00 kH/s
+[2023-03-10 16:47:19] CPU #6: 5.18 kH/s
+[2023-03-10 16:47:19] CPU #7: 5.05 kH/s
+[2023-03-10 16:47:19] Total: 40.92 kH/s
+[2023-03-10 16:47:19] CPU #4: 5.17 kH/s
+[2023-03-10 16:47:24] Total: 40.93 kH/s
+[2023-03-10 16:47:25] CPU #4: 5.08 kH/s
+[2023-03-10 16:47:29] CPU #2: 5.20 kH/s
+[2023-03-10 16:47:29] CPU #1: 5.25 kH/s
+[2023-03-10 16:47:29] CPU #0: 5.20 kH/s
+[2023-03-10 16:47:29] CPU #5: 5.08 kH/s
+[2023-03-10 16:47:29] CPU #3: 4.99 kH/s
+[2023-03-10 16:47:29] CPU #6: 5.16 kH/s
+[2023-03-10 16:47:29] CPU #7: 5.04 kH/s
+[2023-03-10 16:47:29] Total: 41.05 kH/s
+[2023-03-10 16:47:34] Total: 41.07 kH/s
+[2023-03-10 16:47:34] CPU #4: 5.21 kH/s
+[2023-03-10 16:47:39] CPU #1: 5.25 kH/s
+[2023-03-10 16:47:39] CPU #2: 5.01 kH/s
+[2023-03-10 16:47:39] CPU #5: 5.15 kH/s
+[2023-03-10 16:47:39] CPU #0: 5.18 kH/s
+[2023-03-10 16:47:39] CPU #3: 5.04 kH/s
+[2023-03-10 16:47:39] CPU #6: 5.14 kH/s
+[2023-03-10 16:47:39] CPU #7: 5.04 kH/s
+[2023-03-10 16:47:39] Total: 41.03 kH/s
+[2023-03-10 16:47:40] CPU #4: 5.19 kH/s
+[2023-03-10 16:47:44] Total: 40.86 kH/s
+[2023-03-10 16:47:49] CPU #4: 5.06 kH/s
+[2023-03-10 16:47:49] CPU #1: 5.24 kH/s
+[2023-03-10 16:47:49] CPU #2: 5.04 kH/s
+[2023-03-10 16:47:49] CPU #3: 5.08 kH/s
+[2023-03-10 16:47:49] CPU #5: 5.08 kH/s
+[2023-03-10 16:47:49] CPU #0: 5.02 kH/s
+[2023-03-10 16:47:49] CPU #6: 5.21 kH/s
+[2023-03-10 16:47:49] CPU #7: 5.11 kH/s
+[2023-03-10 16:47:49] Total: 40.85 kH/s
+[2023-03-10 16:47:54] Total: 40.51 kH/s
+[2023-03-10 16:47:59] CPU #4: 5.07 kH/s
+[2023-03-10 16:47:59] CPU #1: 5.22 kH/s
+[2023-03-10 16:47:59] CPU #2: 5.00 kH/s
+[2023-03-10 16:47:59] CPU #5: 5.06 kH/s
+[2023-03-10 16:47:59] CPU #3: 5.04 kH/s
+[2023-03-10 16:47:59] CPU #0: 5.01 kH/s
+[2023-03-10 16:47:59] CPU #6: 5.23 kH/s
+[2023-03-10 16:47:59] CPU #7: 5.12 kH/s
+[2023-03-10 16:47:59] Total: 40.75 kH/s
+[2023-03-10 16:48:04] Total: 40.88 kH/s
+[2023-03-10 16:48:09] CPU #2: 5.21 kH/s
+[2023-03-10 16:48:09] CPU #1: 5.28 kH/s
+[2023-03-10 16:48:09] CPU #4: 5.01 kH/s
+[2023-03-10 16:48:09] CPU #5: 5.18 kH/s
+[2023-03-10 16:48:09] CPU #0: 5.12 kH/s
+[2023-03-10 16:48:09] CPU #3: 4.97 kH/s
+[2023-03-10 16:48:09] CPU #6: 5.24 kH/s
+[2023-03-10 16:48:09] CPU #7: 5.13 kH/s
+[2023-03-10 16:48:09] Total: 41.14 kH/s
+[2023-03-10 16:48:14] Total: 41.34 kH/s
+[2023-03-10 16:48:19] CPU #2: 5.18 kH/s
+[2023-03-10 16:48:19] CPU #4: 5.15 kH/s
+[2023-03-10 16:48:19] CPU #1: 5.24 kH/s
+[2023-03-10 16:48:19] CPU #5: 5.22 kH/s
+[2023-03-10 16:48:19] CPU #3: 5.03 kH/s
+[2023-03-10 16:48:19] CPU #0: 5.10 kH/s
+[2023-03-10 16:48:19] CPU #6: 5.30 kH/s
+[2023-03-10 16:48:19] CPU #7: 5.19 kH/s
+[2023-03-10 16:48:19] Total: 41.41 kH/s
+[2023-03-10 16:48:24] Total: 41.20 kH/s
+[2023-03-10 16:48:29] CPU #2: 5.19 kH/s
+[2023-03-10 16:48:29] CPU #4: 5.08 kH/s
+[2023-03-10 16:48:29] CPU #1: 5.24 kH/s
+[2023-03-10 16:48:29] CPU #5: 5.18 kH/s
+[2023-03-10 16:48:29] CPU #3: 5.09 kH/s
+[2023-03-10 16:48:29] CPU #0: 5.02 kH/s
+[2023-03-10 16:48:29] CPU #6: 5.29 kH/s
+[2023-03-10 16:48:29] CPU #7: 5.17 kH/s
+[2023-03-10 16:48:29] Total: 41.26 kH/s
+[2023-03-10 16:48:34] Total: 41.22 kH/s
+[2023-03-10 16:48:39] CPU #2: 5.17 kH/s
+[2023-03-10 16:48:39] CPU #5: 5.23 kH/s
+[2023-03-10 16:48:39] CPU #4: 5.01 kH/s
+[2023-03-10 16:48:39] CPU #1: 5.22 kH/s
+[2023-03-10 16:48:39] CPU #3: 5.07 kH/s
+[2023-03-10 16:48:39] CPU #0: 5.06 kH/s
+[2023-03-10 16:48:39] CPU #6: 5.31 kH/s
+[2023-03-10 16:48:39] CPU #7: 5.09 kH/s
+[2023-03-10 16:48:39] Total: 41.16 kH/s
+[2023-03-10 16:48:44] Total: 41.01 kH/s
+[2023-03-10 16:48:49] CPU #2: 5.13 kH/s
+[2023-03-10 16:48:49] CPU #4: 5.04 kH/s
+[2023-03-10 16:48:49] CPU #1: 5.18 kH/s
+[2023-03-10 16:48:49] CPU #3: 5.02 kH/s
+[2023-03-10 16:48:49] CPU #5: 5.02 kH/s
+[2023-03-10 16:48:49] CPU #0: 5.02 kH/s
+[2023-03-10 16:48:49] CPU #6: 5.31 kH/s
+[2023-03-10 16:48:49] CPU #7: 5.09 kH/s
+[2023-03-10 16:48:49] Total: 40.80 kH/s
+[2023-03-10 16:48:54] Total: 40.85 kH/s
+[2023-03-10 16:48:59] CPU #4: 5.14 kH/s
+[2023-03-10 16:48:59] CPU #2: 5.10 kH/s
+[2023-03-10 16:48:59] CPU #1: 5.15 kH/s
+[2023-03-10 16:48:59] CPU #5: 5.03 kH/s
+[2023-03-10 16:48:59] CPU #3: 5.00 kH/s
+[2023-03-10 16:48:59] CPU #0: 5.03 kH/s
+[2023-03-10 16:48:59] CPU #6: 5.30 kH/s
+[2023-03-10 16:48:59] CPU #7: 4.99 kH/s
+[2023-03-10 16:48:59] Total: 40.74 kH/s
+[2023-03-10 16:49:04] Total: 40.79 kH/s
+[2023-03-10 16:49:09] CPU #4: 5.16 kH/s
+[2023-03-10 16:49:09] CPU #2: 4.99 kH/s
+[2023-03-10 16:49:09] CPU #1: 5.18 kH/s
+[2023-03-10 16:49:09] CPU #5: 5.07 kH/s
+[2023-03-10 16:49:09] CPU #0: 5.14 kH/s
+[2023-03-10 16:49:09] CPU #3: 5.03 kH/s
+[2023-03-10 16:49:09] CPU #6: 5.11 kH/s
+[2023-03-10 16:49:09] CPU #7: 5.00 kH/s
+[2023-03-10 16:49:09] Total: 40.67 kH/s
+[2023-03-10 16:49:14] Total: 40.93 kH/s
+[2023-03-10 16:49:19] CPU #4: 5.19 kH/s
+[2023-03-10 16:49:19] CPU #2: 5.18 kH/s
+[2023-03-10 16:49:19] CPU #5: 5.25 kH/s
+[2023-03-10 16:49:19] CPU #1: 5.16 kH/s
+[2023-03-10 16:49:19] CPU #0: 5.21 kH/s
+[2023-03-10 16:49:19] CPU #3: 5.01 kH/s
+[2023-03-10 16:49:19] CPU #6: 5.22 kH/s
+[2023-03-10 16:49:19] CPU #7: 5.04 kH/s
+[2023-03-10 16:49:19] Total: 41.27 kH/s
+[2023-03-10 16:49:24] Total: 41.43 kH/s
+[2023-03-10 16:49:29] CPU #4: 5.17 kH/s
+[2023-03-10 16:49:29] CPU #1: 5.27 kH/s
+[2023-03-10 16:49:29] CPU #5: 5.22 kH/s
+[2023-03-10 16:49:29] CPU #0: 5.21 kH/s
+[2023-03-10 16:49:29] CPU #3: 5.01 kH/s
+[2023-03-10 16:49:29] CPU #6: 5.23 kH/s
+[2023-03-10 16:49:29] CPU #7: 5.04 kH/s
+[2023-03-10 16:49:29] Total: 41.46 kH/s
+[2023-03-10 16:49:30] CPU #2: 5.16 kH/s
+[2023-03-10 16:49:34] Total: 41.06 kH/s
+[2023-03-10 16:49:39] CPU #5: 5.27 kH/s
+[2023-03-10 16:49:39] CPU #4: 5.04 kH/s
+[2023-03-10 16:49:39] CPU #1: 5.26 kH/s
+[2023-03-10 16:49:39] CPU #2: 5.04 kH/s
+[2023-03-10 16:49:39] CPU #0: 5.19 kH/s
+[2023-03-10 16:49:39] CPU #3: 5.10 kH/s
+[2023-03-10 16:49:39] CPU #6: 5.28 kH/s
+[2023-03-10 16:49:39] CPU #7: 5.01 kH/s
+[2023-03-10 16:49:39] Total: 41.19 kH/s
+[2023-03-10 16:49:44] Total: 41.39 kH/s
+[2023-03-10 16:49:49] CPU #4: 5.20 kH/s
+[2023-03-10 16:49:49] CPU #1: 5.26 kH/s
+[2023-03-10 16:49:49] CPU #5: 5.25 kH/s
+[2023-03-10 16:49:49] CPU #2: 5.03 kH/s
+[2023-03-10 16:49:49] CPU #0: 5.20 kH/s
+[2023-03-10 16:49:49] CPU #3: 5.10 kH/s
+[2023-03-10 16:49:49] CPU #6: 5.32 kH/s
+[2023-03-10 16:49:49] CPU #7: 5.10 kH/s
+[2023-03-10 16:49:49] Total: 41.46 kH/s
+[2023-03-10 16:49:54] Total: 41.34 kH/s
+[2023-03-10 16:49:59] CPU #4: 5.08 kH/s
+[2023-03-10 16:49:59] CPU #2: 4.97 kH/s
+[2023-03-10 16:49:59] CPU #5: 5.11 kH/s
+[2023-03-10 16:49:59] CPU #0: 5.11 kH/s
+[2023-03-10 16:49:59] CPU #3: 4.99 kH/s
+[2023-03-10 16:49:59] CPU #1: 4.98 kH/s
+[2023-03-10 16:49:59] CPU #6: 5.32 kH/s
+[2023-03-10 16:49:59] CPU #7: 5.07 kH/s
+[2023-03-10 16:49:59] Total: 40.65 kH/s
+[2023-03-10 16:50:04] Total: 40.32 kH/s
+[2023-03-10 16:50:09] CPU #4: 5.09 kH/s
+[2023-03-10 16:50:09] CPU #5: 5.17 kH/s
+[2023-03-10 16:50:09] CPU #2: 4.85 kH/s
+[2023-03-10 16:50:09] CPU #3: 4.86 kH/s
+[2023-03-10 16:50:09] CPU #6: 5.24 kH/s
+[2023-03-10 16:50:09] CPU #1: 4.86 kH/s
+[2023-03-10 16:50:09] CPU #0: 4.88 kH/s
+[2023-03-10 16:50:09] CPU #7: 5.03 kH/s
+[2023-03-10 16:50:09] Total: 39.98 kH/s
+[2023-03-10 16:50:14] Total: 40.95 kH/s
+[2023-03-10 16:50:19] CPU #4: 5.12 kH/s
+[2023-03-10 16:50:19] CPU #2: 4.98 kH/s
+[2023-03-10 16:50:19] CPU #5: 5.06 kH/s
+[2023-03-10 16:50:19] CPU #0: 5.12 kH/s
+[2023-03-10 16:50:19] CPU #3: 4.99 kH/s
+[2023-03-10 16:50:19] CPU #1: 4.97 kH/s
+[2023-03-10 16:50:19] CPU #6: 5.33 kH/s
+[2023-03-10 16:50:19] CPU #7: 5.19 kH/s
+[2023-03-10 16:50:19] Total: 40.75 kH/s
+[2023-03-10 16:50:24] Total: 40.51 kH/s
+[2023-03-10 16:50:29] CPU #4: 5.03 kH/s
+[2023-03-10 16:50:29] CPU #2: 5.04 kH/s
+[2023-03-10 16:50:29] CPU #5: 5.09 kH/s
+[2023-03-10 16:50:29] CPU #0: 5.15 kH/s
+[2023-03-10 16:50:29] CPU #3: 5.05 kH/s
+[2023-03-10 16:50:29] CPU #1: 5.02 kH/s
+[2023-03-10 16:50:29] CPU #6: 5.15 kH/s
+[2023-03-10 16:50:29] CPU #7: 5.22 kH/s
+[2023-03-10 16:50:29] Total: 40.74 kH/s
+[2023-03-10 16:50:34] Total: 40.00 kH/s
+[2023-03-10 16:50:39] CPU #4: 5.03 kH/s
+[2023-03-10 16:50:39] CPU #2: 5.05 kH/s
+[2023-03-10 16:50:39] CPU #5: 5.13 kH/s
+[2023-03-10 16:50:39] CPU #3: 4.98 kH/s
+[2023-03-10 16:50:39] CPU #1: 4.99 kH/s
+[2023-03-10 16:50:39] CPU #0: 5.03 kH/s
+[2023-03-10 16:50:39] CPU #6: 5.12 kH/s
+[2023-03-10 16:50:39] CPU #7: 5.08 kH/s
+[2023-03-10 16:50:39] Total: 40.42 kH/s
+[2023-03-10 16:50:44] Total: 40.94 kH/s
+[2023-03-10 16:50:49] CPU #2: 5.10 kH/s
+[2023-03-10 16:50:49] CPU #5: 5.25 kH/s
+[2023-03-10 16:50:49] CPU #4: 5.03 kH/s
+[2023-03-10 16:50:49] CPU #1: 5.18 kH/s
+[2023-03-10 16:50:49] CPU #3: 5.04 kH/s
+[2023-03-10 16:50:49] CPU #0: 5.14 kH/s
+[2023-03-10 16:50:49] CPU #6: 5.08 kH/s
+[2023-03-10 16:50:49] CPU #7: 5.05 kH/s
+[2023-03-10 16:50:49] Total: 40.86 kH/s
+[2023-03-10 16:50:54] Total: 40.99 kH/s
+[2023-03-10 16:50:59] CPU #4: 5.20 kH/s
+[2023-03-10 16:50:59] CPU #2: 5.10 kH/s
+[2023-03-10 16:50:59] CPU #5: 5.23 kH/s
+[2023-03-10 16:50:59] CPU #1: 5.23 kH/s
+[2023-03-10 16:50:59] CPU #0: 5.19 kH/s
+[2023-03-10 16:50:59] CPU #3: 5.09 kH/s
+[2023-03-10 16:50:59] CPU #6: 5.13 kH/s
+[2023-03-10 16:50:59] CPU #7: 5.14 kH/s
+[2023-03-10 16:50:59] Total: 41.30 kH/s
+[2023-03-10 16:51:04] Total: 41.34 kH/s
+[2023-03-10 16:51:09] CPU #4: 5.13 kH/s
+
+Total Scores: 41.46,41.43,41.41,41.39,41.34,41.30,41.27,41.26,41.22,41.20,41.19,41.16,41.14,41.07,41.06,41.05,41.03,41.01,40.99,40.95,40.94,40.93,40.92,40.88,40.86,40.85,40.81,40.80,40.79,40.75,40.74,40.69,40.67,40.65,40.61,40.52,40.51,40.42,40.39,40.34,40.32,40.28,40.23,40.19,40.00,39.98,39.91,39.74
+
+##########################################################################
+
+Executing Stockfish 15 using nn-6877cd24400e.nnue 3 times in a row:
+
+Position: 1/48 (rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1)
+Position: 2/48 (r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 10)
+Position: 3/48 (8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - 0 11)
+Position: 4/48 (4rrk1/pp1n3p/3q2pQ/2p1pb2/2PP4/2P3N1/P2B2PP/4RRK1 b - - 7 19)
+Position: 5/48 (rq3rk1/ppp2ppp/1bnpN3/3N2B1/4P3/7P/PPPQ1PP1/2KR3R b - - 0 14)
+Position: 6/48 (r1bq1r1k/1pp1n1pp/1p1p4/4p2Q/4PpP1/1BNP4/PPP2P1P/3R1RK1 b - g3 0 14)
+Position: 7/48 (r3r1k1/2p2ppp/p1p1bn2/8/1q2P3/2NPQN2/PPP3PP/R4RK1 b - - 2 15)
+Position: 8/48 (r1bbk1nr/pp3p1p/2n5/1N4p1/2Np1B2/8/PPP2PPP/2KR1B1R w kq - 0 13)
+Position: 9/48 (r1bq1rk1/ppp1nppp/4n3/3p3Q/3P4/1BP1B3/PP1N2PP/R4RK1 w - - 1 16)
+Position: 10/48 (4r1k1/r1q2ppp/ppp2n2/4P3/5Rb1/1N1BQ3/PPP3PP/R5K1 w - - 1 17)
+Position: 11/48 (2rqkb1r/ppp2p2/2npb1p1/1N1Nn2p/2P1PP2/8/PP2B1PP/R1BQK2R b KQ - 0 11)
+Position: 12/48 (r1bq1r1k/b1p1npp1/p2p3p/1p6/3PP3/1B2NN2/PP3PPP/R2Q1RK1 w - - 1 16)
+Position: 13/48 (3r1rk1/p5pp/bpp1pp2/8/q1PP1P2/b3P3/P2NQRPP/1R2B1K1 b - - 6 22)
+Position: 14/48 (r1q2rk1/2p1bppp/2Pp4/p6b/Q1PNp3/4B3/PP1R1PPP/2K4R w - - 2 18)
+Position: 15/48 (4k2r/1pb2ppp/1p2p3/1R1p4/3P4/2r1PN2/P4PPP/1R4K1 b - - 3 22)
+Position: 16/48 (3q2k1/pb3p1p/4pbp1/2r5/PpN2N2/1P2P2P/5PP1/Q2R2K1 b - - 4 26)
+Position: 17/48 (6k1/6p1/6Pp/ppp5/3pn2P/1P3K2/1PP2P2/3N4 b - - 0 1)
+Position: 18/48 (3b4/5kp1/1p1p1p1p/pP1PpP1P/P1P1P3/3KN3/8/8 w - - 0 1)
+Position: 19/48 (2K5/p7/7P/5pR1/8/5k2/r7/8 w - - 4 3)
+Position: 20/48 (8/6pk/1p6/8/PP3p1p/5P2/4KP1q/3Q4 w - - 0 1)
+Position: 21/48 (7k/3p2pp/4q3/8/4Q3/5Kp1/P6b/8 w - - 0 1)
+Position: 22/48 (8/2p5/8/2kPKp1p/2p4P/2P5/3P4/8 w - - 0 1)
+Position: 23/48 (8/1p3pp1/7p/5P1P/2k3P1/8/2K2P2/8 w - - 0 1)
+Position: 24/48 (8/pp2r1k1/2p1p3/3pP2p/1P1P1P1P/P5KR/8/8 w - - 0 1)
+Position: 25/48 (8/3p4/p1bk3p/Pp6/1Kp1PpPp/2P2P1P/2P5/5B2 b - - 0 1)
+Position: 26/48 (5k2/7R/4P2p/5K2/p1r2P1p/8/8/8 b - - 0 1)
+Position: 27/48 (6k1/6p1/P6p/r1N5/5p2/7P/1b3PP1/4R1K1 w - - 0 1)
+Position: 28/48 (1r3k2/4q3/2Pp3b/3Bp3/2Q2p2/1p1P2P1/1P2KP2/3N4 w - - 0 1)
+Position: 29/48 (6k1/4pp1p/3p2p1/P1pPb3/R7/1r2P1PP/3B1P2/6K1 w - - 0 1)
+Position: 30/48 (8/3p3B/5p2/5P2/p7/PP5b/k7/6K1 w - - 0 1)
+Position: 31/48 (5rk1/q6p/2p3bR/1pPp1rP1/1P1Pp3/P3B1Q1/1K3P2/R7 w - - 93 90)
+Position: 32/48 (4rrk1/1p1nq3/p7/2p1P1pp/3P2bp/3Q1Bn1/PPPB4/1K2R1NR w - - 40 21)
+Position: 33/48 (r3k2r/3nnpbp/q2pp1p1/p7/Pp1PPPP1/4BNN1/1P5P/R2Q1RK1 w kq - 0 16)
+Position: 34/48 (3Qb1k1/1r2ppb1/pN1n2q1/Pp1Pp1Pr/4P2p/4BP2/4B1R1/1R5K b - - 11 40)
+Position: 35/48 (4k3/3q1r2/1N2r1b1/3ppN2/2nPP3/1B1R2n1/2R1Q3/3K4 w - - 5 1)
+Position: 36/48 (8/8/8/8/5kp1/P7/8/1K1N4 w - - 0 1)
+Position: 37/48 (8/8/8/5N2/8/p7/8/2NK3k w - - 0 1)
+Position: 38/48 (8/3k4/8/8/8/4B3/4KB2/2B5 w - - 0 1)
+Position: 39/48 (8/8/1P6/5pr1/8/4R3/7k/2K5 w - - 0 1)
+Position: 40/48 (8/2p4P/8/kr6/6R1/8/8/1K6 w - - 0 1)
+Position: 41/48 (8/8/3P3k/8/1p6/8/1P6/1K3n2 b - - 0 1)
+Position: 42/48 (8/R7/2q5/8/6k1/8/1P5p/K6R w - - 0 124)
+Position: 43/48 (6k1/3b3r/1p1p4/p1n2p2/1PPNpP1q/P3Q1p1/1R1RB1P1/5K2 b - - 0 1)
+Position: 44/48 (r2r1n2/pp2bk2/2p1p2p/3q4/3PN1QP/2P3R1/P4PP1/5RK1 w - - 0 1)
+Position: 45/48 (8/8/8/8/8/6k1/6p1/6K1 w - - 0 1)
+Position: 46/48 (7k/7P/6K1/8/3B4/8/8/8 b - - 0 1)
+Position: 47/48 (bb1n1rkr/ppp1Q1pp/3n1p2/3p4/3P4/6Pq/PPP1PP1P/BB1NNRKR w HFhf - 0 5)
+Position: 48/48 (nqbnrkrb/pppppppp/8/8/8/8/PPPPPPPP/NQBNRKRB w GEge - 0 1)
+ 
+===========================
+Total time (ms) : 241055
+Nodes searched  : 1371164413
+Nodes/second    : 5688180
+ 
+Position: 1/48 (rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1)
+Position: 2/48 (r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 10)
+Position: 3/48 (8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - 0 11)
+Position: 4/48 (4rrk1/pp1n3p/3q2pQ/2p1pb2/2PP4/2P3N1/P2B2PP/4RRK1 b - - 7 19)
+Position: 5/48 (rq3rk1/ppp2ppp/1bnpN3/3N2B1/4P3/7P/PPPQ1PP1/2KR3R b - - 0 14)
+Position: 6/48 (r1bq1r1k/1pp1n1pp/1p1p4/4p2Q/4PpP1/1BNP4/PPP2P1P/3R1RK1 b - g3 0 14)
+Position: 7/48 (r3r1k1/2p2ppp/p1p1bn2/8/1q2P3/2NPQN2/PPP3PP/R4RK1 b - - 2 15)
+Position: 8/48 (r1bbk1nr/pp3p1p/2n5/1N4p1/2Np1B2/8/PPP2PPP/2KR1B1R w kq - 0 13)
+Position: 9/48 (r1bq1rk1/ppp1nppp/4n3/3p3Q/3P4/1BP1B3/PP1N2PP/R4RK1 w - - 1 16)
+Position: 10/48 (4r1k1/r1q2ppp/ppp2n2/4P3/5Rb1/1N1BQ3/PPP3PP/R5K1 w - - 1 17)
+Position: 11/48 (2rqkb1r/ppp2p2/2npb1p1/1N1Nn2p/2P1PP2/8/PP2B1PP/R1BQK2R b KQ - 0 11)
+Position: 12/48 (r1bq1r1k/b1p1npp1/p2p3p/1p6/3PP3/1B2NN2/PP3PPP/R2Q1RK1 w - - 1 16)
+Position: 13/48 (3r1rk1/p5pp/bpp1pp2/8/q1PP1P2/b3P3/P2NQRPP/1R2B1K1 b - - 6 22)
+Position: 14/48 (r1q2rk1/2p1bppp/2Pp4/p6b/Q1PNp3/4B3/PP1R1PPP/2K4R w - - 2 18)
+Position: 15/48 (4k2r/1pb2ppp/1p2p3/1R1p4/3P4/2r1PN2/P4PPP/1R4K1 b - - 3 22)
+Position: 16/48 (3q2k1/pb3p1p/4pbp1/2r5/PpN2N2/1P2P2P/5PP1/Q2R2K1 b - - 4 26)
+Position: 17/48 (6k1/6p1/6Pp/ppp5/3pn2P/1P3K2/1PP2P2/3N4 b - - 0 1)
+Position: 18/48 (3b4/5kp1/1p1p1p1p/pP1PpP1P/P1P1P3/3KN3/8/8 w - - 0 1)
+Position: 19/48 (2K5/p7/7P/5pR1/8/5k2/r7/8 w - - 4 3)
+Position: 20/48 (8/6pk/1p6/8/PP3p1p/5P2/4KP1q/3Q4 w - - 0 1)
+Position: 21/48 (7k/3p2pp/4q3/8/4Q3/5Kp1/P6b/8 w - - 0 1)
+Position: 22/48 (8/2p5/8/2kPKp1p/2p4P/2P5/3P4/8 w - - 0 1)
+Position: 23/48 (8/1p3pp1/7p/5P1P/2k3P1/8/2K2P2/8 w - - 0 1)
+Position: 24/48 (8/pp2r1k1/2p1p3/3pP2p/1P1P1P1P/P5KR/8/8 w - - 0 1)
+Position: 25/48 (8/3p4/p1bk3p/Pp6/1Kp1PpPp/2P2P1P/2P5/5B2 b - - 0 1)
+Position: 26/48 (5k2/7R/4P2p/5K2/p1r2P1p/8/8/8 b - - 0 1)
+Position: 27/48 (6k1/6p1/P6p/r1N5/5p2/7P/1b3PP1/4R1K1 w - - 0 1)
+Position: 28/48 (1r3k2/4q3/2Pp3b/3Bp3/2Q2p2/1p1P2P1/1P2KP2/3N4 w - - 0 1)
+Position: 29/48 (6k1/4pp1p/3p2p1/P1pPb3/R7/1r2P1PP/3B1P2/6K1 w - - 0 1)
+Position: 30/48 (8/3p3B/5p2/5P2/p7/PP5b/k7/6K1 w - - 0 1)
+Position: 31/48 (5rk1/q6p/2p3bR/1pPp1rP1/1P1Pp3/P3B1Q1/1K3P2/R7 w - - 93 90)
+Position: 32/48 (4rrk1/1p1nq3/p7/2p1P1pp/3P2bp/3Q1Bn1/PPPB4/1K2R1NR w - - 40 21)
+Position: 33/48 (r3k2r/3nnpbp/q2pp1p1/p7/Pp1PPPP1/4BNN1/1P5P/R2Q1RK1 w kq - 0 16)
+Position: 34/48 (3Qb1k1/1r2ppb1/pN1n2q1/Pp1Pp1Pr/4P2p/4BP2/4B1R1/1R5K b - - 11 40)
+Position: 35/48 (4k3/3q1r2/1N2r1b1/3ppN2/2nPP3/1B1R2n1/2R1Q3/3K4 w - - 5 1)
+Position: 36/48 (8/8/8/8/5kp1/P7/8/1K1N4 w - - 0 1)
+Position: 37/48 (8/8/8/5N2/8/p7/8/2NK3k w - - 0 1)
+Position: 38/48 (8/3k4/8/8/8/4B3/4KB2/2B5 w - - 0 1)
+Position: 39/48 (8/8/1P6/5pr1/8/4R3/7k/2K5 w - - 0 1)
+Position: 40/48 (8/2p4P/8/kr6/6R1/8/8/1K6 w - - 0 1)
+Position: 41/48 (8/8/3P3k/8/1p6/8/1P6/1K3n2 b - - 0 1)
+Position: 42/48 (8/R7/2q5/8/6k1/8/1P5p/K6R w - - 0 124)
+Position: 43/48 (6k1/3b3r/1p1p4/p1n2p2/1PPNpP1q/P3Q1p1/1R1RB1P1/5K2 b - - 0 1)
+Position: 44/48 (r2r1n2/pp2bk2/2p1p2p/3q4/3PN1QP/2P3R1/P4PP1/5RK1 w - - 0 1)
+Position: 45/48 (8/8/8/8/8/6k1/6p1/6K1 w - - 0 1)
+Position: 46/48 (7k/7P/6K1/8/3B4/8/8/8 b - - 0 1)
+Position: 47/48 (bb1n1rkr/ppp1Q1pp/3n1p2/3p4/3P4/6Pq/PPP1PP1P/BB1NNRKR w HFhf - 0 5)
+Position: 48/48 (nqbnrkrb/pppppppp/8/8/8/8/PPPPPPPP/NQBNRKRB w GEge - 0 1)
+ 
+===========================
+Total time (ms) : 260036
+Nodes searched  : 1437717220
+Nodes/second    : 5528916
+ 
+Position: 1/48 (rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1)
+Position: 2/48 (r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 10)
+Position: 3/48 (8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - 0 11)
+Position: 4/48 (4rrk1/pp1n3p/3q2pQ/2p1pb2/2PP4/2P3N1/P2B2PP/4RRK1 b - - 7 19)
+Position: 5/48 (rq3rk1/ppp2ppp/1bnpN3/3N2B1/4P3/7P/PPPQ1PP1/2KR3R b - - 0 14)
+Position: 6/48 (r1bq1r1k/1pp1n1pp/1p1p4/4p2Q/4PpP1/1BNP4/PPP2P1P/3R1RK1 b - g3 0 14)
+Position: 7/48 (r3r1k1/2p2ppp/p1p1bn2/8/1q2P3/2NPQN2/PPP3PP/R4RK1 b - - 2 15)
+Position: 8/48 (r1bbk1nr/pp3p1p/2n5/1N4p1/2Np1B2/8/PPP2PPP/2KR1B1R w kq - 0 13)
+Position: 9/48 (r1bq1rk1/ppp1nppp/4n3/3p3Q/3P4/1BP1B3/PP1N2PP/R4RK1 w - - 1 16)
+Position: 10/48 (4r1k1/r1q2ppp/ppp2n2/4P3/5Rb1/1N1BQ3/PPP3PP/R5K1 w - - 1 17)
+Position: 11/48 (2rqkb1r/ppp2p2/2npb1p1/1N1Nn2p/2P1PP2/8/PP2B1PP/R1BQK2R b KQ - 0 11)
+Position: 12/48 (r1bq1r1k/b1p1npp1/p2p3p/1p6/3PP3/1B2NN2/PP3PPP/R2Q1RK1 w - - 1 16)
+Position: 13/48 (3r1rk1/p5pp/bpp1pp2/8/q1PP1P2/b3P3/P2NQRPP/1R2B1K1 b - - 6 22)
+Position: 14/48 (r1q2rk1/2p1bppp/2Pp4/p6b/Q1PNp3/4B3/PP1R1PPP/2K4R w - - 2 18)
+Position: 15/48 (4k2r/1pb2ppp/1p2p3/1R1p4/3P4/2r1PN2/P4PPP/1R4K1 b - - 3 22)
+Position: 16/48 (3q2k1/pb3p1p/4pbp1/2r5/PpN2N2/1P2P2P/5PP1/Q2R2K1 b - - 4 26)
+Position: 17/48 (6k1/6p1/6Pp/ppp5/3pn2P/1P3K2/1PP2P2/3N4 b - - 0 1)
+Position: 18/48 (3b4/5kp1/1p1p1p1p/pP1PpP1P/P1P1P3/3KN3/8/8 w - - 0 1)
+Position: 19/48 (2K5/p7/7P/5pR1/8/5k2/r7/8 w - - 4 3)
+Position: 20/48 (8/6pk/1p6/8/PP3p1p/5P2/4KP1q/3Q4 w - - 0 1)
+Position: 21/48 (7k/3p2pp/4q3/8/4Q3/5Kp1/P6b/8 w - - 0 1)
+Position: 22/48 (8/2p5/8/2kPKp1p/2p4P/2P5/3P4/8 w - - 0 1)
+Position: 23/48 (8/1p3pp1/7p/5P1P/2k3P1/8/2K2P2/8 w - - 0 1)
+Position: 24/48 (8/pp2r1k1/2p1p3/3pP2p/1P1P1P1P/P5KR/8/8 w - - 0 1)
+Position: 25/48 (8/3p4/p1bk3p/Pp6/1Kp1PpPp/2P2P1P/2P5/5B2 b - - 0 1)
+Position: 26/48 (5k2/7R/4P2p/5K2/p1r2P1p/8/8/8 b - - 0 1)
+Position: 27/48 (6k1/6p1/P6p/r1N5/5p2/7P/1b3PP1/4R1K1 w - - 0 1)
+Position: 28/48 (1r3k2/4q3/2Pp3b/3Bp3/2Q2p2/1p1P2P1/1P2KP2/3N4 w - - 0 1)
+Position: 29/48 (6k1/4pp1p/3p2p1/P1pPb3/R7/1r2P1PP/3B1P2/6K1 w - - 0 1)
+Position: 30/48 (8/3p3B/5p2/5P2/p7/PP5b/k7/6K1 w - - 0 1)
+Position: 31/48 (5rk1/q6p/2p3bR/1pPp1rP1/1P1Pp3/P3B1Q1/1K3P2/R7 w - - 93 90)
+Position: 32/48 (4rrk1/1p1nq3/p7/2p1P1pp/3P2bp/3Q1Bn1/PPPB4/1K2R1NR w - - 40 21)
+Position: 33/48 (r3k2r/3nnpbp/q2pp1p1/p7/Pp1PPPP1/4BNN1/1P5P/R2Q1RK1 w kq - 0 16)
+Position: 34/48 (3Qb1k1/1r2ppb1/pN1n2q1/Pp1Pp1Pr/4P2p/4BP2/4B1R1/1R5K b - - 11 40)
+Position: 35/48 (4k3/3q1r2/1N2r1b1/3ppN2/2nPP3/1B1R2n1/2R1Q3/3K4 w - - 5 1)
+Position: 36/48 (8/8/8/8/5kp1/P7/8/1K1N4 w - - 0 1)
+Position: 37/48 (8/8/8/5N2/8/p7/8/2NK3k w - - 0 1)
+Position: 38/48 (8/3k4/8/8/8/4B3/4KB2/2B5 w - - 0 1)
+Position: 39/48 (8/8/1P6/5pr1/8/4R3/7k/2K5 w - - 0 1)
+Position: 40/48 (8/2p4P/8/kr6/6R1/8/8/1K6 w - - 0 1)
+Position: 41/48 (8/8/3P3k/8/1p6/8/1P6/1K3n2 b - - 0 1)
+Position: 42/48 (8/R7/2q5/8/6k1/8/1P5p/K6R w - - 0 124)
+Position: 43/48 (6k1/3b3r/1p1p4/p1n2p2/1PPNpP1q/P3Q1p1/1R1RB1P1/5K2 b - - 0 1)
+Position: 44/48 (r2r1n2/pp2bk2/2p1p2p/3q4/3PN1QP/2P3R1/P4PP1/5RK1 w - - 0 1)
+Position: 45/48 (8/8/8/8/8/6k1/6p1/6K1 w - - 0 1)
+Position: 46/48 (7k/7P/6K1/8/3B4/8/8/8 b - - 0 1)
+Position: 47/48 (bb1n1rkr/ppp1Q1pp/3n1p2/3p4/3P4/6Pq/PPP1PP1P/BB1NNRKR w HFhf - 0 5)
+Position: 48/48 (nqbnrkrb/pppppppp/8/8/8/8/PPPPPPPP/NQBNRKRB w GEge - 0 1)
+ 
+===========================
+Total time (ms) : 240397
+Nodes searched  : 1448812253
+Nodes/second    : 6026748
+ 
+Total Scores (nn-6877cd24400e.nnue): 5688180,5528916,6026748
+
+##########################################################################
+
+Testing maximum cpufreq again, still under full load. System health now:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+17:02:56: 2394MHz  8.04  99%   0%  99%   0%   0%   0%  71.0°C
+
+Checking cpufreq OPP:
+
+Cpufreq OPP: 3800    Measured: 3789 (3789.604/3789.248/3789.159)
+
+##########################################################################
+
+Hardware sensors:
+
+iwlwifi_1-virtual-0
+temp1:        +57.0 C  
+
+acpitz-acpi-0
+temp1:        +27.8 C  (crit = +110.0 C)
+
+coretemp-isa-0000
+Package id 0:  +61.0 C  (high = +105.0 C, crit = +105.0 C)
+Core 0:        +61.0 C  (high = +105.0 C, crit = +105.0 C)
+Core 1:        +61.0 C  (high = +105.0 C, crit = +105.0 C)
+Core 2:        +61.0 C  (high = +105.0 C, crit = +105.0 C)
+Core 3:        +61.0 C  (high = +105.0 C, crit = +105.0 C)
+Core 4:        +54.0 C  (high = +105.0 C, crit = +105.0 C)
+Core 5:        +54.0 C  (high = +105.0 C, crit = +105.0 C)
+Core 6:        +54.0 C  (high = +105.0 C, crit = +105.0 C)
+Core 7:        +54.0 C  (high = +105.0 C, crit = +105.0 C)
+
+nvme-pci-0100
+Composite:    +53.9 C  (low  = -273.1 C, high = +82.8 C)
+                       (crit = +84.8 C)
+
+##########################################################################
+
+Thermal source: /sys/devices/virtual/thermal/thermal_zone2/ (x86_pkg_temp)
+
+System health while running tinymembench:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+16:35:37: 3550MHz  2.31   8%   0%   8%   0%   0%   0%  54.0°C
+16:36:17: 3632MHz  1.67  12%   0%  12%   0%   0%   0%  58.0°C
+16:36:57: 3644MHz  1.34  12%   0%  12%   0%   0%   0%  63.0°C
+16:37:37: 3644MHz  1.17  12%   0%  12%   0%   0%   0%  54.0°C
+16:38:17: 3596MHz  1.09  12%   0%  12%   0%   0%   0%  54.0°C
+16:38:57: 3622MHz  1.04  12%   0%  12%   0%   0%   0%  54.0°C
+16:39:37: 3594MHz  1.02  12%   0%  12%   0%   0%   0%  54.0°C
+
+System health while running ramlat:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+16:39:49: 3415MHz  1.02   8%   0%   8%   0%   0%   0%  60.0°C
+16:39:52: 3625MHz  1.02  12%   0%  12%   0%   0%   0%  55.0°C
+16:39:55: 3636MHz  1.01  12%   0%  12%   0%   0%   0%  58.0°C
+16:39:58: 3617MHz  1.01  12%   0%  12%   0%   0%   0%  54.0°C
+16:40:01: 3649MHz  1.01  12%   0%  12%   0%   0%   0%  55.0°C
+16:40:04: 3604MHz  1.01  12%   0%  12%   0%   0%   0%  60.0°C
+16:40:07: 3647MHz  1.01  12%   0%  12%   0%   0%   0%  55.0°C
+16:40:10: 3613MHz  1.01  12%   0%  12%   0%   0%   0%  53.0°C
+
+System health while running OpenSSL benchmark:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+16:40:12: 3479MHz  1.01   9%   0%   8%   0%   0%   0%  73.0°C
+16:40:28: 3611MHz  1.01  12%   0%  12%   0%   0%   0%  68.0°C
+16:40:44: 3649MHz  1.00  12%   0%  12%   0%   0%   0%  68.0°C
+16:41:00: 3609MHz  1.00  12%   0%  12%   0%   0%   0%  67.0°C
+16:41:16: 3641MHz  1.00  12%   0%  12%   0%   0%   0%  68.0°C
+16:41:32: 3598MHz  1.00  12%   0%  12%   0%   0%   0%  70.0°C
+16:41:48: 3644MHz  1.00  12%   0%  12%   0%   0%   0%  69.0°C
+16:42:04: 3659MHz  1.00  12%   0%  12%   0%   0%   0%  87.0°C
+
+System health while running parallel OpenSSL benchmarks:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+16:42:23: 3000MHz  1.64   9%   0%   9%   0%   0%   0%  86.0°C
+16:42:31: 2598MHz  2.15 100%   0% 100%   0%   0%   0%  71.0°C
+16:42:36: 2600MHz  3.12  99%   0%  99%   0%   0%   0%  69.0°C
+16:42:40: 1800MHz  2.87   0%   0%   0%   0%   0%   0%  45.0°C
+16:42:47: 2586MHz  3.36  43%   0%  43%   0%   0%   0%  88.0°C
+16:42:55: 1939MHz  3.74 100%   0% 100%   0%   0%   0%  70.0°C
+16:43:01: 2036MHz  4.47  99%   0%  99%   0%   0%   0%  70.0°C
+16:43:05: 3564MHz  4.11   0%   0%   0%   0%   0%   0%  47.0°C
+
+System health while running 7-zip single core benchmark:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+16:43:08: 3488MHz  4.11  10%   0%  10%   0%   0%   0%  60.0°C
+16:43:13: 3627MHz  3.86  12%   0%  12%   0%   0%   0%  69.0°C
+16:43:18: 3651MHz  3.63  12%   0%  12%   0%   0%   0%  69.0°C
+16:43:23: 3632MHz  3.42  12%   0%  12%   0%   0%   0%  65.0°C
+16:43:28: 3599MHz  3.22  12%   0%  12%   0%   0%   0%  68.0°C
+16:43:33: 3642MHz  3.05  12%   0%  12%   0%   0%   0%  64.0°C
+16:43:38: 3629MHz  2.88  12%   0%  12%   0%   0%   0%  68.0°C
+
+System health while running 7-zip multi core benchmark:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+16:43:40: 2986MHz  2.73  10%   0%  10%   0%   0%   0%  64.0°C
+16:43:54: 2298MHz  3.54  97%   0%  96%   0%   0%   0%  67.0°C
+16:44:08: 2293MHz  4.60  94%   1%  93%   0%   0%   0%  66.0°C
+16:44:18: 2900MHz  5.05  92%   2%  89%   0%   0%   0%  69.0°C
+16:44:29: 2697MHz  5.50  94%   1%  92%   0%   0%   0%  71.0°C
+16:44:39: 2799MHz  5.96  96%   0%  95%   0%   0%   0%  69.0°C
+16:44:49: 2799MHz  6.35  94%   1%  93%   0%   0%   0%  69.0°C
+16:44:59: 3203MHz  6.29  95%   1%  94%   0%   0%   0%  58.0°C
+16:45:09: 2899MHz  6.63  91%   3%  87%   0%   0%   0%  67.0°C
+16:45:19: 2693MHz  6.76  94%   1%  92%   0%   0%   0%  69.0°C
+16:45:30: 2799MHz  7.03  96%   1%  95%   0%   0%   0%  67.0°C
+16:45:40: 2797MHz  7.26  95%   1%  93%   0%   0%   0%  69.0°C
+16:45:50: 3561MHz  7.38  94%   1%  92%   0%   0%   0%  64.0°C
+16:46:00: 2899MHz  7.47  92%   3%  89%   0%   0%   0%  70.0°C
+
+System health while running cpuminer:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+16:46:14: 2688MHz  7.63  16%   0%  15%   0%   0%   0%  70.0°C
+16:46:58: 2688MHz  7.87 100%   0%  99%   0%   0%   0%  71.0°C
+16:47:43: 2600MHz  8.02 100%   0%  99%   0%   0%   0%  71.0°C
+16:48:27: 2690MHz  8.01 100%   0%  99%   0%   0%   0%  71.0°C
+16:49:11: 2600MHz  8.04 100%   0%  99%   0%   0%   0%  73.0°C
+16:49:55: 2600MHz  8.06 100%   0%  99%   0%   0%   0%  71.0°C
+16:50:39: 2600MHz  8.22 100%   0%  99%   0%   0%   0%  71.0°C
+
+System health while running stockfish:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+16:51:09: 3295MHz  8.18  25%   0%  25%   0%   0%   0%  64.0°C
+16:52:12: 2299MHz  8.10  99%   0%  99%   0%   0%   0%  69.0°C
+16:53:17: 2596MHz  8.06  99%   0%  99%   0%   0%   0%  73.0°C
+16:54:21: 2595MHz  8.05  99%   0%  99%   0%   0%   0%  73.0°C
+16:55:26: 2399MHz  8.04  99%   0%  99%   0%   0%   0%  70.0°C
+16:56:30: 2292MHz  8.04  99%   0%  99%   0%   0%   0%  71.0°C
+16:57:34: 2600MHz  8.04  99%   0%  99%   0%   0%   0%  73.0°C
+16:58:39: 2393MHz  8.04  99%   0%  99%   0%   0%   0%  70.0°C
+16:59:43: 2490MHz  8.01  99%   0%  99%   0%   0%   0%  73.0°C
+17:00:47: 2300MHz  8.03  99%   0%  99%   0%   0%   0%  71.0°C
+17:01:51: 2388MHz  8.04  99%   0%  99%   0%   0%   0%  70.0°C
+17:02:56: 2394MHz  8.04  99%   0%  99%   0%   0%   0%  71.0°C
+
+##########################################################################
+
+dmesg output while running the benchmarks:
+
+[ 2228.088065] perf: interrupt took too long (2562 > 2500), lowering kernel.perf_event_max_sample_rate to 78000
+[ 2299.917693] perf: interrupt took too long (3237 > 3202), lowering kernel.perf_event_max_sample_rate to 61750
+[ 2436.625618] perf: interrupt took too long (4095 > 4046), lowering kernel.perf_event_max_sample_rate to 48750
+[ 2602.455180] perf: interrupt took too long (5122 > 5118), lowering kernel.perf_event_max_sample_rate to 39000
+[ 2787.078300] perf: interrupt took too long (6425 > 6402), lowering kernel.perf_event_max_sample_rate to 31000
+[ 3038.704494] perf: interrupt took too long (8067 > 8031), lowering kernel.perf_event_max_sample_rate to 24750
+
+##########################################################################
+
+Linux 5.19.0-35-generic (N10) 	03/10/23 	_x86_64_	(8 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+          42.12    0.01    0.22    0.02    0.00   57.62
+
+Device             tps    kB_read/s    kB_wrtn/s    kB_dscd/s    kB_read    kB_wrtn    kB_dscd
+nvme0n1         428.72      4186.98      4779.62         0.00   13972795   15950561          0
+
+               total        used        free      shared  buff/cache   available
+Mem:           7.5Gi       860Mi       5.7Gi       556Mi       935Mi       5.9Gi
+Swap:             0B          0B          0B
+
+CPU sysfs topology (clusters, cpufreq members, clockspeeds)
+                 cpufreq   min    max
+ CPU    cluster  policy   speed  speed   core type
+  0        0        0      800    3800   i3-N305
+  1        0        1      800    3800   i3-N305
+  2        0        2      800    3800   i3-N305
+  3        0        3      800    3800   i3-N305
+  4        0        4      800    3800   i3-N305
+  5        0        5      800    3800   i3-N305
+  6        0        6      800    3800   i3-N305
+  7        0        7      800    3800   i3-N305
+
+Architecture:                    x86_64
+CPU op-mode(s):                  32-bit, 64-bit
+Address sizes:                   39 bits physical, 48 bits virtual
+Byte Order:                      Little Endian
+CPU(s):                          8
+On-line CPU(s) list:             0-7
+Vendor ID:                       GenuineIntel
+Model name:                      Intel(R) Core(TM) i3-N305
+CPU family:                      6
+Model:                           190
+Thread(s) per core:              1
+Core(s) per socket:              8
+Socket(s):                       1
+Stepping:                        0
+CPU max MHz:                     3800.0000
+CPU min MHz:                     800.0000
+BogoMIPS:                        3609.60
+Flags:                           fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf tsc_known_freq pni pclmulqdq dtes64 monitor ds_cpl vmx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch cpuid_fault epb cat_l2 invpcid_single cdp_l2 ssbd ibrs ibpb stibp ibrs_enhanced tpr_shadow vnmi flexpriority ept vpid ept_ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid rdt_a rdseed adx smap clflushopt clwb intel_pt sha_ni xsaveopt xsavec xgetbv1 xsaves avx_vnni dtherm ida arat pln pts hwp hwp_notify hwp_act_window hwp_epp hwp_pkg_req umip pku ospke waitpkg gfni vaes vpclmulqdq rdpid movdiri movdir64b fsrm md_clear serialize arch_lbr ibt flush_l1d arch_capabilities
+Virtualization:                  VT-x
+L1d cache:                       256 KiB (8 instances)
+L1i cache:                       512 KiB (8 instances)
+L2 cache:                        4 MiB (2 instances)
+L3 cache:                        6 MiB (1 instance)
+NUMA node(s):                    1
+NUMA node0 CPU(s):               0-7
+Vulnerability Itlb multihit:     Not affected
+Vulnerability L1tf:              Not affected
+Vulnerability Mds:               Not affected
+Vulnerability Meltdown:          Not affected
+Vulnerability Mmio stale data:   Not affected
+Vulnerability Retbleed:          Not affected
+Vulnerability Spec store bypass: Mitigation; Speculative Store Bypass disabled via prctl
+Vulnerability Spectre v1:        Mitigation; usercopy/swapgs barriers and __user pointer sanitization
+Vulnerability Spectre v2:        Mitigation; Enhanced IBRS, IBPB conditional, RSB filling, PBRSB-eIBRS Not affected
+Vulnerability Srbds:             Not affected
+Vulnerability Tsx async abort:   Not affected
+
+Processor Information
+	Socket Designation: U3E1
+	Type: Central Processor
+	Family: Core i3
+	Manufacturer: Intel(R) Corporation
+	ID: E0 06 0B 00 FF FB EB BF
+	Signature: Type 0, Family 6, Model 190, Stepping 0
+	Flags:
+		FPU (Floating-point unit on-chip)
+		VME (Virtual mode extension)
+		DE (Debugging extension)
+		PSE (Page size extension)
+		TSC (Time stamp counter)
+		MSR (Model specific registers)
+		PAE (Physical address extension)
+		MCE (Machine check exception)
+		CX8 (CMPXCHG8 instruction supported)
+		APIC (On-chip APIC hardware supported)
+		SEP (Fast system call)
+		MTRR (Memory type range registers)
+		PGE (Page global enable)
+		MCA (Machine check architecture)
+		CMOV (Conditional move instruction supported)
+		PAT (Page attribute table)
+		PSE-36 (36-bit page size extension)
+		CLFSH (CLFLUSH instruction supported)
+		DS (Debug store)
+		ACPI (ACPI supported)
+		MMX (MMX technology supported)
+		FXSR (FXSAVE and FXSTOR instructions supported)
+		SSE (Streaming SIMD extensions)
+		SSE2 (Streaming SIMD extensions 2)
+		SS (Self-snoop)
+		HTT (Multi-threading)
+		TM (Thermal monitor supported)
+		PBE (Pending break enabled)
+	Version: Intel(R) Core(TM) i3-N305
+	Voltage: 0.8 V
+	External Clock: 100 MHz
+	Max Speed: 3800 MHz
+	Current Speed: 1782 MHz
+	Status: Populated, Enabled
+	Upgrade: Other
+	L1 Cache Handle: 0x0046
+	L2 Cache Handle: 0x0047
+	L3 Cache Handle: 0x0048
+	Core Count: 8
+	Core Enabled: 8
+	Thread Count: 8
+	Characteristics:
+		64-bit capable
+		Multi-Core
+		Execute Protection
+		Enhanced Virtualization
+		Power/Performance Control
+
+ Compiler: /usr/bin/gcc (Ubuntu 11.3.0-1ubuntu1~22.04) 11.3.0 / x86_64-linux-gnu
+ Userland: amd64
+   Kernel: 5.19.0-35-generic/x86_64
+           CONFIG_HZ=250
+           CONFIG_HZ_250=y
+           CONFIG_PREEMPTION=y
+           CONFIG_PREEMPT_BUILD=y
+           CONFIG_PREEMPT_COUNT=y
+           CONFIG_PREEMPT_DYNAMIC=y
+           CONFIG_PREEMPT_NOTIFIERS=y
+           CONFIG_PREEMPT_RCU=y
+           CONFIG_PREEMPT_VOLUNTARY=y
+
+##########################################################################
+
+DIMM configuration:
+          description: SODIMM DDR4 Synchronous 3200 MHz (0.3 ns)
+          product: SCQ08GS03M2F1C-32A
+          vendor: Xi'an UnilC Semiconductors Co Ltd
+          physical id: 0
+          configured speed: 3200MT/s
+          size: 8GiB
+          width: 64 bits
+          clock: 3200MHz (0.3ns)
+
+Decoding EEPROM: /sys/bus/i2c/drivers/ee1004/0-0050
+Guessing DIMM is in                              bank 1
+Kernel driver used                               ee1004
+
+---=== SPD EEPROM Information ===---
+EEPROM CRC of bytes 0-125                        OK (0x3A77)
+# of bytes written to SDRAM EEPROM               384
+Total number of bytes in EEPROM                  512
+Fundamental Memory type                          DDR4 SDRAM
+SPD Revision                                     1.1
+Module Type                                      SO-DIMM
+EEPROM CRC of bytes 128-253                      OK (0x4C30)
+
+---=== Memory Characteristics ===---
+Maximum module speed                             3200 MT/s (PC4-25600)
+Size                                             8192 MB
+Banks x Rows x Columns x Bits                    16 x 16 x 10 x 64
+SDRAM Device Width                               8 bits
+Ranks                                            1
+Primary Bus Width                                64 bits
+AA-RCD-RP-RAS (cycles)                           22-22-22-52
+Supported CAS Latencies                          28T, 26T, 25T, 24T, 23T, 22T, 21T, 20T, 19T, 18T, 17T, 16T, 15T, 14T, 13T, 12T, 11T, 10T
+
+---=== Timings at Standard Speeds ===---
+AA-RCD-RP-RAS (cycles) as DDR4-3200              22-22-22-52
+AA-RCD-RP-RAS (cycles) as DDR4-2933              21-21-21-47
+AA-RCD-RP-RAS (cycles) as DDR4-2666              19-19-19-43
+AA-RCD-RP-RAS (cycles) as DDR4-2400              17-17-17-39
+AA-RCD-RP-RAS (cycles) as DDR4-2133              15-15-15-35
+AA-RCD-RP-RAS (cycles) as DDR4-1866              13-13-13-30
+AA-RCD-RP-RAS (cycles) as DDR4-1600              11-11-11-26
+
+---=== Timing Parameters ===---
+Minimum Cycle Time (tCKmin)                      0.625 ns
+Maximum Cycle Time (tCKmax)                      1.600 ns
+Minimum CAS Latency Time (tAA)                   13.750 ns
+Minimum RAS to CAS Delay (tRCD)                  13.750 ns
+Minimum Row Precharge Delay (tRP)                13.750 ns
+Minimum Active to Precharge Delay (tRAS)         32.000 ns
+Minimum Active to Auto-Refresh Delay (tRC)       45.750 ns
+Minimum Recovery Delay (tRFC1)                   350.000 ns
+Minimum Recovery Delay (tRFC2)                   260.000 ns
+Minimum Recovery Delay (tRFC4)                   160.000 ns
+Minimum Four Activate Window Delay (tFAW)        21.000 ns
+Minimum Row Active to Row Active Delay (tRRD_S)  2.500 ns
+Minimum Row Active to Row Active Delay (tRRD_L)  4.900 ns
+Minimum CAS to CAS Delay (tCCD_L)                5.000 ns
+Minimum Write Recovery Time (tWR)                15.000 ns
+Minimum Write to Read Time (tWTR_S)              2.500 ns
+Minimum Write to Read Time (tWTR_L)              7.500 ns
+
+---=== Other Information ===---
+Package Type                                     Monolithic
+Maximum Activate Count (MAC)                     Unlimited
+Post Package Repair                              One row per bank group
+Soft PPR                                         Supported
+Module Nominal Voltage                           1.2 V
+Thermal Sensor                                   No
+
+---=== Physical Characteristics ===---
+Module Height                                    30 mm
+Module Thickness                                 2 mm front, 2 mm back
+Module Reference Card                            A revision 2
+
+---=== Manufacturer Data ===---
+Module Manufacturer                              Xi’an UniIC Semiconductors Co Ltd (former Xi'an SinoChip Semiconductor)
+DRAM Manufacturer                                Micron Technology
+Manufacturing Location Code                      0x01
+Manufacturing Date                               2022-W01
+Part Number                                      SCQ08GS03M2F1C-32A  
+
+Number of SDRAM DIMMs detected and decoded: 1
+
+##########################################################################
+
+Results validation:
+
+  * No mismatch between advertised and measured max CPU clockspeed
+  * Background activity (%system) OK
+  * Powercap detected. Details: "sudo powercap-info -p intel-rapl"
+  * No throttling
+
+| WeiBu ADL-N / i3-N305 | 3800 MHz | 5.19 | Ubuntu 22.04.2 LTS x86_64/amd64 | 17620 | 4398 | 1377280 | 9950 | 8990 | 41.43 |

@@ -4227,8 +4227,11 @@ ValidateResults() {
 				[ "${ZswapEnabled}" = "1" ] && echo -e "${LRED}${BOLD}Zswap configured on top of zram. Swap performance harmed${NC}"
 			else
 				echo -e "${LRED}${BOLD}Swapping occured${NC}"
-				SlowSwap="$(ListSwapDevices | sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" | awk -F") on " '{print $2}' | sed '/^$/d' | tr '\n' ',' | sed -e 's/,/, /g' -e 's/, $//')"
-				[ -z "${SlowSwap}" ] || echo -e "${LRED}${BOLD}Swap configured on ${SlowSwap}${NC}"
+				if [ "X${VirtWhat}" = "X" -o "X${VirtWhat}" = "Xnone" ]; then
+					# identify type of swap only when not running inside a VM
+					SlowSwap="$(ListSwapDevices | sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" | awk -F") on " '{print $2}' | sed '/^$/d' | tr '\n' ',' | sed -e 's/,/, /g' -e 's/, $//')"
+					[ -z "${SlowSwap}" ] || echo -e "${LRED}${BOLD}Swap configured on ${SlowSwap}${NC}"
+				fi
 			fi
 		fi
 	fi
@@ -4816,7 +4819,7 @@ GuessARMSoC() {
 	#
 	# Recent Rockchip BSP kernels include something like this in dmesg output:
 	# rockchip-cpuinfo cpuinfo: SoC            : 35661000 --> Quartz64, RK3566 EVB2 LP4X V10 Board, Firefly RK3566-ROC-PC
-	# rockchip-cpuinfo cpuinfo: SoC            : 35662000 --> http://ix.io/4aXR
+	# rockchip-cpuinfo cpuinfo: SoC            : 35662000 --> RK3566 BOX DEMO V10 ANDROID Board, Rock 3C
 	# rockchip-cpuinfo cpuinfo: SoC            : 35681000 --> only early RK3568 devices showed this silicon revision (e.g. Firefly RK3568-ROC-PC/AIO-3568J)
 	# rockchip-cpuinfo cpuinfo: SoC            : 35682000 --> RK3568-ROC-PC, NanoPi R5S, ODROID-M1, Mrkaio M68S, OWLVisionTech rk3568 opc Board, Radxa ROCK3A,
 	#                                                         Rockemd R68K 2.5G, Hinlink H68K
@@ -4837,7 +4840,7 @@ GuessARMSoC() {
 	# soc soc0: Amlogic Meson GXBB (S905) Revision 1f:b (12:1) Detected <-- Beelink Mini MX / Amlogic Meson GXBB P201 Development Board
 	# soc soc0: Amlogic Meson GXBB (S905) Revision 1f:c (13:1) Detected <-- Beelink Mini MX / NanoPi K2 / NEXBOX A95X / Tronsmart Vega S95 Telos/Meta / WeTek Play 2 / Amlogic Meson GXBB P200 Development Board / Amlogic Meson GXBB P201 Development Board
 	# soc soc0: Amlogic Meson GXBB (S905H) Revision 1f:c (23:1) Detected <-- Amlogic Meson GXBB P201 Development Board
-	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:a (82:2) Detected <-- Khadas VIM / NEXBOX A95X (S905X) / Tanix TX3 Mini / Amlogic Meson GXL (S905X) P212 Development Board
+	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:a (82:2) Detected <-- Khadas VIM / NEXBOX A95X (S905X) / Tanix TX3 Mini / Amlogic Meson GXL (S905X) P212 Development Board, ZTE B860H
 	# soc soc0: Amlogic Meson GXL (S905D) Revision 21:b (0:2) Detected <-- Amlogic Meson GXL (S905W) P281 Development Board
 	# soc soc0: Amlogic Meson GXL (S905D) Revision 21:b (2:2) Detected <-- MeCool KI Pro, Phicomm N1
 	# soc soc0: Amlogic Meson GXL (Unknown) Revision 21:b (2:2) Detected <-- Phicomm N1
@@ -7595,6 +7598,14 @@ CheckKernelVersion() {
 					;;
 				*5422*)
 					PrintBSPWarning Samsung
+					;;
+			esac
+			;;
+		5.10.66|5.10.72|5.10.110)
+			case ${GuessedSoC} in
+				*Rockchip*)
+					# RK 5.10 BSP in different flavours
+					PrintBSPWarning RockchipGKI
 					;;
 			esac
 			;;

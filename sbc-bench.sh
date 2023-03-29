@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.9.39
+Version=0.9.40
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -3171,7 +3171,7 @@ CheckClockspeedsAndSensors() {
 		Disks="$(ls /dev/sd? /dev/nvme? 2>/dev/null | sort)"
 		if [ "X${SmartCtl}" != "X" -a "X${Disks}" != "X" ]; then
 			echo "" >>${ResultLog}
-			# try to restrict SMART queries to 10 sec duration due to buggy devices
+			# try to restrict SMART queries to 15 sec duration due to buggy devices
 			command -v timeout >/dev/null 2>&1 && SmartCtl="timeout 15 ${SmartCtl}"
 			for Disk in ${Disks} ; do
 				case ${Disk} in
@@ -4176,7 +4176,7 @@ ValidateResults() {
 	elif [ -f /sys/devices/system/cpu/cpufreq/policy0/scaling_governor ]; then
 		# cpufreq scaling supported, check we've measured cpufreq before to report 'no mismatch'
 		grep -q "^Checking cpufreq OPP" "${ResultLog}" && \
-			echo -e "${LGREEN}No mismatch between advertised and measured max CPU clockspeed${NC}"
+			echo -e "${LGREEN}Measured clockspeed not lower than advertised max CPU clockspeed${NC}"
 	fi
 
 	# check for certain RPi specifics
@@ -4884,7 +4884,7 @@ GuessARMSoC() {
 	# soc soc0: Amlogic Meson G12A (Unknown) Revision 28:c (70:2) Detected <-- Amlogic Meson G12A U200 Development Board / China Mobile M401A / Skyworth E900V22C
 	# soc soc0: Amlogic Meson G12B (S922X) Revision 29:a (40:2) Detected <-- ODROID-N2 / Beelink GT-King Pro
 	# soc soc0: Amlogic Meson G12B (A311D) Revision 29:b (10:2) Detected <-- Khadas VIM3 / Radxa Zero 2 / UnionPi Tiger / Bananapi CM4
-	# soc soc0: Amlogic Meson G12B (S922X) Revision 29:b (40:2) Detected <-- Beelink GT-King Pro
+	# soc soc0: Amlogic Meson G12B (S922X) Revision 29:b (40:2) Detected <-- Beelink GT-King Pro, Ugoos AM6
 	# soc soc0: Amlogic Meson G12B (S922X) Revision 29:c (40:2) Detected <-- ODROID-N2+ ('S922X-B')
 	# soc soc0: Amlogic Meson Unknown (Unknown) Revision 2a:e (c5:2) Detected <-- Amlogic Meson GXL (S905L2) X7 5G Tv Box / Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson SM1 (S905D3) Revision 2b:b (1:2) Detected <-- AMedia X96 Max+/Air / HK1 Box/Vontar X3 / SEI Robotics SEI610 / X96 Max Plus Q1
@@ -6700,6 +6700,10 @@ GuessSoCbySignature() {
 			# T-Head C910: Dual-core XuanTieISA (compatible with RISC-V 64GC) https://www.t-head.cn/product/c910?lang=en
 			grep -q c910 <<<"${DTCompatible}" && echo "T-Head C910"
 			;;
+		??rv64imafdcvsu??rv64imafdcvsu??rv64imafdcvsu??rv64imafdcvsu)
+			# T-Head TH1520: quad-core C910 https://occ.t-head.cn/wujian600?id=4080405462988689408
+			echo "T-Head TH1520"
+			;;
 		*sifive,u54-mc*sifive,u54-mc*sifive,u54-mc*sifive,u54-mc)
 			# SiFive "Freedom" U540: 4 x U54-MC https://www.sifive.com/cores/u54-mc
 			echo "SiFive U540"
@@ -7811,7 +7815,7 @@ CheckStorage() {
 	# update-smart-drivedb
 	[ -b /dev/nvme0 -o -b /dev/sda -a "$1" = "update-smart-drivedb" ] && update-smart-drivedb >/dev/null 2>&1
 
-	# try to restrict SMART queries to 10 sec duration due to buggy USB-to-SATA bridges
+	# try to restrict SMART queries to 15 sec duration due to buggy USB-to-SATA bridges
 	SmartCtl="$(command -v smartctl 2>/dev/null)"
 	command -v timeout >/dev/null 2>&1 && SmartCtl="timeout 15 ${SmartCtl}"
 

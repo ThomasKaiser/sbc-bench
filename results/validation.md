@@ -14,7 +14,7 @@
 | [1Dt1](1Dt1.txt) | v0.6.6 Realtek\_Lion\_Skin\_1GB | 0%/0% | 570M/313M | X | X | X | | 3% | 2% | |
 | <del>[1ET3](1ET3.txt)</del> | <del>v0.6.6 SolidRun LX2160A COM express typ</del> | <del>0%/0%</del> | <del>60G/57G</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 0%</del> | <del> 2%</del> | |
 | [1HnC](1HnC.txt) | v0.6.6 x5-Z8350 | 0%/0% | 1.9G/1.6G | X | X | X | X | 2% | 0% | |
-| [1I4j](1I4j.txt) | v0.6.7 jetson-nano | 0%/0% | 3.9G/3.0G | X | X | X | X | 1% | 0% | |
+| <del>[1I4j](1I4j.txt)</del> | <del>v0.6.7 jetson-nano </del> | <del>0%/0%</del> | <del>3.9G/3.0G</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 1%</del> | <del> 0%</del> | |
 | [1MFD](1MFD.txt) | v0.6.7 Khadas VIM3 | 0%/0.7% | 1.9G/1.6G | X | X | X | X | 2% | 0% | |
 | [1MFf](1MFf.txt) | v0.6.7 Raspberry Pi 4 Model B Rev 1.1 | 0.1%/0.2% | 3.8Gi/3.6Gi | X | X | X | X | 3% | 0% | [check log](1MFf.txt) |
 | [1Rnj](1Rnj.txt) | v0.6.8 icosa | 0.1%/0% | 3.4Gi/2.6Gi | X | X | X | X | 4% | <span style=color:red> 6%</span> | |
@@ -108,7 +108,7 @@
 | [3DtN](3DtN.txt) | v0.8.1 Hardkernel ODROID-N2Plus | 0%/0% | 3.6Gi/2.7Gi | X | X | X | X | 0% | 0% | |
 | [3E7U](3E7U.txt) | v0.8.3 Raspberry Pi Model B Rev 2 | 1.2%/1.5% | 430Mi/344Mi | X | X | X | | 3% | 0% | |
 | [3E85](3E85.txt) | v0.8.3 Raspberry Pi Zero 2 Rev 1.0 | 2.6%/0.9% | 427Mi/267Mi | X | X | | | 3% | 0% | |
-| [3EOw](3EOw.txt) | v0.8.4 Olimex A20-OLinuXino-LIME2-eMMC | 0%/0% | 998Mi/869Mi | X | X | X | X | <span style=color:red> 7%</span> | 0% | |
+| <del>[3EOw](3EOw.txt)</del> | <del>v0.8.4 Olimex A20-OLinuXino-LIME2-eMMC </del> | <del>0%/0%</del> | <del>998Mi/869Mi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del><span style=color:red> 7%</span></del> | <del> 0%</del> | |
 | [3EgS](3EgS.txt) | v0.8.4 Raspberry Pi 4 Model B Rev 1.1 | 0.5%/0.4% | 857Mi/695Mi | X | X | X | | 2% | 0% | |
 | <del>[3EhG](3EhG.txt)</del> | <del>v0.8.4 Raspberry Pi 4 Model B Rev 1.1 </del> | <del>0%/0.6%</del> | <del>909Mi/754Mi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del><span style=color:red> 8%</span></del> | <del><span style=color:red>**54%**</span></del> | |
 | [3F9C](3F9C.txt) | v0.8.4 Raspberry Pi 4 Model B Rev 1.1 | 0%/0.6% | 959Mi/815Mi | X | X | X | X | <span style=color:red>**12%**</span> | 0% | |
@@ -125,7 +125,7 @@
 | [3L37](3L37.txt) | v0.9.0 Raspberry Pi 4 Model B Rev 1.4 | 0.3%/0.6% | 3.7Gi/3.3Gi | X | X | X | X | 4% | 0% | |
 | [3Lir](3Lir.txt) | v0.9.1 ASUS Tinker Board | 0.5%/0% | 2.0Gi/1.5Gi | X | X | X | X | 2% | 0% | |
 | [3Llk](3Llk.txt) | v0.8.7 Raspberry Pi 4 Model B Rev 1.4 | 1.7%/0.4% | 3.7Gi/2.5Gi | X | X | X | X | <span style=color:red> 8%</span> | 0% | [check log](3Llk.txt) |
-| [3LoH](3LoH.txt) | v0.9.1 Hardkernel ODROID-N2Plus | 0%/0% | 3.6Gi/3.1Gi | X | X | X | X | 1% | 0% | |
+| <del>[3LoH](3LoH.txt)</del> | <del>v0.9.1 Hardkernel ODROID-N2Plus </del> | <del>0%/0%</del> | <del>3.6Gi/3.1Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 1%</del> | <del> 0%</del> | |
 | [3M9F](3M9F.txt) | v0.9.1 Generic RK322x TV Box board | 1.6%/0.5% | 1.9Gi/1.7Gi | X | X | X | X | <span style=color:red> 5%</span> | 0% | |
 | [3MAK](3MAK.txt) | v0.9.1 FriendlyElec NanoPi M4 Ver2.0 | 0.3%/0.3% | 3.8Gi/3.4Gi | X | X | X | X | 2% | 1% | |
 | [3MGN](3MGN.txt) | v0.9.1 Raspberry Pi Model B Rev 2 | 1.4%/1.1% | 429Mi/347Mi | X | X | X | | 2% | 0% | [check log](3MGN.txt) |
@@ -246,3 +246,7 @@
 | [4qJF](4qJF.txt) | v0.9.39 Pine64 RK3566 Quartz64-A Board | 0%/0% | 7.5Gi/7.2Gi | X | X | X | X | 1% | 0% | [check log](4qJF.txt) |
 | [4qpr](4qpr.txt) | v0.9.37 WeiBu ADL-N / i3-N305 extensive | 0%/0% | 7.5Gi/5.9Gi | X | X | X | X | 3% | 0% | [check log](4qpr.txt) |
 | [4r54](4r54.txt) | v0.9.39 Insyde W8 CR50W8 / Atom | 0%/0% | 1.9Gi/1.5Gi | X | X | X | X | 3% | 0% | [check log](4r54.txt) |
+| [4rJj](4rJj.txt) | v0.9.39 Celeron N3350 | 0%/0% | 5.6Gi/4.7Gi | X | X | X | X | <span style=color:red> 8%</span> | <span style=color:red> 5%</span> | [check log](4rJj.txt) |
+| [4rLX](4rLX.txt) | v0.9.39 NVIDIA Jetson Nano Developer Ki | 0%/0% | 3.9Gi/3.4Gi | X | X | X | X | 0% | 0% | [check log](4rLX.txt) |
+| [4rRV](4rRV.txt) | v0.9.39 Olimex A20-OLinuXino-LIME2 | 0%/0% | 998Mi/910Mi | X | X | X | X | <span style=color:red> 5%</span> | <span style=color:red>** 9%**</span> | [check log](4rRV.txt) |
+| [4rWn](4rWn.txt) | v0.9.39 Hardkernel ODROID-N2Plus | 0%/0% | 3.7Gi/3.4Gi | X | X | X | X | 1% | 0% | [check log](4rWn.txt) |

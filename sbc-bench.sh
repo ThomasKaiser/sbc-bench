@@ -537,6 +537,7 @@ GetARMCore() {
 	61/031:Apple Avalanche A15
 	61/032:Apple Blizzard M2
 	61/033:Apple Avalanche M2
+	00/000:Virtualized Apple Silicon
 	66:Faraday
 	66/526:Faraday FA526
 	66/626:Faraday FA626
@@ -2321,6 +2322,12 @@ BasicSetup() {
 			RDO*)
 				grep -q "OpenStack" <<<"${DMIProductName}" && DeviceName="OpenStack ${DMIProductVersion} VM"
 				;;
+			Apple*)
+				# check whether we're running inside Hypervisor.framework
+				if [ "X${DMIProductName}" = "XApple Virtualization Generic Platform" ]; then
+					VirtWhat="apple-hypervisor v${DMIProductVersion}"
+				fi
+				;;
 		esac
 	fi
 
@@ -4024,8 +4031,7 @@ SummarizeResults() {
 
 LogEnvironment() {
 	# Log processor info if available and we're not running virtualized:
-	VirtWhat="$(systemd-detect-virt 2>/dev/null)"
-	if [ "X${VirtWhat}" = "X" -o "X${VirtWhat}" = "Xnone" ]; then
+	if [ "X${VirtWhat}" = "X" -o "X${VirtWhat}" = "Xnone" -o "X${DMIProductName}" = "XApple Virtualization Generic Platform" ]; then
 		command -v dmidecode >/dev/null 2>&1 && \
 			ProcessorInfo="$(dmidecode -t processor 2>/dev/null | grep -E -v -i "^#|^Handle|Serial|O.E.M.|1234567|SMBIOS|: Not |Unknown|OUT OF SPEC|00 00 00 00 00 00 00 00|: None")"
 		if [ "X${ProcessorInfo}" != "X" ]; then
@@ -6685,8 +6691,13 @@ GuessSoCbySignature() {
 			echo "Apple M1 Max"
 			;;
 		*AppleM2r1p0*AppleM2r1p0*AppleM2r1p0*AppleM2r1p0*AppleM2r1p0*AppleM2r1p0*AppleM2r1p0*AppleM2r1p0)
-			# Apple M2: 4 x Apple Blizzard / r1p0 + 4 x Apple Avalanche / r1p0 / https://piped.kavin.rocks/watch?v=SidIJkC5YN0 (7:10:02)
+			# Apple M2: 4 x Apple Blizzard / r1p0 + 4 x Apple Avalanche / r1p0 / https://github.com/hrw/arm-socs-table/blob/main/cpuinfo-data/apple-m2
 			echo "Apple M2"
+			;;
+		*VirtualizedSiliconr0p0*)
+			# Virtualized Apple cores using 0 for every field
+			grep -q 'fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 asimddp sha512 asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp flagm2 frint i8mm bf16 bti ecv' <<< "${ProcCPU}" && echo "Virtualized Apple M2 variant"
+			grep -q 'fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 asimddp sha512 asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp flagm2 frint' <<< "${ProcCPU}" && echo "Virtualized Apple M1 variant"
 			;;
 		*thead,c906|10)
 			# Allwinner D1: single T-Head C906 core
@@ -6959,7 +6970,7 @@ ProvideReviewInfo() {
 	[ "X${RunBenchmarks}" = "XTRUE" ] && CheckLoadAndDmesg || echo ""
 
 	# Allow for a NOTUNING=yes operation mode to compare default with performance settings
-	if [ "X${NOTUNING}" != "Xyes" ]; then
+	if [ "X${NOTUNING}" != "Xyes" -a -f /sys/devices/system/cpu/cpufreq/policy0/scaling_governor ]; then
 		HandleGovernors powersave
 		if [ -f /sys/kernel/debug/clk/clk_summary ]; then
 			snore 1
@@ -6982,7 +6993,7 @@ ProvideReviewInfo() {
 	unset SPACING
 	[ "X${RunBenchmarks}" = "XTRUE" ] && CheckClockspeedsAndSensors || echo -e "\x08\x08 Done.\nNow quickly examining OS, settings and hardware...\c"
 	[ "X${RunBenchmarks}" = "XTRUE" ] && ClockspeedsBefore="$(cat "${TempDir}/cpufreq" | sed -e 's/^/    /')"
-	[ "X${NOTUNING}" != "Xyes" -a "X${RunBenchmarks}" = "XTRUE" ] && CheckTimeInState before
+	[ "X${NOTUNING}" != "Xyes" -a "X${RunBenchmarks}" = "XTRUE" -a -f /sys/devices/system/cpu/cpufreq/policy0/scaling_governor ] && CheckTimeInState before
 	[ "X${RunBenchmarks}" = "XTRUE" ] && RunTinyMemBench
 	[ "X${RunBenchmarks}" = "XTRUE" ] && RunRamlat
 	[ "X${RunBenchmarks}" = "XTRUE" ] && RunOpenSSLBenchmark 256
@@ -6994,7 +7005,7 @@ ProvideReviewInfo() {
 		[ "X${RunBenchmarks}" = "XTRUE" ] && RunStressNG
 	fi
 	[ -z ${InitialTemp} ] || TempNow=$(ReadSoCTemp)
-	[ "X${NOTUNING}" != "Xyes" -a "X${RunBenchmarks}" = "XTRUE" ] && CheckTimeInState after
+	[ "X${NOTUNING}" != "Xyes" -a "X${RunBenchmarks}" = "XTRUE" -a -f /sys/devices/system/cpu/cpufreq/policy0/scaling_governor ] && CheckTimeInState after
 	[ "X${RunBenchmarks}" = "XTRUE" ] && CheckClockspeedsAndSensors
 	[ "X${RunBenchmarks}" = "XTRUE" ] && ClockspeedsAfter="$(cat "${TempDir}/cpufreq" | sed -e 's/^/    /')"
 
@@ -7040,12 +7051,14 @@ ProvideReviewInfo() {
 	echo -e "\n$(( ${AvailableMem} / 1024 )) KB available RAM" >>"${TempDir}/review"
 
 	# report probably performance relevant governors and policies
-	echo -e "\n### Governors/policies (performance vs. idle consumption):\n\nOriginal governor settings:\n" >>"${TempDir}/review"
-	sed -e 's/^/    /' <<<"${GovernorState}" >>"${TempDir}/review"
-	if [ "X${TunedGovernorState}" != "X" ]; then
-		# when running with NOTUNING=yes no before/after check will be performed
-		echo -e "\nTuned governor settings:\n" >>"${TempDir}/review"
-		sed -e 's/^/    /' <<<"${TunedGovernorState}" >>"${TempDir}/review"
+	if [ -f /sys/devices/system/cpu/cpufreq/policy0/scaling_governor ]; then
+		echo -e "\n### Governors/policies (performance vs. idle consumption):\n\nOriginal governor settings:\n" >>"${TempDir}/review"
+		sed -e 's/^/    /' <<<"${GovernorState}" >>"${TempDir}/review"
+		if [ "X${TunedGovernorState}" != "X" ]; then
+			# when running with NOTUNING=yes no before/after check will be performed
+			echo -e "\nTuned governor settings:\n" >>"${TempDir}/review"
+			sed -e 's/^/    /' <<<"${TunedGovernorState}" >>"${TempDir}/review"
+		fi
 	fi
 	PolicyStateNow="$(HandlePolicies)"
 	if [ "X${PolicyStateNow}" != "X" ]; then
@@ -7822,11 +7835,11 @@ CheckStorage() {
 	# grab info about block devices
 	[ -z "${LSBLK}" ] && LSBLK="$(LC_ALL="C" lsblk -l -o SIZE,NAME,FSTYPE,LABEL,MOUNTPOINT 2>&1)"
 
-	for StorageDevice in $(ls /dev/sd? /dev/nvme? 2>/dev/null | sort) ; do
+	for StorageDevice in $(ls /dev/sd? /dev/nvme? /dev/vd? 2>/dev/null | sort) ; do
 		unset DeviceName DeviceInfo DeviceWarning DevizeSize AdditionalInfo AdditionalSMARTInfo ProductName VendorName SpeedInfo SupportedSpeeds RawDiskTemp DriveTemp LnkSta
 
 		UdevInfo="$(udevadm info -a -n ${StorageDevice} 2>/dev/null)"
-		Driver="$(awk -F'"' '/DRIVERS==/ {print $2}' <<<"${UdevInfo}" | grep -E 'uas|usb-storage|ahci|nvme')"
+		Driver="$(awk -F'"' '/DRIVERS==/ {print $2}' <<<"${UdevInfo}" | grep -E 'uas|usb-storage|ahci|nvme|virtio-')"
 		case "${Driver}" in
 			ahci)
 				# (S)ATA attached
@@ -7924,6 +7937,11 @@ CheckStorage() {
 					esac
 				fi
 				AdditionalInfo=", Driver=${Driver}, ${NegotiatedSpeed}Mbps${SpeedInfo}${AdditionalInfo}"
+				;;
+			virtio-*)
+				# virtual disk
+				DeviceName="Virtual disk"
+				AdditionalInfo="${StorageDevice}, Driver=${Driver}"
 				;;
 		esac
 

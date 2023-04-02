@@ -4,7 +4,7 @@ Tested with sbc-bench v0.9.40 on Fri, 31 Mar 2023 13:20:09 +0200. Full info: [ht
 
 ### General information:
 
-    Virtualized Apple M1 variant / guess flawed since running in apple-hypervisor v1, Kernel: aarch64 / apple-hypervisor v1, Userland: arm64
+    Apple Silicon / guess flawed since running in apple-hypervisor v1, Kernel: aarch64 / apple-hypervisor v1, Userland: arm64
     
     CPU sysfs topology (clusters, cpufreq members, clockspeeds)
                      cpufreq   min    max
@@ -48,7 +48,7 @@ After:
 
 ### Swap configuration:
 
-  * /dev/vda2: 2,1G (0K used)
+  * /dev/vda2: 2.1G (0K used)
 
 ### Software versions:
 

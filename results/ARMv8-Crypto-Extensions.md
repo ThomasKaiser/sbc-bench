@@ -69,8 +69,9 @@ Crawling through [sbc-bench results collection](../Results.md) comparing +30 dif
 | [Phytium FT-2000](http://ix.io/4ioj) | 2600 | 936740 | 360 |
 | Carmel | | | |
 | [Jetson Xavier NX](http://ix.io/3YWp) | 1890 | 706280 | 374 |
-| Apple Icestorm | | | |
+| Apple Icestorm/Avalanche | | | |
 | [M1 Pro](http://ix.io/443N) | 2060 | 784430 | 381 |
+| [M2 Pro](http://ix.io/4sp4) | 3500 | 1320470 | 377 |
 | Qualcomm Kryo 3XX Gold | | | |
 | [Snapdragon 845](http://ix.io/4dJV) | 2705 | 1059800 | 392 |
 | Cortex-A53 | | | |

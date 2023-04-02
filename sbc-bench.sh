@@ -6,7 +6,7 @@ InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted 
 Main() {
 	export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/vc/bin
 	PathToMe="$( cd "$(dirname "$0")" ; pwd -P )/${0##*/}"
-	unset LC_ALL LC_MESSAGES LANGUAGE LANG 2>/dev/null # prevent localisation of decimal points and similar stuff
+	unset LC_ALL LC_MESSAGES LC_NUMERIC LANGUAGE LANG 2>/dev/null # prevent localisation of decimal points and similar stuff
 
 	# use colours and bold when outputting to a terminal
 	CheckTerminal
@@ -537,6 +537,12 @@ GetARMCore() {
 	61/031:Apple Avalanche A15
 	61/032:Apple Blizzard M2
 	61/033:Apple Avalanche M2
+	61/034:Apple Blizzard M2Pro
+	61/035:Apple Avalanche M2Pro
+	61/036:Apple Sawtooth A16
+	61/037:Apple Everest A16
+	61/038:Apple Blizzard M2Max
+	61/039:Apple Avalanche M2Max
 	00/000:Virtualized Apple Silicon
 	66:Faraday
 	66/526:Faraday FA526
@@ -4059,11 +4065,18 @@ LogEnvironment() {
 				echo -e "  DMC gov: ${UsedDMCGovernor} ($(( ${DRAMClock} / 1000000 )) MHz)"
 				;;
 			*)
-				# check whether an uptreshold value exists and if true report it
+				# check whether uptreshold and downdifferential values exist and if true report it
 				if [ -f "${DMCGovernor%/*}/upthreshold" ]; then
 					# report DMC governor and upthreshold value
 					read upthreshold <"${DMCGovernor%/*}/upthreshold"
-					echo -e "  DMC gov: ${UsedDMCGovernor} (upthreshold: ${upthreshold})"
+					if [ -f "${DMCGovernor%/*}/downdifferential" ]; then
+						# report DMC governor and upthreshold/downdifferential values
+						read downdifferential <"${DMCGovernor%/*}/downdifferential"
+						echo -e "  DMC gov: ${UsedDMCGovernor} (upthreshold: ${upthreshold}, downdifferential: ${downdifferential})"
+					else
+						# report DMC governor and upthreshold value
+						echo -e "  DMC gov: ${UsedDMCGovernor} (upthreshold: ${upthreshold})"
+					fi
 				else
 					# report only DMC governor
 					echo -e "  DMC gov: ${UsedDMCGovernor}"
@@ -6694,10 +6707,20 @@ GuessSoCbySignature() {
 			# Apple M2: 4 x Apple Blizzard / r1p0 + 4 x Apple Avalanche / r1p0 / https://github.com/hrw/arm-socs-table/blob/main/cpuinfo-data/apple-m2
 			echo "Apple M2"
 			;;
+		*AppleM2Pro*|*AppleA16*)
+			# Apple M2: 4 x Apple Blizzard  + 6/8 x Apple Avalanche / https://github.com/AsahiLinux/m1n1/commit/7904ed43dc0c2760e728f611efa0b26895ebcd10
+			echo "Apple M2 Pro"
+			;;
+		*AppleM2Max*)
+			# Apple M2: 4 x Apple Blizzard + 8 x Apple Avalanche / https://github.com/AsahiLinux/m1n1/commit/8d0474f57b1fb45588d412dcbe7e229dbe6d43cb
+			echo "Apple M2 Max"
+			;;
 		*VirtualizedSiliconr0p0*)
-			# Virtualized Apple cores using 0 for every field
-			grep -q 'fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 asimddp sha512 asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp flagm2 frint i8mm bf16 bti ecv' <<< "${ProcCPU}" && echo "Virtualized Apple M2 variant"
-			grep -q 'fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 asimddp sha512 asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp flagm2 frint' <<< "${ProcCPU}" && echo "Virtualized Apple M1 variant"
+			# When running bare metal M1 and M2 SoCs differ by flags/features:
+			# M1: 'fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 asimddp sha512 asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp flagm2 frint'
+			# M2: 'fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 asimddp sha512 asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp flagm2 frint i8mm bf16 bti ecv'
+			# Inside Hypervisor.Framework VMs all ID values are set to 0 and on M2 SoCs VMs only see M1 CPU flags/features.
+			grep -q 'fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 asimddp sha512 asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp flagm2 frint' <<< "${ProcCPU}" && echo "Apple Silicon"
 			;;
 		*thead,c906|10)
 			# Allwinner D1: single T-Head C906 core

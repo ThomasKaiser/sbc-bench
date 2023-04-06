@@ -1881,7 +1881,7 @@ CreateTempDir() {
 
 CheckLoadAndDmesg() {
 	# Check if kernel ring buffer contains boot messages. These help identifying HW.
-	DMESG="$(dmesg | grep -E "Linux|pvtm|rockchip-cpuinfo|Amlogic Meson|sun50i|pcie|mmc")"
+	DMESG="$(dmesg | grep -E "Linux|pvtm|rockchip-dmc|rockchip-cpuinfo|Amlogic Meson|sun50i|pcie|mmc|leakage")"
 	grep -q -E '] Booting Linux|] Linux version ' <<<"${DMESG}"
 	case $? in
 		1)
@@ -4123,7 +4123,7 @@ LogEnvironment() {
 	fi
 
 	# with Rockchip BSP kernels try to report PVTM settings (Process-Voltage-Temperature Monitor)
-	grep cpu.*pvtm <<<"${DMESG}" | awk -F'] ' '{print "           "$2}'
+	grep -E "cpu.*pvtm|leakage" <<<"${DMESG}" | awk -F'] ' '{print "           "$2}'
 
 	# Add kernel version info / warnings
 	KernelInfo="$(CheckKernelVersion "${KernelVersion}")"
@@ -4913,6 +4913,8 @@ GuessARMSoC() {
 	# soc soc0: Amlogic Meson SM1 (Unknown) Revision 2b:c (10:2) Detected <-- Khadas VIM3L / HK1 Box/Vontar X3
 	# soc soc0: Amlogic Meson SM1 (Unknown) Revision 2b:b (18:2) Detected <-- Shenzhen Amediatech Technology Co. Ltd X96 Air
 	# soc soc0: Amlogic Meson SM1 (Unknown) Revision 2b:b (40:2) Detected <-- Khadas VIM3L
+	# soc soc0: Amlogic Meson SM1 (Unknown) Revision 2b:c (81:2) Detected <-- AMedia X96 Max+
+	# Amlogic Meson SC2 (S905X4/C2) Revision 32:d (2:1) Detected <-- Ugoos X4
 	#
 	# With T7/A311D2 the string 'soc soc0:' is missing in Amlogic's 5.4 BSP kernel, instead it's
 	# just 'Amlogic Meson T7 (A311D2) Revision 36:b (1:3) Detected' in dmesg output. 5.4 BSP

@@ -18,7 +18,7 @@
 | [1MFD](1MFD.txt) | v0.6.7 Khadas VIM3 | 0%/0.7% | 1.9G/1.6G | X | X | X | X | 2% | 0% | |
 | [1MFf](1MFf.txt) | v0.6.7 Raspberry Pi 4 Model B Rev 1.1 | 0.1%/0.2% | 3.8Gi/3.6Gi | X | X | X | X | 3% | 0% | [check log](1MFf.txt) |
 | [1Rnj](1Rnj.txt) | v0.6.8 icosa | 0.1%/0% | 3.4Gi/2.6Gi | X | X | X | X | 4% | <span style=color:red> 6%</span> | |
-| [1XKY](1XKY.txt) | v0.6.9 Radxa ROCK Pi S | 0%/0% | 425Mi/364Mi | X | X | | | 1% | 0% | |
+| <del>[1XKY](1XKY.txt)</del> | <del>v0.6.9 Radxa ROCK Pi S </del> | <del>0%/0%</del> | <del>425Mi/364Mi</del> | <del>X</del> | <del>X</del> | | | <del> 1%</del> | <del> 0%</del> | |
 | <del>[1iFa](1iFa.txt)</del> | <del>v0.4</del> | <del>0%/0.2%</del> | <del>1.0G/913M</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 2%</del> | <del> 0%</del> | |
 | [1iFf](1iFf.txt) | v0.4 Raspberry Pi 2 B+ | 0%/0.7% | 976M/872M | X | X | X | X | 2% | 0% | |
 | [1iFm](1iFm.txt) | v0.4 Rock64 | 0%/1.5% | 1.9G/1.6G | X | X | X | X | 2% | 0% | |
@@ -250,3 +250,4 @@
 | [4rLX](4rLX.txt) | v0.9.39 NVIDIA Jetson Nano Developer Ki | 0%/0% | 3.9Gi/3.4Gi | X | X | X | X | 0% | 0% | [check log](4rLX.txt) |
 | [4rRV](4rRV.txt) | v0.9.39 Olimex A20-OLinuXino-LIME2 | 0%/0% | 998Mi/910Mi | X | X | X | X | <span style=color:red> 5%</span> | <span style=color:red>** 9%**</span> | [check log](4rRV.txt) |
 | [4rWn](4rWn.txt) | v0.9.39 Hardkernel ODROID-N2Plus | 0%/0% | 3.7Gi/3.4Gi | X | X | X | X | 1% | 0% | [check log](4rWn.txt) |
+| [4sNe](4sNe.txt) | v0.9.40 Radxa ROCK Pi S | 0%/0% | 474Mi/330Mi | | | | | <span style=color:red> 5%</span> | 2% | [check log](4sNe.txt) |

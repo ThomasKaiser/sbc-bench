@@ -202,7 +202,7 @@
 | [466y](466y.txt) | v0.9.8 Mediatek MT6580 K9M1-test board | 0%/0% | 878Mi/683Mi | X | X | X | X | 1% | <span style=color:red>**14%**</span> | |
 | [46hs](46hs.txt) | v0.9.8 PXA1908 | 0.8%/1.0% | 661Mi/601Mi | X | X | X | X | <span style=color:red>**12%**</span> | 0% | |
 | [49kx](49kx.txt) | v0.9.8 Qualcomm Technologies, Inc. qrb5 | 0.9%/4.2% | 7.5G/7.0G | X | X | X | X | 1% | 0% | |
-| [4a3s](4a3s.txt) | v0.9.8 StarFive VisionFive V2 | 0.4%/0.1% | 3.8Gi/3.5Gi | X | X | X | X | 1% | 2% | |
+| <del>[4a3s](4a3s.txt)</del> | <del>v0.9.8 StarFive VisionFive V2 </del> | <del>0.4%/0.1%</del> | <del>3.8Gi/3.5Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 1%</del> | <del> 2%</del> | |
 | [4a5U](4a5U.txt) | v0.9.8 Khadas Edge2 | 0%/0% | 15Gi/14Gi | X | X | X | X | 1% | 0% | |
 | [4ax9](4ax9.txt) | v0.9.8 NVIDIA Orin Jetson-Small Develop | 0%/0% | 29Gi/29Gi | X | X | X | X | 0% | 0% | |
 | [4bSf](4bSf.txt) | v0.9.9 MangoPi Mcore | 0.4%/0% | 984Mi/789Mi | X | X | X | X | <span style=color:red>**63%**</span> | 1% | |
@@ -233,7 +233,7 @@
 | [4ju5](4ju5.txt) | v0.9.9 SolidRun LX2160A Clearfog CX | 0%/0.7% | 5.7Gi/3.4Gi | X | X | X | X | 1% | 0% | |
 | [4kEp](4kEp.txt) | v0.9.9 volterra | 1.1%/0.5% | 15Gi/15Gi | X | X | X | X | 1% | 0% | |
 | [4kFQ](4kFQ.txt) | v0.9.9 10ZiG Technology. 44xx Type1 - T | 0%/0.2% | 1.8Gi/1.4Gi | X | X | X | X | 4% | <span style=color:red> 4%</span> | |
-| [4kHv](4kHv.txt) | v0.9.9 StarFive VisionFive V2 | 0.8%/1.2% | 3.8Gi/3.7Gi | X | X | X | X | 1% | 0% | |
+| <del>[4kHv](4kHv.txt)</del> | <del>v0.9.9 StarFive VisionFive V2 </del> | <del>0.8%/1.2%</del> | <del>3.8Gi/3.7Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 1%</del> | <del> 0%</del> | |
 | [4kiu](4kiu.txt) | v0.9.9 HUAQIN P6410 HQ3110BR49000 | 0%/0% | 375Gi/370Gi | X | X | X | X | 0% | 0% | |
 | [4kmM](4kmM.txt) | v0.9.9 Banana Pi BPI-M2-Ultra | 0%/0.1% | 997Mi/874Mi | X | X | X | X | 2% | 0% | |
 | [4knM](4knM.txt) | v0.9.9 Orange Pi Zero 2 | 1.3%/0% | 960Mi/849Mi | X | X | X | X | <span style=color:red>**24%**</span> | <span style=color:red>** 8%**</span> | |
@@ -251,3 +251,5 @@
 | [4rRV](4rRV.txt) | v0.9.39 Olimex A20-OLinuXino-LIME2 | 0%/0% | 998Mi/910Mi | X | X | X | X | <span style=color:red> 5%</span> | <span style=color:red>** 9%**</span> | [check log](4rRV.txt) |
 | [4rWn](4rWn.txt) | v0.9.39 Hardkernel ODROID-N2Plus | 0%/0% | 3.7Gi/3.4Gi | X | X | X | X | 1% | 0% | [check log](4rWn.txt) |
 | [4sNe](4sNe.txt) | v0.9.40 Radxa ROCK Pi S | 0%/0% | 474Mi/330Mi | | | | | <span style=color:red> 5%</span> | 2% | [check log](4sNe.txt) |
+| [4swT](4swT.txt) | v0.9.40 StarFive VisionFive V2 | 0%/0% | 7.7Gi/7.4Gi | X | X | X | X | 1% | 1% | [check log](4swT.txt) |
+| [4tjq](4tjq.txt) | v0.9.40 Pine64 Star64 | 0%/0% | 7.7Gi/7.1Gi | X | X | X | X | 2% | 1% | [check log](4tjq.txt) |

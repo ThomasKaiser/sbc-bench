@@ -1797,18 +1797,18 @@ CheckOSRelease() {
 	# check OS
 	OperatingSystem="$(GetOSRelease)"
 
-	# Display warning when not executing on Debian Stretch/Buster/Bullseye or Ubuntu Bionic/Focal/Jammy/Kinetic
+	# Display warning when not executing on Debian Stretch/Buster/Bullseye/Bookworm or Ubuntu Bionic/Focal/Jammy/Kinetic
 	command -v lsb_release >/dev/null 2>&1 || apt -f -qq -y install lsb-release >/dev/null 2>&1
 	command -v lsb_release >/dev/null 2>&1 && \
 		Distro=$(lsb_release -c 2>/dev/null | awk -F" " '{print $2}' | tr '[:upper:]' '[:lower:]')
 	case ${Distro} in
-		stretch|bionic|buster|focal|bullseye|jammy|kinetic|lunar)
+		stretch|buster|bullseye|bookworm|bionic|focal|jammy|kinetic|lunar)
 			:
 			;;
 		*)
 			# only inform/ask user if $MODE != unattended
 			if [ "X${MODE}" != "Xunattended" ]; then
-				echo -e "${LRED}${BOLD}WARNING: This tool is meant to run only on Debian Stretch, Buster, Bullseye or Ubuntu Bionic, Focal, Jammy, Kinetic, Lunar.${NC}\n"
+				echo -e "${LRED}${BOLD}WARNING: This tool is meant to run only on Debian Stretch, Buster, Bullseye, Bookworm or Ubuntu Bionic, Focal, Jammy, Kinetic, Lunar.${NC}\n"
 				echo -e "When executed on ${BOLD}${OperatingSystem}${NC} results are partially meaningless.\nPress [ctrl]-[c] to stop or ${BOLD}[enter]${NC} to continue.\c"
 				read
 			fi
@@ -2979,9 +2979,9 @@ InitialMonitoring() {
 	VoltageSensor="$(GetVoltageSensor)"
 	if [ "X${VoltageSensor}" != "X" ]; then
 		InputVoltage="$(GetInputVoltage "${VoltageSensor}")"
-		echo -e "\nUptime:$(uptime),  ${InitialTemp}°C,  ${InputVoltage}V,  ${QuickAndDirtyPerformance}\n\n$(iostat | grep -E -v "^loop|boot0|boot1")\n\n$(free -h)\n\n$(swapon -s)\n" | sed '/^$/N;/^\n$/D' >>${ResultLog}
+		echo -e "\nUptime:$(uptime),  ${InitialTemp}°C,  ${InputVoltage}V,  ${QuickAndDirtyPerformance}\n\n$(iostat | grep -E -v "^loop|boot0|boot1|mtdblock")\n\n$(free -h)\n\n$(swapon -s)\n" | sed '/^$/N;/^\n$/D' >>${ResultLog}
 	else
-		echo -e "\nUptime:$(uptime),  ${InitialTemp}°C,  ${QuickAndDirtyPerformance}\n\n$(iostat | grep -E -v "^loop|boot0|boot1")\n\n$(free -h)\n\n$(swapon -s)\n" | sed '/^$/N;/^\n$/D' >>${ResultLog}
+		echo -e "\nUptime:$(uptime),  ${InitialTemp}°C,  ${QuickAndDirtyPerformance}\n\n$(iostat | grep -E -v "^loop|boot0|boot1|mtdblock")\n\n$(free -h)\n\n$(swapon -s)\n" | sed '/^$/N;/^\n$/D' >>${ResultLog}
 	fi
 	ShowZswapStats 2>/dev/null >>${ResultLog}
 	
@@ -3971,7 +3971,7 @@ SummarizeResults() {
 	fi
 
 	echo -e "\n##########################################################################\n" >>${ResultLog}
-	echo -e "$(iostat | grep -E -v "^loop|boot0|boot1")\n\n$(free -h)\n\n$(swapon -s)\n" | sed '/^$/N;/^\n$/D' >>${ResultLog}
+	echo -e "$(iostat | grep -E -v "^loop|boot0|boot1|mtdblock")\n\n$(free -h)\n\n$(swapon -s)\n" | sed '/^$/N;/^\n$/D' >>${ResultLog}
 	ShowZswapStats 2>/dev/null >>${ResultLog}
 	echo >>${ResultLog}
 	cat "${TempDir}/cpu-topology.log" >>${ResultLog}
@@ -4430,7 +4430,7 @@ CheckSwapPartition() {
 				;;
 			*)
 				# flash storage, get device node
-				if [ /sys/block/${BlockDevice}/device/type ]; then
+				if [ -f /sys/block/${BlockDevice}/device/type ]; then
 					case $(</sys/block/${BlockDevice}/device/type) in
 						SD)
 							echo -e " ${LRED}${BOLD}on ultra slow SD card storage${NC}"
@@ -4769,7 +4769,7 @@ GuessARMSoC() {
 	#      Cortex-A53 / r0p1: Exynos 5433, Qualcomm MSM8939
 	#      Cortex-A53 / r0p2: Marvell PXA1908, Mediatek MT6752/MT6738/MT6755/MT8173/MT8176, Qualcomm Snapdragon 810 (MSM8994), Samsung Exynos 7420
 	#      Cortex-A53 / r0p3: ARM Juno r1, ARM Juno r2, HiSilicon Hi3751, Kirin 620/930, Mediatek MT6735/MT8163, Nexell S5P6818, Samsung Exynos 7580, Qualcomm MSM8992 (Snapdragon 808)
-	#      Cortex-A53 / r0p4: Allwinner A100/A133/A53/A64/H313/H5/H6/H616/H64/R329/R818/T507/T509, Amlogic A113X/A113D/A311D/A311D2/S805X/S805Y/S905/S905X/S905D/S905W/S905L/S905L3A/S905M2/S905X2/S905Y2/S905D2/S912/S922X/T962X2, Broadcom BCM2837/BCM2709/BCM2710/RP3A0-AU (BCM2710A1), HiSilicon Hi3798C-V200, Exynos 8890, HiSilicon Kirin 650/710/950/955/960/970, Marvell Armada 37x0, Mediatek MT6739WA/MT6762M/MT6765/MT6771V/MT6797/MT6797T/MT6799/MT8183/MT8735, NXP i.MX8M/i.MX8QM/LS1xx8, Qualcomm MSM8937/MSM8952/MSM8953/MSM8956/MSM8976/MSM8976PRO/SDM439/SDM450, RealTek RTD129x/RTD139x, Rockchip RK3318/RK3328/RK3399, Samsung Exynos 7870/7885/8890/8895, Socionext LD20/SC2A11, TI K3 AM623/AM625/AM62A/AM642/AM654, Xiaomi Surge S1
+	#      Cortex-A53 / r0p4: Allwinner A100/A133/A53/A64/H313/H5/H6/H616/H64/R329/R818/T507/T509, Amlogic A113X/A113D/A311D/A311D2/S805X/S805Y/S905/S905X/S905D/S905W/S905L/S905L3A/S905M2/S905X2/S905Y2/S905D2/S912/S922X/T962X2, Broadcom BCM2837/BCM2709/BCM2710/RP3A0-AU (BCM2710A1), HiSilicon Hi3798C-V200, Exynos 8890, HiSilicon Kirin 650/710/950/955/960/970, Marvell Armada 37x0, Mediatek MT6739WA/MT6762M/MT6765/MT6771V/MT6797/MT6797T/MT6799/MT8183/MT8735, NXP i.MX8M/i.MX8QM/LS1xx8, Qualcomm MSM8937/MSM8952/MSM8953/MSM8956/MSM8976/MSM8976PRO/SDM439/SDM450, RealTek RTD129x/RTD139x, Rockchip RK3318/RK3328/RK3528/RK3562/RK3399, Samsung Exynos 7870/7885/8890/8895, Socionext LD20/SC2A11, TI K3 AM623/AM625/AM62A/AM642/AM654, Xiaomi Surge S1
 	#      Cortex-A55 / r0p1: Samsung Exynos 9810
 	#      Cortex-A55 / r1p0: Amlogic S905X3/S905D3/S905Y3/T962X3/T962E2, HiSilicon Ascend 310 / Kirin 810/980, Samsung Exynos 9820
 	#      Cortex-A55 / r2p0: Amlogic S905X4/S905C2, NXP i.MX 93, Qualcomm SM8350 (Snapdragon 888), Renesas RZG2UL/RZG2LC, Rockchip RK3566/RK3568/RK3588/RK3588s
@@ -5755,7 +5755,7 @@ GuessSoCbySignature() {
 			;;
 		00A53r0p400A53r0p400A53r0p400A53r0p4|??A53r0p4??????)
 			# The boring quad Cortex-A53 done by every SoC vendor: 4 x Cortex-A53 / r0p4
-			# Allwinner A100/A133/A53/A64/H5/H6/H313/H616/R818/T507/T509, BCM2837/BCM2709, RK3318/RK3328, i.MX8 M, S905, S905X/S805X, S805Y, S905X/S905D/S905W/S905L/S905M2, S905X2/S905Y2/T962X2, Mediatek MT6762M/MT6765, RealTek RTD129x/RTD139x
+			# Allwinner A100/A133/A53/A64/H5/H6/H313/H616/R818/T507/T509, BCM2837/BCM2709, RK3318/RK3328/RK3528/RK3562, i.MX8 M, S905, S905X/S805X, S805Y, S905X/S905D/S905W/S905L/S905M2, S905X2/S905Y2/T962X2, Mediatek MT6762M/MT6765, RealTek RTD129x/RTD139x
 			case "${DeviceName}" in
 				"Raspberry Pi Compute Module 3 Plus"*)
 					# 4 x Cortex-A53 / r0p4 / fp asimd evtstrm crc32
@@ -5854,9 +5854,17 @@ GuessSoCbySignature() {
 								# RK3318, 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 								echo "Rockchip RK3318"
 								;;
-							*rockchip*|*rk3328*)
+							*rk3328*)
 								# RK3328, 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 								echo "Rockchip RK3328"
+								;;
+							*rk3528*)
+								# RK3528, 4 x Cortex-A53 / r0p4 / https://github.com/LubanCat/u-boot/blob/b36e944afbe275808a3d88575991417bae5e569f/arch/arm/dts/rk3528.dtsi#L76-L114
+								echo "Rockchip RK3528"
+								;;
+							*rk3562*)
+								# RK3562, 4 x Cortex-A53 / r0p4 / https://github.com/JeffyCN/rockchip_mirrors/blob/30c488cd350f5f7b53c7f46f803a64929f619230/configs/rockchip/chips/rk3562.config / https://cdn.cnx-software.com/wp-content/uploads/2023/03/Rockchip-RK3528-RK3562.jpg
+								echo "Rockchip RK3562"
 								;;
 							*imx8*)
 								# i.MX8M, 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
@@ -7040,7 +7048,7 @@ ProvideReviewInfo() {
 		SummarizeResults
 	else
 		echo -e "\n##########################################################################\n" >>${ResultLog}
-		echo -e "$(iostat | grep -E -v "^loop|boot0|boot1")\n\n$(free -h)\n\n$(swapon -s)\n" | sed '/^$/N;/^\n$/D' >>${ResultLog}
+		echo -e "$(iostat | grep -E -v "^loop|boot0|boot1|mtdblock")\n\n$(free -h)\n\n$(swapon -s)\n" | sed '/^$/N;/^\n$/D' >>${ResultLog}
 		ShowZswapStats 2>/dev/null >>${ResultLog}
 		echo >>${ResultLog}
 		cat "${TempDir}/cpu-topology.log" >>${ResultLog}

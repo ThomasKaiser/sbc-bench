@@ -4878,7 +4878,7 @@ GuessARMSoC() {
 	# soc soc0: Amlogic Meson GXL (Unknown) Revision 21:d (4:2) Detected <-- Phicomm N1, Amlogic Meson GXL (S905D) P230 Development Board
 	# soc soc0: Amlogic Meson GXL (S905D) Revision 21:d (4:2) Detected <-- Phicomm N1 / Amlogic Meson GXL (S905D) P231 Development Board
 	# soc soc0: Amlogic Meson GXL (S805X) Revision 21:d (34:2) Detected <-- Libre Computer AML-S805X-AC / Amlogic Meson GXL (S905X) P212 Development Board
-	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:d (84:2) Detected <-- Khadas VIM / Libre Computer AML-S905X-CC / ZTE B860H / Amlogic Meson GXL (S905X) P212 Development Board
+	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:d (84:2) Detected <-- Khadas VIM / Libre Computer AML-S905X-CC / ZTE B860H / Fiberhome HG680P / Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:d (85:2) Detected <-- Libre Computer AML-S905X-CC
 	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:e (85:2) Detected <-- Vermax UHD 300X / Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson GXL (S905W) Revision 21:d (a4:2) Detected <-- Tanix TX3 Mini / Amlogic Meson GXL (S905X) P212 Development Board / Amlogic Meson GXL (S905W) P281 Development Board
@@ -6745,7 +6745,7 @@ GuessSoCbySignature() {
 			grep -q c910 <<<"${DTCompatible}" && echo "T-Head C910"
 			;;
 		??rv64imafdcvsu??rv64imafdcvsu??rv64imafdcvsu??rv64imafdcvsu)
-			# T-Head TH1520: quad-core C910 https://occ.t-head.cn/wujian600?id=4080405462988689408
+			# T-Head TH1520: quad-core T-Head C910 https://occ.t-head.cn/wujian600?id=4080405462988689408
 			echo "T-Head TH1520"
 			;;
 		*sifive,u54-mc*sifive,u54-mc*sifive,u54-mc*sifive,u54-mc)
@@ -6759,6 +6759,14 @@ GuessSoCbySignature() {
 		*sifive,u74-mc*sifive,u74-mc)
 			# StarFive JH7100: 2 x U74-MC https://doc-en.rvspace.org/Doc_Center/datasheet_7100.html
 			echo "StarFive JH7100"
+			;;
+		*00rv64imafdcv00rv64imafdcv00rv64imafdcv00rv64imafdcv00rv64imafdcv00rv64imafdcv00rv64imafdcv00rv64imafdcv00rv64imafdcv00rv64imafdcv00rv64imafdcv00rv64imafdcv00rv64imafdcv00rv64imafdcv00rv64imafdcv00rv64imafdcv00rv64imafdcv00rv64imafdcv00rv64imafdcv00rv64imafdcv00rv64imafdcv00rv64imafdcv00rv64imafdcv00rv64imafdcv00rv64imafdcv00rv64imafdcv00rv64imafdcv00rv64imafdcv00rv64imafdcv00rv64imafdcv00rv64imafdcv00rv64imafdcv00rv64imafdcv00rv64imafdcv00rv64imafdcv00rv64imafdcv00rv64imafdcv00rv64imafdcv00rv64imafdcv00rv64imafdcv00rv64imafdcv00rv64imafdcv00rv64imafdcv00rv64imafdcv00rv64imafdcv00rv64imafdcv00rv64imafdcv00rv64imafdcv00rv64imafdcv00rv64imafdcv00rv64imafdcv00rv64imafdcv00rv64imafdcv00rv64imafdcv00rv64imafdcv00rv64imafdcv00rv64imafdcv00rv64imafdcv00rv64imafdcv00rv64imafdcv00rv64imafdcv00rv64imafdcv00rv64imafdcv00rv64imafdcv)
+			# Sophgo Mango / Sophon SG2042, 64 x T-Head C910 https://servernews.ru/1081875
+			if [ ${CPUCores} -gt 64 ]; then
+				echo "$(( ${CPUCores} / 64 )) x Sophon SG2042"
+			else
+				echo "Sophon SG2042"
+			fi
 			;;
 		0?Qualcomm3XXSilver0?Qualcomm3XXSilver0?Qualcomm3XXSilver0?Qualcomm3XXSilver0?Qualcomm3XXGold0?Qualcomm3XXGold0?Qualcomm3XXGold0?Qualcomm3XXGold)
 			# Qualcomm Snapdragon 845 / SDM845: 4 x Qualcomm Kryo 3XX Silver / r7p12 + 4 x Qualcomm Kryo 3XX Gold / r6p13 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop

@@ -6674,6 +6674,9 @@ GuessSoCbySignature() {
 					*80)
 						echo "$(( ${CPUCores} / 80 )) x Ampere Altra AADP-80"
 						;;
+					*96)
+						echo "$(( ${CPUCores} / 96 )) x Ampere Altra M96-28"
+						;;
 					*128)
 						echo "$(( ${CPUCores} / 128 )) x Ampere Altra Max"
 						;;

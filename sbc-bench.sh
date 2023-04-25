@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.9.40
+Version=0.9.41
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -1526,6 +1526,7 @@ MonitorBoard() {
 		PrintCPUInfo
 		SPACING=yes
 	else
+		ClusterConfigByCoreType=($(GetCoreClusters))
 		ClusterConfig=($(GetCPUClusters))
 		if [ -f "${TempDir}/Pcores" ]; then
 			read PCores <"${TempDir}/Pcores"
@@ -1954,7 +1955,13 @@ GetCPUClusters() {
 				# currently we do not trust into cpufreq support on RISC-V since Kendryte K510:
 				# https://github.com/ThomasKaiser/sbc-bench/issues/46#issuecomment-1175855473
 				# Same story on Loongson: http://ix.io/4aIA
-				if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
+
+				# if all CPU cores are of same type then just check for NUMA nodes and ignore
+				# cpufreq settings or package IDs (server SoCs like Ampere Altra or NXP LX2160A
+				# show rather weird package IDs, see http://ix.io/4kiu or http://ix.io/4uaA)
+				if [ ${#ClusterConfigByCoreType[@]} -eq 1 ]; then
+					awk -F" " '/^NUMA node[0-9]/ {print $4}' <<<"${LSCPU}" | cut -f1 -d'-'
+				elif [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 					ls -ld /sys/devices/system/cpu/cpufreq/policy? | awk -F"policy" '{print $2}'
 				else
 					# check for different CPU types based on package ids. This allows to test through
@@ -2397,13 +2404,13 @@ BasicSetup() {
 			;;
 	esac
 
+	ClusterConfigByCoreType=($(GetCoreClusters))
 	ClusterConfig=($(GetCPUClusters))
 	if [ -f "${TempDir}/Pcores" ]; then
 		read PCores <"${TempDir}/Pcores"
 		read ECores <"${TempDir}/Ecores"
 	fi
 	[ ${#ClusterConfig[@]} -eq 0 ] && ClusterConfig=(0)
-	ClusterConfigByCoreType=($(GetCoreClusters))
 } # BasicSetup
 
 CheckMissingPackages() {
@@ -4772,7 +4779,7 @@ GuessARMSoC() {
 	#      Cortex-A53 / r0p4: Allwinner A100/A133/A53/A64/H313/H5/H6/H616/H64/R329/R818/T507/T509, Amlogic A113X/A113D/A311D/A311D2/S805X/S805Y/S905/S905X/S905D/S905W/S905L/S905L3A/S905M2/S905X2/S905Y2/S905D2/S912/S922X/T962X2, Broadcom BCM2837/BCM2709/BCM2710/RP3A0-AU (BCM2710A1), HiSilicon Hi3798C-V200, Exynos 8890, HiSilicon Kirin 650/710/950/955/960/970, Marvell Armada 37x0, Mediatek MT6739WA/MT6762M/MT6765/MT6771V/MT6797/MT6797T/MT6799/MT8183/MT8735, NXP i.MX8M/i.MX8QM/LS1xx8, Qualcomm MSM8937/MSM8952/MSM8953/MSM8956/MSM8976/MSM8976PRO/SDM439/SDM450, RealTek RTD129x/RTD139x, Rockchip RK3318/RK3328/RK3528/RK3562/RK3399, Samsung Exynos 7870/7885/8890/8895, Socionext LD20/SC2A11, TI K3 AM623/AM625/AM62A/AM642/AM654, Xiaomi Surge S1
 	#      Cortex-A55 / r0p1: Samsung Exynos 9810
 	#      Cortex-A55 / r1p0: Amlogic S905X3/S905D3/S905Y3/T962X3/T962E2, HiSilicon Ascend 310 / Kirin 810/980, Samsung Exynos 9820
-	#      Cortex-A55 / r2p0: Amlogic S905X4/S905C2, NXP i.MX 93, Qualcomm SM8350 (Snapdragon 888), Renesas RZG2UL/RZG2LC, Rockchip RK3566/RK3568/RK3588/RK3588s
+	#      Cortex-A55 / r2p0: Amlogic S905X4/S905C2, Google Tensor G1, NXP i.MX 93, Qualcomm SM8350 (Snapdragon 888), Renesas RZG2UL/RZG2LC, Rockchip RK3566/RK3568/RK3588/RK3588s
 	#      Cortex-A57 / r0p0: ARM Juno r0
 	#      Cortex-A57 / r1p0: Exynos 5433/7420
 	#      Cortex-A57 / r1p1: ARM Juno r1, Nvidia Tegra TX1, Snapdragon 810 / MSM8994/MSM8994V
@@ -4788,12 +4795,12 @@ GuessARMSoC() {
 	#      Cortex-A75 / r2p1: Samsung Exynos 9820
 	#      Cortex-A76 / r1p0: HiSilicon Kirin 980 (though with an own 0x48/0xd40 ID)
 	#      Cortex-A76 / r3p0: Exynos Auto V9, HiSilicon Kirin 810 (though with an own 0x48/0xd40 ID)
-	#      Cortex-A76 / r4p0: Rockchip RK3588/RK3588s
+	#      Cortex-A76 / r4p0: Google Tensor G1, Rockchip RK3588/RK3588s
 	#      Cortex-A77 / r1p0: Qualcomm QRB5165 (Snapdragon 865)
 	#      Cortex-A78 / r1p0: Qualcomm SM8350 (Snapdragon 888)
 	#    Cortex-A78AE / r0p1: Nvidia Jetson Orin NX / AGX Orin
 	#     Cortex-A78C / r0p0: Qualcomm Snapdragon 8cx Gen 3
-	#       Cortex-X1 / r1p0: Qualcomm SM8350 (Snapdragon 888)
+	#       Cortex-X1 / r1p0: Google Tensor G1, Qualcomm SM8350 (Snapdragon 888)
 	#      Cortex-X1C / r0p0: Qualcomm Snapdragon 8cx Gen 3
 	#     Cortex-A510 / r0p2: Qualcomm Snapdragon 8 Gen1
 	#     Cortex-A510 / r0p3: Qualcomm Snapdragon 8+ Gen1
@@ -4841,7 +4848,7 @@ GuessARMSoC() {
 	# rockchip-cpuinfo cpuinfo: SoC            : 35662000 --> RK3566 BOX DEMO V10 ANDROID Board, Rock 3C
 	# rockchip-cpuinfo cpuinfo: SoC            : 35681000 --> only early RK3568 devices showed this silicon revision (e.g. Firefly RK3568-ROC-PC/AIO-3568J)
 	# rockchip-cpuinfo cpuinfo: SoC            : 35682000 --> RK3568-ROC-PC, NanoPi R5S, ODROID-M1, Mrkaio M68S, OWLVisionTech rk3568 opc Board, Radxa ROCK3A,
-	#                                                         Rockemd R68K 2.5G, Hinlink H68K
+	#                                                         Rockemd R68K 2.5G, Hinlink H68K, Magewell Pro Convert NDI to AIO 4K Gen2, AIO-3568J
 	# rockchip-cpuinfo cpuinfo: SoC            : 35880000 --> 9Tripod X3588S Board, Firefly ITX-3588J/ROC-RK3588S-PC, NanoPi R6S, HINLINK OWL H88K, Khadas Edge2,
 	#                                                         Orange Pi 5, ROCK 5A/5B, EDGE LP4x V1.0 BlueBerry, CoolPi 4B, Shaggy013 LP4x V1.2 H96_Max_v58 Board,
 	#                                                         EVB4 LP4 V10 Board, OWL H88K
@@ -6620,7 +6627,7 @@ GuessSoCbySignature() {
 		*A72r0p3*A72r0p3*A72r0p3*A72r0p3*A72r0p3*A72r0p3*A72r0p3*A72r0p3*A72r0p3*A72r0p3*A72r0p3*A72r0p3*A72r0p3*A72r0p3*A72r0p3*A72r0p3)
 			# NXP LX2160A: 16 x Cortex-A72 / r0p3 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			# or AWS Graviton, 16 x Cortex-A72 / r0p3 / fp asimd evtstrm aes pmull sha1 sha2 crc32 / L1d: 32K, L1i: 48K, L2: 2048K
-			grep -q "nxp" <<<"${DTCompatible}" && echo "NXP LX2160A" || echo "AWS Graviton"
+			grep -q -E "nxp|lx2160" <<<"${DTCompatible}" && echo "NXP LX2160A" || echo "AWS Graviton"
 			;;
 		36?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p3)
 			# NXP LX2080A: 8 x Cortex-A72 / r0p3 / fp asimd evtstrm aes pmull sha1 sha2 crc32
@@ -6797,6 +6804,10 @@ GuessSoCbySignature() {
 		*A510r0p3*A510r0p3*A510r0p3*A510r0p3*A710r2p0*A710r2p0*A710r2p0*X2r2p0)
 			# Qualcomm Snapdragon 8+ Gen1: 4 x Cortex-A510 / r0p3 + 3 Cortex-A710 / r2p0 + 1 x Cortex-X2 / r2p0
 			echo "Qualcomm Snapdragon 8+ Gen1"
+			;;
+		*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A76r4p0*A76r4p0*X1r1p0*X1r1p0)
+			# Google Tensor G1: 4 x Cortex-A55 / r2p0 + 2 x Cortex-A76 / r4p0 + 2 x Cortex-X1 / r1p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp
+			echo "Google Tensor G1"
 			;;
 		0?Loongson3A10000?Loongson3A10000?Loongson3A10000?Loongson3A1000)
 			# Loongson 3A1000: 4 x Loongson-3 V0.5 FPU V0.1 https://github.com/ThomasKaiser/sbc-bench/blob/master/results/Loongson-3A1000.cpuinfo

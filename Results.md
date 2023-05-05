@@ -39,6 +39,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Jetson AGX Orin](http://ix.io/4ax9) | 2200 MHz | 5.10 | Focal arm64 | 39450 | 3187 | 1242940 | 10600 | 30350 | 59.96 |
 | [Jetson Nano](http://ix.io/4rLX) | 1480 MHz | 4.9 | Bullseye arm64 | 5260 | 1578 | 531940 | 3730 | 8870 | - |
 | [Jetson Nano](http://ix.io/3Ufc) | 2000 MHz | 4.9 | Bionic arm64 | 6260 | 1977 | 717500 | 4100 | 11760 | 8.72 |
+| [Jetson Orin Nano](http://ix.io/4vgu) | 1510 MHz | 5.10 | Focal arm64 | 13190 | 2136 | 853580 | 6740 | 20240 | 20.60 |
 | [Jetson Xavier AGX](http://ix.io/4ebH) | 2250 MHz | 4.9 | Bionic arm64 | 21590 | 2742 | 853250 | 10910 | 22520 | 26.57 |
 | [Jetson Xavier NX](http://ix.io/3YWp) | 1890 MHz | 4.9 | Bionic arm64 | 13230 | 2201 | 706280 | 9190 | 18480 | - |
 | [Kendryte K510](http://ix.io/41Qa) | 790 MHz | 4.17 | Sid riscv64 | 690 | 402 | 7410 | 280 | 440 | - |

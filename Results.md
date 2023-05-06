@@ -180,6 +180,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Tinkerboard](http://ix.io/1iSX) | 1730 MHz | 4.14 | Stretch armhf | 5350 | 1563 | 66600 | 1480 | 3900 | - |
 | [Tinkerboard](http://ix.io/3Lir) | 1800 MHz | 4.4 | Buster armhf | 5440 | 1693 | 66300 | 1340 | 3510 | - |
 | [Tinkerboard](http://ix.io/3X9q) | 1800 MHz | 5.10 | Buster armhf | 5770 | 1713 | 67060 | 1540 | 4110 | - |
+| [TinkerBoard S](http://ix.io/4vfU) | 1800 MHz | 6.1 | Jammy armhf | 5560 | 1672 | 65800 | 1540 | 4150 | - |
 | [TRONFY MXQ S805](http://ix.io/3MiR) | 1536 MHz | 5.10 | Focal armhf | 3100 | 897 | 29080 | 980 | 2990 | - |
 | [Tronsmart MXIII Plus](http://ix.io/3S5U) | 1560 MHz | 5.10 | Buster armhf | 3880 | 1113 | 42570 | 1470 | 3430 | - |
 | [Tronsmart S82](http://ix.io/41ML) | 1600 MHz | 5.14 | Focal armhf | 3640 | 1114 | 43150 | 500 | 3200 | - |
@@ -190,6 +191,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [AMD E-450 APU](http://ix.io/4hwl) | 1650 MHz | 5.15 | Jammy amd64 | 2430 | 1258 | 27450 | 1710 | 1740 | - |
 | [Celeron N2830](http://ix.io/4pEc) | 2160 MHz | 5.19 | Jammy amd64 | 2760 | 1664 | 31270 | 3780 | 3520 | 6.10 |
 | [Atom N2800](http://ix.io/4nt8) | 1860 MHz | 5.15 | Bullseye amd64 | 2970 | 1006 | 21780 | 2050 | 1570 | - |
+[ [Celeron N2807](http://ix.io/4uSM) | 2160 MHz | 5.4 | Focal amd64 | 2990 | 1647 | 31280 | 3600 | 2950 | - |
 | [Celeron N3350](http://ix.io/4rJj) | 2400 MHz | 6.0 | Bullseye amd64 | 3810 | 2034 | 446170 | 5190 | 5700 | - |
 | [x5-Z8300](http://ix.io/1lgD) | 1420 MHz | 4.9 | Stretch amd64 | 3900 | 950 | 178010 | 2380 | 2380 | 7.81 |
 | [Celeron 5205U](http://ix.io/4eiM) | 1900 MHz | 5.15 | Jammy amd64 | 4060 | 2171 | 521090 | 7350 | 16020 | 11.20 |

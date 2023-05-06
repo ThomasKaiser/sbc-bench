@@ -253,3 +253,5 @@
 | [4sNe](4sNe.txt) | v0.9.40 Radxa ROCK Pi S | 0%/0% | 474Mi/330Mi | | | | | <span style=color:red> 5%</span> | 2% | [check log](4sNe.txt) |
 | [4swT](4swT.txt) | v0.9.40 StarFive VisionFive V2 | 0%/0% | 7.7Gi/7.4Gi | X | X | X | X | 1% | 1% | [check log](4swT.txt) |
 | [4tjq](4tjq.txt) | v0.9.40 Pine64 Star64 | 0%/0% | 7.7Gi/7.1Gi | X | X | X | X | 2% | 1% | [check log](4tjq.txt) |
+| [4uSM](4uSM.txt) | v0.9.41 WYSE Dell Wyse Thin Client Desk | 0%/0% | 3.7Gi/3.3Gi | X | X | X | X | 3% | 1% | [check log](4uSM.txt) |
+| [4vfU](4vfU.txt) | v0.9.41 Rockchip RK3288 Asus Tinker Boa | 0%/0% | 2.0Gi/1.8Gi | X | X | X | X | 2% | 2% | [check log](4vfU.txt) |

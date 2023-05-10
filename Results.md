@@ -39,7 +39,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Jetson AGX Orin](http://ix.io/4ax9) | 2200 MHz | 5.10 | Focal arm64 | 39450 | 3187 | 1242940 | 10600 | 30350 | 59.96 |
 | [Jetson Nano](http://ix.io/4rLX) | 1480 MHz | 4.9 | Bullseye arm64 | 5260 | 1578 | 531940 | 3730 | 8870 | - |
 | [Jetson Nano](http://ix.io/3Ufc) | 2000 MHz | 4.9 | Bionic arm64 | 6260 | 1977 | 717500 | 4100 | 11760 | 8.72 |
-| [Jetson Orin Nano](http://ix.io/4vgu) | 1510 MHz | 5.10 | Focal arm64 | 13190 | 2136 | 853580 | 6740 | 20240 | 20.60 |
+| [Jetson Orin Nano](http://ix.io/4vy7) | 1510 MHz | 5.10 | Focal arm64 | 13650 | 2153 | 854400 | 6730 | 20240 | 20.68 |
 | [Jetson Xavier AGX](http://ix.io/4ebH) | 2250 MHz | 4.9 | Bionic arm64 | 21590 | 2742 | 853250 | 10910 | 22520 | 26.57 |
 | [Jetson Xavier NX](http://ix.io/3YWp) | 1890 MHz | 4.9 | Bionic arm64 | 13230 | 2201 | 706280 | 9190 | 18480 | - |
 | [Kendryte K510](http://ix.io/41Qa) | 790 MHz | 4.17 | Sid riscv64 | 690 | 402 | 7410 | 280 | 440 | - |
@@ -216,7 +216,9 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Pentium N6005](http://ix.io/4f3I) | 3300/2000 MHz | 6.0 | Jammy amd64 | 10810 | 3485 | 922000 | 9600 | 11300 | 20.15 |
 | [Celeron N5105](http://ix.io/3Qf7) | 2900/2000 MHz | 5.13 | Focal amd64 | 11450 | 3059 | 811760 | 7710 | 9290 | 21.79 |
 | [Pentium G4600](http://ix.io/2jVw) | 3600 MHz | 4.19 | Buster amd64 | 11810 | 4448 | 984820 | 15120 | 33380 | 21.88 |
+| [N100](http://ix.io/4vxM) | 3400 MHz | 6.1 | Lunar amd64 | 14150 | 4073 | 1232790 | 11600 | 12270 | 36.24 |
 | [i3-N305](http://ix.io/4qpr) | 3800 MHz | 5.19 | Jammy amd64 | 20000 | 4398 | 1377280 | 9950 | 8990 | 41.43 |
+
 
 &ast; Number obtained with cryptodev (Marvell's CESA).
 

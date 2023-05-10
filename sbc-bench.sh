@@ -4845,7 +4845,7 @@ GuessARMSoC() {
 	#
 	# Recent Rockchip BSP kernels include something like this in dmesg output:
 	# rockchip-cpuinfo cpuinfo: SoC            : 35661000 --> Quartz64, RK3566 EVB2 LP4X V10 Board, Firefly RK3566-ROC-PC
-	# rockchip-cpuinfo cpuinfo: SoC            : 35662000 --> RK3566 BOX DEMO V10 ANDROID Board, Rock 3C
+	# rockchip-cpuinfo cpuinfo: SoC            : 35662000 --> EmbedFire LubanCat-Zero, RK3566 BOX DEMO V10 ANDROID Board, Rock 3C
 	# rockchip-cpuinfo cpuinfo: SoC            : 35681000 --> only early RK3568 devices showed this silicon revision (e.g. Firefly RK3568-ROC-PC/AIO-3568J)
 	# rockchip-cpuinfo cpuinfo: SoC            : 35682000 --> RK3568-ROC-PC, NanoPi R5S, ODROID-M1, Mrkaio M68S, OWLVisionTech rk3568 opc Board, Radxa ROCK3A,
 	#                                                         Rockemd R68K 2.5G, Hinlink H68K, Magewell Pro Convert NDI to AIO 4K Gen2, AIO-3568J

@@ -127,9 +127,8 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Radxa Zero](http://ix.io/3PlT) | 1800 MHz | 5.10 | Buster arm64 | 4570 | 1373 | 839080 | 1610 | 5250 | 6.82 |
 | [Radxa Zero](http://ix.io/3JCm) | 1800 MHz | 5.10 | Bullseye arm64 | 4580 | 1353 | 838360 | 1600 | 5360 | 7.13 |
 | [Renegade](http://ix.io/1iFx) | 1400 MHz | 4.4 | Stretch arm64 | 3710 | 1069 | 644200 | 1565 | 7435 | 3.92 |
-| [Raspberry Pi B](http://ix.io/3E7U) | 700 MHz | 5.10 | Raspberry Pi OS Buster | 310 | 310 | 11310 | 340 | 1400 | - |
 | [Raspberry Pi B](http://ix.io/3MGN) | 700 MHz | 5.10 | Raspberry Pi OS Bullseye | 320 | 320 | 11630 | 360 | 1420 | - |
-| [Raspberry Pi Zero](http://ix.io/3Njz) | 1000 MHz | 5.10 | Bullseye armv6l/armhf | 460 | 460 | 17060 | 430 | 1670 | - |
+| [Raspberry Pi B](http://ix.io/4vVG) | 1000 MHz | 6.1 | Raspberry Pi OS Bullseye | 480 | 481 | 16900 | 490 | 2220 | - |
 | [Raspberry Pi 2 B+](http://ix.io/1iFf) | 900 MHz | 4.14 | **Debian** Stretch | 2070 | 592 | 17450 | 615 | 1175 | - |
 | [Raspberry Pi 2 B+](http://ix.io/3MGs) | 900 MHz | 5.10 | Raspberry Pi OS Bullseye | 2150 | 620 | 16500 | 1000 | 1180 | - |
 | [Raspberry Pi 3 B](http://ix.io/4hOP) | 1200 MHz | 5.15 | Raspbian Sid | 2970 | 977 | 36230 | 1110 | 1700 | 2.89 |
@@ -140,6 +139,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Raspberry Pi 3 B+](http://ix.io/1iGz) | OC/normal | 4.14 | Raspbian Stretch | 3130 | 843 | 36620 | 1230 | 1780 | - |
 | [Raspberry Pi 3 B+](http://ix.io/1isD) | with fan | 4.14 | Raspbian Stretch | 3670 | 1046 | 42600 | 1120 | 1600 | - |
 | [Raspberry Pi Zero](http://ix.io/1niO) | 1000 MHz | 4.14 | Raspbian Stretch | 450 | 450 | 16820 | 400 | 1590 | - |
+| [Raspberry Pi Zero](http://ix.io/3Njz) | 1000 MHz | 5.10 | Bullseye armv6l/armhf | 460 | 460 | 17060 | 430 | 1670 | - |
 | [Raspberry Pi Zero 2](http://ix.io/3Dfo) | 600 MHz | 5.10 | Raspberry Pi OS Buster | 1900 | 529 | 18150 | 1040 | 1130 | - |
 | [Raspberry Pi Zero 2](http://ix.io/3E85) | 1000 MHz | 5.10 | Raspberry Pi OS Buster | 3030 | 838 | 29860 | 1300 | 1570 | - |
 | [Raspberry Pi Zero 2](http://ix.io/3DeL) | 1200 MHz | 5.10 | Raspberry Pi OS Buster | 3640 | 1007 | 36300 | 1320 | 1790 | - |
@@ -195,6 +195,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Celeron N3350](http://ix.io/4rJj) | 2400 MHz | 6.0 | Bullseye amd64 | 3810 | 2034 | 446170 | 5190 | 5700 | - |
 | [x5-Z8300](http://ix.io/1lgD) | 1420 MHz | 4.9 | Stretch amd64 | 3900 | 950 | 178010 | 2380 | 2380 | 7.81 |
 | [Celeron 5205U](http://ix.io/4eiM) | 1900 MHz | 5.15 | Jammy amd64 | 4060 | 2171 | 521090 | 7350 | 16020 | 11.20 |
+| [Celeron N4020](http://ix.io/4vNB) | 2800 MHz | 5.15 | Bullseye amd64 | 4310 | 2533 | 779580 | 5280 | 5190 | - |
 | [x5-Z8300](http://ix.io/4j4o) | 1840 MHz | 5.15 | Jammy amd64 | 4430 | 1368 | 227030 | 2270 | 2380 | 8.84 |
 | [Atom Z3735F](http://ix.io/4r54) | 1830 MHz | 5.15 | Jammy amd64 | 4510 | 1437 | 227900 | 3020 | 2780 | - |
 | [x5-Z8350](http://ix.io/1HnC) | 1920/1680 MHz | 4.15 | Bionic amd64 | 4710 | 1272 | 207640 | 2740 | 3140 | - |
@@ -218,7 +219,6 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Pentium G4600](http://ix.io/2jVw) | 3600 MHz | 4.19 | Buster amd64 | 11810 | 4448 | 984820 | 15120 | 33380 | 21.88 |
 | [N100](http://ix.io/4vxM) | 3400 MHz | 6.1 | Lunar amd64 | 14150 | 4073 | 1232790 | 11600 | 12270 | 36.24 |
 | [i3-N305](http://ix.io/4qpr) | 3800 MHz | 5.19 | Jammy amd64 | 20000 | 4398 | 1377280 | 9950 | 8990 | 41.43 |
-
 
 &ast; Number obtained with cryptodev (Marvell's CESA).
 

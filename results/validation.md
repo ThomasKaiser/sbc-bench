@@ -106,7 +106,6 @@
 | [3Dfo](3Dfo.txt) | v0.7.9 Raspberry Pi Zero 2 Rev 1.0 | 0.6%/0.3% | 427Mi/277Mi | X | X | | | 2% | 0% | |
 | [3Di2](3Di2.txt) | v0.8.1 Nintendo Switch | 0%/0% | 3.9G/3.5G | X | X | X | X | 1% | 0% | |
 | [3DtN](3DtN.txt) | v0.8.1 Hardkernel ODROID-N2Plus | 0%/0% | 3.6Gi/2.7Gi | X | X | X | X | 0% | 0% | |
-| [3E7U](3E7U.txt) | v0.8.3 Raspberry Pi Model B Rev 2 | 1.2%/1.5% | 430Mi/344Mi | X | X | X | | 3% | 0% | |
 | [3E85](3E85.txt) | v0.8.3 Raspberry Pi Zero 2 Rev 1.0 | 2.6%/0.9% | 427Mi/267Mi | X | X | | | 3% | 0% | |
 | <del>[3EOw](3EOw.txt)</del> | <del>v0.8.4 Olimex A20-OLinuXino-LIME2-eMMC </del> | <del>0%/0%</del> | <del>998Mi/869Mi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del><span style=color:red> 7%</span></del> | <del> 0%</del> | |
 | [3EgS](3EgS.txt) | v0.8.4 Raspberry Pi 4 Model B Rev 1.1 | 0.5%/0.4% | 857Mi/695Mi | X | X | X | | 2% | 0% | |
@@ -254,6 +253,8 @@
 | [4swT](4swT.txt) | v0.9.40 StarFive VisionFive V2 | 0%/0% | 7.7Gi/7.4Gi | X | X | X | X | 1% | 1% | [check log](4swT.txt) |
 | [4tjq](4tjq.txt) | v0.9.40 Pine64 Star64 | 0%/0% | 7.7Gi/7.1Gi | X | X | X | X | 2% | 1% | [check log](4tjq.txt) |
 | [4uSM](4uSM.txt) | v0.9.41 WYSE Dell Wyse Thin Client Desk | 0%/0% | 3.7Gi/3.3Gi | X | X | X | X | 3% | 1% | [check log](4uSM.txt) |
+| [4vNB](4vNB.txt) | v0.9.41 ATOPNUC ATOPNUC AG40 / Celeron | 0%/0% | 3.7Gi/3.3Gi | X | X | X | X | 1% | 0% | [check log](4vNB.txt) |
+| [4vVG](4vVG.txt) | v0.9.41 Raspberry Pi Model B Rev 2 | 0%/0% | 476Mi/397Mi | X | X | X | X | 4% | 1% | [check log](4vVG.txt) |
 | [4vfU](4vfU.txt) | v0.9.41 Rockchip RK3288 Asus Tinker Boa | 0%/0% | 2.0Gi/1.8Gi | X | X | X | X | 2% | 2% | [check log](4vfU.txt) |
 | <del>[4vgu](4vgu.txt)</del> | <del>v0.9.41 NVIDIA Orin Nano Developer Kit </del> | <del>0%/0%</del> | <del>6.3Gi/3.6Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del><span style=color:red> 8%</span></del> | <del> 0%</del> | <del>[check log](4vgu.txt)</del> |
 | [4vxM](4vxM.txt) | v0.9.41 AZW EQ / N100 | 0%/0% | 15Gi/14Gi | X | X | X | X | 1% | 0% | [check log](4vxM.txt) |

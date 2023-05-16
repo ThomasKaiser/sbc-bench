@@ -137,6 +137,7 @@
 | [Atom Z3735F](http://ix.io/4r54) | 1830 MHz | 5.15 | Jammy amd64 | **4510** | 1437 | 227900 | 3020 | 2780 | - |
 | [x5-Z8300](http://ix.io/4j4o) | 1840 MHz | 5.15 | Jammy amd64 | **4430** | 1368 | 227030 | 2270 | 2380 | 8.84 |
 | [HummingBoard Pulse i.MX8M Quad](http://ix.io/27FC) | 1500 MHz | 4.19 | Buster arm64 | **4330** | 1201 | 695540 | 2230 | 9900 | - |
+| [Celeron N4020](http://ix.io/4vNB) | 2800 MHz | 5.15 | Bullseye amd64 | **4310** | 2533 | 779580 | 5280 | 5190 | - |
 | [MangoPi Mcore](http://ix.io/4bSf) | 1800 MHz | 5.19 | Jammy arm64 | **4100** | 1218 | 840270 | 990 | 2380 | - |
 | [ODROID-C2](http://ix.io/1ixI) | 1750 MHz | 3.14 | Xenial arm64 | **4070** | 1128 | 48500 | 1750 | 3100 | - |
 | [Celeron 5205U](http://ix.io/4eiM) | 1900 MHz | 5.15 | Jammy amd64 | **4060** | 2171 | 521090 | 7350 | 16020 | 11.20 |
@@ -211,11 +212,11 @@
 | [Cubietruck](http://ix.io/3Naw) | 960 MHz | 5.10 | Bullseye armhf | **1030** | 541 | 18640 | 440 | 2010 | - |
 | [Kendryte K510](http://ix.io/41Qa) | 790 MHz | 4.17 | Sid riscv64 | **690** | 402 | 7410 | 280 | 440 | - |
 | [Lime A10](http://ix.io/1j1L) | 910 MHz | 4.14 | Stretch armhf | **550** | 550 | 28250 | 440 | 1300 | - |
+| [Raspberry Pi B](http://ix.io/4vVG) | 1000 MHz | 6.1 | Raspberry Pi OS Bullseye | **480** | 481 | 16900 | 490 | 2220 | - |
 | [Raspberry Pi Zero](http://ix.io/3Njz) | 1000 MHz | 5.10 | Bullseye armv6l/armhf | **460** | 460 | 17060 | 430 | 1670 | - |
 | [Raspberry Pi Zero](http://ix.io/1niO) | 1000 MHz | 4.14 | Raspbian Stretch | **450** | 450 | 16820 | 400 | 1590 | - |
 | [ClockworkPi R-01](http://ix.io/40BJ) | 1000 MHz | 5.4 | Focal riscv64 | **450** | 450 | 9040 | 1220 | 2640 | - |
 | [Raspberry Pi B](http://ix.io/3MGN) | 700 MHz | 5.10 | Raspberry Pi OS Bullseye | **320** | 320 | 11630 | 360 | 1420 | - |
-| [Raspberry Pi B](http://ix.io/3E7U) | 700 MHz | 5.10 | Raspberry Pi OS Buster | **310** | 310 | 11310 | 340 | 1400 | - |
 
 [(back to top of the page)](#sbc-bench-results-sorted)
 
@@ -244,6 +245,7 @@
 | [Phytium FT-2000/4 1xSO-DIMM](http://ix.io/4ioj) | 2600 MHz | 5.15 | Bullseye arm64 | 10020 | **2755** | 936740 | 3760 | 14540 | - |
 | [Jetson Xavier AGX](http://ix.io/4ebH) | 2250 MHz | 4.9 | Bionic arm64 | 21590 | **2742** | 853250 | 10910 | 22520 | 26.57 |
 | [Athlon II X3 420e](http://ix.io/4eOo) | 2600 MHz | 4.19 | Buster amd64 | 4780 | **2566** | 98840 | 4120 | 3870 | - |
+| [Celeron N4020](http://ix.io/4vNB) | 2800 MHz | 5.15 | Bullseye amd64 | 4310 | **2533** | 779580 | 5280 | 5190 | - |
 | [OnePlus 5](http://ix.io/4fdD) | 2360/1900 MHz | 6.1 | Jammy arm64 | 9800 | **2474** | 883330 | 9720 | 14070 | 12.58 |
 | [Pentium J5005](http://ix.io/21rE) | 2700/1500 MHz | 5.0 | Bionic amd64 | 9230 | **2455** | 778360 | 5530 | 7130 | 20.74 |
 | [Amazon a1.xlarge](http://ix.io/2iFY) | 2300 MHz | 4.15 | Bionic arm64 | 8610 | **2406** | 1297960 | 4280 | 14220 | - |
@@ -418,12 +420,12 @@
 | [LeMaker Banana Pi](http://ix.io/3PLr) | 960 MHz | 5.10 | Bullseye armhf | 1040 | **542** | 18640 | 440 | 2020 | - |
 | [Cubietruck](http://ix.io/3Naw) | 960 MHz | 5.10 | Bullseye armhf | 1030 | **541** | 18640 | 440 | 2010 | - |
 | [Raspberry Pi Zero 2](http://ix.io/3Dfo) | 600 MHz | 5.10 | Raspberry Pi OS Buster | 1900 | **529** | 18150 | 1040 | 1130 | - |
+| [Raspberry Pi B](http://ix.io/4vVG) | 1000 MHz | 6.1 | Raspberry Pi OS Bullseye | 480 | **481** | 16900 | 490 | 2220 | - |
 | [Raspberry Pi Zero](http://ix.io/3Njz) | 1000 MHz | 5.10 | Bullseye armv6l/armhf | 460 | **460** | 17060 | 430 | 1670 | - |
 | [Raspberry Pi Zero](http://ix.io/1niO) | 1000 MHz | 4.14 | Raspbian Stretch | 450 | **450** | 16820 | 400 | 1590 | - |
 | [ClockworkPi R-01](http://ix.io/40BJ) | 1000 MHz | 5.4 | Focal riscv64 | 450 | **450** | 9040 | 1220 | 2640 | - |
 | [Kendryte K510](http://ix.io/41Qa) | 790 MHz | 4.17 | Sid riscv64 | 690 | **402** | 7410 | 280 | 440 | - |
 | [Raspberry Pi B](http://ix.io/3MGN) | 700 MHz | 5.10 | Raspberry Pi OS Bullseye | 320 | **320** | 11630 | 360 | 1420 | - |
-| [Raspberry Pi B](http://ix.io/3E7U) | 700 MHz | 5.10 | Raspberry Pi OS Buster | 310 | **310** | 11310 | 340 | 1400 | - |
 | [ODROID-XU4](http://ix.io/1ixL) | 1900/1400 MHz | 3.10 | Jessie armhf | 6750 | **-** | 68200 | 2200 | 4800 | - |
 | [BPi M4](http://ix.io/1Dt1) | 1400 MHz | 4.9 | Bionic arm64 | 3500 | **-** | 651460 | 1010 | 4360 | 5.48 |
 
@@ -512,6 +514,7 @@
 | [Celeron N5105](http://ix.io/3Qf7) | 2900/2000 MHz | 5.13 | Focal amd64 | 11450 | 3059 | **811760** | 7710 | 9290 | 21.79 |
 | [Celeron N4500](http://ix.io/3HUU) | 2800/1100 MHz | 5.13 | Impish amd64 | 6300 | 3091 | **783840** | 8100 | 8350 | - |
 | [Celeron N5100](http://ix.io/3IlQ) | 2800/1100 MHz | 5.13 | Focal amd64 | 10550 | 3088 | **783800** | 7750 | 8090 | 19.22 |
+| [Celeron N4020](http://ix.io/4vNB) | 2800 MHz | 5.15 | Bullseye amd64 | 4310 | 2533 | **779580** | 5280 | 5190 | - |
 | [Pentium J5005](http://ix.io/21rE) | 2700/1500 MHz | 5.0 | Bionic amd64 | 9230 | 2455 | **778360** | 5530 | 7130 | 20.74 |
 | [Nintendo Switch](http://ix.io/3Di2) | 2060 MHz | 4.9 | Bionic arm64 | 6720 | 1901 | **746680** | 2370 | 3670 | 9.25 |
 | [Jetson Nano](http://ix.io/3Ufc) | 2000 MHz | 4.9 | Bionic arm64 | 6260 | 1977 | **717500** | 4100 | 11760 | 8.72 |
@@ -632,10 +635,10 @@
 | [Raspberry Pi Zero 2](http://ix.io/3Dfo) | 600 MHz | 5.10 | Raspberry Pi OS Buster | 1900 | 529 | **18150** | 1040 | 1130 | - |
 | [Raspberry Pi 2 B+](http://ix.io/1iFf) | 900 MHz | 4.14 | Debian Stretch | 2070 | 592 | **17450** | 615 | 1175 | - |
 | [Raspberry Pi Zero](http://ix.io/3Njz) | 1000 MHz | 5.10 | Bullseye armv6l/armhf | 460 | 460 | **17060** | 430 | 1670 | - |
+| [Raspberry Pi B](http://ix.io/4vVG) | 1000 MHz | 6.1 | Raspberry Pi OS Bullseye | 480 | 481 | **16900** | 490 | 2220 | - |
 | [Raspberry Pi Zero](http://ix.io/1niO) | 1000 MHz | 4.14 | Raspbian Stretch | 450 | 450 | **16820** | 400 | 1590 | - |
 | [Raspberry Pi 2 B+](http://ix.io/3MGs) | 900 MHz | 5.10 | Raspberry Pi OS Bullseye | 2150 | 620 | **16500** | 1000 | 1180 | - |
 | [Raspberry Pi B](http://ix.io/3MGN) | 700 MHz | 5.10 | Raspberry Pi OS Bullseye | 320 | 320 | **11630** | 360 | 1420 | - |
-| [Raspberry Pi B](http://ix.io/3E7U) | 700 MHz | 5.10 | Raspberry Pi OS Buster | 310 | 310 | **11310** | 340 | 1400 | - |
 | [ClockworkPi R-01](http://ix.io/40BJ) | 1000 MHz | 5.4 | Focal riscv64 | 450 | 450 | **9040** | 1220 | 2640 | - |
 | [Kendryte K510](http://ix.io/41Qa) | 790 MHz | 4.17 | Sid riscv64 | 690 | 402 | **7410** | 280 | 440 | - |
 
@@ -673,6 +676,7 @@
 | [Celeron J4105](http://ix.io/1qb0) | 2400/1500 MHz | 4.15 | Bionic amd64 | 8960 | 2274 | 697080 | **5620** | 7650 | 19.13 |
 | [Pentium J5005](http://ix.io/21rE) | 2700/1500 MHz | 5.0 | Bionic amd64 | 9230 | 2455 | 778360 | **5530** | 7130 | 20.74 |
 | [Celeron J4105](http://ix.io/1qal) | 2400/1500 MHz | 4.15 | Bionic amd64 | 9020 | 2290 | 697100 | **5500** | 7410 | 19.07 |
+| [Celeron N4020](http://ix.io/4vNB) | 2800 MHz | 5.15 | Bullseye amd64 | 4310 | 2533 | 779580 | **5280** | 5190 | - |
 | [Celeron N3350](http://ix.io/4rJj) | 2400 MHz | 6.0 | Bullseye amd64 | 3810 | 2034 | 446170 | **5190** | 5700 | - |
 | [Khadas VIM3](http://ix.io/4o1A) | 2400/2015 MHz | 6.0 | Bullseye arm64 | 9650 | 2379 | 1366300 | **5080** | 9240 | - |
 | [Pentium J4205](http://ix.io/1m5t) | 2560/1500 MHz | 4.17 | Stretch amd64 | 7570 | 2146 | 480640 | **5070** | 5170 | 18.82 |
@@ -835,6 +839,7 @@
 | [RK3318 BOX](http://ix.io/4kor) | 1390 MHz | 6.0 | Jammy arm64 | 3200 | 867 | 644750 | **700** | 2460 | - |
 | [Raspberry Pi 2 B+](http://ix.io/1iFf) | 900 MHz | 4.14 | Debian Stretch | 2070 | 592 | 17450 | **615** | 1175 | - |
 | [Tronsmart S82](http://ix.io/41ML) | 1600 MHz | 5.14 | Focal armhf | 3640 | 1114 | 43150 | **500** | 3200 | - |
+| [Raspberry Pi B](http://ix.io/4vVG) | 1000 MHz | 6.1 | Raspberry Pi OS Bullseye | 480 | 481 | 16900 | **490** | 2220 | - |
 | [Lime A10](http://ix.io/1j1L) | 910 MHz | 4.14 | Stretch armhf | 550 | 550 | 28250 | **440** | 1300 | - |
 | [LeMaker Banana Pi](http://ix.io/3PLr) | 960 MHz | 5.10 | Bullseye armhf | 1040 | 542 | 18640 | **440** | 2020 | - |
 | [Cubietruck](http://ix.io/3Naw) | 960 MHz | 5.10 | Bullseye armhf | 1030 | 541 | 18640 | **440** | 2010 | - |
@@ -844,7 +849,6 @@
 | [Raspberry Pi Zero](http://ix.io/1niO) | 1000 MHz | 4.14 | Raspbian Stretch | 450 | 450 | 16820 | **400** | 1590 | - |
 | [ODROID-C1](http://ix.io/4eg5) | 1500 MHz | 5.19 | Jammy armhf | 3010 | 878 | 29260 | **390** | 2910 | - |
 | [Raspberry Pi B](http://ix.io/3MGN) | 700 MHz | 5.10 | Raspberry Pi OS Bullseye | 320 | 320 | 11630 | **360** | 1420 | - |
-| [Raspberry Pi B](http://ix.io/3E7U) | 700 MHz | 5.10 | Raspberry Pi OS Buster | 310 | 310 | 11310 | **340** | 1400 | - |
 | [Cubox-i4](http://ix.io/4132) | 980 MHz | 5.15 | Jammy armhf | 2360 | 657 | 27000 | **340** | 340 | - |
 | [Ugoos UT2](http://ix.io/408h) | 1560 MHz | 5.10 | Jammy armhf | 3320 | 994 | 43250 | **320** | 2020 | - |
 | [Kendryte K510](http://ix.io/41Qa) | 790 MHz | 4.17 | Sid riscv64 | 690 | 402 | 7410 | **280** | 440 | - |
@@ -946,6 +950,7 @@
 | [Radxa Zero](http://ix.io/3JCm) | 1800 MHz | 5.10 | Bullseye arm64 | 4580 | 1353 | 838360 | 1600 | **5360** | 7.13 |
 | [Radxa Zero](http://ix.io/3PlT) | 1800 MHz | 5.10 | Buster arm64 | 4570 | 1373 | 839080 | 1610 | **5250** | 6.82 |
 | [Celeron N4100](http://ix.io/1uTS) | 2300/1100 MHz | 4.15 | Bionic amd64 | 8510 | 2222 | 669350 | 4750 | **5240** | 18.33 |
+| [Celeron N4020](http://ix.io/4vNB) | 2800 MHz | 5.15 | Bullseye amd64 | 4310 | 2533 | 779580 | 5280 | **5190** | - |
 | [Pentium J4205](http://ix.io/1m5t) | 2560/1500 MHz | 4.17 | Stretch amd64 | 7570 | 2146 | 480640 | 5070 | **5170** | 18.82 |
 | [Libre Computer AML-S912-PC](http://ix.io/40cj) | 1415/1000 MHz | 5.15 | Bullseye arm64 | 5980 | 1012 | 659290 | 1650 | **5170** | - |
 | [ODROID-HC4](http://ix.io/3Na5) | 2100 MHz | 5.10 | Buster arm64 | 5730 | 1672 | 980970 | 3540 | **5150** | - |
@@ -1028,6 +1033,7 @@
 | [x5-Z8300](http://ix.io/4j4o) | 1840 MHz | 5.15 | Jammy amd64 | 4430 | 1368 | 227030 | 2270 | **2380** | 8.84 |
 | [x5-Z8300](http://ix.io/1lgD) | 1420 MHz | 4.9 | Stretch amd64 | 3900 | 950 | 178010 | 2380 | **2380** | 7.81 |
 | [MangoPi Mcore](http://ix.io/4bSf) | 1800 MHz | 5.19 | Jammy arm64 | 4100 | 1218 | 840270 | 990 | **2380** | - |
+| [Raspberry Pi B](http://ix.io/4vVG) | 1000 MHz | 6.1 | Raspberry Pi OS Bullseye | 480 | 481 | 16900 | 490 | **2220** | - |
 | [Marvell PXA1908](http://ix.io/46hs) | 1245 MHz | 3.14 | Bullseye arm64 | 3180 | 951 | 581840 | 740 | **2220** | - |
 | [Ugoos UT2](http://ix.io/408h) | 1560 MHz | 5.10 | Jammy armhf | 3320 | 994 | 43250 | 320 | **2020** | - |
 | [Olimex A20-Lime2](http://ix.io/4rRV) | 960 MHz | 5.10 | Bullseye armhf | 1080 | 589 | 18630 | 430 | **2020** | 0.87 |
@@ -1048,7 +1054,6 @@
 | [Raspberry Pi 3 B+](http://ix.io/1iGM) | normal | 4.14 | Raspbian Stretch | 3040 | 856 | 36600 | 1050 | **1500** | - |
 | [Raspberry Pi 3 B+](http://ix.io/1iH0) | UV/normal | 4.14 | Raspbian Stretch | 2100 | 856 | 36400 | 1040 | **1460** | - |
 | [Raspberry Pi B](http://ix.io/3MGN) | 700 MHz | 5.10 | Raspberry Pi OS Bullseye | 320 | 320 | 11630 | 360 | **1420** | - |
-| [Raspberry Pi B](http://ix.io/3E7U) | 700 MHz | 5.10 | Raspberry Pi OS Buster | 310 | 310 | 11310 | 340 | **1400** | - |
 | [Lime A10](http://ix.io/1j1L) | 910 MHz | 4.14 | Stretch armhf | 550 | 550 | 28250 | 440 | **1300** | - |
 | [RK3228A TV Box](http://ix.io/3M9F) | 1200 MHz | 4.4 | Buster armhf | 2310 | 710 | 23070 | 410 | **1230** | - |
 | [Raspberry Pi 2 B+](http://ix.io/3MGs) | 900 MHz | 5.10 | Raspberry Pi OS Bullseye | 2150 | 620 | 16500 | 1000 | **1180** | - |
@@ -1078,6 +1083,7 @@
 | [Qualcomm QRB5165](http://ix.io/49kx) | **2840/2410/1790** MHz| 4.19 | Focal arm64 | 18860 | 3898 | 1598490 | 14470 | 23910 | 25.56 |
 | [Celeron N5100](http://ix.io/3IlQ) | **2800/1100** MHz| 5.13 | Focal amd64 | 10550 | 3088 | 783800 | 7750 | 8090 | 19.22 |
 | [Celeron N4500](http://ix.io/3HUU) | **2800/1100** MHz| 5.13 | Impish amd64 | 6300 | 3091 | 783840 | 8100 | 8350 | - |
+| [Celeron N4020](http://ix.io/4vNB) | **2800** MHz| 5.15 | Bullseye amd64 | 4310 | 2533 | 779580 | 5280 | 5190 | - |
 | [Pentium J5005](http://ix.io/21rE) | **2700/1500** MHz| 5.0 | Bionic amd64 | 9230 | 2455 | 778360 | 5530 | 7130 | 20.74 |
 | [Ryzen R1606G](http://ix.io/2tQQ) | **2600/1400** MHz| 5.4 | Focal amd64 | 7970 | 2854 | 700780 | 8230 | 5970 | 16.45 |
 | [Phytium FT-2000/4 1xSO-DIMM](http://ix.io/4ioj) | **2600** MHz| 5.15 | Bullseye arm64 | 10020 | 2755 | 936740 | 3760 | 14540 | - |
@@ -1248,6 +1254,7 @@
 | [Raspberry Pi Zero](http://ix.io/3Njz) | **1000** MHz| 5.10 | Bullseye armv6l/armhf | 460 | 460 | 17060 | 430 | 1670 | - |
 | [Raspberry Pi Zero](http://ix.io/1niO) | **1000** MHz| 4.14 | Raspbian Stretch | 450 | 450 | 16820 | 400 | 1590 | - |
 | [Raspberry Pi Zero 2](http://ix.io/3E85) | **1000** MHz| 5.10 | Raspberry Pi OS Buster | 3030 | 838 | 29860 | 1300 | 1570 | - |
+| [Raspberry Pi B](http://ix.io/4vVG) | **1000** MHz| 6.1 | Raspberry Pi OS Bullseye | 480 | 481 | 16900 | 490 | 2220 | - |
 | [ClockworkPi R-01](http://ix.io/40BJ) | **1000** MHz| 5.4 | Focal riscv64 | 450 | 450 | 9040 | 1220 | 2640 | - |
 | [Cubox-i4](http://ix.io/4132) | **980** MHz| 5.15 | Jammy armhf | 2360 | 657 | 27000 | 340 | 340 | - |
 | [Olimex A20-Lime2](http://ix.io/4rRV) | **960** MHz| 5.10 | Bullseye armhf | 1080 | 589 | 18630 | 430 | 2020 | 0.87 |
@@ -1259,7 +1266,6 @@
 | [EspressoBin](http://ix.io/1kt2) | **800** MHz| 4.17 | Stretch arm64 | 1138 | 636 | 368330 | 1040 | 2490 | 1.23 |
 | [Kendryte K510](http://ix.io/41Qa) | **790** MHz| 4.17 | Sid riscv64 | 690 | 402 | 7410 | 280 | 440 | - |
 | [Raspberry Pi B](http://ix.io/3MGN) | **700** MHz| 5.10 | Raspberry Pi OS Bullseye | 320 | 320 | 11630 | 360 | 1420 | - |
-| [Raspberry Pi B](http://ix.io/3E7U) | **700** MHz| 5.10 | Raspberry Pi OS Buster | 310 | 310 | 11310 | 340 | 1400 | - |
 | [Raspberry Pi Zero 2](http://ix.io/3Dfo) | **600** MHz| 5.10 | Raspberry Pi OS Buster | 1900 | 529 | 18150 | 1040 | 1130 | - |
 
 [(back to top of the page)](#sbc-bench-results-sorted)

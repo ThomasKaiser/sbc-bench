@@ -4467,8 +4467,8 @@ HumanReadableSize() {
 
 UploadResults() {
 	# upload results to ix.io and replace multiple empty lines with one. 2nd try if 1st does not succeed
-	UploadURL=$(sed '/^$/N;/^\n$/D' <${ResultLog} | curl -s -F ${UploadScheme} ${UploadServer} 2>/dev/null || \
-		sed '/^$/N;/^\n$/D' <${ResultLog} | curl -s -F ${UploadScheme} ${UploadServer})
+	UploadURL=$(sed '/^$/N;/^\n$/D' <${ResultLog} | sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" | curl -s -F ${UploadScheme} ${UploadServer} 2>/dev/null || \
+		sed '/^$/N;/^\n$/D' <${ResultLog} | sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" | curl -s -F ${UploadScheme} ${UploadServer})
 
 	# Display benchmark results if not in PTS, GB or preview mode
 	if [ "X${MODE}" != "Xpts" -a "X${MODE}" != "Xgb" -a "X${MODE}" != "Xreview" ]; then

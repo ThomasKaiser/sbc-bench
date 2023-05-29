@@ -1952,14 +1952,13 @@ GetCPUClusters() {
 	else
 		case ${CPUArchitecture} in
 			aarch*|arm*)
-				# currently we do not trust into cpufreq support on RISC-V since Kendryte K510:
-				# https://github.com/ThomasKaiser/sbc-bench/issues/46#issuecomment-1175855473
-				# Same story on Loongson: http://ix.io/4aIA
-
-				# if all CPU cores are of same type then just check for NUMA nodes and ignore
+				# If all CPU cores are of same type then just check for NUMA nodes and ignore
 				# cpufreq settings or package IDs (server SoCs like Ampere Altra or NXP LX2160A
 				# show rather weird package IDs, see http://ix.io/4kiu or http://ix.io/4uaA)
-				if [ ${#ClusterConfigByCoreType[@]} -eq 1 ]; then
+				# Try to handle special case of crappy S912 SoC consisting of 8 identical A53
+				# cores of which 4 are crippled (1 GHz vs. 1.4 GHz while the SoC's boot BLOB
+				# fakes 1.5 GHz for the latter)
+				if [ ${#ClusterConfigByCoreType[@]} -eq 1 -a ${#ClusterConfig[@]} -ne 2 ]; then
 					awk -F" " '/^NUMA node[0-9]/ {print $4}' <<<"${LSCPU}" | cut -f1 -d'-'
 				elif [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 					ls -ld /sys/devices/system/cpu/cpufreq/policy? | awk -F"policy" '{print $2}'
@@ -4896,10 +4895,11 @@ GuessARMSoC() {
 	# soc soc0: Amlogic Meson GXL (S905L) Revision 21:e (c2:2) Detected <-- NEXBOX A95X (S905X)
 	# soc soc0: Amlogic Meson GXL (S905L) Revision 21:e (c5:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson GXM (Unknown) Revision 22:a (82:2) Detected <-- Amlogic Meson GXM (S912) Q201 Development Board
-	# soc soc0: Amlogic Meson GXM (S912) Revision 22:a (82:2) Detected <-- Beelink GT1 / Beelink GT1 Ultimate / Octopus Planet / Libre Computer AML-S912-PC / Khadas VIM2 / MeCool KIII Pro / Tronsmart Vega S96 / T95Z Plus / Vontar X92 / Amlogic Meson GXM (S912) Q200 Development Board / Amlogic Meson GXM (S912) Q201 Development Board
+	# soc soc0: Amlogic Meson GXM (S912) Revision 22:a (82:2) Detected <-- Beelink GT1 / Beelink GT1 Ultimate / Octopus Planet / Libre Computer AML-S912-PC / Khadas VIM2 / MeCool KIII Pro / Tanix TX9 Pro / Tronsmart Vega S96 / T95Z Plus / Vontar X92 / Amlogic Meson GXM (S912) Q200 Development Board / Amlogic Meson GXM (S912) Q201 Development Board
 	# soc soc0: Amlogic Meson GXM (S912) Revision 22:b (82:2) Detected <-- Beelink GT1 / Tronsmart Vega S96 / Octopus Planet / Sunvell T95Z Plus / Amlogic Meson GXM (S912) Q201 Development Board
 	# soc soc0: Amlogic Meson AXG (Unknown) Revision 25:b (43:2) Detected <-- JetHome JetHub J100
 	# soc soc0: Amlogic Meson AXG (Unknown) Revision 25:c (43:2) Detected <-- JetHome JetHub J100
+	# soc soc0: Amlogic Meson GXLX (Unknown) Revision 26:a (c1:2) Detected <-- Amlogic Meson GXL (S905W) P281 Development Board
 	# soc soc0: Amlogic Meson GXLX (Unknown) Revision 26:e (c1:2) Detected <-- IPBS9505-S905L2, Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson G12A (Unknown) Revision 28:b (30:2) Detected <-- S905Y2 on Radxa Zero
 	# soc soc0: Amlogic Meson G12A (Unknown) Revision 28:c (30:2) Detected <-- S905Y2 on Radxa Zero
@@ -6727,7 +6727,7 @@ GuessSoCbySignature() {
 			# Apple M2: 4 x Apple Blizzard / r1p0 + 4 x Apple Avalanche / r1p0 / https://github.com/hrw/arm-socs-table/blob/main/cpuinfo-data/apple-m2
 			echo "Apple M2"
 			;;
-		*AppleM2Pro*|*AppleA16*)
+		*AppleM2Pro*)
 			# Apple M2: 4 x Apple Blizzard  + 6/8 x Apple Avalanche / https://github.com/AsahiLinux/m1n1/commit/7904ed43dc0c2760e728f611efa0b26895ebcd10
 			echo "Apple M2 Pro"
 			;;
@@ -6776,6 +6776,12 @@ GuessSoCbySignature() {
 				echo "$(( ${CPUCores} / 64 )) x Sophon SG2042"
 			else
 				echo "Sophon SG2042"
+			fi
+			;;
+		*rv64imafdc)
+			# Renesas RZ/Five R9A07G043: single Andes AX45MP core
+			if [ ${CPUCores} -eq 1 ]; then
+				echo "Renesas RZ/Five R9A07G043"
 			fi
 			;;
 		0?Qualcomm3XXSilver0?Qualcomm3XXSilver0?Qualcomm3XXSilver0?Qualcomm3XXSilver0?Qualcomm3XXGold0?Qualcomm3XXGold0?Qualcomm3XXGold0?Qualcomm3XXGold)

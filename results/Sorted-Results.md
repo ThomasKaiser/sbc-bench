@@ -15,6 +15,7 @@
 | ----- | :--------: | :----: | :----: | ----: | ------: | ------: | -----: | -----: | ---: |
 | [Huaqin P6410](http://ix.io/4kiu) | 3000 MHz | 5.4 | Focal arm64 | **430860** | 4211 | 1710010 | 13310 | 47970 | - |
 | [Gigabyte H270-T70](http://ix.io/3N5c) | 2000 Mhz | 5.16 | Sid arm64 | **107180** | 1826 | 340750 | 4180 | 17130 | - |
+| [Milk-V Pioneer](http://ix.io/4wYE) | 2000 MHz | 6.1 | Kinetic riscv64 | **59820** | 1622 | 43500 | 3620 | 4760 | - |
 | [Apple M1 Pro](http://ix.io/443N) | 3030/2060 MHz | 5.18 | Gentoo 2.8 arm64 | **43800** | 5010 | 1064450 | 27110 | 71910 | 48.28 |
 | [Jetson AGX Orin](http://ix.io/4ax9) | 2200 MHz | 5.10 | Focal arm64 | **39450** | 3187 | 1242940 | 10600 | 30350 | 59.96 |
 | [Qualcomm Snapdragon 8cx Gen 3](http://ix.io/4qG1) | 3000/2440 MHz | 6.2 | Kinetic arm64 | **35320** | 4283 | 1694260 | 17710 | 42110 | 42.76 |
@@ -314,6 +315,7 @@
 | [Raspberry Pi 4 B](http://ix.io/3EgS) | 1500 MHz | 5.10 | Raspberry Pi OS Buster | 5750 | **1661** | 64930 | 2550 | 3430 | - |
 | [Atom E3950](http://ix.io/4dd5) | 2000 MHz | 5.15 | Jammy amd64 | 6440 | **1636** | 374800 | 4400 | 4840 | - |
 | [ODROID-XU4](http://ix.io/1iWL) | 2000/1400 MHz | 4.9 | Stretch armhf | 6400 | **1622** | 72075 | 2230 | 4850 | - |
+| [Milk-V Pioneer](http://ix.io/4wYE) | 2000 MHz | 6.1 | Kinetic riscv64 | 59820 | **1622** | 43500 | 3620 | 4760 | - |
 | [Raspberry Pi 4 B](http://ix.io/1MFf) | 1500 MHz | 4.19 | Raspbian Buster | 5500 | **1606** | 64860 | 2460 | 3170 | - |
 | [ODROID-XU4](http://ix.io/3GnC) | 2000/1400 MHz | 5.4 | Focal armhf | 8980 | **1604** | 72020 | 2280 | 4910 | - |
 | [RockPro64](http://ix.io/1lBC) | 1800/1400 MHz | 4.4 | Stretch arm64 | 6140 | **1580** | 1015600 | 2770 | 4850 | 8.14 |
@@ -592,6 +594,7 @@
 | [NanoPi K2](http://ix.io/1iT1) | 1480 MHz | 4.14 | Stretch arm64 | 3850 | 1095 | **50370** | 1660 | 3870 | 4.61 |
 | [ODROID-C2](http://ix.io/1ixI) | 1750 MHz | 3.14 | Xenial arm64 | 4070 | 1128 | **48500** | 1750 | 3100 | - |
 | [Clearfog A1](http://ix.io/4d1U) | 1600 MHz | 5.15 | Bullseye armhf | 2230 | 1239 | **44080** | 910 | 5060 | - |
+| [Milk-V Pioneer](http://ix.io/4wYE) | 2000 MHz | 6.1 | Kinetic riscv64 | 59820 | 1622 | **43500** | 3620 | 4760 | - |
 | [Ugoos UT2](http://ix.io/408h) | 1560 MHz | 5.10 | Jammy armhf | 3320 | 994 | **43250** | 320 | 2020 | - |
 | [Tronsmart S82](http://ix.io/41ML) | 1600 MHz | 5.14 | Focal armhf | 3640 | 1114 | **43150** | 500 | 3200 | - |
 | [Raspberry Pi 3 B+](http://ix.io/1iI5) | original | 4.9 | Raspbian Stretch | 3600 | 1076 | **42700** | 1230 | 1640 | - |
@@ -712,6 +715,7 @@
 | [Khadas VIM3L](http://ix.io/26Wy) | 1900 MHz | 4.9 | Bionic arm64 | 5160 | 1399 | 892110 | **3670** | 6360 | 7.29 |
 | [Rock Pi 4](http://ix.io/21fX) | 2000/1500 MHz | 5.3 | Bionic arm64 | 6910 | 1817 | 1147370 | **3660** | 8310 | 10.71 |
 | [RockPro64](http://ix.io/1iFp) | 1800/1400 MHz | 4.18 | Stretch arm64 | 6300 | 1755 | 1021500 | **3650** | 8450 | 8.20 |
+| [Milk-V Pioneer](http://ix.io/4wYE) | 2000 MHz | 6.1 | Kinetic riscv64 | 59820 | 1622 | 43500 | **3620** | 4760 | - |
 | [ODROID-HC4](http://ix.io/3Na5) | 2100 MHz | 5.10 | Buster arm64 | 5730 | 1672 | 980970 | **3540** | 5150 | - |
 | [ODROID-C4](http://ix.io/3TQ2) | 2100 MHz | 5.10 | Buster arm64 | 5770 | 1679 | 981940 | **3540** | 5150 | - |
 | [x7-Z8700](http://ix.io/4iDX) | 2400 MHz | 5.15 | Bullseye amd64 | 6580 | 1784 | 296680 | **3510** | 3580 | - |
@@ -972,6 +976,7 @@
 | [NanoPi NEO4](http://ix.io/1oim) | 2000/1500 MHz | 4.4| Stretch arm64 | 6520 | 1718 | 1123190 | 2280 | **4770** | 8.83 |
 | [NanoPi NEO4](http://ix.io/1oib) | 2000/1500 MHz | 4.4| Stretch arm64 | 6030 | 1343 | 1121380 | 2230 | **4770** | 8.57 |
 | [NanoPi NEO4](http://ix.io/1oho) | 2000/1500 MHz | 4.4| Stretch arm64 | 6510 | 1703 | 1128860 | 2260 | **4770** | 8.71 |
+| [Milk-V Pioneer](http://ix.io/4wYE) | 2000 MHz | 6.1 | Kinetic riscv64 | 59820 | 1622 | 43500 | 3620 | **4760** | - |
 | [NanoPi Fire3](http://ix.io/1jjm) | 1400 MHz | 4.14 | Bionic arm64 | 7440 | 1052 | 653000 | 1560 | **4600** | 10.96 |
 | [NanoPi Fire3](http://ix.io/3ZxU) | 1400 MHz | 4.14 | Focal arm64 | 7350 | 1093 | 652640 | 1530 | **4590** | 11.18 |
 | [NanoPi Fire3](http://ix.io/1jiU) | 1380 MHz | 4.14 | Stretch arm64 | 7420 | 1038 | 645400 | 1520 | **4570** | 8.53 |
@@ -1139,6 +1144,7 @@
 | [NanoPi NEO4](http://ix.io/1oho) | **2000/1500** MHz| 4.4| Stretch arm64 | 6510 | 1703 | 1128860 | 2260 | 4770 | 8.71 |
 | [NanoPi M4](http://ix.io/1lzP) | **2000/1500** MHz| 4.19 | Stretch arm64 | 6400 | 1835 | 1128330 | 4080 | 8270 | 8.86 |
 | [NanoPC T4](http://ix.io/1lkG) | **2000/1500** MHz| 4.4 | Stretch arm64 | 5870 | 1336 | 1124040 | 2810 | 4890 | 8.70 |
+| [Milk-V Pioneer](http://ix.io/4wYE) | **2000** MHz| 6.1 | Kinetic riscv64 | 59820 | 1622 | 43500 | 3620 | 4760 | - |
 | [Khadas VIM1S](http://ix.io/4bbv) | **2000** MHz| 5.4 | Jammy arm64 | 4000 | 1148 | 436540 | 1970 | 7530 | - |
 | [Khadas Edge](http://ix.io/1uar) | **2000/1500** MHz| 4.4 | Stretch arm64 | 6600 | 1703 | 1127780 | 2860 | 4880 | 8.85 |
 | [Khadas Edge](http://ix.io/1rYm) | **2000/1500** MHz| 4.4 | Bionic arm64 | 6550 | 1721 | 1130400 | 2810 | 4860 | 10.50 |

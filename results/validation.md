@@ -259,3 +259,4 @@
 | <del>[4vgu](4vgu.txt)</del> | <del>v0.9.41 NVIDIA Orin Nano Developer Kit </del> | <del>0%/0%</del> | <del>6.3Gi/3.6Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del><span style=color:red> 8%</span></del> | <del> 0%</del> | <del>[check log](4vgu.txt)</del> |
 | [4vxM](4vxM.txt) | v0.9.41 AZW EQ / N100 | 0%/0% | 15Gi/14Gi | X | X | X | X | 1% | 0% | [check log](4vxM.txt) |
 | [4vy7](4vy7.txt) | v0.9.41 NVIDIA Orin Nano Developer Kit | 0%/0% | 6.3Gi/5.4Gi | X | X | X | X | 3% | 2% | [check log](4vy7.txt) |
+| [4wYE](4wYE.txt) | v0.9.41 Sophgo Mango | 0%/0% | 125Gi/124Gi | X | X | X | X | <span style=color:red>**72%**</span> | 0% | [check log](4wYE.txt) |

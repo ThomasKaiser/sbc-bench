@@ -260,3 +260,4 @@
 | [4vxM](4vxM.txt) | v0.9.41 AZW EQ / N100 | 0%/0% | 15Gi/14Gi | X | X | X | X | 1% | 0% | [check log](4vxM.txt) |
 | [4vy7](4vy7.txt) | v0.9.41 NVIDIA Orin Nano Developer Kit | 0%/0% | 6.3Gi/5.4Gi | X | X | X | X | 3% | 2% | [check log](4vy7.txt) |
 | [4wYE](4wYE.txt) | v0.9.41 Sophgo Mango | 0%/0% | 125Gi/124Gi | X | X | X | X | <span style=color:red>**72%**</span> | 0% | [check log](4wYE.txt) |
+| [4x8j](4x8j.txt) | v0.9.41 T-HEAD Light Lichee Pi 4A confi | 0%/0% | 7.6Gi/6.9Gi | X | X | X | X | 3% | <span style=color:red> 5%</span> | [check log](4x8j.txt) |

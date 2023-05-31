@@ -7714,6 +7714,9 @@ CheckKernelVersion() {
 				*S928X*)
 					PrintBSPWarning Amlogic
 					;;
+				*T-Head*)
+					PrintBSPWarning T-Head
+					;;
 			esac
 			;;
 		5.15.*)
@@ -7757,7 +7760,7 @@ PrintBSPWarning() {
 			echo -e "${BOLD}vendor kernel. See https://tinyurl.com/y8k3af73 and https://tinyurl.com/ywtfec7n${NC}"
 			echo -e "${BOLD}for details.${NC}"
 			;;
-		MediaTek|Nexell|Nvidia|NXP|Qualcomm|RealTek|Samsung|StarFive)
+		MediaTek|Nexell|Nvidia|NXP|Qualcomm|RealTek|Samsung|StarFive|T-Head)
 			echo -e "${BOLD}This device runs a $1 vendor/BSP kernel.${NC}"
 			;;
 		Rockchip)

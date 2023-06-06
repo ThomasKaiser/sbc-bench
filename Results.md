@@ -120,7 +120,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [PineH64](http://ix.io/26Ph) | 1800 MHz | 5.4 | Buster arm64 | 4710 | 1293 | 839870 | 1420 | 5560 | 7.10 |
 | [Qualcomm QRB5165](http://ix.io/49kx) | 2840/2410/1790 MHz | 4.19 | Focal arm64 | 18860 | 3898 | 1598490 | 14470 | 23910 | 25.56 |
 | [Qualcomm Snapdragon 8cx Gen 3 (WSL2)](http://ix.io/4kEp) | 2980/? MHz | 5.15 | Jammy arm64 | 33600 | 4789 | 1679480 | 21010 | 41540 | 50.65 |
-| [Qualcomm Snapdragon 8cx Gen 3](http://ix.io/4qG1) | 3000/2440 MHz | 6.2 | Kinetic arm64 | 35320 | 4283 | 1694260 | 17710 | 42110 | 42.76 |
+| [Qualcomm Snapdragon 8cx Gen 3](http://ix.io/4xwT) | 3000/2440 MHz | 6.3 | Lunar arm64 | 35370 | 4312 | 1686160 | 17500 | 41780 | 42.76 |
 | [Quartz64-A](http://ix.io/3rUb) | 1810 MHz | 5.13 | Buster arm64 | 4840 | 1353 | 845490 | 2980 | 7650| - |
 | [Quartz64-A](http://ix.io/4qJF) | 1890 MHz | 6.2 | Jammy arm64 | 4980 | 1457 | 884590 | 3240 | 6100 | 6.98 |
 | [Radxa ROCK 3A](http://ix.io/40TX) | 2000 MHz | 5.18 | Bullseye arm64 | 5110 | 1450 | 935920 | 3150 | 6250 | 7.58 |
@@ -219,6 +219,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Pentium N6005](http://ix.io/4f3I) | 3300/2000 MHz | 6.0 | Jammy amd64 | 10810 | 3485 | 922000 | 9600 | 11300 | 20.15 |
 | [Celeron N5105](http://ix.io/3Qf7) | 2900/2000 MHz | 5.13 | Focal amd64 | 11450 | 3059 | 811760 | 7710 | 9290 | 21.79 |
 | [Pentium G4600](http://ix.io/2jVw) | 3600 MHz | 4.19 | Buster amd64 | 11810 | 4448 | 984820 | 15120 | 33380 | 21.88 |
+| [N95](http://ix.io/4xwq) | 3400 MHz | 5.15 | Jammy amd64 | 13070 | 3993 | 1232880 | 9710 | 8730 | 34.60 |
 | [N100](http://ix.io/4vxM) | 3400 MHz | 6.1 | Lunar amd64 | 14150 | 4073 | 1232790 | 11600 | 12270 | 36.24 |
 | [i3-N305](http://ix.io/4qpr) | 3800 MHz | 5.19 | Jammy amd64 | 20000 | 4398 | 1377280 | 9950 | 8990 | 41.43 |
 

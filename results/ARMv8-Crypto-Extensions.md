@@ -50,7 +50,7 @@ All of this **only** applies to ARM SoCs with _ARMv8 Crypto Extensions_ licensed
 
 ### Numbers the aforementioned conclusions are based on
 
-Crawling through [sbc-bench results collection](../Results.md) comparing +30 different SoCs/CPUs from various vendors at various clockspeeds using OpenSSL versions 1.1.0f (25 May 2017) through 3.0.2 (15 Mar 2022) shows always the same relation between openssl score and clockspeed for those four core families (right column is OpenSSL's aes-256-cbc score divided through clockspeed in MHz):
+Crawling through [sbc-bench results collection](../Results.md) comparing +70 different SoCs/CPUs from various vendors at various clockspeeds using OpenSSL versions 1.1.0f (25 May 2017) through 3.0.9 (30 May 2023) shows always the same relation between openssl score and clockspeed for those four core families (right column is OpenSSL's aes-256-cbc score divided through clockspeed in MHz):
 
 | ARM core | MHz | aes-256-cbc | score/mhz |
 | :----: | ----:  | :----:  | :----:  |
@@ -98,17 +98,18 @@ Crawling through [sbc-bench results collection](../Results.md) comparing +30 dif
 | Cortex-A55 | | | |
 | [RK3588](http://ix.io/3XzI) | 915 | 427750 | 467 |
 | [RK3566](http://ix.io/45X1) | 1750 |  818550 | 467 |
+| [Snapdragon 845](http://ix.io/4dJV) | 1760 | 824640 | 469 |
 | [RK3588s](http://ix.io/3XTA) | 1780 | 830640 | 467 |
 | [QRB5165](http://ix.io/49kx) | 1790 | 837220 | 468 |
+| [Snapdragon 7c](http://ix.io/4xEW) | 1800 | 840140 | 467 |
 | [RK3566](http://ix.io/3rUb) | 1810 | 845490 | 469 |
 | [RK3588s](http://ix.io/3XYo) | 1815 | 846760 | 467 |
+| [Snapdragon 835](http://ix.io/4fdD) | 1900 | 883330 | 465 |
 | [S905X3](http://ix.io/3Vdt) | 1908 | 890730 | 466 |
 | [RK3568](http://ix.io/3Ug9) | 1930 | 898610 | 465 |
 | [RK3568](http://ix.io/3UXa) | 1950 | 911730 | 467 |
 | [S905X3](http://ix.io/2kaS) | 2010 | 941590 | 468 |
 | [S905X3](http://ix.io/3TQ2) | 2100 | 981940 | 467 |
-| [Snapdragon 835](http://ix.io/4fdD) | 1900 | 883330 | 465 |
-| [Snapdragon 845](http://ix.io/4dJV) | 1760 | 824640 | 469 |
 | Cortex-A72 | | | |
 | [RK3399](http://ix.io/1iWU) | 1800 | 1023600 | 568 |
 | [LX2160A](http://ix.io/1ET3) | 1900 | 1079480 | 568 |
@@ -124,6 +125,7 @@ Crawling through [sbc-bench results collection](../Results.md) comparing +30 dif
 | Cortex-A76 | | | |
 | [RK3588](http://ix.io/3XzI) | 985 | 560200 | 569 |
 | [RK3588s](http://ix.io/3XYo) | 2330 | 1325370 | 569 |
+| [Snapdragon 7c](http://ix.io/4xEW) | 2550 | 1454480 | 570 |
 | Cortex-A77 | | | |
 | [QRB5165](http://ix.io/49kx) | 2410 | 1348440 | 560 |
 | [QRB5165](http://ix.io/49kx) | 2840 | 1598490 | 563 |

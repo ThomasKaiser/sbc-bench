@@ -4350,8 +4350,9 @@ ValidateResults() {
 		esac
 	else
 		# Throttling on all other systems?
-		if [ "${ThrottlingWarning}" = "" ]; then
-			# only report 'no throttling' when not running inside a VM/container
+		if [ "${ThrottlingWarning}" = "" -a -f /sys/devices/system/cpu/cpufreq/policy0/stats/time_in_state ]; then
+			# only report 'No throttling' when cpufreq statistics are available and not
+			# running inside a VM/container
 			[ "X${VirtWhat}" = "X" -o "X${VirtWhat}" = "Xnone" ] && echo -e "${LGREEN}No throttling${NC}"
 		else
 			# we need to check whether we're running in Geekbench or PTS mode since the
@@ -4834,7 +4835,8 @@ GuessARMSoC() {
 	#  Qualcomm Krait / r2p1: Qualcomm MSM8974PRO (Snapdragon 801)
 	#   Qualcomm Kryo / r1p2: Qualcomm MSM8996 (Snapdragon 820)
 	#   Qualcomm Kryo / r2p1: Qualcomm MSM8996pro (Snapdragon 821)
-	#   Qualcomm Kryo / r13p14: Qualcomm QRB5165 (Snapdragon 865)
+	#   Qualcomm Kryo / r13p14: Qualcomm Snapdragon 7c, Qualcomm QRB5165 (Snapdragon 865)
+	#   Qualcomm Kryo / r15p15: Qualcomm Snapdragon 7c
 	# Qualcomm Kryo V2 / r10p4: Qualcomm SDM662 (Snapdragon 622), Qualcomm MSM8998 (Snapdragon 835)
 	#   ThunderX 88XX / r1p1: ThunderX CN8890
 	#  ThunderX2 99xx / r0p1: Cavium ThunderX2 CN9980
@@ -4886,7 +4888,7 @@ GuessARMSoC() {
 	# soc soc0: Amlogic Meson GXL (S805X) Revision 21:d (34:2) Detected <-- Libre Computer AML-S805X-AC / Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:d (84:2) Detected <-- Khadas VIM / Libre Computer AML-S905X-CC / ZTE B860H / Fiberhome HG680P / Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:d (85:2) Detected <-- Libre Computer AML-S905X-CC
-	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:e (85:2) Detected <-- Vermax UHD 300X / Amlogic Meson GXL (S905X) P212 Development Board
+	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:e (85:2) Detected <-- Khadas VIM, Vermax UHD 300X / Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson GXL (S905W) Revision 21:d (a4:2) Detected <-- Tanix TX3 Mini / Amlogic Meson GXL (S905X) P212 Development Board / Amlogic Meson GXL (S905W) P281 Development Board
 	# soc soc0: Amlogic Meson GXL (Unknown) Revision 21:d (a4:2) Detected <-- Khadas VIM / Tanix TX3 Mini / JetHome JetHub J80 / Amlogic Meson GXL (S905X) P212 Development Board / Amlogic Meson GXL (S905W) P281 Development Board
 	# soc soc0: Amlogic Meson GXL (S905L) Revision 21:d (c4:2) Detected <-- X96 mini, Amlogic Meson GXL (S905X) P212 Development Board
@@ -5755,6 +5757,10 @@ GuessSoCbySignature() {
 		*Kryor2p1*Kryor2p1*Kryor2p1*Kryor2p1)
 			# Qualcomm MSM8996pro: 2 x Kryo r2p1 + 2 x Kryo r2p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			echo "Qualcomm MSM8996pro"
+			;;
+		00Qualcomm4XXSilver00Qualcomm4XXSilver00Qualcomm4XXSilver00Qualcomm4XXSilver00Qualcomm4XXSilver00Qualcomm4XXSilver06Qualcomm4XXGold06Qualcomm4XXGold)
+			# Qualcomm Snapdragon 7c (SC7180): 6 x Kryo 468 Silver / r13p14 + 2 x Kryo 468 Gold / r15p15 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp asimdrdm lrcpc dcpop asimddp
+			echo "Qualcomm Snapdragon 7c"
 			;;
 		*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4)
 			# Socionext SC2A11: 24 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid

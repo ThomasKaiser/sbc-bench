@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.9.41
+Version=0.9.42
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -4852,7 +4852,7 @@ GuessARMSoC() {
 	#                                                         Rockemd R68K 2.5G, Hinlink H68K, Magewell Pro Convert NDI to AIO 4K Gen2, AIO-3568J
 	# rockchip-cpuinfo cpuinfo: SoC            : 35880000 --> 9Tripod X3588S Board, Firefly ITX-3588J/ROC-RK3588S-PC, NanoPi R6S, HINLINK OWL H88K, Khadas Edge2,
 	#                                                         Orange Pi 5, ROCK 5A/5B, EDGE LP4x V1.0 BlueBerry, CoolPi 4B, Shaggy013 LP4x V1.2 H96_Max_v58 Board,
-	#                                                         EVB4 LP4 V10 Board, OWL H88K
+	#                                                         EVB4 LP4 V10 Board, OWL H88K, RK3588 MINI PC V11 Board
 	# rockchip-cpuinfo cpuinfo: SoC            : 35881000 --> http://ix.io/4nwf (RK3588S, majority of Orange Pi 5 has this silicon revision)
 	#
 	# RK 'open source' SoCs according to https://github.com/rockchip-linux/kernel/blob/develop-5.10/drivers/soc/rockchip/rockchip-cpuinfo.c (at least RV1108 and RK3588/RK3588s missing)
@@ -4869,7 +4869,7 @@ GuessARMSoC() {
 	# soc soc0: Amlogic Meson GXBB (S905H) Revision 1f:c (23:1) Detected <-- Amlogic Meson GXBB P201 Development Board
 	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:a (82:2) Detected <-- Khadas VIM / NEXBOX A95X (S905X) / Tanix TX3 Mini / Amlogic Meson GXL (S905X) P212 Development Board, ZTE B860H
 	# soc soc0: Amlogic Meson GXL (S905D) Revision 21:b (0:2) Detected <-- Amlogic Meson GXL (S905W) P281 Development Board
-	# soc soc0: Amlogic Meson GXL (S905D) Revision 21:b (2:2) Detected <-- MeCool KI Pro, Phicomm N1
+	# soc soc0: Amlogic Meson GXL (S905D) Revision 21:b (2:2) Detected <-- MeCool KI Pro, Phicomm N1, Amlogic Meson GXL (S905D) P231 Development Board
 	# soc soc0: Amlogic Meson GXL (Unknown) Revision 21:b (2:2) Detected <-- Phicomm N1
 	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:b (82:2) Detected <-- Libre Computer AML-S905X-CC / NEXBOX A95X (S905X) / Tanix TX3 Mini / Amlogic Meson GXL (S905X) P212 Development Board / Amlogic Meson GXL (S905W) P281 Development Board
 	# soc soc0: Amlogic Meson GXL (S905W) Revision 21:b (a2:2) Detected <-- Tanix TX3 Mini / Amlogic Meson GXL (S905X) P212 Development Board, Amlogic Meson GXL (S905W) P281 Development Board
@@ -6746,7 +6746,7 @@ GuessSoCbySignature() {
 			# M1: 'fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 asimddp sha512 asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp flagm2 frint'
 			# M2: 'fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 asimddp sha512 asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp flagm2 frint i8mm bf16 bti ecv'
 			# Inside Hypervisor.Framework VMs all ID values are set to 0 and on M2 SoCs VMs only see M1 CPU flags/features.
-			grep -q 'fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 asimddp sha512 asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp flagm2 frint' <<< "${ProcCPU}" && echo "Apple Silicon"
+			grep -q -E 'fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 asimddp sha512 asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp flagm2 frint|fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 asimddp sha512 asimdfhm dit uscat ilrcpc flagm sb paca pacg dcpodp flagm2 frint' <<< "${ProcCPU}" && echo "Apple Silicon"
 			;;
 		*thead,c906|10)
 			# Allwinner D1: single T-Head C906 core
@@ -7059,6 +7059,8 @@ ProvideReviewInfo() {
 	InitialMonitoring
 	unset SPACING
 	[ "X${RunBenchmarks}" = "XTRUE" ] && CheckClockspeedsAndSensors || echo -e "\x08\x08 Done.\nNow quickly examining OS, settings and hardware...\c"
+	# repeat SoC guessing after measuring CPU clockspeeds (some guesses depend on clockspeed)
+	[ "${CPUArchitecture}" = "x86_64" ] || GuessedSoC="$(GuessARMSoC)"
 	[ "X${RunBenchmarks}" = "XTRUE" ] && ClockspeedsBefore="$(cat "${TempDir}/cpufreq" | sed -e 's/^/    /')"
 	[ "X${NOTUNING}" != "Xyes" -a "X${RunBenchmarks}" = "XTRUE" -a -f /sys/devices/system/cpu/cpufreq/policy0/scaling_governor ] && CheckTimeInState before
 	[ "X${RunBenchmarks}" = "XTRUE" ] && RunTinyMemBench

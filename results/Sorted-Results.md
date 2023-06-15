@@ -117,6 +117,7 @@
 | [ODROID-M1](http://ix.io/4ijy) | 2060 MHz | 5.18 | Bullseye arm64 | **5430** | 1567 | 961090 | 3310 | 5960 | 7.76 |
 | [Tinkerboard](http://ix.io/1iSX) | 1730 MHz | 4.14 | Stretch armhf | **5350** | 1563 | 66600 | 1480 | 3900 | - |
 | [AMedia X96 Max+](http://ix.io/3QOj) | 2100 MHz | 5.15 | Focal arm64 | **5270** | 1330 | 981830 | 2630 | 5150 | - |
+| [Lichee Pi 4A](http://ix.io/4xYE) | 1990 MHz | 5.10 | Bookworm riscv64 | **5260** | 1592 | 43820 | 4350 | 14760 | - |
 | [Jetson Nano](http://ix.io/4rLX) | 1480 MHz | 4.9 | Bullseye arm64 | **5260** | 1578 | 531940 | 3730 | 8870 | - |
 | [Khadas VIM3L](http://ix.io/26Wy) | 1900 MHz | 4.9 | Bionic arm64 | **5160** | 1399 | 892110 | 3670 | 6360 | 7.29 |
 | [Radxa ROCK 3A](http://ix.io/40TX) | 2000 MHz | 5.18 | Bullseye arm64 | **5110** | 1450 | 935920 | 3150 | 6250 | 7.58 |
@@ -130,7 +131,6 @@
 | [Khadas VIM2](http://ix.io/1ixi) | 1415/1000 MHz | 4.9 | Xenial arm64 | **4800** | 1128 | 659000 | 1690 | 5610 | - |
 | [x5-Z8350](http://ix.io/2Jdb) | 1920/1680 MHz | 5.4 | Focal amd64 | **4790** | 1454 | 237230 | 3170 | 2960 | 9.38 |
 | [Athlon II X3 420e](http://ix.io/4eOo) | 2600 MHz | 4.19 | Buster amd64 | **4780** | 2566 | 98840 | 4120 | 3870 | - |
-| [Lichee Pi 4A](http://ix.io/4x8j) | 1850 MHz | 5.10 | Bookworm riscv64 | **4740** | 1320 | 40610 | 4250 | 13870 | - |
 | [x5-Z8350](http://ix.io/1HnC) | 1920/1680 MHz | 4.15 | Bionic amd64 | **4710** | 1272 | 207640 | 2740 | 3140 | - |
 | [PineH64](http://ix.io/26Ph) | 1800 MHz | 5.4 | Buster arm64 | **4710** | 1293 | 839870 | 1420 | 5560 | 7.10 |
 | [PineH64](http://ix.io/1jEr) | 1800 MHz | 4.18 | Stretch arm64 | **4650** | 1274 | 836900 | 1380 | 5530 | 5.62 |
@@ -321,6 +321,7 @@
 | [Milk-V Pioneer](http://ix.io/4wYE) | 2000 MHz | 6.1 | Kinetic riscv64 | 59820 | **1622** | 43500 | 3620 | 4760 | - |
 | [Raspberry Pi 4 B](http://ix.io/1MFf) | 1500 MHz | 4.19 | Raspbian Buster | 5500 | **1606** | 64860 | 2460 | 3170 | - |
 | [ODROID-XU4](http://ix.io/3GnC) | 2000/1400 MHz | 5.4 | Focal armhf | 8980 | **1604** | 72020 | 2280 | 4910 | - |
+| [Lichee Pi 4A](http://ix.io/4xYE) | 1990 MHz | 5.10 | Bookworm riscv64 | 5260 | **1592** | 43820 | 4350 | 14760 | - |
 | [RockPro64](http://ix.io/1lBC) | 1800/1400 MHz | 4.4 | Stretch arm64 | 6140 | **1580** | 1015600 | 2770 | 4850 | 8.14 |
 | [Jetson Nano](http://ix.io/4rLX) | 1480 MHz | 4.9 | Bullseye arm64 | 5260 | **1578** | 531940 | 3730 | 8870 | - |
 | [ODROID-M1](http://ix.io/4ijy) | 2060 MHz | 5.18 | Bullseye arm64 | 5430 | **1567** | 961090 | 3310 | 5960 | 7.76 |
@@ -343,7 +344,6 @@
 | [NanoPi NEO4](http://ix.io/1oib) | 2000/1500 MHz | 4.4| Stretch arm64 | 6030 | **1343** | 1121380 | 2230 | 4770 | 8.57 |
 | [NanoPC T4](http://ix.io/1lkG) | 2000/1500 MHz | 4.4 | Stretch arm64 | 5870 | **1336** | 1124040 | 2810 | 4890 | 8.70 |
 | [AMedia X96 Max+](http://ix.io/3QOj) | 2100 MHz | 5.15 | Focal arm64 | 5270 | **1330** | 981830 | 2630 | 5150 | - |
-| [Lichee Pi 4A](http://ix.io/4x8j) | 1850 MHz | 5.10 | Bookworm riscv64 | 4740 | **1320** | 40610 | 4250 | 13870 | - |
 | [PineH64](http://ix.io/26Ph) | 1800 MHz | 5.4 | Buster arm64 | 4710 | **1293** | 839870 | 1420 | 5560 | 7.10 |
 | [PineH64](http://ix.io/1jEr) | 1800 MHz | 4.18 | Stretch arm64 | 4650 | **1274** | 836900 | 1380 | 5530 | 5.62 |
 | [x5-Z8350](http://ix.io/1HnC) | 1920/1680 MHz | 4.15 | Bionic amd64 | 4710 | **1272** | 207640 | 2740 | 3140 | - |
@@ -599,6 +599,7 @@
 | [NanoPi K2](http://ix.io/1iT1) | 1480 MHz | 4.14 | Stretch arm64 | 3850 | 1095 | **50370** | 1660 | 3870 | 4.61 |
 | [ODROID-C2](http://ix.io/1ixI) | 1750 MHz | 3.14 | Xenial arm64 | 4070 | 1128 | **48500** | 1750 | 3100 | - |
 | [Clearfog A1](http://ix.io/4d1U) | 1600 MHz | 5.15 | Bullseye armhf | 2230 | 1239 | **44080** | 910 | 5060 | - |
+| [Lichee Pi 4A](http://ix.io/4xYE) | 1990 MHz | 5.10 | Bookworm riscv64 | 5260 | 1592 | **43820** | 4350 | 14760 | - |
 | [Milk-V Pioneer](http://ix.io/4wYE) | 2000 MHz | 6.1 | Kinetic riscv64 | 59820 | 1622 | **43500** | 3620 | 4760 | - |
 | [Ugoos UT2](http://ix.io/408h) | 1560 MHz | 5.10 | Jammy armhf | 3320 | 994 | **43250** | 320 | 2020 | - |
 | [Tronsmart S82](http://ix.io/41ML) | 1600 MHz | 5.14 | Focal armhf | 3640 | 1114 | **43150** | 500 | 3200 | - |
@@ -606,7 +607,6 @@
 | [Raspberry Pi 3 B+](http://ix.io/1isD) | with fan | 4.14 | Raspbian Stretch | 3670 | 1046 | **42600** | 1120 | 1600 | - |
 | [Tronsmart MXIII Plus](http://ix.io/3S5U) | 1560 MHz | 5.10 | Buster armhf | 3880 | 1113 | **42570** | 1470 | 3430 | - |
 | [Helios4](http://ix.io/1jCy) | 1600 MHz | 4.14 | Stretch armhf | 2210 | 1215 | **42500 &ast;98560** | 910 | 4840 | - |
-| [Lichee Pi 4A](http://ix.io/4x8j) | 1850 MHz | 5.10 | Bookworm riscv64 | 4740 | 1320 | **40610** | 4250 | 13870 | - |
 | [Raspberry Pi 3 B+](http://ix.io/1iGz) | OC/normal | 4.14 | Raspbian Stretch | 3130 | 843 | **36620** | 1230 | 1780 | - |
 | [Raspberry Pi 3 B+](http://ix.io/1ism) | normal | 4.14 | Raspbian Stretch | 3240 | 914 | **36600** | 1130 | 1530 | - |
 | [Raspberry Pi 3 B+](http://ix.io/1iGM) | normal | 4.14 | Raspbian Stretch | 3040 | 856 | **36600** | 1050 | 1500 | - |
@@ -697,10 +697,10 @@
 | [Pentium N4200](http://ix.io/1ngq) | 2560/1100 MHz | 4.14 | Bionic amd64 | 7469 | 1976 | 468008 | **4682** | 4997 | 18.75 |
 | [Clearfog CX](http://ix.io/4ju5) | 2000 MHz | 5.10 | Focal arm64 | 25260 | 2236 | 1136690 | **4460** | 12500 | - |
 | [Atom E3950](http://ix.io/4dd5) | 2000 MHz | 5.15 | Jammy amd64 | 6440 | 1636 | 374800 | **4400** | 4840 | - |
+| [Lichee Pi 4A](http://ix.io/4xYE) | 1990 MHz | 5.10 | Bookworm riscv64 | 5260 | 1592 | 43820 | **4350** | 14760 | - |
 | [ODROID-N2+](http://ix.io/3DtN) | 2400/2015 MHz | 5.14 | Impish arm64 | 9790 | 2253 | 1366930 | **4300** | 7480 | - |
 | [Amazon a1.xlarge](http://ix.io/2iFY) | 2300 MHz | 4.15 | Bionic arm64 | 8610 | 2406 | 1297960 | **4280** | 14220 | - |
 | [ODROID-N2](http://ix.io/3MuT) | 2000/1900 MHz | 5.10 | Buster arm64 | 9090 | 2012 | 1085350 | **4260** | 9080 | - |
-| [Lichee Pi 4A](http://ix.io/4x8j) | 1850 MHz | 5.10 | Bookworm riscv64 | 4740 | 1320 | 40610 | **4250** | 13870 | - |
 | [ODROID-N2+](http://ix.io/4rWn) | 2400/2015 MHz | 6.1 | Bullseye arm64 | 9710 | 2373 | 1366180 | **4220** | 7720 | - |
 | [Gigabyte H270-T70](http://ix.io/3N5c) | 2000 Mhz | 5.16 | Sid arm64 | 107180 | 1826 | 340750 | **4180** | 17130 | - |
 | [NanoPC T4](http://ix.io/1iZq) | 1800/1400 MHz | 4.17 | Stretch arm64 | 6380 | 1741 | 1022600 | **4160** | 9000 | 9.36 |
@@ -889,10 +889,10 @@
 | [Honeycomb LX2](http://ix.io/3Y4f) | 2200 MHz | 5.16 | Fedora 35 aarch64 | 30690 | 2288 | 1251710 | 5050 | **16220** | 46.09 |
 | [Phytium D2000 2xSO-DIMM](http://ix.io/446h) | 2300 MHz | 5.19 | Jammy arm64 | 16670 | 2252 | 828130 | 3480 | **16110** | - |
 | [Celeron 5205U](http://ix.io/4eiM) | 1900 MHz | 5.15 | Jammy amd64 | 4060 | 2171 | 521090 | 7350 | **16020** | 11.20 |
+| [Lichee Pi 4A](http://ix.io/4xYE) | 1990 MHz | 5.10 | Bookworm riscv64 | 5260 | 1592 | 43820 | 4350 | **14760** | - |
 | [Phytium FT-2000/4 1xSO-DIMM](http://ix.io/4ioj) | 2600 MHz | 5.15 | Bullseye arm64 | 10020 | 2755 | 936740 | 3760 | **14540** | - |
 | [Amazon a1.xlarge](http://ix.io/2iFY) | 2300 MHz | 4.15 | Bionic arm64 | 8610 | 2406 | 1297960 | 4280 | **14220** | - |
 | [OnePlus 5](http://ix.io/4fdD) | 2360/1900 MHz | 6.1 | Jammy arm64 | 9800 | 2474 | 883330 | 9720 | **14070** | 12.58 |
-| [Lichee Pi 4A](http://ix.io/4x8j) | 1850 MHz | 5.10 | Bookworm riscv64 | 4740 | 1320 | 40610 | 4250 | **13870** | - |
 | [Clearfog CX](http://ix.io/4ju5) | 2000 MHz | 5.10 | Focal arm64 | 25260 | 2236 | 1136690 | 4460 | **12500** | - |
 | [i.MX8MPlus EVK board](http://ix.io/4hx0) | 1800 MHz | 5.15 | Focal arm64 | 4990 | 1348 | 837680 | 2740 | **12420** | 7.02 |
 | [N100](http://ix.io/4vxM) | 3400 MHz | 6.1 | Lunar amd64 | 14150 | 4073 | 1232790 | 11600 | **12270** | 36.24 |
@@ -1162,6 +1162,7 @@
 | [Jetson Nano](http://ix.io/3Ufc) | **2000** MHz| 4.9 | Bionic arm64 | 6260 | 1977 | 717500 | 4100 | 11760 | 8.72 |
 | [Clearfog CX](http://ix.io/4ju5) | **2000** MHz| 5.10 | Focal arm64 | 25260 | 2236 | 1136690 | 4460 | 12500 | - |
 | [Atom E3950](http://ix.io/4dd5) | **2000** MHz| 5.15 | Jammy amd64 | 6440 | 1636 | 374800 | 4400 | 4840 | - |
+| [Lichee Pi 4A](http://ix.io/4xYE) | **1990** MHz| 5.10 | Bookworm riscv64 | 5260 | 1592 | 43820 | 4350 | 14760 | - |
 | [RK3568-ROC-PC](http://ix.io/3Rsg) | **1960** MHz| 4.19 | Bullseye arm64 | 5040 | 1424 | 912800 | 3130 | 6240 | - |
 | [NanoPi R5S](http://ix.io/4jfZ) | **1960** MHz| 6.1 | Bullseye arm64 | 5030 | 1482 | 914340 | 2990 | 5970 | 7.33 |
 | [ODROID-M1](http://ix.io/3Ug9) | **1930** MHz| 4.19 | Focal arm64 | 5010 | 1450 | 898610 | 3070 | 6220 | 7.14 |
@@ -1174,7 +1175,6 @@
 | [Quartz64-A](http://ix.io/4qJF) | **1890** MHz| 6.2 | Jammy arm64 | 4980 | 1457 | 884590 | 3240 | 6100 | 6.98 |
 | [Jetson Xavier NX](http://ix.io/3YWp) | **1890** MHz| 4.9 | Bionic arm64 | 13230 | 2201 | 706280 | 9190 | 18480 | - |
 | [Atom N2800](http://ix.io/4nt8) | **1860** MHz| 5.15 | Bullseye amd64 | 2970 | 1006 | 21780 | 2050 | 1570 | - |
-| [Lichee Pi 4A](http://ix.io/4x8j) | **1850** MHz| 5.10 | Bookworm riscv64 | 4740 | 1320 | 40610 | 4250 | 13870 | - |
 | [x5-Z8300](http://ix.io/4j4o) | **1840** MHz| 5.15 | Jammy amd64 | 4430 | 1368 | 227030 | 2270 | 2380 | 8.84 |
 | [Atom Z3735F](http://ix.io/4r54) | **1830** MHz| 5.15 | Jammy amd64 | 4510 | 1437 | 227900 | 3020 | 2780 | - |
 | [Quartz64-A](http://ix.io/3rUb) | **1810** MHz| 5.13 | Buster arm64 | 4840 | 1353 | 845490 | 2980 | 7650| - |

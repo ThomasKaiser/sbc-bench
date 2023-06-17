@@ -4779,7 +4779,7 @@ GuessARMSoC() {
 	#      Cortex-A53 / r0p4: Allwinner A100/A133/A53/A64/H313/H5/H6/H616/H64/R329/R818/T507/T509, Amlogic A113X/A113D/A311D/A311D2/S805X/S805Y/S905/S905X/S905D/S905W/S905L/S905L3A/S905M2/S905X2/S905Y2/S905D2/S912/S922X/T962X2, Broadcom BCM2837/BCM2709/BCM2710/RP3A0-AU (BCM2710A1), HiSilicon Hi3798C-V200, Exynos 8890, HiSilicon Kirin 650/710/950/955/960/970, Marvell Armada 37x0, Mediatek MT6739WA/MT6762M/MT6765/MT6771V/MT6797/MT6797T/MT6799/MT8183/MT8735, NXP i.MX8M/i.MX8QM/LS1xx8, Qualcomm MSM8937/MSM8952/MSM8953/MSM8956/MSM8976/MSM8976PRO/SDM439/SDM450, RealTek RTD129x/RTD139x, Rockchip RK3318/RK3328/RK3528/RK3562/RK3399, Samsung Exynos 7870/7885/8890/8895, Socionext LD20/SC2A11, TI K3 AM623/AM625/AM62A/AM642/AM654, Xiaomi Surge S1
 	#      Cortex-A55 / r0p1: Samsung Exynos 9810
 	#      Cortex-A55 / r1p0: Amlogic S905X3/S905D3/S905Y3/T962X3/T962E2, HiSilicon Ascend 310 / Kirin 810/980, Samsung Exynos 9820
-	#      Cortex-A55 / r2p0: Amlogic S905X4/S905C2, Google Tensor G1, NXP i.MX 93, Qualcomm SM8350 (Snapdragon 888), Renesas RZG2UL/RZG2LC, Rockchip RK3566/RK3568/RK3588/RK3588s
+	#      Cortex-A55 / r2p0: Amlogic S905X4/S905C2, Google Tensor G1, MediaTek Genio 1200, NXP i.MX 93, Qualcomm SM8350 (Snapdragon 888), Renesas RZG2UL/RZG2LC, Rockchip RK3566/RK3568/RK3588/RK3588s
 	#      Cortex-A57 / r0p0: ARM Juno r0
 	#      Cortex-A57 / r1p0: Exynos 5433/7420
 	#      Cortex-A57 / r1p1: ARM Juno r1, Nvidia Tegra TX1, Snapdragon 810 / MSM8994/MSM8994V
@@ -4797,7 +4797,7 @@ GuessARMSoC() {
 	#      Cortex-A76 / r3p0: Exynos Auto V9, HiSilicon Kirin 810 (though with an own 0x48/0xd40 ID)
 	#      Cortex-A76 / r4p0: Google Tensor G1, Rockchip RK3588/RK3588s
 	#      Cortex-A77 / r1p0: Qualcomm QRB5165 (Snapdragon 865)
-	#      Cortex-A78 / r1p0: Qualcomm SM8350 (Snapdragon 888)
+	#      Cortex-A78 / r1p0: MediaTek Genio 1200, Qualcomm SM8350 (Snapdragon 888)
 	#    Cortex-A78AE / r0p1: Nvidia Jetson Orin NX / AGX Orin
 	#     Cortex-A78C / r0p0: Qualcomm Snapdragon 8cx Gen 3
 	#       Cortex-X1 / r1p0: Google Tensor G1, Qualcomm SM8350 (Snapdragon 888)
@@ -6844,6 +6844,10 @@ GuessSoCbySignature() {
 			# Amlogic S928X, 4 x Cortex-A55 + 1 x Cortex-A76: https://browser.geekbench.com/v5/cpu/compare/19788026?baseline=20656779
 			echo "Amlogic S928X"
 			;;
+		*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A78r1p0*A78r1p0*A78r1p0*A78r1p0)
+			# MediaTek Genio 1200: 4 x Cortex-A55 / r2p0 + 4 x Cortex-A78 / r1p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp
+			echo "MediaTek Genio 1200"
+			;;
 	esac
 } # GuessSoCbySignature
 
@@ -7732,7 +7736,7 @@ CheckKernelVersion() {
 				StarFive*)
 					PrintBSPWarning StarFive
 					;;
-				*MT7986A*)
+				*MT7986A*|*"Genio 1200"*)
 					PrintBSPWarning MediaTek
 					;;
 				*S928X*)

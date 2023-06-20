@@ -4877,7 +4877,7 @@ GuessARMSoC() {
 	# soc soc0: Amlogic Meson GXL (S905M2) Revision 21:b (e2:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:c (84:2) Detected <-- Khadas VIM / Rureka / Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson GXL (Unknown) Revision 21:c (84:2) Detected <-- Khadas VIM
-	# soc soc0: Amlogic Meson GXL (S905L) Revision 21:c (c2:2) Detected <-- PiBox by wdmomo
+	# soc soc0: Amlogic Meson GXL (S905L) Revision 21:c (c2:2) Detected <-- PiBox by wdmomo, Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson GXL (Unknown) Revision 21:c (c2:2) Detected <-- S905L on "PiBox by wdmomo"
 	# soc soc0: Amlogic Meson GXL (S905L) Revision 21:c (c4:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson GXL (S905M2) Revision 21:c (e2:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board
@@ -6115,7 +6115,7 @@ GuessSoCbySignature() {
 		00A72r0p300A72r0p300A72r0p300A72r0p3)
 			# BCM2711, 4 x Cortex-A72 / r0p3 / fp asimd evtstrm crc32 (running 32-bit: half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm crc32)
 			# or Marvell Armada3900-A1, 4 x Cortex-A72 / r0p3 / https://community.cisco.com/t5/wireless/catalyst-9130ax-ap-booting-into-wnc-linux-instead-of-ios-xe/td-p/4460181
-			grep -q raspberrypi <<<"${DTCompatible}" && echo "BCM2711${BCM2711}" || echo "Marvell Armada3900-A1"
+			grep -E -q 'raspberrypi|bcm283' <<<"${DTCompatible}" && echo "BCM2711${BCM2711}" || echo "Marvell Armada3900-A1"
 			;;
 		??A72r0p3??A72r0p3)
 			# Xilinx Versal, 2 x Cortex-A72 / r0p3 / fp asimd aes pmull sha1 sha2 crc32 cpuid
@@ -6254,16 +6254,28 @@ GuessSoCbySignature() {
 			# TI Sitara AM572x: 2 x Cortex-A15 / r2p2 / half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
 			echo "TI Sitara AM572x"
 			;;
+		00A55r2p000A55r2p000A55r2p000A55r2p014A76r4p014A76r4p014A76r4p027A76r4p0)
+			# Unisoc UMS9620, 4 x Cortex-A55 / r2p0 + 3 x Cortex-A76 / r4p0 / + 1 x Cortex-A76 / r4p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp asimdrdm lrcpc dcpop asimddp
+			echo "Unisoc UMS9620"
+			;;
 		0?A55r2p00?A55r2p00?A55r2p00?A55r2p0??A76r4p0??A76r4p0??A76r4p0??A76r4p0)
 			# RK3588, 4 x Cortex-A55 / r2p0 + 2 x Cortex-A76 / r4p0 / + 2 x Cortex-A76 / r4p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp asimdrdm lrcpc dcpop asimddp
-			if [ -f /sys/devices/system/cpu/cpufreq/policy7/cpuinfo_max_freq ]; then
-				# According to this site RK3588M is limited to 2.1 GHz
-				# https://techacute.com/rockchip-launched-flagship-smart-vehicle-solution-rk3588m-with-360-panoramic-view-function/
-				read MaxRK3588Freq </sys/devices/system/cpu/cpufreq/policy7/cpuinfo_max_freq
-				[ ${MaxRK3588Freq:-0} -eq 2100000 ] && echo "Rockchip RK3588M" || echo "Rockchip RK3588/RK3588s"
-			else
-				echo "Rockchip RK3588/RK3588s"
-			fi
+			# or Unisoc UMS9620, 4 x Cortex-A55 / r2p0 + 3 x Cortex-A76 / r4p0 / + 1 x Cortex-A76 / r4p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp asimdrdm lrcpc dcpop asimddp
+			case "${DTCompatible}" in
+				*ums9620*)
+					echo "Unisoc UMS9620"
+					;;
+				*)
+					if [ -f /sys/devices/system/cpu/cpufreq/policy7/cpuinfo_max_freq ]; then
+						# According to this site RK3588M is limited to 2.1 GHz
+						# https://techacute.com/rockchip-launched-flagship-smart-vehicle-solution-rk3588m-with-360-panoramic-view-function/
+						read MaxRK3588Freq </sys/devices/system/cpu/cpufreq/policy7/cpuinfo_max_freq
+						[ ${MaxRK3588Freq:-0} -eq 2100000 ] && echo "Rockchip RK3588M" || echo "Rockchip RK3588/RK3588s"
+					else
+						echo "Rockchip RK3588/RK3588s"
+					fi
+					;;
+			esac
 			;;
 		150A7r0p5150A7r0p5150A7r0p5150A7r0p5)
 			case "${DeviceName}" in
@@ -7689,6 +7701,9 @@ CheckKernelVersion() {
 				*5422*)
 					PrintBSPWarning Samsung
 					;;
+				*Unisoc*)
+					PrintBSPWarning Unisoc
+					;;
 			esac
 			;;
 		5.10.66|5.10.72|5.10.110)
@@ -7772,7 +7787,7 @@ PrintBSPWarning() {
 			echo -e "${BOLD}vendor kernel. See https://tinyurl.com/y8k3af73 and https://tinyurl.com/ywtfec7n${NC}"
 			echo -e "${BOLD}for details.${NC}"
 			;;
-		MediaTek|Nexell|Nvidia|NXP|Qualcomm|RealTek|Samsung|StarFive|T-Head)
+		MediaTek|Nexell|Nvidia|NXP|Qualcomm|RealTek|Samsung|StarFive|T-Head|Unisoc)
 			echo -e "${BOLD}This device runs a $1 vendor/BSP kernel.${NC}"
 			;;
 		Rockchip)

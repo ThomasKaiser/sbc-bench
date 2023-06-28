@@ -737,8 +737,8 @@ HandleGovernors() {
 		read Governor <"${REPLY}"
 		if [ "X${Governor}" != "X" ]; then
 			SysFSNode="$(sed 's/cpufreq\//cpufreq-/' <<<"${REPLY%/*}")"
-			AvailableGovernorsSysFSNode="$(ls -d "${REPLY%/*}"/*available_governors)"
-			AvailableFrequenciesSysFSNode="$(ls -d "${REPLY%/*}"/*available_frequencies)"
+			AvailableGovernorsSysFSNode="$(ls -d "${REPLY%/*}"/*available_governors 2>/dev/null)"
+			AvailableFrequenciesSysFSNode="$(ls -d "${REPLY%/*}"/*available_frequencies 2>/dev/null)"
 			if [ -r "${REPLY%/*}/cpuinfo_cur_freq" ]; then
 				Curfreq=" / $(awk '{printf ("%0.0f",$1/1000); }' <"${REPLY%/*}/cpuinfo_cur_freq") MHz"
 				Divider=1000
@@ -6680,7 +6680,7 @@ GuessSoCbySignature() {
 			grep -q 'No cpufreq support available. Measured on cpu' ${ResultLog} && \
 				MeasuredClockspeed=$(awk -F": " '/No cpufreq support available. Measured on cpu/ {print $2}' <${ResultLog} | cut -f1 -d' ' | head -n 1) || \
 				MeasuredClockspeed=$(grep -A2 "^Checking cpufreq OPP" ${ResultLog} | awk -F" " '/Measured/ {print $5}' | sort -r | head -n1)
-			if [ ${MeasuredClockspeed} -gt 2550 ]; then
+			if [ ${MeasuredClockspeed:-0} -gt 2550 ]; then
 				# Lame assumption that cpufreq above 2.5GHz identifies Ampere Altra
 				case $(awk -F":" '/ per socket/ {print $2}' <<<"${LSCPU}") in
 					*32)
@@ -7480,6 +7480,9 @@ CheckKernelVersion() {
 			;;
 	esac
 
+	# check kernel version number string for distro kernel schemes and return if true
+	grep -v -E 'amlogic|librem5|rockchip' <<<"$1" | grep -q -E '[3-9]\.[0-9]{1,3}\.[0-9]{1,2}-[0-9]{1,3}-[a-z]{1,3}' && return
+
 	# skip this whole check on x86 and in aarch64 VMs where usually distro kernels are
 	# used that follow an own release schedule
 	case "${CPUArchitecture}" in
@@ -7488,7 +7491,7 @@ CheckKernelVersion() {
 			;;
 		aarch64)
 			case ${VirtWhat} in
-				kvm|parallels|vmware|wsl|xen)
+				kvm|oracle|parallels|vmware|wsl|xen)
 					return
 					;;
 			esac

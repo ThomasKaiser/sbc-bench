@@ -250,7 +250,6 @@
 | [4rWn](4rWn.txt) | v0.9.39 Hardkernel ODROID-N2Plus | 0%/0% | 3.7Gi/3.4Gi | X | X | X | X | 1% | 0% | [check log](4rWn.txt) |
 | [4sNe](4sNe.txt) | v0.9.40 Radxa ROCK Pi S | 0%/0% | 474Mi/330Mi | | | | | <span style=color:red> 5%</span> | 2% | [check log](4sNe.txt) |
 | [4tjq](4tjq.txt) | v0.9.40 Pine64 Star64 | 0%/0% | 7.7Gi/7.1Gi | X | X | X | X | 2% | 1% | [check log](4tjq.txt) |
-| [4uSM](4uSM.txt) | v0.9.41 WYSE Dell Wyse Thin Client Desk | 0%/0% | 3.7Gi/3.3Gi | X | X | X | X | 3% | 1% | [check log](4uSM.txt) |
 | [4vNB](4vNB.txt) | v0.9.41 ATOPNUC ATOPNUC AG40 / Celeron | 0%/0% | 3.7Gi/3.3Gi | X | X | X | X | 1% | 0% | [check log](4vNB.txt) |
 | [4vVG](4vVG.txt) | v0.9.41 Raspberry Pi Model B Rev 2 | 0%/0% | 476Mi/397Mi | X | X | X | X | 4% | 1% | [check log](4vVG.txt) |
 | [4vfU](4vfU.txt) | v0.9.41 Rockchip RK3288 Asus Tinker Boa | 0%/0% | 2.0Gi/1.8Gi | X | X | X | X | 2% | 2% | [check log](4vfU.txt) |
@@ -264,3 +263,5 @@
 | [4xwT](4xwT.txt) | v0.9.41 Microsoft Dev Kit 2023 | 0%/0% | 30Gi/29Gi | X | X | X | X | 0% | 0% | [check log](4xwT.txt) |
 | [4xwq](4xwq.txt) | v0.9.41 / N95 | 0%/0% | 15Gi/14Gi | X | X | X | X | 1% | 0% | [check log](4xwq.txt) |
 | [4yNC](4yNC.txt) | v0.9.42 Google Homestar | 0%/0% | 3.8Gi/2.7Gi | X | X | X | X | 2% | 0% | [check log](4yNC.txt) |
+| [4z3s](4z3s.txt) | v0.9.42 clientron TC120 Type1 - TBD by | 0%/0% | 1.8Gi/1.0Gi | X | X | X | X | 2% | 0% | [check log](4z3s.txt) |
+| [4zcm](4zcm.txt) | v0.9.42 Marvell 8040 MACCHIATOBin Doubl | 0%/0% | 3.8Gi/3.3Gi | X | X | X | X | 2% | 0% | [check log](4zcm.txt) |

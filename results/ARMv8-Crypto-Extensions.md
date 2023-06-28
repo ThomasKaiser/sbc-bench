@@ -108,9 +108,11 @@ Crawling through [sbc-bench results collection](../Results.md) comparing +70 dif
 | [S905X3](http://ix.io/3Vdt) | 1908 | 890730 | 466 |
 | [RK3568](http://ix.io/3Ug9) | 1930 | 898610 | 465 |
 | [RK3568](http://ix.io/3UXa) | 1950 | 911730 | 467 |
+| [UMS9620](http://ix.io/4yFl) | 2000 | 936310 | 468 |
 | [S905X3](http://ix.io/2kaS) | 2010 | 941590 | 468 |
 | [S905X3](http://ix.io/3TQ2) | 2100 | 981940 | 467 |
 | Cortex-A72 | | | |
+| [Armada 8040](http://ix.io/4zcm) | 1600 | 909420 | 568 |
 | [RK3399](http://ix.io/1iWU) | 1800 | 1023600 | 568 |
 | [LX2160A](http://ix.io/1ET3) | 1900 | 1079480 | 568 |
 | [RK3399](http://ix.io/2yIx) | 2010 | 1144950 | 569 |
@@ -124,20 +126,21 @@ Crawling through [sbc-bench results collection](../Results.md) comparing +70 dif
 | [A311D](http://ix.io/3VfL) | 2400 | 1365900 | 569 |
 | Cortex-A76 | | | |
 | [RK3588](http://ix.io/3XzI) | 985 | 560200 | 569 |
+| [UMS9620](http://ix.io/4yFl) | 2210 | 1258230 | 569 |
 | [RK3588s](http://ix.io/3XYo) | 2330 | 1325370 | 569 |
 | [Snapdragon 7c](http://ix.io/4xEW) | 2550 | 1454480 | 570 |
 | Cortex-A77 | | | |
 | [QRB5165](http://ix.io/49kx) | 2410 | 1348440 | 560 |
 | [QRB5165](http://ix.io/49kx) | 2840 | 1598490 | 563 |
 | Cortex-A78C/A78AE | | | |
-| [Snapdragon 8cx Gen 3](http://ix.io/4qG1) | 2430 | 1373790 | 565 |
 | [NVIDIA Orin](http://ix.io/4ax9) | 2200 | 1242940 | 565 |
+| [Snapdragon 8cx Gen 3](http://ix.io/4xwT) | 2420 | 1365680 | 564 |
 | Cortex-X1C | | | |
-| [Snapdragon 8cx Gen 3](http://ix.io/4qG1) | 3000 | 1694260 | 565 |
+| [Snapdragon 8cx Gen 3](http://ix.io/4xwT) | 2990 | 1686160 | 564 |
 | Qualcomm Falkor V1 | | | |
 | [Snapdragon 835](http://ix.io/4fea) | 2360 | 1342240 | 569 |
 | Neoverse-N1 | | | |
-| [Ampere Altra](http://ix.io/4kiu) | 3000 | 1710010 | 570 |
 | [Amazon m6g.8xlarge](http://ix.io/2FrG) | 2500 | 1424770 | 570 |
+| [Ampere Altra](http://ix.io/4kiu) | 3000 | 1710010 | 570 |
 | Cortex-A510 | | | |
 | [Snapdragon 8 Gen1](http://ix.io/4pgq) | 1515 | 1405500 | 928 |

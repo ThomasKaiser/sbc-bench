@@ -4852,7 +4852,7 @@ GuessARMSoC() {
 	#                                                         Rockemd R68K 2.5G, Hinlink H68K, Magewell Pro Convert NDI to AIO 4K Gen2, AIO-3568J
 	# rockchip-cpuinfo cpuinfo: SoC            : 35880000 --> 9Tripod X3588S Board, Firefly ITX-3588J/ROC-RK3588S-PC, NanoPi R6S, HINLINK OWL H88K, Khadas Edge2,
 	#                                                         Orange Pi 5, ROCK 5A/5B, EDGE LP4x V1.0 BlueBerry, CoolPi 4B, Shaggy013 LP4x V1.2 H96_Max_v58 Board,
-	#                                                         EVB4 LP4 V10 Board, OWL H88K, RK3588 MINI PC V11 Board
+	#                                                         EVB4 LP4 V10 Board, OWL H88K, RK3588 MINI PC V11 Board, TOYBRICK X10, Mixtile Blade 3 v1.0.1
 	# rockchip-cpuinfo cpuinfo: SoC            : 35881000 --> http://ix.io/4nwf (RK3588S, majority of Orange Pi 5 has this silicon revision)
 	#
 	# RK 'open source' SoCs according to https://github.com/rockchip-linux/kernel/blob/develop-5.10/drivers/soc/rockchip/rockchip-cpuinfo.c (at least RV1108 and RK3588/RK3588s missing)
@@ -4879,7 +4879,7 @@ GuessARMSoC() {
 	# soc soc0: Amlogic Meson GXL (Unknown) Revision 21:c (84:2) Detected <-- Khadas VIM
 	# soc soc0: Amlogic Meson GXL (S905L) Revision 21:c (c2:2) Detected <-- PiBox by wdmomo, Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson GXL (Unknown) Revision 21:c (c2:2) Detected <-- S905L on "PiBox by wdmomo"
-	# soc soc0: Amlogic Meson GXL (S905L) Revision 21:c (c4:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board
+	# soc soc0: Amlogic Meson GXL (S905L) Revision 21:c (c4:2) Detected <-- Nexbox A95X, Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson GXL (S905M2) Revision 21:c (e2:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson GXL (Unknown) Revision 21:c (e2:2) Detected <-- Khadas VIM
 	# soc soc0: Amlogic Meson GXL (S905D) Revision 21:d (0:2) Detected <-- Tanix TX3 Mini / Amlogic Meson GXL (S905W) P281 Development Board
@@ -6096,11 +6096,11 @@ GuessSoCbySignature() {
 			# HiSilicon Hi3520D-V300: 1 x Cortex-A9 / r4p1 / swp half fastmult edsp
 			echo "HiSilicon Hi3520D-V300"
 			;;
-		00A72r0p100A72r0p102A72r0p102A72r0p1)
+		0?A72r0p10?A72r0p10?A72r0p10?A72r0p1)
 			# Armada 8040, 4 x Cortex-A72 / r0p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			echo "Marvell Armada 8040"
 			;;
-		00A72r0p100A72r0p1)
+		0?A72r0p10?A72r0p1)
 			# Armada 8020, 2 x Cortex-A72 / r0p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			echo "Marvell Armada 8020"
 			;;
@@ -6784,7 +6784,7 @@ GuessSoCbySignature() {
 			# StarFive JH7110: 4 x U74-MC https://doc-en.rvspace.org/Doc_Center/datasheet_7110.html
 			echo "StarFive JH7110"
 			;;
-		*sifive,u74-mc*sifive,u74-mc)
+		*sifive,u74mc*sifive,u74mc)
 			# StarFive JH7100: 2 x U74-MC https://doc-en.rvspace.org/Doc_Center/datasheet_7100.html
 			echo "StarFive JH7100"
 			;;

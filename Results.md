@@ -63,6 +63,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Lichee Pi 4A](http://ix.io/4xYE) | 1990 MHz | 5.10 | Bookworm riscv64 | 5260 | 1592 | 43820 | 4350 | 14760 | - |
 | [Lime A10](http://ix.io/1j1L) | 910 MHz | 4.14 | Stretch armhf | 550 | 550 | 28250 | 440 | 1300 | - |
 | [Loongson-3A5000-HV](http://ix.io/4dzX) | 2500 MHz | 4.19 | Loongnix 20 loongarch64 | 11120 | 2990 | 116900 | 6930 | 19170 | - |
+| [Macchiatobin](http://ix.io/4zcm) | 1600 MHz | 5.10 | Buster arm64 | 5720 | 1739 | 909420 | 4510 | 12270 | 7.91 |
 | [MangoPi Mcore](http://ix.io/4bSf) | 1800 MHz | 5.19 | Jammy arm64 | 4100 | 1218 | 840270 | 990 | 2380 | - |
 | [Marvell PXA1908](http://ix.io/46hs) | 1245 MHz | 3.14 | Bullseye arm64 | 3180 | 951 | 581840 | 740 | 2220 | - |
 | [Milk-V Pioneer](http://ix.io/4wYE) | 2000 MHz | 6.1 | Kinetic riscv64 | 59820 | 1622 | 43500 | 3620 | 4760 | - |
@@ -194,7 +195,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [AMD E-450 APU](http://ix.io/4hwl) | 1650 MHz | 5.15 | Jammy amd64 | 2430 | 1258 | 27450 | 1710 | 1740 | - |
 | [Celeron N2830](http://ix.io/4pEc) | 2160 MHz | 5.19 | Jammy amd64 | 2760 | 1664 | 31270 | 3780 | 3520 | 6.10 |
 | [Atom N2800](http://ix.io/4nt8) | 1860 MHz | 5.15 | Bullseye amd64 | 2970 | 1006 | 21780 | 2050 | 1570 | - |
-[ [Celeron N2807](http://ix.io/4uSM) | 2160 MHz | 5.4 | Focal amd64 | 2990 | 1647 | 31280 | 3600 | 2950 | - |
+| [Celeron N2807](http://ix.io/4z3s) | 2165 MHz | 5.10 | Bullseye) amd64 | 3070 | 1766 | 31250 | 3600 | 3110 | 6.09 |
 | [Celeron N3350](http://ix.io/4rJj) | 2400 MHz | 6.0 | Bullseye amd64 | 3810 | 2034 | 446170 | 5190 | 5700 | - |
 | [x5-Z8300](http://ix.io/1lgD) | 1420 MHz | 4.9 | Stretch amd64 | 3900 | 950 | 178010 | 2380 | 2380 | 7.81 |
 | [Celeron 5205U](http://ix.io/4eiM) | 1900 MHz | 5.15 | Jammy amd64 | 4060 | 2171 | 521090 | 7350 | 16020 | 11.20 |

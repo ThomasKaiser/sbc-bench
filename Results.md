@@ -14,27 +14,27 @@ So do **not** rely on collected numbers unless you carefully read through all th
 
 | Device / details | Clockspeed | Kernel | Distro | 7-zip multi | 7-zip single | AES | memcpy | memset | kH/s |
 | ----- | :--------: | :----: | :----: | ----: | ------: | ------: | -----: | -----: | ---: |
-| [Akaso M8S (Amlogic S812)](http://ix.io/3R3N) | 1200 MHz | 5.10 | Buster armhf | 3050 | 885 | 32120 | 1160 | 3330 | - |
+| [Akaso M8S (S812)](http://ix.io/3R3N) | 1200 MHz | 5.10 | Buster armhf | 3050 | 885 | 32120 | 1160 | 3330 | - |
 | [Amazon a1.xlarge](http://ix.io/2iFY) | 2300 MHz | 4.15 | Bionic arm64 | 8610 | 2406 | 1297960 | 4280 | 14220 | - |
-| [AMedia X96 Max+ (Amlogic S905X3)](http://ix.io/3QOj) | 2100 MHz | 5.15 | Focal arm64 | 5270 | 1330 | 981830 | 2630 | 5150 | - |
+| [AMedia X96 Max+ (S905X3)](http://ix.io/3QOj) | 2100 MHz | 5.15 | Focal arm64 | 5270 | 1330 | 981830 | 2630 | 5150 | - |
 | [Apple M1 Pro](http://ix.io/443N) | 3030/2060 MHz | 5.18 | Gentoo 2.8 arm64 | 43800 | 5010 | 1064450 | 27110 | 71910 | 48.28 |
 | [BPi M2U (Allwinner R40)](http://ix.io/4kmM) | 1200 MHz | 6.0 | Bullseye armhf | 2690 | 767 | 23320 | 780 | 3010 | - |
 | [BPi M4 (RTD1395)](http://ix.io/1Dt1) | 1400 MHz | 4.9 | Bionic arm64 | 3500 | - | 651460 | 1010 | 4360 | 5.48 |
 | [BPi R2 (MT7623)](http://ix.io/4dO7) | 1300 MHz | 4.19 | Focal armhf | 2990 | 854 | 25260 | 1550 | 3220 | - |
-| [Clearfog A1 (Armada 388)](http://ix.io/4d1U) | 1600 MHz | 5.15 | Bullseye armhf | 2230 | 1239 | 44080 | 910 | 5060 | - |
+| [Clearfog A1<br />(Armada 388)](http://ix.io/4d1U) | 1600 MHz | 5.15 | Bullseye armhf | 2230 | 1239 | 44080 | 910 | 5060 | - |
 | [Clearfog CX (NXP LS1028A)](http://ix.io/4ju5) | 2000 MHz | 5.10 | Focal arm64 | 25260 | 2236 | 1136690 | 4460 | 12500 | - |
 | [ClockworkPi R-01 (Allwinner D1)](http://ix.io/40BJ) | 1000 MHz | 5.4 | Focal riscv64 | 450 | 450 | 9040 | 1220 | 2640 | - |
 | [Cubietruck (Allwinner A20)](http://ix.io/3Naw) | 960 MHz | 5.10 | Bullseye armhf | 1030 | 541 | 18640 | 440 | 2010 | - |
-| [Cubox-i4 (NXP i.MX 6)](http://ix.io/4132) | 980 MHz | 5.15 | Jammy armhf | 2360 | 657 | 27000 | 340 | 340 | - |
+| [Cubox-i4<br />(NXP i.MX 6)](http://ix.io/4132) | 980 MHz | 5.15 | Jammy armhf | 2360 | 657 | 27000 | 340 | 340 | - |
 | [EspressoBin (Armada 3720)](http://ix.io/1kt2) | 800 MHz | 4.17 | Stretch arm64 | 1138 | 636 | 368330 | 1040 | 2490 | 1.23 |
 | [EspressoBin (Armada 3720)](http://ix.io/1lCe) | 1200 MHz | 4.18 | Stretch arm64 | 1630 | 869 | 544240 | 1000 | 2400 | 1.82 |
-| [Gigabyte H270-T70 (2 x ThunderX CN8890)](http://ix.io/3N5c) | 2000 Mhz | 5.16 | Sid arm64 | 107180 | 1826 | 340750 | 4180 | 17130 | - |
-| [Helios4 (Armada 388)](http://ix.io/1jCy) | 1600 MHz | 4.14 | Stretch armhf | 2210 | 1215 | 42500 &ast;98560 | 910 | 4840 | - |
+| [H270-T70<br />(2 x ThunderX CN8890)](http://ix.io/3N5c) | 2000 Mhz | 5.16 | Sid arm64 | 107180 | 1826 | 340750 | 4180 | 17130 | - |
+| [Helios4<br />(Armada 388)](http://ix.io/1jCy) | 1600 MHz | 4.14 | Stretch armhf | 2210 | 1215 | 42500 &ast;98560 | 910 | 4840 | - |
 | [Honeycomb LX2 (NXP LX2160A)](http://ix.io/3Y4f) | 2200 MHz | 5.16 | **Fedora 35 aarch64** | 30690 | 2288 | 1251710 | 5050 | 16220 | 46.09 |
-| [Huaqin P6410 (2 x Ampere Altra Max)](http://ix.io/4kiu) | 3000 MHz | 5.4 | Focal arm64 | 430860 | 4211 | 1710010 | 13310 | 47970 | - |
+| [Huaqin P6410<br />(2 x Ampere Altra Max)](http://ix.io/4kiu) | 3000 MHz | 5.4 | Focal arm64 | 430860 | 4211 | 1710010 | 13310 | 47970 | - |
 | [Hugsun X99 (RK3399)](http://ix.io/2ICt) | 2088/1800 MHz | 5.9 | Focal arm64 | 7710 | 1927 | 1184306 | 2270 | 5970 | - |
 | [HummingBoard Pulse i.MX8M Quad](http://ix.io/27FC) | 1500 MHz | 4.19 | Buster arm64 | 4330 | 1201 | 695540 | 2230 | 9900 | - |
-| [i.MX8MPlus EVK board](http://ix.io/4hx0) | 1800 MHz | 5.15 | Focal arm64 | 4990 | 1348 | 837680 | 2740 | 12420 | 7.02 |
+| [i.MX8MPlus EVK](http://ix.io/4hx0) | 1800 MHz | 5.15 | Focal arm64 | 4990 | 1348 | 837680 | 2740 | 12420 | 7.02 |
 | [Jetson AGX Orin](http://ix.io/4ax9) | 2200 MHz | 5.10 | Focal arm64 | 39450 | 3187 | 1242940 | 10600 | 30350 | 59.96 |
 | [Jetson Nano](http://ix.io/4rLX) | 1480 MHz | 4.9 | Bullseye arm64 | 5260 | 1578 | 531940 | 3730 | 8870 | - |
 | [Jetson Nano](http://ix.io/3Ufc) | 2000 MHz | 4.9 | Bionic arm64 | 6260 | 1977 | 717500 | 4100 | 11760 | 8.72 |
@@ -46,13 +46,13 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Khadas Edge (RK3399)](http://ix.io/1uar) | 2000/1500 MHz | 4.4 | Stretch arm64 | 6600 | 1703 | 1127780 | 2860 | 4880 | 8.85 |
 | [Khadas Edge2 (RK3588s)](http://ix.io/4a5U) | 2260/1800 MHz | 5.10 | Jammy arm64 | 16470 | 3096 | 1287490 | 10860 | 29110 | - |
 | [Khadas VIM1 (Amlogic S905X)](http://ix.io/4bee) | 1415 MHz | 5.1 | Buster arm64 | 3860 | 1136 | 660160 | 1940 | 5900 | - |
-| [Khadas VIM1S (Amlogic S905Y4)](http://ix.io/4bbv) | 2000 MHz | 5.4 | Jammy arm64 | 4000 | 1148 | 436540 | 1970 | 7530 | - |
+| [Khadas VIM1S (S905Y4)](http://ix.io/4bbv) | 2000 MHz | 5.4 | Jammy arm64 | 4000 | 1148 | 436540 | 1970 | 7530 | - |
 | [Khadas VIM2 (Amlogic S912)](http://ix.io/1iJ7) | 1415/1000 MHz | 4.17 | Bionic arm64 | 5450 | 993 | 659600 | 1920 | 5920 | 8.59 |
 | [Khadas VIM3 (Amlogic A311D)](http://ix.io/1MFD) | 2200/1800 MHz | 4.9 | Bionic arm64 | 8600 | 2026 | 1256910 | 4980 | 9300 | 13.12 |
 | [Khadas VIM3 (Amlogic A311D)](http://ix.io/3R2Z) | 2400/2015 MHz | 5.10 | Bullseye arm64 | 9650 | 2376 | 1366350 | 4850 | 7380 | - |
 | [Khadas VIM3 (Amlogic A311D)](http://ix.io/4o1A) | 2400/2015 MHz | 6.0 | Bullseye arm64 | 9650 | 2379 | 1366300 | 5080 | 9240 | - |
-| [Khadas VIM3L (Amlogic S905D3)](http://ix.io/26Wy) | 1900 MHz | 4.9 | Bionic arm64 | 5160 | 1399 | 892110 | 3670 | 6360 | 7.29 |
-| [Khadas VIM3L (Amlogic S905D3)](http://ix.io/3Vdt) | 1900 MHz | 5.16 | Bullseye arm64 | 5110 | 1403 | 890730 | 3700 | 5140 | - |
+| [Khadas VIM3L (S905D3)](http://ix.io/26Wy) | 1900 MHz | 4.9 | Bionic arm64 | 5160 | 1399 | 892110 | 3670 | 6360 | 7.29 |
+| [Khadas VIM3L (S905D3)](http://ix.io/3Vdt) | 1900 MHz | 5.16 | Bullseye arm64 | 5110 | 1403 | 890730 | 3700 | 5140 | - |
 | [Khadas VIM4 (Amlogic A311D2)](http://ix.io/3Wvv) | 2200/1970 MHz | 5.4 | Focal arm64 | 12090 | 2081 | 1253200 | 7810 | 11600 | - |
 | [Khadas VIM4 (Amlogic A311D2)](http://ix.io/4cHh) | 2200/2010 MHz | 5.4 | Jammy arm64 | 12120 | 2067 | 1254540 | 8180 | 11680 | - |
 | [Le Potato (Amlogic S905X)](http://ix.io/1iSQ) | 1410 MHz | 4.18 | Stretch arm64 | 3780 | 1057 | 657200 | 1810 | 5730 | 3.92 |
@@ -64,7 +64,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Macchiatobin (Armada 8040)](http://ix.io/4zcm) | 1600 MHz | 5.10 | Buster arm64 | 5720 | 1739 | 909420 | 4510 | 12270 | 7.91 |
 | [MangoPi Mcore (Allwinner H616)](http://ix.io/4bSf) | 1800 MHz | 5.19 | Jammy arm64 | 4100 | 1218 | 840270 | 990 | 2380 | - |
 | [Marvell PXA1908](http://ix.io/46hs) | 1245 MHz | 3.14 | Bullseye arm64 | 3180 | 951 | 581840 | 740 | 2220 | - |
-| [Milk-V Pioneer (Sophon SG2042)](http://ix.io/4wYE) | 2000 MHz | 6.1 | Kinetic riscv64 | 59820 | 1622 | 43500 | 3620 | 4760 | - |
+| [Milk-V Pioneer (SG2042)](http://ix.io/4wYE) | 2000 MHz | 6.1 | Kinetic riscv64 | 59820 | 1622 | 43500 | 3620 | 4760 | - |
 | [MT6580 K9M1](http://ix.io/466y) | 1300 MHz | 5.19 | Sid armhf | 2930 | 860 | 25300 | 1250 | 3300 | - |
 | [NanoPC T3+ (Nexell S5P6818)](http://ix.io/1iyp) | 1400 MHz | 4.4 | **Xenial armhf** | 6400 | 943 | 651000 | 1650 | 3700 | - |
 | [NanoPC T3+ (Nexell S5P6818)](http://ix.io/1iRJ) | 1400 MHz | 4.14 | Bionic arm64 | 7480 | 1053 | 652600 | 1440 | 4540 | 10.99 |
@@ -91,9 +91,9 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Nintendo Switch (Tegra X1)](http://ix.io/3Di2) | 2060 MHz | 4.9 | Bionic arm64 | 6720 | 1901 | 746680 | 2370 | 3670 | 9.25 |
 | [ODROID-C1 (Amlogic S805)](http://ix.io/4eg5) | 1500 MHz | 5.19 | Jammy armhf | 3010 | 878 | 29260 | 390 | 2910 | - |
 | [ODROID-C2 (Amlogic S905)](http://ix.io/1ixI) | 1750 MHz | 3.14 | **Xenial** arm64 | 4070 | 1128 | 48500 | 1750 | 3100 | - |
-| [ODROID-C4 (Amlogic S905X3)](http://ix.io/2kaS) | 2010 MHz | 4.9 | Focal arm64 | 5450 | 1459 | 941590 | 3310 | 6270 | 7.71 |
-| [ODROID-C4 (Amlogic S905X3)](http://ix.io/3TQ2) | 2100 MHz | 5.10 | Buster arm64 | 5770 | 1679 | 981940 | 3540 | 5150 | - |
-| [ODROID-HC4 (Amlogic S905X3)](http://ix.io/3Na5) | 2100 MHz | 5.10 | Buster arm64 | 5730 | 1672 | 980970 | 3540 | 5150 | - |
+| [ODROID-C4 (S905X3)](http://ix.io/2kaS) | 2010 MHz | 4.9 | Focal arm64 | 5450 | 1459 | 941590 | 3310 | 6270 | 7.71 |
+| [ODROID-C4 (S905X3)](http://ix.io/3TQ2) | 2100 MHz | 5.10 | Buster arm64 | 5770 | 1679 | 981940 | 3540 | 5150 | - |
+| [ODROID-HC4 (S905X3)](http://ix.io/3Na5) | 2100 MHz | 5.10 | Buster arm64 | 5730 | 1672 | 980970 | 3540 | 5150 | - |
 | [ODROID-M1 (RK3568)](http://ix.io/3Ug9) | 1930 MHz | 4.19 | Focal arm64 | 5010 | 1450 | 898610 | 3070 | 6220 | 7.14 |
 | [ODROID-M1 (RK3568)](http://ix.io/4ijy) | 2060 MHz | 5.18 | Bullseye arm64 | 5430 | 1567 | 961090 | 3310 | 5960 | 7.76 |
 | [ODROID-N2 (Amlogic S922X)](http://ix.io/1BsF) | 1800/1900 MHz | 4.9 | Bionic arm64 | 8140 | 1669 | 1024680 | 4120 | 8610 | 11.39 |
@@ -105,14 +105,14 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [ODROID-XU4 (Exynos 5422)](http://ix.io/1iWL) | 2000/1400 MHz | 4.9 | Stretch armhf | 6400 | 1622 | 72075 | 2230 | 4850 | - |
 | [ODROID-XU4 (Exynos 5422)](http://ix.io/3GnC) | 2000/1400 MHz | 5.4 | Focal armhf | 8980 | 1604 | 72020 | 2280 | 4910 | - |
 | [Olimex A20-Lime2](http://ix.io/4rRV) | 960 MHz | 5.10 | Bullseye armhf | 1080 | 589 | 18630 | 430 | 2020 | 0.87 |
-| [Orange Pi PC Plus (Allwinner H3)](http://ix.io/3MQV) | 1370 MHz | 5.10 | Focal armhf | 3060 | 879 | 26590 | 890 | 3450 | - |
+| [Orange Pi PC+ (Allwinner H3)](http://ix.io/3MQV) | 1370 MHz | 5.10 | Focal armhf | 3060 | 879 | 26590 | 890 | 3450 | - |
 | [Orange Pi PC 2 (Allwinner H5)](http://ix.io/3MQJ) | 1370 MHz | 5.10 | Focal arm64 | 3500 | 1023 | 637410 | 1070 | 3680 | - |
 | [Orange Pi Plus 2 (Allwinner H3)](http://ix.io/1iX4) | 1300 MHz | 4.14 | Stretch armhf | 2890 | 812 | 25250 | 830 | 3240 | - |
 | [Orange Pi Prime (Allwinner H5)](http://ix.io/2kTH) | 1370 MHz | 5.4 | Buster | 3590 | 984 | 637980 | 1180 | 3540 | - |
 | [Orange Pi Zero 2 (Allwinner H616)](http://ix.io/4knM) | 1510 MHz | 4.9 | Buster arm64 | 3550 | 1067 | 703300 | 1190 | 2820 | 5.01 |
-| [Phytium FT-2000/4 (1xSO-DIMM)](http://ix.io/4ioj) | 2600 MHz | 5.15 | Bullseye arm64 | 10020 | 2755 | 936740 | 3760 | 14540 | - |
-| [Phytium D2000 (1xSO-DIMM)](http://ix.io/445T) | 2300 MHz | 5.19 | Jammy arm64 | 16390 | 2220 | 827090 | 2820 | 6490 | - |
-| [Phytium D2000 (2xSO-DIMM)](http://ix.io/446h) | 2300 MHz | 5.19 | Jammy arm64 | 16670 | 2252 | 828130 | 3480 | 16110 | - |
+| [Phytium FT-2000/4<br />(1 x SO-DIMM)](http://ix.io/4ioj) | 2600 MHz | 5.15 | Bullseye arm64 | 10020 | 2755 | 936740 | 3760 | 14540 | - |
+| [Phytium D2000<br />(1 x SO-DIMM)](http://ix.io/445T) | 2300 MHz | 5.19 | Jammy arm64 | 16390 | 2220 | 827090 | 2820 | 6490 | - |
+| [Phytium D2000<br />(2 x SO-DIMM)](http://ix.io/446h) | 2300 MHz | 5.19 | Jammy arm64 | 16670 | 2252 | 828130 | 3480 | 16110 | - |
 | [PineH64 (Allwinner H6)](http://ix.io/1jEr) | 1800 MHz | 4.18 | Stretch arm64 | 4650 | 1274 | 836900 | 1380 | 5530 | 5.62 |
 | [PineH64 (Allwinner H6)](http://ix.io/26Ph) | 1800 MHz | 5.4 | Buster arm64 | 4710 | 1293 | 839870 | 1420 | 5560 | 7.10 |
 | [Qualcomm QRB5165](http://ix.io/49kx) | 2840/2410/1790 MHz | 4.19 | Focal arm64 | 18860 | 3898 | 1598490 | 14470 | 23910 | 25.56 |
@@ -127,9 +127,9 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Radxa Rock Pi 4 (RK3399)](http://ix.io/21fX) | 2000/1500 MHz | 5.3 | Bionic arm64 | 6910 | 1817 | 1147370 | 3660 | 8310 | 10.71 |
 | [Radxa Rock Pi 4 (RK3399)](http://ix.io/3Q2q) | 2000/1500 MHz | 5.10 | Focal arm64 | 6900 | 1899 | 1146500 | 3430 | 8260 | - |
 | [Radxa Rock Pi S (RK3308)](http://ix.io/4sNe) | 1300 MHz | 6.1 | Jammy arm64 | 2540 | 732 | 282030 | 820 | 1870 | - |
-| [Radxa Zero (Amlogic S905Y2)](http://ix.io/3wZn) | 1800 MHz | 5.10 | Focal arm64 | 4610 | 1267 | 840080 | 1600 | 5370 | - |
-| [Radxa Zero (Amlogic S905Y2)](http://ix.io/3PlT) | 1800 MHz | 5.10 | Buster arm64 | 4570 | 1373 | 839080 | 1610 | 5250 | 6.82 |
-| [Radxa Zero (Amlogic S905Y2)](http://ix.io/3JCm) | 1800 MHz | 5.10 | Bullseye arm64 | 4580 | 1353 | 838360 | 1600 | 5360 | 7.13 |
+| [Radxa Zero (S905Y2)](http://ix.io/3wZn) | 1800 MHz | 5.10 | Focal arm64 | 4610 | 1267 | 840080 | 1600 | 5370 | - |
+| [Radxa Zero (S905Y2)](http://ix.io/3PlT) | 1800 MHz | 5.10 | Buster arm64 | 4570 | 1373 | 839080 | 1610 | 5250 | 6.82 |
+| [Radxa Zero (S905Y2)](http://ix.io/3JCm) | 1800 MHz | 5.10 | Bullseye arm64 | 4580 | 1353 | 838360 | 1600 | 5360 | 7.13 |
 | [Raspberry Pi B (BCM2835)](http://ix.io/3MGN) | 700 MHz | 5.10 | Raspberry Pi OS Bullseye | 320 | 320 | 11630 | 360 | 1420 | - |
 | [Raspberry Pi B (BCM2835)](http://ix.io/4vVG) | 1000 MHz | 6.1 | Raspberry Pi OS Bullseye | 480 | 481 | 16900 | 490 | 2220 | - |
 | [Raspberry Pi 2 B+ (BCM2836)](http://ix.io/1iFf) | 900 MHz | 4.14 | **Debian** Stretch | 2070 | 592 | 17450 | 615 | 1175 | - |
@@ -174,18 +174,18 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [RockPro64 (RK3399)](http://ix.io/2sZH) | 2010/1510 MHz | 5.4 | Focal arm64 | 6920 | 1826 | 1145300 | 3700 | 8430 | 11.55 |
 | [RockPro64 (RK3399)](http://ix.io/2yIx) | 2010/1510 MHz | 5.8 | Bullseye arm64 | 7000 | 1833 | 1144950 | 3690 | 8360 | 11.08 |
 | [Star64 (JH7110)](http://ix.io/4tjq) | 1500 MHz | 5.15 | Sid riscv64 | 3970 | 1175 | 24990 | 820 | 770 | - |
-| [StarFive VisionFive V2 (JH7110)](http://ix.io/4xOY) | 1500 MHz | 5.15 | Sid riscv64 | 4180 | 1197 | 25080 | 880 | 770 | - |
 | [SBC2D70 (SSD202D)](http://ix.io/3N1U) | 1700 MHz | 5.16 | Sid armhf | 1960 | 1094 | 33120 | 770 | 3190 | - |
 | [T-HEAD C910 RVB-ICE](http://ix.io/41AB) | 1200 MHz | 5.10 | Sid riscv64 | 1760 | 1007 | 26930 | 3340 | 6470 | - |
-| [Teres-I (Allwinner A64)](http://ix.io/1tJg) | 1050 MHz | 4.19 | Stretch arm64 | 2785 | 780 | 491590 | 1080 | 2820 | - |
+| [Teres-I<br />(Allwinner A64)](http://ix.io/1tJg) | 1050 MHz | 4.19 | Stretch arm64 | 2785 | 780 | 491590 | 1080 | 2820 | - |
 | [Tinkerboard (RK3288)](http://ix.io/1iSX) | 1730 MHz | 4.14 | Stretch armhf | 5350 | 1563 | 66600 | 1480 | 3900 | - |
 | [Tinkerboard (RK3288)](http://ix.io/3Lir) | 1800 MHz | 4.4 | Buster armhf | 5440 | 1693 | 66300 | 1340 | 3510 | - |
 | [Tinkerboard (RK3288)](http://ix.io/3X9q) | 1800 MHz | 5.10 | Buster armhf | 5770 | 1713 | 67060 | 1540 | 4110 | - |
 | [TinkerBoard S (RK3288)](http://ix.io/4vfU) | 1800 MHz | 6.1 | Jammy armhf | 5560 | 1672 | 65800 | 1540 | 4150 | - |
-| [TRONFY MXQ S805 (Amlogic S805)](http://ix.io/3MiR) | 1536 MHz | 5.10 | Focal armhf | 3100 | 897 | 29080 | 980 | 2990 | - |
-| [Tronsmart MXIII Plus (Amlogic S812)](http://ix.io/3S5U) | 1560 MHz | 5.10 | Buster armhf | 3880 | 1113 | 42570 | 1470 | 3430 | - |
+| [TRONFY MXQ S805](http://ix.io/3MiR) | 1536 MHz | 5.10 | Focal armhf | 3100 | 897 | 29080 | 980 | 2990 | - |
+| [Tronsmart MXIII Plus (S812)](http://ix.io/3S5U) | 1560 MHz | 5.10 | Buster armhf | 3880 | 1113 | 42570 | 1470 | 3430 | - |
 | [Tronsmart S82 (Amlogic S802)](http://ix.io/41ML) | 1600 MHz | 5.14 | Focal armhf | 3640 | 1114 | 43150 | 500 | 3200 | - |
 | [Ugoos UT2 (RK3188)](http://ix.io/408h) | 1560 MHz | 5.10 | Jammy armhf | 3320 | 994 | 43250 | 320 | 2020 | - |
+| [VisionFive V2 (JH7110)](http://ix.io/4xOY) | 1500 MHz | 5.15 | Sid riscv64 | 4180 | 1197 | 25080 | 880 | 770 | - |
 | [Atom N270](http://ix.io/461n) | 1600 MHz | 4.19 | Buster i386 | 1220 | 824 | 18760 | 1420 | 2840 | - |
 | [Atom E3825](http://ix.io/4kFQ) | 1330 MHz | 5.10 | Bullseye amd64 | 1950 | 1109 | 165840 | 2890 | 2890 | - |
 | [Atom E3826](http://ix.io/44pd) | 1460 MHz | 5.18 | Jammy amd64 | 2140 | 1112 | 182190 | 2840 | 2760 | - |

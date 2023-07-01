@@ -4759,7 +4759,7 @@ GuessARMSoC() {
 	#       Cortex-A9 / r2p9: Nvidia Tegra 3
 	#       Cortex-A9 / r2p10: Freescale/NXP i.MX6 Dual/Quad, TI OMAP4470
 	#       Cortex-A9 / r3p0: Amlogic 8726-MX, Calxeda Highbank, Cyclone V FPGA SoC, Marvell PXA988, Mediatek MT5880, Nexell S5P4418, Rockchip RK3066/RK3188, Samsung Exynos 4412, ST Micro STiH415/STiH416, Xilinx Zynq 7000S
-	#       Cortex-A9 / r4p1: Amlogic S802/S812, Freescale/NXP i.MX6SLL, HiSilicon Hi3520D-V300/Hi6620, Marvell Armada 375/38x, MStar Infinity2
+	#       Cortex-A9 / r4p1: Amlogic S802/S812, Freescale/NXP i.MX6SLL, HiSilicon Hi3520D-V300/Hi6620, Marvell Armada 375/38x, MStar Infinity2, Triductor TR6560
 	#      Cortex-A15 / r0p4: Samsung Exynos 5 Dual 5250
 	#      Cortex-A15 / r2p1: ARM Versatile Express V2P-CA15-CA7
 	#      Cortex-A15 / r2p2: TI Sitara AM572x
@@ -5002,6 +5002,7 @@ GuessARMSoC() {
 	# CPU: ARMv7 Processor [413fc0f2] revision 2 (ARMv7), cr=10c5347d  <-  Cortex-A15 / r3p2 / Renesas R8A7790 SoC
 	# CPU: ARMv7 Processor [414fc091] revision 1 (ARMv7), cr=10c5387d  <-  Cortex-A9 / r4p1 / Amlogic S812
 	# CPU: ARMv7 Processor [414fc091] revision 1 (ARMv7), cr=10c53c7d  <-  Cortex-A9 / r4p1 / Marvell Armada 385 Development Board / Freescale/NXP i.MX6SLL (Kindle Paperwhite 4)
+	# CPU: ARMv7 Processor [414fc091] revision 1 (ARMv7), cr=18c5387d  <-  Cortex-A9 / r4p1 / Triductor TR6560
 	# CPU: ARMv7 Processor [414fc091] revision 1 (ARMv7), cr=50c5387d  <-  Cortex-A9 / r4p1 / Armada 375/38x
 	# CPU: ARMv7 Processor [511f04d0] revision 0 (ARMv7), cr=10c5387d  <-  Qualcomm Krait / r1p0 / Qualcomm  MSM8960 (Snapdragon S4 Plus)
 	# CPU: ARMv7 Processor [512f04d0] revision 0 (ARMv7), cr=10c5787d  <-  Qualcomm Krait / r2p0 / Qualcomm IPQ806x
@@ -6087,10 +6088,21 @@ GuessSoCbySignature() {
 			# The big bores are marketed/documented as Cortex-A76 by HiSilicon but instead of the usual ARM core ID 0x41/0xd0b they have 0x48/0xd40
 			echo "HiSilicon Kirin 810"
 			;;
-		0A9r4p10A9r4p1|00A9r4p100A9r4p1)
+		0A9r4p10A9r4p1|0?A9r4p10?A9r4p1)
 			# Armada 375/38x, 2 x Cortex-A9 / r4p1 / swp half thumb fastmult vfp edsp neon vfpv3 tls
 			# or MStar Infinity2: 2 Cortex-A9 / r4p1 / half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpd32
-			grep -q armada <<<"${DTCompatible}" && echo "Marvell Armada 375/38x" || echo "MStar Infinity2"
+			# or Triductor TR6560: 2 x Cortex-A9 / r4p1
+			case "${DTCompatible}" in
+				*armada*)
+					echo "Marvell Armada 375/38x"
+					;;
+				*mstar*|*infinity*)
+					echo "MStar Infinity2"
+					;;
+				*)
+					echo "Triductor TR6560"
+					;;
+			esac
 			;;
 		*A9r4p1)
 			# HiSilicon Hi3520D-V300: 1 x Cortex-A9 / r4p1 / swp half fastmult edsp

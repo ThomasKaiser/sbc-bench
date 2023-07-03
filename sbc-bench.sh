@@ -5802,6 +5802,9 @@ GuessSoCbySignature() {
 									*h616*)
 										echo "Allwinner H616/H313"
 										;;
+									*h618*|*zero3*)
+										echo "Allwinner H618"
+										;;
 									*h313*)
 										echo "Allwinner H313"
 										;;
@@ -6078,14 +6081,18 @@ GuessSoCbySignature() {
 			# HiSilicon Ascend 310, 8 x Cortex-A55 / r1p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp asimdrdm lrcpc dcpop asimddp
 			echo "HiSilicon Ascend 310"
 			;;
+		0?A55r?p?0?A55r?p?0?A55r?p?0?A55r?p?0?A55r?p?0?A55r?p?0?A55r?p?0?A55r?p?)
+			# Allwinner A523, 8 x Cortex-A55
+			grep -q -E 'a523|allwinner' <<<"${DTCompatible}" && echo "Allwinner A523"
+			;;
 		*A55r1p0*A55r1p0*A55r1p0*A55r1p0*A76r1p0*A76r1p0*A76r1p0*A76r1p0)
 			# HiSilicon Kirin 980, 4 x Cortex-A55 / r1p0 + 4 x Cortex-A76 / r1p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp
-			# The big bores are marketed/documented as Cortex-A76 by HiSilicon but instead of the usual ARM core ID 0x41/0xd0b they have 0x48/0xd40
+			# The big cores are marketed/documented as Cortex-A76 by HiSilicon but instead of the usual ARM core ID 0x41/0xd0b they have 0x48/0xd40
 			echo "HiSilicon Kirin 980"
 			;;
 		*A55r1p0*A55r1p0*A55r1p0*A55r1p0*A55r1p0*A55r1p0*A76r3p0*A76r3p0)
 			# HiSilicon Kirin 810, 6 x Cortex-A55 / r1p0 + 2 x Cortex-A76 / r3p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp asimdrdm lrcpc dcpop asimddp
-			# The big bores are marketed/documented as Cortex-A76 by HiSilicon but instead of the usual ARM core ID 0x41/0xd0b they have 0x48/0xd40
+			# The big cores are marketed/documented as Cortex-A76 by HiSilicon but instead of the usual ARM core ID 0x41/0xd0b they have 0x48/0xd40
 			echo "HiSilicon Kirin 810"
 			;;
 		0A9r4p10A9r4p1|0?A9r4p10?A9r4p1)

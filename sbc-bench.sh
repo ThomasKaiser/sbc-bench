@@ -1900,12 +1900,17 @@ CheckLoadAndDmesg() {
 	esac
 
 	# check for CPU cores being offline
-	OfflineCores=$(lscpu | awk -F" " '/^Off-line CPU/ {print $4}')
+	[ -z "${LSCPU}" ] && LSCPU="$(lscpu)"
+	OfflineCores=$(awk -F" " '/^Off-line CPU/ {print $4}' <<<"${LSCPU}")
 	if [ "X${OfflineCores}" != "X" -a "X${MODE}" != "Xunattended" ]; then
 		echo -e "${LRED}${BOLD}WARNING: One or more CPU cores are offline: ${OfflineCores}${NC}\n"
 		echo -e "Press ${BOLD}[ctrl]-[c]${NC} to stop or ${BOLD}[enter]${NC} to continue.\c"
 		read
 	fi
+
+	# skip whole load check on systems with more than 63 cores.
+	CPUCores=$(awk -F" " '/^CPU...:/ {print $2}' <<<"${LSCPU}")
+	[ ${CPUCores} -gt 63 ] && return
 
 	# Only continue if average load is less than 0.1 or averaged CPU utilization is lower
 	# than 2.5% for 30 sec. Please note that average load on Linux is *not* the same as CPU
@@ -4776,10 +4781,10 @@ GuessARMSoC() {
 	#      Cortex-A53 / r0p1: Exynos 5433, Qualcomm MSM8939
 	#      Cortex-A53 / r0p2: Marvell PXA1908, Mediatek MT6752/MT6738/MT6755/MT8173/MT8176, Qualcomm Snapdragon 810 (MSM8994), Samsung Exynos 7420
 	#      Cortex-A53 / r0p3: ARM Juno r1, ARM Juno r2, HiSilicon Hi3751, Kirin 620/930, Mediatek MT6735/MT8163, Nexell S5P6818, Samsung Exynos 7580, Qualcomm MSM8992 (Snapdragon 808)
-	#      Cortex-A53 / r0p4: Allwinner A100/A133/A53/A64/H313/H5/H6/H616/H64/R329/R818/T507/T509, Amlogic A113X/A113D/A311D/A311D2/S805X/S805Y/S905/S905X/S905D/S905W/S905L/S905L3A/S905M2/S905X2/S905Y2/S905D2/S912/S922X/T962X2, Broadcom BCM2837/BCM2709/BCM2710/RP3A0-AU (BCM2710A1), HiSilicon Hi3798C-V200, Exynos 8890, HiSilicon Kirin 650/710/950/955/960/970, Marvell Armada 37x0, Mediatek MT6739WA/MT6762M/MT6765/MT6771V/MT6797/MT6797T/MT6799/MT8183/MT8735, NXP i.MX8M/i.MX8QM/LS1xx8, Qualcomm MSM8937/MSM8952/MSM8953/MSM8956/MSM8976/MSM8976PRO/SDM439/SDM450, RealTek RTD129x/RTD139x, Rockchip RK3318/RK3328/RK3528/RK3562/RK3399, Samsung Exynos 7870/7885/8890/8895, Socionext LD20/SC2A11, TI K3 AM623/AM625/AM62A/AM642/AM654, Xiaomi Surge S1
+	#      Cortex-A53 / r0p4: Allwinner A100/A133/A53/A64/H313/H5/H6/H616/H618/H64/R329/R818/T507/T509, Amlogic A113X/A113D/A311D/A311D2/S805X/S805Y/S905/S905X/S905D/S905W/S905L/S905L3A/S905M2/S905X2/S905Y2/S905D2/S912/S922X/T962X2, Broadcom BCM2837/BCM2709/BCM2710/RP3A0-AU (BCM2710A1), HiSilicon Hi3798C-V200, Exynos 8890, HiSilicon Kirin 650/710/950/955/960/970, Marvell Armada 37x0, Mediatek MT6739WA/MT6762M/MT6765/MT6771V/MT6797/MT6797T/MT6799/MT8183/MT8735, NXP i.MX8M/i.MX8QM/LS1xx8, Qualcomm MSM8937/MSM8952/MSM8953/MSM8956/MSM8976/MSM8976PRO/SDM439/SDM450, RealTek RTD129x/RTD139x, Rockchip RK3318/RK3328/RK3528/RK3562/RK3399, Samsung Exynos 7870/7885/8890/8895, Socionext LD20/SC2A11, TI K3 AM623/AM625/AM62A/AM642/AM654, Xiaomi Surge S1
 	#      Cortex-A55 / r0p1: Samsung Exynos 9810
 	#      Cortex-A55 / r1p0: Amlogic S905X3/S905D3/S905Y3/T962X3/T962E2, HiSilicon Ascend 310 / Kirin 810/980, Samsung Exynos 9820
-	#      Cortex-A55 / r2p0: Amlogic S905X4/S905C2, Google Tensor G1, MediaTek Genio 1200, NXP i.MX 93, Qualcomm SM8350 (Snapdragon 888), Renesas RZG2UL/RZG2LC, Rockchip RK3566/RK3568/RK3588/RK3588s
+	#      Cortex-A55 / r2p0: Amlogic S905X4/S905C2, Google Tensor G1, MediaTek Genio 1200, NXP i.MX 93, Qualcomm SM8350 (Snapdragon 888), Renesas RZG2UL/RZG2LC, Rockchip RK3566/RK3568/RK3588/RK3588s, Unisoc UMS9620
 	#      Cortex-A57 / r0p0: ARM Juno r0
 	#      Cortex-A57 / r1p0: Exynos 5433/7420
 	#      Cortex-A57 / r1p1: ARM Juno r1, Nvidia Tegra TX1, Snapdragon 810 / MSM8994/MSM8994V
@@ -4795,7 +4800,7 @@ GuessARMSoC() {
 	#      Cortex-A75 / r2p1: Samsung Exynos 9820
 	#      Cortex-A76 / r1p0: HiSilicon Kirin 980 (though with an own 0x48/0xd40 ID)
 	#      Cortex-A76 / r3p0: Exynos Auto V9, HiSilicon Kirin 810 (though with an own 0x48/0xd40 ID)
-	#      Cortex-A76 / r4p0: Google Tensor G1, Rockchip RK3588/RK3588s
+	#      Cortex-A76 / r4p0: Google Tensor G1, Rockchip RK3588/RK3588s, Unisoc UMS9620
 	#      Cortex-A77 / r1p0: Qualcomm QRB5165 (Snapdragon 865)
 	#      Cortex-A78 / r1p0: MediaTek Genio 1200, Qualcomm SM8350 (Snapdragon 888)
 	#    Cortex-A78AE / r0p1: Nvidia Jetson Orin NX / AGX Orin
@@ -6599,23 +6604,23 @@ GuessSoCbySignature() {
 		*Kunpeng920r1p0*)
 			# Kunpeng 920-6426 in Huawei Taishan 200 2280 V2 server: 2 x 64 x Kunpeng-920 / r1p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma dcpop asimddp asimdfhm ssbs
 			# https://www.spec.org/cpu2017/results/res2020q2/cpu2017-20200529-22564.html / https://en.wikichip.org/wiki/hisilicon/microarchitectures/taishan_v110
-			case $(awk -F":" '/ per socket/ {print $2}' <<<"${LSCPU}") in
-				*32)
+			case $(awk -F":" '/ per socket/ {print $2}' <<<"${LSCPU}" | tr -c -d '[:digit:]') in
+				32)
 					echo "$(( ${CPUCores} / 32 )) x Kunpeng 920-3226"
 					;;
-				*48)
+				48)
 					echo "$(( ${CPUCores} / 48 )) x Kunpeng 920-4826"
 					;;
-				*64)
+				64)
 					echo "$(( ${CPUCores} / 64 )) x Kunpeng 920-6426"
 					;;
-				*24)
+				24)
 					echo "Kunpeng 920 3211K"
 					;;
-				*8)
+				8)
 					echo "Kunpeng 920 2249K"
 					;;
-				*4)
+				4)
 					echo "Kunpeng 920 quad core"
 					;;
 			esac
@@ -6699,36 +6704,54 @@ GuessSoCbySignature() {
 			grep -q 'No cpufreq support available. Measured on cpu' ${ResultLog} && \
 				MeasuredClockspeed=$(awk -F": " '/No cpufreq support available. Measured on cpu/ {print $2}' <${ResultLog} | cut -f1 -d' ' | head -n 1) || \
 				MeasuredClockspeed=$(grep -A2 "^Checking cpufreq OPP" ${ResultLog} | awk -F" " '/Measured/ {print $5}' | sort -r | head -n1)
-			if [ ${MeasuredClockspeed:-0} -gt 2550 ]; then
-				# Lame assumption that cpufreq above 2.5GHz identifies Ampere Altra
-				case $(awk -F":" '/ per socket/ {print $2}' <<<"${LSCPU}") in
-					*32)
-						echo "$(( ${CPUCores} / 32 )) x Ampere Altra AADP-32"
-						;;
-					*64)
-						echo "$(( ${CPUCores} / 64 )) x Ampere Altra AADP-64"
-						;;
-					*80)
-						echo "$(( ${CPUCores} / 80 )) x Ampere Altra AADP-80"
-						;;
-					*96)
-						echo "$(( ${CPUCores} / 96 )) x Ampere Altra M96-28"
-						;;
-					*128)
-						echo "$(( ${CPUCores} / 128 )) x Ampere Altra Max"
-						;;
-					*)
-						echo "Ampere Altra / Altra Max"
-						;;
-				esac
-			else
-				if [ "X${VirtWhat}" = "X" -o "X${VirtWhat}" = "Xnone" ]; then
-					# if no virtualization is detected we might be on downclocked Ampere Altra
-					echo "Ampere Altra / Altra Max"
-				else
-					echo "AWS Graviton2"
-				fi
-			fi
+			ProcessorInfo="$(dmidecode -t processor 2>/dev/null | grep -E -v -i "^#|^Handle|Serial|O.E.M.|1234567|SMBIOS|: Not |Unknown|OUT OF SPEC|00 00 00 00 00 00 00 00|: None")"
+			case ${ProcessorInfo} in
+				*Ampere*|*Altra*)
+					# Try to get Part Number via DMI
+					PartNumber="$(awk -F": " '/Part Number: / {print $2}' <<<"${ProcessorInfo}" | tr '\n' '/' | sed -e 's/NotSet/Unpopulated/' -e 's/\/$//')"
+					if [ -n ${PartNumber} ]; then
+						# output part number:
+						echo "Ampere Altra ${PartNumber}"
+					else
+						# empty string, so check count of CPU cores per socket and in total and report that
+						case $(awk -F":" '/ per socket/ {print $2}' <<<"${LSCPU}" | tr -c -d '[:digit:]') in
+							32)
+								echo "$(( ${CPUCores} / 32 )) x Ampere Altra AADP-32"
+								;;
+							48)
+								echo "$(( ${CPUCores} / 48 )) x Ampere Altra AADP-48"
+								;;
+							64)
+								echo "$(( ${CPUCores} / 64 )) x Ampere Altra AADP-64"
+								;;
+							72)
+								echo "$(( ${CPUCores} / 72 )) x Ampere Altra AADP-72"
+								;;
+							80)
+								echo "$(( ${CPUCores} / 80 )) x Ampere Altra AADP-80"
+								;;
+							96)
+								echo "$(( ${CPUCores} / 96 )) x Ampere Altra AADP-96"
+								;;
+							128)
+								echo "$(( ${CPUCores} / 128 )) x Ampere Altra Max"
+								;;
+							*)
+								echo "Ampere Altra / Altra Max"
+								;;
+						esac
+					fi
+					;;
+				*)
+					# No DMI information hinting at Ampere/Altra so we check clockspeeds
+					if [ ${MeasuredClockspeed:-0} -gt 2550 ]; then
+						# Lame assumption that cpufreq above 2.5GHz identifies Ampere Altra
+						echo "Ampere Altra"
+					else
+						echo "AWS Graviton2"
+					fi
+					;;
+			esac
 			;;
 		*NeoverseV1r1p1*)
 			# AWS Graviton3: 1/2/4/8/16/32/48/64 vCPU Neoverse-V1 / r1p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 sve asimdfhm dit uscat ilrcpc flagm ssbs paca pacg dcpodp svei8mm svebf16 i8mm bf16 dgh rng

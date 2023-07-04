@@ -14,6 +14,8 @@
 | Device / details | Clockspeed | Kernel | Distro | *7-zip multi* | 7-zip single | AES | memcpy | memset | kH/s |
 | ----- | :--------: | :----: | :----: | ----: | ------: | ------: | -----: | -----: | ---: |
 | [Huaqin P6410<br />(2 x Ampere Altra Max)](http://ix.io/4kiu) | 3000 MHz | 5.4 | Focal arm64 | **430860** | 4211 | 1710010 | 13310 | 47970 | - |
+| [Ampere Altra M96-28](http://ix.io/4zGI) | 2800 MHz | 5.15 | Jammy arm64 | **249380** | 3858 | 1596110 | 10130 | 44750 | - |
+| [Ampere Altra Q80-26](http://ix.io/4zkJ) | 2600 MHz | 5.15 | Jammy arm64 | **214390** | 3748 | 1482190 | 11685 | 41560 | 316.50 |
 | [H270-T70<br />(2 x ThunderX CN8890)](http://ix.io/3N5c) | 2000 Mhz | 5.16 | Sid arm64 | **107180** | 1826 | 340750 | 4180 | 17130 | - |
 | [Milk-V Pioneer (SG2042)](http://ix.io/4wYE) | 2000 MHz | 6.1 | Kinetic riscv64 | **59820** | 1622 | 43500 | 3620 | 4760 | - |
 | [Apple M1 Pro](http://ix.io/443N) | 3030/2060 MHz | 5.18 | Gentoo 2.8 arm64 | **43800** | 5010 | 1064450 | 27110 | 71910 | 48.28 |
@@ -236,6 +238,8 @@
 | [N100](http://ix.io/4vxM) | 3400 MHz | 6.1 | Lunar amd64 | 14150 | **4073** | 1232790 | 11600 | 12270 | 36.24 |
 | [N95](http://ix.io/4xwq) | 3400 MHz | 5.15 | Jammy amd64 | 13070 | **3993** | 1232880 | 9710 | 8730 | 34.60 |
 | [Qualcomm QRB5165](http://ix.io/49kx) | 2840/2410/1790 MHz | 4.19 | Focal arm64 | 18860 | **3898** | 1598490 | 14470 | 23910 | 25.56 |
+| [Ampere Altra M96-28](http://ix.io/4zGI) | 2800 MHz | 5.15 | Jammy arm64 | 249380 | **3858** | 1596110 | 10130 | 44750 | - |
+| [Ampere Altra Q80-26](http://ix.io/4zkJ) | 2600 MHz | 5.15 | Jammy arm64 | 214390 | **3748** | 1482190 | 11685 | 41560 | 316.50 |
 | [Pentium N6005](http://ix.io/4f3I) | 3300/2000 MHz | 6.0 | Jammy amd64 | 10810 | **3485** | 922000 | 9600 | 11300 | 20.15 |
 | [Jetson AGX Orin](http://ix.io/4ax9) | 2200 MHz | 5.10 | Focal arm64 | 39450 | **3187** | 1242940 | 10600 | 30350 | 59.96 |
 | [Radxa ROCK 5B (RK3588)](http://ix.io/41BH) | 2350/1830 MHz | 5.10 | Focal arm64 | 16450 | **3146** | 1337540 | 10830 | 29220 | 25.31 |
@@ -447,6 +451,8 @@
 | [Qualcomm Snapdragon 8cx Gen 3](http://ix.io/4xwT) | 3000/2440 MHz | 6.3 | Lunar arm64 | 35370 | 4312 | **1686160** | 17500 | 41780 | 42.76 |
 | [Qualcomm Snapdragon 8cx Gen 3 (WSL2)](http://ix.io/4kEp) | 2980/? MHz | 5.15 | Jammy arm64 | 33600 | 4789 | **1679480** | 21010 | 41540 | 50.65 |
 | [Qualcomm QRB5165](http://ix.io/49kx) | 2840/2410/1790 MHz | 4.19 | Focal arm64 | 18860 | 3898 | **1598490** | 14470 | 23910 | 25.56 |
+| [Ampere Altra M96-28](http://ix.io/4zGI) | 2800 MHz | 5.15 | Jammy arm64 | 249380 | 3858 | **1596110** | 10130 | 44750 | - |
+| [Ampere Altra Q80-26](http://ix.io/4zkJ) | 2600 MHz | 5.15 | Jammy arm64 | 214390 | 3748 | **1482190** | 11685 | 41560 | 316.50 |
 | [Qualcomm Snapdragon 7c](http://ix.io/4yNC) | 2550/1800 MHz | 6.3 | Bookworm arm64 | 12240 | 2912 | **1453670** | 6710 | 14980 | - |
 | [i3-N305](http://ix.io/4qpr) | 3800 MHz | 5.19 | Jammy amd64 | 20000 | 4398 | **1377280** | 9950 | 8990 | 41.43 |
 | [ODROID-N2+ (Amlogic S922X)](http://ix.io/3DtN) | 2400/2015 MHz | 5.14 | Impish arm64 | 9790 | 2253 | **1366930** | 4300 | 7480 | - |
@@ -663,11 +669,13 @@
 | [Pentium G4600](http://ix.io/2jVw) | 3600 MHz | 4.19 | Buster amd64 | 11810 | 4448 | 984820 | **15120** | 33380 | 21.88 |
 | [Qualcomm QRB5165](http://ix.io/49kx) | 2840/2410/1790 MHz | 4.19 | Focal arm64 | 18860 | 3898 | 1598490 | **14470** | 23910 | 25.56 |
 | [Huaqin P6410<br />(2 x Ampere Altra Max)](http://ix.io/4kiu) | 3000 MHz | 5.4 | Focal arm64 | 430860 | 4211 | 1710010 | **13310** | 47970 | - |
+| [Ampere Altra Q80-26](http://ix.io/4zkJ) | 2600 MHz | 5.15 | Jammy arm64 | 214390 | 3748 | 1482190 | **11685** | 41560 | 316.50 |
 | [N100](http://ix.io/4vxM) | 3400 MHz | 6.1 | Lunar amd64 | 14150 | 4073 | 1232790 | **11600** | 12270 | 36.24 |
 | [Jetson Xavier AGX](http://ix.io/4ebH) | 2250 MHz | 4.9 | Bionic arm64 | 21590 | 2742 | 853250 | **10910** | 22520 | 26.57 |
 | [Khadas Edge2 (RK3588s)](http://ix.io/4a5U) | 2260/1800 MHz | 5.10 | Jammy arm64 | 16470 | 3096 | 1287490 | **10860** | 29110 | - |
 | [Radxa ROCK 5B (RK3588)](http://ix.io/41BH) | 2350/1830 MHz | 5.10 | Focal arm64 | 16450 | 3146 | 1337540 | **10830** | 29220 | 25.31 |
 | [Jetson AGX Orin](http://ix.io/4ax9) | 2200 MHz | 5.10 | Focal arm64 | 39450 | 3187 | 1242940 | **10600** | 30350 | 59.96 |
+| [Ampere Altra M96-28](http://ix.io/4zGI) | 2800 MHz | 5.15 | Jammy arm64 | 249380 | 3858 | 1596110 | **10130** | 44750 | - |
 | [i3-N305](http://ix.io/4qpr) | 3800 MHz | 5.19 | Jammy amd64 | 20000 | 4398 | 1377280 | **9950** | 8990 | 41.43 |
 | [Qualcomm Snapdragon 835](http://ix.io/4fdD) | 2360/1900 MHz | 6.1 | Jammy arm64 | 9800 | 2474 | 883330 | **9720** | 14070 | 12.58 |
 | [N95](http://ix.io/4xwq) | 3400 MHz | 5.15 | Jammy amd64 | 13070 | 3993 | 1232880 | **9710** | 8730 | 34.60 |
@@ -873,7 +881,9 @@
 | ----- | :--------: | :----: | :----: | ----: | ------: | ------: | -----: | -----: | ---: |
 | [Apple M1 Pro](http://ix.io/443N) | 3030/2060 MHz | 5.18 | Gentoo 2.8 arm64 | 43800 | 5010 | 1064450 | 27110 | **71910** | 48.28 |
 | [Huaqin P6410<br />(2 x Ampere Altra Max)](http://ix.io/4kiu) | 3000 MHz | 5.4 | Focal arm64 | 430860 | 4211 | 1710010 | 13310 | **47970** | - |
+| [Ampere Altra M96-28](http://ix.io/4zGI) | 2800 MHz | 5.15 | Jammy arm64 | 249380 | 3858 | 1596110 | 10130 | **44750** | - |
 | [Qualcomm Snapdragon 8cx Gen 3](http://ix.io/4xwT) | 3000/2440 MHz | 6.3 | Lunar arm64 | 35370 | 4312 | 1686160 | 17500 | **41780** | 42.76 |
+| [Ampere Altra Q80-26](http://ix.io/4zkJ) | 2600 MHz | 5.15 | Jammy arm64 | 214390 | 3748 | 1482190 | 11685 | **41560** | 316.50 |
 | [Qualcomm Snapdragon 8cx Gen 3 (WSL2)](http://ix.io/4kEp) | 2980/? MHz | 5.15 | Jammy arm64 | 33600 | 4789 | 1679480 | 21010 | **41540** | 50.65 |
 | [Pentium G4600](http://ix.io/2jVw) | 3600 MHz | 4.19 | Buster amd64 | 11810 | 4448 | 984820 | 15120 | **33380** | 21.88 |
 | [Jetson AGX Orin](http://ix.io/4ax9) | 2200 MHz | 5.10 | Focal arm64 | 39450 | 3187 | 1242940 | 10600 | **30350** | 59.96 |
@@ -1099,10 +1109,12 @@
 | [Celeron N5100](http://ix.io/3IlQ) | **2800/1100** MHz| 5.13 | Focal amd64 | 10550 | 3088 | 783800 | 7750 | 8090 | 19.22 |
 | [Celeron N4500](http://ix.io/3HUU) | **2800/1100** MHz| 5.13 | Impish amd64 | 6300 | 3091 | 783840 | 8100 | 8350 | - |
 | [Celeron N4020](http://ix.io/4vNB) | **2800** MHz| 5.15 | Bullseye amd64 | 4310 | 2533 | 779580 | 5280 | 5190 | - |
+| [Ampere Altra M96-28](http://ix.io/4zGI) | **2800** MHz| 5.15 | Jammy arm64 | 249380 | 3858 | 1596110 | 10130 | 44750 | - |
 | [Pentium J5005](http://ix.io/21rE) | **2700/1500** MHz| 5.0 | Bionic amd64 | 9230 | 2455 | 778360 | 5530 | 7130 | 20.74 |
 | [Ryzen R1606G](http://ix.io/2tQQ) | **2600/1400** MHz| 5.4 | Focal amd64 | 7970 | 2854 | 700780 | 8230 | 5970 | 16.45 |
 | [Phytium<br />FT-2000/4<br />(1 x SO-DIMM)](http://ix.io/4ioj) | **2600** MHz| 5.15 | Bullseye arm64 | 10020 | 2755 | 936740 | 3760 | 14540 | - |
 | [Athlon II X3 420e](http://ix.io/4eOo) | **2600** MHz| 4.19 | Buster amd64 | 4780 | 2566 | 98840 | 4120 | 3870 | - |
+| [Ampere Altra Q80-26](http://ix.io/4zkJ) | **2600** MHz| 5.15 | Jammy arm64 | 214390 | 3748 | 1482190 | 11685 | 41560 | 316.50 |
 | [Pentium N4200](http://ix.io/1ngq) | **2560/1100** MHz| 4.14 | Bionic amd64 | 7469 | 1976 | 468008 | 4682 | 4997 | 18.75 |
 | [Pentium J4205](http://ix.io/1m5t) | **2560/1500** MHz| 4.17 | Stretch amd64 | 7570 | 2146 | 480640 | 5070 | 5170 | 18.82 |
 | [Qualcomm Snapdragon 7c](http://ix.io/4yNC) | **2550/1800** MHz| 6.3 | Bookworm arm64 | 12240 | 2912 | 1453670 | 6710 | 14980 | - |

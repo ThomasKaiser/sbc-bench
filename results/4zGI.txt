@@ -1,0 +1,705 @@
+sbc-bench v0.9.42 ADLINK Ampere Altra Developer Platform ES2 (Mon, 03 Jul 2023 22:26:26 +0000)
+
+Distributor ID:	Ubuntu
+Description:	Ubuntu 22.04.2 LTS
+Release:	22.04
+Codename:	jammy
+
+Device Info:
+	Manufacturer: ADLINK
+	Product Name: Ampere Altra Developer Platform
+	Version: ES2
+	SKU Number: FEDCBA9876543211FEDCBA9876543211
+	Family: Altra Max
+
+BIOS/UEFI:
+	Vendor: ADLINK
+	Version: TianoCore 2.04.100.10 (SYS: 2.06.20220308)
+	Release Date: 04/18/2023
+	BIOS Revision: 2.4
+	Firmware Revision: 2.6
+
+/usr/bin/gcc (Ubuntu 11.3.0-1ubuntu1~22.04.1) 11.3.0
+
+Uptime: 22:26:26 up  1:01,  3 users,  load average: 1.39, 0.36, 0.12,  °C,  45727730
+
+Linux 5.15.0-73-generic (adlink-ampere) 	07/03/23 	_aarch64_	(96 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+           0.01    0.00    0.03    0.01    0.00   99.95
+
+Device             tps    kB_read/s    kB_wrtn/s    kB_dscd/s    kB_read    kB_wrtn    kB_dscd
+nvme0n1           0.28         6.28         0.00         0.00      23256          0          0
+nvme1n1           8.19       139.16       104.31     29724.40     515273     386237  110063500
+
+               total        used        free      shared  buff/cache   available
+Mem:            93Gi       807Mi        92Gi       3.0Mi       267Mi        92Gi
+Swap:          8.0Gi          0B       8.0Gi
+
+Filename				Type		Size		Used		Priority
+/swap.img                               file		8388604		0		-2
+
+##########################################################################
+
+Checking cpufreq OPP (Neoverse-N1):
+
+Cpufreq OPP: 2800    Measured: 2798 (2798.278/2798.278/2798.278)
+Cpufreq OPP: 1000    Measured: 1048 (1048.724/1048.698/1048.685)     (+4.8%)
+
+##########################################################################
+
+Hardware sensors:
+
+apm_xgene-isa-0000
+SoC Temperature:  +37.0 C  
+CPU power:        18.48 W  
+IO power:         21.17 W  
+
+nvme-pci-40400
+Composite:    +31.9 C  (low  =  -0.1 C, high = +117.8 C)
+                       (crit = +149.8 C)
+
+nvme-pci-40500
+Composite:    +32.9 C  (low  =  -0.1 C, high = +74.8 C)
+                       (crit = +79.8 C)
+
+##########################################################################
+
+Executing benchmark on cpu0 (Neoverse-N1):
+
+tinymembench v0.4.9-nuumio (simple benchmark for memory throughput and latency)
+
+CFLAGS: 
+bandwidth test min repeats (-b): 2
+bandwidth test max repeats (-B): 3
+bandwidth test mem realloc (-M): no      (-m for realloc)
+      latency test repeats (-l): 3
+        latency test count (-c): 1000000
+
+==========================================================================
+== Memory bandwidth tests                                               ==
+==                                                                      ==
+== Note 1: 1MB = 1000000 bytes                                          ==
+== Note 2: Test result is the best of repeated runs. Number of repeats  ==
+==         is shown in brackets                                         ==
+== Note 3: Results for 'copy' tests show how many bytes can be          ==
+==         copied per second (adding together read and writen           ==
+==         bytes would have provided twice higher numbers)              ==
+== Note 4: 2-pass copy means that we are using a small temporary buffer ==
+==         to first fetch data into it, and only then write it to the   ==
+==         destination (source -> L1 cache, L1 cache -> destination)    ==
+== Note 5: If sample standard deviation exceeds 0.1%, it is shown in    ==
+==         brackets                                                     ==
+==========================================================================
+
+ C copy backwards                                 :   8993.1 MB/s (2)
+ C copy backwards (32 byte blocks)                :   9232.1 MB/s (3, 1.6%)
+ C copy backwards (64 byte blocks)                :   9239.7 MB/s (2)
+ C copy                                           :   9576.3 MB/s (2)
+ C copy prefetched (32 bytes step)                :   9999.6 MB/s (2)
+ C copy prefetched (64 bytes step)                :  10029.3 MB/s (2)
+ C 2-pass copy                                    :   5526.7 MB/s (3, 0.1%)
+ C 2-pass copy prefetched (32 bytes step)         :   6208.1 MB/s (3, 0.2%)
+ C 2-pass copy prefetched (64 bytes step)         :   6035.1 MB/s (2)
+ C scan 8                                         :   1397.2 MB/s (2)
+ C scan 16                                        :   2787.7 MB/s (2)
+ C scan 32                                        :   4877.7 MB/s (2)
+ C scan 64                                        :   7826.1 MB/s (2)
+ C fill                                           :  43950.3 MB/s (2)
+ C fill (shuffle within 16 byte blocks)           :  43953.0 MB/s (2)
+ C fill (shuffle within 32 byte blocks)           :  43949.6 MB/s (2)
+ C fill (shuffle within 64 byte blocks)           :  43947.0 MB/s (2)
+ ---
+ libc memcpy copy                                 :  10132.6 MB/s (2)
+ libc memchr scan                                 :  11157.7 MB/s (3, 0.2%)
+ libc memset fill                                 :  44753.7 MB/s (2)
+ ---
+ NEON LDP/STP copy                                :  10190.0 MB/s (2)
+ NEON LDP/STP copy pldl2strm (32 bytes step)      :  11259.3 MB/s (2)
+ NEON LDP/STP copy pldl2strm (64 bytes step)      :  11335.4 MB/s (2)
+ NEON LDP/STP copy pldl1keep (32 bytes step)      :  11509.5 MB/s (2)
+ NEON LDP/STP copy pldl1keep (64 bytes step)      :  11492.3 MB/s (3, 0.1%)
+ NEON LD1/ST1 copy                                :  10225.1 MB/s (2)
+ NEON LDP load                                    :  13908.5 MB/s (2)
+ NEON LDNP load                                   :  12987.6 MB/s (2)
+ NEON STP fill                                    :  44753.1 MB/s (2)
+ NEON STNP fill                                   :  44756.3 MB/s (2)
+ ARM LDP/STP copy                                 :  10258.5 MB/s (2)
+ ARM LDP load                                     :  13646.8 MB/s (3, 0.1%)
+ ARM LDNP load                                    :  12725.2 MB/s (3, 0.2%)
+ ARM STP fill                                     :  44741.2 MB/s (2)
+ ARM STNP fill                                    :  44742.6 MB/s (2)
+
+==========================================================================
+== Framebuffer read tests.                                              ==
+==                                                                      ==
+== Many ARM devices use a part of the system memory as the framebuffer, ==
+== typically mapped as uncached but with write-combining enabled.       ==
+== Writes to such framebuffers are quite fast, but reads are much       ==
+== slower and very sensitive to the alignment and the selection of      ==
+== CPU instructions which are used for accessing memory.                ==
+==                                                                      ==
+== Many x86 systems allocate the framebuffer in the GPU memory,         ==
+== accessible for the CPU via a relatively slow PCI-E bus. Moreover,    ==
+== PCI-E is asymmetric and handles reads a lot worse than writes.       ==
+==                                                                      ==
+== If uncached framebuffer reads are reasonably fast (at least 100 MB/s ==
+== or preferably >300 MB/s), then using the shadow framebuffer layer    ==
+== is not necessary in Xorg DDX drivers, resulting in a nice overall    ==
+== performance improvement. For example, the xf86-video-fbturbo DDX     ==
+== uses this trick.                                                     ==
+==========================================================================
+
+ NEON LDP/STP copy (from framebuffer)             :  10314.1 MB/s (2)
+ NEON LDP/STP 2-pass copy (from framebuffer)      :   8097.0 MB/s (2)
+ NEON LD1/ST1 copy (from framebuffer)             :  10353.1 MB/s (2)
+ NEON LD1/ST1 2-pass copy (from framebuffer)      :   7038.5 MB/s (2)
+ ARM LDP/STP copy (from framebuffer)              :  10383.1 MB/s (2)
+ ARM LDP/STP 2-pass copy (from framebuffer)       :   7853.2 MB/s (2)
+
+==========================================================================
+== Memory latency test                                                  ==
+==                                                                      ==
+== Average time is measured for random memory accesses in the buffers   ==
+== of different sizes. The larger is the buffer, the more significant   ==
+== are relative contributions of TLB, L1/L2 cache misses and SDRAM      ==
+== accesses. For extremely large buffer sizes we are expecting to see   ==
+== page table walk with several requests to SDRAM for almost every      ==
+== memory access (though 64MiB is not nearly large enough to experience ==
+== this effect to its fullest).                                         ==
+==                                                                      ==
+== Note 1: All the numbers are representing extra time, which needs to  ==
+==         be added to L1 cache latency. The cycle timings for L1 cache ==
+==         latency can be usually found in the processor documentation. ==
+== Note 2: Dual random read means that we are simultaneously performing ==
+==         two independent memory accesses at a time. In the case if    ==
+==         the memory subsystem can't handle multiple outstanding       ==
+==         requests, dual random read has the same timings as two       ==
+==         single reads performed one after another.                    ==
+==========================================================================
+
+block size : single random read / dual random read, [MADV_NOHUGEPAGE]
+      1024 :    0.0 ns          /     0.0 ns 
+      2048 :    0.0 ns          /     0.0 ns 
+      4096 :    0.0 ns          /     0.0 ns 
+      8192 :    0.0 ns          /     0.0 ns 
+     16384 :    0.0 ns          /     0.0 ns 
+     32768 :    0.0 ns          /     0.0 ns 
+     65536 :    0.1 ns          /     0.0 ns 
+    131072 :    1.4 ns          /     1.8 ns 
+    262144 :    2.8 ns          /     3.0 ns 
+    524288 :    3.7 ns          /     3.9 ns 
+   1048576 :    6.6 ns          /     7.5 ns 
+   2097152 :   20.8 ns          /    24.8 ns 
+   4194304 :   26.3 ns          /    30.5 ns 
+   8388608 :   42.9 ns          /    35.0 ns 
+  16777216 :   63.1 ns          /    53.1 ns 
+  33554432 :   88.1 ns          /   103.9 ns 
+  67108864 :   98.6 ns          /   124.9 ns 
+
+block size : single random read / dual random read, [MADV_HUGEPAGE]
+      1024 :    0.0 ns          /     0.0 ns 
+      2048 :    0.0 ns          /     0.0 ns 
+      4096 :    0.0 ns          /     0.0 ns 
+      8192 :    0.0 ns          /     0.0 ns 
+     16384 :    0.0 ns          /     0.0 ns 
+     32768 :    0.0 ns          /     0.0 ns 
+     65536 :    0.1 ns          /     0.0 ns 
+    131072 :    1.5 ns          /     1.8 ns 
+    262144 :    2.1 ns          /     2.3 ns 
+    524288 :    2.4 ns          /     2.5 ns 
+   1048576 :    4.1 ns          /     2.7 ns 
+   2097152 :   18.3 ns          /    23.1 ns 
+   4194304 :   25.6 ns          /    28.7 ns 
+   8388608 :   37.8 ns          /    30.4 ns 
+  16777216 :   28.0 ns          /    31.3 ns 
+  33554432 :   69.2 ns          /    95.2 ns 
+  67108864 :   88.6 ns          /   113.7 ns 
+
+##########################################################################
+
+Executing ramlat on cpu0 (Neoverse-N1), results in ns:
+
+       size:  1x32  2x32  1x64  2x64 1xPTR 2xPTR 4xPTR 8xPTR
+         4k: 1.435 1.433 1.433 1.432 1.432 1.431 1.431 2.726 
+         8k: 1.431 1.432 1.432 1.432 1.432 1.430 1.430 2.785 
+        16k: 1.430 1.430 1.430 1.429 1.430 1.430 1.430 2.785 
+        32k: 1.430 1.430 1.430 1.429 1.429 1.430 1.430 2.787 
+        64k: 1.430 1.430 1.430 1.430 1.430 1.430 1.430 2.788 
+       128k: 5.025 5.025 5.025 5.025 5.026 5.608 6.810 10.85 
+       256k: 5.730 5.757 5.728 5.753 5.723 5.739 6.973 10.85 
+       512k: 6.676 6.681 6.684 6.705 6.709 6.697 7.707 11.59 
+      1024k: 16.37 15.06 16.34 15.09 16.36 15.38 16.37 20.01 
+      2048k: 31.97 28.84 31.98 28.85 31.99 29.41 28.86 32.40 
+      4096k: 33.76 32.70 33.78 32.80 33.62 32.92 33.00 34.30 
+      8192k: 39.63 36.03 38.40 36.12 38.40 36.49 37.53 39.00 
+     16384k: 58.13 45.03 54.73 46.33 54.65 47.32 46.72 59.01 
+     32768k: 106.7 78.29 104.0 78.16 102.8 86.58 86.45 114.1 
+     65536k: 119.9 104.7 118.9 105.7 118.2 99.65 99.72 117.8 
+    131072k: 117.7 113.4 118.9 115.9 119.3 111.3 109.6 118.9 
+
+##########################################################################
+
+Executing benchmark twice on cluster 0 (Neoverse-N1)
+
+OpenSSL 3.0.2, built on 15 Mar 2022 (Library: OpenSSL 3.0.2 15 Mar 2022)
+type             16 bytes     64 bytes    256 bytes   1024 bytes   8192 bytes  16384 bytes
+aes-128-cbc     796165.06k  1576202.24k  2023527.51k  2171779.07k  2227093.50k  2232833.37k
+aes-128-cbc     791871.84k  1579594.97k  2023827.97k  2169844.05k  2226918.74k  2232669.53k
+aes-192-cbc     750426.13k  1387396.22k  1718240.43k  1807296.85k  1857686.19k  1861642.92k
+aes-192-cbc     744861.90k  1387979.75k  1717576.70k  1807480.15k  1857890.99k  1861675.69k
+aes-256-cbc     715428.22k  1227382.25k  1484381.87k  1563873.62k  1593264.81k  1596145.66k
+aes-256-cbc     716891.95k  1230795.03k  1486725.72k  1563989.67k  1593251.16k  1596080.13k
+
+##########################################################################
+
+Executing benchmark single-threaded on cpu0 (Neoverse-N1)
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,96 CPUs LE)
+
+LE
+CPU Freq: - - - - - - - - -
+
+RAM size:   96092 MB,  # CPU hardware threads:  96
+RAM usage:    435 MB,  # Benchmark threads:      1
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       3878   100   3774   3773  |      46250   100   3949   3949
+23:       3781   100   3854   3853  |      45830   100   3968   3967
+24:       3454   100   3715   3714  |      45253   100   3973   3973
+25:       3221   100   3679   3678  |      44464   100   3958   3958
+----------------------------------  | ------------------------------
+Avr:             100   3755   3755  |              100   3962   3962
+Tot:             100   3859   3858
+
+##########################################################################
+
+Executing benchmark 3 times multi-threaded on CPUs 0-95
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,96 CPUs LE)
+
+LE
+CPU Freq: - - - - - - - - -
+
+RAM size:   96092 MB,  # CPU hardware threads:  96
+RAM usage:  21180 MB,  # Benchmark threads:     96
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:     204478  7791   2553 198916  |    3759892  8437   3800 320619
+23:     170453  6739   2577 173671  |    3668512  8455   3755 317428
+24:     169252  7214   2523 181981  |    3589905  8519   3699 315072
+25:     157065  7194   2494 179331  |    3474171  8505   3635 309149
+----------------------------------  | ------------------------------
+Avr:            7234   2537 183475  |             8479   3722 315567
+Tot:            7857   3130 249521
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,96 CPUs LE)
+
+LE
+CPU Freq: - - - - - - - - -
+
+RAM size:   96092 MB,  # CPU hardware threads:  96
+RAM usage:  21180 MB,  # Benchmark threads:     96
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:     202681  7659   2574 197169  |    3777168  8478   3799 322092
+23:     173539  6905   2561 176816  |    3670025  8463   3753 317558
+24:     163101  6998   2506 175366  |    3585302  8510   3698 314668
+25:     155403  7147   2484 177434  |    3461524  8474   3635 308023
+----------------------------------  | ------------------------------
+Avr:            7178   2531 181696  |             8481   3721 315585
+Tot:            7829   3126 248641
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,96 CPUs LE)
+
+LE
+CPU Freq: - - - - - - - - -
+
+RAM size:   96092 MB,  # CPU hardware threads:  96
+RAM usage:  21180 MB,  # Benchmark threads:     96
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:     203586  7698   2573 198049  |    3772349  8467   3800 321682
+23:     175114  6893   2588 178421  |    3659122  8436   3753 316615
+24:     169025  7219   2518 181736  |    3590455  8522   3698 315120
+25:     157255  7212   2491 179549  |    3467929  8489   3635 308593
+----------------------------------  | ------------------------------
+Avr:            7255   2543 184439  |             8479   3722 315502
+Tot:            7867   3132 249970
+
+Compression: 183475,181696,184439
+Decompression: 315567,315585,315502
+Total: 249521,248641,249970
+
+##########################################################################
+
+Testing maximum cpufreq again, still under full load. System health now:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+22:33:29: 2800MHz 51.25  75%   2%  73%   0%   0%   0%      °C
+
+Checking cpufreq OPP (Neoverse-N1):
+
+Cpufreq OPP: 2800    Measured: 2798 (2798.280/2798.280/2798.280)
+
+##########################################################################
+
+Hardware sensors:
+
+apm_xgene-isa-0000
+SoC Temperature:  +43.0 C  
+CPU power:        39.52 W  
+IO power:         21.67 W  
+
+nvme-pci-40400
+Composite:    +31.9 C  (low  =  -0.1 C, high = +117.8 C)
+                       (crit = +149.8 C)
+
+nvme-pci-40500
+Composite:    +29.9 C  (low  =  -0.1 C, high = +74.8 C)
+                       (crit = +79.8 C)
+
+##########################################################################
+
+System health while running tinymembench:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+22:26:38: 2800MHz  1.54   0%   0%   0%   0%   0%   0%      °C
+22:26:48: 2800MHz  1.45   1%   0%   1%   0%   0%   0%      °C
+22:26:58: 2800MHz  1.38   1%   0%   1%   0%   0%   0%      °C
+22:27:08: 2800MHz  1.32   1%   0%   1%   0%   0%   0%      °C
+22:27:18: 2800MHz  1.27   1%   0%   1%   0%   0%   0%      °C
+22:27:28: 2800MHz  1.23   1%   0%   1%   0%   0%   0%      °C
+22:27:38: 2800MHz  1.20   1%   0%   1%   0%   0%   0%      °C
+22:27:48: 2800MHz  1.16   1%   0%   1%   0%   0%   0%      °C
+
+System health while running ramlat:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+22:27:52: 2800MHz  1.31   0%   0%   0%   0%   0%   0%      °C
+22:27:55: 2800MHz  1.31   1%   0%   1%   0%   0%   0%      °C
+22:27:58: 2800MHz  1.29   1%   0%   1%   0%   0%   0%      °C
+22:28:01: 2800MHz  1.29   1%   0%   1%   0%   0%   0%      °C
+22:28:04: 2800MHz  1.26   1%   0%   1%   0%   0%   0%      °C
+22:28:07: 2800MHz  1.24   1%   0%   1%   0%   0%   0%      °C
+22:28:10: 2800MHz  1.24   1%   0%   1%   0%   0%   0%      °C
+22:28:13: 2800MHz  1.22   1%   0%   1%   0%   0%   0%      °C
+22:28:16: 2800MHz  1.22   1%   0%   1%   0%   0%   0%      °C
+
+System health while running OpenSSL benchmark:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+22:28:20: 2800MHz  1.20   0%   0%   0%   0%   0%   0%      °C
+22:28:36: 2800MHz  1.16   1%   0%   1%   0%   0%   0%      °C
+22:28:52: 2800MHz  1.11   1%   0%   1%   0%   0%   0%      °C
+22:29:08: 2800MHz  1.09   1%   0%   1%   0%   0%   0%      °C
+22:29:24: 2800MHz  1.07   1%   0%   1%   0%   0%   0%      °C
+22:29:40: 2800MHz  1.05   1%   0%   1%   0%   0%   0%      °C
+22:29:56: 2800MHz  1.04   1%   0%   1%   0%   0%   0%      °C
+
+System health while running 7-zip single core benchmark:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+22:30:08: 2800MHz  1.11   0%   0%   0%   0%   0%   0%      °C
+22:30:13: 2800MHz  1.10   1%   0%   1%   0%   0%   0%      °C
+22:30:18: 2800MHz  1.09   1%   0%   1%   0%   0%   0%      °C
+22:30:23: 2800MHz  1.08   1%   0%   1%   0%   0%   0%      °C
+22:30:28: 2800MHz  1.08   1%   0%   1%   0%   0%   0%      °C
+22:30:33: 2800MHz  1.07   1%   0%   1%   0%   0%   0%      °C
+22:30:38: 2800MHz  1.07   1%   0%   1%   0%   0%   0%      °C
+
+System health while running 7-zip multi core benchmark:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+22:30:51: 2800MHz  8.74   0%   0%   0%   0%   0%   0%      °C
+22:31:01: 2800MHz 15.16  64%   0%  63%   0%   0%   0%      °C
+22:31:14: 2800MHz 20.27  45%   1%  44%   0%   0%   0%      °C
+22:31:25: 2800MHz 22.64  23%   0%  23%   0%   0%   0%      °C
+22:31:35: 2800MHz 32.57  75%   2%  73%   0%   0%   0%      °C
+22:31:48: 2800MHz 42.80  77%   0%  76%   0%   0%   0%      °C
+22:31:58: 2800MHz 53.92  69%   0%  69%   0%   0%   0%      °C
+22:32:12: 2800MHz 51.87  44%   1%  43%   0%   0%   0%      °C
+22:32:22: 2800MHz 47.10  23%   0%  23%   0%   0%   0%      °C
+22:32:32: 2800MHz 48.21  75%   2%  73%   0%   0%   0%      °C
+22:32:45: 2800MHz 48.56  76%   0%  75%   0%   0%   0%      °C
+22:32:56: 2800MHz 48.85  70%   0%  69%   0%   0%   0%      °C
+22:33:09: 2800MHz 48.94  45%   1%  44%   0%   0%   0%      °C
+22:33:19: 2800MHz 44.83  23%   0%  23%   0%   0%   0%      °C
+22:33:29: 2800MHz 51.25  75%   2%  73%   0%   0%   0%      °C
+
+##########################################################################
+
+Linux 5.15.0-73-generic (adlink-ampere) 	07/03/23 	_aarch64_	(96 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+           2.41    0.00    0.06    0.01    0.00   97.51
+
+Device             tps    kB_read/s    kB_wrtn/s    kB_dscd/s    kB_read    kB_wrtn    kB_dscd
+nvme0n1           0.25         5.62         0.00         0.00      23256          0          0
+nvme1n1           8.34       160.58       156.35     26615.99     664033     646529  110063500
+
+               total        used        free      shared  buff/cache   available
+Mem:            93Gi       788Mi        92Gi       3.0Mi       548Mi        92Gi
+Swap:          8.0Gi          0B       8.0Gi
+
+Filename				Type		Size		Used		Priority
+/swap.img                               file		8388604		0		-2
+
+CPU sysfs topology (clusters, cpufreq members, clockspeeds)
+                 cpufreq   min    max
+ CPU    cluster  policy   speed  speed   core type
+  0      128        0     1000    2800   Neoverse-N1 / r3p1
+  1      128        1     1000    2800   Neoverse-N1 / r3p1
+  2      128        2     1000    2800   Neoverse-N1 / r3p1
+  3      128        3     1000    2800   Neoverse-N1 / r3p1
+  4      128        4     1000    2800   Neoverse-N1 / r3p1
+  5      128        5     1000    2800   Neoverse-N1 / r3p1
+  6      128        6     1000    2800   Neoverse-N1 / r3p1
+  7      128        7     1000    2800   Neoverse-N1 / r3p1
+  8      128        8     1000    2800   Neoverse-N1 / r3p1
+  9      128        9     1000    2800   Neoverse-N1 / r3p1
+ 10      128       10     1000    2800   Neoverse-N1 / r3p1
+ 11      128       11     1000    2800   Neoverse-N1 / r3p1
+ 12      128       12     1000    2800   Neoverse-N1 / r3p1
+ 13      128       13     1000    2800   Neoverse-N1 / r3p1
+ 14      128       14     1000    2800   Neoverse-N1 / r3p1
+ 15      128       15     1000    2800   Neoverse-N1 / r3p1
+ 16      128       16     1000    2800   Neoverse-N1 / r3p1
+ 17      128       17     1000    2800   Neoverse-N1 / r3p1
+ 18      128       18     1000    2800   Neoverse-N1 / r3p1
+ 19      128       19     1000    2800   Neoverse-N1 / r3p1
+ 20      128       20     1000    2800   Neoverse-N1 / r3p1
+ 21      128       21     1000    2800   Neoverse-N1 / r3p1
+ 22      128       22     1000    2800   Neoverse-N1 / r3p1
+ 23      128       23     1000    2800   Neoverse-N1 / r3p1
+ 24      128       24     1000    2800   Neoverse-N1 / r3p1
+ 25      128       25     1000    2800   Neoverse-N1 / r3p1
+ 26      128       26     1000    2800   Neoverse-N1 / r3p1
+ 27      128       27     1000    2800   Neoverse-N1 / r3p1
+ 28      128       28     1000    2800   Neoverse-N1 / r3p1
+ 29      128       29     1000    2800   Neoverse-N1 / r3p1
+ 30      128       30     1000    2800   Neoverse-N1 / r3p1
+ 31      128       31     1000    2800   Neoverse-N1 / r3p1
+ 32      128       32     1000    2800   Neoverse-N1 / r3p1
+ 33      128       33     1000    2800   Neoverse-N1 / r3p1
+ 34      128       34     1000    2800   Neoverse-N1 / r3p1
+ 35      128       35     1000    2800   Neoverse-N1 / r3p1
+ 36      128       36     1000    2800   Neoverse-N1 / r3p1
+ 37      128       37     1000    2800   Neoverse-N1 / r3p1
+ 38      128       38     1000    2800   Neoverse-N1 / r3p1
+ 39      128       39     1000    2800   Neoverse-N1 / r3p1
+ 40      128       40     1000    2800   Neoverse-N1 / r3p1
+ 41      128       41     1000    2800   Neoverse-N1 / r3p1
+ 42      128       42     1000    2800   Neoverse-N1 / r3p1
+ 43      128       43     1000    2800   Neoverse-N1 / r3p1
+ 44      128       44     1000    2800   Neoverse-N1 / r3p1
+ 45      128       45     1000    2800   Neoverse-N1 / r3p1
+ 46      128       46     1000    2800   Neoverse-N1 / r3p1
+ 47      128       47     1000    2800   Neoverse-N1 / r3p1
+ 48      128       48     1000    2800   Neoverse-N1 / r3p1
+ 49      128       49     1000    2800   Neoverse-N1 / r3p1
+ 50      128       50     1000    2800   Neoverse-N1 / r3p1
+ 51      128       51     1000    2800   Neoverse-N1 / r3p1
+ 52      128       52     1000    2800   Neoverse-N1 / r3p1
+ 53      128       53     1000    2800   Neoverse-N1 / r3p1
+ 54      128       54     1000    2800   Neoverse-N1 / r3p1
+ 55      128       55     1000    2800   Neoverse-N1 / r3p1
+ 56      128       56     1000    2800   Neoverse-N1 / r3p1
+ 57      128       57     1000    2800   Neoverse-N1 / r3p1
+ 58      128       58     1000    2800   Neoverse-N1 / r3p1
+ 59      128       59     1000    2800   Neoverse-N1 / r3p1
+ 60      128       60     1000    2800   Neoverse-N1 / r3p1
+ 61      128       61     1000    2800   Neoverse-N1 / r3p1
+ 62      128       62     1000    2800   Neoverse-N1 / r3p1
+ 63      128       63     1000    2800   Neoverse-N1 / r3p1
+ 64      128       64     1000    2800   Neoverse-N1 / r3p1
+ 65      128       65     1000    2800   Neoverse-N1 / r3p1
+ 66      128       66     1000    2800   Neoverse-N1 / r3p1
+ 67      128       67     1000    2800   Neoverse-N1 / r3p1
+ 68      128       68     1000    2800   Neoverse-N1 / r3p1
+ 69      128       69     1000    2800   Neoverse-N1 / r3p1
+ 70      128       70     1000    2800   Neoverse-N1 / r3p1
+ 71      128       71     1000    2800   Neoverse-N1 / r3p1
+ 72      128       72     1000    2800   Neoverse-N1 / r3p1
+ 73      128       73     1000    2800   Neoverse-N1 / r3p1
+ 74      128       74     1000    2800   Neoverse-N1 / r3p1
+ 75      128       75     1000    2800   Neoverse-N1 / r3p1
+ 76      128       76     1000    2800   Neoverse-N1 / r3p1
+ 77      128       77     1000    2800   Neoverse-N1 / r3p1
+ 78      128       78     1000    2800   Neoverse-N1 / r3p1
+ 79      128       79     1000    2800   Neoverse-N1 / r3p1
+ 80      128       80     1000    2800   Neoverse-N1 / r3p1
+ 81      128       81     1000    2800   Neoverse-N1 / r3p1
+ 82      128       82     1000    2800   Neoverse-N1 / r3p1
+ 83      128       83     1000    2800   Neoverse-N1 / r3p1
+ 84      128       84     1000    2800   Neoverse-N1 / r3p1
+ 85      128       85     1000    2800   Neoverse-N1 / r3p1
+ 86      128       86     1000    2800   Neoverse-N1 / r3p1
+ 87      128       87     1000    2800   Neoverse-N1 / r3p1
+ 88      128       88     1000    2800   Neoverse-N1 / r3p1
+ 89      128       89     1000    2800   Neoverse-N1 / r3p1
+ 90      128       90     1000    2800   Neoverse-N1 / r3p1
+ 91      128       91     1000    2800   Neoverse-N1 / r3p1
+ 92      128       92     1000    2800   Neoverse-N1 / r3p1
+ 93      128       93     1000    2800   Neoverse-N1 / r3p1
+ 94      128       94     1000    2800   Neoverse-N1 / r3p1
+ 95      128       95     1000    2800   Neoverse-N1 / r3p1
+
+Architecture:                    aarch64
+CPU op-mode(s):                  32-bit, 64-bit
+Byte Order:                      Little Endian
+CPU(s):                          96
+On-line CPU(s) list:             0-95
+Vendor ID:                       ARM
+Model name:                      Neoverse-N1
+Model:                           1
+Thread(s) per core:              1
+Core(s) per socket:              96
+Socket(s):                       1
+Stepping:                        r3p1
+Frequency boost:                 disabled
+CPU max MHz:                     2800.0000
+CPU min MHz:                     1000.0000
+BogoMIPS:                        50.00
+Flags:                           fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp ssbs
+L1d cache:                       6 MiB (96 instances)
+L1i cache:                       6 MiB (96 instances)
+L2 cache:                        96 MiB (96 instances)
+NUMA node(s):                    1
+NUMA node0 CPU(s):               0-95
+Vulnerability Itlb multihit:     Not affected
+Vulnerability L1tf:              Not affected
+Vulnerability Mds:               Not affected
+Vulnerability Meltdown:          Not affected
+Vulnerability Mmio stale data:   Not affected
+Vulnerability Retbleed:          Not affected
+Vulnerability Spec store bypass: Mitigation; Speculative Store Bypass disabled via prctl
+Vulnerability Spectre v1:        Mitigation; __user pointer sanitization
+Vulnerability Spectre v2:        Mitigation; CSV2, BHB
+Vulnerability Srbds:             Not affected
+Vulnerability Tsx async abort:   Not affected
+
+Processor Information
+	Socket Designation: CPU 0
+	Type: Central Processor
+	Family: ARMv8
+	Manufacturer: Ampere(R)
+	ID: C1 D0 3F 41 00 00 00 00
+	Signature: Implementor 0x41, Variant 0x3, Architecture 15, Part 0xd0c, Revision 1
+	Version: Ampere(R) Altra(R) Max Processor
+	Voltage: 0.9 V
+	External Clock: 1900 MHz
+	Max Speed: 2800 MHz
+	Current Speed: 2800 MHz
+	Status: Populated, Enabled
+	Upgrade: Other
+	L1 Cache Handle: 0x001A
+	L2 Cache Handle: 0x001C
+	Part Number: M96-28
+	Core Count: 96
+	Core Enabled: 96
+	Thread Count: 96
+	Characteristics:
+		64-bit capable
+		Multi-Core
+		Execute Protection
+		Enhanced Virtualization
+		Power/Performance Control
+
+SoC guess: Ampere Altra / Altra Max
+ Compiler: /usr/bin/gcc (Ubuntu 11.3.0-1ubuntu1~22.04.1) 11.3.0 / aarch64-linux-gnu
+ Userland: arm64
+   Kernel: 5.15.0-73-generic/aarch64
+           CONFIG_HZ=250
+           CONFIG_HZ_250=y
+           CONFIG_PREEMPT_NOTIFIERS=y
+           CONFIG_PREEMPT_VOLUNTARY=y
+
+##########################################################################
+
+DIMM configuration:
+     *-bank:0
+          description: DIMM DDR4 3200 MHz (0.3 ns)
+          product: TS2GHR72V2E3
+          vendor: Transcend
+          physical id: 0
+          slot: Socket 0 DIMM 0
+          size: 16GiB
+          width: 64 bits
+          clock: 3200MHz (0.3ns)
+     *-bank:1
+          description: DIMM DDR4 3200 MHz (0.3 ns)
+          product: TS2GHR72V2E3
+          vendor: Transcend
+          physical id: 1
+          slot: Socket 0 DIMM 1
+          size: 16GiB
+          width: 64 bits
+          clock: 3200MHz (0.3ns)
+     *-bank:2
+          description: DIMM DDR4 3200 MHz (0.3 ns)
+          product: TS2GHR72V2E3
+          vendor: Transcend
+          physical id: 2
+          slot: Socket 0 DIMM 2
+          size: 16GiB
+          width: 64 bits
+          clock: 3200MHz (0.3ns)
+     *-bank:3
+          description: DIMM DDR4 3200 MHz (0.3 ns)
+          product: TS2GHR72V2E3
+          vendor: Transcend
+          physical id: 3
+          slot: Socket 0 DIMM 3
+          size: 16GiB
+          width: 64 bits
+          clock: 3200MHz (0.3ns)
+     *-bank:4
+          description: DIMM DDR4 3200 MHz (0.3 ns)
+          product: TS2GHR72V2E3
+          vendor: Transcend
+          physical id: 4
+          slot: Socket 0 DIMM 4
+          size: 16GiB
+          width: 64 bits
+          clock: 3200MHz (0.3ns)
+     *-bank:5
+          description: DIMM DDR4 3200 MHz (0.3 ns)
+          product: TS2GHR72V2E3
+          vendor: Transcend
+          physical id: 5
+          slot: Socket 0 DIMM 5
+          size: 16GiB
+          width: 64 bits
+          clock: 3200MHz (0.3ns)
+
+##########################################################################
+
+Results validation:
+
+  * Measured clockspeed not lower than advertised max CPU clockspeed
+  * No swapping
+  * Background activity (%system) OK
+  * Throttling occured
+
+Status of performance related policies found below /sys:
+
+  * /sys/module/pcie_aspm/parameters/policy: [default] performance powersave powersupersave
+
+| ADLINK Ampere Altra Developer Platform ES2 | 2800 MHz | 5.15 | Ubuntu 22.04.2 LTS arm64 | 249380 | 3858 | 1596110 | 10130 | 44750 | - |

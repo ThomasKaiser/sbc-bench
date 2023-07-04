@@ -264,4 +264,6 @@
 | [4xwq](4xwq.txt) | v0.9.41 / N95 | 0%/0% | 15Gi/14Gi | X | X | X | X | 1% | 0% | [check log](4xwq.txt) |
 | [4yNC](4yNC.txt) | v0.9.42 Google Homestar | 0%/0% | 3.8Gi/2.7Gi | X | X | X | X | 2% | 0% | [check log](4yNC.txt) |
 | [4z3s](4z3s.txt) | v0.9.42 clientron TC120 Type1 - TBD by | 0%/0% | 1.8Gi/1.0Gi | X | X | X | X | 2% | 0% | [check log](4z3s.txt) |
+| [4zGI](4zGI.txt) | v0.9.42 ADLINK Ampere Altra Developer P | 0%/0% | 93Gi/92Gi | X | X | X | X | 0% | 0% | [check log](4zGI.txt) |
 | [4zcm](4zcm.txt) | v0.9.42 Marvell 8040 MACCHIATOBin Doubl | 0%/0% | 3.8Gi/3.3Gi | X | X | X | X | 2% | 0% | [check log](4zcm.txt) |
+| [4zkJ](4zkJ.txt) | v0.9.42 ADLINK AVA Developer Platform E | 0%/0% | 93Gi/91Gi | X | X | X | X | 0% | 0% | [check log](4zkJ.txt) |

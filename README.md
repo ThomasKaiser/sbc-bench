@@ -48,7 +48,7 @@ This tool therefore focuses on a controlled environment and intensive monitoring
 
 ## Execution
 
-You need Debian Stretch/Buster/Bullseye or Ubuntu Bionic/Focal/Jammy. Older variants are not supported (due to distro packages being way too outdated). Then it's
+You need Debian Stretch/Buster/Bullseye/Bookworm or Ubuntu Bionic/Focal/Jammy. Older variants are not supported (due to distro packages being way too outdated). Then it's
 
     wget https://raw.githubusercontent.com/ThomasKaiser/sbc-bench/master/sbc-bench.sh
     sudo /bin/bash ./sbc-bench.sh -c

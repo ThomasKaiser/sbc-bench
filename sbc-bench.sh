@@ -4151,7 +4151,7 @@ LogEnvironment() {
 	# results validation:
 	IsValid="$(ValidateResults | sed -e 's/^/  * /')"
 	echo -e "\n##########################################################################\n"
-	echo -e "Results validation:\n\n${IsValid}\n" | sed "s,\x1B\[[0-9;]*[a-zA-Z],,g"
+	echo -e "${BOLD}Results validation:${NC}\n\n${IsValid}\n" | sed "s,\x1B\[[0-9;]*[a-zA-Z],,g"
 
 	# add performance relevant governors/policies to results if available:
 	GovernorStateNow="$(HandleGovernors | grep -v cpufreq-policy)"
@@ -4776,7 +4776,7 @@ GuessARMSoC() {
 	#      Cortex-A17 / r0p1: Rockchip RK3288
 	#      Cortex-A35 / r0p1: Mediatek MT8167B/MT6799
 	#      Cortex-A35 / r0p2: NXP i.MX8QXP, Rockchip RK1808/RK3308/RK3326/PX30/PX30S
-	#      Cortex-A35 / r1p0: Amlogic S805X2/S905Y4/S905W2
+	#      Cortex-A35 / r1p0: Amlogic C302X/C305X/S805X2/S905Y4/S905W2
 	#      Cortex-A53 / r0p0: ARM Juno r0, Qualcomm Snapdragon 410 (MSM8916)
 	#      Cortex-A53 / r0p1: Exynos 5433, Qualcomm MSM8939
 	#      Cortex-A53 / r0p2: Marvell PXA1908, Mediatek MT6752/MT6738/MT6755/MT8173/MT8176, Qualcomm Snapdragon 810 (MSM8994), Samsung Exynos 7420
@@ -6194,6 +6194,20 @@ GuessSoCbySignature() {
 					;;
 			esac
 			;;
+		00A35r1p000A35r1p0)
+			# Amlogic C302X or C305X, 2 x Cortex-A35 / r1p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32
+			case "${DTCompatible}" in
+				*c302*)
+					echo "Amlogic C302X"
+					;;
+				*c305*)
+					echo "Amlogic C305X"
+					;;
+				*amlogic*)
+					echo "Amlogic C3 SoC"
+					;;
+			esac
+			;;
 		00A35r1p000A35r1p000A35r1p000A35r1p0)
 			# S805X2/S905Y4/S905W2, 4 x Cortex-A35 / r1p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			echo "Amlogic S805X2/S905Y4/S905W2"
@@ -6220,10 +6234,24 @@ GuessSoCbySignature() {
 					;;
 			esac
 			;;
-		*A55r2p0*A55r2p0)
+		0?A55r?p?0?A55r?p?)
 			# Renesas RZG2LC, 2 x Cortex-A55 / r2p0 / L1d 32K, L1i 32K, L2 0K, L3 256K (shared)
 			# or NXP i.MX 93, 2 x Cortex-A55 / r2p0 / L1d 32K, L1i 32K, L2 64K, L3 256K (shared)
-			grep -q nxp <<<"${DTCompatible}" && echo "NXP i.MX 93" || echo "Renesas RZG2LC"
+			# or Amlogic C308X, 2 x Cortex-A55
+			case "${DTCompatible}" in
+				*nxp*)
+					echo "NXP i.MX 93"
+					;;
+				*renesas*|*rzg2*)
+					echo "Renesas RZG2LC"
+					;;
+				*c308l*)
+					echo "Amlogic C308L"
+					;;
+				*c308*)
+					echo "Amlogic C308X"
+					;;
+			esac
 			;;
 		*A55r2p0)
 			# Renesas RZG2UL, 1 x Cortex-A55 / r2p0 / L1d 32K, L1i 32K, L2 0K, L3 256K (shared)
@@ -6684,7 +6712,7 @@ GuessSoCbySignature() {
 			echo "NXP LS1028A"
 			;;
 		*NeoverseN1r3p1*)
-			# Ampere Altra / Altra Max: 32/64/80/128 x Neoverse-N1 / r3p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp ssbs
+			# Ampere Altra / Altra Max: 32/48/64/72/80/96/128 x Neoverse-N1 / r3p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp ssbs
 			# or AWS Graviton2: 1/2/4/8/16/32/48/64 vCPU Neoverse-N1 / r3p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp ssbs / L1d 128K, L1i 128K, L2 2M, L3 32M
 			# https://lore.kernel.org/all/alpine.DEB.2.22.394.2204131354190.3066615@ubuntu-linux-20-04-desktop/
 			# https://www.spec.org/cpu2017/results/res2021q3/cpu2017-20210702-27694.pdf

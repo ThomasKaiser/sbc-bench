@@ -4151,7 +4151,7 @@ LogEnvironment() {
 	# results validation:
 	IsValid="$(ValidateResults | sed -e 's/^/  * /')"
 	echo -e "\n##########################################################################\n"
-	echo -e "${BOLD}Results validation:${NC}\n\n${IsValid}\n" | sed "s,\x1B\[[0-9;]*[a-zA-Z],,g"
+	echo -e "Results validation:\n\n${IsValid}\n" | sed "s,\x1B\[[0-9;]*[a-zA-Z],,g"
 
 	# add performance relevant governors/policies to results if available:
 	GovernorStateNow="$(HandleGovernors | grep -v cpufreq-policy)"
@@ -4477,7 +4477,7 @@ UploadResults() {
 
 	# Display benchmark results if not in PTS, GB or preview mode
 	if [ "X${MODE}" != "Xpts" -a "X${MODE}" != "Xgb" -a "X${MODE}" != "Xreview" ]; then
-		echo -e "Results validation:\n\n${IsValid}\n"
+		echo -e "${BOLD}Results validation:${NC}\n\n${IsValid}\n"
 		MemoryScores="$(awk -F" " '/^ libc / {print $2$4" "$5" "$6}' <${ResultLog} | grep -E 'memcpy|memset' | awk -F'MB/s' '{print $1"MB/s"}')"
 		CountOfMemoryScores=$(wc -l <<<"${MemoryScores}")
 		if [ ${#ClusterConfig[@]} -eq 1 -o $(( ${#ClusterConfig[@]} * 2 )) -ne ${CountOfMemoryScores} ]; then
@@ -4784,7 +4784,7 @@ GuessARMSoC() {
 	#      Cortex-A53 / r0p4: Allwinner A100/A133/A53/A64/H313/H5/H6/H616/H618/H64/R329/R818/T507/T509, Amlogic A113X/A113D/A311D/A311D2/S805X/S805Y/S905/S905X/S905D/S905W/S905L/S905L3A/S905M2/S905X2/S905Y2/S905D2/S912/S922X/T962X2, Broadcom BCM2837/BCM2709/BCM2710/RP3A0-AU (BCM2710A1), HiSilicon Hi3798C-V200, Exynos 8890, HiSilicon Kirin 650/710/950/955/960/970, Marvell Armada 37x0, Mediatek MT6739WA/MT6762M/MT6765/MT6771V/MT6797/MT6797T/MT6799/MT8183/MT8735, NXP i.MX8M/i.MX8QM/LS1xx8, Qualcomm MSM8937/MSM8952/MSM8953/MSM8956/MSM8976/MSM8976PRO/SDM439/SDM450, RealTek RTD129x/RTD139x, Rockchip RK3318/RK3328/RK3528/RK3562/RK3399, Samsung Exynos 7870/7885/8890/8895, Socionext LD20/SC2A11, TI K3 AM623/AM625/AM62A/AM642/AM654, Xiaomi Surge S1
 	#      Cortex-A55 / r0p1: Samsung Exynos 9810
 	#      Cortex-A55 / r1p0: Amlogic S905X3/S905D3/S905Y3/T962X3/T962E2, HiSilicon Ascend 310 / Kirin 810/980, Samsung Exynos 9820
-	#      Cortex-A55 / r2p0: Amlogic S905X4/S905C2, Google Tensor G1, MediaTek Genio 1200, NXP i.MX 93, Qualcomm SM8350 (Snapdragon 888), Renesas RZG2UL/RZG2LC, Rockchip RK3566/RK3568/RK3588/RK3588s, Unisoc UMS9620
+	#      Cortex-A55 / r2p0: Amlogic S905X4/S905C2, Allwinner A523/T527, Google Tensor G1, MediaTek Genio 1200, NXP i.MX 93, Qualcomm SM8350 (Snapdragon 888), Renesas RZG2UL/RZG2LC, Rockchip RK3566/RK3568/RK3588/RK3588s, Unisoc UMS9620
 	#      Cortex-A57 / r0p0: ARM Juno r0
 	#      Cortex-A57 / r1p0: Exynos 5433/7420
 	#      Cortex-A57 / r1p1: ARM Juno r1, Nvidia Tegra TX1, Snapdragon 810 / MSM8994/MSM8994V
@@ -5495,7 +5495,7 @@ GuessARMSoC() {
 				SoCGuess="$(GuessSoCbySignature)"
 				if [ "X${SoCGuess}" != "X" -a "X${VirtWhat}" != "X" -a "X${VirtWhat}" != "Xnone" ]; then
 					# add virtualization disclaimer
-					echo "${SoCGuess} / guess flawed since running in ${VirtWhat}"
+					echo "${SoCGuess} / guessing impossible since running in ${VirtWhat}"
 				else
 					echo "${SoCGuess:-n/a}"
 				fi
@@ -6086,9 +6086,19 @@ GuessSoCbySignature() {
 			# HiSilicon Ascend 310, 8 x Cortex-A55 / r1p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp asimdrdm lrcpc dcpop asimddp
 			echo "HiSilicon Ascend 310"
 			;;
-		0?A55r?p?0?A55r?p?0?A55r?p?0?A55r?p?0?A55r?p?0?A55r?p?0?A55r?p?0?A55r?p?)
-			# Allwinner A523, 8 x Cortex-A55
-			grep -q -E 'a523|allwinner' <<<"${DTCompatible}" && echo "Allwinner A523"
+		0?A55r2p00?A55r2p00?A55r2p00?A55r2p00?A55r2p00?A55r2p00?A55r2p00?A55r2p0)
+			# Allwinner A523/T527, 8 x Cortex-A55 / r2p0 / at least 'aes pmull sha1 sha2' (https://browser.geekbench.com/v6/cpu/1168710)
+			case "${DTCompatible}" in
+				*a523*)
+					echo "Allwinner A523"
+					;;
+				*t527*)
+					echo "Allwinner T527"
+					;;
+				*allwinner*)
+					echo "Allwinner A523/T527"
+					;;
+			esac
 			;;
 		*A55r1p0*A55r1p0*A55r1p0*A55r1p0*A76r1p0*A76r1p0*A76r1p0*A76r1p0)
 			# HiSilicon Kirin 980, 4 x Cortex-A55 / r1p0 + 4 x Cortex-A76 / r1p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp

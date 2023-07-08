@@ -61,7 +61,7 @@ I chose [mhz](https://github.com/wtarreau/mhz), [tinymembench](https://github.co
 
 ### [mhz](https://github.com/wtarreau/mhz)
 
-This tool is not a benchmark but instead measures real CPU clockspeeds. This is helpful on platforms where cpufreq support is not available yet or we can not rely on the clockspeed values returned by the kernel. This applies to platforms where vendors are cheating (RPi, Amlogic) or where actual clockspeeds are set via jumpers while the clockspeeds available to the kernel are derived from device-tree (DT) entries. On a Clearfog Pro routerboard it will look like this for example (DT defines 666/1332 MHz while I configured 800/1600 MHz via jumper):
+This tool is not a benchmark but instead measures real CPU clockspeeds. This is helpful on platforms where cpufreq support is not available (yet) or we can not rely on the clockspeed values returned by the kernel. This applies to platforms where vendors are cheating (RPi, Amlogic), where [weird clockspeed capping occurs for unknown reasons](https://www.ipi.wiki/community/forum/topic/100157/cpu-frequency-capped-to-23-ghz-instead-of-26-ghz) or where actual clockspeeds are set via jumpers while the clockspeeds available to the kernel are derived from device-tree (DT) entries. On a Clearfog Pro routerboard it will look like this for example (DT defines 666/1332 MHz while I configured 800/1600 MHz via jumper):
 
     Checking cpufreq OPP:
 

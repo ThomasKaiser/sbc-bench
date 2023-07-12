@@ -4781,7 +4781,7 @@ GuessARMSoC() {
 	#      Cortex-A53 / r0p1: Exynos 5433, Qualcomm MSM8939
 	#      Cortex-A53 / r0p2: Marvell PXA1908, Mediatek MT6752/MT6738/MT6755/MT8173/MT8176, Qualcomm Snapdragon 810 (MSM8994), Samsung Exynos 7420
 	#      Cortex-A53 / r0p3: ARM Juno r1, ARM Juno r2, HiSilicon Hi3751, Kirin 620/930, Mediatek MT6735/MT8163, Nexell S5P6818, Samsung Exynos 7580, Qualcomm MSM8992 (Snapdragon 808)
-	#      Cortex-A53 / r0p4: Allwinner A100/A133/A53/A64/H313/H5/H6/H616/H618/H64/R329/R818/T507/T509, Amlogic A113X/A113D/A311D/A311D2/S805X/S805Y/S905/S905X/S905D/S905W/S905L/S905L3A/S905M2/S905X2/S905Y2/S905D2/S912/S922X/T962X2, Broadcom BCM2837/BCM2709/BCM2710/RP3A0-AU (BCM2710A1), HiSilicon Hi3798C-V200, Exynos 8890, HiSilicon Kirin 650/710/950/955/960/970, Marvell Armada 37x0, Mediatek MT6739WA/MT6762M/MT6765/MT6771V/MT6797/MT6797T/MT6799/MT8183/MT8735, NXP i.MX8M/i.MX8QM/LS1xx8, Qualcomm MSM8937/MSM8952/MSM8953/MSM8956/MSM8976/MSM8976PRO/SDM439/SDM450, RealTek RTD129x/RTD139x, Rockchip RK3318/RK3328/RK3528/RK3562/RK3399, Samsung Exynos 7870/7885/8890/8895, Socionext LD20/SC2A11, TI K3 AM623/AM625/AM62A/AM642/AM654, Xiaomi Surge S1
+	#      Cortex-A53 / r0p4: Allwinner A100/A133/A53/A64/H313/H5/H6/H616/H618/H64/R329/R818/T507/T509, Amlogic A113X/A113D/A311D/A311D2/S805X/S805Y/S905/S905X/S905D/S905W/S905L/S905L3A/S905M2/S905X2/S905Y2/S905D2/S912/S922X/T962X2, Broadcom BCM2837/BCM2709/BCM2710/RP3A0-AU (BCM2710A1), Exynos 8890, HiSilicon Hi3798C-V200, HiSilicon Kirin 650/710/950/955/960/970, Marvell Armada 37x0, Mediatek MT6739WA/MT6762M/MT6765/MT6771V/MT6797/MT6797T/MT6799/MT8183/MT8735, NXP i.MX8M/i.MX8QM/LS1xx8, Qualcomm IPQ5332/MSM8937/MSM8952/MSM8953/MSM8956/MSM8976/MSM8976PRO/SDM439/SDM450, RealTek RTD129x/RTD139x, Rockchip RK3318/RK3328/RK3528/RK3562/RK3399, Samsung Exynos 7870/7885/8890/8895, Socionext LD20/SC2A11, TI K3 AM623/AM625/AM62A/AM642/AM654, Xiaomi Surge S1
 	#      Cortex-A55 / r0p1: Samsung Exynos 9810
 	#      Cortex-A55 / r1p0: Amlogic S905X3/S905D3/S905Y3/T962X3/T962E2, HiSilicon Ascend 310 / Kirin 810/980, Samsung Exynos 9820
 	#      Cortex-A55 / r2p0: Amlogic S905X4/S905C2, Allwinner A523/T527, Google Tensor G1, MediaTek Genio 1200, NXP i.MX 93, Qualcomm SM8350 (Snapdragon 888), Renesas RZG2UL/RZG2LC, Rockchip RK3566/RK3568/RK3588/RK3588s, Unisoc UMS9620
@@ -5944,6 +5944,10 @@ GuessSoCbySignature() {
 								# Texas Instruments K3 AM654, 4 x Cortex-A53 / r0p4
 								echo "Texas Instruments K3 AM654"
 								;;
+							*ipq5332*)
+								# Qualcomm IPQ5332, 4 x Cortex-A53 / r0p4
+								echo "Qualcomm IPQ5332"
+								;;
 						esac
 					fi
 					;;
@@ -6038,6 +6042,10 @@ GuessSoCbySignature() {
 		00A53r0p400A53r0p412A73r0p212A73r0p212A73r0p212A73r0p2)
 			# Amlogic S922X/A311D, 2 x Cortex-A53 / r0p4 + 4 x Cortex-A73 / r0p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			echo "Amlogic S922X/A311D"
+			;;
+		??A73r?p???A73r?p???A73r?p???A73r?p?)
+			# Qualcomm IPQ9574, 4 x Cortex-A73
+			echo "Qualcomm IPQ9574"
 			;;
 		*A73r0p2*A73r0p2*A73r0p2*A73r0p2*A73r0p2*A73r0p2*A73r0p2*A73r0p2)
 			# https://github.com/vmlemon/understand/wiki/Lenovo-ChromeBook-Duet suggests all 8 cores are
@@ -6940,6 +6948,10 @@ GuessSoCbySignature() {
 			# MediaTek Genio 1200: 4 x Cortex-A55 / r2p0 + 4 x Cortex-A78 / r1p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp
 			echo "MediaTek Genio 1200"
 			;;
+		0?IngenicV4.15FPUV0.00?IngenicV4.15FPUV0.0)
+			# Ingenic JZ4780: dual-core MIPS32
+			echo "Ingenic JZ4780"
+			;;
 	esac
 } # GuessSoCbySignature
 
@@ -7700,6 +7712,15 @@ CheckKernelVersion() {
 			esac
 			echo -e "\n${LRED}${BOLD}The 3.16 series has reached end-of-life on 2020-06-11 with version 3.16.85.${NC}"
 			;;
+		3.18.*)
+			# some SDKs/BSPs based on this version: Ingenic JZ4780
+			case ${GuessedSoC} in
+				*Ingenic*)
+					PrintBSPWarning Ingenic
+					;;
+			esac
+			echo -e "\n${LRED}${BOLD}The 3.18 series has reached end-of-life on 2017-02-08 with version 3.18.48.${NC}"
+			;;
 		4.4.*)
 			# some SDKs/BSPs based on this version: Rockchip RK32xx/RK33xx, Nexell S5P4418/S5P6818
 			case ${GuessedSoC} in
@@ -7870,7 +7891,7 @@ PrintBSPWarning() {
 			echo -e "${BOLD}vendor kernel. See https://tinyurl.com/y8k3af73 and https://tinyurl.com/ywtfec7n${NC}"
 			echo -e "${BOLD}for details.${NC}"
 			;;
-		MediaTek|Nexell|Nvidia|NXP|Qualcomm|RealTek|Samsung|StarFive|T-Head|Unisoc)
+		Ingenic|MediaTek|Nexell|Nvidia|NXP|Qualcomm|RealTek|Samsung|StarFive|T-Head|Unisoc)
 			echo -e "${BOLD}This device runs a $1 vendor/BSP kernel.${NC}"
 			;;
 		Rockchip)

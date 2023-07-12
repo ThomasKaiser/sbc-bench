@@ -1,0 +1,35 @@
+system type		: JZ4780
+machine			: imgtec,ci20
+processor		: 0
+cpu model		: Ingenic JZRISC V4.15  FPU V0.0
+BogoMIPS		: 1196.85
+wait instruction	: yes
+microsecond timers	: no
+tlb_entries		: 32
+extra interrupt vector	: yes
+hardware watchpoint	: yes, count: 1, address/irw mask: [0x0fff]
+isa			: mips1 mips2 mips32r1 mips32r2
+ASEs implemented	:
+shadow register sets	: 1
+kscratch registers	: 0
+package			: 0
+core			: 0
+VCED exceptions		: not available
+VCEI exceptions		: not available
+
+processor		: 1
+cpu model		: Ingenic JZRISC V4.15  FPU V0.0
+BogoMIPS		: 1202.58
+wait instruction	: yes
+microsecond timers	: no
+tlb_entries		: 32
+extra interrupt vector	: yes
+hardware watchpoint	: yes, count: 1, address/irw mask: [0x0fff]
+isa			: mips1 mips2 mips32r1 mips32r2
+ASEs implemented	:
+shadow register sets	: 1
+kscratch registers	: 0
+package			: 0
+core			: 1
+VCED exceptions		: not available
+VCEI exceptions		: not available

@@ -1,0 +1,33 @@
+   opp-table-cluster0:
+       408 MHz    750.0 mV
+       600 MHz    750.0 mV
+       816 MHz    750.0 mV
+      1008 MHz    750.0 mV
+      1200 MHz    775.0 mV
+      1416 MHz    825.0 mV
+      1608 MHz    875.0 mV
+      1800 MHz    950.0 mV
+
+   opp-table-cluster1:
+       408 MHz    600.0 mV
+       600 MHz    600.0 mV
+       816 MHz    600.0 mV
+      1008 MHz    625.0 mV
+      1200 MHz    650.0 mV
+      1416 MHz    675.0 mV
+      1608 MHz    700.0 mV
+      1800 MHz    775.0 mV
+      2016 MHz    850.0 mV
+      2208 MHz    925.0 mV
+
+   opp-table-cluster2:
+       408 MHz    600.0 mV
+       600 MHz    600.0 mV
+       816 MHz    600.0 mV
+      1008 MHz    625.0 mV
+      1200 MHz    650.0 mV
+      1416 MHz    675.0 mV
+      1608 MHz    700.0 mV
+      1800 MHz    775.0 mV
+      2016 MHz    850.0 mV
+      2208 MHz    925.0 mV

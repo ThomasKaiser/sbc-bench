@@ -292,7 +292,7 @@ UpdateMe() {
 	# function to replace this script with latest version from here:
 	# https://raw.githubusercontent.com/ThomasKaiser/sbc-bench/master/sbc-bench.sh
 	# Also check/update the github projects except of stockfish since there we use
-	#  a static and not latest version
+	# a static and not latest version
 
 	[ -w "${PathToMe}" ] || { echo "Permission problem accessing ${PathToMe}. Wrong user? Aborting." >&2 ; exit 1 ; }
 	command -v curl >/dev/null 2>&1 || { echo "curl not found. Please install and try again. Aborting." >&2 ; exit 1 ; }
@@ -641,8 +641,8 @@ GetCoreType() {
 
 GetARMStepping() {
 	# Parse '^CPU variant|^CPU revision' fields from /proc/cpuinfo and transform them
-	# into 'Stepping' like lscpu does (the latter only showing info for cpu0 so partially
-	# useless on systems with different CPU clusters)
+	# into 'Stepping' like lscpu does (the latter in older versions only showing info for
+	# cpu0 so partially useless on systems with different CPU clusters)
 	if [ -n "${ARMStepping}" ]; then
 		echo "r$(awk -Wposix '{printf("%d", $1)}' <<<${ARMStepping[$(( $1 * 2 ))]})p${ARMStepping[$(( $(( $1 * 2 )) + 1 ))]}"
 	fi
@@ -1363,7 +1363,7 @@ GetTempSensor() {
 						TempInfo="Thermal source: /sys/devices/platform/a20-tp-hwmon/ (${ThermalSource})"
 				else
 					ThermalNodeGuess=$(cat /sys/devices/virtual/thermal/thermal_zone?/type 2>/dev/null | grep -E -i "aml_thermal|cpu|soc" | tail -n1)
-					HWMonNodeGuess=$(cat /sys/class/hwmon/hwmon?/name 2>/dev/null | grep -E -i "120e0000" | tail -n1)
+					HWMonNodeGuess=$(cat /sys/class/hwmon/hwmon?/name 2>/dev/null | grep -E -i "120e0000|cpu-hwmon" | tail -n1)
 					if [ "X${ThermalNodeGuess}" != "X" ]; then
 						# let's use this thermal node
 						ThermalZone="$(GetThermalZone "${ThermalNodeGuess}")"
@@ -1371,7 +1371,7 @@ GetTempSensor() {
 						TempInfo="Thermal source: ${ThermalZone}/ (${ThermalNodeGuess})"
 					elif [ "X${HWMonNodeGuess}" != "X" ]; then
 						# temporary hack to support thermal readouts on JH71x0 boards running
-						# StarVision vendor kernel
+						# StarVision vendor kernel and Loongson CPUs with 4.19.0 vendor kernel
 						ThermalZone="$(GetHWNode "${HWMonNodeGuess}")"
 						if [ -r ${ThermalZone}/temp1_input ]; then
 							ln -fs ${ThermalZone}/temp1_input ${TempSource}
@@ -2425,7 +2425,7 @@ CheckMissingPackages() {
 			command -v pacman >/dev/null 2>&1
 			if [ $? -eq 0 ]; then
 				# Arch/Manjaro
-				echo -e "pacman --noconfirm -Sq \c"
+				echo -e "pacman --noconfirm -Syq \c"
 				command -v gcc >/dev/null 2>&1 || echo -e "gcc make base-devel \c"
 				command -v sensors >/dev/null 2>&1 || echo -e "lm-sensors \c"
 			else
@@ -2457,16 +2457,16 @@ CheckMissingPackages() {
 			;;
 	esac
 
-	command -v iostat >/dev/null 2>&1 || echo -e "sysstat \c"
-	command -v git >/dev/null 2>&1 || echo -e "git \c"
-	command -v openssl >/dev/null 2>&1 || echo -e "openssl \c"
 	command -v curl >/dev/null 2>&1 || echo -e "curl \c"
 	command -v dmidecode >/dev/null 2>&1 || echo -e "dmidecode \c"
+	command -v git >/dev/null 2>&1 || echo -e "git \c"
+	command -v iostat >/dev/null 2>&1 || echo -e "sysstat \c"
 	command -v lshw >/dev/null 2>&1 || echo -e "lshw \c"
-	command -v strings >/dev/null 2>&1 || echo -e "binutils \c"
-	command -v uptime >/dev/null 2>&1 || echo -e "procps \c"
+	command -v openssl >/dev/null 2>&1 || echo -e "openssl \c"
 	command -v powercap-info >/dev/null 2>&1
 	[ $? -ne 0 -a -d /sys/devices/virtual/powercap ] && echo -e "powercap-utils \c"
+	command -v strings >/dev/null 2>&1 || echo -e "binutils \c"
+	command -v uptime >/dev/null 2>&1 || echo -e "procps \c"
 	if [ "${ExecuteStockfish}" = "yes" ]; then
 		command -v g++ >/dev/null 2>&1 || echo -e "g++ \c"
 	fi
@@ -2480,13 +2480,13 @@ CheckMissingPackages() {
 	if [ "X${MODE}" = "Xreview" ]; then
 		command -v lspci >/dev/null 2>&1 || echo -e "pciutils \c"
 		command -v lsusb >/dev/null 2>&1 || echo -e "usbutils \c"
-		command -v stress-ng >/dev/null 2>&1 || echo -e "stress-ng \c"
-		command -v smartctl >/dev/null 2>&1 || echo -e "smartmontools \c"
-		command -v udevadm >/dev/null 2>&1 || echo -e "udev \c"
 		command -v mmc >/dev/null 2>&1
 		if [ $? -ne 0 ]; then
 			apt-cache show mmc-utils >/dev/null 2>&1 && echo -e "mmc-utils \c"
 		fi
+		command -v smartctl >/dev/null 2>&1 || echo -e "smartmontools \c"
+		command -v stress-ng >/dev/null 2>&1 || echo -e "stress-ng \c"
+		command -v udevadm >/dev/null 2>&1 || echo -e "udev \c"
 	fi
 } # CheckMissingPackages
 
@@ -3892,13 +3892,23 @@ PrintCPUTopology() {
 	echo "CPU sysfs topology (clusters, cpufreq members, clockspeeds)"
 	echo "                 cpufreq   min    max"
 	echo " CPU    cluster  policy   speed  speed   core type"
+	FirstCoreName="$(GetCoreType 0)"
+	FirstCoreStepping="$(GetARMStepping 0)"
 	for i in $(seq 0 $(( ${CPUCores} - 1 )) ); do
 		CoreName="$(GetCoreType $i)"
 		# check if CoreName is empty
 		if [ "X${CoreName}" = "X" ]; then
-			# try to return CPU type instead of core type on x86 if available
-			[[ ${CPUArchitecture} == *86* ]] && \
-				CoreName="${X86CPUName}"
+			case ${CPUArchitecture} in
+				*86*)
+					# try to return CPU type instead of core type on x86 if available
+					CoreName="${X86CPUName}"
+					;;
+				*arm*|*aarch*)
+					# On ARM with older kernels core/stepping info might only be available
+					# for cpu0 so use this instead
+					[ -n ${FirstCoreName} ] && CoreName="${FirstCoreName} / ${FirstCoreStepping}"
+					;;
+			esac
 		else
 			CoreStepping="$(GetARMStepping $i)"
 			if [ "X${CoreStepping}" != "X" ]; then
@@ -6812,6 +6822,17 @@ GuessSoCbySignature() {
 				echo "YiTian 710"
 			fi
 			;;
+		*NeoverseV2*)
+			# Nvidia Grace: 72 or 144 Neoverse-V2
+			case ${CPUCores} in
+				72)
+					echo "Nvidia Grace Hopper"
+					;;
+				144)
+					echo "Nvidia Grace"
+					;;
+			esac
+			;;
 		*AppleM1r0p0*AppleM1r0p0*AppleM1r0p0*AppleM1r0p0*AppleM1*AppleM1*AppleM1*AppleM1*|*AppleM1r1p1*AppleM1r1p1*AppleM1r1p1*AppleM1r1p1*AppleM1r1p1*AppleM1r1p1*AppleM1r1p1*AppleM1r1p1)
 			# Apple M1: 4 x Apple Icestorm / r1p1 + 4 x Apple Firestorm / r1p1 / https://gist.github.com/z4yx/13520bd2beef49019b1b7436e3b95ddd
 			# or 4 x Apple Icestorm / r0p0 + 4 x Apple Firestorm / ? / https://bench.cr.yp.to/computers.html
@@ -6925,20 +6946,24 @@ GuessSoCbySignature() {
 			echo "Google Tensor G1"
 			;;
 		0?Loongson3A10000?Loongson3A10000?Loongson3A10000?Loongson3A1000)
-			# Loongson 3A1000: 4 x Loongson-3 V0.5 FPU V0.1 https://github.com/ThomasKaiser/sbc-bench/blob/master/results/Loongson-3A1000.cpuinfo
+			# Loongson 3A1000: 4 x Loongson-3 V0.5 FPU V0.1 https://github.com/ThomasKaiser/sbc-bench/blob/master/results/cpuinfo/Loongson-3A1000.cpuinfo
 			echo "Loongson 3A1000"
 			;;
 		0?Loongson3A30000?Loongson3A30000?Loongson3A30000?Loongson3A3000)
-			# Loongson 3A3000: 4 x Loongson-3 V0.9 FPU V0.1 https://github.com/ThomasKaiser/sbc-bench/blob/master/results/Loongson-3A3000-5.4.211-aosc-lemote.cpuinfo
+			# Loongson 3A3000: 4 x Loongson-3 V0.9 FPU V0.1 https://github.com/ThomasKaiser/sbc-bench/blob/master/results/cpuinfo/Loongson-3A3000-5.4.211-aosc-lemote.cpuinfo
 			echo "Loongson 3A3000"
 			;;
 		0?Loongson3A5000H0?Loongson3A5000H0?Loongson3A5000H0?Loongson3A5000H)
-			# Loongson-3A5000-H: 4 x LoongArch / loongarch32, loongarch64 / cpucfg lam ual fpu lsx lasx complex crypto lvz lbt_x86 lbt_arm lbt_mips https://github.com/ThomasKaiser/sbc-bench/blob/master/results/Loongson-3A5000-H-4.19.0-17-loongson-3.cpuinfo
+			# Loongson-3A5000-H: 4 x LoongArch / loongarch32, loongarch64 / cpucfg lam ual fpu lsx lasx complex crypto lvz lbt_x86 lbt_arm lbt_mips https://github.com/ThomasKaiser/sbc-bench/blob/master/results/cpuinfo/Loongson-3A5000-H-4.19.0-17-loongson-3.cpuinfo
 			echo "Loongson-3A5000-H"
 			;;
 		0?Loongson3A5000HV0?Loongson3A5000HV0?Loongson3A5000HV0?Loongson3A5000HV)
-			# Loongson-3A5000-HV: 4 x LoongArch / loongarch32, loongarch64 / cpucfg lam ual fpu lsx lasx complex crypto lvz lbt_x86 lbt_arm lbt_mips https://github.com/ThomasKaiser/sbc-bench/blob/master/results/Loongson-3A5000-HV-4.19.0-loongson-3.cpuinfo
+			# Loongson-3A5000-HV: 4 x LoongArch / loongarch32, loongarch64 / cpucfg lam ual fpu lsx lasx complex crypto lvz lbt_x86 lbt_arm lbt_mips https://github.com/ThomasKaiser/sbc-bench/blob/master/results/cpuinfo/Loongson-3A5000-HV-4.19.0-loongson-3.cpuinfo
 			echo "Loongson-3A5000-HV"
+			;;
+		0?Loongson3A5000M0?Loongson3A5000M0?Loongson3A5000M0?Loongson3A5000M)
+			# Loongson-3A5000M: 4 x LoongArch / loongarch32, loongarch64 / cpucfg lam ual fpu lsx lasx complex crypto lvz lbt_x86 lbt_arm lbt_mips https://github.com/ThomasKaiser/sbc-bench/blob/master/results/cpuinfo/Loongson-3A5000M-4.19.0.cpuinfo
+			echo "Loongson-3A5000M"
 			;;
 		*A55*A55*A55*A55*A76r?p?|*A76r?p?*A55*A55*A55*A55r?p?)
 			# Amlogic S928X, 4 x Cortex-A55 + 1 x Cortex-A76: https://browser.geekbench.com/v5/cpu/compare/19788026?baseline=20656779

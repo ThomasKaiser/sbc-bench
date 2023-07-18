@@ -6173,7 +6173,7 @@ GuessSoCbySignature() {
 			# Xilinx Versal, 2 x Cortex-A72 / r0p3 / fp asimd aes pmull sha1 sha2 crc32 cpuid
 			echo "Xilinx Versal"
 			;;
-		10A7r0p310A7r0p310A7r0p310A7r0p304A15r2p304A15r2p304A15r2p304A15r2p3)
+		10A7r0p310A7r0p310A7r0p310A7r0p30?A15r2p30?A15r2p30?A15r2p30?A15r2p3)
 			# Exynos 5422, 4 x Cortex-A7 / r0p3 + 4 x Cortex-A15 / r2p3 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae (with 5.x also evtstrm)
 			echo "Exynos 5422"
 			;;

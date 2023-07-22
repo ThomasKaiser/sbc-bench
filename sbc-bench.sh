@@ -1659,6 +1659,10 @@ TempTest() {
 	if [ ! -x "${InstallLocation}"/mhz/mhz ]; then
 		cd "${InstallLocation}"
 		git clone https://github.com/wtarreau/mhz >/dev/null 2>&1
+		if [ $? -ne 0 ]; then
+			echo -e "\n\n${LRED}${BOLD}Temporary Github problem. Not able to download mhz. Please try again later.${NC}" >&2
+			exit 1
+		fi
 		cd mhz
 		make >/dev/null 2>&1
 		if [ ! -x "${InstallLocation}"/mhz/mhz ]; then
@@ -1948,8 +1952,8 @@ CheckLoadAndDmesg() {
 
 GetCPUClusters() {
 	# try to report different CPU clusters. Cores of same type might be handled differently.
-	# For example on RK3588 with 4 x A55 and 4 x A76 the latter form two clusters that
-	# behave differently wrt clockspeeds due to PVTM (see below at GetCoreClusters function
+	# For example on RK3588 with 4 x A55 and 4 x A76 the latter are two clusters behaving
+	# differently wrt clockspeeds due to PVTM (see below at GetCoreClusters function
 	# that reports all cores of same type as single cluster)
 	if [ "X${VirtWhat}" != "X" -a "X${VirtWhat}" != "Xnone" ]; then
 		# in virtualized environments we only check cpu0
@@ -2177,8 +2181,22 @@ Getx86ClusterDetails() {
 			[ ${HT} -eq 1 ] && echo "0 2" || echo "0 1"
 			;;
 		*)
-			# all cores of same type
-			echo "0"
+			# unknown CPU, try to check cache sizes since at least on currently known Intel
+			# CPUs efficiency and performance cores have differing cache sizes.
+			echo "Efficiency" >"${TempDir}/Ecores"
+			echo "Performance" >"${TempDir}/Pcores"
+			if [ -d /sys/devices/system/cpu/cpu0/cache ] ; then
+				local i
+				for i in $(seq 0 $(( ${CPUCores} - 1 )) ) ; do
+					ThisCache="$(find /sys/devices/system/cpu/cpu${i}/cache -name size | sort -V | while read ; do echo -n "$(cat "${REPLY}")" ; done)"
+					if [ "X${ThisCache}" != "X${LastCache}" ]; then
+						echo "${i}"
+						LastCache="${ThisCache}"
+					fi
+				done
+			else
+				echo "0"
+			fi
 		;;
 	esac
 } # Getx86ClusterDetails
@@ -2410,6 +2428,10 @@ BasicSetup() {
 
 	ClusterConfigByCoreType=($(GetCoreClusters))
 	ClusterConfig=($(GetCPUClusters))
+	if [ ${#ClusterConfig[@]} -lt ${#ClusterConfigByCoreType[@]} ] ; then
+		# SoC bring-up stage, different CPU clusters are not properly defined
+		ClusterConfig="${ClusterConfigByCoreType}"
+	fi
 	if [ -f "${TempDir}/Pcores" ]; then
 		read PCores <"${TempDir}/Pcores"
 		read ECores <"${TempDir}/Ecores"
@@ -2660,6 +2682,10 @@ InstallPrerequisits() {
 		echo -e "\x08\x08\x08, tinymembench...\c"
 		cd "${InstallLocation}"
 		git clone https://github.com/nuumio/tinymembench >/dev/null 2>&1
+		if [ $? -ne 0 ]; then
+			echo -e "\n\n${LRED}${BOLD}Temporary Github problem. Not able to download tinymembench. Please try again later.${NC}" >&2
+			exit 1
+		fi
 		cd tinymembench
 		make >/dev/null 2>&1
 		if [ ! -x "${InstallLocation}"/tinymembench/tinymembench ]; then
@@ -2674,6 +2700,10 @@ InstallPrerequisits() {
 		echo -e "\x08\x08\x08, ramlat...\c"
 		if [ ! -d "${InstallLocation}"/ramspeed ]; then
 			cd "${InstallLocation}" && git clone https://github.com/wtarreau/ramspeed >/dev/null 2>&1
+			if [ $? -ne 0 ]; then
+				echo -e "\n\n${LRED}${BOLD}Temporary Github problem. Not able to download ramspeed. Please try again later.${NC}" >&2
+				exit 1
+			fi
 		fi
 		[ -d "${InstallLocation}"/ramspeed ] && cd "${InstallLocation}"/ramspeed ; git pull >/dev/null 2>&1; make >/dev/null 2>&1
 	fi
@@ -2683,6 +2713,10 @@ InstallPrerequisits() {
 		echo -e "\x08\x08\x08, mhz...\c"
 		cd "${InstallLocation}"
 		git clone https://github.com/wtarreau/mhz >/dev/null 2>&1
+		if [ $? -ne 0 ]; then
+			echo -e "\n\n${LRED}${BOLD}Temporary Github problem. Not able to download mhz. Please try again later.${NC}" >&2
+			exit 1
+		fi
 		cd mhz
 		make >/dev/null 2>&1
 		if [ ! -x "${InstallLocation}"/mhz/mhz ]; then
@@ -2725,6 +2759,10 @@ InstallCpuminer() {
 		apt-get -f -qq -y install automake autoconf pkg-config libcurl4-openssl-dev libjansson-dev libssl-dev libgmp-dev make g++ zlib1g-dev >/dev/null 2>&1
 		pacman --noconfirm -Sq automake autoconf pkg-config libcurl4-openssl-dev libjansson-dev libssl-dev libgmp-dev make g++ zlib1g-dev >/dev/null 2>&1
 		git clone https://github.com/tpruvot/cpuminer-multi >/dev/null 2>&1
+		if [ $? -ne 0 ]; then
+			echo -e "\n\n${LRED}${BOLD}Temporary Github problem. Not able to download cpuminer. Please try again later.${NC}" >&2
+			exit 1
+		fi
 		cd cpuminer-multi/ && ./build.sh >/dev/null 2>&1
 	fi
 	if [ ! -x "${InstallLocation}"/cpuminer-multi/cpuminer ]; then

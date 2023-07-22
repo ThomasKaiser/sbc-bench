@@ -57,7 +57,7 @@ You can also try out the new 'review mode' using `-r` instead of `-c`:
 
     sudo /bin/bash ./sbc-bench.sh -r
 
-This takes only a few seconds longer but generates a lot of additional insights especially on new platforms/SBC as well as stuff that might invalidate proper benchmark execution (counterfeit SD cards, USB negotiation problems, 'bad settings' and so on). This mode is designed to provide a sane environment for further benchmark testing executed in another/different shell(s) so stopping the script via `[ctrl]-[c]` is necessary when done.
+This takes only a few seconds longer but generates a lot of additional insights especially on new platforms/SBC. It also exposes stuff that might invalidate proper benchmark execution (counterfeit SD cards, USB negotiation problems, 'bad settings' and so on). This mode is designed to provide a sane environment for further benchmark testing executed in another/different shell(s) so stopping the script via `[ctrl]-[c]` is necessary when done.
 
 Unfortunately to adjust the cpufreq governor and to collect monitoring data execution as root is needed. So do **not** run this on productive systems or if you don't understand what the script is doing.
 

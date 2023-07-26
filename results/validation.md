@@ -201,6 +201,7 @@
 | [466y](466y.txt) | v0.9.8 Mediatek MT6580 K9M1-test board | 0%/0% | 878Mi/683Mi | X | X | X | X | 1% | <span style=color:red>**14%**</span> | |
 | [46hs](46hs.txt) | v0.9.8 PXA1908 | 0.8%/1.0% | 661Mi/601Mi | X | X | X | X | <span style=color:red>**12%**</span> | 0% | |
 | [49kx](49kx.txt) | v0.9.8 Qualcomm Technologies, Inc. qrb5 | 0.9%/4.2% | 7.5G/7.0G | X | X | X | X | 1% | 0% | |
+| [4BtC](4BtC.txt) | v0.9.42 GoWin Solution R86S 1.0 / Penti | 0%/0% | 31Gi/29Gi | X | X | X | X | 2% | 0% | [check log](4BtC.txt) |
 | <del>[4a3s](4a3s.txt)</del> | <del>v0.9.8 StarFive VisionFive V2 </del> | <del>0.4%/0.1%</del> | <del>3.8Gi/3.5Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 1%</del> | <del> 2%</del> | |
 | [4a5U](4a5U.txt) | v0.9.8 Khadas Edge2 | 0%/0% | 15Gi/14Gi | X | X | X | X | 1% | 0% | |
 | [4ax9](4ax9.txt) | v0.9.8 NVIDIA Orin Jetson-Small Develop | 0%/0% | 29Gi/29Gi | X | X | X | X | 0% | 0% | |
@@ -218,7 +219,7 @@
 | [4ebH](4ebH.txt) | v0.9.9 Jetson-AGX | 0.3%/0.6% | 31G/29G | X | X | X | X | 1% | 0% | |
 | [4eg5](4eg5.txt) | v0.9.9 Hardkernel ODROID-C1 | 0.2%/2.3% | 990Mi/874Mi | X | X | X | X | 2% | 1% | |
 | [4eiM](4eiM.txt) | v0.9.9 / Celeron 5205U @ 1.90GHz | 0%/0% | 7.6Gi/6.4Gi | X | X | X | X | 1% | 0% | |
-| [4f3I](4f3I.txt) | v0.9.9 HARDKERNEL ODROID-H3 1.0 / Penti | 0%/0.5% | 31Gi/30Gi | X | X | X | X | 1% | 0% | |
+| <del>[4f3I](4f3I.txt)</del> | <del>v0.9.9 HARDKERNEL ODROID-H3 1.0 / Penti</del> | <del>0%/0.5%</del> | <del>31Gi/30Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 1%</del> | <del> 0%</del> | |
 | [4fdD](4fdD.txt) | v0.9.9 OnePlus 5 | 2.7%/0.6% | 5.5Gi/5.2Gi | X | X | X | X | 1% | 1% | |
 | [4hKV](4hKV.txt) | v0.9.9 / Celeron J1900 @ 1.99GHz | 0%/0% | 7.7Gi/6.9Gi | X | X | X | X | 3% | 0% | |
 | [4hOP](4hOP.txt) | v0.9.9 Raspberry Pi 3 Model B Rev 1.2 | 0%/0% | 909Mi/796Mi | X | X | X | X | 2% | <span style=color:red>** 9%**</span> | [check log](4hOP.txt) |

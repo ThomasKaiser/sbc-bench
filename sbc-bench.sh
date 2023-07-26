@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.9.42
+Version=0.9.43
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -2428,7 +2428,7 @@ BasicSetup() {
 
 	ClusterConfigByCoreType=($(GetCoreClusters))
 	ClusterConfig=($(GetCPUClusters))
-	if [ ${#ClusterConfig[@]} -lt ${#ClusterConfigByCoreType[@]} ] ; then
+	if [ ${#ClusterConfig[@]} -lt ${#ClusterConfigByCoreType[@]} -a ! -d /sys/devices/system/cpu/cpufreq/policy0 ] ; then
 		# SoC bring-up stage, different CPU clusters are not properly defined
 		ClusterConfig="${ClusterConfigByCoreType}"
 	fi
@@ -8262,6 +8262,11 @@ CheckStorage() {
 			# Only add manufacturer info if really unique. Partially misleading since counterfeit
 			# cards were and still are an issue: https://www.bunniestudios.com/blog/?page_id=1022
 			case "${mmc_manfid}/${mmc_oemid}" in
+				0x0000df/0x0118)
+					# Despite the weird 0x0000df manufacturer ID this seems to be a legit soldered
+					# 128GB eMMC used in e.g. GoWin R86S and MeLE Quieter3C
+					:
+					;;
 				0x000000*|0x0000ff/0x0000|0x00006f/0x0013|0x000025/0x1708|0x0000df*|0x0000fe/0x3456)
 					# counterfeit card
 					Manufacturer="Definite counterfeit "

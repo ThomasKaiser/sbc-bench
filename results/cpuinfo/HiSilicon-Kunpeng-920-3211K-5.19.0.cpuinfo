@@ -1,0 +1,215 @@
+processor	: 0
+BogoMIPS	: 200.00
+Features	: fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma dcpop asimddp asimdfhm
+CPU implementer	: 0x48
+CPU architecture: 8
+CPU variant	: 0x1
+CPU part	: 0xd01
+CPU revision	: 0
+
+processor	: 1
+BogoMIPS	: 200.00
+Features	: fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma dcpop asimddp asimdfhm
+CPU implementer	: 0x48
+CPU architecture: 8
+CPU variant	: 0x1
+CPU part	: 0xd01
+CPU revision	: 0
+
+processor	: 2
+BogoMIPS	: 200.00
+Features	: fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma dcpop asimddp asimdfhm
+CPU implementer	: 0x48
+CPU architecture: 8
+CPU variant	: 0x1
+CPU part	: 0xd01
+CPU revision	: 0
+
+processor	: 3
+BogoMIPS	: 200.00
+Features	: fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma dcpop asimddp asimdfhm
+CPU implementer	: 0x48
+CPU architecture: 8
+CPU variant	: 0x1
+CPU part	: 0xd01
+CPU revision	: 0
+
+processor	: 4
+BogoMIPS	: 200.00
+Features	: fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma dcpop asimddp asimdfhm
+CPU implementer	: 0x48
+CPU architecture: 8
+CPU variant	: 0x1
+CPU part	: 0xd01
+CPU revision	: 0
+
+processor	: 5
+BogoMIPS	: 200.00
+Features	: fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma dcpop asimddp asimdfhm
+CPU implementer	: 0x48
+CPU architecture: 8
+CPU variant	: 0x1
+CPU part	: 0xd01
+CPU revision	: 0
+
+processor	: 6
+BogoMIPS	: 200.00
+Features	: fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma dcpop asimddp asimdfhm
+CPU implementer	: 0x48
+CPU architecture: 8
+CPU variant	: 0x1
+CPU part	: 0xd01
+CPU revision	: 0
+
+processor	: 7
+BogoMIPS	: 200.00
+Features	: fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma dcpop asimddp asimdfhm
+CPU implementer	: 0x48
+CPU architecture: 8
+CPU variant	: 0x1
+CPU part	: 0xd01
+CPU revision	: 0
+
+processor	: 8
+BogoMIPS	: 200.00
+Features	: fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma dcpop asimddp asimdfhm
+CPU implementer	: 0x48
+CPU architecture: 8
+CPU variant	: 0x1
+CPU part	: 0xd01
+CPU revision	: 0
+
+processor	: 9
+BogoMIPS	: 200.00
+Features	: fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma dcpop asimddp asimdfhm
+CPU implementer	: 0x48
+CPU architecture: 8
+CPU variant	: 0x1
+CPU part	: 0xd01
+CPU revision	: 0
+
+processor	: 10
+BogoMIPS	: 200.00
+Features	: fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma dcpop asimddp asimdfhm
+CPU implementer	: 0x48
+CPU architecture: 8
+CPU variant	: 0x1
+CPU part	: 0xd01
+CPU revision	: 0
+
+processor	: 11
+BogoMIPS	: 200.00
+Features	: fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma dcpop asimddp asimdfhm
+CPU implementer	: 0x48
+CPU architecture: 8
+CPU variant	: 0x1
+CPU part	: 0xd01
+CPU revision	: 0
+
+processor	: 12
+BogoMIPS	: 200.00
+Features	: fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma dcpop asimddp asimdfhm
+CPU implementer	: 0x48
+CPU architecture: 8
+CPU variant	: 0x1
+CPU part	: 0xd01
+CPU revision	: 0
+
+processor	: 13
+BogoMIPS	: 200.00
+Features	: fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma dcpop asimddp asimdfhm
+CPU implementer	: 0x48
+CPU architecture: 8
+CPU variant	: 0x1
+CPU part	: 0xd01
+CPU revision	: 0
+
+processor	: 14
+BogoMIPS	: 200.00
+Features	: fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma dcpop asimddp asimdfhm
+CPU implementer	: 0x48
+CPU architecture: 8
+CPU variant	: 0x1
+CPU part	: 0xd01
+CPU revision	: 0
+
+processor	: 15
+BogoMIPS	: 200.00
+Features	: fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma dcpop asimddp asimdfhm
+CPU implementer	: 0x48
+CPU architecture: 8
+CPU variant	: 0x1
+CPU part	: 0xd01
+CPU revision	: 0
+
+processor	: 16
+BogoMIPS	: 200.00
+Features	: fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma dcpop asimddp asimdfhm
+CPU implementer	: 0x48
+CPU architecture: 8
+CPU variant	: 0x1
+CPU part	: 0xd01
+CPU revision	: 0
+
+processor	: 17
+BogoMIPS	: 200.00
+Features	: fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma dcpop asimddp asimdfhm
+CPU implementer	: 0x48
+CPU architecture: 8
+CPU variant	: 0x1
+CPU part	: 0xd01
+CPU revision	: 0
+
+processor	: 18
+BogoMIPS	: 200.00
+Features	: fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma dcpop asimddp asimdfhm
+CPU implementer	: 0x48
+CPU architecture: 8
+CPU variant	: 0x1
+CPU part	: 0xd01
+CPU revision	: 0
+
+processor	: 19
+BogoMIPS	: 200.00
+Features	: fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma dcpop asimddp asimdfhm
+CPU implementer	: 0x48
+CPU architecture: 8
+CPU variant	: 0x1
+CPU part	: 0xd01
+CPU revision	: 0
+
+processor	: 20
+BogoMIPS	: 200.00
+Features	: fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma dcpop asimddp asimdfhm
+CPU implementer	: 0x48
+CPU architecture: 8
+CPU variant	: 0x1
+CPU part	: 0xd01
+CPU revision	: 0
+
+processor	: 21
+BogoMIPS	: 200.00
+Features	: fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma dcpop asimddp asimdfhm
+CPU implementer	: 0x48
+CPU architecture: 8
+CPU variant	: 0x1
+CPU part	: 0xd01
+CPU revision	: 0
+
+processor	: 22
+BogoMIPS	: 200.00
+Features	: fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma dcpop asimddp asimdfhm
+CPU implementer	: 0x48
+CPU architecture: 8
+CPU variant	: 0x1
+CPU part	: 0xd01
+CPU revision	: 0
+
+processor	: 23
+BogoMIPS	: 200.00
+Features	: fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma dcpop asimddp asimdfhm
+CPU implementer	: 0x48
+CPU architecture: 8
+CPU variant	: 0x1
+CPU part	: 0xd01
+CPU revision	: 0

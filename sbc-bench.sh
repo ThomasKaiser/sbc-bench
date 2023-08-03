@@ -1527,7 +1527,7 @@ MonitorBoard() {
 		SPACING=yes
 	else
 		ClusterConfigByCoreType=($(GetCoreClusters))
-		ClusterConfig=($(GetCPUClusters))
+		ClusterConfig=($(GetRelevantCPUClusters))
 		if [ -f "${TempDir}/Pcores" ]; then
 			read PCores <"${TempDir}/Pcores"
 			read ECores <"${TempDir}/Ecores"
@@ -1802,18 +1802,18 @@ CheckOSRelease() {
 	# check OS
 	OperatingSystem="$(GetOSRelease)"
 
-	# Display warning when not executing on Debian Stretch/Buster/Bullseye/Bookworm or Ubuntu Bionic/Focal/Jammy/Kinetic
+	# Display warning when not executing on Debian Stretch/Buster/Bullseye/Bookworm or Ubuntu Bionic/Focal/Jammy
 	command -v lsb_release >/dev/null 2>&1 || apt -f -qq -y install lsb-release >/dev/null 2>&1
 	command -v lsb_release >/dev/null 2>&1 && \
 		Distro=$(lsb_release -c 2>/dev/null | awk -F" " '{print $2}' | tr '[:upper:]' '[:lower:]')
 	case ${Distro} in
-		stretch|buster|bullseye|bookworm|bionic|focal|jammy|kinetic|lunar)
+		stretch|buster|bullseye|bookworm|bionic|focal|jammy|lunar)
 			:
 			;;
 		*)
 			# only inform/ask user if $MODE != unattended
 			if [ "X${MODE}" != "Xunattended" ]; then
-				echo -e "${LRED}${BOLD}WARNING: This tool is meant to run only on Debian Stretch, Buster, Bullseye, Bookworm or Ubuntu Bionic, Focal, Jammy, Kinetic, Lunar.${NC}\n"
+				echo -e "${LRED}${BOLD}WARNING: This tool is meant to run only on Debian Stretch, Buster, Bullseye, Bookworm or Ubuntu Bionic, Focal, Jammy, Lunar.${NC}\n"
 				echo -e "When executed on ${BOLD}${OperatingSystem}${NC} results are partially meaningless.\nPress [ctrl]-[c] to stop or ${BOLD}[enter]${NC} to continue.\c"
 				read
 			fi
@@ -1825,7 +1825,7 @@ CheckOSReleaseForReview() {
 	# check OS to issue a warning if OS is too old for a review
 	OperatingSystem="$(GetOSRelease)"
 
-	# Display warning when not executing on Debian Stretch/Buster/Bullseye or Ubuntu Bionic/Focal/Jammy/Kinetic
+	# Display warning when not executing on Debian Stretch/Buster/Bullseye or Ubuntu Bionic/Focal/Jammy
 	command -v lsb_release >/dev/null 2>&1 || apt -f -qq -y install lsb-release >/dev/null 2>&1
 	command -v lsb_release >/dev/null 2>&1 && \
 		Distro=$(lsb_release -c 2>/dev/null | awk -F" " '{print $2}' | tr '[:upper:]' '[:lower:]')
@@ -1950,6 +1950,29 @@ CheckLoadAndDmesg() {
 	echo ""
 } # CheckLoadAndDmesg
 
+GetRelevantCPUClusters() {
+	# If all CPU cores are of same type then just check for NUMA nodes and ignore
+	# cpufreq settings or package IDs (server SoCs like Ampere Altra or NXP LX2160A
+	# show rather weird package IDs, see http://ix.io/4kiu or http://ix.io/4uaA)
+	# Try to handle special case of crappy S912 SoC consisting of 8 identical A53
+	# cores of which 4 are crippled (1 GHz vs. 1.4 GHz while the SoC's boot BLOB
+	# fakes 1.5 GHz for the latter)
+	# Also try to cope with big.LITTLE/DynamIQ SoC bring-up situations where cpufreq
+	# isn't working yet while all cores share same ID, see http://ix.io/4Bc8 for example.
+
+	local ClustersByCpufreqOrPackageIDs=($(GetCPUClusters))
+
+	if [ ${#ClusterConfigByCoreType[@]} -eq 1 -a ${#ClustersByCpufreqOrPackageIDs[@]} -ne 2 ]; then
+		NumaNodes=$(awk -F" " '/^NUMA node[0-9]/ {print $4}' <<<"${LSCPU}" | cut -f1 -d'-')
+		[ "X${NumaNodes}" = "X" ] && echo 0 || echo "${NumaNodes}"
+	elif [ ${#ClustersByCpufreqOrPackageIDs[@]} -lt ${#ClusterConfigByCoreType[@]} ] ; then
+		# SoC bring-up stage, different CPU clusters are not properly defined
+		echo "${ClusterConfigByCoreType[@]}"
+	else
+		echo "${ClustersByCpufreqOrPackageIDs[@]}"
+	fi
+} # GetRelevantCPUClusters
+
 GetCPUClusters() {
 	# try to report different CPU clusters. Cores of same type might be handled differently.
 	# For example on RK3588 with 4 x A55 and 4 x A76 the latter are two clusters behaving
@@ -1961,15 +1984,7 @@ GetCPUClusters() {
 	else
 		case ${CPUArchitecture} in
 			aarch*|arm*)
-				# If all CPU cores are of same type then just check for NUMA nodes and ignore
-				# cpufreq settings or package IDs (server SoCs like Ampere Altra or NXP LX2160A
-				# show rather weird package IDs, see http://ix.io/4kiu or http://ix.io/4uaA)
-				# Try to handle special case of crappy S912 SoC consisting of 8 identical A53
-				# cores of which 4 are crippled (1 GHz vs. 1.4 GHz while the SoC's boot BLOB
-				# fakes 1.5 GHz for the latter)
-				if [ ${#ClusterConfigByCoreType[@]} -eq 1 -a ${#ClusterConfig[@]} -ne 2 ]; then
-					awk -F" " '/^NUMA node[0-9]/ {print $4}' <<<"${LSCPU}" | cut -f1 -d'-'
-				elif [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
+				if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
 					ls -ld /sys/devices/system/cpu/cpufreq/policy? | awk -F"policy" '{print $2}'
 				else
 					# check for different CPU types based on package ids. This allows to test through
@@ -2427,11 +2442,7 @@ BasicSetup() {
 	esac
 
 	ClusterConfigByCoreType=($(GetCoreClusters))
-	ClusterConfig=($(GetCPUClusters))
-	if [ ${#ClusterConfig[@]} -lt ${#ClusterConfigByCoreType[@]} -a ! -d /sys/devices/system/cpu/cpufreq/policy0 ] ; then
-		# SoC bring-up stage, different CPU clusters are not properly defined
-		ClusterConfig="${ClusterConfigByCoreType}"
-	fi
+	ClusterConfig=($(GetRelevantCPUClusters))
 	if [ -f "${TempDir}/Pcores" ]; then
 		read PCores <"${TempDir}/Pcores"
 		read ECores <"${TempDir}/Ecores"
@@ -4902,10 +4913,11 @@ GuessARMSoC() {
 	# rockchip-cpuinfo cpuinfo: SoC            : 35662000 --> EmbedFire LubanCat-Zero, RK3566 BOX DEMO V10 ANDROID Board, Rock 3C
 	# rockchip-cpuinfo cpuinfo: SoC            : 35681000 --> only early RK3568 devices showed this silicon revision (e.g. Firefly RK3568-ROC-PC/AIO-3568J)
 	# rockchip-cpuinfo cpuinfo: SoC            : 35682000 --> RK3568-ROC-PC, NanoPi R5S, ODROID-M1, Mrkaio M68S, OWLVisionTech rk3568 opc Board, Radxa ROCK3A,
-	#                                                         Rockemd R68K 2.5G, Hinlink H68K, Magewell Pro Convert NDI to AIO 4K Gen2, AIO-3568J
+	#                                                         Rockemd R68K 2.5G, Hinlink H68K, Magewell Pro Convert NDI to AIO 4K Gen2, AIO-3568J, Forlinx OK3568-C
 	# rockchip-cpuinfo cpuinfo: SoC            : 35880000 --> 9Tripod X3588S Board, Firefly ITX-3588J/ROC-RK3588S-PC, NanoPi R6S, HINLINK OWL H88K, Khadas Edge2,
 	#                                                         Orange Pi 5, ROCK 5A/5B, EDGE LP4x V1.0 BlueBerry, CoolPi 4B, Shaggy013 LP4x V1.2 H96_Max_v58 Board,
-	#                                                         EVB4 LP4 V10 Board, OWL H88K, RK3588 MINI PC V11 Board, TOYBRICK X10, Mixtile Blade 3 v1.0.1
+	#                                                         EVB4 LP4 V10 Board, OWL H88K, RK3588 MINI PC V11 Board, TOYBRICK X10, Mixtile Blade 3 v1.0.1,
+	#                                                         RK3588 EVB7 LP4 V10
 	# rockchip-cpuinfo cpuinfo: SoC            : 35881000 --> http://ix.io/4nwf (RK3588S, majority of Orange Pi 5 has this silicon revision)
 	#
 	# RK 'open source' SoCs according to https://github.com/rockchip-linux/kernel/blob/develop-5.10/drivers/soc/rockchip/rockchip-cpuinfo.c (at least RV1108 and RK3588/RK3588s missing)
@@ -6054,6 +6066,7 @@ GuessSoCbySignature() {
 			# or Qualcomm MSM8952 / Snapdragon 617: 8 x Cortex-A53 / r0p4 / swp half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 evtstrm (booting 32-bit)
 			# or Qualcomm MSM8953: 8 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			# or Xiaomi Surge S1: 8 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
+			# or Sophgo BM1684: 8 x Cortex-A53 / r0p4
 			case "${DTCompatible}" in
 				*amlogic*)
 					echo "Amlogic S912"
@@ -6081,6 +6094,12 @@ GuessSoCbySignature() {
 					;;
 				*xiaomi*)
 					echo "Xiaomi Surge S1"
+					;;
+				*bm1684x*)
+					echo "Sophgo BM1684X"
+					;;
+				*bm1684*)
+					echo "Sophgo BM1684"
 					;;
 				*)
 					echo "NXP QorIQ LS1088"
@@ -8621,8 +8640,8 @@ GetDiskSize() {
 
 	grep -q " ${1##*/}" <<<"${LSBLK}" || return
 	local disksize=$(awk -F" " "/ ${1##*/}/ {print \$1}" <<<"${LSBLK}" | head -n1)
-	# grep -E -q "[0-9][0-9]GB| [0-9]TB" <<<"${2}" || echo "${disksize}B "
-	echo "${disksize}B "
+	# return disk size only if not '0B'
+	[ "X${disksize}" != "X0B" ] && echo "${disksize}B "
 } # GetDiskSize
 
 CheckSMARTData() {

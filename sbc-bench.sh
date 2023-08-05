@@ -429,9 +429,11 @@ GetARMCore() {
 	41/d0e:Cortex-A76AE
 	41/d13:Cortex-R52
 	41/d15:Cortex-R82
+	41/d16:Cortex-R52+
 	41/d20:Cortex-M23
 	41/d21:Cortex-M33
 	41/d22:Cortex-M55
+	41/d23:Cortex-M85
 	41/d40:Neoverse-V1
 	41/d41:Cortex-A78
 	41/d42:Cortex-A78AE
@@ -447,6 +449,9 @@ GetARMCore() {
 	41/d4d:Cortex-A715
 	41/d4e:Cortex-X3
 	41/d4f:Neoverse-V2
+	41/d80:Cortex-A520
+	41/d81:Cortex-A720
+	41/d82:Cortex-X4
 	42:Broadcom
 	42/00f:Broadcom Brahma B15
 	42/100:Broadcom Brahma B53
@@ -5864,11 +5869,11 @@ GuessSoCbySignature() {
 							*allwinner*)
 								# 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 								case "${DTCompatible}" in
+									*h618*|*orangepi-zero3*)
+										echo "Allwinner H618"
+										;;
 									*h616*)
 										echo "Allwinner H616/H313"
-										;;
-									*h618*|*zero3*)
-										echo "Allwinner H618"
 										;;
 									*h313*)
 										echo "Allwinner H313"

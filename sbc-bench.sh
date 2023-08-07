@@ -4407,6 +4407,18 @@ ValidateResults() {
 		grep -q -i GenuineIntel <<< "${ProcCPU}" && echo -e "Powercap detected. Details: \"sudo powercap-info -p intel-rapl\""
 	fi
 
+	# temporarily killed CPU cores due to overheating with Amlogic SoCs and BSP kernel
+	if [ ! -f "${TempDir}/dmesg" ]; then
+		# filter dmesg output to contain only contents from start of benchmarking
+		TimeStamp="$(dmesg | tr -d '[' | tr -d ']' | awk -F" " '/sbc-bench started/ {print $1}' | tail -n1)"
+		dmesg | sed "/${TimeStamp}/,\$!d" | grep -E -v 'sbc-bench started|started with executable stack' >"${TempDir}/dmesg"
+	fi
+	KilledCPUs="$(grep "CPU[0-7]: shutdown" "${TempDir}/dmesg" | awk -F" " '{print $2}' | sort | uniq | tr "\n" ":" | sed -e 's/::/, /g')"
+	if [ "X${KilledCPUs}" != "X" ]; then
+		ThrottlingWarning="${LRED}${BOLD} (throttled)${NC}"
+		echo -e "${LRED}${BOLD}Overheating resulted in CPU cores temporarily being stopped ($(sed 's/, $//' <<<"${KilledCPUs,,}"))${NC}"
+	fi
+
 	# Throttling and frequency capping on RPi?
 	if [ "${USE_VCGENCMD}" = "true" ]; then
 		case "${ThrottlingCheck}" in
@@ -4904,7 +4916,7 @@ GuessARMSoC() {
 	#  Qualcomm Krait / r2p1: Qualcomm MSM8974PRO (Snapdragon 801)
 	#   Qualcomm Kryo / r1p2: Qualcomm MSM8996 (Snapdragon 820)
 	#   Qualcomm Kryo / r2p1: Qualcomm MSM8996pro (Snapdragon 821)
-	#   Qualcomm Kryo / r13p14: Qualcomm Snapdragon 7c, Qualcomm QRB5165 (Snapdragon 865)
+	#   Qualcomm Kryo / r13p14: Qualcomm Snapdragon 7c, Qualcomm Snapdragon 855/865
 	#   Qualcomm Kryo / r15p15: Qualcomm Snapdragon 7c
 	# Qualcomm Kryo V2 / r10p4: Qualcomm SDM662 (Snapdragon 622), Qualcomm MSM8998 (Snapdragon 835)
 	#   ThunderX 88XX / r1p1: ThunderX CN8890
@@ -6982,8 +6994,8 @@ GuessSoCbySignature() {
 			echo "Qualcomm Snapdragon 865 / QRB5165"
 			;;
 		*Qualcomm4XXSilver*Qualcomm4XXSilver*Qualcomm4XXSilver*Qualcomm4XXSilver*Qualcomm4XXGold*Qualcomm4XXGold*Qualcomm4XXGold*Qualcomm4XXGold)
-			# Qualcomm SM8150: 4 x Qualcomm Kryo 4XX Silver / r13p14 + 4 x Qualcomm Kryo 4XX Gold / r13p14  / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp asimdrdm lrcpc dcpop asimddp
-			echo "Qualcomm SM8150"
+			# Qualcomm SM8150 / Snapdragon 855: 4 x Qualcomm Kryo 4XX Silver / r13p14 + 4 x Qualcomm Kryo 4XX Gold / r13p14  / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp asimdrdm lrcpc dcpop asimddp
+			echo "Qualcomm SM8150 (Snapdragon 855)"
 			;;
 		*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A78r1p0*A78r1p0*A78r1p0*X1r1p0)
 			# Qualcomm SM8350 (Snapdragon 888): 4 x Cortex-A55 / r2p0 + 3 x Cortex-A78 / r1p0 + 1 x Cortex-X1 / r1p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp

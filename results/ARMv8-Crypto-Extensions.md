@@ -87,7 +87,8 @@ Crawling through [sbc-bench results collection](../Results.md) comparing +70 dif
 | [S905X](http://ix.io/3QLN) | 1410 | 659460 | 467 |
 | [S912](http://ix.io/1iJ7) | 1420 | 659603 | 464 |
 | [i.MX8M Quad](http://ix.io/27FC) | 1500 | 695540 | 463 |
-| [RK3399](http://ix.io/2yIx) | 1510 | 695265 | 460 |
+| [Allwinner H618](http://ix.io/4CPF) | 1510 | 705330 | 468 |
+| [RK3399](http://ix.io/3Q2q) | 1510 | 706041 | 468 |
 | [S905Y2](http://ix.io/3JCm) | 1800 | 838360 | 465 |
 | [i.MX8M Quad](http://ix.io/44Lq) | 1800 | 839321 | 466 |
 | [RK3399](http://ix.io/2ICt) | 1800| 839360 | 466 |
@@ -115,6 +116,7 @@ Crawling through [sbc-bench results collection](../Results.md) comparing +70 dif
 | [Armada 8040](http://ix.io/4zcm) | 1600 | 909420 | 568 |
 | [RK3399](http://ix.io/1iWU) | 1800 | 1023600 | 568 |
 | [LX2160A](http://ix.io/1ET3) | 1900 | 1079480 | 568 |
+| [LX2160A](http://ix.io/4ju5) | 2000 | 1136690 | 568 |
 | [RK3399](http://ix.io/2yIx) | 2010 | 1144950 | 569 |
 | [RK3399](http://ix.io/2ICt) | 2088 | 1184306 | 567 |
 | [LX2160A](http://ix.io/3Y4f) | 2200 | 1251710 | 569 |
@@ -141,6 +143,8 @@ Crawling through [sbc-bench results collection](../Results.md) comparing +70 dif
 | [Snapdragon 835](http://ix.io/4fea) | 2360 | 1342240 | 569 |
 | Neoverse-N1 | | | |
 | [Amazon m6g.8xlarge](http://ix.io/2FrG) | 2500 | 1424770 | 570 |
-| [Ampere Altra](http://ix.io/4kiu) | 3000 | 1710010 | 570 |
+| [Ampere Altra Q80](http://ix.io/4zkJ) | 2600 | 1482190 | 570 |
+| [Ampere Altra M96](http://ix.io/4zGI) | 2800 | 1596110 | 570 |
+| [Ampere Altra Max](http://ix.io/4kiu) | 3000 | 1710010 | 570 |
 | Cortex-A510 | | | |
 | [Snapdragon 8 Gen1](http://ix.io/4pgq) | 1515 | 1405500 | 928 |

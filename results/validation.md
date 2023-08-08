@@ -202,7 +202,7 @@
 | [46hs](46hs.txt) | v0.9.8 PXA1908 | 0.8%/1.0% | 661Mi/601Mi | X | X | X | X | <span style=color:red>**12%**</span> | 0% | |
 | [49kx](49kx.txt) | v0.9.8 Qualcomm Technologies, Inc. qrb5 | 0.9%/4.2% | 7.5G/7.0G | X | X | X | X | 1% | 0% | |
 | [4BtC](4BtC.txt) | v0.9.42 GoWin Solution R86S 1.0 / Penti | 0%/0% | 31Gi/29Gi | X | X | X | X | 2% | 0% | [check log](4BtC.txt) |
-| [4Cq7](4Cq7.txt) | v0.9.43 OrangePi Zero3 | 0%/0% | 3.8Gi/3.2Gi | X | X | X | X | 2% | 0% | [check log](4Cq7.txt) |
+| [4CPF](4CPF.txt) | v0.9.43 OrangePi Zero3 | 0%/0% | 3.8Gi/3.5Gi | X | X | X | X | 1% | 1% | [check log](4CPF.txt) |
 | <del>[4a3s](4a3s.txt)</del> | <del>v0.9.8 StarFive VisionFive V2 </del> | <del>0.4%/0.1%</del> | <del>3.8Gi/3.5Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 1%</del> | <del> 2%</del> | |
 | [4a5U](4a5U.txt) | v0.9.8 Khadas Edge2 | 0%/0% | 15Gi/14Gi | X | X | X | X | 1% | 0% | |
 | [4ax9](4ax9.txt) | v0.9.8 NVIDIA Orin Jetson-Small Develop | 0%/0% | 29Gi/29Gi | X | X | X | X | 0% | 0% | |

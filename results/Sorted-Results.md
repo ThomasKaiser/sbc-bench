@@ -147,8 +147,8 @@
 | [MangoPi Mcore (Allwinner H616)](http://ix.io/4bSf) | 1800 MHz | 5.19 | Jammy arm64 | **4100** | 1218 | 840270 | 990 | 2380 | - |
 | [ODROID-C2 (Amlogic S905)](http://ix.io/1ixI) | 1750 MHz | 3.14 | Xenial arm64 | **4070** | 1128 | 48500 | 1750 | 3100 | - |
 | [Celeron 5205U](http://ix.io/4eiM) | 1900 MHz | 5.15 | Jammy amd64 | **4060** | 2171 | 521090 | 7350 | 16020 | 11.20 |
+| [Orange Pi Zero 3 (Allwinner H618)](http://ix.io/4CPF) | 1510 MHz | 6.1 | Jammy arm64 | **4020** | 1165 | 705330 | 1510 | 6010 | 6.02 |
 | [Khadas VIM1S (S905Y4)](http://ix.io/4bbv) | 2000 MHz | 5.4 | Jammy arm64 | **4000** | 1148 | 436540 | 1970 | 7530 | - |
-| [Orange Pi Zero 3 (Allwinner H618)](http://ix.io/4Cq7) | 1510 MHz | 6.1 | Bookworm arm64 | **3990** | 1161 | 705310 | 1510 | 5980 | 5.86 |
 | [Star64 (JH7110)](http://ix.io/4tjq) | 1500 MHz | 5.15 | Sid riscv64 | **3970** | 1175 | 24990 | 820 | 770 | - |
 | [x5-Z8300](http://ix.io/1lgD) | 1420 MHz | 4.9 | Stretch amd64 | **3900** | 950 | 178010 | 2380 | 2380 | 7.81 |
 | [Tronsmart MXIII Plus (S812)](http://ix.io/3S5U) | 1560 MHz | 5.10 | Buster armhf | **3880** | 1113 | 42570 | 1470 | 3430 | - |
@@ -362,7 +362,7 @@
 | [HummingBoard Pulse i.MX8M Quad](http://ix.io/27FC) | 1500 MHz | 4.19 | Buster arm64 | 4330 | **1201** | 695540 | 2230 | 9900 | - |
 | [VisionFive V2 (JH7110)](http://ix.io/4xOY) | 1500 MHz | 5.15 | Sid riscv64 | 4180 | **1197** | 25080 | 880 | 770 | - |
 | [Star64 (JH7110)](http://ix.io/4tjq) | 1500 MHz | 5.15 | Sid riscv64 | 3970 | **1175** | 24990 | 820 | 770 | - |
-| [Orange Pi Zero 3 (Allwinner H618)](http://ix.io/4Cq7) | 1510 MHz | 6.1 | Bookworm arm64 | 3990 | **1161** | 705310 | 1510 | 5980 | 5.86 |
+| [Orange Pi Zero 3 (Allwinner H618)](http://ix.io/4CPF) | 1510 MHz | 6.1 | Jammy arm64 | 4020 | **1165** | 705330 | 1510 | 6010 | 6.02 |
 | [NanoPi K2 (Amlogic S905)](http://ix.io/3Qve) | 1480 MHz | 5.10 | Bullseye arm64 | 3880 | **1154** | 51490 | 1850 | 3790 | - |
 | [Khadas VIM1S (S905Y4)](http://ix.io/4bbv) | 2000 MHz | 5.4 | Jammy arm64 | 4000 | **1148** | 436540 | 1970 | 7530 | - |
 | [Khadas VIM1 (Amlogic S905X)](http://ix.io/4bee) | 1415 MHz | 5.1 | Buster arm64 | 3860 | **1136** | 660160 | 1940 | 5900 | - |
@@ -535,7 +535,7 @@
 | [Nintendo Switch (Tegra X1)](http://ix.io/3Di2) | 2060 MHz | 4.9 | Bionic arm64 | 6720 | 1901 | **746680** | 2370 | 3670 | 9.25 |
 | [Jetson Nano](http://ix.io/3Ufc) | 2000 MHz | 4.9 | Bionic arm64 | 6260 | 1977 | **717500** | 4100 | 11760 | 8.72 |
 | [Jetson Xavier NX](http://ix.io/3YWp) | 1890 MHz | 4.9 | Bionic arm64 | 13230 | 2201 | **706280** | 9190 | 18480 | - |
-| [Orange Pi Zero 3 (Allwinner H618)](http://ix.io/4Cq7) | 1510 MHz | 6.1 | Bookworm arm64 | 3990 | 1161 | **705310** | 1510 | 5980 | 5.86 |
+| [Orange Pi Zero 3 (Allwinner H618)](http://ix.io/4CPF) | 1510 MHz | 6.1 | Jammy arm64 | 4020 | 1165 | **705330** | 1510 | 6010 | 6.02 |
 | [Orange Pi Zero 2 (Allwinner H616)](http://ix.io/4knM) | 1510 MHz | 4.9 | Buster arm64 | 3550 | 1067 | **703300** | 1190 | 2820 | 5.01 |
 | [Ryzen R1606G](http://ix.io/2tQQ) | 2600/1400 MHz | 5.4 | Focal amd64 | 7970 | 2854 | **700780** | 8230 | 5970 | 16.45 |
 | [Celeron J4105](http://ix.io/1qal) | 2400/1500 MHz | 4.15 | Bionic amd64 | 9020 | 2290 | **697100** | 5500 | 7410 | 19.07 |
@@ -808,7 +808,7 @@
 | [TinkerBoard S (RK3288)](http://ix.io/4vfU) | 1800 MHz | 6.1 | Jammy armhf | 5560 | 1672 | 65800 | **1540** | 4150 | - |
 | [NanoPi Fire3 (Nexell S5P6818)](http://ix.io/3ZxU) | 1400 MHz | 4.14 | Focal arm64 | 7350 | 1093 | 652640 | **1530** | 4590 | 11.18 |
 | [NanoPi Fire3 (Nexell S5P6818)](http://ix.io/1jiU) | 1380 MHz | 4.14 | Stretch arm64 | 7420 | 1038 | 645400 | **1520** | 4570 | 8.53 |
-| [Orange Pi Zero 3 (Allwinner H618)](http://ix.io/4Cq7) | 1510 MHz | 6.1 | Bookworm arm64 | 3990 | 1161 | 705310 | **1510** | 5980 | 5.86 |
+| [Orange Pi Zero 3 (Allwinner H618)](http://ix.io/4CPF) | 1510 MHz | 6.1 | Jammy arm64 | 4020 | 1165 | 705330 | **1510** | 6010 | 6.02 |
 | [Tinkerboard (RK3288)](http://ix.io/1iSX) | 1730 MHz | 4.14 | Stretch armhf | 5350 | 1563 | 66600 | **1480** | 3900 | - |
 | [Tronsmart MXIII Plus (S812)](http://ix.io/3S5U) | 1560 MHz | 5.10 | Buster armhf | 3880 | 1113 | 42570 | **1470** | 3430 | - |
 | [NanoPC T3+ (Nexell S5P6818)](http://ix.io/1iRJ) | 1400 MHz | 4.14 | Bionic arm64 | 7480 | 1053 | 652600 | **1440** | 4540 | 10.99 |
@@ -957,7 +957,7 @@
 | [NanoPi NEO4 (RK3399)](http://ix.io/3GmR) | 2016/1512 MHz | 5.10 | Focal arm64 | 6970 | 1906 | 1145030 | 2450 | **6190** | 11.36 |
 | [NanoPi NEO4 (RK3399)](http://ix.io/1p3T) | 2000/1500 MHz | 4.19 | Stretch arm64 | 6750 | 1814 | 1139850 | 2370 | **6110** | 8.84 |
 | [Quartz64-A (RK3566)](http://ix.io/4qJF) | 1890 MHz | 6.2 | Jammy arm64 | 4980 | 1457 | 884590 | 3240 | **6100** | 6.98 |
-| [Orange Pi Zero 3 (Allwinner H618)](http://ix.io/4Cq7) | 1510 MHz | 6.1 | Bookworm arm64 | 3990 | 1161 | 705310 | 1510 | **5980** | 5.86 |
+| [Orange Pi Zero 3 (Allwinner H618)](http://ix.io/4CPF) | 1510 MHz | 6.1 | Jammy arm64 | 4020 | 1165 | 705330 | 1510 | **6010** | 6.02 |
 | [Ryzen R1606G](http://ix.io/2tQQ) | 2600/1400 MHz | 5.4 | Focal amd64 | 7970 | 2854 | 700780 | 8230 | **5970** | 16.45 |
 | [NanoPi R5S (RK3568)](http://ix.io/4jfZ) | 1960 MHz | 6.1 | Bullseye arm64 | 5030 | 1482 | 914340 | 2990 | **5970** | 7.33 |
 | [Hugsun X99 (RK3399)](http://ix.io/2ICt) | 2088/1800 MHz | 5.9 | Focal arm64 | 7710 | 1927 | 1184306 | 2270 | **5970** | - |
@@ -1234,7 +1234,7 @@
 | [Ugoos UT2 (RK3188)](http://ix.io/408h) | **1560** MHz| 5.10 | Jammy armhf | 3320 | 994 | 43250 | 320 | 2020 | - |
 | [Tronsmart MXIII Plus (S812)](http://ix.io/3S5U) | **1560** MHz| 5.10 | Buster armhf | 3880 | 1113 | 42570 | 1470 | 3430 | - |
 | [TRONFY MXQ (Amlogic S805)](http://ix.io/3MiR) | **1536** MHz| 5.10 | Focal armhf | 3100 | 897 | 29080 | 980 | 2990 | - |
-| [Orange Pi Zero 3 (Allwinner H618)](http://ix.io/4Cq7) | **1510** MHz| 6.1 | Bookworm arm64 | 3990 | 1161 | 705310 | 1510 | 5980 | 5.86 |
+| [Orange Pi Zero 3 (Allwinner H618)](http://ix.io/4CPF) | **1510** MHz| 6.1 | Jammy arm64 | 4020 | 1165 | 705330 | 1510 | 6010 | 6.02 |
 | [Orange Pi Zero 2 (Allwinner H616)](http://ix.io/4knM) | **1510** MHz| 4.9 | Buster arm64 | 3550 | 1067 | 703300 | 1190 | 2820 | 5.01 |
 | [Jetson Orin Nano](http://ix.io/4vy7) | **1510** MHz| 5.10 | Focal arm64 | 13650 | 2153 | 854400 | 6730 | 20240 | 20.68 |
 | [VisionFive V2 (JH7110)](http://ix.io/4xOY) | **1500** MHz| 5.15 | Sid riscv64 | 4180 | 1197 | 25080 | 880 | 770 | - |

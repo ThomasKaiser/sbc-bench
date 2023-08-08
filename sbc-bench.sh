@@ -1656,6 +1656,7 @@ TempTest() {
 		echo -e "${LRED}${BOLD}WARNING: sysfs thermal readout is ominously low: ${SocTemp}°C.${NC}\n" >&2
 
 	BasicSetup nochange >/dev/null 2>&1
+	InstallPrerequisits
 	InitialMonitoring
 	echo -e "\n${BOLD}Thermal efficiency test using $(readlink "${TempSource}")${NC}"
 	echo -e "\nInstalling needed tools. This may take some time...\c"

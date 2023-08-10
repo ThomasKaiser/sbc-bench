@@ -10,7 +10,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 
 *The below table is also available sorted: [7-zip multi-threaded](results/Sorted-Results.md#7-zip-mips-multi-threaded), [7-zip single-threaded](results/Sorted-Results.md#7-zip-mips-single-threaded), [aes-256-cbc](results/Sorted-Results.md#openssl-speed--elapsed--evp-aes-256-cbc), [memcpy](results/Sorted-Results.md#memcpy), [memset](results/Sorted-Results.md#memset) and [clockspeed](results/Sorted-Results.md#clockspeed).*
 
-*ROCK 5B, RK3568-ROC-PC and Khadas VIM4 numbers are preliminary since software support situation for RK3588/RK3588s and A311D2 is still in a very early stage. Same applies to all RISC-V numbers and [Apple M1 Pro](https://github.com/ThomasKaiser/sbc-bench/issues/47#issue-1300572558). Please also note that with RK35xx devices so far [measured clockspeeds differ from what's defined in device-tree due to PVTM](https://github.com/ThomasKaiser/Knowledge/blob/master/articles/Quick_Preview_of_ROCK_5B.md#pvtm).*
+*ROCK 5B, Orange Pi 5, RK3568-ROC-PC and Khadas VIM4 numbers are preliminary since software support situation for RK3588/RK3588s and A311D2 is still in a very early stage. Same applies to all RISC-V numbers and [Apple M1 Pro](https://github.com/ThomasKaiser/sbc-bench/issues/47#issue-1300572558). Please also note that with RK35xx devices so far [measured clockspeeds differ from what's defined in device-tree due to PVTM](https://github.com/ThomasKaiser/Knowledge/blob/master/articles/Quick_Preview_of_ROCK_5B.md#pvtm) and also that all these RK35xx based devices perform more or less identical [or only differ by PVTM (silicon lottery) and settings](https://github.com/ThomasKaiser/sbc-bench/issues/75#issuecomment-1672817171).*
 
 | Device / details | Clockspeed | Kernel | Distro | 7-zip multi | 7-zip single | AES | memcpy | memset | kH/s |
 | ----- | :--------: | :----: | :----: | ----: | ------: | ------: | -----: | -----: | ---: |
@@ -113,6 +113,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Orange Pi Prime (Allwinner H5)](http://ix.io/2kTH) | 1370 MHz | 5.4 | Buster | 3590 | 984 | 637980 | 1180 | 3540 | - |
 | [Orange Pi Zero 2 (Allwinner H616)](http://ix.io/4knM) | 1510 MHz | 4.9 | Buster arm64 | 3550 | 1067 | 703300 | 1190 | 2820 | 5.01 |
 | [Orange Pi Zero 3 (Allwinner H618)](http://ix.io/4CPF) | 1510 MHz | 6.1 | Jammy arm64 | 4020 | 1165 | 705330 | 1510 | 6010 | 6.02 |
+| [Orange Pi 5 (RK3588)](http://ix.io/4D0a) | 2400/1800 MHz | 5.10 | Jammy arm64 | 16780 | 2689 | 1366590 | 12800 | 29900 | - |
 | [Phytium<br />FT-2000/4<br />(1 x SO-DIMM)](http://ix.io/4ioj) | 2600 MHz | 5.15 | Bullseye arm64 | 10020 | 2755 | 936740 | 3760 | 14540 | - |
 | [Phytium D2000<br />(1 x SO-DIMM)](http://ix.io/445T) | 2300 MHz | 5.19 | Jammy arm64 | 16390 | 2220 | 827090 | 2820 | 6490 | - |
 | [Phytium D2000<br />(2 x SO-DIMM)](http://ix.io/446h) | 2300 MHz | 5.19 | Jammy arm64 | 16670 | 2252 | 828130 | 3480 | 16110 | - |

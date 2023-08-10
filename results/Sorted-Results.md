@@ -27,6 +27,7 @@
 | [Jetson Xavier AGX](http://ix.io/4ebH) | 2250 MHz | 4.9 | Bionic arm64 | **21590** | 2742 | 853250 | 10910 | 22520 | 26.57 |
 | [Intel i3-N305](http://ix.io/4qpr) | 3800 MHz | 5.19 | Jammy amd64 | **20000** | 4398 | 1377280 | 9950 | 8990 | 41.43 |
 | [Qualcomm QRB5165](http://ix.io/49kx) | 2840/2410/1790 MHz | 4.19 | Focal arm64 | **18860** | 3898 | 1598490 | 14470 | 23910 | 25.56 |
+| [Orange Pi 5 (RK3588)](http://ix.io/4D0a) | 2400/1800 MHz | 5.10 | Jammy arm64 | **16780** | 2689 | 1366590 | 12800 | 29900 | - |
 | [Phytium D2000<br />(2 x SO-DIMM)](http://ix.io/446h) | 2300 MHz | 5.19 | Jammy arm64 | **16670** | 2252 | 828130 | 3480 | 16110 | - |
 | [Khadas Edge2 (RK3588s)](http://ix.io/4a5U) | 2260/1800 MHz | 5.10 | Jammy arm64 | **16470** | 3096 | 1287490 | 10860 | 29110 | - |
 | [Radxa ROCK 5B (RK3588)](http://ix.io/41BH) | 2350/1830 MHz | 5.10 | Focal arm64 | **16450** | 3146 | 1337540 | 10830 | 29220 | 25.31 |
@@ -253,6 +254,7 @@
 | [Ryzen R1606G](http://ix.io/2tQQ) | 2600/1400 MHz | 5.4 | Focal amd64 | 7970 | **2854** | 700780 | 8230 | 5970 | 16.45 |
 | [Phytium<br />FT-2000/4<br />(1 x SO-DIMM)](http://ix.io/4ioj) | 2600 MHz | 5.15 | Bullseye arm64 | 10020 | **2755** | 936740 | 3760 | 14540 | - |
 | [Jetson Xavier AGX](http://ix.io/4ebH) | 2250 MHz | 4.9 | Bionic arm64 | 21590 | **2742** | 853250 | 10910 | 22520 | 26.57 |
+| [Orange Pi 5 (RK3588)](http://ix.io/4D0a) | 2400/1800 MHz | 5.10 | Jammy arm64 | 16780 | **2689** | 1366590 | 12800 | 29900 | - |
 | [Athlon II X3 420e](http://ix.io/4eOo) | 2600 MHz | 4.19 | Buster amd64 | 4780 | **2566** | 98840 | 4120 | 3870 | - |
 | [Celeron N4020](http://ix.io/4vNB) | 2800 MHz | 5.15 | Bullseye amd64 | 4310 | **2533** | 779580 | 5280 | 5190 | - |
 | [Qualcomm Snapdragon 835](http://ix.io/4fdD) | 2360/1900 MHz | 6.1 | Jammy arm64 | 9800 | **2474** | 883330 | 9720 | 14070 | 12.58 |
@@ -459,6 +461,7 @@
 | [Intel i3-N305](http://ix.io/4qpr) | 3800 MHz | 5.19 | Jammy amd64 | 20000 | 4398 | **1377280** | 9950 | 8990 | 41.43 |
 | [ODROID-N2+ (Amlogic S922X)](http://ix.io/3DtN) | 2400/2015 MHz | 5.14 | Impish arm64 | 9790 | 2253 | **1366930** | 4300 | 7480 | - |
 | [ODROID-N2+ (Amlogic S922X)](http://ix.io/3R1a) | 2400/2015 MHz | 5.10 | Focal arm64 | 9680 | 2372 | **1366730** | 4030 | 7120 | - |
+| [Orange Pi 5 (RK3588)](http://ix.io/4D0a) | 2400/1800 MHz | 5.10 | Jammy arm64 | 16780 | 2689 | **1366590** | 12800 | 29900 | - |
 | [Khadas VIM3 (Amlogic A311D)](http://ix.io/3R2Z) | 2400/2015 MHz | 5.10 | Bullseye arm64 | 9650 | 2376 | **1366350** | 4850 | 7380 | - |
 | [Khadas VIM3 (Amlogic A311D)](http://ix.io/4o1A) | 2400/2015 MHz | 6.0 | Bullseye arm64 | 9650 | 2379 | **1366300** | 5080 | 9240 | - |
 | [ODROID-N2+ (Amlogic S922X)](http://ix.io/4rWn) | 2400/2015 MHz | 6.1 | Bullseye arm64 | 9710 | 2373 | **1366180** | 4220 | 7720 | - |
@@ -672,6 +675,7 @@
 | [Pentium G4600](http://ix.io/2jVw) | 3600 MHz | 4.19 | Buster amd64 | 11810 | 4448 | 984820 | **15120** | 33380 | 21.88 |
 | [Qualcomm QRB5165](http://ix.io/49kx) | 2840/2410/1790 MHz | 4.19 | Focal arm64 | 18860 | 3898 | 1598490 | **14470** | 23910 | 25.56 |
 | [Huaqin P6410<br />(2 x Ampere Altra Max)](http://ix.io/4kiu) | 3000 MHz | 5.4 | Focal arm64 | 430860 | 4211 | 1710010 | **13310** | 47970 | - |
+| [Orange Pi 5 (RK3588)](http://ix.io/4D0a) | 2400/1800 MHz | 5.10 | Jammy arm64 | 16780 | 2689 | 1366590 | **12800** | 29900 | - |
 | [Ampere Altra Q80-26](http://ix.io/4zkJ) | 2600 MHz | 5.15 | Jammy arm64 | 214390 | 3748 | 1482190 | **11685** | 41560 | 316.50 |
 | [Intel N100](http://ix.io/4vxM) | 3400 MHz | 6.1 | Lunar amd64 | 14150 | 4073 | 1232790 | **11600** | 12270 | 36.24 |
 | [Jetson Xavier AGX](http://ix.io/4ebH) | 2250 MHz | 4.9 | Bionic arm64 | 21590 | 2742 | 853250 | **10910** | 22520 | 26.57 |
@@ -891,6 +895,7 @@
 | [Qualcomm Snapdragon 8cx Gen 3 (WSL2)](http://ix.io/4kEp) | 2980/? MHz | 5.15 | Jammy arm64 | 33600 | 4789 | 1679480 | 21010 | **41540** | 50.65 |
 | [Pentium G4600](http://ix.io/2jVw) | 3600 MHz | 4.19 | Buster amd64 | 11810 | 4448 | 984820 | 15120 | **33380** | 21.88 |
 | [Jetson AGX Orin](http://ix.io/4ax9) | 2200 MHz | 5.10 | Focal arm64 | 39450 | 3187 | 1242940 | 10600 | **30350** | 59.96 |
+| [Orange Pi 5 (RK3588)](http://ix.io/4D0a) | 2400/1800 MHz | 5.10 | Jammy arm64 | 16780 | 2689 | 1366590 | 12800 | **29900** | - |
 | [Radxa ROCK 5B (RK3588)](http://ix.io/41BH) | 2350/1830 MHz | 5.10 | Focal arm64 | 16450 | 3146 | 1337540 | 10830 | **29220** | 25.31 |
 | [Khadas Edge2 (RK3588s)](http://ix.io/4a5U) | 2260/1800 MHz | 5.10 | Jammy arm64 | 16470 | 3096 | 1287490 | 10860 | **29110** | - |
 | [Qualcomm QRB5165](http://ix.io/49kx) | 2840/2410/1790 MHz | 4.19 | Focal arm64 | 18860 | 3898 | 1598490 | 14470 | **23910** | 25.56 |
@@ -1126,6 +1131,7 @@
 | [Loongson-3A5000-HV](http://ix.io/4dzX) | **2500** MHz| 4.19 | Loongnix 20 loongarch64 | 11120 | 2990 | 116900 | 6930 | 19170 | - |
 | [Celeron J1900](http://ix.io/4hKV) | **2415/1333** MHz| 5.4 | Focal amd64 | 6560 | 1806 | 34900 | 3780 | 3390 | - |
 | [x7-Z8700](http://ix.io/4iDX) | **2400** MHz| 5.15 | Bullseye amd64 | 6580 | 1784 | 296680 | 3510 | 3580 | - |
+| [Orange Pi 5 (RK3588)](http://ix.io/4D0a) | **2400/1800** MHz| 5.10 | Jammy arm64 | 16780 | 2689 | 1366590 | 12800 | 29900 | - |
 | [ODROID-N2+ (Amlogic S922X)](http://ix.io/4rWn) | **2400/2015** MHz| 6.1 | Bullseye arm64 | 9710 | 2373 | 1366180 | 4220 | 7720 | - |
 | [ODROID-N2+ (Amlogic S922X)](http://ix.io/3R1a) | **2400/2015** MHz| 5.10 | Focal arm64 | 9680 | 2372 | 1366730 | 4030 | 7120 | - |
 | [ODROID-N2+ (Amlogic S922X)](http://ix.io/3DtN) | **2400/2015** MHz| 5.14 | Impish arm64 | 9790 | 2253 | 1366930 | 4300 | 7480 | - |

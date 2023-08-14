@@ -4932,11 +4932,15 @@ GuessARMSoC() {
 	# rockchip-cpuinfo cpuinfo: SoC            : 35681000 --> only early RK3568 devices showed this silicon revision (e.g. Firefly RK3568-ROC-PC/AIO-3568J)
 	# rockchip-cpuinfo cpuinfo: SoC            : 35682000 --> RK3568-ROC-PC, NanoPi R5S, ODROID-M1, Mrkaio M68S, OWLVisionTech rk3568 opc Board, Radxa ROCK3A,
 	#                                                         Rockemd R68K 2.5G, Hinlink H68K, Magewell Pro Convert NDI to AIO 4K Gen2, AIO-3568J, Forlinx OK3568-C
-	# rockchip-cpuinfo cpuinfo: SoC            : 35880000 --> 9Tripod X3588S Board, Firefly ITX-3588J/ROC-RK3588S-PC, NanoPi R6S, HINLINK OWL H88K, Khadas Edge2,
-	#                                                         Orange Pi 5, ROCK 5A/5B, EDGE LP4x V1.0 BlueBerry, CoolPi 4B, Shaggy013 LP4x V1.2 H96_Max_v58 Board,
-	#                                                         EVB4 LP4 V10 Board, OWL H88K, RK3588 MINI PC V11 Board, TOYBRICK X10, Mixtile Blade 3 v1.0.1,
-	#                                                         RK3588 EVB7 LP4 V10
-	# rockchip-cpuinfo cpuinfo: SoC            : 35881000 --> http://ix.io/4nwf (RK3588S, majority of Orange Pi 5 has this silicon revision)
+	# rockchip-cpuinfo cpuinfo: SoC            : 35880000 --> 9Tripod X3588S Board, Firefly ITX-3588J HDMI(Linux), Firefly ROC-RK3588S-PC HDMI(Linux),
+	#                                                         FriendlyElec NanoPC-T6, FriendlyElec NanoPi R6C, FriendlyElec NanoPi R6S, HINLINK OWL H88K Board,
+	#                                                         Khadas Edge2, Mekotronics R58X-4G (RK3588 EDGE LP4x V1.2 BlueBerry Board), Mixtile Blade 3 v1.0.1,
+	#                                                         Orange Pi 5, Orange Pi 5B, Orange Pi 5 Plus, Radxa ROCK 5A, Radxa ROCK 5B, RK3588 EDGE LP4x V1.0
+	#                                                         BlueBerry Board, RK3588 MINIPC-MIZHUO LP4x V1.0 BlueBerry Board, RK3588S CoolPi 4B Board, RK3588
+	#                                                         Shaggy013 LP4x V1.2 H96_Max_v58 Board, Rockchip RK3588 EVB4 LP4 V10 Board, Rockchip RK3588 EVB7
+	#                                                         LP4 V10 Board, Rockchip RK3588-EVB-KS-T1 LP4 V10 Board, Rockchip RK3588 MINI PC V11 Board
+	#                                                         Rockchip RK3588 OWL H88K Board, Rockchip RK3588 TOYBRICK X10 Board
+	# rockchip-cpuinfo cpuinfo: SoC            : 35881000 --> Orange Pi 5, Orange Pi 5B, Orange Pi 5 Plus
 	#
 	# RK 'open source' SoCs according to https://github.com/rockchip-linux/kernel/blob/develop-5.10/drivers/soc/rockchip/rockchip-cpuinfo.c (at least RV1108 and RK3588/RK3588s missing)
 	# PX30, PX30S, RK3126, RK3126B, RK3126C, RK3128, RK3288, RK3288W, RK3308, RK3308B, RK3308BS, RK3566, RK3568, RV1103, RV1106, RV1109 and RV1126
@@ -6085,6 +6089,7 @@ GuessSoCbySignature() {
 			# or Qualcomm MSM8953: 8 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			# or Xiaomi Surge S1: 8 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			# or Sophgo BM1684: 8 x Cortex-A53 / r0p4
+			# or Qualcomm APQ8053: 8 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			case "${DTCompatible}" in
 				*amlogic*)
 					echo "Amlogic S912"
@@ -6119,7 +6124,10 @@ GuessSoCbySignature() {
 				*bm1684*)
 					echo "Sophgo BM1684"
 					;;
-				*)
+				*apq8053*)
+					echo "Qualcomm APQ8053"
+					;;
+				*ls1088*)
 					echo "NXP QorIQ LS1088"
 					;;
 			esac
@@ -6965,7 +6973,7 @@ GuessSoCbySignature() {
 			echo "SiFive U540"
 			;;
 		10sifive,u74mc10sifive,u74mc10sifive,u74mc10sifive,u74mc|*sifive,u74mc*sifive,u74mc*sifive,u74mc*sifive,u74mc)
-			# StarFive JH7110: 4 x U74-MC https://doc-en.rvspace.org/Doc_Center/datasheet_7110.html
+			# StarFive JH7110: 4 x U74-MC https://raw.githubusercontent.com/ThomasKaiser/sbc-bench/master/results/cpuinfo/StarFive-JH7110-6.5.0.cpuinfo
 			echo "StarFive JH7110"
 			;;
 		*sifive,u74mc*sifive,u74mc)
@@ -7813,10 +7821,13 @@ CheckKernelVersion() {
 			echo -e "\n${LRED}${BOLD}The 3.16 series has reached end-of-life on 2020-06-11 with version 3.16.85.${NC}"
 			;;
 		3.18.*)
-			# some SDKs/BSPs based on this version: Ingenic JZ4780
+			# some SDKs/BSPs based on this version: Ingenic JZ4780, Qualcomm APQ8053
 			case ${GuessedSoC} in
 				*Ingenic*)
 					PrintBSPWarning Ingenic
+					;;
+				*Qualcomm*)
+					PrintBSPWarning Qualcomm
 					;;
 			esac
 			echo -e "\n${LRED}${BOLD}The 3.18 series has reached end-of-life on 2017-02-08 with version 3.18.48.${NC}"

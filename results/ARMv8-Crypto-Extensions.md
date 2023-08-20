@@ -116,6 +116,7 @@ Crawling through [sbc-bench results collection](../Results.md) comparing +70 dif
 | [Armada 8040](http://ix.io/4zcm) | 1600 | 909420 | 568 |
 | [RK3399](http://ix.io/1iWU) | 1800 | 1023600 | 568 |
 | [LX2160A](http://ix.io/1ET3) | 1900 | 1079480 | 568 |
+| [TI J721E](http://ix.io/4DLw) | 2000 | 1130390 | 565 |
 | [LX2160A](http://ix.io/4ju5) | 2000 | 1136690 | 568 |
 | [RK3399](http://ix.io/2yIx) | 2010 | 1144950 | 569 |
 | [RK3399](http://ix.io/2ICt) | 2088 | 1184306 | 567 |

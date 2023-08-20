@@ -204,6 +204,7 @@
 | [4BtC](4BtC.txt) | v0.9.42 GoWin Solution R86S 1.0 / Penti | 0%/0% | 31Gi/29Gi | X | X | X | X | 2% | 0% | [check log](4BtC.txt) |
 | [4CPF](4CPF.txt) | v0.9.43 OrangePi Zero3 | 0%/0% | 3.8Gi/3.5Gi | X | X | X | X | 1% | 1% | [check log](4CPF.txt) |
 | [4D0a](4D0a.txt) | v0.9.44 Orange Pi 5 | 0%/0% | 7.8Gi/7.4Gi | X | X | X | X | 1% | 0% | [check log](4D0a.txt) |
+| [4DLw](4DLw.txt) | v0.9.44 BeagleBoard.org BeagleBone AI-6 | 0%/0% | 2.1Gi/1.9Gi | X | X | X | X | 2% | <span style=color:red> 6%</span> | [check log](4DLw.txt) |
 | <del>[4a3s](4a3s.txt)</del> | <del>v0.9.8 StarFive VisionFive V2 </del> | <del>0.4%/0.1%</del> | <del>3.8Gi/3.5Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 1%</del> | <del> 2%</del> | |
 | [4a5U](4a5U.txt) | v0.9.8 Khadas Edge2 | 0%/0% | 15Gi/14Gi | X | X | X | X | 1% | 0% | |
 | [4ax9](4ax9.txt) | v0.9.8 NVIDIA Orin Jetson-Small Develop | 0%/0% | 29Gi/29Gi | X | X | X | X | 0% | 0% | |

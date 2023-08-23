@@ -69,7 +69,7 @@ Main() {
 					command -v smartctl >/dev/null 2>&1 || echo -e "${BOLD}Warning: smartmontools not installed${NC}\n" >&2
 					[ ${UID} = 0 ] || echo -e "${BOLD}Warning: to query all drive info this tool needs to be run as root${NC}\n" >&2
 				fi
-				CheckStorage
+				CheckStorage | sed 's/000Mbps/Gbps/'
 				exit 0
 				;;
 			h)
@@ -3399,9 +3399,9 @@ CheckAllCores() {
 	for i in $(seq 0 $(( ${CPUCores} -1 )) ) ; do
 		taskset -c ${i} "${InstallLocation}"/mhz/mhz 3 1000000 >"${TempDir}/CheckAllCores-${1}.${i}" &
 	done
-	if [ -f /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq ]; then
+	if [ -r /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq ]; then
 		CpuFreqToQuery=cpuinfo_cur_freq
-	elif [ -f /sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq ]; then
+	elif [ -r /sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq ]; then
 		CpuFreqToQuery=scaling_cur_freq
 	fi
 	# if in full-load mode wait 8 seconds
@@ -5705,7 +5705,7 @@ GuessSoCbySignature() {
 			echo "Allwinner A20"
 			;;
 		00A7r0p500A7r0p500A7r0p500A7r0p5)
-			# Allwinner sun8i: could be Allwinner H3/H2+, R40/V40 or A33/R16 or A50/MR133/R311 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
+			# Allwinner sun8i: could be Allwinner H3/H2+, R40/V40/T3/A40i or A33/R16 or A50/MR133/R311 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
 			# or Spreadtrum SC7731/SC8830 or Rockchip RV1126/RK3126/RK3126B/RK3126C/RK3128
 			case "${DTCompatible}" in
 				*rv1126*)
@@ -5732,9 +5732,9 @@ GuessSoCbySignature() {
 					# Rockchip RV1126 or RK3126/RK3126B/RK3126C or RK3128 | 4 x Cortex-A7 / r0p5
 					echo "Rockchip RV1126 or RK3126/RK3126B/RK3126C or RK3128"
 					;;
-				*sun8i-r40*)
-					# R40/V40, 4 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
-					echo "Allwinner R40/V40"
+				*sun8i-r40*|*sun8i-v40*|*sun8i-a40i*|*sun8i-t3*)
+					# R40/V40/T3/A40i, 4 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
+					echo "Allwinner R40/V40/T3/A40i"
 					;;
 				*sun8i-h3*)
 					# Allwinner H3, 4 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
@@ -7403,7 +7403,7 @@ ProvideReviewInfo() {
 	# underpowering (https://github.com/raspberrypi/linux/issues/4130#issuecomment-787826273)
 	# and so on...
 	PCIeStatus="$(CheckPCIe)"
-	StorageStatus="$(CheckStorage update-smart-drivedb)"
+	StorageStatus="$(CheckStorage update-smart-drivedb | sed 's/000Mbps/Gbps/')"
 	if [ "X${PCIeStatus}" != "X" -a "X${StorageStatus}" != "X" ]; then
 		echo -e "\n### PCIe and storage devices:\n\n${PCIeStatus}\n${StorageStatus}" >>"${TempDir}/review"
 	elif [ "X${StorageStatus}" = "X" ]; then
@@ -7536,9 +7536,14 @@ ProvideReviewInfo() {
 		# throttling check and routine waiting for the board to cool down since otherwise the
 		# next monitoring step will report throttling even if none happens from now on.
 		[ "X${ThrottlingWarning}" != "X" ] && snore 5
+		if [ -r /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq ]; then
+			CpuFreqToQuery=cpuinfo_cur_freq
+		elif [ -r /sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq ]; then
+			CpuFreqToQuery=scaling_cur_freq
+		fi
 		if [ -r /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq ]; then
 			cpuinfo_max_freq=$(cat /sys/devices/system/cpu/cpu?/cpufreq/cpuinfo_max_freq)
-			cpuinfo_cur_freq=$(cat /sys/devices/system/cpu/cpu?/cpufreq/cpuinfo_cur_freq)
+			cpuinfo_cur_freq=$(cat /sys/devices/system/cpu/cpu?/cpufreq/${CpuFreqToQuery})
 			if [ "X${cpuinfo_max_freq}" != "X${cpuinfo_cur_freq}" ]; then
 				echo -e "\nWaiting for the device to cool down       \c"
 				while [ "X${cpuinfo_max_freq}" != "X${cpuinfo_cur_freq}" ]; do
@@ -7546,7 +7551,7 @@ ProvideReviewInfo() {
 					echo -e "\x08\x08\x08\x08\x08\x08\x08. ${TempNow}°C\c"
 					snore 2
 					cpuinfo_max_freq=$(cat /sys/devices/system/cpu/cpu?/cpufreq/cpuinfo_max_freq)
-					cpuinfo_cur_freq=$(cat /sys/devices/system/cpu/cpu?/cpufreq/cpuinfo_cur_freq)
+					cpuinfo_cur_freq=$(cat /sys/devices/system/cpu/cpu?/cpufreq/${CpuFreqToQuery})
 				done
 				# wait 20 more seconds for temperatures to stabilize
 				for i in {1..10} ; do
@@ -7611,7 +7616,7 @@ FinalReporting() {
 	# check PCIe and storage devices again to spot disconnects or link degradation and
 	# stuff like this. Strip off sane drive temps so we only compare unhealthy ones
 	PCIeStatusNow="$(CheckPCIe)"
-	StorageStatusNow="$(CheckStorage | awk -F", drive temp: " '{print $1"X"}' | sed -e 's/X$//' -e '/^$/d' | grep -v smartctl)"
+	StorageStatusNow="$(CheckStorage | sed 's/000Mbps/Gbps/' | awk -F", drive temp: " '{print $1"X"}' | sed -e 's/X$//' -e '/^$/d' | grep -v smartctl)"
 
 	if [ "X${RunBenchmarks}" = "XTRUE" ]; then
 		ClockspeedsNow="$(cat "${TempDir}/cpufreq" | sed -e 's/^/    /')"

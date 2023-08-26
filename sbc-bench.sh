@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.9.44
+Version=0.9.45
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -84,7 +84,7 @@ Main() {
 				;;
 			j|r)
 				# Jeff Geerling or Jean-Luc Aufranc mode. Help in reviewing devices
-				MODE=review
+				REVIEWMODE=true
 				interval=$2
 				RunBenchmarks=TRUE
 				[ ${UID} = 0 ] || { echo -e "${BOLD}Warning: for useable results this tool needs to be run as root${NC}\n" >&2 ; exit 1 ; }
@@ -93,7 +93,7 @@ Main() {
 				;;
 			R)
 				# Review mode w/o basic benchmarking and thermal throttling tests
-				MODE=review
+				REVIEWMODE=true
 				interval=$2
 				[ ${UID} = 0 ] || { echo -e "${BOLD}Warning: for useable results this tool needs to be run as root${NC}\n" >&2 ; exit 1 ; }
 				ProvideReviewInfo
@@ -215,7 +215,7 @@ Main() {
 	# distro is not rather recent
 	if [ "X${MODE}" = "Xpts" -o "X${MODE}" = "Xgb" ]; then
 		:
-	elif [ "X${MODE}" = "Xreview" ]; then
+	elif [ "X${REVIEWMODE}" = "Xtrue" ]; then
 		CheckOSReleaseForReview
 	else
 		CheckOSRelease
@@ -2516,7 +2516,7 @@ CheckMissingPackages() {
 		command -v wget >/dev/null 2>&1 || echo -e "wget \c"
 		command -v links >/dev/null 2>&1 || echo -e "links \c"
 	fi
-	if [ "X${MODE}" = "Xreview" ]; then
+	if [ "X${REVIEWMODE}" = "Xtrue" ]; then
 		command -v lspci >/dev/null 2>&1 || echo -e "pciutils \c"
 		command -v lsusb >/dev/null 2>&1 || echo -e "usbutils \c"
 		command -v mmc >/dev/null 2>&1
@@ -2952,9 +2952,9 @@ InitialMonitoring() {
 	read HostName </etc/hostname 2>/dev/null
 	if [ "X${MODE}" = "Xunattended" -o "X${MODE}" = "Xextensive" -o "X${MODE}" = "Xpts" -o "X${MODE}" = "Xgb" ]; then
 		echo -e "sbc-bench v${Version} ${DeviceName:-$HostName} ${MODE} ($(date -R))\n" | sed 's/  / /g' >${ResultLog}
-	elif [ "X${MODE}" = "Xreview" -a "X${NOTUNING}" != "Xyes" ]; then
+	elif [ "X${REVIEWMODE}" = "Xtrue" -a "X${NOTUNING}" != "Xyes" ]; then
 		echo -e "sbc-bench v${Version} ${DeviceName:-$HostName} ${MODE} ($(date -R))\n" | sed 's/  / /g' >${ResultLog}
-	elif [ "X${MODE}" = "Xreview" ]; then
+	elif [ "X${REVIEWMODE}" = "Xtrue" ]; then
 		echo -e "sbc-bench v${Version} ${DeviceName:-$HostName} NOTUNING review ($(date -R))\n" | sed 's/  / /g' >${ResultLog}
 	else
 		echo -e "sbc-bench v${Version} ${DeviceName:-$HostName} ($(date -R))\n" | sed 's/  / /g' >${ResultLog}
@@ -3427,7 +3427,7 @@ CheckAllCores() {
 } # CheckAllCores
 
 RunTinyMemBench() {
-	if [ "X${MODE}" = "Xextensive" -o "X${MODE}" = "Xreview" -o "X${ExecuteStockfish}" = "Xyes" ]; then
+	if [ "X${MODE}" = "Xextensive" -o "X${REVIEWMODE}" = "Xtrue" -o "X${ExecuteStockfish}" = "Xyes" ]; then
 		# extensive/review mode or yet unknown stockfish run time, do not print any duration estimates
 		echo -e "\x08\x08 Done."
 	else
@@ -3659,7 +3659,7 @@ RunOpenSSLBenchmark() {
 } # RunOpenSSLBenchmark
 
 RunCpuminerBenchmark() {
-	if [ "X${MODE}" = "Xreview" ]; then
+	if [ "X${REVIEWMODE}" = "Xtrue" ]; then
 		echo -e "\x08\x08 Done.\nThrottling test: heating up the device, 5 more minutes to wait...\c"
 	else
 		echo -e "\x08\x08 Done.\nExecuting cpuminer. 5 more minutes to wait...\c"
@@ -3688,7 +3688,7 @@ RunCpuminerBenchmark() {
 } # RunCpuminerBenchmark
 
 RunStressNG() {
-	if [ "X${MODE}" = "Xreview" ]; then
+	if [ "X${REVIEWMODE}" = "Xtrue" ]; then
 		echo -e "\x08\x08 Done.\nThrottling test: heating up the device, 5 more minutes to wait...\c"
 	else
 		echo -e "\x08\x08 Done.\nExecuting stress-ng. 5 more minutes to wait...\c"
@@ -3704,7 +3704,7 @@ RunStressNG() {
 } # RunStressNG
 
 RunStockfishBenchmark() {
-	echo -e "\x08\x08 Done.\nExecuting stockfish...\c"
+	echo -e "\x08\x08 Done.\nExecuting stockfish benchmark...\c"
 	echo -e "\nSystem health while running stockfish:\n" >>${MonitorLog}
 	/bin/bash "${PathToMe}" -m 60 >>${MonitorLog} &
 	MonitoringPID=$!
@@ -4100,7 +4100,7 @@ SummarizeResults() {
 	fi
 
 	# Add a line suitable for Results.md on Github if not in efficiency plotting or PTS, GB or review mode
-	if [ "X${PlotCpufreqOPPs}" != "Xyes" -a "X${MODE}" != "Xpts" -a "X${MODE}" != "Xgb" -a "X${MODE}" != "Xreview" ]; then
+	if [ "X${PlotCpufreqOPPs}" != "Xyes" -a "X${MODE}" != "Xpts" -a "X${MODE}" != "Xgb" -a "X${REVIEWMODE}" != "Xtrue" ]; then
 		KernelArch="$(uname -m | sed -e 's/armv7l/armhf/' -e 's/aarch64/arm64/')"
 		if [ "X${KernelArch}" = "X" -o "X${KernelArch}" = "X${ARCH}" ]; then
 			DistroInfo="${OperatingSystem} ${ARCH}"
@@ -4553,7 +4553,7 @@ UploadResults() {
 		sed '/^$/N;/^\n$/D' <${ResultLog} | sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" | curl -s -F ${UploadScheme} ${UploadServer})
 
 	# Display benchmark results if not in PTS, GB or preview mode
-	if [ "X${MODE}" != "Xpts" -a "X${MODE}" != "Xgb" -a "X${MODE}" != "Xreview" ]; then
+	if [ "X${MODE}" != "Xpts" -a "X${MODE}" != "Xgb" -a "X${REVIEWMODE}" != "Xtrue" ]; then
 		echo -e "${BOLD}Results validation:${NC}\n\n${IsValid}\n"
 		MemoryScores="$(awk -F" " '/^ libc / {print $2$4" "$5" "$6}' <${ResultLog} | grep -E 'memcpy|memset' | awk -F'MB/s' '{print $1"MB/s"}')"
 		CountOfMemoryScores=$(wc -l <<<"${MemoryScores}")
@@ -4597,7 +4597,7 @@ UploadResults() {
 				;;
 		esac
 		echo -e "\n${CompareURL}\n\nResults validation:\n\n${IsValid}"
-	elif [ "X${MODE}" = "Xreview" -a "X${NOTUNING}" != "Xyes" ]; then
+	elif [ "X${REVIEWMODE}" = "Xtrue" -a "X${NOTUNING}" != "Xyes" ]; then
 		echo -e "Results validation:\n\n${IsValid}"
 	fi
 	case ${UploadURL} in
@@ -7284,7 +7284,10 @@ ProvideReviewInfo() {
 	[ "X${RunBenchmarks}" = "XTRUE" ] && RunRamlat
 	[ "X${RunBenchmarks}" = "XTRUE" ] && RunOpenSSLBenchmark 256
 	[ "X${RunBenchmarks}" = "XTRUE" ] && Run7ZipBenchmark
-	if [ -x "${InstallLocation}"/cpuminer-multi/cpuminer ]; then
+	if [ -x "${InstallLocation}/Stockfish-sf_15/src/stockfish" ]; then
+		ExecuteStockfish=yes
+		RunStockfishBenchmark
+	elif [ -x "${InstallLocation}"/cpuminer-multi/cpuminer ]; then
 		ExecuteCpuminer=yes
 		[ "X${RunBenchmarks}" = "XTRUE" ] && RunCpuminerBenchmark
 	else

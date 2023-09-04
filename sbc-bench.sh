@@ -2077,6 +2077,15 @@ Getx86ClusterDetails() {
 	# i3: 1-4 P cores, 0-8 E cores, 4.1-4.6 GHz, 10-12 MB "Smart Cache"
 	# U300*: 1 P core, 4 E cores, 8 MB "Smart Cache"
 
+	# Check amount of available CPU cores first and whether virtualization has been detected
+	# since when running in a virtualized environment it doesn't make sense trying to
+	# distinguish between efficiency and performance cores
+
+	if [ ${CPUCores} -eq 1 -o "X${VirtWhat}" != "Xnone" ]; then
+		echo "0"
+		return
+	fi
+
 	# Check for hyper threading first since affecting size of P logical cluster (the 1st)
 	[ -f /sys/devices/system/cpu/smt/active ] && read HT </sys/devices/system/cpu/smt/active || HT=0
 
@@ -4858,10 +4867,10 @@ GuessARMSoC() {
 	#      Cortex-A53 / r0p1: Exynos 5433, Qualcomm MSM8939
 	#      Cortex-A53 / r0p2: Marvell PXA1908, Mediatek MT6752/MT6738/MT6755/MT8173/MT8176, Qualcomm Snapdragon 810 (MSM8994), Samsung Exynos 7420
 	#      Cortex-A53 / r0p3: ARM Juno r1, ARM Juno r2, HiSilicon Hi3751, Kirin 620/930, Mediatek MT6735/MT8163, Nexell S5P6818, Samsung Exynos 7580, Qualcomm MSM8992 (Snapdragon 808)
-	#      Cortex-A53 / r0p4: Allwinner A100/A133/A53/A64/H313/H5/H6/H616/H618/H64/R329/R818/T507/T509, Amlogic A113X/A113D/A311D/A311D2/S805X/S805Y/S905/S905X/S905D/S905W/S905L/S905L3A/S905M2/S905X2/S905Y2/S905D2/S912/S922X/T962X2, Broadcom BCM2837/BCM2709/BCM2710/RP3A0-AU (BCM2710A1), Exynos 8890, HiSilicon Hi3798C-V200, HiSilicon Kirin 650/710/950/955/960/970, Marvell Armada 37x0, Mediatek MT6739WA/MT6762M/MT6765/MT6771V/MT6797/MT6797T/MT6799/MT8183/MT8735, NXP i.MX8M/i.MX8QM/LS1xx8, Qualcomm IPQ5332/MSM8937/MSM8952/MSM8953/MSM8956/MSM8976/MSM8976PRO/SDM439/SDM450, RealTek RTD129x/RTD139x, Rockchip RK3318/RK3328/RK3528/RK3562/RK3399, Samsung Exynos 7870/7885/8890/8895, Socionext LD20/SC2A11, TI K3 AM623/AM625/AM62A/AM642/AM654, Xiaomi Surge S1
+	#      Cortex-A53 / r0p4: Allwinner A100/A133/A53/A64/H313/H5/H6/H616/H618/H64/R329/R818/R923/T507/T509, Amlogic A113X/A113D/A311D/A311D2/S805X/S805Y/S905/S905X/S905D/S905W/S905L/S905L3A/S905M2/S905X2/S905Y2/S905D2/S912/S922X/T962X2, Broadcom BCM2837/BCM2709/BCM2710/RP3A0-AU (BCM2710A1), Exynos 8890, HiSilicon Hi3798C-V200, HiSilicon Kirin 650/710/950/955/960/970, Marvell Armada 37x0, Mediatek MT6739WA/MT6762M/MT6765/MT6771V/MT6797/MT6797T/MT6799/MT8183/MT8735, NXP i.MX8M/i.MX8QM/LS1xx8, Qualcomm IPQ5332/MSM8937/MSM8952/MSM8953/MSM8956/MSM8976/MSM8976PRO/SDM439/SDM450, RealTek RTD129x/RTD139x, Rockchip RK3318/RK3328/RK3528/RK3562/RK3399, Samsung Exynos 7870/7885/8890/8895, Socionext LD20/SC2A11, TI K3 AM623/AM625/AM62A/AM642/AM654, Xiaomi Surge S1
 	#      Cortex-A55 / r0p1: Samsung Exynos 9810
 	#      Cortex-A55 / r1p0: Amlogic S905X3/S905D3/S905Y3/T962X3/T962E2, HiSilicon Ascend 310 / Kirin 810/980, Samsung Exynos 9820
-	#      Cortex-A55 / r2p0: Amlogic S905X4/S905C2, Allwinner A523/T527, Google Tensor G1, MediaTek Genio 1200, NXP i.MX 93, Qualcomm SM8350 (Snapdragon 888), Renesas RZG2UL/RZG2LC, Rockchip RK3566/RK3568/RK3588/RK3588s, Unisoc UMS9620
+	#      Cortex-A55 / r2p0: Amlogic S905X4/S905C2, Allwinner A513/A523/A736/A737/T527/T736/T737, Google Tensor G1, MediaTek Genio 1200, NXP i.MX 93, Qualcomm SM8350 (Snapdragon 888), Renesas RZG2UL/RZG2LC, Rockchip RK3566/RK3568/RK3588/RK3588s, Unisoc UMS9620
 	#      Cortex-A57 / r0p0: ARM Juno r0
 	#      Cortex-A57 / r1p0: Exynos 5433/7420
 	#      Cortex-A57 / r1p1: ARM Juno r1, Nvidia Tegra TX1, Snapdragon 810 / MSM8994/MSM8994V
@@ -4873,11 +4882,11 @@ GuessARMSoC() {
 	#      Cortex-A72 / r0p3: Broadcom BCM2711, NXP LS1028A, NXP LX2xx0A, Marvell Armada3900-A1, Xilinx Versal, AWS Graviton -> https://tinyurl.com/y47yz2f6
 	#      Cortex-A72 / r1p0: TI J721E (TDA4VM/DRA829V)
 	#      Cortex-A73 / r0p1: HiSilicon Kirin 960
-	#      Cortex-A73 / r0p2: Amlogic A311D/A311D2/S922X, HiSilicon Kirin 710/970, MediaTek Helio P60T/MT6771V/MT6799/MT8183, Samsung Exynos 7885
+	#      Cortex-A73 / r0p2: Allwinner R923, Amlogic A311D/A311D2/S922X, HiSilicon Kirin 710/970, MediaTek Helio P60T/MT6771V/MT6799/MT8183, Samsung Exynos 7885
 	#      Cortex-A75 / r2p1: Samsung Exynos 9820
 	#      Cortex-A76 / r1p0: HiSilicon Kirin 980 (though with an own 0x48/0xd40 ID)
 	#      Cortex-A76 / r3p0: Exynos Auto V9, HiSilicon Kirin 810 (though with an own 0x48/0xd40 ID)
-	#      Cortex-A76 / r4p0: Google Tensor G1, Rockchip RK3588/RK3588s, Unisoc UMS9620
+	#      Cortex-A76 / r4p0: Allwinner A736/T736, Google Tensor G1, Rockchip RK3588/RK3588s, Unisoc UMS9620
 	#      Cortex-A77 / r1p0: Qualcomm QRB5165 (Snapdragon 865)
 	#      Cortex-A78 / r1p0: MediaTek Genio 1200, Qualcomm SM8350 (Snapdragon 888)
 	#    Cortex-A78AE / r0p1: Nvidia Jetson Orin NX / AGX Orin
@@ -4940,7 +4949,7 @@ GuessARMSoC() {
 	#                                                         Shaggy013 LP4x V1.2 H96_Max_v58 Board, Rockchip RK3588 EVB4 LP4 V10 Board, Rockchip RK3588 EVB7
 	#                                                         LP4 V10 Board, Rockchip RK3588-EVB-KS-T1 LP4 V10 Board, Rockchip RK3588 MINI PC V11 Board
 	#                                                         Rockchip RK3588 OWL H88K Board, Rockchip RK3588 TOYBRICK X10 Board
-	# rockchip-cpuinfo cpuinfo: SoC            : 35881000 --> Orange Pi 5, Orange Pi 5B, Orange Pi 5 Plus
+	# rockchip-cpuinfo cpuinfo: SoC            : 35881000 --> Orange Pi 5, Orange Pi 5B, Orange Pi 5 Plus, Firefly ROC-RK3588S-PC V12 MIPI
 	#
 	# RK 'open source' SoCs according to https://github.com/rockchip-linux/kernel/blob/develop-5.10/drivers/soc/rockchip/rockchip-cpuinfo.c (at least RV1108 and RK3588/RK3588s missing)
 	# PX30, PX30S, RK3126, RK3126B, RK3126C, RK3128, RK3288, RK3288W, RK3308, RK3308B, RK3308BS, RK3566, RK3568, RV1103, RV1106, RV1109 and RV1126
@@ -5851,6 +5860,17 @@ GuessSoCbySignature() {
 			# Qualcomm Snapdragon 7c (SC7180): 6 x Kryo 468 Silver / r13p14 + 2 x Kryo 468 Gold / r15p15 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp asimdrdm lrcpc dcpop asimddp
 			echo "Qualcomm Snapdragon 7c"
 			;;
+		0?Qualcomm4XXSilver0?Qualcomm4XXSilver0?Qualcomm4XXSilver0?Qualcomm4XXSilver0?Qualcomm4XXGold0?Qualcomm4XXGold0?Qualcomm4XXGold0?Qualcomm4XXGold)
+			# Qualcomm Snapdragon 7c+ Gen 3 (SC7280) or QCM6490: 4 x Kryo 468 Silver + 3 x Kryo 468 Gold + 1 x Kryo 468 Gold Plus
+			case "${DTCompatible}" in
+				*qcm6490*)
+					echo "Qualcomm QCM6490"
+					;;
+				*sc7280*)
+					echo "Qualcomm Snapdragon 7c+ Gen 3 (SC7280)"
+					;;
+			esac
+			;;
 		*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4)
 			# Socionext SC2A11: 24 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
 			echo "Socionext SC2A11"
@@ -6173,8 +6193,12 @@ GuessSoCbySignature() {
 			esac
 			;;
 		00A73r0p200A73r0p200A73r0p200A73r0p214A53r0p414A53r0p414A53r0p414A53r0p4)
-			# Amlogic A311D2, 4 x Cortex-A73 / r0p2 + 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
+			# Amlogic A311D2: 4 x Cortex-A73 / r0p2 + 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			echo "Amlogic A311D2"
+			;;
+		??A53r0p4??A53r0p4??A53r0p4??A53r0p4??A73r0p2??A73r0p2??A73r0p2??A73r0p2)
+			# Allwinner R923: 4 x Cortex-A53 / r0p4 + 4 x Cortex-A73 / r0p2
+			echo "Allwinner R923"
 			;;
 		*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A72r0p0*A72r0p0*A72r0p0*A72r0p0)
 			# HiSilicon 950/955: 4 x Cortex-A53 / r0p4 + 4 x Cortex-A72 / r0p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32
@@ -6211,6 +6235,14 @@ GuessSoCbySignature() {
 			# HiSilicon Kirin 810, 6 x Cortex-A55 / r1p0 + 2 x Cortex-A76 / r3p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp asimdrdm lrcpc dcpop asimddp
 			# The big cores are marketed/documented as Cortex-A76 by HiSilicon but instead of the usual ARM core ID 0x41/0xd0b they have 0x48/0xd40
 			echo "HiSilicon Kirin 810"
+			;;
+		*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A76r4p0*A76r4p0)
+			# Allwinner A736/T736, 6 x Cortex-A55 / r2p0 + 2 x Cortex-A76 / r4p0
+			echo "Allwinner A736/T736"
+			;;
+		*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A78*A78)
+			# Allwinner A737/T737, 6 x Cortex-A55 / r2p0 + 2 x Cortex-A78
+			echo "Allwinner A737/T737"
 			;;
 		0A9r4p10A9r4p1|0?A9r4p10?A9r4p1)
 			# Armada 375/38x, 2 x Cortex-A9 / r4p1 / swp half thumb fastmult vfp edsp neon vfpv3 tls
@@ -6308,6 +6340,7 @@ GuessSoCbySignature() {
 			;;
 		00A35r1p000A35r1p0)
 			# Amlogic C302X or C305X, 2 x Cortex-A35 / r1p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32
+			# or Nuvoton MA35D1, 2 x Cortex-A35 / r1p0
 			case "${DTCompatible}" in
 				*c302*)
 					echo "Amlogic C302X"
@@ -6317,6 +6350,9 @@ GuessSoCbySignature() {
 					;;
 				*amlogic*)
 					echo "Amlogic C3 SoC"
+					;;
+				*nuvoton*|*ma35d1*)
+					echo "Nuvoton MA35D1"
 					;;
 			esac
 			;;
@@ -6329,7 +6365,7 @@ GuessSoCbySignature() {
 			echo "Amlogic S905X3"
 			;;
 		00A55r2p000A55r2p000A55r2p000A55r2p0)
-			# Amlogic S905X4/S905C2 or RK3566/RK3568
+			# Amlogic S905X4/S905C2 or RK3566/RK3568 or Allwinner A513
 			# 4 x Cortex-A55 / r2p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp asimdrdm lrcpc dcpop asimddp
 			case "${DTCompatible}" in
 				*amlogic*)
@@ -6343,6 +6379,9 @@ GuessSoCbySignature() {
 					;;
 				*rockchip*)
 					echo "Rockchip RK3566/RK3568"
+					;;
+				*a513*|*allwinner*)
+					echo "Allwinner A513"
 					;;
 			esac
 			;;

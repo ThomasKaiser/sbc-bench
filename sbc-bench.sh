@@ -477,7 +477,10 @@ GetARMCore() {
 	46/001:A64FX
 	48:HiSilicon
 	48/d01:Kunpeng-920
-	48/d40:Cortex-A76
+	48/d02:Kunpeng-930
+	48/d40:HiSilicon-A76
+	48/d41:HiSilicon-A77
+	48/d42:HiSilicon-A78AE
 	49:Infineon
 	4d:Motorola/Freescale
 	4e:NVidia
@@ -4884,17 +4887,21 @@ GuessARMSoC() {
 	#      Cortex-A73 / r0p1: HiSilicon Kirin 960
 	#      Cortex-A73 / r0p2: Allwinner R923, Amlogic A311D/A311D2/S922X, HiSilicon Kirin 710/970, MediaTek Helio P60T/MT6771V/MT6799/MT8183, Samsung Exynos 7885
 	#      Cortex-A75 / r2p1: Samsung Exynos 9820
-	#      Cortex-A76 / r1p0: HiSilicon Kirin 980 (though with an own 0x48/0xd40 ID)
-	#      Cortex-A76 / r3p0: Exynos Auto V9, HiSilicon Kirin 810 (though with an own 0x48/0xd40 ID)
+	#   HiSilicon-A76 / r1p0: HiSilicon Kirin 980
+	#      Cortex-A76 / r3p0: Exynos Auto V9
+	#   HiSilicon-A76 / r3p0: HiSilicon Kirin 810/990
+	#   HiSilicon-A76 / r3p1: HiSilicon Kirin 990
 	#      Cortex-A76 / r4p0: Allwinner A736/T736, Google Tensor G1, Rockchip RK3588/RK3588s, Unisoc UMS9620
-	#      Cortex-A77 / r1p0: Qualcomm QRB5165 (Snapdragon 865)
+	#      Cortex-A77 / r1p0: HiSilicon Kirin 9000, Qualcomm QRB5165 (Snapdragon 865)
 	#      Cortex-A78 / r1p0: MediaTek Genio 1200, Qualcomm SM8350 (Snapdragon 888)
 	#    Cortex-A78AE / r0p1: Nvidia Jetson Orin NX / AGX Orin
+	# HiSilicon-A78AE / r2p2: HiSilicon Kirin 9000s
 	#     Cortex-A78C / r0p0: Qualcomm Snapdragon 8cx Gen 3
 	#       Cortex-X1 / r1p0: Google Tensor G1, Qualcomm SM8350 (Snapdragon 888)
 	#      Cortex-X1C / r0p0: Qualcomm Snapdragon 8cx Gen 3
 	#     Cortex-A510 / r0p2: Qualcomm Snapdragon 8 Gen1
 	#     Cortex-A510 / r0p3: Qualcomm Snapdragon 8+ Gen1
+	#     Cortex-A510 / r1p1: HiSilicon Kirin 9000s
 	#     Cortex-A710 / r2p0: Qualcomm Snapdragon 8 Gen1, Snapdragon 8+ Gen1
 	#       Cortex-X2 / r2p0: Qualcomm Snapdragon 8 Gen1, Snapdragon 8+ Gen1
 	#       Exynos-m1 / r1p1: Samsung Exynos 8890
@@ -4910,6 +4917,7 @@ GuessARMSoC() {
 	#   NVidia Denver / r0p0: Nvidia Tegra K1 (Tegra132)
 	# NVidia Denver 2 / r0p0: Nvidia Jetson TX2
 	#     Kunpeng-920 / r1p0: HiSilicon Kunpeng 920
+	#     Kunpeng-930 / r2p2: HiSilicon Kirin 9000s
 	# Marvell 88FR131 / r2p1: Marvell Kirkwood 88F6281
 	#     Marvell PJ4 / r0p5: Marvell Armada 510
 	#     Marvell PJ4 / r1p1: Marvell Armada 370/XP
@@ -6231,6 +6239,24 @@ GuessSoCbySignature() {
 			# The big cores are marketed/documented as Cortex-A76 by HiSilicon but instead of the usual ARM core ID 0x41/0xd0b they have 0x48/0xd40
 			echo "HiSilicon Kirin 980"
 			;;
+		*A55r1p0*A55r1p0*A55r1p0*A55r1p0*A76r3p0*A76r3p0*A76r3p0*A76r3p0|*A55r1p0*A55r1p0*A55r1p0*A55r1p0*A76r3p1*A76r3p1*A76r3p1*A76r3p1)
+			# HiSilicon Kirin 990, 4 x Cortex-A55 / r1p0 + 4 x Cortex-A76 / r3p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp asimdrdm lrcpc dcpop asimddp
+			# The big cores are marketed/documented as Cortex-A76 by HiSilicon but instead of the usual ARM core ID 0x41/0xd0b they have 0x48/0xd40
+			# There also seems to be a newer Kirin 990 version with Cortex-A76 / r3p1 cores
+			# https://browser.geekbench.com/v5/cpu/compare/21007796?baseline=18843090
+			echo "HiSilicon Kirin 990"
+			;;
+		*A55r?p*A55r?p*A55r?p*A55r?p*A77r1p0*A77r1p0*A77r1p0*A77r1p0)
+			# HiSilicon Kirin 9000, 4 x Cortex-A55 + 4 x Cortex-A77 / r1p0 / https://browser.geekbench.com/v6/cpu/2493425
+			# https://browser.geekbench.com/v5/cpu/compare/21007796?baseline=18843090
+			echo "HiSilicon Kirin 9000"
+			;;
+		*A510r1p1*A510r1p1*A510r1p1*A510r1p1*A78AEr2p2*A78AEr2p2*A78AEr2p2*Kunpeng930r2p2|*A510r1p1*A510r1p1*A510r1p1*A510r1p1*A78AEr2p2*A78AEr2p2*A78AEr2p2*A78AEr2p2*A78AEr2p2*A78AEr2p2*Kunpeng930r2p2*Kunpeng930r2p2)
+			# HiSilicon Kirin 9000s: 4 x Cortex-A510 / r1p1 + 3 x Cortex-A78AE / r2p2 + 1 x Kunpeng-930 / r2p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 sve asimdfhm dit ilrcpc flagm ssbs sb pacg dcpodp flagm2 frint svei8mm i8mm bti
+			# https://youtu.be/SCRIFe0uaac?feature=shared&t=32
+			# The 'A78AE' like cores use HiSilicon's own 48/d42 ID and all the big cores are SMT capable
+			echo "HiSilicon Kirin 9000s"
+			;;
 		*A55r1p0*A55r1p0*A55r1p0*A55r1p0*A55r1p0*A55r1p0*A76r3p0*A76r3p0)
 			# HiSilicon Kirin 810, 6 x Cortex-A55 / r1p0 + 2 x Cortex-A76 / r3p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp asimdrdm lrcpc dcpop asimddp
 			# The big cores are marketed/documented as Cortex-A76 by HiSilicon but instead of the usual ARM core ID 0x41/0xd0b they have 0x48/0xd40
@@ -6498,6 +6524,7 @@ GuessSoCbySignature() {
 			# or Rockchip RV1109 | 2 x Cortex-A7 / r0p5
 			# or Renesas RZ/N1 | 2 x Cortex-A7 / r0p5
 			# or Allwinner R328/T113: 2 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm (https://whycan.com/t_7497.html -> ARMv7 Processor [410fc075] revision 5 (ARMv7), cr=10c5387d)
+			# or STMicroelectronics STM32MP153C: 2 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
 			case "${DTCompatible}" in
 				*rockchip*)
 					echo "Rockchip RV1109"
@@ -6510,6 +6537,9 @@ GuessSoCbySignature() {
 					;;
 				*sun*|*llwinner*)
 					echo "Allwinner R328/T113"
+					;;
+				*stm32mp153*)
+					echo "STMicroelectronics STM32MP153C"
 					;;
 			esac
 			;;
@@ -7106,7 +7136,7 @@ GuessSoCbySignature() {
 GetCPUSignature() {
 	case ${CPUArchitecture} in
 		arm*|aarch*|riscv*|mips*|loongarch*)
-			sed -e '1,/^ CPU/ d' -e 's/Cortex-//' <<<"${CPUTopology}" | while read ; do
+			sed -e '1,/^ CPU/ d' -e 's/Cortex-//' -e 's/HiSilicon-//' <<<"${CPUTopology}" | while read ; do
 				echo -e "$(awk -F" " '{print $2$3$6$8$9$10}' <<<"${REPLY}" | sed -e 's/-//g' -e 's/\///g')\c"
 			done
 			;;

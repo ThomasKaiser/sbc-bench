@@ -5915,11 +5915,11 @@ GuessSoCbySignature() {
 							*allwinner*)
 								# 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 								case "${DTCompatible}" in
-									*h618*|*orangepi-zero3*)
+									*h618*|*orangepi-zero3*|*orangepi-zero2w*)
 										echo "Allwinner H618"
 										;;
 									*h616*)
-										echo "Allwinner H616/H313"
+										echo "Allwinner H616/H313/H618"
 										;;
 									*h313*)
 										echo "Allwinner H313"
@@ -8036,6 +8036,14 @@ CheckKernelVersion() {
 					;;
 				*T-Head*)
 					PrintBSPWarning T-Head
+					;;
+			esac
+			;;
+		"5.15.119")
+			# New Amlogic SDK released with 5.15.119, supports at least T7, S4, SM1 and G12B
+			case ${GuessedSoC} in
+				*Amlogic*)
+					PrintBSPWarning Amlogic
 					;;
 			esac
 			;;

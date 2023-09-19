@@ -4948,7 +4948,8 @@ GuessARMSoC() {
 	# rockchip-cpuinfo cpuinfo: SoC            : 35662000 --> EmbedFire LubanCat-Zero, RK3566 BOX DEMO V10 ANDROID Board, Rock 3C
 	# rockchip-cpuinfo cpuinfo: SoC            : 35681000 --> only early RK3568 devices showed this silicon revision (e.g. Firefly RK3568-ROC-PC/AIO-3568J)
 	# rockchip-cpuinfo cpuinfo: SoC            : 35682000 --> RK3568-ROC-PC, NanoPi R5S, ODROID-M1, Mrkaio M68S, OWLVisionTech rk3568 opc Board, Radxa ROCK3A,
-	#                                                         Rockemd R68K 2.5G, Hinlink H68K, Magewell Pro Convert NDI to AIO 4K Gen2, AIO-3568J, Forlinx OK3568-C
+	#                                                         Rockemd R68K 2.5G, Hinlink H68K, Magewell Pro Convert NDI to AIO 4K Gen2, AIO-3568J, Forlinx OK3568-C,
+	#                                                         Smartfly YY3568 Board, CPdevice Spring2 Plus Board
 	# rockchip-cpuinfo cpuinfo: SoC            : 35880000 --> 9Tripod X3588S Board, Firefly ITX-3588J HDMI(Linux), Firefly ROC-RK3588S-PC HDMI(Linux),
 	#                                                         FriendlyElec NanoPC-T6, FriendlyElec NanoPi R6C, FriendlyElec NanoPi R6S, HINLINK OWL H88K Board,
 	#                                                         Khadas Edge2, Mekotronics R58X-4G (RK3588 EDGE LP4x V1.2 BlueBerry Board), Mixtile Blade 3 v1.0.1,
@@ -4957,7 +4958,7 @@ GuessARMSoC() {
 	#                                                         Shaggy013 LP4x V1.2 H96_Max_v58 Board, Rockchip RK3588 EVB4 LP4 V10 Board, Rockchip RK3588 EVB7
 	#                                                         LP4 V10 Board, Rockchip RK3588-EVB-KS-T1 LP4 V10 Board, Rockchip RK3588 MINI PC V11 Board
 	#                                                         Rockchip RK3588 OWL H88K Board, Rockchip RK3588 TOYBRICK X10 Board
-	# rockchip-cpuinfo cpuinfo: SoC            : 35881000 --> Orange Pi 5, Orange Pi 5B, Orange Pi 5 Plus, Firefly ROC-RK3588S-PC V12 MIPI
+	# rockchip-cpuinfo cpuinfo: SoC            : 35881000 --> Orange Pi 5, Orange Pi 5B, Orange Pi 5 Plus, Firefly ROC-RK3588S-PC V12 MIPI, Firefly AIO-3588Q MIPI101
 	#
 	# RK 'open source' SoCs according to https://github.com/rockchip-linux/kernel/blob/develop-5.10/drivers/soc/rockchip/rockchip-cpuinfo.c (at least RV1108 and RK3588/RK3588s missing)
 	# PX30, PX30S, RK3126, RK3126B, RK3126C, RK3128, RK3288, RK3288W, RK3308, RK3308B, RK3308BS, RK3566, RK3568, RV1103, RV1106, RV1109 and RV1126
@@ -5918,11 +5919,14 @@ GuessSoCbySignature() {
 									*h618*|*orangepi-zero3*|*orangepi-zero2w*)
 										echo "Allwinner H618"
 										;;
-									*h616*)
-										echo "Allwinner H616/H313/H618"
+									*orangepi-zero2*)
+										echo "Allwinner H616"
 										;;
 									*h313*)
 										echo "Allwinner H313"
+										;;
+									*h616*)
+										echo "Allwinner H616/H313/H618"
 										;;
 									*pine-h64*)
 										echo "Allwinner H6"
@@ -6245,6 +6249,10 @@ GuessSoCbySignature() {
 			# There also seems to be a newer Kirin 990 version with Cortex-A76 / r3p1 cores
 			# https://browser.geekbench.com/v5/cpu/compare/21007796?baseline=18843090
 			echo "HiSilicon Kirin 990"
+			;;
+		*TaiShanv120*A55*)
+			# HiSilicon Kirin 990A, 4 x Cortex-A55 + 4 x TaiShan v120 Lite
+			echo "HiSilicon Kirin 990A"
 			;;
 		*A55r?p*A55r?p*A55r?p*A55r?p*A77r1p0*A77r1p0*A77r1p0*A77r1p0)
 			# HiSilicon Kirin 9000, 4 x Cortex-A55 + 4 x Cortex-A77 / r1p0 / https://browser.geekbench.com/v6/cpu/2493425
@@ -6833,6 +6841,10 @@ GuessSoCbySignature() {
 					echo "Kunpeng 920 quad core"
 					;;
 			esac
+			;;
+		*TaiShanv120*)
+			# HiSilicon Kunpeng 930
+			echo "Kunpeng 930"
 			;;
 		*A72r0p2*A72r0p2*A53r0p4*A53r0p4)
 			# Socionext UniPhier LD20: 2 x Cortex-A72 / r0p2 + 2 x Cortex-A53 / r0p4 / https://lore.kernel.org/all/CAM-ziR6N36F-2C7wHLEa4rUD1BpN+pAyMtnjCS9NWJWACZnwQA@mail.gmail.com/T/

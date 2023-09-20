@@ -480,7 +480,7 @@ GetARMCore() {
 	48/d02:TaiShan v120
 	48/d40:HiSilicon-A76
 	48/d41:HiSilicon-A77
-	48/d42:HiSilicon-A78AE
+	48/d42:HiSilicon-A710
 	49:Infineon
 	4d:Motorola/Freescale
 	4e:NVidia
@@ -4895,7 +4895,7 @@ GuessARMSoC() {
 	#      Cortex-A77 / r1p0: HiSilicon Kirin 9000, Qualcomm QRB5165 (Snapdragon 865)
 	#      Cortex-A78 / r1p0: MediaTek Genio 1200, Qualcomm SM8350 (Snapdragon 888)
 	#    Cortex-A78AE / r0p1: Nvidia Jetson Orin NX / AGX Orin
-	# HiSilicon-A78AE / r2p2: HiSilicon Kirin 9000s
+	#  HiSilicon-A710 / r2p2: HiSilicon Kirin 9000s
 	#     Cortex-A78C / r0p0: Qualcomm Snapdragon 8cx Gen 3
 	#       Cortex-X1 / r1p0: Google Tensor G1, Qualcomm SM8350 (Snapdragon 888)
 	#      Cortex-X1C / r0p0: Qualcomm Snapdragon 8cx Gen 3
@@ -6239,34 +6239,33 @@ GuessSoCbySignature() {
 			esac
 			;;
 		*A55r1p0*A55r1p0*A55r1p0*A55r1p0*A76r1p0*A76r1p0*A76r1p0*A76r1p0)
-			# HiSilicon Kirin 980, 4 x Cortex-A55 / r1p0 + 4 x Cortex-A76 / r1p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp
+			# HiSilicon Kirin 980, 4 x Cortex-A55 / r1p0 + 4 x HiSilicon-A76 / r1p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp
 			# The big cores are marketed/documented as Cortex-A76 by HiSilicon but instead of the usual ARM core ID 0x41/0xd0b they have 0x48/0xd40
 			echo "HiSilicon Kirin 980"
 			;;
 		*A55r1p0*A55r1p0*A55r1p0*A55r1p0*A76r3p0*A76r3p0*A76r3p0*A76r3p0|*A55r1p0*A55r1p0*A55r1p0*A55r1p0*A76r3p1*A76r3p1*A76r3p1*A76r3p1)
-			# HiSilicon Kirin 990, 4 x Cortex-A55 / r1p0 + 4 x Cortex-A76 / r3p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp asimdrdm lrcpc dcpop asimddp
+			# HiSilicon Kirin 990, 4 x Cortex-A55 / r1p0 + 4 x HiSilicon-A76 / r3p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp asimdrdm lrcpc dcpop asimddp
 			# The big cores are marketed/documented as Cortex-A76 by HiSilicon but instead of the usual ARM core ID 0x41/0xd0b they have 0x48/0xd40
-			# There also seems to be a newer Kirin 990 version with Cortex-A76 / r3p1 cores
+			# There also seems to be a newer Kirin 990 version with HiSilicon-A76 / r3p1 cores
 			# https://browser.geekbench.com/v5/cpu/compare/21007796?baseline=18843090
 			echo "HiSilicon Kirin 990"
 			;;
-		*TaiShanv120*A55*)
+		*A55*TaiShanv120*)
 			# HiSilicon Kirin 990A, 4 x Cortex-A55 + 4 x TaiShan v120 Lite
 			echo "HiSilicon Kirin 990A"
 			;;
 		*A55r?p*A55r?p*A55r?p*A55r?p*A77r1p0*A77r1p0*A77r1p0*A77r1p0)
 			# HiSilicon Kirin 9000, 4 x Cortex-A55 + 4 x Cortex-A77 / r1p0 / https://browser.geekbench.com/v6/cpu/2493425
-			# https://browser.geekbench.com/v5/cpu/compare/21007796?baseline=18843090
 			echo "HiSilicon Kirin 9000"
 			;;
-		*A510r1p1*A510r1p1*A510r1p1*A510r1p1*A78AEr2p2*A78AEr2p2*A78AEr2p2*TaiShanv120r2p2|*A510r1p1*A510r1p1*A510r1p1*A510r1p1*A78AEr2p2*A78AEr2p2*A78AEr2p2*A78AEr2p2*A78AEr2p2*A78AEr2p2*TaiShanv120r2p2*TaiShanv120r2p2)
-			# HiSilicon Kirin 9000s: 4 x Cortex-A510 / r1p1 + 3 x Cortex-A78AE / r2p2 + 1 x TaiShan v120 / r2p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 sve asimdfhm dit ilrcpc flagm ssbs sb pacg dcpodp flagm2 frint svei8mm i8mm bti
+		*A510r1p1*A510r1p1*A510r1p1*A510r1p1*A710r2p2*A710r2p2*A710r2p2*TaiShanv120r2p2|*A510r1p1*A510r1p1*A510r1p1*A510r1p1*A710r2p2*A710r2p2*A710r2p2*A710r2p2*A710r2p2*A710r2p2*TaiShanv120r2p2*TaiShanv120r2p2)
+			# HiSilicon Kirin 9000s: 4 x Cortex-A510 / r1p1 + 3 x HiSilicon-A710 / r2p2 + 1 x TaiShan v120 / r2p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 sve asimdfhm dit ilrcpc flagm ssbs sb pacg dcpodp flagm2 frint svei8mm i8mm bti
 			# https://youtu.be/SCRIFe0uaac?feature=shared&t=32
-			# The 'A78AE' like cores use HiSilicon's own 48/d42 ID and all the big cores are SMT capable
+			# The 'A710' like cores use HiSilicon's own 48/d42 ID and all the big cores are SMT capable
 			echo "HiSilicon Kirin 9000s"
 			;;
 		*A55r1p0*A55r1p0*A55r1p0*A55r1p0*A55r1p0*A55r1p0*A76r3p0*A76r3p0)
-			# HiSilicon Kirin 810, 6 x Cortex-A55 / r1p0 + 2 x Cortex-A76 / r3p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp asimdrdm lrcpc dcpop asimddp
+			# HiSilicon Kirin 810, 6 x Cortex-A55 / r1p0 + 2 x HiSilicon-A76 / r3p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp asimdrdm lrcpc dcpop asimddp
 			# The big cores are marketed/documented as Cortex-A76 by HiSilicon but instead of the usual ARM core ID 0x41/0xd0b they have 0x48/0xd40
 			echo "HiSilicon Kirin 810"
 			;;
@@ -6815,36 +6814,36 @@ GuessSoCbySignature() {
 			echo "$(( ${CPUCores} / 8 )) x APM 883208-X1"
 			;;
 		*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*A72r0p2*)
-			# Kunpeng 916 in Huawei Taishan 100 2280 server: 2 x 32 x Cortex-A72 / r0p2 / https://gist.github.com/expipiplus1/bd48761b119e867d3c9ddabc2f677374
-			echo "$(( ${CPUCores} / 32 )) x Kunpeng 916"
+			# HiSilicon Kunpeng 916 in Huawei Taishan 100 2280 server: 2 x 32 x Cortex-A72 / r0p2 / https://gist.github.com/expipiplus1/bd48761b119e867d3c9ddabc2f677374
+			echo "$(( ${CPUCores} / 32 )) x HiSilicon Kunpeng 916"
 			;;
 		*TaiShanv110r1p0*)
-			# Kunpeng 920-6426 in Huawei Taishan 200 2280 V2 server: 2 x 64 x TaiShan v110 / r1p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma dcpop asimddp asimdfhm ssbs
+			# HiSilicon Kunpeng 920-6426 in Huawei Taishan 200 2280 V2 server: 2 x 64 x TaiShan v110 / r1p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma dcpop asimddp asimdfhm ssbs
 			# https://www.spec.org/cpu2017/results/res2020q2/cpu2017-20200529-22564.html / https://en.wikichip.org/wiki/hisilicon/microarchitectures/taishan_v110
 			case $(awk -F":" '/ per socket/ {print $2}' <<<"${LSCPU}" | tr -c -d '[:digit:]') in
 				32)
-					echo "$(( ${CPUCores} / 32 )) x Kunpeng 920-3226"
+					echo "$(( ${CPUCores} / 32 )) x HiSilicon Kunpeng 920-3226"
 					;;
 				48)
-					echo "$(( ${CPUCores} / 48 )) x Kunpeng 920-4826"
+					echo "$(( ${CPUCores} / 48 )) x HiSilicon Kunpeng 920-4826"
 					;;
 				64)
-					echo "$(( ${CPUCores} / 64 )) x Kunpeng 920-6426"
+					echo "$(( ${CPUCores} / 64 )) x HiSilicon Kunpeng 920-6426"
 					;;
 				24)
-					echo "Kunpeng 920 3211K"
+					echo "HiSilicon Kunpeng 920 3211K"
 					;;
 				8)
-					echo "Kunpeng 920 2249K"
+					echo "HiSilicon Kunpeng 920 2249K"
 					;;
 				4)
-					echo "Kunpeng 920 quad core"
+					echo "HiSilicon Kunpeng 920 quad core"
 					;;
 			esac
 			;;
 		*TaiShanv120*)
-			# HiSilicon Kunpeng 930
-			echo "Kunpeng 930"
+			# HiSilicon HiSilicon Kunpeng 930
+			echo "HiSilicon Kunpeng 930"
 			;;
 		*A72r0p2*A72r0p2*A53r0p4*A53r0p4)
 			# Socionext UniPhier LD20: 2 x Cortex-A72 / r0p2 + 2 x Cortex-A53 / r0p4 / https://lore.kernel.org/all/CAM-ziR6N36F-2C7wHLEa4rUD1BpN+pAyMtnjCS9NWJWACZnwQA@mail.gmail.com/T/

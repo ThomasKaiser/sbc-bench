@@ -584,6 +584,7 @@ GetARMCore() {
 	70/661:Phytium FTC661
 	70/662:Phytium FTC662
 	70/663:Phytium FTC663
+	70/862:Phytium FTC862
 	c0:Ampere
 	c0/ac3:Ampere Ampere-1
 	c0/ac4:Ampere Ampere-1a" | cut -f2 -d:
@@ -4838,7 +4839,7 @@ GuessARMSoC() {
 	#       Cortex-A5 / r0p1: Actions ATM8029, Amlogic S805, Qualcomm MSM8625Q
 	#       Cortex-A7 / r0p1: ARM Versatile Express V2P-CA15-CA7
 	#       Cortex-A7 / r0p2: MediaTek MT6589/MT6588
-	#       Cortex-A7 / r0p3: Allwinner A31, MediaTek MT6572/MT6580/MT6582/MT6589/MT7623/MT8127/MT8135, Qualcomm MSM8610 (Snapdragon 200) / MSM8226/MSM8926 (Snapdragon 400), Samsung Exynos 5422
+	#       Cortex-A7 / r0p3: Allwinner A31/A31s, MediaTek MT6572/MT6580/MT6582/MT6589/MT7623/MT8127/MT8135, Qualcomm MSM8610 (Snapdragon 200) / MSM8226/MSM8926 (Snapdragon 400), Samsung Exynos 5422
 	#       Cortex-A7 / r0p4: Allwinner A20, Exynos 5430, Mediatek MT6592
 	#       Cortex-A7 / r0p5: Allwinner A33/A50/MR133/R311/A83T/H2+/H3/H8/R16/R328/R40/S3/T113/V3/V3s/V40/V853, Broadcom BCM2836, Freescale/NXP i.MX7D/i.MX6 ULL, HiSilicon Hi351x/Hi3796M-V100/Hi3798M-V100, HiSilicon Kirin 920/925/928, MediaTek MT6595, Microchip SAMA7G54, Qualcomm MDM9607/MSM8909, Renesas RZ/N1, Rockchip RK3126/RK3126B/RK3126C/RK3128/RK3228A/RK3229/RV1108/RV1109/RV1126, SigmaStar SSD201/SSD202D, Spreadtrum SC7731/SC8830, STMicroelectronics STM32MP157
 	#       Cortex-A8 / r1p3: TI OMAP3530/AM3703
@@ -5028,8 +5029,8 @@ GuessARMSoC() {
 	# soc soc0: Amlogic Meson SM1 (Unknown) Revision 2b:b (18:2) Detected <-- Shenzhen Amediatech Technology Co. Ltd X96 Air / HK1 Box/Vontar X3
 	# soc soc0: Amlogic Meson SM1 (Unknown) Revision 2b:b (40:2) Detected <-- Khadas VIM3L
 	# soc soc0: Amlogic Meson SM1 (Unknown) Revision 2b:c (81:2) Detected <-- AMedia X96 Max+
-	# Amlogic Meson SC2 (S905X4/C2) Revision 32:b (2:2) Detected <-- Akari AX810
-	# Amlogic Meson SC2 (S905X4/C2) Revision 32:d (2:1) Detected <-- Ugoos X4
+	# soc soc0: Amlogic Meson SC2 (S905X4/C2) Revision 32:b (2:2) Detected <-- Akari AX810 / Advan AT01
+	# soc soc0: Amlogic Meson SC2 (S905X4/C2) Revision 32:d (2:1) Detected <-- Ugoos X4
 	#
 	# With T7/A311D2 the string 'soc soc0:' is missing in Amlogic's 5.4 BSP kernel, instead it's
 	# just 'Amlogic Meson T7 (A311D2) Revision 36:b (1:3) Detected' in dmesg output. 5.4 BSP
@@ -5084,7 +5085,7 @@ GuessARMSoC() {
 	# CPU: ARMv7 Processor [410fc051] revision 1 (ARMv7), cr=10c5387d  <-  Cortex-A5 / r0p1 / Amlogic S805
 	# CPU: ARMv7 Processor [410fc073] revision 3 (ARMv7), cr=10c5387d  <-  Cortex-A7 / r0p3 / Exynos 5422
 	# CPU: ARMv7 Processor [410fc072] revision 2 (ARMv7), cr=10c5387d  <-  Cortex-A7 / r0p2 / MediaTek MT6589/TMK6588
-	# CPU: ARMv7 Processor [410fc073] revision 3 (ARMv7), cr=50c5387d  <-  Cortex-A7 / r0p3 / Banana Pi M2 (Allwinner A31), Odroid XU4 (Exynos 5422)
+	# CPU: ARMv7 Processor [410fc073] revision 3 (ARMv7), cr=50c5387d  <-  Cortex-A7 / r0p3 / Banana Pi M2 (Allwinner A31s), Odroid XU4 (Exynos 5422)
 	# CPU: ARMv7 Processor [410fc074] revision 4 (ARMv7), cr=10c5387d  <-  Cortex-A7 / r0p4 / Allwinner A20: Banana Pi
 	# CPU: ARMv7 Processor [410fc074] revision 4 (ARMv7), cr=50c5387d  <-  Cortex-A7 / r0p4 / Allwinner A20: Banana Pi, Banana Pi Pro, Cubieboard 2, Cubietruck, Lamobo R1, Lime 2, OLinuXino-A20, pcDuino3 Nano
 	# CPU: ARMv7 Processor [410fc075] revision 5 (ARMv7), cr=10c5387d  <-  Cortex-A7 / r0p5 / Beelink X2, Orange Pi+ 2E, Orange Pi One, Orange Pi PC, Orange Pi PC +, Orange Pi Zero, rk322x-box, BCM2836 (BCM2709), Generic RK322x TV Box board, Nexbox A95X R1, Rockchip RV1108 MINIEVB V10, Firefly Core-RV1126-JD4 Board
@@ -6631,24 +6632,12 @@ GuessSoCbySignature() {
 			# MT6589: 4 x Cortex-A7 / r0p2 / https://gist.github.com/MaTBeu4uk/3a1bea6bf8c658829622f3ecbcf4b7eb which is in conflict to other sources who claim Cortex-A7 / r0p3
 			echo "Mediatek MT6589"
 			;;
-		*A7r0p3*A7r0p3)
-			# Mediatek MT6572: 2 x Cortex-A7 / r0p3 / swp half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpv4 idiva idivt
-			# or Qualcomm MSM8610 (Snapdragon 200): 2 x Cortex-A7 / r0p3 / swp half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt 
-			case "${DTCompatible}" in
-				*mt6572*)
-					echo "Mediatek MT6572"
-					;;
-				*)
-					echo "Qualcomm MSM8610 (Snapdragon 200)"
-					;;
-			esac
-			;;
 		*A7r0p3*A7r0p3*A15r3p2*A15r3p2)
 			# MT8135: 2 x Cortex-A7 / r0p3 + 2 x Cortex-A15 / r3p2 / swp half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpv4 idiva idivt
 				echo "Mediatek MT8135"
 				;;
 		*A7r0p3*A7r0p3*A7r0p3*A7r0p3)
-			# Allwinner A31: 4 x Cortex-A7 / r0p3 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
+			# Allwinner A31/A31s: 4 x Cortex-A7 / r0p3 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
 			# or MT7623: 4 x Cortex-A7 / r0p3 / half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
 			# or MT6580: 4 x Cortex-A7 / r0p3 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae
 			# or MT6582: 4 x Cortex-A7 / r0p3 / swp half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpv4 idiva idivt
@@ -6674,8 +6663,23 @@ GuessSoCbySignature() {
 				*msm8226*|*msm8926*|*400*)
 					echo "Qualcomm MSM8226/MSM8926 (Snapdragon 400)"
 					;;
+				*a31s*)
+					echo "Allwinner A31s"
+					;;
 				*)
 					echo "Allwinner A31"
+					;;
+			esac
+			;;
+		*A7r0p3*A7r0p3)
+			# Mediatek MT6572: 2 x Cortex-A7 / r0p3 / swp half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpv4 idiva idivt
+			# or Qualcomm MSM8610 (Snapdragon 200): 2 x Cortex-A7 / r0p3 / swp half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt
+			case "${DTCompatible}" in
+				*mt6572*)
+					echo "Mediatek MT6572"
+					;;
+				*)
+					echo "Qualcomm MSM8610 (Snapdragon 200)"
 					;;
 			esac
 			;;

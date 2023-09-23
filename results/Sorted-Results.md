@@ -60,9 +60,9 @@
 | [Khadas VIM3 (Amlogic A311D)](http://ix.io/1MFD) | 2200/1800 MHz | 4.9 | Bionic arm64 | **8600** | 2026 | 1256910 | 4980 | 9300 | 13.12 |
 | [Celeron N4100](http://ix.io/1uTS) | 2300/1100 MHz | 4.15 | Bionic amd64 | **8510** | 2222 | 669350 | 4750 | 5240 | 18.33 |
 | [ODROID-N2 (Amlogic S922X)](http://ix.io/1BsF) | 1800/1900 MHz | 4.9 | Bionic arm64 | **8140** | 1669 | 1024680 | 4120 | 8610 | 11.39 |
+| [Hetzner CAX11 (Ampere Altra)](http://ix.io/4HdL) | 3000 MHz | 5.15 | Jammy arm64 | **8060** | 3842 | 1705600 | 11250 | 47670 | 11.44 |
 | [Ryzen R1606G](http://ix.io/2tQQ) | 2600/1400 MHz | 5.4 | Focal amd64 | **7970** | 2854 | 700780 | 8230 | 5970 | 16.45 |
 | [Hugsun X99 (RK3399)](http://ix.io/2ICt) | 2088/1800 MHz | 5.9 | Focal arm64 | **7710** | 1927 | 1184306 | 2270 | 5970 | - |
-| [Hetzner CAX11 (Ampere Altra)](http://ix.io/4Hdp) | 3000 MHz | 5.15 | Ubuntu 22.04.3 LTS arm64 | **7660** | 3718 | 1705880 | 11010 | 43630 | 11.44 |
 | [Pentium J4205](http://ix.io/1m5t) | 2560/1500 MHz | 4.17 | Stretch amd64 | **7570** | 2146 | 480640 | 5070 | 5170 | 18.82 |
 | [NanoPC T3+ (Nexell S5P6818)](http://ix.io/1iRJ) | 1400 MHz | 4.14 | Bionic arm64 | **7480** | 1053 | 652600 | 1440 | 4540 | 10.99 |
 | [Pentium N4200](http://ix.io/1ngq) | 2560/1100 MHz | 4.14 | Bionic amd64 | **7469** | 1976 | 468008 | 4682 | 4997 | 18.75 |
@@ -152,6 +152,7 @@
 | [Orange Pi Zero 3 (Allwinner H618)](http://ix.io/4CPF) | 1510 MHz | 6.1 | Jammy arm64 | **4020** | 1165 | 705330 | 1510 | 6010 | 6.02 |
 | [Khadas VIM1S (S905Y4)](http://ix.io/4bbv) | 2000 MHz | 5.4 | Jammy arm64 | **4000** | 1148 | 436540 | 1970 | 7530 | - |
 | [Star64 (JH7110)](http://ix.io/4tjq) | 1500 MHz | 5.15 | Sid riscv64 | **3970** | 1175 | 24990 | 820 | 770 | - |
+| [Orange Pi Zero 2W (Allwinner H618)](http://ix.io/4Hd0) | 1510 MHz | 6.1 | Jammy arm64 | **3920** | 1167 | 705660 | 1510 | 6010 | 6.02 |
 | [x5-Z8300](http://ix.io/1lgD) | 1420 MHz | 4.9 | Stretch amd64 | **3900** | 950 | 178010 | 2380 | 2380 | 7.81 |
 | [Tronsmart MXIII Plus (S812)](http://ix.io/3S5U) | 1560 MHz | 5.10 | Buster armhf | **3880** | 1113 | 42570 | 1470 | 3430 | - |
 | [NanoPi K2 (Amlogic S905)](http://ix.io/3Qve) | 1480 MHz | 5.10 | Bullseye arm64 | **3880** | 1154 | 51490 | 1850 | 3790 | - |
@@ -243,8 +244,8 @@
 | [Intel N95](http://ix.io/4xwq) | 3400 MHz | 5.15 | Jammy amd64 | 13070 | **3993** | 1232880 | 9710 | 8730 | 34.60 |
 | [Qualcomm QRB5165](http://ix.io/49kx) | 2840/2410/1790 MHz | 4.19 | Focal arm64 | 18860 | **3898** | 1598490 | 14470 | 23910 | 25.56 |
 | [Ampere Altra M96-28](http://ix.io/4zGI) | 2800 MHz | 5.15 | Jammy arm64 | 249380 | **3858** | 1596110 | 10130 | 44750 | - |
+| [Hetzner CAX11 (Ampere Altra)](http://ix.io/4HdL) | 3000 MHz | 5.15 | Jammy arm64 | 8060 | **3842** | 1705600 | 11250 | 47670 | 11.44 |
 | [Ampere Altra Q80-26](http://ix.io/4zkJ) | 2600 MHz | 5.15 | Jammy arm64 | 214390 | **3748** | 1482190 | 11685 | 41560 | 316.50 |
-| [Hetzner CAX11 (Ampere Altra)](http://ix.io/4Hdp) | 3000 MHz | 5.15 | Ubuntu 22.04.3 LTS arm64 | 7660 | **3718** | 1705880 | 11010 | 43630 | 11.44 |
 | [Pentium N6005](http://ix.io/4BtC) | 3300/2000 MHz | 5.15 | Jammy amd64 | 11510 | **3369** | 923550 | 9650 | 10280 | 22.18 |
 | [Jetson AGX Orin](http://ix.io/4ax9) | 2200 MHz | 5.10 | Focal arm64 | 39450 | **3187** | 1242940 | 10600 | 30350 | 59.96 |
 | [Radxa ROCK 5B (RK3588)](http://ix.io/41BH) | 2350/1830 MHz | 5.10 | Focal arm64 | 16450 | **3146** | 1337540 | 10830 | 29220 | 25.31 |
@@ -368,6 +369,7 @@
 | [HummingBoard Pulse i.MX8M Quad](http://ix.io/27FC) | 1500 MHz | 4.19 | Buster arm64 | 4330 | **1201** | 695540 | 2230 | 9900 | - |
 | [VisionFive V2 (JH7110)](http://ix.io/4xOY) | 1500 MHz | 5.15 | Sid riscv64 | 4180 | **1197** | 25080 | 880 | 770 | - |
 | [Star64 (JH7110)](http://ix.io/4tjq) | 1500 MHz | 5.15 | Sid riscv64 | 3970 | **1175** | 24990 | 820 | 770 | - |
+| [Orange Pi Zero 2W (Allwinner H618)](http://ix.io/4Hd0) | 1510 MHz | 6.1 | Jammy arm64 | 3920 | **1167** | 705660 | 1510 | 6010 | 6.02 |
 | [Orange Pi Zero 3 (Allwinner H618)](http://ix.io/4CPF) | 1510 MHz | 6.1 | Jammy arm64 | 4020 | **1165** | 705330 | 1510 | 6010 | 6.02 |
 | [NanoPi K2 (Amlogic S905)](http://ix.io/3Qve) | 1480 MHz | 5.10 | Bullseye arm64 | 3880 | **1154** | 51490 | 1850 | 3790 | - |
 | [Khadas VIM1S (S905Y4)](http://ix.io/4bbv) | 2000 MHz | 5.4 | Jammy arm64 | 4000 | **1148** | 436540 | 1970 | 7530 | - |
@@ -456,7 +458,7 @@
 | Device / details | Clockspeed | Kernel | Distro | 7-zip multi | 7-zip single | *AES* | memcpy | memset | kH/s |
 | ----- | :--------: | :----: | :----: | ----: | ------: | ------: | -----: | -----: | ---: |
 | [Huaqin P6410<br />(2 x Ampere Altra Max)](http://ix.io/4kiu) | 3000 MHz | 5.4 | Focal arm64 | 430860 | 4211 | **1710010** | 13310 | 47970 | - |
-| [Hetzner CAX11 (Ampere Altra)](http://ix.io/4Hdp) | 3000 MHz | 5.15 | Ubuntu 22.04.3 LTS arm64 | 7660 | 3718 | **1705880** | 11010 | 43630 | 11.44 |
+| [Hetzner CAX11 (Ampere Altra)](http://ix.io/4HdL) | 3000 MHz | 5.15 | Jammy arm64 | 8060 | 3842 | **1705600** | 11250 | 47670 | 11.44 |
 | [Qualcomm Snapdragon 8cx Gen 3](http://ix.io/4xwT) | 3000/2440 MHz | 6.3 | Lunar arm64 | 35370 | 4312 | **1686160** | 17500 | 41780 | 42.76 |
 | [Qualcomm Snapdragon 8cx Gen 3 (WSL2)](http://ix.io/4kEp) | 2980/? MHz | 5.15 | Jammy arm64 | 33600 | 4789 | **1679480** | 21010 | 41540 | 50.65 |
 | [Qualcomm QRB5165](http://ix.io/49kx) | 2840/2410/1790 MHz | 4.19 | Focal arm64 | 18860 | 3898 | **1598490** | 14470 | 23910 | 25.56 |
@@ -544,6 +546,7 @@
 | [Nintendo Switch (Tegra X1)](http://ix.io/3Di2) | 2060 MHz | 4.9 | Bionic arm64 | 6720 | 1901 | **746680** | 2370 | 3670 | 9.25 |
 | [Jetson Nano](http://ix.io/3Ufc) | 2000 MHz | 4.9 | Bionic arm64 | 6260 | 1977 | **717500** | 4100 | 11760 | 8.72 |
 | [Jetson Xavier NX](http://ix.io/3YWp) | 1890 MHz | 4.9 | Bionic arm64 | 13230 | 2201 | **706280** | 9190 | 18480 | - |
+| [Orange Pi Zero 2W (Allwinner H618)](http://ix.io/4Hd0) | 1510 MHz | 6.1 | Jammy arm64 | 3920 | 1167 | **705660** | 1510 | 6010 | 6.02 |
 | [Orange Pi Zero 3 (Allwinner H618)](http://ix.io/4CPF) | 1510 MHz | 6.1 | Jammy arm64 | 4020 | 1165 | **705330** | 1510 | 6010 | 6.02 |
 | [Orange Pi Zero 2 (Allwinner H616)](http://ix.io/4knM) | 1510 MHz | 4.9 | Buster arm64 | 3550 | 1067 | **703300** | 1190 | 2820 | 5.01 |
 | [Ryzen R1606G](http://ix.io/2tQQ) | 2600/1400 MHz | 5.4 | Focal amd64 | 7970 | 2854 | **700780** | 8230 | 5970 | 16.45 |
@@ -684,7 +687,7 @@
 | [Orange Pi 5 (RK3588)](http://ix.io/4D0a) | 2400/1800 MHz | 5.10 | Jammy arm64 | 16780 | 2689 | 1366590 | **12800** | 29900 | - |
 | [Ampere Altra Q80-26](http://ix.io/4zkJ) | 2600 MHz | 5.15 | Jammy arm64 | 214390 | 3748 | 1482190 | **11685** | 41560 | 316.50 |
 | [Intel N100](http://ix.io/4vxM) | 3400 MHz | 6.1 | Lunar amd64 | 14150 | 4073 | 1232790 | **11600** | 12270 | 36.24 |
-| [Hetzner CAX11 (Ampere Altra)](http://ix.io/4Hdp) | 3000 MHz | 5.15 | Ubuntu 22.04.3 LTS arm64 | 7660 | 3718 | 1705880 | **11010** | 43630 | 11.44 |
+| [Hetzner CAX11 (Ampere Altra)](http://ix.io/4HdL) | 3000 MHz | 5.15 | Jammy arm64 | 8060 | 3842 | 1705600 | **11250** | 47670 | 11.44 |
 | [Jetson Xavier AGX](http://ix.io/4ebH) | 2250 MHz | 4.9 | Bionic arm64 | 21590 | 2742 | 853250 | **10910** | 22520 | 26.57 |
 | [Khadas Edge2 (RK3588s)](http://ix.io/4a5U) | 2260/1800 MHz | 5.10 | Jammy arm64 | 16470 | 3096 | 1287490 | **10860** | 29110 | - |
 | [Radxa ROCK 5B (RK3588)](http://ix.io/41BH) | 2350/1830 MHz | 5.10 | Focal arm64 | 16450 | 3146 | 1337540 | **10830** | 29220 | 25.31 |
@@ -821,6 +824,7 @@
 | [NanoPi Fire3 (Nexell S5P6818)](http://ix.io/3ZxU) | 1400 MHz | 4.14 | Focal arm64 | 7350 | 1093 | 652640 | **1530** | 4590 | 11.18 |
 | [NanoPi Fire3 (Nexell S5P6818)](http://ix.io/1jiU) | 1380 MHz | 4.14 | Stretch arm64 | 7420 | 1038 | 645400 | **1520** | 4570 | 8.53 |
 | [Orange Pi Zero 3 (Allwinner H618)](http://ix.io/4CPF) | 1510 MHz | 6.1 | Jammy arm64 | 4020 | 1165 | 705330 | **1510** | 6010 | 6.02 |
+| [Orange Pi Zero 2W (Allwinner H618)](http://ix.io/4Hd0) | 1510 MHz | 6.1 | Jammy arm64 | 3920 | 1167 | 705660 | **1510** | 6010 | 6.02 |
 | [Tinkerboard (RK3288)](http://ix.io/1iSX) | 1730 MHz | 4.14 | Stretch armhf | 5350 | 1563 | 66600 | **1480** | 3900 | - |
 | [Tronsmart MXIII Plus (S812)](http://ix.io/3S5U) | 1560 MHz | 5.10 | Buster armhf | 3880 | 1113 | 42570 | **1470** | 3430 | - |
 | [NanoPC T3+ (Nexell S5P6818)](http://ix.io/1iRJ) | 1400 MHz | 4.14 | Bionic arm64 | 7480 | 1053 | 652600 | **1440** | 4540 | 10.99 |
@@ -897,8 +901,8 @@
 | ----- | :--------: | :----: | :----: | ----: | ------: | ------: | -----: | -----: | ---: |
 | [Apple M1 Pro](http://ix.io/443N) | 3030/2060 MHz | 5.18 | Gentoo 2.8 arm64 | 43800 | 5010 | 1064450 | 27110 | **71910** | 48.28 |
 | [Huaqin P6410<br />(2 x Ampere Altra Max)](http://ix.io/4kiu) | 3000 MHz | 5.4 | Focal arm64 | 430860 | 4211 | 1710010 | 13310 | **47970** | - |
+| [Hetzner CAX11 (Ampere Altra)](http://ix.io/4HdL) | 3000 MHz | 5.15 | Jammy arm64 | 8060 | 3842 | 1705600 | 11250 | **47670** | 11.44 |
 | [Ampere Altra M96-28](http://ix.io/4zGI) | 2800 MHz | 5.15 | Jammy arm64 | 249380 | 3858 | 1596110 | 10130 | **44750** | - |
-| [Hetzner CAX11 (Ampere Altra)](http://ix.io/4Hdp) | 3000 MHz | 5.15 | Ubuntu 22.04.3 LTS arm64 | 7660 | 3718 | 1705880 | 11010 | **43630** | 11.44 |
 | [Qualcomm Snapdragon 8cx Gen 3](http://ix.io/4xwT) | 3000/2440 MHz | 6.3 | Lunar arm64 | 35370 | 4312 | 1686160 | 17500 | **41780** | 42.76 |
 | [Ampere Altra Q80-26](http://ix.io/4zkJ) | 2600 MHz | 5.15 | Jammy arm64 | 214390 | 3748 | 1482190 | 11685 | **41560** | 316.50 |
 | [Qualcomm Snapdragon 8cx Gen 3 (WSL2)](http://ix.io/4kEp) | 2980/? MHz | 5.15 | Jammy arm64 | 33600 | 4789 | 1679480 | 21010 | **41540** | 50.65 |
@@ -973,6 +977,7 @@
 | [NanoPi NEO4 (RK3399)](http://ix.io/1p3T) | 2000/1500 MHz | 4.19 | Stretch arm64 | 6750 | 1814 | 1139850 | 2370 | **6110** | 8.84 |
 | [Quartz64-A (RK3566)](http://ix.io/4qJF) | 1890 MHz | 6.2 | Jammy arm64 | 4980 | 1457 | 884590 | 3240 | **6100** | 6.98 |
 | [Orange Pi Zero 3 (Allwinner H618)](http://ix.io/4CPF) | 1510 MHz | 6.1 | Jammy arm64 | 4020 | 1165 | 705330 | 1510 | **6010** | 6.02 |
+| [Orange Pi Zero 2W (Allwinner H618)](http://ix.io/4Hd0) | 1510 MHz | 6.1 | Jammy arm64 | 3920 | 1167 | 705660 | 1510 | **6010** | 6.02 |
 | [Ryzen R1606G](http://ix.io/2tQQ) | 2600/1400 MHz | 5.4 | Focal amd64 | 7970 | 2854 | 700780 | 8230 | **5970** | 16.45 |
 | [NanoPi R5S (RK3568)](http://ix.io/4jfZ) | 1960 MHz | 6.1 | Bullseye arm64 | 5030 | 1482 | 914340 | 2990 | **5970** | 7.33 |
 | [Hugsun X99 (RK3399)](http://ix.io/2ICt) | 2088/1800 MHz | 5.9 | Focal arm64 | 7710 | 1927 | 1184306 | 2270 | **5970** | - |
@@ -1123,7 +1128,7 @@
 | [Apple M1 Pro](http://ix.io/443N) | **3030/2060** MHz| 5.18 | Gentoo 2.8 arm64 | 43800 | 5010 | 1064450 | 27110 | 71910 | 48.28 |
 | [Qualcomm Snapdragon 8cx Gen 3](http://ix.io/4xwT) | **3000/2440** MHz| 6.3 | Lunar arm64 | 35370 | 4312 | 1686160 | 17500 | 41780 | 42.76 |
 | [Huaqin P6410<br />(2 x Ampere Altra Max)](http://ix.io/4kiu) | **3000** MHz| 5.4 | Focal arm64 | 430860 | 4211 | 1710010 | 13310 | 47970 | - |
-| [Hetzner CAX11 (Ampere Altra)](http://ix.io/4Hdp) | **3000** MHz| 5.15 | Ubuntu 22.04.3 LTS arm64 | 7660 | 3718 | 1705880 | 11010 | 43630 | 11.44 |
+| [Hetzner CAX11 (Ampere Altra)](http://ix.io/4HdL) | **3000** MHz| 5.15 | Jammy arm64 | 8060 | 3842 | 1705600 | 11250 | 47670 | 11.44 |
 | [Qualcomm Snapdragon 8cx Gen 3 (WSL2)](http://ix.io/4kEp) | **2980/?** MHz| 5.15 | Jammy arm64 | 33600 | 4789 | 1679480 | 21010 | 41540 | 50.65 |
 | [Celeron N5105](http://ix.io/3Qf7) | **2900/2000** MHz| 5.13 | Focal amd64 | 11450 | 3059 | 811760 | 7710 | 9290 | 21.79 |
 | [Qualcomm QRB5165](http://ix.io/49kx) | **2840/2410/1790** MHz| 4.19 | Focal arm64 | 18860 | 3898 | 1598490 | 14470 | 23910 | 25.56 |
@@ -1253,6 +1258,7 @@
 | [Tronsmart MXIII Plus (S812)](http://ix.io/3S5U) | **1560** MHz| 5.10 | Buster armhf | 3880 | 1113 | 42570 | 1470 | 3430 | - |
 | [TRONFY MXQ (Amlogic S805)](http://ix.io/3MiR) | **1536** MHz| 5.10 | Focal armhf | 3100 | 897 | 29080 | 980 | 2990 | - |
 | [Orange Pi Zero 3 (Allwinner H618)](http://ix.io/4CPF) | **1510** MHz| 6.1 | Jammy arm64 | 4020 | 1165 | 705330 | 1510 | 6010 | 6.02 |
+| [Orange Pi Zero 2W (Allwinner H618)](http://ix.io/4Hd0) | **1510** MHz| 6.1 | Jammy arm64 | 3920 | 1167 | 705660 | 1510 | 6010 | 6.02 |
 | [Orange Pi Zero 2 (Allwinner H616)](http://ix.io/4knM) | **1510** MHz| 4.9 | Buster arm64 | 3550 | 1067 | 703300 | 1190 | 2820 | 5.01 |
 | [Jetson Orin Nano](http://ix.io/4vy7) | **1510** MHz| 5.10 | Focal arm64 | 13650 | 2153 | 854400 | 6730 | 20240 | 20.68 |
 | [VisionFive V2 (JH7110)](http://ix.io/4xOY) | **1500** MHz| 5.15 | Sid riscv64 | 4180 | 1197 | 25080 | 880 | 770 | - |

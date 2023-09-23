@@ -34,7 +34,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [EspressoBin (Armada 3720)](http://ix.io/1lCe) | 1200 MHz | 4.18 | Stretch arm64 | 1630 | 869 | 544240 | 1000 | 2400 | 1.82 |
 | [H270-T70<br />(2 x ThunderX CN8890)](http://ix.io/3N5c) | 2000 Mhz | 5.16 | Sid arm64 | 107180 | 1826 | 340750 | 4180 | 17130 | - |
 | [Helios4<br />(Armada 388)](http://ix.io/1jCy) | 1600 MHz | 4.14 | Stretch armhf | 2210 | 1215 | 42500 &ast;98560 | 910 | 4840 | - |
-| [Hetzner CAX11 (Ampere Altra)](http://ix.io/4Hdp) | 3000 MHz | 5.15 | Ubuntu 22.04.3 LTS arm64 | 7660 | 3718 | 1705880 | 11010 | 43630 | 11.44 |
+| [Hetzner CAX11 (Ampere Altra)](http://ix.io/4HdL) | 3000 MHz | 5.15 | Jammy arm64 | 8060 | 3842 | 1705600 | 11250 | 47670 | 11.44 |
 | [Honeycomb LX2 (NXP LX2160A)](http://ix.io/3Y4f) | 2200 MHz | 5.16 | **Fedora 35 aarch64** | 30690 | 2288 | 1251710 | 5050 | 16220 | 46.09 |
 | [Huaqin P6410<br />(2 x Ampere Altra Max)](http://ix.io/4kiu) | 3000 MHz | 5.4 | Focal arm64 | 430860 | 4211 | 1710010 | 13310 | 47970 | - |
 | [Hugsun X99 (RK3399)](http://ix.io/2ICt) | 2088/1800 MHz | 5.9 | Focal arm64 | 7710 | 1927 | 1184306 | 2270 | 5970 | - |
@@ -114,6 +114,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Orange Pi Plus 2 (Allwinner H3)](http://ix.io/1iX4) | 1300 MHz | 4.14 | Stretch armhf | 2890 | 812 | 25250 | 830 | 3240 | - |
 | [Orange Pi Prime (Allwinner H5)](http://ix.io/2kTH) | 1370 MHz | 5.4 | Buster | 3590 | 984 | 637980 | 1180 | 3540 | - |
 | [Orange Pi Zero 2 (Allwinner H616)](http://ix.io/4knM) | 1510 MHz | 4.9 | Buster arm64 | 3550 | 1067 | 703300 | 1190 | 2820 | 5.01 |
+| [Orange Pi Zero 2W (Allwinner H618)](http://ix.io/4Hd0) | 1510 MHz | 6.1 | Jammy arm64 | 3920 | 1167 | 705660 | 1510 | 6010 | 6.02 |
 | [Orange Pi Zero 3 (Allwinner H618)](http://ix.io/4CPF) | 1510 MHz | 6.1 | Jammy arm64 | 4020 | 1165 | 705330 | 1510 | 6010 | 6.02 |
 | [Orange Pi 5 (RK3588)](http://ix.io/4D0a) | 2400/1800 MHz | 5.10 | Jammy arm64 | 16780 | 2689 | 1366590 | 12800 | 29900 | - |
 | [Phytium<br />FT-2000/4<br />(1 x SO-DIMM)](http://ix.io/4ioj) | 2600 MHz | 5.15 | Bullseye arm64 | 10020 | 2755 | 936740 | 3760 | 14540 | - |

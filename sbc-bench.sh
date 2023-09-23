@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.9.45
+Version=0.9.46
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -1973,7 +1973,7 @@ GetRelevantCPUClusters() {
 	local ClustersByCpufreqOrPackageIDs=($(GetCPUClusters))
 
 	if [ ${#ClusterConfigByCoreType[@]} -eq 1 -a ${#ClustersByCpufreqOrPackageIDs[@]} -ne 2 ]; then
-		NumaNodes=$(awk -F" " '/^NUMA node[0-9]/ {print $4}' <<<"${LSCPU}" | cut -f1 -d'-')
+		NumaNodes=$(awk -F" " '/^NUMA node[0-9]/ {print $4}' <<<"${LSCPU}" | cut -f1 -d'-' | cut -f1 -d',')
 		[ "X${NumaNodes}" = "X" ] && echo 0 || echo "${NumaNodes}"
 	elif [ ${#ClustersByCpufreqOrPackageIDs[@]} -lt ${#ClusterConfigByCoreType[@]} ] ; then
 		# SoC bring-up stage, different CPU clusters are not properly defined
@@ -4019,6 +4019,9 @@ SummarizeResults() {
 	BenchmarkDuration=$(( $(( ${BenchmarkFinishedTime} - ${BenchmarkStartTime} +59 )) / 60 ))
 	echo -e "\x08\x08 Done (${BenchmarkDuration} minutes elapsed).\n\007\007\007"
 
+	# recheck for aarch64 since for some SoC guesses measured clockspeeds are needed
+	[ "${CPUArchitecture}" = "aarch64" ] && GuessedSoC="$(GuessARMSoC)"
+
 	# only check for throttling in normal mode and not when plotting performance/mhz graphs
 	SwapNow="$(awk -F" " '{print $4}' </proc/swaps | grep -v -i Used | awk '{s+=$1} END {printf "%.0f", s}')"
 	[ ${SwapNow:-0} -gt ${SwapBefore:-0} ] && SwapWarning=" and swapping" || SwapWarning=""
@@ -4449,7 +4452,7 @@ ValidateResults() {
 			# only report 'No throttling' when cpufreq statistics are available and not
 			# running inside a VM/container
 			[ "X${VirtWhat}" = "X" -o "X${VirtWhat}" = "Xnone" ] && echo -e "${LGREEN}No throttling${NC}"
-		else
+		elif [ "${ThrottlingWarning}" != "" ]; then
 			# we need to check whether we're running in Geekbench or PTS mode since the
 			# cluster tests on CPUs with different core types end up with the CPUs remaining
 			# on lower clockspeeds for a fraction of time when bringing them back online
@@ -4567,7 +4570,7 @@ UploadResults() {
 
 	# Display benchmark results if not in PTS, GB or preview mode
 	if [ "X${MODE}" != "Xpts" -a "X${MODE}" != "Xgb" -a "X${REVIEWMODE}" != "Xtrue" ]; then
-		echo -e "${BOLD}Results validation:${NC}\n\n${IsValid}\n"
+		[ "X${IsValid}" != "X" ] && echo -e "${BOLD}Results validation:${NC}\n\n${IsValid}\n"
 		MemoryScores="$(awk -F" " '/^ libc / {print $2$4" "$5" "$6}' <${ResultLog} | grep -E 'memcpy|memset' | awk -F'MB/s' '{print $1"MB/s"}')"
 		CountOfMemoryScores=$(wc -l <<<"${MemoryScores}")
 		if [ ${#ClusterConfig[@]} -eq 1 -o $(( ${#ClusterConfig[@]} * 2 )) -ne ${CountOfMemoryScores} ]; then
@@ -4611,7 +4614,7 @@ UploadResults() {
 		esac
 		echo -e "\n${CompareURL}\n\nResults validation:\n\n${IsValid}"
 	elif [ "X${REVIEWMODE}" = "Xtrue" -a "X${NOTUNING}" != "Xyes" ]; then
-		echo -e "Results validation:\n\n${IsValid}"
+		[ "X${IsValid}" != "X" ] && echo -e "Results validation:\n\n${IsValid}"
 	fi
 	case ${UploadURL} in
 		http*)
@@ -6925,9 +6928,11 @@ GuessSoCbySignature() {
 			# reports smaller cache sizes for Ampere Altra. Measured clockspeeds should differ (2.5 GHz
 			# for AWS vs. 3/3+ GHz for Altra while reviews mentioned little less). Altra Max (Mystique)
 			# could be identified by its smaller L3 cache.
-			grep -q 'No cpufreq support available. Measured on cpu' ${ResultLog} && \
-				MeasuredClockspeed=$(awk -F": " '/No cpufreq support available. Measured on cpu/ {print $2}' <${ResultLog} | cut -f1 -d' ' | head -n 1) || \
-				MeasuredClockspeed=$(grep -A2 "^Checking cpufreq OPP" ${ResultLog} | awk -F" " '/Measured/ {print $5}' | sort -r | head -n1)
+			if [ -r "${ResultLog}" ]; then
+				grep -q 'No cpufreq support available. Measured on cpu' ${ResultLog} && \
+					MeasuredClockspeed=$(awk -F": " '/No cpufreq support available. Measured on cpu/ {print $2}' <${ResultLog} | cut -f1 -d' ' | head -n 1) || \
+					MeasuredClockspeed=$(grep -A2 "^Checking cpufreq OPP" ${ResultLog} | awk -F" " '/Measured/ {print $5}' | sort -r | head -n1)
+			fi
 			ProcessorInfo="$(dmidecode -t processor 2>/dev/null | grep -E -v -i "^#|^Handle|Serial|O.E.M.|1234567|SMBIOS|: Not |Unknown|OUT OF SPEC|00 00 00 00 00 00 00 00|: None")"
 			case ${ProcessorInfo} in
 				*Ampere*|*Altra*)
@@ -7361,7 +7366,7 @@ ProvideReviewInfo() {
 	unset SPACING
 	[ "X${RunBenchmarks}" = "XTRUE" ] && CheckClockspeedsAndSensors || echo -e "\x08\x08 Done.\nNow quickly examining OS, settings and hardware...\c"
 	# repeat SoC guessing after measuring CPU clockspeeds (some guesses depend on clockspeed)
-	[ "${CPUArchitecture}" = "x86_64" ] || GuessedSoC="$(GuessARMSoC)"
+	[ "${CPUArchitecture}" = "aarch64" ] && GuessedSoC="$(GuessARMSoC)"
 	[ "X${RunBenchmarks}" = "XTRUE" ] && ClockspeedsBefore="$(cat "${TempDir}/cpufreq" | sed -e 's/^/    /')"
 	[ "X${NOTUNING}" != "Xyes" -a "X${RunBenchmarks}" = "XTRUE" -a -f /sys/devices/system/cpu/cpufreq/policy0/scaling_governor ] && CheckTimeInState before
 	[ "X${RunBenchmarks}" = "XTRUE" ] && RunTinyMemBench

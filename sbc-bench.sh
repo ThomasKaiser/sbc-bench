@@ -4948,6 +4948,7 @@ GuessARMSoC() {
 	# https://www.cnx-software.com/2021/12/10/starfive-dubhe-64-bit-risc-v-core-12nm-2-ghz-processors/#comment-588823
 	#
 	# Recent Rockchip BSP kernels include something like this in dmesg output:
+	# rockchip-cpuinfo cpuinfo: SoC            : 35281000 --> Hlink H28K
 	# rockchip-cpuinfo cpuinfo: SoC            : 35661000 --> Quartz64, RK3566 EVB2 LP4X V10 Board, Firefly RK3566-ROC-PC
 	# rockchip-cpuinfo cpuinfo: SoC            : 35662000 --> EmbedFire LubanCat-Zero, RK3566 BOX DEMO V10 ANDROID Board, Rock 3C
 	# rockchip-cpuinfo cpuinfo: SoC            : 35681000 --> only early RK3568 devices showed this silicon revision (e.g. Firefly RK3568-ROC-PC/AIO-3568J)

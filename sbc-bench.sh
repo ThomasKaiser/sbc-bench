@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.9.46
+Version=0.9.47
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -4154,7 +4154,7 @@ LogEnvironment() {
 			userspace|powersave|performance)
 				# report also configured RAM clock
 				read DRAMClock <"${DMCGovernor%/*}/cur_freq"
-				echo -e "  DMC gov: ${UsedDMCGovernor} ($(( ${DRAMClock} / 1000000 )) MHz)"
+				DMCGovernorSettings="${UsedDMCGovernor} ($(( ${DRAMClock} / 1000000 )) MHz)"
 				;;
 			*)
 				# check whether uptreshold and downdifferential values exist and if true report it
@@ -4164,17 +4164,18 @@ LogEnvironment() {
 					if [ -f "${DMCGovernor%/*}/downdifferential" ]; then
 						# report DMC governor and upthreshold/downdifferential values
 						read downdifferential <"${DMCGovernor%/*}/downdifferential"
-						echo -e "  DMC gov: ${UsedDMCGovernor} (upthreshold: ${upthreshold}, downdifferential: ${downdifferential})"
+						DMCGovernorSettings="${UsedDMCGovernor} (upthreshold: ${upthreshold}, downdifferential: ${downdifferential})"
 					else
 						# report DMC governor and upthreshold value
-						echo -e "  DMC gov: ${UsedDMCGovernor} (upthreshold: ${upthreshold})"
+						DMCGovernorSettings="${UsedDMCGovernor} (upthreshold: ${upthreshold})"
 					fi
 				else
 					# report only DMC governor
-					echo -e "  DMC gov: ${UsedDMCGovernor}"
+					DMCGovernorSettings="${UsedDMCGovernor}"
 				fi
 				;;
 		esac
+		echo -e "  DMC gov: ${DMCGovernorSettings}"
 	fi
 
 	# log /proc/device-tree/compatible contents if available
@@ -4656,6 +4657,21 @@ UploadResults() {
 	[ -s /var/log/sbc-bench.log ] && echo -e "\n\n\n" >>/var/log/sbc-bench.log
 	sed '/^$/N;/^\n$/D' <${ResultLog} >>/var/log/sbc-bench.log
 	echo ""
+
+	# On systems running with Rockchip BSP kernel check DMC governor settings and if not
+	# optimal, suggest retesting with performance DMC governor
+	if [ -f "${DMCGovernor}" ]; then
+		if [ "X${UsedDMCGovernor}" != "Xperformance" ]; then
+			echo -e "${LRED}${BOLD}WARNING:${NC} ${LRED}The DMC governor settings of this device are not adjusted for performance${NC}"
+			echo -e "${LRED}and as such DRAM bandwidth and latency might have been severly harmed. Your current\nsettings: ${DMCGovernorSettings}\n${NC}"
+			echo -e "${LRED}For a discussion wrt settings see https://github.com/ThomasKaiser/Knowledge/issues/7${NC}\n"
+			echo -e "${LRED}It is strongly advised to ${BOLD}switch to maximum performance and run sbc-bench again${NC} ${LRED}to be${NC}"
+			echo -e "${LRED}able to compare real hardware performance with default settings of this distro/kernel.${NC}"
+			echo -e "${LRED}You might want to execute this now and call sbc-bench again directly afterwards:\n${NC}"
+			echo -e "${LRED}echo performance | sudo tee ${DMCGovernor}\n${NC}"
+			echo -e "${LRED}Alternatively you can simply use review mode: sbc-bench -r\n${NC}"
+		fi
+	fi
 } # UploadResults
 
 CheckIOWait() {
@@ -7780,7 +7796,9 @@ CheckKernelVersion() {
 	esac
 
 	# check kernel version number string for distro kernel schemes and return if true
-	grep -v -E 'amlogic|librem5|rockchip' <<<"$1" | grep -q -E '[3-9]\.[0-9]{1,3}\.[0-9]{1,2}-[0-9]{1,3}-[a-z]{1,3}' && return
+	# Debian/Ubuntu kernel versions look like 6.2.0-32-generic, 5.10.0-23-amd64 or
+	# 5.15.0-1035-raspi or for example
+	grep -v -E 'amlogic|librem5|rockchip' <<<"$1" | grep -q -E '[3-9]\.[0-9]{1,3}\.[0-9]{1,2}-[0-9]{1,4}-raspi|[3-9]\.[0-9]{1,3}\.[0-9]{1,2}-[0-9]{1,3}-[a-z]{1,3}' && return
 
 	# skip this whole check on x86 and in aarch64 VMs where usually distro kernels are
 	# used that follow an own release schedule
@@ -8029,12 +8047,12 @@ CheckKernelVersion() {
 			esac
 			;;
 		5.10.*)
-			# some SDKs/BSPs based on this version: Nvidia Jetson AGX Orin, Rockchip RK3588/RK356x/RK3399
+			# some SDKs/BSPs based on this version: Nvidia Jetson AGX Orin, Rockchip RK3399/RK3528/RK356x/RK3588/
 			case ${GuessedSoC} in
 				"Nvidia Jetson AGX Orin")
 					PrintBSPWarning Nvidia
 					;;
-				*RK3588*)
+				*RK3528*|*RK3588*)
 					PrintBSPWarning RockchipGKI
 					;;
 				*RK3399*)

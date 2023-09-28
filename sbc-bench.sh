@@ -6339,6 +6339,10 @@ GuessSoCbySignature() {
 			# or Marvell Armada3900-A1, 4 x Cortex-A72 / r0p3 / https://community.cisco.com/t5/wireless/catalyst-9130ax-ap-booting-into-wnc-linux-instead-of-ios-xe/td-p/4460181
 			grep -E -q 'raspberrypi|bcm283' <<<"${DTCompatible}" && echo "BCM2711${BCM2711}" || echo "Marvell Armada3900-A1"
 			;;
+		*A76r4p0*A76r4p0*A76r4p0*A76r4p0|*A76*A76*A76*A76)
+			# BCM2712, 4 x Cortex-A76
+			echo "BCM2712"
+			;;
 		??A72r0p3??A72r0p3)
 			# Xilinx Versal, 2 x Cortex-A72 / r0p3 / fp asimd aes pmull sha1 sha2 crc32 cpuid
 			echo "Xilinx Versal"
@@ -7797,7 +7801,7 @@ CheckKernelVersion() {
 
 	# check kernel version number string for distro kernel schemes and return if true
 	# Debian/Ubuntu kernel versions look like 6.2.0-32-generic, 5.10.0-23-amd64 or
-	# 5.15.0-1035-raspi or for example
+	# 5.15.0-1035-raspi for example
 	grep -v -E 'amlogic|librem5|rockchip' <<<"$1" | grep -q -E '[3-9]\.[0-9]{1,3}\.[0-9]{1,2}-[0-9]{1,4}-raspi|[3-9]\.[0-9]{1,3}\.[0-9]{1,2}-[0-9]{1,3}-[a-z]{1,3}' && return
 
 	# skip this whole check on x86 and in aarch64 VMs where usually distro kernels are

@@ -4912,6 +4912,7 @@ GuessARMSoC() {
 	#   HiSilicon-A76 / r3p0: HiSilicon Kirin 810/990
 	#   HiSilicon-A76 / r3p1: HiSilicon Kirin 990
 	#      Cortex-A76 / r4p0: Allwinner A736/T736, Google Tensor G1, Rockchip RK3588/RK3588s, Unisoc UMS9620
+	#      Cortex-A76 / r4p1: Broadcom BCM2712
 	#      Cortex-A77 / r1p0: HiSilicon Kirin 9000, Qualcomm QRB5165 (Snapdragon 865)
 	#      Cortex-A78 / r1p0: MediaTek Genio 1200, Qualcomm SM8350 (Snapdragon 888)
 	#    Cortex-A78AE / r0p1: Nvidia Jetson Orin NX / AGX Orin
@@ -6339,8 +6340,8 @@ GuessSoCbySignature() {
 			# or Marvell Armada3900-A1, 4 x Cortex-A72 / r0p3 / https://community.cisco.com/t5/wireless/catalyst-9130ax-ap-booting-into-wnc-linux-instead-of-ios-xe/td-p/4460181
 			grep -E -q 'raspberrypi|bcm283' <<<"${DTCompatible}" && echo "BCM2711${BCM2711}" || echo "Marvell Armada3900-A1"
 			;;
-		*A76r4p0*A76r4p0*A76r4p0*A76r4p0|*A76*A76*A76*A76)
-			# BCM2712, 4 x Cortex-A76
+		*A76r4p1*A76r4p1*A76r4p1*A76r4p1)
+			# BCM2712, 4 x Cortex-A76 / r4p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp
 			echo "BCM2712"
 			;;
 		??A72r0p3??A72r0p3)

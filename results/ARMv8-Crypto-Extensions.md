@@ -132,6 +132,7 @@ Crawling through [sbc-bench results collection](../Results.md) comparing +70 dif
 | [RK3588](http://ix.io/3XzI) | 985 | 560200 | 569 |
 | [UMS9620](http://ix.io/4yFl) | 2210 | 1258230 | 569 |
 | [RK3588s](http://ix.io/3XYo) | 2330 | 1325370 | 569 |
+| [BCM2712](http://ix.io/4HDw) | 2400 | 1367990 | 570 |
 | [Snapdragon 7c](http://ix.io/4xEW) | 2550 | 1454480 | 570 |
 | Cortex-A77 | | | |
 | [QRB5165](http://ix.io/49kx) | 2410 | 1348440 | 560 |

@@ -181,6 +181,8 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [RockPro64 (RK3399)](http://ix.io/1iFp) | 1800/1400 MHz | 4.18 | Stretch arm64 | 6300 | 1755 | 1021500 | 3650 | 8450 | 8.20 |
 | [RockPro64 (RK3399)](http://ix.io/2sZH) | 2010/1510 MHz | 5.4 | Focal arm64 | 6920 | 1826 | 1145300 | 3700 | 8430 | 11.55 |
 | [RockPro64 (RK3399)](http://ix.io/2yIx) | 2010/1510 MHz | 5.8 | Bullseye arm64 | 7000 | 1833 | 1144950 | 3690 | 8360 | 11.08 |
+| [RockPro64 (RK3399)](http://ix.io/4HV0) | 1800/1416 MHz | 6.1 | Bookworm arm64 | 6420 | 1717 | 1020670 | 3220 | 7970 | 9.81 |
+| [RockPro64 (RK3399)](http://ix.io/4HVb) | 1800/1416 MHz | 6.4 | Bookworm arm64 | 6400 | 1719 | 1020880 | 3150 | 7830 | 9.81 |
 | [Star64 (JH7110)](http://ix.io/4tjq) | 1500 MHz | 5.15 | Sid riscv64 | 3970 | 1175 | 24990 | 820 | 770 | - |
 | [SBC2D70 (SSD202D)](http://ix.io/3N1U) | 1700 MHz | 5.16 | Sid armhf | 1960 | 1094 | 33120 | 770 | 3190 | - |
 | [T-HEAD C910 RVB-ICE](http://ix.io/41AB) | 1200 MHz | 5.10 | Sid riscv64 | 1760 | 1007 | 26930 | 3340 | 6470 | - |

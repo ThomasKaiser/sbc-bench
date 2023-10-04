@@ -206,8 +206,10 @@
 | [4D0a](4D0a.txt) | v0.9.44 Orange Pi 5 | 0%/0% | 7.8Gi/7.4Gi | X | X | X | X | 1% | 0% | [check log](4D0a.txt) |
 | [4DLw](4DLw.txt) | v0.9.44 BeagleBoard.org BeagleBone AI-6 | 0%/0% | 2.1Gi/1.9Gi | X | X | X | X | 2% | <span style=color:red> 6%</span> | [check log](4DLw.txt) |
 | [4HDw](4HDw.txt) | v0.9.47 Raspberry Pi 5 Model B Rev 1.0 | 0%/0% | 7.9Gi/7.4Gi | X | X | X | X | 1% | 2% | [check log](4HDw.txt) |
+| [4HYd](4HYd.txt) | v0.9.47 HP HP t640 Thin Client / Ryzen | 0%/0% | 5.7Gi/4.4Gi | X | X | X | X | 4% | 0% | [check log](4HYd.txt) |
 | [4Hd0](4Hd0.txt) | v0.9.45 OrangePi Zero2 W | 0%/0% | 981Mi/775Mi | X | X | X | X | <span style=color:red>**40%**</span> | 2% | [check log](4Hd0.txt) |
 | [4HdL](4HdL.txt) | v0.9.46 Hetzner Neoverse-N1 kvm VM | 0%/0% | 3.7Gi/3.4Gi | X | X | X | X | 1% | 0% | |
+| [4I1w](4I1w.txt) | v0.9.47 Raspberry Pi 5 Model B Rev 1.0 | 0%/0% | 7.9Gi/7.3Gi | X | X | X | X | 1% | 0% | [check log](4I1w.txt) |
 | <del>[4a3s](4a3s.txt)</del> | <del>v0.9.8 StarFive VisionFive V2 </del> | <del>0.4%/0.1%</del> | <del>3.8Gi/3.5Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 1%</del> | <del> 2%</del> | |
 | [4a5U](4a5U.txt) | v0.9.8 Khadas Edge2 | 0%/0% | 15Gi/14Gi | X | X | X | X | 1% | 0% | |
 | [4ax9](4ax9.txt) | v0.9.8 NVIDIA Orin Jetson-Small Develop | 0%/0% | 29Gi/29Gi | X | X | X | X | 0% | 0% | |

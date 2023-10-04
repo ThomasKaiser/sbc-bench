@@ -94,7 +94,6 @@ Crawling through [sbc-bench results collection](../Results.md) comparing +70 dif
 | [RK3399](http://ix.io/2ICt) | 1800| 839360 | 466 |
 | [Allwinner H6](http://ix.io/26Ph) | 1800 | 839870 | 466 |
 | [Allwinner H616](http://ix.io/4bSf) | 1800 | 840275 | 467 |
-| [RK3528](http://ix.io/4Hxh) | 2010 | 922060 | 459 |
 | [A311D](http://ix.io/3VfL) | 2010 | 940425 | 467 |
 | [A311D2](http://ix.io/3Wq0) | 2010 | 941040 | 468 |
 | Cortex-A55 | | | |
@@ -134,6 +133,7 @@ Crawling through [sbc-bench results collection](../Results.md) comparing +70 dif
 | [RK3588s](http://ix.io/3XYo) | 2330 | 1325370 | 569 |
 | [BCM2712](http://ix.io/4HDw) | 2400 | 1367990 | 570 |
 | [Snapdragon 7c](http://ix.io/4xEW) | 2550 | 1454480 | 570 |
+| [BCM2712](http://ix.io/4I1w) | 3000 | 1710050 | 570 |
 | Cortex-A77 | | | |
 | [QRB5165](http://ix.io/49kx) | 2410 | 1348440 | 560 |
 | [QRB5165](http://ix.io/49kx) | 2840 | 1598490 | 563 |

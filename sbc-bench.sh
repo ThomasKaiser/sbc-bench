@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.9.47
+Version=0.9.48
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -1100,8 +1100,9 @@ CheckPerformance() {
 		SysfsSpeed=$(( $i / 1000 ))
 		if [ ${USE_VCGENCMD} = true ] ; then
 			# On RPi we query ThreadX about clockspeeds too
-			ThreadXFreq=$("${VCGENCMD}" measure_clock arm | awk -F"=" '{printf ("%0.0f",$2/1000000); }' )
-			CoreVoltage=$("${VCGENCMD}" measure_volts | cut -f2 -d= | sed 's/000//')
+			ThreadXFreq=$("${VCGENCMD}" measure_clock arm 2>/dev/null | awk -F"=" '{printf ("%0.0f",$2/1000000); }' )
+			CoreVoltage=$("${VCGENCMD}" measure_volts uncached 2>/dev/null | cut -f2 -d=)
+			[ "X${CoreVoltage}" = "X" ] && CoreVoltage=$("${VCGENCMD}" measure_volts 2>/dev/null | cut -f2 -d=)
 			echo -e "$(printf "%4s" ${SysfsSpeed}) /  $(printf "%4s" ${ThreadXFreq}) /$(printf "%6s" ${RoundedSpeed}):\c" >>"${CpufreqLog}"
 			echo -e "${ThreadXFreq}\t\c" >>"${CpufreqDat}"
 			echo -e "${ThreadXFreq}MHz, \c"
@@ -1624,8 +1625,9 @@ MonitorBoard() {
 		case ${CPUs} in
 			raspberrypi)
 				FakeFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpu0/cpufreq/${CpuFreqToQuery} 2>/dev/null)
-				RealFreq=$("${VCGENCMD}" measure_clock arm | awk -F"=" '{printf ("%0.0f",$2/1000000); }' )
-				CoreVoltage=$("${VCGENCMD}" measure_volts | cut -f2 -d= | sed 's/000//')
+				RealFreq=$("${VCGENCMD}" measure_clock arm 2>/dev/null | awk -F"=" '{printf ("%0.0f",$2/1000000); }' )
+				CoreVoltage=$("${VCGENCMD}" measure_volts uncached 2>/dev/null | cut -f2 -d=)
+				[ "X${CoreVoltage}" = "X" ] && CoreVoltage=$("${VCGENCMD}" measure_volts 2>/dev/null | cut -f2 -d=)
 				echo -e "$(date "+%H:%M:%S"): $(printf "%4s" ${FakeFreq})/$(printf "%4s" ${RealFreq})MHz $(printf "%5s" ${LoadAvg}) ${procStats}  $(printf "%4s" ${SocTemp})°C  $(printf "%7s" ${CoreVoltage})${NetioColumn}"
 				;;
 			biglittle)
@@ -3373,8 +3375,9 @@ CheckCPUCluster() {
 
 				if [ ${USE_VCGENCMD} = true ] ; then
 					# On RPi we query ThreadX about clockspeeds and Vcore voltage too
-					ThreadXFreq=$("${VCGENCMD}" measure_clock arm | awk -F"=" '{printf ("%0.0f",$2/1000000); }' )
-					CoreVoltage=$("${VCGENCMD}" measure_volts | cut -f2 -d= | sed 's/000//')
+					ThreadXFreq=$("${VCGENCMD}" measure_clock arm 2>/dev/null | awk -F"=" '{printf ("%0.0f",$2/1000000); }' )
+					CoreVoltage=$("${VCGENCMD}" measure_volts uncached 2>/dev/null | cut -f2 -d=)
+					[ "X${CoreVoltage}" = "X" ] && CoreVoltage=$("${VCGENCMD}" measure_volts 2>/dev/null | cut -f2 -d=)
 					echo -e "Cpufreq OPP: $(printf "%4s" ${SysfsSpeed})  ThreadX: $(printf "%4s" ${ThreadXFreq})  Measured: $(printf "%4s" ${RoundedSpeed}) @ ${CoreVoltage}${PrettyDiff}"
 					[ $i -eq ${MaxSpeed} ] && echo -e "OPP: $(printf "%4s" ${SysfsSpeed}), ThreadX: $(printf "%4s" ${ThreadXFreq}), Measured: $(printf "%4s" ${RoundedSpeed}) ${CpufreqPrefix}${PrettyDiff}${NC}">>"${TempDir}/cpufreq"
 				else
@@ -4195,7 +4198,8 @@ LogEnvironment() {
 	# Log ThreadX version if available
 	if [ "X${ThreadXVersion}" != "X" ]; then
 		echo -e "  ThreadX: $(awk '/^version/ {print $2}' <<<"${ThreadXVersion}") / $(head -n1 <<<"${ThreadXVersion}")"
-		"${VCGENCMD}" mem_reloc_stats | while read ; do
+		vcgencmd_mem_reloc_stats="$("${VCGENCMD}" mem_reloc_stats 2>/dev/null)"
+		grep -q compactions <<<"${vcgencmd_mem_reloc_stats}" && echo "${vcgencmd_mem_reloc_stats}" | while read ; do
 			echo "           ${REPLY}"
 		done
 	fi
@@ -4662,7 +4666,7 @@ UploadResults() {
 	# optimal, suggest retesting with performance DMC governor
 	if [ -f "${DMCGovernor}" ]; then
 		if [ "X${UsedDMCGovernor}" != "Xperformance" ]; then
-			echo -e "${LRED}${BOLD}WARNING:${NC} ${LRED}The DMC governor settings of this device are not adjusted for performance${NC}"
+			echo -e "\n${LRED}${BOLD}WARNING:${NC} ${LRED}The DMC governor settings of this device are not adjusted for performance${NC}"
 			echo -e "${LRED}and as such DRAM bandwidth and latency might have been severly harmed. Your current\nsettings: ${DMCGovernorSettings}\n${NC}"
 			echo -e "${LRED}For a discussion wrt settings see https://github.com/ThomasKaiser/Knowledge/issues/7${NC}\n"
 			echo -e "${LRED}It is strongly advised to ${BOLD}switch to maximum performance and run sbc-bench again${NC} ${LRED}to be${NC}"
@@ -5038,7 +5042,7 @@ GuessARMSoC() {
 	# soc soc0: Amlogic Meson G12A (Unknown) Revision 28:b (70:2) Detected <-- Amlogic Meson G12A U200 Development Board
 	# soc soc0: Amlogic Meson G12A (Unknown) Revision 28:c (70:2) Detected <-- Amlogic Meson G12A U200 Development Board / China Mobile M401A / Skyworth E900V22C
 	# soc soc0: Amlogic Meson G12B (S922X) Revision 29:a (40:2) Detected <-- ODROID-N2 / Beelink GT-King Pro
-	# soc soc0: Amlogic Meson G12B (A311D) Revision 29:b (10:2) Detected <-- Khadas VIM3 / Radxa Zero 2 / UnionPi Tiger / Bananapi CM4
+	# soc soc0: Amlogic Meson G12B (A311D) Revision 29:b (10:2) Detected <-- Khadas VIM3 / Radxa Zero 2 / UnionPi Tiger / Bananapi CM4 / Libre Computer AML-A311D-CC
 	# soc soc0: Amlogic Meson G12B (S922X) Revision 29:b (40:2) Detected <-- Beelink GT-King Pro, Ugoos AM6
 	# soc soc0: Amlogic Meson G12B (S922X) Revision 29:c (40:2) Detected <-- ODROID-N2+ ('S922X-B')
 	# soc soc0: Amlogic Meson Unknown (Unknown) Revision 2a:e (c5:2) Detected <-- Amlogic Meson GXL (S905L2) X7 5G Tv Box / Amlogic Meson GXL (S905X) P212 Development Board
@@ -7386,34 +7390,34 @@ ProvideReviewInfo() {
 	InstallCpuminer
 	InitialMonitoring
 	unset SPACING
-	[ "X${RunBenchmarks}" = "XTRUE" ] && CheckClockspeedsAndSensors || echo -e "\x08\x08 Done.\nNow quickly examining OS, settings and hardware...\c"
-	# repeat SoC guessing after measuring CPU clockspeeds (some guesses depend on clockspeed)
-	[ "${CPUArchitecture}" = "aarch64" ] && GuessedSoC="$(GuessARMSoC)"
-	[ "X${RunBenchmarks}" = "XTRUE" ] && ClockspeedsBefore="$(cat "${TempDir}/cpufreq" | sed -e 's/^/    /')"
-	[ "X${NOTUNING}" != "Xyes" -a "X${RunBenchmarks}" = "XTRUE" -a -f /sys/devices/system/cpu/cpufreq/policy0/scaling_governor ] && CheckTimeInState before
-	[ "X${RunBenchmarks}" = "XTRUE" ] && RunTinyMemBench
-	[ "X${RunBenchmarks}" = "XTRUE" ] && RunRamlat
-	[ "X${RunBenchmarks}" = "XTRUE" ] && RunOpenSSLBenchmark 256
-	[ "X${RunBenchmarks}" = "XTRUE" ] && Run7ZipBenchmark
-	if [ -x "${InstallLocation}/Stockfish-sf_15/src/stockfish" ]; then
-		ExecuteStockfish=yes
-		RunStockfishBenchmark
-	elif [ -x "${InstallLocation}"/cpuminer-multi/cpuminer ]; then
-		ExecuteCpuminer=yes
-		[ "X${RunBenchmarks}" = "XTRUE" ] && RunCpuminerBenchmark
-	else
-		[ "X${RunBenchmarks}" = "XTRUE" ] && RunStressNG
-	fi
-	[ -z ${InitialTemp} ] || TempNow=$(ReadSoCTemp)
-	[ "X${NOTUNING}" != "Xyes" -a "X${RunBenchmarks}" = "XTRUE" -a -f /sys/devices/system/cpu/cpufreq/policy0/scaling_governor ] && CheckTimeInState after
-	[ "X${RunBenchmarks}" = "XTRUE" ] && CheckClockspeedsAndSensors
-	[ "X${RunBenchmarks}" = "XTRUE" ] && ClockspeedsAfter="$(cat "${TempDir}/cpufreq" | sed -e 's/^/    /')"
-
 	OperatingSystem="$(GetOSRelease)"
 
 	if [ "X${RunBenchmarks}" = "XTRUE" ]; then
+		CheckClockspeedsAndSensors
+		# repeat SoC guessing after measuring CPU clockspeeds (some guesses depend on clockspeed)
+		[ "${CPUArchitecture}" = "aarch64" ] && GuessedSoC="$(GuessARMSoC)"
+		ClockspeedsBefore="$(cat "${TempDir}/cpufreq" | sed -e 's/^/    /')"
+		[ "X${NOTUNING}" != "Xyes" -a -f /sys/devices/system/cpu/cpufreq/policy0/scaling_governor ] && CheckTimeInState before
+		RunTinyMemBench
+		RunRamlat
+		RunOpenSSLBenchmark 256
+		Run7ZipBenchmark
+		if [ -x "${InstallLocation}/Stockfish-sf_15/src/stockfish" ]; then
+			ExecuteStockfish=yes
+			RunStockfishBenchmark
+		elif [ -x "${InstallLocation}"/cpuminer-multi/cpuminer ]; then
+			ExecuteCpuminer=yes
+			RunCpuminerBenchmark
+		else
+			RunStressNG
+		fi
+		[ -z ${InitialTemp} ] || TempNow=$(ReadSoCTemp)
+		[ "X${NOTUNING}" != "Xyes" -a -f /sys/devices/system/cpu/cpufreq/policy0/scaling_governor ] && CheckTimeInState after
+		CheckClockspeedsAndSensors
+		ClockspeedsAfter="$(cat "${TempDir}/cpufreq" | sed -e 's/^/    /')"
 		SummarizeResults
 	else
+		echo -e "\x08\x08 Done.\nNow quickly examining OS, settings and hardware...\c"
 		echo -e "\n##########################################################################\n" >>${ResultLog}
 		echo -e "$(iostat | grep -E -v "^loop|boot0|boot1|mtdblock")\n\n$(free -h)\n\n$(swapon -s)\n" | sed '/^$/N;/^\n$/D' >>${ResultLog}
 		ShowZswapStats 2>/dev/null >>${ResultLog}

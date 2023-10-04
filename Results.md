@@ -162,7 +162,8 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Raspberry Pi 4 B (BCM2711)](http://ix.io/3InF) | 1800 MHz | 5.15 | Armbian **Jammy arm64** | 5640 | 1752 | 36260 | 2580 | 3110 | - |
 | [Raspberry Pi 4 B (BCM2711)](http://ix.io/3VME) | 1800 MHz | 5.15 | Jammy armhf | 6300 | 1844 | 82750 | 1190 | 3110 | - |
 | [Raspberry Pi 400 (BCM2711)](http://ix.io/2Cyi) | 1800 MHz | 5.4 | Raspberry Pi OS Buster | 6550 | 1903 | 77890 | 2680 | 3110 | - |
-| [Raspberry Pi 5 B (BCM2712)](http://ix.io/4HDw) | 2400 MHz | 6.1 | Bookworm arm64 | 10950 | 3160 | 1367990 | 5260 | 11520 | - |
+| [Raspberry Pi 5 B (BCM2712)](http://ix.io/4HDw) | 2400 MHz | 6.1 | Bookworm arm64 | 10950 | 3160 | 1367990 | 5260 | 11520 | 15.42 |
+| [Raspberry Pi 5 B (BCM2712)](http://ix.io/4I1w) | 3000 MHz | 6.1 | Bookworm arm64 | 12740 | 3747 | 1710050 | 4940 | 12640 | - |
 | [Renegade (RK3328)](http://ix.io/1iFx) | 1400 MHz | 4.4 | Stretch arm64 | 3710 | 1069 | 644200 | 1565 | 7435 | 3.92 |
 | [RK3228A TV Box](http://ix.io/3M9F) | 1200 MHz | 4.4 | Buster armhf | 2310 | 710 | 23070 | 410 | 1230 | - |
 | [RK3568-ROC-PC](http://ix.io/3Rsg) | 1960 MHz | 4.19 | Bullseye arm64 | 5040 | 1424 | 912800 | 3130 | 6240 | - |
@@ -211,6 +212,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Athlon II X3 420e](http://ix.io/4eOo) | 2600 MHz | 4.19 | Buster amd64 | 4780 | 2566 | 98840 | 4120 | 3870 | - |
 | [x5-Z8350](http://ix.io/2Jdb) | 1920/1680 MHz | 5.4 | Focal amd64 | 4790 | 1454 | 237230 | 3170 | 2960 | 9.38 |
 | [Atom E3950](http://ix.io/4dd5) | 2000 MHz | 5.15 | Jammy amd64 | 6440 | 1636 | 374800 | 4400 | 4840 | - |
+| [Celeron N4500](http://ix.io/3HUU) | 2800/1100 MHz | 5.13 | Impish amd64 | 6300 | 3091 | 783840 | 8100 | 8350 | - |
 | [Celeron J1900](http://ix.io/4hKV) | 2415/1333 MHz | 5.4 | Focal amd64 | 6560 | 1806 | 34900 | 3780 | 3390 | - |
 | [x7-Z8700](http://ix.io/4iDX) | 2400 MHz | 5.15 | Bullseye amd64 | 6580 | 1784 | 296680 | 3510 | 3580 | - |
 | [Celeron J3455](http://ix.io/1m5p) | 2300/1500 MHz | 4.17 | Stretch amd64 | 7000 | 2037 | 429660 | 4090 | 4050 | 17.26 |
@@ -220,8 +222,8 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Celeron N4100](http://ix.io/1uTS) | 2300/1100 MHz | 4.15 | Bionic amd64 | 8510 | 2222 | 669350 | 4750 | 5240 | 18.33 |
 | [Celeron J4105](http://ix.io/1qal) | 2400/1500 MHz | 4.15 | Bionic amd64 | 9020 | 2290 | 697100 | 5500 | 7410 | 19.07 |
 | [Celeron J4105](http://ix.io/1qb0) | 2400/1500 MHz | 4.15 | Bionic amd64 | 8960 | 2274 | 697080 | 5620 | 7650 | 19.13 |
+| [Ryzen R1505G](http://ix.io/4HYd) | 3270 MHz | 6.1 | Bookworm amd64 | 9080 | 3327 | 886980 | 10520 | 8160 | 18.14 |
 | [Pentium J5005](http://ix.io/21rE) | 2700/1500 MHz | 5.0 | Bionic amd64 | 9230 | 2455 | 778360 | 5530 | 7130 | 20.74 |
-| [Celeron N4500](http://ix.io/3HUU) | 2800/1100 MHz | 5.13 | Impish amd64 | 6300 | 3091 | 783840 | 8100 | 8350 | - |
 | [Celeron N5100](http://ix.io/3IlQ) | 2800/1100 MHz | 5.13 | Focal amd64 | 10550 | 3088 | 783800 | 7750 | 8090 | 19.22 |
 | [Pentium N6005](http://ix.io/4BtC) | 3300/2000 MHz | 5.15 | Jammy amd64 | 11510 | 3369 | 923550 | 9650 | 10280 | 22.18 |
 | [Celeron N5105](http://ix.io/3Qf7) | 2900/2000 MHz | 5.13 | Focal amd64 | 11450 | 3059 | 811760 | 7710 | 9290 | 21.79 |
@@ -229,6 +231,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Intel N95](http://ix.io/4xwq) | 3400 MHz | 5.15 | Jammy amd64 | 13070 | 3993 | 1232880 | 9710 | 8730 | 34.60 |
 | [Intel N100](http://ix.io/4vxM) | 3400 MHz | 6.1 | Lunar amd64 | 14150 | 4073 | 1232790 | 11600 | 12270 | 36.24 |
 | [Intel i3-N305](http://ix.io/4qpr) | 3800 MHz | 5.19 | Jammy amd64 | 20000 | 4398 | 1377280 | 9950 | 8990 | 41.43 |
+
 
 &ast; Number obtained with cryptodev (Marvell's CESA).
 
@@ -260,6 +263,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 * RPi 3 B+ marked as 'UV/normal' means: normal settings and average Micro USB cable resulting in **UV** (undervoltage). Once the demanding 7-zip benchmark started voltage dropped below 4.63V and 'frequency capping' (downclocking to 600 MHz) happened destroying performance. See the [detailed log](http://ix.io/1iH0): 1400 MHz are reported by the kernel while it's 600 MHz in reality. Is this just highly misleading or already cheating?
 * RPi 3 B+ marked as 'OC/normal' means: **OC** (overclocked) settings, stable voltage but no fan used. Since SoC temperature exceeds 60°C the 'firmware' starts to cheat and downclocks to 1200 MHz while the kernel reports running at 1570 MHz. At least memory overclocking is somewhat effective.
 * RPi 4 B numbers improved over time partly due to 'firmware' optimisations resulting in faster memory access (lower latency). Using a 64-bit kernel (`arm_64bit=1`) just takes away 50MB of RAM, the worst choice is to combine 64-bit kernel and 64-bit userland since everything relevant get slower, same tasks require much more memory and the device will start to swap if low on memory or even kill processes due to out of memory. As a rule of thumb you need almost twice as much RAM with a 64-bit userland compared to 32-bit with the same programs/services running.
+* The overclocked RPi 5B results are interesting for two reasons: while trying out to exceed 3.0 GHz (`arm_freq=3100`) ThreadX ignores values above 3000. And the tester set `over_voltage=8` which kinda defeats the [DVFS implementation starting with BCM2711](https://www.raspberrypi.com/documentation/computers/raspberry-pi.html#using-dvfs). The recommended way is using `over_voltage_delta` now if you want to cook the SoC for tiny performance gains ([few details](https://github.com/raspberrypi/firmware/issues/1825#issuecomment-1723117881)).
 * The highest clockspeeds listed for RPi 4/400 are 1800 MHz since this is what can be achieved with little overvoltage on early BCM2711B0 SoC revisions and is default _without overvolting_ on revision C0 or later. While it's possible to 'overclock' the RPi 4 to [2.15 GHz](http://ix.io/3Llk), [2.3 GHz](http://ix.io/3L37) and even [2.4 GHz](http://ix.io/3KVs) all of this requires overvolting the SoC up to `over_voltage=15`. Unfortunately the ThreadX DFVS ([Dynamic voltage and frequency scaling](https://developer.arm.com/documentation/100960/0100/Dynamic-Voltage-and-Frequency-Scaling)) implementation is rather primitive and as such this overvolting happens also when the CPU cores idle at low frequencies which pretty much fries the CPU cores all the time resulting in high(er) temperatures and consumption figures than necessary. That's why 1.8 GHz is considered the reasonable maximum here.
 * Last RockPro64 entry has been made after ayufan solved memory performance problem with Rockchip's 4.4 kernel on his images (see [discussion](https://forum.khadas.com/t/painlessly-usable-linux-distro/3124/24?u=tkaiser))
 * [SBC2D70](http://linux-chenxing.org/infinity2/ido-sbc2d70/) results are somewhat representative for [SigmaStar SSD201/SSD202D dual Cortex-A7](http://linux-chenxing.org/infinity2/#ssd201ssd202d) in general even though clockspeeds exceeding 1.3 GHz are considered boost frequencies and require appropriate cooling.

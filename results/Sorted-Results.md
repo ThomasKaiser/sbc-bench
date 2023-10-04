@@ -140,6 +140,7 @@
 | [Athlon II X3 420e](http://ix.io/4eOo) | 2600 MHz | 4.19 | Buster amd64 | **4780** | 2566 | 98840 | 4120 | 3870 | - |
 | [x5-Z8350](http://ix.io/1HnC) | 1920/1680 MHz | 4.15 | Bionic amd64 | **4710** | 1272 | 207640 | 2740 | 3140 | - |
 | [PineH64 (Allwinner H6)](http://ix.io/26Ph) | 1800 MHz | 5.4 | Buster arm64 | **4710** | 1293 | 839870 | 1420 | 5560 | 7.10 |
+| [Hlink H28K (RK3528)](http://ix.io/4I93) | 2000 Mhz | 5.10 | Jammy arm64 | **4680** | 1388 | 933630 | 2090 | 7650 | 6.48 |
 | [PineH64 (Allwinner H6)](http://ix.io/1jEr) | 1800 MHz | 4.18 | Stretch arm64 | **4650** | 1274 | 836900 | 1380 | 5530 | 5.62 |
 | [Radxa Zero (S905Y2)](http://ix.io/3wZn) | 1800 MHz | 5.10 | Focal arm64 | **4610** | 1267 | 840080 | 1600 | 5370 | - |
 | [Radxa Zero (S905Y2)](http://ix.io/3JCm) | 1800 MHz | 5.10 | Bullseye arm64 | **4580** | 1353 | 838360 | 1600 | 5360 | 7.13 |
@@ -356,6 +357,7 @@
 | [RK3568-ROC-PC](http://ix.io/3Rsg) | 1960 MHz | 4.19 | Bullseye arm64 | 5040 | **1424** | 912800 | 3130 | 6240 | - |
 | [Khadas VIM3L (S905D3)](http://ix.io/3Vdt) | 1900 MHz | 5.16 | Bullseye arm64 | 5110 | **1403** | 890730 | 3700 | 5140 | - |
 | [Khadas VIM3L (S905D3)](http://ix.io/26Wy) | 1900 MHz | 4.9 | Bionic arm64 | 5160 | **1399** | 892110 | 3670 | 6360 | 7.29 |
+| [Hlink H28K (RK3528)](http://ix.io/4I93) | 2000 Mhz | 5.10 | Jammy arm64 | 4680 | **1388** | 933630 | 2090 | 7650 | 6.48 |
 | [Radxa Zero (S905Y2)](http://ix.io/3PlT) | 1800 MHz | 5.10 | Buster arm64 | 4570 | **1373** | 839080 | 1610 | 5250 | 6.82 |
 | [x5-Z8300](http://ix.io/4j4o) | 1840 MHz | 5.15 | Jammy amd64 | 4430 | **1368** | 227030 | 2270 | 2380 | 8.84 |
 | [Radxa Zero (S905Y2)](http://ix.io/3JCm) | 1800 MHz | 5.10 | Bullseye arm64 | 4580 | **1353** | 838360 | 1600 | 5360 | 7.13 |
@@ -524,6 +526,7 @@
 | [ODROID-C4 (S905X3)](http://ix.io/2kaS) | 2010 MHz | 4.9 | Focal arm64 | 5450 | 1459 | **941590** | 3310 | 6270 | 7.71 |
 | [Phytium<br />FT-2000/4<br />(1 x SO-DIMM)](http://ix.io/4ioj) | 2600 MHz | 5.15 | Bullseye arm64 | 10020 | 2755 | **936740** | 3760 | 14540 | - |
 | [Radxa ROCK 3A (RK3568)](http://ix.io/40TX) | 2000 MHz | 5.18 | Bullseye arm64 | 5110 | 1450 | **935920** | 3150 | 6250 | 7.58 |
+| [Hlink H28K (RK3528)](http://ix.io/4I93) | 2000 Mhz | 5.10 | Jammy arm64 | 4680 | 1388 | **933630** | 2090 | 7650 | 6.48 |
 | [Pentium N6005](http://ix.io/4BtC) | 3300/2000 MHz | 5.15 | Jammy amd64 | 11510 | 3369 | **923550** | 9650 | 10280 | 22.18 |
 | [NanoPi M4v2 (RK3399)](http://ix.io/3MAK) | 2015/1510 MHz | 5.10 | Bullseye arm64 | 6680 | 1855 | **921980** | 3110 | 7640 | - |
 | [NanoPi R5S (RK3568)](http://ix.io/4jfZ) | 1960 MHz | 6.1 | Bullseye arm64 | 5030 | 1482 | **914340** | 2990 | 5970 | 7.33 |
@@ -813,6 +816,7 @@
 | [NanoPi NEO4 (RK3399)](http://ix.io/1oib) | 2000/1500 MHz | 4.4| Stretch arm64 | 6030 | 1343 | 1121380 | **2230** | 4770 | 8.57 |
 | [HummingBoard Pulse i.MX8M Quad](http://ix.io/27FC) | 1500 MHz | 4.19 | Buster arm64 | 4330 | 1201 | 695540 | **2230** | 9900 | - |
 | [ODROID-XU4 (Exynos 5422)](http://ix.io/1ixL) | 1900/1400 MHz | 3.10 | Jessie armhf | 6750 | - | 68200 | **2200** | 4800 | - |
+| [Hlink H28K (RK3528)](http://ix.io/4I93) | 2000 Mhz | 5.10 | Jammy arm64 | 4680 | 1388 | 933630 | **2090** | 7650 | 6.48 |
 | [Atom N2800](http://ix.io/4nt8) | 1860 MHz | 5.15 | Bullseye amd64 | 2970 | 1006 | 21780 | **2050** | 1570 | - |
 | [RockPro64 (RK3399)](http://ix.io/1iFZ) | 1800/1400 MHz | 4.4 | Stretch armhf | 6250 | 1809 | 1000150 | **2000** | 4835 | - |
 | [Khadas VIM1S (S905Y4)](http://ix.io/4bbv) | 2000 MHz | 5.4 | Jammy arm64 | 4000 | 1148 | 436540 | **1970** | 7530 | - |
@@ -972,6 +976,7 @@
 | [Celeron N5100](http://ix.io/3IlQ) | 2800/1100 MHz | 5.13 | Focal amd64 | 10550 | 3088 | 783800 | 7750 | **8090** | 19.22 |
 | [ODROID-N2+ (Amlogic S922X)](http://ix.io/4rWn) | 2400/2015 MHz | 6.1 | Bullseye arm64 | 9710 | 2373 | 1366180 | 4220 | **7720** | - |
 | [Quartz64-A (RK3566)](http://ix.io/3rUb) | 1810 MHz | 5.13 | Buster arm64 | 4840 | 1353 | 845490 | 2980 | **7650**| - |
+| [Hlink H28K (RK3528)](http://ix.io/4I93) | 2000 Mhz | 5.10 | Jammy arm64 | 4680 | 1388 | 933630 | 2090 | **7650** | 6.48 |
 | [Celeron J4105](http://ix.io/1qb0) | 2400/1500 MHz | 4.15 | Bionic amd64 | 8960 | 2274 | 697080 | 5620 | **7650** | 19.13 |
 | [NanoPi M4v2 (RK3399)](http://ix.io/3MAK) | 2015/1510 MHz | 5.10 | Bullseye arm64 | 6680 | 1855 | 921980 | 3110 | **7640** | - |
 | [Khadas VIM1S (S905Y4)](http://ix.io/4bbv) | 2000 MHz | 5.4 | Jammy arm64 | 4000 | 1148 | 436540 | 1970 | **7530** | - |

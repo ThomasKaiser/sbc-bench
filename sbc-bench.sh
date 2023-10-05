@@ -4831,7 +4831,7 @@ Parse_ADC_Readouts() {
 		PowerRail="${REPLY%_A*}"
 		Ampere=$(sed 's/A//' <<<"${REPLY##*=}")
 		Voltage=$(grep "${PowerRail}_V" <<<"${1}")
-		[ -n "${Voltage}" ] && echo "${Ampere} ${Voltage##*=} | sed 's/V//'"
+		[ -n "${Voltage}" ] && echo "${Ampere} ${Voltage##*=}" | sed 's/V//'
 	done
 } # Parse_ADC_Readouts
 

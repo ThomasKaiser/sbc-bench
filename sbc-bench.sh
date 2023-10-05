@@ -1573,7 +1573,13 @@ MonitorBoard() {
 	# check whether input voltage can be read
 	[ "X${VoltageSensor}" != "X" ] && VoltageHeader="   DC(V)"
 
-	if [ ${USE_VCGENCMD} = true ] ; then
+	# Check whether PMIC ADCs are readable on RPi 5
+	"${VCGENCMD}" pmic_read_adc >/dev/null 2>&1 && PMIC_ADC=true || PMIC_ADC=false
+
+	if [ ${USE_VCGENCMD} = true -a ${PMIC_ADC} = true ] ; then
+		DisplayHeader="Time        fake/real   load %cpu %sys %usr %nice %io %irq   Temp    VCore    PMIC${VoltageHeader}${NetioHeader}"
+		CPUs=raspberrypi
+	elif [ ${USE_VCGENCMD} = true ] ; then
 		DisplayHeader="Time        fake/real   load %cpu %sys %usr %nice %io %irq   Temp    VCore${VoltageHeader}${NetioHeader}"
 		CPUs=raspberrypi
 	elif [ ${#ClusterConfig[@]} -eq 1 -a -r /sys/devices/system/cpu/cpufreq/policy0/${CpuFreqToQuery} ] ; then
@@ -1628,7 +1634,13 @@ MonitorBoard() {
 				RealFreq=$("${VCGENCMD}" measure_clock arm 2>/dev/null | awk -F"=" '{printf ("%0.0f",$2/1000000); }' )
 				CoreVoltage=$("${VCGENCMD}" measure_volts uncached 2>/dev/null | cut -f2 -d=)
 				[ "X${CoreVoltage}" = "X" ] && CoreVoltage=$("${VCGENCMD}" measure_volts 2>/dev/null | cut -f2 -d=)
-				echo -e "$(date "+%H:%M:%S"): $(printf "%4s" ${FakeFreq})/$(printf "%4s" ${RealFreq})MHz $(printf "%5s" ${LoadAvg}) ${procStats}  $(printf "%4s" ${SocTemp})°C  $(printf "%7s" ${CoreVoltage})${NetioColumn}"
+				if [ ${PMIC_ADC} = true ]; then
+					ADC_Readouts="$("${VCGENCMD}" pmic_read_adc 2>/dev/null)"
+					PMIC_Whole_Consumption=$(Parse_ADC_Readouts "${ADC_Readouts}" | awk '{s+=$1*$2} END {printf "%.1f", s}')
+					echo -e "$(date "+%H:%M:%S"): $(printf "%4s" ${FakeFreq})/$(printf "%4s" ${RealFreq})MHz $(printf "%5s" ${LoadAvg}) ${procStats}  $(printf "%4s" ${SocTemp})°C  $(printf "%7s" ${CoreVoltage})$(printf "%7s" ${PMIC_Whole_Consumption}W)${NetioColumn}"
+				else
+					echo -e "$(date "+%H:%M:%S"): $(printf "%4s" ${FakeFreq})/$(printf "%4s" ${RealFreq})MHz $(printf "%5s" ${LoadAvg}) ${procStats}  $(printf "%4s" ${SocTemp})°C  $(printf "%7s" ${CoreVoltage})${NetioColumn}"
+				fi
 				;;
 			biglittle)
 				BigFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpufreq/policy${ClusterConfig[$ClusterCount]}/${CpuFreqToQuery} 2>/dev/null)
@@ -4784,6 +4796,44 @@ ReportCpufreqStatistics() {
 		done
 	fi
 } # ReportCpufreqStatistics
+
+Parse_ADC_Readouts() {
+	# this function tries to multiply all amperage and voltage values spitten out by the
+	# RPi 5B PMIC ADCs. Querying ThreadX via 'vcgencmd pmic_read_adc' will result in
+	# something like this:
+	#
+	#  3V7_WL_SW_A current(0)=0.00780744A
+	#    3V3_SYS_A current(1)=0.12199130A
+	#    1V8_SYS_A current(2)=0.24300660A
+	#   DDR_VDD2_A current(3)=0.02147046A
+	#   DDR_VDDQ_A current(4)=0.00000000A
+	#    1V1_SYS_A current(5)=0.18640260A
+	#    0V8_SYS_A current(6)=0.26935670A
+	#   VDD_CORE_A current(7)=0.75012000A
+	#    3V3_DAC_A current(17)=0.61050000A
+	#    3V3_ADC_A current(18)=0.42735000A
+	#    1V1_SYS_A current(16)=5.18925000A
+	#       HDMI_A current(22)=0.01782660A
+	#  3V7_WL_SW_V volt(8)=3.71926400V
+	#    3V3_SYS_V volt(9)=3.32580900V
+	#    1V8_SYS_V volt(2)=1.84300660V
+	#   DDR_VDD2_V volt(3)=0.62147046V
+	#   DDR_VDDQ_V volt(4)=0.00000000V
+	#    1V1_SYS_V volt(5)=1.12640260V
+	#    0V8_SYS_V volt(6)=0.81935670V
+	#   VDD_CORE_V volt(7)=1.05012000V
+	#    3V3_DAC_V volt(17)=3.31050000V
+	#    3V3_ADC_V volt(18)=3.32735000V
+	#    1V1_SYS_V volt(16)=1.18925000V
+	#       HDMI_V volt(22)=5.11782660V
+
+	grep current <<<"${1}" | while read ; do
+		PowerRail="${REPLY%_A*}"
+		Ampere=$(sed 's/A//' <<<"${REPLY##*=}")
+		Voltage=$(grep "${PowerRail}_V" <<<"${1}")
+		[ -n "${Voltage}" ] && echo "${Ampere} ${Voltage##*=} | sed 's/V//'"
+	done
+} # Parse_ADC_Readouts
 
 ReportRPiHealth() {
 	# Displaying the 'vcgencmd get_throttled' output in an understandable way

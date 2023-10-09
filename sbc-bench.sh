@@ -8541,7 +8541,8 @@ CheckStorage() {
 					;;
 				0x000015/0x0100|0x00001b/0x534d|0x0000ce*)
 					# 0x534d -> "SM"
-					Manufacturer="${Manufacturer}Samsung "
+					Manufacturer="${Manufacturer}Samsung"
+					mmc_name=""
 					;;
 				0x00001d/0x4144)
 					# 0x4144 -> "AD"

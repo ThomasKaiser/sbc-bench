@@ -1574,7 +1574,16 @@ MonitorBoard() {
 	[ "X${VoltageSensor}" != "X" ] && VoltageHeader="   DC(V)"
 
 	# Check whether PMIC ADCs are readable on RPi 5
-	"${VCGENCMD}" pmic_read_adc >/dev/null 2>&1 && PMIC_ADC=true || PMIC_ADC=false
+	"${VCGENCMD}" pmic_read_adc >/dev/null 2>&1
+	case $? in
+		0)
+			PMIC_ADC=true
+			VoltageHeader="   DC(V)"
+			;;
+		*)
+			PMIC_ADC=false
+			;;
+	esac
 
 	if [ ${USE_VCGENCMD} = true -a ${PMIC_ADC} = true ] ; then
 		DisplayHeader="Time        fake/real   load %cpu %sys %usr %nice %io %irq   Temp    VCore    PMIC${VoltageHeader}${NetioHeader}"
@@ -1620,7 +1629,7 @@ MonitorBoard() {
 
 		if [ "X${VoltageSensor}" != "X" ]; then
 			InputVoltage="$(GetInputVoltage "${VoltageSensor}")"
-			VoltageColumn="  $(printf "%5s" ${InputVoltage})"
+			VoltageColumn="  $(printf "%4s" ${InputVoltage})"
 		fi
 
 		if [ -s "${NetioConsumptionFile}" ]; then
@@ -1636,28 +1645,29 @@ MonitorBoard() {
 				[ "X${CoreVoltage}" = "X" ] && CoreVoltage=$("${VCGENCMD}" measure_volts 2>/dev/null | cut -f2 -d=)
 				if [ ${PMIC_ADC} = true ]; then
 					ADC_Readouts="$("${VCGENCMD}" pmic_read_adc 2>/dev/null)"
+					InputVoltage="$(awk -F"=" '/EXT5V_V/ {printf ("%0.2f",$2); }' <<<"${ADC_Readouts}")V"
 					PMIC_Whole_Consumption=$(Parse_ADC_Readouts "${ADC_Readouts}" | awk '{s+=$1*$2} END {printf "%.1f", s}')
-					echo -e "$(date "+%H:%M:%S"): $(printf "%4s" ${FakeFreq})/$(printf "%4s" ${RealFreq})MHz $(printf "%5s" ${LoadAvg}) ${procStats}  $(printf "%4s" ${SocTemp})°C  $(printf "%7s" ${CoreVoltage})$(printf "%7s" ${PMIC_Whole_Consumption}W)${NetioColumn}"
+					printf "%s: %4s/%4sMHz %5s %s %8s %8s %6s %7s %s\n" "$(date "+%H:%M:%S")" "${FakeFreq}" "${RealFreq}" "${LoadAvg}" "${procStats}" "${SocTemp}°C" "${CoreVoltage}" "${PMIC_Whole_Consumption}W" "${InputVoltage}" "${NetioColumn}"
 				else
-					echo -e "$(date "+%H:%M:%S"): $(printf "%4s" ${FakeFreq})/$(printf "%4s" ${RealFreq})MHz $(printf "%5s" ${LoadAvg}) ${procStats}  $(printf "%4s" ${SocTemp})°C  $(printf "%7s" ${CoreVoltage})${NetioColumn}"
+					printf "%s: %4s/%4sMHz %5s %s %8s %8s %s\n" "$(date "+%H:%M:%S")" "${FakeFreq}" "${RealFreq}" "${LoadAvg}" "${procStats}" "${SocTemp}°C" "${CoreVoltage}" "${NetioColumn}"
 				fi
 				;;
 			biglittle)
 				BigFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpufreq/policy${ClusterConfig[$ClusterCount]}/${CpuFreqToQuery} 2>/dev/null)
 				LittleFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpufreq/policy${ClusterConfig[0]}/${CpuFreqToQuery} 2>/dev/null)
-				echo -e "$(date "+%H:%M:%S"): $(printf "%4s" ${BigFreq})/$(printf "%4s" ${LittleFreq})MHz $(printf "%5s" ${LoadAvg}) ${procStats}  $(printf "%4s" ${SocTemp})°C${VoltageColumn}${NetioColumn}"
+				printf "%s: %4s/%4sMHz %5s %s %8s %s %s\n" "$(date "+%H:%M:%S")" "${BigFreq}" "${LittleFreq}" "${LoadAvg}" "${procStats}" "${SocTemp}°C" "${VoltageColumn}" "${NetioColumn}"
 				;;
 			littlebig)
 				BigFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpufreq/policy${ClusterConfig[0]}/${CpuFreqToQuery} 2>/dev/null)
 				LittleFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpufreq/policy${ClusterConfig[$ClusterCount]}/${CpuFreqToQuery} 2>/dev/null)
-				echo -e "$(date "+%H:%M:%S"): $(printf "%4s" ${BigFreq})/$(printf "%4s" ${LittleFreq})MHz $(printf "%5s" ${LoadAvg}) ${procStats}  $(printf "%4s" ${SocTemp})°C${VoltageColumn}${NetioColumn}"
+				printf "%s: %4s/%4sMHz %5s %s %8s %s %s\n" "$(date "+%H:%M:%S")" "${BigFreq}" "${LittleFreq}" "${LoadAvg}" "${procStats}" "${SocTemp}°C" "${VoltageColumn}" "${NetioColumn}"
 				;;
 			singlecluster)
 				CpuFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpufreq/policy0/${CpuFreqToQuery} 2>/dev/null)
-				echo -e "$(date "+%H:%M:%S"): $(printf "%4s" ${CpuFreq})MHz $(printf "%5s" ${LoadAvg}) ${procStats}  $(printf "%4s" ${SocTemp})°C${VoltageColumn}${NetioColumn}"
+				printf "%s: %4sMHz %5s %s %8s %s %s\n" "$(date "+%H:%M:%S")" "${CpuFreq}" "${LoadAvg}" "${procStats}" "${SocTemp}°C" "${VoltageColumn}" "${NetioColumn}"
 				;;
 			notavailable)
-				echo -e "$(date "+%H:%M:%S"): n/a MHz   $(printf "%5s" ${LoadAvg}) ${procStats}  $(printf "%4s" ${SocTemp})°C${VoltageColumn}${NetioColumn}"
+				printf "%s: n/a MHz %7s %s %8s %s %s\n" "$(date "+%H:%M:%S")" "${LoadAvg}" "${procStats}" "${SocTemp}°C" "${VoltageColumn}" "${NetioColumn}"
 				;;
 		esac
 		snore ${SleepInterval}
@@ -4802,30 +4812,32 @@ Parse_ADC_Readouts() {
 	# RPi 5B PMIC ADCs. Querying ThreadX via 'vcgencmd pmic_read_adc' will result in
 	# something like this:
 	#
-	#  3V7_WL_SW_A current(0)=0.00780744A
-	#    3V3_SYS_A current(1)=0.12199130A
-	#    1V8_SYS_A current(2)=0.24300660A
-	#   DDR_VDD2_A current(3)=0.02147046A
+	#  3V7_WL_SW_A current(0)=0.00390372A
+	#    3V3_SYS_A current(1)=0.05562801A
+	#    1V8_SYS_A current(2)=0.16493220A
+	#   DDR_VDD2_A current(3)=0.02049453A
 	#   DDR_VDDQ_A current(4)=0.00000000A
-	#    1V1_SYS_A current(5)=0.18640260A
-	#    0V8_SYS_A current(6)=0.26935670A
-	#   VDD_CORE_A current(7)=0.75012000A
-	#    3V3_DAC_A current(17)=0.61050000A
-	#    3V3_ADC_A current(18)=0.42735000A
-	#    1V1_SYS_A current(16)=5.18925000A
-	#       HDMI_A current(22)=0.01782660A
-	#  3V7_WL_SW_V volt(8)=3.71926400V
-	#    3V3_SYS_V volt(9)=3.32580900V
-	#    1V8_SYS_V volt(2)=1.84300660V
-	#   DDR_VDD2_V volt(3)=0.62147046V
-	#   DDR_VDDQ_V volt(4)=0.00000000V
-	#    1V1_SYS_V volt(5)=1.12640260V
-	#    0V8_SYS_V volt(6)=0.81935670V
-	#   VDD_CORE_V volt(7)=1.05012000V
-	#    3V3_DAC_V volt(17)=3.31050000V
-	#    3V3_ADC_V volt(18)=3.32735000V
-	#    1V1_SYS_V volt(16)=1.18925000V
-	#       HDMI_V volt(22)=5.11782660V
+	#    1V1_SYS_A current(5)=0.18152300A
+	#    0V8_SYS_A current(6)=0.32693650A
+	#   VDD_CORE_A current(7)=0.71440000A
+	#   3V3_DAC_A current(17)=0.48840000A
+	#   3V3_ADC_A current(18)=0.42735000A
+	#   1V1_SYS_A current(16)=5.55555000A
+	#      HDMI_A current(22)=0.02344320A
+	#     3V7_WL_SW_V volt(8)=3.71462400V
+	#       3V3_SYS_V volt(9)=3.31096100V
+	#      1V8_SYS_V volt(10)=1.79926600V
+	#     DDR_VDD2_V volt(11)=1.11355200V
+	#     DDR_VDDQ_V volt(12)=0.60842430V
+	#      1V1_SYS_V volt(13)=1.10622600V
+	#      0V8_SYS_V volt(14)=0.80476110V
+	#     VDD_CORE_V volt(15)=0.72097620V
+	#      3V3_DAC_V volt(20)=3.30768900V
+	#      3V3_ADC_V volt(21)=3.30494200V
+	#      1V1_SYS_V volt(19)=0.79765500V
+	#         HDMI_V volt(23)=5.10004000V
+	#        EXT5V_V volt(24)=5.09602000V
+	#         BATT_V volt(25)=0.00683760V
 
 	grep current <<<"${1}" | while read ; do
 		PowerRail="${REPLY%_A*}"

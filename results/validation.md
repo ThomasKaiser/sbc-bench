@@ -232,6 +232,7 @@
 | [4fdD](4fdD.txt) | v0.9.9 OnePlus 5 | 2.7%/0.6% | 5.5Gi/5.2Gi | X | X | X | X | 1% | 1% | |
 | [4hKV](4hKV.txt) | v0.9.9 / Celeron J1900 @ 1.99GHz | 0%/0% | 7.7Gi/6.9Gi | X | X | X | X | 3% | 0% | |
 | [4hOP](4hOP.txt) | v0.9.9 Raspberry Pi 3 Model B Rev 1.2 | 0%/0% | 909Mi/796Mi | X | X | X | X | 2% | <span style=color:red>** 9%**</span> | [check log](4hOP.txt) |
+| [4hau](4hau.txt) | v0.9.9 Fanless Mini PC Quieter2 / Celer | 0.2%/0% | 7.6Gi/6.4Gi | X | X | X | X | 2% | 2% | |
 | [4hwl](4hwl.txt) | v0.9.9 ASUSTeK Computer Inc. U32U 1.0 | 0.4%/0.3% | 5,4Gi/3,2Gi | X | X | X | X | <span style=color:red> 5%</span> | 0% | |
 | [4hx0](4hx0.txt) | v0.9.9 NXP i.MX8MPlus EVK board | 1.5%/0.1% | 5.5Gi/4.9Gi | X | X | X | X | 2% | <span style=color:red> 6%</span> | |
 | [4iDX](4iDX.txt) | v0.9.9 / Atom | 0%/0% | 3.7Gi/3.3Gi | X | X | X | X | 2% | 0% | |

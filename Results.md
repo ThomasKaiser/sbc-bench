@@ -233,6 +233,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Intel N95](http://ix.io/4xwq) | 3400 MHz | 5.15 | Jammy amd64 | 13070 | 3993 | 1232880 | 9710 | 8730 | 34.60 |
 | [Intel N100](http://ix.io/4vxM) | 3400 MHz | 6.1 | Lunar amd64 | 14150 | 4073 | 1232790 | 11600 | 12270 | 36.24 |
 | [Intel i3-N305](http://ix.io/4qpr) | 3800 MHz | 5.19 | Jammy amd64 | 20000 | 4398 | 1377280 | 9950 | 8990 | 41.43 |
+| [Intel i9-13900H](http://ix.io/4ITv) | 3400/800 Mhz | 6.1 | Armbian Jammy x86_64 | 30930 | 6757 | 1844400 | 23650 | 27160 | - |
 
 &ast; Number obtained with cryptodev (Marvell's CESA).
 

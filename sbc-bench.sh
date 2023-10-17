@@ -2104,6 +2104,11 @@ Getx86ClusterDetails() {
 	# i5: 4-6 P cores, 4-8 E cores, 4.4-5.1 GHz, 12-24 MB "Smart Cache"
 	# i3: 1-4 P cores, 0-8 E cores, 4.1-4.6 GHz, 10-12 MB "Smart Cache"
 	# U300*: 1 P core, 4 E cores, 8 MB "Smart Cache"
+	#
+	# Raptor Lake Refresh SKUs:
+	# i9: ?-8 P cores, ?-16 E cores, ?-6.0 GHz, ?-36 MB "Smart Cache"
+	# i7: ?-8 P cores, ?-12 E cores, ?-5.6 GHz, ?-33 MB "Smart Cache"
+	# i5: ?-6 P cores, ?-8 E cores, ?-5.3 GHz, ?-24 MB "Smart Cache"
 
 	# Check amount of available CPU cores first and whether virtualization has been detected
 	# since when running in a virtualized environment it doesn't make sense trying to
@@ -2124,13 +2129,13 @@ Getx86ClusterDetails() {
 			echo "Sunny Cove" >"${TempDir}/Pcores"
 			[ ${HT} -eq 1 ] && echo "0 2" || echo "0 1"
 			;;
-		i9-13900K|i9-13900KF|i9-13900F|i9-13900T|i9-13900HX|i9-13950HX|i9-13980HX|i9-13900|i9-13900TE|i9-13900E)
+		i9-13900K|i9-13900KF|i9-13900F|i9-13900T|i9-13900HX|i9-13950HX|i9-13980HX|i9-13900|i9-13900TE|i9-13900E|i9-14900K|i9-14900KF)
 			# Raptor Lake, 8/16 cores, 32 threads
 			echo "Gracemont" >"${TempDir}/Ecores"
 			echo "Raptor Cove" >"${TempDir}/Pcores"
 			[ ${HT} -eq 1 ] && echo "0 16" || echo "0 8"
 			;;
-		i7-13850HX)
+		i7-13850HX|i7-14700K|i7-14700KF)
 			# Raptor Lake, 8/12 cores, 28 threads
 			echo "Gracemont" >"${TempDir}/Ecores"
 			echo "Raptor Cove" >"${TempDir}/Pcores"
@@ -2160,7 +2165,7 @@ Getx86ClusterDetails() {
 			echo "Golden Cove" >"${TempDir}/Pcores"
 			[ ${HT} -eq 1 ] && echo "0 12" || echo "0 6"
 			;;
-		i9-13900HK|i7-13700H|i5-13600K|i5-13600KF|i5-13500|i9-13905H|i9-13900HK|i9-13900H|i7-13800H|i7-1370P|i7-13700H|i7-13705H|i7-13650HX|i5-13500HX|i5-13600HX|i7-1370PE|i7-13800HE|i5-13500T|i5-13500E|i5-13500TE|i5-13500|i5-13600|i5-13600T)
+		i9-13900HK|i7-13700H|i5-13600K|i5-13600KF|i5-13500|i9-13905H|i9-13900HK|i9-13900H|i7-13800H|i7-1370P|i7-13700H|i7-13705H|i7-13650HX|i5-13500HX|i5-13600HX|i7-1370PE|i7-13800HE|i5-13500T|i5-13500E|i5-13500TE|i5-13500|i5-13600|i5-13600T|i5-14600K|i5-14600KF)
 			# Raptor Lake, 6/8 cores, 20 threads
 			echo "Gracemont" >"${TempDir}/Ecores"
 			echo "Raptor Cove" >"${TempDir}/Pcores"
@@ -5115,7 +5120,7 @@ GuessARMSoC() {
 	# soc soc0: Amlogic Meson SM1 (Unknown) Revision 2b:c (10:2) Detected <-- Khadas VIM3L / HK1 Box/Vontar X3
 	# soc soc0: Amlogic Meson SM1 (Unknown) Revision 2b:b (18:2) Detected <-- Shenzhen Amediatech Technology Co. Ltd X96 Air / HK1 Box/Vontar X3
 	# soc soc0: Amlogic Meson SM1 (Unknown) Revision 2b:b (40:2) Detected <-- Khadas VIM3L
-	# soc soc0: Amlogic Meson SM1 (Unknown) Revision 2b:c (81:2) Detected <-- AMedia X96 Max+
+	# soc soc0: Amlogic Meson SM1 (Unknown) Revision 2b:c (81:2) Detected <-- AMedia X96 Max+, H96 Max X3
 	# soc soc0: Amlogic Meson SC2 (S905X4/C2) Revision 32:b (2:2) Detected <-- Akari AX810 / Advan AT01
 	# soc soc0: Amlogic Meson SC2 (S905X4/C2) Revision 32:d (2:1) Detected <-- Ugoos X4
 	#
@@ -8422,7 +8427,7 @@ CheckStorage() {
 							# USB-to-SATA bridge vendors: JMicron, ASMedia, VIA Labs, Realtek
 							BetterNameAvailable="$(GetUSBSataBridgeName "${idVendor}" "${idProduct}" "${LsusbGuess}")"
 							if [ "X${BetterNameAvailable}" = "X" ]; then
-								DeviceInfo="behind \"${LsusbGuess}\""
+								DeviceInfo="behind \"${LsusbGuess}\" (${idVendor}:${idProduct})"
 							else
 								DeviceInfo="behind ${BetterNameAvailable}"
 							fi
@@ -8431,10 +8436,10 @@ CheckStorage() {
 							# vendor IDs of disk manufacturers that use USB SATA bridges with
 							# branded firmwares like Seagate, WD, Samsung, SanDisk, Toshiba,
 							# Sony, Buffalo, Lenovo, Freecom, Imation, iStorage, Verbatim
-							DeviceInfo="in \"${LsusbGuess}\""
+							DeviceInfo="in \"${LsusbGuess}\" (${idVendor}:${idProduct})"
 							;;
 						*)
-							DeviceInfo="behind \"${LsusbGuess}\""
+							DeviceInfo="behind \"${LsusbGuess}\" (${idVendor}:${idProduct})"
 							;;
 					esac
 				fi

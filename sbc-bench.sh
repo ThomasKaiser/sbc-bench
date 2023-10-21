@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.9.48
+Version=0.9.49
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -5036,13 +5036,14 @@ GuessARMSoC() {
 	# https://www.cnx-software.com/2021/12/10/starfive-dubhe-64-bit-risc-v-core-12nm-2-ghz-processors/#comment-588823
 	#
 	# Recent Rockchip BSP kernels include something like this in dmesg output:
+	# rockchip-cpuinfo cpuinfo: SoC            : 35280000 --> Hlink H28K
 	# rockchip-cpuinfo cpuinfo: SoC            : 35281000 --> Hlink H28K
 	# rockchip-cpuinfo cpuinfo: SoC            : 35661000 --> Quartz64, RK3566 EVB2 LP4X V10 Board, Firefly RK3566-ROC-PC
 	# rockchip-cpuinfo cpuinfo: SoC            : 35662000 --> EmbedFire LubanCat-Zero, RK3566 BOX DEMO V10 ANDROID Board, Rock 3C
 	# rockchip-cpuinfo cpuinfo: SoC            : 35681000 --> only early RK3568 devices showed this silicon revision (e.g. Firefly RK3568-ROC-PC/AIO-3568J)
 	# rockchip-cpuinfo cpuinfo: SoC            : 35682000 --> RK3568-ROC-PC, NanoPi R5S, ODROID-M1, Mrkaio M68S, OWLVisionTech rk3568 opc Board, Radxa ROCK3A,
 	#                                                         Rockemd R68K 2.5G, Hinlink H68K, Magewell Pro Convert NDI to AIO 4K Gen2, AIO-3568J, Forlinx OK3568-C,
-	#                                                         Smartfly YY3568 Board, CPdevice Spring2 Plus Board
+	#                                                         Smartfly YY3568 Board, CPdevice Spring2 Plus Board, HINLINK H66K
 	# rockchip-cpuinfo cpuinfo: SoC            : 35880000 --> 9Tripod X3588S Board, Firefly ITX-3588J HDMI(Linux), Firefly ROC-RK3588S-PC HDMI(Linux),
 	#                                                         FriendlyElec NanoPC-T6, FriendlyElec NanoPi R6C, FriendlyElec NanoPi R6S, HINLINK OWL H88K Board,
 	#                                                         Khadas Edge2, Mekotronics R58X-4G (RK3588 EDGE LP4x V1.2 BlueBerry Board), Mixtile Blade 3 v1.0.1,
@@ -5053,7 +5054,7 @@ GuessARMSoC() {
 	#                                                         Rockchip RK3588 OWL H88K Board, Rockchip RK3588 TOYBRICK X10 Board
 	# rockchip-cpuinfo cpuinfo: SoC            : 35881000 --> Orange Pi 5, Orange Pi 5B, Orange Pi 5 Plus, Firefly ROC-RK3588S-PC V12 MIPI, Firefly AIO-3588Q MIPI101
 	#
-	# RK 'open source' SoCs according to https://github.com/rockchip-linux/kernel/blob/develop-5.10/drivers/soc/rockchip/rockchip-cpuinfo.c (at least RV1108 and RK3588/RK3588s missing)
+	# RK 'open source' SoCs according to https://github.com/rockchip-linux/kernel/blob/develop-5.10/drivers/soc/rockchip/rockchip-cpuinfo.c (at least RV1108 and RK3528/RK3588[s] missing)
 	# PX30, PX30S, RK3126, RK3126B, RK3126C, RK3128, RK3288, RK3288W, RK3308, RK3308B, RK3308BS, RK3566, RK3568, RV1103, RV1106, RV1109 and RV1126
 	#
 	# Amlogic: dmesg | grep 'soc soc0:'
@@ -7587,7 +7588,7 @@ ProvideReviewInfo() {
 	# above a certain thermal treshold), negotiated USB and SATA speeds relating to e.g.
 	# underpowering (https://github.com/raspberrypi/linux/issues/4130#issuecomment-787826273)
 	# and so on...
-	PCIeStatus="$(CheckPCIe)"
+	PCIeStatus="$(CheckPCIe | sed 's/Vendor\ Device\ 0001/Raspberry Pi Ltd. RP1/')"
 	StorageStatus="$(CheckStorage update-smart-drivedb | sed 's/000Mbps/Gbps/')"
 	if [ "X${PCIeStatus}" != "X" -a "X${StorageStatus}" != "X" ]; then
 		echo -e "\n### PCIe and storage devices:\n\n${PCIeStatus}\n${StorageStatus}" >>"${TempDir}/review"
@@ -8429,7 +8430,7 @@ CheckStorage() {
 							if [ "X${BetterNameAvailable}" = "X" ]; then
 								DeviceInfo="behind \"${LsusbGuess}\" (${idVendor}:${idProduct})"
 							else
-								DeviceInfo="behind ${BetterNameAvailable}"
+								DeviceInfo="behind ${BetterNameAvailable} (${idVendor}:${idProduct})"
 							fi
 							;;
 						0bc2*|1058*|04e8*|0781*|0930*|0fce*|054c*|0411*|17ef*|07ab*|0718*|2009*|18a5*)
@@ -8559,7 +8560,9 @@ CheckStorage() {
 				0x000015/0x0100|0x00001b/0x534d|0x0000ce*)
 					# 0x534d -> "SM"
 					Manufacturer="${Manufacturer}Samsung"
-					mmc_name=""
+					# erase mmc_name if 00000 since Samsung SD cards all use this non-descriptive
+					# string that's also used by scammers (Samsung eMMC though uses descriptive names)
+					[ "X${mmc_name}" = "X00000" ] && mmc_name=""
 					;;
 				0x00001d/0x4144)
 					# 0x4144 -> "AD"
@@ -8635,7 +8638,7 @@ CheckStorage() {
 
 			# check certain fraud criteria again to switch from 'Probable counterfeit' (low
 			# serial number) to 'Definite counterfeit'
-			if [ "${mmc_serial}" = "0x00000000" -o "${mmc_name}" = "00000" -o "${mmc_name}" = "SMI" -o "${mmc_name}" = "ASTC" -o "${mmc_name}" = "AS" ]; then
+			if [ "${mmc_serial}" = "0x00000000" -o "X${mmc_name}" = "X00000" -o "X${mmc_name}" = "XSMI" -o "X${mmc_name}" = "XASTC" -o "X${mmc_name}" = "XAS" ]; then
 				Manufacturer="Definite counterfeit "
 				DeviceWarning=TRUE
 			fi

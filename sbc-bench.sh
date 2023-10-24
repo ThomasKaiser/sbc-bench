@@ -4236,7 +4236,11 @@ LogEnvironment() {
 	# kernel info
 	KernelVersion="$(uname -r)"
 	ShortKernelVersion="$(awk -F"." '{print $1"."$2}' <<<"${KernelVersion}")"
-	echo -e "   Kernel: ${KernelVersion}/${CPUArchitecture}${VirtOrContainer}"
+	if [ -r /proc/self/smaps ]; then
+		KernelPageSize="$(awk -F" " '/KernelPageSize/ {print $2$3}' /proc/self/smaps 2>/dev/null | head -n1)"
+		[ "${KernelPageSize}" != "4kB" ] && PageSize=" (${KernelPageSize})" || PageSize=""
+	fi
+	echo -e "   Kernel: ${KernelVersion}/${CPUArchitecture}${PageSize}${VirtOrContainer}"
 	# kernel config
 	KernelConfig="/boot/config-${KernelVersion}"
 	if [ -f "${KernelConfig}" ] ; then
@@ -7143,6 +7147,10 @@ GuessSoCbySignature() {
 		*rv64i2p0m2p0a2p0f2p0d2p0c2p0xv50p0*rv64i2p0m2p0a2p0f2p0d2p0c2p0xv50p0)
 			# Kendryte K510: Dual-core 64-bit RISC-V https://canaan.io/product/kendryte-k510
 			grep -q k510 <<<"${DTCompatible}" && echo "Kendryte K510"
+			;;
+		*thead,c908*thead,c908)
+			# Kendryte K230: Dual-core 64-bit RISC-V https://canaan.io/product/kendryte-k230
+			echo "Kendryte K230"
 			;;
 		*thead,c910*thead,c910|1?1?|10rv64imafdcsu10rv64imafdcsu)
 			# T-Head C910: Dual-core XuanTieISA (compatible with RISC-V 64GC) https://www.t-head.cn/product/c910?lang=en

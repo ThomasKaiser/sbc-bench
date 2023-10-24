@@ -55,6 +55,7 @@ Crawling through [sbc-bench results collection](../Results.md) comparing +70 dif
 | ARM core | MHz | aes-256-cbc | score/mhz |
 | :----: | ----:  | :----:  | :----:  |
 | Cortex-A35 | | | |
+| [PX30](http://ix.io/4IT1) | 1235 | 268860 | 218 |
 | [RK3308](http://ix.io/4sNe) | 1300 | 282030 | 217 |
 | [S905Y4](http://ix.io/4bbv) | 2000 | 436550 | 218 |
 | Apple Firestorm | | | |

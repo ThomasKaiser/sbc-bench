@@ -5095,7 +5095,7 @@ GuessARMSoC() {
 	# soc soc0: Amlogic Meson GXL (S905W) Revision 21:d (a4:2) Detected <-- Tanix TX3 Mini / Amlogic Meson GXL (S905X) P212 Development Board / Amlogic Meson GXL (S905W) P281 Development Board
 	# soc soc0: Amlogic Meson GXL (Unknown) Revision 21:d (a4:2) Detected <-- Khadas VIM / Tanix TX3 Mini / JetHome JetHub J80 / Amlogic Meson GXL (S905X) P212 Development Board / Amlogic Meson GXL (S905W) P281 Development Board
 	# soc soc0: Amlogic Meson GXL (S905L) Revision 21:d (c4:2) Detected <-- X96 mini, Amlogic Meson GXL (S905X) P212 Development Board
-	# soc soc0: Amlogic Meson GXL (S905M2) Revision 21:d (e4:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board / Amlogic Meson GXL (S905W) P281 Development Board
+	# soc soc0: Amlogic Meson GXL (S905M2) Revision 21:d (e4:2) Detected <-- Oranth Tanix TX3 Mini, Amlogic Meson GXL (S905X) P212 Development Board / Amlogic Meson GXL (S905W) P281 Development Board
 	# soc soc0: Amlogic Meson GXL (S905W) Revision 21:e (a5:2) Detected <-- Tanix TX3 Mini / JetHome JetHub J80 / Amlogic Meson GXL (S905X) P212 Development Board / Amlogic Meson GXL (S905W) P281 Development Board
 	# soc soc0: Amlogic Meson GXL (S905L) Revision 21:e (c2:2) Detected <-- NEXBOX A95X (S905X)
 	# soc soc0: Amlogic Meson GXL (S905L) Revision 21:e (c5:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board
@@ -8570,7 +8570,7 @@ CheckStorage() {
 					Manufacturer="${Manufacturer}Samsung"
 					# erase mmc_name if 00000 since Samsung SD cards all use this non-descriptive
 					# string that's also used by scammers (Samsung eMMC though uses descriptive names)
-					[ "X${mmc_name}" = "X00000" ] && mmc_name=""
+					[ "X${mmc_name}" = "X00000" ] && mmc_name="" || Manufacturer="${Manufacturer}Samsung "
 					;;
 				0x00001d/0x4144)
 					# 0x4144 -> "AD"
@@ -8628,7 +8628,7 @@ CheckStorage() {
 					# 0x5446 -> "TF", http://strontium.biz/products/memory-cards/mobile-memory-cards/#seven
 					:
 					;;
-				0x000088/0x0103|0x0000d6/0x0103)
+				0x000088/0x0103|0x0000d6/0x0103|0x0000d6/0x2903)
 					Manufacturer="${Manufacturer}Foresee "
 					;;
 				0x00009f/0x5449)

@@ -151,6 +151,7 @@
 | [HummingBoard Pulse i.MX8M Quad](http://ix.io/27FC) | 1500 MHz | 4.19 | Buster arm64 | **4330** | 1201 | 695540 | 2230 | 9900 | - |
 | [Celeron N4020](http://ix.io/4vNB) | 2800 MHz | 5.15 | Bullseye amd64 | **4310** | 2533 | 779580 | 5280 | 5190 | - |
 | [VisionFive V2 (JH7110)](http://ix.io/4xOY) | 1500 MHz | 5.15 | Sid riscv64 | **4180** | 1197 | 25080 | 880 | 770 | - |
+| [Milk-V Mars CM (JH7110)](http://ix.io/4K7E) | 1500 MHz | 5.15 | Bookworm riscv64 | **4110** | 1195 | 25070 | 930 | 830 | - |
 | [MangoPi Mcore (Allwinner H616)](http://ix.io/4bSf) | 1800 MHz | 5.19 | Jammy arm64 | **4100** | 1218 | 840270 | 990 | 2380 | - |
 | [ODROID-C2 (Amlogic S905)](http://ix.io/1ixI) | 1750 MHz | 3.14 | Xenial arm64 | **4070** | 1128 | 48500 | 1750 | 3100 | - |
 | [Celeron 5205U](http://ix.io/4eiM) | 1900 MHz | 5.15 | Jammy amd64 | **4060** | 2171 | 521090 | 7350 | 16020 | 11.20 |
@@ -378,6 +379,7 @@
 | [Helios4<br />(Armada 388)](http://ix.io/1jCy) | 1600 MHz | 4.14 | Stretch armhf | 2210 | **1215** | 42500 &ast;98560 | 910 | 4840 | - |
 | [HummingBoard Pulse i.MX8M Quad](http://ix.io/27FC) | 1500 MHz | 4.19 | Buster arm64 | 4330 | **1201** | 695540 | 2230 | 9900 | - |
 | [VisionFive V2 (JH7110)](http://ix.io/4xOY) | 1500 MHz | 5.15 | Sid riscv64 | 4180 | **1197** | 25080 | 880 | 770 | - |
+| [Milk-V Mars CM (JH7110)](http://ix.io/4K7E) | 1500 MHz | 5.15 | Bookworm riscv64 | 4110 | **1195** | 25070 | 930 | 830 | - |
 | [Star64 (JH7110)](http://ix.io/4tjq) | 1500 MHz | 5.15 | Sid riscv64 | 3970 | **1175** | 24990 | 820 | 770 | - |
 | [Orange Pi Zero 2W (Allwinner H618)](http://ix.io/4Hd0) | 1510 MHz | 6.1 | Jammy arm64 | 3920 | **1167** | 705660 | 1510 | 6010 | 6.02 |
 | [Orange Pi Zero 3 (Allwinner H618)](http://ix.io/4CPF) | 1510 MHz | 6.1 | Jammy arm64 | 4020 | **1165** | 705330 | 1510 | 6010 | 6.02 |
@@ -669,6 +671,7 @@
 | [BPi R2 (MT7623)](http://ix.io/4dO7) | 1300 MHz | 4.19 | Focal armhf | 2990 | 854 | **25260** | 1550 | 3220 | - |
 | [Orange Pi Plus 2 (Allwinner H3)](http://ix.io/1iX4) | 1300 MHz | 4.14 | Stretch armhf | 2890 | 812 | **25250** | 830 | 3240 | - |
 | [VisionFive V2 (JH7110)](http://ix.io/4xOY) | 1500 MHz | 5.15 | Sid riscv64 | 4180 | 1197 | **25080** | 880 | 770 | - |
+| [Milk-V Mars CM (JH7110)](http://ix.io/4K7E) | 1500 MHz | 5.15 | Bookworm riscv64 | 4110 | 1195 | **25070** | 930 | 830 | - |
 | [Star64 (JH7110)](http://ix.io/4tjq) | 1500 MHz | 5.15 | Sid riscv64 | 3970 | 1175 | **24990** | 820 | 770 | - |
 | [BPi M2U (Allwinner R40)](http://ix.io/4kmM) | 1200 MHz | 6.0 | Bullseye armhf | 2690 | 767 | **23320** | 780 | 3010 | - |
 | [RK3228A TV Box](http://ix.io/3M9F) | 1200 MHz | 4.4 | Buster armhf | 2310 | 710 | **23070** | 410 | 1230 | - |
@@ -885,6 +888,7 @@
 | [EspressoBin (Armada 3720)](http://ix.io/1lCe) | 1200 MHz | 4.18 | Stretch arm64 | 1630 | 869 | 544240 | **1000** | 2400 | 1.82 |
 | [MangoPi Mcore (Allwinner H616)](http://ix.io/4bSf) | 1800 MHz | 5.19 | Jammy arm64 | 4100 | 1218 | 840270 | **990** | 2380 | - |
 | [TRONFY MXQ (Amlogic S805)](http://ix.io/3MiR) | 1536 MHz | 5.10 | Focal armhf | 3100 | 897 | 29080 | **980** | 2990 | - |
+| [Milk-V Mars CM (JH7110)](http://ix.io/4K7E) | 1500 MHz | 5.15 | Bookworm riscv64 | 4110 | 1195 | 25070 | **930** | 830 | - |
 | [Helios4<br />(Armada 388)](http://ix.io/1jCy) | 1600 MHz | 4.14 | Stretch armhf | 2210 | 1215 | 42500 &ast;98560 | **910** | 4840 | - |
 | [Clearfog A1<br />(Armada 388)](http://ix.io/4d1U) | 1600 MHz | 5.15 | Bullseye armhf | 2230 | 1239 | 44080 | **910** | 5060 | - |
 | [Orange Pi PC+ (Allwinner H3)](http://ix.io/3MQV) | 1370 MHz | 5.10 | Focal armhf | 3060 | 879 | 26590 | **890** | 3450 | - |
@@ -1134,6 +1138,7 @@
 | [Raspberry Pi 2 B+ (BCM2836)](http://ix.io/3MGs) | 900 MHz | 5.10 | Raspberry Pi OS Bullseye | 2150 | 620 | 16500 | 1000 | **1180** | - |
 | [Raspberry Pi 2 B+ (BCM2836)](http://ix.io/1iFf) | 900 MHz | 4.14 | Debian Stretch | 2070 | 592 | 17450 | 615 | **1175** | - |
 | [Raspberry Pi Zero 2 (RP3A0)](http://ix.io/3Dfo) | 600 MHz | 5.10 | Raspberry Pi OS Buster | 1900 | 529 | 18150 | 1040 | **1130** | - |
+| [Milk-V Mars CM (JH7110)](http://ix.io/4K7E) | 1500 MHz | 5.15 | Bookworm riscv64 | 4110 | 1195 | 25070 | 930 | **830** | - |
 | [VisionFive V2 (JH7110)](http://ix.io/4xOY) | 1500 MHz | 5.15 | Sid riscv64 | 4180 | 1197 | 25080 | 880 | **770** | - |
 | [Star64 (JH7110)](http://ix.io/4tjq) | 1500 MHz | 5.15 | Sid riscv64 | 3970 | 1175 | 24990 | 820 | **770** | - |
 | [Kendryte K510](http://ix.io/41Qa) | 790 MHz | 4.17 | Sid riscv64 | 690 | 402 | 7410 | 280 | **440** | - |
@@ -1295,6 +1300,7 @@
 | [Raspberry Pi 4 B (BCM2711)](http://ix.io/3EgS) | **1500** MHz| 5.10 | Raspberry Pi OS Buster | 5750 | 1661 | 64930 | 2550 | 3430 | - |
 | [Raspberry Pi 4 B (BCM2711)](http://ix.io/1MFf) | **1500** MHz| 4.19 | Raspbian Buster | 5500 | 1606 | 64860 | 2460 | 3170 | - |
 | [ODROID-C1 (Amlogic S805)](http://ix.io/4eg5) | **1500** MHz| 5.19 | Jammy armhf | 3010 | 878 | 29260 | 390 | 2910 | - |
+| [Milk-V Mars CM (JH7110)](http://ix.io/4K7E) | **1500** MHz| 5.15 | Bookworm riscv64 | 4110 | 1195 | 25070 | 930 | 830 | - |
 | [HummingBoard Pulse i.MX8M Quad](http://ix.io/27FC) | **1500** MHz| 4.19 | Buster arm64 | 4330 | 1201 | 695540 | 2230 | 9900 | - |
 | [NanoPi K2 (Amlogic S905)](http://ix.io/3Qve) | **1480** MHz| 5.10 | Bullseye arm64 | 3880 | 1154 | 51490 | 1850 | 3790 | - |
 | [NanoPi K2 (Amlogic S905)](http://ix.io/1iT1) | **1480** MHz| 4.14 | Stretch arm64 | 3850 | 1095 | 50370 | 1660 | 3870 | 4.61 |

@@ -211,6 +211,7 @@
 | [4HdL](4HdL.txt) | v0.9.46 Hetzner Neoverse-N1 kvm VM | 0%/0% | 3.7Gi/3.4Gi | X | X | X | X | 1% | 0% | |
 | [4I1w](4I1w.txt) | v0.9.47 Raspberry Pi 5 Model B Rev 1.0 | 0%/0% | 7.9Gi/7.3Gi | X | X | X | X | 1% | 0% | [check log](4I1w.txt) |
 | [4I93](4I93.txt) | v0.9.47 Hlink H28K | 0%/0% | 1.9Gi/1.6Gi | X | X | X | X | 2% | 0% | [check log](4I93.txt) |
+| [4K7E](4K7E.txt) | v0.9.49 Milk-V Mars CM eMMC | 0%/0% | 3.8Gi/3.3Gi | X | X | X | X | 2% | 0% | [check log](4K7E.txt) |
 | <del>[4a3s](4a3s.txt)</del> | <del>v0.9.8 StarFive VisionFive V2 </del> | <del>0.4%/0.1%</del> | <del>3.8Gi/3.5Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 1%</del> | <del> 2%</del> | |
 | [4a5U](4a5U.txt) | v0.9.8 Khadas Edge2 | 0%/0% | 15Gi/14Gi | X | X | X | X | 1% | 0% | |
 | [4ax9](4ax9.txt) | v0.9.8 NVIDIA Orin Jetson-Small Develop | 0%/0% | 29Gi/29Gi | X | X | X | X | 0% | 0% | |

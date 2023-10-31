@@ -490,6 +490,7 @@ GetARMCore() {
 	50:APM
 	50/000:APM X-Gene
 	51:Qualcomm
+	51/001:Qualcomm Oryon
 	51/00f:Qualcomm Scorpion
 	51/02d:Qualcomm Scorpion
 	51/04d:Qualcomm Krait
@@ -5963,11 +5964,11 @@ GuessSoCbySignature() {
 			# Qualcomm MSM8996pro: 2 x Kryo r2p1 + 2 x Kryo r2p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			echo "Qualcomm MSM8996pro"
 			;;
-		00Qualcomm4XXSilver00Qualcomm4XXSilver00Qualcomm4XXSilver00Qualcomm4XXSilver00Qualcomm4XXSilver00Qualcomm4XXSilver06Qualcomm4XXGold06Qualcomm4XXGold)
+		00Qualcomm4XXSilverr13p1400Qualcomm4XXSilverr13p1400Qualcomm4XXSilverr13p1400Qualcomm4XXSilverr13p1400Qualcomm4XXSilverr13p1400Qualcomm4XXSilverr13p1406Qualcomm4XXGoldr15p1506Qualcomm4XXGoldr15p15)
 			# Qualcomm Snapdragon 7c (SC7180): 6 x Kryo 468 Silver / r13p14 + 2 x Kryo 468 Gold / r15p15 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp asimdrdm lrcpc dcpop asimddp
 			echo "Qualcomm Snapdragon 7c"
 			;;
-		0?Qualcomm4XXSilver0?Qualcomm4XXSilver0?Qualcomm4XXSilver0?Qualcomm4XXSilver0?Qualcomm4XXGold0?Qualcomm4XXGold0?Qualcomm4XXGold0?Qualcomm4XXGold)
+		*Qualcomm4XXSilver*Qualcomm4XXSilver*Qualcomm4XXSilver*Qualcomm4XXSilver*Qualcomm4XXGold*Qualcomm4XXGold*Qualcomm4XXGold*Qualcomm4XXGold*)
 			# Qualcomm Snapdragon 7c+ Gen 3 (SC7280) or QCM6490: 4 x Kryo 468 Silver + 3 x Kryo 468 Gold + 1 x Kryo 468 Gold Plus
 			case "${DTCompatible}" in
 				*qcm6490*)
@@ -5977,6 +5978,14 @@ GuessSoCbySignature() {
 					echo "Qualcomm Snapdragon 7c+ Gen 3 (SC7280)"
 					;;
 			esac
+			;;
+		*QualcommOryon*)
+			# Qualcomm Snapdragon X Elite (SC8380XP): 8 x Oryon + 4 x Oryon
+			# https://browser.geekbench.com/v6/cpu/3327362.gb6 is in conflict with https://browser.geekbench.com/v6/cpu/3326512.gb6
+			# wrt stepping: "ARM implementer 81 architecture 8 variant 1 part 1 revision 1" vs. "ARMv8 (64-bit) Family 8 Model 1 Revision 201"
+			# The former is r1p1, the latter r2p1. But maybe it's different steppings since it's also said both clusters would also consist
+			# of different core types: https://lore.kernel.org/linux-arm-msm/b165d2cd-e8da-4f6d-9ecf-14df2b803614@linaro.org/
+			echo "Qualcomm Snapdragon X Elite (SC8380XP)"
 			;;
 		*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4)
 			# Socionext SC2A11: 24 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid

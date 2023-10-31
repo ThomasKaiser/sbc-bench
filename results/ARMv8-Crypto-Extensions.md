@@ -64,6 +64,7 @@ Crawling through [sbc-bench results collection](../Results.md) comparing +70 dif
 | [Jetson Nano](http://ix.io/1I4j) | 1430 | 513700 | 359 |
 | [Nintendo Switch](http://ix.io/1Rnj) | 1780| 642670 | 361 |
 | [Jetson Nano](http://ix.io/3Ufc) | 2000 | 717500 | 358 |
+| [Opteron A1100](http://ix.io/4Kqn) | 2000 | 720710 | 360 |
 | [Nintendo Switch](http://ix.io/3Di2) | 2090 | 746680 | 357 |
 | FTC663 | | | |
 | [Phytium D2000](http://ix.io/3Sl9) | 2300 | 828520 | 360 |

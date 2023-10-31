@@ -16,6 +16,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | ----- | :--------: | :----: | :----: | ----: | ------: | ------: | -----: | -----: | ---: |
 | [Akaso M8S (S812)](http://ix.io/3R3N) | 1200 MHz | 5.10 | Buster armhf | 3050 | 885 | 32120 | 1160 | 3330 | - |
 | [Amazon a1.xlarge](http://ix.io/2iFY) | 2300 MHz | 4.15 | Bionic arm64 | 8610 | 2406 | 1297960 | 4280 | 14220 | - |
+| [AMD Seattle (Opteron A1100)](http://ix.io/4Kqn) | 2000 MHz | 4.15 | Bionic arm64 | 14080 | 2006 | 720710 | 3020 | 9530 | - |
 | [AMedia X96 Max+ (S905X3)](http://ix.io/3QOj) | 2100 MHz | 5.15 | Focal arm64 | 5270 | 1330 | 981830 | 2630 | 5150 | - |
 | [Ampere Altra M96-28](http://ix.io/4zGI) | 2800 MHz | 5.15 | Jammy arm64 | 249380 | 3858 | 1596110 | 10130 | 44750 | - |
 | [Ampere Altra Q80-26](http://ix.io/4zkJ) | 2600 MHz | 5.15 | Jammy arm64 | 214390 | 3748 | 1482190 | 11685 | 41560 | 316.50 |
@@ -118,7 +119,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Orange Pi Zero 2 (Allwinner H616)](http://ix.io/4knM) | 1510 MHz | 4.9 | Buster arm64 | 3550 | 1067 | 703300 | 1190 | 2820 | 5.01 |
 | [Orange Pi Zero 2W (Allwinner H618)](http://ix.io/4Hd0) | 1510 MHz | 6.1 | Jammy arm64 | 3920 | 1167 | 705660 | 1510 | 6010 | 6.02 |
 | [Orange Pi Zero 3 (Allwinner H618)](http://ix.io/4CPF) | 1510 MHz | 6.1 | Jammy arm64 | 4020 | 1165 | 705330 | 1510 | 6010 | 6.02 |
-| [OrangePi 4](http://ix.io/4Kau) | 2010/1510 MHz | 6.1 | Bookworm arm64 | 6880 | 1891 | 1145840 | 3490 | 8430 | - |
+| [OrangePi 4 (RK3399)](http://ix.io/4Kau) | 2010/1510 MHz | 6.1 | Bookworm arm64 | 6880 | 1891 | 1145840 | 3490 | 8430 | - |
 | [Orange Pi 5 (RK3588)](http://ix.io/4D0a) | 2400/1800 MHz | 5.10 | Jammy arm64 | 16780 | 2689 | 1366590 | 12800 | 29900 | - |
 | [Phytium<br />FT-2000/4<br />(1 x SO-DIMM)](http://ix.io/4ioj) | 2600 MHz | 5.15 | Bullseye arm64 | 10020 | 2755 | 936740 | 3760 | 14540 | - |
 | [Phytium D2000<br />(1 x SO-DIMM)](http://ix.io/445T) | 2300 MHz | 5.19 | Jammy arm64 | 16390 | 2220 | 827090 | 2820 | 6490 | - |

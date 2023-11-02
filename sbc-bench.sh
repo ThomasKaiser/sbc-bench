@@ -6378,11 +6378,11 @@ GuessSoCbySignature() {
 			;;
 		*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A76r4p0*A76r4p0)
 			# Allwinner A736/T736, 6 x Cortex-A55 / r2p0 + 2 x Cortex-A76 / r4p0
-			echo "Allwinner A736/T736"
+			grep -E -q 'allwinner|sun60i|a736|t736' <<<"${DTCompatible}" && echo "Allwinner A736/T736"
 			;;
 		*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A78*A78)
 			# Allwinner A737/T737, 6 x Cortex-A55 / r2p0 + 2 x Cortex-A78
-			echo "Allwinner A737/T737"
+			grep -E -q 'allwinner|a737|t737|' <<<"${DTCompatible}" && echo "Allwinner A737/T737"
 			;;
 		0A9r4p10A9r4p1|0?A9r4p10?A9r4p1)
 			# Armada 375/38x, 2 x Cortex-A9 / r4p1 / swp half thumb fastmult vfp edsp neon vfpv3 tls
@@ -6481,6 +6481,37 @@ GuessSoCbySignature() {
 					echo "NXP i.MX8QXP"
 					;;
 			esac
+			;;
+		*A35r*A35r*A35r*A35r???)
+			# RK quad-core A35 with yet unknown details (stepping/flags)
+			case "${DTCompatible}" in
+				*rk3308b*)
+					echo "Rockchip RK3308B"
+					;;
+				*rk3308h*)
+					echo "Rockchip RK3308H"
+					;;
+				*rk3358j*)
+					echo "Rockchip RK3358J"
+					;;
+			esac
+			;;
+		*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A72r1p0*A72r1p0*A72r1p0*A72r1p0)
+			# RK3576, 4 x Cortex-A53 / r0p4 + 4 x Cortex-A72 / r1p0 https://archive.ph/7lkym
+			# (most recent steppings are pure assumption since announced in 2023)
+			# Though could also be Allwinner R923 based on same assumption
+			# Why A53/A72 still in 2024? Since last ARM cores able to boot a 32-bit
+			# ARMv8l kernel (32-bit userlands consume way less memory compared to 64-bit)
+			grep -E -q 'allwinner|sun60i|r923' <<<"${DTCompatible}" && echo "Allwinner R923" || echo "Rockchip RK3576"
+			;;
+		*A7r0p5*A7r0p5*A7r0p5)
+			# RK3506, 3 x Cortex-A7 / r0p5 (stepping is assumption)
+			echo "Rockchip RK3506"
+			;;
+		0?A55r2p00?A55r2p00?A55r2p00?A55r2p0*A76r4p0??A76r4p0)
+			# RK3582, assumed to be a stripped down RK3588 variant with two A76 removed (and gpu/rkvdec according to some Github comments)
+			# https://www.cnx-software.com/2023/10/13/orange-pi-5-5b-and-5-plus-sbc-32gb-ram/#comment-611080
+			grep -q "rk3582" <<<"${DTCompatible}" && echo "Rockchip RK3582"
 			;;
 		00A35r1p000A35r1p0)
 			# Amlogic C302X or C305X, 2 x Cortex-A35 / r1p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32

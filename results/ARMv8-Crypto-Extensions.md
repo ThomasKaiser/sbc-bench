@@ -4,7 +4,7 @@
 
 SoC vendors who license ARMv8 cores (usually 64-bit capable) can decide between certain optional features: for example cryptographic acceleration called ['ARMv8 Cryptography Extensions'](https://developer.arm.com/documentation/ddi0500/e/CJHDEBAF).
 
-Usually SoC vendors do, the only known exceptions are early Cortex-A53 SoCs like Qualcomm's Snapdragon 410, Amlogic's very first 64-bit SoC S905 (used only on ODROID-C2 and NanoPi K2), Phytium's FTC662 core and BroadCom's SoCs powering all 64-bit capable Raspberry Pis: all lack any crypto acceleration and perform way lower than all other 64-bit ARM SoCs in this area.
+Usually SoC vendors do, the only known exceptions are early Cortex-A53 SoCs like Qualcomm's Snapdragon 410, Amlogic's very first 64-bit SoC S905 (used only on ODROID-C2 and NanoPi K2), Phytium's FTC662 core and BroadCom's SoCs powering all 64-bit capable Raspberry Pis except BCM2712: those lack any crypto acceleration and perform way lower than all other 64-bit ARM SoCs in this area.
 
 If the kernel has been built correctly, availability of accelerated cryptography functions can be checked by querying `/proc/cpuinfo`: The 'Features' entry will additionally show `aes pmull sha1 sha2`.
 
@@ -50,7 +50,7 @@ All of this **only** applies to ARM SoCs with _ARMv8 Crypto Extensions_ licensed
 
 ### Numbers the aforementioned conclusions are based on
 
-Crawling through [sbc-bench results collection](../Results.md) comparing +70 different SoCs/CPUs from various vendors at various clockspeeds using OpenSSL versions 1.1.0f (25 May 2017) through 3.0.9 (30 May 2023) shows always the same relation between openssl score and clockspeed for those four core families (right column is OpenSSL's aes-256-cbc score divided through clockspeed in MHz):
+Crawling through [sbc-bench results collection](../Results.md) comparing +70 different SoCs/CPUs from various vendors at various clockspeeds using OpenSSL versions 1.1.0f (25 May 2017) through 3.0.11 (19 Sep 2023) shows always the same relation between openssl score and clockspeed for those four core families (right column is OpenSSL's aes-256-cbc score divided through clockspeed in MHz):
 
 | ARM core | MHz | aes-256-cbc | score/mhz |
 | :----: | ----:  | :----:  | :----:  |
@@ -112,6 +112,7 @@ Crawling through [sbc-bench results collection](../Results.md) comparing +70 dif
 | [S905X3](http://ix.io/3Vdt) | 1908 | 890730 | 466 |
 | [RK3568](http://ix.io/3Ug9) | 1930 | 898610 | 465 |
 | [RK3568](http://ix.io/3UXa) | 1950 | 911730 | 467 |
+| [Genio 1200](http://ix.io/4Kvg) | 2000 | 935000 | 468 |
 | [UMS9620](http://ix.io/4yFl) | 2000 | 936310 | 468 |
 | [S905X3](http://ix.io/2kaS) | 2010 | 941590 | 468 |
 | [S905X3](http://ix.io/3TQ2) | 2100 | 981940 | 467 |
@@ -140,8 +141,9 @@ Crawling through [sbc-bench results collection](../Results.md) comparing +70 dif
 | Cortex-A77 | | | |
 | [QRB5165](http://ix.io/49kx) | 2410 | 1348440 | 560 |
 | [QRB5165](http://ix.io/49kx) | 2840 | 1598490 | 563 |
-| Cortex-A78C/A78AE | | | |
+| Cortex-A78/A78C/A78AE | | | |
 | [NVIDIA Orin](http://ix.io/4Ebd) | 1500 | 850750 | 567 |
+| [Genio 1200](http://ix.io/4Kvg) | 2200 | 1240850 | 564 |
 | [NVIDIA Orin](http://ix.io/4ax9) | 2200 | 1242940 | 565 |
 | [Snapdragon 8cx Gen 3](http://ix.io/4xwT) | 2420 | 1365680 | 564 |
 | Cortex-X1C | | | |

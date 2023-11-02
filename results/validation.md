@@ -214,6 +214,7 @@
 | [4K7E](4K7E.txt) | v0.9.49 Milk-V Mars CM eMMC | 0%/0% | 3.8Gi/3.3Gi | X | X | X | X | 2% | 0% | [check log](4K7E.txt) |
 | [4Kau](4Kau.txt) | v0.9.49 OrangePi 4 | 0%/0% | 3.8Gi/3.2Gi | X | X | X | X | 2% | 1% | [check log](4Kau.txt) |
 | [4Kqn](4Kqn.txt) | v0.9.49 AMD Seattle | 0%/0% | 31G/30G | X | X | X | X | 1% | 0% | |
+| [4Kvg](4Kvg.txt) | v0.9.49 MediaTek Genio-1200 EVK | 0%/0% | 7.6Gi/6.4Gi | X | X | X | X | 1% | 0% | [check log](4Kvg.txt) |
 | <del>[4a3s](4a3s.txt)</del> | <del>v0.9.8 StarFive VisionFive V2 </del> | <del>0.4%/0.1%</del> | <del>3.8Gi/3.5Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 1%</del> | <del> 2%</del> | |
 | [4a5U](4a5U.txt) | v0.9.8 Khadas Edge2 | 0%/0% | 15Gi/14Gi | X | X | X | X | 1% | 0% | |
 | [4ax9](4ax9.txt) | v0.9.8 NVIDIA Orin Jetson-Small Develop | 0%/0% | 29Gi/29Gi | X | X | X | X | 0% | 0% | |

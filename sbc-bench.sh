@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.9.49
+Version=0.9.50
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -491,6 +491,7 @@ GetARMCore() {
 	50/000:APM X-Gene
 	51:Qualcomm
 	51/001:Qualcomm Oryon
+	51/002:Qualcomm Oryon
 	51/00f:Qualcomm Scorpion
 	51/02d:Qualcomm Scorpion
 	51/04d:Qualcomm Krait
@@ -2984,8 +2985,17 @@ InitialMonitoring() {
 	if [ $? -eq 0 -a "X${ProcCPUFile}" = "X/proc/cpuinfo" ]; then
 		UploadScheme="f:1=<-"
 		UploadServer="ix.io"
-		(echo -e "/proc/cpuinfo\n\n$(uname -a) / ${DeviceName}\n" ; cat /proc/cpuinfo ; echo -e "\n${CPUTopology}\n\n${CPUSignature} / ${GuessedSoC}\n\n${DTCompatible}\n\n${OPPTables}\n\n$(grep . /sys/devices/virtual/thermal/thermal_zone?/* 2>/dev/null)\n\n$(grep . /sys/class/hwmon/hwmon?/* 2>/dev/null)") 2>/dev/null \
-			| curl -s -F ${UploadScheme} ${UploadServer} >/dev/null 2>&1 &
+		UploadAnswer="$( (echo -e "/proc/cpuinfo\n\n$(uname -a) / ${DeviceName}\n" ; cat /proc/cpuinfo ; echo -e "\n${CPUTopology}\n\n${CPUSignature} / ${GuessedSoC}\n\n${DTCompatible}\n\n${OPPTables}\n\n$(grep . /sys/devices/virtual/thermal/thermal_zone?/* 2>/dev/null)\n\n$(grep . /sys/class/hwmon/hwmon?/* 2>/dev/null)") 2>/dev/null | curl -s -F ${UploadScheme} ${UploadServer} 2>&1)"
+		case "${UploadAnswer}" in
+			*ix.io*)
+				# everything's fine
+				:
+				;;
+			*)
+				# something's wrong, e.g. "down for a while due to DDOS. thanks, buddy!" in early Nov. 2023
+				ping -c1 sprunge.us >/dev/null 2>&1 && UploadScheme="sprunge=<-" ; UploadServer="sprunge.us"
+				;;
+		esac
 	else
 		# upload location fallback to sprunge.us if possible
 		ping -c1 sprunge.us >/dev/null 2>&1 && UploadScheme="sprunge=<-" ; UploadServer="sprunge.us"
@@ -5980,12 +5990,22 @@ GuessSoCbySignature() {
 			esac
 			;;
 		*QualcommOryon*)
-			# Qualcomm Snapdragon X Elite (SC8380XP): 8 x Oryon + 4 x Oryon
+			# Qualcomm Snapdragon X Elite (SC8380XP): 8 x Oryon + 4 x Oryon or variants
 			# https://browser.geekbench.com/v6/cpu/3327362.gb6 is in conflict with https://browser.geekbench.com/v6/cpu/3326512.gb6
 			# wrt stepping: "ARM implementer 81 architecture 8 variant 1 part 1 revision 1" vs. "ARMv8 (64-bit) Family 8 Model 1 Revision 201"
 			# The former is r1p1, the latter r2p1. But maybe it's different steppings since it's also said both clusters would also consist
 			# of different core types: https://lore.kernel.org/linux-arm-msm/b165d2cd-e8da-4f6d-9ecf-14df2b803614@linaro.org/
-			echo "Qualcomm Snapdragon X Elite (SC8380XP)"
+			case ${CPUCores} in
+				12)
+					echo "Qualcomm Snapdragon X Elite (SC8380XP)"
+					;;
+				10)
+					echo "Qualcomm SC8370/SC8370XP"
+					;;
+				8)
+					echo "Qualcomm SC8350/SC8350X"
+					;;
+			esac
 			;;
 		*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4)
 			# Socionext SC2A11: 24 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
@@ -6503,10 +6523,6 @@ GuessSoCbySignature() {
 			# Why A53/A72 still in 2024? Since last ARM cores able to boot a 32-bit
 			# ARMv8l kernel (32-bit userlands consume way less memory compared to 64-bit)
 			grep -E -q 'allwinner|sun60i|r923' <<<"${DTCompatible}" && echo "Allwinner R923" || echo "Rockchip RK3576"
-			;;
-		*A7r0p5*A7r0p5*A7r0p5)
-			# RK3506, 3 x Cortex-A7 / r0p5 (stepping is assumption)
-			echo "Rockchip RK3506"
 			;;
 		0?A55r2p00?A55r2p00?A55r2p00?A55r2p0*A76r4p0??A76r4p0)
 			# RK3582, assumed to be a stripped down RK3588 variant with two A76 removed (and gpu/rkvdec according to some Github comments)
@@ -7291,6 +7307,10 @@ GuessSoCbySignature() {
 		0?IngenicV4.15FPUV0.00?IngenicV4.15FPUV0.0)
 			# Ingenic JZ4780: dual-core MIPS32
 			echo "Ingenic JZ4780"
+			;;
+		*A7r0p5*A7r0p5*A7r0p5)
+			# RK3506, 3 x Cortex-A7 / r0p5 (stepping is assumption)
+			grep -q rk3506 <<<"${DTCompatible}" && echo "Rockchip RK3506"
 			;;
 	esac
 } # GuessSoCbySignature

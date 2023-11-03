@@ -7303,9 +7303,13 @@ GuessSoCbySignature() {
 			echo "Loongson-3A5000M"
 			;;
 		*Loongson3A6000*Loongson3A6000*Loongson3A6000*Loongson3A6000)
-			# Loongson-3A6000: 8 x LoongArch / loongarch32, loongarch64 / cpucfg lam ual fpu lsx lasx crc32 complex crypto lvz lbt_x86 lbt_arm lbt_mips https://github.com/ThomasKaiser/sbc-bench/blob/master/results/cpuinfo/Loongson-3A6000-4.19.0-loongson-3.cpuinfo
-			# Has SMT support: with SCHED_SMT enabled CPU appears as 4c/8t, without as 8c/8t: https://lkml.org/lkml/2023/6/14/397
+			# Loongson-3A6000: 4 x LoongArch / loongarch32, loongarch64 / cpucfg lam ual fpu lsx lasx crc32 complex crypto lvz lbt_x86 lbt_arm lbt_mips https://github.com/ThomasKaiser/sbc-bench/blob/master/results/cpuinfo/Loongson-3A6000-4.19.0-loongson-3.cpuinfo
+			# With SMT support: with SCHED_SMT enabled CPU appears as 4c/8t, without as 8c/8t? https://lkml.org/lkml/2023/6/14/397
 			echo "Loongson-3A6000"
+			;;
+		*Loongson3?6000*Loongson3?6000*Loongson3?6000*Loongson3?6000)
+			# Loongson-3A6000 variants with more cores
+			[ "X${ModelName}" != "X" ] && echo "${ModelName}"
 			;;
 		*A55*A55*A55*A55*A76r?p?|*A76r?p?*A55*A55*A55*A55r?p?)
 			# Amlogic S928X, 4 x Cortex-A55 + 1 x Cortex-A76: https://browser.geekbench.com/v5/cpu/compare/19788026?baseline=20656779
@@ -8638,10 +8642,14 @@ CheckStorage() {
 					;;
 				0x000015/0x0100|0x00001b/0x534d|0x0000ce*)
 					# 0x534d -> "SM"
-					Manufacturer="${Manufacturer}Samsung"
-					# erase mmc_name if 00000 since Samsung SD cards all use this non-descriptive
-					# string that's also used by scammers (Samsung eMMC though uses descriptive names)
-					[ "X${mmc_name}" = "X00000" ] && mmc_name="" || Manufacturer="${Manufacturer}Samsung "
+					if [ "X${mmc_name}" = "X00000" ]; then
+						# erase mmc_name if 00000 since Samsung SD cards all use this non-descriptive
+						# string that's also used by scammers (Samsung eMMC though uses descriptive names)
+						Manufacturer="${Manufacturer}Samsung"
+						mmc_name=""
+					else
+						Manufacturer="${Manufacturer}Samsung "
+					fi
 					;;
 				0x00001d/0x4144)
 					# 0x4144 -> "AD"

@@ -7302,8 +7302,9 @@ GuessSoCbySignature() {
 			# Loongson-3A5000M: 4 x LoongArch / loongarch32, loongarch64 / cpucfg lam ual fpu lsx lasx complex crypto lvz lbt_x86 lbt_arm lbt_mips https://github.com/ThomasKaiser/sbc-bench/blob/master/results/cpuinfo/Loongson-3A5000M-4.19.0.cpuinfo
 			echo "Loongson-3A5000M"
 			;;
-		0?Loongson3A60000?Loongson3A60000?Loongson3A60000?Loongson3A6000)
+		*Loongson3A6000*Loongson3A6000*Loongson3A6000*Loongson3A6000)
 			# Loongson-3A6000: 8 x LoongArch / loongarch32, loongarch64 / cpucfg lam ual fpu lsx lasx crc32 complex crypto lvz lbt_x86 lbt_arm lbt_mips https://github.com/ThomasKaiser/sbc-bench/blob/master/results/cpuinfo/Loongson-3A6000-4.19.0-loongson-3.cpuinfo
+			# Has SMT support: with SCHED_SMT enabled CPU appears as 4c/8t, without as 8c/8t: https://lkml.org/lkml/2023/6/14/397
 			echo "Loongson-3A6000"
 			;;
 		*A55*A55*A55*A55*A76r?p?|*A76r?p?*A55*A55*A55*A55r?p?)

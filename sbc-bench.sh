@@ -621,6 +621,12 @@ GetCoreType() {
 		loongarch*)
 			ModelName="$(awk -F": " '/^model name/ {print $2}' <<< "${ProcCPU}" | sed -n $(( $1 + 1 ))p)"
 			case ${ModelName} in
+				*3?5000*)
+					echo "LA464"
+					;;
+				*3?6000*)
+					echo "LA664"
+					;;
 				"")
 					# fallback to cpu model if existing
 					grep -q 'cpu model' <<< "${ProcCPU}" && awk -F": " '/^cpu model/ {print $2}' <<< "${ProcCPU}" | sed -n $(( $1 + 1 ))p
@@ -7295,6 +7301,10 @@ GuessSoCbySignature() {
 		0?Loongson3A5000M0?Loongson3A5000M0?Loongson3A5000M0?Loongson3A5000M)
 			# Loongson-3A5000M: 4 x LoongArch / loongarch32, loongarch64 / cpucfg lam ual fpu lsx lasx complex crypto lvz lbt_x86 lbt_arm lbt_mips https://github.com/ThomasKaiser/sbc-bench/blob/master/results/cpuinfo/Loongson-3A5000M-4.19.0.cpuinfo
 			echo "Loongson-3A5000M"
+			;;
+		0?Loongson3A60000?Loongson3A60000?Loongson3A60000?Loongson3A6000)
+			# Loongson-3A6000: 8 x LoongArch / loongarch32, loongarch64 / cpucfg lam ual fpu lsx lasx crc32 complex crypto lvz lbt_x86 lbt_arm lbt_mips https://github.com/ThomasKaiser/sbc-bench/blob/master/results/cpuinfo/Loongson-3A6000-4.19.0-loongson-3.cpuinfo
+			echo "Loongson-3A6000"
 			;;
 		*A55*A55*A55*A55*A76r?p?|*A76r?p?*A55*A55*A55*A55r?p?)
 			# Amlogic S928X, 4 x Cortex-A55 + 1 x Cortex-A76: https://browser.geekbench.com/v5/cpu/compare/19788026?baseline=20656779

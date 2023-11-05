@@ -5060,11 +5060,14 @@ GuessARMSoC() {
 	# rockchip-cpuinfo cpuinfo: SoC            : 35280000 --> Hlink H28K
 	# rockchip-cpuinfo cpuinfo: SoC            : 35281000 --> Hlink H28K
 	# rockchip-cpuinfo cpuinfo: SoC            : 35661000 --> Quartz64, RK3566 EVB2 LP4X V10 Board, Firefly RK3566-ROC-PC
-	# rockchip-cpuinfo cpuinfo: SoC            : 35662000 --> EmbedFire LubanCat-Zero, RK3566 BOX DEMO V10 ANDROID Board, Rock 3C
-	# rockchip-cpuinfo cpuinfo: SoC            : 35681000 --> only early RK3568 devices showed this silicon revision (e.g. Firefly RK3568-ROC-PC/AIO-3568J)
-	# rockchip-cpuinfo cpuinfo: SoC            : 35682000 --> RK3568-ROC-PC, NanoPi R5S, ODROID-M1, Mrkaio M68S, OWLVisionTech rk3568 opc Board, Radxa ROCK3A,
-	#                                                         Rockemd R68K 2.5G, Hinlink H68K, Magewell Pro Convert NDI to AIO 4K Gen2, AIO-3568J, Forlinx OK3568-C,
-	#                                                         Smartfly YY3568 Board, CPdevice Spring2 Plus Board, HINLINK H66K
+	# rockchip-cpuinfo cpuinfo: SoC            : 35662000 --> EmbedFire LubanCat-Zero, RK3566 BOX DEMO V10 ANDROID Board, Rock 3C, Radxa CM3, Orange Pi 3B,
+	#                                                         Orange Pi CM4
+	# rockchip-cpuinfo cpuinfo: SoC            : 35681000 --> only early RK3568 devices showed this silicon revision (e.g. Firefly RK3568-ROC-PC/AIO-3568J,
+	#                                                         Radxa E25)
+	# rockchip-cpuinfo cpuinfo: SoC            : 35682000 --> AIO-3568J HDMI, CPdevice Spring2 Plus Board, Firefly RK3568-ROC-PC HDMI, Forlinx OK3568-C Board,
+	#                                                         FriendlyElec NanoPi R3S, FriendlyElec NanoPi R5S, FriendlyElec NanoPi R5S, Hardkernel ODROID-M1
+	#                                                         HINLINK H66K, HINLINK H68K, Magewell Pro Convert NDI, Mrkaio M68S, OWLVisionTech rk3568 opc Board,
+	#                                                         Radxa Rock3A, Radxa ROCK 3 Model, Radxa ROCK3 Model A, Rockemd R68K 2.5G, SMARTFLY YY3568 Board
 	# rockchip-cpuinfo cpuinfo: SoC            : 35880000 --> 9Tripod X3588S Board, Firefly ITX-3588J HDMI(Linux), Firefly ROC-RK3588S-PC HDMI(Linux),
 	#                                                         FriendlyElec NanoPC-T6, FriendlyElec NanoPi R6C, FriendlyElec NanoPi R6S, HINLINK OWL H88K Board,
 	#                                                         Khadas Edge2, Mekotronics R58X-4G (RK3588 EDGE LP4x V1.2 BlueBerry Board), Mixtile Blade 3 v1.0.1,
@@ -7959,6 +7962,10 @@ CheckKernelVersion() {
 	# Debian/Ubuntu kernel versions look like 6.2.0-32-generic, 5.10.0-23-amd64 or
 	# 5.15.0-1035-raspi for example
 	grep -v -E 'amlogic|librem5|rockchip' <<<"$1" | grep -q -E '[3-9]\.[0-9]{1,3}\.[0-9]{1,2}-[0-9]{1,4}-raspi|[3-9]\.[0-9]{1,3}\.[0-9]{1,2}-[0-9]{1,3}-[a-z]{1,3}' && return
+
+	# RPi Bookworm images implement a new naming scheme not directly exposing real kernel
+	# version, e.g. an RPi 4 runs 6.1.0-rpi4-rpi-v8, RPi 5 runs 6.1.0-rpi4-rpi-2712
+	grep -q -E 'rpi4-rpi' <<<"$1" && return
 
 	# skip this whole check on x86 and in aarch64 VMs where usually distro kernels are
 	# used that follow an own release schedule

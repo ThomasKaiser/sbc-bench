@@ -1885,10 +1885,8 @@ CheckOSReleaseForReview() {
 
 GetOSRelease() {
 	# try to get human friendly OS release name
-	command -v hostnamectl >/dev/null 2>&1
-	if [ $? -eq 0 ]; then
-		OS="$(hostnamectl | awk -F": " '/Operating System:/ {print $2}')"
-	elif [ -f /etc/os-release ]; then
+	OS="$(hostnamectl 2>/dev/null | awk -F": " '/Operating System:/ {print $2}')"
+	if [ "X${OS}" = "X" -a -f /etc/os-release ]; then
 		OS="$(awk -F'"' '/^PRETTY_NAME/ {print $2}' </etc/os-release)"
 	fi
 	case "${OS}" in
@@ -1906,6 +1904,9 @@ GetOSRelease() {
 			# just by updating Debian/Ubuntu once the base-files package gets updated):
 			apt-get -f -qq -y --reinstall install base-files >/dev/null 2>&1
 			hostnamectl | awk -F": " '/Operating System:/ {print $2}'
+			;;
+		"")
+			echo "n/a"
 			;;
 		*)
 			grep -q -i Gentoo <<<"${OS}" && read OS </etc/gentoo-release
@@ -3042,10 +3043,14 @@ InitialMonitoring() {
 			khadas_pci=${cmdline##*pci=}
 			khadas_imagetype=${cmdline##*imagetype=}
 			khadas_uboottype=${cmdline##*uboottype=}
-			echo "Build system:  Khadas Fenix ${VERSION}, ${khadas_board%% *}/${khadas_hwver%% *}, u-boot type: ${khadas_uboottype%% *}, image type: ${khadas_imagetype%% *}" >>${ResultLog}
+			echo "Build system:   Khadas Fenix ${VERSION}, ${khadas_board%% *}/${khadas_hwver%% *}, u-boot type: ${khadas_uboottype%% *}, image type: ${khadas_imagetype%% *}" >>${ResultLog}
 		else
-			echo "Build system:  Khadas Fenix ${VERSION}" >>${ResultLog}
+			echo "Build system:   Khadas Fenix ${VERSION}" >>${ResultLog}
 		fi
+	elif [ -r /boot/dietpi/.version ]; then
+		# DietPi
+		. /boot/dietpi/.version
+		echo -e "Build \"system\": DietPi ${G_DIETPI_VERSION_CORE}.${G_DIETPI_VERSION_SUB}.${G_DIETPI_VERSION_RC}, https://github.com/${G_GITOWNER}/DietPi/tree/${G_GITBRANCH}" >>${ResultLog}
 	elif [ -r /etc/orangepi-release ]; then
 		# Xunlong's forked Armbian scripts
 		. /etc/orangepi-release
@@ -5061,7 +5066,7 @@ GuessARMSoC() {
 	# rockchip-cpuinfo cpuinfo: SoC            : 35681000 --> only early RK3568 devices showed this silicon revision (e.g. Firefly RK3568-ROC-PC/AIO-3568J,
 	#                                                         Radxa E25)
 	# rockchip-cpuinfo cpuinfo: SoC            : 35682000 --> AIO-3568J HDMI, CPdevice Spring2 Plus Board, Firefly RK3568-ROC-PC HDMI, Forlinx OK3568-C Board,
-	#                                                         FriendlyElec NanoPi R3S, FriendlyElec NanoPi R5S, FriendlyElec NanoPi R5S, Hardkernel ODROID-M1
+	#                                                         FriendlyElec NanoPi R3S, FriendlyElec NanoPi R5C, FriendlyElec NanoPi R5S, Hardkernel ODROID-M1
 	#                                                         HINLINK H66K, HINLINK H68K, Magewell Pro Convert NDI, Mrkaio M68S, OWLVisionTech rk3568 opc Board,
 	#                                                         Radxa Rock3A, Radxa ROCK 3 Model, Radxa ROCK3 Model A, Rockemd R68K 2.5G, SMARTFLY YY3568 Board
 	# rockchip-cpuinfo cpuinfo: SoC            : 35880000 --> 9Tripod X3588S Board, Firefly ITX-3588J HDMI(Linux), Firefly ROC-RK3588S-PC HDMI(Linux),
@@ -5137,7 +5142,7 @@ GuessARMSoC() {
 	# soc soc0: Amlogic Meson SM1 (S905D3) Revision 2b:b (1:2) Detected <-- AMedia X96 Max+/Air / HK1 Box/Vontar X3 / SEI Robotics SEI610 / X96 Max Plus Q1
 	# soc soc0: Amlogic Meson SM1 (Unknown) Revision 2b:b (1:2) Detected <-- Shenzhen Amediatech Technology Co. Ltd X96 Air / AMedia X96 Max+ / SEI Robotics SEI610 / HK1 Box/Vontar X3
 	# soc soc0: Amlogic Meson SM1 (S905D3) Revision 2b:c (4:2) Detected <-- Khadas VIM3L / https://www.spinics.net/lists/arm-kernel/msg848718.html
-	# soc soc0: Amlogic Meson SM1 (S905X3) Revision 2b:c (10:2) Detected <-- AMedia X96 Max+ / H96 Max X3 / ODROID-C4 / ODROID-HC4 / HK1 Box/Vontar X3 / SEI Robotics SEI610 / Shenzhen Amediatech Technology Co. Ltd X96 Max/Air / Shenzhen CYX Industrial Co. Ltd A95XF3-AIR / Sinovoip BANANAPI-M5 / Skyworth LB2004-A4091 / Tanix TX3 (QZ) / Ugoos X3
+	# soc soc0: Amlogic Meson SM1 (S905X3) Revision 2b:c (10:2) Detected <-- AMedia X96 Max+ / H96 Max X3 / ODROID-C4 / ODROID-HC4 / HK1 Box/Vontar X3 / SEI Robotics SEI610 / Shenzhen Amediatech Technology Co. Ltd X96 Max/Air / Shenzhen CYX Industrial Co. Ltd A95XF3-AIR / Sinovoip BANANAPI-M5 / Skyworth LB2004-A4091 / Tanix TX3 (QZ) / Ugoos X3 / AI-Speaker DEV3
 	# soc soc0: Amlogic Meson SM1 (Unknown) Revision 2b:c (10:2) Detected <-- Khadas VIM3L / HK1 Box/Vontar X3
 	# soc soc0: Amlogic Meson SM1 (Unknown) Revision 2b:b (18:2) Detected <-- Shenzhen Amediatech Technology Co. Ltd X96 Air / HK1 Box/Vontar X3
 	# soc soc0: Amlogic Meson SM1 (Unknown) Revision 2b:b (40:2) Detected <-- Khadas VIM3L
@@ -7725,10 +7730,7 @@ ProvideReviewInfo() {
 	BuildInfo="$(grep "^Build system:   " ${ResultLog} | sed 's/Build system:   /  * Build scripts: /')"
 	[ -z "${BuildInfo}" ] || echo "${BuildInfo}" >>"${TempDir}/review"
 	grep -i "^ Compiler:" ${ResultLog} | sed -e 's/^/  */' >>"${TempDir}/review"
-	# skip OpenSSL version reporting on ARMv8 systems with Crypto Extensions since irrelevant:
-	# https://github.com/ThomasKaiser/sbc-bench/blob/master/results/ARMv8-Crypto-Extensions.md
-	grep -q "aes pmull sha1 sha2" <<<"${ProcCPU}" || \
-		openssl version | awk -F" " '{print "  * "$1" "$2", built on "$3" "$4" "$5" "$6" "$7" "$8" "$9" "$10" "$11" "$12" "$13" "$14" "$15}' >>"${TempDir}/review"
+	openssl version | awk -F" " '{print "  * "$1" "$2", built on "$3" "$4" "$5" "$6" "$7" "$8" "$9" "$10" "$11" "$12" "$13" "$14" "$15}' >>"${TempDir}/review"
 	[ -z "${ThreadXVersion}" ] || echo -e "  * ThreadX: $(tail -n1 <<<"${ThreadXVersion}" | cut -d' ' -f2) / $(head -n1 <<<"${ThreadXVersion}")" >>"${TempDir}/review"
 
 	# Kernel relevant settings / versions

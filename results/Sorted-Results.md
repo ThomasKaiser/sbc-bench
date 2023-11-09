@@ -145,6 +145,7 @@
 | [x5-Z8350](http://ix.io/1HnC) | 1920/1680 MHz | 4.15 | Bionic amd64 | **4710** | 1272 | 207640 | 2740 | 3140 | - |
 | [PineH64 (Allwinner H6)](http://ix.io/26Ph) | 1800 MHz | 5.4 | Buster arm64 | **4710** | 1293 | 839870 | 1420 | 5560 | 7.10 |
 | [Hlink H28K (RK3528)](http://ix.io/4I93) | 2000 Mhz | 5.10 | Jammy arm64 | **4680** | 1388 | 933630 | 2090 | 7650 | 6.48 |
+| [Celeron N4020](http://ix.io/4vNB) | 2800 MHz | 5.15 | Bookworm amd64 | **4680** | 2577 | 780770 | 5480 | 5390 | - |
 | [PineH64 (Allwinner H6)](http://ix.io/1jEr) | 1800 MHz | 4.18 | Stretch arm64 | **4650** | 1274 | 836900 | 1380 | 5530 | 5.62 |
 | [Radxa Zero (S905Y2)](http://ix.io/3wZn) | 1800 MHz | 5.10 | Focal arm64 | **4610** | 1267 | 840080 | 1600 | 5370 | - |
 | [Radxa Zero (S905Y2)](http://ix.io/3JCm) | 1800 MHz | 5.10 | Bullseye arm64 | **4580** | 1353 | 838360 | 1600 | 5360 | 7.13 |
@@ -152,7 +153,6 @@
 | [Atom Z3735F](http://ix.io/4r54) | 1830 MHz | 5.15 | Jammy amd64 | **4510** | 1437 | 227900 | 3020 | 2780 | - |
 | [x5-Z8300](http://ix.io/4j4o) | 1840 MHz | 5.15 | Jammy amd64 | **4430** | 1368 | 227030 | 2270 | 2380 | 8.84 |
 | [HummingBoard Pulse i.MX8M Quad](http://ix.io/27FC) | 1500 MHz | 4.19 | Buster arm64 | **4330** | 1201 | 695540 | 2230 | 9900 | - |
-| [Celeron N4020](http://ix.io/4vNB) | 2800 MHz | 5.15 | Bullseye amd64 | **4310** | 2533 | 779580 | 5280 | 5190 | - |
 | [VisionFive V2 (JH7110)](http://ix.io/4xOY) | 1500 MHz | 5.15 | Sid riscv64 | **4180** | 1197 | 25080 | 880 | 770 | - |
 | [Milk-V Mars CM (JH7110)](http://ix.io/4K7E) | 1500 MHz | 5.15 | Bookworm riscv64 | **4110** | 1195 | 25070 | 930 | 830 | - |
 | [MangoPi Mcore (Allwinner H616)](http://ix.io/4bSf) | 1800 MHz | 5.19 | Jammy arm64 | **4100** | 1218 | 840270 | 990 | 2380 | - |
@@ -272,8 +272,8 @@
 | [Phytium<br />FT-2000/4<br />(1 x SO-DIMM)](http://ix.io/4ioj) | 2600 MHz | 5.15 | Bullseye arm64 | 10020 | **2755** | 936740 | 3760 | 14540 | - |
 | [Jetson Xavier AGX](http://ix.io/4ebH) | 2250 MHz | 4.9 | Bionic arm64 | 21590 | **2742** | 853250 | 10910 | 22520 | 26.57 |
 | [Orange Pi 5 (RK3588)](http://ix.io/4D0a) | 2400/1800 MHz | 5.10 | Jammy arm64 | 16780 | **2689** | 1366590 | 12800 | 29900 | - |
+| [Celeron N4020](http://ix.io/4vNB) | 2800 MHz | 5.15 | Bookworm amd64 | 4680 | **2577** | 780770 | 5480 | 5390 | - |
 | [Athlon II X3 420e](http://ix.io/4eOo) | 2600 MHz | 4.19 | Buster amd64 | 4780 | **2566** | 98840 | 4120 | 3870 | - |
-| [Celeron N4020](http://ix.io/4vNB) | 2800 MHz | 5.15 | Bullseye amd64 | 4310 | **2533** | 779580 | 5280 | 5190 | - |
 | [Qualcomm Snapdragon 835](http://ix.io/4fdD) | 2360/1900 MHz | 6.1 | Jammy arm64 | 9800 | **2474** | 883330 | 9720 | 14070 | 12.58 |
 | [Pentium J5005](http://ix.io/21rE) | 2700/1500 MHz | 5.0 | Bionic amd64 | 9230 | **2455** | 778360 | 5530 | 7130 | 20.74 |
 | [Amazon a1.xlarge](http://ix.io/2iFY) | 2300 MHz | 4.15 | Bionic arm64 | 8610 | **2406** | 1297960 | 4280 | 14220 | - |
@@ -565,7 +565,7 @@
 | [Celeron N5105](http://ix.io/3Qf7) | 2900/2000 MHz | 5.13 | Focal amd64 | 11450 | 3059 | **811760** | 7710 | 9290 | 21.79 |
 | [Celeron N4500](http://ix.io/3HUU) | 2800/1100 MHz | 5.13 | Impish amd64 | 6300 | 3091 | **783840** | 8100 | 8350 | - |
 | [Celeron N5100](http://ix.io/3IlQ) | 2800/1100 MHz | 5.13 | Focal amd64 | 10550 | 3088 | **783800** | 7750 | 8090 | 19.22 |
-| [Celeron N4020](http://ix.io/4vNB) | 2800 MHz | 5.15 | Bullseye amd64 | 4310 | 2533 | **779580** | 5280 | 5190 | - |
+| [Celeron N4020](http://ix.io/4vNB) | 2800 MHz | 5.15 | Bookworm amd64 | 4680 | 2577 | **780770** | 5480 | 5390 | - |
 | [Pentium J5005](http://ix.io/21rE) | 2700/1500 MHz | 5.0 | Bionic amd64 | 9230 | 2455 | **778360** | 5530 | 7130 | 20.74 |
 | [Celeron J4125](http://ix.io/4hau) | 2700/2000 MHz | 5.15 | Jammy amd64 | 7620 | 2367 | **751360** | 5110 | 5960 | 18.30 |
 | [Nintendo Switch (Tegra X1)](http://ix.io/3Di2) | 2060 MHz | 4.9 | Bionic arm64 | 6720 | 1901 | **746680** | 2370 | 3670 | 9.25 |
@@ -740,7 +740,7 @@
 | [Celeron J4105](http://ix.io/1qb0) | 2400/1500 MHz | 4.15 | Bionic amd64 | 8960 | 2274 | 697080 | **5620** | 7650 | 19.13 |
 | [Pentium J5005](http://ix.io/21rE) | 2700/1500 MHz | 5.0 | Bionic amd64 | 9230 | 2455 | 778360 | **5530** | 7130 | 20.74 |
 | [Celeron J4105](http://ix.io/1qal) | 2400/1500 MHz | 4.15 | Bionic amd64 | 9020 | 2290 | 697100 | **5500** | 7410 | 19.07 |
-| [Celeron N4020](http://ix.io/4vNB) | 2800 MHz | 5.15 | Bullseye amd64 | 4310 | 2533 | 779580 | **5280** | 5190 | - |
+| [Celeron N4020](http://ix.io/4vNB) | 2800 MHz | 5.15 | Bookworm amd64 | 4680 | 2577 | 780770 | **5480** | 5390 | - |
 | [Raspberry Pi 5 B (BCM2712)](http://ix.io/4HDw) | 2400 MHz | 6.1 | Bookworm arm64 | 10950 | 3160 | 1367990 | **5260** | 11520 | 15.42 |
 | [Celeron N3350](http://ix.io/4rJj) | 2400 MHz | 6.0 | Bullseye amd64 | 3810 | 2034 | 446170 | **5190** | 5700 | - |
 | [Celeron J4125](http://ix.io/4hau) | 2700/2000 MHz | 5.15 | Jammy amd64 | 7620 | 2367 | 751360 | **5110** | 5960 | 18.30 |
@@ -1039,11 +1039,11 @@
 | [Rock64 (RK3328)](http://ix.io/1iZj) | 1400 MHz | 4.4 | Stretch arm64 | 3590 | 1030 | 643700 | 1320 | **5640** | 4.40 |
 | [PineH64 (Allwinner H6)](http://ix.io/26Ph) | 1800 MHz | 5.4 | Buster arm64 | 4710 | 1293 | 839870 | 1420 | **5560** | 7.10 |
 | [PineH64 (Allwinner H6)](http://ix.io/1jEr) | 1800 MHz | 4.18 | Stretch arm64 | 4650 | 1274 | 836900 | 1380 | **5530** | 5.62 |
+| [Celeron N4020](http://ix.io/4vNB) | 2800 MHz | 5.15 | Bookworm amd64 | 4680 | 2577 | 780770 | 5480 | **5390** | - |
 | [Radxa Zero (S905Y2)](http://ix.io/3wZn) | 1800 MHz | 5.10 | Focal arm64 | 4610 | 1267 | 840080 | 1600 | **5370** | - |
 | [Radxa Zero (S905Y2)](http://ix.io/3JCm) | 1800 MHz | 5.10 | Bullseye arm64 | 4580 | 1353 | 838360 | 1600 | **5360** | 7.13 |
 | [Radxa Zero (S905Y2)](http://ix.io/3PlT) | 1800 MHz | 5.10 | Buster arm64 | 4570 | 1373 | 839080 | 1610 | **5250** | 6.82 |
 | [Celeron N4100](http://ix.io/1uTS) | 2300/1100 MHz | 4.15 | Bionic amd64 | 8510 | 2222 | 669350 | 4750 | **5240** | 18.33 |
-| [Celeron N4020](http://ix.io/4vNB) | 2800 MHz | 5.15 | Bullseye amd64 | 4310 | 2533 | 779580 | 5280 | **5190** | - |
 | [Pentium J4205](http://ix.io/1m5t) | 2560/1500 MHz | 4.17 | Stretch amd64 | 7570 | 2146 | 480640 | 5070 | **5170** | 18.82 |
 | [Libre Computer AML-S912-PC](http://ix.io/40cj) | 1415/1000 MHz | 5.15 | Bullseye arm64 | 5980 | 1012 | 659290 | 1650 | **5170** | - |
 | [ODROID-HC4 (S905X3)](http://ix.io/3Na5) | 2100 MHz | 5.10 | Buster arm64 | 5730 | 1672 | 980970 | 3540 | **5150** | - |
@@ -1181,7 +1181,7 @@
 | [Qualcomm QRB5165](http://ix.io/49kx) | **2840/2410/1790** MHz| 4.19 | Focal arm64 | 18860 | 3898 | 1598490 | 14470 | 23910 | 25.56 |
 | [Celeron N5100](http://ix.io/3IlQ) | **2800/1100** MHz| 5.13 | Focal amd64 | 10550 | 3088 | 783800 | 7750 | 8090 | 19.22 |
 | [Celeron N4500](http://ix.io/3HUU) | **2800/1100** MHz| 5.13 | Impish amd64 | 6300 | 3091 | 783840 | 8100 | 8350 | - |
-| [Celeron N4020](http://ix.io/4vNB) | **2800** MHz| 5.15 | Bullseye amd64 | 4310 | 2533 | 779580 | 5280 | 5190 | - |
+| [Celeron N4020](http://ix.io/4vNB) | **2800** MHz| 5.15 | Bookworm amd64 | 4680 | 2577 | 780770 | 5480 | 5390 | - |
 | [Ampere Altra M96-28](http://ix.io/4zGI) | **2800** MHz| 5.15 | Jammy arm64 | 249380 | 3858 | 1596110 | 10130 | 44750 | - |
 | [Pentium J5005](http://ix.io/21rE) | **2700/1500** MHz| 5.0 | Bionic amd64 | 9230 | 2455 | 778360 | 5530 | 7130 | 20.74 |
 | [Celeron J4125](http://ix.io/4hau) | **2700/2000** MHz| 5.15 | Jammy amd64 | 7620 | 2367 | 751360 | 5110 | 5960 | 18.30 |

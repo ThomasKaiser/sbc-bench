@@ -1,6 +1,6 @@
 # Raspberry Pi 5 Model B Rev 1.0
 
-Tested with sbc-bench v0.9.48 on Sat, 21 Oct 2023 16:31:49 +0100. Full info: [http://ix.io/4JAv](http://ix.io/4JAv)
+Tested with sbc-bench v0.9.48 on Sat, 21 Oct 2023 16:31:49 +0100. Full info: [http://ix.io/4JAv](http://ix.io/4JAv) and [Jeff Geerling's review thread](https://github.com/geerlingguy/sbc-reviews/issues/21).
 
 ### General information:
 

@@ -490,8 +490,8 @@ GetARMCore() {
 	50:APM
 	50/000:APM X-Gene
 	51:Qualcomm
-	51/001:Qualcomm Oryon
-	51/002:Qualcomm Oryon
+	51/001:Qualcomm Oryon 1
+	51/002:Qualcomm Oryon 2
 	51/00f:Qualcomm Scorpion
 	51/02d:Qualcomm Scorpion
 	51/04d:Qualcomm Krait
@@ -2653,10 +2653,6 @@ CheckGB() {
 			DLSuffix="LinuxRISCVPreview"
 			GBBinaryName="geekbench_riscv64"
 			FirstOfflineCPU=1
-			# check whether Geekbench-6.0.0-LinuxRISCVPreview.tar.gz exists. If 404 is
-			# returned do a fallback to last known 5.5 version
-			curl -s -I https://cdn.geekbench.com/Geekbench-6.0.0-LinuxRISCVPreview.tar.gz 2>/dev/null | grep -q 404
-			[ $? -eq 0 ] && GBVersion="5.5"
 			;;
 		amd64|*x86*)
 			DLSuffix="Linux"
@@ -2991,7 +2987,7 @@ InitialMonitoring() {
 	if [ $? -eq 0 -a "X${ProcCPUFile}" = "X/proc/cpuinfo" ]; then
 		UploadScheme="f:1=<-"
 		UploadServer="ix.io"
-		UploadAnswer="$( (echo -e "/proc/cpuinfo\n\n$(uname -a) / ${DeviceName}\n" ; cat /proc/cpuinfo ; echo -e "\n${CPUTopology}\n\n${CPUSignature} / ${GuessedSoC}\n\n${DTCompatible}\n\n${OPPTables}\n\n$(grep . /sys/devices/virtual/thermal/thermal_zone?/* 2>/dev/null)\n\n$(grep . /sys/class/hwmon/hwmon?/* 2>/dev/null)") 2>/dev/null | curl -s -F ${UploadScheme} ${UploadServer} 2>&1)"
+		UploadAnswer="$( (echo -e "/proc/cpuinfo ${Version}\n\n$(uname -a) / ${DeviceName}\n" ; cat /proc/cpuinfo ; echo -e "\n${CPUTopology}\n\n${CPUSignature} / ${GuessedSoC}\n\n${DTCompatible}\n\n${OPPTables}\n\n$(grep . /sys/devices/virtual/thermal/thermal_zone?/* 2>/dev/null)\n\n$(grep . /sys/class/hwmon/hwmon?/* 2>/dev/null)") 2>/dev/null | curl -s -F ${UploadScheme} ${UploadServer} 2>&1)"
 		case "${UploadAnswer}" in
 			*ix.io*)
 				# everything's fine
@@ -5095,7 +5091,7 @@ GuessARMSoC() {
 	# soc soc0: Amlogic Meson GXL (S905D) Revision 21:b (2:2) Detected <-- MeCool KI Pro, Phicomm N1, Amlogic Meson GXL (S905D) P231 Development Board
 	# soc soc0: Amlogic Meson GXL (Unknown) Revision 21:b (2:2) Detected <-- Phicomm N1
 	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:b (82:2) Detected <-- Libre Computer AML-S905X-CC / NEXBOX A95X (S905X) / Tanix TX3 Mini / Amlogic Meson GXL (S905X) P212 Development Board / Amlogic Meson GXL (S905W) P281 Development Board
-	# soc soc0: Amlogic Meson GXL (S905W) Revision 21:b (a2:2) Detected <-- Tanix TX3 Mini / Amlogic Meson GXL (S905X) P212 Development Board, Amlogic Meson GXL (S905W) P281 Development Board
+	# soc soc0: Amlogic Meson GXL (S905W) Revision 21:b (a2:2) Detected <-- Tanix TX3 Mini / X96W Smart TV Box / Amlogic Meson GXL (S905X) P212 Development Board, Amlogic Meson GXL (S905W) P281 Development Board
 	# soc soc0: Amlogic Meson GXL (S905L) Revision 21:b (c2:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson GXL (S905M2) Revision 21:b (e2:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:c (84:2) Detected <-- Khadas VIM / Rureka / Amlogic Meson GXL (S905X) P212 Development Board

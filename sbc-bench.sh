@@ -602,7 +602,20 @@ GetCoreType() {
 			fi
 			;;
 		riscv*)
-			# TODO: newer kernels now expose more information so we could use this in the future:
+			# TODO: newer kernels now expose more information so we could use this:
+			# (mvendorid corresponds to manufacturer's JEDEC ID)
+			#
+			# AX45MP core in Renesas RZ/Five (R9A07G043)
+			# mvendorid	: 0x31e (Andes)
+			# marchid	: 0x8000000000008a45
+			# mimpid	: 0x500
+			#
+			# SiFive U74 cores in JH7110
+			# mvendorid	: 0x489 (SiFive)
+			# marchid	: 0x8000000000000007
+			# mimpid	: 0x4210427
+			#
+			# C920 cores in Sophgo SG2042
 			# mvendorid	: 0x5b7 (T-Head)
 			# marchid	: 0x0
 			# mimpid	: 0x0
@@ -3050,7 +3063,7 @@ InitialMonitoring() {
 	elif [ -r /boot/dietpi/.version ]; then
 		# DietPi
 		. /boot/dietpi/.version
-		echo -e "Build \"system\": DietPi ${G_DIETPI_VERSION_CORE}.${G_DIETPI_VERSION_SUB}.${G_DIETPI_VERSION_RC}, https://github.com/${G_GITOWNER}/DietPi/tree/${G_GITBRANCH}" >>${ResultLog}
+		echo -e "Build system:   DietPi ${G_DIETPI_VERSION_CORE}.${G_DIETPI_VERSION_SUB}.${G_DIETPI_VERSION_RC}, https://github.com/${G_GITOWNER}/DietPi/tree/${G_GITBRANCH}" >>${ResultLog}
 	elif [ -r /etc/orangepi-release ]; then
 		# Xunlong's forked Armbian scripts
 		. /etc/orangepi-release
@@ -5061,8 +5074,8 @@ GuessARMSoC() {
 	# rockchip-cpuinfo cpuinfo: SoC            : 35280000 --> Hlink H28K
 	# rockchip-cpuinfo cpuinfo: SoC            : 35281000 --> Hlink H28K
 	# rockchip-cpuinfo cpuinfo: SoC            : 35661000 --> Quartz64, RK3566 EVB2 LP4X V10 Board, Firefly RK3566-ROC-PC
-	# rockchip-cpuinfo cpuinfo: SoC            : 35662000 --> EmbedFire LubanCat-Zero, RK3566 BOX DEMO V10 ANDROID Board, Rock 3C, Radxa CM3, Orange Pi 3B,
-	#                                                         Orange Pi CM4
+	# rockchip-cpuinfo cpuinfo: SoC            : 35662000 --> EmbedFire LubanCat-Zero, RK3566 BOX DEMO V10 ANDROID Board, Radxa Zero 3, Rock 3C, Radxa CM3,
+	#                                                         Orange Pi 3B, Orange Pi CM4
 	# rockchip-cpuinfo cpuinfo: SoC            : 35681000 --> only early RK3568 devices showed this silicon revision (e.g. Firefly RK3568-ROC-PC/AIO-3568J,
 	#                                                         Radxa E25)
 	# rockchip-cpuinfo cpuinfo: SoC            : 35682000 --> AIO-3568J HDMI, CPdevice Spring2 Plus Board, Firefly RK3568-ROC-PC HDMI, Forlinx OK3568-C Board,
@@ -7962,8 +7975,9 @@ CheckKernelVersion() {
 	grep -v -E 'amlogic|librem5|rockchip' <<<"$1" | grep -q -E '[3-9]\.[0-9]{1,3}\.[0-9]{1,2}-[0-9]{1,4}-raspi|[3-9]\.[0-9]{1,3}\.[0-9]{1,2}-[0-9]{1,3}-[a-z]{1,3}' && return
 
 	# RPi Bookworm images implement a new naming scheme not directly exposing real kernel
-	# version, e.g. an RPi 4 runs 6.1.0-rpi4-rpi-v8, RPi 5 runs 6.1.0-rpi4-rpi-2712
-	grep -q -E 'rpi4-rpi' <<<"$1" && return
+	# version, e.g. an RPi 4 runs 6.1.0-rpi4-rpi-v8, RPi 5 runs 6.1.0-rpi4-rpi-2712 or
+	# 6.1.0-rpi6-rpi-v8
+	grep -q -E 'rpi.-rpi' <<<"$1" && return
 
 	# skip this whole check on x86 and in aarch64 VMs where usually distro kernels are
 	# used that follow an own release schedule

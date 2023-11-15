@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.9.50
+Version=0.9.51
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -2563,6 +2563,7 @@ CheckMissingPackages() {
 	command -v curl >/dev/null 2>&1 || echo -e "curl \c"
 	command -v dmidecode >/dev/null 2>&1 || echo -e "dmidecode \c"
 	command -v git >/dev/null 2>&1 || echo -e "git \c"
+	command -v hexdump >/dev/null 2>&1 || echo -e "bsdmainutils \c"
 	command -v iostat >/dev/null 2>&1 || echo -e "sysstat \c"
 	command -v lshw >/dev/null 2>&1 || echo -e "lshw \c"
 	command -v openssl >/dev/null 2>&1 || echo -e "openssl \c"
@@ -5320,7 +5321,16 @@ GuessARMSoC() {
 	AMLS4Guess="$(awk -F"= " '/cpu_version: chip version/ {print $2}' <<<"${DMESG}")"
 	
 	if [ "X${RockchipGuess}" != "X" -a "X${RockchipGuess}" != "X0" ]; then
+		# use Rockchip SoC info from dmesg output
 		echo "Rockchip RK$(cut -c-4 <<<"${RockchipGuess}") (${RockchipGuess})" | sed 's| RK3588 | RK3588/RK3588s |'
+	elif [ -r /sys/bus/nvmem/devices/rockchip-otp0/nvmem ]; then
+		# search for Rockchip NVMEM available as otp0 to parse SoC model from there
+		RK_NVMEM="$(hexdump -C </sys/bus/nvmem/devices/rockchip-otp0/nvmem 2>/dev/null | grep "52 4b ")"
+		[ "X${RK_NVMEM}" = "X" ] || echo "Rockchip RK${RK_NVMEM:16:2}${RK_NVMEM:19:2}" | sed 's| RK3588| RK3588/RK3588s|'
+	elif [ -r /sys/bus/nvmem/devices/rockchip-efuse0/nvmem ]; then
+		# search for Rockchip NVMEM available as efuse0 to parse SoC model from there
+		RK_NVMEM="$(hexdump -C </sys/bus/nvmem/devices/rockchip-efuse0/nvmem 2>/dev/null | grep "52 4b ")"
+		[ "X${RK_NVMEM}" = "X" ] || echo "Rockchip RK${RK_NVMEM:16:2}${RK_NVMEM:19:2}" | sed 's| RK3588| RK3588/RK3588s|'
 	elif [ "X${AmlogicGuess}" != "XAmlogic Meson" ]; then
 		echo "${AmlogicGuess}" | sed -e 's/GXL (Unknown) Revision 21:b (2:2)/GXL (S905D) Revision 21:b (2:2)/' \
 		-e 's/GXL (Unknown) Revision 21:c (84:2)/GXL (S905X) Revision 21:c (84:2)/' \
@@ -6007,7 +6017,7 @@ GuessSoCbySignature() {
 			# Qualcomm MSM8996pro: 2 x Kryo r2p1 + 2 x Kryo r2p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			echo "Qualcomm MSM8996pro"
 			;;
-		00Qualcomm4XXSilverr13p1400Qualcomm4XXSilverr13p1400Qualcomm4XXSilverr13p1400Qualcomm4XXSilverr13p1400Qualcomm4XXSilverr13p1400Qualcomm4XXSilverr13p1406Qualcomm4XXGoldr15p1506Qualcomm4XXGoldr15p15)
+		00Qualcomm4XXSilver00Qualcomm4XXSilver00Qualcomm4XXSilver00Qualcomm4XXSilver00Qualcomm4XXSilver00Qualcomm4XXSilver06Qualcomm4XXGold06Qualcomm4XXGold)
 			# Qualcomm Snapdragon 7c (SC7180): 6 x Kryo 468 Silver / r13p14 + 2 x Kryo 468 Gold / r15p15 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp asimdrdm lrcpc dcpop asimddp
 			echo "Qualcomm Snapdragon 7c"
 			;;

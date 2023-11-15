@@ -5159,7 +5159,7 @@ GuessARMSoC() {
 	# soc soc0: Amlogic Meson SM1 (Unknown) Revision 2b:c (10:2) Detected <-- Khadas VIM3L / HK1 Box/Vontar X3
 	# soc soc0: Amlogic Meson SM1 (Unknown) Revision 2b:b (18:2) Detected <-- Shenzhen Amediatech Technology Co. Ltd X96 Air / HK1 Box/Vontar X3
 	# soc soc0: Amlogic Meson SM1 (Unknown) Revision 2b:b (40:2) Detected <-- Khadas VIM3L
-	# soc soc0: Amlogic Meson SM1 (Unknown) Revision 2b:c (81:2) Detected <-- AMedia X96 Max+, H96 Max X3
+	# soc soc0: Amlogic Meson SM1 (Unknown) Revision 2b:c (81:2) Detected <-- AMedia X96 Max+, X96 Air / H96 Max X3 / A95XF3-AIR
 	# soc soc0: Amlogic Meson SC2 (S905X4/C2) Revision 32:b (2:2) Detected <-- Akari AX810 / Advan AT01
 	# soc soc0: Amlogic Meson SC2 (S905X4/C2) Revision 32:d (2:1) Detected <-- Ugoos X4
 	#
@@ -5516,20 +5516,27 @@ GuessARMSoC() {
 								# SC2: S905X4, S905C2
 								echo "Amlogic S905X4/S905C2"
 								;;
-							36*)
+							360b*)
 								# T7: A311D2: 36:b (1:3)
 								echo "Amlogic A311D2"
+								;;
+							360c*)
+								# T7C: A311D2-N0D (A311D2 with NPU and different ISP): 36:c (1:2)
+								# https://docs.khadas.com/products/sbc/vim4/configurations/identify-version / https://archive.md/YUeWa
+								echo "Amlogic A311D2-N0D"
 								;;
 							37*)
 								# S4: S905Y4, S805X2, S905W2
 								echo "Amlogic S905Y4/S805X2/S905W2"
 								;;
 							*)
-								# https://tinyurl.com/y85lsxsc:
-								# T3 --> T982, T963D4, T965D4
-								# S4D --> S905C3, S905C3ENG (quad Cortex-A35): https://archive.md/4H6xM
-								#         quad-core A55 according to Amlogic 5.4 BSP kernel: tinyurl.com/r598z7aa
-								# T5D --> T950D4, T950X4
+								# https://tinyurl.com/y85lsxsc and/vs. https://tinyurl.com/5n99muj6:
+								# S4D --> S805C3, S905C3, S905C3ENG (quad Cortex-A35): https://archive.md/4H6xM
+								#         but quad-core A55 according to Amlogic 5.4 BSP kernel: tinyurl.com/r598z7aa
+								#         and CoreElec device tree files
+								#  T3 --> T965D4, T963D4, T982 (quad-core A55)
+								# T5D --> T950D4, T950X4 (quad-core A53)
+								# T5W --> T962D4 (quad-core A55)
 								echo "unknown Amlogic, serial $(cut -c-8 <<<"${AmLogicSerial}")..."
 								;;
 						esac
@@ -5697,7 +5704,7 @@ GuessARMSoC() {
 				;;
 			Hardkernel*)
 				case ${HardwareInfo} in
-					*XU4|*HC1|*HC2|*MC1|*XU4Q)
+					*XU3|*XU4|*HC1|*HC2|*MC1|*XU4Q)
 						echo "Exynos 5422"
 						;;
 					*C1*)
@@ -5711,6 +5718,9 @@ GuessARMSoC() {
 						;;
 					*M1)
 						echo "Rockchip RK3568"
+						;;
+					*M1S)
+						echo "Rockchip RK3566"
 						;;
 					*N1)
 						echo "Rockchip RK3399"

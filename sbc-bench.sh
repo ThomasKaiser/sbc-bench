@@ -5004,7 +5004,7 @@ GuessARMSoC() {
 	#      Cortex-A53 / r0p4: Allwinner A100/A133/A53/A64/H313/H5/H6/H616/H618/H64/R329/R818/R923/T507/T509, Amlogic A113X/A113D/A311D/A311D2/S805X/S805Y/S905/S905X/S905D/S905W/S905L/S905L3A/S905M2/S905X2/S905Y2/S905D2/S912/S922X/T962X2, Broadcom BCM2837/BCM2709/BCM2710/RP3A0-AU (BCM2710A1), Exynos 7570/8890, HiSilicon Hi3798C-V200, HiSilicon Kirin 650/710/950/955/960/970, Marvell Armada 37x0, Mediatek MT6739WA/MT6762M/MT6765/MT6771V/MT6797/MT6797T/MT6799/MT8183/MT8735, NXP i.MX8M/i.MX8QM/LS1xx8, Qualcomm IPQ5332/MSM8937/MSM8952/MSM8953/MSM8956/MSM8976/MSM8976PRO/SDM439/SDM450, RealTek RTD129x/RTD139x, Rockchip RK3318/RK3328/RK3528/RK3562/RK3399, Samsung Exynos 7870/7885/8890/8895, Socionext LD20/SC2A11, TI K3 AM623/AM625/AM62A/AM642/AM654, Xiaomi Surge S1
 	#      Cortex-A55 / r0p1: Samsung Exynos 9810
 	#      Cortex-A55 / r1p0: Amlogic S905X3/S905D3/S905Y3/T962X3/T962E2, HiSilicon Ascend 310 / Kirin 810/980, Samsung Exynos 9820
-	#      Cortex-A55 / r2p0: Amlogic S905X4/S905C2, Allwinner A513/A523/A736/A737/T527/T736/T737, Google Tensor G1, MediaTek Genio 1200, NXP i.MX 93, Qualcomm SM8350 (Snapdragon 888), Renesas RZG2UL/RZG2LC, Rockchip RK3566/RK3568/RK3588/RK3588s, Unisoc UMS9620
+	#      Cortex-A55 / r2p0: Amlogic S905X4/S905C2, Allwinner A513/A523/A736/A737/T527/T736/T737, Google Tensor G1/G2, MediaTek Genio 1200, NXP i.MX 93, Qualcomm SM8350 (Snapdragon 888), Renesas RZG2UL/RZG2LC, Rockchip RK3566/RK3568/RK3588/RK3588s, Unisoc UMS9620
 	#      Cortex-A57 / r0p0: ARM Juno r0
 	#      Cortex-A57 / r1p0: Exynos 5433/7420
 	#      Cortex-A57 / r1p1: ARM Juno r1, Nvidia Tegra TX1, Snapdragon 810 / MSM8994/MSM8994V
@@ -5026,10 +5026,11 @@ GuessARMSoC() {
 	#      Cortex-A76 / r4p1: Broadcom BCM2712
 	#      Cortex-A77 / r1p0: HiSilicon Kirin 9000, Qualcomm QRB5165 (Snapdragon 865)
 	#      Cortex-A78 / r1p0: MediaTek Genio 1200, Qualcomm SM8350 (Snapdragon 888)
+	#      Cortex-A78 / r1p1: Google Tensor G2
 	#    Cortex-A78AE / r0p1: Nvidia Jetson Orin NX / AGX Orin
 	#  HiSilicon-A710 / r2p2: HiSilicon Kirin 9000s
 	#     Cortex-A78C / r0p0: Qualcomm Snapdragon 8cx Gen 3
-	#       Cortex-X1 / r1p0: Google Tensor G1, Qualcomm SM8350 (Snapdragon 888)
+	#       Cortex-X1 / r1p0: Google Tensor G1/G2, Qualcomm SM8350 (Snapdragon 888)
 	#      Cortex-X1C / r0p0: Qualcomm Snapdragon 8cx Gen 3
 	#     Cortex-A510 / r0p2: Qualcomm Snapdragon 8 Gen1
 	#     Cortex-A510 / r0p3: Qualcomm Snapdragon 8+ Gen1
@@ -7339,6 +7340,10 @@ GuessSoCbySignature() {
 		*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A76r4p0*A76r4p0*X1r1p0*X1r1p0)
 			# Google Tensor G1: 4 x Cortex-A55 / r2p0 + 2 x Cortex-A76 / r4p0 + 2 x Cortex-X1 / r1p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp
 			echo "Google Tensor G1"
+			;;
+		*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A78r1p1*A78r1p1*X1r1p0*X1r1p0)
+			# Google Tensor G2: 4 x Cortex-A55 / r2p0 + 2 x Cortex-A78 / r1p1 + 2 x Cortex-X1 / r1p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp
+			echo "Google Tensor G2"
 			;;
 		*A510r1p1*A510r1p1*A510r1p1*A510r1p1*A715r1p0*A715r1p0*A715r1p0*A715r1p0)
 			# Google Tensor G3: 4 x Cortex-A510 / r1p1 + 4 x Cortex-A715 / r1p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 sve asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp sve2 sveaes svepmull svebitperm svesha3 svesm4 flagm2 frint svei8mm svebf16 i8mm bti mte mte3

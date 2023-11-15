@@ -1,0 +1,71 @@
+processor       : 0
+BogoMIPS        : 100.00
+Features        : fp asimd evtstrm crc32 cpuid
+CPU implementer : 0x41
+CPU architecture: 8
+CPU variant     : 0x1
+CPU part        : 0xd07
+CPU revision    : 3
+
+processor       : 1
+BogoMIPS        : 100.00
+Features        : fp asimd evtstrm crc32 cpuid
+CPU implementer : 0x41
+CPU architecture: 8
+CPU variant     : 0x1
+CPU part        : 0xd07
+CPU revision    : 3
+
+processor       : 2
+BogoMIPS        : 100.00
+Features        : fp asimd evtstrm crc32 cpuid
+CPU implementer : 0x41
+CPU architecture: 8
+CPU variant     : 0x1
+CPU part        : 0xd07
+CPU revision    : 3
+
+processor       : 3
+BogoMIPS        : 100.00
+Features        : fp asimd evtstrm crc32 cpuid
+CPU implementer : 0x41
+CPU architecture: 8
+CPU variant     : 0x1
+CPU part        : 0xd07
+CPU revision    : 3
+
+processor       : 4
+BogoMIPS        : 100.00
+Features        : fp asimd evtstrm crc32 cpuid
+CPU implementer : 0x41
+CPU architecture: 8
+CPU variant     : 0x1
+CPU part        : 0xd07
+CPU revision    : 3
+
+processor       : 5
+BogoMIPS        : 100.00
+Features        : fp asimd evtstrm crc32 cpuid
+CPU implementer : 0x41
+CPU architecture: 8
+CPU variant     : 0x1
+CPU part        : 0xd07
+CPU revision    : 3
+
+processor       : 6
+BogoMIPS        : 100.00
+Features        : fp asimd evtstrm crc32 cpuid
+CPU implementer : 0x41
+CPU architecture: 8
+CPU variant     : 0x1
+CPU part        : 0xd07
+CPU revision    : 3
+
+processor       : 7
+BogoMIPS        : 100.00
+Features        : fp asimd evtstrm crc32 cpuid
+CPU implementer : 0x41
+CPU architecture: 8
+CPU variant     : 0x1
+CPU part        : 0xd07
+CPU revision    : 3

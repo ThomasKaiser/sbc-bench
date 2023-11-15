@@ -215,6 +215,7 @@
 | [4Kau](4Kau.txt) | v0.9.49 OrangePi 4 | 0%/0% | 3.8Gi/3.2Gi | X | X | X | X | 2% | 1% | [check log](4Kau.txt) |
 | [4Kqn](4Kqn.txt) | v0.9.49 AMD Seattle | 0%/0% | 31G/30G | X | X | X | X | 1% | 0% | |
 | [4Kvg](4Kvg.txt) | v0.9.49 MediaTek Genio-1200 EVK | 0%/0% | 7.6Gi/6.4Gi | X | X | X | X | 1% | 0% | [check log](4Kvg.txt) |
+| [4Lyf](4Lyf.txt) | v0.9.50 Google Homestar | 0%/0% | 3.8Gi/2.5Gi | X | X | X | X | 2% | 0% | [check log](4Lyf.txt) |
 | <del>[4a3s](4a3s.txt)</del> | <del>v0.9.8 StarFive VisionFive V2 </del> | <del>0.4%/0.1%</del> | <del>3.8Gi/3.5Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 1%</del> | <del> 2%</del> | |
 | [4a5U](4a5U.txt) | v0.9.8 Khadas Edge2 | 0%/0% | 15Gi/14Gi | X | X | X | X | 1% | 0% | |
 | [4ax9](4ax9.txt) | v0.9.8 NVIDIA Orin Jetson-Small Develop | 0%/0% | 29Gi/29Gi | X | X | X | X | 0% | 0% | |
@@ -277,7 +278,7 @@
 | [4xYE](4xYE.txt) | v0.9.41 T-HEAD Light Lichee Pi 4A confi | 0%/0% | 7.6Gi/7.4Gi | X | X | X | X | 2% | 0% | [check log](4xYE.txt) |
 | [4xwT](4xwT.txt) | v0.9.41 Microsoft Dev Kit 2023 | 0%/0% | 30Gi/29Gi | X | X | X | X | 0% | 0% | [check log](4xwT.txt) |
 | [4xwq](4xwq.txt) | v0.9.41 / N95 | 0%/0% | 15Gi/14Gi | X | X | X | X | 1% | 0% | [check log](4xwq.txt) |
-| [4yNC](4yNC.txt) | v0.9.42 Google Homestar | 0%/0% | 3.8Gi/2.7Gi | X | X | X | X | 2% | 0% | [check log](4yNC.txt) |
+| <del>[4yNC](4yNC.txt)</del> | <del>v0.9.42 Google Homestar </del> | <del>0%/0%</del> | <del>3.8Gi/2.7Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 2%</del> | <del> 0%</del> | <del>[check log](4yNC.txt)</del> |
 | [4z3s](4z3s.txt) | v0.9.42 clientron TC120 Type1 - TBD by | 0%/0% | 1.8Gi/1.0Gi | X | X | X | X | 2% | 0% | [check log](4z3s.txt) |
 | [4zGI](4zGI.txt) | v0.9.42 ADLINK Ampere Altra Developer P | 0%/0% | 93Gi/92Gi | X | X | X | X | 0% | 0% | [check log](4zGI.txt) |
 | [4zcm](4zcm.txt) | v0.9.42 Marvell 8040 MACCHIATOBin Doubl | 0%/0% | 3.8Gi/3.3Gi | X | X | X | X | 2% | 0% | [check log](4zcm.txt) |

@@ -2554,6 +2554,11 @@ CheckMissingPackages() {
 				echo -e "apt -f -qq -y install \c"
 				command -v gcc >/dev/null 2>&1 || echo -e "gcc make build-essential \c"
 				command -v sensors >/dev/null 2>&1 || echo -e "lm-sensors \c"
+				# Check for hexdump only on Rockchip platforms where NVMEM is readable.
+				# In Debian based distros the tool is part of bsdmainutils package, no
+				# idea about other distros.
+				RK_NVMEM_FILE="$(find /sys/bus/nvmem/devices/rockchip*/* -name nvmem | head -n1)"
+				[ -r "${RK_NVMEM_FILE}" ] && command -v hexdump >/dev/null 2>&1 || echo -e "bsdmainutils \c"
 			else
 				echo -e "echo \c"
 			fi
@@ -2563,7 +2568,6 @@ CheckMissingPackages() {
 	command -v curl >/dev/null 2>&1 || echo -e "curl \c"
 	command -v dmidecode >/dev/null 2>&1 || echo -e "dmidecode \c"
 	command -v git >/dev/null 2>&1 || echo -e "git \c"
-	command -v hexdump >/dev/null 2>&1 || echo -e "bsdmainutils \c"
 	command -v iostat >/dev/null 2>&1 || echo -e "sysstat \c"
 	command -v lshw >/dev/null 2>&1 || echo -e "lshw \c"
 	command -v openssl >/dev/null 2>&1 || echo -e "openssl \c"
@@ -2726,7 +2730,7 @@ InstallPrerequisits() {
 	fi
 	
 	# add needed repository and install all necessary packages in a batch
-	grep -E -q "sensors|gcc|git|sysstat|openssl|curl|dmidecode|i2c|lshw|binutils|procps|p7zip|wget|links|powercap|g++|pciutils|usbutils|mmc-utils|stress-ng|smartmontools|udev" <<<"${MissingPackages}"
+	grep -E -q "sensors|gcc|git|sysstat|openssl|curl|dmidecode|i2c|lshw|binutils|procps|p7zip|wget|links|powercap|g++|pciutils|usbutils|mmc-utils|stress-ng|smartmontools|udev|bsdmainutils" <<<"${MissingPackages}"
 	if [ $? -eq 0 ]; then
 		echo -e "\x08\x08 ${MissingPackages}...\c"
 		add-apt-repository -y universe >/dev/null 2>&1
@@ -4997,7 +5001,7 @@ GuessARMSoC() {
 	#      Cortex-A53 / r0p1: Exynos 5433, Qualcomm MSM8939
 	#      Cortex-A53 / r0p2: Marvell PXA1908, Mediatek MT6752/MT6738/MT6755/MT8173/MT8176, Qualcomm Snapdragon 810 (MSM8994), Samsung Exynos 7420
 	#      Cortex-A53 / r0p3: ARM Juno r1, ARM Juno r2, HiSilicon Hi3751, Kirin 620/930, Mediatek MT6735/MT8163, Nexell S5P6818, Samsung Exynos 7580, Qualcomm MSM8992 (Snapdragon 808)
-	#      Cortex-A53 / r0p4: Allwinner A100/A133/A53/A64/H313/H5/H6/H616/H618/H64/R329/R818/R923/T507/T509, Amlogic A113X/A113D/A311D/A311D2/S805X/S805Y/S905/S905X/S905D/S905W/S905L/S905L3A/S905M2/S905X2/S905Y2/S905D2/S912/S922X/T962X2, Broadcom BCM2837/BCM2709/BCM2710/RP3A0-AU (BCM2710A1), Exynos 8890, HiSilicon Hi3798C-V200, HiSilicon Kirin 650/710/950/955/960/970, Marvell Armada 37x0, Mediatek MT6739WA/MT6762M/MT6765/MT6771V/MT6797/MT6797T/MT6799/MT8183/MT8735, NXP i.MX8M/i.MX8QM/LS1xx8, Qualcomm IPQ5332/MSM8937/MSM8952/MSM8953/MSM8956/MSM8976/MSM8976PRO/SDM439/SDM450, RealTek RTD129x/RTD139x, Rockchip RK3318/RK3328/RK3528/RK3562/RK3399, Samsung Exynos 7870/7885/8890/8895, Socionext LD20/SC2A11, TI K3 AM623/AM625/AM62A/AM642/AM654, Xiaomi Surge S1
+	#      Cortex-A53 / r0p4: Allwinner A100/A133/A53/A64/H313/H5/H6/H616/H618/H64/R329/R818/R923/T507/T509, Amlogic A113X/A113D/A311D/A311D2/S805X/S805Y/S905/S905X/S905D/S905W/S905L/S905L3A/S905M2/S905X2/S905Y2/S905D2/S912/S922X/T962X2, Broadcom BCM2837/BCM2709/BCM2710/RP3A0-AU (BCM2710A1), Exynos 7570/8890, HiSilicon Hi3798C-V200, HiSilicon Kirin 650/710/950/955/960/970, Marvell Armada 37x0, Mediatek MT6739WA/MT6762M/MT6765/MT6771V/MT6797/MT6797T/MT6799/MT8183/MT8735, NXP i.MX8M/i.MX8QM/LS1xx8, Qualcomm IPQ5332/MSM8937/MSM8952/MSM8953/MSM8956/MSM8976/MSM8976PRO/SDM439/SDM450, RealTek RTD129x/RTD139x, Rockchip RK3318/RK3328/RK3528/RK3562/RK3399, Samsung Exynos 7870/7885/8890/8895, Socionext LD20/SC2A11, TI K3 AM623/AM625/AM62A/AM642/AM654, Xiaomi Surge S1
 	#      Cortex-A55 / r0p1: Samsung Exynos 9810
 	#      Cortex-A55 / r1p0: Amlogic S905X3/S905D3/S905Y3/T962X3/T962E2, HiSilicon Ascend 310 / Kirin 810/980, Samsung Exynos 9820
 	#      Cortex-A55 / r2p0: Amlogic S905X4/S905C2, Allwinner A513/A523/A736/A737/T527/T736/T737, Google Tensor G1, MediaTek Genio 1200, NXP i.MX 93, Qualcomm SM8350 (Snapdragon 888), Renesas RZG2UL/RZG2LC, Rockchip RK3566/RK3568/RK3588/RK3588s, Unisoc UMS9620
@@ -5005,7 +5009,7 @@ GuessARMSoC() {
 	#      Cortex-A57 / r1p0: Exynos 5433/7420
 	#      Cortex-A57 / r1p1: ARM Juno r1, Nvidia Tegra TX1, Snapdragon 810 / MSM8994/MSM8994V
 	#      Cortex-A57 / r1p2: AMD Opteron A1100, Qualcomm MSM8992 (Snapdragon 808)
-	#      Cortex-A57 / r1p3: Nvidia Jetson TX2, Renesas R8A7795/R8A7796/R8A77965
+	#      Cortex-A57 / r1p3: Baikal-M, Nvidia Jetson TX2, Renesas R8A7795/R8A7796/R8A77965
 	#      Cortex-A72 / r0p0: ARM Juno r2, HiSilicon Kirin 950/955, Mediatek MT8173/MT8176, Snapdragon 650/652/653 / Qualcomm MSM8956/MSM8976/MSM8976PRO
 	#      Cortex-A72 / r0p1: Marvell Armada 8020/8040, Mediatek MT6797/MT6797T
 	#      Cortex-A72 / r0p2: HiSilicon Kunpeng 916, NXP i.MX8QM/LS2xx8A, Rockchip RK3399, Socionext LD20, 
@@ -5029,9 +5033,14 @@ GuessARMSoC() {
 	#      Cortex-X1C / r0p0: Qualcomm Snapdragon 8cx Gen 3
 	#     Cortex-A510 / r0p2: Qualcomm Snapdragon 8 Gen1
 	#     Cortex-A510 / r0p3: Qualcomm Snapdragon 8+ Gen1
-	#     Cortex-A510 / r1p1: HiSilicon Kirin 9000s
-	#     Cortex-A710 / r2p0: Qualcomm Snapdragon 8 Gen1, Snapdragon 8+ Gen1
+	#     Cortex-A510 / r1p1: Google Tensor G3, HiSilicon Kirin 9000s, Snapdragon 8 Gen 2
+	#     Cortex-A520 / r0p1: Snapdragon 8 Gen 3
+	#     Cortex-A710 / r2p0: Qualcomm Snapdragon 8 Gen1, Snapdragon 8+ Gen1, Snapdragon 8 Gen 2
+	#     Cortex-A715 / r1p0: Google Tensor G3, Snapdragon 8 Gen 2
+	#     Cortex-A720 / r0p1: Snapdragon 8 Gen 3
 	#       Cortex-X2 / r2p0: Qualcomm Snapdragon 8 Gen1, Snapdragon 8+ Gen1
+	#       Cortex-X3 / r1p0: Snapdragon 8 Gen 2
+	#       Cortex-X4 / r0p1: Snapdragon 8 Gen 3
 	#       Exynos-m1 / r1p1: Samsung Exynos 8890
 	#       Exynos-m1 / r4p0: Samsung Exynos 8895
 	#       Exynos-m3 / r1p0: Samsung Exynos 9810
@@ -5322,14 +5331,10 @@ GuessARMSoC() {
 	
 	if [ "X${RockchipGuess}" != "X" -a "X${RockchipGuess}" != "X0" ]; then
 		# use Rockchip SoC info from dmesg output
-		echo "Rockchip RK$(cut -c-4 <<<"${RockchipGuess}") (${RockchipGuess})" | sed 's| RK3588 | RK3588/RK3588s |'
-	elif [ -r /sys/bus/nvmem/devices/rockchip-otp0/nvmem ]; then
-		# search for Rockchip NVMEM available as otp0 to parse SoC model from there
-		RK_NVMEM="$(hexdump -C </sys/bus/nvmem/devices/rockchip-otp0/nvmem 2>/dev/null | grep "52 4b ")"
-		[ "X${RK_NVMEM}" = "X" ] || echo "Rockchip RK${RK_NVMEM:16:2}${RK_NVMEM:19:2}" | sed 's| RK3588| RK3588/RK3588s|'
-	elif [ -r /sys/bus/nvmem/devices/rockchip-efuse0/nvmem ]; then
-		# search for Rockchip NVMEM available as efuse0 to parse SoC model from there
-		RK_NVMEM="$(hexdump -C </sys/bus/nvmem/devices/rockchip-efuse0/nvmem 2>/dev/null | grep "52 4b ")"
+		echo "Rockchip RK${RockchipGuess:0:4} (${RockchipGuess})" | sed 's| RK3588| RK3588/RK3588s|'
+	elif [ -r "${RK_NVMEM_FILE}" ]; then
+		# search for Rockchip NVMEM below /sys/bus/nvmem/devices/rockchip* to parse SoC model from there
+		RK_NVMEM="$(hexdump -C <"${RK_NVMEM_FILE}" 2>/dev/null | grep "52 4b ")"
 		[ "X${RK_NVMEM}" = "X" ] || echo "Rockchip RK${RK_NVMEM:16:2}${RK_NVMEM:19:2}" | sed 's| RK3588| RK3588/RK3588s|'
 	elif [ "X${AmlogicGuess}" != "XAmlogic Meson" ]; then
 		echo "${AmlogicGuess}" | sed -e 's/GXL (Unknown) Revision 21:b (2:2)/GXL (S905D) Revision 21:b (2:2)/' \
@@ -6233,6 +6238,10 @@ GuessSoCbySignature() {
 								# Qualcomm IPQ5332, 4 x Cortex-A53 / r0p4
 								echo "Qualcomm IPQ5332"
 								;;
+							*7570*)
+								# Exynos 7570, 4 x Cortex-A53 / r0p4 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt lpae evtstrm aes pmull sha1 sha2 crc32
+								echo "Exynos 7570"
+								;;
 						esac
 					fi
 					;;
@@ -6770,6 +6779,10 @@ GuessSoCbySignature() {
 		00A57r1p100A57r1p100A57r1p100A57r1p1)
 			# Tegra X1/TX1, 4 x Cortex-A57 / r1p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			echo "Nvidia Tegra X1/TX1"
+			;;
+		*A57r1p3*A57r1p3*A57r1p3*A57r1p3*A57r1p3*A57r1p3*A57r1p3*A57r1p3)
+			# Baikal-M, 8 x Cortex-A57 / r1p3 / fp asimd evtstrm crc32 cpuid
+			echo "Baikal-M"
 			;;
 		*A57r1p3*)
 			# Jetson TX2, 1-4 x Cortex-A57 / r1p3 + 0-2 x Denver 2 / r0p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32
@@ -7315,9 +7328,21 @@ GuessSoCbySignature() {
 			# Qualcomm Snapdragon 8+ Gen1: 4 x Cortex-A510 / r0p3 + 3 Cortex-A710 / r2p0 + 1 x Cortex-X2 / r2p0
 			echo "Qualcomm Snapdragon 8+ Gen1"
 			;;
+		*A510r1p1*A510r1p1*A510r1p1*A715r1p0*A715r1p0*A710r2p0*A710r2p0*X3r1p0)
+			# Qualcomm Snapdragon 8 Gen 2 (SM8550): 3 x Cortex-A510 / r1p1 + 2 x Cortex-A715 / r1p0 + 2 x Cortex-A710 / r2p0 + 1 x Cortex-X3 / r1p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp flagm2 frint i8mm bf16 bti
+			echo "Qualcomm Snapdragon 8 Gen 2"
+			;;
+		*A520r0p1*A520r0p1*A720r0p1*A720r0p1*A720r0p1*A720r0p1*A720r0p1*X4r0p1)
+			# Qualcomm Snapdragon 8 Gen 3: 2 x Cortex-A520 / r0p1 + 5 x Cortex-A720 / r0p1 + 1 x Cortex-X4 / r0p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp flagm2 frint i8mm bf16 dgh bti ecv afp
+			echo "Qualcomm Snapdragon 8 Gen 3"
+			;;
 		*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A76r4p0*A76r4p0*X1r1p0*X1r1p0)
 			# Google Tensor G1: 4 x Cortex-A55 / r2p0 + 2 x Cortex-A76 / r4p0 + 2 x Cortex-X1 / r1p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp
 			echo "Google Tensor G1"
+			;;
+		*A510r1p1*A510r1p1*A510r1p1*A510r1p1*A715r1p0*A715r1p0*A715r1p0*A715r1p0)
+			# Google Tensor G3: 4 x Cortex-A510 / r1p1 + 4 x Cortex-A715 / r1p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 sve asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp sve2 sveaes svepmull svebitperm svesha3 svesm4 flagm2 frint svei8mm svebf16 i8mm bti mte mte3
+			echo "Google Tensor G3"
 			;;
 		0?Loongson3A10000?Loongson3A10000?Loongson3A10000?Loongson3A1000)
 			# Loongson 3A1000: 4 x Loongson-3 V0.5 FPU V0.1 https://github.com/ThomasKaiser/sbc-bench/blob/master/results/cpuinfo/Loongson-3A1000.cpuinfo

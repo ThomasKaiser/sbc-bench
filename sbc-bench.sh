@@ -3006,7 +3006,7 @@ InitialMonitoring() {
 	if [ $? -eq 0 -a "X${ProcCPUFile}" = "X/proc/cpuinfo" ]; then
 		UploadScheme="f:1=<-"
 		UploadServer="ix.io"
-		UploadAnswer="$( (echo -e "/proc/cpuinfo ${Version}\n\n$(uname -a) / ${DeviceName}\n" ; cat /proc/cpuinfo ; echo -e "\n${CPUTopology}\n\n${CPUSignature} / ${GuessedSoC}$(hexdump -C <"${RK_NVMEM_FILE}" 2>/dev/null | grep "52 4b " | cut -c9-)\n\n${DTCompatible}\n\n${OPPTables}\n\n$(grep . /sys/devices/virtual/thermal/thermal_zone?/* 2>/dev/null)\n\n$(grep . /sys/class/hwmon/hwmon?/* 2>/dev/null)") 2>/dev/null | curl -s -F ${UploadScheme} ${UploadServer} 2>&1)"
+		UploadAnswer="$( (echo -e "/proc/cpuinfo ${Version}\n\n$(uname -a) / ${DeviceName}\n" ; cat /proc/cpuinfo ; echo -e "\n${CPUTopology}\n\n${CPUSignature} / ${GuessedSoC}$(hexdump -C <"${RK_NVMEM_FILE}" 2>/dev/null | grep "52 4b " | cut -c9- | head -n1)\n\n${DTCompatible}\n\n${OPPTables}\n\n$(grep . /sys/devices/virtual/thermal/thermal_zone?/* 2>/dev/null)\n\n$(grep . /sys/class/hwmon/hwmon?/* 2>/dev/null)") 2>/dev/null | curl -s -F ${UploadScheme} ${UploadServer} 2>&1)"
 		case "${UploadAnswer}" in
 			*ix.io*)
 				# everything's fine
@@ -5161,6 +5161,7 @@ GuessARMSoC() {
 	# soc soc0: Amlogic Meson G12B (S922X) Revision 29:a (40:2) Detected <-- ODROID-N2 / Beelink GT-King Pro
 	# soc soc0: Amlogic Meson G12B (A311D) Revision 29:b (10:2) Detected <-- Khadas VIM3 / Radxa Zero 2 / UnionPi Tiger / Bananapi CM4 / Libre Computer AML-A311D-CC
 	# soc soc0: Amlogic Meson G12B (S922X) Revision 29:b (40:2) Detected <-- Beelink GT-King Pro, Ugoos AM6
+	# soc soc0: Amlogic Meson G12B (A311D) Revision 29:c (10:0) Detected <-- Orbbec Zora P1
 	# soc soc0: Amlogic Meson G12B (S922X) Revision 29:c (40:2) Detected <-- ODROID-N2+ ('S922X-B')
 	# soc soc0: Amlogic Meson Unknown (Unknown) Revision 2a:e (c5:2) Detected <-- Amlogic Meson GXL (S905L2) X7 5G Tv Box / Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson SM1 (S905D3) Revision 2b:b (1:2) Detected <-- AMedia X96 Max+/Air / HK1 Box/Vontar X3 / SEI Robotics SEI610 / X96 Max Plus Q1
@@ -5337,7 +5338,7 @@ GuessARMSoC() {
 		echo "Rockchip RK${RockchipGuess:0:4} (${RockchipGuess})" | sed 's| RK3588| RK3588/RK3588s|'
 	elif [ -r "${RK_NVMEM_FILE}" ]; then
 		# search for Rockchip NVMEM below /sys/bus/nvmem/devices/rockchip* to parse SoC model from there
-		RK_NVMEM="$(hexdump -C <"${RK_NVMEM_FILE}" 2>/dev/null | grep "52 4b ")"
+		RK_NVMEM="$(hexdump -C <"${RK_NVMEM_FILE}" 2>/dev/null | grep "52 4b " | head -n1)"
 		[ "X${RK_NVMEM}" = "X" ] || echo "Rockchip RK${RK_NVMEM:16:2}${RK_NVMEM:19:2}" | sed 's| RK3588| RK3588/RK3588s|'
 	elif [ "X${AmlogicGuess}" != "XAmlogic Meson" ]; then
 		echo "${AmlogicGuess}" | sed -e 's/GXL (Unknown) Revision 21:b (2:2)/GXL (S905D) Revision 21:b (2:2)/' \
@@ -5395,45 +5396,45 @@ GuessARMSoC() {
 								;;
 							1f??0*|1f??1*)
 								# GXBB: S905: 1f:b (0:1) / 1f:c (0:1) / 1f:c (13:1)
-								echo "Amlogic S905"
+								echo "Amlogic Meson GXBB (S905) Revision ${AmLogicSerial:0:2}:${AmLogicSerial:2:2} (${AmLogicSerial:4:2}:${AmLogicSerial:6:2})" | sed -e 's/:0/:/g' -e 's/(0/(/'
 								;;
 							1f??23*)
 								# GXBB: S905H: 1f:c (23:1)
-								echo "Amlogic S905H"
+								echo "Amlogic Meson GXBB (S905H) Revision ${AmLogicSerial:0:2}:${AmLogicSerial:2:2} (${AmLogicSerial:4:2}:${AmLogicSerial:6:2})" | sed -e 's/:0/:/g' -e 's/(0/(/'
 								;;
 							1f*)
 								# GXBB: S905, S905H, S905M
 								# - S905: 1f:b (0:1) / 1f:c (0:1)
 								# - S905H: 1f:c (23:1)
-								echo "Amlogic S905/S905H/S905M"
+								echo "Amlogic Meson GXBB (S905/S905H/S905M) Revision ${AmLogicSerial:0:2}:${AmLogicSerial:2:2} (${AmLogicSerial:4:2}:${AmLogicSerial:6:2})" | sed -e 's/:0/:/g' -e 's/(0/(/'
 								;;
 							20*)
 								# GXTVBB
-								echo "unknown Amlogic GXTVBB SoC, serial ${AmLogicSerial:0:8}..."
+								echo "Amlogic Meson GXTVBB (Unknown) Revision ${AmLogicSerial:0:2}:${AmLogicSerial:2:2} (${AmLogicSerial:4:2}:${AmLogicSerial:6:2})" | sed -e 's/:0/:/g' -e 's/(0/(/'
 								;;
 							21??3*)
 								# GXL: S805X: 21:d (34:2)
-								echo "Amlogic S805X"
+								echo "Amlogic Meson GXL (S805X) Revision ${AmLogicSerial:0:2}:${AmLogicSerial:2:2} (${AmLogicSerial:4:2}:${AmLogicSerial:6:2})" | sed -e 's/:0/:/g' -e 's/(0/(/'
 								;;
 							21??0*|21??4*)
 								# GXL: S905D: 21:d (0:2), 21:d (4:2)
-								echo "Amlogic S905D"
+								echo "Amlogic Meson GXL (S905D) Revision ${AmLogicSerial:0:2}:${AmLogicSerial:2:2} (${AmLogicSerial:4:2}:${AmLogicSerial:6:2})" | sed -e 's/:0/:/g' -e 's/(0/(/'
 								;;
 							21??8*)
 								# GXL: S905X: 21:a (82:2), 21:b (82:2), 21:c (84:2), 21:d (84:2)
-								echo "Amlogic S905X"
+								echo "Amlogic Meson GXL (S905X) Revision ${AmLogicSerial:0:2}:${AmLogicSerial:2:2} (${AmLogicSerial:4:2}:${AmLogicSerial:6:2})" | sed -e 's/:0/:/g' -e 's/(0/(/'
 								;;
 							21??a*)
 								# GXL: S905W: 21:b (a2:2), 21:e (a5:2)
-								echo "Amlogic S905W"
+								echo "Amlogic Meson GXL (S905W) Revision ${AmLogicSerial:0:2}:${AmLogicSerial:2:2} (${AmLogicSerial:4:2}:${AmLogicSerial:6:2})" | sed -e 's/:0/:/g' -e 's/(0/(/'
 								;;
 							21??c*)
 								# GXL: S905L: 21:b (c2:2), 21:c (c4:2), 21:d (c4:2), 21:e (c5:2)
-								echo "Amlogic S905L"
+								echo "Amlogic Meson GXL (S905L) Revision ${AmLogicSerial:0:2}:${AmLogicSerial:2:2} (${AmLogicSerial:4:2}:${AmLogicSerial:6:2})" | sed -e 's/:0/:/g' -e 's/(0/(/'
 								;;
 							21??e*)
 								# GXL: S905M2: 21:b (e2:2), 21:d (e4:2)
-								echo "Amlogic S905M2"
+								echo "Amlogic Meson GXL (S905M2) Revision ${AmLogicSerial:0:2}:${AmLogicSerial:2:2} (${AmLogicSerial:4:2}:${AmLogicSerial:6:2})" | sed -e 's/:0/:/g' -e 's/(0/(/'
 								;;
 							21*)
 								# GXL: S805X, S805Y, S905X, S905D, S905W, S905L, S905L2, S905M2
@@ -5443,120 +5444,153 @@ GuessARMSoC() {
 								# - S905W: 21:b (a2:2), 21:e (a5:2)
 								# - S905L: 21:b (c2:2), 21:c (c4:2), 21:d (c4:2), 21:e (c5:2)
 								# - S905M2: 21:b (e2:2), 21:d (e4:2)
-								echo "Amlogic S805X/S805Y/S905X/S905D/S905W/S905L/S905M2"
+								echo "Amlogic Meson GXL (Unknown) Revision ${AmLogicSerial:0:2}:${AmLogicSerial:2:2} (${AmLogicSerial:4:2}:${AmLogicSerial:6:2})" | sed -e 's/:0/:/g' -e 's/(0/(/'
 								;;
 							22*)
 								# GXM: S912: 22:a (82:2), 22:b (82:2)
-								echo "Amlogic S912"
+								echo "Amlogic Meson GXM (S912) Revision ${AmLogicSerial:0:2}:${AmLogicSerial:2:2} (${AmLogicSerial:4:2}:${AmLogicSerial:6:2})" | sed -e 's/:0/:/g' -e 's/(0/(/'
 								;;
 							23*)
 								# TXL
-								echo "unknown Amlogic TXL SoC, serial ${AmLogicSerial:0:8}..."
+								echo "Amlogic Meson TXL (Unknown) Revision ${AmLogicSerial:0:2}:${AmLogicSerial:2:2} (${AmLogicSerial:4:2}:${AmLogicSerial:6:2})" | sed -e 's/:0/:/g' -e 's/(0/(/'
 								;;
 							24*)
 								# TXLX: T962X, T962E
-								echo "Amlogic T962X/T962E"
+								echo "Amlogic Meson TXLX (T962X/T962E) Revision ${AmLogicSerial:0:2}:${AmLogicSerial:2:2} (${AmLogicSerial:4:2}:${AmLogicSerial:6:2})" | sed -e 's/:0/:/g' -e 's/(0/(/'
 								;;
 							25*)
 								# AXG: A113X, A113D
 								# - Unknown: 25:b (43:2), 25:c (43:2)
-								echo "Amlogic A113X/A113D"
+								echo "Amlogic Meson AXG (A113X/A113D) Revision ${AmLogicSerial:0:2}:${AmLogicSerial:2:2} (${AmLogicSerial:4:2}:${AmLogicSerial:6:2})" | sed -e 's/:0/:/g' -e 's/(0/(/'
 								;;
 							26*)
 								# GXLX, seems to be compatible to GXL since one occurence of ID '26:e (c1:2)'
 								# has been detected with 'Amlogic Meson GXL (S905X) P212 Development Board'
 								# and same ID on IPBS9505 TV box
-								echo "unknown Amlogic GXLX SoC, serial ${AmLogicSerial:0:8}..."
+								echo "Amlogic Meson GXLX (Unknown) Revision ${AmLogicSerial:0:2}:${AmLogicSerial:2:2} (${AmLogicSerial:4:2}:${AmLogicSerial:6:2})" | sed -e 's/:0/:/g' -e 's/(0/(/'
 								;;
 							27*)
 								# TXHD
-								echo "unknown Amlogic TXHD SoC, serial ${AmLogicSerial:0:8}..."
+								echo "Amlogic Meson TXHD (Unknown) Revision ${AmLogicSerial:0:2}:${AmLogicSerial:2:2} (${AmLogicSerial:4:2}:${AmLogicSerial:6:2})" | sed -e 's/:0/:/g' -e 's/(0/(/'
 								;;
 							28??4*)
 								# G12A: S905X2: 28:b (40:2)
-								echo "Amlogic S905X2"
+								echo "Amlogic Meson G12A (S905X2) Revision ${AmLogicSerial:0:2}:${AmLogicSerial:2:2} (${AmLogicSerial:4:2}:${AmLogicSerial:6:2})" | sed -e 's/:0/:/g' -e 's/(0/(/'
 								;;
 							28??3*)
 								# G12A: S905Y2: 28:b (30:2)
-								echo "Amlogic S905Y2"
+								echo "Amlogic Meson G12A (S905Y2) Revision ${AmLogicSerial:0:2}:${AmLogicSerial:2:2} (${AmLogicSerial:4:2}:${AmLogicSerial:6:2})" | sed -e 's/:0/:/g' -e 's/(0/(/'
 								;;
 							28??7*)
 								# G12A: S905L3A: 28:b (70:2)
-								echo "Amlogic S905L3A"
+								echo "Amlogic Meson G12A (S905L3A) Revision ${AmLogicSerial:0:2}:${AmLogicSerial:2:2} (${AmLogicSerial:4:2}:${AmLogicSerial:6:2})" | sed -e 's/:0/:/g' -e 's/(0/(/'
 								;;
 							28*)
 								# G12A: S905X2, S905D2, S905Y2
 								# - S905X2: 28:b (40:2)
 								# - S905Y2: 28:b (30:2)
 								# - S905L3A: 28:b (70:2)
-								echo "Amlogic S905X2/S905D2/S905Y2/S905L3A"
+								echo "Amlogic Meson G12A (Unknown) Revision ${AmLogicSerial:0:2}:${AmLogicSerial:2:2} (${AmLogicSerial:4:2}:${AmLogicSerial:6:2})" | sed -e 's/:0/:/g' -e 's/(0/(/'
 								;;
 							29??1*)
 								# - G12B: A311D: 29:b (10:2)
-								echo "Amlogic A311D"
+								# - G12B: A311D: 29:c (10:0)
+								echo "Amlogic Meson G12B (A311D) Revision ${AmLogicSerial:0:2}:${AmLogicSerial:2:2} (${AmLogicSerial:4:2}:${AmLogicSerial:6:2})" | sed -e 's/:0/:/g' -e 's/(0/(/'
 								;;
 							29??4*)
 								# - G12B: S922X: 29:a (40:2), 29:b (40:2), 29:c (40:2)
-								echo "Amlogic S922X"
+								echo "Amlogic Meson G12B (S922X) Revision ${AmLogicSerial:0:2}:${AmLogicSerial:2:2} (${AmLogicSerial:4:2}:${AmLogicSerial:6:2})" | sed -e 's/:0/:/g' -e 's/(0/(/'
 								;;
 							29*)
 								# G12B: A311D, S922X
 								# - A311D: 29:b (10:2)
 								# - S922X: 29:a (40:2), 29:b (40:2)
 								# - 'S922X-B': 29:c (40:2)
-								echo "Amlogic S922X/A311D"
+								echo "Amlogic Meson G12B (Unknown) Revision ${AmLogicSerial:0:2}:${AmLogicSerial:2:2} (${AmLogicSerial:4:2}:${AmLogicSerial:6:2})" | sed -e 's/:0/:/g' -e 's/(0/(/'
 								;;
 							2a*)
-								# some weird GXL variant, most probably for S905L2 only
+								# GXLX2: some weird GXL variant, most probably for S905L2 only
 								# https://www.cnx-software.com/2020/09/15/low-cost-amlogic-s905l2-tv-boxes-show-up-on-aliexpress-for-20/
 								# http://ix.io/45QA / http://ix.io/3RLI
 								# Fake 2 GHz while in reality 1.2 GHz, 'Revision 2a:e (c5:2)'
 								# while S905L always appears as 'Revision 21:X (cX:X)'
-								echo "Amlogic S905L2"
+								echo "Amlogic Meson GXLX2 (S905L2) Revision ${AmLogicSerial:0:2}:${AmLogicSerial:2:2} (${AmLogicSerial:4:2}:${AmLogicSerial:6:2})" | sed -e 's/:0/:/g' -e 's/(0/(/'
+								;;
+							2b??10*)
+								# SM1: S905X3: 2b:c (10:2)
+								echo "Amlogic Meson SM1 (S905X3) Revision ${AmLogicSerial:0:2}:${AmLogicSerial:2:2} (${AmLogicSerial:4:2}:${AmLogicSerial:6:2})" | sed -e 's/:0/:/g' -e 's/(0/(/'
+								;;
+							2b??01*|2b??04*)
+								# SM1: S905D3: 2b:b (1:2), 2b:c (4:2)
+								echo "Amlogic Meson SM1 (S905D3) Revision ${AmLogicSerial:0:2}:${AmLogicSerial:2:2} (${AmLogicSerial:4:2}:${AmLogicSerial:6:2})" | sed -e 's/:0/:/g' -e 's/(0/(/'
 								;;
 							2b*)
 								# SM1: S905X3, S905D3, S905Y3: 2b:b (1:2), 2b:c (4:2), 2b:c (10:2), 2b:b (40:2)
-								echo "Amlogic S905X3/S905D3/S905Y3"
+								echo "Amlogic Meson SM1 (Unknown) Revision ${AmLogicSerial:0:2}:${AmLogicSerial:2:2} (${AmLogicSerial:4:2}:${AmLogicSerial:6:2})" | sed -e 's/:0/:/g' -e 's/(0/(/'
 								;;
 							2c*)
 								# A1: A113L (dual A35: https://www.amlogic.com/#Products/408/index.html / meson-a1.dtsi)
-								echo "Amlogic A113L"
+								echo "Amlogic Meson A1 (A113L) Revision ${AmLogicSerial:0:2}:${AmLogicSerial:2:2} (${AmLogicSerial:4:2}:${AmLogicSerial:6:2})" | sed -e 's/:0/:/g' -e 's/(0/(/'
 								;;
 							2e*)
 								# TL1: T962X2
-								echo "Amlogic T962X2"
+								echo "Amlogic Meson TL1 (T962X2) Revision ${AmLogicSerial:0:2}:${AmLogicSerial:2:2} (${AmLogicSerial:4:2}:${AmLogicSerial:6:2})" | sed -e 's/:0/:/g' -e 's/(0/(/'
 								;;
 							2f*)
 								# TM2: T962X3, T962E2
-								echo "Amlogic T962X3/T962E2, serial ${AmLogicSerial:0:8}..."
+								echo "Amlogic Meson TM2 (T962X3/T962E2) Revision ${AmLogicSerial:0:2}:${AmLogicSerial:2:2} (${AmLogicSerial:4:2}:${AmLogicSerial:6:2})" | sed -e 's/:0/:/g' -e 's/(0/(/'
+								;;
+							32??02*)
+								# SC2: S905X4: 32:b (2:2)
+								echo "Amlogic Meson SC2 (S905X4) Revision ${AmLogicSerial:0:2}:${AmLogicSerial:2:2} (${AmLogicSerial:4:2}:${AmLogicSerial:6:2})" | sed -e 's/:0/:/g' -e 's/(0/(/'
 								;;
 							32*)
 								# SC2: S905X4, S905C2
-								echo "Amlogic S905X4/S905C2"
+								echo "Amlogic Meson SC2 (S905X4/S905C2) Revision ${AmLogicSerial:0:2}:${AmLogicSerial:2:2} (${AmLogicSerial:4:2}:${AmLogicSerial:6:2})" | sed -e 's/:0/:/g' -e 's/(0/(/'
+								;;
+							34*)
+								# T5: ?
+								echo "Amlogic Meson T5 (Unknown) Revision ${AmLogicSerial:0:2}:${AmLogicSerial:2:2} (${AmLogicSerial:4:2}:${AmLogicSerial:6:2})" | sed -e 's/:0/:/g' -e 's/(0/(/'
+								;;
+							35*)
+								# T5D: T950D4, T950X4 (quad-core A53)
+								echo "Amlogic Meson T5D (Unknown) Revision ${AmLogicSerial:0:2}:${AmLogicSerial:2:2} (${AmLogicSerial:4:2}:${AmLogicSerial:6:2})" | sed -e 's/:0/:/g' -e 's/(0/(/'
 								;;
 							360b*)
 								# T7: A311D2: 36:b (1:3)
-								echo "Amlogic A311D2"
+								echo "Amlogic Meson T7 (A311D2) Revision ${AmLogicSerial:0:2}:${AmLogicSerial:2:2} (${AmLogicSerial:4:2}:${AmLogicSerial:6:2})" | sed -e 's/:0/:/g' -e 's/(0/(/'
 								;;
 							360c*)
 								# T7C: A311D2-N0D (A311D2 with NPU and different ISP): 36:c (1:2)
 								# https://docs.khadas.com/products/sbc/vim4/configurations/identify-version / https://archive.md/YUeWa
-								echo "Amlogic A311D2-N0D"
+								echo "Amlogic Meson T7C (A311D2-N0D) Revision ${AmLogicSerial:0:2}:${AmLogicSerial:2:2} (${AmLogicSerial:4:2}:${AmLogicSerial:6:2})" | sed -e 's/:0/:/g' -e 's/(0/(/'
+								;;
+							370b*)
+								# S4: S905Y4
+								echo "Amlogic Meson S4 (S905Y4) Revision ${AmLogicSerial:0:2}:${AmLogicSerial:2:2} (${AmLogicSerial:4:2}:${AmLogicSerial:6:2})" | sed -e 's/:0/:/g' -e 's/(0/(/'
 								;;
 							37*)
 								# S4: S905Y4, S805X2, S905W2
-								echo "Amlogic S905Y4/S805X2/S905W2"
+								echo "Amlogic Meson S4 (S905Y4/S805X2/S905W2) Revision ${AmLogicSerial:0:2}:${AmLogicSerial:2:2} (${AmLogicSerial:4:2}:${AmLogicSerial:6:2})" | sed -e 's/:0/:/g' -e 's/(0/(/'
+								;;
+							38*)
+								# T3: T965D4, T963D4, T982 (quad-core A55)
+								echo "Amlogic Meson T3 (Unknown) Revision ${AmLogicSerial:0:2}:${AmLogicSerial:2:2} (${AmLogicSerial:4:2}:${AmLogicSerial:6:2})" | sed -e 's/:0/:/g' -e 's/(0/(/'
+								;;
+							3a*)
+								# S4D: S805C3, S905C3, S905C3ENG (quad Cortex-A35): https://archive.md/4H6xM
+								# but quad-core A55 according to Amlogic 5.4 BSP kernel: tinyurl.com/r598z7aa
+								# and CoreElec device tree files
+								# https://tinyurl.com/y85lsxsc and/vs. https://tinyurl.com/5n99muj6
+								echo "Amlogic Meson S4D (Unknown) Revision ${AmLogicSerial:0:2}:${AmLogicSerial:2:2} (${AmLogicSerial:4:2}:${AmLogicSerial:6:2})" | sed -e 's/:0/:/g' -e 's/(0/(/'
+								;;
+							3b*)
+								# T5W: T962D4 (quad-core A55)
+								echo "Amlogic Meson T5W (Unknown) Revision ${AmLogicSerial:0:2}:${AmLogicSerial:2:2} (${AmLogicSerial:4:2}:${AmLogicSerial:6:2})" | sed -e 's/:0/:/g' -e 's/(0/(/'
 								;;
 							*)
-								# https://tinyurl.com/y85lsxsc and/vs. https://tinyurl.com/5n99muj6:
-								# S4D --> S805C3, S905C3, S905C3ENG (quad Cortex-A35): https://archive.md/4H6xM
-								#         but quad-core A55 according to Amlogic 5.4 BSP kernel: tinyurl.com/r598z7aa
-								#         and CoreElec device tree files
-								#  T3 --> T965D4, T963D4, T982 (quad-core A55)
-								# T5D --> T950D4, T950X4 (quad-core A53)
-								# T5W --> T962D4 (quad-core A55)
 								# C1/C2/T5/P1/S5 https://tinyurl.com/wwuwdef7
-								echo "unknown Amlogic, serial ${AmLogicSerial:0:8}..."
+								echo "Amlogic Meson Unknown (Unknown) Revision ${AmLogicSerial:0:2}:${AmLogicSerial:2:2} (${AmLogicSerial:4:2}:${AmLogicSerial:6:2})" | sed -e 's/:0/:/g' -e 's/(0/(/'
 								;;
 						esac
 						;;

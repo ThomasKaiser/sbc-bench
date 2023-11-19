@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.9.51
+Version=0.9.52
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -2374,6 +2374,7 @@ BasicSetup() {
 	CPUArchitecture="$(awk -F" " '/^Architecture/ {print $2}' <<<"${LSCPU}")"
 	X86CPUName="$(sed 's/ \{1,\}/ /g' <<<"${LSCPU}" | awk -F": " '/^Model name/ {print $2}' | sed -e 's/1.th Gen //' -e 's/.th Gen //' -e 's/Core(TM) //' -e 's/ Processor//' -e 's/Intel(R) Xeon(R) CPU //' -e 's/Intel(R) //' -e 's/(R)//' -e 's/CPU //' -e 's/ 0 @/ @/' -e 's/AMD //' -e 's/Authentic //' -e 's/ with .*//')"
 	VirtWhat="$(systemd-detect-virt 2>/dev/null)"
+	RK_NVMEM_FILE="$(find /sys/bus/nvmem/devices/rockchip*/* -name nvmem | head -n1)"
 	CPUCores=$(awk -F" " '/^CPU...:/ {print $2}' <<<"${LSCPU}")
 	# Might not work with RISC-V on old kernels, see
 	# https://github.com/ThomasKaiser/sbc-bench/issues/46
@@ -2557,7 +2558,6 @@ CheckMissingPackages() {
 				# Check for hexdump only on Rockchip platforms where NVMEM is readable.
 				# In Debian based distros the tool is part of bsdmainutils package, no
 				# idea about other distros.
-				RK_NVMEM_FILE="$(find /sys/bus/nvmem/devices/rockchip*/* -name nvmem | head -n1)"
 				[ -r "${RK_NVMEM_FILE}" ] && command -v hexdump >/dev/null 2>&1 || echo -e "bsdmainutils \c"
 			else
 				echo -e "echo \c"
@@ -3006,7 +3006,7 @@ InitialMonitoring() {
 	if [ $? -eq 0 -a "X${ProcCPUFile}" = "X/proc/cpuinfo" ]; then
 		UploadScheme="f:1=<-"
 		UploadServer="ix.io"
-		UploadAnswer="$( (echo -e "/proc/cpuinfo ${Version}\n\n$(uname -a) / ${DeviceName}\n" ; cat /proc/cpuinfo ; echo -e "\n${CPUTopology}\n\n${CPUSignature} / ${GuessedSoC}\n\n${DTCompatible}\n\n${OPPTables}\n\n$(grep . /sys/devices/virtual/thermal/thermal_zone?/* 2>/dev/null)\n\n$(grep . /sys/class/hwmon/hwmon?/* 2>/dev/null)") 2>/dev/null | curl -s -F ${UploadScheme} ${UploadServer} 2>&1)"
+		UploadAnswer="$( (echo -e "/proc/cpuinfo ${Version}\n\n$(uname -a) / ${DeviceName}\n" ; cat /proc/cpuinfo ; echo -e "\n${CPUTopology}\n\n${CPUSignature} / ${GuessedSoC}$(hexdump -C <"${RK_NVMEM_FILE}" 2>/dev/null | grep "52 4b " | cut -c9-)\n\n${DTCompatible}\n\n${OPPTables}\n\n$(grep . /sys/devices/virtual/thermal/thermal_zone?/* 2>/dev/null)\n\n$(grep . /sys/class/hwmon/hwmon?/* 2>/dev/null)") 2>/dev/null | curl -s -F ${UploadScheme} ${UploadServer} 2>&1)"
 		case "${UploadAnswer}" in
 			*ix.io*)
 				# everything's fine
@@ -5115,7 +5115,7 @@ GuessARMSoC() {
 	# soc soc0: Amlogic Meson GXBB (S905) Revision 1f:b (12:1) Detected <-- Beelink Mini MX / Amlogic Meson GXBB P201 Development Board
 	# soc soc0: Amlogic Meson GXBB (S905) Revision 1f:c (13:1) Detected <-- Beelink Mini MX / NanoPi K2 / NEXBOX A95X / Tronsmart Vega S95 Telos/Meta / WeTek Play 2 / Amlogic Meson GXBB P200 Development Board / Amlogic Meson GXBB P201 Development Board
 	# soc soc0: Amlogic Meson GXBB (S905H) Revision 1f:c (23:1) Detected <-- Amlogic Meson GXBB P201 Development Board
-	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:a (82:2) Detected <-- Khadas VIM / NEXBOX A95X (S905X) / Tanix TX3 Mini / Amlogic Meson GXL (S905X) P212 Development Board, ZTE B860H
+	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:a (82:2) Detected <-- Khadas VIM / NEXBOX A95X (S905X) / Tanix TX3 Mini / ZTE B860H / Amlogic Meson GXL (S905X) P212 Development Board
 	# soc soc0: Amlogic Meson GXL (S905D) Revision 21:b (0:2) Detected <-- Amlogic Meson GXL (S905W) P281 Development Board
 	# soc soc0: Amlogic Meson GXL (S905D) Revision 21:b (2:2) Detected <-- MeCool KI Pro, Phicomm N1, Amlogic Meson GXL (S905D) P231 Development Board
 	# soc soc0: Amlogic Meson GXL (Unknown) Revision 21:b (2:2) Detected <-- Phicomm N1
@@ -5203,6 +5203,8 @@ GuessARMSoC() {
 	#   - Unknown: 22:a (82:2)
 	# - U200 Development Board (G12A):
 	#   - Unknown: 28:b (70:2), 28:c (70:2)
+	#
+	# For certain older Amlogic SoC families also look here: https://github.com/ophub/amlogic-s9xxx-armbian/blob/main/build-armbian/armbian-files/common-files/etc/model_database.conf
 	#
 	# If /proc/cpuinfo Hardware field is 'Amlogic' then chars 1-8 of 'AmLogic Serial'
 	# and if not present 'Serial' have special meaning as it's the 'chip id':
@@ -5407,7 +5409,7 @@ GuessARMSoC() {
 								;;
 							20*)
 								# GXTVBB
-								echo "unknown Amlogic GXTVBB SoC, serial $(cut -c-8 <<<"${AmLogicSerial}")..."
+								echo "unknown Amlogic GXTVBB SoC, serial ${AmLogicSerial:0:8}..."
 								;;
 							21??3*)
 								# GXL: S805X: 21:d (34:2)
@@ -5449,7 +5451,7 @@ GuessARMSoC() {
 								;;
 							23*)
 								# TXL
-								echo "unknown Amlogic TXL SoC, serial $(cut -c-8 <<<"${AmLogicSerial}")..."
+								echo "unknown Amlogic TXL SoC, serial ${AmLogicSerial:0:8}..."
 								;;
 							24*)
 								# TXLX: T962X, T962E
@@ -5464,11 +5466,11 @@ GuessARMSoC() {
 								# GXLX, seems to be compatible to GXL since one occurence of ID '26:e (c1:2)'
 								# has been detected with 'Amlogic Meson GXL (S905X) P212 Development Board'
 								# and same ID on IPBS9505 TV box
-								echo "unknown Amlogic GXLX SoC, serial $(cut -c-8 <<<"${AmLogicSerial}")..."
+								echo "unknown Amlogic GXLX SoC, serial ${AmLogicSerial:0:8}..."
 								;;
 							27*)
 								# TXHD
-								echo "unknown Amlogic TXHD SoC, serial $(cut -c-8 <<<"${AmLogicSerial}")..."
+								echo "unknown Amlogic TXHD SoC, serial ${AmLogicSerial:0:8}..."
 								;;
 							28??4*)
 								# G12A: S905X2: 28:b (40:2)
@@ -5526,7 +5528,7 @@ GuessARMSoC() {
 								;;
 							2f*)
 								# TM2: T962X3, T962E2
-								echo "Amlogic T962X3/T962E2, serial $(cut -c-8 <<<"${AmLogicSerial}")..."
+								echo "Amlogic T962X3/T962E2, serial ${AmLogicSerial:0:8}..."
 								;;
 							32*)
 								# SC2: S905X4, S905C2
@@ -5553,7 +5555,8 @@ GuessARMSoC() {
 								#  T3 --> T965D4, T963D4, T982 (quad-core A55)
 								# T5D --> T950D4, T950X4 (quad-core A53)
 								# T5W --> T962D4 (quad-core A55)
-								echo "unknown Amlogic, serial $(cut -c-8 <<<"${AmLogicSerial}")..."
+								# C1/C2/T5/P1/S5 https://tinyurl.com/wwuwdef7
+								echo "unknown Amlogic, serial ${AmLogicSerial:0:8}..."
 								;;
 						esac
 						;;
@@ -8307,8 +8310,10 @@ CheckKernelVersion() {
 					;;
 			esac
 			;;
-		"5.15.119")
-			# New Amlogic SDK released with 5.15.119, supports at least T7, S4, SM1 and G12B
+		"5.15.78"|"5.15.119")
+			# New Amlogic SDK released with 5.15.78, supports at least T7, S4, SM1 and G12B.
+			# Kernel version 5.15.119 some images were using is the result of version string
+			# cosmetics over at ophub/flippy/unifreq
 			case ${GuessedSoC} in
 				*Amlogic*)
 					PrintBSPWarning Amlogic

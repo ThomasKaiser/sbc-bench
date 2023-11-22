@@ -2374,7 +2374,8 @@ BasicSetup() {
 	CPUArchitecture="$(awk -F" " '/^Architecture/ {print $2}' <<<"${LSCPU}")"
 	X86CPUName="$(sed 's/ \{1,\}/ /g' <<<"${LSCPU}" | awk -F": " '/^Model name/ {print $2}' | sed -e 's/1.th Gen //' -e 's/.th Gen //' -e 's/Core(TM) //' -e 's/ Processor//' -e 's/Intel(R) Xeon(R) CPU //' -e 's/Intel(R) //' -e 's/(R)//' -e 's/CPU //' -e 's/ 0 @/ @/' -e 's/AMD //' -e 's/Authentic //' -e 's/ with .*//')"
 	VirtWhat="$(systemd-detect-virt 2>/dev/null)"
-	RK_NVMEM_FILE="$(find /sys/bus/nvmem/devices/rockchip*/* -name nvmem | head -n1)"
+	RK_NVMEM_FILE="$(find /sys/bus/nvmem/devices/rockchip*/* -name nvmem 2>/dev/null | head -n1)"
+	RK_NVMEM="$(hexdump -C <"${RK_NVMEM_FILE}" 2>/dev/null | grep -E "52 4b |52 56 " | head -n1)"
 	CPUCores=$(awk -F" " '/^CPU...:/ {print $2}' <<<"${LSCPU}")
 	# Might not work with RISC-V on old kernels, see
 	# https://github.com/ThomasKaiser/sbc-bench/issues/46
@@ -3006,7 +3007,7 @@ InitialMonitoring() {
 	if [ $? -eq 0 -a "X${ProcCPUFile}" = "X/proc/cpuinfo" ]; then
 		UploadScheme="f:1=<-"
 		UploadServer="ix.io"
-		UploadAnswer="$( (echo -e "/proc/cpuinfo ${Version}\n\n$(uname -a) / ${DeviceName}\n" ; cat /proc/cpuinfo ; echo -e "\n${CPUTopology}\n\n${CPUSignature} / ${GuessedSoC}$(hexdump -C <"${RK_NVMEM_FILE}" 2>/dev/null | grep -E "52 4b |52 56 " | cut -c9- | head -n1)\n\n${DTCompatible}\n\n${OPPTables}\n\n$(grep . /sys/devices/virtual/thermal/thermal_zone?/* 2>/dev/null)\n\n$(grep . /sys/class/hwmon/hwmon?/* 2>/dev/null)") 2>/dev/null | curl -s -F ${UploadScheme} ${UploadServer} 2>&1)"
+		UploadAnswer="$( (echo -e "/proc/cpuinfo ${Version}\n\n$(uname -a) / ${DeviceName}\n" ; cat /proc/cpuinfo ; echo -e "\n${CPUTopology}\n\n${CPUSignature} / ${GuessedSoC}$(cut -c9- <<<"${RK_NVMEM}")\n\n${DTCompatible}\n\n${OPPTables}\n\n$(grep . /sys/devices/virtual/thermal/thermal_zone?/* 2>/dev/null)\n\n$(grep . /sys/class/hwmon/hwmon?/* 2>/dev/null)") 2>/dev/null | curl -s -F ${UploadScheme} ${UploadServer} 2>&1)"
 		case "${UploadAnswer}" in
 			*ix.io*)
 				# everything's fine
@@ -5156,10 +5157,10 @@ GuessARMSoC() {
 	# soc soc0: Amlogic Meson G12A (S905Y2) Revision 28:b (30:2) Detected <-- S905Y2 on Radxa Zero
 	# soc soc0: Amlogic Meson G12A (S905X2) Revision 28:b (40:2) Detected <-- Shenzhen Amediatech Technology Co. / Ltd X96 Max / SEI Robotics SEI510 / Amlogic Meson G12A U200 Development Board
 	# soc soc0: Amlogic Meson G12A (S905X2) Revision 28:c (40:2) Detected <-- ZTE B860H V5, SEI Robotics SEI500TR, X96 Max
-	# soc soc0: Amlogic Meson G12A (Unknown) Revision 28:b (70:2) Detected <-- Amlogic Meson G12A U200 Development Board
+	# soc soc0: Amlogic Meson G12A (Unknown) Revision 28:b (70:2) Detected <-- Amlogic Meson G12A U200 Development Board / Skyworth E900V22C
 	# soc soc0: Amlogic Meson G12A (Unknown) Revision 28:c (70:2) Detected <-- Amlogic Meson G12A U200 Development Board / China Mobile M401A / Skyworth E900V22C
 	# soc soc0: Amlogic Meson G12B (S922X) Revision 29:a (40:2) Detected <-- ODROID-N2 / Beelink GT-King Pro
-	# soc soc0: Amlogic Meson G12B (A311D) Revision 29:b (10:2) Detected <-- Khadas VIM3 / Radxa Zero 2 / UnionPi Tiger / Bananapi CM4 / Libre Computer AML-A311D-CC
+	# soc soc0: Amlogic Meson G12B (A311D) Revision 29:b (10:2) Detected <-- Khadas VIM3 / Radxa Zero 2 / UnionPi Tiger / Bananapi CM4/M2S / Libre Computer AML-A311D-CC
 	# soc soc0: Amlogic Meson G12B (S922X) Revision 29:b (40:2) Detected <-- Beelink GT-King Pro, Ugoos AM6
 	# soc soc0: Amlogic Meson G12B (A311D) Revision 29:c (10:0) Detected <-- Orbbec Zora P1
 	# soc soc0: Amlogic Meson G12B (S922X) Revision 29:c (40:2) Detected <-- ODROID-N2+ ('S922X-B')
@@ -5167,7 +5168,7 @@ GuessARMSoC() {
 	# soc soc0: Amlogic Meson SM1 (S905D3) Revision 2b:b (1:2) Detected <-- AMedia X96 Max+/Air / HK1 Box/Vontar X3 / SEI Robotics SEI610 / X96 Max Plus Q1
 	# soc soc0: Amlogic Meson SM1 (Unknown) Revision 2b:b (1:2) Detected <-- Shenzhen Amediatech Technology Co. Ltd X96 Air / AMedia X96 Max+ / SEI Robotics SEI610 / HK1 Box/Vontar X3
 	# soc soc0: Amlogic Meson SM1 (S905D3) Revision 2b:c (4:2) Detected <-- Khadas VIM3L / https://www.spinics.net/lists/arm-kernel/msg848718.html
-	# soc soc0: Amlogic Meson SM1 (S905X3) Revision 2b:c (10:2) Detected <-- AMedia X96 Max+ / H96 Max X3 / ODROID-C4 / ODROID-HC4 / HK1 Box/Vontar X3 / SEI Robotics SEI610 / Shenzhen Amediatech Technology Co. Ltd X96 Max/Air / Shenzhen CYX Industrial Co. Ltd A95XF3-AIR / Sinovoip BANANAPI-M5 / Skyworth LB2004-A4091 / Tanix TX3 (QZ) / Ugoos X3 / AI-Speaker DEV3
+	# soc soc0: Amlogic Meson SM1 (S905X3) Revision 2b:c (10:2) Detected <-- AMedia X96 Max+ / H96 Max X3 / ODROID-C4 / ODROID-HC4 / HK1 Box/Vontar X3 / SEI Robotics SEI610 / Shenzhen Amediatech Technology Co. Ltd X96 Max/Air / Shenzhen CYX Industrial Co. Ltd A95XF3-AIR / Sinovoip BANANAPI-M5 / M2 Pro / Skyworth LB2004-A4091 / Tanix TX3 (QZ) / Ugoos X3 / AI-Speaker DEV3
 	# soc soc0: Amlogic Meson SM1 (Unknown) Revision 2b:c (10:2) Detected <-- Khadas VIM3L / HK1 Box/Vontar X3
 	# soc soc0: Amlogic Meson SM1 (Unknown) Revision 2b:b (18:2) Detected <-- Shenzhen Amediatech Technology Co. Ltd X96 Air / HK1 Box/Vontar X3
 	# soc soc0: Amlogic Meson SM1 (Unknown) Revision 2b:b (40:2) Detected <-- Khadas VIM3L
@@ -5336,45 +5337,42 @@ GuessARMSoC() {
 	if [ "X${RockchipGuess}" != "X" -a "X${RockchipGuess}" != "X0" ]; then
 		# use Rockchip SoC info from dmesg output
 		echo "Rockchip RK${RockchipGuess:0:4} (${RockchipGuess})" | sed 's| RK3588| RK3588/RK3588s|'
-	elif [ -r "${RK_NVMEM_FILE}" ]; then
+	elif [ "X${RK_NVMEM}" != "X" ]; then
 		# search for Rockchip NVMEM below /sys/bus/nvmem/devices/rockchip* to parse SoC model from there
-		RK_NVMEM="$(hexdump -C <"${RK_NVMEM_FILE}" 2>/dev/null | grep -E "52 4b |52 56 " | head -n1)"
-		if [ "X${RK_NVMEM}" != "X" ]; then
-			case ${RK_NVMEM:16:2} in
-				03|13|23|53|81)
-					# reverse order, 52 4b 23 82 -> RK3228
-					echo "Rockchip RK${RK_NVMEM:17:1}${RK_NVMEM:16:1}${RK_NVMEM:20:1}${RK_NVMEM:19:1}"
-					;;
-				33)
-					# unknown order, affects RK3308, RK3318, RK3326, RK3328, RK3358 and RK3399
-					case ${RK_NVMEM:19:2} in
-						80|81|62|82|85)
-							# reverse order
-							echo "Rockchip RK${RK_NVMEM:17:1}${RK_NVMEM:16:1}${RK_NVMEM:20:1}${RK_NVMEM:19:1}"
-							;;
-						*)
-							# normal order
-							echo "Rockchip RK${RK_NVMEM:16:2}${RK_NVMEM:19:2}"
-							;;
-					esac
-					;;
-				11)
-					# unknown order, affects RV1109 and RV1126
-					case ${RK_NVMEM:19:2} in
-						62|90)
-							echo "Rockchip RV11${RK_NVMEM:20:1}${RK_NVMEM:19:1}"
-							;;
-						*)
-							echo "Rockchip RV11${RK_NVMEM:19:2}"
-							;;
-					esac
-					;;
-				*)
-					# normal order: 52 4b 35 88 -> RK3588
-					echo "Rockchip RK${RK_NVMEM:16:2}${RK_NVMEM:19:2}" | sed 's| RK3588| RK3588/RK3588s|'
-					;;
-			esac
-		fi
+		case ${RK_NVMEM:16:2} in
+			03|13|23|53|81)
+				# reverse order, 52 4b 23 82 -> RK3228
+				echo "Rockchip RK${RK_NVMEM:17:1}${RK_NVMEM:16:1}${RK_NVMEM:20:1}${RK_NVMEM:19:1}"
+				;;
+			33)
+				# unknown order, affects RK3308, RK3318, RK3326, RK3328, RK3358 and RK3399
+				case ${RK_NVMEM:19:2} in
+					80|81|62|82|85)
+						# reverse order
+						echo "Rockchip RK${RK_NVMEM:17:1}${RK_NVMEM:16:1}${RK_NVMEM:20:1}${RK_NVMEM:19:1}"
+						;;
+					*)
+						# normal order
+						echo "Rockchip RK${RK_NVMEM:16:2}${RK_NVMEM:19:2}"
+						;;
+				esac
+				;;
+			11)
+				# unknown order, affects RV1109 and RV1126
+				case ${RK_NVMEM:19:2} in
+					62|90)
+						echo "Rockchip RV11${RK_NVMEM:20:1}${RK_NVMEM:19:1}"
+						;;
+					*)
+						echo "Rockchip RV11${RK_NVMEM:19:2}"
+						;;
+				esac
+				;;
+			*)
+				# normal order: 52 4b 35 88 -> RK3588
+				echo "Rockchip RK${RK_NVMEM:16:2}${RK_NVMEM:19:2}" | sed 's| RK3588| RK3588/RK3588s|'
+				;;
+		esac
 	elif [ "X${AmlogicGuess}" != "XAmlogic Meson" ]; then
 		echo "${AmlogicGuess}" | sed -e 's/GXL (Unknown) Revision 21:b (2:2)/GXL (S905D) Revision 21:b (2:2)/' \
 		-e 's/GXL (Unknown) Revision 21:c (84:2)/GXL (S905X) Revision 21:c (84:2)/' \
@@ -5437,6 +5435,10 @@ GuessARMSoC() {
 								# GXBB: S905H: 1f:c (23:1)
 								ParseAmlSerial GXBB S905H
 								;;
+							1f??20*)
+								# GXBB: S905M
+								ParseAmlSerial GXBB S905M
+								;;
 							1f*)
 								# GXBB: S905, S905H, S905M
 								# - S905: 1f:b (0:1) / 1f:c (0:1)
@@ -5447,13 +5449,13 @@ GuessARMSoC() {
 								# GXTVBB
 								ParseAmlSerial GXTVBB Unknown
 								;;
-							21??3*)
-								# GXL: S805X: 21:d (34:2)
-								ParseAmlSerial GXL S805X
-								;;
 							21??0*|21??4*)
 								# GXL: S905D: 21:d (0:2), 21:d (4:2)
 								ParseAmlSerial GXL S905D
+								;;
+							21??3*)
+								# GXL: S805X: 21:d (34:2)
+								ParseAmlSerial GXL S805X
 								;;
 							21??8*)
 								# GXL: S905X: 21:a (82:2), 21:b (82:2), 21:c (84:2), 21:d (84:2)
@@ -5462,6 +5464,10 @@ GuessARMSoC() {
 							21??a*)
 								# GXL: S905W: 21:b (a2:2), 21:e (a5:2)
 								ParseAmlSerial GXL S905W
+								;;
+							21??b*)
+								# GXL: S805Y
+								ParseAmlSerial GXL S805Y
 								;;
 							21??c*)
 								# GXL: S905L: 21:b (c2:2), 21:c (c4:2), 21:d (c4:2), 21:e (c5:2)
@@ -5489,14 +5495,30 @@ GuessARMSoC() {
 								# TXL
 								ParseAmlSerial TXL Unknown
 								;;
+							24??10*)
+								# TXLX: T962X
+								ParseAmlSerial TXLX T962X
+								;;
+							24??20*)
+								# TXLX: T962E
+								ParseAmlSerial TXLX T962E
+								;;
 							24*)
 								# TXLX: T962X, T962E
-								ParseAmlSerial TXLX T962X/T962E
+								ParseAmlSerial TXLX Unknown
+								;;
+							25??22*)
+								# AXG: A113D
+								ParseAmlSerial AXG A113D
+								;;
+							25??37*)
+								# AXG: A113X
+								ParseAmlSerial AXG A113X
 								;;
 							25*)
 								# AXG: A113X, A113D
 								# - Unknown: 25:b (43:2), 25:c (43:2)
-								ParseAmlSerial AXG A113X/A113D
+								ParseAmlSerial AXG Unknown
 								;;
 							26*)
 								# GXLX, seems to be compatible to GXL since one occurence of ID '26:e (c1:2)'
@@ -5508,13 +5530,17 @@ GuessARMSoC() {
 								# TXHD
 								ParseAmlSerial TXHD Unknown
 								;;
-							28??4*)
-								# G12A: S905X2: 28:b (40:2)
-								ParseAmlSerial G12A S905X2
+							28??1*)
+								# G12A: S905D2: 28:b (10:2)
+								ParseAmlSerial G12A S905D2
 								;;
 							28??3*)
 								# G12A: S905Y2: 28:b (30:2)
 								ParseAmlSerial G12A S905Y2
+								;;
+							28??4*)
+								# G12A: S905X2: 28:b (40:2)
+								ParseAmlSerial G12A S905X2
 								;;
 							28??7*)
 								# G12A: S905L3A: 28:b (70:2)
@@ -5551,11 +5577,11 @@ GuessARMSoC() {
 								# while S905L always appears as 'Revision 21:X (cX:X)'
 								ParseAmlSerial GXLX2 S905L2
 								;;
-							2b??10*)
+							2b??05*|2b??10*)
 								# SM1: S905X3: 2b:c (10:2)
 								ParseAmlSerial SM1 S905X3
 								;;
-							2b??01*|2b??04*)
+							2b??01*|2b??04*|2b??30*)
 								# SM1: S905D3: 2b:b (1:2), 2b:c (4:2)
 								ParseAmlSerial SM1 S905D3
 								;;

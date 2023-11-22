@@ -129,7 +129,7 @@ A typical result (Rock 5B with Ubuntu Focal) will look like this:
 
 Stockfish (open source chess engine) also makes heavy use of SIMD extensions but is heavy on memory access too putting even more load on devices than cpuminer which doesn't access RAM that much or at all since working set fits inside CPU caches.
 
-As with cpuminer this test is optional (`sbc-bench -s` or `MODE=extensive` needed) since not representing any broader use case but being more of a stressor / load generator exposing thermal and stability issues. Consumption figures are higher compared to cpuminer since stockfish also stresses the DRAM interface and at least it's sufficient to expose a reliability issue with Rock 5B (most probably today RK3588 in general) since running this benchmark [reliably freezes Rock 5B at 2112 MHz DRAM clock](https://github.com/ThomasKaiser/sbc-bench/issues/55).
+As with cpuminer this test is optional (`sbc-bench -s` or `MODE=extensive` needed) since not representing any broader use case but being more of a stressor / load generator exposing thermal and stability issues. Consumption figures are higher compared to cpuminer since stockfish also stresses the DRAM interface and at least it's sufficient to expose a reliability issue with Rock 5B (most probably today RK3588 in general) since running this benchmark [reliably freezes my Rock 5B at 2112 MHz DRAM clock](https://github.com/ThomasKaiser/sbc-bench/issues/55).
 
 ### [7-zip](https://www.7-cpu.com)
 
@@ -147,7 +147,7 @@ On big.LITTLE systems we start with one run pinned to a little core followed by 
 
 If your use case is different (desktop, rendering, video editing, number crunching and so on that either depends more on single-threaded performance and/or involves floating point arithmetic, vector extensions or GPGPU), 7-zip MIPS are rather irrelevant for you since they do not even remotely represent your use case!
 
-With 'server workloads' in mind 7-zip MIPS give _an estimate_ of what to expect. A system showing two times more 7-zip MIPS compared to another will be able to run more (maybe twice as much or even more) daemons/tasks _as long as the stuff is only CPU bound_. How an individual daemon/task performs is a totally different story and needs to be checked (single-core 7-zip MIPS are available via left column in [results list](https://github.com/ThomasKaiser/sbc-bench/blob/master/Results.md)).
+With 'server workloads' in mind 7-zip MIPS give _an estimate_ of what to expect. A system showing two times more 7-zip MIPS compared to another will be able to run more (maybe twice as much or even more) daemons/tasks _as long as the stuff is only CPU bound_. How an individual daemon/task performs is a totally different story and needs to be checked (single-core 7-zip MIPS).
 
 With a system scoring 125% compared to another it's a different story and you need to examine individual results and your use case closely (time to switch from staring at numbers to [Active Benchmarking](https://www.brendangregg.com/activebenchmarking.html)).
 
@@ -157,7 +157,7 @@ If those 7-zip MIPS apply only to a few selected use cases as performance indica
 
   * 7-zip's multi-threaded benchmark is that demanding that it can be used to check for power supply issues and thermal/throttling (that's why it's executed 3 times in a row)
   * Results are not _that much_ affected by compiler version which allows to compare scores made in different years with different OS versions (confirmed with Debian Stretch/Buster/Bullseye and Ubuntu Bionic/Focal/Jammy or in other words: GCC 6.3 - 10.2). Majority of kitchen-sink benchmarks [overly depend on compiler version / settings](https://www.brendangregg.com/blog/2014-05-02/compilers-love-messing-with-benchmarks.html) and as such usually it makes comparing results from different years pointless
-  * Also the benchmark is not known to perform completely different when built for ARMv6, ARMv7 oder ARMv8 (the infamous `sysbench cpu` benchmark on the other hand ['performs' 10-15 times better on a 64-bit Raspbian](https://forums.raspberrypi.com/viewtopic.php?p=1536679&sid=8ddda8e0d980ef2fdf495f176a92c1ec#p1536679) which is _not_ related to 64-bit vs. 32-bit but just due to ARMv8 ISA containing a `divide` instruction)
+  * Also the benchmark is not known to perform completely different when built for ARMv6, ARMv7 oder ARMv8 (the infamous `sysbench cpu` benchmark on the other hand ['performs' 10-15 times better on a 64-bit Raspbian](https://forums.raspberrypi.com/viewtopic.php?p=1536679&sid=8ddda8e0d980ef2fdf495f176a92c1ec#p1536679) which is _not_ related to 64-bit vs. 32-bit but just due to ARMv8 ISA having a `divide` instruction)
   * To be able to get comparable scores spanning different years/libs/compilers submitted results are cherry picked to ensure 7-zip version being 16.02 or lower since [on some platforms more recent 7-zip versions perform way better](https://github.com/ThomasKaiser/sbc-bench/issues/81)
   * Unlike many other kitchen-sink benchmarks RAM access / memory performance matters (`sysbench cpu` for example runs completely inside CPU caches). With this benchmark it's easy to spot memory performance issues like [this](https://github.com/armbian/build/issues/1744) (after switching bootloaders DDR4 RAM got clocked with just 333 instead of the former 1056 MHz). It's one of the 'cheapest' tools for regression testing but unfortunately not widely used there
   * the multi-core test is also nice to spot internal CPU/SoC bottlenecks and/or scheduler improvements
@@ -310,3 +310,23 @@ If `$MaxKHz` is exported prior to benchmark execution (e.g. by `MODE=extensive M
 ### CPUINFOFILE environment variable
 
 If `$CPUINFOFILE` is exported prior to benchmark execution then SoC guessing and similar stuff happens not based on `/proc/cpuinfo` but on the supplied file that obviously needs to have a compatible format.
+
+## Interpreting results (WIP)
+
+### Measured clockspeeds
+
+### Swapping
+
+### oom-killer
+
+### Background activity
+
+### Powercap
+
+### Silly settings
+
+### zswap combined with zram
+
+### Thermal throttling
+
+### Frequency capping (under-voltage)

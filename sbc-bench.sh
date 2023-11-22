@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.9.53
+Version=0.9.54
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -2375,7 +2375,7 @@ BasicSetup() {
 	X86CPUName="$(sed 's/ \{1,\}/ /g' <<<"${LSCPU}" | awk -F": " '/^Model name/ {print $2}' | sed -e 's/1.th Gen //' -e 's/.th Gen //' -e 's/Core(TM) //' -e 's/ Processor//' -e 's/Intel(R) Xeon(R) CPU //' -e 's/Intel(R) //' -e 's/(R)//' -e 's/CPU //' -e 's/ 0 @/ @/' -e 's/AMD //' -e 's/Authentic //' -e 's/ with .*//')"
 	VirtWhat="$(systemd-detect-virt 2>/dev/null)"
 	RK_NVMEM_FILE="$(find /sys/bus/nvmem/devices/rockchip*/* -name nvmem 2>/dev/null | head -n1)"
-	RK_NVMEM="$(hexdump -C <"${RK_NVMEM_FILE}" 2>/dev/null | grep -E "52 4b |52 56 " | head -n1)"
+	[ -r "${RK_NVMEM_FILE}" ] && RK_NVMEM="$(hexdump -C <"${RK_NVMEM_FILE}" 2>/dev/null | grep -E "52 4b |52 56 " | head -n1)"
 	CPUCores=$(awk -F" " '/^CPU...:/ {print $2}' <<<"${LSCPU}")
 	# Might not work with RISC-V on old kernels, see
 	# https://github.com/ThomasKaiser/sbc-bench/issues/46
@@ -5082,99 +5082,99 @@ GuessARMSoC() {
 	# For a rough performance estimate wrt different Cortex ARMv8 cores see:
 	# https://www.cnx-software.com/2021/12/10/starfive-dubhe-64-bit-risc-v-core-12nm-2-ghz-processors/#comment-588823
 	#
-	# Recent Rockchip BSP kernels include something like this in dmesg output:
-	# rockchip-cpuinfo cpuinfo: SoC            : 35280000 --> Hlink H28K
-	# rockchip-cpuinfo cpuinfo: SoC            : 35281000 --> Hlink H28K
-	# rockchip-cpuinfo cpuinfo: SoC            : 35661000 --> Quartz64, RK3566 EVB2 LP4X V10 Board, Firefly RK3566-ROC-PC
-	# rockchip-cpuinfo cpuinfo: SoC            : 35662000 --> EmbedFire LubanCat-Zero, RK3566 BOX DEMO V10 ANDROID Board, Radxa Zero 3, Rock 3C, Radxa CM3,
-	#                                                         Orange Pi 3B, Orange Pi CM4
-	# rockchip-cpuinfo cpuinfo: SoC            : 35681000 --> only early RK3568 devices showed this silicon revision (e.g. Firefly RK3568-ROC-PC/AIO-3568J,
-	#                                                         Radxa E25)
-	# rockchip-cpuinfo cpuinfo: SoC            : 35682000 --> AIO-3568J HDMI, CPdevice Spring2 Plus Board, Firefly RK3568-ROC-PC HDMI, Forlinx OK3568-C Board,
-	#                                                         FriendlyElec NanoPi R3S, FriendlyElec NanoPi R5C, FriendlyElec NanoPi R5S, Hardkernel ODROID-M1
-	#                                                         HINLINK H66K, HINLINK H68K, Magewell Pro Convert NDI, Mrkaio M68S, OWLVisionTech rk3568 opc Board,
-	#                                                         Radxa Rock3A, Radxa ROCK 3 Model, Radxa ROCK3 Model A, Rockemd R68K 2.5G, SMARTFLY YY3568 Board
-	# rockchip-cpuinfo cpuinfo: SoC            : 35880000 --> 9Tripod X3588S Board, Firefly ITX-3588J HDMI(Linux), Firefly ROC-RK3588S-PC HDMI(Linux),
-	#                                                         FriendlyElec NanoPC-T6, FriendlyElec NanoPi R6C, FriendlyElec NanoPi R6S, HINLINK OWL H88K Board,
-	#                                                         Khadas Edge2, Mekotronics R58X-4G (RK3588 EDGE LP4x V1.2 BlueBerry Board), Mixtile Blade 3 v1.0.1,
-	#                                                         Orange Pi 5, Orange Pi 5B, Orange Pi 5 Plus, Radxa ROCK 5A, Radxa ROCK 5B, RK3588 EDGE LP4x V1.0
-	#                                                         BlueBerry Board, RK3588 MINIPC-MIZHUO LP4x V1.0 BlueBerry Board, RK3588S CoolPi 4B Board, RK3588
-	#                                                         Shaggy013 LP4x V1.2 H96_Max_v58 Board, Rockchip RK3588 EVB4 LP4 V10 Board, Rockchip RK3588 EVB7
-	#                                                         LP4 V10 Board, Rockchip RK3588-EVB-KS-T1 LP4 V10 Board, Rockchip RK3588 MINI PC V11 Board
-	#                                                         Rockchip RK3588 OWL H88K Board, Rockchip RK3588 TOYBRICK X10 Board
-	# rockchip-cpuinfo cpuinfo: SoC            : 35881000 --> Orange Pi 5, Orange Pi 5B, Orange Pi 5 Plus, Firefly ROC-RK3588S-PC V12 MIPI, Firefly AIO-3588Q MIPI101
+	# Recent Rockchip BSP kernels include something like this in dmesg output: rockchip-cpuinfo cpuinfo: SoC : 35880000
+	# 35280000 --> Hlink H28K
+	# 35281000 --> Hlink H28K
+	# 35661000 --> Quartz64, RK3566 EVB2 LP4X V10 Board, Firefly RK3566-ROC-PC
+	# 35662000 --> EmbedFire LubanCat-Zero, RK3566 BOX DEMO V10 ANDROID Board, Radxa Zero 3, Rock 3C, Radxa CM3,
+	#              Orange Pi 3B, Orange Pi CM4
+	# 35681000 --> only early RK3568 devices showed this silicon revision (e.g. Firefly RK3568-ROC-PC/AIO-3568J,
+	#              Radxa E25)
+	# 35682000 --> AIO-3568J HDMI, CPdevice Spring2 Plus Board, Firefly RK3568-ROC-PC HDMI, Forlinx OK3568-C Board,
+	#              FriendlyElec NanoPi R3S, FriendlyElec NanoPi R5C, FriendlyElec NanoPi R5S, Hardkernel ODROID-M1
+	#              HINLINK H66K, HINLINK H68K, Magewell Pro Convert NDI, Mrkaio M68S, OWLVisionTech rk3568 opc Board,
+	#              Radxa Rock3A, Radxa ROCK 3 Model, Radxa ROCK3 Model A, Rockemd R68K 2.5G, SMARTFLY YY3568 Board
+	# 35880000 --> 9Tripod X3588S Board, Firefly ITX-3588J HDMI(Linux), Firefly ROC-RK3588S-PC HDMI(Linux),
+	#              FriendlyElec NanoPC-T6, FriendlyElec NanoPi R6C, FriendlyElec NanoPi R6S, HINLINK OWL H88K Board,
+	#              Khadas Edge2, Mekotronics R58X-4G (RK3588 EDGE LP4x V1.2 BlueBerry Board), Mixtile Blade 3 v1.0.1,
+	#              Orange Pi 5, Orange Pi 5B, Orange Pi 5 Plus, Radxa ROCK 5A, Radxa ROCK 5B, RK3588 EDGE LP4x V1.0
+	#              BlueBerry Board, RK3588 MINIPC-MIZHUO LP4x V1.0 BlueBerry Board, RK3588S CoolPi 4B Board, RK3588
+	#              Shaggy013 LP4x V1.2 H96_Max_v58 Board, Rockchip RK3588 EVB4 LP4 V10 Board, Rockchip RK3588 EVB7
+	#              LP4 V10 Board, Rockchip RK3588-EVB-KS-T1 LP4 V10 Board, Rockchip RK3588 MINI PC V11 Board
+	#              Rockchip RK3588 OWL H88K Board, Rockchip RK3588 TOYBRICK X10 Board
+	# 35881000 --> Orange Pi 5, Orange Pi 5B, Orange Pi 5 Plus, Firefly ROC-RK3588S-PC V12 MIPI, Firefly AIO-3588Q MIPI101
 	#
 	# RK 'open source' SoCs according to https://github.com/rockchip-linux/kernel/blob/develop-5.10/drivers/soc/rockchip/rockchip-cpuinfo.c (at least RV1108 and RK3528/RK3588[s] missing)
 	# PX30, PX30S, RK3126, RK3126B, RK3126C, RK3128, RK3288, RK3288W, RK3308, RK3308B, RK3308BS, RK3566, RK3568, RV1103, RV1106, RV1109 and RV1126
 	#
-	# Amlogic: dmesg | grep 'soc soc0:'
-	# soc soc0: Amlogic Meson8 (S802) RevC (19 - 0:27ED) detected <-- Tronsmart S82
-	# soc soc0: Amlogic Meson8b (S805) RevA (1b - 0:B72) detected <-- ODROID-C1 / S805-onecloud / Endless Computers Endless Mini / TRONFY MXQ S805
-	# soc soc0: Amlogic Meson8m2 (S812) RevA (1d - 0:74E) detected <-- Akaso M8S / Tronsmart MXIII Plus
-	# soc soc0: Amlogic Meson GXBB (S905) Revision 1f:b (0:1) Detected <-- ODROID-C2
-	# soc soc0: Amlogic Meson GXBB (S905) Revision 1f:c (0:1) Detected <-- ODROID-C2
-	# soc soc0: Amlogic Meson GXBB (S905) Revision 1f:b (12:1) Detected <-- Beelink Mini MX / Amlogic Meson GXBB P201 Development Board
-	# soc soc0: Amlogic Meson GXBB (S905) Revision 1f:c (13:1) Detected <-- Beelink Mini MX / NanoPi K2 / NEXBOX A95X / Tronsmart Vega S95 Telos/Meta / WeTek Play 2 / Amlogic Meson GXBB P200 Development Board / Amlogic Meson GXBB P201 Development Board
-	# soc soc0: Amlogic Meson GXBB (S905H) Revision 1f:c (23:1) Detected <-- Amlogic Meson GXBB P201 Development Board
-	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:a (82:2) Detected <-- Khadas VIM / NEXBOX A95X (S905X) / Tanix TX3 Mini / ZTE B860H / Amlogic Meson GXL (S905X) P212 Development Board
-	# soc soc0: Amlogic Meson GXL (S905D) Revision 21:b (0:2) Detected <-- Amlogic Meson GXL (S905W) P281 Development Board
-	# soc soc0: Amlogic Meson GXL (S905D) Revision 21:b (2:2) Detected <-- MeCool KI Pro, Phicomm N1, Amlogic Meson GXL (S905D) P231 Development Board
-	# soc soc0: Amlogic Meson GXL (Unknown) Revision 21:b (2:2) Detected <-- Phicomm N1
-	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:b (82:2) Detected <-- Libre Computer AML-S905X-CC / NEXBOX A95X (S905X) / Tanix TX3 Mini / Amlogic Meson GXL (S905X) P212 Development Board / Amlogic Meson GXL (S905W) P281 Development Board
-	# soc soc0: Amlogic Meson GXL (S905W) Revision 21:b (a2:2) Detected <-- Tanix TX3 Mini / X96W Smart TV Box / Amlogic Meson GXL (S905X) P212 Development Board, Amlogic Meson GXL (S905W) P281 Development Board
-	# soc soc0: Amlogic Meson GXL (S905L) Revision 21:b (c2:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board
-	# soc soc0: Amlogic Meson GXL (S905M2) Revision 21:b (e2:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board
-	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:c (84:2) Detected <-- Khadas VIM / Rureka / Amlogic Meson GXL (S905X) P212 Development Board
-	# soc soc0: Amlogic Meson GXL (Unknown) Revision 21:c (84:2) Detected <-- Khadas VIM
-	# soc soc0: Amlogic Meson GXL (S905L) Revision 21:c (c2:2) Detected <-- PiBox by wdmomo, Amlogic Meson GXL (S905X) P212 Development Board
-	# soc soc0: Amlogic Meson GXL (Unknown) Revision 21:c (c2:2) Detected <-- S905L on "PiBox by wdmomo"
-	# soc soc0: Amlogic Meson GXL (S905L) Revision 21:c (c4:2) Detected <-- Nexbox A95X, Amlogic Meson GXL (S905X) P212 Development Board
-	# soc soc0: Amlogic Meson GXL (S905M2) Revision 21:c (e2:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board
-	# soc soc0: Amlogic Meson GXL (Unknown) Revision 21:c (e2:2) Detected <-- Khadas VIM
-	# soc soc0: Amlogic Meson GXL (S905D) Revision 21:d (0:2) Detected <-- Tanix TX3 Mini / Amlogic Meson GXL (S905W) P281 Development Board
-	# soc soc0: Amlogic Meson GXL (Unknown) Revision 21:d (4:2) Detected <-- Phicomm N1, Amlogic Meson GXL (S905D) P230 Development Board
-	# soc soc0: Amlogic Meson GXL (S905D) Revision 21:d (4:2) Detected <-- Phicomm N1 / Amlogic Meson GXL (S905D) P231 Development Board
-	# soc soc0: Amlogic Meson GXL (S805X) Revision 21:d (34:2) Detected <-- Libre Computer AML-S805X-AC / Amlogic Meson GXL (S905X) P212 Development Board
-	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:d (84:2) Detected <-- Khadas VIM / Libre Computer AML-S905X-CC / ZTE B860H / Fiberhome HG680P / Amlogic Meson GXL (S905X) P212 Development Board
-	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:d (85:2) Detected <-- Libre Computer AML-S905X-CC
-	# soc soc0: Amlogic Meson GXL (S905X) Revision 21:e (85:2) Detected <-- Khadas VIM / Vermax UHD 300X / Nexbox A95X / Amlogic Meson GXL (S905X) P212 Development Board
-	# soc soc0: Amlogic Meson GXL (S905W) Revision 21:d (a4:2) Detected <-- Tanix TX3 Mini / Amlogic Meson GXL (S905X) P212 Development Board / Amlogic Meson GXL (S905W) P281 Development Board
-	# soc soc0: Amlogic Meson GXL (Unknown) Revision 21:d (a4:2) Detected <-- Khadas VIM / Tanix TX3 Mini / JetHome JetHub J80 / Amlogic Meson GXL (S905X) P212 Development Board / Amlogic Meson GXL (S905W) P281 Development Board
-	# soc soc0: Amlogic Meson GXL (S905L) Revision 21:d (c4:2) Detected <-- X96 mini, Amlogic Meson GXL (S905X) P212 Development Board
-	# soc soc0: Amlogic Meson GXL (S905M2) Revision 21:d (e4:2) Detected <-- Oranth Tanix TX3 Mini, Amlogic Meson GXL (S905X) P212 Development Board / Amlogic Meson GXL (S905W) P281 Development Board
-	# soc soc0: Amlogic Meson GXL (S905W) Revision 21:e (a5:2) Detected <-- Tanix TX3 Mini / JetHome JetHub J80 / Amlogic Meson GXL (S905X) P212 Development Board / Amlogic Meson GXL (S905W) P281 Development Board
-	# soc soc0: Amlogic Meson GXL (S905L) Revision 21:e (c2:2) Detected <-- NEXBOX A95X (S905X)
-	# soc soc0: Amlogic Meson GXL (S905L) Revision 21:e (c5:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board
-	# soc soc0: Amlogic Meson GXM (Unknown) Revision 22:a (82:2) Detected <-- Amlogic Meson GXM (S912) Q201 Development Board
-	# soc soc0: Amlogic Meson GXM (S912) Revision 22:a (82:2) Detected <-- Beelink GT1 / Beelink GT1 Ultimate / Octopus Planet / Libre Computer AML-S912-PC / Khadas VIM2 / MeCool KIII Pro / Tanix TX9 Pro / Tronsmart Vega S96 / T95Z Plus / Vontar X92 / Amlogic Meson GXM (S912) Q200 Development Board / Amlogic Meson GXM (S912) Q201 Development Board
-	# soc soc0: Amlogic Meson GXM (S912) Revision 22:b (82:2) Detected <-- Beelink GT1 / Tronsmart Vega S96 / Octopus Planet / Sunvell T95Z Plus / Amlogic Meson GXM (S912) Q201 Development Board
-	# soc soc0: Amlogic Meson AXG (Unknown) Revision 25:b (43:2) Detected <-- JetHome JetHub J100
-	# soc soc0: Amlogic Meson AXG (Unknown) Revision 25:c (43:2) Detected <-- JetHome JetHub J100
-	# soc soc0: Amlogic Meson GXLX (Unknown) Revision 26:a (c1:2) Detected <-- Amlogic Meson GXL (S905W) P281 Development Board
-	# soc soc0: Amlogic Meson GXLX (Unknown) Revision 26:e (c1:2) Detected <-- IPBS9505-S905L2, Amlogic Meson GXL (S905X) P212 Development Board
-	# soc soc0: Amlogic Meson G12A (Unknown) Revision 28:b (30:2) Detected <-- S905Y2 on Radxa Zero
-	# soc soc0: Amlogic Meson G12A (Unknown) Revision 28:c (30:2) Detected <-- S905Y2 on Radxa Zero
-	# soc soc0: Amlogic Meson G12A (S905Y2) Revision 28:b (30:2) Detected <-- S905Y2 on Radxa Zero
-	# soc soc0: Amlogic Meson G12A (S905X2) Revision 28:b (40:2) Detected <-- Shenzhen Amediatech Technology Co. / Ltd X96 Max / SEI Robotics SEI510 / Amlogic Meson G12A U200 Development Board
-	# soc soc0: Amlogic Meson G12A (S905X2) Revision 28:c (40:2) Detected <-- ZTE B860H V5, SEI Robotics SEI500TR, X96 Max
-	# soc soc0: Amlogic Meson G12A (Unknown) Revision 28:b (70:2) Detected <-- Amlogic Meson G12A U200 Development Board / Skyworth E900V22C
-	# soc soc0: Amlogic Meson G12A (Unknown) Revision 28:c (70:2) Detected <-- Amlogic Meson G12A U200 Development Board / China Mobile M401A / Skyworth E900V22C
-	# soc soc0: Amlogic Meson G12B (S922X) Revision 29:a (40:2) Detected <-- ODROID-N2 / Beelink GT-King Pro
-	# soc soc0: Amlogic Meson G12B (A311D) Revision 29:b (10:2) Detected <-- Khadas VIM3 / Radxa Zero 2 / UnionPi Tiger / Bananapi CM4/M2S / Libre Computer AML-A311D-CC
-	# soc soc0: Amlogic Meson G12B (S922X) Revision 29:b (40:2) Detected <-- Beelink GT-King Pro, Ugoos AM6
-	# soc soc0: Amlogic Meson G12B (A311D) Revision 29:c (10:0) Detected <-- Orbbec Zora P1
-	# soc soc0: Amlogic Meson G12B (S922X) Revision 29:c (40:2) Detected <-- ODROID-N2+ ('S922X-B')
-	# soc soc0: Amlogic Meson Unknown (Unknown) Revision 2a:e (c5:2) Detected <-- Amlogic Meson GXL (S905L2) X7 5G Tv Box / Amlogic Meson GXL (S905X) P212 Development Board
-	# soc soc0: Amlogic Meson SM1 (S905D3) Revision 2b:b (1:2) Detected <-- AMedia X96 Max+/Air / HK1 Box/Vontar X3 / SEI Robotics SEI610 / X96 Max Plus Q1
-	# soc soc0: Amlogic Meson SM1 (Unknown) Revision 2b:b (1:2) Detected <-- Shenzhen Amediatech Technology Co. Ltd X96 Air / AMedia X96 Max+ / SEI Robotics SEI610 / HK1 Box/Vontar X3
-	# soc soc0: Amlogic Meson SM1 (S905D3) Revision 2b:c (4:2) Detected <-- Khadas VIM3L / https://www.spinics.net/lists/arm-kernel/msg848718.html
-	# soc soc0: Amlogic Meson SM1 (S905X3) Revision 2b:c (10:2) Detected <-- AMedia X96 Max+ / H96 Max X3 / ODROID-C4 / ODROID-HC4 / HK1 Box/Vontar X3 / SEI Robotics SEI610 / Shenzhen Amediatech Technology Co. Ltd X96 Max/Air / Shenzhen CYX Industrial Co. Ltd A95XF3-AIR / Sinovoip BANANAPI-M5 / M2 Pro / Skyworth LB2004-A4091 / Tanix TX3 (QZ) / Ugoos X3 / AI-Speaker DEV3
-	# soc soc0: Amlogic Meson SM1 (Unknown) Revision 2b:c (10:2) Detected <-- Khadas VIM3L / HK1 Box/Vontar X3
-	# soc soc0: Amlogic Meson SM1 (Unknown) Revision 2b:b (18:2) Detected <-- Shenzhen Amediatech Technology Co. Ltd X96 Air / HK1 Box/Vontar X3
-	# soc soc0: Amlogic Meson SM1 (Unknown) Revision 2b:b (40:2) Detected <-- Khadas VIM3L
-	# soc soc0: Amlogic Meson SM1 (Unknown) Revision 2b:c (81:2) Detected <-- AMedia X96 Max+, X96 Air / H96 Max X3 / A95XF3-AIR
-	# soc soc0: Amlogic Meson SC2 (S905X4/C2) Revision 32:b (2:2) Detected <-- Akari AX810 / Advan AT01
-	# soc soc0: Amlogic Meson SC2 (S905X4/C2) Revision 32:d (2:1) Detected <-- Ugoos X4
+	# Amlogic: dmesg | grep 'soc soc0:' (mainline Linux: drivers/soc/amlogic/meson-gx-socinfo.c)
+	# Amlogic Meson8 (S802) RevC (19 - 0:27ED) detected <-- Tronsmart S82
+	# Amlogic Meson8b (S805) RevA (1b - 0:B72) detected <-- ODROID-C1 / S805-onecloud / Endless Computers Endless Mini / TRONFY MXQ S805
+	# Amlogic Meson8m2 (S812) RevA (1d - 0:74E) detected <-- Akaso M8S / Tronsmart MXIII Plus
+	# Amlogic Meson GXBB (S905) Revision 1f:b (0:1) Detected <-- ODROID-C2
+	# Amlogic Meson GXBB (S905) Revision 1f:c (0:1) Detected <-- ODROID-C2
+	# Amlogic Meson GXBB (S905) Revision 1f:b (12:1) Detected <-- Beelink Mini MX / Amlogic Meson GXBB P201 Development Board
+	# Amlogic Meson GXBB (S905) Revision 1f:c (13:1) Detected <-- Beelink Mini MX / NanoPi K2 / NEXBOX A95X / Tronsmart Vega S95 Telos/Meta / WeTek Play 2 / Amlogic Meson GXBB P200 Development Board / Amlogic Meson GXBB P201 Development Board
+	# Amlogic Meson GXBB (S905H) Revision 1f:c (23:1) Detected <-- Amlogic Meson GXBB P201 Development Board
+	# Amlogic Meson GXL (S905X) Revision 21:a (82:2) Detected <-- Khadas VIM / NEXBOX A95X (S905X) / Tanix TX3 Mini / ZTE B860H / Amlogic Meson GXL (S905X) P212 Development Board
+	# Amlogic Meson GXL (S905D) Revision 21:b (0:2) Detected <-- Amlogic Meson GXL (S905W) P281 Development Board
+	# Amlogic Meson GXL (S905D) Revision 21:b (2:2) Detected <-- MeCool KI Pro, Phicomm N1, Amlogic Meson GXL (S905D) P231 Development Board
+	# Amlogic Meson GXL (Unknown) Revision 21:b (2:2) Detected <-- Phicomm N1
+	# Amlogic Meson GXL (S905X) Revision 21:b (82:2) Detected <-- Libre Computer AML-S905X-CC / NEXBOX A95X (S905X) / Tanix TX3 Mini / Amlogic Meson GXL (S905X) P212 Development Board / Amlogic Meson GXL (S905W) P281 Development Board
+	# Amlogic Meson GXL (S905W) Revision 21:b (a2:2) Detected <-- Tanix TX3 Mini / X96W Smart TV Box / Amlogic Meson GXL (S905X) P212 Development Board, Amlogic Meson GXL (S905W) P281 Development Board
+	# Amlogic Meson GXL (S905L) Revision 21:b (c2:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board
+	# Amlogic Meson GXL (S905M2) Revision 21:b (e2:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board
+	# Amlogic Meson GXL (S905X) Revision 21:c (84:2) Detected <-- Khadas VIM / Rureka / Amlogic Meson GXL (S905X) P212 Development Board
+	# Amlogic Meson GXL (Unknown) Revision 21:c (84:2) Detected <-- Khadas VIM
+	# Amlogic Meson GXL (S905L) Revision 21:c (c2:2) Detected <-- PiBox by wdmomo, Amlogic Meson GXL (S905X) P212 Development Board
+	# Amlogic Meson GXL (Unknown) Revision 21:c (c2:2) Detected <-- S905L on "PiBox by wdmomo"
+	# Amlogic Meson GXL (S905L) Revision 21:c (c4:2) Detected <-- Nexbox A95X, Amlogic Meson GXL (S905X) P212 Development Board
+	# Amlogic Meson GXL (S905M2) Revision 21:c (e2:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board
+	# Amlogic Meson GXL (Unknown) Revision 21:c (e2:2) Detected <-- Khadas VIM
+	# Amlogic Meson GXL (S905D) Revision 21:d (0:2) Detected <-- Tanix TX3 Mini / Amlogic Meson GXL (S905W) P281 Development Board
+	# Amlogic Meson GXL (Unknown) Revision 21:d (4:2) Detected <-- Phicomm N1, Amlogic Meson GXL (S905D) P230 Development Board
+	# Amlogic Meson GXL (S905D) Revision 21:d (4:2) Detected <-- Phicomm N1 / Amlogic Meson GXL (S905D) P231 Development Board
+	# Amlogic Meson GXL (S805X) Revision 21:d (34:2) Detected <-- Libre Computer AML-S805X-AC / Amlogic Meson GXL (S905X) P212 Development Board
+	# Amlogic Meson GXL (S905X) Revision 21:d (84:2) Detected <-- Khadas VIM / Libre Computer AML-S905X-CC / ZTE B860H / Fiberhome HG680P / Amlogic Meson GXL (S905X) P212 Development Board
+	# Amlogic Meson GXL (S905X) Revision 21:d (85:2) Detected <-- Libre Computer AML-S905X-CC
+	# Amlogic Meson GXL (S905X) Revision 21:e (85:2) Detected <-- Khadas VIM / Vermax UHD 300X / Nexbox A95X / Amlogic Meson GXL (S905X) P212 Development Board
+	# Amlogic Meson GXL (S905W) Revision 21:d (a4:2) Detected <-- Tanix TX3 Mini / Amlogic Meson GXL (S905X) P212 Development Board / Amlogic Meson GXL (S905W) P281 Development Board
+	# Amlogic Meson GXL (Unknown) Revision 21:d (a4:2) Detected <-- Khadas VIM / Tanix TX3 Mini / JetHome JetHub J80 / Amlogic Meson GXL (S905X) P212 Development Board / Amlogic Meson GXL (S905W) P281 Development Board
+	# Amlogic Meson GXL (S905L) Revision 21:d (c4:2) Detected <-- X96 mini, Amlogic Meson GXL (S905X) P212 Development Board
+	# Amlogic Meson GXL (S905M2) Revision 21:d (e4:2) Detected <-- Oranth Tanix TX3 Mini, Amlogic Meson GXL (S905X) P212 Development Board / Amlogic Meson GXL (S905W) P281 Development Board
+	# Amlogic Meson GXL (S905W) Revision 21:e (a5:2) Detected <-- Tanix TX3 Mini / JetHome JetHub J80 / Amlogic Meson GXL (S905X) P212 Development Board / Amlogic Meson GXL (S905W) P281 Development Board
+	# Amlogic Meson GXL (S905L) Revision 21:e (c2:2) Detected <-- NEXBOX A95X (S905X)
+	# Amlogic Meson GXL (S905L) Revision 21:e (c5:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board
+	# Amlogic Meson GXM (Unknown) Revision 22:a (82:2) Detected <-- Amlogic Meson GXM (S912) Q201 Development Board
+	# Amlogic Meson GXM (S912) Revision 22:a (82:2) Detected <-- Beelink GT1 / Beelink GT1 Ultimate / Octopus Planet / Libre Computer AML-S912-PC / Khadas VIM2 / MeCool KIII Pro / Tanix TX9 Pro / Tronsmart Vega S96 / T95Z Plus / Vontar X92 / Amlogic Meson GXM (S912) Q200 Development Board / Amlogic Meson GXM (S912) Q201 Development Board
+	# Amlogic Meson GXM (S912) Revision 22:b (82:2) Detected <-- Beelink GT1 / Tronsmart Vega S96 / Octopus Planet / Sunvell T95Z Plus / Amlogic Meson GXM (S912) Q201 Development Board
+	# Amlogic Meson AXG (Unknown) Revision 25:b (43:2) Detected <-- JetHome JetHub J100
+	# Amlogic Meson AXG (Unknown) Revision 25:c (43:2) Detected <-- JetHome JetHub J100
+	# Amlogic Meson GXLX (Unknown) Revision 26:a (c1:2) Detected <-- Amlogic Meson GXL (S905W) P281 Development Board
+	# Amlogic Meson GXLX (Unknown) Revision 26:e (c1:2) Detected <-- IPBS9505-S905L2, Amlogic Meson GXL (S905X) P212 Development Board
+	# Amlogic Meson G12A (Unknown) Revision 28:b (30:2) Detected <-- S905Y2 on Radxa Zero
+	# Amlogic Meson G12A (Unknown) Revision 28:c (30:2) Detected <-- S905Y2 on Radxa Zero
+	# Amlogic Meson G12A (S905Y2) Revision 28:b (30:2) Detected <-- S905Y2 on Radxa Zero
+	# Amlogic Meson G12A (S905X2) Revision 28:b (40:2) Detected <-- Shenzhen Amediatech Technology Co. / Ltd X96 Max / SEI Robotics SEI510 / Amlogic Meson G12A U200 Development Board
+	# Amlogic Meson G12A (S905X2) Revision 28:c (40:2) Detected <-- ZTE B860H V5, SEI Robotics SEI500TR, X96 Max
+	# Amlogic Meson G12A (Unknown) Revision 28:b (70:2) Detected <-- Amlogic Meson G12A U200 Development Board / Skyworth E900V22C
+	# Amlogic Meson G12A (Unknown) Revision 28:c (70:2) Detected <-- Amlogic Meson G12A U200 Development Board / China Mobile M401A / Skyworth E900V22C
+	# Amlogic Meson G12B (S922X) Revision 29:a (40:2) Detected <-- ODROID-N2 / Beelink GT-King Pro
+	# Amlogic Meson G12B (A311D) Revision 29:b (10:2) Detected <-- Khadas VIM3 / Radxa Zero 2 / UnionPi Tiger / Bananapi CM4/M2S / Libre Computer AML-A311D-CC
+	# Amlogic Meson G12B (S922X) Revision 29:b (40:2) Detected <-- Beelink GT-King Pro, Ugoos AM6
+	# Amlogic Meson G12B (A311D) Revision 29:c (10:0) Detected <-- Orbbec Zora P1
+	# Amlogic Meson G12B (S922X) Revision 29:c (40:2) Detected <-- ODROID-N2+ ('S922X-B')
+	# Amlogic Meson Unknown (Unknown) Revision 2a:e (c5:2) Detected <-- Amlogic Meson GXL (S905L2) X7 5G Tv Box / Amlogic Meson GXL (S905X) P212 Development Board
+	# Amlogic Meson SM1 (S905D3) Revision 2b:b (1:2) Detected <-- AMedia X96 Max+/Air / HK1 Box/Vontar X3 / SEI Robotics SEI610 / X96 Max Plus Q1
+	# Amlogic Meson SM1 (Unknown) Revision 2b:b (1:2) Detected <-- Shenzhen Amediatech Technology Co. Ltd X96 Air / AMedia X96 Max+ / SEI Robotics SEI610 / HK1 Box/Vontar X3
+	# Amlogic Meson SM1 (S905D3) Revision 2b:c (4:2) Detected <-- Khadas VIM3L / https://www.spinics.net/lists/arm-kernel/msg848718.html
+	# Amlogic Meson SM1 (S905X3) Revision 2b:c (10:2) Detected <-- AMedia X96 Max+ / H96 Max X3 / ODROID-C4 / ODROID-HC4 / HK1 Box/Vontar X3 / SEI Robotics SEI610 / Shenzhen Amediatech Technology Co. Ltd X96 Max/Air / Shenzhen CYX Industrial Co. Ltd A95XF3-AIR / Sinovoip BANANAPI-M5 / M2 Pro / Skyworth LB2004-A4091 / Tanix TX3 (QZ) / Ugoos X3 / AI-Speaker DEV3
+	# Amlogic Meson SM1 (Unknown) Revision 2b:c (10:2) Detected <-- Khadas VIM3L / HK1 Box/Vontar X3
+	# Amlogic Meson SM1 (Unknown) Revision 2b:b (18:2) Detected <-- Shenzhen Amediatech Technology Co. Ltd X96 Air / HK1 Box/Vontar X3
+	# Amlogic Meson SM1 (Unknown) Revision 2b:b (40:2) Detected <-- Khadas VIM3L
+	# Amlogic Meson SM1 (Unknown) Revision 2b:c (81:2) Detected <-- AMedia X96 Max+, X96 Air / H96 Max X3 / A95XF3-AIR
+	# Amlogic Meson SC2 (S905X4/C2) Revision 32:b (2:2) Detected <-- Akari AX810 / Advan AT01
+	# Amlogic Meson SC2 (S905X4/C2) Revision 32:d (2:1) Detected <-- Ugoos X4
 	#
 	# With T7/A311D2 the string 'soc soc0:' is missing in Amlogic's 5.4 BSP kernel, instead it's
 	# just 'Amlogic Meson T7 (A311D2) Revision 36:b (1:3) Detected' in dmesg output. 5.4 BSP
@@ -5338,14 +5338,14 @@ GuessARMSoC() {
 		# use Rockchip SoC info from dmesg output
 		echo "Rockchip RK${RockchipGuess:0:4} (${RockchipGuess})" | sed 's| RK3588| RK3588/RK3588s|'
 	elif [ "X${RK_NVMEM}" != "X" ]; then
-		# search for Rockchip NVMEM below /sys/bus/nvmem/devices/rockchip* to parse SoC model from there
-		case ${RK_NVMEM:16:2} in
-			03|13|23|53|81)
+		# use Rockchip NVMEM available below /sys/bus/nvmem/devices/rockchip* to parse SoC model from there
+		case ${RK_NVMEM:16:4} in
+			03*|13*|23*|53*|81*)
 				# reverse order, 52 4b 23 82 -> RK3228
 				echo "Rockchip RK${RK_NVMEM:17:1}${RK_NVMEM:16:1}${RK_NVMEM:20:1}${RK_NVMEM:19:1}"
 				;;
-			33)
-				# unknown order, affects RK3308, RK3318, RK3326, RK3328, RK3358 and (not really) RK3399
+			33*)
+				# unknown order, affects RK3308, RK3318, RK3326, RK3328, RK3358 and in theory RK3399
 				case ${RK_NVMEM:19:2} in
 					80|81|62|82|85)
 						# reverse order
@@ -5357,16 +5357,20 @@ GuessARMSoC() {
 						;;
 				esac
 				;;
-			11)
-				# unknown order, affects RV1109 and RV1126
+			11*)
+				# unknown order, affects RV1103, RV1106, RV1109 and RV1126
 				case ${RK_NVMEM:19:2} in
-					62|90)
+					30|60|62|90)
 						echo "Rockchip RV11${RK_NVMEM:20:1}${RK_NVMEM:19:1}"
 						;;
 					*)
 						echo "Rockchip RV11${RK_NVMEM:19:2}"
 						;;
 				esac
+				;;
+			"35 6"*)
+				# RK3566/RK3568, normal order and SoC revision (in reverse order) also present
+				echo "Rockchip RK${RK_NVMEM:16:2}${RK_NVMEM:19:2} (${RK_NVMEM:16:2}${RK_NVMEM:19:2}${RK_NVMEM:23:1}${RK_NVMEM:22:1}${RK_NVMEM:26:1}${RK_NVMEM:25:1})"
 				;;
 			*)
 				# normal order: 52 4b 35 88 -> RK3588
@@ -6149,8 +6153,8 @@ GuessSoCbySignature() {
 			# Qualcomm Snapdragon X Elite (SC8380XP): 8 x Oryon + 4 x Oryon or variants
 			# https://browser.geekbench.com/v6/cpu/3327362.gb6 is in conflict with https://browser.geekbench.com/v6/cpu/3326512.gb6
 			# wrt stepping: "ARM implementer 81 architecture 8 variant 1 part 1 revision 1" vs. "ARMv8 (64-bit) Family 8 Model 1 Revision 201"
-			# The former is r1p1, the latter r2p1. But maybe it's different steppings since it's also said both clusters would also consist
-			# of different core types: https://lore.kernel.org/linux-arm-msm/b165d2cd-e8da-4f6d-9ecf-14df2b803614@linaro.org/
+			# The former is r1p1, the latter r2p1. But maybe it's different steppings since it's also said the clusters would consist of two
+			# different core types: https://lore.kernel.org/linux-arm-msm/b165d2cd-e8da-4f6d-9ecf-14df2b803614@linaro.org/
 			case ${CPUCores} in
 				12)
 					echo "Qualcomm Snapdragon X Elite (SC8380XP)"

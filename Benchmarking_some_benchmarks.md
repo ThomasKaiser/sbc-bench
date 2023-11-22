@@ -72,7 +72,7 @@ The correctly measured Dhrystone MIPS/MHz score suggests [Cortex-A72](https://en
 
 ## Blender
 
-Blender is a popular open source render engine/tool that got an own benchmark mode/tool [few years ago](https://www.blender.org/news/introducing-blender-benchmark/). Since I was interested in Apple's raytracing functionality introduced with their M3 SoCs ([this little patch did the magic from version 4.0.0 on](https://projects.blender.org/blender/blender/commit/705c0733c67b2a707affaa3faa9289210167ba8e)) I compared 4.0.0 with 3.6.0 scores:
+Blender is a popular open source render engine/tool that got an own benchmark mode/tool [few years ago](https://www.blender.org/news/introducing-blender-benchmark/). Since I was interested in Apple's raytracing functionality introduced with their M3 SoCs ([this little patch does the magic from version 4.0.0 on](https://projects.blender.org/blender/blender/commit/705c0733c67b2a707affaa3faa9289210167ba8e)) I compared 4.0.0 with 3.6.0 scores:
 
 | GPU | 4.0.0 score | 3.6.0 score | difference |
 | ----: | ----: | ----: | ----: |

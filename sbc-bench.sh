@@ -4513,7 +4513,7 @@ ValidateResults() {
 	if [ "${USE_VCGENCMD}" = "true" ]; then
 		case "${ThrottlingCheck}" in
 			*"requency capping"*)
-				[ "${ThrottlingWarning}" = "" ] && echo -e "${LRED}${BOLD}Frequency capping occured${NC}" || echo -e "${LRED}${BOLD}Throttling / frequency capping occured${NC}"
+				[ "${ThrottlingWarning}" = "" ] && echo -e "${LRED}${BOLD}Frequency capping (under-voltage) occured${NC}" || echo -e "${LRED}${BOLD}Throttling / frequency capping (under-voltage) occured${NC}"
 				;;
 			*)
 				[ "${ThrottlingWarning}" = "" ] && echo -e "${LGREEN}No throttling${NC}" || echo -e "${LRED}${BOLD}Throttling occured${NC}"
@@ -5345,7 +5345,7 @@ GuessARMSoC() {
 				echo "Rockchip RK${RK_NVMEM:17:1}${RK_NVMEM:16:1}${RK_NVMEM:20:1}${RK_NVMEM:19:1}"
 				;;
 			33)
-				# unknown order, affects RK3308, RK3318, RK3326, RK3328, RK3358 and RK3399
+				# unknown order, affects RK3308, RK3318, RK3326, RK3328, RK3358 and (not really) RK3399
 				case ${RK_NVMEM:19:2} in
 					80|81|62|82|85)
 						# reverse order
@@ -6456,10 +6456,6 @@ GuessSoCbySignature() {
 			# Amlogic S922X/A311D, 2 x Cortex-A53 / r0p4 + 4 x Cortex-A73 / r0p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			echo "Amlogic S922X/A311D"
 			;;
-		??A73r?p???A73r?p???A73r?p???A73r?p?)
-			# Qualcomm IPQ9574, 4 x Cortex-A73
-			echo "Qualcomm IPQ9574"
-			;;
 		*A73r0p2*A73r0p2*A73r0p2*A73r0p2*A73r0p2*A73r0p2*A73r0p2*A73r0p2)
 			# https://github.com/vmlemon/understand/wiki/Lenovo-ChromeBook-Duet suggests all 8 cores are
 			# Cortex-A73 / r0p2 (cpu0 -> 'Booting Linux on physical CPU 0x0000000000 [0x410fd092]' and
@@ -6599,6 +6595,18 @@ GuessSoCbySignature() {
 		10ARM1176r0p7)
 			# BCM2835, 1 x ARM1176 / r0p7 / half thumb fastmult vfp edsp java tls
 			echo "BCM2835"
+			;;
+		??A73r?p???A73r?p???A73r?p???A73r?p?)
+			# Qualcomm IPQ9574, 4 x Cortex-A73
+			# or Synaptics VS680, 4 x Cortex-A73
+			case "${DTCompatible}" in
+				*qualcomm*|*9574*)
+					echo "Qualcomm IPQ9574"
+					;;
+				*synaptics*|*vs680*)
+					echo "Synaptics VS680"
+					;;
+			esac
 			;;
 		00A72r0p300A72r0p300A72r0p300A72r0p3)
 			# BCM2711, 4 x Cortex-A72 / r0p3 / fp asimd evtstrm crc32 (running 32-bit: half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm crc32)

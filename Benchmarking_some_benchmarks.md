@@ -69,3 +69,153 @@ But of course you also find totally different numbers all over the web, for exam
 
 The correctly measured Dhrystone MIPS/MHz score suggests [Cortex-A72](https://en.wikipedia.org/wiki/ARM_Cortex-A72) (an [out-of-order](https://en.wikipedia.org/wiki/Out-of-order_execution) 
 *big* core) being more than twice as fast as the corresponding [Cortex-A53](https://en.wikipedia.org/wiki/ARM_Cortex-A53) (an in-order *little* core meant to be combined with A72/A73 for [big.LITTLE](https://en.wikipedia.org/wiki/ARM_big.LITTLE) hybrid CPU designs). But when trusting into Wikipedia A72 is almost 3 times faster. And with the Cortex-A77 for example it gets even more weird since Wikipedia numbers and correctly determined differ even more.
+
+## Blender
+
+Blender is a popular open source render engine/tool that got an own benchmark mode/tool [few years ago](https://www.blender.org/news/introducing-blender-benchmark/). Since I was interested in Apple's raytracing functionality introduced with their M3 SoCs ([this little patch did the magic from version 4.0.0 on](https://projects.blender.org/blender/blender/commit/705c0733c67b2a707affaa3faa9289210167ba8e)) I compared 4.0.0 with 3.6.0 scores:
+
+| GPU | 4.0.0 score | 3.6.0 score | difference |
+| ----: | ----: | ----: | ----: |
+| Apple M3 Max (GPU - 40 cores) | 3417.29 | 3014.83 | 113.3% |
+| Apple M3 Pro (GPU - 18 cores) | 1510.37 | 1314.46 | 114.9% |
+
+So 'hardware raytracing' makes up for a less than 15% performance improvement? Let's have a closer look whether benchmark scores done with different versions can be compared in the first place...
+
+Grabbing data from [https://opendata.blender.org/](https://opendata.blender.org/) on 22th Nov 2023 and filtering out all devices with less than 4 scores (52 GPU models remaining) we see a 'drop in performance' with 46 of them compared to the older 3.6.0 version. Especially Nvidia GPUs are affected (RTX 4060 Ti being the 'worst') and Apple's SoCs as such we can assume that the benefit of having HW accelerated raytracing on the M3 SoCs accounts for a performance improvement in Blender more close to 20%.
+
+<details>
+  <summary>Comparing 4.0.0 with 3.6.0 in detail</summary>
+
+    grep "^\"" Blender-4.0.0.csv | while read ; do
+    Device="$(awk -F'"' '{print $2}' <<<"${REPLY}")"
+    Score4="$(awk -F'"' '{print $4}' <<<"${REPLY}")"
+    Score3="$(grep "\"${Device}\"" Blender-3.6.0.csv | awk -F'"' '{print $4}')"
+    Diff="$(awk '{printf ("%0.1f",100*$1/$2); }' <<<"${Score4} ${Score3}")"
+    echo -e "| ${Device} | ${Score4} | ${Score3} | ${Diff}% |"
+    done | sort -t '|' -k 5 -n
+
+| GPU | 4.0.0 score | 3.6.0 score | difference |
+| ----: | ----: | ----: | ----: |
+| NVIDIA GeForce RTX 4060 Ti | 3451.59 | 4306.28 | 80.2% |
+| NVIDIA GeForce RTX 2060 | 1541.86 | 1851.51 | 83.3% |
+| NVIDIA GeForce RTX 2070 | 2074.64 | 2441.76 | 85.0% |
+| NVIDIA GeForce RTX 4090 | 11337.02 | 13093.11 | 86.6% |
+| NVIDIA GeForce RTX 3080 Ti | 5253.9 | 6055.71 | 86.8% |
+| NVIDIA GeForce RTX 3070 Ti | 3557.07 | 4092.95 | 86.9% |
+| NVIDIA GeForce RTX 4060 | 3056.69 | 3482.13 | 87.8% |
+| NVIDIA GeForce RTX 3080 | 4605.96 | 5227.13 | 88.1% |
+| NVIDIA GeForce RTX 3070 | 3268.63 | 3704.15 | 88.2% |
+| NVIDIA GeForce GTX 1660 Ti | 753.36 | 851.8 | 88.4% |
+| NVIDIA GeForce RTX 2060 SUPER | 2167.41 | 2449.2 | 88.5% |
+| NVIDIA GeForce RTX 3060 Ti | 2835.63 | 3195.27 | 88.7% |
+| NVIDIA GeForce RTX 4080 Laptop GPU | 5650.66 | 6371.23 | 88.7% |
+| NVIDIA GeForce RTX 3060 | 2246.81 | 2531.17 | 88.8% |
+| NVIDIA GeForce RTX 4070 Ti | 6514.48 | 7290.21 | 89.4% |
+| NVIDIA GeForce RTX 4080 | 8558.09 | 9575.48 | 89.4% |
+| NVIDIA GeForce RTX 3090 | 5651.84 | 6289.07 | 89.9% |
+| NVIDIA GeForce RTX 2080 SUPER | 2357.52 | 2617.67 | 90.1% |
+| NVIDIA GeForce RTX 4090 Laptop GPU | 7388.08 | 8203.46 | 90.1% |
+| NVIDIA GeForce GTX 1660 SUPER | 749.46 | 830.35 | 90.3% |
+| NVIDIA GeForce RTX 4050 Laptop GPU | 2610.53 | 2889.12 | 90.4% |
+| NVIDIA GeForce RTX 3050 Laptop GPU | 1212.3 | 1340.07 | 90.5% |
+| NVIDIA GeForce RTX 3060 Laptop GPU | 2390.45 | 2617.27 | 91.3% |
+| NVIDIA GeForce RTX 4060 Laptop GPU | 3351.88 | 3645.67 | 91.9% |
+| NVIDIA GeForce RTX 4070 Laptop GPU | 3674.3 | 3999.65 | 91.9% |
+| Apple M2 Max (GPU - 38 cores) | 1765.03 | 1914.88 | 92.2% |
+| NVIDIA GeForce GTX 1070 | 528.56 | 573.36 | 92.2% |
+| NVIDIA GeForce RTX 2070 SUPER | 2398.9 | 2602.16 | 92.2% |
+| NVIDIA GeForce RTX 2080 Ti | 3075.79 | 3333.86 | 92.3% |
+| NVIDIA GeForce RTX 4070 | 5581.39 | 6028.95 | 92.6% |
+| Apple M1 Max (GPU - 32 cores) | 933.21 | 1006.63 | 92.7% |
+| NVIDIA GeForce GTX 1080 Ti | 829.75 | 894.47 | 92.8% |
+| AMD Radeon RX 6800 | 1793.94 | 1929.72 | 93.0% |
+| NVIDIA GeForce RTX 3070 Ti Laptop GPU | 3071.26 | 3287.45 | 93.4% |
+| AMD Radeon RX 7800 XT | 2270 | 2427.85 | 93.5% |
+| Apple M2 Max (GPU - 30 cores) | 1451.12 | 1550.73 | 93.6% |
+| Apple M1 (GPU - 8 cores) | 249.92 | 265.98 | 94.0% |
+| Apple M2 Ultra (GPU - 76 cores) | 3214.87 | 3420.98 | 94.0% |
+| Intel Arc A770 Graphics | 1980.98 | 2106.39 | 94.0% |
+| AMD Radeon RX 6700 XT | 1490.09 | 1566.79 | 95.1% |
+| Apple M1 Pro (GPU - 16 cores) | 469.32 | 487.02 | 96.4% |
+| Apple M1 Max (GPU - 24 cores) | 774.97 | 796.77 | 97.3% |
+| AMD Radeon RX 7900 XTX | 3958.38 | 3980.96 | 99.4% |
+| AMD Radeon RX 6900 XT | 2597.21 | 2611.39 | 99.5% |
+| NVIDIA RTX A4000 | 3397.06 | 3408.64 | 99.7% |
+| AMD Radeon RX 6800 XT | 2432.05 | 2437.77 | 99.8% |
+| Intel Arc A750 Graphics | 2058.68 | 2054.02 | 100.2% |
+| NVIDIA GeForce RTX 3070 Laptop GPU | 3171.62 | 3161.06 | 100.3% |
+| AMD Radeon RX 6950 XT | 2776.02 | 2751.71 | 100.9% |
+| AMD Radeon RX 6700 | 1404.47 | 1347.65 | 104.2% |
+| Apple M3 Max (GPU - 40 cores) | 3417.29 | 3014.83 | 113.3% |
+| Apple M3 Pro (GPU - 18 cores) | 1510.37 | 1314.46 | 114.9% |
+</details>
+
+Does this only affect 3.6.0 vs. 4.0.0 so that we at least can rely on Blender 3.x scores to be comparable? Nope, there it's even worse. 3.6.0 vs. 3.0.1 ends up with some GPUs becoming 'three to four times faster'.
+
+<details>
+  <summary>Comparing 3.6.0 with 3.0.1 in detail</summary>
+
+    grep "^\"" Blender-3.6.0.csv | while read ; do
+    Device="$(awk -F'"' '{print $2}' <<<"${REPLY}")"
+    Score4="$(awk -F'"' '{print $4}' <<<"${REPLY}")"
+    Score3="$(grep "\"${Device}\"" Blender-3.0.1.csv | awk -F'"' '{print $4}')"
+    Diff="$(awk '{printf ("%0.1f",100*$1/$2); }' <<<"${Score4} ${Score3}")"
+    echo -e "| ${Device} | ${Score4} | ${Score3} | ${Diff}% |"
+    done | sort -t '|' -k 5 -n
+
+| GPU | 3.6.0 score | 3.0.1 score | difference |
+| ----: | ----: | ----: | ----: |
+| NVIDIA GeForce GTX 660 | 124.11 | 150.92 | 82.2% |
+| NVIDIA GeForce GTX 1060 6GB | 390.68 | 443.65 | 88.1% |
+| NVIDIA GeForce GTX 1050 | 185.12 | 208.68 | 88.7% |
+| NVIDIA GeForce GTX 1070 | 573.36 | 624.6 | 91.8% |
+| NVIDIA GeForce RTX 3070 Ti Laptop GPU | 3287.45 | 3495.73 | 94.0% |
+| NVIDIA Quadro RTX 4000 | 2342.57 | 2485.81 | 94.2% |
+| NVIDIA GeForce GTX 1650 | 480.56 | 505.67 | 95.0% |
+| NVIDIA GeForce GTX 1050 Ti | 231.88 | 242.73 | 95.5% |
+| NVIDIA GeForce GTX 1080 Ti | 894.47 | 935.9 | 95.6% |
+| NVIDIA Quadro RTX 6000 | 3370.77 | 3521.78 | 95.7% |
+| NVIDIA GeForce GTX 1080 | 621.83 | 643.01 | 96.7% |
+| NVIDIA GeForce GTX 1660 Ti | 851.8 | 879.17 | 96.9% |
+| NVIDIA GeForce GTX 1650 Ti | 518.39 | 533.94 | 97.1% |
+| NVIDIA GeForce GTX 970 | 323.6 | 333.36 | 97.1% |
+| NVIDIA GeForce GTX 1660 | 777.73 | 799.05 | 97.3% |
+| NVIDIA GeForce RTX 3080 Laptop GPU | 3300.05 | 3378.88 | 97.7% |
+| NVIDIA GeForce GTX 1660 SUPER | 830.35 | 849.14 | 97.8% |
+| NVIDIA GeForce RTX 2060 SUPER | 2449.2 | 2487.79 | 98.4% |
+| NVIDIA GeForce RTX 2070 with Max-Q Design | 2026.81 | 2055.26 | 98.6% |
+| NVIDIA GeForce GTX 1060 | 380.67 | 385.74 | 98.7% |
+| NVIDIA GeForce RTX 2080 Ti | 3333.86 | 3373.16 | 98.8% |
+| NVIDIA GeForce RTX 3060 | 2531.17 | 2513.31 | 100.7% |
+| NVIDIA GeForce RTX 3050 | 1659.88 | 1629.28 | 101.9% |
+| NVIDIA GeForce RTX 2060 | 1851.51 | 1809.77 | 102.3% |
+| NVIDIA GeForce RTX 2080 | 2549.7 | 2490.22 | 102.4% |
+| NVIDIA GeForce RTX 3060 Ti | 3195.27 | 3120.36 | 102.4% |
+| AMD Radeon RX 5700 XT | 955.06 | 932.15 | 102.5% |
+| NVIDIA GeForce RTX 2080 SUPER | 2617.67 | 2535.25 | 103.3% |
+| NVIDIA GeForce RTX 2070 SUPER | 2602.16 | 2505.17 | 103.9% |
+| NVIDIA GeForce RTX 3080 | 5227.13 | 5029.25 | 103.9% |
+| NVIDIA GeForce RTX 3070 Laptop GPU | 3161.06 | 3023.2 | 104.6% |
+| NVIDIA GeForce RTX 3070 | 3704.15 | 3506.28 | 105.6% |
+| NVIDIA RTX A6000 | 5785.7 | 5472.1 | 105.7% |
+| NVIDIA GeForce RTX 3080 Ti | 6055.71 | 5711.42 | 106.0% |
+| NVIDIA GeForce RTX 3070 Ti | 4092.95 | 3849.24 | 106.3% |
+| NVIDIA GeForce RTX 2070 | 2441.76 | 2252.86 | 108.4% |
+| NVIDIA GeForce RTX 3090 | 6289.07 | 5764.34 | 109.1% |
+| NVIDIA GeForce RTX 3060 Laptop GPU | 2617.27 | 2372.01 | 110.3% |
+| NVIDIA GeForce RTX 3050 Laptop GPU | 1340.07 | 1207.17 | 111.0% |
+| AMD Radeon RX 6700 XT | 1566.79 | 1359.52 | 115.2% |
+| AMD Radeon RX 6900 XT | 2611.39 | 2262.86 | 115.4% |
+| AMD Radeon RX 6700S | 918.46 | 789.23 | 116.4% |
+| NVIDIA GeForce RTX 3080 Ti Laptop GPU | 3978.32 | 3385.31 | 117.5% |
+| AMD Radeon RX 5500 XT | 506.08 | 428.89 | 118.0% |
+| AMD Radeon RX 6800 XT | 2437.77 | 2061.51 | 118.3% |
+| AMD Radeon PRO W6800 | 1880.56 | 1584.62 | 118.7% |
+| AMD Radeon RX 6600 XT | 1103.97 | 928.68 | 118.9% |
+| AMD Radeon RX 6600 | 1011.36 | 850.45 | 118.9% |
+| NVIDIA GeForce RTX 3050 Ti Laptop GPU | 1514.43 | 1253.98 | 120.8% |
+| NVIDIA Tesla T4 | 1727.73 | 445.36 | 387.9% |
+| NVIDIA RTX A2000 8GB Laptop GPU | 1473.89 | 375.63 | 392.4% |
+</details>
+
+As usual: scores generated with different software versions can't be compared!

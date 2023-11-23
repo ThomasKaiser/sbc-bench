@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.9.54
+Version=0.9.55
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -5102,7 +5102,8 @@ GuessARMSoC() {
 	#              Shaggy013 LP4x V1.2 H96_Max_v58 Board, Rockchip RK3588 EVB4 LP4 V10 Board, Rockchip RK3588 EVB7
 	#              LP4 V10 Board, Rockchip RK3588-EVB-KS-T1 LP4 V10 Board, Rockchip RK3588 MINI PC V11 Board
 	#              Rockchip RK3588 OWL H88K Board, Rockchip RK3588 TOYBRICK X10 Board
-	# 35881000 --> Orange Pi 5, Orange Pi 5B, Orange Pi 5 Plus, Firefly ROC-RK3588S-PC V12 MIPI, Firefly AIO-3588Q MIPI101
+	# 35881000 --> Orange Pi 5, Orange Pi 5B, Orange Pi 5 Plus, Firefly ROC-RK3588S-PC V12 MIPI, Firefly AIO-3588Q MIPI101,
+	#              FriendlyElec NanoPi R6C
 	#
 	# RK 'open source' SoCs according to https://github.com/rockchip-linux/kernel/blob/develop-5.10/drivers/soc/rockchip/rockchip-cpuinfo.c (at least RV1108 and RK3528/RK3588[s] missing)
 	# PX30, PX30S, RK3126, RK3126B, RK3126C, RK3128, RK3288, RK3288W, RK3308, RK3308B, RK3308BS, RK3566, RK3568, RV1103, RV1106, RV1109 and RV1126
@@ -5336,10 +5337,24 @@ GuessARMSoC() {
 	
 	if [ "X${RockchipGuess}" != "X" -a "X${RockchipGuess}" != "X0" ]; then
 		# use Rockchip SoC info from dmesg output
-		echo "Rockchip RK${RockchipGuess:0:4} (${RockchipGuess})" | sed 's| RK3588| RK3588/RK3588s|'
+		if [ "X${RK_NVMEM}" != "X" -a "${RockchipGuess:0:4}" = "3588" ]; then
+			case "${RK_NVMEM:28:2}" in
+				21)
+					echo "Rockchip RK3588 (${RockchipGuess})"
+					;;
+				33)
+					echo "Rockchip RK3588s (${RockchipGuess})"
+					;;
+				*)
+					echo "Rockchip RK3588/RK3588s (${RockchipGuess})"
+					;;
+			esac
+		else
+			echo "Rockchip RK${RockchipGuess:0:4} (${RockchipGuess})" | sed 's| RK3588| RK3588/RK3588s|'
+		fi
 	elif [ "X${RK_NVMEM}" != "X" ]; then
 		# use Rockchip NVMEM available below /sys/bus/nvmem/devices/rockchip* to parse SoC model from there
-		case ${RK_NVMEM:16:4} in
+		case ${RK_NVMEM:16:5} in
 			03*|13*|23*|53*|81*)
 				# reverse order, 52 4b 23 82 -> RK3228
 				echo "Rockchip RK${RK_NVMEM:17:1}${RK_NVMEM:16:1}${RK_NVMEM:20:1}${RK_NVMEM:19:1}"
@@ -5372,9 +5387,23 @@ GuessARMSoC() {
 				# RK3566/RK3568, normal order and SoC revision (in reverse order) also present
 				echo "Rockchip RK${RK_NVMEM:16:2}${RK_NVMEM:19:2} (${RK_NVMEM:16:2}${RK_NVMEM:19:2}${RK_NVMEM:23:1}${RK_NVMEM:22:1}${RK_NVMEM:26:1}${RK_NVMEM:25:1})"
 				;;
+			"35 88")
+				# RK3588/RK3588s, normal order: 52 4b 35 88 -> RK3588
+				case "${RK_NVMEM:28:2}" in
+					21)
+						echo "Rockchip RK3588"
+						;;
+					33)
+						echo "Rockchip RK3588s"
+						;;
+					*)
+						echo "Rockchip RK3588/RK3588s"
+						;;
+				esac
+				;;
 			*)
 				# normal order: 52 4b 35 88 -> RK3588
-				echo "Rockchip RK${RK_NVMEM:16:2}${RK_NVMEM:19:2}" | sed 's| RK3588| RK3588/RK3588s|'
+				echo "Rockchip RK${RK_NVMEM:16:2}${RK_NVMEM:19:2}"
 				;;
 		esac
 	elif [ "X${AmlogicGuess}" != "XAmlogic Meson" ]; then
@@ -6603,12 +6632,16 @@ GuessSoCbySignature() {
 		??A73r?p???A73r?p???A73r?p???A73r?p?)
 			# Qualcomm IPQ9574, 4 x Cortex-A73
 			# or Synaptics VS680, 4 x Cortex-A73
+			# or MediaTek MT7988A (Filogic 880), 4 x Cortex-A73
 			case "${DTCompatible}" in
 				*qualcomm*|*9574*)
 					echo "Qualcomm IPQ9574"
 					;;
 				*synaptics*|*vs680*)
 					echo "Synaptics VS680"
+					;;
+				*880*|*mt7988*)
+					echo "MediaTek MT7988A (Filogic 880)"
 					;;
 			esac
 			;;
@@ -6832,7 +6865,19 @@ GuessSoCbySignature() {
 					echo "Unisoc UMS9620"
 					;;
 				*)
-					if [ -f /sys/devices/system/cpu/cpufreq/policy7/cpuinfo_max_freq ]; then
+					if [ "X${RK_NVMEM}" != "X" ]; then
+						case "${RK_NVMEM:28:2}" in
+							21)
+								echo "Rockchip RK3588"
+								;;
+							33)
+								echo "Rockchip RK3588s"
+								;;
+							*)
+								echo "Rockchip RK3588/RK3588s"
+								;;
+						esac
+					elif [ -f /sys/devices/system/cpu/cpufreq/policy7/cpuinfo_max_freq ]; then
 						# According to this site RK3588M is limited to 2.1 GHz
 						# https://techacute.com/rockchip-launched-flagship-smart-vehicle-solution-rk3588m-with-360-panoramic-view-function/
 						read MaxRK3588Freq </sys/devices/system/cpu/cpufreq/policy7/cpuinfo_max_freq
@@ -8802,8 +8847,8 @@ CheckStorage() {
 					# 0x544d -> "TM"
 					Manufacturer="${Manufacturer}Toshiba "
 					;;
-				0x000003/0x5344)
-					# 0x5344 -> "SD"
+				0x000003/0x5344|0x000003/0x5744)
+					# 0x5344 -> "SD", 0x5744 -> "WD" (Western Digital owning the SanDisk brand since 2016)
 					Manufacturer="${Manufacturer}SanDisk "
 					;;
 				0x000008*)

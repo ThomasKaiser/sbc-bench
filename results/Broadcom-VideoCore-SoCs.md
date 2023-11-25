@@ -12,19 +12,20 @@ Why Geekbench 4? Since firing up a dedicated AES benchmark we're able to quickly
 
 With newer Geekbench 5/6 by checking the `.gb5` and `.gb6` raw data you can also get the clockspeeds measured by Geekbench in the warmup phase (firing up clockspeed measurements for a fraction of a second to give the kernel the chance to ramp up clockspeeds and on hybrid designs to move the process to a performance core).
 
-Checking the VideoCore/GPU version over at khronos.org with hopefully correct BroadCom SoC names it was possible for some of the Geekbench finds to do an exact mapping. BroadCom uses mostly Canada's nature for their SoC platform codenames (e.g. [Banff](https://en.wikipedia.org/wiki/Banff_National_Park), [Inuvik](https://en.wikipedia.org/wiki/Inuvik), [Logan](https://en.wikipedia.org/wiki/Mount_Logan), [Muskoka](https://en.wikipedia.org/wiki/District_Municipality_of_Muskoka)) and Geekbench's Android version only extracts these names but not the SoC model itself.
+Checking the VideoCore/GPU version over at khronos.org with hopefully correct BroadCom SoC names it was possible for some of the Geekbench finds to do an exact mapping. BroadCom uses mostly Canada's nature for their SoC platform codenames (e.g. [Banff](https://en.wikipedia.org/wiki/Banff_National_Park), 
+[Fundy](https://parks.canada.ca/pn-np/nb/fundy), [Inuvik](https://en.wikipedia.org/wiki/Inuvik), [Logan](https://en.wikipedia.org/wiki/Mount_Logan), [Muskoka](https://en.wikipedia.org/wiki/District_Municipality_of_Muskoka)) and Geekbench's Android version only extracts these names but not the SoC model itself.
 
-### History of ARMv8 Crypto Extensions licensing (obviously based on core type)
+### BroadCom's history of ARMv8 Crypto Extensions licensing (obviously based on core type)
 
 Broadcom has/had an ARM architecture license and did two custom cores: ARMv7 "Brahma B15" (based on Cortex-A15) and ARMv8 "Brahma B53" (based on Cortex-A53). The B53 cores appeared on SoCs in 2017 initially without ARMv8 Crypto Extensions but fortunately that changed already in 2019.
 
-But for whatever reasons with standard Cortex A cores BroadCom switched to an ARMv8 Crypto Extensions license only two years later. As such none of the A53 cores in any of the older VideoCore SoCs and the A72/r0p3 appearing in 2019 in Hudson Set-top boxes (BCM7211) and on RPi 4 (the BCM2711 sibling) all lack AES/SHA acceleration. This changed only recently in 2021: both the A72/r1p0 in 'Klondike' and the A76/r4p1 in 'Muskoka' (BCM2712's STB sibling) come with ARMv8 Crypto Extensions.
+But for whatever reasons (licensing costs?) with standard Cortex A cores BroadCom switched to ARMv8 Crypto Extensions only two years later. As such none of the A53 cores in any of the older VideoCore SoCs and the A72/r0p3 appearing in 2019 in Hudson Set-top boxes (BCM7211) and on RPi 4 (the BCM2711 sibling) all lack AES/SHA acceleration. This changed only recently in 2021: both the A72/r1p0 in 'Klondike' and the A76/r4p1 in 'Muskoka' (BCM2712's STB sibling) come with ARMv8 Crypto Extensions.
 
 When first details about BCM2712 went public in Sep 2023 I was surprised to find a more recent A76 stepping than on RK3588 (r4p0) but now we know that random people already benchmarked BroadCom VideoCore VII Set-top boxes with these cores back in 2021. 
 
 ### List of SoCs where exact VideoCore version could be determined
 
-The SoCs are chronologically (the provided timestamps are either RPi announcements or first listing in Geekbench browser):
+The SoCs are listed chronologically (timestamps are either RPi announcements or first listing in Geekbench browser):
 
 #### BCM2835
 

@@ -17,9 +17,11 @@ Checking the VideoCore/GPU version over at khronos.org with hopefully correct Br
 
 ### BroadCom's history of ARMv8 Crypto Extensions licensing (obviously based on core type)
 
-Broadcom has/had an ARM architecture license and did two custom cores: ARMv7 "Brahma B15" (based on Cortex-A15) and ARMv8 "Brahma B53" (based on Cortex-A53). The B53 cores appeared on SoCs in 2017 initially without ARMv8 Crypto Extensions but fortunately that changed already in 2019.
+Broadcom has/had an ARM architecture license and did two custom cores: ARMv7 "Brahma B15" (based on Cortex-A15) and ARMv8 "Brahma B53" (based on Cortex-A53). The B53 cores appeared on SoCs in 2017 initially without ARMv8 Crypto Extensions but fortunately that changed already in 2018.
 
-But for whatever reasons (licensing costs?) with standard Cortex A cores BroadCom switched to ARMv8 Crypto Extensions only two years later. As such none of the A53 cores in any of the older VideoCore SoCs and the A72/r0p3 appearing in 2019 in Hudson Set-top boxes (BCM7211) and on RPi 4 (the BCM2711 sibling) all lack AES/SHA acceleration. This changed only recently in 2021: both the A72/r1p0 in 'Klondike' and the A76/r4p1 in 'Muskoka' (BCM2712's STB sibling) come with ARMv8 Crypto Extensions.
+But for whatever reasons (licensing costs?) with standard Cortex A cores BroadCom switched to ARMv8 Crypto Extensions only from 2021 on: the A72/r1p0 in 'Klondike' and the A76/r4p1 in 'Muskoka' (BCM2712's STB sibling) come with ARMv8 Crypto Extensions.
+
+But the A53 cores in any of the older VideoCore SoCs and the A72/r0p3 appearing in 2019 in Hudson Set-top boxes (BCM7211) and on RPi 4 (the BCM2711 sibling) all lack AES/SHA acceleration.
 
 When first details about BCM2712 went public in Sep 2023 I was surprised to find a more recent A76 stepping than on RK3588 (r4p0) but now we know that random people already benchmarked BroadCom VideoCore VII Set-top boxes with these cores back in 2021. 
 
@@ -51,6 +53,12 @@ The SoCs are listed chronologically (timestamps are either RPi announcements or 
   * VideoCore IV
   * February 2016
 
+#### [BCM7252 (Avko/Banff)](https://browser.geekbench.com/v4/cpu/2113312)
+
+  * 2 x Brahma B15 / r0p3 (1.72 GHz)
+  * VideoCore V (V3D-530)
+  * March 2017
+
 #### [BCM7268](https://browser.geekbench.com/v4/cpu/search?utf8=✓&q=broadcom+bcm7268*)
 
   * 4 x Brahma B53 / r0p0 w/o Crypto Extensions (1.66 GHz)
@@ -63,29 +71,29 @@ The SoCs are listed chronologically (timestamps are either RPi announcements or 
   * VideoCore V (V3D-510)
   * August 2017
 
+#### [BCM7278 (Fundy)](https://browser.geekbench.com/v4/cpu/11587209.gb4)
+
+  * 4 x Brahma B53 / r0p0 with Crypto Extensions (1.87 / 2.01 GHz)
+  * VideoCore VI (V3D-630)
+  * November 2018
+
 #### [Grouse](https://browser.geekbench.com/v4/cpu/search?utf8=✓&q=broadcom+grouse)
 
   * 2 x Brahma B53 / r0p0 with Crypto Extensions (1.84 GHz)
   * VideoCore V (V3D-510)
   * January 2019
 
-#### [BCM7271](https://browser.geekbench.com/v4/cpu/12465921)
-
-  * 4 x Brahma B53 / r0p0 with Crypto Extensions (1.66 GHz)
-  * VideoCore V (V3D-520)
-  * March 2019
-
-#### [BCM7252 (Avko/Banff)](https://browser.geekbench.com/v4/cpu/2113312)
-
-  * 2 x Brahma B15 / r0p3 (1.72 GHz)
-  * VideoCore V (V3D-530)
-  * March 2017
-
 #### [BCM7218 (Inuvik)](https://nitter.net/androidtv_rumor/status/1110846991427227648)
 
   * 4 x Brahma B53 / r0p0 with Crypto Extensions (2.62 GHz)
   * VideoCore VI (V3D-620)
   * February 2019
+
+#### [BCM7271](https://browser.geekbench.com/v4/cpu/12465921)
+
+  * 4 x Brahma B53 / r0p0 with Crypto Extensions (1.66 GHz)
+  * VideoCore V (V3D-520)
+  * March 2019
 
 #### [BCM7211 (Hudson)](https://nitter.net/androidtv_rumor/status/1110846991427227648)
 
@@ -111,12 +119,6 @@ The SoCs are listed chronologically (timestamps are either RPi announcements or 
   * 2 x Cortex-A72 / r1p0 with Crypto Extensions (1.80 GHz)
   * VideoCore VI (V3D-620)
   * January 2021
-
-#### [BCM7278 (Fundy)](https://browser.geekbench.com/v4/cpu/11587209.gb4)
-
-  * 4 x Brahma B53 / r0p0 with Crypto Extensions (1.87 / 2.01 GHz)
-  * VideoCore VI (V3D-630)
-  * November 2018
 
 #### [Muskoka](https://browser.geekbench.com/v4/cpu/search?utf8=✓&q=Muskoka)
 

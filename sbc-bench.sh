@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.9.55
+Version=0.9.56
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -2376,6 +2376,8 @@ BasicSetup() {
 	VirtWhat="$(systemd-detect-virt 2>/dev/null)"
 	RK_NVMEM_FILE="$(find /sys/bus/nvmem/devices/rockchip*/* -name nvmem 2>/dev/null | head -n1)"
 	[ -r "${RK_NVMEM_FILE}" ] && RK_NVMEM="$(hexdump -C <"${RK_NVMEM_FILE}" 2>/dev/null | grep -E "52 4b |52 56 " | head -n1)"
+	AW_NVMEM_FILE="/sys/bus/nvmem/devices/sunxi-sid0/nvmem"
+	[ -r "${AW_NVMEM_FILE}" ] && AW_NVMEM="$(hexdump -C <"${AW_NVMEM_FILE}" 2>/dev/null | head -n1)"
 	CPUCores=$(awk -F" " '/^CPU...:/ {print $2}' <<<"${LSCPU}")
 	# Might not work with RISC-V on old kernels, see
 	# https://github.com/ThomasKaiser/sbc-bench/issues/46
@@ -2559,7 +2561,7 @@ CheckMissingPackages() {
 				# Check for hexdump only on Rockchip platforms where NVMEM is readable.
 				# In Debian based distros the tool is part of bsdmainutils package, no
 				# idea about other distros.
-				[ -r "${RK_NVMEM_FILE}" ] && command -v hexdump >/dev/null 2>&1 || echo -e "bsdmainutils \c"
+				[ -r "${RK_NVMEM_FILE}" -o -r "${AW_NVMEM_FILE}" ] && command -v hexdump >/dev/null 2>&1 || echo -e "bsdmainutils \c"
 			else
 				echo -e "echo \c"
 			fi
@@ -2841,12 +2843,16 @@ InstallCpuminer() {
 		zypper install -y automake autoconf pkg-config libcurl4-openssl-dev libjansson-dev libssl-dev libgmp-dev make g++ zlib1g-dev >/dev/null 2>&1
 		apt-get -f -qq -y install automake autoconf pkg-config libcurl4-openssl-dev libjansson-dev libssl-dev libgmp-dev make g++ zlib1g-dev >/dev/null 2>&1
 		pacman --noconfirm -Sq automake autoconf pkg-config libcurl4-openssl-dev libjansson-dev libssl-dev libgmp-dev make g++ zlib1g-dev >/dev/null 2>&1
-		git clone https://github.com/tpruvot/cpuminer-multi >/dev/null 2>&1
+		if [ -d "${InstallLocation}/cpuminer-multi/.git" ]; then
+			cd "${InstallLocation}/cpuminer-multi/" && git pull >/dev/null 2>&1 && make clean >/dev/null 2>&1
+		else
+			git clone https://github.com/tpruvot/cpuminer-multi >/dev/null 2>&1
+		fi
 		if [ $? -ne 0 ]; then
 			echo -e "\n\n${LRED}${BOLD}Temporary Github problem. Not able to download cpuminer. Please try again later.${NC}" >&2
 			exit 1
 		fi
-		cd cpuminer-multi/ && ./build.sh >/dev/null 2>&1
+		cd "${InstallLocation}/cpuminer-multi/" && ./build.sh >/dev/null 2>&1
 	fi
 	if [ ! -x "${InstallLocation}"/cpuminer-multi/cpuminer ]; then
 		echo -e "\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08 (can't build cpuminer)  \c"
@@ -3007,7 +3013,7 @@ InitialMonitoring() {
 	if [ $? -eq 0 -a "X${ProcCPUFile}" = "X/proc/cpuinfo" ]; then
 		UploadScheme="f:1=<-"
 		UploadServer="ix.io"
-		UploadAnswer="$( (echo -e "/proc/cpuinfo ${Version}\n\n$(uname -a) / ${DeviceName}\n" ; cat /proc/cpuinfo ; echo -e "\n${CPUTopology}\n\n${CPUSignature} / ${GuessedSoC}$(cut -c9- <<<"${RK_NVMEM}")\n\n${DTCompatible}\n\n${OPPTables}\n\n$(grep . /sys/devices/virtual/thermal/thermal_zone?/* 2>/dev/null)\n\n$(grep . /sys/class/hwmon/hwmon?/* 2>/dev/null)") 2>/dev/null | curl -s -F ${UploadScheme} ${UploadServer} 2>&1)"
+		UploadAnswer="$( (echo -e "/proc/cpuinfo ${Version}\n\n$(uname -a) / ${DeviceName}\n" ; cat /proc/cpuinfo ; echo -e "\n${CPUTopology}\n\n${CPUSignature} / ${GuessedSoC}$(cut -c9- <<<"${RK_NVMEM}")$(cut -c9- <<<"${AW_NVMEM}")\n\n${DTCompatible}\n\n${OPPTables}\n\n$(grep . /sys/devices/virtual/thermal/thermal_zone?/* 2>/dev/null)\n\n$(grep . /sys/class/hwmon/hwmon?/* 2>/dev/null)") 2>/dev/null | curl -s -F ${UploadScheme} ${UploadServer} 2>&1)"
 		case "${UploadAnswer}" in
 			*ix.io*)
 				# everything's fine
@@ -4353,9 +4359,9 @@ ValidateResults() {
 		OneOrTwoDigitsAfter=$(wc -c <<<"${OneOrTwoDigitsAfter}")
 		if [ ${OneOrTwoDigitsBefore:-6} -gt 6 -o ${OneOrTwoDigitsAfter:-6} -gt 6 ]; then
 			# mismatch greater than 9%, print warning in red and bold
-			echo -e "${LRED}${BOLD}Advertised vs. measured max CPU clockspeed: ${ClockspeedMismatchBefore} before, ${ClockspeedMismatchAfter} after${NC}"
+			echo -e "${LRED}${BOLD}Advertised vs. measured max CPU clockspeed: ${ClockspeedMismatchBefore} before, ${ClockspeedMismatchAfter} after${NC} -> https://t.ly/rXNnN"
 		else
-			echo -e "Advertised vs. measured max CPU clockspeed: ${ClockspeedMismatchBefore} before, ${ClockspeedMismatchAfter} after"
+			echo -e "Advertised vs. measured max CPU clockspeed: ${ClockspeedMismatchBefore} before, ${ClockspeedMismatchAfter} after -> https://t.ly/rXNnN"
 		fi
 	elif [ -f /sys/devices/system/cpu/cpufreq/policy0/scaling_governor ]; then
 		# cpufreq scaling supported, check we've measured cpufreq before to report 'no mismatch'
@@ -4378,10 +4384,10 @@ ValidateResults() {
 			case $? in
 				0)
 					# Armbian settings
-					echo -e "${LRED}${BOLD}Silly settings: \"arm_boost=1\" missing but \"arm_freq=1800\" set in ${ThreadXConfig}${NC}"
+					echo -e "${LRED}${BOLD}Silly settings: \"arm_boost=1\" missing but \"arm_freq=1800\" set in ${ThreadXConfig}${NC} -> https://t.ly/4UoLw"
 					;;
 				*)
-					echo -e "${LRED}${BOLD}\"arm_boost=1\" missing in ${ThreadXConfig}${NC}"
+					echo -e "${LRED}${BOLD}\"arm_boost=1\" missing in ${ThreadXConfig}${NC} -> https://t.ly/4UoLw"
 					;;
 			esac
 		fi
@@ -4394,7 +4400,7 @@ ValidateResults() {
 				LimitedTo1200=$?
 				grep -q "temp_soft_limit" "${ThreadXConfig}"
 				TempSoftLimitSet=$?
-				[ ${LimitedTo1200} -ne 0 -a ${TempSoftLimitSet} -ne 0 ] && echo "\"temp_soft_limit\" not set in ${ThreadXConfig}"
+				[ ${LimitedTo1200} -ne 0 -a ${TempSoftLimitSet} -ne 0 ] && echo "\"temp_soft_limit\" not set in ${ThreadXConfig} -> https://t.ly/G0ANg"
 				;;
 		esac
 	fi
@@ -4407,10 +4413,12 @@ ValidateResults() {
 		else
 			NoZRAM=$(tail -n +2 /proc/swaps | grep -v '^/dev/zram' | wc -l)
 			if [ ${NoZRAM} -eq 0 ]; then
-				echo -e "${LRED}${BOLD}Swapping (ZRAM) occured${NC}"
-				[ "${ZswapEnabled}" = "1" ] && echo -e "${LRED}${BOLD}Zswap configured on top of zram. Swap performance harmed${NC}"
+				echo -e "${LRED}${BOLD}Swapping (ZRAM) occured${NC} -> https://t.ly/TQ-hO"
+				# check whether zswap sits on top of zram
+				[ -r /sys/module/zswap/parameters/enabled ] && ZswapEnabled="$(sed 's/Y/1/' </sys/module/zswap/parameters/enabled)"
+				[ "${ZswapEnabled}" = "1" ] && echo -e "${LRED}${BOLD}Zswap configured on top of zram. Swap performance harmed${NC} -> https://t.ly/dfJGh"
 			else
-				echo -e "${LRED}${BOLD}Swapping occured${NC}"
+				echo -e "${LRED}${BOLD}Swapping occured${NC} -> https://t.ly/TQ-hO"
 				if [ "X${VirtWhat}" = "X" -o "X${VirtWhat}" = "Xnone" ]; then
 					# identify type of swap only when not running inside a VM
 					SlowSwap="$(ListSwapDevices | sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" | awk -F") on " '{print $2}' | sed '/^$/d' | tr '\n' ',' | sed -e 's/,/, /g' -e 's/, $//')"
@@ -4427,7 +4435,7 @@ ValidateResults() {
 	UtilizationSum=$(awk '{s+=$1} END {printf "%.0f", s}' <<<"${UtilizationValues}")
 	AverageSysUtilization=$(( ${UtilizationSum} / ${LogLength} ))
 	if [ ${PeakSysUtilization:-0} -gt 15 -o ${AverageSysUtilization:-0} -gt 0 ]; then
-		echo -e "${LRED}${BOLD}Too much background activity (%system): ${AverageSysUtilization}% avg, ${PeakSysUtilization}% max${NC}"
+		echo -e "${LRED}${BOLD}Too much background activity (%system): ${AverageSysUtilization}% avg, ${PeakSysUtilization}% max${NC} -> https://t.ly/uhOJa"
 	else
 		# only report background activity being ok when not running inside a VM/container
 		[ "X${VirtWhat}" = "X" -o "X${VirtWhat}" = "Xnone" ] && echo -e "${LGREEN}Background activity (%system) OK${NC}"
@@ -4449,24 +4457,24 @@ ValidateResults() {
 		case ${CPUCores} in
 			2)
 				# 8% peak and 2% average is acceptable
-				[ ${PeakDiff} -gt 8 -o ${AverageDiff} -gt 2 ] && echo -e "${LRED}${BOLD}Too much other background activity: ${AverageDiff}% avg, ${PeakDiff}% max${NC}"
+				[ ${PeakDiff} -gt 8 -o ${AverageDiff} -gt 2 ] && echo -e "${LRED}${BOLD}Too much other background activity: ${AverageDiff}% avg, ${PeakDiff}% max${NC} -> https://t.ly/uhOJa"
 				;;
 			4)
 				# 5% peak and 1% average is acceptable
-				[ ${PeakDiff} -gt 5 -o ${AverageDiff} -gt 1 ] && echo -e "${LRED}${BOLD}Too much other background activity: ${AverageDiff}% avg, ${PeakDiff}% max${NC}"
+				[ ${PeakDiff} -gt 5 -o ${AverageDiff} -gt 1 ] && echo -e "${LRED}${BOLD}Too much other background activity: ${AverageDiff}% avg, ${PeakDiff}% max${NC} -> https://t.ly/uhOJa"
 				;;
 			5|6)
 				# 3% peak and 1% average is acceptable
-				[ ${PeakDiff} -gt 3 -o ${AverageDiff} -gt 1 ] && echo -e "${LRED}${BOLD}Too much other background activity: ${AverageDiff}% avg, ${PeakDiff}% max${NC}"
+				[ ${PeakDiff} -gt 3 -o ${AverageDiff} -gt 1 ] && echo -e "${LRED}${BOLD}Too much other background activity: ${AverageDiff}% avg, ${PeakDiff}% max${NC} -> https://t.ly/uhOJa"
 				;;
 			8)
 				# 2% peak and 0% average is acceptable
-				[ ${PeakDiff} -gt 2 -o ${AverageDiff} -gt 0 ] && echo -e "${LRED}${BOLD}Too much other background activity: ${AverageDiff}% avg, ${PeakDiff}% max${NC}"
+				[ ${PeakDiff} -gt 2 -o ${AverageDiff} -gt 0 ] && echo -e "${LRED}${BOLD}Too much other background activity: ${AverageDiff}% avg, ${PeakDiff}% max${NC} -> https://t.ly/uhOJa"
 				;;
 			*)
 				# With more CPU cores it's impossible to detect 'sane environment' so only
 				# notify if average utilization is off by more than 0%
-				[ ${AverageDiff} -gt 0 ] && echo -e "${LRED}${BOLD}Too much other background activity: ${AverageDiff}% avg, ${PeakDiff}% max${NC}"
+				[ ${AverageDiff} -gt 0 ] && echo -e "${LRED}${BOLD}Too much other background activity: ${AverageDiff}% avg, ${PeakDiff}% max${NC} -> https://t.ly/uhOJa"
 				;;
 		esac
 	fi
@@ -4477,24 +4485,18 @@ ValidateResults() {
 		if [ ${OOMCount:-0} -gt 0 ]; then
 			case ${ProcSwapLines} in
 				1)
-					echo -e "${LRED}${BOLD}${OOMCount} oom-killer invocations (system too low on RAM and no ZRAM configured)${NC}"
+					echo -e "${LRED}${BOLD}${OOMCount} oom-killer invocations (system too low on RAM and no ZRAM configured)${NC} -> https://t.ly/HDEnb"
 					;;
 				*)
-					echo -e "${LRED}${BOLD}${OOMCount} oom-killer invocations (system too low on RAM and insufficient swap configured)${NC}"
+					echo -e "${LRED}${BOLD}${OOMCount} oom-killer invocations (system too low on RAM and insufficient swap configured)${NC} -> https://t.ly/HDEnb"
 					;;
 			esac
 		fi
 	fi
 
-	# check whether zswap sits on top of zram
-	[ -r /sys/module/zswap/parameters/enabled ] && ZswapEnabled="$(sed 's/Y/1/' </sys/module/zswap/parameters/enabled)"
-	if [ "${ZswapEnabled}" = "1" ]; then
-		grep -q '/dev/zram' /proc/swaps && echo -e "${LRED}${BOLD}Zswap combined with ZRAM. Swapping performance severely harmed${NC}"
-	fi
-
 	# powercap on Intel?
 	if [ -d /sys/devices/virtual/powercap/intel-rapl ]; then
-		grep -q -i GenuineIntel <<< "${ProcCPU}" && echo -e "Powercap detected. Details: \"sudo powercap-info -p intel-rapl\""
+		grep -q -i GenuineIntel <<< "${ProcCPU}" && echo -e "Powercap detected. Details: \"sudo powercap-info -p intel-rapl\" -> https://t.ly/lQToW"
 	fi
 
 	# temporarily killed CPU cores due to overheating with Amlogic SoCs and BSP kernel
@@ -4506,17 +4508,17 @@ ValidateResults() {
 	KilledCPUs="$(grep "CPU[0-7]: shutdown" "${TempDir}/dmesg" | awk -F" " '{print $2}' | sort | uniq | tr "\n" ":" | sed -e 's/::/, /g')"
 	if [ "X${KilledCPUs}" != "X" ]; then
 		ThrottlingWarning="${LRED}${BOLD} (throttled)${NC}"
-		echo -e "${LRED}${BOLD}Overheating resulted in CPU cores temporarily being stopped ($(sed 's/, $//' <<<"${KilledCPUs,,}"))${NC}"
+		echo -e "${LRED}${BOLD}Overheating resulted in CPU cores temporarily being stopped ($(sed 's/, $//' <<<"${KilledCPUs,,}"))${NC} -> https://t.ly/R7CCG"
 	fi
 
 	# Throttling and frequency capping on RPi?
 	if [ "${USE_VCGENCMD}" = "true" ]; then
 		case "${ThrottlingCheck}" in
 			*"requency capping"*)
-				[ "${ThrottlingWarning}" = "" ] && echo -e "${LRED}${BOLD}Frequency capping (under-voltage) occured${NC}" || echo -e "${LRED}${BOLD}Throttling / frequency capping (under-voltage) occured${NC}"
+				[ "${ThrottlingWarning}" = "" ] && echo -e "${LRED}${BOLD}Frequency capping (under-voltage) occured${NC} -> https://t.ly/ayb16" || echo -e "${LRED}${BOLD}Throttling / frequency capping (under-voltage) occured${NC} -> https://t.ly/RGrGZ / https://t.ly/ayb16"
 				;;
 			*)
-				[ "${ThrottlingWarning}" = "" ] && echo -e "${LGREEN}No throttling${NC}" || echo -e "${LRED}${BOLD}Throttling occured${NC}"
+				[ "${ThrottlingWarning}" = "" ] && echo -e "${LGREEN}No throttling${NC}" || echo -e "${LRED}${BOLD}Throttling occured${NC} -> https://t.ly/RGrGZ"
 				;;
 		esac
 	else
@@ -4532,9 +4534,9 @@ ValidateResults() {
 			# which then results in stats/time_in_state cpufreq statistics showing the cores
 			# not all the time at maximum clockspeed.
 			if [ "X${MODE}" != "Xpts" -a "X${MODE}" != "Xgb" ]; then
-				echo -e "${LRED}${BOLD}Throttling occured${NC}"
+				echo -e "${LRED}${BOLD}Throttling occured${NC} -> https://t.ly/RGrGZ"
 			else
-				echo -e "Throttling might have occured"
+				echo -e "Throttling might have occured -> https://t.ly/RGrGZ"
 			fi
 		fi
 	fi
@@ -5015,7 +5017,7 @@ GuessARMSoC() {
 	#      Cortex-A72 / r0p1: Marvell Armada 8020/8040, Mediatek MT6797/MT6797T
 	#      Cortex-A72 / r0p2: HiSilicon Kunpeng 916, NXP i.MX8QM/LS2xx8A, Rockchip RK3399, Socionext LD20, 
 	#      Cortex-A72 / r0p3: Broadcom BCM2711, NXP LS1028A, NXP LX2xx0A, Marvell Armada3900-A1, Xilinx Versal, AWS Graviton -> https://tinyurl.com/y47yz2f6
-	#      Cortex-A72 / r1p0: TI J721E (TDA4VM/DRA829V)
+	#      Cortex-A72 / r1p0: Broadcom Klondike, TI J721E (TDA4VM/DRA829V)
 	#      Cortex-A73 / r0p1: HiSilicon Kirin 960
 	#      Cortex-A73 / r0p2: Allwinner R923, Amlogic A311D/A311D2/S922X, HiSilicon Kirin 710/970, MediaTek Helio P60T/MT6771V/MT6799/MT8183, Samsung Exynos 7885
 	#      Cortex-A75 / r2p1: Samsung Exynos 9820
@@ -5024,7 +5026,7 @@ GuessARMSoC() {
 	#   HiSilicon-A76 / r3p0: HiSilicon Kirin 810/990
 	#   HiSilicon-A76 / r3p1: HiSilicon Kirin 990
 	#      Cortex-A76 / r4p0: Allwinner A736/T736, Google Tensor G1, Rockchip RK3588/RK3588s, Unisoc UMS9620
-	#      Cortex-A76 / r4p1: Broadcom BCM2712
+	#      Cortex-A76 / r4p1: Broadcom BCM2712/Muskoka
 	#      Cortex-A77 / r1p0: HiSilicon Kirin 9000, Qualcomm QRB5165 (Snapdragon 865)
 	#      Cortex-A78 / r1p0: MediaTek Genio 1200, Qualcomm SM8350 (Snapdragon 888)
 	#      Cortex-A78 / r1p1: Google Tensor G2
@@ -5105,7 +5107,7 @@ GuessARMSoC() {
 	# 35881000 --> Orange Pi 5, Orange Pi 5B, Orange Pi 5 Plus, Firefly ROC-RK3588S-PC V12 MIPI, Firefly AIO-3588Q MIPI101,
 	#              FriendlyElec NanoPi R6C
 	#
-	# RK 'open source' SoCs according to https://github.com/rockchip-linux/kernel/blob/develop-5.10/drivers/soc/rockchip/rockchip-cpuinfo.c (at least RV1108 and RK3528/RK3588[s] missing)
+	# RK 'open source' SoCs according to https://github.com/rockchip-linux/kernel/blob/develop-5.10/drivers/soc/rockchip/rockchip-cpuinfo.c (at least RV1108 and RK3306/RK3528/RK3588[s] missing)
 	# PX30, PX30S, RK3126, RK3126B, RK3126C, RK3128, RK3288, RK3288W, RK3308, RK3308B, RK3308BS, RK3566, RK3568, RV1103, RV1106, RV1109 and RV1126
 	#
 	# Amlogic: dmesg | grep 'soc soc0:' (mainline Linux: drivers/soc/amlogic/meson-gx-socinfo.c)
@@ -5356,14 +5358,14 @@ GuessARMSoC() {
 		# use Rockchip NVMEM available below /sys/bus/nvmem/devices/rockchip* to parse SoC model from there
 		case ${RK_NVMEM:16:5} in
 			03*|13*|23*|53*|81*)
-				# reverse order, 52 4b 23 82 -> RK3228
+				# reverse order: 52 4b 23 82 -> RK3228
 				echo "Rockchip RK${RK_NVMEM:17:1}${RK_NVMEM:16:1}${RK_NVMEM:20:1}${RK_NVMEM:19:1}"
 				;;
 			33*)
-				# unknown order, affects RK3308, RK3318, RK3326, RK3328, RK3358 and in theory RK3399
+				# unknown order, affects RK3306, RK3308, RK3318, RK3326, RK3328, RK3358 and in theory RK3399
 				case ${RK_NVMEM:19:2} in
 					80|81|62|82|85)
-						# reverse order
+						# reverse order: 52 4b 33 82 -> RK3328, also affected: RK3318
 						echo "Rockchip RK${RK_NVMEM:17:1}${RK_NVMEM:16:1}${RK_NVMEM:20:1}${RK_NVMEM:19:1}"
 						;;
 					*)
@@ -5383,10 +5385,6 @@ GuessARMSoC() {
 						;;
 				esac
 				;;
-			"35 6"*)
-				# RK3566/RK3568, normal order and SoC revision (in reverse order) also present
-				echo "Rockchip RK${RK_NVMEM:16:2}${RK_NVMEM:19:2} (${RK_NVMEM:16:2}${RK_NVMEM:19:2}${RK_NVMEM:23:1}${RK_NVMEM:22:1}${RK_NVMEM:26:1}${RK_NVMEM:25:1})"
-				;;
 			"35 88")
 				# RK3588/RK3588s, normal order: 52 4b 35 88 -> RK3588
 				case "${RK_NVMEM:28:2}" in
@@ -5402,7 +5400,7 @@ GuessARMSoC() {
 				esac
 				;;
 			*)
-				# normal order: 52 4b 35 88 -> RK3588
+				# normal order: 52 4b 35 28 -> RK3528, affects RK3528, RK3566, RK3568
 				echo "Rockchip RK${RK_NVMEM:16:2}${RK_NVMEM:19:2}"
 				;;
 		esac
@@ -5835,7 +5833,7 @@ GuessARMSoC() {
 				echo "Allwinner TV303"
 				;;
 			sun55iw3*)
-				echo "Allwinner A523/T527"
+				echo "Allwinner A523/A527/T523/T527/MR527"
 				;;
 			sun9i*)
 				# SoC ID: 0x1639
@@ -6541,7 +6539,7 @@ GuessSoCbySignature() {
 			echo "HiSilicon Ascend 310"
 			;;
 		0?A55r2p00?A55r2p00?A55r2p00?A55r2p00?A55r2p00?A55r2p00?A55r2p00?A55r2p0)
-			# Allwinner A523/T527, 8 x Cortex-A55 / r2p0 / at least 'aes pmull sha1 sha2' (https://browser.geekbench.com/v6/cpu/1168710)
+			# Allwinner A523/A527/T523/T527/MR527, 8 x Cortex-A55 / r2p0 / at least 'aes pmull sha1 sha2' (https://browser.geekbench.com/v5/cpu/21564626)
 			case "${DTCompatible}" in
 				*a523*)
 					echo "Allwinner A523"
@@ -6549,8 +6547,8 @@ GuessSoCbySignature() {
 				*t527*)
 					echo "Allwinner T527"
 					;;
-				*allwinner*)
-					echo "Allwinner A523/T527"
+				*allwinner*|*sun55i*)
+					echo "Allwinner A523/A527/T523/T527/MR527"
 					;;
 			esac
 			;;
@@ -6724,10 +6722,9 @@ GuessSoCbySignature() {
 		*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A72r1p0*A72r1p0*A72r1p0*A72r1p0)
 			# RK3576, 4 x Cortex-A53 / r0p4 + 4 x Cortex-A72 / r1p0 https://archive.ph/7lkym
 			# (most recent steppings are pure assumption since announced in 2023)
-			# Though could also be Allwinner R923 based on same assumption
 			# Why A53/A72 still in 2024? Since last ARM cores able to boot a 32-bit
 			# ARMv8l kernel (32-bit userlands consume way less memory compared to 64-bit)
-			grep -E -q 'allwinner|sun60i|r923' <<<"${DTCompatible}" && echo "Allwinner R923" || echo "Rockchip RK3576"
+			echo "Rockchip RK3576"
 			;;
 		0?A55r2p00?A55r2p00?A55r2p00?A55r2p0*A76r4p0??A76r4p0)
 			# RK3582, assumed to be a stripped down RK3588 variant with two A76 removed (and gpu/rkvdec according to some Github comments)
@@ -6847,7 +6844,15 @@ GuessSoCbySignature() {
 			;;
 		00A72r1p000A72r1p0)
 			# TI J721E (TDA4VM/DRA829V): 2 x Cortex-A72 / r1p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32
-			echo "TI J721E"
+			# or BroadCom Klondike: 2 x Cortex-A72 / r1p0 / with at least 'aes pmull sha1 sha2' https://browser.geekbench.com/v4/cpu/search?page=1&q=broadcom+klondike&utf8=✓
+			case "${DTCompatible}" in
+				*721*|*ti*)
+					echo "TI J721E"
+					;;
+				*bcm*|*broadcom*)
+					echo "BroadCom Klondike"
+					;;
+			esac
 			;;
 		*A15r2p2*A15r2p2)
 			# TI Sitara AM572x: 2 x Cortex-A15 / r2p2 / half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
@@ -7769,7 +7774,7 @@ ProvideReviewInfo() {
 
 	GetTempSensor
 	InstallPrerequisits
-	InstallCpuminer
+	[ "X${RunBenchmarks}" = "XTRUE" ] && InstallCpuminer
 	InitialMonitoring
 	unset SPACING
 	OperatingSystem="$(GetOSRelease)"
@@ -7919,15 +7924,7 @@ ProvideReviewInfo() {
 	[ -z "${LSBLK}" ] && LSBLK="$(LC_ALL="C" lsblk -l -o SIZE,NAME,FSTYPE,LABEL,MOUNTPOINT 2>&1)"
 	NTFSdevices="$(awk -F" " '/ ntfs / {print $2}' <<< "${LSBLK}" | tr '\n' ',' | sed 's/,$//')"
 	if [ "X${NTFSdevices}" != "X" ]; then
-		echo -e "\n### Challenging filesystems:\n\nThe following partitions are NTFS: ${NTFSdevices}\n" >>"${TempDir}/review"
-		cat >>"${TempDir}/review" <<- EOF
-		When this OS uses FUSE/userland methods to access NTFS filesystems performance
-		will be significantly harmed or at least likely be bottlenecked by maxing out
-		one or more CPU cores. It is highly advised when benchmarking with any NTFS to
-		monitor closely CPU utilization or better switch to a 'Linux native' filesystem
-		like ext4 since representing 'storage performance' a lot more than 'somewhat
-		dealing with a foreign filesystem' as with NTFS.
-		EOF
+		echo -e "\n### Challenging filesystems:\n\nThe following partitions are NTFS: ${NTFSdevices} -> https://t.ly/1YpI0" >>"${TempDir}/review"
 	fi
 
 	# check swap devices/files/partitions
@@ -8355,7 +8352,7 @@ CheckKernelVersion() {
 			echo -e "\n${LRED}${BOLD}The 4.4 series has reached end-of-life on 2022-02-03 with version 4.4.302.${NC}"
 			;;
 		4.9.*)
-			# some SDKs/BSPs based on this version: Allwinner A50/MR133/R311/H6, Allwinner H616/H313, Amlogic S905X3 (SM1) / S922X/A311D (G12B), Exynos 5422, Nvidia AGX Xavier / Nvidia Jetson Nano / Nvidia Tegra X1 / Nvidia Tegra Xavier, RealTek RTD129x/RTD139x
+			# some SDKs/BSPs based on this version: Allwinner A50/MR133/R311/H6/H616/H313/H618, Amlogic S905X3 (SM1) / S922X/A311D (G12B), Exynos 5422, Nvidia AGX Xavier / Nvidia Jetson Nano / Nvidia Tegra X1 / Nvidia Tegra Xavier, RealTek RTD129x/RTD139x
 			case ${GuessedSoC} in
 				*5422*)
 					PrintBSPWarning Samsung
@@ -8408,13 +8405,17 @@ CheckKernelVersion() {
 			# New Amlogic SDK initially released with 5.4.125 and after some version string cosmetics
 			# stuck at 5.4.180
 			case ${GuessedSoC} in
+				Allwinner*)
+					# 5.4.125 is also used in Allwinner Android builds
+					PrintBSPWarning Allwinner
+					;;
 				*Amlogic*)
 					PrintBSPWarning Amlogic
 					;;
 			esac
 			;;
 		5.4.*)
-			# some SDKs/BSPs based on this version: Allwinner A64/D1/R528/T113/H5/H6, Amlogic A311D2 (T7), S805X2/S905Y4/S905W2 (S4), Exynos 5422
+			# some SDKs/BSPs based on this version: Allwinner A64/D1/R528/T113/H5/H6/H616/H618, Amlogic A311D2 (T7), S805X2/S905Y4/S905W2 (S4), Exynos 5422
 			case ${GuessedSoC} in
 				Allwinner*)
 					# highly unlikely that there's any Allwinner A64/H5/H6 out in the wild still running a _mainline_ 5.4 version
@@ -8478,6 +8479,15 @@ CheckKernelVersion() {
 			case ${GuessedSoC} in
 				*Amlogic*)
 					PrintBSPWarning Amlogic
+					;;
+			esac
+			;;
+		"5.15.94")
+			# At least used with Android 13 builds for A133: https://browser.geekbench.com/v5/cpu/21947495.gb5
+			case ${GuessedSoC} in
+				Allwinner*)
+					# though there's a small chance users of flippy/unifreq kernels on older Allwinner SoCs are affected print BSP warning
+					PrintBSPWarning Allwinner
 					;;
 			esac
 			;;

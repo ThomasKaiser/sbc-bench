@@ -272,6 +272,7 @@ Main() {
 	CheckClockspeedsAndSensors # test again loaded system after heating the SoC to the max
 	SummarizeResults
 	UploadResults
+	CheckAgeOfScript
 	BasicSetup ${OriginalCPUFreqGovernor} >/dev/null 2>&1
 } # Main
 
@@ -356,6 +357,19 @@ UpdateMe() {
 		fi
 	done
 } # UpdateMe
+
+CheckAgeOfScript() {
+	# check's modification of this file on disk, compares to 'time now' and if difference
+	# is a month or more then suggests running 'sbc-bench -u' for an update check
+	FileTime=$(stat -c %Y -- "${PathToMe}" 2>/dev/null)
+	TimeNow=$(date "+%s")
+	FileAge=$(( $(( ${TimeNow} - ${FileTime} )) / 86400 ))
+	if [ ${FileAge:-0} -ge 30 ]; then
+		[ "X${SUDO_USER}" != "X" ] && Sudoprefix="sudo "
+		echo -e "\nJust for your information: this script's version on disk is ${FileAge} days old."
+		echo -e "Maybe checking for an update: ${BOLD}${Sudoprefix}${PathToMe} -u${NC}\n"
+	fi
+} # CheckAgeOfScript
 
 snore() {
 	# https://blog.dhampir.no/content/sleeping-without-a-subprocess-in-bash-and-how-to-sleep-forever
@@ -2740,6 +2754,7 @@ InstallPrerequisits() {
 		${MissingPackages} >/dev/null 2>&1
 		if [ $? -eq 100 ]; then
 			# if apt cache is too outdated then update and try again
+			echo -e "\x08\x08 updating APT cache...\c"
 			apt update >/dev/null 2>&1
 			${MissingPackages} >/dev/null 2>&1
 		fi
@@ -4204,7 +4219,7 @@ LogEnvironment() {
 	# Log processor info if available and we're not running virtualized:
 	if [ "X${VirtWhat}" = "X" -o "X${VirtWhat}" = "Xnone" -o "X${DMIProductName}" = "XApple Virtualization Generic Platform" ]; then
 		command -v dmidecode >/dev/null 2>&1 && \
-			ProcessorInfo="$(dmidecode -t processor 2>/dev/null | grep -E -v -i "^#|^Handle|Serial|O.E.M.|1234567|SMBIOS|: Not |Unknown|OUT OF SPEC|00 00 00 00 00 00 00 00|: None")"
+			ProcessorInfo="$(dmidecode -t processor 2>/dev/null | grep -E -v -i "^#|^Handle|Serial|O.E.M.|1234567|SMBIOS|: Not |Unknown|OUT OF SPEC|00 00 00 00 00 00 00 00|: None|Scanning ")"
 		if [ "X${ProcessorInfo}" != "X" ]; then
 			echo -e "\n${ProcessorInfo}\n"
 		fi
@@ -4969,6 +4984,7 @@ GuessARMSoC() {
 	# Apple Avalanche / r1p0: Apple M2
 	#    ARM11 MPCore / r0p5: PLX NAS7820
 	#         ARM1176 / r0p7: Broadcom BCM2835
+	#      Brahma B53 / r0p0: Broadcom BCM4908 (and tons of others since Broadcom hasn't updated stepping information)
 	#       Cortex-A5 / r0p1: Actions ATM8029, Amlogic S805, Qualcomm MSM8625Q
 	#       Cortex-A7 / r0p1: ARM Versatile Express V2P-CA15-CA7
 	#       Cortex-A7 / r0p2: MediaTek MT6589/MT6588
@@ -6383,6 +6399,18 @@ GuessSoCbySignature() {
 								;;
 						esac
 					fi
+					;;
+			esac
+			;;
+		??BroadcomB53r0p0??BroadcomB53r0p0??BroadcomB53r0p0??BroadcomB53r0p0)
+			# technically another quad core A53 but in this case the cores are Broadcom's Brahma-B53.
+			# Broadcom used these cores in a bunch of SoCs, usually with ARMv8 Crypto Extensions but
+			# sometimes they're not active or licensed (applies to early VideoCore SoCs between 2017
+			# and 2018). Stepping was always r0p0.
+			case "${DTCompatible}" in
+				*brcm,bcm4908*)
+					# Broadcom BCM4908: 4 x Brahma B53 / r0p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
+					echo "Broadcom BCM4908"
 					;;
 			esac
 			;;
@@ -7841,8 +7869,8 @@ ProvideReviewInfo() {
 	AvailableMem=$(free | awk -F" " '/^Mem:   / {print $2}' | tail -n1)
 	echo -e "\n$(( ${AvailableMem} / 1024 )) KB available RAM" >>"${TempDir}/review"
 
-	# report probably performance relevant governors and policies
-	if [ -f /sys/devices/system/cpu/cpufreq/policy0/scaling_governor ]; then
+	# report probably performance relevant governors (not on x86_64) and policies
+	if [ -f /sys/devices/system/cpu/cpufreq/policy0/scaling_governor -a "${CPUArchitecture}" != "x86_64" ]; then
 		echo -e "\n### Governors/policies (performance vs. idle consumption):\n\nOriginal governor settings:\n" >>"${TempDir}/review"
 		sed -e 's/^/    /' <<<"${GovernorState}" >>"${TempDir}/review"
 		if [ "X${TunedGovernorState}" != "X" ]; then
@@ -8157,6 +8185,8 @@ FinalReporting() {
 	ClusterConfig=(0)
 	IsValid="$(ValidateResults review | sed -e 's/^/  * /')"
 	echo -e "Results validation:\n\n${IsValid}${NC}\n${ThrottlingDetails}"
+
+	CheckAgeOfScript
 
 	# revert at least cpufreq and PCIe ASPM settings
 	BasicSetup ${OriginalCPUFreqGovernor} >/dev/null 2>&1
@@ -8960,7 +8990,7 @@ CheckStorage() {
 					# or as "Kingston Canvas Select Plus, SDCS2/32GB" "SD32G", date 10/2020, hw/fw rev: 0x6/0x1
 					Manufacturer="${Manufacturer}Texas Instruments "
 					;;
-				0x0000ad*)
+				0x0000ad*|0x000090/0x014a)
 					Manufacturer="${Manufacturer}SK Hynix "
 					;;
 				0x0000fe*)

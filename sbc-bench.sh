@@ -8795,9 +8795,10 @@ CheckStorage() {
 		UdevInfo="$(udevadm info -a -n ${StorageDevice} 2>/dev/null)"
 		Driver="$(awk -F'"' '/DRIVERS==/ {print $2}' <<<"${UdevInfo}" | grep -E 'uas|usb-storage|ahci|nvme|virtio-')"
 		case "${Driver}" in
-			ahci)
-				# (S)ATA attached
-				CheckSMARTData "${StorageDevice}" "${Driver}"
+			ahci|ahci-*|*-ahci|sata_*|sata-*|*-sata|*pata|pata*)
+				# (S)ATA attached, we need to also take care about other driver names like
+				# ahci-mvebu, ahci-sunxi, sata_promise, tegra-ahci, xgene-ahci and so on
+				CheckSMARTData "${StorageDevice}" ahci
 				;;
 			nvme)
 				# NVMe, we need to determine bus address to check PCIe link width/speed

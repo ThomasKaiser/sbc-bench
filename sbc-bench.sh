@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.9.56
+Version=0.9.57
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -2572,10 +2572,12 @@ CheckMissingPackages() {
 				echo -e "apt -f -qq -y install \c"
 				command -v gcc >/dev/null 2>&1 || echo -e "gcc make build-essential \c"
 				command -v sensors >/dev/null 2>&1 || echo -e "lm-sensors \c"
-				# Check for hexdump only on Rockchip platforms where NVMEM is readable.
-				# In Debian based distros the tool is part of bsdmainutils package, no
-				# idea about other distros.
-				[ -r "${RK_NVMEM_FILE}" -o -r "${AW_NVMEM_FILE}" ] && command -v hexdump >/dev/null 2>&1 || echo -e "bsdmainutils \c"
+				# Check for hexdump only on Rockchip and Allwinner platforms where NVMEM is
+				# readable. In Debian based distros the tool is part of bsdmainutils package,
+				# no idea about other distros.
+				if [ -r "${RK_NVMEM_FILE}" -o -r "${AW_NVMEM_FILE}" ]; then
+					command -v hexdump >/dev/null 2>&1 || echo -e "bsdmainutils \c"
+				fi
 			else
 				echo -e "echo \c"
 			fi
@@ -5347,7 +5349,33 @@ GuessARMSoC() {
 	#
 	# If the kernel is recent enough MIDR_EL1 can be read out at runtime per core via
 	# /sys/devices/system/cpu/cpuN/regs/identification/midr_el1
+	#
+	# Allwinner SoCs feature something called a SID (Security ID) which should be available with
+	# mainline kernel as /sys/bus/nvmem/devices/sunxi-sid0/nvmem. From the first bytes the SoC
+	# model might be detectable once the SIDs are known. Unfortunately information in linux-sunxi
+	# wiki is both a bit flawed (H6) and sparse: https://linux-sunxi.org/SID_Register_Guide
+	# The following list is based on linux-sunxi wiki and complemented with own checks on the right.
+	#
+	# A10      162367*|16236782 (Olimex A10-Lime)
+	# A10s     162541*
+	# A13/R8   162541*|162542*
+	# A20      165165*|165166*|16516608 (Olimex A20-Lime2)
+	# A23
+	# A31s     16524251
+	# A33/R16  0461872a
+	# A64      92c000ba
+	# H2+      02c00042
+	# H3       02c00081 (NanoPi NEO / M1 Plus)
+	# H5       82800001 (NanoPi K1 Plus)
+	# H6       82c00007|82c00001 (OPi Lite 2/PineH64)
+	# H64      92c000bb
+	# H313
+	# H616     32c05000 (OPi Zero 2)
+	# H618
+	# R40/V40  12c00017
+	# V3s      12c00000
 
+	[ "X${AW_NVMEM}" != "X" ] && Allwinner_SID=" (SID: ${AW_NVMEM:19:2}${AW_NVMEM:16:2}${AW_NVMEM:13:2}${AW_NVMEM:10:2})" || Allwinner_SID=""
 	HardwareInfo="$(awk -F': ' '/^Hardware/ {print $2}' <<< "${ProcCPU}" | tail -n1)"
 	RockchipGuess="$(awk -F': ' '/rockchip-cpuinfo cpuinfo: SoC/ {print $3}' <<<"${DMESG}" | head -n1)"
 	AmlogicGuess="Amlogic Meson$(grep -i " detected$" <<<"${DMESG}" | awk -F"Amlogic Meson" '/Amlogic Meson/ {print $2}' | head -n1)"
@@ -5705,76 +5733,76 @@ GuessARMSoC() {
 				esac
 				;;
 			sun20iw1*)
-				echo "Allwinner D1"
+				echo "Allwinner D1${Allwinner_SID}"
 				;;
 			sun4i*)
 				# SoC ID: 0x1623
-				echo "Allwinner A10"
+				echo "Allwinner A10${Allwinner_SID}"
 				;;
 			sun5i*)
 				# SoC ID: 0x1625
-				echo "Allwinner A10s/A13/R8"
+				echo "Allwinner A10s/A13/R8${Allwinner_SID}"
 				;;
 			sun6i*)
 				# SoC ID: 0x1633
-				echo "Allwinner A31/A31s"
+				echo "Allwinner A31/A31s${Allwinner_SID}"
 				;;
 			sun7iw2*)
 				# SoC ID: 0x1651
-				echo "Allwinner A20"
+				echo "Allwinner A20${Allwinner_SID}"
 				;;
 			sun8iw3*)
 				# SoC ID: 0x1650
-				echo "Allwinner A23"
+				echo "Allwinner A23${Allwinner_SID}"
 				;;
 			sun8iw5*)
 				# SoC ID: 0x1667
-				echo "Allwinner A33/R16"
+				echo "Allwinner A33/R16${Allwinner_SID}"
 				;;
 			sun8iw6*)
 				# SoC ID: 0x1673
-				echo "Allwinner A83T/H8/H80/V66/R58"
+				echo "Allwinner A83T/H8/H80/V66/R58${Allwinner_SID}"
 				;;
 			sun8iw7*)
 				# SoC ID: 0x1680
-				echo "Allwinner H3/H2+"
+				echo "Allwinner H3/H2+${Allwinner_SID}"
 				;;
 			sun8iw8*)
 				# SoC ID: 0x1681
-				echo "Allwinner V3/S3/V3s"
+				echo "Allwinner V3/S3/V3s${Allwinner_SID}"
 				;;
 			sun8iw10*)
-				echo "Allwinner B288/B100"
+				echo "Allwinner B288/B100${Allwinner_SID}"
 				;;
 			sun8iw11*)
 				# SoC ID: 0x1701
-				echo "Allwinner R40/V40/T3/A40i"
+				echo "Allwinner R40/V40/T3/A40i${Allwinner_SID}"
 				;;
 			sun8iw12*)
 				# SoC ID: 0x1721
-				echo "Allwinner V5/V100"
+				echo "Allwinner V5/V100${Allwinner_SID}"
 				;;
 			sun8iw15*)
-				echo "Allwinner A50/MR133/R311"
+				echo "Allwinner A50/MR133/R311${Allwinner_SID}"
 				;;
 			sun8iw16*)
 				# SoC ID: 0x1816
-				echo "Allwinner V313/V316/V526/V536/V5V200"
+				echo "Allwinner V313/V316/V526/V536/V5V200${Allwinner_SID}"
 				;;
 			sun8iw17*)
-				echo "Allwinner T7"
+				echo "Allwinner T7${Allwinner_SID}"
 				;;
 			sun8iw19*)
 				# SoC ID: 0x1817
-				echo "Allwinner V533/V833/V831"
+				echo "Allwinner V533/V833/V831${Allwinner_SID}"
 				;;
 			sun8iw20*)
 				# SoC ID: 0x1859
-				echo "Allwinner R528/T113"
+				echo "Allwinner R528/T113${Allwinner_SID}"
 				;;
 			sun8iw21*)
 				# SoC ID: 0x1886
-				echo "Allwinner V853"
+				echo "Allwinner V853${Allwinner_SID}"
 				;;
 			sun50iw1p*)
 				# SoC ID: 0x1689
@@ -5798,70 +5826,70 @@ GuessARMSoC() {
 							BoardFamily="$(awk -F'=' '/^BOARDFAMILY/ {print $2}' <"${ArmbianReleaseFile}")"
 							case ${BoardFamily} in
 								sun50iw1)
-									echo "Allwinner A64"
+									echo "Allwinner A64${Allwinner_SID}"
 									;;
 								sun50iw2)
-									echo "Allwinner H5"
+									echo "Allwinner H5${Allwinner_SID}"
 									;;
 								sun50iw6)
-									echo "Allwinner H6"
+									echo "Allwinner H6${Allwinner_SID}"
 									;;
 								sun50iw9)
-									echo "Allwinner H616/H313"
+									echo "Allwinner H616/H313/H618${Allwinner_SID}"
 									;;
 								*)
-									echo "Allwinner A64 or https://tinyurl.com/yyf3d7fg"
+									echo "Allwinner A64${Allwinner_SID} or https://tinyurl.com/yyf3d7fg"
 									;;
 							esac
 						else
-							echo "Allwinner A64 or https://tinyurl.com/yyf3d7fg"
+							echo "Allwinner A64${Allwinner_SID} or https://tinyurl.com/yyf3d7fg"
 						fi
 						;;
 					*)
-						echo "${AllwinnerGuess}"
+						echo "${AllwinnerGuess}${Allwinner_SID}"
 						;;
 				esac
 				;;
 			sun50iw2*)
 				# SoC ID: 0x1718
-				echo "Allwinner H5"
+				echo "Allwinner H5${Allwinner_SID}"
 				;;
 			sun50iw3*)
 				# SoC ID: 0x1719
-				echo "Allwinner A63"
+				echo "Allwinner A63${Allwinner_SID}"
 				;;
 			sun50iw6*)
 				# SoC ID: 0x1728
-				echo "Allwinner H6"
+				echo "Allwinner H6${Allwinner_SID}"
 				;;
 			sun50iw9*)
 				# SoC ID: 0x1823
-				echo "Allwinner H313/H503/H513/H616/H618/H700/T507/T517"
+				echo "Allwinner H313/H503/H513/H616/H618/H700/T507/T517${Allwinner_SID}"
 				;;
 			sun50iw10*)
-				echo "Allwinner A100/A133/A53/R818/T509"
+				echo "Allwinner A100/A133/A53/R818/T509${Allwinner_SID}"
 				;;
 			sun50iw11*)
 				# SoC ID: 0x1851
-				echo "Allwinner R329"
+				echo "Allwinner R329${Allwinner_SID}"
 				;;
 			sun50iw12*)
-				echo "Allwinner TV303"
+				echo "Allwinner TV303${Allwinner_SID}"
 				;;
 			sun55iw3*)
-				echo "Allwinner A523/A527/T523/T527/MR527"
+				echo "Allwinner A523/A527/T523/T527/MR527${Allwinner_SID}"
 				;;
 			sun9i*)
 				# SoC ID: 0x1639
-				echo "Allwinner A80"
+				echo "Allwinner A80${Allwinner_SID}"
 				;;
 			sun*)
 				SoCGuess="$(GuessSoCbySignature)"
-				[ "X${SoCGuess}" = "X" ] && echo "unknown Allwinner SoC" || echo "${SoCGuess}"
+				[ "X${SoCGuess}" = "X" ] && echo "unknown Allwinner SoC" || echo "${SoCGuess}${Allwinner_SID}"
 				;;
 			Allwinner*)
 				SoCGuess="$(GuessSoCbySignature)"
-				[ "X${SoCGuess}" = "X" ] && sed -e 's/ board//' -e 's/ Family//' <<<"${HardwareInfo}" || echo "${SoCGuess}"
+				[ "X${SoCGuess}" = "X" ] && sed -e 's/ board//' -e 's/ Family//' <<<"${HardwareInfo}" || echo "${SoCGuess}${Allwinner_SID}"
 				;;
 			Hardkernel*)
 				case ${HardwareInfo} in
@@ -5899,9 +5927,9 @@ GuessARMSoC() {
 				SoCGuess="$(GuessSoCbySignature)"
 				if [ "X${SoCGuess}" != "X" -a "X${VirtWhat}" != "X" -a "X${VirtWhat}" != "Xnone" ]; then
 					# add virtualization disclaimer
-					echo "${SoCGuess} / guessing impossible since running in ${VirtWhat}"
+					echo "${SoCGuess}${Allwinner_SID} / guessing impossible since running in ${VirtWhat}"
 				else
-					echo "${SoCGuess:-n/a}"
+					echo "${SoCGuess:-n/a}${Allwinner_SID}"
 				fi
 				;;
 		esac
@@ -5945,23 +5973,40 @@ GuessSoCbySignature() {
 			;;
 		??A8r3p2)
 			# TI OMAP3530/DM3730/AM335x or Allwinner A10, 1 x Cortex-A8 / r3p2 / half thumb fastmult vfp edsp neon vfpv3 tls vfpd32
-			lsmod | grep -i -q sun4i
-			case $? in
-				0)
-					# Allwinner A10, 1 x Cortex-A8 / r3p2 / half thumb fastmult vfp edsp neon vfpv3 tls vfpd32
+			case "${Allwinner_SID:7:8}" in
+				162367*)
 					echo "Allwinner A10"
 					;;
+				162541*)
+					echo "Allwinner A10s/A13/R8"
+					;;
+				162542*)
+					echo "Allwinner A13/R8"
+					;;
 				*)
-					case "${DTCompatible}" in
-						*sun4i*|*allwinner*)
+					lsmod | grep -i -q sun4i
+					case $? in
+						0)
 							# Allwinner A10, 1 x Cortex-A8 / r3p2 / half thumb fastmult vfp edsp neon vfpv3 tls vfpd32
 							echo "Allwinner A10"
 							;;
 						*)
-							# TI DM3730/AM335x, 1 x Cortex-A8 / r3p2 / half thumb fastmult vfp edsp neon vfpv3 tls vfpd32
-							echo "TI DM3730/AM335x"
+							case "${DTCompatible}" in
+								*sun4i*)
+									# Allwinner A10, 1 x Cortex-A8 / r3p2 / half thumb fastmult vfp edsp neon vfpv3 tls vfpd32
+									echo "Allwinner A10"
+									;;
+								*sun5i*)
+									# Allwinner A10s/A13/R8, 1 x Cortex-A8 / r3p2 / half thumb fastmult vfp edsp neon vfpv3 tls vfpd32
+									echo "Allwinner A10s/A13/R8"
+									;;
+								*)
+									# TI DM3730/AM335x, 1 x Cortex-A8 / r3p2 / half thumb fastmult vfp edsp neon vfpv3 tls vfpd32
+									echo "TI DM3730/AM335x"
+									;;
+								esac
 							;;
-						esac
+					esac
 					;;
 			esac
 			;;
@@ -6062,26 +6107,6 @@ GuessSoCbySignature() {
 					# Rockchip RV1126 or RK3126/RK3126B/RK3126C or RK3128 | 4 x Cortex-A7 / r0p5
 					echo "Rockchip RV1126 or RK3126/RK3126B/RK3126C or RK3128"
 					;;
-				*sun8i-r40*|*sun8i-v40*|*sun8i-a40i*|*sun8i-t3*)
-					# R40/V40/T3/A40i, 4 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
-					echo "Allwinner R40/V40/T3/A40i"
-					;;
-				*sun8i-h3*)
-					# Allwinner H3, 4 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
-					echo "Allwinner H3"
-					;;
-				*sun8i-h2*)
-					# Allwinner H2+, 4 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
-					echo "Allwinner H2+"
-					;;
-				*sun8i-a33*|*sun8i-r16*)
-					# Allwinner A33/R16, 4 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
-					echo "Allwinner A33/R16"
-					;;
-				*sun8iw15p1*|*sun8i-a50*)
-					# Allwinner A50/MR133/R311, 4 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
-					echo "Allwinner A50/MR133/R311"
-					;;
 				*hi3796*)
 					# HiSilicon Hi3796M-V100, 4 x Cortex-A7 / r0p5 / swp half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt
 					echo "HiSilicon Hi3796M-V100"
@@ -6102,8 +6127,50 @@ GuessSoCbySignature() {
 					# Spreadtrum SC8830: 4 x Cortex-A7 / r0p5 / swp half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32
 					echo "Spreadtrum SC8830"
 					;;
-				*)
-					echo "Allwinner H3/H2+ or R40/V40 or A33/R16 or A50/MR133/R311"
+				*sun8i|*)
+					case "${Allwinner_SID:7:8}" in
+						02c00081)
+							echo "Allwinner H3"
+							;;
+						02c00042)
+							echo "Allwinner H2+"
+							;;
+						02c000*)
+							echo "Allwinner H3/H2+"
+							;;
+						0461872a)
+							echo "Allwinner A33/R16"
+							;;
+						12c00017)
+							echo "Allwinner R40/V40"
+							;;
+						*)
+							case "${DTCompatible}" in
+								*sun8i-r40*|*sun8i-v40*|*sun8i-a40i*|*sun8i-t3*)
+									# R40/V40/T3/A40i, 4 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
+									echo "Allwinner R40/V40/T3/A40i"
+									;;
+								*sun8i-h3*)
+									# Allwinner H3, 4 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
+									echo "Allwinner H3"
+									;;
+								*sun8i-h2*)
+									# Allwinner H2+, 4 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
+									echo "Allwinner H2+"
+									;;
+								*sun8i-a33*|*sun8i-r16*)
+									# Allwinner A33/R16, 4 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
+									echo "Allwinner A33/R16"
+									;;
+								*sun8iw15p1*|*sun8i-a50*)
+									# Allwinner A50/MR133/R311, 4 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
+									echo "Allwinner A50/MR133/R311"
+									;;
+								*)
+									echo "Unknown"
+							esac
+							;;
+					esac
 					;;
 			esac
 			;;
@@ -6245,51 +6312,70 @@ GuessSoCbySignature() {
 						case "${DTCompatible}" in
 							*allwinner*)
 								# 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
-								case "${DTCompatible}" in
-									*h618*|*orangepi-zero3*|*orangepi-zero2w*)
-										echo "Allwinner H618"
-										;;
-									*orangepi-zero2*)
-										echo "Allwinner H616"
-										;;
-									*h313*)
-										echo "Allwinner H313"
-										;;
-									*h616*)
-										echo "Allwinner H616/H313/H618"
-										;;
-									*pine-h64*)
-										echo "Allwinner H6"
-										;;
-									*h64*)
-										echo "Allwinner H64"
-										;;
-									*h6*)
-										echo "Allwinner H6"
-										;;
-									*h5*)
-										echo "Allwinner H5"
-										;;
-									*a64*)
+								case "${Allwinner_SID:7:8}" in
+									92c000ba)
 										echo "Allwinner A64"
 										;;
-									*t507*)
-										echo "Allwinner T507"
+									82800001)
+										echo "Allwinner H5"
 										;;
-									*t509*)
-										echo "Allwinner T509"
+									82c0000*)
+										echo "Allwinner H6"
 										;;
-									*a100*)
-										echo "Allwinner A100"
+									92c000bb)
+										echo "Allwinner H64"
 										;;
-									*a133*)
-										echo "Allwinner A133"
+									32c05000)
+										echo "Allwinner H616"
 										;;
-									*a53*)
-										echo "Allwinner A53"
-										;;
-									*r818*)
-										echo "Allwinner R818"
+									*)
+										case "${DTCompatible}" in
+											*h618*|*orangepi-zero3*|*orangepi-zero2w*)
+												echo "Allwinner H618"
+												;;
+											*orangepi-zero2*)
+												echo "Allwinner H616"
+												;;
+											*h313*)
+												echo "Allwinner H313"
+												;;
+											*h616*)
+												echo "Allwinner H616/H313/H618"
+												;;
+											*pine-h64*)
+												echo "Allwinner H6"
+												;;
+											*h64*)
+												echo "Allwinner H64"
+												;;
+											*h6*)
+												echo "Allwinner H6"
+												;;
+											*h5*)
+												echo "Allwinner H5"
+												;;
+											*a64*)
+												echo "Allwinner A64"
+												;;
+											*t507*)
+												echo "Allwinner T507"
+												;;
+											*t509*)
+												echo "Allwinner T509"
+												;;
+											*a100*)
+												echo "Allwinner A100"
+												;;
+											*a133*)
+												echo "Allwinner A133"
+												;;
+											*a53*)
+												echo "Allwinner A53"
+												;;
+											*r818*)
+												echo "Allwinner R818"
+												;;
+										esac
 										;;
 								esac
 								;;
@@ -7870,6 +7956,7 @@ ProvideReviewInfo() {
 	echo -e "\n$(( ${AvailableMem} / 1024 )) KB available RAM" >>"${TempDir}/review"
 
 	# report probably performance relevant governors (not on x86_64) and policies
+	PolicyStateNow="$(HandlePolicies)"
 	if [ -f /sys/devices/system/cpu/cpufreq/policy0/scaling_governor -a "${CPUArchitecture}" != "x86_64" ]; then
 		echo -e "\n### Governors/policies (performance vs. idle consumption):\n\nOriginal governor settings:\n" >>"${TempDir}/review"
 		sed -e 's/^/    /' <<<"${GovernorState}" >>"${TempDir}/review"
@@ -7878,8 +7965,9 @@ ProvideReviewInfo() {
 			echo -e "\nTuned governor settings:\n" >>"${TempDir}/review"
 			sed -e 's/^/    /' <<<"${TunedGovernorState}" >>"${TempDir}/review"
 		fi
+	else
+		[ "X${PolicyStateNow}" != "X" ] && echo -e "\n### Policies (performance vs. idle consumption):" >>"${TempDir}/review"
 	fi
-	PolicyStateNow="$(HandlePolicies)"
 	if [ "X${PolicyStateNow}" != "X" ]; then
 		echo -e "\nStatus of performance related policies found below /sys:\n" >>"${TempDir}/review"
 		sed -e 's/^/    /' <<<"${PolicyStateNow}" >>"${TempDir}/review"

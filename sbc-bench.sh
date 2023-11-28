@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.9.57
+Version=0.9.58
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -5353,26 +5353,29 @@ GuessARMSoC() {
 	# Allwinner SoCs feature something called a SID (Security ID) which should be available with
 	# mainline kernel as /sys/bus/nvmem/devices/sunxi-sid0/nvmem. From the first bytes the SoC
 	# model might be detectable once the SIDs are known. Unfortunately information in linux-sunxi
-	# wiki is both a bit flawed (H6) and sparse: https://linux-sunxi.org/SID_Register_Guide
-	# The following list is based on linux-sunxi wiki and complemented with own checks on the right.
+	# wiki is both a bit questionable (H6) and sparse: https://linux-sunxi.org/SID_Register_Guide
+	# The following list is based on linux-sunxi wiki and complemented with own checks (crawling
+	# through sbc-bench submissions and conducting tests on own devices).
 	#
-	# A10      162367*|16236782 (Olimex A10-Lime)
+	# A10      162367*
 	# A10s     162541*
-	# A13/R8   162541*|162542*
-	# A20      165165*|165166*|16516608 (Olimex A20-Lime2)
+	# A13/R8   162541*, 162542*
+	# A20      165165*, 165166*
 	# A23
-	# A31s     16524251
+	# A31/A31s 16524251, 16554144
 	# A33/R16  0461872a
 	# A64      92c000ba
-	# H2+      02c00042
-	# H3       02c00081 (NanoPi NEO / M1 Plus)
-	# H5       82800001 (NanoPi K1 Plus)
-	# H6       82c00007|82c00001 (OPi Lite 2/PineH64)
+	# A83T     32c00401 (87%), 32c00403 (13%)
+	# H2+      02c00?42: 02c00042 (79%), 02c00142 (11%), 02c00242 (0.4%)
+	# H3       02c00?81: 02c00081 (91%), 02c00181 (9%)
+	# H5       82800001
+	# H6       82c00007 (wiki), 82c00001 (TK's OPi Lite 2/PineH64)
 	# H64      92c000bb
 	# H313
 	# H616     32c05000 (OPi Zero 2)
 	# H618
 	# R40/V40  12c00017
+	# S3       12c00001
 	# V3s      12c00000
 
 	[ "X${AW_NVMEM}" != "X" ] && Allwinner_SID=" (SID: ${AW_NVMEM:19:2}${AW_NVMEM:16:2}${AW_NVMEM:13:2}${AW_NVMEM:10:2})" || Allwinner_SID=""
@@ -5402,14 +5405,14 @@ GuessARMSoC() {
 		# use Rockchip NVMEM available below /sys/bus/nvmem/devices/rockchip* to parse SoC model from there
 		case ${RK_NVMEM:16:5} in
 			03*|13*|23*|53*|81*)
-				# reverse order: 52 4b 23 82 -> RK3228
+				# reverse order: 52 4b 23 82 -> RK3228, also affects RK3288
 				echo "Rockchip RK${RK_NVMEM:17:1}${RK_NVMEM:16:1}${RK_NVMEM:20:1}${RK_NVMEM:19:1}"
 				;;
 			33*)
 				# unknown order, affects RK3306, RK3308, RK3318, RK3326, RK3328, RK3358 and in theory RK3399
 				case ${RK_NVMEM:19:2} in
 					80|81|62|82|85)
-						# reverse order: 52 4b 33 82 -> RK3328, also affected: RK3318
+						# reverse order: 52 4b 33 81 -> RK3318, also affects RK3328
 						echo "Rockchip RK${RK_NVMEM:17:1}${RK_NVMEM:16:1}${RK_NVMEM:20:1}${RK_NVMEM:19:1}"
 						;;
 					*)
@@ -5444,7 +5447,7 @@ GuessARMSoC() {
 				esac
 				;;
 			*)
-				# normal order: 52 4b 35 28 -> RK3528, affects RK3528, RK3566, RK3568
+				# normal order: 52 4b 35 28 -> RK3528, also affects RK3566, RK3568
 				echo "Rockchip RK${RK_NVMEM:16:2}${RK_NVMEM:19:2}"
 				;;
 		esac
@@ -6129,10 +6132,10 @@ GuessSoCbySignature() {
 					;;
 				*sun8i|*)
 					case "${Allwinner_SID:7:8}" in
-						02c00081)
+						02c00?81)
 							echo "Allwinner H3"
 							;;
-						02c00042)
+						02c00?42)
 							echo "Allwinner H2+"
 							;;
 						02c000*)
@@ -6141,7 +6144,11 @@ GuessSoCbySignature() {
 						0461872a)
 							echo "Allwinner A33/R16"
 							;;
-						12c00017)
+						12c00017|16554153)
+							# checking sbc-bench submissions all BPI-M2 Berry/Ultra (R40/V40) show 16554153
+							# as first part of the serial number (which should be the relevant SID part with
+							# mainline kernel). Could be a bug in Allwinner's BSP kernel but the versions
+							# were as follows: 5.1, 5.4, 5.10, 5.15, 5.16, 5.19, 6.0, 6.1, 6.2 and 6.4
 							echo "Allwinner R40/V40"
 							;;
 						*)
@@ -7160,11 +7167,8 @@ GuessSoCbySignature() {
 				*msm8226*|*msm8926*|*400*)
 					echo "Qualcomm MSM8226/MSM8926 (Snapdragon 400)"
 					;;
-				*a31s*)
-					echo "Allwinner A31s"
-					;;
-				*)
-					echo "Allwinner A31"
+				*a31*|*sun6i*)
+					echo "Allwinner A31/A31s"
 					;;
 			esac
 			;;
@@ -8331,18 +8335,19 @@ CheckKernelVersion() {
 	
 	KernelVersionDigitsOnly=$(cut -f1 -d- <<<"$1")
 	
-	# parse LTS kernel info, in February 2023 this looks like this for example with 5.10:
-	# eol: 2026-12-01
+	# parse LTS kernel info, in Nov 2023 this looks like this for example with 5.10:
+	# releaseCycle: "5.10"
 	# lts: true
-	# latest: "5.10.166"
-	# latestReleaseDate: 2023-02-01
 	# releaseDate: 2020-12-13
+	# eol: 2026-12-31 # Projected EOL from https://www.kernel.org/category/releases.html
+	# latest: "5.10.201"
+	# latestReleaseDate: 2023-11-20
 	KernelStatus="$(grep -A5 "releaseCycle: \"${ShortKernelVersion}\"" "${TempDir}/linuxkernel.md" | tail -n5)"
 	LatestKernelVersion="$(awk -F'"' '/latest:/ {print $2}' <<<"${KernelStatus}")"
 	LatestKernelDate="$(awk -F": " '/latestReleaseDate:/ {print $2}' <<<"${KernelStatus}")"
 	IsLTS="$(awk -F": " '/lts:/ {print $2}' <<<"${KernelStatus}")"
 	[ "X${IsLTS}" = "Xtrue" ] && KernelSuffix=" LTS"
-	EOLDate="$(awk -F": " '/eol:/ {print $2}' <<<"${KernelStatus}")"
+	EOLDate="$(awk -F": " '/eol:/ {print $2}' <<<"${KernelStatus}" | awk -F" # " '{print $1}')"
 	Today="$(date "+%Y-%m-%d")"
 	# check EOL date vs. today
 	CheckEOL=$(echo -e "${Today}\n${EOLDate}" | sort -n | head -n1)

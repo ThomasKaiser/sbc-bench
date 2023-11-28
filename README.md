@@ -311,22 +311,410 @@ If `$MaxKHz` is exported prior to benchmark execution (e.g. by `MODE=extensive M
 
 If `$CPUINFOFILE` is exported prior to benchmark execution then SoC guessing and similar stuff happens not based on `/proc/cpuinfo` but on the supplied file that obviously needs to have a compatible format.
 
-## Interpreting results (WIP)
+## Interpreting results
+
+The whole point of `sbc-bench` being started in the first place was trying to replace the casual 'fire and forget' benchmarking done by SBC reviewers with a controlled execution of benchmarks in a fully monitored environment to get an idea why benchmark scores are as they are. A lot of stuff can go wrong! And in 'fire and forget' mode almost always unnoticed.
+
+The reasons why monitoring is absolutely necessary and what 'SBC reviewers' (especially majority of 'Youtubers') usually forget to check/mention as follows:
 
 ### Measured clockspeeds
 
+It's plain stupid to trust into the clockspeeds a certain device pretends to use. Single-Board Computers mostly rely on ARM SoCs originating from the 'Android e-waste' world and there cheating is rather norm than exception.
+
+Faking clockspeeds is pretty easy, as such we always *measure* (see [above](#mhz)). Before conducting any benchmarks `sbc-bench` walks through all cpufreq operation points to check them. And it does the same for the highest clockspeeds when benchmarking has finished.
+
+Looks like this when clockspeeds are fake:
+
+<details>
+  <summary>Tinkerboard: fake 2.0 GHz vs. real 1.8 GHz</summary>
+
+    Checking cpufreq OPP (Cortex-A17):
+    
+    Cpufreq OPP: 1992    Measured: 1793 (1796.339/1793.356/1789.489)    (-10.0%)
+    Cpufreq OPP: 1920    Measured: 1792 (1793.825/1793.713/1789.355)     (-6.7%)
+    Cpufreq OPP: 1896    Measured: 1793 (1796.309/1793.640/1791.471)     (-5.4%)
+    Cpufreq OPP: 1800    Measured: 1793 (1794.914/1793.996/1790.777)
+    Cpufreq OPP: 1704    Measured: 1698 (1699.339/1698.236/1697.833)
+    ...
+
+</details>
+
+<details>
+  <summary>Amlogic S905L2 TV box: fake 2.0 GHz vs. real 1.2 GHz</summary>
+
+    Checking cpufreq OPP (Cortex-A53):
+    
+    Cpufreq OPP: 2016    Measured: 1197 (1197.660/1197.605/1197.411)    (-40.6%)
+    Cpufreq OPP: 1752    Measured: 1196 (1197.022/1196.370/1195.166)    (-31.7%)
+    Cpufreq OPP: 1536    Measured: 1196 (1197.286/1197.175/1195.540)    (-22.1%)
+    Cpufreq OPP: 1416    Measured: 1196 (1197.549/1197.438/1195.637)    (-15.5%)
+    Cpufreq OPP: 1200    Measured: 1197 (1197.535/1197.480/1197.397)
+    Cpufreq OPP: 1000    Measured:  996    (998.145/997.446/994.960)
+    Cpufreq OPP:  667    Measured:  663    (664.189/663.662/661.729)
+    ...
+
+</details>
+
+<details>
+  <summary>Orange Pi 5: fake 2.4 GHz vs. real 2.2 GHz</summary>
+
+    Checking cpufreq OPP for cpu4-cpu5 (Cortex-A76):
+    
+    Cpufreq OPP: 2400    Measured: 2221 (2221.092/2221.044/2220.997)     (-7.5%)
+    Cpufreq OPP: 2352    Measured: 2220 (2220.519/2220.472/2220.328)     (-5.6%)
+    Cpufreq OPP: 2304    Measured: 2219 (2219.994/2219.947/2219.947)     (-3.7%)
+    Cpufreq OPP: 2256    Measured: 2219 (2219.565/2219.517/2219.422)     (-1.6%)
+    Cpufreq OPP: 2208    Measured: 2197 (2197.609/2197.562/2197.469)
+    ...
+
+</details>
+
 ### Swapping
 
-### oom-killer
+Swapping happens if physical RAM gets depleted and RAM contents are either compressed (zram/zswap) or transferred to slow storage (zswap/traditional swap). Both tasks harm performance, especially swap on storage used by SBCs (with low random I/O performance) is horribly slow.
 
-### Background activity
-
-### Powercap
-
-### Silly settings
+Results are invalid and usually all you can do is to retest on a device with higher RAM capacity. More info on the topic [above](#swapping).
 
 ### zswap combined with zram
 
+Zswap and zram are mutually exclusive so use either/or. In case zswap is configured on top of zram once swapping starts performance will be more harmed compared to zswap or zram alone since the kernel will compress memory pages twice.
+
+### oom-killer
+
+If no swap is configured or swap space is not sufficiently large enough then the kernel decides `out of memory` (oom) and kills the process in question.
+
+If this happens you won't get benchmark scores and might need to stop memory hungry processes (e.g. disabling temporarely a desktop environment, then rebooting and rechecking), tools like [ps_mem](https://github.com/pixelb/ps_mem) might ease the task.
+
+In case no swap is configured you might change that but will then most probably run into [this](#swapping-1)
+
+### Background activity
+
+It should be obvious that only an absolutely idle system can be benchmarked properly since if the benchmark programm has to fight with other processes for CPU or memory resources the scores will suffer.
+
+Results are invalid, more on this [above](#background-activity).
+
+### Powercap
+
+This is Intel/AMD stuff. Their CPUs are restricted by certain limits: thermal throttling or e.g. cores allowed to clock higher with single-threaded loads compared to multi-threaded.
+
+But there are also power limits that can be set by the device maker: a passively cooled notebook might ship with different settings than a huge desktop with plenty of thermal headroom. Since this x86 stuff is kinda off-topic, simply check [this review](https://www.cnx-software.com/2023/11/26/geekom-mini-it13-review-ubuntu-22-04-intel-core-i9-13900h-mini-pc/) for example and search for 'powercap-info' there.
+
 ### Thermal throttling
 
+This is an attempt to prevent overheating. One or more sensors in SoC/CPU are used to determine warning and critical temperatures to then take measures:
+
+#### Normal behaviour
+
+Downclocking CPU cores when temperatures get critical is the usual strategy, for more details see [above](#throttling).
+
+The detailed `sbc-bench` output contains a monitoring section and in case throttling happens over a time period long enough then the reduced clockspeeds are clearly visible
+<details>
+  <summary>Example of a Tinkerboard starting to throttle at 70°C</summary>
+
+    ##########################################################################
+    
+    Thermal source: /sys/class/hwmon/hwmon0/ (cpu_thermal)
+    
+    System health while running tinymembench:
+    
+    Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+    10:52:40: 1800MHz  1.87  27%   9%  16%   0%   0%   0%  66.2°C  
+    10:52:50: 1800MHz  1.89  29%   2%  26%   0%   0%   0%  66.5°C  
+    10:53:00: 1800MHz  1.91  29%   3%  26%   0%   0%   0%  67.7°C  
+    10:53:10: 1800MHz  1.77  27%   1%  25%   0%   0%   0%  68.8°C  
+    10:53:20: 1800MHz  1.65  28%   2%  26%   0%   0%   0%  68.8°C  
+    10:53:30: 1800MHz  1.70  27%   1%  25%   0%   0%   0%  70.0°C  
+    10:53:40: 1800MHz  1.67  27%   2%  25%   0%   0%   0%  69.2°C  
+    10:53:51: 1800MHz  1.57  28%   2%  26%   0%   0%   0%  69.6°C  
+    10:54:01: 1800MHz  1.56  28%   2%  26%   0%   0%   0%  69.2°C  
+    10:54:11: 1704MHz  1.63  29%   2%  26%   0%   0%   0%  69.6°C  
+    10:54:21: 1800MHz  1.77  29%   2%  26%   0%   0%   0%  69.2°C  
+    10:54:31: 1704MHz  1.96  28%   2%  26%   0%   0%   0%  70.4°C  
+    10:54:41: 1704MHz  1.81  28%   2%  25%   0%   0%   0%  70.4°C  
+    10:54:52: 1608MHz  1.68  29%   2%  26%   0%   0%   0%  70.4°C  
+    10:55:02: 1800MHz  1.66  28%   2%  25%   0%   0%   0%  69.6°C  
+    
+    System health while running ramlat:
+    
+    Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+    10:55:07: 1800MHz  1.61  27%   7%  19%   0%   0%   0%  72.1°C  
+    10:55:10: 1800MHz  1.56  26%   1%  25%   0%   0%   0%  70.4°C  
+    10:55:13: 1608MHz  1.56  26%   0%  25%   0%   0%   0%  70.4°C  
+    10:55:16: 1800MHz  1.59  27%   1%  25%   0%   0%   0%  69.6°C  
+    10:55:19: 1800MHz  1.59  26%   1%  25%   0%   0%   0%  68.8°C  
+    10:55:22: 1800MHz  1.70  27%   1%  25%   0%   0%   0%  69.2°C  
+    10:55:25: 1800MHz  1.73  27%   1%  25%   0%   0%   0%  68.8°C  
+    10:55:28: 1800MHz  1.73  27%   1%  25%   0%   0%   0%  68.8°C  
+    10:55:32: 1800MHz  1.67  26%   1%  25%   0%   0%   0%  69.6°C  
+    10:55:35: 1800MHz  1.62  26%   1%  25%   0%   0%   0%  68.8°C  
+    10:55:38: 1800MHz  1.62  26%   1%  25%   0%   0%   0%  69.2°C  
+    10:55:41: 1800MHz  1.57  26%   1%  24%   0%   0%   0%  69.2°C  
+    
+    System health while running OpenSSL benchmark:
+    
+    Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+    10:55:42: 1800MHz  1.57  27%   7%  19%   0%   0%   0%  74.2°C  
+    10:55:58: 1512MHz  1.44  26%   1%  25%   0%   0%   0%  70.4°C  
+    10:56:14: 1512MHz  1.41  26%   1%  25%   0%   0%   0%  71.2°C  
+    10:56:30: 1512MHz  1.37  26%   1%  25%   0%   0%   0%  69.6°C  
+    10:56:46: 1800MHz  1.43  26%   0%  25%   0%   0%   0%  70.0°C  
+    10:57:03: 1512MHz  1.34  26%   1%  25%   0%   0%   0%  70.0°C  
+    10:57:19: 1704MHz  1.33  26%   1%  25%   0%   0%   0%  69.6°C  
+    
+    System health while running 7-zip single core benchmark:
+    
+    Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+    10:57:30: 1512MHz  1.26  27%   6%  20%   0%   0%   0%  70.8°C  
+    10:57:38: 1704MHz  1.32  26%   1%  25%   0%   0%   0%  70.4°C  
+    10:57:46: 1608MHz  1.34  26%   1%  25%   0%   0%   0%  69.6°C  
+    10:57:55: 1704MHz  1.31  26%   1%  25%   0%   0%   0%  70.0°C  
+    10:58:03: 1608MHz  1.50  26%   1%  25%   0%   0%   0%  69.6°C  
+    10:58:11: 1608MHz  1.42  26%   1%  25%   0%   0%   0%  69.2°C  
+    10:58:19: 1800MHz  1.39  26%   1%  24%   0%   0%   0%  70.0°C  
+    10:58:27: 1704MHz  1.49  26%   1%  24%   0%   0%   0%  69.2°C  
+    10:58:35: 1704MHz  1.57  26%   1%  24%   0%   0%   0%  70.4°C  
+    10:58:43: 1512MHz  1.52  26%   1%  24%   0%   0%   0%  70.0°C  
+    10:58:51: 1704MHz  1.44  26%   1%  24%   0%   0%   0%  69.2°C  
+    10:58:59: 1800MHz  1.41  27%   2%  24%   0%   0%   0%  70.4°C  
+    10:59:07: 1704MHz  1.34  26%   1%  25%   0%   0%   0%  70.8°C  
+    
+    System health while running 7-zip multi core benchmark:
+    
+    Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+    10:59:10: 1512MHz  1.32  27%   5%  21%   0%   0%   0%  70.8°C  
+    10:59:28: 1416MHz  2.06  88%   2%  85%   0%   0%   0%  74.6°C  
+    10:59:47: 1416MHz  2.79  91%   2%  89%   0%   0%   0%  75.4°C  
+    11:00:06: 1200MHz  3.13  90%   3%  86%   0%   0%   0%  74.6°C  
+    11:00:23: 1416MHz  3.57  87%   3%  83%   0%   0%   0%  74.6°C  
+    11:00:39: 1416MHz  3.73  96%   4%  92%   0%   0%   0%  75.0°C  
+    11:00:55: 1416MHz  3.81  85%   2%  82%   0%   0%   0%  74.2°C  
+    11:01:13: 1200MHz  4.01  94%   1%  92%   0%   0%   0%  74.6°C  
+    11:01:33: 1200MHz  4.02  92%   2%  90%   0%   0%   0%  75.8°C  
+    11:01:53: 1200MHz  4.23  88%   3%  84%   0%   0%   0%  73.3°C  
+    11:02:10: 1200MHz  4.29  88%   3%  85%   0%   0%   0%  75.0°C  
+    11:02:26: 1416MHz  4.10  76%   3%  72%   0%   0%   0%  75.0°C  
+    11:02:42: 1512MHz  3.84  81%   2%  78%   0%   0%   0%  71.2°C  
+    11:03:01: 1200MHz  3.94  88%   2%  86%   0%   0%   0%  75.4°C  
+    11:03:19: 1416MHz  3.94  92%   2%  89%   0%   0%   0%  75.0°C  
+    11:03:36: 1416MHz  3.82  89%   3%  86%   0%   0%   0%  75.0°C  
+    11:03:53: 1512MHz  4.02  88%   2%  85%   0%   0%   0%  75.0°C  
+    11:04:10: 1416MHz  4.02  94%   4%  90%   0%   0%   0%  74.2°C  
+    11:04:28: 1200MHz  3.94  90%   2%  87%   0%   0%   0%  75.8°C  
+    
+    ##########################################################################
+
+</details>
+
+But sometimes when throttling happens only fractions of time the monitoring output won't catch the short dips as such we need to query cpufreq statistics (if available). In such cases this might look like this:
+
+<details>
+  <summary>Allwinner H5 throttling for a short amount of time</summary>
+
+    ##########################################################################
+    
+    Throttling statistics (time spent on each cpufreq OPP):
+    
+    1368 MHz:  672.97 sec
+    1296 MHz:    3.62 sec
+    1200 MHz:       0 sec
+    1056 MHz:       0 sec
+     816 MHz:       0 sec
+     648 MHz:       0 sec
+     480 MHz:       0 sec
+    
+    ##########################################################################
+
+</details>
+
+...and with the aforementioned Tinkerboard like that:
+
+<details>
+  <summary>Tinkerboard throttling statistics for whole sbc-bench execution</summary>
+
+    ##########################################################################
+    
+    Throttling statistics (time spent on each cpufreq OPP):
+    
+    1800 MHz:  173.64 sec
+    1704 MHz:   68.23 sec
+    1608 MHz:   65.95 sec
+    1512 MHz:  157.73 sec
+    1416 MHz:  131.39 sec
+    1200 MHz:  101.11 sec
+    1008 MHz:   12.39 sec
+     816 MHz:    0.20 sec
+     696 MHz:       0 sec
+     600 MHz:       0 sec
+     408 MHz:       0 sec
+    
+    ##########################################################################
+
+</details>
+
+On Raspberries there's another problem: the ARM cores having no idea at which frequency they run since clockspeeds and throttling are done in the closed source ThreadX domain (for details start reading from 'The real brain of the Pi is not open source' [here](https://archive.ph/AeTp8#selection-435.0-435.43)). As such `sbc-bench` also queries ThreadX in monitoring mode and lists fake and real frequencies next to each other:
+
+<details>
+  <summary>Raspberry Pi 3B struggling with temperatures exceeding 80°C</summary>
+
+    System health while running 7-zip multi core benchmark:
+    
+    Time        fake/real   load %cpu %sys %usr %nice %io %irq   Temp    VCore
+    23:19:21: 1200/1200MHz  1.00  12%   0%   5%   0%   5%   0%  61.2°C  1.3062V
+    23:19:54: 1200/1200MHz  2.17  79%   1%  78%   0%   0%   0%  68.8°C  1.3062V
+    23:20:25: 1200/1200MHz  2.82  90%   2%  88%   0%   0%   0%  72.0°C  1.3062V
+    23:20:55: 1200/1200MHz  3.21  90%   2%  88%   0%   0%   0%  73.1°C  1.3062V
+    23:21:28: 1200/1200MHz  3.53  87%   7%  80%   0%   0%   0%  75.2°C  1.3062V
+    23:22:01: 1200/1200MHz  3.62  87%  67%  20%   0%   0%   0%  78.4°C  1.3062V
+    23:22:37: 1200/1195MHz  3.83  86%   4%  81%   0%   0%   0%  77.9°C  1.3062V
+    23:23:15: 1200/1034MHz  4.07  95%   1%  94%   0%   0%   0%  81.1°C  1.3062V
+    23:23:50: 1200/1034MHz  3.99  91%   2%  89%   0%   0%   0%  81.7°C  1.3062V
+    23:24:21: 1200/1200MHz  3.38  50%   2%  48%   0%   0%   0%  76.3°C  1.3062V
+    23:24:59: 1200/1200MHz  3.97  74%  31%  41%   0%   0%   0%  79.5°C  1.3062V
+    23:25:29: 1200/1200MHz  3.84  83%   4%  78%   0%   0%   0%  79.5°C  1.3062V
+    23:25:59: 1200/1141MHz  3.92  83%   1%  81%   0%   0%   0%  80.6°C  1.3062V
+    23:26:30: 1200/1034MHz  4.00  91%   1%  89%   0%   0%   0%  81.1°C  1.3062V
+    23:27:00: 1200/1034MHz  4.00  90%   1%  88%   0%   0%   0%  81.7°C  1.3062V
+    23:27:31: 1200/1200MHz  3.54  48%   2%  46%   0%   0%   0%  77.9°C  1.3062V
+    23:28:24: 1200/1034MHz  3.89  84%  52%  32%   0%   0%   0%  81.7°C  1.3062V
+
+</details>
+
+When all benchmarks have finished we then query ThreadX for throttling and under-voltage events (for the latter see below) and in case only thermal throttling has happened this looks like this then:
+
+<details>
+  <summary>Raspberry Pi 3B throttling and under-voltage summary since last reboot</summary>
+
+    ##########################################################################
+    
+    Querying ThreadX on RPi for thermal or undervoltage issues:
+    
+    0100000000000000000
+    |||             |||_ under-voltage
+    |||             ||_ currently throttled
+    |||             |_ arm frequency capped
+    |||_ under-voltage has occurred since last reboot
+    ||_ throttling has occurred since last reboot
+    |_ arm frequency capped has occurred since last reboot
+    
+    ##########################################################################
+
+</details>
+
+#### Killed CPU cores
+
+Another attempt is to simply kill CPU cores to lower consumption under load. In the past Allwinner Android kernels were (in)famous for this but Amlogic started to do this with their Android kernels also in the past (but they at least bring the killed CPU cores up again when temperatures settle).
+
+That's why `sbc-bench` als collects `dmesg` output while running the benchmarks to spot such problems ruining benchmark scores:
+
+<details>
+  <summary>Khadas VIM3 `dmesg` output while killing two cores at 90°C and bringing them back up again below 85°C</summary>
+
+    [ 2877.094811] thermal thermal_zone0: temp:90000 increase, hyst:5000, trip_temp:90000, hot:1
+    [ 2877.115730] IRQ33 no longer affine to CPU1
+    [ 2877.115752] IRQ53 no longer affine to CPU1
+    [ 2877.115755] IRQ54 no longer affine to CPU1
+    [ 2877.115758] IRQ55 no longer affine to CPU1
+    [ 2877.115822] process 11494 (cpuminer) no longer affine to cpu1
+    [ 2877.115856] CPU1: shutdown
+    [ 2877.116885] psci: CPU1 killed (polled 0 ms)
+    [ 2877.163235] process 11496 (cpuminer) no longer affine to cpu3
+    [ 2877.163264] CPU3: shutdown
+    [ 2877.164291] psci: CPU3 killed (polled 0 ms)
+    [ 2877.198777] idx > max freq
+    [ 2877.302771] idx > max freq
+    [ 2877.406789] idx > max freq
+    [ 2877.406809] thermal thermal_zone0: temp:84500 decrease, hyst:5000, trip_temp:90000, hot:0
+    [ 2877.424153] Detected VIPT I-cache on CPU1
+    [ 2877.424202] CPU1: update cpu_capacity 631
+    [ 2877.424204] CPU1: Booted secondary processor [410fd034]
+    [ 2877.444258] Detected VIPT I-cache on CPU3
+    [ 2877.444291] CPU3: update cpu_capacity 1192
+    [ 2877.444293] CPU3: Booted secondary processor [410fd092]
+
+</details>
+
+#### temp\_soft\_limit
+
+This is a Raspberry Pi 3B Plus (and CM3+) speciality with their BCM2837B0 SoC said to clock at 1400 MHz. But unless you set `temp_soft_limit=70` in `config.txt` the SoC will silently be limited to 1200 MHz once 60°C are hit. Since nobody knows `sbc-bench` is warning.
+
 ### Frequency capping (under-voltage)
+
+This is another Raspberry Pi speciality caused by their (in)famous 5V powering. [Ohm's law](https://en.wikipedia.org/wiki/Ohm%27s_law) also exists in the SBC world and low voltages combined with high currents always result in a voltage drop unless you have a proper power supply with fixed cable that can compensate for this voltage drop (read as: if you buy a Pi then always buy their appropriate USB-C wall wart as well).
+
+We always query ThreadX after executing all benchmarks and if you suffer from voltage drops (input voltage dropping below ~4.65V) then performance is ruined and it looks like this in detailed output:
+
+<details>
+  <summary>RPi reporting under-voltage and frequency capping</summary>
+
+    1010000000000000000
+    |||             |||_ under-voltage
+    |||             ||_ currently throttled
+    |||             |_ arm frequency capped
+    |||_ under-voltage has occurred since last reboot
+    ||_ throttling has occurred since last reboot
+    |_ arm frequency capped has occurred since last reboot
+
+</details>
+
+Frequency capping is the try to compensate for the voltage drops. The SoC's various engine's clockspeeds are lowered immediately (ARM cores to 600 MHz prior to RPi 5, now 1500 MHz) and performance will suffer a lot. Since a few years fortunately those under-voltage events are also logged in kernel ring buffer as such `sbc-bench`'s detailed output will contain a section like this:
+
+<details>
+  <summary>Multiple voltage drops on a RPi 4B while benchmarking</summary>
+
+    ##########################################################################
+    
+    dmesg output while running the benchmarks:
+    
+    [ 1964.179580] hwmon hwmon1: Undervoltage detected!
+    [ 1974.259710] hwmon hwmon1: Voltage normalised
+    [ 1982.323967] hwmon hwmon1: Undervoltage detected!
+    [ 1988.372011] hwmon hwmon1: Voltage normalised
+    [ 2004.500454] hwmon hwmon1: Undervoltage detected!
+    [ 2014.580643] hwmon hwmon1: Voltage normalised
+    [ 2034.741173] hwmon hwmon1: Undervoltage detected!
+    [ 2050.869645] hwmon hwmon1: Voltage normalised
+    [ 2058.933690] hwmon hwmon1: Undervoltage detected!
+    [ 2066.997794] hwmon hwmon1: Voltage normalised
+    [ 2075.062096] hwmon hwmon1: Undervoltage detected!
+    [ 2081.110116] hwmon hwmon1: Voltage normalised
+    [ 2097.238583] hwmon hwmon1: Undervoltage detected!
+    [ 2101.270584] hwmon hwmon1: Voltage normalised
+    [ 2125.463233] hwmon hwmon1: Undervoltage detected!
+    [ 2133.527483] hwmon hwmon1: Voltage normalised
+    [ 2157.719971] hwmon hwmon1: Undervoltage detected!
+    [ 2163.767990] hwmon hwmon1: Voltage normalised
+    [ 2177.880416] hwmon hwmon1: Undervoltage detected!
+    [ 2183.928438] hwmon hwmon1: Voltage normalised
+    [ 2208.121072] hwmon hwmon1: Undervoltage detected!
+    [ 2214.169136] hwmon hwmon1: Voltage normalised
+    
+    ##########################################################################
+
+</details>
+
+Frequency capping often gets confused with thermal throttling but they're different things though can occur in parallel. Then `sbc-bench` will hint at both in detailed output:
+
+<details>
+  <summary>under-voltage, frequency capping and throttling while benchmarking</summary>
+
+    11100000000000000000
+    |||             |||_ under-voltage
+    |||             ||_ currently throttled
+    |||             |_ arm frequency capped
+    |||_ under-voltage has occurred since last reboot
+    ||_ throttling has occurred since last reboot
+    |_ arm frequency capped has occurred since last reboot
+
+</details>
+
+### Silly settings
+
+This is mostly an Armbian issue: their OS images for Raspberries lack `arm_boost=1` (which is a requirement for RPi 4B with BCM2711 C0 or later to automagically increase maximum clockspeed from 1500 MHz to 1800 MHz w/o overvolting) while at the same time setting `over_voltage=2` and `arm_freq=1800` which might improve performance on early RPi 4B but often does the opposite on recent RPi 4 since with these silly settings the CPU gets overvolted, therefore heats up more and is prone to throttling.
+
+## Additional info when in review mode (WIP)
+
+`-r`/`-R`
+
+### NTFS filesystems
+
+When Linux is using FUSE/userland methods to access NTFS filesystems performance will be significantly harmed or at least on majority of SBCs likely be bottlenecked by maxing out one or more CPU cores. It is highly advised when benchmarking with any NTFS to monitor closely CPU utilization or better switch to a 'Linux native' filesystem like ext4 since representing 'storage performance' a lot more than 'somewhat dealing with a foreign filesystem' as with NTFS.

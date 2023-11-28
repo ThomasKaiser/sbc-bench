@@ -5406,7 +5406,8 @@ GuessARMSoC() {
 		case ${RK_NVMEM:16:5} in
 			03*|13*|23*|53*|81*)
 				# reverse order: 52 4b 23 82 -> RK3228, also affects RK3288
-				echo "Rockchip RK${RK_NVMEM:17:1}${RK_NVMEM:16:1}${RK_NVMEM:20:1}${RK_NVMEM:19:1}"
+				# RK3228A and RK3229 share same '52 4b 23 82' signature
+				echo "Rockchip RK${RK_NVMEM:17:1}${RK_NVMEM:16:1}${RK_NVMEM:20:1}${RK_NVMEM:19:1}" | sed 's|3228|3229/RK3228A|'
 				;;
 			33*)
 				# unknown order, affects RK3306, RK3308, RK3318, RK3326, RK3328, RK3358 and in theory RK3399

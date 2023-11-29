@@ -4379,9 +4379,9 @@ ValidateResults() {
 		OneOrTwoDigitsAfter=$(wc -c <<<"${OneOrTwoDigitsAfter}")
 		if [ ${OneOrTwoDigitsBefore:-6} -gt 6 -o ${OneOrTwoDigitsAfter:-6} -gt 6 ]; then
 			# mismatch greater than 9%, print warning in red and bold
-			echo -e "${LRED}${BOLD}Advertised vs. measured max CPU clockspeed: ${ClockspeedMismatchBefore} before, ${ClockspeedMismatchAfter} after${NC} -> https://tinyurl.com/2udn2bxk"
+			echo -e "${LRED}${BOLD}Advertised vs. measured max CPU clockspeed: ${ClockspeedMismatchBefore} before, ${ClockspeedMismatchAfter} after${NC} -> https://tinyurl.com/32w9rr94"
 		else
-			echo -e "Advertised vs. measured max CPU clockspeed: ${ClockspeedMismatchBefore} before, ${ClockspeedMismatchAfter} after -> https://tinyurl.com/2udn2bxk"
+			echo -e "Advertised vs. measured max CPU clockspeed: ${ClockspeedMismatchBefore} before, ${ClockspeedMismatchAfter} after -> https://tinyurl.com/32w9rr94"
 		fi
 	elif [ -f /sys/devices/system/cpu/cpufreq/policy0/scaling_governor ]; then
 		# cpufreq scaling supported, check we've measured cpufreq before to report 'no mismatch'
@@ -4404,10 +4404,10 @@ ValidateResults() {
 			case $? in
 				0)
 					# Armbian settings
-					echo -e "${LRED}${BOLD}Silly settings: \"arm_boost=1\" missing but \"arm_freq=1800\" set in ${ThreadXConfig}${NC} -> https://tinyurl.com/53cw5xvh"
+					echo -e "${LRED}${BOLD}Silly settings: \"arm_boost=1\" missing but \"arm_freq=1800\" set in ${ThreadXConfig}${NC} -> https://tinyurl.com/sbmvhwpf"
 					;;
 				*)
-					echo -e "${LRED}${BOLD}\"arm_boost=1\" missing in ${ThreadXConfig}${NC} -> https://tinyurl.com/53cw5xvh"
+					echo -e "${LRED}${BOLD}\"arm_boost=1\" missing in ${ThreadXConfig}${NC} -> https://tinyurl.com/sbmvhwpf"
 					;;
 			esac
 		fi
@@ -4433,12 +4433,12 @@ ValidateResults() {
 		else
 			NoZRAM=$(tail -n +2 /proc/swaps | grep -v '^/dev/zram' | wc -l)
 			if [ ${NoZRAM} -eq 0 ]; then
-				echo -e "${LRED}${BOLD}Swapping (ZRAM) occured${NC} -> https://tinyurl.com/5n8sp5b5"
+				echo -e "${LRED}${BOLD}Swapping (ZRAM) occured${NC} -> https://tinyurl.com/3h222wnh"
 				# check whether zswap sits on top of zram
 				[ -r /sys/module/zswap/parameters/enabled ] && ZswapEnabled="$(sed 's/Y/1/' </sys/module/zswap/parameters/enabled)"
-				[ "${ZswapEnabled}" = "1" ] && echo -e "${LRED}${BOLD}Zswap configured on top of zram. Swap performance harmed${NC} -> https://tinyurl.com/448bnzb8"
+				[ "${ZswapEnabled}" = "1" ] && echo -e "${LRED}${BOLD}Zswap configured on top of zram. Swap performance harmed${NC} -> https://tinyurl.com/spkr8ytz"
 			else
-				echo -e "${LRED}${BOLD}Swapping occured${NC} -> https://tinyurl.com/5n8sp5b5"
+				echo -e "${LRED}${BOLD}Swapping occured${NC} -> https://tinyurl.com/3h222wnh"
 				if [ "X${VirtWhat}" = "X" -o "X${VirtWhat}" = "Xnone" ]; then
 					# identify type of swap only when not running inside a VM
 					SlowSwap="$(ListSwapDevices | sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" | awk -F") on " '{print $2}' | sed '/^$/d' | tr '\n' ',' | sed -e 's/,/, /g' -e 's/, $//')"
@@ -4455,7 +4455,7 @@ ValidateResults() {
 	UtilizationSum=$(awk '{s+=$1} END {printf "%.0f", s}' <<<"${UtilizationValues}")
 	AverageSysUtilization=$(( ${UtilizationSum} / ${LogLength} ))
 	if [ ${PeakSysUtilization:-0} -gt 15 -o ${AverageSysUtilization:-0} -gt 0 ]; then
-		echo -e "${LRED}${BOLD}Too much background activity (%system): ${AverageSysUtilization}% avg, ${PeakSysUtilization}% max${NC} -> https://tinyurl.com/3um9enwx"
+		echo -e "${LRED}${BOLD}Too much background activity (%system): ${AverageSysUtilization}% avg, ${PeakSysUtilization}% max${NC} -> https://tinyurl.com/mr2wy5uv"
 	else
 		# only report background activity being ok when not running inside a VM/container
 		[ "X${VirtWhat}" = "X" -o "X${VirtWhat}" = "Xnone" ] && echo -e "${LGREEN}Background activity (%system) OK${NC}"
@@ -4477,24 +4477,24 @@ ValidateResults() {
 		case ${CPUCores} in
 			2)
 				# 8% peak and 2% average is acceptable
-				[ ${PeakDiff} -gt 8 -o ${AverageDiff} -gt 2 ] && echo -e "${LRED}${BOLD}Too much other background activity: ${AverageDiff}% avg, ${PeakDiff}% max${NC} -> https://tinyurl.com/3um9enwx"
+				[ ${PeakDiff} -gt 8 -o ${AverageDiff} -gt 2 ] && echo -e "${LRED}${BOLD}Too much other background activity: ${AverageDiff}% avg, ${PeakDiff}% max${NC} -> https://tinyurl.com/mr2wy5uv"
 				;;
 			4)
 				# 5% peak and 1% average is acceptable
-				[ ${PeakDiff} -gt 5 -o ${AverageDiff} -gt 1 ] && echo -e "${LRED}${BOLD}Too much other background activity: ${AverageDiff}% avg, ${PeakDiff}% max${NC} -> https://tinyurl.com/3um9enwx"
+				[ ${PeakDiff} -gt 5 -o ${AverageDiff} -gt 1 ] && echo -e "${LRED}${BOLD}Too much other background activity: ${AverageDiff}% avg, ${PeakDiff}% max${NC} -> https://tinyurl.com/mr2wy5uv"
 				;;
 			5|6)
 				# 3% peak and 1% average is acceptable
-				[ ${PeakDiff} -gt 3 -o ${AverageDiff} -gt 1 ] && echo -e "${LRED}${BOLD}Too much other background activity: ${AverageDiff}% avg, ${PeakDiff}% max${NC} -> https://tinyurl.com/3um9enwx"
+				[ ${PeakDiff} -gt 3 -o ${AverageDiff} -gt 1 ] && echo -e "${LRED}${BOLD}Too much other background activity: ${AverageDiff}% avg, ${PeakDiff}% max${NC} -> https://tinyurl.com/mr2wy5uv"
 				;;
 			8)
 				# 2% peak and 0% average is acceptable
-				[ ${PeakDiff} -gt 2 -o ${AverageDiff} -gt 0 ] && echo -e "${LRED}${BOLD}Too much other background activity: ${AverageDiff}% avg, ${PeakDiff}% max${NC} -> https://tinyurl.com/3um9enwx"
+				[ ${PeakDiff} -gt 2 -o ${AverageDiff} -gt 0 ] && echo -e "${LRED}${BOLD}Too much other background activity: ${AverageDiff}% avg, ${PeakDiff}% max${NC} -> https://tinyurl.com/mr2wy5uv"
 				;;
 			*)
 				# With more CPU cores it's impossible to detect 'sane environment' so only
 				# notify if average utilization is off by more than 0%
-				[ ${AverageDiff} -gt 0 ] && echo -e "${LRED}${BOLD}Too much other background activity: ${AverageDiff}% avg, ${PeakDiff}% max${NC} -> https://tinyurl.com/3um9enwx"
+				[ ${AverageDiff} -gt 0 ] && echo -e "${LRED}${BOLD}Too much other background activity: ${AverageDiff}% avg, ${PeakDiff}% max${NC} -> https://tinyurl.com/mr2wy5uv"
 				;;
 		esac
 	fi
@@ -4505,10 +4505,10 @@ ValidateResults() {
 		if [ ${OOMCount:-0} -gt 0 ]; then
 			case ${ProcSwapLines} in
 				1)
-					echo -e "${LRED}${BOLD}${OOMCount} oom-killer invocations (system too low on RAM and no ZRAM configured)${NC} -> https://tinyurl.com/bdh4xpsb"
+					echo -e "${LRED}${BOLD}${OOMCount} oom-killer invocations (system too low on RAM and no ZRAM configured)${NC} -> https://tinyurl.com/ytma8u4e"
 					;;
 				*)
-					echo -e "${LRED}${BOLD}${OOMCount} oom-killer invocations (system too low on RAM and insufficient swap configured)${NC} -> https://tinyurl.com/bdh4xpsb"
+					echo -e "${LRED}${BOLD}${OOMCount} oom-killer invocations (system too low on RAM and insufficient swap configured)${NC} -> https://tinyurl.com/ytma8u4e"
 					;;
 			esac
 		fi
@@ -4516,7 +4516,7 @@ ValidateResults() {
 
 	# powercap on Intel?
 	if [ -d /sys/devices/virtual/powercap/intel-rapl ]; then
-		grep -q -i GenuineIntel <<< "${ProcCPU}" && echo -e "Powercap detected. Details: \"sudo powercap-info -p intel-rapl\" -> https://tinyurl.com/4zbuwx52"
+		grep -q -i GenuineIntel <<< "${ProcCPU}" && echo -e "Powercap detected. Details: \"sudo powercap-info -p intel-rapl\" -> https://tinyurl.com/4jh9nevj"
 	fi
 
 	# temporarily killed CPU cores due to overheating with Amlogic SoCs and BSP kernel
@@ -4535,10 +4535,10 @@ ValidateResults() {
 	if [ "${USE_VCGENCMD}" = "true" ]; then
 		case "${ThrottlingCheck}" in
 			*"requency capping"*)
-				[ "${ThrottlingWarning}" = "" ] && echo -e "${LRED}${BOLD}Frequency capping (under-voltage) occured${NC} -> https://tinyurl.com/y363sjws" || echo -e "${LRED}${BOLD}Throttling / frequency capping (under-voltage) occured${NC} -> https://tinyurl.com/2vdpwjam / https://tinyurl.com/y363sjws"
+				[ "${ThrottlingWarning}" = "" ] && echo -e "${LRED}${BOLD}Frequency capping (under-voltage) occured${NC} -> https://tinyurl.com/3j2c66kd" || echo -e "${LRED}${BOLD}Throttling / frequency capping (under-voltage) occured${NC} -> https://tinyurl.com/4ky59sys / https://tinyurl.com/3j2c66kd"
 				;;
 			*)
-				[ "${ThrottlingWarning}" = "" ] && echo -e "${LGREEN}No throttling${NC}" || echo -e "${LRED}${BOLD}Throttling occured${NC} -> https://tinyurl.com/2vdpwjam"
+				[ "${ThrottlingWarning}" = "" ] && echo -e "${LGREEN}No throttling${NC}" || echo -e "${LRED}${BOLD}Throttling occured${NC} -> https://tinyurl.com/4ky59sys"
 				;;
 		esac
 	else
@@ -4554,9 +4554,9 @@ ValidateResults() {
 			# which then results in stats/time_in_state cpufreq statistics showing the cores
 			# not all the time at maximum clockspeed.
 			if [ "X${MODE}" != "Xpts" -a "X${MODE}" != "Xgb" ]; then
-				echo -e "${LRED}${BOLD}Throttling occured${NC} -> https://tinyurl.com/2vdpwjam"
+				echo -e "${LRED}${BOLD}Throttling occured${NC} -> https://tinyurl.com/4ky59sys"
 			else
-				echo -e "Throttling might have occured -> https://tinyurl.com/2vdpwjam"
+				echo -e "Throttling might have occured -> https://tinyurl.com/4ky59sys"
 			fi
 		fi
 	fi
@@ -8117,7 +8117,7 @@ ProvideReviewInfo() {
 	[ -z "${LSBLK}" ] && LSBLK="$(LC_ALL="C" lsblk -l -o SIZE,NAME,FSTYPE,LABEL,MOUNTPOINT 2>&1)"
 	NTFSdevices="$(awk -F" " '/ ntfs / {print $2}' <<< "${LSBLK}" | tr '\n' ',' | sed 's/,$//')"
 	if [ "X${NTFSdevices}" != "X" ]; then
-		echo -e "\n### Challenging filesystems:\n\nThe following partitions are NTFS: ${NTFSdevices} -> https://tinyurl.com/yuk5rtt" >>"${TempDir}/review"
+		echo -e "\n### Challenging filesystems:\n\nThe following partitions are NTFS: ${NTFSdevices} -> https://tinyurl.com/mv7wvzct" >>"${TempDir}/review"
 	fi
 
 	# check swap devices/files/partitions
@@ -8595,6 +8595,9 @@ CheckKernelVersion() {
 				*RK3566*|*RK3568*)
 					PrintBSPWarning Rockchip
 					;;
+				Phytium*)
+					PrintBSPWarning Phytium
+					;;
 			esac
 			;;
 		"5.4.125"|"5.4.180")
@@ -8623,6 +8626,9 @@ CheckKernelVersion() {
 				*5422*)
 					PrintBSPWarning Samsung
 					;;
+				Phytium*)
+					PrintBSPWarning Phytium
+					;;
 				*Unisoc*)
 					PrintBSPWarning Unisoc
 					;;
@@ -8641,6 +8647,9 @@ CheckKernelVersion() {
 			case ${GuessedSoC} in
 				"Nvidia Jetson AGX Orin")
 					PrintBSPWarning Nvidia
+					;;
+				Phytium*)
+					PrintBSPWarning Phytium
 					;;
 				*RK3528*|*RK3588*)
 					PrintBSPWarning RockchipGKI
@@ -8728,7 +8737,7 @@ PrintBSPWarning() {
 			echo -e "${BOLD}vendor kernel. See https://tinyurl.com/y8k3af73 and https://tinyurl.com/ywtfec7n${NC}"
 			echo -e "${BOLD}for details.${NC}"
 			;;
-		Ingenic|MediaTek|Nexell|Nvidia|NXP|Qualcomm|RealTek|Samsung|StarFive|T-Head|Unisoc)
+		Ingenic|MediaTek|Nexell|Nvidia|NXP|Phytium|Qualcomm|RealTek|Samsung|StarFive|T-Head|Unisoc)
 			echo -e "${BOLD}This device runs a $1 vendor/BSP kernel.${NC}"
 			;;
 		Rockchip)

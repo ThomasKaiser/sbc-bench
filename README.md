@@ -385,7 +385,7 @@ If no swap is configured or swap space is not sufficiently large enough then the
 
 If this happens you won't get benchmark scores and might need to stop memory hungry processes (e.g. disabling temporarely a desktop environment, then rebooting and rechecking), tools like [ps_mem](https://github.com/pixelb/ps_mem) might ease the task.
 
-In case no swap is configured you might change that but will then most probably run into [this](#swapping-1)
+In case no swap is configured you might change that but will then most probably run into [this](#swapping-1).
 
 ### Background activity
 
@@ -401,7 +401,7 @@ But there are also power limits that can be set by the device maker: a passively
 
 ### Thermal throttling
 
-This is an attempt to prevent overheating. If it has happened of course results are invalid.
+This is an attempt to prevent overheating by reducing consumption with the immediate effect of reduced performance. If it has happened of course results are invalid.
 
 Background: one or more thermal sensors in SoC/CPU are used to determine warning and critical temperatures to then take measures:
 
@@ -412,7 +412,7 @@ Downclocking CPU cores when temperatures get critical is the usual strategy, for
 The detailed `sbc-bench` output contains a monitoring section and in case throttling happens over a time period long enough then the reduced clockspeeds can be spotted easily:
 
 <details>
-  <summary>Example of a Tinkerboard starting to throttle at 70°C</summary>
+  <summary>Example of a Tinkerboard starting to throttle at 70°C and clocking down to 1200 MHz</summary>
 
     ##########################################################################
     
@@ -511,7 +511,7 @@ The detailed `sbc-bench` output contains a monitoring section and in case thrott
 Though the monitoring output only taking samples every few seconds can't spot any peaks or dips as such we also try to report cpufreq statistics (if available). This might look like this:
 
 <details>
-  <summary>Aforementioned Tinkerboard even throttling down to 816 MHz</summary>
+  <summary>Aforementioned Tinkerboard even clocked down shortly to 816 MHz</summary>
 
     ##########################################################################
     
@@ -605,7 +605,7 @@ When all benchmarks have finished we then query ThreadX for throttling and under
 
 Another attempt to cope with critical temperatures is to simply kill CPU cores to lower consumption/temps under load. Almost a decade ago Allwinner's Android kernels were (in)famous for this but Amlogic started to do this with their Android kernels also in recent years (but at least they bring the killed CPU cores up again when temperatures settle).
 
-That's why `sbc-bench` als collects `dmesg` output while running the benchmarks to spot such problems ruining benchmark scores:
+That's why `sbc-bench` also collects `dmesg` output while running the benchmarks to spot such problems ruining benchmark scores:
 
 <details>
   <summary>Khadas VIM3 `dmesg` output while killing two cores at 90°C and bringing them back up again below 85°C</summary>
@@ -657,7 +657,7 @@ We query ThreadX after executing all benchmarks and if you suffered from voltage
 
 </details>
 
-Frequency capping is the try to compensate for the voltage drops preventing the SBC from crashing. The SoC's various engine's clockspeeds are lowered immediately (ARM cores to 600 MHz prior, with RPi 5 now to 1000/1500 MHz) and performance will suffer a lot. Since a few years fortunately those under-voltage events are also logged in kernel ring buffer when running with Raspberry Pi Ltd.'s kernels as such `sbc-bench`'s detailed output will contain a section like this:
+Frequency capping is the try to compensate for the voltage drops preventing the SBC from crashing. The SoC's various engine's clockspeeds are lowered immediately (ARM cores to 600 MHz with RPi 2-4, now with RPi 5 down to 1000/1500 MHz) and performance will suffer a lot. Since a few years fortunately those under-voltage events are also logged in kernel ring buffer when running with Raspberry Pi Ltd.'s kernels as such `sbc-bench`'s detailed output will contain a section like this:
 
 <details>
   <summary>Multiple voltage drops on a RPi 4B while benchmarking</summary>

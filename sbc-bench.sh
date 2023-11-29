@@ -38,7 +38,8 @@ Main() {
 		case ${c} in
 			m)
 				# monitoring mode
-				interval=$2
+				SleepInterval=${2:-5}
+				MonitorMode=TRUE
 				MonitorBoard
 				exit 0
 				;;
@@ -1327,7 +1328,7 @@ GetTempSensor() {
 						TempSource="${TempDir}/soctemp"
 					else
 						TempSource="$(mktemp /tmp/soctemp.XXXXXX)"
-						trap "rm -f \"${TempSource}\" ; exit 0" 0 1 2 3 15
+						trap "rm -f \"${TempSource}\" ; exit 0" 0
 					fi
 					ThermalZone="$(GetThermalZone "${NodeGuess}")"
 					ln -fs ${ThermalZone}/temp ${TempSource}
@@ -1362,7 +1363,7 @@ GetTempSensor() {
 			TempSource="${TempDir}/soctemp"
 		else
 			TempSource="$(mktemp /tmp/soctemp.XXXXXX)"
-			trap "rm -f \"${TempSource}\" ; exit 0" 0 1 2 3 15
+			trap "rm -f \"${TempSource}\" ; exit 0" 0
 		fi
 
 		# check platform
@@ -1487,7 +1488,7 @@ CheckNetio() {
 			export NetioConsumptionFile
 			/bin/bash "${PathToMe}" -N ${NetioDevice} ${NetioSocket} ${NetioConsumptionFile} >/dev/null 2>&1 &
 			NetioMonitoringPID=$!
-			trap "kill ${NetioMonitoringPID} ; rm -rf \"${TempDir}\" ; exit 0" 0 1 2 3 15
+			trap "kill ${NetioMonitoringPID} ; rm -rf \"${TempDir}\" ; exit 0" 0
 		fi
 	fi
 } # CheckNetio
@@ -1603,8 +1604,6 @@ MonitorBoard() {
 	LastSoftIrqStat=0
 	LastCpuStatCheck=0
 	LastTotal=0
-
-	SleepInterval=${interval:-5}
 
 	# check if we're in Netio consumption monitoring mode
 	[ -s "${NetioConsumptionFile}" ] && NetioHeader="     mW"
@@ -1955,7 +1954,7 @@ CreateTempDir() {
 	fi
 	export TempDir
 	# delete $TempDir by default but not if in extensive mode:
-	[ "X${MODE}" = "Xextensive" ] || trap "rm -rf \"${TempDir}\" ; exit 0" 0 1 2 3 15
+	[ "X${MODE}" = "Xextensive" ] || trap "rm -rf \"${TempDir}\" ; exit 0" 0
 } # CreateTempDir
 
 CheckLoadAndDmesg() {
@@ -5382,6 +5381,16 @@ GuessARMSoC() {
 	# S3       12c00001
 	# V3s      12c00000
 
+	# If in simulation mode (-m and CPUINFOFILE set) skip all SoC vendor specific detection
+	# mechanisms (dmesg, nvmem)
+	if [ "X${ProcCPUFile}" != "X/proc/cpuinfo}" ]; then
+		SoCGuess="$(GuessSoCbySignature)"
+		if [ "X${SoCGuess}" != "X" -a "X${MonitorMode}" = "XTRUE" ]; then
+			echo "${SoCGuess}"
+			return
+		fi
+	fi
+
 	[ "X${AW_NVMEM}" != "X" ] && Allwinner_SID=" (SID: ${AW_NVMEM:19:2}${AW_NVMEM:16:2}${AW_NVMEM:13:2}${AW_NVMEM:10:2})" || Allwinner_SID=""
 	HardwareInfo="$(awk -F': ' '/^Hardware/ {print $2}' <<< "${ProcCPU}" | tail -n1)"
 	RockchipGuess="$(awk -F': ' '/rockchip-cpuinfo cpuinfo: SoC/ {print $3}' <<<"${DMESG}" | head -n1)"
@@ -6300,14 +6309,14 @@ GuessSoCbySignature() {
 			esac
 			;;
 		*QualcommOryon*)
-			# Qualcomm Snapdragon X Elite (SC8380XP): 8 x Oryon + 4 x Oryon or variants
+			# Qualcomm Snapdragon X Elite (X1E80100): 8 x Oryon + 4 x Oryon or variants
 			# https://browser.geekbench.com/v6/cpu/3327362.gb6 is in conflict with https://browser.geekbench.com/v6/cpu/3326512.gb6
 			# wrt stepping: "ARM implementer 81 architecture 8 variant 1 part 1 revision 1" vs. "ARMv8 (64-bit) Family 8 Model 1 Revision 201"
 			# The former is r1p1, the latter r2p1. But maybe it's different steppings since it's also said the clusters would consist of two
 			# different core types: https://lore.kernel.org/linux-arm-msm/b165d2cd-e8da-4f6d-9ecf-14df2b803614@linaro.org/
 			case ${CPUCores} in
 				12)
-					echo "Qualcomm Snapdragon X Elite (SC8380XP)"
+					echo "Qualcomm Snapdragon X Elite (X1E80100)"
 					;;
 				10)
 					echo "Qualcomm SC8370/SC8370XP"
@@ -8269,7 +8278,7 @@ ProvideReviewInfo() {
 	SwapBefore="$(awk -F" " '{print $4}' </proc/swaps | grep -v -i Used | awk '{s+=$1} END {printf "%.0f", s}')"
 	CheckTimeInState before
 	export SPACING=yes
-	/bin/bash "${PathToMe}" -m ${interval:-60} >"${MonitorLog}" &
+	/bin/bash "${PathToMe}" -m 60 >"${MonitorLog}" &
 	MonitoringPID=$!
 	echo ""
 	snore 1
@@ -8277,7 +8286,7 @@ ProvideReviewInfo() {
 } # ProvideReviewInfo
 
 FinalReporting() {
-	trap "rm -rf \"${TempDir}\" ; exit 0" 0 1 2 3 15
+	trap "rm -rf \"${TempDir}\" ; exit 0" 0
 	echo -e "\n\nCleaning up...\c"
 	kill ${NetioMonitoringPID} ${MonitoringPID} 2>/dev/null
 	SwapNow="$(awk -F" " '{print $4}' </proc/swaps | grep -v -i Used | awk '{s+=$1} END {printf "%.0f", s}')"
@@ -8742,7 +8751,7 @@ PrintBSPWarning() {
 PrintKernelInfo() {
 	# Kernel info: version number and vendor/BSP check
 	CreateTempDir
-	trap "rm -rf \"${TempDir}\" ; exit 0" 0 1 2 3 15
+	trap "rm -rf \"${TempDir}\" ; exit 0" 0
 	curl -s -q --connect-timeout 10 https://raw.githubusercontent.com/endoflife-date/endoflife.date/master/products/linuxkernel.md \
 		>"${TempDir}/linuxkernel.md"
 	BasicSetup nochange >/dev/null 2>&1

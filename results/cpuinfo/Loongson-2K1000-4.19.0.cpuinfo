@@ -1,0 +1,39 @@
+system type		: lemote-soc-2k
+machine			: loongson,2k1000
+processor		: 0
+cpu model		: Loongson-2K V0.3  FPU V0.1
+model name		: Loongson-2K1000 Lemote @ 1000MHz
+CPU MHz			: 999.98
+BogoMIPS		: 1992.00
+wait instruction	: yes
+microsecond timers	: yes
+tlb_entries		: 64
+extra interrupt vector	: no
+hardware watchpoint	: yes, count: 0, address/irw mask: []
+isa			: mips1 mips2 mips3 mips4 mips5 mips32r1 mips32r2 mips64r1 mips64r2
+ASEs implemented	:
+shadow register sets	: 1
+kscratch registers	: 2
+package			: 0
+core			: 0
+VCED exceptions		: not available
+VCEI exceptions		: not available
+
+processor		: 1
+cpu model		: Loongson-2K V0.3  FPU V0.1
+model name		: Loongson-2K (Loongson-2K1000)
+CPU MHz			: 999.98
+BogoMIPS		: 2007.09
+wait instruction	: yes
+microsecond timers	: yes
+tlb_entries		: 64
+extra interrupt vector	: no
+hardware watchpoint	: yes, count: 0, address/irw mask: []
+isa			: mips1 mips2 mips3 mips4 mips5 mips32r1 mips32r2 mips64r1 mips64r2
+ASEs implemented	:
+shadow register sets	: 1
+kscratch registers	: 2
+package			: 0
+core			: 1
+VCED exceptions		: not available
+VCEI exceptions		: not available

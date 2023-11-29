@@ -567,6 +567,8 @@ GetARMCore() {
 	61/037:Apple Everest A16
 	61/038:Apple Blizzard M2Max
 	61/039:Apple Avalanche M2Max
+	61/048:Apple Sawtooth M3Max
+	61/049:Apple Everest M3Max
 	00/000:Virtualized Apple Silicon
 	66:Faraday
 	66/526:Faraday FA526
@@ -596,10 +598,12 @@ GetARMCore() {
 	69/b11:Intel SA1110
 	69/c12:Intel IPX1200
 	70:Phytium
+	70/303:Phytium FTC310
 	70/660:Phytium FTC660
 	70/661:Phytium FTC661
 	70/662:Phytium FTC662
 	70/663:Phytium FTC663
+	70/664:Phytium FTC664
 	70/862:Phytium FTC862
 	c0:Ampere
 	c0/ac3:Ampere Ampere-1
@@ -4376,9 +4380,9 @@ ValidateResults() {
 		OneOrTwoDigitsAfter=$(wc -c <<<"${OneOrTwoDigitsAfter}")
 		if [ ${OneOrTwoDigitsBefore:-6} -gt 6 -o ${OneOrTwoDigitsAfter:-6} -gt 6 ]; then
 			# mismatch greater than 9%, print warning in red and bold
-			echo -e "${LRED}${BOLD}Advertised vs. measured max CPU clockspeed: ${ClockspeedMismatchBefore} before, ${ClockspeedMismatchAfter} after${NC} -> https://t.ly/rXNnN"
+			echo -e "${LRED}${BOLD}Advertised vs. measured max CPU clockspeed: ${ClockspeedMismatchBefore} before, ${ClockspeedMismatchAfter} after${NC} -> https://tinyurl.com/2udn2bxk"
 		else
-			echo -e "Advertised vs. measured max CPU clockspeed: ${ClockspeedMismatchBefore} before, ${ClockspeedMismatchAfter} after -> https://t.ly/rXNnN"
+			echo -e "Advertised vs. measured max CPU clockspeed: ${ClockspeedMismatchBefore} before, ${ClockspeedMismatchAfter} after -> https://tinyurl.com/2udn2bxk"
 		fi
 	elif [ -f /sys/devices/system/cpu/cpufreq/policy0/scaling_governor ]; then
 		# cpufreq scaling supported, check we've measured cpufreq before to report 'no mismatch'
@@ -4401,10 +4405,10 @@ ValidateResults() {
 			case $? in
 				0)
 					# Armbian settings
-					echo -e "${LRED}${BOLD}Silly settings: \"arm_boost=1\" missing but \"arm_freq=1800\" set in ${ThreadXConfig}${NC} -> https://t.ly/4UoLw"
+					echo -e "${LRED}${BOLD}Silly settings: \"arm_boost=1\" missing but \"arm_freq=1800\" set in ${ThreadXConfig}${NC} -> https://tinyurl.com/53cw5xvh"
 					;;
 				*)
-					echo -e "${LRED}${BOLD}\"arm_boost=1\" missing in ${ThreadXConfig}${NC} -> https://t.ly/4UoLw"
+					echo -e "${LRED}${BOLD}\"arm_boost=1\" missing in ${ThreadXConfig}${NC} -> https://tinyurl.com/53cw5xvh"
 					;;
 			esac
 		fi
@@ -4417,7 +4421,7 @@ ValidateResults() {
 				LimitedTo1200=$?
 				grep -q "temp_soft_limit" "${ThreadXConfig}"
 				TempSoftLimitSet=$?
-				[ ${LimitedTo1200} -ne 0 -a ${TempSoftLimitSet} -ne 0 ] && echo "\"temp_soft_limit\" not set in ${ThreadXConfig} -> https://t.ly/G0ANg"
+				[ ${LimitedTo1200} -ne 0 -a ${TempSoftLimitSet} -ne 0 ] && echo "\"temp_soft_limit\" not set in ${ThreadXConfig} -> https://tinyurl.com/4e3kpt6n"
 				;;
 		esac
 	fi
@@ -4430,12 +4434,12 @@ ValidateResults() {
 		else
 			NoZRAM=$(tail -n +2 /proc/swaps | grep -v '^/dev/zram' | wc -l)
 			if [ ${NoZRAM} -eq 0 ]; then
-				echo -e "${LRED}${BOLD}Swapping (ZRAM) occured${NC} -> https://t.ly/TQ-hO"
+				echo -e "${LRED}${BOLD}Swapping (ZRAM) occured${NC} -> https://tinyurl.com/5n8sp5b5"
 				# check whether zswap sits on top of zram
 				[ -r /sys/module/zswap/parameters/enabled ] && ZswapEnabled="$(sed 's/Y/1/' </sys/module/zswap/parameters/enabled)"
-				[ "${ZswapEnabled}" = "1" ] && echo -e "${LRED}${BOLD}Zswap configured on top of zram. Swap performance harmed${NC} -> https://t.ly/dfJGh"
+				[ "${ZswapEnabled}" = "1" ] && echo -e "${LRED}${BOLD}Zswap configured on top of zram. Swap performance harmed${NC} -> https://tinyurl.com/448bnzb8"
 			else
-				echo -e "${LRED}${BOLD}Swapping occured${NC} -> https://t.ly/TQ-hO"
+				echo -e "${LRED}${BOLD}Swapping occured${NC} -> https://tinyurl.com/5n8sp5b5"
 				if [ "X${VirtWhat}" = "X" -o "X${VirtWhat}" = "Xnone" ]; then
 					# identify type of swap only when not running inside a VM
 					SlowSwap="$(ListSwapDevices | sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" | awk -F") on " '{print $2}' | sed '/^$/d' | tr '\n' ',' | sed -e 's/,/, /g' -e 's/, $//')"
@@ -4452,7 +4456,7 @@ ValidateResults() {
 	UtilizationSum=$(awk '{s+=$1} END {printf "%.0f", s}' <<<"${UtilizationValues}")
 	AverageSysUtilization=$(( ${UtilizationSum} / ${LogLength} ))
 	if [ ${PeakSysUtilization:-0} -gt 15 -o ${AverageSysUtilization:-0} -gt 0 ]; then
-		echo -e "${LRED}${BOLD}Too much background activity (%system): ${AverageSysUtilization}% avg, ${PeakSysUtilization}% max${NC} -> https://t.ly/uhOJa"
+		echo -e "${LRED}${BOLD}Too much background activity (%system): ${AverageSysUtilization}% avg, ${PeakSysUtilization}% max${NC} -> https://tinyurl.com/3um9enwx"
 	else
 		# only report background activity being ok when not running inside a VM/container
 		[ "X${VirtWhat}" = "X" -o "X${VirtWhat}" = "Xnone" ] && echo -e "${LGREEN}Background activity (%system) OK${NC}"
@@ -4474,24 +4478,24 @@ ValidateResults() {
 		case ${CPUCores} in
 			2)
 				# 8% peak and 2% average is acceptable
-				[ ${PeakDiff} -gt 8 -o ${AverageDiff} -gt 2 ] && echo -e "${LRED}${BOLD}Too much other background activity: ${AverageDiff}% avg, ${PeakDiff}% max${NC} -> https://t.ly/uhOJa"
+				[ ${PeakDiff} -gt 8 -o ${AverageDiff} -gt 2 ] && echo -e "${LRED}${BOLD}Too much other background activity: ${AverageDiff}% avg, ${PeakDiff}% max${NC} -> https://tinyurl.com/3um9enwx"
 				;;
 			4)
 				# 5% peak and 1% average is acceptable
-				[ ${PeakDiff} -gt 5 -o ${AverageDiff} -gt 1 ] && echo -e "${LRED}${BOLD}Too much other background activity: ${AverageDiff}% avg, ${PeakDiff}% max${NC} -> https://t.ly/uhOJa"
+				[ ${PeakDiff} -gt 5 -o ${AverageDiff} -gt 1 ] && echo -e "${LRED}${BOLD}Too much other background activity: ${AverageDiff}% avg, ${PeakDiff}% max${NC} -> https://tinyurl.com/3um9enwx"
 				;;
 			5|6)
 				# 3% peak and 1% average is acceptable
-				[ ${PeakDiff} -gt 3 -o ${AverageDiff} -gt 1 ] && echo -e "${LRED}${BOLD}Too much other background activity: ${AverageDiff}% avg, ${PeakDiff}% max${NC} -> https://t.ly/uhOJa"
+				[ ${PeakDiff} -gt 3 -o ${AverageDiff} -gt 1 ] && echo -e "${LRED}${BOLD}Too much other background activity: ${AverageDiff}% avg, ${PeakDiff}% max${NC} -> https://tinyurl.com/3um9enwx"
 				;;
 			8)
 				# 2% peak and 0% average is acceptable
-				[ ${PeakDiff} -gt 2 -o ${AverageDiff} -gt 0 ] && echo -e "${LRED}${BOLD}Too much other background activity: ${AverageDiff}% avg, ${PeakDiff}% max${NC} -> https://t.ly/uhOJa"
+				[ ${PeakDiff} -gt 2 -o ${AverageDiff} -gt 0 ] && echo -e "${LRED}${BOLD}Too much other background activity: ${AverageDiff}% avg, ${PeakDiff}% max${NC} -> https://tinyurl.com/3um9enwx"
 				;;
 			*)
 				# With more CPU cores it's impossible to detect 'sane environment' so only
 				# notify if average utilization is off by more than 0%
-				[ ${AverageDiff} -gt 0 ] && echo -e "${LRED}${BOLD}Too much other background activity: ${AverageDiff}% avg, ${PeakDiff}% max${NC} -> https://t.ly/uhOJa"
+				[ ${AverageDiff} -gt 0 ] && echo -e "${LRED}${BOLD}Too much other background activity: ${AverageDiff}% avg, ${PeakDiff}% max${NC} -> https://tinyurl.com/3um9enwx"
 				;;
 		esac
 	fi
@@ -4502,10 +4506,10 @@ ValidateResults() {
 		if [ ${OOMCount:-0} -gt 0 ]; then
 			case ${ProcSwapLines} in
 				1)
-					echo -e "${LRED}${BOLD}${OOMCount} oom-killer invocations (system too low on RAM and no ZRAM configured)${NC} -> https://t.ly/HDEnb"
+					echo -e "${LRED}${BOLD}${OOMCount} oom-killer invocations (system too low on RAM and no ZRAM configured)${NC} -> https://tinyurl.com/bdh4xpsb"
 					;;
 				*)
-					echo -e "${LRED}${BOLD}${OOMCount} oom-killer invocations (system too low on RAM and insufficient swap configured)${NC} -> https://t.ly/HDEnb"
+					echo -e "${LRED}${BOLD}${OOMCount} oom-killer invocations (system too low on RAM and insufficient swap configured)${NC} -> https://tinyurl.com/bdh4xpsb"
 					;;
 			esac
 		fi
@@ -4513,7 +4517,7 @@ ValidateResults() {
 
 	# powercap on Intel?
 	if [ -d /sys/devices/virtual/powercap/intel-rapl ]; then
-		grep -q -i GenuineIntel <<< "${ProcCPU}" && echo -e "Powercap detected. Details: \"sudo powercap-info -p intel-rapl\" -> https://t.ly/lQToW"
+		grep -q -i GenuineIntel <<< "${ProcCPU}" && echo -e "Powercap detected. Details: \"sudo powercap-info -p intel-rapl\" -> https://tinyurl.com/4zbuwx52"
 	fi
 
 	# temporarily killed CPU cores due to overheating with Amlogic SoCs and BSP kernel
@@ -4525,17 +4529,17 @@ ValidateResults() {
 	KilledCPUs="$(grep "CPU[0-7]: shutdown" "${TempDir}/dmesg" | awk -F" " '{print $2}' | sort | uniq | tr "\n" ":" | sed -e 's/::/, /g')"
 	if [ "X${KilledCPUs}" != "X" ]; then
 		ThrottlingWarning="${LRED}${BOLD} (throttled)${NC}"
-		echo -e "${LRED}${BOLD}Overheating resulted in CPU cores temporarily being stopped ($(sed 's/, $//' <<<"${KilledCPUs,,}"))${NC} -> https://t.ly/R7CCG"
+		echo -e "${LRED}${BOLD}Overheating resulted in CPU cores temporarily being stopped ($(sed 's/, $//' <<<"${KilledCPUs,,}"))${NC} -> https://tinyurl.com/2jetn2eb"
 	fi
 
 	# Throttling and frequency capping on RPi?
 	if [ "${USE_VCGENCMD}" = "true" ]; then
 		case "${ThrottlingCheck}" in
 			*"requency capping"*)
-				[ "${ThrottlingWarning}" = "" ] && echo -e "${LRED}${BOLD}Frequency capping (under-voltage) occured${NC} -> https://t.ly/ayb16" || echo -e "${LRED}${BOLD}Throttling / frequency capping (under-voltage) occured${NC} -> https://t.ly/RGrGZ / https://t.ly/ayb16"
+				[ "${ThrottlingWarning}" = "" ] && echo -e "${LRED}${BOLD}Frequency capping (under-voltage) occured${NC} -> https://tinyurl.com/y363sjws" || echo -e "${LRED}${BOLD}Throttling / frequency capping (under-voltage) occured${NC} -> https://tinyurl.com/2vdpwjam / https://tinyurl.com/y363sjws"
 				;;
 			*)
-				[ "${ThrottlingWarning}" = "" ] && echo -e "${LGREEN}No throttling${NC}" || echo -e "${LRED}${BOLD}Throttling occured${NC} -> https://t.ly/RGrGZ"
+				[ "${ThrottlingWarning}" = "" ] && echo -e "${LGREEN}No throttling${NC}" || echo -e "${LRED}${BOLD}Throttling occured${NC} -> https://tinyurl.com/2vdpwjam"
 				;;
 		esac
 	else
@@ -4551,9 +4555,9 @@ ValidateResults() {
 			# which then results in stats/time_in_state cpufreq statistics showing the cores
 			# not all the time at maximum clockspeed.
 			if [ "X${MODE}" != "Xpts" -a "X${MODE}" != "Xgb" ]; then
-				echo -e "${LRED}${BOLD}Throttling occured${NC} -> https://t.ly/RGrGZ"
+				echo -e "${LRED}${BOLD}Throttling occured${NC} -> https://tinyurl.com/2vdpwjam"
 			else
-				echo -e "Throttling might have occured -> https://t.ly/RGrGZ"
+				echo -e "Throttling might have occured -> https://tinyurl.com/2vdpwjam"
 			fi
 		fi
 	fi
@@ -5186,7 +5190,7 @@ GuessARMSoC() {
 	# Amlogic Meson G12B (A311D) Revision 29:c (10:0) Detected <-- Orbbec Zora P1
 	# Amlogic Meson G12B (S922X) Revision 29:c (40:2) Detected <-- ODROID-N2+ ('S922X-B')
 	# Amlogic Meson Unknown (Unknown) Revision 2a:e (c5:2) Detected <-- Amlogic Meson GXL (S905L2) X7 5G Tv Box / Amlogic Meson GXL (S905X) P212 Development Board
-	# Amlogic Meson SM1 (S905D3) Revision 2b:b (1:2) Detected <-- AMedia X96 Max+/Air / HK1 Box/Vontar X3 / SEI Robotics SEI610 / X96 Max Plus Q1
+	# Amlogic Meson SM1 (S905D3) Revision 2b:b (1:2) Detected <-- AMedia X96 Max+/Air / HK1 Box/Vontar X3 / SEI Robotics SEI610 / X96 Max Plus Q1 / AIS DEV3
 	# Amlogic Meson SM1 (Unknown) Revision 2b:b (1:2) Detected <-- Shenzhen Amediatech Technology Co. Ltd X96 Air / AMedia X96 Max+ / SEI Robotics SEI610 / HK1 Box/Vontar X3
 	# Amlogic Meson SM1 (S905D3) Revision 2b:c (4:2) Detected <-- Khadas VIM3L / https://www.spinics.net/lists/arm-kernel/msg848718.html
 	# Amlogic Meson SM1 (S905X3) Revision 2b:c (10:2) Detected <-- AMedia X96 Max+ / H96 Max X3 / ODROID-C4 / ODROID-HC4 / HK1 Box/Vontar X3 / SEI Robotics SEI610 / Shenzhen Amediatech Technology Co. Ltd X96 Max/Air / Shenzhen CYX Industrial Co. Ltd A95XF3-AIR / Sinovoip BANANAPI-M5 / M2 Pro / Skyworth LB2004-A4091 / Tanix TX3 (QZ) / Ugoos X3 / AI-Speaker DEV3
@@ -5353,23 +5357,23 @@ GuessARMSoC() {
 	# Allwinner SoCs feature something called a SID (Security ID) which should be available with
 	# mainline kernel as /sys/bus/nvmem/devices/sunxi-sid0/nvmem. From the first bytes the SoC
 	# model might be detectable once the SIDs are known. Unfortunately information in linux-sunxi
-	# wiki is both a bit questionable (H6) and sparse: https://linux-sunxi.org/SID_Register_Guide
-	# The following list is based on linux-sunxi wiki and complemented with own checks (crawling
-	# through sbc-bench submissions and conducting tests on own devices).
+	# wiki is/was a bit sparse and outdated: https://linux-sunxi.org/SID_Register_Guide
+	# The following list is based on linux-sunxi wiki contents and complemented with own checks
+	# (crawling through sbc-bench submissions and conducting tests on own devices).
 	#
 	# A10      162367*
-	# A10s     162541*
-	# A13/R8   162541*, 162542*
+	# A10s     162541*          \__ most probably it's simply
+	# A13/R8   162541*, 162542* /   1625* for A10s/A13/R8
 	# A20      165165*, 165166*
 	# A23
 	# A31/A31s 16524251, 16554144
 	# A33/R16  0461872a
 	# A64      92c000ba
-	# A83T     32c00401 (87%), 32c00403 (13%)
+	# A83T     32c0040*: 32c00401 (87%), 32c00403 (13%)
 	# H2+      02c00?42: 02c00042 (79%), 02c00142 (11%), 02c00242 (0.4%)
 	# H3       02c00?81: 02c00081 (91%), 02c00181 (9%)
 	# H5       82800001
-	# H6       82c00007 (wiki), 82c00001 (TK's OPi Lite 2/PineH64)
+	# H6       82c0000*: 82c00001 (40%), 82c00007 (60%)
 	# H64      92c000bb
 	# H313
 	# H616     32c05000 (OPi Zero 2)
@@ -5697,7 +5701,7 @@ GuessARMSoC() {
 								ParseAmlSerial T5D Unknown
 								;;
 							360b*)
-								# T7: A311D2: 36:b (1:3)
+								# T7: A311D2, POP1-G: 36:b (1:3)
 								ParseAmlSerial T7 A311D2
 								;;
 							360c*)
@@ -5736,9 +5740,6 @@ GuessARMSoC() {
 						;;
 				esac
 				;;
-			sun20iw1*)
-				echo "Allwinner D1${Allwinner_SID}"
-				;;
 			sun4i*)
 				# SoC ID: 0x1623
 				echo "Allwinner A10${Allwinner_SID}"
@@ -5776,6 +5777,7 @@ GuessARMSoC() {
 				echo "Allwinner V3/S3/V3s${Allwinner_SID}"
 				;;
 			sun8iw10*)
+				# SoC ID: 0x1699
 				echo "Allwinner B288/B100${Allwinner_SID}"
 				;;
 			sun8iw11*)
@@ -5787,6 +5789,7 @@ GuessARMSoC() {
 				echo "Allwinner V5/V100${Allwinner_SID}"
 				;;
 			sun8iw15*)
+				# SoC ID: 0x1755
 				echo "Allwinner A50/MR133/R311${Allwinner_SID}"
 				;;
 			sun8iw16*)
@@ -5796,17 +5799,32 @@ GuessARMSoC() {
 			sun8iw17*)
 				echo "Allwinner T7${Allwinner_SID}"
 				;;
+			sun8iw18*)
+				echo "Allwinner R328${Allwinner_SID}"
+				;;
 			sun8iw19*)
 				# SoC ID: 0x1817
 				echo "Allwinner V533/V833/V831${Allwinner_SID}"
 				;;
 			sun8iw20*)
 				# SoC ID: 0x1859
-				echo "Allwinner R528/T113${Allwinner_SID}"
+				echo "Allwinner H133/R528/T113${Allwinner_SID}"
 				;;
 			sun8iw21*)
-				# SoC ID: 0x1886
+				# SoC ID: 0x1886, https://v853.docs.aw-ol.com
 				echo "Allwinner V853${Allwinner_SID}"
+				;;
+			sun9i*)
+				# SoC ID: 0x1639
+				echo "Allwinner A80${Allwinner_SID}"
+				;;
+			sun20iw1*)
+				# https://d1.docs.aw-ol.com / https://d1s.docs.aw-ol.com
+				echo "Allwinner D1${Allwinner_SID}"
+				;;
+			sun20iw2*)
+				# https://r128.docs.aw-ol.com
+				echo "Allwinner R128${Allwinner_SID}"
 				;;
 			sun50iw1p*)
 				# SoC ID: 0x1689
@@ -5871,21 +5889,23 @@ GuessARMSoC() {
 				echo "Allwinner H313/H503/H513/H616/H618/H700/T507/T517${Allwinner_SID}"
 				;;
 			sun50iw10*)
+				# SoC ID: 0x1855
 				echo "Allwinner A100/A133/A53/R818/T509${Allwinner_SID}"
 				;;
 			sun50iw11*)
-				# SoC ID: 0x1851
+				# SoC ID: 0x1851, https://r329.docs.aw-ol.com
 				echo "Allwinner R329${Allwinner_SID}"
 				;;
 			sun50iw12*)
+				# SoC ID: 0x1860
 				echo "Allwinner TV303${Allwinner_SID}"
 				;;
 			sun55iw3*)
+				# SoC ID: 0x1890
 				echo "Allwinner A523/A527/T523/T527/MR527${Allwinner_SID}"
 				;;
-			sun9i*)
-				# SoC ID: 0x1639
-				echo "Allwinner A80${Allwinner_SID}"
+			sun60iw1*)
+				echo "Allwinner A736/T736${Allwinner_SID}"
 				;;
 			sun*)
 				SoCGuess="$(GuessSoCbySignature)"
@@ -6015,7 +6035,7 @@ GuessSoCbySignature() {
 			esac
 			;;
 		00A7r0p5)
-			# Allwinner S3/V3/V3s/V853, 1 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
+			# Allwinner S3/V3/V3s/V533/V833/V831/V853, 1 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
 			# or maybe Microchip SAMA7G54, 1 x Cortex-A7 / r0p5
 			# or maybe Rockchip RV1108 | 1 x Cortex-A7 / r0p5
 			case "${DTCompatible}" in
@@ -6023,9 +6043,21 @@ GuessSoCbySignature() {
 					# Rockchip RV1108 | 1 x Cortex-A7 / r0p5
 					echo "Rockchip RV1108"
 					;;
+				*sun8iw8*)
+					# Allwinner S3/V3/V3s, 1 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
+					echo "Allwinner S3/V3/V3s"
+					;;
+				*sun8iw19*)
+					# Allwinner V533/V833/V831, 1 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
+					echo "Allwinner V533/V833/V831"
+					;;
+				*sun8iw21*)
+					# Allwinner V853, 1 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
+					echo "Allwinner V853"
+					;;
 				*allwinner*)
 					# Allwinner S3/V3/V3s/V853, 1 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
-					echo "Allwinner S3/V3/V3s/V853"
+					echo "Allwinner S3/V3/V3s/V533/V833/V831/V853"
 					;;
 				*)
 					# Microchip SAMA7G54, 1 x Cortex-A7 / r0p5
@@ -7035,7 +7067,8 @@ GuessSoCbySignature() {
 			# SigmaStar SSD201/SSD202D | 2 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
 			# or Rockchip RV1109 | 2 x Cortex-A7 / r0p5
 			# or Renesas RZ/N1 | 2 x Cortex-A7 / r0p5
-			# or Allwinner R328/T113: 2 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm (https://whycan.com/t_7497.html -> ARMv7 Processor [410fc075] revision 5 (ARMv7), cr=10c5387d)
+			# or Allwinner R328: 2 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm (https://whycan.com/t_7497.html -> ARMv7 Processor [410fc075] revision 5 (ARMv7), cr=10c5387d)
+			# or Allwinner H113/R528/T113: 2 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm (https://forums.100ask.net/t/topic/2867 -> ARMv7 Processor [410fc075] revision 5 (ARMv7), cr=10c5387d)
 			# or STMicroelectronics STM32MP153C: 2 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
 			case "${DTCompatible}" in
 				*rockchip*)
@@ -7047,8 +7080,11 @@ GuessSoCbySignature() {
 				*sstar*)
 					echo "SigmaStar SSD201/SSD202D"
 					;;
-				*sun*|*llwinner*)
-					echo "Allwinner R328/T113"
+				*sun8iw18*|*r328*)
+					echo "Allwinner R328"
+					;;
+				*sun8iw20*|*h133*|*r328*|*t113*)
+					echo "Allwinner H133/R528/T113"
 					;;
 				*stm32mp153*)
 					echo "STMicroelectronics STM32MP153C"
@@ -7285,25 +7321,41 @@ GuessSoCbySignature() {
 			# PLX NAS7820: 2 x ARM11 MPCore / r0p5 / swp half thumb fastmult edsp java
 			echo "PLX NAS7820"
 			;;
-		*Phytiumr1p1*Phytiumr1p1*Phytiumr1p1*Phytiumr1p1)
+		*FTC660r1p1*FTC660r1p1*FTC660r1p1*FTC660r1p1)
 			# Phytium FT-1500A: 4 x Phytium FTC660 / r1p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32 / https://openbenchmarking.org/s/Phytium+FT1500A
 			echo "Phytium FT-1500A"
 			;;
-		*Phytiumr1p2*Phytiumr1p2*Phytiumr1p2*Phytiumr1p2*Phytiumr1p2*Phytiumr1p2*Phytiumr1p2*Phytiumr1p2*Phytiumr1p2*)
+		*FTC662r1p2*FTC662r1p2*FTC662r1p2*FTC662r1p2*FTC662r1p2*FTC662r1p2*FTC662r1p2*FTC662r1p2*FTC662r1p2*)
 			# Phytium FT-2000+/64: 64 x Phytium FTC662 / r1p2 / fp asimd evtstrm crc32 / https://github.com/util-linux/util-linux/issues/1036
 			echo "Phytium FT-2000+/64"
 			;;
-		*Phytiumr1p3*Phytiumr1p3*Phytiumr1p3*Phytiumr1p3*Phytiumr1p3*Phytiumr1p3*Phytiumr1p3*Phytiumr1p3*Phytiumr1p3*)
+		*FTC663r1p3*FTC663r1p3*FTC663r1p3*FTC663r1p3*FTC663r1p3*FTC663r1p3*FTC663r1p3*FTC663r1p3*FTC663r1p3*)
 			# Phytium FT-2500: 64 x Phytium FTC663 / r1p3 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			echo "$(( ${CPUCores} / 64 )) x Phytium FT-2500"
 			;;
-		*Phytiumr1p3*Phytiumr1p3*Phytiumr1p3*Phytiumr1p3*Phytiumr1p3*Phytiumr1p3*Phytiumr1p3*Phytiumr1p3)
+		*FTC663r1p3*FTC663r1p3*FTC663r1p3*FTC663r1p3*FTC663r1p3*FTC663r1p3*FTC663r1p3*FTC663r1p3)
 			# Phytium D2000/8: 8 x Phytium FTC663 / r1p3 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			echo "Phytium D2000/8"
 			;;
-		*Phytiumr1p3*Phytiumr1p3*Phytiumr1p3*Phytiumr1p3)
+		*FTC663r1p3*FTC663r1p3*FTC663r1p3*FTC663r1p3)
 			# Phytium FT-2000/4: 4 x Phytium FTC663 / r1p3 / fp asimd evtstrm aes pmull sha1 sha2 crc32 / https://www.phytium.com.cn/en/article/97
 			echo "Phytium FT-2000/4"
+			;;
+		*FTC310r0p4*FTC310r0p4*FTC664r1p3*FTC664r1p3)
+			# Phytium E2000Q: 2 x FTC310 / r0p4 + 2 x FTC664 / r1p3 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid sha3 sha512
+			echo "Phytium E2000Q"
+			;;
+		*FTC310r0p4*FTC310r0p4)
+			# Phytium E2000D: 2 x FTC310 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid sha3 sha512
+			echo "Phytium E2000D"
+			;;
+		*FTC310r0p4)
+			# Phytium E2000S: 1 x FTC310 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid sha3 sha512
+			echo "Phytium E2000S"
+			;;
+		*FTC862r0p0*FTC862r0p0*FTC862r0p0*FTC862r0p0*FTC862r0p0*FTC862r0p0*FTC862r0p0*FTC862r0p0)
+			# Phytium D3000/8: 8 x Phytium FTC862 / r0p0 / https://browser.geekbench.com/v6/cpu/3447903.gb6
+			echo "Phytium D3000"
 			;;
 		*A57r1p2*A57r1p2*A57r1p2*A57r1p2*A57r1p2*A57r1p2*A57r1p2*A57r1p2)
 			# AMD Opteron A1100: 8 x Cortex-A57 / r1p2 / https://bugzilla-attachments.redhat.com/attachment.cgi?id=1475897
@@ -7530,12 +7582,20 @@ GuessSoCbySignature() {
 			echo "Apple M2"
 			;;
 		*AppleM2Pro*)
-			# Apple M2: 4 x Apple Blizzard  + 6/8 x Apple Avalanche / https://github.com/AsahiLinux/m1n1/commit/7904ed43dc0c2760e728f611efa0b26895ebcd10
+			# Apple M2 Pro: 4 x Apple Blizzard  + 6/8 x Apple Avalanche / https://github.com/AsahiLinux/m1n1/commit/7904ed43dc0c2760e728f611efa0b26895ebcd10
 			echo "Apple M2 Pro"
 			;;
 		*AppleM2Max*)
-			# Apple M2: 4 x Apple Blizzard + 8 x Apple Avalanche / https://github.com/AsahiLinux/m1n1/commit/8d0474f57b1fb45588d412dcbe7e229dbe6d43cb
+			# Apple M2 Max: 4 x Apple Blizzard + 8 x Apple Avalanche / https://github.com/AsahiLinux/m1n1/commit/8d0474f57b1fb45588d412dcbe7e229dbe6d43cb
 			echo "Apple M2 Max"
+			;;
+		*AppleM3Pro*)
+			# Apple M3 Pro: 6 x Apple Sawtooth + 6 x Apple Everest
+			echo "Apple M3 Pro"
+			;;
+		*AppleM3Max*)
+			# Apple M3 Max: 4 x Apple Sawtooth + 12 x Apple Everest / https://github.com/AsahiLinux/m1n1/pull/357
+			echo "Apple M3 Max"
 			;;
 		*VirtualizedSiliconr0p0*)
 			# When running bare metal M1 and M2 SoCs differ by flags/features:
@@ -7691,7 +7751,7 @@ GuessSoCbySignature() {
 GetCPUSignature() {
 	case ${CPUArchitecture} in
 		arm*|aarch*|riscv*|mips*|loongarch*)
-			sed -e '1,/^ CPU/ d' -e 's/Cortex-//' -e 's/HiSilicon-//' <<<"${CPUTopology}" | while read ; do
+			sed -e '1,/^ CPU/ d' -e 's/Cortex-//' -e 's/HiSilicon-//' -e 's/Phytium //' <<<"${CPUTopology}" | while read ; do
 				echo -e "$(awk -F" " '{print $2$3$6$8$9$10}' <<<"${REPLY}" | sed -e 's/-//g' -e 's/\///g')\c"
 			done
 			;;
@@ -8048,7 +8108,7 @@ ProvideReviewInfo() {
 	[ -z "${LSBLK}" ] && LSBLK="$(LC_ALL="C" lsblk -l -o SIZE,NAME,FSTYPE,LABEL,MOUNTPOINT 2>&1)"
 	NTFSdevices="$(awk -F" " '/ ntfs / {print $2}' <<< "${LSBLK}" | tr '\n' ',' | sed 's/,$//')"
 	if [ "X${NTFSdevices}" != "X" ]; then
-		echo -e "\n### Challenging filesystems:\n\nThe following partitions are NTFS: ${NTFSdevices} -> https://t.ly/1YpI0" >>"${TempDir}/review"
+		echo -e "\n### Challenging filesystems:\n\nThe following partitions are NTFS: ${NTFSdevices} -> https://tinyurl.com/yuk5rtt" >>"${TempDir}/review"
 	fi
 
 	# check swap devices/files/partitions

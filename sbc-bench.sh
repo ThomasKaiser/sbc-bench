@@ -5373,7 +5373,7 @@ GuessARMSoC() {
 	# H64      92c000bb
 	# H313
 	# H616     32c05000 (OPi Zero 2)
-	# H618
+	# H618     33802000 (OPi Zero 2W)
 	# R40/V40  12c00017
 	# S3       12c00001
 	# V3s      12c00000
@@ -6335,6 +6335,9 @@ GuessSoCbySignature() {
 										;;
 									32c05000)
 										echo "Allwinner H616"
+										;;
+									33*)
+										echo "Allwinner H618"
 										;;
 									*)
 										case "${DTCompatible}" in

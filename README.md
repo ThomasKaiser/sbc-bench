@@ -389,7 +389,7 @@ In case no swap is configured you might change that but will then most probably 
 
 ### Background activity
 
-It should be obvious that only an absolutely idle system can be benchmarked properly since if the benchmark programm has to fight with other processes for CPU or memory resources the scores will suffer.
+It should be obvious that only an absolutely idle system can be benchmarked properly since if the benchmark program has to fight with other processes for CPU or memory resources the scores will suffer.
 
 Results are invalid, more on this [above](#background-activity).
 
@@ -401,13 +401,16 @@ But there are also power limits that can be set by the device maker: a passively
 
 ### Thermal throttling
 
-This is an attempt to prevent overheating. One or more sensors in SoC/CPU are used to determine warning and critical temperatures to then take measures:
+This is an attempt to prevent overheating. If it has happened of course results are invalid.
+
+Background: one or more thermal sensors in SoC/CPU are used to determine warning and critical temperatures to then take measures:
 
 #### Normal behaviour
 
 Downclocking CPU cores when temperatures get critical is the usual strategy, for more details see [above](#throttling).
 
-The detailed `sbc-bench` output contains a monitoring section and in case throttling happens over a time period long enough then the reduced clockspeeds are clearly visible
+The detailed `sbc-bench` output contains a monitoring section and in case throttling happens over a time period long enough then the reduced clockspeeds can be spotted easily:
+
 <details>
   <summary>Example of a Tinkerboard starting to throttle at 70°C</summary>
 
@@ -505,31 +508,10 @@ The detailed `sbc-bench` output contains a monitoring section and in case thrott
 
 </details>
 
-But sometimes when throttling happens only fractions of time the monitoring output won't catch the short dips as such we need to query cpufreq statistics (if available). In such cases this might look like this:
+Though the monitoring output only taking samples every few seconds can't spot any peaks or dips as such we also try to report cpufreq statistics (if available). This might look like this:
 
 <details>
-  <summary>Allwinner H5 throttling for a short amount of time</summary>
-
-    ##########################################################################
-    
-    Throttling statistics (time spent on each cpufreq OPP):
-    
-    1368 MHz:  672.97 sec
-    1296 MHz:    3.62 sec
-    1200 MHz:       0 sec
-    1056 MHz:       0 sec
-     816 MHz:       0 sec
-     648 MHz:       0 sec
-     480 MHz:       0 sec
-    
-    ##########################################################################
-
-</details>
-
-...and with the aforementioned Tinkerboard like that:
-
-<details>
-  <summary>Tinkerboard throttling statistics for whole sbc-bench execution</summary>
+  <summary>Aforementioned Tinkerboard even throttling down to 816 MHz</summary>
 
     ##########################################################################
     
@@ -546,6 +528,25 @@ But sometimes when throttling happens only fractions of time the monitoring outp
      696 MHz:       0 sec
      600 MHz:       0 sec
      408 MHz:       0 sec
+    
+    ##########################################################################
+
+</details>
+
+<details>
+  <summary>Allwinner H5 throttling just for a short amount of time</summary>
+
+    ##########################################################################
+    
+    Throttling statistics (time spent on each cpufreq OPP):
+    
+    1368 MHz:  672.97 sec
+    1296 MHz:    3.62 sec
+    1200 MHz:       0 sec
+    1056 MHz:       0 sec
+     816 MHz:       0 sec
+     648 MHz:       0 sec
+     480 MHz:       0 sec
     
     ##########################################################################
 
@@ -602,7 +603,7 @@ When all benchmarks have finished we then query ThreadX for throttling and under
 
 #### Killed CPU cores
 
-Another attempt is to simply kill CPU cores to lower consumption under load. In the past Allwinner Android kernels were (in)famous for this but Amlogic started to do this with their Android kernels also in the past (but they at least bring the killed CPU cores up again when temperatures settle).
+Another attempt to cope with critical temperatures is to simply kill CPU cores to lower consumption/temps under load. Almost a decade ago Allwinner's Android kernels were (in)famous for this but Amlogic started to do this with their Android kernels also in recent years (but at least they bring the killed CPU cores up again when temperatures settle).
 
 That's why `sbc-bench` als collects `dmesg` output while running the benchmarks to spot such problems ruining benchmark scores:
 
@@ -635,13 +636,13 @@ That's why `sbc-bench` als collects `dmesg` output while running the benchmarks 
 
 #### temp\_soft\_limit
 
-This is a Raspberry Pi 3B Plus (and CM3+) speciality with their BCM2837B0 SoC said to clock at 1400 MHz. But unless you set `temp_soft_limit=70` in `config.txt` the SoC will silently be limited to 1200 MHz once 60°C are hit. Since nobody knows `sbc-bench` is warning.
+This is a Raspberry Pi 3B Plus and CM3+ speciality with their BCM2837B0 SoC said to clock at 1400 MHz. But unless you set `temp_soft_limit=70` in `config.txt` the SoC will silently be limited to 1200 MHz once 60°C are hit. Since nobody knows `sbc-bench` is warning.
 
 ### Frequency capping (under-voltage)
 
 This is another Raspberry Pi speciality caused by their (in)famous 5V powering. [Ohm's law](https://en.wikipedia.org/wiki/Ohm%27s_law) also exists in the SBC world and low voltages combined with high currents always result in a voltage drop unless you have a proper power supply with fixed cable that can compensate for this voltage drop (read as: if you buy a Pi then always buy their appropriate USB-C wall wart as well).
 
-We always query ThreadX after executing all benchmarks and if you suffer from voltage drops (input voltage dropping below ~4.65V) then performance is ruined and it looks like this in detailed output:
+We query ThreadX after executing all benchmarks and if you suffered from voltage drops (input voltage sacking below ~4.65V) then performance is ruined and it looks like this in detailed output:
 
 <details>
   <summary>RPi reporting under-voltage and frequency capping</summary>
@@ -656,7 +657,7 @@ We always query ThreadX after executing all benchmarks and if you suffer from vo
 
 </details>
 
-Frequency capping is the try to compensate for the voltage drops. The SoC's various engine's clockspeeds are lowered immediately (ARM cores to 600 MHz prior to RPi 5, now 1500 MHz) and performance will suffer a lot. Since a few years fortunately those under-voltage events are also logged in kernel ring buffer as such `sbc-bench`'s detailed output will contain a section like this:
+Frequency capping is the try to compensate for the voltage drops preventing the SBC from crashing. The SoC's various engine's clockspeeds are lowered immediately (ARM cores to 600 MHz prior, with RPi 5 now to 1000/1500 MHz) and performance will suffer a lot. Since a few years fortunately those under-voltage events are also logged in kernel ring buffer when running with Raspberry Pi Ltd.'s kernels as such `sbc-bench`'s detailed output will contain a section like this:
 
 <details>
   <summary>Multiple voltage drops on a RPi 4B while benchmarking</summary>
@@ -692,7 +693,7 @@ Frequency capping is the try to compensate for the voltage drops. The SoC's vari
 
 </details>
 
-Frequency capping often gets confused with thermal throttling but they're different things though can occur in parallel. Then `sbc-bench` will hint at both in detailed output:
+Frequency capping often gets confused with thermal throttling but they're really different things though can occur in parallel. Then `sbc-bench` will hint at both in detailed output:
 
 <details>
   <summary>under-voltage, frequency capping and throttling while benchmarking</summary>
@@ -709,7 +710,7 @@ Frequency capping often gets confused with thermal throttling but they're differ
 
 ### Silly settings
 
-This is mostly an Armbian issue: their OS images for Raspberries lack `arm_boost=1` (which is a requirement for RPi 4B with BCM2711 C0 or later to automagically increase maximum clockspeed from 1500 MHz to 1800 MHz w/o overvolting) while at the same time setting `over_voltage=2` and `arm_freq=1800` which might improve performance on early RPi 4B but often does the opposite on recent RPi 4 since with these silly settings the CPU gets overvolted, therefore heats up more and is prone to throttling.
+This is mostly an Armbian issue: their OS images for Raspberries lack `arm_boost=1` (which is a requirement for RPi 4B with BCM2711 C0 or later to automagically increase maximum clockspeed from 1500 MHz to 1800 MHz w/o overvolting) while at the same time setting `over_voltage=2` and `arm_freq=1800` which might improve performance on early RPi 4B but often does the opposite on recent RPi 4 since with these silly settings the CPU gets overvolted, therefore heats up more quickly and is prone to throttling.
 
 ## Additional info when in review mode (WIP)
 

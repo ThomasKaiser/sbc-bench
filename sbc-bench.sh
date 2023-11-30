@@ -5075,6 +5075,7 @@ GuessARMSoC() {
 	#     Neoverse-N1 / r3p1: Ampere Altra, AWS Graviton2
 	#     Neoverse-N2 / r0p0: Marvell Octeon 10, YiTian 710
 	#     Neoverse-V1 / r1p1: AWS Graviton3
+	#     Neoverse-V2 / r0p0: Nvidia Grace
 	#   NVidia Carmel / r0p0: Nvidia Tegra Xavier
 	#   NVidia Denver / r0p0: Nvidia Tegra K1 (Tegra132)
 	# NVidia Denver 2 / r0p0: Nvidia Jetson TX2
@@ -5360,26 +5361,33 @@ GuessARMSoC() {
 	# The following list is based on linux-sunxi wiki contents and complemented with own checks
 	# (crawling through sbc-bench submissions and conducting tests on own devices).
 	#
-	# A10      162367*
-	# A10s     162541*          \__ most probably it's simply
-	# A13/R8   162541*, 162542* /   1625* for A10s/A13/R8
-	# A20      165165*, 165166*
-	# A23
-	# A31/A31s 16524251, 16554144
-	# A33/R16  0461872a
-	# A64      92c000ba
-	# A83T     32c0040*: 32c00401 (87%), 32c00403 (13%)
-	# H2+      02c00?42: 02c00042 (79%), 02c00142 (11%), 02c00242 (0.4%)
-	# H3       02c00?81: 02c00081 (91%), 02c00181 (9%)
-	# H5       82800001
-	# H6       82c0000*: 82c00001 (40%), 82c00007 (60%)
-	# H64      92c000bb
-	# H313
-	# H616     32c05000 (OPi Zero 2)
-	# H618     33802000 (OPi Zero 2W)
-	# R40/V40  12c00017
-	# S3       12c00001
-	# V3s      12c00000
+	# SoCs are sorted by chip ID, starting with 'old scheme':
+	#
+	# A10 (1623)      162367*              --> 1623*
+	# A10s (1625)     162541*              \__ following the old ID scheme it's
+	# A13/R8 (1625)   162541*, 162542*     /   simply 1625* for all A10s/A13/R8
+	# A31/A31s (1633) 16524251, 16554144   --> with these SoCs the SID is stored in the PMIC
+	#                                          (AXP221 or AXP221s, most probably their chip
+	#                                          IDs are 1652 and 1655, see also R40 below)
+	# A20 (1651)      165165*, 165166*     --> 1651*
+	# R40/V40 (1701)  16554153             --> that's 1st part of Serial number on all BPi-M2
+	#                                          Ultra/Berry which both rely on AXP221s
+	#
+	# new SID scheme (SID not starting with chip ID any longer)
+	#
+	# A33/R16 (1667)  0461872a
+	# A83T (1673)     32c0040?: 32c00401 (87%), 32c00403 (13%)
+	# H2+ (1680)      02c00?42: 02c00042 (79%), 02c00142 (11%), 02c00242 (0.4%)
+	# H3 (1680)       02c00?81: 02c00081 (91%), 02c00181 (9%)
+	# V3s (1681)      12c00000
+	# S3 (1681)       12c00001
+	# A64 (1689)      92c00?ba: 92c000ba, 92c001ba <- https://archive.ph/mpiHO#selection-317.39-317.74 / https://archive.ph/CM9Oy#selection-1279.39-1279.74
+	# H64 (1689)      92c000bb
+	# R40/V40 (1701)  12c00017
+	# H5 (1718)       82800001
+	# H6 (1728)       82c0000?: 82c00001 (40%), 82c00007 (60%)
+	# H616 (1823)     32c05000 (OPi Zero 2)
+	# H618 (1823)     33802000 (OPi Zero 2W)
 
 	# If in simulation mode (-m and CPUINFOFILE set) skip all SoC vendor specific detection
 	# mechanisms (dmesg, nvmem)
@@ -6007,14 +6015,11 @@ GuessSoCbySignature() {
 		??A8r3p2)
 			# TI OMAP3530/DM3730/AM335x or Allwinner A10, 1 x Cortex-A8 / r3p2 / half thumb fastmult vfp edsp neon vfpv3 tls vfpd32
 			case "${Allwinner_SID:7:8}" in
-				162367*)
+				1623*)
 					echo "Allwinner A10"
 					;;
-				162541*)
+				1625*)
 					echo "Allwinner A10s/A13/R8"
-					;;
-				162542*)
-					echo "Allwinner A13/R8"
 					;;
 				*)
 					lsmod | grep -i -q sun4i
@@ -6362,19 +6367,19 @@ GuessSoCbySignature() {
 							*allwinner*)
 								# 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 								case "${Allwinner_SID:7:8}" in
-									92c000ba)
+									92c00?ba)
 										echo "Allwinner A64"
-										;;
-									82800001)
-										echo "Allwinner H5"
-										;;
-									82c0000*)
-										echo "Allwinner H6"
 										;;
 									92c000bb)
 										echo "Allwinner H64"
 										;;
-									32c05000)
+									828000*)
+										echo "Allwinner H5"
+										;;
+									82c000*)
+										echo "Allwinner H6"
+										;;
+									32c050*)
 										echo "Allwinner H616"
 										;;
 									33*)
@@ -7558,8 +7563,8 @@ GuessSoCbySignature() {
 				echo "YiTian 710"
 			fi
 			;;
-		*NeoverseV2*)
-			# Nvidia Grace: 72 or 144 Neoverse-V2
+		*NeoverseV2r0p0*)
+			# Nvidia Grace: 72 or 144 Neoverse-V2 / r0p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 sve asimdfhm dit uscat ilrcpc flagm ssbs sb dcpodp sve2 sveaes svepmull svebitperm svesha3 svesm4 flagm2 frint svei8mm svebf16 i8mm bf16 dgh
 			case ${CPUCores} in
 				72)
 					echo "Nvidia Grace Hopper"

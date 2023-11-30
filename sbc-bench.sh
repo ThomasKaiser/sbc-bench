@@ -4995,7 +4995,7 @@ GuessARMSoC() {
 	#       Cortex-A7 / r0p2: MediaTek MT6589/MT6588
 	#       Cortex-A7 / r0p3: Allwinner A31/A31s, MediaTek MT6572/MT6580/MT6582/MT6589/MT7623/MT8127/MT8135, Qualcomm MSM8610 (Snapdragon 200) / MSM8226/MSM8926 (Snapdragon 400), Samsung Exynos 5422
 	#       Cortex-A7 / r0p4: Allwinner A20, Exynos 5430, Mediatek MT6592
-	#       Cortex-A7 / r0p5: Allwinner A33/A50/MR133/R311/A83T/H2+/H3/H8/R16/R328/R40/S3/T113/V3/V3s/V40/V853, Broadcom BCM2836, Freescale/NXP i.MX7D/i.MX6 ULL, HiSilicon Hi351x/Hi3796M-V100/Hi3798M-V100, HiSilicon Kirin 920/925/928, MediaTek MT6595, Microchip SAMA7G54, Qualcomm MDM9607/MSM8909, Renesas RZ/N1, Rockchip RK3126/RK3126B/RK3126C/RK3128/RK3228A/RK3229/RV1108/RV1109/RV1126, SigmaStar SSD201/SSD202D, Spreadtrum SC7731/SC8830, STMicroelectronics STM32MP157
+	#       Cortex-A7 / r0p5: Allwinner A33/A50/MR133/R311/A80/A83T/H2+/H3/H8/R16/R328/R40/S3/T113/V3/V3s/V40/V853, Broadcom BCM2836, Freescale/NXP i.MX7D/i.MX6 ULL, HiSilicon Hi351x/Hi3796M-V100/Hi3798M-V100, HiSilicon Kirin 920/925/928, MediaTek MT6595, Microchip SAMA7G54, Qualcomm MDM9607/MSM8909, Renesas RZ/N1, Rockchip RK3126/RK3126B/RK3126C/RK3128/RK3228A/RK3229/RV1108/RV1109/RV1126, SigmaStar SSD201/SSD202D, Spreadtrum SC7731/SC8830, STMicroelectronics STM32MP157
 	#       Cortex-A8 / r1p3: TI OMAP3530/AM3703
 	#       Cortex-A8 / r1p7: TI Sitara AM3517
 	#       Cortex-A8 / r2p2: Samsung Exynos 3110 (S5PC110)
@@ -5016,6 +5016,7 @@ GuessARMSoC() {
 	#      Cortex-A15 / r2p4: AnnapurnaLabs Alpine
 	#      Cortex-A15 / r3p2: MediaTek MT8135, Renesas R8A7790
 	#      Cortex-A15 / r3p3: Exynos 5430, HiSilicon Kirin 920/925/928, Nvidia Tegra K1 (Tegra124)
+	#      Cortex-A15 / r4p0: Allwinner A80
 	#      Cortex-A17 / r0p0: MediaTek MT5890/MT6595
 	#      Cortex-A17 / r0p1: Rockchip RK3288
 	#      Cortex-A35 / r0p1: Mediatek MT8167B/MT6799
@@ -6240,6 +6241,11 @@ GuessSoCbySignature() {
 					echo "Allwinner H3/H2+ or A33/R16"
 					;;
 			esac
+			;;
+		*A7r0p5*A7r0p5*A7r0p5*A7r0p5*A15r4p0*A15r4p0*A15r4p0*A15r4p0)
+			# Allwinner A80: 4 x Cortex-A7 / r0p5 + 4 x Cortex-A15 / r4p0 / swp half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpv4 idiva idivt
+			# GB4 reports stepping of big core: https://browser.geekbench.com/v4/cpu/16436341.gb4, /proc/cpuinfo of little: https://nitter.net/miniNodes/status/533125394686562304
+			echo "Allwinner A80"
 			;;
 		??A7r0p5??A7r0p5??A7r0p5??A7r0p5??A7r0p5??A7r0p5??A7r0p5??A7r0p5)
 			# Allwinner A83T, 8 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm

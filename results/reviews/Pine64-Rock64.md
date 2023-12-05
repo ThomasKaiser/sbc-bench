@@ -1,6 +1,6 @@
 # Pine64 Rock64
 
-Tested with sbc-bench v0.9.36 on Wed, 01 Mar 2023 16:39:28 +0000. Full info: [http://ix.io/4pBQ](http://ix.io/4pBQ)
+Tested with sbc-bench v0.9.58 on Fri, 01 Dec 2023 17:03:10 +0100. Full info: [http://sprunge.us/Ga0KBn](http://sprunge.us/Ga0KBn)
 
 ### General information:
 
@@ -14,62 +14,58 @@ Tested with sbc-bench v0.9.36 on Wed, 01 Mar 2023 16:39:28 +0000. Full info: [ht
       2        0        0      408    1512   Cortex-A53 / r0p4
       3        0        0      408    1512   Cortex-A53 / r0p4
 
-1982 KB available RAM
+1981 KB available RAM
 
 ### Governors/policies (performance vs. idle consumption):
 
 Original governor settings:
 
-    cpufreq-policy0: ondemand / 1296 MHz (conservative ondemand userspace powersave performance schedutil / 408 600 816 1008 1200 1296 1392 1512)
+    cpufreq-policy0: ondemand / 1512 MHz (conservative ondemand userspace powersave performance schedutil / 408 600 816 1008 1200 1296 1392 1512)
     ff300000.gpu: simple_ondemand / 200 MHz (powersave performance simple_ondemand / 200 300 400 500)
 
 Tuned governor settings:
 
-    cpufreq-policy0: performance / 1296 MHz
+    cpufreq-policy0: performance / 1512 MHz
     ff300000.gpu: performance / 500 MHz
 
 ### Clockspeeds (idle vs. heated up):
 
-Before at 34.5°C:
+Before at 35.9°C:
 
     cpu0 (Cortex-A53): OPP: 1512, Measured: 1509 
 
-After at 81.5°C (throttled):
+After at 59.5°C:
 
     cpu0 (Cortex-A53): OPP: 1512, Measured: 1509 
 
 ### Performance baseline
 
-  * memcpy: 1386.3 MB/s, memchr: 2430.2 MB/s, memset: 5913.0 MB/s
-  * 16M latency: 147.2 150.0 146.6 152.6 146.7 149.5 174.1 323.9 
-  * 7-zip MIPS (3 consecutive runs): 3999, 4005, 4000 (4000 avg), single-threaded: 1150
-  * `aes-256-cbc     117590.61k   314535.79k   533007.10k   655821.82k   703012.86k   705751.72k`
-  * `aes-256-cbc     117812.32k   314704.36k   533071.96k   655860.74k   703004.67k   706144.94k`
+  * memcpy: 1375.9 MB/s, memchr: 1971.1 MB/s, memset: 5882.1 MB/s
+  * 16M latency: 147.2 149.0 146.6 148.5 146.4 151.5 173.7 324.6 
+  * 128M latency: 163.5 168.1 161.4 168.4 162.9 167.6 211.2 344.4 
+  * 7-zip MIPS (3 consecutive runs): 3948, 3952, 3946 (3950 avg), single-threaded: 1131
+  * `aes-256-cbc     101125.50k   283286.23k   503031.38k   643702.78k   700467.88k   704064.17k`
+  * `aes-256-cbc     102851.00k   286153.66k   505707.01k   645017.60k   700882.94k   704615.77k`
 
 ### Storage devices:
 
-  * 14.4GB "Genesys Logic GL827L SD/MMC/MS Flash Card Reader" as /dev/sda: USB, Driver=usb-storage, 480Mbps
-  * 14.9GB "SanDisk SP16G" HS SD card as /dev/mmcblk0: date 07/2015, manfid/oemid: 0x000003/0x5344, hw/fw rev: 0x8/0x0
-  * 16MB SPI NOR flash, drivers in use: spi-nor/rockchip-spi
+  * 111.8GB "Transcend TS120GMTS420" SSD as /dev/sda [SATA 3.1, 6.0 Gb/s (current: 6.0 Gb/s)]: behind JMicron JMS578 SATA 6Gb/s bridge (152d:0578), 1% worn out, Driver=uas, 480Mbps (capable of 12Mbps, 480Mbps, 5Gbps), drive temp: 31°C
+  * 14.8GB "SanDisk SP16G" HS SD card as /dev/mmcblk0: date 07/2015, manfid/oemid: 0x000003/0x5344, hw/fw rev: 0x8/0x0
+  * Winbond W25Q128 16MB SPI NOR flash, drivers in use: spi-nor/rockchip-spi
 
 ### Swap configuration:
 
-  * /dev/zram0: 991.3M (0K used, lzo-rle, 4 streams, 4K data, 74B compressed, 12K total)
+  * /dev/zram0: 990.5M (0K used, lzo-rle, 4 streams, 4K data, 74B compressed, 12K total)
 
 ### Software versions:
 
-  * Ubuntu 20.04.3 LTS (focal) arm64
-  * Build scripts: https://github.com/armbian/build, 21.08.3, Rock 64, rockchip64, rockchip64
-  * Compiler: /usr/bin/gcc (Ubuntu 9.3.0-17ubuntu1~20.04) 9.3.0 / aarch64-linux-gnu
+  * Armbian 23.11.1 bookworm arm64
+  * Build scripts: https://github.com/armbian/build, 23.11.1, Rock 64, rockchip64, rockchip64
+  * Compiler: /usr/bin/gcc (Debian 12.2.0-14) 12.2.0 / aarch64-linux-gnu
+  * OpenSSL 3.0.11, built on 19 Sep 2023 (Library: OpenSSL 3.0.11 19 Sep 2023)    
 
 ### Kernel info:
 
-  * `/proc/cmdline: root=UUID=8ef0cd26-9dc8-4a3e-90e2-bb5f209a75aa rootwait rootfstype=ext4 console=ttyS2,1500000 console=tty1 consoleblank=0 loglevel=1 ubootpart=c945e319-01 usb-storage.quirks=0x2537:0x1066:u,0x2537:0x1068:u   cgroup_enable=cpuset cgroup_memory=1 cgroup_enable=memory swapaccount=1`
-  * Vulnerability Spectre v1:        Mitigation; __user pointer sanitization
-  * Kernel 5.10.63-rockchip64 / CONFIG_HZ=250
-
-Kernel 5.10.63 is not latest 5.10.170 LTS that was released on 2023-02-25.
-
-See https://endoflife.date/linux for details. It is somewhat likely that
-a lot of exploitable vulnerabilities exist for this kernel as well as many
-unfixed bugs.
+  * `/proc/cmdline: root=UUID=31ba9b53-4ed3-4748-b77f-abd1962b4b82 rootwait rootfstype=ext4 splash=verbose console=ttyS2,1500000 console=tty1 consoleblank=0 loglevel=1 ubootpart=1958fdf7-01 usb-storage.quirks=0x2537:0x1066:u,0x2537:0x1068:u   cgroup_enable=cpuset cgroup_memory=1 cgroup_enable=memory swapaccount=1`
+  * Vulnerability Spectre v1:           Mitigation; __user pointer sanitization
+  * Kernel 6.1.63-current-rockchip64 / CONFIG_HZ=250

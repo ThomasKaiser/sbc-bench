@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.9.58
+Version=0.9.59
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -320,7 +320,7 @@ UpdateMe() {
 	# Only try to update git projects if git is already installed
 	command -v git >/dev/null 2>&1 || exit 0
 	
-	for GitProject in mhz ramspeed tinymembench cpuminer-multi ; do
+	for GitProject in mhz ramspeed tinymembench cpuminer-multi cpufetch ; do
 		if [ -x "${InstallLocation}/${GitProject}" ]; then
 			if [ -r "${InstallLocation}/${GitProject}/.git/config" ]; then
 				GitURL="$(awk -F" = " '/url = / {print $2}' "${InstallLocation}/${GitProject}/.git/config")"
@@ -1572,7 +1572,11 @@ MonitorBoard() {
 	
 	if test -t 1; then
 		# when called from a terminal we print some system information first and insert
-		# empty line + header every 15 lines
+		# empty line + header every 15 lines. On x86 include cpufetch info if available
+		if [ -x "${InstallLocation}"/cpufetch/cpufetch -a "${CPUArchitecture}" = "x86_64" ]; then
+			CPUFetchInfo="$("${InstallLocation}"/cpufetch/cpufetch)"
+			[[ ${CPUFetchInfo} != *Unknown* ]] && echo -e "Information courtesy of cpufetch:\n${CPUFetchInfo}\n"
+		fi
 		PrintCPUInfo
 		SPACING=yes
 	else
@@ -2395,6 +2399,8 @@ BasicSetup() {
 	[ -r "${RK_NVMEM_FILE}" ] && RK_NVMEM="$(hexdump -C <"${RK_NVMEM_FILE}" 2>/dev/null | grep -E "52 4b |52 56 " | head -n1)"
 	AW_NVMEM_FILE="/sys/bus/nvmem/devices/sunxi-sid0/nvmem"
 	[ -r "${AW_NVMEM_FILE}" ] && AW_NVMEM="$(hexdump -C <"${AW_NVMEM_FILE}" 2>/dev/null | head -n1)"
+	CPUFetchInfo="$(GrabCPUFetchInfo)"
+	[[ ${CPUFetchInfo} != *Unknown* ]] && CPUFetchGuess="$(awk -F": " '/SoC:/ {print $2}' <<<"${CPUFetchInfo}" | sed "s/^[ \t]*//")"
 	CPUCores=$(awk -F" " '/^CPU...:/ {print $2}' <<<"${LSCPU}")
 	# Might not work with RISC-V on old kernels, see
 	# https://github.com/ThomasKaiser/sbc-bench/issues/46
@@ -2839,6 +2845,31 @@ InstallPrerequisits() {
 		fi
 	fi
 
+	# get/build/update cpufetch if not already there
+	if [ -x "${InstallLocation}"/cpufetch/cpufetch ]; then
+		cd "${InstallLocation}/cpufetch"
+		GitResult="$(git pull 2>/dev/null)"
+		if [[ ${GitResult} != *"up to date"* ]]; then
+			# always update cpufetch if something has changed on Github
+			echo -e "\x08\x08\x08, updating cpufetch...\c"
+			make >/dev/null 2>&1
+		fi
+	else
+		echo -e "\x08\x08\x08, cpufetch...\c"
+		cd "${InstallLocation}"
+		git clone https://github.com/Dr-Noob/cpufetch >/dev/null 2>&1
+		if [ $? -ne 0 ]; then
+			echo -e "\n\n${LRED}${BOLD}Temporary Github problem. Not able to download cpufetch. Please try again later.${NC}" >&2
+			exit 1
+		fi
+		cd cpufetch
+		make >/dev/null 2>&1
+		if [ ! -x "${InstallLocation}"/cpufetch/cpufetch ]; then
+			echo -e "${LRED}${BOLD}Not able to build necessary tools. Aborting.${NC}\nMost probably gcc and make packages are missing." >&2
+			exit 1
+		fi
+	fi
+
 	# if called with -s or with MODE=extensive we also use stockfish
 	if [ "${ExecuteStockfish}" = "yes" -o "X${MODE}" = "Xextensive" ]; then
 		InstallStockfish && DownloadNeuralNet
@@ -3033,7 +3064,7 @@ InitialMonitoring() {
 	if [ $? -eq 0 -a "X${ProcCPUFile}" = "X/proc/cpuinfo" ]; then
 		UploadScheme="f:1=<-"
 		UploadServer="ix.io"
-		UploadAnswer="$( (echo -e "/proc/cpuinfo ${Version}\n\n$(uname -a) / ${DeviceName}\n" ; cat /proc/cpuinfo ; echo -e "\n${CPUTopology}\n\n${CPUSignature} / ${GuessedSoC}$(cut -c9- <<<"${RK_NVMEM}")  ${AW_NVMEM:19:2}${AW_NVMEM:16:2}${AW_NVMEM:13:2}${AW_NVMEM:10:2} ${AW_NVMEM:31:2}${AW_NVMEM:28:2}${AW_NVMEM:25:2}${AW_NVMEM:22:2} ${AW_NVMEM:44:2}${AW_NVMEM:41:2}${AW_NVMEM:38:2}${AW_NVMEM:35:2} ${AW_NVMEM:56:2}${AW_NVMEM:53:2}${AW_NVMEM:50:2}${AW_NVMEM:47:2}\n\n${DTCompatible}\n\n${OPPTables}\n\n$(grep . /sys/devices/virtual/thermal/thermal_zone?/* 2>/dev/null)\n\n$(grep . /sys/class/hwmon/hwmon?/* 2>/dev/null)") 2>/dev/null | curl -s -F ${UploadScheme} ${UploadServer} 2>&1)"
+		UploadAnswer="$( (echo -e "/proc/cpuinfo ${Version}\n\n$(uname -a) / ${DeviceName}\n" ; cat /proc/cpuinfo ; echo -e "\n${CPUTopology}\n\n${CPUSignature} / ${GuessedSoC} / ${CPUFetchGuess}$(cut -c9- <<<"${RK_NVMEM}")  ${AW_NVMEM:19:2}${AW_NVMEM:16:2}${AW_NVMEM:13:2}${AW_NVMEM:10:2} ${AW_NVMEM:31:2}${AW_NVMEM:28:2}${AW_NVMEM:25:2}${AW_NVMEM:22:2} ${AW_NVMEM:44:2}${AW_NVMEM:41:2}${AW_NVMEM:38:2}${AW_NVMEM:35:2} ${AW_NVMEM:56:2}${AW_NVMEM:53:2}${AW_NVMEM:50:2}${AW_NVMEM:47:2}\n\n${DTCompatible}\n\n${OPPTables}\n\n$(grep . /sys/devices/virtual/thermal/thermal_zone?/* 2>/dev/null)\n\n$(grep . /sys/class/hwmon/hwmon?/* 2>/dev/null)") 2>/dev/null | curl -s -F ${UploadScheme} ${UploadServer} 2>&1)"
 		case "${UploadAnswer}" in
 			*ix.io*)
 				# everything's fine
@@ -4234,7 +4265,11 @@ LogEnvironment() {
 	if [ "X${GuessedSoC}" != "Xn/a" ]; then
 		echo -e "\nSoC guess: ${GuessedSoC}"
 	elif [ "X${CPUSignature}" != "X" ]; then
-		echo -e "\nSignature: ${CPUSignature}"
+		if [ "X${CPUFetchGuess}" != "X" ]; then
+			echo -e "\nSoC guess: ${CPUFetchGuess} (${CPUSignature})"
+		else
+			echo -e "\nSignature: ${CPUSignature}"
+		fi
 	else
 		echo ""
 	fi
@@ -5048,7 +5083,7 @@ GuessARMSoC() {
 	#   HiSilicon-A76 / r3p0: HiSilicon Kirin 810/990
 	#   HiSilicon-A76 / r3p1: HiSilicon Kirin 990
 	#      Cortex-A76 / r4p0: Allwinner A736/T736, Google Tensor G1, Rockchip RK3588/RK3588s, Unisoc UMS9620
-	#      Cortex-A76 / r4p1: Broadcom BCM2712/Muskoka
+	#      Cortex-A76 / r4p1: Amlogic S928X, Broadcom BCM2712/Muskoka
 	#      Cortex-A77 / r1p0: HiSilicon Kirin 9000, Qualcomm QRB5165 (Snapdragon 865)
 	#      Cortex-A78 / r1p0: MediaTek Genio 1200, Qualcomm SM8350 (Snapdragon 888)
 	#      Cortex-A78 / r1p1: Google Tensor G2
@@ -5699,8 +5734,12 @@ GuessARMSoC() {
 								ParseAmlSerial TL1 T962X2
 								;;
 							2f*)
-								# TM2: T962X3, T962E2
+								# TM2: T962X3, T962E2 (quad-core A55)
 								ParseAmlSerial TM2 T962X3/T962E2
+								;;
+							30*)
+								# C1
+								ParseAmlSerial C1 Unknown
 								;;
 							32??02*)
 								# SC2: S905X4: 32:b (2:2)
@@ -5710,8 +5749,12 @@ GuessARMSoC() {
 								# SC2: S905X4, S905C2
 								ParseAmlSerial SC2 S905X4/S905C2
 								;;
+							33*)
+								# C2
+								ParseAmlSerial C2 Unknown
+								;;
 							34*)
-								# T5: ?
+								# T5
 								ParseAmlSerial T5 Unknown
 								;;
 							35*)
@@ -5739,6 +5782,10 @@ GuessARMSoC() {
 								# T3: T965D4, T963D4, T982 (quad-core A55)
 								ParseAmlSerial T3 Unknown
 								;;
+							39*)
+								# P1: (8 x A55) https://tinyurl.com/ye8m9uf4
+								ParseAmlSerial P1 Unknown
+								;;
 							3a*)
 								# S4D: S805C3, S905C3, S905C3ENG (quad Cortex-A35): https://archive.md/4H6xM
 								# but quad-core A55 according to Amlogic 5.4 BSP kernel: tinyurl.com/r598z7aa
@@ -5750,8 +5797,20 @@ GuessARMSoC() {
 								# T5W: T962D4 (quad-core A55)
 								ParseAmlSerial T5W Unknown
 								;;
+							3c*)
+								# A5: A113X2 (quad-core A55)
+								ParseAmlSerial A5 Unknown
+								;;
+							3d*)
+								# C3
+								ParseAmlSerial C3 Unknown
+								;;
+							3e*)
+								# S5: S928X (4 x A55 + 1 x A76) https://tinyurl.com/mpwhcsua
+								ParseAmlSerial S5 Unknown
+								;;
 							*)
-								# C1/C2/T5/P1/S5 https://tinyurl.com/wwuwdef7
+								# https://tinyurl.com/wwuwdef7
 								ParseAmlSerial Unknown Unknown
 								;;
 						esac
@@ -6717,9 +6776,16 @@ GuessSoCbySignature() {
 			;;
 		0?A55r2p00?A55r2p00?A55r2p00?A55r2p00?A55r2p00?A55r2p00?A55r2p00?A55r2p0)
 			# Allwinner A523/A527/T523/T527/MR527, 8 x Cortex-A55 / r2p0 / at least 'aes pmull sha1 sha2' (https://browser.geekbench.com/v5/cpu/21564626)
+			# or Amlogic P1, 8 x Cortex-A55 / r2p0
 			case "${DTCompatible}" in
 				*a523*)
 					echo "Allwinner A523"
+					;;
+				*a527*)
+					echo "Allwinner A527"
+					;;
+				*t523*)
+					echo "Allwinner T523"
 					;;
 				*t527*)
 					echo "Allwinner T527"
@@ -6760,8 +6826,8 @@ GuessSoCbySignature() {
 			# The big cores are marketed/documented as Cortex-A76 by HiSilicon but instead of the usual ARM core ID 0x41/0xd0b they have 0x48/0xd40
 			echo "HiSilicon Kirin 810"
 			;;
-		*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A76r4p0*A76r4p0)
-			# Allwinner A736/T736, 6 x Cortex-A55 / r2p0 + 2 x Cortex-A76 / r4p0
+		*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A76r4p?*A76r4p?)
+			# Allwinner A736/T736, 6 x Cortex-A55 / r2p0 + 2 x Cortex-A76 / r4p?
 			grep -E -q 'allwinner|sun60i|a736|t736' <<<"${DTCompatible}" && echo "Allwinner A736/T736"
 			;;
 		*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A78*A78)
@@ -7749,8 +7815,8 @@ GuessSoCbySignature() {
 			# Loongson-3A6000 variants with more cores
 			[ "X${ModelName}" != "X" ] && echo "${ModelName}"
 			;;
-		*A55*A55*A55*A55*A76r?p?|*A76r?p?*A55*A55*A55*A55r?p?)
-			# Amlogic S928X, 4 x Cortex-A55 + 1 x Cortex-A76: https://browser.geekbench.com/v5/cpu/compare/19788026?baseline=20656779
+		*A55*A55*A55*A55*A76r4p1|*A76r4p1*A55*A55*A55*A55r?p?)
+			# Amlogic S928X, 4 x Cortex-A55 + 1 x Cortex-A76 / r4p1: https://browser.geekbench.com/v5/cpu/compare/19788026?baseline=20656779
 			echo "Amlogic S928X"
 			;;
 		*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A78r1p0*A78r1p0*A78r1p0*A78r1p0)
@@ -7924,6 +7990,30 @@ BegForContribution() {
 	EOF
 } # BegForContribution
 
+GrabCPUFetchInfo() {
+	if [ -x "${InstallLocation}"/cpufetch/cpufetch ]; then
+		echo -e "Information courtesy of cpufetch:\n"
+		CPUFetchOutput="$("${InstallLocation}"/cpufetch/cpufetch -s legacy --logo-short 2>/dev/null | sed "s,\x1B\[[0-9;]*[a-zA-Z],,g")"
+		case ${CPUFetchOutput} in
+			*SoC:*)
+				FirstLine="$(grep "SoC:" <<<"${CPUFetchOutput}")"
+				LogoArea=${FirstLine%%SoC:*}
+				;;
+			*Name:*)
+				FirstLine="$(grep "Name:" <<<"${CPUFetchOutput}")"
+				LogoArea=${FirstLine%%Name:*}
+				;;
+			*"Part Number:"*)
+				FirstLine="$(grep "Part Number:" <<<"${CPUFetchOutput}")"
+				LogoArea=${FirstLine%%Part*}
+				;;
+		esac
+		cut -c$((${#LogoArea} + 1))- <<<"${CPUFetchOutput}" | sed -e '/^$/d'
+	else
+		echo "Unknown"
+	fi
+} # GrabCPUFetchInfo
+
 ProvideReviewInfo() {
 	# This function tries to collect as much performance relevant information
 	# possible based on sbc-bench being now 5 years used on lots of devices.
@@ -8029,6 +8119,13 @@ ProvideReviewInfo() {
 	# Prepare device listing in Markdown friendly format
 	echo -e "# ${DeviceName:-$HostName}" >"${TempDir}/review"
 	echo -e "\nTested with sbc-bench v${Version} on $(date -R).\n\n### General information:\n" >>"${TempDir}/review"
+
+	# include cpufetch output if available
+	CPUFetchInfo="$(GrabCPUFetchInfo)"
+	if [[ ${CPUFetchInfo} != *Unknown* ]]; then
+		echo "${CPUFetchInfo}" | sed  -e 's/^/    /' >>"${TempDir}/review"
+		echo "    " >>"${TempDir}/review"
+	fi
 
 	# add info about CPU cores, if more than 2 CPU clusters add info about them and core types
 	if [ ${#ClusterConfig[@]} -gt 1 -a ${#ClusterConfigByCoreType[@]} -eq 1 ]; then
@@ -8625,7 +8722,7 @@ CheckKernelVersion() {
 			esac
 			;;
 		5.4.*)
-			# some SDKs/BSPs based on this version: Allwinner A64/D1/R528/T113/H5/H6/H616/H618, Amlogic A311D2 (T7), S805X2/S905Y4/S905W2 (S4), Exynos 5422
+			# some SDKs/BSPs based on this version: Allwinner A133/A64/D1/R528/T113/H5/H6/H616/H618, Amlogic A311D2 (T7), S805X2/S905Y4/S905W2 (S4), S928X (S5), Exynos 5422
 			case ${GuessedSoC} in
 				Allwinner*)
 					# highly unlikely that there's any Allwinner A64/H5/H6 out in the wild still running a _mainline_ 5.4 version
@@ -8692,7 +8789,12 @@ CheckKernelVersion() {
 			# New Amlogic SDK released with 5.15.78, supports at least T7, S4, SM1 and G12B.
 			# Kernel version 5.15.119 some images were using is the result of version string
 			# cosmetics over at ophub/flippy/unifreq
+			# Allwinner's Android 13 BSP also uses both 5.15.78 and 5.15.119
 			case ${GuessedSoC} in
+				Allwinner*)
+					# though there's a small chance users of flippy/unifreq kernels on older Allwinner SoCs are affected print BSP warning
+					PrintBSPWarning Allwinner
+					;;
 				*Amlogic*)
 					PrintBSPWarning Amlogic
 					;;
@@ -8716,6 +8818,7 @@ CheckKernelVersion() {
 					PrintBSPWarning MediaTek
 					;;
 				*S928X*)
+					# Android 14 BSP relies on 5.15
 					PrintBSPWarning Amlogic
 					;;
 			esac

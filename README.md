@@ -63,7 +63,7 @@ Unfortunately to adjust the cpufreq governor and to collect monitoring data exec
 
 ## Which tools are used and why?
 
-I chose [mhz](https://github.com/wtarreau/mhz), [tinymembench](https://github.com/nuumio/tinymembench), [ramlat](https://github.com/wtarreau/ramspeed), [cpuminer](https://github.com/tkinjo1985/cpuminer-multi.git), [stockfish](https://stockfishchess.org), [7-zip](https://www.7-cpu.com) and [OpenSSL](https://www.openssl.org)'s AES benchmarks for the following reasons:
+I chose [mhz](https://github.com/wtarreau/mhz), [tinymembench](https://github.com/nuumio/tinymembench), [ramlat](https://github.com/wtarreau/ramspeed), [cpuminer](https://github.com/tkinjo1985/cpuminer-multi.git), [stockfish](https://stockfishchess.org), [7-zip](https://www.7-cpu.com), [cpufetch](https://github.com/Dr-Noob/cpufetch) and [OpenSSL](https://www.openssl.org)'s AES benchmarks for the following reasons:
 
 ### [mhz](https://github.com/wtarreau/mhz)
 
@@ -112,6 +112,10 @@ On ARM SoCs CPU and GPU/VPU usually share memory access so it's worth a try to e
 ### [ramlat](https://github.com/wtarreau/ramspeed)
 
 Provides some insights about cache sizes/speed and memory latency/bandwidth. Stuff [like this](https://www.cnx-software.com/2021/03/04/rockchip-rk3566-tv-box-h96-max-android-11/#comment-581346).
+
+### [cpufetch](https://github.com/Dr-Noob/cpufetch)
+
+Helps identifying CPUs/SoCs and also provides detailed info about them in review mode.
 
 ### [cpuminer](https://github.com/tpruvot/cpuminer-multi)
 

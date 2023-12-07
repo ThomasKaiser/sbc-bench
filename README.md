@@ -44,7 +44,7 @@ The monitoring now also displays some hardware information when starting:
 
 The SoCs (system-on-chip) used on today's SBC are that performant that heat dissipation when running full load for some time becomes an issue. The strategies to deal with the problem differ by platform and kernel. We've seen CPU cores being shut down when overheating (Allwinner boards running with original Allwinner software), we know platforms where throttling works pretty well but by switching to a different kernel performance is trashed on exactly the same hardware. Sometimes it's pretty easy to spot what's going on, sometimes vendors cheat on us and it takes some efforts to get a clue what's really happening.
 
-This tool therefore focuses on a controlled environment and intensive monitoring running in the background and being added to results output. The tool returns with a brief performance overview (see screenshot above) but the real information will be uploaded to an online pasteboard service ([Rock 5B example](http://ix.io/41BH)). Without checking this detailed output numbers are worthless (since we always need to check what really happened).
+This tool therefore focuses on a controlled environment and intensive monitoring running in the background and being added to results output. The tool returns with a brief performance overview (see screenshot above) but the real information will be uploaded to an online pasteboard service ([Rock 5B example](results/41BH.txt)). Without checking this detailed output numbers are worthless (since we always need to check what really happened).
 
 ## Execution
 
@@ -74,7 +74,7 @@ This tool is not a benchmark but instead measures real CPU clockspeeds. This is 
     Cpufreq OPP: 1332    Measured: 1599 (1598.621/1598.759/1598.324) (+20%)
     Cpufreq OPP:  666    Measured:  799    (799.502/798.295/799.115) (+20%)
 
-We call `mhz` twice. At the begin of the benchmark with an idle and cold system walking through all cpufreq OPP and directly after the most demanding benchmark has finished with the device still under full load to see whether behaviour changes when SoC is overheated. This is on a [Thundercomm Dragonboard 845c](http://ix.io/4dJV). Prior to benchmark execution it looked like this:
+We call `mhz` twice. At the begin of the benchmark with an idle and cold system walking through all cpufreq OPP and directly after the most demanding benchmark has finished with the device still under full load to see whether behaviour changes when SoC is overheated. This is on a [Thundercomm Dragonboard 845c](results/4dJV.txt). Prior to benchmark execution it looked like this:
 
     Checking cpufreq OPP for cpu4-cpu7 (Qualcomm Kryo 3XX Gold):
 
@@ -170,9 +170,9 @@ A good example for the latter is Odroid XU4, three times tested with different k
 
 | Kernel / Compiler | 7-zip single | 7-zip multi | CPU utilisation compression | CPU utilisation decompression |
 | ----: | :----: |  :----: | :----: | :----: |
-| [Kernel 4.9 / GCC 6.3](http://ix.io/1iWL) | 1622 | 6370 | 64% | 78% |
-| [Kernel 4.14 / GCC 7.3](http://ix.io/1iLy) | 1633 | 7100 | 64% | 78% |
-| [Kernel 5.4 / GCC 9.3](http://ix.io/3GnC) | 1604 | 8980 | 94% | 84% |
+| [Kernel 4.9 / GCC 6.3](results/1iWL.txt) | 1622 | 6370 | 64% | 78% |
+| [Kernel 4.14 / GCC 7.3](results/1iLy.txt) | 1633 | 7100 | 64% | 78% |
+| [Kernel 5.4 / GCC 9.3](results/3GnC.txt) | 1604 | 8980 | 94% | 84% |
 
 Smells like a scheduler problem with kernel 4.x. Only more detailed tests with more kernel/GCC combinations or switching to [Active Benchmarking](https://www.brendangregg.com/activebenchmarking.html) could really tell.
 
@@ -209,7 +209,7 @@ Benchmarking a system that is otherwise busy will result in numbers without mean
 
 Of course this is not sufficient since background tasks might become active later or cron jobs result in some peak activity in between. As much such services as possible should be stopped prior to benchmark execution or in best case a rather minimal image should be used for testing. On the other hand `sbc-bench` can also easily be used to compare 'desktop' and 'minimal' images.
 
-But comparisons only make some sense if execution of the benchmark can be observed. That's what `sbc-bench`'s background monitoring is for that will be appended to detailed result list. See [this example for Rock64](http://ix.io/1izV). We can there look for the following problems:
+But comparisons only make some sense if execution of the benchmark can be observed. That's what `sbc-bench`'s background monitoring is for that will be appended to detailed result list. We can there look for the following problems:
 
 ### Swapping
 

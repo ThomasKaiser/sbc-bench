@@ -1,0 +1,652 @@
+sbc-bench v0.9.8 InnoComm i.MX8MM MOZART (Mon, 18 Jul 2022 23:23:37 +0000)
+
+/usr/bin/gcc (GCC) 7.3.0
+
+Uptime: 23:23:37 up 5 min,  1 user,  load average: 0.98, 0.46, 0.17,  65.0°C
+
+Linux 4.14.98-imx_4.14.98_2.0.0_ga+g1175b5961153 (imx8mmmozart) 	07/18/22 	_aarch64_	(4 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+          12.71    0.01    1.53    0.29    0.00   85.46
+
+Device             tps    kB_read/s    kB_wrtn/s    kB_dscd/s    kB_read    kB_wrtn    kB_dscd
+mmcblk0          12.20       418.75       297.42         0.00     136830      97184          0
+
+              total        used        free      shared  buff/cache   available
+Mem:           981M        245M        682M        8.7M         53M        661M
+Swap:            0B          0B          0B
+
+##########################################################################
+
+Checking cpufreq OPP (Cortex-A53):
+
+Cpufreq OPP: 1800    Measured: 1796 (1797.045/1796.545/1796.405)
+Cpufreq OPP: 1600    Measured: 1594 (1596.151/1594.495/1593.256)
+Cpufreq OPP: 1200    Measured: 1196 (1197.175/1196.412/1195.706)
+
+##########################################################################
+
+Executing benchmark on cpu0 (Cortex-A53):
+
+tinymembench v0.4.9 (simple benchmark for memory throughput and latency)
+
+==========================================================================
+== Memory bandwidth tests                                               ==
+==                                                                      ==
+== Note 1: 1MB = 1000000 bytes                                          ==
+== Note 2: Results for 'copy' tests show how many bytes can be          ==
+==         copied per second (adding together read and writen           ==
+==         bytes would have provided twice higher numbers)              ==
+== Note 3: 2-pass copy means that we are using a small temporary buffer ==
+==         to first fetch data into it, and only then write it to the   ==
+==         destination (source -> L1 cache, L1 cache -> destination)    ==
+== Note 4: If sample standard deviation exceeds 0.1%, it is shown in    ==
+==         brackets                                                     ==
+==========================================================================
+
+ C copy backwards                                     :   2047.3 MB/s (1.8%)
+ C copy backwards (32 byte blocks)                    :   2055.9 MB/s (1.8%)
+ C copy backwards (64 byte blocks)                    :   2057.0 MB/s (1.9%)
+ C copy                                               :   2050.3 MB/s (1.3%)
+ C copy prefetched (32 bytes step)                    :   1623.6 MB/s (0.7%)
+ C copy prefetched (64 bytes step)                    :   1798.4 MB/s (0.6%)
+ C 2-pass copy                                        :   1940.9 MB/s
+ C 2-pass copy prefetched (32 bytes step)             :   1425.6 MB/s
+ C 2-pass copy prefetched (64 bytes step)             :   1519.5 MB/s (0.7%)
+ C fill                                               :   9339.6 MB/s
+ C fill (shuffle within 16 byte blocks)               :   9346.9 MB/s
+ C fill (shuffle within 32 byte blocks)               :   9404.8 MB/s (0.2%)
+ C fill (shuffle within 64 byte blocks)               :   9336.6 MB/s
+ ---
+ standard memcpy                                      :   2170.9 MB/s (1.1%)
+ standard memset                                      :   9441.8 MB/s (0.5%)
+ ---
+ NEON LDP/STP copy                                    :   2145.8 MB/s (1.0%)
+ NEON LDP/STP copy pldl2strm (32 bytes step)          :   1583.6 MB/s (0.1%)
+ NEON LDP/STP copy pldl2strm (64 bytes step)          :   1939.1 MB/s
+ NEON LDP/STP copy pldl1keep (32 bytes step)          :   2525.3 MB/s
+ NEON LDP/STP copy pldl1keep (64 bytes step)          :   2529.4 MB/s (0.9%)
+ NEON LD1/ST1 copy                                    :   2179.2 MB/s (0.5%)
+ NEON STP fill                                        :   9507.3 MB/s (0.6%)
+ NEON STNP fill                                       :   9063.1 MB/s (0.3%)
+ ARM LDP/STP copy                                     :   2122.2 MB/s (0.6%)
+ ARM STP fill                                         :   9356.5 MB/s
+ ARM STNP fill                                        :   9058.6 MB/s (12.8%)
+
+==========================================================================
+== Framebuffer read tests.                                              ==
+==                                                                      ==
+== Many ARM devices use a part of the system memory as the framebuffer, ==
+== typically mapped as uncached but with write-combining enabled.       ==
+== Writes to such framebuffers are quite fast, but reads are much       ==
+== slower and very sensitive to the alignment and the selection of      ==
+== CPU instructions which are used for accessing memory.                ==
+==                                                                      ==
+== Many x86 systems allocate the framebuffer in the GPU memory,         ==
+== accessible for the CPU via a relatively slow PCI-E bus. Moreover,    ==
+== PCI-E is asymmetric and handles reads a lot worse than writes.       ==
+==                                                                      ==
+== If uncached framebuffer reads are reasonably fast (at least 100 MB/s ==
+== or preferably >300 MB/s), then using the shadow framebuffer layer    ==
+== is not necessary in Xorg DDX drivers, resulting in a nice overall    ==
+== performance improvement. For example, the xf86-video-fbturbo DDX     ==
+== uses this trick.                                                     ==
+==========================================================================
+
+ NEON LDP/STP copy (from framebuffer)                 :    281.4 MB/s
+ NEON LDP/STP 2-pass copy (from framebuffer)          :    274.1 MB/s
+ NEON LD1/ST1 copy (from framebuffer)                 :     73.4 MB/s
+ NEON LD1/ST1 2-pass copy (from framebuffer)          :     72.8 MB/s
+ ARM LDP/STP copy (from framebuffer)                  :    144.8 MB/s
+ ARM LDP/STP 2-pass copy (from framebuffer)           :    142.4 MB/s
+
+==========================================================================
+== Memory latency test                                                  ==
+==                                                                      ==
+== Average time is measured for random memory accesses in the buffers   ==
+== of different sizes. The larger is the buffer, the more significant   ==
+== are relative contributions of TLB, L1/L2 cache misses and SDRAM      ==
+== accesses. For extremely large buffer sizes we are expecting to see   ==
+== page table walk with several requests to SDRAM for almost every      ==
+== memory access (though 64MiB is not nearly large enough to experience ==
+== this effect to its fullest).                                         ==
+==                                                                      ==
+== Note 1: All the numbers are representing extra time, which needs to  ==
+==         be added to L1 cache latency. The cycle timings for L1 cache ==
+==         latency can be usually found in the processor documentation. ==
+== Note 2: Dual random read means that we are simultaneously performing ==
+==         two independent memory accesses at a time. In the case if    ==
+==         the memory subsystem can't handle multiple outstanding       ==
+==         requests, dual random read has the same timings as two       ==
+==         single reads performed one after another.                    ==
+==========================================================================
+
+block size : single random read / dual random read, [MADV_NOHUGEPAGE]
+      1024 :    0.0 ns          /     0.0 ns 
+      2048 :    0.0 ns          /     0.0 ns 
+      4096 :    0.0 ns          /     0.0 ns 
+      8192 :    0.0 ns          /     0.0 ns 
+     16384 :    0.0 ns          /     0.0 ns 
+     32768 :    0.0 ns          /     0.0 ns 
+     65536 :    3.5 ns          /     6.1 ns 
+    131072 :    5.4 ns          /     8.7 ns 
+    262144 :    6.4 ns          /     9.9 ns 
+    524288 :    7.3 ns          /    11.1 ns 
+   1048576 :   72.8 ns          /   112.7 ns 
+   2097152 :  108.8 ns          /   146.1 ns 
+   4194304 :  131.2 ns          /   161.8 ns 
+   8388608 :  143.1 ns          /   168.5 ns 
+  16777216 :  149.8 ns          /   172.6 ns 
+  33554432 :  153.8 ns          /   175.1 ns 
+  67108864 :  156.3 ns          /   176.8 ns 
+
+block size : single random read / dual random read, [MADV_HUGEPAGE]
+      1024 :    0.0 ns          /     0.0 ns 
+      2048 :    0.0 ns          /     0.0 ns 
+      4096 :    0.0 ns          /     0.0 ns 
+      8192 :    0.0 ns          /     0.0 ns 
+     16384 :    0.0 ns          /     0.0 ns 
+     32768 :    0.0 ns          /     0.0 ns 
+     65536 :    3.5 ns          /     6.1 ns 
+    131072 :    5.4 ns          /     8.7 ns 
+    262144 :    6.3 ns          /     9.9 ns 
+    524288 :    7.4 ns          /    11.1 ns 
+   1048576 :   72.8 ns          /   112.7 ns 
+   2097152 :  108.2 ns          /   145.5 ns 
+   4194304 :  126.3 ns          /   156.5 ns 
+   8388608 :  135.1 ns          /   160.4 ns 
+  16777216 :  139.6 ns          /   162.0 ns 
+  33554432 :  141.9 ns          /   162.7 ns 
+  67108864 :  143.1 ns          /   163.0 ns 
+
+##########################################################################
+
+Executing ramlat on cpu0 (Cortex-A53), results in ns:
+
+       size:  1x32  2x32  1x64  2x64 1xPTR 2xPTR 4xPTR 8xPTR
+         4k: 2.227 2.227 1.670 1.670 1.670 1.670 2.297 4.662 
+         8k: 2.227 2.227 1.671 1.670 1.672 1.670 2.298 4.663 
+        16k: 2.227 2.227 1.670 1.671 1.670 1.670 2.296 4.662 
+        32k: 2.235 2.231 1.681 1.680 1.677 1.674 2.300 4.669 
+        64k: 15.39 17.30 14.83 17.04 14.83 17.25 21.07 37.70 
+       128k: 18.02 19.84 17.49 19.28 17.50 19.44 22.56 43.33 
+       256k: 19.35 20.72 18.85 20.27 18.84 20.38 22.97 44.35 
+       512k: 20.67 21.62 19.98 21.14 19.85 21.51 23.61 45.05 
+      1024k: 132.7 139.3 140.9 139.8 145.2 139.1 173.4 317.5 
+      2048k: 152.6 152.3 150.2 150.4 150.2 151.7 169.6 327.4 
+      4096k: 152.3 152.5 150.5 150.4 150.4 150.0 172.8 327.2 
+      8192k: 152.2 152.3 150.6 150.3 150.5 150.2 168.7 326.9 
+     16384k: 153.2 152.0 150.5 150.4 150.6 150.1 168.8 326.8 
+
+##########################################################################
+
+Executing benchmark twice on cluster 0 (Cortex-A53)
+
+OpenSSL 1.0.2p, built on 14 Aug 2018
+type             16 bytes     64 bytes    256 bytes   1024 bytes   8192 bytes
+aes-128-cbc     231764.75k   614857.86k  1004960.77k  1255194.97k  1353258.33k
+aes-128-cbc     231737.50k   614280.53k  1004839.25k  1255074.13k  1353220.10k
+aes-192-cbc     214477.38k   526353.71k   804049.41k   960146.43k  1017678.51k
+aes-192-cbc     214478.68k   525304.38k   803952.64k   960062.81k  1017449.13k
+aes-256-cbc     205296.57k   471631.64k   688493.65k   799855.62k   839349.59k
+aes-256-cbc     204976.46k   474151.23k   688357.55k   799762.09k   839294.98k
+
+##########################################################################
+
+Executing benchmark single-threaded on cpu0 (Cortex-A53)
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,4 CPUs LE)
+
+LE
+CPU Freq:  1792  1785  1790  1794  1796  1794  1796  1796  1796
+
+RAM size:     981 MB,  # CPU hardware threads:   4
+RAM usage:    435 MB,  # Benchmark threads:      1
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:        936    99    919    911  |      19714   100   1689   1683
+23:        919    99    945    937  |      19337   100   1680   1674
+24:        909    99    986    978  |      18988   100   1673   1667
+25:        898    99   1035   1026  |      18655   100   1666   1660
+----------------------------------  | ------------------------------
+Avr:              99    971    963  |              100   1677   1671
+Tot:              99   1324   1317
+
+##########################################################################
+
+Executing benchmark 3 times multi-threaded on CPUs 0-3
+
+Compression: 
+Decompression: 
+Total: 
+
+##########################################################################
+
+Testing maximum cpufreq again, still under full load. System health now:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+23:38:03: 1800MHz  3.29  77%   0%  76%   0%   0%   0%  76.0°C
+
+Checking cpufreq OPP (Cortex-A53):
+
+Cpufreq OPP: 1800    Measured: 1796 (1796.645/1796.625/1796.145)
+
+##########################################################################
+
+Thermal source: /sys/devices/virtual/thermal/thermal_zone0/ (cpu-thermal)
+
+System health while running tinymembench:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+23:23:46: 1800MHz  0.98  14%   1%  13%   0%   0%   0%  65.0°C
+23:24:26: 1800MHz  1.03  25%   0%  24%   0%   0%   0%  69.0°C
+23:25:06: 1800MHz  1.02  25%   0%  24%   0%   0%   0%  71.0°C
+23:25:46: 1800MHz  1.01  25%   0%  24%   0%   0%   0%  71.0°C
+23:26:26: 1800MHz  1.00  25%   0%  24%   0%   0%   0%  73.0°C
+23:27:06: 1800MHz  1.00  25%   0%  24%   0%   0%   0%  69.0°C
+23:27:46: 1800MHz  1.00  25%   0%  24%   0%   0%   0%  66.0°C
+23:28:26: 1800MHz  1.00  25%   0%  24%   0%   0%   0%  66.0°C
+23:29:07: 1800MHz  1.00  25%   0%  24%   0%   0%   0%  65.0°C
+23:29:47: 1800MHz  1.00  25%   0%  24%   0%   0%   0%  65.0°C
+23:30:27: 1800MHz  1.00  25%   0%  24%   0%   0%   0%  64.0°C
+23:31:07: 1800MHz  1.00  25%   0%  24%   0%   0%   0%  64.0°C
+23:31:47: 1800MHz  1.00  25%   0%  24%   0%   0%   0%  64.0°C
+
+System health while running ramlat:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+23:31:52: 1800MHz  1.00  20%   0%  20%   0%   0%   0%  65.0°C
+23:31:55: 1800MHz  1.00  25%   0%  25%   0%   0%   0%  65.0°C
+23:31:58: 1800MHz  1.00  25%   0%  24%   0%   0%   0%  65.0°C
+23:32:01: 1800MHz  1.00  25%   0%  25%   0%   0%   0%  65.0°C
+23:32:04: 1800MHz  1.00  25%   0%  24%   0%   0%   0%  66.0°C
+23:32:07: 1800MHz  1.00  25%   0%  24%   0%   0%   0%  65.0°C
+23:32:10: 1800MHz  1.00  25%   0%  24%   0%   0%   0%  65.0°C
+23:32:13: 1800MHz  1.00  25%   0%  24%   0%   0%   0%  65.0°C
+23:32:16: 1800MHz  1.00  25%   0%  24%   0%   0%   0%  65.0°C
+
+System health while running OpenSSL benchmark:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+23:32:19: 1800MHz  1.00  21%   0%  20%   0%   0%   0%  65.0°C
+23:32:35: 1800MHz  1.00  25%   0%  24%   0%   0%   0%  66.0°C
+23:32:51: 1800MHz  1.00  25%   0%  24%   0%   0%   0%  66.0°C
+23:33:07: 1800MHz  1.08  25%   0%  24%   0%   0%   0%  66.0°C
+23:33:23: 1800MHz  1.06  25%   0%  24%   0%   0%   0%  67.0°C
+23:33:39: 1800MHz  1.05  25%   0%  24%   0%   0%   0%  66.0°C
+
+System health while running 7-zip single core benchmark:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+23:33:49: 1800MHz  1.04  21%   0%  20%   0%   0%   0%  67.0°C
+23:33:56: 1800MHz  1.04  25%   0%  24%   0%   0%   0%  66.0°C
+23:34:03: 1800MHz  1.10  25%   0%  24%   0%   0%   0%  66.0°C
+23:34:10: 1800MHz  1.10  25%   0%  24%   0%   0%   0%  66.0°C
+23:34:17: 1800MHz  1.08  25%   0%  24%   0%   0%   0%  66.0°C
+23:34:24: 1800MHz  1.07  25%   0%  24%   0%   0%   0%  66.0°C
+23:34:31: 1800MHz  1.06  25%   0%  24%   0%   0%   0%  66.0°C
+23:34:38: 1800MHz  1.06  25%   0%  24%   0%   0%   0%  66.0°C
+23:34:45: 1800MHz  1.05  25%   0%  24%   0%   0%   0%  66.0°C
+23:34:52: 1800MHz  1.04  25%   0%  24%   0%   0%   0%  66.0°C
+23:34:59: 1800MHz  1.04  25%   0%  24%   0%   0%   0%  65.0°C
+23:35:07: 1800MHz  1.03  25%   0%  24%   0%   0%   0%  66.0°C
+23:35:14: 1800MHz  1.03  25%   0%  24%   0%   0%   0%  66.0°C
+
+System health while running 7-zip multi core benchmark:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+23:35:16: 1800MHz  1.03  21%   0%  20%   0%   0%   0%  66.0°C
+23:35:31: 1800MHz  1.24  76%   0%  74%   0%   0%   0%  70.0°C
+23:35:46: 1800MHz  1.69  82%   0%  81%   0%   0%   0%  72.0°C
+23:36:01: 1800MHz  2.22  79%   0%  78%   0%   0%   0%  73.0°C
+23:36:16: 1800MHz  2.71  71%   2%  68%   0%   0%   0%  70.0°C
+23:36:31: 1800MHz  2.89  81%   0%  80%   0%   0%   0%  75.0°C
+23:36:46: 1800MHz  2.98  82%   0%  81%   0%   0%   0%  75.0°C
+23:37:01: 1800MHz  3.28  79%   0%  77%   0%   0%   0%  76.0°C
+23:37:17: 1800MHz  3.07  69%   1%  66%   0%   0%   0%  74.0°C
+23:37:33: 1800MHz  3.20  86%   0%  84%   0%   0%   0%  78.0°C
+23:37:48: 1800MHz  3.39  82%   0%  80%   0%   0%   0%  77.0°C
+23:38:03: 1800MHz  3.29  77%   0%  76%   0%   0%   0%  76.0°C
+
+##########################################################################
+
+dmesg output while running the benchmarks:
+
+[  710.583460] audit: type=1006 audit(1658187001.136:3): pid=6678 uid=0 old-auid=4294967295 auid=0 tty=(none) old-ses=4294967295 ses=2 res=1
+[ 1083.596773] 7za invoked oom-killer: gfp_mask=0x14201ca(GFP_HIGHUSER_MOVABLE|__GFP_COLD), nodemask=(null),  order=0, oom_score_adj=0
+[ 1083.608635] 7za cpuset=/ mems_allowed=0
+[ 1083.612515] CPU: 2 PID: 7519 Comm: 7za Tainted: G           O    4.14.98-imx_4.14.98_2.0.0_ga+g1175b5961153 #1
+[ 1083.622514] Hardware name: InnoComm i.MX8MM MOZART (DT)
+[ 1083.627737] Call trace:
+[ 1083.630190] [<ffff000008089cb8>] dump_backtrace+0x0/0x3c8
+[ 1083.635589] [<ffff00000808a094>] show_stack+0x14/0x20
+[ 1083.640641] [<ffff000008dc92c0>] dump_stack+0x9c/0xbc
+[ 1083.645694] [<ffff000008191978>] dump_header+0x90/0x1e8
+[ 1083.650918] [<ffff000008190b94>] oom_kill_process+0x2a4/0x5c8
+[ 1083.656664] [<ffff000008191550>] out_of_memory+0x198/0x4c0
+[ 1083.662149] [<ffff000008196e54>] __alloc_pages_nodemask+0xb04/0xb38
+[ 1083.668416] [<ffff0000081ea74c>] alloc_pages_current+0x7c/0xe8
+[ 1083.674248] [<ffff00000818cc58>] __page_cache_alloc+0x98/0xb8
+[ 1083.679993] [<ffff00000818e64c>] filemap_fault+0x474/0x608
+[ 1083.685479] [<ffff0000082c0100>] ext4_filemap_fault+0x30/0x50
+[ 1083.691224] [<ffff0000081c02c8>] __do_fault+0x30/0xd8
+[ 1083.696276] [<ffff0000081c6150>] __handle_mm_fault+0xaf0/0x1100
+[ 1083.702194] [<ffff0000081c688c>] handle_mm_fault+0x12c/0x1d8
+[ 1083.707853] [<ffff00000809c218>] do_page_fault+0x1a8/0x3e0
+[ 1083.713338] [<ffff00000809c48c>] do_translation_fault+0x3c/0x48
+[ 1083.719257] [<ffff000008081310>] do_mem_abort+0x40/0xa0
+[ 1083.724481] [<ffff0000080813f8>] do_el0_ia_bp_hardening+0x38/0x98
+[ 1083.730573] Exception stack(0xffff00001b74bec0 to 0xffff00001b74c000)
+[ 1083.737013] bec0: 0000ffff98336cd4 0000000000000000 000000000352db25 0000ffff87edbb34
+[ 1083.744841] bee0: 0000ffff769ad010 000000000152db24 0000000002000001 000000000000001e
+[ 1083.752669] bf00: 0000000000000007 0000000002a59be8 000000000352db25 0000000000000035
+[ 1083.760498] bf20: 0000000000000006 0000000000000007 0000ffff81313fb0 0000ffff81313fb4
+[ 1083.768326] bf40: 0000ffff98336cd4 0000000000000035 0000000000000000 0000000012196fc8
+[ 1083.776154] bf60: 0000ffff98336cc0 000000000152db24 000000000352db25 0000000000000050
+[ 1083.783983] bf80: 0000000000000050 000000000152ead0 0000ffff98336b80 0000000000000020
+[ 1083.791811] bfa0: 0000000000003fc0 0000ffffa71e97a0 0000000000408f24 0000ffffa71e9790
+[ 1083.799639] bfc0: 0000000000408f24 0000000020000000 00000000121974e0 00000000ffffffff
+[ 1083.807468] bfe0: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+[ 1083.815296] [<ffff000008083688>] el0_ia+0x18/0x1c
+[ 1083.820034] Mem-Info:
+[ 1083.822323] active_anon:191642 inactive_anon:2218 isolated_anon:0
+                active_file:24 inactive_file:35 isolated_file:0
+                unevictable:0 dirty:0 writeback:0 unstable:0
+                slab_reclaimable:2506 slab_unreclaimable:5832
+                mapped:211 shmem:2241 pagetables:837 bounce:0
+                free:7472 free_pcp:60 free_cma:428
+[ 1083.854927] Node 0 active_anon:766568kB inactive_anon:8872kB active_file:120kB inactive_file:92kB unevictable:0kB isolated(anon):0kB isolated(file):0kB mapped:848kB dirty:0kB writeback:0kB shmem:8964kB shmem_thp: 0kB shmem_pmdmapped: 0kB anon_thp: 499712kB writeback_tmp:0kB unstable:0kB all_unreclaimable? no
+[ 1083.882214] Node 0 DMA free:29888kB min:30000kB low:37500kB high:45000kB active_anon:766568kB inactive_anon:8872kB active_file:136kB inactive_file:72kB unevictable:0kB writepending:0kB present:1044480kB managed:1004704kB mlocked:0kB kernel_stack:2064kB pagetables:3348kB bounce:0kB free_pcp:120kB local_pcp:0kB free_cma:1712kB
+[ 1083.910981] lowmem_reserve[]: 0 0 0
+[ 1083.914479] Node 0 DMA: 194*4kB (UMEC) 164*8kB (UME) 130*16kB (UME) 98*32kB (UEC) 47*64kB (UMEC) 16*128kB (UME) 7*256kB (UME) 9*512kB (UMEC) 11*1024kB (UM) 0*2048kB 0*4096kB 0*8192kB 0*16384kB 0*32768kB = 30024kB
+[ 1083.933369] Node 0 hugepages_total=0 hugepages_free=0 hugepages_surp=0 hugepages_size=2048kB
+[ 1083.941836] 2303 total pagecache pages
+[ 1083.945600] 0 pages in swap cache
+[ 1083.948934] Swap cache stats: add 0, delete 0, find 0/0
+[ 1083.954178] Free swap  = 0kB
+[ 1083.957073] Total swap = 0kB
+[ 1083.959954] 261120 pages RAM
+[ 1083.962849] 0 pages HighMem/MovableOnly
+[ 1083.966705] 9944 pages reserved
+[ 1083.969860] 81920 pages cma reserved
+[ 1083.973445] [ pid ]   uid  tgid total_vm      rss nr_ptes nr_pmds swapents oom_score_adj name
+[ 1083.982012] [ 2382]     0  2382     3363      283       9       4        0             0 systemd-journal
+[ 1083.991522] [ 3358]   997  3358    20008       73       9       3        0             0 systemd-timesyn
+[ 1084.001022] [ 3361]     0  3361     3455      287       7       3        0         -1000 systemd-udevd
+[ 1084.010344] [ 3376]   996  3376     1502       76       6       4        0             0 systemd-network
+[ 1084.019841] [ 3402]     0  3402      851      144       5       3        0             0 crond
+[ 1084.028471] [ 3418]   992  3418     1197       82       6       3        0             0 avahi-daemon
+[ 1084.037704] [ 3420]   998  3420      831       61       5       3        0             0 rpcbind
+[ 1084.046509] [ 3425]     0  3425      619       34       5       3        0             0 atd
+[ 1084.054966] [ 3434]     0  3434      510       32       5       3        0             0 syslogd
+[ 1084.063773] [ 3435]   992  3435     1166       66       6       3        0             0 avahi-daemon
+[ 1084.073026] [ 3442]   999  3442     1120       90       5       3        0          -900 dbus-daemon
+[ 1084.082179] [ 3458]     0  3458     1677      148       6       3        0             0 ofonod
+[ 1084.090905] [ 3460]     0  3460     1456      117       6       4        0             0 systemd-logind
+[ 1084.100323] [ 3508]     0  3508     2460      161       9       3        0             0 connmand
+[ 1084.109212] [ 3551]     0  3551     2093     1672       8       3        0             0 klogd
+[ 1084.117840] [ 3553]   993  3553      772      142       5       3        0             0 rpc.statd
+[ 1084.126815] [ 3561]   989  3561    18145      157       9       4        0             0 ntpd
+[ 1084.135357] [ 3567]     0  3567     2432      107       8       3        0             0 wpa_supplicant
+[ 1084.144766] [ 3575]     0  3575     1172      109       6       3        0             0 login
+[ 1084.153394] [ 3576]     0  3576      579       32       5       3        0             0 agetty
+[ 1084.162113] [ 3577]     0  3577     1124       57       6       3        0             0 weston-launch
+[ 1084.171436] [ 3579]     0  3579     1842      157       7       3        0             0 systemd
+[ 1084.180239] [ 3580]     0  3580     2496      429       9       4        0             0 (sd-pam)
+[ 1084.189127] [ 3584]     0  3584     2629      423      10       4        0             0 (sd-pam)
+[ 1084.198014] [ 3585]     0  3585    59003      488      84       3        0             0 weston
+[ 1084.206728] [ 3587]     0  3587    80700     4498      94       3        0             0 weston-keyboard
+[ 1084.216223] [ 3588]     0  3588    80597     4354      94       4        0             0 weston-desktop-
+[ 1084.225717] [ 3601]     0  3601     1158      340       5       3        0             0 sh
+[ 1084.234082] [ 3603]     0  3603     1217      541       6       3        0             0 sbc-bench.sh
+[ 1084.243320] [ 7410]     0  7410     1217      518       6       3        0             0 bash
+[ 1084.251859] [ 7412]     0  7412   307048   175697     367       4        0             0 7za
+[ 1084.260313] [ 7541]     0  7541      451       16       5       3        0             0 sleep
+[ 1084.268938] Out of memory: Kill process 7412 (7za) score 679 or sacrifice child
+[ 1084.276296] Killed process 7412 (7za) total-vm:1228192kB, anon-rss:702788kB, file-rss:0kB, shmem-rss:0kB
+[ 1084.336434] oom_reaper: reaped process 7412 (7za), now anon-rss:0kB, file-rss:0kB, shmem-rss:0kB
+[ 1084.376871] audit: type=1701 audit(1658187374.933:4): auid=4294967295 uid=0 gid=0 ses=4294967295 pid=7412 comm="7za" exe="/usr/local/bin/7za" sig=7 res=1
+[ 1142.376730] 7za invoked oom-killer: gfp_mask=0x14201ca(GFP_HIGHUSER_MOVABLE|__GFP_COLD), nodemask=(null),  order=0, oom_score_adj=0
+[ 1142.388578] 7za cpuset=/ mems_allowed=0
+[ 1142.392445] CPU: 3 PID: 7633 Comm: 7za Tainted: G           O    4.14.98-imx_4.14.98_2.0.0_ga+g1175b5961153 #1
+[ 1142.402444] Hardware name: InnoComm i.MX8MM MOZART (DT)
+[ 1142.407667] Call trace:
+[ 1142.410120] [<ffff000008089cb8>] dump_backtrace+0x0/0x3c8
+[ 1142.415520] [<ffff00000808a094>] show_stack+0x14/0x20
+[ 1142.420572] [<ffff000008dc92c0>] dump_stack+0x9c/0xbc
+[ 1142.425625] [<ffff000008191978>] dump_header+0x90/0x1e8
+[ 1142.430849] [<ffff000008190b94>] oom_kill_process+0x2a4/0x5c8
+[ 1142.436594] [<ffff000008191550>] out_of_memory+0x198/0x4c0
+[ 1142.442080] [<ffff000008196e54>] __alloc_pages_nodemask+0xb04/0xb38
+[ 1142.448347] [<ffff0000081ea74c>] alloc_pages_current+0x7c/0xe8
+[ 1142.454180] [<ffff00000818cc58>] __page_cache_alloc+0x98/0xb8
+[ 1142.459925] [<ffff00000818e64c>] filemap_fault+0x474/0x608
+[ 1142.465411] [<ffff0000082c0100>] ext4_filemap_fault+0x30/0x50
+[ 1142.471156] [<ffff0000081c02c8>] __do_fault+0x30/0xd8
+[ 1142.476207] [<ffff0000081c6150>] __handle_mm_fault+0xaf0/0x1100
+[ 1142.482126] [<ffff0000081c688c>] handle_mm_fault+0x12c/0x1d8
+[ 1142.487785] [<ffff00000809c218>] do_page_fault+0x1a8/0x3e0
+[ 1142.493270] [<ffff00000809c48c>] do_translation_fault+0x3c/0x48
+[ 1142.499188] [<ffff000008081310>] do_mem_abort+0x40/0xa0
+[ 1142.504412] [<ffff0000080813f8>] do_el0_ia_bp_hardening+0x38/0x98
+[ 1142.510504] Exception stack(0xffff00001b81bec0 to 0xffff00001b81c000)
+[ 1142.516943] bec0: 0000000032e21088 0000000000000001 0000000000000000 0000000000000000
+[ 1142.524772] bee0: 0000000000000000 0000000000000000 0000000000000001 00000000000002a9
+[ 1142.532600] bf00: 0000ffff9c011760 000000000000006e 000000000000ceb4 000000000000cdb4
+[ 1142.540428] bf20: 000000000000d0b4 0000000000000012 0000000000000002 0000000000000006
+[ 1142.548257] bf40: 00000000005441a0 0000ffffb23b6950 0000000032e210b0 0000000000000001
+[ 1142.556085] bf60: 0000000032e21048 0000000032e21058 0000000000000003 0000ffffaedae83c
+[ 1142.563913] bf80: 0000000032e20d90 000000000000000c 0000000032e53bd0 0000000000000004
+[ 1142.571741] bfa0: 0000000000000020 0000ffffaedae620 0000000000418dd0 0000ffffaedae620
+[ 1142.579570] bfc0: 0000ffffb23b6950 0000000020000000 0000000032e210b4 00000000ffffffff
+[ 1142.587398] bfe0: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+[ 1142.595226] [<ffff000008083688>] el0_ia+0x18/0x1c
+[ 1142.599945] Mem-Info:
+[ 1142.602236] active_anon:191602 inactive_anon:2218 isolated_anon:0
+                active_file:59 inactive_file:19 isolated_file:0
+                unevictable:0 dirty:0 writeback:0 unstable:0
+                slab_reclaimable:2496 slab_unreclaimable:5837
+                mapped:232 shmem:2250 pagetables:834 bounce:0
+                free:7480 free_pcp:0 free_cma:428
+[ 1142.634756] Node 0 active_anon:766408kB inactive_anon:8872kB active_file:192kB inactive_file:100kB unevictable:0kB isolated(anon):0kB isolated(file):0kB mapped:928kB dirty:0kB writeback:0kB shmem:9000kB shmem_thp: 0kB shmem_pmdmapped: 0kB anon_thp: 499712kB writeback_tmp:0kB unstable:0kB all_unreclaimable? no
+[ 1142.662133] Node 0 DMA free:29920kB min:30000kB low:37500kB high:45000kB active_anon:766408kB inactive_anon:8872kB active_file:228kB inactive_file:308kB unevictable:0kB writepending:0kB present:1044480kB managed:1004704kB mlocked:0kB kernel_stack:2064kB pagetables:3336kB bounce:0kB free_pcp:0kB local_pcp:0kB free_cma:1712kB
+[ 1142.690811] lowmem_reserve[]: 0 0 0
+[ 1142.694311] Node 0 DMA: 223*4kB (UMEC) 170*8kB (UME) 136*16kB (UME) 100*32kB (UMEC) 47*64kB (UMEC) 16*128kB (UME) 7*256kB (UME) 9*512kB (UMEC) 11*1024kB (UM) 0*2048kB 0*4096kB 0*8192kB 0*16384kB 0*32768kB = 30348kB
+[ 1142.713375] Node 0 hugepages_total=0 hugepages_free=0 hugepages_surp=0 hugepages_size=2048kB
+[ 1142.721820] 2315 total pagecache pages
+[ 1142.725576] 0 pages in swap cache
+[ 1142.728897] Swap cache stats: add 0, delete 0, find 0/0
+[ 1142.734129] Free swap  = 0kB
+[ 1142.737017] Total swap = 0kB
+[ 1142.739895] 261120 pages RAM
+[ 1142.742783] 0 pages HighMem/MovableOnly
+[ 1142.746625] 9944 pages reserved
+[ 1142.749772] 81920 pages cma reserved
+[ 1142.753354] [ pid ]   uid  tgid total_vm      rss nr_ptes nr_pmds swapents oom_score_adj name
+[ 1142.761912] [ 2382]     0  2382     3363      287       9       4        0             0 systemd-journal
+[ 1142.771403] [ 3358]   997  3358    20008       73       9       3        0             0 systemd-timesyn
+[ 1142.780891] [ 3361]     0  3361     3455      285       7       3        0         -1000 systemd-udevd
+[ 1142.790207] [ 3376]   996  3376     1502       76       6       4        0             0 systemd-network
+[ 1142.799696] [ 3402]     0  3402      851      142       5       3        0             0 crond
+[ 1142.808317] [ 3418]   992  3418     1197       82       6       3        0             0 avahi-daemon
+[ 1142.817545] [ 3420]   998  3420      831       61       5       3        0             0 rpcbind
+[ 1142.826339] [ 3425]     0  3425      619       34       5       3        0             0 atd
+[ 1142.834785] [ 3434]     0  3434      510       31       5       3        0             0 syslogd
+[ 1142.843579] [ 3435]   992  3435     1166       66       6       3        0             0 avahi-daemon
+[ 1142.852807] [ 3442]   999  3442     1120       90       5       3        0          -900 dbus-daemon
+[ 1142.861948] [ 3458]     0  3458     1677      148       6       3        0             0 ofonod
+[ 1142.870655] [ 3460]     0  3460     1456      117       6       4        0             0 systemd-logind
+[ 1142.880058] [ 3508]     0  3508     2460      161       9       3        0             0 connmand
+[ 1142.888951] [ 3551]     0  3551     2093     1672       8       3        0             0 klogd
+[ 1142.897572] [ 3553]   993  3553      772      142       5       3        0             0 rpc.statd
+[ 1142.906539] [ 3561]   989  3561    18145      157       9       4        0             0 ntpd
+[ 1142.915090] [ 3567]     0  3567     2432      107       8       3        0             0 wpa_supplicant
+[ 1142.924507] [ 3575]     0  3575     1172      109       6       3        0             0 login
+[ 1142.933133] [ 3576]     0  3576      579       32       5       3        0             0 agetty
+[ 1142.941853] [ 3577]     0  3577     1124       57       6       3        0             0 weston-launch
+[ 1142.951186] [ 3579]     0  3579     1842      157       7       3        0             0 systemd
+[ 1142.960010] [ 3580]     0  3580     2496      429       9       4        0             0 (sd-pam)
+[ 1142.968895] [ 3584]     0  3584     2629      423      10       4        0             0 (sd-pam)
+[ 1142.977776] [ 3585]     0  3585    59003      533      84       3        0             0 weston
+[ 1142.986498] [ 3587]     0  3587    80700     4498      94       3        0             0 weston-keyboard
+[ 1142.996004] [ 3588]     0  3588    80597     4408      94       4        0             0 weston-desktop-
+[ 1143.005502] [ 3601]     0  3601     1158      340       5       3        0             0 sh
+[ 1143.013870] [ 3603]     0  3603     1217      541       6       3        0             0 sbc-bench.sh
+[ 1143.023107] [ 7410]     0  7410     1217      518       6       3        0             0 bash
+[ 1143.031645] [ 7542]     0  7542   307048   175672     365       4        0             0 7za
+[ 1143.040096] [ 7658]     0  7658      451       16       4       3        0             0 sleep
+[ 1143.048727] Out of memory: Kill process 7542 (7za) score 679 or sacrifice child
+[ 1143.056064] Killed process 7542 (7za) total-vm:1228192kB, anon-rss:702688kB, file-rss:0kB, shmem-rss:0kB
+[ 1143.068373] audit: type=1701 audit(1658187433.625:5): auid=4294967295 uid=0 gid=0 ses=4294967295 pid=7542 comm="7za" exe="/usr/local/bin/7za" sig=7 res=1
+[ 1143.115666] oom_reaper: reaped process 7542 (7za), now anon-rss:0kB, file-rss:0kB, shmem-rss:0kB
+[ 1143.148822] audit: type=1701 audit(1658187433.705:6): auid=4294967295 uid=0 gid=0 ses=4294967295 pid=7542 comm="7za" exe="/usr/local/bin/7za" sig=7 res=1
+[ 1201.183730] 7za invoked oom-killer: gfp_mask=0x14080c0(GFP_KERNEL|__GFP_ZERO), nodemask=(null),  order=0, oom_score_adj=0
+[ 1201.194739] 7za cpuset=/ mems_allowed=0
+[ 1201.198637] CPU: 0 PID: 7757 Comm: 7za Tainted: G           O    4.14.98-imx_4.14.98_2.0.0_ga+g1175b5961153 #1
+[ 1201.208636] Hardware name: InnoComm i.MX8MM MOZART (DT)
+[ 1201.213859] Call trace:
+[ 1201.216313] [<ffff000008089cb8>] dump_backtrace+0x0/0x3c8
+[ 1201.221712] [<ffff00000808a094>] show_stack+0x14/0x20
+[ 1201.226765] [<ffff000008dc92c0>] dump_stack+0x9c/0xbc
+[ 1201.231817] [<ffff000008191978>] dump_header+0x90/0x1e8
+[ 1201.237042] [<ffff000008190b94>] oom_kill_process+0x2a4/0x5c8
+[ 1201.242787] [<ffff000008191550>] out_of_memory+0x198/0x4c0
+[ 1201.248273] [<ffff000008196e54>] __alloc_pages_nodemask+0xb04/0xb38
+[ 1201.254540] [<ffff0000081ea74c>] alloc_pages_current+0x7c/0xe8
+[ 1201.260372] [<ffff0000081c17c4>] __pte_alloc+0x24/0x110
+[ 1201.265597] [<ffff0000081c6624>] __handle_mm_fault+0xfc4/0x1100
+[ 1201.271515] [<ffff0000081c688c>] handle_mm_fault+0x12c/0x1d8
+[ 1201.277175] [<ffff00000809c218>] do_page_fault+0x1a8/0x3e0
+[ 1201.282659] [<ffff00000809c48c>] do_translation_fault+0x3c/0x48
+[ 1201.288578] [<ffff000008081310>] do_mem_abort+0x40/0xa0
+[ 1201.293801] Exception stack(0xffff00001b90bec0 to 0xffff00001b90c000)
+[ 1201.300241] bec0: 0000000000000020 000000000335c98e 000000000350bbff 0000ffff860cbc0e
+[ 1201.308069] bee0: 0000ffff719a2010 000000000150bbfe 0000000002000001 0000000000000020
+[ 1201.315898] bf00: 0000000000000000 00000000026b931a 00000000000000e3 000000000000002f
+[ 1201.323726] bf20: 0000000000000000 0000000000000000 0000ffff7b486c78 0000ffff7c200000
+[ 1201.331554] bf40: 00000000000000e3 000000000000002f 0000000000000000 0000ffff8c1f6148
+[ 1201.339382] bf60: 0000000000000003 000000000150bbfe 000000000350bbff 0000000000003d71
+[ 1201.347211] bf80: 0000000000003d71 000000000150caf2 0000ffff8c1e6b80 0000000000000020
+[ 1201.355039] bfa0: 0000000000003fc0 0000ffffa5b59770 0000ffff7c200004 0000ffffa5b59770
+[ 1201.362867] bfc0: 00000000004075e8 0000000080000000 000000001920140c 00000000ffffffff
+[ 1201.370695] bfe0: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+[ 1201.378523] [<ffff00000808366c>] el0_da+0x20/0x24
+[ 1201.383277] Mem-Info:
+[ 1201.385669] active_anon:191247 inactive_anon:2218 isolated_anon:0
+                active_file:68 inactive_file:85 isolated_file:0
+                unevictable:0 dirty:0 writeback:0 unstable:0
+                slab_reclaimable:2495 slab_unreclaimable:5833
+                mapped:247 shmem:2258 pagetables:835 bounce:0
+                free:7721 free_pcp:62 free_cma:428
+[ 1201.418383] Node 0 active_anon:765188kB inactive_anon:8872kB active_file:484kB inactive_file:424kB unevictable:0kB isolated(anon):0kB isolated(file):0kB mapped:1096kB dirty:0kB writeback:0kB shmem:9032kB shmem_thp: 0kB shmem_pmdmapped: 0kB anon_thp: 497664kB writeback_tmp:0kB unstable:0kB all_unreclaimable? no
+[ 1201.445946] Node 0 DMA free:30184kB min:30000kB low:37500kB high:45000kB active_anon:765592kB inactive_anon:8872kB active_file:296kB inactive_file:664kB unevictable:0kB writepending:0kB present:1044480kB managed:1004704kB mlocked:0kB kernel_stack:2048kB pagetables:3340kB bounce:0kB free_pcp:80kB local_pcp:0kB free_cma:1712kB
+[ 1201.474741] lowmem_reserve[]: 0 0 0
+[ 1201.478261] Node 0 DMA: 240*4kB (UEC) 132*8kB (UE) 139*16kB (UME) 96*32kB (UMEC) 44*64kB (UEC) 16*128kB (UME) 8*256kB (UME) 9*512kB (UMEC) 11*1024kB (UM) 0*2048kB 0*4096kB 0*8192kB 0*16384kB 0*32768kB = 30096kB
+[ 1201.497011] Node 0 hugepages_total=0 hugepages_free=0 hugepages_surp=0 hugepages_size=2048kB
+[ 1201.505480] 2560 total pagecache pages
+[ 1201.509263] 0 pages in swap cache
+[ 1201.512604] Swap cache stats: add 0, delete 0, find 0/0
+[ 1201.517851] Free swap  = 0kB
+[ 1201.520757] Total swap = 0kB
+[ 1201.523650] 261120 pages RAM
+[ 1201.526558] 0 pages HighMem/MovableOnly
+[ 1201.530422] 9944 pages reserved
+[ 1201.533588] 81920 pages cma reserved
+[ 1201.537186] [ pid ]   uid  tgid total_vm      rss nr_ptes nr_pmds swapents oom_score_adj name
+[ 1201.545772] [ 2382]     0  2382     3363      302       9       4        0             0 systemd-journal
+[ 1201.555287] [ 3358]   997  3358    20008       88       9       3        0             0 systemd-timesyn
+[ 1201.564799] [ 3361]     0  3361     3455      285       7       3        0         -1000 systemd-udevd
+[ 1201.574131] [ 3376]   996  3376     1502       76       6       4        0             0 systemd-network
+[ 1201.583647] [ 3402]     0  3402      851      142       5       3        0             0 crond
+[ 1201.592280] [ 3418]   992  3418     1197       82       6       3        0             0 avahi-daemon
+[ 1201.601527] [ 3420]   998  3420      831       61       5       3        0             0 rpcbind
+[ 1201.610334] [ 3425]     0  3425      619       34       5       3        0             0 atd
+[ 1201.618802] [ 3434]     0  3434      510       31       5       3        0             0 syslogd
+[ 1201.627615] [ 3435]   992  3435     1166       66       6       3        0             0 avahi-daemon
+[ 1201.636866] [ 3442]   999  3442     1120       90       5       3        0          -900 dbus-daemon
+[ 1201.646032] [ 3458]     0  3458     1677      148       6       3        0             0 ofonod
+[ 1201.654758] [ 3460]     0  3460     1456      115       6       4        0             0 systemd-logind
+[ 1201.664176] [ 3508]     0  3508     2460      161       9       3        0             0 connmand
+[ 1201.673074] [ 3551]     0  3551     2093     1672       8       3        0             0 klogd
+[ 1201.681711] [ 3553]   993  3553      772      142       5       3        0             0 rpc.statd
+[ 1201.690731] [ 3561]   989  3561    18145      157       9       4        0             0 ntpd
+[ 1201.699288] [ 3567]     0  3567     2432      107       8       3        0             0 wpa_supplicant
+[ 1201.708733] [ 3575]     0  3575     1172      109       6       3        0             0 login
+[ 1201.717371] [ 3576]     0  3576      579       32       5       3        0             0 agetty
+[ 1201.726103] [ 3577]     0  3577     1124       57       6       3        0             0 weston-launch
+[ 1201.735444] [ 3579]     0  3579     1842      157       7       3        0             0 systemd
+[ 1201.744258] [ 3580]     0  3580     2496      429       9       4        0             0 (sd-pam)
+[ 1201.753152] [ 3584]     0  3584     2629      423      10       4        0             0 (sd-pam)
+[ 1201.762072] [ 3585]     0  3585    59003      533      84       3        0             0 weston
+[ 1201.770802] [ 3587]     0  3587    80700     4498      94       3        0             0 weston-keyboard
+[ 1201.780312] [ 3588]     0  3588    80597     4408      94       4        0             0 weston-desktop-
+[ 1201.789819] [ 3601]     0  3601     1158      340       5       3        0             0 sh
+[ 1201.798254] [ 3603]     0  3603     1217      539       6       3        0             0 sbc-bench.sh
+[ 1201.807517] [ 7410]     0  7410     1217      518       6       3        0             0 bash
+[ 1201.816070] [ 7661]     0  7661   307048   175403     365       4        0             0 7za
+[ 1201.824526] [ 7777]     0  7777      451       15       5       3        0             0 sleep
+[ 1201.833166] Out of memory: Kill process 7661 (7za) score 678 or sacrifice child
+[ 1201.840542] Killed process 7661 (7za) total-vm:1228192kB, anon-rss:701612kB, file-rss:0kB, shmem-rss:0kB
+[ 1201.850468] audit: type=1701 audit(1658187492.405:7): auid=4294967295 uid=0 gid=0 ses=4294967295 pid=7661 comm="7za" exe="/usr/local/bin/7za" sig=7 res=1
+[ 1201.901759] oom_reaper: reaped process 7661 (7za), now anon-rss:0kB, file-rss:0kB, shmem-rss:0kB
+[ 1201.940611] audit: type=1701 audit(1658187492.497:8): auid=4294967295 uid=0 gid=0 ses=4294967295 pid=7661 comm="7za" exe="/usr/local/bin/7za" sig=7 res=1
+
+##########################################################################
+
+Linux 4.14.98-imx_4.14.98_2.0.0_ga+g1175b5961153 (imx8mmmozart) 	07/18/22 	_aarch64_	(4 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+          29.20    0.02    0.84    0.12    0.00   69.82
+
+Device             tps    kB_read/s    kB_wrtn/s    kB_dscd/s    kB_read    kB_wrtn    kB_dscd
+mmcblk0           4.76       175.36        80.80         0.00     211294      97356          0
+
+              total        used        free      shared  buff/cache   available
+Mem:           981M        245M        705M        8.9M         30M        671M
+Swap:            0B          0B          0B
+
+CPU sysfs topology (clusters, cpufreq members, clockspeeds)
+                 cpufreq   min    max
+ CPU    cluster  policy   speed  speed   core type
+  0        0        0     1200    1800   Cortex-A53 / r0p4
+  1        0        0     1200    1800   Cortex-A53 / r0p4
+  2        0        0     1200    1800   Cortex-A53 / r0p4
+  3        0        0     1200    1800   Cortex-A53 / r0p4
+
+Architecture:        aarch64
+CPU op-mode(s):      32-bit, 64-bit
+Byte Order:          Little Endian
+CPU(s):              4
+On-line CPU(s) list: 0-3
+Thread(s) per core:  1
+Core(s) per socket:  4
+Socket(s):           1
+NUMA node(s):        1
+Vendor ID:           ARM
+Model:               4
+Model name:          Cortex-A53
+Stepping:            r0p4
+CPU max MHz:         1800.0000
+CPU min MHz:         1200.0000
+BogoMIPS:            16.00
+NUMA node0 CPU(s):   0-3
+Flags:               fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
+
+SoC guess: NXP i.MX8M
+DT compat: icom,imx8mm-mozart
+           fsl,imx8mm
+ Compiler: /usr/bin/gcc (GCC) 7.3.0 / aarch64-poky-linux
+ Userland: aarch64
+   Kernel: 4.14.98-imx_4.14.98_2.0.0_ga+g1175b5961153/aarch64
+           CONFIG_HZ=250
+           CONFIG_HZ_250=y
+           CONFIG_PREEMPT=y
+           CONFIG_PREEMPT_COUNT=y
+           CONFIG_PREEMPT_NOTIFIERS=y
+           CONFIG_PREEMPT_RCU=y
+
+| InnoComm i.MX8MM MOZART | 1800 MHz | 4.14 | NXP i.MX Release Distro 4.14-sumo (sumo) arm64/aarch64 | 0 | 231750 | 0 | 2170 | 9440 | - |

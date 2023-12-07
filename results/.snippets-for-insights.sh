@@ -42,7 +42,7 @@ CPUUtilization7ZIP() {
 				fi
 				SoCName="$(awk -F": " '/^SoC guess/ {print $2}' "${file}")"
 				[ "X${SoCName}" = "X" ] || Title="$(cut -f1 -d' ' <<<"${Title}") ${SoCName}"
-				echo -e "| [${Title}](http://ix.io/${file%.*}) | ${CPUs} | ${SinglePercentageComp} | ${SinglePercentageDecomp} | ${MultiPercentageComp} | ${MultiPercentageDecomp} |"
+				echo -e "| [${Title}](${file}) | ${CPUs} | ${SinglePercentageComp} | ${SinglePercentageDecomp} | ${MultiPercentageComp} | ${MultiPercentageDecomp} |"
 				;;
 		esac
 	done

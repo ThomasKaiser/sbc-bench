@@ -2764,9 +2764,18 @@ InstallPrerequisits() {
 		add-apt-repository -y universe >/dev/null 2>&1
 		${MissingPackages} >/dev/null 2>&1
 		if [ $? -eq 100 ]; then
-			# if apt cache is too outdated then update and try again
-			echo -e "\x08\x08 updating APT cache...\c"
-			apt update >/dev/null 2>&1
+			# apt cache might be too outdated so update and try again
+			echo -e "\x08\x08 Updating APT cache...\c"
+			AptMessage="$(apt update 2>&1)"
+			MissingPubKeys="$(tr "N" "\n" <<<"${AptMessage}" | awk -F" " '/^O_PUBKEY/ {print $2}' | sort | uniq | tr "\n" " ")"
+			if [ "X${MissingPubKeys}" != "X" ]; then
+				# try to add missing public keys and retry (Ubuntu's key server also has Debian keys)
+				echo -e "\x08\x08 Try to add missing public keys ${MissingPubKeys}...\c"
+				apt-key adv --keyserver keyserver.ubuntu.com --recv-keys ${MissingPubKeys} >/dev/null 2>&1
+				echo -e "\x08\x08 Updating APT cache again...\c"
+				apt update >/dev/null 2>&1
+				echo -e "\x08\x08 Installing packages...\c"
+			fi
 			${MissingPackages} >/dev/null 2>&1
 		fi
 	fi

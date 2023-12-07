@@ -55,105 +55,105 @@ Crawling through [sbc-bench results collection](../Results.md) comparing +70 dif
 | ARM core | MHz | aes-256-cbc | score/mhz |
 | :----: | ----:  | :----:  | :----:  |
 | Cortex-A35 | | | |
-| [PX30](http://ix.io/4IT1) | 1235 | 268860 | 218 |
-| [RK3308](http://ix.io/4sNe) | 1300 | 282030 | 217 |
-| [S905Y4](http://ix.io/4bbv) | 2000 | 436550 | 218 |
+| [PX30](4IT1.txt) | 1235 | 268860 | 218 |
+| [RK3308](4sNe.txt) | 1300 | 282030 | 217 |
+| [S905Y4](4bbv.txt) | 2000 | 436550 | 218 |
 | Apple Firestorm | | | |
-| [M1 Pro](http://ix.io/443N) | 3030 | 1064110 | 351 |
+| [M1 Pro](443N.txt) | 3030 | 1064110 | 351 |
 | Cortex-A57 | | | |
-| [Jetson Nano](http://ix.io/1I4j) | 1430 | 513700 | 359 |
-| [Nintendo Switch](http://ix.io/1Rnj) | 1780| 642670 | 361 |
-| [Jetson Nano](http://ix.io/3Ufc) | 2000 | 717500 | 358 |
-| [Opteron A1100](http://ix.io/4Kqn) | 2000 | 720710 | 360 |
-| [Nintendo Switch](http://ix.io/3Di2) | 2090 | 746680 | 357 |
+| [Jetson Nano](1I4j.txt) | 1430 | 513700 | 359 |
+| [Nintendo Switch](1Rnj.txt) | 1780| 642670 | 361 |
+| [Jetson Nano](3Ufc.txt) | 2000 | 717500 | 358 |
+| [Opteron A1100](4Kqn.txt) | 2000 | 720710 | 360 |
+| [Nintendo Switch](3Di2.txt) | 2090 | 746680 | 357 |
 | FTC663 | | | |
-| [Phytium D2000](http://ix.io/3Sl9) | 2300 | 828520 | 360 |
-| [Phytium FT-2000](http://ix.io/4ioj) | 2600 | 936740 | 360 |
+| [Phytium D2000](3Sl9.txt) | 2300 | 828520 | 360 |
+| [Phytium FT-2000](4ioj.txt) | 2600 | 936740 | 360 |
 | Carmel | | | |
-| [Jetson Xavier NX](http://ix.io/3YWp) | 1890 | 706280 | 374 |
+| [Jetson Xavier NX](3YWp.txt) | 1890 | 706280 | 374 |
 | Apple Icestorm/Avalanche | | | |
-| [M1 Pro](http://ix.io/443N) | 2060 | 784430 | 381 |
-| [M2 Pro](http://ix.io/4sp4) | 3500 | 1320470 | 377 |
+| [M1 Pro](443N.txt) | 2060 | 784430 | 381 |
+| [M2 Pro](4sp4.txt) | 3500 | 1320470 | 377 |
 | Qualcomm Kryo 3XX Gold | | | |
-| [Snapdragon 845](http://ix.io/4dJV) | 2705 | 1059800 | 392 |
+| [Snapdragon 845](4dJV.txt) | 2705 | 1059800 | 392 |
 | Cortex-A53 | | | |
-| [Armada 3700LP](http://ix.io/1kt2) | 790 | 368330 | 466 |
-| [S912](http://ix.io/1iJ7) | 1000 | 466780 | 466 |
-| [Allwinner A64](http://ix.io/1tJg) | 1050 | 491590 | 468 |
-| [RK3328](http://ix.io/1iGW) | 1290 | 601200 | 466 |
-| [Allwinner H5](http://ix.io/2kTH) | 1370 | 637980 | 465 |
-| [RK3328](http://ix.io/1iFx) | 1380 | 644200 | 467 |
-| [S5P6818](http://ix.io/3GmP) (64-bit) | 1400 | 653770 | 466 |
-| [S5P6818](http://ix.io/1iyp) (32-bit) | 1400 | 651000 | 465 |
-| [RTD1395](http://ix.io/1Dt1) | 1400 | 651460 | 465 |
-| [S905X](http://ix.io/3QLN) | 1410 | 659460 | 467 |
-| [S912](http://ix.io/1iJ7) | 1420 | 659603 | 464 |
-| [i.MX8M Quad](http://ix.io/27FC) | 1500 | 695540 | 463 |
-| [Allwinner H618](http://ix.io/4CPF) | 1510 | 705330 | 468 |
-| [RK3399](http://ix.io/3Q2q) | 1510 | 706041 | 468 |
-| [S905Y2](http://ix.io/3JCm) | 1800 | 838360 | 465 |
-| [i.MX8M Quad](http://ix.io/44Lq) | 1800 | 839321 | 466 |
-| [RK3399](http://ix.io/2ICt) | 1800| 839360 | 466 |
-| [Allwinner H6](http://ix.io/26Ph) | 1800 | 839870 | 466 |
-| [Allwinner H616](http://ix.io/4bSf) | 1800 | 840275 | 467 |
-| [RK3528](http://ix.io/4I93) | 2000 | 933630 | 467 |
-| [A311D](http://ix.io/3VfL) | 2010 | 940425 | 467 |
-| [A311D2](http://ix.io/3Wq0) | 2010 | 941040 | 468 |
+| [Armada 3700LP](1kt2.txt) | 790 | 368330 | 466 |
+| [S912](1iJ7.txt) | 1000 | 466780 | 466 |
+| [Allwinner A64](1tJg.txt) | 1050 | 491590 | 468 |
+| [RK3328](1iGW.txt) | 1290 | 601200 | 466 |
+| [Allwinner H5](2kTH.txt) | 1370 | 637980 | 465 |
+| [RK3328](1iFx.txt) | 1380 | 644200 | 467 |
+| [S5P6818](3GmP.txt) (64-bit.txt) | 1400 | 652554 | 466 |
+| [S5P6818](1iyp.txt) (32-bit.txt) | 1400 | 651000 | 465 |
+| [RTD1395](1Dt1.txt) | 1400 | 651460 | 465 |
+| [S905X](3QLN.txt) | 1410 | 659460 | 467 |
+| [S912](1iJ7.txt) | 1420 | 659603 | 464 |
+| [i.MX8M Quad](27FC.txt) | 1500 | 695540 | 463 |
+| [Allwinner H618](4CPF.txt) | 1510 | 705330 | 468 |
+| [RK3399](3Q2q.txt) | 1510 | 706041 | 468 |
+| [S905Y2](3JCm.txt) | 1800 | 838360 | 465 |
+| [i.MX8M Quad](44Lq.txt) | 1800 | 839321 | 466 |
+| [RK3399](2ICt.txt) | 1800| 839360 | 466 |
+| [Allwinner H6](26Ph.txt) | 1800 | 839870 | 466 |
+| [Allwinner H616](4bSf.txt) | 1800 | 840275 | 467 |
+| [RK3528](4I93.txt) | 2000 | 933630 | 467 |
+| [A311D](3VfL.txt) | 2010 | 940425 | 467 |
+| [A311D2](3Wq0.txt) | 2010 | 941040 | 468 |
 | Cortex-A55 | | | |
-| [RK3588](http://ix.io/3XzI) | 915 | 427750 | 467 |
-| [RK3566](http://ix.io/45X1) | 1750 |  818550 | 467 |
-| [Snapdragon 845](http://ix.io/4dJV) | 1760 | 824640 | 469 |
-| [RK3588s](http://ix.io/3XTA) | 1780 | 830640 | 467 |
-| [QRB5165](http://ix.io/49kx) | 1790 | 837220 | 468 |
-| [Snapdragon 7c](http://ix.io/4xEW) | 1800 | 840140 | 467 |
-| [RK3566](http://ix.io/3rUb) | 1810 | 845490 | 469 |
-| [RK3588s](http://ix.io/3XYo) | 1815 | 846760 | 467 |
-| [Snapdragon 835](http://ix.io/4fdD) | 1900 | 883330 | 465 |
-| [S905X3](http://ix.io/3Vdt) | 1908 | 890730 | 466 |
-| [RK3568](http://ix.io/3Ug9) | 1930 | 898610 | 465 |
-| [RK3568](http://ix.io/3UXa) | 1950 | 911730 | 467 |
-| [Genio 1200](http://ix.io/4Kvg) | 2000 | 935000 | 468 |
-| [UMS9620](http://ix.io/4yFl) | 2000 | 936310 | 468 |
-| [S905X3](http://ix.io/2kaS) | 2010 | 941590 | 468 |
-| [S905X3](http://ix.io/3TQ2) | 2100 | 981940 | 467 |
+| [RK3588](3XzI.txt) | 915 | 427750 | 467 |
+| [RK3566](45X1.txt) | 1750 |  818550 | 467 |
+| [Snapdragon 845](4dJV.txt) | 1760 | 824640 | 469 |
+| [RK3588s](3XTA.txt) | 1780 | 830640 | 467 |
+| [QRB5165](49kx.txt) | 1790 | 837220 | 468 |
+| [Snapdragon 7c](4xEW.txt) | 1800 | 840140 | 467 |
+| [RK3566](3rUb.txt) | 1810 | 845490 | 469 |
+| [RK3588s](3XYo.txt) | 1815 | 846760 | 467 |
+| [Snapdragon 835](4fdD.txt) | 1900 | 883330 | 465 |
+| [S905X3](3Vdt.txt) | 1908 | 890730 | 466 |
+| [RK3568](3Ug9.txt) | 1930 | 898610 | 465 |
+| [RK3568](3UXa.txt) | 1950 | 911730 | 467 |
+| [Genio 1200](4Kvg.txt) | 2000 | 935000 | 468 |
+| [UMS9620](4yFl.txt) | 2000 | 936310 | 468 |
+| [S905X3](2kaS.txt) | 2010 | 941590 | 468 |
+| [S905X3](3TQ2.txt) | 2100 | 981940 | 467 |
 | Cortex-A72 | | | |
-| [Armada 8040](http://ix.io/4zcm) | 1600 | 909420 | 568 |
-| [RK3399](http://ix.io/1iWU) | 1800 | 1023600 | 568 |
-| [LX2160A](http://ix.io/1ET3) | 1900 | 1079480 | 568 |
-| [TI J721E](http://ix.io/4DLw) | 2000 | 1130390 | 565 |
-| [LX2160A](http://ix.io/4ju5) | 2000 | 1136690 | 568 |
-| [RK3399](http://ix.io/2yIx) | 2010 | 1144950 | 569 |
-| [RK3399](http://ix.io/2ICt) | 2088 | 1184306 | 567 |
-| [LX2160A](http://ix.io/3Y4f) | 2200 | 1251710 | 569 |
-| [Amazon a1.xlarge](http://ix.io/2iFY) | 2300 | 1297960 | 564 |
+| [Armada 8040](4zcm.txt) | 1600 | 909420 | 568 |
+| [RK3399](1iWU.txt) | 1800 | 1023600 | 568 |
+| [LX2160A](1ET3.txt) | 1900 | 1079480 | 568 |
+| [TI J721E](4DLw.txt) | 2000 | 1130390 | 565 |
+| [LX2160A](4ju5.txt) | 2000 | 1136690 | 568 |
+| [RK3399](2yIx.txt) | 2010 | 1144950 | 569 |
+| [RK3399](2ICt.txt) | 2088 | 1184306 | 567 |
+| [LX2160A](3Y4f.txt) | 2200 | 1251710 | 569 |
+| [Amazon a1.xlarge](2iFY.txt) | 2300 | 1297960 | 564 |
 | Cortex-A73 | | | |
-| [S922X](http://ix.io/1BsF) | 1800 | 1024680 | 569 |
-| [S922X](http://ix.io/3MuT) | 1900 | 1085350 | 571 |
-| [A311D2](http://ix.io/3Wq0) | 2200 | 1252070 | 569 |
-| [A311D](http://ix.io/3VfL) | 2400 | 1365900 | 569 |
+| [S922X](1BsF.txt) | 1800 | 1024680 | 569 |
+| [S922X](3MuT.txt) | 1900 | 1085350 | 571 |
+| [A311D2](3Wq0.txt) | 2200 | 1252070 | 569 |
+| [A311D](3VfL.txt) | 2400 | 1365900 | 569 |
 | Cortex-A76 | | | |
-| [RK3588](http://ix.io/3XzI) | 985 | 560200 | 569 |
-| [UMS9620](http://ix.io/4yFl) | 2210 | 1258230 | 569 |
-| [RK3588s](http://ix.io/3XYo) | 2330 | 1325370 | 569 |
-| [BCM2712](http://ix.io/4HDw) | 2400 | 1367990 | 570 |
-| [Snapdragon 7c](http://ix.io/4xEW) | 2550 | 1454480 | 570 |
-| [BCM2712](http://ix.io/4I1w) | 3000 | 1710050 | 570 |
+| [RK3588](3XzI.txt) | 985 | 560200 | 569 |
+| [UMS9620](4yFl.txt) | 2210 | 1258230 | 569 |
+| [RK3588s](3XYo.txt) | 2330 | 1325370 | 569 |
+| [BCM2712](4HDw.txt) | 2400 | 1367990 | 570 |
+| [Snapdragon 7c](4xEW.txt) | 2550 | 1454480 | 570 |
+| [BCM2712](4I1w.txt) | 3000 | 1710050 | 570 |
 | Cortex-A77 | | | |
-| [QRB5165](http://ix.io/49kx) | 2410 | 1348440 | 560 |
-| [QRB5165](http://ix.io/49kx) | 2840 | 1598490 | 563 |
+| [QRB5165](49kx.txt) | 2410 | 1348440 | 560 |
+| [QRB5165](49kx.txt) | 2840 | 1598490 | 563 |
 | Cortex-A78/A78C/A78AE | | | |
-| [NVIDIA Orin](http://ix.io/4Ebd) | 1500 | 850750 | 567 |
-| [Genio 1200](http://ix.io/4Kvg) | 2200 | 1240850 | 564 |
-| [NVIDIA Orin](http://ix.io/4ax9) | 2200 | 1242940 | 565 |
-| [Snapdragon 8cx Gen 3](http://ix.io/4xwT) | 2420 | 1365680 | 564 |
+| [NVIDIA Orin](4Ebd.txt) | 1500 | 850750 | 567 |
+| [Genio 1200](4Kvg.txt) | 2200 | 1240850 | 564 |
+| [NVIDIA Orin](4ax9.txt) | 2200 | 1242940 | 565 |
+| [Snapdragon 8cx Gen 3](4xwT.txt) | 2420 | 1365680 | 564 |
 | Cortex-X1C | | | |
-| [Snapdragon 8cx Gen 3](http://ix.io/4xwT) | 2990 | 1686160 | 564 |
+| [Snapdragon 8cx Gen 3](4xwT.txt) | 2990 | 1686160 | 564 |
 | Qualcomm Falkor V1 | | | |
-| [Snapdragon 835](http://ix.io/4fea) | 2360 | 1342240 | 569 |
+| [Snapdragon 835](4fea.txt) | 2360 | 1342240 | 569 |
 | Neoverse-N1 | | | |
-| [Amazon m6g.8xlarge](http://ix.io/2FrG) | 2500 | 1424770 | 570 |
-| [Ampere Altra Q80](http://ix.io/4zkJ) | 2600 | 1482190 | 570 |
-| [Ampere Altra M96](http://ix.io/4zGI) | 2800 | 1596110 | 570 |
-| [Ampere Altra Max](http://ix.io/4kiu) | 3000 | 1710010 | 570 |
+| [Amazon m6g.8xlarge](2FrG.txt) | 2500 | 1424770 | 570 |
+| [Ampere Altra Q80](4zkJ.txt) | 2600 | 1482190 | 570 |
+| [Ampere Altra M96](4zGI.txt) | 2800 | 1596110 | 570 |
+| [Ampere Altra Max](4kiu.txt) | 3000 | 1710010 | 570 |
 | Cortex-A510 | | | |
-| [Snapdragon 8 Gen1](http://ix.io/4pgq) | 1515 | 1405500 | 928 |
+| [Snapdragon 8 Gen1](4pgq.txt) | 1515 | 1405500 | 928 |

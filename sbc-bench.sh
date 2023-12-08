@@ -2172,13 +2172,13 @@ Getx86ClusterDetails() {
 			echo "Sunny Cove" >"${TempDir}/Pcores"
 			[ ${HT} -eq 1 ] && echo "0 2" || echo "0 1"
 			;;
-		i9-13900K|i9-13900KF|i9-13900F|i9-13900T|i9-13900HX|i9-13950HX|i9-13980HX|i9-13900|i9-13900TE|i9-13900E|i9-14900K|i9-14900KF)
+		i9-13900K|i9-13900KF|i9-13900F|i9-13900T|i9-13900HX|i9-13950HX|i9-13980HX|i9-13900|i9-13900TE|i9-13900E|i9-14900K|i9-14900KF|i9-14900|i9-14900HX)
 			# Raptor Lake, 8/16 cores, 32 threads
 			echo "Gracemont" >"${TempDir}/Ecores"
 			echo "Raptor Cove" >"${TempDir}/Pcores"
 			[ ${HT} -eq 1 ] && echo "0 16" || echo "0 8"
 			;;
-		i7-13850HX|i7-14700K|i7-14700KF)
+		i7-13850HX|i7-14700K|i7-14700KF|i7-14700|i7-14700F|i7-14700HX)
 			# Raptor Lake, 8/12 cores, 28 threads
 			echo "Gracemont" >"${TempDir}/Ecores"
 			echo "Raptor Cove" >"${TempDir}/Pcores"
@@ -2208,7 +2208,7 @@ Getx86ClusterDetails() {
 			echo "Golden Cove" >"${TempDir}/Pcores"
 			[ ${HT} -eq 1 ] && echo "0 12" || echo "0 6"
 			;;
-		i9-13900HK|i7-13700H|i5-13600K|i5-13600KF|i5-13500|i9-13905H|i9-13900HK|i9-13900H|i7-13800H|i7-1370P|i7-13700H|i7-13705H|i7-13650HX|i5-13500HX|i5-13600HX|i7-1370PE|i7-13800HE|i5-13500T|i5-13500E|i5-13500TE|i5-13500|i5-13600|i5-13600T|i5-14600K|i5-14600KF)
+		i9-13900HK|i7-13700H|i5-13600K|i5-13600KF|i5-13500|i9-13905H|i9-13900HK|i9-13900H|i7-13800H|i7-1370P|i7-13700H|i7-13705H|i7-13650HX|i5-13500HX|i5-13600HX|i7-1370PE|i7-13800HE|i5-13500T|i5-13500E|i5-13500TE|i5-13500|i5-13600|i5-13600T|i5-14600K|i5-14600KF|i5-14500|i5-14500HX)
 			# Raptor Lake, 6/8 cores, 20 threads
 			echo "Gracemont" >"${TempDir}/Ecores"
 			echo "Raptor Cove" >"${TempDir}/Pcores"
@@ -2244,10 +2244,16 @@ Getx86ClusterDetails() {
 			echo "Golden Cove" >"${TempDir}/Pcores"
 			[ ${HT} -eq 1 ] && echo "0 12" || echo "0 6"
 			;;
-		i5-13400|i5-13400F|i7-13620H|i5-13450HX|i5-13400|i5-13400E|i5-13400T)
+		i5-13400|i5-13400F|i7-13620H|i5-13450HX|i5-13400|i5-13400E|i5-13400T|i5-14400|i5-14400F)
 			# Raptor Lake, 6/4 cores, 16 threads
 			echo "Gracemont" >"${TempDir}/Ecores"
 			echo "Raptor Cove" >"${TempDir}/Pcores"
+			[ ${HT} -eq 1 ] && echo "0 12" || echo "0 6"
+			;;
+		*"Ultra 7 155H"*|*"Ultra 7 165H"*|*"Ultra 9 185H"*)
+			# Meteor Lake, 6/10 cores, 22 threads
+			echo "Crestmont" >"${TempDir}/Ecores"
+			echo "Redwood Cove" >"${TempDir}/Pcores"
 			[ ${HT} -eq 1 ] && echo "0 12" || echo "0 6"
 			;;
 		i5-12450HX|i5-12450H|i3-12300HL|i3-1220PE|i3-12300HE)
@@ -2262,6 +2268,12 @@ Getx86ClusterDetails() {
 			echo "Raptor Cove" >"${TempDir}/Pcores"
 			[ ${HT} -eq 1 ] && echo "0 8" || echo "0 4"
 			;;
+		*"Ultra 5 125H"*)
+			# Meteor Lake, 4/10 cores, 18 threads
+			echo "Crestmont" >"${TempDir}/Ecores"
+			echo "Redwood Cove" >"${TempDir}/Pcores"
+			[ ${HT} -eq 1 ] && echo "0 8" || echo "0 4"
+			;;
 		i3-1215UL|i3-1215UE|i3-1210U|i3-1215U|i3-1215U)
 			# Alder Lake, 2/4 cores, 8 threads
 			echo "Gracemont" >"${TempDir}/Ecores"
@@ -2272,6 +2284,12 @@ Getx86ClusterDetails() {
 			# Raptor Lake, 2/4 cores, 8 threads
 			echo "Gracemont" >"${TempDir}/Ecores"
 			echo "Raptor Cove" >"${TempDir}/Pcores"
+			[ ${HT} -eq 1 ] && echo "0 4" || echo "0 2"
+			;;
+		*"Ultra 5 135U"*)
+			# Meteor Lake, 2/10 cores, 14 threads
+			echo "Crestmont" >"${TempDir}/Ecores"
+			echo "Redwood Cove" >"${TempDir}/Pcores"
 			[ ${HT} -eq 1 ] && echo "0 4" || echo "0 2"
 			;;
 		*Gold*850*|*Celeron*730*)

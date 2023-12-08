@@ -147,9 +147,7 @@
 | [Hlink H28K (RK3528)](results/4I93.txt) | 2000 Mhz | 5.10 | Jammy arm64 | **4680** | 1388 | 933630 | 2090 | 7650 | 6.48 |
 | [Celeron N4020](results/4vNB.txt) | 2800 MHz | 5.15 | Bookworm amd64 | **4680** | 2577 | 780770 | 5480 | 5390 | - |
 | [PineH64 (Allwinner H6)](results/1jEr.txt) | 1800 MHz | 4.18 | Stretch arm64 | **4650** | 1274 | 836900 | 1380 | 5530 | 5.62 |
-| [Radxa Zero (S905Y2)](results/3wZn.txt) | 1800 MHz | 5.10 | Focal arm64 | **4610** | 1267 | 840080 | 1600 | 5370 | - |
 | [Radxa Zero (S905Y2)](results/3JCm.txt) | 1800 MHz | 5.10 | Bullseye arm64 | **4580** | 1353 | 838360 | 1600 | 5360 | 7.13 |
-| [Radxa Zero (S905Y2)](results/3PlT.txt) | 1800 MHz | 5.10 | Buster arm64 | **4570** | 1373 | 839080 | 1610 | 5250 | 6.82 |
 | [Atom Z3735F](results/4r54.txt) | 1830 MHz | 5.15 | Jammy amd64 | **4510** | 1437 | 227900 | 3020 | 2780 | - |
 | [x5-Z8300](results/4j4o.txt) | 1840 MHz | 5.15 | Jammy amd64 | **4430** | 1368 | 227030 | 2270 | 2380 | 8.84 |
 | [HummingBoard Pulse i.MX8M Quad](results/27FC.txt) | 1500 MHz | 4.19 | Buster arm64 | **4330** | 1201 | 695540 | 2230 | 9900 | - |
@@ -159,6 +157,7 @@
 | [ODROID-C2 (Amlogic S905)](results/1ixI.txt) | 1750 MHz | 3.14 | Xenial arm64 | **4070** | 1128 | 48500 | 1750 | 3100 | - |
 | [Celeron 5205U](results/4eiM.txt) | 1900 MHz | 5.15 | Jammy amd64 | **4060** | 2171 | 521090 | 7350 | 16020 | 11.20 |
 | [Orange Pi Zero 3 (Allwinner H618)](results/4CPF.txt) | 1510 MHz | 6.1 | Jammy arm64 | **4020** | 1165 | 705330 | 1510 | 6010 | 6.02 |
+| [Radxa Zero 3W (RK3566)](results/4L4k.txt) | 1600 MHz | 5.10 | Jammy arm64 | **4000** | 1155 | 750970 | 2400 | 5580 | 5.75 |
 | [Khadas VIM1S (S905Y4)](results/4bbv.txt) | 2000 MHz | 5.4 | Jammy arm64 | **4000** | 1148 | 436540 | 1970 | 7530 | - |
 | [Star64 (JH7110)](results/4tjq.txt) | 1500 MHz | 5.15 | Sid riscv64 | **3970** | 1175 | 24990 | 820 | 770 | - |
 | [Orange Pi Zero 2W (Allwinner H618)](results/4Hd0.txt) | 1510 MHz | 6.1 | Jammy arm64 | **3920** | 1167 | 705660 | 1510 | 6010 | 6.02 |
@@ -367,7 +366,6 @@
 | [Khadas VIM3L (S905D3)](results/3Vdt.txt) | 1900 MHz | 5.16 | Bullseye arm64 | 5110 | **1403** | 890730 | 3700 | 5140 | - |
 | [Khadas VIM3L (S905D3)](results/26Wy.txt) | 1900 MHz | 4.9 | Bionic arm64 | 5160 | **1399** | 892110 | 3670 | 6360 | 7.29 |
 | [Hlink H28K (RK3528)](results/4I93.txt) | 2000 Mhz | 5.10 | Jammy arm64 | 4680 | **1388** | 933630 | 2090 | 7650 | 6.48 |
-| [Radxa Zero (S905Y2)](results/3PlT.txt) | 1800 MHz | 5.10 | Buster arm64 | 4570 | **1373** | 839080 | 1610 | 5250 | 6.82 |
 | [x5-Z8300](results/4j4o.txt) | 1840 MHz | 5.15 | Jammy amd64 | 4430 | **1368** | 227030 | 2270 | 2380 | 8.84 |
 | [Radxa Zero (S905Y2)](results/3JCm.txt) | 1800 MHz | 5.10 | Bullseye arm64 | 4580 | **1353** | 838360 | 1600 | 5360 | 7.13 |
 | [Quartz64-A (RK3566)](results/3rUb.txt) | 1810 MHz | 5.13 | Buster arm64 | 4840 | **1353** | 845490 | 2980 | 7650| - |
@@ -378,7 +376,6 @@
 | [PineH64 (Allwinner H6)](results/26Ph.txt) | 1800 MHz | 5.4 | Buster arm64 | 4710 | **1293** | 839870 | 1420 | 5560 | 7.10 |
 | [PineH64 (Allwinner H6)](results/1jEr.txt) | 1800 MHz | 4.18 | Stretch arm64 | 4650 | **1274** | 836900 | 1380 | 5530 | 5.62 |
 | [x5-Z8350](results/1HnC.txt) | 1920/1680 MHz | 4.15 | Bionic amd64 | 4710 | **1272** | 207640 | 2740 | 3140 | - |
-| [Radxa Zero (S905Y2)](results/3wZn.txt) | 1800 MHz | 5.10 | Focal arm64 | 4610 | **1267** | 840080 | 1600 | 5370 | - |
 | [AMD E-450 APU](results/4hwl.txt) | 1650 MHz | 5.15 | Jammy amd64 | 2430 | **1258** | 27450 | 1710 | 1740 | - |
 | [Clearfog A1<br />(Armada 388)](results/4d1U.txt) | 1600 MHz | 5.15 | Bullseye armhf | 2230 | **1239** | 44080 | 910 | 5060 | - |
 | [MangoPi Mcore (Allwinner H616)](results/4bSf.txt) | 1800 MHz | 5.19 | Jammy arm64 | 4100 | **1218** | 840270 | 990 | 2380 | - |
@@ -389,6 +386,7 @@
 | [Star64 (JH7110)](results/4tjq.txt) | 1500 MHz | 5.15 | Sid riscv64 | 3970 | **1175** | 24990 | 820 | 770 | - |
 | [Orange Pi Zero 2W (Allwinner H618)](results/4Hd0.txt) | 1510 MHz | 6.1 | Jammy arm64 | 3920 | **1167** | 705660 | 1510 | 6010 | 6.02 |
 | [Orange Pi Zero 3 (Allwinner H618)](results/4CPF.txt) | 1510 MHz | 6.1 | Jammy arm64 | 4020 | **1165** | 705330 | 1510 | 6010 | 6.02 |
+| [Radxa Zero 3W (RK3566)](results/4L4k.txt) | 1600 MHz | 5.10 | Jammy arm64 | 4000 | **1155** | 750970 | 2400 | 5580 | 5.75 |
 | [NanoPi K2 (Amlogic S905)](results/3Qve.txt) | 1480 MHz | 5.10 | Bullseye arm64 | 3880 | **1154** | 51490 | 1850 | 3790 | - |
 | [Khadas VIM1S (S905Y4)](results/4bbv.txt) | 2000 MHz | 5.4 | Jammy arm64 | 4000 | **1148** | 436540 | 1970 | 7530 | - |
 | [Khadas VIM1 (Amlogic S905X)](results/4bee.txt) | 1415 MHz | 5.1 | Buster arm64 | 3860 | **1136** | 660160 | 1940 | 5900 | - |
@@ -554,9 +552,7 @@
 | [Jetson Xavier AGX](results/4ebH.txt) | 2250 MHz | 4.9 | Bionic arm64 | 21590 | 2742 | **853250** | 10910 | 22520 | 26.57 |
 | [Quartz64-A (RK3566)](results/3rUb.txt) | 1810 MHz | 5.13 | Buster arm64 | 4840 | 1353 | **845490** | 2980 | 7650| - |
 | [MangoPi Mcore (Allwinner H616)](results/4bSf.txt) | 1800 MHz | 5.19 | Jammy arm64 | 4100 | 1218 | **840270** | 990 | 2380 | - |
-| [Radxa Zero (S905Y2)](results/3wZn.txt) | 1800 MHz | 5.10 | Focal arm64 | 4610 | 1267 | **840080** | 1600 | 5370 | - |
 | [PineH64 (Allwinner H6)](results/26Ph.txt) | 1800 MHz | 5.4 | Buster arm64 | 4710 | 1293 | **839870** | 1420 | 5560 | 7.10 |
-| [Radxa Zero (S905Y2)](results/3PlT.txt) | 1800 MHz | 5.10 | Buster arm64 | 4570 | 1373 | **839080** | 1610 | 5250 | 6.82 |
 | [Radxa Zero (S905Y2)](results/3JCm.txt) | 1800 MHz | 5.10 | Bullseye arm64 | 4580 | 1353 | **838360** | 1600 | 5360 | 7.13 |
 | [i.MX8MPlus EVK](results/4hx0.txt) | 1800 MHz | 5.15 | Focal arm64 | 4990 | 1348 | **837680** | 2740 | 12420 | 7.02 |
 | [PineH64 (Allwinner H6)](results/1jEr.txt) | 1800 MHz | 4.18 | Stretch arm64 | 4650 | 1274 | **836900** | 1380 | 5530 | 5.62 |
@@ -568,6 +564,7 @@
 | [Celeron N4020](results/4vNB.txt) | 2800 MHz | 5.15 | Bookworm amd64 | 4680 | 2577 | **780770** | 5480 | 5390 | - |
 | [Pentium J5005](results/21rE.txt) | 2700/1500 MHz | 5.0 | Bionic amd64 | 9230 | 2455 | **778360** | 5530 | 7130 | 20.74 |
 | [Celeron J4125](results/4hau.txt) | 2700/2000 MHz | 5.15 | Jammy amd64 | 7620 | 2367 | **751360** | 5110 | 5960 | 18.30 |
+| [Radxa Zero 3W (RK3566)](results/4L4k.txt) | 1600 MHz | 5.10 | Jammy arm64 | 4000 | 1155 | **750970** | 2400 | 5580 | 5.75 |
 | [Nintendo Switch (Tegra X1)](results/3Di2.txt) | 2060 MHz | 4.9 | Bionic arm64 | 6720 | 1901 | **746680** | 2370 | 3670 | 9.25 |
 | [AMD Seattle (Opteron A1100)](results/4Kqn.txt) | 2000 MHz | 4.15 | Bionic arm64 | 14080 | 2006 | **720710** | 3020 | 9530 | - |
 | [Jetson Nano](results/3Ufc.txt) | 2000 MHz | 4.9 | Bionic arm64 | 6260 | 1977 | **717500** | 4100 | 11760 | 8.72 |
@@ -820,6 +817,7 @@
 | [Nintendo Switch (Tegra X1)](results/1Rnj.txt) | 1780 MHz | 4.9 | Fedora 30 arm-64 | 6170 | 1719 | 642670 | **2500** | 3570 | - |
 | [Raspberry Pi 4 B (BCM2711)](results/1MFf.txt) | 1500 MHz | 4.19 | Raspbian Buster | 5500 | 1606 | 64860 | **2460** | 3170 | - |
 | [NanoPi NEO4 (RK3399)](results/3GmR.txt) | 2016/1512 MHz | 5.10 | Focal arm64 | 6970 | 1906 | 1145030 | **2450** | 6190 | 11.36 |
+| [Radxa Zero 3W (RK3566)](results/4L4k.txt) | 1600 MHz | 5.10 | Jammy arm64 | 4000 | 1155 | 750970 | **2400** | 5580 | 5.75 |
 | [x5-Z8300](results/1lgD.txt) | 1420 MHz | 4.9 | Stretch amd64 | 3900 | 950 | 178010 | **2380** | 2380 | 7.81 |
 | [Nintendo Switch (Tegra X1)](results/3Di2.txt) | 2060 MHz | 4.9 | Bionic arm64 | 6720 | 1901 | 746680 | **2370** | 3670 | 9.25 |
 | [NanoPi NEO4 (RK3399)](results/1p3T.txt) | 2000/1500 MHz | 4.19 | Stretch arm64 | 6750 | 1814 | 1139850 | **2370** | 6110 | 8.84 |
@@ -848,8 +846,6 @@
 | [NanoPi K2 (Amlogic S905)](results/1iT1.txt) | 1480 MHz | 4.14 | Stretch arm64 | 3850 | 1095 | 50370 | **1660** | 3870 | 4.61 |
 | [NanoPC T3+ (Nexell S5P6818)](results/1iyp.txt) | 1400 MHz | 4.4 | Xenial armhf | 6400 | 943 | 651000 | **1650** | 3700 | - |
 | [Libre Computer AML-S912-PC](results/40cj.txt) | 1415/1000 MHz | 5.15 | Bullseye arm64 | 5980 | 1012 | 659290 | **1650** | 5170 | - |
-| [Radxa Zero (S905Y2)](results/3PlT.txt) | 1800 MHz | 5.10 | Buster arm64 | 4570 | 1373 | 839080 | **1610** | 5250 | 6.82 |
-| [Radxa Zero (S905Y2)](results/3wZn.txt) | 1800 MHz | 5.10 | Focal arm64 | 4610 | 1267 | 840080 | **1600** | 5370 | - |
 | [Radxa Zero (S905Y2)](results/3JCm.txt) | 1800 MHz | 5.10 | Bullseye arm64 | 4580 | 1353 | 838360 | **1600** | 5360 | 7.13 |
 | [Renegade (RK3328)](results/1iFx.txt) | 1400 MHz | 4.4 | Stretch arm64 | 3710 | 1069 | 644200 | **1565** | 7435 | 3.92 |
 | [NanoPi Fire3 (Nexell S5P6818)](results/1jjm.txt) | 1400 MHz | 4.14 | Bionic arm64 | 7440 | 1052 | 653000 | **1560** | 4600 | 10.96 |
@@ -1037,12 +1033,11 @@
 | [Rock64 (RK3328)](results/1iHo.txt) | 1300 MHz | 4.4 | Stretch arm64 | 3430 | 952 | 601000 | 1350 | **5680** | 3.64 |
 | [Rock64 (RK3328)](results/1iGW.txt) | 1300 MHz | 4.4 | Bionic arm64 | 3410 | 945 | 601200 | 1310 | **5680** | 4.46 |
 | [Rock64 (RK3328)](results/1iZj.txt) | 1400 MHz | 4.4 | Stretch arm64 | 3590 | 1030 | 643700 | 1320 | **5640** | 4.40 |
+| [Radxa Zero 3W (RK3566)](results/4L4k.txt) | 1600 MHz | 5.10 | Jammy arm64 | 4000 | 1155 | 750970 | 2400 | **5580** | 5.75 |
 | [PineH64 (Allwinner H6)](results/26Ph.txt) | 1800 MHz | 5.4 | Buster arm64 | 4710 | 1293 | 839870 | 1420 | **5560** | 7.10 |
 | [PineH64 (Allwinner H6)](results/1jEr.txt) | 1800 MHz | 4.18 | Stretch arm64 | 4650 | 1274 | 836900 | 1380 | **5530** | 5.62 |
 | [Celeron N4020](results/4vNB.txt) | 2800 MHz | 5.15 | Bookworm amd64 | 4680 | 2577 | 780770 | 5480 | **5390** | - |
-| [Radxa Zero (S905Y2)](results/3wZn.txt) | 1800 MHz | 5.10 | Focal arm64 | 4610 | 1267 | 840080 | 1600 | **5370** | - |
 | [Radxa Zero (S905Y2)](results/3JCm.txt) | 1800 MHz | 5.10 | Bullseye arm64 | 4580 | 1353 | 838360 | 1600 | **5360** | 7.13 |
-| [Radxa Zero (S905Y2)](results/3PlT.txt) | 1800 MHz | 5.10 | Buster arm64 | 4570 | 1373 | 839080 | 1610 | **5250** | 6.82 |
 | [Celeron N4100](results/1uTS.txt) | 2300/1100 MHz | 4.15 | Bionic amd64 | 8510 | 2222 | 669350 | 4750 | **5240** | 18.33 |
 | [Pentium J4205](results/1m5t.txt) | 2560/1500 MHz | 4.17 | Stretch amd64 | 7570 | 2146 | 480640 | 5070 | **5170** | 18.82 |
 | [Libre Computer AML-S912-PC](results/40cj.txt) | 1415/1000 MHz | 5.15 | Bullseye arm64 | 5980 | 1012 | 659290 | 1650 | **5170** | - |
@@ -1286,8 +1281,6 @@
 | [Raspberry Pi 4 B (BCM2711)](results/3InF.txt) | **1800** MHz| 5.15 | Armbian Jammy arm64 | 5640 | 1752 | 36260 | 2580 | 3110 | - |
 | [Raspberry Pi 4 B (BCM2711)](results/3Gia.txt) | **1800** MHz| 5.10 | Raspberry Pi OS Buster | 6550 | 1897 | 77830 | 2780 | 3080 | - |
 | [Raspberry Pi 4 B (BCM2711)](results/3F9C.txt) | **1800** MHz| 5.10 | Raspberry Pi OS Buster arm64 | 5760 | 1741 | 36240 | 2240 | 3120 | 9.46 |
-| [Radxa Zero (S905Y2)](results/3wZn.txt) | **1800** MHz| 5.10 | Focal arm64 | 4610 | 1267 | 840080 | 1600 | 5370 | - |
-| [Radxa Zero (S905Y2)](results/3PlT.txt) | **1800** MHz| 5.10 | Buster arm64 | 4570 | 1373 | 839080 | 1610 | 5250 | 6.82 |
 | [Radxa Zero (S905Y2)](results/3JCm.txt) | **1800** MHz| 5.10 | Bullseye arm64 | 4580 | 1353 | 838360 | 1600 | 5360 | 7.13 |
 | [PineH64 (Allwinner H6)](results/26Ph.txt) | **1800** MHz| 5.4 | Buster arm64 | 4710 | 1293 | 839870 | 1420 | 5560 | 7.10 |
 | [PineH64 (Allwinner H6)](results/1jEr.txt) | **1800** MHz| 4.18 | Stretch arm64 | 4650 | 1274 | 836900 | 1380 | 5530 | 5.62 |
@@ -1302,6 +1295,7 @@
 | [SBC2D70 (SSD202D)](results/3N1U.txt) | **1700** MHz| 5.16 | Sid armhf | 1960 | 1094 | 33120 | 770 | 3190 | - |
 | [AMD E-450 APU](results/4hwl.txt) | **1650** MHz| 5.15 | Jammy amd64 | 2430 | 1258 | 27450 | 1710 | 1740 | - |
 | [Tronsmart S82 (Amlogic S802)](results/41ML.txt) | **1600** MHz| 5.14 | Focal armhf | 3640 | 1114 | 43150 | 500 | 3200 | - |
+| [Radxa Zero 3W (RK3566)](results/4L4k.txt) | **1600** MHz| 5.10 | Jammy arm64 | 4000 | 1155 | 750970 | 2400 | 5580 | 5.75 |
 | [Macchiatobin (Armada 8040)](results/4zcm.txt) | **1600** MHz| 5.10 | Buster arm64 | 5720 | 1739 | 909420 | 4510 | 12270 | 7.91 |
 | [Helios4<br />(Armada 388)](results/1jCy.txt) | **1600** MHz| 4.14 | Stretch armhf | 2210 | 1215 | 42500 &ast;98560 | 910 | 4840 | - |
 | [Clearfog A1<br />(Armada 388)](results/4d1U.txt) | **1600** MHz| 5.15 | Bullseye armhf | 2230 | 1239 | 44080 | 910 | 5060 | - |

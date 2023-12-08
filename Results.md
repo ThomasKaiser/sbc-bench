@@ -139,9 +139,8 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Radxa Rock Pi 4 (RK3399)](results/21fX.txt) | 2000/1500 MHz | 5.3 | Bionic arm64 | 6910 | 1817 | 1147370 | 3660 | 8310 | 10.71 |
 | [Radxa Rock Pi 4 (RK3399)](results/3Q2q.txt) | 2000/1500 MHz | 5.10 | Focal arm64 | 6900 | 1899 | 1146500 | 3430 | 8260 | - |
 | [Radxa Rock Pi S (RK3308)](results/4sNe.txt) | 1300 MHz | 6.1 | Jammy arm64 | 2540 | 732 | 282030 | 820 | 1870 | - |
-| [Radxa Zero (S905Y2)](results/3wZn.txt) | 1800 MHz | 5.10 | Focal arm64 | 4610 | 1267 | 840080 | 1600 | 5370 | - |
-| [Radxa Zero (S905Y2)](results/3PlT.txt) | 1800 MHz | 5.10 | Buster arm64 | 4570 | 1373 | 839080 | 1610 | 5250 | 6.82 |
 | [Radxa Zero (S905Y2)](results/3JCm.txt) | 1800 MHz | 5.10 | Bullseye arm64 | 4580 | 1353 | 838360 | 1600 | 5360 | 7.13 |
+| [Radxa Zero 3W (RK3566)](results/4L4k.txt) | 1600 MHz | 5.10 | Jammy arm64 | 4000 | 1155 | 750970 | 2400 | 5580 | 5.75 |
 | [Raspberry Pi B (BCM2835)](results/3MGN.txt) | 700 MHz | 5.10 | Raspberry Pi OS Bullseye | 320 | 320 | 11630 | 360 | 1420 | - |
 | [Raspberry Pi B (BCM2835)](results/4vVG.txt) | 1000 MHz | 6.1 | Raspberry Pi OS Bullseye | 480 | 481 | 16900 | 490 | 2220 | - |
 | [Raspberry Pi 2 B+ (BCM2836)](results/1iFf.txt) | 900 MHz | 4.14 | **Debian** Stretch | 2070 | 592 | 17450 | 615 | 1175 | - |

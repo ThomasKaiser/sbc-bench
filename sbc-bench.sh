@@ -7031,15 +7031,21 @@ GuessSoCbySignature() {
 			esac
 			;;
 		0?A55r?p?0?A55r?p?)
-			# Renesas RZG2LC, 2 x Cortex-A55 / r2p0 / L1d 32K, L1i 32K, L2 0K, L3 256K (shared)
+			# Renesas RZG2L/RZG2LC, 2 x Cortex-A55 / r2p0 / L1d 32K, L1i 32K, L2 0K, L3 256K (shared)
 			# or NXP i.MX 93, 2 x Cortex-A55 / r2p0 / L1d 32K, L1i 32K, L2 64K, L3 256K (shared)
 			# or Amlogic C308X, 2 x Cortex-A55
 			case "${DTCompatible}" in
 				*nxp*)
 					echo "NXP i.MX 93"
 					;;
-				*renesas*|*rzg2*)
+				*rzg2lc*)
 					echo "Renesas RZG2LC"
+					;;
+				*rzg2l*)
+					echo "Renesas RZG2L"
+					;;
+				*renesas*|*rzg2*)
+					echo "Renesas RZG2L/RZG2LC"
 					;;
 				*c308l*)
 					echo "Amlogic C308L"
@@ -7050,9 +7056,25 @@ GuessSoCbySignature() {
 			esac
 			;;
 		*A55r2p0)
-			# Renesas RZG2UL, 1 x Cortex-A55 / r2p0 / L1d 32K, L1i 32K, L2 0K, L3 256K (shared)
+			# Renesas RZG2L/RZG2LC/RZG2UL, 1 x Cortex-A55 / r2p0 / L1d 32K, L1i 32K, L2 0K, L3 256K (shared)
 			# or NXP i.MX 93, 1 x Cortex-A55 / r2p0 / L1d 32K, L1i 32K, L2 64K, L3 256K (shared)
-			grep -q nxp <<<"${DTCompatible}" && echo "NXP i.MX 93" || echo "Renesas RZG2LC"
+			case "${DTCompatible}" in
+				*nxp*)
+					echo "NXP i.MX 93"
+					;;
+				*rzg2lc*)
+					echo "Renesas RZG2LC"
+					;;
+				*rzg2l*)
+					echo "Renesas RZG2L"
+					;;
+				*rzg2ul*)
+					echo "Renesas RZG2UL"
+					;;
+				*renesas*|*rzg2*)
+					echo "Renesas RZG2L/RZG2LC/RZG2UL"
+					;;
+			esac
 			;;
 		*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A72r0p2*A72r0p2)
 			# RK3399, 4 x Cortex-A53 / r0p4 + 2 x Cortex-A72 / r0p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32 (32-bit 4.4 BSP kernel: half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt lpae evtstrm aes pmull sha1 sha2 crc32)

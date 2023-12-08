@@ -1,6 +1,6 @@
 # Helios64
 
-Tested with sbc-bench v0.9.50 on Tue, 14 Nov 2023 14:32:09 +0100. Full info: [http://ix.io/4LtI](http://ix.io/4LtI)
+Tested with sbc-bench v0.9.50 on Tue, 14 Nov 2023 14:32:09 +0100. Full info: [http://ix.io/4LtI](../4LtI.txt)
 
 ### General information:
 

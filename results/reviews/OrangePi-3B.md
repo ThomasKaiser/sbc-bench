@@ -1,6 +1,6 @@
 # Rockchip RK3566 OPi 3B
 
-Tested with sbc-bench v0.9.45 on Tue, 07 Nov 2023 11:22:57 +0000. Full info: [http://ix.io/4KU0](http://ix.io/4KU0)
+Tested with sbc-bench v0.9.45 on Tue, 07 Nov 2023 11:22:57 +0000. Full info: [http://ix.io/4KU0](../4KU0.txt)
 
 ### General information:
 

@@ -1,6 +1,6 @@
 # Radxa ROCK Pi 4A
 
-Tested with sbc-bench v0.9.36 on Wed, 01 Mar 2023 18:43:15 +0000. Full info: [http://ix.io/4pCM](http://ix.io/4pCM)
+Tested with sbc-bench v0.9.36 on Wed, 01 Mar 2023 18:43:15 +0000. Full info: [http://ix.io/4pCM](../4pCM.txt)
 
 ### General information:
 

@@ -2,7 +2,7 @@ While below the device is called "ROCK Pi 4B" since using an image/dtb for this,
 
 # Radxa ROCK Pi 4B
 
-Tested on Sun, 19 Feb 2023 17:51:55 +0000. Full info: [http://ix.io/4ozG](http://ix.io/4ozG)
+Tested on Sun, 19 Feb 2023 17:51:55 +0000. Full info: [http://ix.io/4ozG](../4ozG.txt)
 
 ### General information:
 

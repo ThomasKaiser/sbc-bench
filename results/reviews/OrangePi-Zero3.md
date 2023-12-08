@@ -1,6 +1,6 @@
 # Orange Pi Zero 3
 
-Tested with sbc-bench v0.9.53 on Wed, 22 Nov 2023 12:28:25 +0000. Full info: [http://ix.io/4M8N](http://ix.io/4M8N)
+Tested with sbc-bench v0.9.53 on Wed, 22 Nov 2023 12:28:25 +0000. Full info: [http://ix.io/4M8N](../4M8N.txt)
 
 ### General information:
 

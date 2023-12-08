@@ -1,6 +1,6 @@
 # FriendlyElec NanoPi Fire3
 
-Tested with sbc-bench v0.9.37 on Thu, 09 Mar 2023 15:46:43 +0000. Full info: [http://ix.io/4qm8](http://ix.io/4qm8)
+Tested with sbc-bench v0.9.37 on Thu, 09 Mar 2023 15:46:43 +0000. Full info: [http://ix.io/4qm8](../4qm8.txt)
 
 ### General information:
 

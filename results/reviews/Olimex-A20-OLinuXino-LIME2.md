@@ -1,6 +1,6 @@
 # Olimex A20-OLinuXino-LIME2
 
-Tested with sbc-bench v0.9.57 on Mon, 27 Nov 2023 15:47:12 +0000. Full info: [http://ix.io/4MCU](http://ix.io/4MCU)
+Tested with sbc-bench v0.9.57 on Mon, 27 Nov 2023 15:47:12 +0000. Full info: [http://ix.io/4MCU](../4MCU.txt)
 
 ### General information:
 

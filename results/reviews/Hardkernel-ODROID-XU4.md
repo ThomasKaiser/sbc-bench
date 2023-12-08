@@ -1,6 +1,6 @@
 # Hardkernel Odroid XU4
 
-Tested with sbc-bench v0.9.36 on Wed, 01 Mar 2023 17:45:14 +0100. Full info: [http://ix.io/4pC7](http://ix.io/4pC7)
+Tested with sbc-bench v0.9.36 on Wed, 01 Mar 2023 17:45:14 +0100. Full info: [http://ix.io/4pC7](../4pC7.txt)
 
 ### General information:
 

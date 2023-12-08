@@ -1,6 +1,6 @@
 # Microsoft Devkit 2023
 
-Tested with sbc-bench v0.9.38 on Mon, 13 Mar 2023 14:10:27 +0100. Full info: [http://ix.io/4qIj](http://ix.io/4qIj)
+Tested with sbc-bench v0.9.38 on Mon, 13 Mar 2023 14:10:27 +0100. Full info: [http://ix.io/4qIj](../4qIj.txt)
 
 Interestingly single-threaded 7-zip MIPS are significantly lower compared to running the 7-zip benchmark in a WSL2 VM on otherwise identical hardware. This is caused by [memory latency with larg(er) blocks being way worse with Linux running bare metal compared to running in a VM on top of Windows 11](https://github.com/ThomasKaiser/sbc-bench/issues/60#issuecomment-1466069724).
 

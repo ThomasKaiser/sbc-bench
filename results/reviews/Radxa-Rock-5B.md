@@ -1,6 +1,6 @@
 # Radxa ROCK 5B
 
-Tested with sbc-bench v0.9.39 on Mon, 13 Mar 2023 17:55:48 +0100. Full info: [http://ix.io/4qJr](http://ix.io/4qJr)
+Tested with sbc-bench v0.9.39 on Mon, 13 Mar 2023 17:55:48 +0100. Full info: [http://ix.io/4qJr](../4qJr.txt)
 
 ### General information:
 

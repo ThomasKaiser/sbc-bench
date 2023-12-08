@@ -1,6 +1,6 @@
 # Apple Inc. Apple Virtualization Generic Platform 1
 
-Tested with sbc-bench v0.9.40 on Sat, 01 Apr 2023 15:28:35 +0200. Full info: [http://ix.io/4sp4](http://ix.io/4sp4)
+Tested with sbc-bench v0.9.40 on Sat, 01 Apr 2023 15:28:35 +0200. Full info: [http://ix.io/4sp4](../4sp4.txt)
 
 ### General information:
 

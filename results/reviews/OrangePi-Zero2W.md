@@ -1,6 +1,6 @@
 # Orange Pi Zero2w
 
-Tested with sbc-bench v0.9.58 on Wed, 29 Nov 2023 06:57:57 +0000. Full info: [http://ix.io/4MLz](http://ix.io/4MLz)
+Tested with sbc-bench v0.9.58 on Wed, 29 Nov 2023 06:57:57 +0000. Full info: [http://ix.io/4MLz](../4MLz.txt)
 
 ### General information:
 

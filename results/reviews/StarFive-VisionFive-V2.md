@@ -1,6 +1,6 @@
 # StarFive VisionFive V2
 
-Tested with sbc-bench v0.9.36 on Wed, 01 Mar 2023 15:24:08 +0000.. Full info: [http://ix.io/4pBf](http://ix.io/4pBf)
+Tested with sbc-bench v0.9.36 on Wed, 01 Mar 2023 15:24:08 +0000.. Full info: [http://ix.io/4pBf](../4pBf.txt)
 
 ### General information:
 

@@ -1,6 +1,6 @@
 # Pine64 Rock64
 
-Tested with sbc-bench v0.9.58 on Fri, 01 Dec 2023 17:03:10 +0100. Full info: [http://sprunge.us/Ga0KBn](http://sprunge.us/Ga0KBn)
+Tested with sbc-bench v0.9.58 on Fri, 01 Dec 2023 17:03:10 +0100. Full info: [http://sprunge.us/Ga0KBn](../1Ga0KBn.txt)
 
 ### General information:
 

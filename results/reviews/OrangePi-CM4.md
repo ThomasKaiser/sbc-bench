@@ -1,6 +1,6 @@
 # Rockchip RK3566 Orange Pi CM4 Board
 
-Tested with sbc-bench v0.9.50 on Sat, 04 Nov 2023 02:31:03 +0000. Full info: [http://ix.io/4KDv](http://ix.io/4KDv) and [Jeff Geerling's review thread](https://github.com/geerlingguy/sbc-reviews/issues/26).
+Tested with sbc-bench v0.9.50 on Sat, 04 Nov 2023 02:31:03 +0000. Full info: [http://ix.io/4KDv](../4KDv.txt) and [Jeff Geerling's review thread](https://github.com/geerlingguy/sbc-reviews/issues/26).
 
 ### General information:
 

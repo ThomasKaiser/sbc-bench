@@ -1,6 +1,6 @@
 # RPi 4 Model B Rev 1.1 / BCM2711 Rev B0
 
-Tested with sbc-bench v0.9.35 on Wed, 01 Mar 2023 11:07:17 +0100. Full info: [http://ix.io/4pzj](http://ix.io/4pzj)
+Tested with sbc-bench v0.9.35 on Wed, 01 Mar 2023 11:07:17 +0100. Full info: [http://ix.io/4pzj](../4pzj.txt)
 
 ### General information:
 

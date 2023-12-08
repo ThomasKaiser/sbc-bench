@@ -1,6 +1,6 @@
 # ADLINK AVA Developer Platform ES2
 
-Tested with sbc-bench v0.9.42 on Wed, 28 Jun 2023 16:30:50 +0000.
+Tested with sbc-bench v0.9.42 on Wed, 28 Jun 2023 16:30:50 +0000. Full info: [http://ix.io/4zkJ](../4zkJ.txt)
 
 ### General information:
 

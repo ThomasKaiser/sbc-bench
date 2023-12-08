@@ -1,6 +1,6 @@
 # NanoPi NEO4
 
-Tested with sbc-bench v0.9.36 on Wed, 01 Mar 2023 19:38:19 +0100. Full info: [http://ix.io/4pCK](http://ix.io/4pCK)
+Tested with sbc-bench v0.9.36 on Wed, 01 Mar 2023 19:38:19 +0100. Full info: [http://ix.io/4pCK](../4pCK.txt)
 
 ### General information:
 

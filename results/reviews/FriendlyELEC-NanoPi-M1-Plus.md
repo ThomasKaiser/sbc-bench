@@ -1,6 +1,6 @@
 # FriendlyArm NanoPi M1 Plus
 
-Tested with sbc-bench v0.9.35 on Wed, 01 Mar 2023 10:56:09 +0100. Full info: [http://ix.io/4pzf](http://ix.io/4pzf)
+Tested with sbc-bench v0.9.35 on Wed, 01 Mar 2023 10:56:09 +0100. Full info: [http://ix.io/4pzf](../4pzf.txt)
 
 ### General information:
 

@@ -1,6 +1,6 @@
 # NanoPi Fire3
 
-Tested with sbc-bench v0.9.36 on Fri, 03 Mar 2023 11:32:37 +0100. Full info: [http://ix.io/4pMk](http://ix.io/4pMk)
+Tested with sbc-bench v0.9.36 on Fri, 03 Mar 2023 11:32:37 +0100. Full info: [http://ix.io/4pMk](../4pMk.txt)
 
 ### General information:
 

@@ -1,6 +1,6 @@
 # Turing Machines RK1
 
-Tested with sbc-bench v0.9.50 on Fri, 03 Nov 2023 18:40:15 +0000. Full benchmark info: [http://sprunge.us/Xuf1O1](http://sprunge.us/Xuf1O1) and [Jeff Geerling's review thread](https://github.com/geerlingguy/sbc-reviews/issues/25).
+Tested with sbc-bench v0.9.50 on Fri, 03 Nov 2023 18:40:15 +0000. Full benchmark info: [http://sprunge.us/Xuf1O1](../1Xuf1O1.txt) and [Jeff Geerling's review thread](https://github.com/geerlingguy/sbc-reviews/issues/25).
 
 ### General information:
 

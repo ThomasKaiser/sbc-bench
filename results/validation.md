@@ -11,21 +11,16 @@
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | ----: | ----: | :---: |
 | [1BsF](1BsF.txt) | v0.6.2 Hardkernel ODROID-N2 | 0%/0.1% | 3.6G/3.5G | X | X | X | X | 2% | 0% | |
 | [1Dt1](1Dt1.txt) | v0.6.6 Realtek\_Lion\_Skin\_1GB | 0%/0% | 570M/313M | X | X | X | | 3% | 2% | |
-| <del>[1ET3](1ET3.txt)</del> | <del>v0.6.6 SolidRun LX2160A COM express typ</del> | <del>0%/0%</del> | <del>60G/57G</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 0%</del> | <del> 2%</del> | |
 | [1HnC](1HnC.txt) | v0.6.6 x5-Z8350 | 0%/0% | 1.9G/1.6G | X | X | X | X | 2% | 0% | |
-| <del>[1I4j](1I4j.txt)</del> | <del>v0.6.7 jetson-nano </del> | <del>0%/0%</del> | <del>3.9G/3.0G</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 1%</del> | <del> 0%</del> | |
 | [1MFD](1MFD.txt) | v0.6.7 Khadas VIM3 | 0%/0.7% | 1.9G/1.6G | X | X | X | X | 2% | 0% | |
 | [1MFf](1MFf.txt) | v0.6.7 Raspberry Pi 4 Model B Rev 1.1 | 0.1%/0.2% | 3.8Gi/3.6Gi | X | X | X | X | 3% | 0% | [check log](1MFf.txt) |
 | [1Rnj](1Rnj.txt) | v0.6.8 icosa | 0.1%/0% | 3.4Gi/2.6Gi | X | X | X | X | 4% | <span style=color:red> 6%</span> | |
-| <del>[1XKY](1XKY.txt)</del> | <del>v0.6.9 Radxa ROCK Pi S </del> | <del>0%/0%</del> | <del>425Mi/364Mi</del> | <del>X</del> | <del>X</del> | | | <del> 1%</del> | <del> 0%</del> | |
-| <del>[1iFa](1iFa.txt)</del> | <del>v0.4</del> | <del>0%/0.2%</del> | <del>1.0G/913M</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 2%</del> | <del> 0%</del> | |
 | [1iFf](1iFf.txt) | v0.4 Raspberry Pi 2 B+ (BCM2836) | 0%/0.7% | 976M/872M | X | X | X | X | 2% | 0% | |
 | [1iFm](1iFm.txt) | v0.4 Rock64 (RK3328) | 0%/1.5% | 1.9G/1.6G | X | X | X | X | 2% | 0% | |
 | [1iFp](1iFp.txt) | v0.4 RockPro64 (RK3399) | 0%/0.7% | 3.8G/3.6G | X | X | X | X | 0% | 1% | |
 | [1iFx](1iFx.txt) | v0.4 Renegade (RK3328) | 0.5%/0% | 3.8G/3.5G | X | X | X | X | 2% | 0% | |
 | [1iFz](1iFz.txt) | v0.4 NanoPC T4 (RK3399) | 0.2%/0.6% | 3.8G/3.5G | X | X | X | X | 0% | 0% | |
 | [1iGM](1iGM.txt) | v0.4 Raspberry Pi 3 B+ (BCM2837B0) | 0%/0.2% | 927M/814M | X | X | X | X | 1% | <span style=color:red>**33%**</span> | |
-| <del>[1iGV](1iGV.txt)</del> | <del>v0.4</del> | <del>0%/0%</del> | <del>2.0G/1.8G</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 1%</del> | <del> 0%</del> | |
 | [1iGW](1iGW.txt) | v0.4 Rock64 (RK3328) | 0%/0% | 1.9G/1.8G | X | X | X | X | 1% | <span style=color:red> 7%</span> | |
 | [1iGz](1iGz.txt) | v0.4 Raspberry Pi 3 B+ (BCM2837B0) | 0.1%/0% | 927M/813M | X | X | X | X | 2% | <span style=color:red>**25%**</span> | |
 | [1iH0](1iH0.txt) | v0.4 Raspberry Pi 3 B+ (BCM2837B0) | 0%/0% | 927M/819M | X | X | X | X | 2% | <span style=color:red>**30%**</span> | [check log](1iH0.txt) |
@@ -34,11 +29,9 @@
 | [1iHo](1iHo.txt) | v0.4 Rock64 (RK3328) | 0%/0% | 1.9G/1.8G | X | X | X | X | 1% | <span style=color:red> 6%</span> | |
 | [1iI5](1iI5.txt) | v0.4 Raspberry Pi 3 B+ (BCM2837B0) | 0%/0.2% | 927M/822M | X | X | X | X | 1% | <span style=color:red>**22%**</span> | |
 | [1iJ7](1iJ7.txt) | v0.4 Khadas VIM2 (Amlogic S912) | 0.9%/0% | 1.8G/1.5G | X | X | X | X | <span style=color:red>**27%**</span> | <span style=color:red>**16%**</span> | |
-| <del>[1iLy](1iLy.txt)</del> | <del>v0.4.3 Hardkernel Odroid XU4 </del> | <del>0%/1.1%</del> | <del>/</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 2%</del> | <del> 0%</del> | |
 | [1iRJ](1iRJ.txt) | v0.4.6 NanoPi Fire3 | 0%/0% | 2.0G/1.8G | X | X | X | X | 0% | 0% | |
 | [1iSQ](1iSQ.txt) | v0.4.6 Libre Technology CC | 0.2%/0% | 1.9G/1.6G | X | X | X | X | 0% | 0% | |
 | [1iSX](1iSX.txt) | v0.4.6 Rockchip RK3288 Tinker Board | 0.2%/5.1% | 2.0G/1.7G | X | X | X | X | 2% | 0% | |
-| <del>[1iSh](1iSh.txt)</del> | <del>v0.4.6 Hardkernel ODROID-C2 </del> | <del>0.2%/0%</del> | <del>1.9G/1.8G</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 0%</del> | <del> 0%</del> | |
 | [1iT1](1iT1.txt) | v0.4.6 NanoPi K2 (Amlogic S905) | 0.3%/0% | 1.9G/1.8G | X | X | X | X | 1% | 0% | |
 | [1iWL](1iWL.txt) | v0.5 Hardkernel Odroid XU4 | 3.2%/0.8% | 1.9G/1.8G | X | X | X | X | 2% | 0% | [check log](1iWL.txt) |
 | [1iWU](1iWU.txt) | v0.5 FriendlyElec NanoPC-T4 | 0%/0.8% | 3.8G/3.5G | X | X | X | X | 2% | 0% | |
@@ -49,13 +42,10 @@
 | [1isD](1isD.txt) | Raspberry Pi 3 B+ (BCM2837B0) | 0.8%/0.2% | 927M/810M | X | X | X | X | 1% | 0% | |
 | [1ism](1ism.txt) | Raspberry Pi 3 B+ (BCM2837B0) | 0.1%/0.2% | 927M/816M | X | X | X | X | 1% | 0% | |
 | [1ivR](1ivR.txt) | RockPro64 arm64 | 0%/0.4% | 3.8G/3.7G | X | X | X | X | 1% | 1% | |
-| <del>[1ivw](1ivw.txt)</del> | <del></del> | <del>0%/0%</del> | <del>927M/834M</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 2%</del> | <del> 0%</del> | |
 | [1iwz](1iwz.txt) | Rock64 (RK3328) | 0%/0.3% | 1.9G/1.7G | X | X | X | X | 2% | 0% | |
 | [1ixL](1ixL.txt) | ODROID-XU4 (Exynos 5422) | 0%/3.5% | 1.9G/513M | X | X | X | X | <span style=color:red>**12%**</span> | <span style=color:red>**39%**</span> | |
-| <del>[1ixi](1ixi.txt)</del> | <del></del> | <del>0.4%/0%</del> | <del>1.7G/1.3G</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 1%</del> | <del> 0%</del> | |
 | [1iyp](1iyp.txt) | NanoPC T3+ (Nexell S5P6818) | 0.5%/0% | 1.9G/1.6G | X | X | X | X | 1% | 0% | |
 | [1j1L](1j1L.txt) | v0.5 Olimex A10-OLinuXino-LIME | 8.3%/5.3% | 493M/430M | X | X | X | X | <span style=color:red> 9%</span> | 0% | |
-| <del>[1j1d](1j1d.txt)</del> | <del>v0.5 Xunlong Orange Pi PC Plus </del> | <del>0.4%/0%</del> | <del>1.0G/868M</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 3%</del> | <del> 0%</del> | |
 | [1jCy](1jCy.txt) | v0.5.3 Helios4 | 0.3%/0.3% | 2.0G/1.8G | X | X | X | X | <span style=color:red>**33%**</span> | 0% | |
 | [1jEr](1jEr.txt) | v0.5.4 Pine H64 | 0%/0% | 2.0G/1.8G | X | X | X | X | 1% | 0% | [check log](1jEr.txt) |
 | [1jiU](1jiU.txt) | v0.5.3 NanoPi Fire3 | 0%/0% | 990M/878M | X | X | X | | 0% | 0% | |
@@ -74,12 +64,10 @@
 | [1oib](1oib.txt) | v0.6.1 FriendlyElec NanoPi NEO4 | 0%/0.3% | 919M/769M | X | X | X | | 1% | 0% | |
 | [1oim](1oim.txt) | v0.6.1 FriendlyElec NanoPi M4 | 0%/0.4% | 919M/769M | X | X | X | | 1% | 0% | |
 | [1p3T](1p3T.txt) | v0.6.1 FriendlyElec NanoPi NEO4 | 0%/0.5% | 992M/825M | X | X | X | | 1% | 0% | |
-| <del>[1pJi](1pJi.txt)</del> | <del>v0.6.1 ROCK PI 4B </del> | <del>0.2%/0.4%</del> | <del>1.9G/1.8G</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 2%</del> | <del> 0%</del> | <del>[check log](1pJi.txt)</del> |
 | [1qal](1qal.txt) | v0.6.2 Celeron J4105 | 0%/0.3% | 7.6G/7.2G | X | X | X | X | 1% | 0% | |
 | [1qb0](1qb0.txt) | v0.6.2 Celeron J4105 | 0%/0% | 31G/30G | X | X | X | X | 1% | 0% | |
 | [1rYm](1rYm.txt) | v0.6.2 Khadas Captain | 0.2%/0.2% | 3.7G/3.6G | X | X | X | X | 1% | 0% | [check log](1rYm.txt) |
 | [1tJg](1tJg.txt) | v0.6.2 Olimex A64 Teres-I | 0.6%/0.6% | 1.9G/1.6G | X | X | X | X | 2% | 0% | |
-| <del>[1u3W](1u3W.txt)</del> | <del>v0.6.2 Cubietech Cubietruck </del> | <del>0%/0%</del> | <del>2.0G/1.7G</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del><span style=color:red> 9%</span></del> | <del> 0%</del> | |
 | [1uTS](1uTS.txt) | v0.6.2 Celeron N4100 | 0%/2.1% | 3.7G/2.1G | X | X | X | X | 2% | 2% | |
 | [1uar](1uar.txt) | v0.6.2 Khadas Captain | 0.3%/0.6% | 3.7G/3.6G | X | X | X | X | 1% | 0% | [check log](1uar.txt) |
 | [1ub9](1ub9.txt) | v0.6.2 Pine64 RockPro64 | 0%/0.5% | 3.8G/3.7G | X | X | X | X | 1% | 0% | |
@@ -89,9 +77,6 @@
 | [26Wy](26Wy.txt) | v0.6.9 Khadas VIM3L | 0%/0% | 1.8G/1.6G | X | X | X | X | 2% | 0% | |
 | [27FC](27FC.txt) | v0.6.9 SolidRun i.MX8MQ HummingBoard Pu | 1.3%/0.3% | 2.9Gi/2.7Gi | X | X | X | X | 0% | 0% | |
 | [2Cyi](2Cyi.txt) | v0.7.4 Raspberry Pi 400 Rev 1.0 | 0%/0.9% | 3.7Gi/3.4Gi | X | X | X | X | 3% | 0% | |
-| <del>[2FrG](2FrG.txt)</del> | <del>v0.7.4 Amazon m6g.8xlarge </del> | <del>0%/0%</del> | <del>123Gi/121Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 0%</del> | <del> 0%</del> | |
-| <del>[2Gjg](2Gjg.txt)</del> | <del>v0.7.5 Apple M1 VM performance core </del> | <del>0.3%/13.2%</del> | <del>1.9Gi/1.5Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 0%</del> | <del> 2%</del> | |
-| <del>[2Gtf](2Gtf.txt)</del> | <del>v0.7.5 Apple M1 VM efficiency core @ 60</del> | <del>1.1%/1.4%</del> | <del>1.9Gi/1.5Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 4%</del> | <del> 1%</del> | |
 | [2ICt](2ICt.txt) | v0.7.5 Hugsun X99 TV BOX | 0%/0.7% | 3.7Gi/3.4Gi | X | X | X | X | 0% | 0% | |
 | [2Jdb](2Jdb.txt) | v0.7.2 x5-Z8350 | 0%/0% | 3.8Gi/2.6Gi | X | X | X | X | 4% | <span style=color:red>**21%**</span> | |
 | [2iFY](2iFY.txt) | v0.7.1 Amazon a1.xlarge | 0%/0% | 7.5G/7.2G | X | X | X | X | 1% | 0% | |
@@ -106,17 +91,12 @@
 | [3Di2](3Di2.txt) | v0.8.1 Nintendo Switch | 0%/0% | 3.9G/3.5G | X | X | X | X | 1% | 0% | |
 | [3DtN](3DtN.txt) | v0.8.1 Hardkernel ODROID-N2Plus | 0%/0% | 3.6Gi/2.7Gi | X | X | X | X | 0% | 0% | |
 | [3E85](3E85.txt) | v0.8.3 Raspberry Pi Zero 2 Rev 1.0 | 2.6%/0.9% | 427Mi/267Mi | X | X | | | 3% | 0% | |
-| <del>[3EOw](3EOw.txt)</del> | <del>v0.8.4 Olimex A20-OLinuXino-LIME2-eMMC </del> | <del>0%/0%</del> | <del>998Mi/869Mi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del><span style=color:red> 7%</span></del> | <del> 0%</del> | |
 | [3EgS](3EgS.txt) | v0.8.4 Raspberry Pi 4 Model B Rev 1.1 | 0.5%/0.4% | 857Mi/695Mi | X | X | X | | 2% | 0% | |
-| <del>[3EhG](3EhG.txt)</del> | <del>v0.8.4 Raspberry Pi 4 Model B Rev 1.1 </del> | <del>0%/0.6%</del> | <del>909Mi/754Mi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del><span style=color:red> 8%</span></del> | <del><span style=color:red>**54%**</span></del> | |
 | [3F9C](3F9C.txt) | v0.8.4 Raspberry Pi 4 Model B Rev 1.1 | 0%/0.6% | 959Mi/815Mi | X | X | X | X | <span style=color:red>**12%**</span> | 0% | |
-| <del>[3FlD](3FlD.txt)</del> | <del>v0.8.4 Raspberry Pi 4 Model B Rev 1.1 </del> | <del>0%/0.6%</del> | <del>959Mi/839Mi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del><span style=color:red> 9%</span></del> | <del> 0%</del> | |
 | [3Gia](3Gia.txt) | v0.8.5 Raspberry Pi 4 Model B Rev 1.1 | 2.0%/1.0% | 857Mi/696Mi | X | X | X | X | 3% | 0% | |
-| <del>[3GmP](3GmP.txt)</del> | <del>v0.9.59 NanoPi Fire3 </del> | <del>0%/0%</del> | <del>994Mi/847Mi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del><span style=color:red>**38%**</span></del> | <del> 0%</del> | <del>[check log](3GmP.txt)</del> |
 | [3GmR](3GmR.txt) | v0.8.6 FriendlyARM NanoPi NEO4 | 0%/0.7% | 977Mi/714Mi | X | X | X | X | 1% | 0% | |
 | [3GnC](3GnC.txt) | v0.8.6 Hardkernel Odroid XU4 | 0%/0.9% | 1.9Gi/1.7Gi | X | X | X | X | 4% | 0% | [check log](3GnC.txt) |
 | [3HUU](3HUU.txt) | v0.8.8 Celeron N4500 | 0.2%/0% | 7,5Gi/6,4Gi | X | X | X | X | 1% | 0% | |
-| <del>[3HUd](3HUd.txt)</del> | <del>v0.8.8 Intel Celeron N5100 @ 1.10GHz </del> | <del>0%/0%</del> | <del>7.6Gi/7.1Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 3%</del> | <del> 0%</del> | |
 | [3IlQ](3IlQ.txt) | v0.8.8 Celeron N5100 | 0%/0% | 7.6Gi/7.2Gi | X | X | X | X | 3% | 0% | |
 | [3InF](3InF.txt) | v0.8.8 Raspberry Pi 4 Model B Rev 1.1 | 0%/0.5% | 958Mi/747Mi | X | X | X | X | <span style=color:red>**33%**</span> | 0% | |
 | [3JCm](3JCm.txt) | v0.8.8 Radxa Zero | 0.3%/0.8% | 3.7Gi/3.4Gi | X | X | X | X | 1% | 0% | |
@@ -124,38 +104,27 @@
 | [3L37](3L37.txt) | v0.9.0 Raspberry Pi 4 Model B Rev 1.4 | 0.3%/0.6% | 3.7Gi/3.3Gi | X | X | X | X | 4% | 0% | |
 | [3Lir](3Lir.txt) | v0.9.1 ASUS Tinker Board | 0.5%/0% | 2.0Gi/1.5Gi | X | X | X | X | 2% | 0% | |
 | [3Llk](3Llk.txt) | v0.8.7 Raspberry Pi 4 Model B Rev 1.4 | 1.7%/0.4% | 3.7Gi/2.5Gi | X | X | X | X | <span style=color:red> 8%</span> | 0% | [check log](3Llk.txt) |
-| <del>[3LoH](3LoH.txt)</del> | <del>v0.9.1 Hardkernel ODROID-N2Plus </del> | <del>0%/0%</del> | <del>3.6Gi/3.1Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 1%</del> | <del> 0%</del> | |
 | [3M9F](3M9F.txt) | v0.9.1 Generic RK322x TV Box board | 1.6%/0.5% | 1.9Gi/1.7Gi | X | X | X | X | <span style=color:red> 5%</span> | 0% | |
 | [3MAK](3MAK.txt) | v0.9.1 FriendlyElec NanoPi M4 Ver2.0 | 0.3%/0.3% | 3.8Gi/3.4Gi | X | X | X | X | 2% | 1% | |
 | [3MGN](3MGN.txt) | v0.9.1 Raspberry Pi Model B Rev 2 | 1.4%/1.1% | 429Mi/347Mi | X | X | X | | 2% | 0% | [check log](3MGN.txt) |
 | [3MGs](3MGs.txt) | v0.9.1 Raspberry Pi 2 Model B Rev 1.1 | 0.8%/0.2% | 922Mi/835Mi | X | X | X | X | 2% | 0% | |
 | [3MQJ](3MQJ.txt) | v0.9.1 Xunlong Orange Pi PC 2 | 0%/0% | 985Mi/753Mi | X | X | X | X | <span style=color:red>**13%**</span> | 0% | |
 | [3MQV](3MQV.txt) | v0.9.1 Xunlong Orange Pi PC Plus | 0%/0% | 999Mi/779Mi | X | X | X | X | 2% | 0% | |
-| <del>[3MX1](3MX1.txt)</del> | <del>v0.9.1 Radxa Zero </del> | <del>0%/0%</del> | <del>1.9Gi/1.6Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 1%</del> | <del> 0%</del> | |
-| <del>[3MhQ](3MhQ.txt)</del> | <del>v0.9.1 Hardkernel ODROID-HC4 </del> | <del>0%/0%</del> | <del>3.7Gi/3.3Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 1%</del> | <del> 0%</del> | |
 | [3MiR](3MiR.txt) | v0.9.1 TRONFY MXQ S805 | 1.1%/0% | 987Mi/794Mi | X | X | X | X | 2% | 0% | |
 | [3MuT](3MuT.txt) | v0.9.1 Hardkernel ODROID-N2 | 0%/0.2% | 3.6Gi/3.3Gi | X | X | X | X | 1% | 0% | |
-| <del>[3MzQ](3MzQ.txt)</del> | <del>v0.9.1 Khadas VIM </del> | <del>0.5%/0%</del> | <del>1.9Gi/1.5Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 1%</del> | <del> 0%</del> | |
 | [3N1U](3N1U.txt) | v0.9.2 SBC2D70 | 1.1%/0% | 113Mi/32Mi | X | | | | 0% | 0% | |
 | [3N2z](3N2z.txt) | v0.9.2 FriendlyArm NanoPi M1 Plus | 0.7%/0% | 999M/836M | X | X | X | X | 2% | 0% | |
 | [3N5c](3N5c.txt) | v0.9.2 bigboy | 0%/0% | 31Gi/29Gi | X | X | X | X | 1% | 0% | |
-| <del>[3N6Q](3N6Q.txt)</del> | <del>v0.9.2 Hardkernel ODROID-C2 </del> | <del>0.7%/0.2%</del> | <del>1.9Gi/1.6Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 1%</del> | <del> 0%</del> | |
 | [3N7H](3N7H.txt) | v0.9.2 FriendlyElec NanoPi K1 Plus | 0%/1.3% | 1.9Gi/1.7Gi | X | X | X | X | 2% | 0% | |
 | [3N94](3N94.txt) | v0.9.2 RPi 4 Model B Rev 1.4 / BCM2711 | 0%/0% | 7.7Gi/7.4Gi | X | X | X | X | 4% | <span style=color:red>**12%**</span> | |
 | [3Na5](3Na5.txt) | v0.9.2 Hardkernel ODROID-HC4 | 0%/0% | 3.7Gi/3.5Gi | X | X | X | X | 1% | 0% | |
 | [3Naw](3Naw.txt) | v0.9.2 Cubietech Cubietruck | 8.3%/8.8% | 2,0Gi/1,8Gi | X | X | X | X | <span style=color:red> 8%</span> | <span style=color:red> 5%</span> | |
 | [3Njz](3Njz.txt) | v0.9.2 Raspberry Pi Zero W Rev 1.1 | 0.9%/0.8% | 477Mi/416Mi | X | X | X | X | <span style=color:red> 5%</span> | 0% | |
-| <del>[3Ntu](3Ntu.txt)</del> | <del>v0.9.2 Hardkernel ODROID-N2Plus </del> | <del>0%/0%</del> | <del>1.8Gi/1.5Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 1%</del> | <del> 0%</del> | |
-| <del>[3NvH](3NvH.txt)</del> | <del>v0.9.2 Radxa ROCK Pi 4C </del> | <del>0%/0.5%</del> | <del>3.8Gi/3.2Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 2%</del> | <del> 0%</del> | |
-| <del>[3Nzx](3Nzx.txt)</del> | <del>v0.9.2 LeMaker Banana Pi </del> | <del>0%/0.5%</del> | <del>985Mi/813Mi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del><span style=color:red> 9%</span></del> | <del> 1%</del> | |
 | [3OBF](3OBF.txt) | v0.9.2 RPi 4 Model B Rev 1.1 / BCM2711 | 0%/0.6% | 909Mi/765Mi | X | X | X | X | 4% | 2% | |
-| <del>[3OKN](3OKN.txt)</del> | <del>v0.9.3 NVIDIA Jetson Nano Developer Kit</del> | <del>0.1%/0%</del> | <del>3,9G/3,3G</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del><span style=color:red> 7%</span></del> | <del> 0%</del> | |
 | [3Owk](3Owk.txt) | v0.9.2 bigboy | 0%/0% | 127Gi/108Gi | X | X | X | X | 1% | 1% | |
 | [3Owv](3Owv.txt) | v0.9.2 bigboy | 0%/0% | 127Gi/108Gi | X | X | X | X | 1% | 0% | |
 | [3PLr](3PLr.txt) | v0.9.3 LeMaker Banana Pi | 8.2%/8.6% | 997Mi/862Mi | X | X | X | X | <span style=color:red> 7%</span> | 0% | |
-| <del>[3PlT](3PlT.txt)</del> | <del>v0.9.3 Radxa Zero </del> | <del>0.6%/0.5%</del> | <del>3.7Gi/3.2Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 3%</del> | <del> 2%</del> | |
 | [3Q2q](3Q2q.txt) | v0.9.3 Radxa ROCK Pi 4B | 0.2%/0.3% | 3.8Gi/3.5Gi | X | X | X | X | 2% | 0% | |
-| <del>[3QLN](3QLN.txt)</del> | <del>v0.9.3 Khadas VIM </del> | <del>0.8%/0%</del> | <del>1.8Gi/1.5Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 1%</del> | <del> 0%</del> | |
 | [3QOj](3QOj.txt) | v0.9.3 AMedia X96 Max+ | 0%/0.8% | 3.7Gi/3.4Gi | X | X | X | X | 1% | 0% | |
 | [3Qf7](3Qf7.txt) | v0.9.3 Celeron N5105 | 0%/0% | 7.5Gi/6.4Gi | X | X | X | X | 2% | 0% | |
 | [3Qve](3Qve.txt) | v0.9.3 FriendlyARM NanoPi K2 | 0.9%/0.9% | 1.9Gi/1.6Gi | X | X | X | X | 1% | 1% | |
@@ -164,27 +133,17 @@
 | [3R3N](3R3N.txt) | v0.9.3 Akaso M8S | 0%/0.4% | 986Mi/873Mi | X | X | X | X | 1% | <span style=color:red>**11%**</span> | [check log](3R3N.txt) |
 | [3Rsg](3Rsg.txt) | v0.9.3 Firefly RK3568-ROC-PC HDMI | 0%/0% | 3.7Gi/3.4Gi | X | X | X | X | 2% | 0% | |
 | [3S5U](3S5U.txt) | v0.9.3 Tronsmart MXIII Plus | 0%/0.4% | 2.0Gi/1.7Gi | X | X | X | X | 2% | 0% | |
-| <del>[3Sl9](3Sl9.txt)</del> | <del>v0.9.3 zqykj-K681-F223 </del> | <del>0%/0.4%</del> | <del>15Gi/13Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 3%</del> | <del> 1%</del> | |
-| <del>[3TKh](3TKh.txt)</del> | <del>v0.9.3 Banana Pi BPI-M2-Ultra </del> | <del>2.0%/0%</del> | <del>2.0Gi/1.5Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 3%</del> | <del> 0%</del> | |
 | [3TQ2](3TQ2.txt) | v0.9.3 Hardkernel ODROID-C4 | 0.3%/0% | 3.7Gi/3.2Gi | X | X | X | X | 4% | 0% | |
-| <del>[3UXa](3UXa.txt)</del> | <del>v0.9.3 Radxa ROCK 3 Model A </del> | <del>0%/0.3%</del> | <del>7.5Gi/7.2Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 2%</del> | <del> 0%</del> | |
 | [3Ufc](3Ufc.txt) | v0.9.3 NVIDIA Jetson Nano 2GB Developer | 1.3%/0.3% | 1.9G/1.5G | X | X | X | X | <span style=color:red> 5%</span> | 0% | |
 | [3Ug9](3Ug9.txt) | v0.9.3 Hardkernel ODROID-M1 | 0%/0% | 7.3Gi/7.0Gi | X | X | X | X | 2% | 0% | |
 | [3VME](3VME.txt) | v0.9.3 RPi 4 Model B Rev 1.1 / BCM2711 | 1.9%/0.2% | 967Mi/807Mi | X | X | X | X | <span style=color:red>**12%**</span> | 0% | |
 | [3Vdt](3Vdt.txt) | v0.9.3 Khadas VIM3L | 0%/0% | 1.8Gi/1.1Gi | X | X | X | X | 4% | 3% | |
-| <del>[3VfL](3VfL.txt)</del> | <del>v0.9.3 Khadas VIM3 </del> | <del>0%/0.2%</del> | <del>3.7Gi/2.7Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 1%</del> | <del> 0%</del> | |
-| <del>[3Wq0](3Wq0.txt)</del> | <del>v0.9.3 Khadas VIM4 </del> | <del>0%/0.3%</del> | <del>7.8Gi/6.0Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 2%</del> | <del> 0%</del> | |
 | [3Wvv](3Wvv.txt) | v0.9.4 Khadas VIM4 | 0%/0.2% | 7.8Gi/6.6Gi | X | X | X | X | 2% | 0% | |
 | [3X9q](3X9q.txt) | v0.9.4 Rockchip RK3288 Asus Tinker Boar | 0.3%/0.2% | 2.0Gi/1.8Gi | X | X | X | X | 2% | 0% | |
-| <del>[3XTA](3XTA.txt)</del> | <del>v0.9.6 Radxa ROCK 5A </del> | <del>7.6%/7.4%</del> | <del>3.7Gi/3.4Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 3%</del> | <del> 0%</del> | <del>[check log](3XTA.txt)</del> |
-| <del>[3XYo](3XYo.txt)</del> | <del>v0.9.6 Radxa ROCK 5A </del> | <del>0%/0%</del> | <del>3.7Gi/3.3Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 1%</del> | <del> 0%</del> | |
-| <del>[3XzI](3XzI.txt)</del> | <del>v0.9.6 Firefly ITX-3588J HDMI</del> | <del>0.2%/0.4%</del> | <del>7.5Gi/6.5Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 3%</del> | <del> 0%</del> | |
 | [3Y4f](3Y4f.txt) | v0.9.6 keeper.lan | 0.3%/0% | 30Gi/29Gi | X | X | X | X | 2% | 0% | |
 | [3YWp](3YWp.txt) | v0.9.7 NVIDIA Jetson Xavier NX Develope | 1.9%/0.8% | 7.6G/5.2G | X | X | X | X | 2% | 0% | |
-| <del>[3ZRD](3ZRD.txt)</del> | <del>v0.9.8 Rockchip RK3318 BOX </del> | <del>0.3%/0.2%</del> | <del>3.9Gi/3.7Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 2%</del> | <del> 0%</del> | |
 | [3ZxU](3ZxU.txt) | v0.9.8 NanoPi Fire3 extensive | 0%/0% | 994Mi/853Mi | X | X | X | X | <span style=color:red> 8%</span> | 0% | |
 | [3rUb](3rUb.txt) | v0.7.7 Pine64 RK3566 Quartz64-A Board | 0%/0% | 3.8Gi/3.5Gi | X | X | X | X | 1% | 0% | |
-| <del>[3wZn](3wZn.txt)</del> | <del>v0.7.7 Radxa Zero </del> | <del>0.3%/0%</del> | <del>3.7Gi/3.4Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 1%</del> | <del> 0%</del> | |
 | [408h](408h.txt) | v0.9.8 Ugoos UT2 | 0%/0% | 2.0Gi/1.8Gi | X | X | X | X | 2% | 0% | |
 | [40BJ](40BJ.txt) | v0.9.8 Allwinner D1 | 3.0%/1.5% | 960Mi/852Mi | X | X | X | X | 4% | 0% | |
 | [40TX](40TX.txt) | v0.9.8 Radxa ROCK3 Model A | 0.6%/0% | 3.8Gi/3.5Gi | X | X | X | X | 2% | 0% | |
@@ -192,15 +151,12 @@
 | [4132](4132.txt) | v0.9.8 SolidRun Cubox-i Dual/Quad | 2.3%/0% | 2.0Gi/1.8Gi | X | X | X | X | 3% | <span style=color:red>** 9%**</span> | |
 | [41AB](41AB.txt) | v0.9.8 T-HEAD c910 ice | 0%/0.4% | 3.4Gi/3.3Gi | X | X | X | X | 3% | 1% | |
 | [41BH](41BH.txt) | v0.9.8 Radxa ROCK 5B extensive | 0%/0% | 15Gi/15Gi | X | X | X | X | 1% | 0% | [check log](41BH.txt) |
-| <del>[41Kb](41Kb.txt)</del> | <del>v0.9.8 / Celeron J1900 @ 1.99GHz </del> | <del>0%/0%</del> | <del>7.7Gi/6.5Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 2%</del> | <del> 0%</del> | |
 | [41ML](41ML.txt) | v0.9.8 Tronsmart S82 | 0.8%/1.0% | 2.0Gi/1.7Gi | X | X | X | X | 2% | <span style=color:red> 7%</span> | |
 | [41Qa](41Qa.txt) | v0.9.8 canaan-creative,k510 | 0%/0% | 192Mi/131Mi | | | | | 4% | 1% | |
 | [443N](443N.txt) | v0.9.8 Apple MacBook Pro | 0.2%/8.9% | 15Gi/14Gi | X | X | X | X | 1% | 0% | |
 | [445T](445T.txt) | v0.9.8 PHYTIUM LTD D2000 | 0%/2.4% | 15Gi/15Gi | X | X | X | X | 2% | 0% | |
 | [446h](446h.txt) | v0.9.8 PHYTIUM LTD D2000 | 0%/3.3% | 31Gi/30Gi | X | X | X | X | 2% | 0% | |
-| <del>[44Lq](44Lq.txt)</del> | <del>v0.9.8 InnoComm i.MX8MM MOZART </del> | <del>1.1%/0.5%</del> | <del>981M/671M</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 2%</del> | <del> 0%</del> | |
 | [44pd](44pd.txt) | v0.9.8 Silicom Minnowboard Turbot D0/D1 | 3.1%/0% | 1.8Gi/1.6Gi | X | X | X | X | 2% | 0% | |
-| <del>[45X1](45X1.txt)</del> | <del>v0.9.8 Firefly rk3566-roc-pc </del> | <del>0%/0%</del> | <del>7.5Gi/6.7Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 3%</del> | <del> 0%</del> | |
 | [461n](461n.txt) | v0.9.8 Dell Inc. Inspiron 1011 A06 / At | 2.9%/0.3% | 992Mi/668Mi | X | X | X | X | 2% | 2% | |
 | [466y](466y.txt) | v0.9.8 Mediatek MT6580 K9M1-test board | 0%/0% | 878Mi/683Mi | X | X | X | X | 1% | <span style=color:red>**14%**</span> | |
 | [46hs](46hs.txt) | v0.9.8 PXA1908 | 0.8%/1.0% | 661Mi/601Mi | X | X | X | X | <span style=color:red>**12%**</span> | 0% | |
@@ -209,21 +165,18 @@
 | [4CPF](4CPF.txt) | v0.9.43 OrangePi Zero3 | 0%/0% | 3.8Gi/3.5Gi | X | X | X | X | 1% | 1% | [check log](4CPF.txt) |
 | [4D0a](4D0a.txt) | v0.9.44 Orange Pi 5 | 0%/0% | 7.8Gi/7.4Gi | X | X | X | X | 1% | 0% | [check log](4D0a.txt) |
 | [4DLw](4DLw.txt) | v0.9.44 BeagleBoard.org BeagleBone AI-6 | 0%/0% | 2.1Gi/1.9Gi | X | X | X | X | 2% | <span style=color:red> 6%</span> | [check log](4DLw.txt) |
-| <del>[4Ebd](4Ebd.txt)</del> | <del>v0.9.44 NVIDIA Orin Nano Developer Kit </del> | <del>0%/0%</del> | <del>7.2Gi/5.8Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 0%</del> | <del> 0%</del> | <del>[check log](4Ebd.txt)</del> |
 | [4HDw](4HDw.txt) | v0.9.47 Raspberry Pi 5 Model B Rev 1.0 | 0%/0% | 7.9Gi/7.4Gi | X | X | X | X | 1% | 2% | [check log](4HDw.txt) |
 | [4HYd](4HYd.txt) | v0.9.47 HP HP t640 Thin Client / Ryzen | 0%/0% | 5.7Gi/4.4Gi | X | X | X | X | 4% | 0% | [check log](4HYd.txt) |
 | [4Hd0](4Hd0.txt) | v0.9.45 OrangePi Zero2 W | 0%/0% | 981Mi/775Mi | X | X | X | X | <span style=color:red>**40%**</span> | 2% | [check log](4Hd0.txt) |
 | [4HdL](4HdL.txt) | v0.9.46 Hetzner Neoverse-N1 kvm VM | 0%/0% | 3.7Gi/3.4Gi | X | X | X | X | 1% | 0% | |
 | [4I1w](4I1w.txt) | v0.9.47 Raspberry Pi 5 Model B Rev 1.0 | 0%/0% | 7.9Gi/7.3Gi | X | X | X | X | 1% | 0% | [check log](4I1w.txt) |
 | [4I93](4I93.txt) | v0.9.47 Hlink H28K | 0%/0% | 1.9Gi/1.6Gi | X | X | X | X | 2% | 0% | [check log](4I93.txt) |
-| <del>[4IT1](4IT1.txt)</del> | <del>v0.9.48 Rockchip linux PX30 9tripod ddr</del> | <del>0%/0%</del> | <del>1.9G/1.5G</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 3%</del> | <del> 0%</del> | <del>[check log](4IT1.txt)</del> |
 | [4K7E](4K7E.txt) | v0.9.49 Milk-V Mars CM eMMC | 0%/0% | 3.8Gi/3.3Gi | X | X | X | X | 2% | 0% | [check log](4K7E.txt) |
 | [4Kau](4Kau.txt) | v0.9.49 OrangePi 4 | 0%/0% | 3.8Gi/3.2Gi | X | X | X | X | 2% | 1% | [check log](4Kau.txt) |
 | [4Kqn](4Kqn.txt) | v0.9.49 AMD Seattle | 0%/0% | 31G/30G | X | X | X | X | 1% | 0% | |
 | [4Kvg](4Kvg.txt) | v0.9.49 MediaTek Genio-1200 EVK | 0%/0% | 7.6Gi/6.4Gi | X | X | X | X | 1% | 0% | [check log](4Kvg.txt) |
 | [4L4k](4L4k.txt) | v0.9.50 Radxa ZERO 3 | 0%/0% | 979Mi/781Mi | X | X | X | X | <span style=color:red>**29%**</span> | 0% | [check log](4L4k.txt) |
 | [4Lyf](4Lyf.txt) | v0.9.50 Google Homestar | 0%/0% | 3.8Gi/2.5Gi | X | X | X | X | 2% | 0% | [check log](4Lyf.txt) |
-| <del>[4a3s](4a3s.txt)</del> | <del>v0.9.8 StarFive VisionFive V2 </del> | <del>0.4%/0.1%</del> | <del>3.8Gi/3.5Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 1%</del> | <del> 2%</del> | |
 | [4a5U](4a5U.txt) | v0.9.8 Khadas Edge2 | 0%/0% | 15Gi/14Gi | X | X | X | X | 1% | 0% | |
 | [4ax9](4ax9.txt) | v0.9.8 NVIDIA Orin Jetson-Small Develop | 0%/0% | 29Gi/29Gi | X | X | X | X | 0% | 0% | |
 | [4bSf](4bSf.txt) | v0.9.9 MangoPi Mcore | 0.4%/0% | 984Mi/789Mi | X | X | X | X | <span style=color:red>**63%**</span> | 1% | |
@@ -231,18 +184,14 @@
 | [4bee](4bee.txt) | v0.9.9 Khadas VIM | 0.6%/0% | 801Mi/622Mi | X | X | X | X | 1% | 0% | |
 | [4cHh](4cHh.txt) | v0.9.9 Khadas VIM4 | 0%/0.3% | 7.8Gi/6.9Gi | X | X | X | X | 2% | 0% | |
 | [4d1U](4d1U.txt) | v0.9.9 SolidRun Clearfog A1 | 0%/0% | 1.0Gi/873Mi | X | X | X | X | 1% | 0% | |
-| <del>[4dJV](4dJV.txt)</del> | <del>v0.9.9 Thundercomm Dragonboard 845c </del> | <del>3.8%/7.9%</del> | <del>7.4Gi/7.1Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 1%</del> | <del> 0%</del> | |
 | [4dO7](4dO7.txt) | v0.9.9 Bananapi BPI-R2 | 0%/0% | 2.0Gi/1.8Gi | X | X | X | X | 2% | <span style=color:red>** 8%**</span> | |
 | [4dd5](4dd5.txt) | v0.9.9 AAEON UP-APL03 V1.0 / Atom | 0%/0% | 3.7Gi/2.6Gi | X | X | X | X | 2% | 1% | |
-| <del>[4dsC](4dsC.txt)</del> | <del>v0.9.9 QEMU KVM Virtual Machine virt-4.</del> | <del>0%/0%</del> | <del>15Gi/15Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 2%</del> | <del> 0%</del> | |
 | [4dzX](4dzX.txt) | v0.9.9 Katyusha-Loongson | 0.6%/0.4% | 31Gi/29Gi | X | X | X | X | 0% | 0% | |
 | [4eOo](4eOo.txt) | v0.9.9 / Athlon | 0%/0.3% | 5.8Gi/4.8Gi | X | X | X | X | 1% | 0% | |
 | [4ebH](4ebH.txt) | v0.9.9 Jetson-AGX | 0.3%/0.6% | 31G/29G | X | X | X | X | 1% | 0% | |
 | [4eg5](4eg5.txt) | v0.9.9 Hardkernel ODROID-C1 | 0.2%/2.3% | 990Mi/874Mi | X | X | X | X | 2% | 1% | |
 | [4eiM](4eiM.txt) | v0.9.9 / Celeron 5205U @ 1.90GHz | 0%/0% | 7.6Gi/6.4Gi | X | X | X | X | 1% | 0% | |
-| <del>[4f3I](4f3I.txt)</del> | <del>v0.9.9 HARDKERNEL ODROID-H3 1.0 / Penti</del> | <del>0%/0.5%</del> | <del>31Gi/30Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 1%</del> | <del> 0%</del> | |
 | [4fdD](4fdD.txt) | v0.9.9 OnePlus 5 | 2.7%/0.6% | 5.5Gi/5.2Gi | X | X | X | X | 1% | 1% | |
-| <del>[4fea](4fea.txt)</del> | <del>v0.9.9 OnePlus 5 </del> | <del>2.7%/0.6%</del> | <del>5.5Gi/5.2Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 1%</del> | <del> 1%</del> | |
 | [4hKV](4hKV.txt) | v0.9.9 / Celeron J1900 @ 1.99GHz | 0%/0% | 7.7Gi/6.9Gi | X | X | X | X | 3% | 0% | |
 | [4hOP](4hOP.txt) | v0.9.9 Raspberry Pi 3 Model B Rev 1.2 | 0%/0% | 909Mi/796Mi | X | X | X | X | 2% | <span style=color:red>** 9%**</span> | [check log](4hOP.txt) |
 | [4hau](4hau.txt) | v0.9.9 Fanless Mini PC Quieter2 / Celer | 0.2%/0% | 7.6Gi/6.4Gi | X | X | X | X | 2% | 2% | |
@@ -256,7 +205,6 @@
 | [4ju5](4ju5.txt) | v0.9.9 SolidRun LX2160A Clearfog CX | 0%/0.7% | 5.7Gi/3.4Gi | X | X | X | X | 1% | 0% | |
 | [4kEp](4kEp.txt) | v0.9.9 volterra | 1.1%/0.5% | 15Gi/15Gi | X | X | X | X | 1% | 0% | |
 | [4kFQ](4kFQ.txt) | v0.9.9 10ZiG Technology. 44xx Type1 - T | 0%/0.2% | 1.8Gi/1.4Gi | X | X | X | X | 4% | <span style=color:red> 4%</span> | |
-| <del>[4kHv](4kHv.txt)</del> | <del>v0.9.9 StarFive VisionFive V2 </del> | <del>0.8%/1.2%</del> | <del>3.8Gi/3.7Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 1%</del> | <del> 0%</del> | |
 | [4kiu](4kiu.txt) | v0.9.9 HUAQIN P6410 HQ3110BR49000 | 0%/0% | 375Gi/370Gi | X | X | X | X | 0% | 0% | |
 | [4kmM](4kmM.txt) | v0.9.9 Banana Pi BPI-M2-Ultra | 0%/0.1% | 997Mi/874Mi | X | X | X | X | 2% | 0% | |
 | [4knM](4knM.txt) | v0.9.9 Orange Pi Zero 2 | 1.3%/0% | 960Mi/849Mi | X | X | X | X | <span style=color:red>**24%**</span> | <span style=color:red>** 8%**</span> | |
@@ -265,7 +213,6 @@
 | [4nt8](4nt8.txt) | v0.9.13 Beijin Cloud Times S13XS / Atom | 0.2%/0.2% | 3.8Gi/3.5Gi | X | X | X | X | 2% | 0% | |
 | [4o1A](4o1A.txt) | v0.9.19 Khadas VIM3 | 0%/0% | 3.7Gi/3.5Gi | X | X | X | X | 1% | 0% | |
 | [4pEc](4pEc.txt) | v0.9.36 / Celeron N2830 @ 2.16GHz | 0%/0% | 3.7Gi/3.2Gi | X | X | X | X | <span style=color:red> 6%</span> | <span style=color:red>**32%**</span> | [check log](4pEc.txt) |
-| <del>[4pgq](4pgq.txt)</del> | <del>v0.9.30 81f328652970 </del> | <del>0%/0%</del> | <del>7.1Gi/3.4Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del><span style=color:red>**10%**</span></del> | <del> 0%</del> | <del>[check log](4pgq.txt)</del> |
 | [4qJF](4qJF.txt) | v0.9.39 Pine64 RK3566 Quartz64-A Board | 0%/0% | 7.5Gi/7.2Gi | X | X | X | X | 1% | 0% | [check log](4qJF.txt) |
 | [4qpr](4qpr.txt) | v0.9.37 WeiBu ADL-N / i3-N305 extensive | 0%/0% | 7.5Gi/5.9Gi | X | X | X | X | 3% | 0% | [check log](4qpr.txt) |
 | [4r54](4r54.txt) | v0.9.39 Insyde W8 CR50W8 / Atom | 0%/0% | 1.9Gi/1.5Gi | X | X | X | X | 3% | 0% | [check log](4r54.txt) |
@@ -274,23 +221,17 @@
 | [4rRV](4rRV.txt) | v0.9.39 Olimex A20-OLinuXino-LIME2 | 0%/0% | 998Mi/910Mi | X | X | X | X | <span style=color:red> 5%</span> | <span style=color:red>** 9%**</span> | [check log](4rRV.txt) |
 | [4rWn](4rWn.txt) | v0.9.39 Hardkernel ODROID-N2Plus | 0%/0% | 3.7Gi/3.4Gi | X | X | X | X | 1% | 0% | [check log](4rWn.txt) |
 | [4sNe](4sNe.txt) | v0.9.40 Radxa ROCK Pi S | 0%/0% | 474Mi/330Mi | | | | | <span style=color:red> 5%</span> | 2% | [check log](4sNe.txt) |
-| <del>[4sp4](4sp4.txt)</del> | <del>v0.9.40 Apple Inc. Apple Virtualization</del> | <del>0%/0%</del> | <del>3,8Gi/2,5Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 2%</del> | <del> 0%</del> | |
 | [4tjq](4tjq.txt) | v0.9.40 Pine64 Star64 | 0%/0% | 7.7Gi/7.1Gi | X | X | X | X | 2% | 1% | [check log](4tjq.txt) |
 | [4vNB](4vNB.txt) | v0.9.41 ATOPNUC ATOPNUC AG40 / Celeron | 0%/0% | 3.7Gi/3.3Gi | X | X | X | X | 1% | 0% | [check log](4vNB.txt) |
 | [4vVG](4vVG.txt) | v0.9.41 Raspberry Pi Model B Rev 2 | 0%/0% | 476Mi/397Mi | X | X | X | X | 4% | 1% | [check log](4vVG.txt) |
 | [4vfU](4vfU.txt) | v0.9.41 Rockchip RK3288 Asus Tinker Boa | 0%/0% | 2.0Gi/1.8Gi | X | X | X | X | 2% | 2% | [check log](4vfU.txt) |
-| <del>[4vgu](4vgu.txt)</del> | <del>v0.9.41 NVIDIA Orin Nano Developer Kit </del> | <del>0%/0%</del> | <del>6.3Gi/3.6Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del><span style=color:red> 8%</span></del> | <del> 0%</del> | <del>[check log](4vgu.txt)</del> |
 | [4vxM](4vxM.txt) | v0.9.41 AZW EQ / N100 | 0%/0% | 15Gi/14Gi | X | X | X | X | 1% | 0% | [check log](4vxM.txt) |
 | [4vy7](4vy7.txt) | v0.9.41 NVIDIA Orin Nano Developer Kit | 0%/0% | 6.3Gi/5.4Gi | X | X | X | X | 3% | 2% | [check log](4vy7.txt) |
 | [4wYE](4wYE.txt) | v0.9.41 Sophgo Mango | 0%/0% | 125Gi/124Gi | X | X | X | X | <span style=color:red>**72%**</span> | 0% | [check log](4wYE.txt) |
-| <del>[4x8j](4x8j.txt)</del> | <del>v0.9.41 T-HEAD Light Lichee Pi 4A confi</del> | <del>0%/0%</del> | <del>7.6Gi/6.9Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 3%</del> | <del><span style=color:red> 5%</span></del> | <del>[check log](4x8j.txt)</del> |
-| <del>[4xEW](4xEW.txt)</del> | <del>v0.9.41 Google Homestar </del> | <del>0%/0%</del> | <del>3.8Gi/3.0Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 1%</del> | <del> 0%</del> | <del>[check log](4xEW.txt)</del> |
 | [4xOY](4xOY.txt) | v0.9.41 StarFive VisionFive V2 | 0%/0% | 7.7Gi/7.4Gi | X | X | X | X | 1% | 0% | [check log](4xOY.txt) |
 | [4xYE](4xYE.txt) | v0.9.41 T-HEAD Light Lichee Pi 4A confi | 0%/0% | 7.6Gi/7.4Gi | X | X | X | X | 2% | 0% | [check log](4xYE.txt) |
 | [4xwT](4xwT.txt) | v0.9.41 Microsoft Dev Kit 2023 | 0%/0% | 30Gi/29Gi | X | X | X | X | 0% | 0% | [check log](4xwT.txt) |
 | [4xwq](4xwq.txt) | v0.9.41 / N95 | 0%/0% | 15Gi/14Gi | X | X | X | X | 1% | 0% | [check log](4xwq.txt) |
-| <del>[4yFl](4yFl.txt)</del> | <del>v0.9.42 Spreadtrum UMS9620 SoC </del> | <del>0%/0%</del> | <del>3.4G/2.7G</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>%</del> | <del>%</del> | <del>[check log](4yFl.txt)</del> |
-| <del>[4yNC](4yNC.txt)</del> | <del>v0.9.42 Google Homestar </del> | <del>0%/0%</del> | <del>3.8Gi/2.7Gi</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del>X</del> | <del> 2%</del> | <del> 0%</del> | <del>[check log](4yNC.txt)</del> |
 | [4z3s](4z3s.txt) | v0.9.42 clientron TC120 Type1 - TBD by | 0%/0% | 1.8Gi/1.0Gi | X | X | X | X | 2% | 0% | [check log](4z3s.txt) |
 | [4zGI](4zGI.txt) | v0.9.42 ADLINK Ampere Altra Developer P | 0%/0% | 93Gi/92Gi | X | X | X | X | 0% | 0% | [check log](4zGI.txt) |
 | [4zcm](4zcm.txt) | v0.9.42 Marvell 8040 MACCHIATOBin Doubl | 0%/0% | 3.8Gi/3.3Gi | X | X | X | X | 2% | 0% | [check log](4zcm.txt) |

@@ -1,6 +1,6 @@
 # FriendlyElec NanoPi M3
 
-Tested with sbc-bench v0.9.37 on Tue, 07 Mar 2023 13:28:32 +0000. Full info: [http://ix.io/4qaC](http://ix.io/4qaC)
+Tested with sbc-bench v0.9.37 on Tue, 07 Mar 2023 13:28:32 +0000. Full info: [http://ix.io/4qaC](../4qaC.txt)
 
 ### General information:
 

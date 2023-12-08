@@ -1,0 +1,545 @@
+sbc-bench v0.9.57 Olimex A10-OLinuXino-LIME (Mon, 27 Nov 2023 13:11:05 +0000)
+
+Distributor ID:	Debian
+Description:	Debian GNU/Linux 11 (bullseye)
+Release:	11
+Codename:	bullseye
+Build system:   git@github.com:armbian/build, 21.08.1, Lime A10, sun4i, sunxi
+
+/usr/bin/gcc (Debian 10.2.1-6) 10.2.1 20210110
+
+Uptime: 13:11:06 up 9 min,  1 user,  load average: 1.46, 1.28, 0.79,  47.6°C,  5.08V,  1018221091
+
+Linux 5.10.60-sunxi (lime-a10) 	11/27/23 	_armv7l_	(1 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+          29.49    0.51   24.76    1.43    0.00   43.81
+
+Device             tps    kB_read/s    kB_wrtn/s    kB_dscd/s    kB_read    kB_wrtn    kB_dscd
+mmcblk0          17.73       461.83       493.05         0.00     257817     275244          0
+zram0             1.02         4.07         0.01         0.00       2272          4          0
+zram1             0.80         0.75        17.71         0.00        420       9888          0
+zram2             1.14         2.08         5.70         0.00       1160       3184          0
+
+               total        used        free      shared  buff/cache   available
+Mem:           491Mi        62Mi       378Mi       0.0Ki        51Mi       417Mi
+Swap:          245Mi          0B       245Mi
+
+Filename				Type		Size	Used	Priority
+/dev/zram0                             	partition	251876	0	5
+
+##########################################################################
+
+Checking cpufreq OPP (Cortex-A8):
+
+Cpufreq OPP:  912    Measured:  908    (908.990/908.967/908.921)
+Cpufreq OPP:  864    Measured:  860    (860.995/860.984/860.962)
+Cpufreq OPP:  624    Measured:  621    (621.138/621.029/620.982)
+
+##########################################################################
+
+Executing benchmark on cpu0 (Cortex-A8):
+
+tinymembench v0.4.9-nuumio (simple benchmark for memory throughput and latency)
+
+CFLAGS: 
+bandwidth test min repeats (-b): 2
+bandwidth test max repeats (-B): 3
+bandwidth test mem realloc (-M): no      (-m for realloc)
+      latency test repeats (-l): 3
+        latency test count (-c): 1000000
+
+==========================================================================
+== Memory bandwidth tests                                               ==
+==                                                                      ==
+== Note 1: 1MB = 1000000 bytes                                          ==
+== Note 2: Test result is the best of repeated runs. Number of repeats  ==
+==         is shown in brackets                                         ==
+== Note 3: Results for 'copy' tests show how many bytes can be          ==
+==         copied per second (adding together read and writen           ==
+==         bytes would have provided twice higher numbers)              ==
+== Note 4: 2-pass copy means that we are using a small temporary buffer ==
+==         to first fetch data into it, and only then write it to the   ==
+==         destination (source -> L1 cache, L1 cache -> destination)    ==
+== Note 5: If sample standard deviation exceeds 0.1%, it is shown in    ==
+==         brackets                                                     ==
+==========================================================================
+
+ C copy backwards                                 :    329.1 MB/s (3, 27.8%)
+ C copy backwards (32 byte blocks)                :    315.4 MB/s (2)
+ C copy backwards (64 byte blocks)                :    315.2 MB/s (2)
+ C copy                                           :    388.6 MB/s (3, 0.2%)
+ C copy prefetched (32 bytes step)                :    536.5 MB/s (3, 6.3%)
+ C copy prefetched (64 bytes step)                :    480.6 MB/s (2)
+ C 2-pass copy                                    :    269.7 MB/s (3, 12.1%)
+ C 2-pass copy prefetched (32 bytes step)         :    396.1 MB/s (3, 9.0%)
+ C 2-pass copy prefetched (64 bytes step)         :    392.8 MB/s (3, 8.3%)
+ C scan 8                                         :    115.2 MB/s (2)
+ C scan 16                                        :    193.5 MB/s (3, 5.7%)
+ C scan 32                                        :    299.9 MB/s (3, 7.5%)
+ C scan 64                                        :    324.7 MB/s (3, 0.1%)
+ C fill                                           :   1306.6 MB/s (2)
+ C fill (shuffle within 16 byte blocks)           :   1290.0 MB/s (3, 5.6%)
+ C fill (shuffle within 32 byte blocks)           :   1280.8 MB/s (3, 6.6%)
+ C fill (shuffle within 64 byte blocks)           :    899.2 MB/s (3, 8.8%)
+ ---
+ libc memcpy copy                                 :    445.7 MB/s (3, 9.7%)
+ libc memchr scan                                 :    282.8 MB/s (2)
+ libc memset fill                                 :   1306.3 MB/s (3, 6.4%)
+ ---
+ NEON read                                        :    666.1 MB/s (3, 6.9%)
+ NEON read prefetched (32 bytes step)             :    663.5 MB/s (3, 18.8%)
+ NEON read prefetched (64 bytes step)             :    665.1 MB/s (2)
+ NEON read 2 data streams                         :    647.5 MB/s (2)
+ NEON read 2 data streams prefetched (32 bytes step) :    663.3 MB/s (2)
+ NEON read 2 data streams prefetched (64 bytes step) :    653.7 MB/s (3, 7.6%)
+ NEON copy                                        :    589.9 MB/s (3, 6.5%)
+ NEON copy prefetched (32 bytes step)             :    589.6 MB/s (3, 12.7%)
+ NEON copy prefetched (64 bytes step)             :    592.5 MB/s (3, 10.7%)
+ NEON unrolled copy                               :    503.3 MB/s (3, 5.3%)
+ NEON unrolled copy prefetched (32 bytes step)    :    601.6 MB/s (3, 6.2%)
+ NEON unrolled copy prefetched (64 bytes step)    :    604.4 MB/s (3, 6.0%)
+ NEON copy backwards                              :    576.9 MB/s (3, 12.1%)
+ NEON copy backwards prefetched (32 bytes step)   :    591.9 MB/s (2)
+ NEON copy backwards prefetched (64 bytes step)   :    596.4 MB/s (2)
+ NEON 2-pass copy                                 :    431.8 MB/s (2)
+ NEON 2-pass copy prefetched (32 bytes step)      :    457.6 MB/s (3, 9.3%)
+ NEON 2-pass copy prefetched (64 bytes step)      :    446.9 MB/s (3, 9.2%)
+ NEON unrolled 2-pass copy                        :    417.2 MB/s (3, 9.1%)
+ NEON unrolled 2-pass copy prefetched (32 bytes step) :    434.7 MB/s (3, 9.1%)
+ NEON unrolled 2-pass copy prefetched (64 bytes step) :    457.1 MB/s (3, 9.7%)
+ NEON fill                                        :   1311.9 MB/s (3, 6.5%)
+ NEON fill backwards                              :   1311.9 MB/s (3, 6.5%)
+ VFP copy                                         :    457.6 MB/s (2)
+ VFP 2-pass copy                                  :    335.8 MB/s (3, 7.7%)
+ ARM fill (STRD)                                  :   1308.9 MB/s (3, 6.9%)
+ ARM fill (STM with 8 registers)                  :   1310.3 MB/s (2)
+ ARM fill (STM with 4 registers)                  :   1309.5 MB/s (2)
+ ARM copy prefetched (incr pld)                   :    566.7 MB/s (3, 6.6%)
+ ARM copy prefetched (wrap pld)                   :    526.6 MB/s (2)
+ ARM 2-pass copy prefetched (incr pld)            :    414.7 MB/s (3, 8.6%)
+ ARM 2-pass copy prefetched (wrap pld)            :    431.4 MB/s (3, 8.5%)
+
+==========================================================================
+== Memory latency test                                                  ==
+==                                                                      ==
+== Average time is measured for random memory accesses in the buffers   ==
+== of different sizes. The larger is the buffer, the more significant   ==
+== are relative contributions of TLB, L1/L2 cache misses and SDRAM      ==
+== accesses. For extremely large buffer sizes we are expecting to see   ==
+== page table walk with several requests to SDRAM for almost every      ==
+== memory access (though 64MiB is not nearly large enough to experience ==
+== this effect to its fullest).                                         ==
+==                                                                      ==
+== Note 1: All the numbers are representing extra time, which needs to  ==
+==         be added to L1 cache latency. The cycle timings for L1 cache ==
+==         latency can be usually found in the processor documentation. ==
+== Note 2: Dual random read means that we are simultaneously performing ==
+==         two independent memory accesses at a time. In the case if    ==
+==         the memory subsystem can't handle multiple outstanding       ==
+==         requests, dual random read has the same timings as two       ==
+==         single reads performed one after another.                    ==
+==========================================================================
+
+block size : single random read / dual random read
+      1024 :    0.0 ns          /     0.0 ns 
+      2048 :    0.0 ns          /     0.0 ns 
+      4096 :    0.0 ns          /     0.0 ns 
+      8192 :    0.0 ns          /     0.0 ns 
+     16384 :    0.0 ns          /     0.0 ns 
+     32768 :    0.1 ns          /     0.1 ns 
+     65536 :    5.7 ns          /    10.8 ns 
+    131072 :    8.7 ns          /    16.4 ns 
+    262144 :   37.1 ns          /    66.5 ns 
+    524288 :  112.7 ns          /   225.4 ns 
+   1048576 :  152.4 ns          /   305.9 ns 
+   2097152 :  172.7 ns          /   347.8 ns 
+   4194304 :  184.1 ns          /   368.1 ns 
+   8388608 :  191.0 ns          /   383.0 ns 
+  16777216 :  198.4 ns          /   396.2 ns 
+  33554432 :  208.4 ns          /   417.1 ns 
+  67108864 :  228.0 ns          /   455.3 ns 
+
+##########################################################################
+
+Executing ramlat on cpu0 (Cortex-A8), results in ns:
+
+       size:  1x32  2x32  1x64  2x64 1xPTR 2xPTR 4xPTR 8xPTR
+         4k: 6.763 7.286 8.352 8.301 7.913 4.570 4.617 13.75 
+         8k: 3.372 5.057 3.444 3.579 3.315 3.305 4.543 9.222 
+        16k: 3.305 3.306 3.443 3.581 3.305 3.304 4.543 9.235 
+        32k: 3.320 3.310 3.450 3.590 3.322 3.309 4.555 9.239 
+        64k: 14.35 20.12 14.37 20.55 14.34 20.41 38.70 80.44 
+       128k: 14.49 23.72 14.63 36.93 14.80 24.35 49.29 108.3 
+       256k: 124.0 142.1 92.11 139.3 124.6 143.1 243.1 528.3 
+       512k: 172.1 309.9 219.9 297.1 172.2 303.9 639.0 1124 
+      1024k: 193.4 334.6 290.4 330.9 193.5 335.1 715.3 1397 
+      2048k: 197.3 340.1 197.6 337.2 197.5 339.6 630.1 1208 
+      4096k: 197.7 340.6 197.1 336.8 197.6 340.0 630.5 1319 
+      8192k: 210.9 345.2 296.8 342.5 207.3 443.7 646.4 1342 
+     16384k: 301.5 344.6 205.2 339.4 206.4 339.9 719.4 1294 
+     32768k: 197.9 336.4 203.1 338.9 298.2 336.7 622.7 1199 
+     65536k: 198.3 337.6 198.3 338.1 198.3 337.2 623.1 1300 
+    131072k: 234.5 466.9 232.3 471.3 231.0 475.5 671.1 1355 
+
+##########################################################################
+
+Executing benchmark twice on cluster 0 (Cortex-A8)
+
+OpenSSL 1.1.1k, built on 25 Mar 2021
+type             16 bytes     64 bytes    256 bytes   1024 bytes   8192 bytes  16384 bytes
+aes-256-cbc      12201.71k    27314.90k    29745.15k    28019.71k    27885.57k    27159.21k
+aes-256-cbc      19594.95k    23484.59k    27768.49k    27373.57k    28508.16k    28426.24k
+
+##########################################################################
+
+Executing benchmark single-threaded on cpu0 (Cortex-A8)
+
+7-Zip (a) [32] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,32 bits,1 CPU LE)
+
+LE
+CPU Freq: 21333333 16000000 16000000 16000000 32000000 64000000 128000000 256000000 409600000
+
+RAM size:     491 MB,  # CPU hardware threads:   1
+RAM usage:    435 MB,  # Benchmark threads:      1
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:        416    93    436    405  |       7959    93    734    680
+23:        392    93    430    400  |       7854    93    735    680
+24:        375    92    441    404  |       7777    93    733    683
+25:        355    90    452    406  |       7550    92    727    672
+----------------------------------  | ------------------------------
+Avr:              92    440    404  |               93    732    679
+Tot:              92    586    541
+
+Compression: 404
+Decompression: 679
+Total: 541
+
+##########################################################################
+
+Executing "stress-ng --matrix 0" for 5 minutes:
+
+stress-ng: info:  [6206] dispatching hogs: 1 matrix
+stress-ng: info:  [6206] successful run completed in 300.01s (5 mins, 0.01 secs)
+
+##########################################################################
+
+Testing maximum cpufreq again, still under full load. System health now:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp   DC(V)
+13:25:03:  912MHz  1.57 100%   7%  92%   0%   0%   0%  54.4°C   5.07 
+
+Checking cpufreq OPP (Cortex-A8):
+
+Cpufreq OPP:  912    Measured:  908    (908.995/908.973/908.973)
+
+##########################################################################
+
+Thermal source: /sys/devices/virtual/thermal/thermal_zone0/ (cpu-thermal)
+
+System health while running tinymembench:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp   DC(V)
+13:11:46:  912MHz  1.44  58%  24%  31%   0%   1%   0%  50.8°C   5.06 
+13:12:11:  912MHz  1.88 100%   7%  92%   0%   0%   0%  51.6°C   5.06 
+13:12:36:  912MHz  2.09 100%   6%  93%   0%   0%   0%  50.8°C   5.06 
+13:13:01:  912MHz  2.23 100%   7%  92%   0%   0%   0%  51.9°C   5.08 
+13:13:26:  912MHz  2.19 100%   6%  93%   0%   0%   0%  51.6°C   5.06 
+
+System health while running ramlat:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp   DC(V)
+13:14:03:  912MHz  2.32  66%  21%  43%   0%   1%   0%  52.5°C   5.08 
+13:14:22:  912MHz  2.55 100%   6%  93%   0%   0%   0%  49.9°C   5.07 
+
+System health while running OpenSSL benchmark:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp   DC(V)
+13:14:57:  912MHz  2.41  68%  20%  46%   0%   1%   0%  55.6°C   5.05 
+
+System health while running 7-zip single core benchmark:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp   DC(V)
+13:15:36:  912MHz  2.35  70%  19%  48%   0%   0%   0%  53.6°C   5.06 
+13:16:07:  912MHz  2.10 100%   7%  92%   0%   0%   0%  54.4°C   5.07 
+13:16:38:  912MHz  2.09 100%   8%  91%   0%   0%   0%  54.3°C   5.08 
+13:17:08:  912MHz  2.03 100%   7%  92%   0%   0%   0%  55.1°C   5.06 
+13:17:39:  912MHz  1.92 100%   9%  90%   0%   0%   0%  53.9°C   5.06 
+13:18:09:  912MHz  1.96 100%   8%  91%   0%   0%   0%  55.2°C   5.06 
+13:18:39:  912MHz  1.80 100%   9%  90%   0%   0%   0%  54.5°C   5.07 
+13:19:10:  912MHz  1.77 100%   8%  91%   0%   0%   0%  54.5°C   5.07 
+13:19:44:  912MHz  1.78 100%  12%  87%   0%   0%   0%  54.3°C   5.08 
+
+System health while running stress-ng:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp   DC(V)
+13:20:25:  912MHz  2.13  77%  17%  59%   0%   0%   0%  54.5°C   5.07 
+13:21:21:  912MHz  1.77 100%   7%  92%   0%   0%   0%  54.4°C   5.07 
+13:22:16:  912MHz  1.54 100%   7%  92%   0%   0%   0%  54.1°C   5.07 
+13:23:12:  912MHz  1.54 100%   7%  92%   0%   0%   0%  54.5°C   5.07 
+13:24:07:  912MHz  1.59 100%   7%  92%   0%   0%   0%  54.4°C   5.07 
+13:25:03:  912MHz  1.57 100%   7%  92%   0%   0%   0%  54.4°C   5.07 
+
+##########################################################################
+
+Linux 5.10.60-sunxi (lime-a10) 	11/27/23 	_armv7l_	(1 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+          66.36    0.22   15.39    0.58    0.00   17.44
+
+Device             tps    kB_read/s    kB_wrtn/s    kB_dscd/s    kB_read    kB_wrtn    kB_dscd
+mmcblk0           7.87       220.43       197.42         0.00     309973     277616          0
+zram0            10.29         6.11        35.06         0.00       8592      49304          0
+zram1             0.45         0.70         7.83         0.00        980      11004          0
+zram2             0.54         0.86         2.58         0.00       1216       3632          0
+
+               total        used        free      shared  buff/cache   available
+Mem:           491Mi        58Mi       390Mi       0.0Ki        42Mi       421Mi
+Swap:          245Mi        11Mi       234Mi
+
+Filename				Type		Size	Used	Priority
+/dev/zram0                             	partition	251876	12032	5
+
+CPU sysfs topology (clusters, cpufreq members, clockspeeds)
+                 cpufreq   min    max
+ CPU    cluster  policy   speed  speed   core type
+  0       -1        0      624     912   Cortex-A8 / r3p2
+
+Architecture:        armv7l
+Byte Order:          Little Endian
+CPU(s):              1
+On-line CPU(s) list: 0
+Thread(s) per core:  1
+Core(s) per socket:  1
+Socket(s):           1
+Vendor ID:           ARM
+Model:               2
+Model name:          Cortex-A8
+Stepping:            r3p2
+CPU max MHz:         912.0000
+CPU min MHz:         624.0000
+BogoMIPS:            909.31
+Flags:               half thumb fastmult vfp edsp neon vfpv3 tls vfpd32
+
+SoC guess: Allwinner A10 (SID: 16236782)
+DT compat: olimex,a10-olinuxino-lime
+           allwinner,sun4i-a10
+ Compiler: /usr/bin/gcc (Debian 10.2.1-6) 10.2.1 20210110 / arm-linux-gnueabihf
+ Userland: arm
+   Kernel: 5.10.60-sunxi/armv7l
+           CONFIG_HZ=250
+           CONFIG_HZ_250=y
+           CONFIG_HZ_FIXED=0
+           CONFIG_PREEMPT_NONE=y
+
+##########################################################################
+
+Kernel 5.10.60 is not latest 5.10.201 LTS that was released on 2023-11-20.
+
+See https://endoflife.date/linux for details. It is somewhat likely that
+a lot of exploitable vulnerabilities exist for this kernel as well as many
+unfixed bugs.
+
+##########################################################################
+
+Results validation:
+
+  * Measured clockspeed not lower than advertised max CPU clockspeed
+  * Swapping (ZRAM) occured -> https://t.ly/TQ-hO
+  * Too much background activity (%system): 7% avg, 12% max -> https://t.ly/uhOJa
+  * No throttling
+
+##########################################################################
+
+/sys/kernel/debug/clk/clk_summary diff between all governors set to powersave and performance:
+
+                                   enable  prepare  protect                                duty
+     clock                          count    count    count        rate   accuracy phase  cycle
+  ---------------------------------------------------------------------------------------------
+102,155c102,155
+<        pll-core                       1        1        0   624000000          0     0  50000
+<           cpu                         2        2        0   624000000          0     0  50000
+<              axi                      1        1        0   208000000          0     0  50000
+<                 ahb                  16       16        0   104000000          0     0  50000
+<                    ahb-gpu            0        0        0   104000000          0     0  50000
+<                    ahb-mp             0        0        0   104000000          0     0  50000
+<                    ahb-de-fe1         0        0        0   104000000          0     0  50000
+<                    ahb-de-fe0         0        0        0   104000000          0     0  50000
+<                    ahb-de-be1         1        1        0   104000000          0     0  50000
+<                    ahb-de-be0         1        1        0   104000000          0     0  50000
+<                    ahb-hdmi0          1        1        0   104000000          0     0  50000
+<                    ahb-csi1           0        0        0   104000000          0     0  50000
+<                    ahb-csi0           0        0        0   104000000          0     0  50000
+<                    ahb-lcd1           1        1        0   104000000          0     0  50000
+<                    ahb-lcd0           1        1        0   104000000          0     0  50000
+<                    ahb-tve1           0        0        0   104000000          0     0  50000
+<                    ahb-tve0           0        0        0   104000000          0     0  50000
+<                    ahb-tvd            0        0        0   104000000          0     0  50000
+<                    ahb-ve             0        0        0   104000000          0     0  50000
+<                    ahb-gps            0        0        0   104000000          0     0  50000
+<                    ahb-sata           1        1        0   104000000          0     0  50000
+<                    ahb-pata           0        0        0   104000000          0     0  50000
+<                    ahb-spi3           0        0        0   104000000          0     0  50000
+<                    ahb-spi2           0        0        0   104000000          0     0  50000
+<                    ahb-spi1           0        0        0   104000000          0     0  50000
+<                    ahb-spi0           0        0        0   104000000          0     0  50000
+<                    ahb-ts             0        0        0   104000000          0     0  50000
+<                    ahb-emac           1        1        0   104000000          0     0  50000
+<                    ahb-ace            0        0        0   104000000          0     0  50000
+<                    ahb-sdram          1        1        0   104000000          0     0  50000
+<                    ahb-nand           0        0        0   104000000          0     0  50000
+<                    ahb-ms             0        0        0   104000000          0     0  50000
+<                    ahb-mmc3           0        0        0   104000000          0     0  50000
+<                    ahb-mmc2           0        0        0   104000000          0     0  50000
+<                    ahb-mmc1           0        0        0   104000000          0     0  50000
+<                    ahb-mmc0           1        1        0   104000000          0     0  50000
+<                    ahb-bist           0        0        0   104000000          0     0  50000
+<                    ahb-dma            1        1        0   104000000          0     0  50000
+<                    ahb-ss             0        0        0   104000000          0     0  50000
+<                    ahb-ohci1          1        1        0   104000000          0     0  50000
+<                    ahb-ehci1          1        1        0   104000000          0     0  50000
+<                    ahb-ohci0          1        1        0   104000000          0     0  50000
+<                    ahb-ehci0          1        1        0   104000000          0     0  50000
+<                    ahb-otg            1        1        0   104000000          0     0  50000
+<                    apb0               1        1        0    52000000          0     0  50000
+<                       apb0-keypad       0        0        0    52000000          0     0  50000
+<                       apb0-ir1        0        0        0    52000000          0     0  50000
+<                       apb0-ir0        0        0        0    52000000          0     0  50000
+<                       apb0-pio        1        1        0    52000000          0     0  50000
+<                       apb0-ac97       0        0        0    52000000          0     0  50000
+<                       apb0-i2s0       0        0        0    52000000          0     0  50000
+<                       apb0-spdif       0        0        0    52000000          0     0  50000
+<                       apb0-codec       0        0        0    52000000          0     0  50000
+<                    axi-dram           0        0        0   104000000          0     0  50000
+---
+>        pll-core                       1        1        0   912000000          0     0  50000
+>           cpu                         2        2        0   912000000          0     0  50000
+>              axi                      1        1        0   304000000          0     0  50000
+>                 ahb                  16       16        0   152000000          0     0  50000
+>                    ahb-gpu            0        0        0   152000000          0     0  50000
+>                    ahb-mp             0        0        0   152000000          0     0  50000
+>                    ahb-de-fe1         0        0        0   152000000          0     0  50000
+>                    ahb-de-fe0         0        0        0   152000000          0     0  50000
+>                    ahb-de-be1         1        1        0   152000000          0     0  50000
+>                    ahb-de-be0         1        1        0   152000000          0     0  50000
+>                    ahb-hdmi0          1        1        0   152000000          0     0  50000
+>                    ahb-csi1           0        0        0   152000000          0     0  50000
+>                    ahb-csi0           0        0        0   152000000          0     0  50000
+>                    ahb-lcd1           1        1        0   152000000          0     0  50000
+>                    ahb-lcd0           1        1        0   152000000          0     0  50000
+>                    ahb-tve1           0        0        0   152000000          0     0  50000
+>                    ahb-tve0           0        0        0   152000000          0     0  50000
+>                    ahb-tvd            0        0        0   152000000          0     0  50000
+>                    ahb-ve             0        0        0   152000000          0     0  50000
+>                    ahb-gps            0        0        0   152000000          0     0  50000
+>                    ahb-sata           1        1        0   152000000          0     0  50000
+>                    ahb-pata           0        0        0   152000000          0     0  50000
+>                    ahb-spi3           0        0        0   152000000          0     0  50000
+>                    ahb-spi2           0        0        0   152000000          0     0  50000
+>                    ahb-spi1           0        0        0   152000000          0     0  50000
+>                    ahb-spi0           0        0        0   152000000          0     0  50000
+>                    ahb-ts             0        0        0   152000000          0     0  50000
+>                    ahb-emac           1        1        0   152000000          0     0  50000
+>                    ahb-ace            0        0        0   152000000          0     0  50000
+>                    ahb-sdram          1        1        0   152000000          0     0  50000
+>                    ahb-nand           0        0        0   152000000          0     0  50000
+>                    ahb-ms             0        0        0   152000000          0     0  50000
+>                    ahb-mmc3           0        0        0   152000000          0     0  50000
+>                    ahb-mmc2           0        0        0   152000000          0     0  50000
+>                    ahb-mmc1           0        0        0   152000000          0     0  50000
+>                    ahb-mmc0           1        1        0   152000000          0     0  50000
+>                    ahb-bist           0        0        0   152000000          0     0  50000
+>                    ahb-dma            1        1        0   152000000          0     0  50000
+>                    ahb-ss             0        0        0   152000000          0     0  50000
+>                    ahb-ohci1          1        1        0   152000000          0     0  50000
+>                    ahb-ehci1          1        1        0   152000000          0     0  50000
+>                    ahb-ohci0          1        1        0   152000000          0     0  50000
+>                    ahb-ehci0          1        1        0   152000000          0     0  50000
+>                    ahb-otg            1        1        0   152000000          0     0  50000
+>                    apb0               1        1        0    76000000          0     0  50000
+>                       apb0-keypad       0        0        0    76000000          0     0  50000
+>                       apb0-ir1        0        0        0    76000000          0     0  50000
+>                       apb0-ir0        0        0        0    76000000          0     0  50000
+>                       apb0-pio        1        1        0    76000000          0     0  50000
+>                       apb0-ac97       0        0        0    76000000          0     0  50000
+>                       apb0-i2s0       0        0        0    76000000          0     0  50000
+>                       apb0-spdif       0        0        0    76000000          0     0  50000
+>                       apb0-codec       0        0        0    76000000          0     0  50000
+>                    axi-dram           0        0        0   152000000          0     0  50000
+
+##########################################################################
+
+# Olimex A10-OLinuXino-LIME
+
+Tested with sbc-bench v0.9.57 on Mon, 27 Nov 2023 13:25:18 +0000.
+
+### General information:
+
+    Allwinner A10 (SID: 16236782), Kernel: armv7l, Userland: armhf
+    
+    CPU sysfs topology (clusters, cpufreq members, clockspeeds)
+                     cpufreq   min    max
+     CPU    cluster  policy   speed  speed   core type
+      0       -1        0      624     912   Cortex-A8 / r3p2
+
+491 KB available RAM
+
+### Governors/policies (performance vs. idle consumption):
+
+Original governor settings:
+
+    cpufreq-policy0: ondemand / 912 MHz (conservative ondemand userspace powersave performance schedutil / 624 864 912)
+
+Tuned governor settings:
+
+    cpufreq-policy0: performance / 912 MHz
+
+### Clockspeeds (idle vs. heated up):
+
+Before at 47.6°C:
+
+    cpu0 (Cortex-A8): OPP:  912, Measured:  908 
+
+After at 55.3°C:
+
+    cpu0 (Cortex-A8): OPP:  912, Measured:  908 
+
+### Performance baseline
+
+  * memcpy: 445.7 MB/s, memchr: 282.8 MB/s, memset: 1306.3 MB/s
+  * 16M latency: 301.5 344.6 205.2 339.4 206.4 339.9 719.4 1294 
+  * 128M latency: 234.5 466.9 232.3 471.3 231.0 475.5 671.1 1355 
+  * 7-zip MIPS (3 consecutive runs): 541 (540 avg), single-threaded: 541
+  * `aes-256-cbc      12201.71k    27314.90k    29745.15k    28019.71k    27885.57k    27159.21k`
+  * `aes-256-cbc      19594.95k    23484.59k    27768.49k    27373.57k    28508.16k    28426.24k`
+
+### Storage devices:
+
+  * 7.4GB "SanDisk SU08G" SD card as /dev/mmcblk0: date 06/2013, manfid/oemid: 0x000003/0x5344, hw/fw rev: 0x8/0x0
+
+### Swap configuration:
+
+  * /dev/zram0: 246M (11.5M used, lzo-rle, 1 streams, 11.4M data, 5.5M compressed, 6.4M total)
+
+### Software versions:
+
+  * Debian GNU/Linux 11 (bullseye) arm
+  * Build scripts: git@github.com:armbian/build, 21.08.1, Lime A10, sun4i, sunxi
+  * Compiler: /usr/bin/gcc (Debian 10.2.1-6) 10.2.1 20210110 / arm-linux-gnueabihf
+  * OpenSSL 1.1.1k, built on 25 Mar 2021          
+
+### Kernel info:
+
+  * `/proc/cmdline: root=UUID=4a1ddfcc-aea5-49e6-9918-31848b4639f0 rootwait rootfstype=ext4 console=ttyS0,115200 console=tty1 hdmi.audio=EDID:0 disp.screen0_output_mode=1920x1080p60 consoleblank=0 loglevel=1 ubootpart=21bfb2b9-01 ubootsource=mmc usb-storage.quirks=   sunxi_ve_mem_reserve=0 sunxi_g2d_mem_reserve=0 sunxi_fb_mem_reserve=16 cgroup_enable=memory swapaccount=1`
+  * Kernel 5.10.60-sunxi / CONFIG_HZ=250
+
+Kernel 5.10.60 is not latest 5.10.201 LTS that was released on 2023-11-20.
+
+See https://endoflife.date/linux for details. It is somewhat likely that
+a lot of exploitable vulnerabilities exist for this kernel as well as many
+unfixed bugs.

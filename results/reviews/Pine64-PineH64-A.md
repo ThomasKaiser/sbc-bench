@@ -1,6 +1,6 @@
 # Pine H64 model A
 
-Tested with sbc-bench v0.9.57 on Mon, 27 Nov 2023 10:22:45 +0100. Full info: [http://ix.io/4MBc](http://ix.io/4MBc)
+Tested with sbc-bench v0.9.57 on Mon, 27 Nov 2023 10:22:45 +0100. Full info: [http://ix.io/4MBc](../4MBc.txt)
 
 ### General information:
 

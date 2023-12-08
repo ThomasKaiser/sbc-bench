@@ -1,6 +1,6 @@
-# Radxa ZERO 3
+# Radxa ZERO 3W
 
-Tested with sbc-bench v0.9.50 on Thu, 09 Nov 2023 13:23:38 +0000. Full info: [http://ix.io/4L4k](results/4L4k.txt)
+Tested with sbc-bench v0.9.50 on Thu, 09 Nov 2023 13:23:38 +0000. Full info: [http://ix.io/4L4k](../4L4k.txt)
 
 ### General information:
 

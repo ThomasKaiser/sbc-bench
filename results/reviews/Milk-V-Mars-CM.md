@@ -1,6 +1,6 @@
 # Milk-V Mars CM eMMC
 
-Tested with sbc-bench v0.9.49 on Sat, 28 Oct 2023 00:53:32 +0000.  Full info: [http://ix.io/4K7E](http://ix.io/4K7E) and [Jeff Geerling's review thread](https://github.com/geerlingguy/sbc-reviews/issues/22).
+Tested with sbc-bench v0.9.49 on Sat, 28 Oct 2023 00:53:32 +0000. Full info: [http://ix.io/4K7E](../4K7E.txt) and [Jeff Geerling's review thread](https://github.com/geerlingguy/sbc-reviews/issues/22).
 
 ### General information:
 

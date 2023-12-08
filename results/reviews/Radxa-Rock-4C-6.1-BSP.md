@@ -1,6 +1,6 @@
 # Radxa ROCK Pi 4C
 
-Tested with sbc-bench v0.9.51 on Sun, 19 Nov 2023 11:34:51 +0300. Full info: [http://ix.io/4LT2](http://ix.io/4LT2)
+Tested with sbc-bench v0.9.51 on Sun, 19 Nov 2023 11:34:51 +0300. Full info: [http://ix.io/4LT2](../4LT2.txt)
 
 ### General information:
 

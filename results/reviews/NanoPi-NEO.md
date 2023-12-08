@@ -1,6 +1,6 @@
 # NanoPi NEO
 
-Tested with sbc-bench v0.9.57 on Mon, 27 Nov 2023 10:45:32 +0100. Full info: [http://ix.io/4MBf](http://ix.io/4MBf)
+Tested with sbc-bench v0.9.57 on Mon, 27 Nov 2023 10:45:32 +0100. Full info: [http://ix.io/4MBf](../4MBf.txt)
 
 ### General information:
 

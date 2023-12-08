@@ -1,6 +1,6 @@
 # FriendlyElec NanoPi R5S
 
-Tested with sbc-bench v0.9.50 on Thu, 09 Nov 2023 13:38:32 +0000. Full info: [http://ix.io/4L4u](http://ix.io/4L4u)
+Tested with sbc-bench v0.9.50 on Thu, 09 Nov 2023 13:38:32 +0000. Full info: [http://ix.io/4L4u](../4L4u.txt)
 
 ### General information:
 

@@ -1,0 +1,3435 @@
+sbc-bench v0.9.44 Khadas Mind 1.0 / i7-1360P review (Sun, 20 Aug 2023 20:36:40 +0700)
+
+Distributor ID:	Ubuntu
+Description:	Ubuntu 22.04.3 LTS
+Release:	22.04
+Codename:	jammy
+
+Device Info:
+	Manufacturer: Khadas
+	Product Name: Mind
+	Version: 1.0
+
+BIOS/UEFI:
+	Vendor: American Megatrends International, LLC.
+	Version: 3.0
+	Release Date: 06/07/2023
+	BIOS Revision: 3.0
+	Firmware Revision: 2.7
+
+/usr/bin/gcc (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0
+
+Uptime: 20:36:40 up  1:03,  2 users,  load average: 0.55, 0.55, 0.77,  62.0°C,  19410727
+
+Linux 6.2.0-26-generic (Khadas-Mind-CNX) 	20/08/2566 	_x86_64_	(16 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+           4.04    0.04    1.53    1.38    0.00   93.00
+
+Device             tps    kB_read/s    kB_wrtn/s    kB_dscd/s    kB_read    kB_wrtn    kB_dscd
+nvme0n1          77.65       700.00      3246.40         0.00    2664142   12355461          0
+sdb               1.53        16.10         0.48         0.00      61277       1808          0
+sdd               0.20         2.22         0.01         0.00       8434         48          0
+sde               0.61         4.36         0.00         0.00      16604          8          0
+sdf               0.34        10.94        17.30         0.00      41633      65828          0
+
+               total        used        free      shared  buff/cache   available
+Mem:            31Gi       1.4Gi        28Gi       361Mi       765Mi        28Gi
+Swap:             0B          0B          0B
+
+##########################################################################
+
+Intel P-States: Intel P-state driver initializing, HWP enabled
+
+Intel Hardware Feedback Interface enabled (2 core types)
+
+Powercap present. You might want to check with "powercap-info -p intel-rapl"
+
+Checking cpufreq OPP for cpu0-cpu7 (Performance):
+
+Cpufreq OPP: 5000    Measured: 4970 (4972.222/4971.725/4966.201)
+Cpufreq OPP:  400    Measured:  417    (428.916/412.986/410.954)     (+4.2%)
+
+Checking cpufreq OPP for cpu8-cpu15 (Efficiency):
+
+Cpufreq OPP: 3700    Measured: 3690 (3690.380/3690.380/3690.334)
+Cpufreq OPP:  400    Measured:  410    (414.516/409.845/408.582)     (+2.5%)
+
+##########################################################################
+
+Hardware sensors:
+
+coretemp-isa-0000
+Package id 0:  +61.0 C  (high = +100.0 C, crit = +100.0 C)
+Core 0:        +55.0 C  (high = +100.0 C, crit = +100.0 C)
+Core 4:        +61.0 C  (high = +100.0 C, crit = +100.0 C)
+Core 8:        +59.0 C  (high = +100.0 C, crit = +100.0 C)
+Core 12:       +56.0 C  (high = +100.0 C, crit = +100.0 C)
+Core 16:       +57.0 C  (high = +100.0 C, crit = +100.0 C)
+Core 17:       +57.0 C  (high = +100.0 C, crit = +100.0 C)
+Core 18:       +57.0 C  (high = +100.0 C, crit = +100.0 C)
+Core 19:       +57.0 C  (high = +100.0 C, crit = +100.0 C)
+Core 20:       +57.0 C  (high = +100.0 C, crit = +100.0 C)
+Core 21:       +57.0 C  (high = +100.0 C, crit = +100.0 C)
+Core 22:       +57.0 C  (high = +100.0 C, crit = +100.0 C)
+Core 23:       +57.0 C  (high = +100.0 C, crit = +100.0 C)
+
+BAT1-acpi-0
+in0:          12.39 V  
+
+iwlwifi_1-virtual-0
+temp1:        +48.0 C  
+
+nvme-pci-0200
+Composite:    +53.9 C  (low  = -40.1 C, high = +83.8 C)
+                       (crit = +87.8 C)
+Sensor 1:     +71.8 C  (low  = -273.1 C, high = +65261.8 C)
+Sensor 2:     +53.9 C  (low  = -273.1 C, high = +65261.8 C)
+
+acpitz-acpi-0
+
+/dev/nvme0:	54°C
+
+##########################################################################
+
+Executing benchmark on cpu0 (Performance):
+
+tinymembench v0.4.9-nuumio (simple benchmark for memory throughput and latency)
+
+CFLAGS: 
+bandwidth test min repeats (-b): 2
+bandwidth test max repeats (-B): 3
+bandwidth test mem realloc (-M): no      (-m for realloc)
+      latency test repeats (-l): 3
+        latency test count (-c): 1000000
+
+==========================================================================
+== Memory bandwidth tests                                               ==
+==                                                                      ==
+== Note 1: 1MB = 1000000 bytes                                          ==
+== Note 2: Test result is the best of repeated runs. Number of repeats  ==
+==         is shown in brackets                                         ==
+== Note 3: Results for 'copy' tests show how many bytes can be          ==
+==         copied per second (adding together read and writen           ==
+==         bytes would have provided twice higher numbers)              ==
+== Note 4: 2-pass copy means that we are using a small temporary buffer ==
+==         to first fetch data into it, and only then write it to the   ==
+==         destination (source -> L1 cache, L1 cache -> destination)    ==
+== Note 5: If sample standard deviation exceeds 0.1%, it is shown in    ==
+==         brackets                                                     ==
+==========================================================================
+
+ C copy backwards                                 :  12740.4 MB/s (3, 3.0%)
+ C copy backwards (32 byte blocks)                :  12736.0 MB/s (3, 0.2%)
+ C copy backwards (64 byte blocks)                :  12731.4 MB/s (2)
+ C copy                                           :  12766.7 MB/s (2)
+ C copy prefetched (32 bytes step)                :  12622.6 MB/s (2)
+ C copy prefetched (64 bytes step)                :  12635.9 MB/s (3, 0.2%)
+ C 2-pass copy                                    :  10620.6 MB/s (2)
+ C 2-pass copy prefetched (32 bytes step)         :   9987.7 MB/s (2)
+ C 2-pass copy prefetched (64 bytes step)         :  10108.1 MB/s (2)
+ C scan 8                                         :   4847.5 MB/s (3, 0.4%)
+ C scan 16                                        :   9306.8 MB/s (3, 0.5%)
+ C scan 32                                        :  14986.0 MB/s (2)
+ C scan 64                                        :  20807.5 MB/s (2)
+ C fill                                           :  19520.2 MB/s (3, 0.2%)
+ C fill (shuffle within 16 byte blocks)           :  19486.0 MB/s (3, 0.2%)
+ C fill (shuffle within 32 byte blocks)           :  19474.4 MB/s (2)
+ C fill (shuffle within 64 byte blocks)           :  19456.1 MB/s (2)
+ ---
+ libc memcpy copy                                 :  25389.5 MB/s (2)
+ libc memchr scan                                 :  30560.0 MB/s (3, 0.1%)
+ libc memset fill                                 :  24731.8 MB/s (2)
+ ---
+ MOVSB copy                                       :  14507.6 MB/s (2)
+ MOVSD copy                                       :  14432.1 MB/s (2)
+ STOSB fill                                       :  24735.5 MB/s (3, 0.3%)
+ SSE2 copy                                        :  14458.1 MB/s (3, 0.4%)
+ SSE2 nontemporal copy                            :  20125.0 MB/s (3)
+ SSE2 copy prefetched (32 bytes step)             :  13487.3 MB/s (3, 0.5%)
+ SSE2 copy prefetched (64 bytes step)             :  13534.3 MB/s (2)
+ SSE2 nontemporal copy prefetched (32 bytes step) :  18766.8 MB/s (2)
+ SSE2 nontemporal copy prefetched (64 bytes step) :  18895.0 MB/s (2)
+ SSE2 2-pass copy                                 :  11195.6 MB/s (3, 0.3%)
+ SSE2 2-pass copy prefetched (32 bytes step)      :  10606.9 MB/s (2)
+ SSE2 2-pass copy prefetched (64 bytes step)      :  10481.5 MB/s (2)
+ SSE2 2-pass nontemporal copy                     :   5831.2 MB/s (3, 0.2%)
+ SSE2 fill                                        :  19887.0 MB/s (3, 0.2%)
+ SSE2 nontemporal fill                            :  58274.7 MB/s (2)
+
+==========================================================================
+== Framebuffer read tests.                                              ==
+==                                                                      ==
+== Many ARM devices use a part of the system memory as the framebuffer, ==
+== typically mapped as uncached but with write-combining enabled.       ==
+== Writes to such framebuffers are quite fast, but reads are much       ==
+== slower and very sensitive to the alignment and the selection of      ==
+== CPU instructions which are used for accessing memory.                ==
+==                                                                      ==
+== Many x86 systems allocate the framebuffer in the GPU memory,         ==
+== accessible for the CPU via a relatively slow PCI-E bus. Moreover,    ==
+== PCI-E is asymmetric and handles reads a lot worse than writes.       ==
+==                                                                      ==
+== If uncached framebuffer reads are reasonably fast (at least 100 MB/s ==
+== or preferably >300 MB/s), then using the shadow framebuffer layer    ==
+== is not necessary in Xorg DDX drivers, resulting in a nice overall    ==
+== performance improvement. For example, the xf86-video-fbturbo DDX     ==
+== uses this trick.                                                     ==
+==========================================================================
+
+ MOVSD copy (from framebuffer)                    :    168.4 MB/s (2)
+ MOVSD 2-pass copy (from framebuffer)             :    169.5 MB/s (3)
+ SSE2 copy (from framebuffer)                     :     44.2 MB/s (2)
+ SSE2 2-pass copy (from framebuffer)              :     44.2 MB/s (2)
+
+==========================================================================
+== Memory latency test                                                  ==
+==                                                                      ==
+== Average time is measured for random memory accesses in the buffers   ==
+== of different sizes. The larger is the buffer, the more significant   ==
+== are relative contributions of TLB, L1/L2 cache misses and SDRAM      ==
+== accesses. For extremely large buffer sizes we are expecting to see   ==
+== page table walk with several requests to SDRAM for almost every      ==
+== memory access (though 64MiB is not nearly large enough to experience ==
+== this effect to its fullest).                                         ==
+==                                                                      ==
+== Note 1: All the numbers are representing extra time, which needs to  ==
+==         be added to L1 cache latency. The cycle timings for L1 cache ==
+==         latency can be usually found in the processor documentation. ==
+== Note 2: Dual random read means that we are simultaneously performing ==
+==         two independent memory accesses at a time. In the case if    ==
+==         the memory subsystem can't handle multiple outstanding       ==
+==         requests, dual random read has the same timings as two       ==
+==         single reads performed one after another.                    ==
+==========================================================================
+
+block size : single random read / dual random read, [MADV_NOHUGEPAGE]
+      1024 :    0.0 ns          /     0.0 ns 
+      2048 :    0.0 ns          /     0.0 ns 
+      4096 :    0.0 ns          /     0.0 ns 
+      8192 :    0.0 ns          /     0.0 ns 
+     16384 :    0.0 ns          /     0.0 ns 
+     32768 :    0.0 ns          /     0.0 ns 
+     65536 :    0.5 ns          /     0.8 ns 
+    131072 :    1.3 ns          /     1.6 ns 
+    262144 :    1.7 ns          /     1.9 ns 
+    524288 :    2.2 ns          /     2.6 ns 
+   1048576 :    3.8 ns          /     4.0 ns 
+   2097152 :    7.7 ns          /     8.7 ns 
+   4194304 :   10.5 ns          /    11.6 ns 
+   8388608 :   17.0 ns          /    13.3 ns 
+  16777216 :   30.9 ns          /    26.2 ns 
+  33554432 :   56.7 ns          /    69.8 ns 
+  67108864 :   72.1 ns          /    92.0 ns 
+
+block size : single random read / dual random read, [MADV_HUGEPAGE]
+      1024 :    0.0 ns          /     0.0 ns 
+      2048 :    0.0 ns          /     0.0 ns 
+      4096 :    0.0 ns          /     0.0 ns 
+      8192 :    0.0 ns          /     0.0 ns 
+     16384 :    0.0 ns          /     0.0 ns 
+     32768 :    0.0 ns          /     0.0 ns 
+     65536 :    0.5 ns          /     0.8 ns 
+    131072 :    1.3 ns          /     1.7 ns 
+    262144 :    1.7 ns          /     1.9 ns 
+    524288 :    1.9 ns          /     2.0 ns 
+   1048576 :    2.0 ns          /     1.9 ns 
+   2097152 :    6.5 ns          /     7.3 ns 
+   4194304 :    9.6 ns          /    10.3 ns 
+   8388608 :   13.7 ns          /    11.2 ns 
+  16777216 :   18.0 ns          /    17.8 ns 
+  33554432 :   43.9 ns          /    65.0 ns 
+  67108864 :   67.0 ns          /    86.9 ns 
+
+Executing benchmark on cpu8 (Efficiency):
+
+tinymembench v0.4.9-nuumio (simple benchmark for memory throughput and latency)
+
+CFLAGS: 
+bandwidth test min repeats (-b): 2
+bandwidth test max repeats (-B): 3
+bandwidth test mem realloc (-M): no      (-m for realloc)
+      latency test repeats (-l): 3
+        latency test count (-c): 1000000
+
+==========================================================================
+== Memory bandwidth tests                                               ==
+==                                                                      ==
+== Note 1: 1MB = 1000000 bytes                                          ==
+== Note 2: Test result is the best of repeated runs. Number of repeats  ==
+==         is shown in brackets                                         ==
+== Note 3: Results for 'copy' tests show how many bytes can be          ==
+==         copied per second (adding together read and writen           ==
+==         bytes would have provided twice higher numbers)              ==
+== Note 4: 2-pass copy means that we are using a small temporary buffer ==
+==         to first fetch data into it, and only then write it to the   ==
+==         destination (source -> L1 cache, L1 cache -> destination)    ==
+== Note 5: If sample standard deviation exceeds 0.1%, it is shown in    ==
+==         brackets                                                     ==
+==========================================================================
+
+ C copy backwards                                 :   4138.5 MB/s (3, 0.2%)
+ C copy backwards (32 byte blocks)                :   4121.9 MB/s (3)
+ C copy backwards (64 byte blocks)                :   4105.4 MB/s (2)
+ C copy                                           :   4107.1 MB/s (2)
+ C copy prefetched (32 bytes step)                :   4089.1 MB/s (2)
+ C copy prefetched (64 bytes step)                :   4097.8 MB/s (2)
+ C 2-pass copy                                    :   4197.7 MB/s (2)
+ C 2-pass copy prefetched (32 bytes step)         :   3557.1 MB/s (2)
+ C 2-pass copy prefetched (64 bytes step)         :   3605.8 MB/s (3, 0.3%)
+ C scan 8                                         :   2892.5 MB/s (2)
+ C scan 16                                        :   5623.4 MB/s (2)
+ C scan 32                                        :   8565.6 MB/s (2)
+ C scan 64                                        :   9211.3 MB/s (2)
+ C fill                                           :   8013.5 MB/s (2)
+ C fill (shuffle within 16 byte blocks)           :   8175.5 MB/s (3, 1.2%)
+ C fill (shuffle within 32 byte blocks)           :   7986.7 MB/s (2)
+ C fill (shuffle within 64 byte blocks)           :   7988.7 MB/s (2)
+ ---
+ libc memcpy copy                                 :   7165.4 MB/s (2)
+ libc memchr scan                                 :   9257.6 MB/s (2)
+ libc memset fill                                 :   8117.8 MB/s (2)
+ ---
+ MOVSB copy                                       :   4668.2 MB/s (2)
+ MOVSD copy                                       :   4668.0 MB/s (2)
+ STOSB fill                                       :   8106.4 MB/s (3)
+ SSE2 copy                                        :   4645.3 MB/s (2)
+ SSE2 nontemporal copy                            :   7397.9 MB/s (3, 0.1%)
+ SSE2 copy prefetched (32 bytes step)             :   4428.8 MB/s (2)
+ SSE2 copy prefetched (64 bytes step)             :   4492.8 MB/s (2)
+ SSE2 nontemporal copy prefetched (32 bytes step) :   6773.2 MB/s (2)
+ SSE2 nontemporal copy prefetched (64 bytes step) :   6928.1 MB/s (2)
+ SSE2 2-pass copy                                 :   4162.7 MB/s (2)
+ SSE2 2-pass copy prefetched (32 bytes step)      :   4038.5 MB/s (2)
+ SSE2 2-pass copy prefetched (64 bytes step)      :   4083.3 MB/s (2)
+ SSE2 2-pass nontemporal copy                     :   3488.0 MB/s (2)
+ SSE2 fill                                        :   8388.1 MB/s (3, 1.7%)
+ SSE2 nontemporal fill                            :  21421.9 MB/s (2)
+
+==========================================================================
+== Framebuffer read tests.                                              ==
+==                                                                      ==
+== Many ARM devices use a part of the system memory as the framebuffer, ==
+== typically mapped as uncached but with write-combining enabled.       ==
+== Writes to such framebuffers are quite fast, but reads are much       ==
+== slower and very sensitive to the alignment and the selection of      ==
+== CPU instructions which are used for accessing memory.                ==
+==                                                                      ==
+== Many x86 systems allocate the framebuffer in the GPU memory,         ==
+== accessible for the CPU via a relatively slow PCI-E bus. Moreover,    ==
+== PCI-E is asymmetric and handles reads a lot worse than writes.       ==
+==                                                                      ==
+== If uncached framebuffer reads are reasonably fast (at least 100 MB/s ==
+== or preferably >300 MB/s), then using the shadow framebuffer layer    ==
+== is not necessary in Xorg DDX drivers, resulting in a nice overall    ==
+== performance improvement. For example, the xf86-video-fbturbo DDX     ==
+== uses this trick.                                                     ==
+==========================================================================
+
+ MOVSD copy (from framebuffer)                    :     40.3 MB/s (2)
+ MOVSD 2-pass copy (from framebuffer)             :     40.3 MB/s (3)
+ SSE2 copy (from framebuffer)                     :     40.3 MB/s (2)
+ SSE2 2-pass copy (from framebuffer)              :     40.3 MB/s (2)
+
+==========================================================================
+== Memory latency test                                                  ==
+==                                                                      ==
+== Average time is measured for random memory accesses in the buffers   ==
+== of different sizes. The larger is the buffer, the more significant   ==
+== are relative contributions of TLB, L1/L2 cache misses and SDRAM      ==
+== accesses. For extremely large buffer sizes we are expecting to see   ==
+== page table walk with several requests to SDRAM for almost every      ==
+== memory access (though 64MiB is not nearly large enough to experience ==
+== this effect to its fullest).                                         ==
+==                                                                      ==
+== Note 1: All the numbers are representing extra time, which needs to  ==
+==         be added to L1 cache latency. The cycle timings for L1 cache ==
+==         latency can be usually found in the processor documentation. ==
+== Note 2: Dual random read means that we are simultaneously performing ==
+==         two independent memory accesses at a time. In the case if    ==
+==         the memory subsystem can't handle multiple outstanding       ==
+==         requests, dual random read has the same timings as two       ==
+==         single reads performed one after another.                    ==
+==========================================================================
+
+block size : single random read / dual random read, [MADV_NOHUGEPAGE]
+      1024 :    0.0 ns          /     0.0 ns 
+      2048 :    0.0 ns          /     0.0 ns 
+      4096 :    0.0 ns          /     0.0 ns 
+      8192 :    0.0 ns          /     0.0 ns 
+     16384 :    0.0 ns          /     0.0 ns 
+     32768 :    0.0 ns          /     0.0 ns 
+     65536 :    2.3 ns          /     3.4 ns 
+    131072 :    3.5 ns          /     4.3 ns 
+    262144 :    4.8 ns          /     5.5 ns 
+    524288 :    5.9 ns          /     6.6 ns 
+   1048576 :    6.7 ns          /     6.9 ns 
+   2097152 :   11.0 ns          /     9.3 ns 
+   4194304 :   14.6 ns          /    17.0 ns 
+   8388608 :   27.7 ns          /    19.8 ns 
+  16777216 :   45.5 ns          /    35.8 ns 
+  33554432 :   70.4 ns          /    80.9 ns 
+  67108864 :   83.6 ns          /   103.3 ns 
+
+block size : single random read / dual random read, [MADV_HUGEPAGE]
+      1024 :    0.0 ns          /     0.0 ns 
+      2048 :    0.0 ns          /     0.0 ns 
+      4096 :    0.0 ns          /     0.0 ns 
+      8192 :    0.0 ns          /     0.0 ns 
+     16384 :    0.0 ns          /     0.0 ns 
+     32768 :    0.0 ns          /     0.0 ns 
+     65536 :    2.3 ns          /     3.4 ns 
+    131072 :    3.5 ns          /     4.3 ns 
+    262144 :    4.4 ns          /     4.5 ns 
+    524288 :    4.4 ns          /     4.6 ns 
+   1048576 :    4.7 ns          /     4.6 ns 
+   2097152 :    7.4 ns          /     4.7 ns 
+   4194304 :   13.9 ns          /    14.6 ns 
+   8388608 :   21.7 ns          /    17.4 ns 
+  16777216 :   23.4 ns          /    23.1 ns 
+  33554432 :   50.5 ns          /    71.5 ns 
+  67108864 :   74.5 ns          /    93.5 ns 
+
+##########################################################################
+
+Executing ramlat on cpu0 (Performance), results in ns:
+
+       size:  1x32  2x32  1x64  2x64 1xPTR 2xPTR 4xPTR 8xPTR
+         4k: 1.081 1.083 1.191 1.191 1.007 1.003 1.003 1.003 
+         8k: 1.003 1.003 1.191 1.192 1.003 1.003 1.003 1.003 
+        16k: 1.003 1.003 1.191 1.191 1.003 1.004 1.003 1.007 
+        32k: 1.004 1.003 1.192 1.191 1.003 1.003 1.003 1.007 
+        64k: 3.002 3.012 3.190 3.190 3.002 3.008 3.010 3.195 
+       128k: 3.006 3.006 3.193 3.211 3.005 3.008 3.008 3.196 
+       256k: 3.006 3.006 3.195 3.195 3.006 3.018 3.008 3.196 
+       512k: 4.414 4.408 4.601 4.596 4.434 4.411 4.415 4.599 
+      1024k: 5.570 5.302 5.759 5.501 5.567 5.330 5.656 6.190 
+      2048k: 11.98 10.91 12.06 11.04 11.95 11.43 12.67 20.26 
+      4096k: 13.51 13.16 13.63 13.29 13.50 13.65 16.13 26.09 
+      8192k: 14.76 14.42 14.61 14.51 14.51 14.66 17.22 27.83 
+     16384k: 27.34 21.84 27.56 22.00 26.56 22.73 23.19 30.48 
+     32768k: 66.42 55.96 68.12 54.93 65.08 56.82 49.09 50.45 
+     65536k: 81.53 75.51 80.55 75.26 80.23 74.22 65.77 64.86 
+    131072k: 90.93 86.37 90.33 88.11 90.51 81.06 80.37 81.29 
+
+Executing ramlat on cpu8 (Efficiency), results in ns:
+
+       size:  1x32  2x32  1x64  2x64 1xPTR 2xPTR 4xPTR 8xPTR
+         4k: 1.085 1.084 1.338 1.338 0.813 0.813 0.813 1.084 
+         8k: 1.084 1.084 1.338 1.338 0.814 0.813 0.813 1.085 
+        16k: 1.091 1.088 1.339 1.338 0.813 0.813 0.813 1.084 
+        32k: 1.085 1.084 1.339 1.338 0.814 0.813 0.813 1.084 
+        64k: 5.691 5.691 5.946 5.944 5.419 5.421 5.420 5.461 
+       128k: 5.691 5.691 5.952 5.946 5.422 5.420 5.420 5.451 
+       256k: 8.125 8.121 8.379 8.375 7.854 7.855 7.583 7.290 
+       512k: 8.130 8.130 8.384 8.385 7.859 7.859 7.673 7.291 
+      1024k: 8.132 8.131 8.387 8.385 7.863 7.860 7.611 7.304 
+      2048k: 12.13 11.37 12.43 11.63 11.95 11.09 10.68 11.06 
+      4096k: 21.05 19.74 21.39 19.91 20.82 19.94 19.76 20.08 
+      8192k: 21.46 20.66 21.72 20.91 21.23 20.57 20.43 20.67 
+     16384k: 42.34 34.27 42.40 35.83 42.24 36.45 36.41 38.83 
+     32768k: 103.0 92.30 102.9 93.57 101.8 92.20 91.15 97.18 
+     65536k: 111.1 108.3 108.2 109.0 111.7 105.5 105.0 107.9 
+    131072k: 114.0 113.8 114.2 114.6 113.8 111.0 110.6 112.8 
+
+##########################################################################
+
+Executing benchmark on each cluster individually
+
+OpenSSL 3.0.2, built on 15 Mar 2022 (Library: OpenSSL 3.0.2 15 Mar 2022)
+type             16 bytes     64 bytes    256 bytes   1024 bytes   8192 bytes  16384 bytes
+aes-256-cbc    1438828.64k  1733297.96k  1757919.91k  1769635.50k  1772008.79k  1771334.31k (Performance)
+aes-256-cbc    1010215.46k  1283383.51k  1326648.58k  1337359.70k  1341131.43k  1341521.92k (Efficiency)
+
+##########################################################################
+
+Executing benchmark single-threaded on cpu0 (Performance)
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,16 CPUs 13th Gen Intel(R) Core(TM) i7-1360P (B06A2),ASM,AES-NI)
+
+13th Gen Intel(R) Core(TM) i7-1360P (B06A2)
+CPU Freq: - - - - - - - - -
+
+RAM size:   31820 MB,  # CPU hardware threads:  16
+RAM usage:    435 MB,  # Benchmark threads:      1
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       6997   100   6810   6807  |      64793   100   5533   5532
+23:       5929   100   6042   6041  |      64344   100   5570   5570
+24:       5537   100   5955   5954  |      63821   100   5604   5603
+25:       5145   100   5876   5874  |      62423   100   5557   5556
+----------------------------------  | ------------------------------
+Avr:             100   6171   6169  |              100   5566   5565
+Tot:             100   5868   5867
+
+Executing benchmark single-threaded on cpu8 (Efficiency)
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,16 CPUs 13th Gen Intel(R) Core(TM) i7-1360P (B06A2),ASM,AES-NI)
+
+13th Gen Intel(R) Core(TM) i7-1360P (B06A2)
+CPU Freq: - - - - - - - - -
+
+RAM size:   31820 MB,  # CPU hardware threads:  16
+RAM usage:    435 MB,  # Benchmark threads:      1
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       5624   100   5472   5471  |      48523   100   4143   4143
+23:       4843   100   4936   4935  |      49292   100   4267   4267
+24:       4396   100   4727   4727  |      48818   100   4286   4286
+25:       4119   100   4705   4704  |      47978   100   4271   4270
+----------------------------------  | ------------------------------
+Avr:             100   4960   4959  |              100   4242   4241
+Tot:             100   4601   4600
+
+##########################################################################
+
+Executing benchmark 3 times multi-threaded on CPUs 0-15
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,16 CPUs 13th Gen Intel(R) Core(TM) i7-1360P (B06A2),ASM,AES-NI)
+
+13th Gen Intel(R) Core(TM) i7-1360P (B06A2)
+CPU Freq: - - - - - - - - -
+
+RAM size:   31820 MB,  # CPU hardware threads:  16
+RAM usage:   3530 MB,  # Benchmark threads:     16
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:      55001  1339   3997  53506  |     522282  1522   2927  44545
+23:      55003  1444   3882  56042  |     531896  1578   2916  46020
+24:      52231  1420   3955  56160  |     504357  1514   2924  44270
+25:      51051  1445   4035  58289  |     498199  1570   2824  44338
+----------------------------------  | ------------------------------
+Avr:            1412   3967  55999  |             1546   2898  44793
+Tot:            1479   3433  50396
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,16 CPUs 13th Gen Intel(R) Core(TM) i7-1360P (B06A2),ASM,AES-NI)
+
+13th Gen Intel(R) Core(TM) i7-1360P (B06A2)
+CPU Freq: - - - - - - - - -
+
+RAM size:   31820 MB,  # CPU hardware threads:  16
+RAM usage:   3530 MB,  # Benchmark threads:     16
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:      42135  1449   2830  40990  |     471174  1572   2557  40186
+23:      42336  1453   2970  43136  |     465957  1583   2547  40315
+24:      40431  1437   3026  43471  |     450920  1561   2536  39580
+25:      38332  1451   3016  43767  |     424400  1500   2518  37770
+----------------------------------  | ------------------------------
+Avr:            1447   2960  42841  |             1554   2539  39463
+Tot:            1501   2750  41152
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,16 CPUs 13th Gen Intel(R) Core(TM) i7-1360P (B06A2),ASM,AES-NI)
+
+13th Gen Intel(R) Core(TM) i7-1360P (B06A2)
+CPU Freq: - - - - - - - - -
+
+RAM size:   31820 MB,  # CPU hardware threads:  16
+RAM usage:   3530 MB,  # Benchmark threads:     16
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:      44185  1423   3021  42984  |     469235  1548   2586  40021
+23:      42901  1417   3085  43711  |     467478  1584   2553  40447
+24:      40441  1440   3020  43482  |     454704  1580   2526  39912
+25:      38582  1464   3009  44052  |     442379  1581   2491  39370
+----------------------------------  | ------------------------------
+Avr:            1436   3034  43557  |             1573   2539  39937
+Tot:            1505   2786  41747
+
+Compression: 55999,42841,43557
+Decompression: 44793,39463,39937
+Total: 50396,41152,41747
+
+##########################################################################
+
+** cpuminer-multi 1.3.7 by tpruvot@github **
+BTC donation address: 1FhDPLPpw18X4srecguG3MxJYe4a1JsZnd (tpruvot)
+
+[2023-08-20 20:44:42] 16 miner threads started, using 'scrypt' algorithm.
+[2023-08-20 20:44:42] CPU #0: 10.28 kH/s
+[2023-08-20 20:44:42] CPU #1: 10.31 kH/s
+[2023-08-20 20:44:42] CPU #5: 10.64 kH/s
+[2023-08-20 20:44:42] CPU #3: 10.24 kH/s
+[2023-08-20 20:44:42] CPU #2: 10.22 kH/s
+[2023-08-20 20:44:42] CPU #7: 10.32 kH/s
+[2023-08-20 20:44:42] CPU #4: 10.03 kH/s
+[2023-08-20 20:44:42] CPU #6: 9.99 kH/s
+[2023-08-20 20:44:42] CPU #8: 7.56 kH/s
+[2023-08-20 20:44:42] CPU #9: 7.54 kH/s
+[2023-08-20 20:44:42] CPU #11: 7.54 kH/s
+[2023-08-20 20:44:42] CPU #12: 7.50 kH/s
+[2023-08-20 20:44:42] CPU #13: 7.48 kH/s
+[2023-08-20 20:44:42] CPU #14: 7.40 kH/s
+[2023-08-20 20:44:42] CPU #15: 7.17 kH/s
+[2023-08-20 20:44:42] CPU #10: 6.60 kH/s
+[2023-08-20 20:44:48] CPU #1: 8.83 kH/s
+[2023-08-20 20:44:48] CPU #0: 8.80 kH/s
+[2023-08-20 20:44:48] CPU #5: 9.03 kH/s
+[2023-08-20 20:44:48] CPU #15: 5.99 kH/s
+[2023-08-20 20:44:48] Total: 128.78 kH/s
+[2023-08-20 20:44:48] CPU #14: 5.89 kH/s
+[2023-08-20 20:44:48] CPU #8: 5.99 kH/s
+[2023-08-20 20:44:48] CPU #11: 5.97 kH/s
+[2023-08-20 20:44:48] CPU #9: 5.94 kH/s
+[2023-08-20 20:44:48] CPU #13: 5.86 kH/s
+[2023-08-20 20:44:48] CPU #12: 5.81 kH/s
+[2023-08-20 20:44:52] Total: 118.95 kH/s
+[2023-08-20 20:44:52] CPU #10: 5.99 kH/s
+[2023-08-20 20:44:52] CPU #6: 8.97 kH/s
+[2023-08-20 20:44:52] CPU #4: 8.96 kH/s
+[2023-08-20 20:44:52] CPU #2: 8.93 kH/s
+[2023-08-20 20:44:52] CPU #3: 8.94 kH/s
+[2023-08-20 20:44:52] CPU #7: 8.98 kH/s
+[2023-08-20 20:44:57] CPU #1: 8.80 kH/s
+[2023-08-20 20:44:57] CPU #0: 8.64 kH/s
+[2023-08-20 20:44:57] CPU #5: 8.95 kH/s
+[2023-08-20 20:44:57] CPU #15: 5.93 kH/s
+[2023-08-20 20:44:57] Total: 118.43 kH/s
+[2023-08-20 20:44:57] CPU #14: 5.94 kH/s
+[2023-08-20 20:44:57] CPU #11: 6.04 kH/s
+[2023-08-20 20:44:57] CPU #8: 6.04 kH/s
+[2023-08-20 20:44:57] CPU #9: 6.03 kH/s
+[2023-08-20 20:44:57] CPU #13: 5.95 kH/s
+[2023-08-20 20:44:57] CPU #12: 5.94 kH/s
+[2023-08-20 20:45:02] Total: 119.13 kH/s
+[2023-08-20 20:45:02] CPU #2: 9.96 kH/s
+[2023-08-20 20:45:02] CPU #10: 6.03 kH/s
+[2023-08-20 20:45:02] CPU #6: 8.98 kH/s
+[2023-08-20 20:45:02] CPU #4: 8.94 kH/s
+[2023-08-20 20:45:02] CPU #7: 8.98 kH/s
+[2023-08-20 20:45:03] CPU #3: 7.99 kH/s
+[2023-08-20 20:45:07] CPU #1: 8.75 kH/s
+[2023-08-20 20:45:07] CPU #0: 8.63 kH/s
+[2023-08-20 20:45:07] CPU #5: 8.95 kH/s
+[2023-08-20 20:45:07] CPU #15: 5.93 kH/s
+[2023-08-20 20:45:07] Total: 120.05 kH/s
+[2023-08-20 20:45:07] CPU #14: 5.93 kH/s
+[2023-08-20 20:45:07] CPU #9: 6.02 kH/s
+[2023-08-20 20:45:07] CPU #11: 6.02 kH/s
+[2023-08-20 20:45:07] CPU #8: 6.02 kH/s
+[2023-08-20 20:45:07] CPU #13: 5.93 kH/s
+[2023-08-20 20:45:07] CPU #12: 5.93 kH/s
+[2023-08-20 20:45:12] CPU #3: 8.94 kH/s
+[2023-08-20 20:45:12] Total: 118.99 kH/s
+[2023-08-20 20:45:12] CPU #10: 6.03 kH/s
+[2023-08-20 20:45:12] CPU #6: 8.94 kH/s
+[2023-08-20 20:45:12] CPU #4: 8.96 kH/s
+[2023-08-20 20:45:12] CPU #7: 8.98 kH/s
+[2023-08-20 20:45:12] CPU #2: 8.93 kH/s
+[2023-08-20 20:45:17] CPU #0: 8.75 kH/s
+[2023-08-20 20:45:17] CPU #1: 8.73 kH/s
+[2023-08-20 20:45:17] CPU #5: 8.95 kH/s
+[2023-08-20 20:45:17] CPU #15: 5.94 kH/s
+[2023-08-20 20:45:17] Total: 119.07 kH/s
+[2023-08-20 20:45:17] CPU #9: 6.03 kH/s
+[2023-08-20 20:45:17] CPU #11: 6.03 kH/s
+[2023-08-20 20:45:17] CPU #8: 6.03 kH/s
+[2023-08-20 20:45:17] CPU #14: 5.89 kH/s
+[2023-08-20 20:45:17] CPU #13: 5.94 kH/s
+[2023-08-20 20:45:17] CPU #12: 5.94 kH/s
+[2023-08-20 20:45:22] Total: 119.62 kH/s
+[2023-08-20 20:45:22] CPU #3: 7.99 kH/s
+[2023-08-20 20:45:22] CPU #10: 6.04 kH/s
+[2023-08-20 20:45:22] CPU #6: 8.96 kH/s
+[2023-08-20 20:45:22] CPU #2: 9.29 kH/s
+[2023-08-20 20:45:22] CPU #4: 8.95 kH/s
+[2023-08-20 20:45:22] CPU #7: 8.96 kH/s
+[2023-08-20 20:45:27] CPU #0: 8.75 kH/s
+[2023-08-20 20:45:27] CPU #1: 8.71 kH/s
+[2023-08-20 20:45:27] CPU #5: 8.96 kH/s
+[2023-08-20 20:45:27] CPU #15: 5.93 kH/s
+[2023-08-20 20:45:27] Total: 119.38 kH/s
+[2023-08-20 20:45:27] CPU #9: 6.03 kH/s
+[2023-08-20 20:45:27] CPU #11: 6.03 kH/s
+[2023-08-20 20:45:27] CPU #8: 6.03 kH/s
+[2023-08-20 20:45:27] CPU #14: 5.87 kH/s
+[2023-08-20 20:45:27] CPU #13: 5.93 kH/s
+[2023-08-20 20:45:27] CPU #12: 5.93 kH/s
+[2023-08-20 20:45:28] CPU #2: 8.93 kH/s
+[2023-08-20 20:45:32] CPU #3: 8.93 kH/s
+[2023-08-20 20:45:32] Total: 118.92 kH/s
+[2023-08-20 20:45:32] CPU #10: 6.03 kH/s
+[2023-08-20 20:45:32] CPU #6: 8.96 kH/s
+[2023-08-20 20:45:32] CPU #4: 8.95 kH/s
+[2023-08-20 20:45:32] CPU #7: 8.96 kH/s
+[2023-08-20 20:45:37] CPU #2: 8.94 kH/s
+[2023-08-20 20:45:37] CPU #0: 8.74 kH/s
+[2023-08-20 20:45:37] CPU #1: 8.74 kH/s
+[2023-08-20 20:45:37] CPU #5: 8.94 kH/s
+[2023-08-20 20:45:37] CPU #15: 5.94 kH/s
+[2023-08-20 20:45:37] Total: 118.99 kH/s
+[2023-08-20 20:45:37] CPU #9: 6.03 kH/s
+[2023-08-20 20:45:37] CPU #14: 5.90 kH/s
+[2023-08-20 20:45:37] CPU #11: 6.03 kH/s
+[2023-08-20 20:45:37] CPU #8: 6.02 kH/s
+[2023-08-20 20:45:37] CPU #13: 5.93 kH/s
+[2023-08-20 20:45:37] CPU #12: 5.93 kH/s
+[2023-08-20 20:45:42] CPU #3: 8.93 kH/s
+[2023-08-20 20:45:42] Total: 118.94 kH/s
+[2023-08-20 20:45:42] CPU #10: 6.02 kH/s
+[2023-08-20 20:45:42] CPU #6: 8.95 kH/s
+[2023-08-20 20:45:42] CPU #4: 8.94 kH/s
+[2023-08-20 20:45:42] CPU #7: 8.96 kH/s
+[2023-08-20 20:45:47] CPU #2: 8.93 kH/s
+[2023-08-20 20:45:47] CPU #0: 8.74 kH/s
+[2023-08-20 20:45:47] CPU #1: 8.73 kH/s
+[2023-08-20 20:45:47] CPU #5: 8.95 kH/s
+[2023-08-20 20:45:47] CPU #15: 5.92 kH/s
+[2023-08-20 20:45:47] Total: 118.91 kH/s
+[2023-08-20 20:45:47] CPU #9: 6.02 kH/s
+[2023-08-20 20:45:47] CPU #11: 6.02 kH/s
+[2023-08-20 20:45:47] CPU #8: 6.02 kH/s
+[2023-08-20 20:45:47] CPU #14: 5.87 kH/s
+[2023-08-20 20:45:47] CPU #13: 5.92 kH/s
+[2023-08-20 20:45:47] CPU #12: 5.92 kH/s
+[2023-08-20 20:45:52] CPU #3: 8.86 kH/s
+[2023-08-20 20:45:52] Total: 118.39 kH/s
+[2023-08-20 20:45:52] CPU #4: 8.91 kH/s
+[2023-08-20 20:45:52] CPU #10: 5.89 kH/s
+[2023-08-20 20:45:52] CPU #6: 8.72 kH/s
+[2023-08-20 20:45:53] CPU #7: 8.73 kH/s
+[2023-08-20 20:45:57] CPU #2: 8.91 kH/s
+[2023-08-20 20:45:57] CPU #1: 8.69 kH/s
+[2023-08-20 20:45:57] CPU #0: 8.67 kH/s
+[2023-08-20 20:45:57] CPU #5: 8.91 kH/s
+[2023-08-20 20:45:57] CPU #15: 5.91 kH/s
+[2023-08-20 20:45:57] Total: 117.36 kH/s
+[2023-08-20 20:45:57] CPU #14: 5.91 kH/s
+[2023-08-20 20:45:57] CPU #9: 6.01 kH/s
+[2023-08-20 20:45:57] CPU #11: 6.00 kH/s
+[2023-08-20 20:45:57] CPU #8: 6.01 kH/s
+[2023-08-20 20:45:57] CPU #13: 5.92 kH/s
+[2023-08-20 20:45:57] CPU #12: 5.91 kH/s
+[2023-08-20 20:46:01] CPU #7: 8.97 kH/s
+[2023-08-20 20:46:02] Total: 119.72 kH/s
+[2023-08-20 20:46:02] CPU #10: 6.02 kH/s
+[2023-08-20 20:46:02] CPU #3: 7.98 kH/s
+[2023-08-20 20:46:02] CPU #6: 8.94 kH/s
+[2023-08-20 20:46:02] CPU #4: 8.93 kH/s
+[2023-08-20 20:46:07] CPU #0: 8.73 kH/s
+[2023-08-20 20:46:07] CPU #1: 8.70 kH/s
+[2023-08-20 20:46:07] CPU #5: 8.97 kH/s
+[2023-08-20 20:46:07] CPU #15: 5.92 kH/s
+[2023-08-20 20:46:07] Total: 118.99 kH/s
+[2023-08-20 20:46:07] CPU #14: 5.92 kH/s
+[2023-08-20 20:46:07] CPU #9: 6.02 kH/s
+[2023-08-20 20:46:07] CPU #11: 6.02 kH/s
+[2023-08-20 20:46:07] CPU #8: 6.02 kH/s
+[2023-08-20 20:46:07] CPU #13: 5.92 kH/s
+[2023-08-20 20:46:07] CPU #2: 8.91 kH/s
+[2023-08-20 20:46:07] CPU #12: 5.92 kH/s
+[2023-08-20 20:46:08] CPU #7: 8.94 kH/s
+[2023-08-20 20:46:12] Total: 119.91 kH/s
+[2023-08-20 20:46:12] CPU #10: 6.02 kH/s
+[2023-08-20 20:46:12] CPU #6: 8.94 kH/s
+[2023-08-20 20:46:12] CPU #4: 8.93 kH/s
+[2023-08-20 20:46:12] CPU #3: 7.97 kH/s
+[2023-08-20 20:46:17] CPU #7: 8.94 kH/s
+[2023-08-20 20:46:17] CPU #0: 8.73 kH/s
+[2023-08-20 20:46:17] CPU #1: 8.67 kH/s
+[2023-08-20 20:46:17] CPU #5: 8.93 kH/s
+[2023-08-20 20:46:17] CPU #15: 5.91 kH/s
+[2023-08-20 20:46:17] Total: 119.82 kH/s
+[2023-08-20 20:46:17] CPU #14: 5.92 kH/s
+[2023-08-20 20:46:17] CPU #9: 6.00 kH/s
+[2023-08-20 20:46:17] CPU #11: 6.00 kH/s
+[2023-08-20 20:46:17] CPU #13: 5.91 kH/s
+[2023-08-20 20:46:17] CPU #12: 5.91 kH/s
+[2023-08-20 20:46:17] CPU #8: 5.88 kH/s
+[2023-08-20 20:46:17] CPU #2: 8.89 kH/s
+[2023-08-20 20:46:22] CPU #3: 8.91 kH/s
+[2023-08-20 20:46:22] Total: 118.54 kH/s
+[2023-08-20 20:46:22] CPU #10: 6.01 kH/s
+[2023-08-20 20:46:22] CPU #6: 8.93 kH/s
+[2023-08-20 20:46:22] CPU #4: 8.93 kH/s
+[2023-08-20 20:46:27] CPU #7: 8.97 kH/s
+[2023-08-20 20:46:27] CPU #0: 8.74 kH/s
+[2023-08-20 20:46:27] CPU #1: 8.72 kH/s
+[2023-08-20 20:46:27] CPU #5: 8.95 kH/s
+[2023-08-20 20:46:27] CPU #2: 9.92 kH/s
+[2023-08-20 20:46:27] CPU #15: 5.93 kH/s
+[2023-08-20 20:46:27] Total: 119.80 kH/s
+[2023-08-20 20:46:27] CPU #14: 5.92 kH/s
+[2023-08-20 20:46:27] CPU #9: 6.02 kH/s
+[2023-08-20 20:46:27] CPU #11: 6.02 kH/s
+[2023-08-20 20:46:27] CPU #8: 5.96 kH/s
+[2023-08-20 20:46:27] CPU #13: 5.92 kH/s
+[2023-08-20 20:46:27] CPU #12: 5.92 kH/s
+[2023-08-20 20:46:32] Total: 118.78 kH/s
+[2023-08-20 20:46:32] CPU #3: 8.91 kH/s
+[2023-08-20 20:46:32] CPU #10: 6.01 kH/s
+[2023-08-20 20:46:32] CPU #6: 8.94 kH/s
+[2023-08-20 20:46:32] CPU #4: 8.92 kH/s
+[2023-08-20 20:46:37] CPU #7: 8.94 kH/s
+[2023-08-20 20:46:37] CPU #1: 8.72 kH/s
+[2023-08-20 20:46:37] CPU #0: 8.72 kH/s
+[2023-08-20 20:46:37] CPU #5: 8.92 kH/s
+[2023-08-20 20:46:37] CPU #15: 5.92 kH/s
+[2023-08-20 20:46:37] Total: 118.68 kH/s
+[2023-08-20 20:46:37] CPU #14: 5.91 kH/s
+[2023-08-20 20:46:37] CPU #9: 6.01 kH/s
+[2023-08-20 20:46:37] CPU #11: 6.01 kH/s
+[2023-08-20 20:46:37] CPU #8: 5.98 kH/s
+[2023-08-20 20:46:37] CPU #13: 5.91 kH/s
+[2023-08-20 20:46:37] CPU #12: 5.91 kH/s
+[2023-08-20 20:46:37] CPU #2: 8.92 kH/s
+[2023-08-20 20:46:42] Total: 118.73 kH/s
+[2023-08-20 20:46:42] CPU #3: 8.92 kH/s
+[2023-08-20 20:46:42] CPU #10: 6.01 kH/s
+[2023-08-20 20:46:42] CPU #6: 8.95 kH/s
+[2023-08-20 20:46:42] CPU #4: 8.93 kH/s
+[2023-08-20 20:46:47] CPU #7: 8.95 kH/s
+[2023-08-20 20:46:47] CPU #0: 8.73 kH/s
+[2023-08-20 20:46:47] CPU #1: 8.70 kH/s
+[2023-08-20 20:46:47] CPU #5: 8.93 kH/s
+[2023-08-20 20:46:47] CPU #15: 5.91 kH/s
+[2023-08-20 20:46:47] Total: 118.75 kH/s
+[2023-08-20 20:46:47] CPU #14: 5.92 kH/s
+[2023-08-20 20:46:47] CPU #9: 6.02 kH/s
+[2023-08-20 20:46:47] CPU #11: 6.02 kH/s
+[2023-08-20 20:46:47] CPU #8: 5.99 kH/s
+[2023-08-20 20:46:47] CPU #13: 5.92 kH/s
+[2023-08-20 20:46:47] CPU #12: 5.92 kH/s
+[2023-08-20 20:46:47] CPU #2: 8.92 kH/s
+[2023-08-20 20:46:52] Total: 118.72 kH/s
+[2023-08-20 20:46:52] CPU #3: 8.92 kH/s
+[2023-08-20 20:46:52] CPU #10: 6.02 kH/s
+[2023-08-20 20:46:52] CPU #6: 8.95 kH/s
+[2023-08-20 20:46:52] CPU #4: 8.93 kH/s
+[2023-08-20 20:46:57] CPU #7: 8.94 kH/s
+[2023-08-20 20:46:57] CPU #0: 8.74 kH/s
+[2023-08-20 20:46:57] CPU #1: 8.72 kH/s
+[2023-08-20 20:46:57] CPU #5: 8.92 kH/s
+[2023-08-20 20:46:57] CPU #15: 5.90 kH/s
+[2023-08-20 20:46:57] Total: 118.68 kH/s
+[2023-08-20 20:46:57] CPU #14: 5.91 kH/s
+[2023-08-20 20:46:57] CPU #9: 6.01 kH/s
+[2023-08-20 20:46:57] CPU #11: 6.01 kH/s
+[2023-08-20 20:46:57] CPU #8: 5.98 kH/s
+[2023-08-20 20:46:57] CPU #13: 5.91 kH/s
+[2023-08-20 20:46:57] CPU #12: 5.91 kH/s
+[2023-08-20 20:46:57] CPU #2: 8.90 kH/s
+[2023-08-20 20:47:02] Total: 119.73 kH/s
+[2023-08-20 20:47:02] CPU #10: 6.01 kH/s
+[2023-08-20 20:47:02] CPU #6: 8.93 kH/s
+[2023-08-20 20:47:02] CPU #4: 8.89 kH/s
+[2023-08-20 20:47:02] CPU #3: 7.96 kH/s
+[2023-08-20 20:47:07] CPU #7: 8.93 kH/s
+[2023-08-20 20:47:07] CPU #0: 8.72 kH/s
+[2023-08-20 20:47:07] CPU #1: 8.67 kH/s
+[2023-08-20 20:47:07] CPU #5: 8.94 kH/s
+[2023-08-20 20:47:07] CPU #15: 5.90 kH/s
+[2023-08-20 20:47:07] Total: 118.70 kH/s
+[2023-08-20 20:47:07] CPU #14: 5.90 kH/s
+[2023-08-20 20:47:07] CPU #9: 6.00 kH/s
+[2023-08-20 20:47:07] CPU #11: 6.00 kH/s
+[2023-08-20 20:47:07] CPU #8: 6.00 kH/s
+[2023-08-20 20:47:07] CPU #13: 5.90 kH/s
+[2023-08-20 20:47:07] CPU #12: 5.90 kH/s
+[2023-08-20 20:47:07] CPU #2: 8.88 kH/s
+[2023-08-20 20:47:12] Total: 118.54 kH/s
+[2023-08-20 20:47:12] CPU #3: 8.88 kH/s
+[2023-08-20 20:47:12] CPU #10: 6.01 kH/s
+[2023-08-20 20:47:12] CPU #6: 8.94 kH/s
+[2023-08-20 20:47:12] CPU #4: 8.92 kH/s
+[2023-08-20 20:47:17] CPU #7: 8.94 kH/s
+[2023-08-20 20:47:17] CPU #1: 8.71 kH/s
+[2023-08-20 20:47:17] CPU #0: 8.73 kH/s
+[2023-08-20 20:47:17] CPU #5: 8.96 kH/s
+[2023-08-20 20:47:17] CPU #15: 5.92 kH/s
+[2023-08-20 20:47:17] Total: 118.72 kH/s
+[2023-08-20 20:47:17] CPU #14: 5.90 kH/s
+[2023-08-20 20:47:17] CPU #9: 6.01 kH/s
+[2023-08-20 20:47:17] CPU #11: 6.01 kH/s
+[2023-08-20 20:47:17] CPU #8: 6.01 kH/s
+[2023-08-20 20:47:17] CPU #13: 5.91 kH/s
+[2023-08-20 20:47:17] CPU #12: 5.91 kH/s
+[2023-08-20 20:47:17] CPU #2: 8.92 kH/s
+[2023-08-20 20:47:22] Total: 118.62 kH/s
+[2023-08-20 20:47:22] CPU #3: 8.90 kH/s
+[2023-08-20 20:47:22] CPU #10: 6.00 kH/s
+[2023-08-20 20:47:22] CPU #6: 8.92 kH/s
+[2023-08-20 20:47:22] CPU #4: 8.90 kH/s
+[2023-08-20 20:47:27] CPU #7: 8.94 kH/s
+[2023-08-20 20:47:27] CPU #0: 8.72 kH/s
+[2023-08-20 20:47:27] CPU #1: 8.71 kH/s
+[2023-08-20 20:47:27] CPU #5: 8.94 kH/s
+[2023-08-20 20:47:27] CPU #15: 5.91 kH/s
+[2023-08-20 20:47:27] Total: 118.55 kH/s
+[2023-08-20 20:47:27] CPU #14: 5.90 kH/s
+[2023-08-20 20:47:27] CPU #9: 6.00 kH/s
+[2023-08-20 20:47:27] CPU #11: 6.00 kH/s
+[2023-08-20 20:47:27] CPU #8: 6.00 kH/s
+[2023-08-20 20:47:27] CPU #13: 5.89 kH/s
+[2023-08-20 20:47:27] CPU #12: 5.89 kH/s
+[2023-08-20 20:47:27] CPU #2: 8.92 kH/s
+[2023-08-20 20:47:32] Total: 118.57 kH/s
+[2023-08-20 20:47:32] CPU #3: 8.90 kH/s
+[2023-08-20 20:47:32] CPU #10: 6.00 kH/s
+[2023-08-20 20:47:32] CPU #6: 8.93 kH/s
+[2023-08-20 20:47:32] CPU #4: 8.91 kH/s
+[2023-08-20 20:47:37] CPU #7: 8.94 kH/s
+[2023-08-20 20:47:37] CPU #0: 8.72 kH/s
+[2023-08-20 20:47:37] CPU #1: 8.68 kH/s
+[2023-08-20 20:47:37] CPU #5: 8.94 kH/s
+[2023-08-20 20:47:37] CPU #15: 5.90 kH/s
+[2023-08-20 20:47:37] Total: 118.53 kH/s
+[2023-08-20 20:47:37] CPU #14: 5.90 kH/s
+[2023-08-20 20:47:37] CPU #9: 6.00 kH/s
+[2023-08-20 20:47:37] CPU #11: 6.00 kH/s
+[2023-08-20 20:47:37] CPU #8: 6.00 kH/s
+[2023-08-20 20:47:37] CPU #13: 5.91 kH/s
+[2023-08-20 20:47:37] CPU #12: 5.91 kH/s
+[2023-08-20 20:47:37] CPU #2: 8.91 kH/s
+[2023-08-20 20:47:42] Total: 118.61 kH/s
+[2023-08-20 20:47:42] CPU #3: 8.91 kH/s
+[2023-08-20 20:47:42] CPU #10: 6.00 kH/s
+[2023-08-20 20:47:42] CPU #6: 8.94 kH/s
+[2023-08-20 20:47:42] CPU #4: 8.89 kH/s
+[2023-08-20 20:47:47] CPU #7: 8.94 kH/s
+[2023-08-20 20:47:47] CPU #0: 8.72 kH/s
+[2023-08-20 20:47:47] CPU #1: 8.70 kH/s
+[2023-08-20 20:47:47] CPU #5: 8.95 kH/s
+[2023-08-20 20:47:47] CPU #15: 5.91 kH/s
+[2023-08-20 20:47:47] Total: 118.61 kH/s
+[2023-08-20 20:47:47] CPU #14: 5.91 kH/s
+[2023-08-20 20:47:47] CPU #9: 6.00 kH/s
+[2023-08-20 20:47:47] CPU #11: 6.00 kH/s
+[2023-08-20 20:47:47] CPU #8: 6.00 kH/s
+[2023-08-20 20:47:47] CPU #13: 5.91 kH/s
+[2023-08-20 20:47:47] CPU #12: 5.91 kH/s
+[2023-08-20 20:47:47] CPU #2: 8.91 kH/s
+[2023-08-20 20:47:52] Total: 118.57 kH/s
+[2023-08-20 20:47:52] CPU #3: 8.90 kH/s
+[2023-08-20 20:47:52] CPU #10: 5.99 kH/s
+[2023-08-20 20:47:52] CPU #6: 8.93 kH/s
+[2023-08-20 20:47:52] CPU #4: 8.90 kH/s
+[2023-08-20 20:47:57] CPU #7: 8.94 kH/s
+[2023-08-20 20:47:57] CPU #0: 8.73 kH/s
+[2023-08-20 20:47:57] CPU #1: 8.68 kH/s
+[2023-08-20 20:47:57] CPU #5: 8.94 kH/s
+[2023-08-20 20:47:57] CPU #15: 5.90 kH/s
+[2023-08-20 20:47:57] Total: 118.52 kH/s
+[2023-08-20 20:47:57] CPU #14: 5.91 kH/s
+[2023-08-20 20:47:57] CPU #9: 6.00 kH/s
+[2023-08-20 20:47:57] CPU #11: 6.00 kH/s
+[2023-08-20 20:47:57] CPU #8: 5.98 kH/s
+[2023-08-20 20:47:57] CPU #13: 5.91 kH/s
+[2023-08-20 20:47:57] CPU #12: 5.90 kH/s
+[2023-08-20 20:47:57] CPU #2: 8.89 kH/s
+[2023-08-20 20:48:02] Total: 118.53 kH/s
+[2023-08-20 20:48:02] CPU #3: 8.90 kH/s
+[2023-08-20 20:48:02] CPU #10: 6.00 kH/s
+[2023-08-20 20:48:02] CPU #6: 8.93 kH/s
+[2023-08-20 20:48:02] CPU #4: 8.86 kH/s
+[2023-08-20 20:48:07] CPU #7: 8.93 kH/s
+[2023-08-20 20:48:07] CPU #1: 8.69 kH/s
+[2023-08-20 20:48:07] CPU #0: 8.71 kH/s
+[2023-08-20 20:48:07] CPU #5: 8.93 kH/s
+[2023-08-20 20:48:07] CPU #15: 5.89 kH/s
+[2023-08-20 20:48:07] Total: 118.42 kH/s
+[2023-08-20 20:48:07] CPU #14: 5.89 kH/s
+[2023-08-20 20:48:07] CPU #9: 5.99 kH/s
+[2023-08-20 20:48:07] CPU #11: 5.99 kH/s
+[2023-08-20 20:48:07] CPU #8: 5.99 kH/s
+[2023-08-20 20:48:07] CPU #13: 5.89 kH/s
+[2023-08-20 20:48:07] CPU #12: 5.89 kH/s
+[2023-08-20 20:48:07] CPU #2: 8.90 kH/s
+[2023-08-20 20:48:12] Total: 118.36 kH/s
+[2023-08-20 20:48:12] CPU #3: 8.90 kH/s
+[2023-08-20 20:48:12] CPU #10: 5.99 kH/s
+[2023-08-20 20:48:12] CPU #6: 8.92 kH/s
+[2023-08-20 20:48:12] CPU #4: 8.86 kH/s
+[2023-08-20 20:48:17] CPU #7: 8.93 kH/s
+[2023-08-20 20:48:17] CPU #1: 8.70 kH/s
+[2023-08-20 20:48:17] CPU #0: 8.71 kH/s
+[2023-08-20 20:48:17] CPU #5: 8.94 kH/s
+[2023-08-20 20:48:17] CPU #15: 5.90 kH/s
+[2023-08-20 20:48:17] Total: 118.39 kH/s
+[2023-08-20 20:48:17] CPU #14: 5.89 kH/s
+[2023-08-20 20:48:17] CPU #9: 6.00 kH/s
+[2023-08-20 20:48:17] CPU #11: 6.00 kH/s
+[2023-08-20 20:48:17] CPU #8: 6.00 kH/s
+[2023-08-20 20:48:17] CPU #13: 5.90 kH/s
+[2023-08-20 20:48:17] CPU #12: 5.90 kH/s
+[2023-08-20 20:48:17] CPU #2: 8.90 kH/s
+[2023-08-20 20:48:22] Total: 118.48 kH/s
+[2023-08-20 20:48:22] CPU #3: 8.90 kH/s
+[2023-08-20 20:48:22] CPU #10: 5.99 kH/s
+[2023-08-20 20:48:22] CPU #6: 8.92 kH/s
+[2023-08-20 20:48:22] CPU #4: 8.88 kH/s
+[2023-08-20 20:48:27] CPU #7: 8.92 kH/s
+[2023-08-20 20:48:27] CPU #0: 8.73 kH/s
+[2023-08-20 20:48:27] CPU #1: 8.68 kH/s
+[2023-08-20 20:48:27] CPU #5: 8.94 kH/s
+[2023-08-20 20:48:27] CPU #15: 5.89 kH/s
+[2023-08-20 20:48:27] Total: 118.43 kH/s
+[2023-08-20 20:48:27] CPU #14: 5.90 kH/s
+[2023-08-20 20:48:27] CPU #9: 6.00 kH/s
+[2023-08-20 20:48:27] CPU #11: 6.00 kH/s
+[2023-08-20 20:48:27] CPU #8: 6.00 kH/s
+[2023-08-20 20:48:27] CPU #13: 5.90 kH/s
+[2023-08-20 20:48:27] CPU #12: 5.90 kH/s
+[2023-08-20 20:48:27] CPU #2: 8.90 kH/s
+[2023-08-20 20:48:32] Total: 118.47 kH/s
+[2023-08-20 20:48:32] CPU #3: 8.90 kH/s
+[2023-08-20 20:48:32] CPU #10: 6.00 kH/s
+[2023-08-20 20:48:32] CPU #6: 8.93 kH/s
+[2023-08-20 20:48:32] CPU #4: 8.91 kH/s
+[2023-08-20 20:48:37] CPU #7: 8.94 kH/s
+[2023-08-20 20:48:37] CPU #1: 8.72 kH/s
+[2023-08-20 20:48:37] CPU #0: 8.72 kH/s
+[2023-08-20 20:48:37] CPU #5: 8.95 kH/s
+[2023-08-20 20:48:37] CPU #15: 5.90 kH/s
+[2023-08-20 20:48:37] Total: 118.55 kH/s
+[2023-08-20 20:48:37] CPU #14: 5.91 kH/s
+[2023-08-20 20:48:37] CPU #9: 6.00 kH/s
+[2023-08-20 20:48:37] CPU #11: 6.00 kH/s
+[2023-08-20 20:48:37] CPU #8: 5.99 kH/s
+[2023-08-20 20:48:37] CPU #13: 5.91 kH/s
+[2023-08-20 20:48:37] CPU #12: 5.91 kH/s
+[2023-08-20 20:48:37] CPU #2: 8.91 kH/s
+[2023-08-20 20:48:42] Total: 118.47 kH/s
+[2023-08-20 20:48:42] CPU #3: 8.88 kH/s
+[2023-08-20 20:48:42] CPU #10: 5.99 kH/s
+[2023-08-20 20:48:42] CPU #6: 8.92 kH/s
+[2023-08-20 20:48:42] CPU #4: 8.86 kH/s
+[2023-08-20 20:48:47] CPU #7: 8.92 kH/s
+[2023-08-20 20:48:47] CPU #0: 8.70 kH/s
+[2023-08-20 20:48:47] CPU #1: 8.67 kH/s
+[2023-08-20 20:48:47] CPU #5: 8.92 kH/s
+[2023-08-20 20:48:47] CPU #15: 5.89 kH/s
+[2023-08-20 20:48:47] Total: 118.23 kH/s
+[2023-08-20 20:48:47] CPU #14: 5.89 kH/s
+[2023-08-20 20:48:47] CPU #9: 5.99 kH/s
+[2023-08-20 20:48:47] CPU #11: 5.99 kH/s
+[2023-08-20 20:48:47] CPU #8: 5.97 kH/s
+[2023-08-20 20:48:47] CPU #13: 5.89 kH/s
+[2023-08-20 20:48:47] CPU #12: 5.89 kH/s
+[2023-08-20 20:48:47] CPU #2: 8.89 kH/s
+[2023-08-20 20:48:52] Total: 118.34 kH/s
+[2023-08-20 20:48:52] CPU #3: 8.88 kH/s
+[2023-08-20 20:48:52] CPU #10: 5.98 kH/s
+[2023-08-20 20:48:52] CPU #6: 8.92 kH/s
+[2023-08-20 20:48:52] CPU #4: 8.92 kH/s
+[2023-08-20 20:48:57] CPU #7: 8.91 kH/s
+[2023-08-20 20:48:57] CPU #1: 8.69 kH/s
+[2023-08-20 20:48:57] CPU #0: 8.71 kH/s
+[2023-08-20 20:48:57] CPU #5: 8.92 kH/s
+[2023-08-20 20:48:57] CPU #15: 5.88 kH/s
+[2023-08-20 20:48:57] Total: 118.28 kH/s
+[2023-08-20 20:48:57] CPU #14: 5.89 kH/s
+[2023-08-20 20:48:57] CPU #9: 5.99 kH/s
+[2023-08-20 20:48:57] CPU #11: 5.99 kH/s
+[2023-08-20 20:48:57] CPU #8: 5.96 kH/s
+[2023-08-20 20:48:57] CPU #13: 5.89 kH/s
+[2023-08-20 20:48:57] CPU #12: 5.89 kH/s
+[2023-08-20 20:48:57] CPU #2: 8.88 kH/s
+[2023-08-20 20:49:02] Total: 118.25 kH/s
+[2023-08-20 20:49:02] CPU #3: 8.88 kH/s
+[2023-08-20 20:49:02] CPU #10: 5.98 kH/s
+[2023-08-20 20:49:02] CPU #6: 8.91 kH/s
+[2023-08-20 20:49:02] CPU #4: 8.86 kH/s
+[2023-08-20 20:49:07] CPU #7: 8.91 kH/s
+[2023-08-20 20:49:07] CPU #1: 8.68 kH/s
+[2023-08-20 20:49:07] CPU #0: 8.70 kH/s
+[2023-08-20 20:49:07] CPU #5: 8.93 kH/s
+[2023-08-20 20:49:07] CPU #15: 5.88 kH/s
+[2023-08-20 20:49:07] Total: 118.20 kH/s
+[2023-08-20 20:49:07] CPU #14: 5.88 kH/s
+[2023-08-20 20:49:07] CPU #9: 5.98 kH/s
+[2023-08-20 20:49:07] CPU #11: 5.98 kH/s
+[2023-08-20 20:49:07] CPU #8: 5.98 kH/s
+[2023-08-20 20:49:07] CPU #13: 5.88 kH/s
+[2023-08-20 20:49:07] CPU #12: 5.88 kH/s
+[2023-08-20 20:49:07] CPU #2: 8.88 kH/s
+[2023-08-20 20:49:12] Total: 118.20 kH/s
+[2023-08-20 20:49:12] CPU #3: 8.88 kH/s
+[2023-08-20 20:49:12] CPU #10: 5.97 kH/s
+[2023-08-20 20:49:12] CPU #6: 8.91 kH/s
+[2023-08-20 20:49:12] CPU #4: 8.89 kH/s
+[2023-08-20 20:49:17] CPU #7: 8.91 kH/s
+[2023-08-20 20:49:17] CPU #0: 8.71 kH/s
+[2023-08-20 20:49:17] CPU #1: 8.65 kH/s
+[2023-08-20 20:49:17] CPU #5: 8.91 kH/s
+[2023-08-20 20:49:17] CPU #15: 5.88 kH/s
+[2023-08-20 20:49:17] Total: 118.14 kH/s
+[2023-08-20 20:49:17] CPU #14: 5.88 kH/s
+[2023-08-20 20:49:17] CPU #9: 5.97 kH/s
+[2023-08-20 20:49:17] CPU #11: 5.97 kH/s
+[2023-08-20 20:49:17] CPU #8: 5.97 kH/s
+[2023-08-20 20:49:17] CPU #13: 5.88 kH/s
+[2023-08-20 20:49:17] CPU #12: 5.88 kH/s
+[2023-08-20 20:49:17] CPU #2: 8.89 kH/s
+[2023-08-20 20:49:22] Total: 118.14 kH/s
+[2023-08-20 20:49:22] CPU #3: 8.87 kH/s
+[2023-08-20 20:49:22] CPU #10: 5.97 kH/s
+[2023-08-20 20:49:22] CPU #6: 8.90 kH/s
+[2023-08-20 20:49:22] CPU #4: 8.88 kH/s
+[2023-08-20 20:49:27] CPU #7: 8.91 kH/s
+[2023-08-20 20:49:27] CPU #1: 8.67 kH/s
+[2023-08-20 20:49:27] CPU #0: 8.70 kH/s
+[2023-08-20 20:49:27] CPU #5: 8.91 kH/s
+[2023-08-20 20:49:27] CPU #15: 5.88 kH/s
+[2023-08-20 20:49:27] Total: 118.11 kH/s
+[2023-08-20 20:49:27] CPU #14: 5.88 kH/s
+[2023-08-20 20:49:27] CPU #9: 5.97 kH/s
+[2023-08-20 20:49:27] CPU #11: 5.97 kH/s
+[2023-08-20 20:49:27] CPU #8: 5.96 kH/s
+[2023-08-20 20:49:27] CPU #13: 5.88 kH/s
+[2023-08-20 20:49:27] CPU #12: 5.88 kH/s
+[2023-08-20 20:49:27] CPU #2: 8.88 kH/s
+[2023-08-20 20:49:32] Total: 118.12 kH/s
+[2023-08-20 20:49:32] CPU #3: 8.88 kH/s
+[2023-08-20 20:49:32] CPU #10: 5.98 kH/s
+[2023-08-20 20:49:32] CPU #6: 8.91 kH/s
+[2023-08-20 20:49:32] CPU #4: 8.90 kH/s
+[2023-08-20 20:49:37] CPU #7: 8.91 kH/s
+[2023-08-20 20:49:37] CPU #0: 8.71 kH/s
+[2023-08-20 20:49:37] CPU #1: 8.66 kH/s
+[2023-08-20 20:49:37] CPU #5: 8.91 kH/s
+[2023-08-20 20:49:37] CPU #15: 5.88 kH/s
+[2023-08-20 20:49:37] Total: 118.15 kH/s
+[2023-08-20 20:49:37] CPU #14: 5.88 kH/s
+[2023-08-20 20:49:37] CPU #9: 5.97 kH/s
+[2023-08-20 20:49:37] CPU #11: 5.97 kH/s
+[2023-08-20 20:49:37] CPU #8: 5.97 kH/s
+[2023-08-20 20:49:37] CPU #13: 5.88 kH/s
+[2023-08-20 20:49:37] CPU #12: 5.88 kH/s
+[2023-08-20 20:49:37] CPU #2: 8.87 kH/s
+
+Total Scores: 120.05,119.91,119.82,119.80,119.73,119.72,119.62,119.38,119.13,119.07,118.99,118.94,118.92,118.91,118.78,118.75,118.73,118.72,118.70,118.68,118.62,118.61,118.57,118.55,118.54,118.53,118.52,118.48,118.47,118.43,118.42,118.39,118.36,118.34,118.28,118.25,118.23,118.20,118.15,118.14,118.12,118.11,117.36
+
+##########################################################################
+
+Testing maximum cpufreq again, still under full load. System health now:
+
+Time       big.LITTLE   load %cpu %sys %usr %nice %io %irq   Temp
+20:49:24: 2900/2300MHz 16.06 100%   0%  99%   0%   0%   0%  87.0°C
+
+Checking cpufreq OPP for cpu0-cpu7 (Performance):
+
+Cpufreq OPP: 5000    Measured: 4986 (4986.630/4986.380/4985.189)
+
+Checking cpufreq OPP for cpu8-cpu15 (Efficiency):
+
+Cpufreq OPP: 3700    Measured: 3690 (3690.431/3690.431/3690.431)
+
+##########################################################################
+
+Hardware sensors:
+
+coretemp-isa-0000
+Package id 0:  +75.0 C  (high = +100.0 C, crit = +100.0 C)
+Core 0:        +70.0 C  (high = +100.0 C, crit = +100.0 C)
+Core 4:        +77.0 C  (high = +100.0 C, crit = +100.0 C)
+Core 8:        +74.0 C  (high = +100.0 C, crit = +100.0 C)
+Core 12:       +70.0 C  (high = +100.0 C, crit = +100.0 C)
+Core 16:       +71.0 C  (high = +100.0 C, crit = +100.0 C)
+Core 17:       +71.0 C  (high = +100.0 C, crit = +100.0 C)
+Core 18:       +71.0 C  (high = +100.0 C, crit = +100.0 C)
+Core 19:       +71.0 C  (high = +100.0 C, crit = +100.0 C)
+Core 20:       +70.0 C  (high = +100.0 C, crit = +100.0 C)
+Core 21:       +70.0 C  (high = +100.0 C, crit = +100.0 C)
+Core 22:       +70.0 C  (high = +100.0 C, crit = +100.0 C)
+Core 23:       +69.0 C  (high = +100.0 C, crit = +100.0 C)
+
+BAT1-acpi-0
+in0:          12.40 V  
+
+iwlwifi_1-virtual-0
+temp1:        +56.0 C  
+
+nvme-pci-0200
+Composite:    +56.9 C  (low  = -40.1 C, high = +83.8 C)
+                       (crit = +87.8 C)
+Sensor 1:     +75.8 C  (low  = -273.1 C, high = +65261.8 C)
+Sensor 2:     +56.9 C  (low  = -273.1 C, high = +65261.8 C)
+
+acpitz-acpi-0
+
+/dev/nvme0:	57°C
+
+##########################################################################
+
+Thermal source: /sys/devices/virtual/thermal/thermal_zone4/ (x86_pkg_temp)
+
+System health while running tinymembench:
+
+Time       big.LITTLE   load %cpu %sys %usr %nice %io %irq   Temp
+20:37:59: 4449/ 524MHz  0.91   6%   1%   3%   0%   1%   0%  67.0°C
+20:38:19: 4550/ 489MHz  0.94   6%   0%   6%   0%   0%   0%  99.0°C
+20:38:39: 4779/3077MHz  1.02   6%   0%   6%   0%   0%   0%  79.0°C
+20:38:59: 4948/ 760MHz  1.01   6%   0%   6%   0%   0%   0%  78.0°C
+20:39:19: 4512/3686MHz  1.01   6%   0%   6%   0%   0%   0%  67.0°C
+20:39:39: 4413/3667MHz  1.07   6%   0%   6%   0%   0%   0%  67.0°C
+20:39:59: 4314/3654MHz  1.05   6%   0%   6%   0%   0%   0%  68.0°C
+
+System health while running ramlat:
+
+Time       big.LITTLE   load %cpu %sys %usr %nice %io %irq   Temp
+20:40:16: 4536/2546MHz  1.04   6%   1%   4%   0%   1%   0%  72.0°C
+20:40:22: 4975/2794MHz  1.03   6%   0%   6%   0%   0%   0%  81.0°C
+20:40:28: 4947/2690MHz  1.03   6%   0%   6%   0%   0%   0%  71.0°C
+20:40:34: 4878/3070MHz  1.02   6%   0%   6%   0%   0%   0%  71.0°C
+20:40:40: 4876/3082MHz  1.02   6%   0%   6%   0%   0%   0%  74.0°C
+20:40:46: 3575/3672MHz  1.02   6%   0%   6%   0%   0%   0%  65.0°C
+20:40:52: 3437/3659MHz  1.02   6%   0%   6%   0%   0%   0%  63.0°C
+20:40:58: 4035/3673MHz  1.02   6%   0%   6%   0%   0%   0%  66.0°C
+20:41:04: 4375/3677MHz  1.01   6%   0%   6%   0%   0%   0%  62.0°C
+20:41:10: 4311/3650MHz  1.01   6%   0%   6%   0%   0%   0%  63.0°C
+
+System health while running OpenSSL benchmark:
+
+Time       big.LITTLE   load %cpu %sys %usr %nice %io %irq   Temp
+20:41:12: 4572/2711MHz  1.01   6%   1%   4%   0%   1%   0%  99.0°C
+20:41:28: 4959/2834MHz  1.16   6%   0%   6%   0%   0%   0%  89.0°C
+20:41:44: 4295/3671MHz  1.12   6%   0%   6%   0%   0%   0%  71.0°C
+
+System health while running 7-zip single core benchmark:
+
+Time       big.LITTLE   load %cpu %sys %usr %nice %io %irq   Temp
+20:41:48: 4770/1613MHz  1.11   6%   1%   4%   0%   1%   0%  91.0°C
+20:41:53: 3358/ 400MHz  1.10   7%   0%   6%   0%   0%   0%  91.0°C
+20:41:58: 4877/2600MHz  1.09   6%   0%   6%   0%   0%   0%  92.0°C
+20:42:03: 4703/2334MHz  1.09   6%   0%   6%   0%   0%   0%  97.0°C
+20:42:08: 4711/2600MHz  1.16   6%   0%   6%   0%   0%   0%  91.0°C
+20:42:13: 4077/3666MHz  1.15   6%   0%   6%   0%   0%   0%  72.0°C
+20:42:18: 4287/3679MHz  1.13   8%   0%   7%   0%   0%   0%  70.0°C
+20:42:23: 3570/3681MHz  1.12   6%   0%   6%   0%   0%   0%  70.0°C
+20:42:28: 2565/3662MHz  1.11   7%   0%   6%   0%   0%   0%  70.0°C
+20:42:33: 4288/3666MHz  1.10   6%   0%   6%   0%   0%   0%  67.0°C
+20:42:38: 4186/3645MHz  1.10   6%   0%   6%   0%   0%   0%  67.0°C
+20:42:43: 3588/3625MHz  1.09   6%   0%   6%   0%   0%   0%  70.0°C
+
+System health while running 7-zip multi core benchmark:
+
+Time       big.LITTLE   load %cpu %sys %usr %nice %io %irq   Temp
+20:42:44: 3239/2531MHz  1.09   6%   0%   4%   0%   1%   0%  80.0°C
+20:42:58: 3300/2424MHz  4.54  93%   0%  92%   0%   0%   0%  83.0°C
+20:43:08: 3207/2583MHz  6.08  85%   1%  84%   0%   0%   0%  86.0°C
+20:43:18: 3100/2500MHz  7.83  95%   0%  94%   0%   0%   0%  82.0°C
+20:43:28: 3200/2600MHz  9.01  92%   0%  91%   0%   0%   0%  87.0°C
+20:43:38: 2977/2400MHz 10.16  92%   0%  92%   0%   0%   0%  82.0°C
+20:43:48: 3163/2506MHz 11.21  86%   1%  85%   0%   0%   0%  87.0°C
+20:44:00: 3000/2400MHz 11.95  95%   1%  94%   0%   0%   0%  83.0°C
+20:44:10: 3206/2600MHz 12.91  89%   0%  88%   0%   0%   0%  87.0°C
+20:44:20: 3000/2400MHz 13.31  92%   0%  91%   0%   0%   0%  82.0°C
+20:44:30: 3300/2600MHz 13.32  87%   0%  86%   0%   0%   0%  88.0°C
+20:44:42: 2900/2300MHz 13.96  96%   1%  95%   0%   0%   0%  85.0°C
+
+System health while running cpuminer:
+
+Time       big.LITTLE   load %cpu %sys %usr %nice %io %irq   Temp
+20:44:55: 2900/2300MHz 14.42  10%   0%   7%   0%   1%   0%  86.0°C
+20:45:40: 2900/2300MHz 15.30 100%   0%  99%   0%   0%   0%  87.0°C
+20:46:24: 2900/2300MHz 15.83 100%   0%  99%   0%   0%   0%  86.0°C
+20:47:09: 2900/2300MHz 15.96 100%   0%  99%   0%   0%   0%  87.0°C
+20:47:54: 2900/2300MHz 16.02 100%   0%  99%   0%   0%   0%  87.0°C
+20:48:39: 2900/2300MHz 16.05 100%   0%  99%   0%   0%   0%  87.0°C
+20:49:24: 2900/2300MHz 16.06 100%   0%  99%   0%   0%   0%  87.0°C
+
+##########################################################################
+
+dmesg output while running the benchmarks:
+
+[ 3857.450826] sd 1:0:0:0: [sdb] tag#22 uas_eh_abort_handler 0 uas-tag 1 inflight: OUT 
+[ 3857.450831] sd 1:0:0:0: [sdb] tag#22 CDB: ATA command pass through(12)/Blank a1 80 00 00 02 00 00 00 00 00 00 00
+[ 3857.470845] scsi host1: uas_eh_device_reset_handler start
+[ 3857.551321] usb 2-3.1: reset SuperSpeed USB device number 20 using xhci_hcd
+[ 3857.576664] scsi host1: uas_eh_device_reset_handler success
+[ 3951.881348] iwlwifi 0000:00:14.3: Queue 2 is stuck 1133 1138
+[ 3951.882208] iwlwifi 0000:00:14.3: Microcode SW error detected. Restarting 0x0.
+[ 3951.882310] iwlwifi 0000:00:14.3: Start IWL Error Log Dump:
+[ 3951.882311] iwlwifi 0000:00:14.3: Transport status: 0x0000004A, valid: 6
+[ 3951.882312] iwlwifi 0000:00:14.3: Loaded firmware version: 72.a764baac.0 so-a0-gf-a0-72.ucode
+[ 3951.882313] iwlwifi 0000:00:14.3: 0x00000084 | NMI_INTERRUPT_UNKNOWN       
+[ 3951.882314] iwlwifi 0000:00:14.3: 0x00800EF4 | trm_hw_status0
+[ 3951.882315] iwlwifi 0000:00:14.3: 0x00000000 | trm_hw_status1
+[ 3951.882315] iwlwifi 0000:00:14.3: 0x004DAAEE | branchlink2
+[ 3951.882316] iwlwifi 0000:00:14.3: 0x000066AC | interruptlink1
+[ 3951.882317] iwlwifi 0000:00:14.3: 0x000066AC | interruptlink2
+[ 3951.882317] iwlwifi 0000:00:14.3: 0x00008068 | data1
+[ 3951.882318] iwlwifi 0000:00:14.3: 0x01000000 | data2
+[ 3951.882318] iwlwifi 0000:00:14.3: 0x00000000 | data3
+[ 3951.882319] iwlwifi 0000:00:14.3: 0x2E00193F | beacon time
+[ 3951.882319] iwlwifi 0000:00:14.3: 0xBFD586C7 | tsf low
+[ 3951.882320] iwlwifi 0000:00:14.3: 0x00000015 | tsf hi
+[ 3951.882321] iwlwifi 0000:00:14.3: 0x00000000 | time gp1
+[ 3951.882321] iwlwifi 0000:00:14.3: 0x6521C898 | time gp2
+[ 3951.882322] iwlwifi 0000:00:14.3: 0x00000001 | uCode revision type
+[ 3951.882322] iwlwifi 0000:00:14.3: 0x00000048 | uCode version major
+[ 3951.882323] iwlwifi 0000:00:14.3: 0xA764BAAC | uCode version minor
+[ 3951.882324] iwlwifi 0000:00:14.3: 0x00000370 | hw version
+[ 3951.882324] iwlwifi 0000:00:14.3: 0x00C80002 | board version
+[ 3951.882325] iwlwifi 0000:00:14.3: 0x020D001C | hcmd
+[ 3951.882325] iwlwifi 0000:00:14.3: 0x80120000 | isr0
+[ 3951.882326] iwlwifi 0000:00:14.3: 0x08000000 | isr1
+[ 3951.882326] iwlwifi 0000:00:14.3: 0x48F00002 | isr2
+[ 3951.882327] iwlwifi 0000:00:14.3: 0x00C3680D | isr3
+[ 3951.882328] iwlwifi 0000:00:14.3: 0x00000000 | isr4
+[ 3951.882328] iwlwifi 0000:00:14.3: 0x020C001C | last cmd Id
+[ 3951.882329] iwlwifi 0000:00:14.3: 0x00008068 | wait_event
+[ 3951.882329] iwlwifi 0000:00:14.3: 0x000000D4 | l2p_control
+[ 3951.882330] iwlwifi 0000:00:14.3: 0x00002820 | l2p_duration
+[ 3951.882330] iwlwifi 0000:00:14.3: 0x00000007 | l2p_mhvalid
+[ 3951.882331] iwlwifi 0000:00:14.3: 0x00810048 | l2p_addr_match
+[ 3951.882331] iwlwifi 0000:00:14.3: 0x00000009 | lmpm_pmg_sel
+[ 3951.882332] iwlwifi 0000:00:14.3: 0x00000000 | timestamp
+[ 3951.882333] iwlwifi 0000:00:14.3: 0x0000B0E0 | flow_handler
+[ 3951.882426] iwlwifi 0000:00:14.3: Start IWL Error Log Dump:
+[ 3951.882427] iwlwifi 0000:00:14.3: Transport status: 0x0000004A, valid: 7
+[ 3951.882428] iwlwifi 0000:00:14.3: 0x20000066 | NMI_INTERRUPT_HOST
+[ 3951.882428] iwlwifi 0000:00:14.3: 0x00000000 | umac branchlink1
+[ 3951.882429] iwlwifi 0000:00:14.3: 0x8045FDF8 | umac branchlink2
+[ 3951.882430] iwlwifi 0000:00:14.3: 0x804805CE | umac interruptlink1
+[ 3951.882430] iwlwifi 0000:00:14.3: 0xC00819C2 | umac interruptlink2
+[ 3951.882431] iwlwifi 0000:00:14.3: 0x01000000 | umac data1
+[ 3951.882432] iwlwifi 0000:00:14.3: 0xC00819C2 | umac data2
+[ 3951.882432] iwlwifi 0000:00:14.3: 0x00000000 | umac data3
+[ 3951.882433] iwlwifi 0000:00:14.3: 0x00000048 | umac major
+[ 3951.882433] iwlwifi 0000:00:14.3: 0xA764BAAC | umac minor
+[ 3951.882434] iwlwifi 0000:00:14.3: 0x6521CAEB | frame pointer
+[ 3951.882434] iwlwifi 0000:00:14.3: 0xC0887EF4 | stack pointer
+[ 3951.882435] iwlwifi 0000:00:14.3: 0x004E019C | last host cmd
+[ 3951.882435] iwlwifi 0000:00:14.3: 0x00000404 | isr status reg
+[ 3951.882525] iwlwifi 0000:00:14.3: IML/ROM dump:
+[ 3951.882526] iwlwifi 0000:00:14.3: 0x00000B03 | IML/ROM error/state
+[ 3951.882534] iwlwifi 0000:00:14.3: 0x00008030 | IML/ROM data1
+[ 3951.882542] iwlwifi 0000:00:14.3: 0x00000090 | IML/ROM WFPM_AUTH_KEY_0
+[ 3951.882547] iwlwifi 0000:00:14.3: Fseq Registers:
+[ 3951.882549] iwlwifi 0000:00:14.3: 0x60000100 | FSEQ_ERROR_CODE
+[ 3951.882552] iwlwifi 0000:00:14.3: 0x003E0003 | FSEQ_TOP_INIT_VERSION
+[ 3951.882554] iwlwifi 0000:00:14.3: 0x00190002 | FSEQ_CNVIO_INIT_VERSION
+[ 3951.882557] iwlwifi 0000:00:14.3: 0x0000A652 | FSEQ_OTP_VERSION
+[ 3951.882559] iwlwifi 0000:00:14.3: 0x00000003 | FSEQ_TOP_CONTENT_VERSION
+[ 3951.882561] iwlwifi 0000:00:14.3: 0x4552414E | FSEQ_ALIVE_TOKEN
+[ 3951.882564] iwlwifi 0000:00:14.3: 0x00080400 | FSEQ_CNVI_ID
+[ 3951.882566] iwlwifi 0000:00:14.3: 0x00400410 | FSEQ_CNVR_ID
+[ 3951.882569] iwlwifi 0000:00:14.3: 0x00080400 | CNVI_AUX_MISC_CHIP
+[ 3951.882576] iwlwifi 0000:00:14.3: 0x00400410 | CNVR_AUX_MISC_CHIP
+[ 3951.882619] iwlwifi 0000:00:14.3: 0x00009061 | CNVR_SCU_SD_REGS_SD_REG_DIG_DCDC_VTRIM
+[ 3951.882626] iwlwifi 0000:00:14.3: 0x00000061 | CNVR_SCU_SD_REGS_SD_REG_ACTIVE_VDIG_MIRROR
+[ 3951.882764] iwlwifi 0000:00:14.3: WRT: Collecting data: ini trigger 4 fired (delay=0ms).
+[ 3951.882768] ieee80211 phy0: Hardware restart was requested
+[ 3952.519712] iwlwifi 0000:00:14.3: WFPM_UMAC_PD_NOTIFICATION: 0x1f
+[ 3952.519764] iwlwifi 0000:00:14.3: WFPM_LMAC2_PD_NOTIFICATION: 0x1f
+[ 3952.519772] iwlwifi 0000:00:14.3: WFPM_AUTH_KEY_0: 0x90
+[ 3952.519780] iwlwifi 0000:00:14.3: CNVI_SCU_SEQ_DATA_DW9: 0x0
+[ 3979.527789] iwlwifi 0000:00:14.3: Queue 2 is stuck 0 6
+[ 3979.528651] iwlwifi 0000:00:14.3: Microcode SW error detected. Restarting 0x0.
+[ 3979.528756] iwlwifi 0000:00:14.3: Start IWL Error Log Dump:
+[ 3979.528756] iwlwifi 0000:00:14.3: Transport status: 0x0000004A, valid: 6
+[ 3979.528758] iwlwifi 0000:00:14.3: Loaded firmware version: 72.a764baac.0 so-a0-gf-a0-72.ucode
+[ 3979.528759] iwlwifi 0000:00:14.3: 0x00000084 | NMI_INTERRUPT_UNKNOWN       
+[ 3979.528760] iwlwifi 0000:00:14.3: 0x00801EF5 | trm_hw_status0
+[ 3979.528760] iwlwifi 0000:00:14.3: 0x00000000 | trm_hw_status1
+[ 3979.528761] iwlwifi 0000:00:14.3: 0x004DAAEE | branchlink2
+[ 3979.528762] iwlwifi 0000:00:14.3: 0x00015ABE | interruptlink1
+[ 3979.528762] iwlwifi 0000:00:14.3: 0x00015ABE | interruptlink2
+[ 3979.528763] iwlwifi 0000:00:14.3: 0x00008068 | data1
+[ 3979.528763] iwlwifi 0000:00:14.3: 0x01000000 | data2
+[ 3979.528764] iwlwifi 0000:00:14.3: 0x00000000 | data3
+[ 3979.528764] iwlwifi 0000:00:14.3: 0x41C01CE5 | beacon time
+[ 3979.528765] iwlwifi 0000:00:14.3: 0xC17B6329 | tsf low
+[ 3979.528766] iwlwifi 0000:00:14.3: 0x00000015 | tsf hi
+[ 3979.528766] iwlwifi 0000:00:14.3: 0x00000000 | time gp1
+[ 3979.528767] iwlwifi 0000:00:14.3: 0x019E85D1 | time gp2
+[ 3979.528767] iwlwifi 0000:00:14.3: 0x00000001 | uCode revision type
+[ 3979.528768] iwlwifi 0000:00:14.3: 0x00000048 | uCode version major
+[ 3979.528769] iwlwifi 0000:00:14.3: 0xA764BAAC | uCode version minor
+[ 3979.528769] iwlwifi 0000:00:14.3: 0x00000370 | hw version
+[ 3979.528770] iwlwifi 0000:00:14.3: 0x00C80002 | board version
+[ 3979.528770] iwlwifi 0000:00:14.3: 0x0200001C | hcmd
+[ 3979.528771] iwlwifi 0000:00:14.3: 0x80120000 | isr0
+[ 3979.528771] iwlwifi 0000:00:14.3: 0x08000000 | isr1
+[ 3979.528772] iwlwifi 0000:00:14.3: 0x48F00002 | isr2
+[ 3979.528772] iwlwifi 0000:00:14.3: 0x00C3480D | isr3
+[ 3979.528773] iwlwifi 0000:00:14.3: 0x00000000 | isr4
+[ 3979.528773] iwlwifi 0000:00:14.3: 0x0601001C | last cmd Id
+[ 3979.528774] iwlwifi 0000:00:14.3: 0x00008068 | wait_event
+[ 3979.528775] iwlwifi 0000:00:14.3: 0x000000D4 | l2p_control
+[ 3979.528775] iwlwifi 0000:00:14.3: 0x00002820 | l2p_duration
+[ 3979.528776] iwlwifi 0000:00:14.3: 0x00000007 | l2p_mhvalid
+[ 3979.528776] iwlwifi 0000:00:14.3: 0x00810048 | l2p_addr_match
+[ 3979.528777] iwlwifi 0000:00:14.3: 0x00000009 | lmpm_pmg_sel
+[ 3979.528777] iwlwifi 0000:00:14.3: 0x00000000 | timestamp
+[ 3979.528778] iwlwifi 0000:00:14.3: 0x000090FC | flow_handler
+[ 3979.528832] iwlwifi 0000:00:14.3: Start IWL Error Log Dump:
+[ 3979.528832] iwlwifi 0000:00:14.3: Transport status: 0x0000004A, valid: 7
+[ 3979.528833] iwlwifi 0000:00:14.3: 0x20000066 | NMI_INTERRUPT_HOST
+[ 3979.528834] iwlwifi 0000:00:14.3: 0x00000000 | umac branchlink1
+[ 3979.528834] iwlwifi 0000:00:14.3: 0x8045FDF8 | umac branchlink2
+[ 3979.528835] iwlwifi 0000:00:14.3: 0x804805CE | umac interruptlink1
+[ 3979.528835] iwlwifi 0000:00:14.3: 0xC00818F6 | umac interruptlink2
+[ 3979.528836] iwlwifi 0000:00:14.3: 0x01000000 | umac data1
+[ 3979.528836] iwlwifi 0000:00:14.3: 0xC00818F6 | umac data2
+[ 3979.528837] iwlwifi 0000:00:14.3: 0x00000000 | umac data3
+[ 3979.528838] iwlwifi 0000:00:14.3: 0x00000048 | umac major
+[ 3979.528838] iwlwifi 0000:00:14.3: 0xA764BAAC | umac minor
+[ 3979.528839] iwlwifi 0000:00:14.3: 0x019E8824 | frame pointer
+[ 3979.528839] iwlwifi 0000:00:14.3: 0xC0887F04 | stack pointer
+[ 3979.528840] iwlwifi 0000:00:14.3: 0x005901D2 | last host cmd
+[ 3979.528840] iwlwifi 0000:00:14.3: 0x00000404 | isr status reg
+[ 3979.528883] iwlwifi 0000:00:14.3: IML/ROM dump:
+[ 3979.528884] iwlwifi 0000:00:14.3: 0x00000B03 | IML/ROM error/state
+[ 3979.528892] iwlwifi 0000:00:14.3: 0x00008099 | IML/ROM data1
+[ 3979.528900] iwlwifi 0000:00:14.3: 0x00000090 | IML/ROM WFPM_AUTH_KEY_0
+[ 3979.528905] iwlwifi 0000:00:14.3: Fseq Registers:
+[ 3979.528907] iwlwifi 0000:00:14.3: 0x60000100 | FSEQ_ERROR_CODE
+[ 3979.528910] iwlwifi 0000:00:14.3: 0x003E0003 | FSEQ_TOP_INIT_VERSION
+[ 3979.528912] iwlwifi 0000:00:14.3: 0x00190002 | FSEQ_CNVIO_INIT_VERSION
+[ 3979.528915] iwlwifi 0000:00:14.3: 0x0000A652 | FSEQ_OTP_VERSION
+[ 3979.528917] iwlwifi 0000:00:14.3: 0x00000003 | FSEQ_TOP_CONTENT_VERSION
+[ 3979.528919] iwlwifi 0000:00:14.3: 0x4552414E | FSEQ_ALIVE_TOKEN
+[ 3979.528922] iwlwifi 0000:00:14.3: 0x00080400 | FSEQ_CNVI_ID
+[ 3979.528924] iwlwifi 0000:00:14.3: 0x00400410 | FSEQ_CNVR_ID
+[ 3979.528926] iwlwifi 0000:00:14.3: 0x00080400 | CNVI_AUX_MISC_CHIP
+[ 3979.528933] iwlwifi 0000:00:14.3: 0x00400410 | CNVR_AUX_MISC_CHIP
+[ 3979.528976] iwlwifi 0000:00:14.3: 0x00009061 | CNVR_SCU_SD_REGS_SD_REG_DIG_DCDC_VTRIM
+[ 3979.528983] iwlwifi 0000:00:14.3: 0x00000061 | CNVR_SCU_SD_REGS_SD_REG_ACTIVE_VDIG_MIRROR
+[ 3979.529121] iwlwifi 0000:00:14.3: WRT: Collecting data: ini trigger 4 fired (delay=0ms).
+[ 3979.529125] ieee80211 phy0: Hardware restart was requested
+[ 3980.167681] iwlwifi 0000:00:14.3: WFPM_UMAC_PD_NOTIFICATION: 0x1f
+[ 3980.167729] iwlwifi 0000:00:14.3: WFPM_LMAC2_PD_NOTIFICATION: 0x1f
+[ 3980.167736] iwlwifi 0000:00:14.3: WFPM_AUTH_KEY_0: 0x90
+[ 3980.167745] iwlwifi 0000:00:14.3: CNVI_SCU_SEQ_DATA_DW9: 0x0
+[ 4046.851827] iwlwifi 0000:00:14.3: Queue 2 is stuck 0 6
+[ 4046.852720] iwlwifi 0000:00:14.3: Microcode SW error detected. Restarting 0x0.
+[ 4046.852823] iwlwifi 0000:00:14.3: Start IWL Error Log Dump:
+[ 4046.852824] iwlwifi 0000:00:14.3: Transport status: 0x0000004A, valid: 6
+[ 4046.852826] iwlwifi 0000:00:14.3: Loaded firmware version: 72.a764baac.0 so-a0-gf-a0-72.ucode
+[ 4046.852827] iwlwifi 0000:00:14.3: 0x00000084 | NMI_INTERRUPT_UNKNOWN       
+[ 4046.852828] iwlwifi 0000:00:14.3: 0x000082F0 | trm_hw_status0
+[ 4046.852828] iwlwifi 0000:00:14.3: 0x00000000 | trm_hw_status1
+[ 4046.852829] iwlwifi 0000:00:14.3: 0x004DAAEE | branchlink2
+[ 4046.852830] iwlwifi 0000:00:14.3: 0x000017F0 | interruptlink1
+[ 4046.852830] iwlwifi 0000:00:14.3: 0x000017F0 | interruptlink2
+[ 4046.852831] iwlwifi 0000:00:14.3: 0x004C72F2 | data1
+[ 4046.852831] iwlwifi 0000:00:14.3: 0x01000000 | data2
+[ 4046.852832] iwlwifi 0000:00:14.3: 0x00000000 | data3
+[ 4046.852832] iwlwifi 0000:00:14.3: 0xA280EE4E | beacon time
+[ 4046.852833] iwlwifi 0000:00:14.3: 0xC57EB1C8 | tsf low
+[ 4046.852833] iwlwifi 0000:00:14.3: 0x00000015 | tsf hi
+[ 4046.852834] iwlwifi 0000:00:14.3: 0x00000000 | time gp1
+[ 4046.852835] iwlwifi 0000:00:14.3: 0x03FBEE5A | time gp2
+[ 4046.852835] iwlwifi 0000:00:14.3: 0x00000001 | uCode revision type
+[ 4046.852836] iwlwifi 0000:00:14.3: 0x00000048 | uCode version major
+[ 4046.852836] iwlwifi 0000:00:14.3: 0xA764BAAC | uCode version minor
+[ 4046.852837] iwlwifi 0000:00:14.3: 0x00000370 | hw version
+[ 4046.852837] iwlwifi 0000:00:14.3: 0x00C80002 | board version
+[ 4046.852838] iwlwifi 0000:00:14.3: 0x8026FD04 | hcmd
+[ 4046.852839] iwlwifi 0000:00:14.3: 0x20020000 | isr0
+[ 4046.852839] iwlwifi 0000:00:14.3: 0x08000000 | isr1
+[ 4046.852840] iwlwifi 0000:00:14.3: 0x48F00002 | isr2
+[ 4046.852840] iwlwifi 0000:00:14.3: 0x00C30808 | isr3
+[ 4046.852841] iwlwifi 0000:00:14.3: 0x00000000 | isr4
+[ 4046.852841] iwlwifi 0000:00:14.3: 0x00380103 | last cmd Id
+[ 4046.852842] iwlwifi 0000:00:14.3: 0x004C72F2 | wait_event
+[ 4046.852842] iwlwifi 0000:00:14.3: 0x000000D4 | l2p_control
+[ 4046.852843] iwlwifi 0000:00:14.3: 0x00000000 | l2p_duration
+[ 4046.852844] iwlwifi 0000:00:14.3: 0x00000007 | l2p_mhvalid
+[ 4046.852844] iwlwifi 0000:00:14.3: 0x00000048 | l2p_addr_match
+[ 4046.852845] iwlwifi 0000:00:14.3: 0x00000009 | lmpm_pmg_sel
+[ 4046.852845] iwlwifi 0000:00:14.3: 0x00000000 | timestamp
+[ 4046.852846] iwlwifi 0000:00:14.3: 0x000080D8 | flow_handler
+[ 4046.852902] iwlwifi 0000:00:14.3: Start IWL Error Log Dump:
+[ 4046.852902] iwlwifi 0000:00:14.3: Transport status: 0x0000004A, valid: 7
+[ 4046.852903] iwlwifi 0000:00:14.3: 0x20000066 | NMI_INTERRUPT_HOST
+[ 4046.852904] iwlwifi 0000:00:14.3: 0x00000000 | umac branchlink1
+[ 4046.852904] iwlwifi 0000:00:14.3: 0x8045FDF8 | umac branchlink2
+[ 4046.852905] iwlwifi 0000:00:14.3: 0x804805CE | umac interruptlink1
+[ 4046.852905] iwlwifi 0000:00:14.3: 0xC00819C6 | umac interruptlink2
+[ 4046.852906] iwlwifi 0000:00:14.3: 0x01000000 | umac data1
+[ 4046.852907] iwlwifi 0000:00:14.3: 0xC00819C6 | umac data2
+[ 4046.852907] iwlwifi 0000:00:14.3: 0x00000000 | umac data3
+[ 4046.852908] iwlwifi 0000:00:14.3: 0x00000048 | umac major
+[ 4046.852908] iwlwifi 0000:00:14.3: 0xA764BAAC | umac minor
+[ 4046.852909] iwlwifi 0000:00:14.3: 0x03FBF0BC | frame pointer
+[ 4046.852909] iwlwifi 0000:00:14.3: 0xC0886240 | stack pointer
+[ 4046.852910] iwlwifi 0000:00:14.3: 0x0062019C | last host cmd
+[ 4046.852911] iwlwifi 0000:00:14.3: 0x00000400 | isr status reg
+[ 4046.852951] iwlwifi 0000:00:14.3: IML/ROM dump:
+[ 4046.852952] iwlwifi 0000:00:14.3: 0x00000B03 | IML/ROM error/state
+[ 4046.852960] iwlwifi 0000:00:14.3: 0x00008063 | IML/ROM data1
+[ 4046.852968] iwlwifi 0000:00:14.3: 0x00000090 | IML/ROM WFPM_AUTH_KEY_0
+[ 4046.852973] iwlwifi 0000:00:14.3: Fseq Registers:
+[ 4046.852975] iwlwifi 0000:00:14.3: 0x60000100 | FSEQ_ERROR_CODE
+[ 4046.852978] iwlwifi 0000:00:14.3: 0x003E0003 | FSEQ_TOP_INIT_VERSION
+[ 4046.852980] iwlwifi 0000:00:14.3: 0x00190002 | FSEQ_CNVIO_INIT_VERSION
+[ 4046.852983] iwlwifi 0000:00:14.3: 0x0000A652 | FSEQ_OTP_VERSION
+[ 4046.852985] iwlwifi 0000:00:14.3: 0x00000003 | FSEQ_TOP_CONTENT_VERSION
+[ 4046.852991] iwlwifi 0000:00:14.3: 0x4552414E | FSEQ_ALIVE_TOKEN
+[ 4046.853030] iwlwifi 0000:00:14.3: 0x00080400 | FSEQ_CNVI_ID
+[ 4046.853033] iwlwifi 0000:00:14.3: 0x00400410 | FSEQ_CNVR_ID
+[ 4046.853036] iwlwifi 0000:00:14.3: 0x00080400 | CNVI_AUX_MISC_CHIP
+[ 4046.853043] iwlwifi 0000:00:14.3: 0x00400410 | CNVR_AUX_MISC_CHIP
+[ 4046.853086] iwlwifi 0000:00:14.3: 0x00009061 | CNVR_SCU_SD_REGS_SD_REG_DIG_DCDC_VTRIM
+[ 4046.853093] iwlwifi 0000:00:14.3: 0x00000061 | CNVR_SCU_SD_REGS_SD_REG_ACTIVE_VDIG_MIRROR
+[ 4046.853231] iwlwifi 0000:00:14.3: WRT: Collecting data: ini trigger 4 fired (delay=0ms).
+[ 4046.853235] ieee80211 phy0: Hardware restart was requested
+[ 4047.486619] iwlwifi 0000:00:14.3: WFPM_UMAC_PD_NOTIFICATION: 0x1f
+[ 4047.486669] iwlwifi 0000:00:14.3: WFPM_LMAC2_PD_NOTIFICATION: 0x1f
+[ 4047.486676] iwlwifi 0000:00:14.3: WFPM_AUTH_KEY_0: 0x90
+[ 4047.486685] iwlwifi 0000:00:14.3: CNVI_SCU_SEQ_DATA_DW9: 0x0
+[ 4057.859225] iwlwifi 0000:00:14.3: Queue 2 is stuck 0 11
+[ 4057.860077] iwlwifi 0000:00:14.3: Microcode SW error detected. Restarting 0x0.
+[ 4057.860180] iwlwifi 0000:00:14.3: Start IWL Error Log Dump:
+[ 4057.860181] iwlwifi 0000:00:14.3: Transport status: 0x0000004A, valid: 6
+[ 4057.860182] iwlwifi 0000:00:14.3: Loaded firmware version: 72.a764baac.0 so-a0-gf-a0-72.ucode
+[ 4057.860183] iwlwifi 0000:00:14.3: 0x00000084 | NMI_INTERRUPT_UNKNOWN       
+[ 4057.860184] iwlwifi 0000:00:14.3: 0x00801EF5 | trm_hw_status0
+[ 4057.860185] iwlwifi 0000:00:14.3: 0x00000000 | trm_hw_status1
+[ 4057.860185] iwlwifi 0000:00:14.3: 0x004DAAEE | branchlink2
+[ 4057.860186] iwlwifi 0000:00:14.3: 0x004D0C26 | interruptlink1
+[ 4057.860186] iwlwifi 0000:00:14.3: 0x004D0C26 | interruptlink2
+[ 4057.860187] iwlwifi 0000:00:14.3: 0x00008068 | data1
+[ 4057.860187] iwlwifi 0000:00:14.3: 0x01000000 | data2
+[ 4057.860188] iwlwifi 0000:00:14.3: 0x00000000 | data3
+[ 4057.860188] iwlwifi 0000:00:14.3: 0x194027CB | beacon time
+[ 4057.860189] iwlwifi 0000:00:14.3: 0xC626A843 | tsf low
+[ 4057.860190] iwlwifi 0000:00:14.3: 0x00000015 | tsf hi
+[ 4057.860190] iwlwifi 0000:00:14.3: 0x00000000 | time gp1
+[ 4057.860191] iwlwifi 0000:00:14.3: 0x00A0AF68 | time gp2
+[ 4057.860191] iwlwifi 0000:00:14.3: 0x00000001 | uCode revision type
+[ 4057.860192] iwlwifi 0000:00:14.3: 0x00000048 | uCode version major
+[ 4057.860192] iwlwifi 0000:00:14.3: 0xA764BAAC | uCode version minor
+[ 4057.860193] iwlwifi 0000:00:14.3: 0x00000370 | hw version
+[ 4057.860194] iwlwifi 0000:00:14.3: 0x00C80002 | board version
+[ 4057.860194] iwlwifi 0000:00:14.3: 0x0200001C | hcmd
+[ 4057.860195] iwlwifi 0000:00:14.3: 0x80120000 | isr0
+[ 4057.860195] iwlwifi 0000:00:14.3: 0x00000000 | isr1
+[ 4057.860196] iwlwifi 0000:00:14.3: 0x48F00002 | isr2
+[ 4057.860196] iwlwifi 0000:00:14.3: 0x00C1080C | isr3
+[ 4057.860197] iwlwifi 0000:00:14.3: 0x00200000 | isr4
+[ 4057.860197] iwlwifi 0000:00:14.3: 0x00380103 | last cmd Id
+[ 4057.860198] iwlwifi 0000:00:14.3: 0x00008068 | wait_event
+[ 4057.860199] iwlwifi 0000:00:14.3: 0x000000D4 | l2p_control
+[ 4057.860199] iwlwifi 0000:00:14.3: 0x00002020 | l2p_duration
+[ 4057.860200] iwlwifi 0000:00:14.3: 0x00000007 | l2p_mhvalid
+[ 4057.860200] iwlwifi 0000:00:14.3: 0x00810048 | l2p_addr_match
+[ 4057.860201] iwlwifi 0000:00:14.3: 0x00000009 | lmpm_pmg_sel
+[ 4057.860201] iwlwifi 0000:00:14.3: 0x00000000 | timestamp
+[ 4057.860202] iwlwifi 0000:00:14.3: 0x00005080 | flow_handler
+[ 4057.860256] iwlwifi 0000:00:14.3: Start IWL Error Log Dump:
+[ 4057.860257] iwlwifi 0000:00:14.3: Transport status: 0x0000004A, valid: 7
+[ 4057.860257] iwlwifi 0000:00:14.3: 0x20000066 | NMI_INTERRUPT_HOST
+[ 4057.860258] iwlwifi 0000:00:14.3: 0x00000000 | umac branchlink1
+[ 4057.860259] iwlwifi 0000:00:14.3: 0x8045FDF8 | umac branchlink2
+[ 4057.860259] iwlwifi 0000:00:14.3: 0x804805CE | umac interruptlink1
+[ 4057.860260] iwlwifi 0000:00:14.3: 0xC0081908 | umac interruptlink2
+[ 4057.860260] iwlwifi 0000:00:14.3: 0x01000000 | umac data1
+[ 4057.860261] iwlwifi 0000:00:14.3: 0xC0081908 | umac data2
+[ 4057.860261] iwlwifi 0000:00:14.3: 0x00000000 | umac data3
+[ 4057.860262] iwlwifi 0000:00:14.3: 0x00000048 | umac major
+[ 4057.860263] iwlwifi 0000:00:14.3: 0xA764BAAC | umac minor
+[ 4057.860263] iwlwifi 0000:00:14.3: 0x00A0B1CA | frame pointer
+[ 4057.860264] iwlwifi 0000:00:14.3: 0xC0887EE4 | stack pointer
+[ 4057.860264] iwlwifi 0000:00:14.3: 0x0048019C | last host cmd
+[ 4057.860265] iwlwifi 0000:00:14.3: 0x00000404 | isr status reg
+[ 4057.860356] iwlwifi 0000:00:14.3: IML/ROM dump:
+[ 4057.860356] iwlwifi 0000:00:14.3: 0x00000B03 | IML/ROM error/state
+[ 4057.860364] iwlwifi 0000:00:14.3: 0x00008063 | IML/ROM data1
+[ 4057.860372] iwlwifi 0000:00:14.3: 0x00000090 | IML/ROM WFPM_AUTH_KEY_0
+[ 4057.860378] iwlwifi 0000:00:14.3: Fseq Registers:
+[ 4057.860380] iwlwifi 0000:00:14.3: 0x60000100 | FSEQ_ERROR_CODE
+[ 4057.860383] iwlwifi 0000:00:14.3: 0x003E0003 | FSEQ_TOP_INIT_VERSION
+[ 4057.860385] iwlwifi 0000:00:14.3: 0x00190002 | FSEQ_CNVIO_INIT_VERSION
+[ 4057.860387] iwlwifi 0000:00:14.3: 0x0000A652 | FSEQ_OTP_VERSION
+[ 4057.860390] iwlwifi 0000:00:14.3: 0x00000003 | FSEQ_TOP_CONTENT_VERSION
+[ 4057.860392] iwlwifi 0000:00:14.3: 0x4552414E | FSEQ_ALIVE_TOKEN
+[ 4057.860395] iwlwifi 0000:00:14.3: 0x00080400 | FSEQ_CNVI_ID
+[ 4057.860397] iwlwifi 0000:00:14.3: 0x00400410 | FSEQ_CNVR_ID
+[ 4057.860399] iwlwifi 0000:00:14.3: 0x00080400 | CNVI_AUX_MISC_CHIP
+[ 4057.860406] iwlwifi 0000:00:14.3: 0x00400410 | CNVR_AUX_MISC_CHIP
+[ 4057.860450] iwlwifi 0000:00:14.3: 0x00009061 | CNVR_SCU_SD_REGS_SD_REG_DIG_DCDC_VTRIM
+[ 4057.860457] iwlwifi 0000:00:14.3: 0x00000061 | CNVR_SCU_SD_REGS_SD_REG_ACTIVE_VDIG_MIRROR
+[ 4057.860595] iwlwifi 0000:00:14.3: WRT: Collecting data: ini trigger 4 fired (delay=0ms).
+[ 4057.860598] ieee80211 phy0: Hardware restart was requested
+[ 4058.490044] iwlwifi 0000:00:14.3: WFPM_UMAC_PD_NOTIFICATION: 0x1f
+[ 4058.490054] iwlwifi 0000:00:14.3: WFPM_LMAC2_PD_NOTIFICATION: 0x1f
+[ 4058.490062] iwlwifi 0000:00:14.3: WFPM_AUTH_KEY_0: 0x90
+[ 4058.490070] iwlwifi 0000:00:14.3: CNVI_SCU_SEQ_DATA_DW9: 0x0
+[ 4068.866503] iwlwifi 0000:00:14.3: Queue 2 is stuck 3 14
+[ 4068.867383] iwlwifi 0000:00:14.3: Microcode SW error detected. Restarting 0x0.
+[ 4068.867486] iwlwifi 0000:00:14.3: Start IWL Error Log Dump:
+[ 4068.867486] iwlwifi 0000:00:14.3: Transport status: 0x0000004A, valid: 6
+[ 4068.867487] iwlwifi 0000:00:14.3: Loaded firmware version: 72.a764baac.0 so-a0-gf-a0-72.ucode
+[ 4068.867489] iwlwifi 0000:00:14.3: 0x00000084 | NMI_INTERRUPT_UNKNOWN       
+[ 4068.867490] iwlwifi 0000:00:14.3: 0x000082F0 | trm_hw_status0
+[ 4068.867490] iwlwifi 0000:00:14.3: 0x00000000 | trm_hw_status1
+[ 4068.867491] iwlwifi 0000:00:14.3: 0x004DAAEE | branchlink2
+[ 4068.867491] iwlwifi 0000:00:14.3: 0x004D0C26 | interruptlink1
+[ 4068.867492] iwlwifi 0000:00:14.3: 0x004D0C26 | interruptlink2
+[ 4068.867492] iwlwifi 0000:00:14.3: 0x004C72F2 | data1
+[ 4068.867493] iwlwifi 0000:00:14.3: 0x01000000 | data2
+[ 4068.867494] iwlwifi 0000:00:14.3: 0x00000000 | data3
+[ 4068.867494] iwlwifi 0000:00:14.3: 0x1940F191 | beacon time
+[ 4068.867495] iwlwifi 0000:00:14.3: 0xC6CE9E7B | tsf low
+[ 4068.867495] iwlwifi 0000:00:14.3: 0x00000015 | tsf hi
+[ 4068.867496] iwlwifi 0000:00:14.3: 0x00000000 | time gp1
+[ 4068.867496] iwlwifi 0000:00:14.3: 0x00A0BE66 | time gp2
+[ 4068.867497] iwlwifi 0000:00:14.3: 0x00000001 | uCode revision type
+[ 4068.867498] iwlwifi 0000:00:14.3: 0x00000048 | uCode version major
+[ 4068.867498] iwlwifi 0000:00:14.3: 0xA764BAAC | uCode version minor
+[ 4068.867499] iwlwifi 0000:00:14.3: 0x00000370 | hw version
+[ 4068.867499] iwlwifi 0000:00:14.3: 0x00C80002 | board version
+[ 4068.867500] iwlwifi 0000:00:14.3: 0x800CFD4F | hcmd
+[ 4068.867500] iwlwifi 0000:00:14.3: 0x20028000 | isr0
+[ 4068.867501] iwlwifi 0000:00:14.3: 0x00000000 | isr1
+[ 4068.867502] iwlwifi 0000:00:14.3: 0x48F00002 | isr2
+[ 4068.867502] iwlwifi 0000:00:14.3: 0x00C30808 | isr3
+[ 4068.867503] iwlwifi 0000:00:14.3: 0x00200000 | isr4
+[ 4068.867503] iwlwifi 0000:00:14.3: 0x0202001C | last cmd Id
+[ 4068.867504] iwlwifi 0000:00:14.3: 0x004C72F2 | wait_event
+[ 4068.867504] iwlwifi 0000:00:14.3: 0x000000D4 | l2p_control
+[ 4068.867505] iwlwifi 0000:00:14.3: 0x00000000 | l2p_duration
+[ 4068.867506] iwlwifi 0000:00:14.3: 0x00000007 | l2p_mhvalid
+[ 4068.867506] iwlwifi 0000:00:14.3: 0x00000048 | l2p_addr_match
+[ 4068.867507] iwlwifi 0000:00:14.3: 0x00000009 | lmpm_pmg_sel
+[ 4068.867507] iwlwifi 0000:00:14.3: 0x00000000 | timestamp
+[ 4068.867508] iwlwifi 0000:00:14.3: 0x00006898 | flow_handler
+[ 4068.867564] iwlwifi 0000:00:14.3: Start IWL Error Log Dump:
+[ 4068.867565] iwlwifi 0000:00:14.3: Transport status: 0x0000004A, valid: 7
+[ 4068.867565] iwlwifi 0000:00:14.3: 0x20000066 | NMI_INTERRUPT_HOST
+[ 4068.867566] iwlwifi 0000:00:14.3: 0x00000000 | umac branchlink1
+[ 4068.867567] iwlwifi 0000:00:14.3: 0x8045FDF8 | umac branchlink2
+[ 4068.867567] iwlwifi 0000:00:14.3: 0x804805CE | umac interruptlink1
+[ 4068.867568] iwlwifi 0000:00:14.3: 0xC0083DE6 | umac interruptlink2
+[ 4068.867568] iwlwifi 0000:00:14.3: 0x01000000 | umac data1
+[ 4068.867569] iwlwifi 0000:00:14.3: 0xC0083DE6 | umac data2
+[ 4068.867570] iwlwifi 0000:00:14.3: 0x00000000 | umac data3
+[ 4068.867570] iwlwifi 0000:00:14.3: 0x00000048 | umac major
+[ 4068.867571] iwlwifi 0000:00:14.3: 0xA764BAAC | umac minor
+[ 4068.867571] iwlwifi 0000:00:14.3: 0x00A0C0C8 | frame pointer
+[ 4068.867572] iwlwifi 0000:00:14.3: 0xC0887EF8 | stack pointer
+[ 4068.867572] iwlwifi 0000:00:14.3: 0x0051010C | last host cmd
+[ 4068.867573] iwlwifi 0000:00:14.3: 0x00000404 | isr status reg
+[ 4068.867615] iwlwifi 0000:00:14.3: IML/ROM dump:
+[ 4068.867616] iwlwifi 0000:00:14.3: 0x00000B03 | IML/ROM error/state
+[ 4068.867624] iwlwifi 0000:00:14.3: 0x00008063 | IML/ROM data1
+[ 4068.867632] iwlwifi 0000:00:14.3: 0x00000090 | IML/ROM WFPM_AUTH_KEY_0
+[ 4068.867637] iwlwifi 0000:00:14.3: Fseq Registers:
+[ 4068.867639] iwlwifi 0000:00:14.3: 0x60000100 | FSEQ_ERROR_CODE
+[ 4068.867642] iwlwifi 0000:00:14.3: 0x003E0003 | FSEQ_TOP_INIT_VERSION
+[ 4068.867644] iwlwifi 0000:00:14.3: 0x00190002 | FSEQ_CNVIO_INIT_VERSION
+[ 4068.867646] iwlwifi 0000:00:14.3: 0x0000A652 | FSEQ_OTP_VERSION
+[ 4068.867649] iwlwifi 0000:00:14.3: 0x00000003 | FSEQ_TOP_CONTENT_VERSION
+[ 4068.867651] iwlwifi 0000:00:14.3: 0x4552414E | FSEQ_ALIVE_TOKEN
+[ 4068.867654] iwlwifi 0000:00:14.3: 0x00080400 | FSEQ_CNVI_ID
+[ 4068.867656] iwlwifi 0000:00:14.3: 0x00400410 | FSEQ_CNVR_ID
+[ 4068.867658] iwlwifi 0000:00:14.3: 0x00080400 | CNVI_AUX_MISC_CHIP
+[ 4068.867665] iwlwifi 0000:00:14.3: 0x00400410 | CNVR_AUX_MISC_CHIP
+[ 4068.867708] iwlwifi 0000:00:14.3: 0x00009061 | CNVR_SCU_SD_REGS_SD_REG_DIG_DCDC_VTRIM
+[ 4068.867715] iwlwifi 0000:00:14.3: 0x00000061 | CNVR_SCU_SD_REGS_SD_REG_ACTIVE_VDIG_MIRROR
+[ 4068.867893] iwlwifi 0000:00:14.3: WRT: Collecting data: ini trigger 4 fired (delay=0ms).
+[ 4068.867896] ieee80211 phy0: Hardware restart was requested
+[ 4069.499199] iwlwifi 0000:00:14.3: WFPM_UMAC_PD_NOTIFICATION: 0x1f
+[ 4069.499248] iwlwifi 0000:00:14.3: WFPM_LMAC2_PD_NOTIFICATION: 0x1f
+[ 4069.499256] iwlwifi 0000:00:14.3: WFPM_AUTH_KEY_0: 0x90
+[ 4069.499265] iwlwifi 0000:00:14.3: CNVI_SCU_SEQ_DATA_DW9: 0x0
+[ 4079.873844] iwlwifi 0000:00:14.3: Queue 2 is stuck 0 3
+[ 4079.874700] iwlwifi 0000:00:14.3: Microcode SW error detected. Restarting 0x0.
+[ 4079.874804] iwlwifi 0000:00:14.3: Start IWL Error Log Dump:
+[ 4079.874805] iwlwifi 0000:00:14.3: Transport status: 0x0000004A, valid: 6
+[ 4079.874806] iwlwifi 0000:00:14.3: Loaded firmware version: 72.a764baac.0 so-a0-gf-a0-72.ucode
+[ 4079.874807] iwlwifi 0000:00:14.3: 0x00000084 | NMI_INTERRUPT_UNKNOWN       
+[ 4079.874808] iwlwifi 0000:00:14.3: 0x00801EF4 | trm_hw_status0
+[ 4079.874809] iwlwifi 0000:00:14.3: 0x00000000 | trm_hw_status1
+[ 4079.874810] iwlwifi 0000:00:14.3: 0x004DAAEE | branchlink2
+[ 4079.874810] iwlwifi 0000:00:14.3: 0x004D0C26 | interruptlink1
+[ 4079.874811] iwlwifi 0000:00:14.3: 0x004D0C26 | interruptlink2
+[ 4079.874811] iwlwifi 0000:00:14.3: 0x00008068 | data1
+[ 4079.874812] iwlwifi 0000:00:14.3: 0x01000000 | data2
+[ 4079.874813] iwlwifi 0000:00:14.3: 0x00000000 | data3
+[ 4079.874813] iwlwifi 0000:00:14.3: 0x19002B2D | beacon time
+[ 4079.874814] iwlwifi 0000:00:14.3: 0xC77694E1 | tsf low
+[ 4079.874814] iwlwifi 0000:00:14.3: 0x00000015 | tsf hi
+[ 4079.874815] iwlwifi 0000:00:14.3: 0x00000000 | time gp1
+[ 4079.874815] iwlwifi 0000:00:14.3: 0x00A0B757 | time gp2
+[ 4079.874816] iwlwifi 0000:00:14.3: 0x00000001 | uCode revision type
+[ 4079.874817] iwlwifi 0000:00:14.3: 0x00000048 | uCode version major
+[ 4079.874817] iwlwifi 0000:00:14.3: 0xA764BAAC | uCode version minor
+[ 4079.874818] iwlwifi 0000:00:14.3: 0x00000370 | hw version
+[ 4079.874818] iwlwifi 0000:00:14.3: 0x00C80002 | board version
+[ 4079.874819] iwlwifi 0000:00:14.3: 0x0200001C | hcmd
+[ 4079.874819] iwlwifi 0000:00:14.3: 0x80120000 | isr0
+[ 4079.874820] iwlwifi 0000:00:14.3: 0x00000000 | isr1
+[ 4079.874820] iwlwifi 0000:00:14.3: 0x48F00002 | isr2
+[ 4079.874821] iwlwifi 0000:00:14.3: 0x00C3480C | isr3
+[ 4079.874822] iwlwifi 0000:00:14.3: 0x00200000 | isr4
+[ 4079.874822] iwlwifi 0000:00:14.3: 0x0600001C | last cmd Id
+[ 4079.874823] iwlwifi 0000:00:14.3: 0x00008068 | wait_event
+[ 4079.874823] iwlwifi 0000:00:14.3: 0x00000054 | l2p_control
+[ 4079.874824] iwlwifi 0000:00:14.3: 0x00002820 | l2p_duration
+[ 4079.874824] iwlwifi 0000:00:14.3: 0x0000000F | l2p_mhvalid
+[ 4079.874825] iwlwifi 0000:00:14.3: 0x00060098 | l2p_addr_match
+[ 4079.874825] iwlwifi 0000:00:14.3: 0x00000009 | lmpm_pmg_sel
+[ 4079.874826] iwlwifi 0000:00:14.3: 0x00000000 | timestamp
+[ 4079.874827] iwlwifi 0000:00:14.3: 0x000058A4 | flow_handler
+[ 4079.874883] iwlwifi 0000:00:14.3: Start IWL Error Log Dump:
+[ 4079.874883] iwlwifi 0000:00:14.3: Transport status: 0x0000004A, valid: 7
+[ 4079.874884] iwlwifi 0000:00:14.3: 0x20000066 | NMI_INTERRUPT_HOST
+[ 4079.874884] iwlwifi 0000:00:14.3: 0x00000000 | umac branchlink1
+[ 4079.874885] iwlwifi 0000:00:14.3: 0x8045FDF8 | umac branchlink2
+[ 4079.874886] iwlwifi 0000:00:14.3: 0x804805CE | umac interruptlink1
+[ 4079.874886] iwlwifi 0000:00:14.3: 0xC00819B0 | umac interruptlink2
+[ 4079.874887] iwlwifi 0000:00:14.3: 0x01000000 | umac data1
+[ 4079.874887] iwlwifi 0000:00:14.3: 0xC00819B0 | umac data2
+[ 4079.874888] iwlwifi 0000:00:14.3: 0x00000000 | umac data3
+[ 4079.874888] iwlwifi 0000:00:14.3: 0x00000048 | umac major
+[ 4079.874889] iwlwifi 0000:00:14.3: 0xA764BAAC | umac minor
+[ 4079.874889] iwlwifi 0000:00:14.3: 0x00A0B9A9 | frame pointer
+[ 4079.874890] iwlwifi 0000:00:14.3: 0xC0887EFC | stack pointer
+[ 4079.874891] iwlwifi 0000:00:14.3: 0x004D019C | last host cmd
+[ 4079.874891] iwlwifi 0000:00:14.3: 0x00000404 | isr status reg
+[ 4079.874934] iwlwifi 0000:00:14.3: IML/ROM dump:
+[ 4079.874934] iwlwifi 0000:00:14.3: 0x00000B03 | IML/ROM error/state
+[ 4079.874942] iwlwifi 0000:00:14.3: 0x00008062 | IML/ROM data1
+[ 4079.874950] iwlwifi 0000:00:14.3: 0x00000090 | IML/ROM WFPM_AUTH_KEY_0
+[ 4079.874956] iwlwifi 0000:00:14.3: Fseq Registers:
+[ 4079.874958] iwlwifi 0000:00:14.3: 0x60000100 | FSEQ_ERROR_CODE
+[ 4079.874960] iwlwifi 0000:00:14.3: 0x003E0003 | FSEQ_TOP_INIT_VERSION
+[ 4079.874963] iwlwifi 0000:00:14.3: 0x00190002 | FSEQ_CNVIO_INIT_VERSION
+[ 4079.874965] iwlwifi 0000:00:14.3: 0x0000A652 | FSEQ_OTP_VERSION
+[ 4079.874968] iwlwifi 0000:00:14.3: 0x00000003 | FSEQ_TOP_CONTENT_VERSION
+[ 4079.874970] iwlwifi 0000:00:14.3: 0x4552414E | FSEQ_ALIVE_TOKEN
+[ 4079.874973] iwlwifi 0000:00:14.3: 0x00080400 | FSEQ_CNVI_ID
+[ 4079.874975] iwlwifi 0000:00:14.3: 0x00400410 | FSEQ_CNVR_ID
+[ 4079.874977] iwlwifi 0000:00:14.3: 0x00080400 | CNVI_AUX_MISC_CHIP
+[ 4079.874984] iwlwifi 0000:00:14.3: 0x00400410 | CNVR_AUX_MISC_CHIP
+[ 4079.875027] iwlwifi 0000:00:14.3: 0x00009061 | CNVR_SCU_SD_REGS_SD_REG_DIG_DCDC_VTRIM
+[ 4079.875034] iwlwifi 0000:00:14.3: 0x00000061 | CNVR_SCU_SD_REGS_SD_REG_ACTIVE_VDIG_MIRROR
+[ 4079.875172] iwlwifi 0000:00:14.3: WRT: Collecting data: ini trigger 4 fired (delay=0ms).
+[ 4079.875175] ieee80211 phy0: Hardware restart was requested
+[ 4080.505783] iwlwifi 0000:00:14.3: WFPM_UMAC_PD_NOTIFICATION: 0x1f
+[ 4080.505793] iwlwifi 0000:00:14.3: WFPM_LMAC2_PD_NOTIFICATION: 0x1f
+[ 4080.505801] iwlwifi 0000:00:14.3: WFPM_AUTH_KEY_0: 0x90
+[ 4080.505810] iwlwifi 0000:00:14.3: CNVI_SCU_SEQ_DATA_DW9: 0x0
+[ 4091.649167] iwlwifi 0000:00:14.3: Queue 2 is stuck 1 10
+[ 4091.650040] iwlwifi 0000:00:14.3: Microcode SW error detected. Restarting 0x0.
+[ 4091.650143] iwlwifi 0000:00:14.3: Start IWL Error Log Dump:
+[ 4091.650144] iwlwifi 0000:00:14.3: Transport status: 0x0000004A, valid: 6
+[ 4091.650145] iwlwifi 0000:00:14.3: Loaded firmware version: 72.a764baac.0 so-a0-gf-a0-72.ucode
+[ 4091.650146] iwlwifi 0000:00:14.3: 0x00000084 | NMI_INTERRUPT_UNKNOWN       
+[ 4091.650147] iwlwifi 0000:00:14.3: 0x00801EF4 | trm_hw_status0
+[ 4091.650148] iwlwifi 0000:00:14.3: 0x00000000 | trm_hw_status1
+[ 4091.650149] iwlwifi 0000:00:14.3: 0x004DAAEE | branchlink2
+[ 4091.650149] iwlwifi 0000:00:14.3: 0x004D02A0 | interruptlink1
+[ 4091.650150] iwlwifi 0000:00:14.3: 0x004D02A0 | interruptlink2
+[ 4091.650150] iwlwifi 0000:00:14.3: 0x00008068 | data1
+[ 4091.650151] iwlwifi 0000:00:14.3: 0x01000000 | data2
+[ 4091.650152] iwlwifi 0000:00:14.3: 0x00000000 | data3
+[ 4091.650153] iwlwifi 0000:00:14.3: 0x1B402CA8 | beacon time
+[ 4091.650154] iwlwifi 0000:00:14.3: 0xC82A4363 | tsf low
+[ 4091.650155] iwlwifi 0000:00:14.3: 0x00000015 | tsf hi
+[ 4091.650155] iwlwifi 0000:00:14.3: 0x00000000 | time gp1
+[ 4091.650156] iwlwifi 0000:00:14.3: 0x00AC7251 | time gp2
+[ 4091.650156] iwlwifi 0000:00:14.3: 0x00000001 | uCode revision type
+[ 4091.650157] iwlwifi 0000:00:14.3: 0x00000048 | uCode version major
+[ 4091.650158] iwlwifi 0000:00:14.3: 0xA764BAAC | uCode version minor
+[ 4091.650158] iwlwifi 0000:00:14.3: 0x00000370 | hw version
+[ 4091.650159] iwlwifi 0000:00:14.3: 0x00C80002 | board version
+[ 4091.650159] iwlwifi 0000:00:14.3: 0x0201001C | hcmd
+[ 4091.650160] iwlwifi 0000:00:14.3: 0x80120000 | isr0
+[ 4091.650161] iwlwifi 0000:00:14.3: 0x08000000 | isr1
+[ 4091.650161] iwlwifi 0000:00:14.3: 0x48F00002 | isr2
+[ 4091.650162] iwlwifi 0000:00:14.3: 0x00C3080D | isr3
+[ 4091.650162] iwlwifi 0000:00:14.3: 0x00200000 | isr4
+[ 4091.650163] iwlwifi 0000:00:14.3: 0x0200001C | last cmd Id
+[ 4091.650163] iwlwifi 0000:00:14.3: 0x00008068 | wait_event
+[ 4091.650164] iwlwifi 0000:00:14.3: 0x000000D4 | l2p_control
+[ 4091.650164] iwlwifi 0000:00:14.3: 0x00002820 | l2p_duration
+[ 4091.650165] iwlwifi 0000:00:14.3: 0x00000007 | l2p_mhvalid
+[ 4091.650166] iwlwifi 0000:00:14.3: 0x00810048 | l2p_addr_match
+[ 4091.650166] iwlwifi 0000:00:14.3: 0x00000009 | lmpm_pmg_sel
+[ 4091.650167] iwlwifi 0000:00:14.3: 0x00000000 | timestamp
+[ 4091.650167] iwlwifi 0000:00:14.3: 0x00005884 | flow_handler
+[ 4091.650222] iwlwifi 0000:00:14.3: Start IWL Error Log Dump:
+[ 4091.650222] iwlwifi 0000:00:14.3: Transport status: 0x0000004A, valid: 7
+[ 4091.650223] iwlwifi 0000:00:14.3: 0x20000066 | NMI_INTERRUPT_HOST
+[ 4091.650223] iwlwifi 0000:00:14.3: 0x00000000 | umac branchlink1
+[ 4091.650224] iwlwifi 0000:00:14.3: 0x8045FDF8 | umac branchlink2
+[ 4091.650225] iwlwifi 0000:00:14.3: 0x804805CE | umac interruptlink1
+[ 4091.650225] iwlwifi 0000:00:14.3: 0xC00819BC | umac interruptlink2
+[ 4091.650226] iwlwifi 0000:00:14.3: 0x01000000 | umac data1
+[ 4091.650226] iwlwifi 0000:00:14.3: 0xC00819BC | umac data2
+[ 4091.650227] iwlwifi 0000:00:14.3: 0x00000000 | umac data3
+[ 4091.650227] iwlwifi 0000:00:14.3: 0x00000048 | umac major
+[ 4091.650228] iwlwifi 0000:00:14.3: 0xA764BAAC | umac minor
+[ 4091.650228] iwlwifi 0000:00:14.3: 0x00AC74A3 | frame pointer
+[ 4091.650229] iwlwifi 0000:00:14.3: 0xC0887F14 | stack pointer
+[ 4091.650230] iwlwifi 0000:00:14.3: 0x004B019C | last host cmd
+[ 4091.650230] iwlwifi 0000:00:14.3: 0x00000404 | isr status reg
+[ 4091.650273] iwlwifi 0000:00:14.3: IML/ROM dump:
+[ 4091.650273] iwlwifi 0000:00:14.3: 0x00000B03 | IML/ROM error/state
+[ 4091.650281] iwlwifi 0000:00:14.3: 0x00008063 | IML/ROM data1
+[ 4091.650289] iwlwifi 0000:00:14.3: 0x00000090 | IML/ROM WFPM_AUTH_KEY_0
+[ 4091.650295] iwlwifi 0000:00:14.3: Fseq Registers:
+[ 4091.650297] iwlwifi 0000:00:14.3: 0x60000100 | FSEQ_ERROR_CODE
+[ 4091.650299] iwlwifi 0000:00:14.3: 0x003E0003 | FSEQ_TOP_INIT_VERSION
+[ 4091.650302] iwlwifi 0000:00:14.3: 0x00190002 | FSEQ_CNVIO_INIT_VERSION
+[ 4091.650304] iwlwifi 0000:00:14.3: 0x0000A652 | FSEQ_OTP_VERSION
+[ 4091.650307] iwlwifi 0000:00:14.3: 0x00000003 | FSEQ_TOP_CONTENT_VERSION
+[ 4091.650309] iwlwifi 0000:00:14.3: 0x4552414E | FSEQ_ALIVE_TOKEN
+[ 4091.650312] iwlwifi 0000:00:14.3: 0x00080400 | FSEQ_CNVI_ID
+[ 4091.650314] iwlwifi 0000:00:14.3: 0x00400410 | FSEQ_CNVR_ID
+[ 4091.650316] iwlwifi 0000:00:14.3: 0x00080400 | CNVI_AUX_MISC_CHIP
+[ 4091.650323] iwlwifi 0000:00:14.3: 0x00400410 | CNVR_AUX_MISC_CHIP
+[ 4091.650368] iwlwifi 0000:00:14.3: 0x00009061 | CNVR_SCU_SD_REGS_SD_REG_DIG_DCDC_VTRIM
+[ 4091.650375] iwlwifi 0000:00:14.3: 0x00000061 | CNVR_SCU_SD_REGS_SD_REG_ACTIVE_VDIG_MIRROR
+[ 4091.650513] iwlwifi 0000:00:14.3: WRT: Collecting data: ini trigger 4 fired (delay=0ms).
+[ 4091.650516] ieee80211 phy0: Hardware restart was requested
+[ 4092.298379] iwlwifi 0000:00:14.3: WFPM_UMAC_PD_NOTIFICATION: 0x1f
+[ 4092.298431] iwlwifi 0000:00:14.3: WFPM_LMAC2_PD_NOTIFICATION: 0x1f
+[ 4092.298439] iwlwifi 0000:00:14.3: WFPM_AUTH_KEY_0: 0x90
+[ 4092.298447] iwlwifi 0000:00:14.3: CNVI_SCU_SEQ_DATA_DW9: 0x0
+[ 4103.168510] iwlwifi 0000:00:14.3: Queue 2 is stuck 1 11
+[ 4103.169390] iwlwifi 0000:00:14.3: Microcode SW error detected. Restarting 0x0.
+[ 4103.169494] iwlwifi 0000:00:14.3: Start IWL Error Log Dump:
+[ 4103.169495] iwlwifi 0000:00:14.3: Transport status: 0x0000004A, valid: 6
+[ 4103.169496] iwlwifi 0000:00:14.3: Loaded firmware version: 72.a764baac.0 so-a0-gf-a0-72.ucode
+[ 4103.169497] iwlwifi 0000:00:14.3: 0x00000084 | NMI_INTERRUPT_UNKNOWN       
+[ 4103.169498] iwlwifi 0000:00:14.3: 0x000082F0 | trm_hw_status0
+[ 4103.169499] iwlwifi 0000:00:14.3: 0x00000000 | trm_hw_status1
+[ 4103.169500] iwlwifi 0000:00:14.3: 0x004DAAEE | branchlink2
+[ 4103.169500] iwlwifi 0000:00:14.3: 0x004D0C26 | interruptlink1
+[ 4103.169501] iwlwifi 0000:00:14.3: 0x004D0C26 | interruptlink2
+[ 4103.169501] iwlwifi 0000:00:14.3: 0x004C72F2 | data1
+[ 4103.169502] iwlwifi 0000:00:14.3: 0x01000000 | data2
+[ 4103.169502] iwlwifi 0000:00:14.3: 0x00000000 | data3
+[ 4103.169503] iwlwifi 0000:00:14.3: 0x1A80F639 | beacon time
+[ 4103.169504] iwlwifi 0000:00:14.3: 0xC8DA09CE | tsf low
+[ 4103.169504] iwlwifi 0000:00:14.3: 0x00000015 | tsf hi
+[ 4103.169505] iwlwifi 0000:00:14.3: 0x00000000 | time gp1
+[ 4103.169505] iwlwifi 0000:00:14.3: 0x00A84722 | time gp2
+[ 4103.169506] iwlwifi 0000:00:14.3: 0x00000001 | uCode revision type
+[ 4103.169506] iwlwifi 0000:00:14.3: 0x00000048 | uCode version major
+[ 4103.169507] iwlwifi 0000:00:14.3: 0xA764BAAC | uCode version minor
+[ 4103.169508] iwlwifi 0000:00:14.3: 0x00000370 | hw version
+[ 4103.169508] iwlwifi 0000:00:14.3: 0x00C80002 | board version
+[ 4103.169509] iwlwifi 0000:00:14.3: 0x80A1FD4F | hcmd
+[ 4103.169509] iwlwifi 0000:00:14.3: 0x20028000 | isr0
+[ 4103.169510] iwlwifi 0000:00:14.3: 0x00000000 | isr1
+[ 4103.169510] iwlwifi 0000:00:14.3: 0x48F00002 | isr2
+[ 4103.169511] iwlwifi 0000:00:14.3: 0x00C30808 | isr3
+[ 4103.169511] iwlwifi 0000:00:14.3: 0x00200000 | isr4
+[ 4103.169512] iwlwifi 0000:00:14.3: 0x0200001C | last cmd Id
+[ 4103.169513] iwlwifi 0000:00:14.3: 0x004C72F2 | wait_event
+[ 4103.169513] iwlwifi 0000:00:14.3: 0x000000D4 | l2p_control
+[ 4103.169514] iwlwifi 0000:00:14.3: 0x00000000 | l2p_duration
+[ 4103.169514] iwlwifi 0000:00:14.3: 0x00000007 | l2p_mhvalid
+[ 4103.169515] iwlwifi 0000:00:14.3: 0x00000048 | l2p_addr_match
+[ 4103.169515] iwlwifi 0000:00:14.3: 0x00000009 | lmpm_pmg_sel
+[ 4103.169516] iwlwifi 0000:00:14.3: 0x00000000 | timestamp
+[ 4103.169516] iwlwifi 0000:00:14.3: 0x0000608C | flow_handler
+[ 4103.169572] iwlwifi 0000:00:14.3: Start IWL Error Log Dump:
+[ 4103.169573] iwlwifi 0000:00:14.3: Transport status: 0x0000004A, valid: 7
+[ 4103.169574] iwlwifi 0000:00:14.3: 0x20000066 | NMI_INTERRUPT_HOST
+[ 4103.169574] iwlwifi 0000:00:14.3: 0x00000000 | umac branchlink1
+[ 4103.169575] iwlwifi 0000:00:14.3: 0x8045FDF8 | umac branchlink2
+[ 4103.169575] iwlwifi 0000:00:14.3: 0x804805CE | umac interruptlink1
+[ 4103.169576] iwlwifi 0000:00:14.3: 0xC008195C | umac interruptlink2
+[ 4103.169577] iwlwifi 0000:00:14.3: 0x01000000 | umac data1
+[ 4103.169577] iwlwifi 0000:00:14.3: 0xC008195C | umac data2
+[ 4103.169578] iwlwifi 0000:00:14.3: 0x00000000 | umac data3
+[ 4103.169578] iwlwifi 0000:00:14.3: 0x00000048 | umac major
+[ 4103.169579] iwlwifi 0000:00:14.3: 0xA764BAAC | umac minor
+[ 4103.169579] iwlwifi 0000:00:14.3: 0x00A84974 | frame pointer
+[ 4103.169580] iwlwifi 0000:00:14.3: 0xC0887EFC | stack pointer
+[ 4103.169580] iwlwifi 0000:00:14.3: 0x004B019C | last host cmd
+[ 4103.169581] iwlwifi 0000:00:14.3: 0x00000404 | isr status reg
+[ 4103.169672] iwlwifi 0000:00:14.3: IML/ROM dump:
+[ 4103.169672] iwlwifi 0000:00:14.3: 0x00000B03 | IML/ROM error/state
+[ 4103.169680] iwlwifi 0000:00:14.3: 0x00008065 | IML/ROM data1
+[ 4103.169688] iwlwifi 0000:00:14.3: 0x00000090 | IML/ROM WFPM_AUTH_KEY_0
+[ 4103.169694] iwlwifi 0000:00:14.3: Fseq Registers:
+[ 4103.169696] iwlwifi 0000:00:14.3: 0x60000100 | FSEQ_ERROR_CODE
+[ 4103.169698] iwlwifi 0000:00:14.3: 0x003E0003 | FSEQ_TOP_INIT_VERSION
+[ 4103.169701] iwlwifi 0000:00:14.3: 0x00190002 | FSEQ_CNVIO_INIT_VERSION
+[ 4103.169703] iwlwifi 0000:00:14.3: 0x0000A652 | FSEQ_OTP_VERSION
+[ 4103.169706] iwlwifi 0000:00:14.3: 0x00000003 | FSEQ_TOP_CONTENT_VERSION
+[ 4103.169708] iwlwifi 0000:00:14.3: 0x4552414E | FSEQ_ALIVE_TOKEN
+[ 4103.169711] iwlwifi 0000:00:14.3: 0x00080400 | FSEQ_CNVI_ID
+[ 4103.169713] iwlwifi 0000:00:14.3: 0x00400410 | FSEQ_CNVR_ID
+[ 4103.169715] iwlwifi 0000:00:14.3: 0x00080400 | CNVI_AUX_MISC_CHIP
+[ 4103.169722] iwlwifi 0000:00:14.3: 0x00400410 | CNVR_AUX_MISC_CHIP
+[ 4103.169766] iwlwifi 0000:00:14.3: 0x00009061 | CNVR_SCU_SD_REGS_SD_REG_DIG_DCDC_VTRIM
+[ 4103.169773] iwlwifi 0000:00:14.3: 0x00000061 | CNVR_SCU_SD_REGS_SD_REG_ACTIVE_VDIG_MIRROR
+[ 4103.169911] iwlwifi 0000:00:14.3: WRT: Collecting data: ini trigger 4 fired (delay=0ms).
+[ 4103.169915] ieee80211 phy0: Hardware restart was requested
+[ 4103.801780] iwlwifi 0000:00:14.3: WFPM_UMAC_PD_NOTIFICATION: 0x1f
+[ 4103.801828] iwlwifi 0000:00:14.3: WFPM_LMAC2_PD_NOTIFICATION: 0x1f
+[ 4103.801836] iwlwifi 0000:00:14.3: WFPM_AUTH_KEY_0: 0x90
+[ 4103.801844] iwlwifi 0000:00:14.3: CNVI_SCU_SEQ_DATA_DW9: 0x0
+[ 4114.175786] iwlwifi 0000:00:14.3: Queue 2 is stuck 0 11
+[ 4114.176649] iwlwifi 0000:00:14.3: Microcode SW error detected. Restarting 0x0.
+[ 4114.176753] iwlwifi 0000:00:14.3: Start IWL Error Log Dump:
+[ 4114.176754] iwlwifi 0000:00:14.3: Transport status: 0x0000004A, valid: 6
+[ 4114.176755] iwlwifi 0000:00:14.3: Loaded firmware version: 72.a764baac.0 so-a0-gf-a0-72.ucode
+[ 4114.176756] iwlwifi 0000:00:14.3: 0x00000084 | NMI_INTERRUPT_UNKNOWN       
+[ 4114.176757] iwlwifi 0000:00:14.3: 0x00801EF5 | trm_hw_status0
+[ 4114.176758] iwlwifi 0000:00:14.3: 0x00000000 | trm_hw_status1
+[ 4114.176758] iwlwifi 0000:00:14.3: 0x004DAAEE | branchlink2
+[ 4114.176759] iwlwifi 0000:00:14.3: 0x004D0C22 | interruptlink1
+[ 4114.176759] iwlwifi 0000:00:14.3: 0x004D0C22 | interruptlink2
+[ 4114.176760] iwlwifi 0000:00:14.3: 0x00008068 | data1
+[ 4114.176761] iwlwifi 0000:00:14.3: 0x01000000 | data2
+[ 4114.176761] iwlwifi 0000:00:14.3: 0x00000000 | data3
+[ 4114.176762] iwlwifi 0000:00:14.3: 0x19403020 | beacon time
+[ 4114.176762] iwlwifi 0000:00:14.3: 0xC981FFEF | tsf low
+[ 4114.176763] iwlwifi 0000:00:14.3: 0x00000015 | tsf hi
+[ 4114.176763] iwlwifi 0000:00:14.3: 0x00000000 | time gp1
+[ 4114.176764] iwlwifi 0000:00:14.3: 0x00A0B4F0 | time gp2
+[ 4114.176765] iwlwifi 0000:00:14.3: 0x00000001 | uCode revision type
+[ 4114.176765] iwlwifi 0000:00:14.3: 0x00000048 | uCode version major
+[ 4114.176766] iwlwifi 0000:00:14.3: 0xA764BAAC | uCode version minor
+[ 4114.176766] iwlwifi 0000:00:14.3: 0x00000370 | hw version
+[ 4114.176767] iwlwifi 0000:00:14.3: 0x00C80002 | board version
+[ 4114.176767] iwlwifi 0000:00:14.3: 0x0200001C | hcmd
+[ 4114.176768] iwlwifi 0000:00:14.3: 0x80120000 | isr0
+[ 4114.176769] iwlwifi 0000:00:14.3: 0x00000000 | isr1
+[ 4114.176769] iwlwifi 0000:00:14.3: 0x48F00002 | isr2
+[ 4114.176770] iwlwifi 0000:00:14.3: 0x00C3080C | isr3
+[ 4114.176770] iwlwifi 0000:00:14.3: 0x00200000 | isr4
+[ 4114.176771] iwlwifi 0000:00:14.3: 0x00380103 | last cmd Id
+[ 4114.176771] iwlwifi 0000:00:14.3: 0x00008068 | wait_event
+[ 4114.176772] iwlwifi 0000:00:14.3: 0x00000054 | l2p_control
+[ 4114.176772] iwlwifi 0000:00:14.3: 0x00002020 | l2p_duration
+[ 4114.176773] iwlwifi 0000:00:14.3: 0x0000000F | l2p_mhvalid
+[ 4114.176774] iwlwifi 0000:00:14.3: 0x00060098 | l2p_addr_match
+[ 4114.176774] iwlwifi 0000:00:14.3: 0x00000009 | lmpm_pmg_sel
+[ 4114.176775] iwlwifi 0000:00:14.3: 0x00000000 | timestamp
+[ 4114.176775] iwlwifi 0000:00:14.3: 0x00005084 | flow_handler
+[ 4114.176830] iwlwifi 0000:00:14.3: Start IWL Error Log Dump:
+[ 4114.176830] iwlwifi 0000:00:14.3: Transport status: 0x0000004A, valid: 7
+[ 4114.176831] iwlwifi 0000:00:14.3: 0x20000066 | NMI_INTERRUPT_HOST
+[ 4114.176831] iwlwifi 0000:00:14.3: 0x00000000 | umac branchlink1
+[ 4114.176832] iwlwifi 0000:00:14.3: 0x8045FDF8 | umac branchlink2
+[ 4114.176833] iwlwifi 0000:00:14.3: 0x804805CE | umac interruptlink1
+[ 4114.176833] iwlwifi 0000:00:14.3: 0xC008196A | umac interruptlink2
+[ 4114.176834] iwlwifi 0000:00:14.3: 0x01000000 | umac data1
+[ 4114.176834] iwlwifi 0000:00:14.3: 0xC008196A | umac data2
+[ 4114.176835] iwlwifi 0000:00:14.3: 0x00000000 | umac data3
+[ 4114.176836] iwlwifi 0000:00:14.3: 0x00000048 | umac major
+[ 4114.176836] iwlwifi 0000:00:14.3: 0xA764BAAC | umac minor
+[ 4114.176837] iwlwifi 0000:00:14.3: 0x00A0B742 | frame pointer
+[ 4114.176837] iwlwifi 0000:00:14.3: 0xC0887EE8 | stack pointer
+[ 4114.176838] iwlwifi 0000:00:14.3: 0x0049019C | last host cmd
+[ 4114.176838] iwlwifi 0000:00:14.3: 0x00000404 | isr status reg
+[ 4114.176881] iwlwifi 0000:00:14.3: IML/ROM dump:
+[ 4114.176881] iwlwifi 0000:00:14.3: 0x00000B03 | IML/ROM error/state
+[ 4114.176889] iwlwifi 0000:00:14.3: 0x00008067 | IML/ROM data1
+[ 4114.176897] iwlwifi 0000:00:14.3: 0x00000090 | IML/ROM WFPM_AUTH_KEY_0
+[ 4114.176903] iwlwifi 0000:00:14.3: Fseq Registers:
+[ 4114.176905] iwlwifi 0000:00:14.3: 0x60000100 | FSEQ_ERROR_CODE
+[ 4114.176907] iwlwifi 0000:00:14.3: 0x003E0003 | FSEQ_TOP_INIT_VERSION
+[ 4114.176910] iwlwifi 0000:00:14.3: 0x00190002 | FSEQ_CNVIO_INIT_VERSION
+[ 4114.176912] iwlwifi 0000:00:14.3: 0x0000A652 | FSEQ_OTP_VERSION
+[ 4114.176914] iwlwifi 0000:00:14.3: 0x00000003 | FSEQ_TOP_CONTENT_VERSION
+[ 4114.176917] iwlwifi 0000:00:14.3: 0x4552414E | FSEQ_ALIVE_TOKEN
+[ 4114.176919] iwlwifi 0000:00:14.3: 0x00080400 | FSEQ_CNVI_ID
+[ 4114.176922] iwlwifi 0000:00:14.3: 0x00400410 | FSEQ_CNVR_ID
+[ 4114.176924] iwlwifi 0000:00:14.3: 0x00080400 | CNVI_AUX_MISC_CHIP
+[ 4114.176931] iwlwifi 0000:00:14.3: 0x00400410 | CNVR_AUX_MISC_CHIP
+[ 4114.176976] iwlwifi 0000:00:14.3: 0x00009061 | CNVR_SCU_SD_REGS_SD_REG_DIG_DCDC_VTRIM
+[ 4114.176983] iwlwifi 0000:00:14.3: 0x00000061 | CNVR_SCU_SD_REGS_SD_REG_ACTIVE_VDIG_MIRROR
+[ 4114.177121] iwlwifi 0000:00:14.3: WRT: Collecting data: ini trigger 4 fired (delay=0ms).
+[ 4114.177124] ieee80211 phy0: Hardware restart was requested
+[ 4114.817358] iwlwifi 0000:00:14.3: WFPM_UMAC_PD_NOTIFICATION: 0x1f
+[ 4114.817369] iwlwifi 0000:00:14.3: WFPM_LMAC2_PD_NOTIFICATION: 0x1f
+[ 4114.817377] iwlwifi 0000:00:14.3: WFPM_AUTH_KEY_0: 0x90
+[ 4114.817385] iwlwifi 0000:00:14.3: CNVI_SCU_SEQ_DATA_DW9: 0x0
+[ 4125.694991] iwlwifi 0000:00:14.3: Queue 2 is stuck 1 9
+[ 4125.695833] iwlwifi 0000:00:14.3: Microcode SW error detected. Restarting 0x0.
+[ 4125.695938] iwlwifi 0000:00:14.3: Start IWL Error Log Dump:
+[ 4125.695938] iwlwifi 0000:00:14.3: Transport status: 0x0000004A, valid: 6
+[ 4125.695939] iwlwifi 0000:00:14.3: Loaded firmware version: 72.a764baac.0 so-a0-gf-a0-72.ucode
+[ 4125.695940] iwlwifi 0000:00:14.3: 0x00000084 | NMI_INTERRUPT_UNKNOWN       
+[ 4125.695941] iwlwifi 0000:00:14.3: 0x000082F0 | trm_hw_status0
+[ 4125.695942] iwlwifi 0000:00:14.3: 0x00000000 | trm_hw_status1
+[ 4125.695943] iwlwifi 0000:00:14.3: 0x004DAAEE | branchlink2
+[ 4125.695943] iwlwifi 0000:00:14.3: 0x004D0C26 | interruptlink1
+[ 4125.695944] iwlwifi 0000:00:14.3: 0x004D0C26 | interruptlink2
+[ 4125.695944] iwlwifi 0000:00:14.3: 0x004C72F2 | data1
+[ 4125.695945] iwlwifi 0000:00:14.3: 0x01000000 | data2
+[ 4125.695946] iwlwifi 0000:00:14.3: 0x00000000 | data3
+[ 4125.695946] iwlwifi 0000:00:14.3: 0x1A40FA46 | beacon time
+[ 4125.695947] iwlwifi 0000:00:14.3: 0xCA31C5C1 | tsf low
+[ 4125.695947] iwlwifi 0000:00:14.3: 0x00000015 | tsf hi
+[ 4125.695948] iwlwifi 0000:00:14.3: 0x00000000 | time gp1
+[ 4125.695948] iwlwifi 0000:00:14.3: 0x00A863F8 | time gp2
+[ 4125.695949] iwlwifi 0000:00:14.3: 0x00000001 | uCode revision type
+[ 4125.695950] iwlwifi 0000:00:14.3: 0x00000048 | uCode version major
+[ 4125.695950] iwlwifi 0000:00:14.3: 0xA764BAAC | uCode version minor
+[ 4125.695951] iwlwifi 0000:00:14.3: 0x00000370 | hw version
+[ 4125.695951] iwlwifi 0000:00:14.3: 0x00C80002 | board version
+[ 4125.695952] iwlwifi 0000:00:14.3: 0x8051FD04 | hcmd
+[ 4125.695952] iwlwifi 0000:00:14.3: 0x20028000 | isr0
+[ 4125.695953] iwlwifi 0000:00:14.3: 0x00000000 | isr1
+[ 4125.695953] iwlwifi 0000:00:14.3: 0x48F00002 | isr2
+[ 4125.695954] iwlwifi 0000:00:14.3: 0x00C30808 | isr3
+[ 4125.695954] iwlwifi 0000:00:14.3: 0x00200000 | isr4
+[ 4125.695955] iwlwifi 0000:00:14.3: 0x0200001C | last cmd Id
+[ 4125.695956] iwlwifi 0000:00:14.3: 0x004C72F2 | wait_event
+[ 4125.695956] iwlwifi 0000:00:14.3: 0x000000D4 | l2p_control
+[ 4125.695957] iwlwifi 0000:00:14.3: 0x00000000 | l2p_duration
+[ 4125.695957] iwlwifi 0000:00:14.3: 0x00000007 | l2p_mhvalid
+[ 4125.695958] iwlwifi 0000:00:14.3: 0x00000048 | l2p_addr_match
+[ 4125.695959] iwlwifi 0000:00:14.3: 0x00000009 | lmpm_pmg_sel
+[ 4125.695959] iwlwifi 0000:00:14.3: 0x00000000 | timestamp
+[ 4125.695960] iwlwifi 0000:00:14.3: 0x0000608C | flow_handler
+[ 4125.696016] iwlwifi 0000:00:14.3: Start IWL Error Log Dump:
+[ 4125.696016] iwlwifi 0000:00:14.3: Transport status: 0x0000004A, valid: 7
+[ 4125.696017] iwlwifi 0000:00:14.3: 0x20000066 | NMI_INTERRUPT_HOST
+[ 4125.696018] iwlwifi 0000:00:14.3: 0x00000000 | umac branchlink1
+[ 4125.696018] iwlwifi 0000:00:14.3: 0x8045FDF8 | umac branchlink2
+[ 4125.696019] iwlwifi 0000:00:14.3: 0x804805CE | umac interruptlink1
+[ 4125.696020] iwlwifi 0000:00:14.3: 0xC00821F0 | umac interruptlink2
+[ 4125.696020] iwlwifi 0000:00:14.3: 0x01000000 | umac data1
+[ 4125.696021] iwlwifi 0000:00:14.3: 0xC00821F0 | umac data2
+[ 4125.696021] iwlwifi 0000:00:14.3: 0x00000000 | umac data3
+[ 4125.696022] iwlwifi 0000:00:14.3: 0x00000048 | umac major
+[ 4125.696022] iwlwifi 0000:00:14.3: 0xA764BAAC | umac minor
+[ 4125.696023] iwlwifi 0000:00:14.3: 0x00A8664A | frame pointer
+[ 4125.696023] iwlwifi 0000:00:14.3: 0xC0887EF4 | stack pointer
+[ 4125.696024] iwlwifi 0000:00:14.3: 0x004B019C | last host cmd
+[ 4125.696024] iwlwifi 0000:00:14.3: 0x00000404 | isr status reg
+[ 4125.696065] iwlwifi 0000:00:14.3: IML/ROM dump:
+[ 4125.696066] iwlwifi 0000:00:14.3: 0x00000B03 | IML/ROM error/state
+[ 4125.696074] iwlwifi 0000:00:14.3: 0x00008063 | IML/ROM data1
+[ 4125.696082] iwlwifi 0000:00:14.3: 0x00000090 | IML/ROM WFPM_AUTH_KEY_0
+[ 4125.696087] iwlwifi 0000:00:14.3: Fseq Registers:
+[ 4125.696089] iwlwifi 0000:00:14.3: 0x60000100 | FSEQ_ERROR_CODE
+[ 4125.696092] iwlwifi 0000:00:14.3: 0x003E0003 | FSEQ_TOP_INIT_VERSION
+[ 4125.696094] iwlwifi 0000:00:14.3: 0x00190002 | FSEQ_CNVIO_INIT_VERSION
+[ 4125.696097] iwlwifi 0000:00:14.3: 0x0000A652 | FSEQ_OTP_VERSION
+[ 4125.696099] iwlwifi 0000:00:14.3: 0x00000003 | FSEQ_TOP_CONTENT_VERSION
+[ 4125.696101] iwlwifi 0000:00:14.3: 0x4552414E | FSEQ_ALIVE_TOKEN
+[ 4125.696104] iwlwifi 0000:00:14.3: 0x00080400 | FSEQ_CNVI_ID
+[ 4125.696106] iwlwifi 0000:00:14.3: 0x00400410 | FSEQ_CNVR_ID
+[ 4125.696109] iwlwifi 0000:00:14.3: 0x00080400 | CNVI_AUX_MISC_CHIP
+[ 4125.696115] iwlwifi 0000:00:14.3: 0x00400410 | CNVR_AUX_MISC_CHIP
+[ 4125.696158] iwlwifi 0000:00:14.3: 0x00009061 | CNVR_SCU_SD_REGS_SD_REG_DIG_DCDC_VTRIM
+[ 4125.696165] iwlwifi 0000:00:14.3: 0x00000061 | CNVR_SCU_SD_REGS_SD_REG_ACTIVE_VDIG_MIRROR
+[ 4125.696303] iwlwifi 0000:00:14.3: WRT: Collecting data: ini trigger 4 fired (delay=0ms).
+[ 4125.696306] ieee80211 phy0: Hardware restart was requested
+[ 4126.327660] iwlwifi 0000:00:14.3: WFPM_UMAC_PD_NOTIFICATION: 0x1f
+[ 4126.327705] iwlwifi 0000:00:14.3: WFPM_LMAC2_PD_NOTIFICATION: 0x1f
+[ 4126.327713] iwlwifi 0000:00:14.3: WFPM_AUTH_KEY_0: 0x90
+[ 4126.327721] iwlwifi 0000:00:14.3: CNVI_SCU_SEQ_DATA_DW9: 0x0
+[ 4137.214294] iwlwifi 0000:00:14.3: Queue 2 is stuck 0 10
+[ 4137.215136] iwlwifi 0000:00:14.3: Microcode SW error detected. Restarting 0x0.
+[ 4137.215239] iwlwifi 0000:00:14.3: Start IWL Error Log Dump:
+[ 4137.215240] iwlwifi 0000:00:14.3: Transport status: 0x0000004A, valid: 6
+[ 4137.215241] iwlwifi 0000:00:14.3: Loaded firmware version: 72.a764baac.0 so-a0-gf-a0-72.ucode
+[ 4137.215242] iwlwifi 0000:00:14.3: 0x00000084 | NMI_INTERRUPT_UNKNOWN       
+[ 4137.215243] iwlwifi 0000:00:14.3: 0x00801EF5 | trm_hw_status0
+[ 4137.215244] iwlwifi 0000:00:14.3: 0x00000000 | trm_hw_status1
+[ 4137.215245] iwlwifi 0000:00:14.3: 0x004DAAEE | branchlink2
+[ 4137.215245] iwlwifi 0000:00:14.3: 0x004D52C2 | interruptlink1
+[ 4137.215246] iwlwifi 0000:00:14.3: 0x004D52C2 | interruptlink2
+[ 4137.215246] iwlwifi 0000:00:14.3: 0x00008068 | data1
+[ 4137.215247] iwlwifi 0000:00:14.3: 0x01000000 | data2
+[ 4137.215248] iwlwifi 0000:00:14.3: 0x00000000 | data3
+[ 4137.215248] iwlwifi 0000:00:14.3: 0x1A8033FA | beacon time
+[ 4137.215249] iwlwifi 0000:00:14.3: 0xCAE18C14 | tsf low
+[ 4137.215249] iwlwifi 0000:00:14.3: 0x00000015 | tsf hi
+[ 4137.215250] iwlwifi 0000:00:14.3: 0x00000000 | time gp1
+[ 4137.215251] iwlwifi 0000:00:14.3: 0x00A8877A | time gp2
+[ 4137.215251] iwlwifi 0000:00:14.3: 0x00000001 | uCode revision type
+[ 4137.215252] iwlwifi 0000:00:14.3: 0x00000048 | uCode version major
+[ 4137.215252] iwlwifi 0000:00:14.3: 0xA764BAAC | uCode version minor
+[ 4137.215253] iwlwifi 0000:00:14.3: 0x00000370 | hw version
+[ 4137.215253] iwlwifi 0000:00:14.3: 0x00C80002 | board version
+[ 4137.215254] iwlwifi 0000:00:14.3: 0x0200001C | hcmd
+[ 4137.215255] iwlwifi 0000:00:14.3: 0x80120000 | isr0
+[ 4137.215255] iwlwifi 0000:00:14.3: 0x08000000 | isr1
+[ 4137.215256] iwlwifi 0000:00:14.3: 0x48F00002 | isr2
+[ 4137.215256] iwlwifi 0000:00:14.3: 0x00C3081C | isr3
+[ 4137.215257] iwlwifi 0000:00:14.3: 0x00200000 | isr4
+[ 4137.215257] iwlwifi 0000:00:14.3: 0x00380103 | last cmd Id
+[ 4137.215258] iwlwifi 0000:00:14.3: 0x00008068 | wait_event
+[ 4137.215258] iwlwifi 0000:00:14.3: 0x00000054 | l2p_control
+[ 4137.215259] iwlwifi 0000:00:14.3: 0x00002820 | l2p_duration
+[ 4137.215260] iwlwifi 0000:00:14.3: 0x0000000F | l2p_mhvalid
+[ 4137.215260] iwlwifi 0000:00:14.3: 0x00060098 | l2p_addr_match
+[ 4137.215261] iwlwifi 0000:00:14.3: 0x00000009 | lmpm_pmg_sel
+[ 4137.215261] iwlwifi 0000:00:14.3: 0x00000000 | timestamp
+[ 4137.215262] iwlwifi 0000:00:14.3: 0x00005080 | flow_handler
+[ 4137.215316] iwlwifi 0000:00:14.3: Start IWL Error Log Dump:
+[ 4137.215316] iwlwifi 0000:00:14.3: Transport status: 0x0000004A, valid: 7
+[ 4137.215317] iwlwifi 0000:00:14.3: 0x20000066 | NMI_INTERRUPT_HOST
+[ 4137.215318] iwlwifi 0000:00:14.3: 0x00000000 | umac branchlink1
+[ 4137.215318] iwlwifi 0000:00:14.3: 0x8045FDF8 | umac branchlink2
+[ 4137.215319] iwlwifi 0000:00:14.3: 0x804805CE | umac interruptlink1
+[ 4137.215319] iwlwifi 0000:00:14.3: 0xC0081904 | umac interruptlink2
+[ 4137.215320] iwlwifi 0000:00:14.3: 0x01000000 | umac data1
+[ 4137.215321] iwlwifi 0000:00:14.3: 0xC0081904 | umac data2
+[ 4137.215321] iwlwifi 0000:00:14.3: 0x00000000 | umac data3
+[ 4137.215322] iwlwifi 0000:00:14.3: 0x00000048 | umac major
+[ 4137.215322] iwlwifi 0000:00:14.3: 0xA764BAAC | umac minor
+[ 4137.215323] iwlwifi 0000:00:14.3: 0x00A889CC | frame pointer
+[ 4137.215323] iwlwifi 0000:00:14.3: 0xC0887EE4 | stack pointer
+[ 4137.215324] iwlwifi 0000:00:14.3: 0x0049019C | last host cmd
+[ 4137.215324] iwlwifi 0000:00:14.3: 0x00000404 | isr status reg
+[ 4137.215367] iwlwifi 0000:00:14.3: IML/ROM dump:
+[ 4137.215367] iwlwifi 0000:00:14.3: 0x00000B03 | IML/ROM error/state
+[ 4137.215375] iwlwifi 0000:00:14.3: 0x00008099 | IML/ROM data1
+[ 4137.215384] iwlwifi 0000:00:14.3: 0x00000090 | IML/ROM WFPM_AUTH_KEY_0
+[ 4137.215389] iwlwifi 0000:00:14.3: Fseq Registers:
+[ 4137.215391] iwlwifi 0000:00:14.3: 0x60000100 | FSEQ_ERROR_CODE
+[ 4137.215394] iwlwifi 0000:00:14.3: 0x003E0003 | FSEQ_TOP_INIT_VERSION
+[ 4137.215396] iwlwifi 0000:00:14.3: 0x00190002 | FSEQ_CNVIO_INIT_VERSION
+[ 4137.215398] iwlwifi 0000:00:14.3: 0x0000A652 | FSEQ_OTP_VERSION
+[ 4137.215401] iwlwifi 0000:00:14.3: 0x00000003 | FSEQ_TOP_CONTENT_VERSION
+[ 4137.215403] iwlwifi 0000:00:14.3: 0x4552414E | FSEQ_ALIVE_TOKEN
+[ 4137.215406] iwlwifi 0000:00:14.3: 0x00080400 | FSEQ_CNVI_ID
+[ 4137.215408] iwlwifi 0000:00:14.3: 0x00400410 | FSEQ_CNVR_ID
+[ 4137.215410] iwlwifi 0000:00:14.3: 0x00080400 | CNVI_AUX_MISC_CHIP
+[ 4137.215417] iwlwifi 0000:00:14.3: 0x00400410 | CNVR_AUX_MISC_CHIP
+[ 4137.215462] iwlwifi 0000:00:14.3: 0x00009061 | CNVR_SCU_SD_REGS_SD_REG_DIG_DCDC_VTRIM
+[ 4137.215469] iwlwifi 0000:00:14.3: 0x00000061 | CNVR_SCU_SD_REGS_SD_REG_ACTIVE_VDIG_MIRROR
+[ 4137.215607] iwlwifi 0000:00:14.3: WRT: Collecting data: ini trigger 4 fired (delay=0ms).
+[ 4137.215610] ieee80211 phy0: Hardware restart was requested
+[ 4137.847557] iwlwifi 0000:00:14.3: WFPM_UMAC_PD_NOTIFICATION: 0x1f
+[ 4137.847567] iwlwifi 0000:00:14.3: WFPM_LMAC2_PD_NOTIFICATION: 0x1f
+[ 4137.847575] iwlwifi 0000:00:14.3: WFPM_AUTH_KEY_0: 0x90
+[ 4137.847584] iwlwifi 0000:00:14.3: CNVI_SCU_SEQ_DATA_DW9: 0x0
+[ 4148.481615] iwlwifi 0000:00:14.3: Queue 2 is stuck 0 10
+[ 4148.482362] iwlwifi 0000:00:14.3: Microcode SW error detected. Restarting 0x0.
+[ 4148.482466] iwlwifi 0000:00:14.3: Start IWL Error Log Dump:
+[ 4148.482469] iwlwifi 0000:00:14.3: Transport status: 0x0000004A, valid: 6
+[ 4148.482472] iwlwifi 0000:00:14.3: Loaded firmware version: 72.a764baac.0 so-a0-gf-a0-72.ucode
+[ 4148.482474] iwlwifi 0000:00:14.3: 0x00000084 | NMI_INTERRUPT_UNKNOWN       
+[ 4148.482477] iwlwifi 0000:00:14.3: 0x00001EF7 | trm_hw_status0
+[ 4148.482479] iwlwifi 0000:00:14.3: 0x00000000 | trm_hw_status1
+[ 4148.482480] iwlwifi 0000:00:14.3: 0x004DAAEE | branchlink2
+[ 4148.482482] iwlwifi 0000:00:14.3: 0x0000066E | interruptlink1
+[ 4148.482484] iwlwifi 0000:00:14.3: 0x0000066E | interruptlink2
+[ 4148.482485] iwlwifi 0000:00:14.3: 0x0000F532 | data1
+[ 4148.482487] iwlwifi 0000:00:14.3: 0x01000000 | data2
+[ 4148.482489] iwlwifi 0000:00:14.3: 0x00000000 | data3
+[ 4148.482490] iwlwifi 0000:00:14.3: 0x1A4025FE | beacon time
+[ 4148.482492] iwlwifi 0000:00:14.3: 0xCB8D7A11 | tsf low
+[ 4148.482494] iwlwifi 0000:00:14.3: 0x00000015 | tsf hi
+[ 4148.482495] iwlwifi 0000:00:14.3: 0x00000000 | time gp1
+[ 4148.482497] iwlwifi 0000:00:14.3: 0x00A4ACD0 | time gp2
+[ 4148.482498] iwlwifi 0000:00:14.3: 0x00000001 | uCode revision type
+[ 4148.482500] iwlwifi 0000:00:14.3: 0x00000048 | uCode version major
+[ 4148.482501] iwlwifi 0000:00:14.3: 0xA764BAAC | uCode version minor
+[ 4148.482503] iwlwifi 0000:00:14.3: 0x00000370 | hw version
+[ 4148.482505] iwlwifi 0000:00:14.3: 0x00C80002 | board version
+[ 4148.482506] iwlwifi 0000:00:14.3: 0x0200001C | hcmd
+[ 4148.482508] iwlwifi 0000:00:14.3: 0xE6F20000 | isr0
+[ 4148.482510] iwlwifi 0000:00:14.3: 0x08000000 | isr1
+[ 4148.482511] iwlwifi 0000:00:14.3: 0x48F00002 | isr2
+[ 4148.482513] iwlwifi 0000:00:14.3: 0x00C1080D | isr3
+[ 4148.482514] iwlwifi 0000:00:14.3: 0x00200000 | isr4
+[ 4148.482516] iwlwifi 0000:00:14.3: 0x00380103 | last cmd Id
+[ 4148.482517] iwlwifi 0000:00:14.3: 0x0000F532 | wait_event
+[ 4148.482519] iwlwifi 0000:00:14.3: 0x00000054 | l2p_control
+[ 4148.482520] iwlwifi 0000:00:14.3: 0x00013434 | l2p_duration
+[ 4148.482522] iwlwifi 0000:00:14.3: 0x0000000F | l2p_mhvalid
+[ 4148.482524] iwlwifi 0000:00:14.3: 0x00060098 | l2p_addr_match
+[ 4148.482525] iwlwifi 0000:00:14.3: 0x00000009 | lmpm_pmg_sel
+[ 4148.482527] iwlwifi 0000:00:14.3: 0x00000000 | timestamp
+[ 4148.482528] iwlwifi 0000:00:14.3: 0x00005880 | flow_handler
+[ 4148.482585] iwlwifi 0000:00:14.3: Start IWL Error Log Dump:
+[ 4148.482587] iwlwifi 0000:00:14.3: Transport status: 0x0000004A, valid: 7
+[ 4148.482589] iwlwifi 0000:00:14.3: 0x20000066 | NMI_INTERRUPT_HOST
+[ 4148.482591] iwlwifi 0000:00:14.3: 0x00000000 | umac branchlink1
+[ 4148.482593] iwlwifi 0000:00:14.3: 0x8045FDF8 | umac branchlink2
+[ 4148.482594] iwlwifi 0000:00:14.3: 0x804805CE | umac interruptlink1
+[ 4148.482596] iwlwifi 0000:00:14.3: 0xC00818F6 | umac interruptlink2
+[ 4148.482597] iwlwifi 0000:00:14.3: 0x01000000 | umac data1
+[ 4148.482599] iwlwifi 0000:00:14.3: 0xC00818F6 | umac data2
+[ 4148.482600] iwlwifi 0000:00:14.3: 0x00000000 | umac data3
+[ 4148.482602] iwlwifi 0000:00:14.3: 0x00000048 | umac major
+[ 4148.482604] iwlwifi 0000:00:14.3: 0xA764BAAC | umac minor
+[ 4148.482605] iwlwifi 0000:00:14.3: 0x00A4AF22 | frame pointer
+[ 4148.482607] iwlwifi 0000:00:14.3: 0xC0887EFC | stack pointer
+[ 4148.482609] iwlwifi 0000:00:14.3: 0x0049019C | last host cmd
+[ 4148.482610] iwlwifi 0000:00:14.3: 0x00000404 | isr status reg
+[ 4148.482650] iwlwifi 0000:00:14.3: IML/ROM dump:
+[ 4148.482652] iwlwifi 0000:00:14.3: 0x00000B03 | IML/ROM error/state
+[ 4148.482702] iwlwifi 0000:00:14.3: 0x0000809B | IML/ROM data1
+[ 4148.482711] iwlwifi 0000:00:14.3: 0x00000090 | IML/ROM WFPM_AUTH_KEY_0
+[ 4148.482717] iwlwifi 0000:00:14.3: Fseq Registers:
+[ 4148.482761] iwlwifi 0000:00:14.3: 0x60000100 | FSEQ_ERROR_CODE
+[ 4148.482767] iwlwifi 0000:00:14.3: 0x003E0003 | FSEQ_TOP_INIT_VERSION
+[ 4148.482810] iwlwifi 0000:00:14.3: 0x00190002 | FSEQ_CNVIO_INIT_VERSION
+[ 4148.482816] iwlwifi 0000:00:14.3: 0x0000A652 | FSEQ_OTP_VERSION
+[ 4148.482861] iwlwifi 0000:00:14.3: 0x00000003 | FSEQ_TOP_CONTENT_VERSION
+[ 4148.482867] iwlwifi 0000:00:14.3: 0x4552414E | FSEQ_ALIVE_TOKEN
+[ 4148.482912] iwlwifi 0000:00:14.3: 0x00080400 | FSEQ_CNVI_ID
+[ 4148.482918] iwlwifi 0000:00:14.3: 0x00400410 | FSEQ_CNVR_ID
+[ 4148.482964] iwlwifi 0000:00:14.3: 0x00080400 | CNVI_AUX_MISC_CHIP
+[ 4148.482974] iwlwifi 0000:00:14.3: 0x00400410 | CNVR_AUX_MISC_CHIP
+[ 4148.483017] iwlwifi 0000:00:14.3: 0x00009061 | CNVR_SCU_SD_REGS_SD_REG_DIG_DCDC_VTRIM
+[ 4148.483027] iwlwifi 0000:00:14.3: 0x00000061 | CNVR_SCU_SD_REGS_SD_REG_ACTIVE_VDIG_MIRROR
+[ 4148.483165] iwlwifi 0000:00:14.3: WRT: Collecting data: ini trigger 4 fired (delay=0ms).
+[ 4148.483170] ieee80211 phy0: Hardware restart was requested
+[ 4149.113967] iwlwifi 0000:00:14.3: WFPM_UMAC_PD_NOTIFICATION: 0x1f
+[ 4149.114018] iwlwifi 0000:00:14.3: WFPM_LMAC2_PD_NOTIFICATION: 0x1f
+[ 4149.114027] iwlwifi 0000:00:14.3: WFPM_AUTH_KEY_0: 0x90
+[ 4149.114037] iwlwifi 0000:00:14.3: CNVI_SCU_SEQ_DATA_DW9: 0x0
+[ 4159.740931] iwlwifi 0000:00:14.3: Queue 2 is stuck 0 7
+[ 4159.741680] iwlwifi 0000:00:14.3: Microcode SW error detected. Restarting 0x0.
+[ 4159.741785] iwlwifi 0000:00:14.3: Start IWL Error Log Dump:
+[ 4159.741787] iwlwifi 0000:00:14.3: Transport status: 0x0000004A, valid: 6
+[ 4159.741790] iwlwifi 0000:00:14.3: Loaded firmware version: 72.a764baac.0 so-a0-gf-a0-72.ucode
+[ 4159.741793] iwlwifi 0000:00:14.3: 0x00000084 | NMI_INTERRUPT_UNKNOWN       
+[ 4159.741795] iwlwifi 0000:00:14.3: 0x000082F0 | trm_hw_status0
+[ 4159.741797] iwlwifi 0000:00:14.3: 0x00000000 | trm_hw_status1
+[ 4159.741799] iwlwifi 0000:00:14.3: 0x004DAAEE | branchlink2
+[ 4159.741800] iwlwifi 0000:00:14.3: 0x004D0C26 | interruptlink1
+[ 4159.741802] iwlwifi 0000:00:14.3: 0x004D0C26 | interruptlink2
+[ 4159.741804] iwlwifi 0000:00:14.3: 0x004C72F2 | data1
+[ 4159.741805] iwlwifi 0000:00:14.3: 0x01000000 | data2
+[ 4159.741807] iwlwifi 0000:00:14.3: 0x00000000 | data3
+[ 4159.741808] iwlwifi 0000:00:14.3: 0x1A003743 | beacon time
+[ 4159.741810] iwlwifi 0000:00:14.3: 0xCC3948CB | tsf low
+[ 4159.741812] iwlwifi 0000:00:14.3: 0x00000015 | tsf hi
+[ 4159.741813] iwlwifi 0000:00:14.3: 0x00000000 | time gp1
+[ 4159.741815] iwlwifi 0000:00:14.3: 0x00A4901B | time gp2
+[ 4159.741816] iwlwifi 0000:00:14.3: 0x00000001 | uCode revision type
+[ 4159.741818] iwlwifi 0000:00:14.3: 0x00000048 | uCode version major
+[ 4159.741819] iwlwifi 0000:00:14.3: 0xA764BAAC | uCode version minor
+[ 4159.741821] iwlwifi 0000:00:14.3: 0x00000370 | hw version
+[ 4159.741822] iwlwifi 0000:00:14.3: 0x00C80002 | board version
+[ 4159.741824] iwlwifi 0000:00:14.3: 0x80E5FD4F | hcmd
+[ 4159.741826] iwlwifi 0000:00:14.3: 0x20028000 | isr0
+[ 4159.741827] iwlwifi 0000:00:14.3: 0x00000000 | isr1
+[ 4159.741828] iwlwifi 0000:00:14.3: 0x48F00002 | isr2
+[ 4159.741830] iwlwifi 0000:00:14.3: 0x00C30808 | isr3
+[ 4159.741831] iwlwifi 0000:00:14.3: 0x00200000 | isr4
+[ 4159.741833] iwlwifi 0000:00:14.3: 0x00380103 | last cmd Id
+[ 4159.741834] iwlwifi 0000:00:14.3: 0x004C72F2 | wait_event
+[ 4159.741836] iwlwifi 0000:00:14.3: 0x000000D4 | l2p_control
+[ 4159.741837] iwlwifi 0000:00:14.3: 0x00000000 | l2p_duration
+[ 4159.741839] iwlwifi 0000:00:14.3: 0x00000007 | l2p_mhvalid
+[ 4159.741840] iwlwifi 0000:00:14.3: 0x00000048 | l2p_addr_match
+[ 4159.741842] iwlwifi 0000:00:14.3: 0x00000009 | lmpm_pmg_sel
+[ 4159.741843] iwlwifi 0000:00:14.3: 0x00000000 | timestamp
+[ 4159.741845] iwlwifi 0000:00:14.3: 0x0000507C | flow_handler
+[ 4159.741904] iwlwifi 0000:00:14.3: Start IWL Error Log Dump:
+[ 4159.741906] iwlwifi 0000:00:14.3: Transport status: 0x0000004A, valid: 7
+[ 4159.741908] iwlwifi 0000:00:14.3: 0x20000066 | NMI_INTERRUPT_HOST
+[ 4159.741909] iwlwifi 0000:00:14.3: 0x00000000 | umac branchlink1
+[ 4159.741911] iwlwifi 0000:00:14.3: 0x8045FDF8 | umac branchlink2
+[ 4159.741913] iwlwifi 0000:00:14.3: 0x804805CE | umac interruptlink1
+[ 4159.741914] iwlwifi 0000:00:14.3: 0xC00819BC | umac interruptlink2
+[ 4159.741916] iwlwifi 0000:00:14.3: 0x01000000 | umac data1
+[ 4159.741917] iwlwifi 0000:00:14.3: 0xC00819BC | umac data2
+[ 4159.741919] iwlwifi 0000:00:14.3: 0x00000000 | umac data3
+[ 4159.741920] iwlwifi 0000:00:14.3: 0x00000048 | umac major
+[ 4159.741922] iwlwifi 0000:00:14.3: 0xA764BAAC | umac minor
+[ 4159.741923] iwlwifi 0000:00:14.3: 0x00A4926D | frame pointer
+[ 4159.741924] iwlwifi 0000:00:14.3: 0xC0887EF8 | stack pointer
+[ 4159.741926] iwlwifi 0000:00:14.3: 0x0048019C | last host cmd
+[ 4159.741927] iwlwifi 0000:00:14.3: 0x00000404 | isr status reg
+[ 4159.741969] iwlwifi 0000:00:14.3: IML/ROM dump:
+[ 4159.741970] iwlwifi 0000:00:14.3: 0x00000B03 | IML/ROM error/state
+[ 4159.742020] iwlwifi 0000:00:14.3: 0x00008066 | IML/ROM data1
+[ 4159.742029] iwlwifi 0000:00:14.3: 0x00000090 | IML/ROM WFPM_AUTH_KEY_0
+[ 4159.742036] iwlwifi 0000:00:14.3: Fseq Registers:
+[ 4159.742079] iwlwifi 0000:00:14.3: 0x60000100 | FSEQ_ERROR_CODE
+[ 4159.742085] iwlwifi 0000:00:14.3: 0x003E0003 | FSEQ_TOP_INIT_VERSION
+[ 4159.742130] iwlwifi 0000:00:14.3: 0x00190002 | FSEQ_CNVIO_INIT_VERSION
+[ 4159.742136] iwlwifi 0000:00:14.3: 0x0000A652 | FSEQ_OTP_VERSION
+[ 4159.742181] iwlwifi 0000:00:14.3: 0x00000003 | FSEQ_TOP_CONTENT_VERSION
+[ 4159.742187] iwlwifi 0000:00:14.3: 0x4552414E | FSEQ_ALIVE_TOKEN
+[ 4159.742190] iwlwifi 0000:00:14.3: 0x00080400 | FSEQ_CNVI_ID
+[ 4159.742232] iwlwifi 0000:00:14.3: 0x00400410 | FSEQ_CNVR_ID
+[ 4159.742238] iwlwifi 0000:00:14.3: 0x00080400 | CNVI_AUX_MISC_CHIP
+[ 4159.742282] iwlwifi 0000:00:14.3: 0x00400410 | CNVR_AUX_MISC_CHIP
+[ 4159.742292] iwlwifi 0000:00:14.3: 0x00009061 | CNVR_SCU_SD_REGS_SD_REG_DIG_DCDC_VTRIM
+[ 4159.742333] iwlwifi 0000:00:14.3: 0x00000061 | CNVR_SCU_SD_REGS_SD_REG_ACTIVE_VDIG_MIRROR
+[ 4159.742437] iwlwifi 0000:00:14.3: WRT: Collecting data: ini trigger 4 fired (delay=0ms).
+[ 4159.742443] ieee80211 phy0: Hardware restart was requested
+[ 4160.381853] iwlwifi 0000:00:14.3: WFPM_UMAC_PD_NOTIFICATION: 0x1f
+[ 4160.381904] iwlwifi 0000:00:14.3: WFPM_LMAC2_PD_NOTIFICATION: 0x1f
+[ 4160.381913] iwlwifi 0000:00:14.3: WFPM_AUTH_KEY_0: 0x90
+[ 4160.381922] iwlwifi 0000:00:14.3: CNVI_SCU_SEQ_DATA_DW9: 0x0
+[ 4203.006299] iwlwifi 0000:00:14.3: Queue 2 is stuck 1 6
+[ 4203.007087] iwlwifi 0000:00:14.3: Microcode SW error detected. Restarting 0x0.
+[ 4203.007217] iwlwifi 0000:00:14.3: Start IWL Error Log Dump:
+[ 4203.007220] iwlwifi 0000:00:14.3: Transport status: 0x0000004A, valid: 6
+[ 4203.007223] iwlwifi 0000:00:14.3: Loaded firmware version: 72.a764baac.0 so-a0-gf-a0-72.ucode
+[ 4203.007226] iwlwifi 0000:00:14.3: 0x00000084 | NMI_INTERRUPT_UNKNOWN       
+[ 4203.007229] iwlwifi 0000:00:14.3: 0x000082F0 | trm_hw_status0
+[ 4203.007231] iwlwifi 0000:00:14.3: 0x00000000 | trm_hw_status1
+[ 4203.007233] iwlwifi 0000:00:14.3: 0x004DAAEE | branchlink2
+[ 4203.007235] iwlwifi 0000:00:14.3: 0x004D0C26 | interruptlink1
+[ 4203.007237] iwlwifi 0000:00:14.3: 0x004D0C26 | interruptlink2
+[ 4203.007239] iwlwifi 0000:00:14.3: 0x004C72F2 | data1
+[ 4203.007241] iwlwifi 0000:00:14.3: 0x01000000 | data2
+[ 4203.007243] iwlwifi 0000:00:14.3: 0x00000000 | data3
+[ 4203.007244] iwlwifi 0000:00:14.3: 0x6840F5EC | beacon time
+[ 4203.007246] iwlwifi 0000:00:14.3: 0xCECD7A20 | tsf low
+[ 4203.007248] iwlwifi 0000:00:14.3: 0x00000015 | tsf hi
+[ 4203.007250] iwlwifi 0000:00:14.3: 0x00000000 | time gp1
+[ 4203.007252] iwlwifi 0000:00:14.3: 0x028CCE70 | time gp2
+[ 4203.007253] iwlwifi 0000:00:14.3: 0x00000001 | uCode revision type
+[ 4203.007255] iwlwifi 0000:00:14.3: 0x00000048 | uCode version major
+[ 4203.007257] iwlwifi 0000:00:14.3: 0xA764BAAC | uCode version minor
+[ 4203.007259] iwlwifi 0000:00:14.3: 0x00000370 | hw version
+[ 4203.007261] iwlwifi 0000:00:14.3: 0x00C80002 | board version
+[ 4203.007262] iwlwifi 0000:00:14.3: 0x80A0FD04 | hcmd
+[ 4203.007264] iwlwifi 0000:00:14.3: 0x20028000 | isr0
+[ 4203.007266] iwlwifi 0000:00:14.3: 0x00000000 | isr1
+[ 4203.007267] iwlwifi 0000:00:14.3: 0x48F00002 | isr2
+[ 4203.007269] iwlwifi 0000:00:14.3: 0x00C30808 | isr3
+[ 4203.007271] iwlwifi 0000:00:14.3: 0x00000000 | isr4
+[ 4203.007273] iwlwifi 0000:00:14.3: 0x0200001C | last cmd Id
+[ 4203.007274] iwlwifi 0000:00:14.3: 0x004C72F2 | wait_event
+[ 4203.007276] iwlwifi 0000:00:14.3: 0x00000000 | l2p_control
+[ 4203.007278] iwlwifi 0000:00:14.3: 0x00000000 | l2p_duration
+[ 4203.007279] iwlwifi 0000:00:14.3: 0x00000000 | l2p_mhvalid
+[ 4203.007281] iwlwifi 0000:00:14.3: 0x00000048 | l2p_addr_match
+[ 4203.007283] iwlwifi 0000:00:14.3: 0x00000009 | lmpm_pmg_sel
+[ 4203.007285] iwlwifi 0000:00:14.3: 0x00000000 | timestamp
+[ 4203.007286] iwlwifi 0000:00:14.3: 0x000088D0 | flow_handler
+[ 4203.007352] iwlwifi 0000:00:14.3: Start IWL Error Log Dump:
+[ 4203.007353] iwlwifi 0000:00:14.3: Transport status: 0x0000004A, valid: 7
+[ 4203.007356] iwlwifi 0000:00:14.3: 0x20000066 | NMI_INTERRUPT_HOST
+[ 4203.007358] iwlwifi 0000:00:14.3: 0x00000000 | umac branchlink1
+[ 4203.007360] iwlwifi 0000:00:14.3: 0x8045FDF8 | umac branchlink2
+[ 4203.007361] iwlwifi 0000:00:14.3: 0x804805CE | umac interruptlink1
+[ 4203.007363] iwlwifi 0000:00:14.3: 0xC008228A | umac interruptlink2
+[ 4203.007365] iwlwifi 0000:00:14.3: 0x01000000 | umac data1
+[ 4203.007367] iwlwifi 0000:00:14.3: 0xC008228A | umac data2
+[ 4203.007368] iwlwifi 0000:00:14.3: 0x00000000 | umac data3
+[ 4203.007370] iwlwifi 0000:00:14.3: 0x00000048 | umac major
+[ 4203.007372] iwlwifi 0000:00:14.3: 0xA764BAAC | umac minor
+[ 4203.007373] iwlwifi 0000:00:14.3: 0x028CD0CF | frame pointer
+[ 4203.007375] iwlwifi 0000:00:14.3: 0xC0887EF4 | stack pointer
+[ 4203.007377] iwlwifi 0000:00:14.3: 0x0058019C | last host cmd
+[ 4203.007379] iwlwifi 0000:00:14.3: 0x00000404 | isr status reg
+[ 4203.007421] iwlwifi 0000:00:14.3: IML/ROM dump:
+[ 4203.007423] iwlwifi 0000:00:14.3: 0x00000B03 | IML/ROM error/state
+[ 4203.007474] iwlwifi 0000:00:14.3: 0x00008063 | IML/ROM data1
+[ 4203.007485] iwlwifi 0000:00:14.3: 0x00000090 | IML/ROM WFPM_AUTH_KEY_0
+[ 4203.007533] iwlwifi 0000:00:14.3: Fseq Registers:
+[ 4203.007539] iwlwifi 0000:00:14.3: 0x60000100 | FSEQ_ERROR_CODE
+[ 4203.007583] iwlwifi 0000:00:14.3: 0x003E0003 | FSEQ_TOP_INIT_VERSION
+[ 4203.007589] iwlwifi 0000:00:14.3: 0x00190002 | FSEQ_CNVIO_INIT_VERSION
+[ 4203.007632] iwlwifi 0000:00:14.3: 0x0000A652 | FSEQ_OTP_VERSION
+[ 4203.007639] iwlwifi 0000:00:14.3: 0x00000003 | FSEQ_TOP_CONTENT_VERSION
+[ 4203.007684] iwlwifi 0000:00:14.3: 0x4552414E | FSEQ_ALIVE_TOKEN
+[ 4203.007690] iwlwifi 0000:00:14.3: 0x00080400 | FSEQ_CNVI_ID
+[ 4203.007735] iwlwifi 0000:00:14.3: 0x00400410 | FSEQ_CNVR_ID
+[ 4203.007741] iwlwifi 0000:00:14.3: 0x00080400 | CNVI_AUX_MISC_CHIP
+[ 4203.007788] iwlwifi 0000:00:14.3: 0x00400410 | CNVR_AUX_MISC_CHIP
+[ 4203.007799] iwlwifi 0000:00:14.3: 0x00009061 | CNVR_SCU_SD_REGS_SD_REG_DIG_DCDC_VTRIM
+[ 4203.007843] iwlwifi 0000:00:14.3: 0x00000061 | CNVR_SCU_SD_REGS_SD_REG_ACTIVE_VDIG_MIRROR
+[ 4203.008013] iwlwifi 0000:00:14.3: WRT: Collecting data: ini trigger 4 fired (delay=0ms).
+[ 4203.008023] ieee80211 phy0: Hardware restart was requested
+[ 4203.763492] iwlwifi 0000:00:14.3: WFPM_UMAC_PD_NOTIFICATION: 0x1f
+[ 4203.763540] iwlwifi 0000:00:14.3: WFPM_LMAC2_PD_NOTIFICATION: 0x1f
+[ 4203.763551] iwlwifi 0000:00:14.3: WFPM_AUTH_KEY_0: 0x90
+[ 4203.763562] iwlwifi 0000:00:14.3: CNVI_SCU_SEQ_DATA_DW9: 0x0
+[ 4215.549529] iwlwifi 0000:00:14.3: Queue 2 is stuck 2 12
+[ 4215.550322] iwlwifi 0000:00:14.3: Microcode SW error detected. Restarting 0x0.
+[ 4215.550451] iwlwifi 0000:00:14.3: Start IWL Error Log Dump:
+[ 4215.550454] iwlwifi 0000:00:14.3: Transport status: 0x0000004A, valid: 6
+[ 4215.550458] iwlwifi 0000:00:14.3: Loaded firmware version: 72.a764baac.0 so-a0-gf-a0-72.ucode
+[ 4215.550460] iwlwifi 0000:00:14.3: 0x00000084 | NMI_INTERRUPT_UNKNOWN       
+[ 4215.550464] iwlwifi 0000:00:14.3: 0x00801EF4 | trm_hw_status0
+[ 4215.550466] iwlwifi 0000:00:14.3: 0x00000000 | trm_hw_status1
+[ 4215.550468] iwlwifi 0000:00:14.3: 0x004DAAEE | branchlink2
+[ 4215.550470] iwlwifi 0000:00:14.3: 0x004DD664 | interruptlink1
+[ 4215.550472] iwlwifi 0000:00:14.3: 0x004DD664 | interruptlink2
+[ 4215.550473] iwlwifi 0000:00:14.3: 0x00008068 | data1
+[ 4215.550475] iwlwifi 0000:00:14.3: 0x01000000 | data2
+[ 4215.550477] iwlwifi 0000:00:14.3: 0x00000000 | data3
+[ 4215.550479] iwlwifi 0000:00:14.3: 0x1C802FC1 | beacon time
+[ 4215.550481] iwlwifi 0000:00:14.3: 0xCF8CE050 | tsf low
+[ 4215.550483] iwlwifi 0000:00:14.3: 0x00000015 | tsf hi
+[ 4215.550484] iwlwifi 0000:00:14.3: 0x00000000 | time gp1
+[ 4215.550486] iwlwifi 0000:00:14.3: 0x00B63FF6 | time gp2
+[ 4215.550488] iwlwifi 0000:00:14.3: 0x00000001 | uCode revision type
+[ 4215.550489] iwlwifi 0000:00:14.3: 0x00000048 | uCode version major
+[ 4215.550491] iwlwifi 0000:00:14.3: 0xA764BAAC | uCode version minor
+[ 4215.550493] iwlwifi 0000:00:14.3: 0x00000370 | hw version
+[ 4215.550495] iwlwifi 0000:00:14.3: 0x00C80002 | board version
+[ 4215.550496] iwlwifi 0000:00:14.3: 0x0202001C | hcmd
+[ 4215.550498] iwlwifi 0000:00:14.3: 0x80020000 | isr0
+[ 4215.550500] iwlwifi 0000:00:14.3: 0x08000000 | isr1
+[ 4215.550501] iwlwifi 0000:00:14.3: 0x48F00002 | isr2
+[ 4215.550503] iwlwifi 0000:00:14.3: 0x00C3480D | isr3
+[ 4215.550505] iwlwifi 0000:00:14.3: 0x00200000 | isr4
+[ 4215.550506] iwlwifi 0000:00:14.3: 0x0201001C | last cmd Id
+[ 4215.550508] iwlwifi 0000:00:14.3: 0x00008068 | wait_event
+[ 4215.550510] iwlwifi 0000:00:14.3: 0x00000054 | l2p_control
+[ 4215.550512] iwlwifi 0000:00:14.3: 0x00002020 | l2p_duration
+[ 4215.550513] iwlwifi 0000:00:14.3: 0x0000000F | l2p_mhvalid
+[ 4215.550515] iwlwifi 0000:00:14.3: 0x00060098 | l2p_addr_match
+[ 4215.550517] iwlwifi 0000:00:14.3: 0x00000009 | lmpm_pmg_sel
+[ 4215.550519] iwlwifi 0000:00:14.3: 0x00000000 | timestamp
+[ 4215.550520] iwlwifi 0000:00:14.3: 0x00005888 | flow_handler
+[ 4215.550584] iwlwifi 0000:00:14.3: Start IWL Error Log Dump:
+[ 4215.550585] iwlwifi 0000:00:14.3: Transport status: 0x0000004A, valid: 7
+[ 4215.550588] iwlwifi 0000:00:14.3: 0x20000066 | NMI_INTERRUPT_HOST
+[ 4215.550590] iwlwifi 0000:00:14.3: 0x00000000 | umac branchlink1
+[ 4215.550591] iwlwifi 0000:00:14.3: 0x8045FDF8 | umac branchlink2
+[ 4215.550593] iwlwifi 0000:00:14.3: 0x804805CE | umac interruptlink1
+[ 4215.550595] iwlwifi 0000:00:14.3: 0xC008228A | umac interruptlink2
+[ 4215.550596] iwlwifi 0000:00:14.3: 0x01000000 | umac data1
+[ 4215.550598] iwlwifi 0000:00:14.3: 0xC008228A | umac data2
+[ 4215.550600] iwlwifi 0000:00:14.3: 0x00000000 | umac data3
+[ 4215.550601] iwlwifi 0000:00:14.3: 0x00000048 | umac major
+[ 4215.550603] iwlwifi 0000:00:14.3: 0xA764BAAC | umac minor
+[ 4215.550605] iwlwifi 0000:00:14.3: 0x00B64255 | frame pointer
+[ 4215.550606] iwlwifi 0000:00:14.3: 0xC0887EF4 | stack pointer
+[ 4215.550608] iwlwifi 0000:00:14.3: 0x004B019C | last host cmd
+[ 4215.550610] iwlwifi 0000:00:14.3: 0x00000404 | isr status reg
+[ 4215.550652] iwlwifi 0000:00:14.3: IML/ROM dump:
+[ 4215.550653] iwlwifi 0000:00:14.3: 0x00000B03 | IML/ROM error/state
+[ 4215.550701] iwlwifi 0000:00:14.3: 0x00008096 | IML/ROM data1
+[ 4215.550712] iwlwifi 0000:00:14.3: 0x00000090 | IML/ROM WFPM_AUTH_KEY_0
+[ 4215.550760] iwlwifi 0000:00:14.3: Fseq Registers:
+[ 4215.550766] iwlwifi 0000:00:14.3: 0x60000100 | FSEQ_ERROR_CODE
+[ 4215.550807] iwlwifi 0000:00:14.3: 0x003E0003 | FSEQ_TOP_INIT_VERSION
+[ 4215.550814] iwlwifi 0000:00:14.3: 0x00190002 | FSEQ_CNVIO_INIT_VERSION
+[ 4215.550855] iwlwifi 0000:00:14.3: 0x0000A652 | FSEQ_OTP_VERSION
+[ 4215.550861] iwlwifi 0000:00:14.3: 0x00000003 | FSEQ_TOP_CONTENT_VERSION
+[ 4215.550904] iwlwifi 0000:00:14.3: 0x4552414E | FSEQ_ALIVE_TOKEN
+[ 4215.550910] iwlwifi 0000:00:14.3: 0x00080400 | FSEQ_CNVI_ID
+[ 4215.550955] iwlwifi 0000:00:14.3: 0x00400410 | FSEQ_CNVR_ID
+[ 4215.550961] iwlwifi 0000:00:14.3: 0x00080400 | CNVI_AUX_MISC_CHIP
+[ 4215.551006] iwlwifi 0000:00:14.3: 0x00400410 | CNVR_AUX_MISC_CHIP
+[ 4215.551017] iwlwifi 0000:00:14.3: 0x00009061 | CNVR_SCU_SD_REGS_SD_REG_DIG_DCDC_VTRIM
+[ 4215.551061] iwlwifi 0000:00:14.3: 0x00000061 | CNVR_SCU_SD_REGS_SD_REG_ACTIVE_VDIG_MIRROR
+[ 4215.551232] iwlwifi 0000:00:14.3: WRT: Collecting data: ini trigger 4 fired (delay=0ms).
+[ 4215.551243] ieee80211 phy0: Hardware restart was requested
+[ 4216.305233] iwlwifi 0000:00:14.3: WFPM_UMAC_PD_NOTIFICATION: 0x1f
+[ 4216.305284] iwlwifi 0000:00:14.3: WFPM_LMAC2_PD_NOTIFICATION: 0x1f
+[ 4216.305295] iwlwifi 0000:00:14.3: WFPM_AUTH_KEY_0: 0x90
+[ 4216.305306] iwlwifi 0000:00:14.3: CNVI_SCU_SEQ_DATA_DW9: 0x0
+[ 4226.812836] iwlwifi 0000:00:14.3: Queue 2 is stuck 1 11
+[ 4226.813615] iwlwifi 0000:00:14.3: Microcode SW error detected. Restarting 0x0.
+[ 4226.813746] iwlwifi 0000:00:14.3: Start IWL Error Log Dump:
+[ 4226.813750] iwlwifi 0000:00:14.3: Transport status: 0x0000004A, valid: 6
+[ 4226.813754] iwlwifi 0000:00:14.3: Loaded firmware version: 72.a764baac.0 so-a0-gf-a0-72.ucode
+[ 4226.813757] iwlwifi 0000:00:14.3: 0x00000084 | NMI_INTERRUPT_UNKNOWN       
+[ 4226.813761] iwlwifi 0000:00:14.3: 0x00A01EF5 | trm_hw_status0
+[ 4226.813763] iwlwifi 0000:00:14.3: 0x00000000 | trm_hw_status1
+[ 4226.813765] iwlwifi 0000:00:14.3: 0x004DAAEE | branchlink2
+[ 4226.813767] iwlwifi 0000:00:14.3: 0x00006782 | interruptlink1
+[ 4226.813769] iwlwifi 0000:00:14.3: 0x00006782 | interruptlink2
+[ 4226.813771] iwlwifi 0000:00:14.3: 0x00015616 | data1
+[ 4226.813773] iwlwifi 0000:00:14.3: 0x01000000 | data2
+[ 4226.813775] iwlwifi 0000:00:14.3: 0x00000000 | data3
+[ 4226.813777] iwlwifi 0000:00:14.3: 0x19C03168 | beacon time
+[ 4226.813778] iwlwifi 0000:00:14.3: 0xD038BEA3 | tsf low
+[ 4226.813780] iwlwifi 0000:00:14.3: 0x00000015 | tsf hi
+[ 4226.813782] iwlwifi 0000:00:14.3: 0x000060FB | time gp1
+[ 4226.813784] iwlwifi 0000:00:14.3: 0x00A2BE59 | time gp2
+[ 4226.813786] iwlwifi 0000:00:14.3: 0x00000001 | uCode revision type
+[ 4226.813788] iwlwifi 0000:00:14.3: 0x00000048 | uCode version major
+[ 4226.813790] iwlwifi 0000:00:14.3: 0xA764BAAC | uCode version minor
+[ 4226.813792] iwlwifi 0000:00:14.3: 0x00000370 | hw version
+[ 4226.813794] iwlwifi 0000:00:14.3: 0x00C80002 | board version
+[ 4226.813796] iwlwifi 0000:00:14.3: 0x0000001C | hcmd
+[ 4226.813797] iwlwifi 0000:00:14.3: 0x80123000 | isr0
+[ 4226.813799] iwlwifi 0000:00:14.3: 0x08040000 | isr1
+[ 4226.813801] iwlwifi 0000:00:14.3: 0x48F00002 | isr2
+[ 4226.813803] iwlwifi 0000:00:14.3: 0x00C3080D | isr3
+[ 4226.813805] iwlwifi 0000:00:14.3: 0x00200000 | isr4
+[ 4226.813806] iwlwifi 0000:00:14.3: 0x0200001C | last cmd Id
+[ 4226.813808] iwlwifi 0000:00:14.3: 0x00015616 | wait_event
+[ 4226.813810] iwlwifi 0000:00:14.3: 0x000000D4 | l2p_control
+[ 4226.813812] iwlwifi 0000:00:14.3: 0x00002820 | l2p_duration
+[ 4226.813814] iwlwifi 0000:00:14.3: 0x00000007 | l2p_mhvalid
+[ 4226.813815] iwlwifi 0000:00:14.3: 0x00810048 | l2p_addr_match
+[ 4226.813817] iwlwifi 0000:00:14.3: 0x00000009 | lmpm_pmg_sel
+[ 4226.813819] iwlwifi 0000:00:14.3: 0x00000000 | timestamp
+[ 4226.813821] iwlwifi 0000:00:14.3: 0x00005888 | flow_handler
+[ 4226.813883] iwlwifi 0000:00:14.3: Start IWL Error Log Dump:
+[ 4226.813885] iwlwifi 0000:00:14.3: Transport status: 0x0000004A, valid: 7
+[ 4226.813888] iwlwifi 0000:00:14.3: 0x20000066 | NMI_INTERRUPT_HOST
+[ 4226.813890] iwlwifi 0000:00:14.3: 0x00000000 | umac branchlink1
+[ 4226.813892] iwlwifi 0000:00:14.3: 0x8045FDF8 | umac branchlink2
+[ 4226.813893] iwlwifi 0000:00:14.3: 0x804805CE | umac interruptlink1
+[ 4226.813895] iwlwifi 0000:00:14.3: 0xC0083E0E | umac interruptlink2
+[ 4226.813897] iwlwifi 0000:00:14.3: 0x01000000 | umac data1
+[ 4226.813899] iwlwifi 0000:00:14.3: 0xC0083E0E | umac data2
+[ 4226.813901] iwlwifi 0000:00:14.3: 0x00000000 | umac data3
+[ 4226.813902] iwlwifi 0000:00:14.3: 0x00000048 | umac major
+[ 4226.813904] iwlwifi 0000:00:14.3: 0xA764BAAC | umac minor
+[ 4226.813906] iwlwifi 0000:00:14.3: 0x00A2C0B8 | frame pointer
+[ 4226.813908] iwlwifi 0000:00:14.3: 0xC0887EF8 | stack pointer
+[ 4226.813910] iwlwifi 0000:00:14.3: 0x004B019C | last host cmd
+[ 4226.813911] iwlwifi 0000:00:14.3: 0x00000400 | isr status reg
+[ 4226.813951] iwlwifi 0000:00:14.3: IML/ROM dump:
+[ 4226.813953] iwlwifi 0000:00:14.3: 0x00000B03 | IML/ROM error/state
+[ 4226.814004] iwlwifi 0000:00:14.3: 0x00008064 | IML/ROM data1
+[ 4226.814015] iwlwifi 0000:00:14.3: 0x00000090 | IML/ROM WFPM_AUTH_KEY_0
+[ 4226.814063] iwlwifi 0000:00:14.3: Fseq Registers:
+[ 4226.814069] iwlwifi 0000:00:14.3: 0x60000100 | FSEQ_ERROR_CODE
+[ 4226.814113] iwlwifi 0000:00:14.3: 0x003E0003 | FSEQ_TOP_INIT_VERSION
+[ 4226.814119] iwlwifi 0000:00:14.3: 0x00190002 | FSEQ_CNVIO_INIT_VERSION
+[ 4226.814164] iwlwifi 0000:00:14.3: 0x0000A652 | FSEQ_OTP_VERSION
+[ 4226.814170] iwlwifi 0000:00:14.3: 0x00000003 | FSEQ_TOP_CONTENT_VERSION
+[ 4226.814211] iwlwifi 0000:00:14.3: 0x4552414E | FSEQ_ALIVE_TOKEN
+[ 4226.814217] iwlwifi 0000:00:14.3: 0x00080400 | FSEQ_CNVI_ID
+[ 4226.814258] iwlwifi 0000:00:14.3: 0x00400410 | FSEQ_CNVR_ID
+[ 4226.814265] iwlwifi 0000:00:14.3: 0x00080400 | CNVI_AUX_MISC_CHIP
+[ 4226.814312] iwlwifi 0000:00:14.3: 0x00400410 | CNVR_AUX_MISC_CHIP
+[ 4226.814323] iwlwifi 0000:00:14.3: 0x00009061 | CNVR_SCU_SD_REGS_SD_REG_DIG_DCDC_VTRIM
+[ 4226.814367] iwlwifi 0000:00:14.3: 0x00000061 | CNVR_SCU_SD_REGS_SD_REG_ACTIVE_VDIG_MIRROR
+[ 4226.814537] iwlwifi 0000:00:14.3: WRT: Collecting data: ini trigger 4 fired (delay=0ms).
+[ 4226.814546] ieee80211 phy0: Hardware restart was requested
+[ 4227.574058] iwlwifi 0000:00:14.3: WFPM_UMAC_PD_NOTIFICATION: 0x1f
+[ 4227.574104] iwlwifi 0000:00:14.3: WFPM_LMAC2_PD_NOTIFICATION: 0x1f
+[ 4227.574115] iwlwifi 0000:00:14.3: WFPM_AUTH_KEY_0: 0x90
+[ 4227.574127] iwlwifi 0000:00:14.3: CNVI_SCU_SEQ_DATA_DW9: 0x0
+[ 4279.545582] iwlwifi 0000:00:14.3: Queue 2 is stuck 1 7
+[ 4279.546357] iwlwifi 0000:00:14.3: Microcode SW error detected. Restarting 0x0.
+[ 4279.546489] iwlwifi 0000:00:14.3: Start IWL Error Log Dump:
+[ 4279.546492] iwlwifi 0000:00:14.3: Transport status: 0x0000004A, valid: 6
+[ 4279.546495] iwlwifi 0000:00:14.3: Loaded firmware version: 72.a764baac.0 so-a0-gf-a0-72.ucode
+[ 4279.546497] iwlwifi 0000:00:14.3: 0x00000084 | NMI_INTERRUPT_UNKNOWN       
+[ 4279.546500] iwlwifi 0000:00:14.3: 0x00809E04 | trm_hw_status0
+[ 4279.546502] iwlwifi 0000:00:14.3: 0x00000000 | trm_hw_status1
+[ 4279.546504] iwlwifi 0000:00:14.3: 0x004DAAEE | branchlink2
+[ 4279.546505] iwlwifi 0000:00:14.3: 0x0000C65E | interruptlink1
+[ 4279.546507] iwlwifi 0000:00:14.3: 0x0000C65E | interruptlink2
+[ 4279.546509] iwlwifi 0000:00:14.3: 0x00008068 | data1
+[ 4279.546510] iwlwifi 0000:00:14.3: 0x01000000 | data2
+[ 4279.546512] iwlwifi 0000:00:14.3: 0x00000000 | data3
+[ 4279.546514] iwlwifi 0000:00:14.3: 0x7EC0393A | beacon time
+[ 4279.546516] iwlwifi 0000:00:14.3: 0xD35D66D7 | tsf low
+[ 4279.546518] iwlwifi 0000:00:14.3: 0x00000015 | tsf hi
+[ 4279.546519] iwlwifi 0000:00:14.3: 0x00000000 | time gp1
+[ 4279.546521] iwlwifi 0000:00:14.3: 0x031B6E65 | time gp2
+[ 4279.546523] iwlwifi 0000:00:14.3: 0x00000001 | uCode revision type
+[ 4279.546525] iwlwifi 0000:00:14.3: 0x00000048 | uCode version major
+[ 4279.546526] iwlwifi 0000:00:14.3: 0xA764BAAC | uCode version minor
+[ 4279.546528] iwlwifi 0000:00:14.3: 0x00000370 | hw version
+[ 4279.546530] iwlwifi 0000:00:14.3: 0x00C80002 | board version
+[ 4279.546531] iwlwifi 0000:00:14.3: 0x0201001C | hcmd
+[ 4279.546533] iwlwifi 0000:00:14.3: 0xA4120000 | isr0
+[ 4279.546535] iwlwifi 0000:00:14.3: 0x08000000 | isr1
+[ 4279.546536] iwlwifi 0000:00:14.3: 0x48F00002 | isr2
+[ 4279.546538] iwlwifi 0000:00:14.3: 0x00C1480D | isr3
+[ 4279.546540] iwlwifi 0000:00:14.3: 0x00000000 | isr4
+[ 4279.546541] iwlwifi 0000:00:14.3: 0x0200001C | last cmd Id
+[ 4279.546543] iwlwifi 0000:00:14.3: 0x00008068 | wait_event
+[ 4279.546545] iwlwifi 0000:00:14.3: 0x000000D4 | l2p_control
+[ 4279.546547] iwlwifi 0000:00:14.3: 0x0001A834 | l2p_duration
+[ 4279.546549] iwlwifi 0000:00:14.3: 0x00000007 | l2p_mhvalid
+[ 4279.546550] iwlwifi 0000:00:14.3: 0x00810048 | l2p_addr_match
+[ 4279.546552] iwlwifi 0000:00:14.3: 0x00000009 | lmpm_pmg_sel
+[ 4279.546554] iwlwifi 0000:00:14.3: 0x00000000 | timestamp
+[ 4279.546555] iwlwifi 0000:00:14.3: 0x000070BC | flow_handler
+[ 4279.546620] iwlwifi 0000:00:14.3: Start IWL Error Log Dump:
+[ 4279.546622] iwlwifi 0000:00:14.3: Transport status: 0x0000004A, valid: 7
+[ 4279.546624] iwlwifi 0000:00:14.3: 0x20000066 | NMI_INTERRUPT_HOST
+[ 4279.546625] iwlwifi 0000:00:14.3: 0x00000000 | umac branchlink1
+[ 4279.546627] iwlwifi 0000:00:14.3: 0x8045FDF8 | umac branchlink2
+[ 4279.546629] iwlwifi 0000:00:14.3: 0x804805CE | umac interruptlink1
+[ 4279.546630] iwlwifi 0000:00:14.3: 0xC00819A8 | umac interruptlink2
+[ 4279.546632] iwlwifi 0000:00:14.3: 0x01000000 | umac data1
+[ 4279.546633] iwlwifi 0000:00:14.3: 0xC00819A8 | umac data2
+[ 4279.546635] iwlwifi 0000:00:14.3: 0x00000000 | umac data3
+[ 4279.546636] iwlwifi 0000:00:14.3: 0x00000048 | umac major
+[ 4279.546638] iwlwifi 0000:00:14.3: 0xA764BAAC | umac minor
+[ 4279.546639] iwlwifi 0000:00:14.3: 0x031B70B6 | frame pointer
+[ 4279.546641] iwlwifi 0000:00:14.3: 0xC0887EFC | stack pointer
+[ 4279.546642] iwlwifi 0000:00:14.3: 0x005901D2 | last host cmd
+[ 4279.546644] iwlwifi 0000:00:14.3: 0x00000400 | isr status reg
+[ 4279.546682] iwlwifi 0000:00:14.3: IML/ROM dump:
+[ 4279.546684] iwlwifi 0000:00:14.3: 0x00000B03 | IML/ROM error/state
+[ 4279.546734] iwlwifi 0000:00:14.3: 0x00008064 | IML/ROM data1
+[ 4279.546746] iwlwifi 0000:00:14.3: 0x00000090 | IML/ROM WFPM_AUTH_KEY_0
+[ 4279.546795] iwlwifi 0000:00:14.3: Fseq Registers:
+[ 4279.546801] iwlwifi 0000:00:14.3: 0x60000100 | FSEQ_ERROR_CODE
+[ 4279.546843] iwlwifi 0000:00:14.3: 0x003E0003 | FSEQ_TOP_INIT_VERSION
+[ 4279.546849] iwlwifi 0000:00:14.3: 0x00190002 | FSEQ_CNVIO_INIT_VERSION
+[ 4279.546892] iwlwifi 0000:00:14.3: 0x0000A652 | FSEQ_OTP_VERSION
+[ 4279.546898] iwlwifi 0000:00:14.3: 0x00000003 | FSEQ_TOP_CONTENT_VERSION
+[ 4279.546943] iwlwifi 0000:00:14.3: 0x4552414E | FSEQ_ALIVE_TOKEN
+[ 4279.546949] iwlwifi 0000:00:14.3: 0x00080400 | FSEQ_CNVI_ID
+[ 4279.546994] iwlwifi 0000:00:14.3: 0x00400410 | FSEQ_CNVR_ID
+[ 4279.547000] iwlwifi 0000:00:14.3: 0x00080400 | CNVI_AUX_MISC_CHIP
+[ 4279.547045] iwlwifi 0000:00:14.3: 0x00400410 | CNVR_AUX_MISC_CHIP
+[ 4279.547056] iwlwifi 0000:00:14.3: 0x00009061 | CNVR_SCU_SD_REGS_SD_REG_DIG_DCDC_VTRIM
+[ 4279.547100] iwlwifi 0000:00:14.3: 0x00000061 | CNVR_SCU_SD_REGS_SD_REG_ACTIVE_VDIG_MIRROR
+[ 4279.547276] iwlwifi 0000:00:14.3: WRT: Collecting data: ini trigger 4 fired (delay=0ms).
+[ 4279.547286] ieee80211 phy0: Hardware restart was requested
+[ 4280.340936] iwlwifi 0000:00:14.3: WFPM_UMAC_PD_NOTIFICATION: 0x1f
+[ 4280.340986] iwlwifi 0000:00:14.3: WFPM_LMAC2_PD_NOTIFICATION: 0x1f
+[ 4280.340997] iwlwifi 0000:00:14.3: WFPM_AUTH_KEY_0: 0x90
+[ 4280.341008] iwlwifi 0000:00:14.3: CNVI_SCU_SEQ_DATA_DW9: 0x0
+[ 4296.180549] iwlwifi 0000:00:14.3: Queue 2 is stuck 0 2
+[ 4296.181323] iwlwifi 0000:00:14.3: Microcode SW error detected. Restarting 0x0.
+[ 4296.181445] iwlwifi 0000:00:14.3: Start IWL Error Log Dump:
+[ 4296.181447] iwlwifi 0000:00:14.3: Transport status: 0x0000004A, valid: 6
+[ 4296.181450] iwlwifi 0000:00:14.3: Loaded firmware version: 72.a764baac.0 so-a0-gf-a0-72.ucode
+[ 4296.181453] iwlwifi 0000:00:14.3: 0x00000084 | NMI_INTERRUPT_UNKNOWN       
+[ 4296.181455] iwlwifi 0000:00:14.3: 0x000082F1 | trm_hw_status0
+[ 4296.181457] iwlwifi 0000:00:14.3: 0x00000000 | trm_hw_status1
+[ 4296.181459] iwlwifi 0000:00:14.3: 0x004DAAEE | branchlink2
+[ 4296.181460] iwlwifi 0000:00:14.3: 0x004C7804 | interruptlink1
+[ 4296.181462] iwlwifi 0000:00:14.3: 0x004C7804 | interruptlink2
+[ 4296.181464] iwlwifi 0000:00:14.3: 0x004C72F2 | data1
+[ 4296.181465] iwlwifi 0000:00:14.3: 0x01000000 | data2
+[ 4296.181467] iwlwifi 0000:00:14.3: 0x00000000 | data3
+[ 4296.181468] iwlwifi 0000:00:14.3: 0x26C1134B | beacon time
+[ 4296.181470] iwlwifi 0000:00:14.3: 0xD45B3CBA | tsf low
+[ 4296.181471] iwlwifi 0000:00:14.3: 0x00000015 | tsf hi
+[ 4296.181473] iwlwifi 0000:00:14.3: 0x00000000 | time gp1
+[ 4296.181474] iwlwifi 0000:00:14.3: 0x00F41A41 | time gp2
+[ 4296.181476] iwlwifi 0000:00:14.3: 0x00000001 | uCode revision type
+[ 4296.181477] iwlwifi 0000:00:14.3: 0x00000048 | uCode version major
+[ 4296.181479] iwlwifi 0000:00:14.3: 0xA764BAAC | uCode version minor
+[ 4296.181480] iwlwifi 0000:00:14.3: 0x00000370 | hw version
+[ 4296.181482] iwlwifi 0000:00:14.3: 0x00C80002 | board version
+[ 4296.181483] iwlwifi 0000:00:14.3: 0x80F6FD25 | hcmd
+[ 4296.181485] iwlwifi 0000:00:14.3: 0x62F28000 | isr0
+[ 4296.181486] iwlwifi 0000:00:14.3: 0x08000000 | isr1
+[ 4296.181488] iwlwifi 0000:00:14.3: 0x48F00002 | isr2
+[ 4296.181489] iwlwifi 0000:00:14.3: 0x04C3481C | isr3
+[ 4296.181491] iwlwifi 0000:00:14.3: 0x00200000 | isr4
+[ 4296.181492] iwlwifi 0000:00:14.3: 0x00380103 | last cmd Id
+[ 4296.181494] iwlwifi 0000:00:14.3: 0x004C72F2 | wait_event
+[ 4296.181495] iwlwifi 0000:00:14.3: 0x000000D4 | l2p_control
+[ 4296.181497] iwlwifi 0000:00:14.3: 0x00000820 | l2p_duration
+[ 4296.181498] iwlwifi 0000:00:14.3: 0x00000007 | l2p_mhvalid
+[ 4296.181500] iwlwifi 0000:00:14.3: 0x00000048 | l2p_addr_match
+[ 4296.181501] iwlwifi 0000:00:14.3: 0x00000009 | lmpm_pmg_sel
+[ 4296.181503] iwlwifi 0000:00:14.3: 0x00000000 | timestamp
+[ 4296.181505] iwlwifi 0000:00:14.3: 0x00005084 | flow_handler
+[ 4296.181570] iwlwifi 0000:00:14.3: Start IWL Error Log Dump:
+[ 4296.181572] iwlwifi 0000:00:14.3: Transport status: 0x0000004A, valid: 7
+[ 4296.181575] iwlwifi 0000:00:14.3: 0x20000066 | NMI_INTERRUPT_HOST
+[ 4296.181577] iwlwifi 0000:00:14.3: 0x00000000 | umac branchlink1
+[ 4296.181578] iwlwifi 0000:00:14.3: 0x8045FDF8 | umac branchlink2
+[ 4296.181580] iwlwifi 0000:00:14.3: 0x804805CE | umac interruptlink1
+[ 4296.181581] iwlwifi 0000:00:14.3: 0xC008228A | umac interruptlink2
+[ 4296.181583] iwlwifi 0000:00:14.3: 0x01000000 | umac data1
+[ 4296.181585] iwlwifi 0000:00:14.3: 0xC008228A | umac data2
+[ 4296.181586] iwlwifi 0000:00:14.3: 0x00000000 | umac data3
+[ 4296.181588] iwlwifi 0000:00:14.3: 0x00000048 | umac major
+[ 4296.181589] iwlwifi 0000:00:14.3: 0xA764BAAC | umac minor
+[ 4296.181591] iwlwifi 0000:00:14.3: 0x00F41CA0 | frame pointer
+[ 4296.181592] iwlwifi 0000:00:14.3: 0xC0887EF4 | stack pointer
+[ 4296.181594] iwlwifi 0000:00:14.3: 0x0049019C | last host cmd
+[ 4296.181595] iwlwifi 0000:00:14.3: 0x00000404 | isr status reg
+[ 4296.181638] iwlwifi 0000:00:14.3: IML/ROM dump:
+[ 4296.181640] iwlwifi 0000:00:14.3: 0x00000B03 | IML/ROM error/state
+[ 4296.181691] iwlwifi 0000:00:14.3: 0x00008062 | IML/ROM data1
+[ 4296.181702] iwlwifi 0000:00:14.3: 0x00000090 | IML/ROM WFPM_AUTH_KEY_0
+[ 4296.181709] iwlwifi 0000:00:14.3: Fseq Registers:
+[ 4296.181752] iwlwifi 0000:00:14.3: 0x60000100 | FSEQ_ERROR_CODE
+[ 4296.181758] iwlwifi 0000:00:14.3: 0x003E0003 | FSEQ_TOP_INIT_VERSION
+[ 4296.181802] iwlwifi 0000:00:14.3: 0x00190002 | FSEQ_CNVIO_INIT_VERSION
+[ 4296.181808] iwlwifi 0000:00:14.3: 0x0000A652 | FSEQ_OTP_VERSION
+[ 4296.181853] iwlwifi 0000:00:14.3: 0x00000003 | FSEQ_TOP_CONTENT_VERSION
+[ 4296.181859] iwlwifi 0000:00:14.3: 0x4552414E | FSEQ_ALIVE_TOKEN
+[ 4296.181904] iwlwifi 0000:00:14.3: 0x00080400 | FSEQ_CNVI_ID
+[ 4296.181910] iwlwifi 0000:00:14.3: 0x00400410 | FSEQ_CNVR_ID
+[ 4296.181953] iwlwifi 0000:00:14.3: 0x00080400 | CNVI_AUX_MISC_CHIP
+[ 4296.181964] iwlwifi 0000:00:14.3: 0x00400410 | CNVR_AUX_MISC_CHIP
+[ 4296.182008] iwlwifi 0000:00:14.3: 0x00009061 | CNVR_SCU_SD_REGS_SD_REG_DIG_DCDC_VTRIM
+[ 4296.182019] iwlwifi 0000:00:14.3: 0x00000061 | CNVR_SCU_SD_REGS_SD_REG_ACTIVE_VDIG_MIRROR
+[ 4296.182186] iwlwifi 0000:00:14.3: WRT: Collecting data: ini trigger 4 fired (delay=0ms).
+[ 4296.182194] ieee80211 phy0: Hardware restart was requested
+[ 4296.975944] iwlwifi 0000:00:14.3: WFPM_UMAC_PD_NOTIFICATION: 0x1f
+[ 4296.975994] iwlwifi 0000:00:14.3: WFPM_LMAC2_PD_NOTIFICATION: 0x1f
+[ 4296.976005] iwlwifi 0000:00:14.3: WFPM_AUTH_KEY_0: 0x90
+[ 4296.976017] iwlwifi 0000:00:14.3: CNVI_SCU_SEQ_DATA_DW9: 0x0
+[ 4326.429095] usb 2-2: USB disconnect, device number 45
+[ 4326.576797] Buffer I/O error on dev sde1, logical block 786433, lost async page write
+[ 4326.629329] sd 0:0:0:0: [sde] Synchronizing SCSI cache
+[ 4326.933244] sd 0:0:0:0: [sde] Synchronize Cache(10) failed: Result: hostbyte=DID_ERROR driverbyte=DRIVER_OK
+[ 4327.317400] usb 2-2: new SuperSpeed Plus Gen 2x1 USB device number 46 using xhci_hcd
+[ 4327.342020] usb 2-2: New USB device found, idVendor=152d, idProduct=0584, bcdDevice= 2.12
+[ 4327.342028] usb 2-2: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+[ 4327.342030] usb 2-2: Product: JMS583
+[ 4327.342031] usb 2-2: Manufacturer: JMicron
+[ 4327.342033] usb 2-2: SerialNumber: DD56419883EE8
+[ 4327.371337] scsi host0: uas
+[ 4327.372018] scsi 0:0:0:0: Direct-Access     Apacer A S2280P4 256G     0212 PQ: 0 ANSI: 6
+[ 4327.383071] sd 0:0:0:0: Attached scsi generic sg4 type 0
+[ 4327.383790] sd 0:0:0:0: [sde] 500118192 512-byte logical blocks: (256 GB/238 GiB)
+[ 4327.383798] sd 0:0:0:0: [sde] 4096-byte physical blocks
+[ 4327.383958] sd 0:0:0:0: [sde] Write Protect is off
+[ 4327.383963] sd 0:0:0:0: [sde] Mode Sense: 5f 00 00 08
+[ 4327.384240] sd 0:0:0:0: [sde] Write cache: enabled, read cache: enabled, doesn't support DPO or FUA
+[ 4327.384424] sd 0:0:0:0: [sde] Preferred minimum I/O size 4096 bytes
+[ 4327.384429] sd 0:0:0:0: [sde] Optimal transfer size 33553920 bytes not a multiple of preferred minimum block size (4096 bytes)
+[ 4329.466959]  sde: sde1
+[ 4329.467288] sd 0:0:0:0: [sde] Attached SCSI disk
+[ 4336.891697] iwlwifi 0000:00:14.3: Queue 2 is stuck 9 19
+[ 4336.892479] iwlwifi 0000:00:14.3: Microcode SW error detected. Restarting 0x0.
+[ 4336.892609] iwlwifi 0000:00:14.3: Start IWL Error Log Dump:
+[ 4336.892613] iwlwifi 0000:00:14.3: Transport status: 0x0000004A, valid: 6
+[ 4336.892616] iwlwifi 0000:00:14.3: Loaded firmware version: 72.a764baac.0 so-a0-gf-a0-72.ucode
+[ 4336.892619] iwlwifi 0000:00:14.3: 0x00000084 | NMI_INTERRUPT_UNKNOWN       
+[ 4336.892622] iwlwifi 0000:00:14.3: 0x00801EF4 | trm_hw_status0
+[ 4336.892624] iwlwifi 0000:00:14.3: 0x00000000 | trm_hw_status1
+[ 4336.892626] iwlwifi 0000:00:14.3: 0x004DAAEE | branchlink2
+[ 4336.892627] iwlwifi 0000:00:14.3: 0x00008CDA | interruptlink1
+[ 4336.892629] iwlwifi 0000:00:14.3: 0x00008CDA | interruptlink2
+[ 4336.892631] iwlwifi 0000:00:14.3: 0x00008068 | data1
+[ 4336.892633] iwlwifi 0000:00:14.3: 0x01000000 | data2
+[ 4336.892634] iwlwifi 0000:00:14.3: 0x00000000 | data3
+[ 4336.892636] iwlwifi 0000:00:14.3: 0x61802BA0 | beacon time
+[ 4336.892638] iwlwifi 0000:00:14.3: 0xD6C87472 | tsf low
+[ 4336.892639] iwlwifi 0000:00:14.3: 0x00000015 | tsf hi
+[ 4336.892641] iwlwifi 0000:00:14.3: 0x00000000 | time gp1
+[ 4336.892643] iwlwifi 0000:00:14.3: 0x02637979 | time gp2
+[ 4336.892644] iwlwifi 0000:00:14.3: 0x00000001 | uCode revision type
+[ 4336.892646] iwlwifi 0000:00:14.3: 0x00000048 | uCode version major
+[ 4336.892648] iwlwifi 0000:00:14.3: 0xA764BAAC | uCode version minor
+[ 4336.892649] iwlwifi 0000:00:14.3: 0x00000370 | hw version
+[ 4336.892651] iwlwifi 0000:00:14.3: 0x00C80002 | board version
+[ 4336.892653] iwlwifi 0000:00:14.3: 0x0209001C | hcmd
+[ 4336.892654] iwlwifi 0000:00:14.3: 0x80020000 | isr0
+[ 4336.892656] iwlwifi 0000:00:14.3: 0x08000000 | isr1
+[ 4336.892657] iwlwifi 0000:00:14.3: 0x48F00002 | isr2
+[ 4336.892659] iwlwifi 0000:00:14.3: 0x00C3680C | isr3
+[ 4336.892660] iwlwifi 0000:00:14.3: 0x00000000 | isr4
+[ 4336.892662] iwlwifi 0000:00:14.3: 0x00610103 | last cmd Id
+[ 4336.892663] iwlwifi 0000:00:14.3: 0x00008068 | wait_event
+[ 4336.892665] iwlwifi 0000:00:14.3: 0x000000D4 | l2p_control
+[ 4336.892667] iwlwifi 0000:00:14.3: 0x00002020 | l2p_duration
+[ 4336.892668] iwlwifi 0000:00:14.3: 0x00000007 | l2p_mhvalid
+[ 4336.892670] iwlwifi 0000:00:14.3: 0x00810048 | l2p_addr_match
+[ 4336.892671] iwlwifi 0000:00:14.3: 0x00000009 | lmpm_pmg_sel
+[ 4336.892673] iwlwifi 0000:00:14.3: 0x00000000 | timestamp
+[ 4336.892674] iwlwifi 0000:00:14.3: 0x000098D8 | flow_handler
+[ 4336.892741] iwlwifi 0000:00:14.3: Start IWL Error Log Dump:
+[ 4336.892742] iwlwifi 0000:00:14.3: Transport status: 0x0000004A, valid: 7
+[ 4336.892744] iwlwifi 0000:00:14.3: 0x20000066 | NMI_INTERRUPT_HOST
+[ 4336.892746] iwlwifi 0000:00:14.3: 0x00000000 | umac branchlink1
+[ 4336.892748] iwlwifi 0000:00:14.3: 0x8045FDF8 | umac branchlink2
+[ 4336.892749] iwlwifi 0000:00:14.3: 0x804805CE | umac interruptlink1
+[ 4336.892751] iwlwifi 0000:00:14.3: 0xC008228A | umac interruptlink2
+[ 4336.892752] iwlwifi 0000:00:14.3: 0x01000000 | umac data1
+[ 4336.892754] iwlwifi 0000:00:14.3: 0xC008228A | umac data2
+[ 4336.892756] iwlwifi 0000:00:14.3: 0x00000000 | umac data3
+[ 4336.892757] iwlwifi 0000:00:14.3: 0x00000048 | umac major
+[ 4336.892758] iwlwifi 0000:00:14.3: 0xA764BAAC | umac minor
+[ 4336.892760] iwlwifi 0000:00:14.3: 0x02637BD8 | frame pointer
+[ 4336.892761] iwlwifi 0000:00:14.3: 0xC0887EF4 | stack pointer
+[ 4336.892763] iwlwifi 0000:00:14.3: 0x0066019C | last host cmd
+[ 4336.892765] iwlwifi 0000:00:14.3: 0x00000404 | isr status reg
+[ 4336.892805] iwlwifi 0000:00:14.3: IML/ROM dump:
+[ 4336.892807] iwlwifi 0000:00:14.3: 0x00000B03 | IML/ROM error/state
+[ 4336.892859] iwlwifi 0000:00:14.3: 0x00008063 | IML/ROM data1
+[ 4336.892912] iwlwifi 0000:00:14.3: 0x00000090 | IML/ROM WFPM_AUTH_KEY_0
+[ 4336.892960] iwlwifi 0000:00:14.3: Fseq Registers:
+[ 4336.892966] iwlwifi 0000:00:14.3: 0x60000100 | FSEQ_ERROR_CODE
+[ 4336.893010] iwlwifi 0000:00:14.3: 0x003E0003 | FSEQ_TOP_INIT_VERSION
+[ 4336.893017] iwlwifi 0000:00:14.3: 0x00190002 | FSEQ_CNVIO_INIT_VERSION
+[ 4336.893061] iwlwifi 0000:00:14.3: 0x0000A652 | FSEQ_OTP_VERSION
+[ 4336.893067] iwlwifi 0000:00:14.3: 0x00000003 | FSEQ_TOP_CONTENT_VERSION
+[ 4336.893112] iwlwifi 0000:00:14.3: 0x4552414E | FSEQ_ALIVE_TOKEN
+[ 4336.893119] iwlwifi 0000:00:14.3: 0x00080400 | FSEQ_CNVI_ID
+[ 4336.893163] iwlwifi 0000:00:14.3: 0x00400410 | FSEQ_CNVR_ID
+[ 4336.893170] iwlwifi 0000:00:14.3: 0x00080400 | CNVI_AUX_MISC_CHIP
+[ 4336.893213] iwlwifi 0000:00:14.3: 0x00400410 | CNVR_AUX_MISC_CHIP
+[ 4336.893223] iwlwifi 0000:00:14.3: 0x00009061 | CNVR_SCU_SD_REGS_SD_REG_DIG_DCDC_VTRIM
+[ 4336.893268] iwlwifi 0000:00:14.3: 0x00000061 | CNVR_SCU_SD_REGS_SD_REG_ACTIVE_VDIG_MIRROR
+[ 4336.893442] iwlwifi 0000:00:14.3: WRT: Collecting data: ini trigger 4 fired (delay=0ms).
+[ 4336.893451] ieee80211 phy0: Hardware restart was requested
+[ 4337.686356] iwlwifi 0000:00:14.3: WFPM_UMAC_PD_NOTIFICATION: 0x1f
+[ 4337.686407] iwlwifi 0000:00:14.3: WFPM_LMAC2_PD_NOTIFICATION: 0x1f
+[ 4337.686419] iwlwifi 0000:00:14.3: WFPM_AUTH_KEY_0: 0x90
+[ 4337.686430] iwlwifi 0000:00:14.3: CNVI_SCU_SEQ_DATA_DW9: 0x0
+[ 4347.902314] iwlwifi 0000:00:14.3: Queue 2 is stuck 0 2
+[ 4347.903083] iwlwifi 0000:00:14.3: Microcode SW error detected. Restarting 0x0.
+[ 4347.903207] iwlwifi 0000:00:14.3: Start IWL Error Log Dump:
+[ 4347.903209] iwlwifi 0000:00:14.3: Transport status: 0x0000004A, valid: 6
+[ 4347.903212] iwlwifi 0000:00:14.3: Loaded firmware version: 72.a764baac.0 so-a0-gf-a0-72.ucode
+[ 4347.903215] iwlwifi 0000:00:14.3: 0x00000084 | NMI_INTERRUPT_UNKNOWN       
+[ 4347.903217] iwlwifi 0000:00:14.3: 0x000082F0 | trm_hw_status0
+[ 4347.903219] iwlwifi 0000:00:14.3: 0x00000000 | trm_hw_status1
+[ 4347.903220] iwlwifi 0000:00:14.3: 0x004DAAEE | branchlink2
+[ 4347.903222] iwlwifi 0000:00:14.3: 0x004D0C26 | interruptlink1
+[ 4347.903224] iwlwifi 0000:00:14.3: 0x004D0C26 | interruptlink2
+[ 4347.903225] iwlwifi 0000:00:14.3: 0x004C72F2 | data1
+[ 4347.903227] iwlwifi 0000:00:14.3: 0x01000000 | data2
+[ 4347.903229] iwlwifi 0000:00:14.3: 0x00000000 | data3
+[ 4347.903230] iwlwifi 0000:00:14.3: 0x1880E85C | beacon time
+[ 4347.903232] iwlwifi 0000:00:14.3: 0xD77077AC | tsf low
+[ 4347.903233] iwlwifi 0000:00:14.3: 0x00000015 | tsf hi
+[ 4347.903234] iwlwifi 0000:00:14.3: 0x00000000 | time gp1
+[ 4347.903236] iwlwifi 0000:00:14.3: 0x009E4AEB | time gp2
+[ 4347.903237] iwlwifi 0000:00:14.3: 0x00000001 | uCode revision type
+[ 4347.903239] iwlwifi 0000:00:14.3: 0x00000048 | uCode version major
+[ 4347.903240] iwlwifi 0000:00:14.3: 0xA764BAAC | uCode version minor
+[ 4347.903242] iwlwifi 0000:00:14.3: 0x00000370 | hw version
+[ 4347.903243] iwlwifi 0000:00:14.3: 0x00C80002 | board version
+[ 4347.903245] iwlwifi 0000:00:14.3: 0x80A3FD04 | hcmd
+[ 4347.903246] iwlwifi 0000:00:14.3: 0x20028000 | isr0
+[ 4347.903248] iwlwifi 0000:00:14.3: 0x00000000 | isr1
+[ 4347.903249] iwlwifi 0000:00:14.3: 0x48F00002 | isr2
+[ 4347.903251] iwlwifi 0000:00:14.3: 0x00C30808 | isr3
+[ 4347.903253] iwlwifi 0000:00:14.3: 0x00200000 | isr4
+[ 4347.903254] iwlwifi 0000:00:14.3: 0x0600001C | last cmd Id
+[ 4347.903256] iwlwifi 0000:00:14.3: 0x004C72F2 | wait_event
+[ 4347.903257] iwlwifi 0000:00:14.3: 0x000000D4 | l2p_control
+[ 4347.903259] iwlwifi 0000:00:14.3: 0x00000000 | l2p_duration
+[ 4347.903261] iwlwifi 0000:00:14.3: 0x00000007 | l2p_mhvalid
+[ 4347.903262] iwlwifi 0000:00:14.3: 0x00000048 | l2p_addr_match
+[ 4347.903264] iwlwifi 0000:00:14.3: 0x00000009 | lmpm_pmg_sel
+[ 4347.903265] iwlwifi 0000:00:14.3: 0x00000000 | timestamp
+[ 4347.903267] iwlwifi 0000:00:14.3: 0x000060AC | flow_handler
+[ 4347.903331] iwlwifi 0000:00:14.3: Start IWL Error Log Dump:
+[ 4347.903333] iwlwifi 0000:00:14.3: Transport status: 0x0000004A, valid: 7
+[ 4347.903335] iwlwifi 0000:00:14.3: 0x20000066 | NMI_INTERRUPT_HOST
+[ 4347.903337] iwlwifi 0000:00:14.3: 0x00000000 | umac branchlink1
+[ 4347.903338] iwlwifi 0000:00:14.3: 0x8045FDF8 | umac branchlink2
+[ 4347.903340] iwlwifi 0000:00:14.3: 0x804805CE | umac interruptlink1
+[ 4347.903341] iwlwifi 0000:00:14.3: 0x804805CE | umac interruptlink2
+[ 4347.903343] iwlwifi 0000:00:14.3: 0x01000000 | umac data1
+[ 4347.903344] iwlwifi 0000:00:14.3: 0x804805CE | umac data2
+[ 4347.903346] iwlwifi 0000:00:14.3: 0x00000000 | umac data3
+[ 4347.903347] iwlwifi 0000:00:14.3: 0x00000048 | umac major
+[ 4347.903349] iwlwifi 0000:00:14.3: 0xA764BAAC | umac minor
+[ 4347.903350] iwlwifi 0000:00:14.3: 0x009E4D3C | frame pointer
+[ 4347.903352] iwlwifi 0000:00:14.3: 0xC088625C | stack pointer
+[ 4347.903353] iwlwifi 0000:00:14.3: 0x004F019C | last host cmd
+[ 4347.903355] iwlwifi 0000:00:14.3: 0x00000400 | isr status reg
+[ 4347.903398] iwlwifi 0000:00:14.3: IML/ROM dump:
+[ 4347.903399] iwlwifi 0000:00:14.3: 0x00000B03 | IML/ROM error/state
+[ 4347.903451] iwlwifi 0000:00:14.3: 0x0000809A | IML/ROM data1
+[ 4347.903504] iwlwifi 0000:00:14.3: 0x00000090 | IML/ROM WFPM_AUTH_KEY_0
+[ 4347.903551] iwlwifi 0000:00:14.3: Fseq Registers:
+[ 4347.903557] iwlwifi 0000:00:14.3: 0x60000100 | FSEQ_ERROR_CODE
+[ 4347.903601] iwlwifi 0000:00:14.3: 0x003E0003 | FSEQ_TOP_INIT_VERSION
+[ 4347.903607] iwlwifi 0000:00:14.3: 0x00190002 | FSEQ_CNVIO_INIT_VERSION
+[ 4347.903652] iwlwifi 0000:00:14.3: 0x0000A652 | FSEQ_OTP_VERSION
+[ 4347.903658] iwlwifi 0000:00:14.3: 0x00000003 | FSEQ_TOP_CONTENT_VERSION
+[ 4347.903703] iwlwifi 0000:00:14.3: 0x4552414E | FSEQ_ALIVE_TOKEN
+[ 4347.903709] iwlwifi 0000:00:14.3: 0x00080400 | FSEQ_CNVI_ID
+[ 4347.903750] iwlwifi 0000:00:14.3: 0x00400410 | FSEQ_CNVR_ID
+[ 4347.903756] iwlwifi 0000:00:14.3: 0x00080400 | CNVI_AUX_MISC_CHIP
+[ 4347.903801] iwlwifi 0000:00:14.3: 0x00400410 | CNVR_AUX_MISC_CHIP
+[ 4347.903812] iwlwifi 0000:00:14.3: 0x00009061 | CNVR_SCU_SD_REGS_SD_REG_DIG_DCDC_VTRIM
+[ 4347.903856] iwlwifi 0000:00:14.3: 0x00000061 | CNVR_SCU_SD_REGS_SD_REG_ACTIVE_VDIG_MIRROR
+[ 4347.904031] iwlwifi 0000:00:14.3: WRT: Collecting data: ini trigger 4 fired (delay=0ms).
+[ 4347.904040] ieee80211 phy0: Hardware restart was requested
+[ 4348.702245] iwlwifi 0000:00:14.3: WFPM_UMAC_PD_NOTIFICATION: 0x1f
+[ 4348.702297] iwlwifi 0000:00:14.3: WFPM_LMAC2_PD_NOTIFICATION: 0x1f
+[ 4348.702308] iwlwifi 0000:00:14.3: WFPM_AUTH_KEY_0: 0x90
+[ 4348.702320] iwlwifi 0000:00:14.3: CNVI_SCU_SEQ_DATA_DW9: 0x0
+[ 4365.314206] iwlwifi 0000:00:14.3: Queue 2 is stuck 0 1
+[ 4365.314979] iwlwifi 0000:00:14.3: Microcode SW error detected. Restarting 0x0.
+[ 4365.315104] iwlwifi 0000:00:14.3: Start IWL Error Log Dump:
+[ 4365.315107] iwlwifi 0000:00:14.3: Transport status: 0x0000004A, valid: 6
+[ 4365.315110] iwlwifi 0000:00:14.3: Loaded firmware version: 72.a764baac.0 so-a0-gf-a0-72.ucode
+[ 4365.315112] iwlwifi 0000:00:14.3: 0x00000084 | NMI_INTERRUPT_UNKNOWN       
+[ 4365.315115] iwlwifi 0000:00:14.3: 0x000082F1 | trm_hw_status0
+[ 4365.315117] iwlwifi 0000:00:14.3: 0x00000000 | trm_hw_status1
+[ 4365.315119] iwlwifi 0000:00:14.3: 0x004DAAEE | branchlink2
+[ 4365.315120] iwlwifi 0000:00:14.3: 0x004C7804 | interruptlink1
+[ 4365.315122] iwlwifi 0000:00:14.3: 0x004C7804 | interruptlink2
+[ 4365.315123] iwlwifi 0000:00:14.3: 0x004C72F2 | data1
+[ 4365.315125] iwlwifi 0000:00:14.3: 0x01000000 | data2
+[ 4365.315126] iwlwifi 0000:00:14.3: 0x00000000 | data3
+[ 4365.315128] iwlwifi 0000:00:14.3: 0x2840D77B | beacon time
+[ 4365.315130] iwlwifi 0000:00:14.3: 0xD87A288D | tsf low
+[ 4365.315131] iwlwifi 0000:00:14.3: 0x00000015 | tsf hi
+[ 4365.315133] iwlwifi 0000:00:14.3: 0x00000000 | time gp1
+[ 4365.315135] iwlwifi 0000:00:14.3: 0x00FFE32E | time gp2
+[ 4365.315136] iwlwifi 0000:00:14.3: 0x00000001 | uCode revision type
+[ 4365.315138] iwlwifi 0000:00:14.3: 0x00000048 | uCode version major
+[ 4365.315140] iwlwifi 0000:00:14.3: 0xA764BAAC | uCode version minor
+[ 4365.315141] iwlwifi 0000:00:14.3: 0x00000370 | hw version
+[ 4365.315143] iwlwifi 0000:00:14.3: 0x00C80002 | board version
+[ 4365.315145] iwlwifi 0000:00:14.3: 0x8030FD25 | hcmd
+[ 4365.315146] iwlwifi 0000:00:14.3: 0x20128000 | isr0
+[ 4365.315148] iwlwifi 0000:00:14.3: 0x08000000 | isr1
+[ 4365.315149] iwlwifi 0000:00:14.3: 0x48F00002 | isr2
+[ 4365.315151] iwlwifi 0000:00:14.3: 0x04C3481C | isr3
+[ 4365.315152] iwlwifi 0000:00:14.3: 0x00200000 | isr4
+[ 4365.315154] iwlwifi 0000:00:14.3: 0x00380103 | last cmd Id
+[ 4365.315156] iwlwifi 0000:00:14.3: 0x004C72F2 | wait_event
+[ 4365.315157] iwlwifi 0000:00:14.3: 0x000000D4 | l2p_control
+[ 4365.315159] iwlwifi 0000:00:14.3: 0x00000820 | l2p_duration
+[ 4365.315161] iwlwifi 0000:00:14.3: 0x00000007 | l2p_mhvalid
+[ 4365.315162] iwlwifi 0000:00:14.3: 0x00000048 | l2p_addr_match
+[ 4365.315164] iwlwifi 0000:00:14.3: 0x00000009 | lmpm_pmg_sel
+[ 4365.315166] iwlwifi 0000:00:14.3: 0x00000000 | timestamp
+[ 4365.315167] iwlwifi 0000:00:14.3: 0x00005890 | flow_handler
+[ 4365.315233] iwlwifi 0000:00:14.3: Start IWL Error Log Dump:
+[ 4365.315234] iwlwifi 0000:00:14.3: Transport status: 0x0000004A, valid: 7
+[ 4365.315236] iwlwifi 0000:00:14.3: 0x20000066 | NMI_INTERRUPT_HOST
+[ 4365.315238] iwlwifi 0000:00:14.3: 0x00000000 | umac branchlink1
+[ 4365.315240] iwlwifi 0000:00:14.3: 0x8045FDF8 | umac branchlink2
+[ 4365.315242] iwlwifi 0000:00:14.3: 0x804805CE | umac interruptlink1
+[ 4365.315243] iwlwifi 0000:00:14.3: 0xC00819CA | umac interruptlink2
+[ 4365.315245] iwlwifi 0000:00:14.3: 0x01000000 | umac data1
+[ 4365.315247] iwlwifi 0000:00:14.3: 0xC00819CA | umac data2
+[ 4365.315248] iwlwifi 0000:00:14.3: 0x00000000 | umac data3
+[ 4365.315250] iwlwifi 0000:00:14.3: 0x00000048 | umac major
+[ 4365.315251] iwlwifi 0000:00:14.3: 0xA764BAAC | umac minor
+[ 4365.315253] iwlwifi 0000:00:14.3: 0x00FFE57F | frame pointer
+[ 4365.315254] iwlwifi 0000:00:14.3: 0xC0887F10 | stack pointer
+[ 4365.315256] iwlwifi 0000:00:14.3: 0x004A019C | last host cmd
+[ 4365.315257] iwlwifi 0000:00:14.3: 0x00000400 | isr status reg
+[ 4365.315302] iwlwifi 0000:00:14.3: IML/ROM dump:
+[ 4365.315304] iwlwifi 0000:00:14.3: 0x00000B03 | IML/ROM error/state
+[ 4365.315354] iwlwifi 0000:00:14.3: 0x00008065 | IML/ROM data1
+[ 4365.315366] iwlwifi 0000:00:14.3: 0x00000090 | IML/ROM WFPM_AUTH_KEY_0
+[ 4365.315373] iwlwifi 0000:00:14.3: Fseq Registers:
+[ 4365.315418] iwlwifi 0000:00:14.3: 0x60000100 | FSEQ_ERROR_CODE
+[ 4365.315424] iwlwifi 0000:00:14.3: 0x003E0003 | FSEQ_TOP_INIT_VERSION
+[ 4365.315469] iwlwifi 0000:00:14.3: 0x00190002 | FSEQ_CNVIO_INIT_VERSION
+[ 4365.315475] iwlwifi 0000:00:14.3: 0x0000A652 | FSEQ_OTP_VERSION
+[ 4365.315518] iwlwifi 0000:00:14.3: 0x00000003 | FSEQ_TOP_CONTENT_VERSION
+[ 4365.315524] iwlwifi 0000:00:14.3: 0x4552414E | FSEQ_ALIVE_TOKEN
+[ 4365.315567] iwlwifi 0000:00:14.3: 0x00080400 | FSEQ_CNVI_ID
+[ 4365.315573] iwlwifi 0000:00:14.3: 0x00400410 | FSEQ_CNVR_ID
+[ 4365.315618] iwlwifi 0000:00:14.3: 0x00080400 | CNVI_AUX_MISC_CHIP
+[ 4365.315629] iwlwifi 0000:00:14.3: 0x00400410 | CNVR_AUX_MISC_CHIP
+[ 4365.315673] iwlwifi 0000:00:14.3: 0x00009061 | CNVR_SCU_SD_REGS_SD_REG_DIG_DCDC_VTRIM
+[ 4365.315684] iwlwifi 0000:00:14.3: 0x00000061 | CNVR_SCU_SD_REGS_SD_REG_ACTIVE_VDIG_MIRROR
+[ 4365.315859] iwlwifi 0000:00:14.3: WRT: Collecting data: ini trigger 4 fired (delay=0ms).
+[ 4365.315869] ieee80211 phy0: Hardware restart was requested
+[ 4366.111850] iwlwifi 0000:00:14.3: WFPM_UMAC_PD_NOTIFICATION: 0x1f
+[ 4366.111899] iwlwifi 0000:00:14.3: WFPM_LMAC2_PD_NOTIFICATION: 0x1f
+[ 4366.111952] iwlwifi 0000:00:14.3: WFPM_AUTH_KEY_0: 0x90
+[ 4366.111963] iwlwifi 0000:00:14.3: CNVI_SCU_SEQ_DATA_DW9: 0x0
+[ 4367.188793] perf: interrupt took too long (2562 > 2500), lowering kernel.perf_event_max_sample_rate to 78000
+[ 4400.141158] iwlwifi 0000:00:14.3: Queue 2 is stuck 0 4
+[ 4400.141918] iwlwifi 0000:00:14.3: Microcode SW error detected. Restarting 0x0.
+[ 4400.142042] iwlwifi 0000:00:14.3: Start IWL Error Log Dump:
+[ 4400.142045] iwlwifi 0000:00:14.3: Transport status: 0x0000004A, valid: 6
+[ 4400.142048] iwlwifi 0000:00:14.3: Loaded firmware version: 72.a764baac.0 so-a0-gf-a0-72.ucode
+[ 4400.142051] iwlwifi 0000:00:14.3: 0x00000084 | NMI_INTERRUPT_UNKNOWN       
+[ 4400.142054] iwlwifi 0000:00:14.3: 0x000082F0 | trm_hw_status0
+[ 4400.142056] iwlwifi 0000:00:14.3: 0x00000000 | trm_hw_status1
+[ 4400.142057] iwlwifi 0000:00:14.3: 0x004DAAEE | branchlink2
+[ 4400.142059] iwlwifi 0000:00:14.3: 0x004D0C26 | interruptlink1
+[ 4400.142061] iwlwifi 0000:00:14.3: 0x004D0C26 | interruptlink2
+[ 4400.142063] iwlwifi 0000:00:14.3: 0x004C72F2 | data1
+[ 4400.142064] iwlwifi 0000:00:14.3: 0x01000000 | data2
+[ 4400.142066] iwlwifi 0000:00:14.3: 0x00000000 | data3
+[ 4400.142067] iwlwifi 0000:00:14.3: 0x5300A981 | beacon time
+[ 4400.142069] iwlwifi 0000:00:14.3: 0xDA8D968C | tsf low
+[ 4400.142071] iwlwifi 0000:00:14.3: 0x00000015 | tsf hi
+[ 4400.142072] iwlwifi 0000:00:14.3: 0x00000000 | time gp1
+[ 4400.142074] iwlwifi 0000:00:14.3: 0x0209A7A0 | time gp2
+[ 4400.142076] iwlwifi 0000:00:14.3: 0x00000001 | uCode revision type
+[ 4400.142077] iwlwifi 0000:00:14.3: 0x00000048 | uCode version major
+[ 4400.142079] iwlwifi 0000:00:14.3: 0xA764BAAC | uCode version minor
+[ 4400.142080] iwlwifi 0000:00:14.3: 0x00000370 | hw version
+[ 4400.142082] iwlwifi 0000:00:14.3: 0x00C80002 | board version
+[ 4400.142084] iwlwifi 0000:00:14.3: 0x8020FD4F | hcmd
+[ 4400.142085] iwlwifi 0000:00:14.3: 0x20028000 | isr0
+[ 4400.142087] iwlwifi 0000:00:14.3: 0x00000000 | isr1
+[ 4400.142088] iwlwifi 0000:00:14.3: 0x48F00002 | isr2
+[ 4400.142089] iwlwifi 0000:00:14.3: 0x00C30808 | isr3
+[ 4400.142091] iwlwifi 0000:00:14.3: 0x00000000 | isr4
+[ 4400.142092] iwlwifi 0000:00:14.3: 0x00380103 | last cmd Id
+[ 4400.142094] iwlwifi 0000:00:14.3: 0x004C72F2 | wait_event
+[ 4400.142095] iwlwifi 0000:00:14.3: 0x000000D4 | l2p_control
+[ 4400.142097] iwlwifi 0000:00:14.3: 0x00000000 | l2p_duration
+[ 4400.142098] iwlwifi 0000:00:14.3: 0x00000007 | l2p_mhvalid
+[ 4400.142100] iwlwifi 0000:00:14.3: 0x00000048 | l2p_addr_match
+[ 4400.142101] iwlwifi 0000:00:14.3: 0x00000009 | lmpm_pmg_sel
+[ 4400.142103] iwlwifi 0000:00:14.3: 0x00000000 | timestamp
+[ 4400.142104] iwlwifi 0000:00:14.3: 0x000068A8 | flow_handler
+[ 4400.142170] iwlwifi 0000:00:14.3: Start IWL Error Log Dump:
+[ 4400.142172] iwlwifi 0000:00:14.3: Transport status: 0x0000004A, valid: 7
+[ 4400.142174] iwlwifi 0000:00:14.3: 0x20000066 | NMI_INTERRUPT_HOST
+[ 4400.142176] iwlwifi 0000:00:14.3: 0x00000000 | umac branchlink1
+[ 4400.142177] iwlwifi 0000:00:14.3: 0x8045FDF8 | umac branchlink2
+[ 4400.142179] iwlwifi 0000:00:14.3: 0x804805CE | umac interruptlink1
+[ 4400.142180] iwlwifi 0000:00:14.3: 0xC0081900 | umac interruptlink2
+[ 4400.142182] iwlwifi 0000:00:14.3: 0x01000000 | umac data1
+[ 4400.142184] iwlwifi 0000:00:14.3: 0xC0081900 | umac data2
+[ 4400.142185] iwlwifi 0000:00:14.3: 0x00000000 | umac data3
+[ 4400.142186] iwlwifi 0000:00:14.3: 0x00000048 | umac major
+[ 4400.142188] iwlwifi 0000:00:14.3: 0xA764BAAC | umac minor
+[ 4400.142189] iwlwifi 0000:00:14.3: 0x0209A9F0 | frame pointer
+[ 4400.142191] iwlwifi 0000:00:14.3: 0xC0887EE4 | stack pointer
+[ 4400.142192] iwlwifi 0000:00:14.3: 0x0055019C | last host cmd
+[ 4400.142194] iwlwifi 0000:00:14.3: 0x00000400 | isr status reg
+[ 4400.142238] iwlwifi 0000:00:14.3: IML/ROM dump:
+[ 4400.142240] iwlwifi 0000:00:14.3: 0x00000B03 | IML/ROM error/state
+[ 4400.142291] iwlwifi 0000:00:14.3: 0x00008066 | IML/ROM data1
+[ 4400.142303] iwlwifi 0000:00:14.3: 0x00000090 | IML/ROM WFPM_AUTH_KEY_0
+[ 4400.142350] iwlwifi 0000:00:14.3: Fseq Registers:
+[ 4400.142356] iwlwifi 0000:00:14.3: 0x60000100 | FSEQ_ERROR_CODE
+[ 4400.142400] iwlwifi 0000:00:14.3: 0x003E0003 | FSEQ_TOP_INIT_VERSION
+[ 4400.142406] iwlwifi 0000:00:14.3: 0x00190002 | FSEQ_CNVIO_INIT_VERSION
+[ 4400.142449] iwlwifi 0000:00:14.3: 0x0000A652 | FSEQ_OTP_VERSION
+[ 4400.142455] iwlwifi 0000:00:14.3: 0x00000003 | FSEQ_TOP_CONTENT_VERSION
+[ 4400.142500] iwlwifi 0000:00:14.3: 0x4552414E | FSEQ_ALIVE_TOKEN
+[ 4400.142506] iwlwifi 0000:00:14.3: 0x00080400 | FSEQ_CNVI_ID
+[ 4400.142551] iwlwifi 0000:00:14.3: 0x00400410 | FSEQ_CNVR_ID
+[ 4400.142557] iwlwifi 0000:00:14.3: 0x00080400 | CNVI_AUX_MISC_CHIP
+[ 4400.142600] iwlwifi 0000:00:14.3: 0x00400410 | CNVR_AUX_MISC_CHIP
+[ 4400.142611] iwlwifi 0000:00:14.3: 0x00009061 | CNVR_SCU_SD_REGS_SD_REG_DIG_DCDC_VTRIM
+[ 4400.142655] iwlwifi 0000:00:14.3: 0x00000061 | CNVR_SCU_SD_REGS_SD_REG_ACTIVE_VDIG_MIRROR
+[ 4400.142832] iwlwifi 0000:00:14.3: WRT: Collecting data: ini trigger 4 fired (delay=0ms).
+[ 4400.142841] ieee80211 phy0: Hardware restart was requested
+[ 4400.939552] iwlwifi 0000:00:14.3: WFPM_UMAC_PD_NOTIFICATION: 0x1f
+[ 4400.939603] iwlwifi 0000:00:14.3: WFPM_LMAC2_PD_NOTIFICATION: 0x1f
+[ 4400.939614] iwlwifi 0000:00:14.3: WFPM_AUTH_KEY_0: 0x90
+[ 4400.939626] iwlwifi 0000:00:14.3: CNVI_SCU_SEQ_DATA_DW9: 0x0
+[ 4475.037787] perf: interrupt took too long (3203 > 3202), lowering kernel.perf_event_max_sample_rate to 62250
+[ 4631.615363] sd 1:0:0:0: [sdb] tag#28 uas_eh_abort_handler 0 uas-tag 1 inflight: OUT 
+[ 4631.615367] sd 1:0:0:0: [sdb] tag#28 CDB: ATA command pass through(12)/Blank a1 80 00 00 02 00 00 00 00 00 00 00
+[ 4631.639508] scsi host1: uas_eh_device_reset_handler start
+[ 4631.720148] usb 2-3.1: reset SuperSpeed USB device number 20 using xhci_hcd
+[ 4631.745506] scsi host1: uas_eh_device_reset_handler success
+
+##########################################################################
+
+Linux 6.2.0-26-generic (Khadas-Mind-CNX) 	20/08/2566 	_x86_64_	(16 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+          15.53    0.03    1.22    1.26    0.00   81.96
+
+Device             tps    kB_read/s    kB_wrtn/s    kB_dscd/s    kB_read    kB_wrtn    kB_dscd
+nvme0n1          65.04       598.07      2659.38         0.00    2786158   12388897          0
+sdb               1.25        13.16         0.39         0.00      61285       1808          0
+sdd               0.17         1.81         0.01         0.00       8438         48          0
+sde               0.45         2.37         0.00         0.00      11020          0          0
+sdf               0.27         8.94        14.13         0.00      41633      65828          0
+
+               total        used        free      shared  buff/cache   available
+Mem:            31Gi       1.4Gi        28Gi       346Mi       887Mi        28Gi
+Swap:             0B          0B          0B
+
+CPU sysfs topology (clusters, cpufreq members, clockspeeds)
+                 cpufreq   min    max
+ CPU    cluster  policy   speed  speed   core type
+  0        0        0      400    5000   Performance
+  1        0        1      400    5000   Performance
+  2        0        2      400    5000   Performance
+  3        0        3      400    5000   Performance
+  4        0        4      400    5000   Performance
+  5        0        5      400    5000   Performance
+  6        0        6      400    5000   Performance
+  7        0        7      400    5000   Performance
+  8        0        8      400    3700   Efficiency
+  9        0        9      400    3700   Efficiency
+ 10        0       10      400    3700   Efficiency
+ 11        0       11      400    3700   Efficiency
+ 12        0       12      400    3700   Efficiency
+ 13        0       13      400    3700   Efficiency
+ 14        0       14      400    3700   Efficiency
+ 15        0       15      400    3700   Efficiency
+
+Architecture:                    x86_64
+CPU op-mode(s):                  32-bit, 64-bit
+Address sizes:                   39 bits physical, 48 bits virtual
+Byte Order:                      Little Endian
+CPU(s):                          16
+On-line CPU(s) list:             0-15
+Vendor ID:                       GenuineIntel
+Model name:                      13th Gen Intel(R) Core(TM) i7-1360P
+CPU family:                      6
+Model:                           186
+Thread(s) per core:              2
+Core(s) per socket:              12
+Socket(s):                       1
+Stepping:                        2
+CPU max MHz:                     5000.0000
+CPU min MHz:                     400.0000
+BogoMIPS:                        5222.40
+Flags:                           fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf tsc_known_freq pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 sdbg fma cx16 xtpr pdcm sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch cpuid_fault epb ssbd ibrs ibpb stibp ibrs_enhanced tpr_shadow vnmi flexpriority ept vpid ept_ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid rdseed adx smap clflushopt clwb intel_pt sha_ni xsaveopt xsavec xgetbv1 xsaves avx_vnni dtherm ida arat pln pts hwp hwp_notify hwp_act_window hwp_epp hwp_pkg_req hfi umip pku ospke waitpkg gfni vaes vpclmulqdq rdpid movdiri movdir64b fsrm md_clear serialize arch_lbr ibt flush_l1d arch_capabilities
+Virtualization:                  VT-x
+L1d cache:                       448 KiB (12 instances)
+L1i cache:                       640 KiB (12 instances)
+L2 cache:                        9 MiB (6 instances)
+L3 cache:                        18 MiB (1 instance)
+NUMA node(s):                    1
+NUMA node0 CPU(s):               0-15
+Vulnerability Itlb multihit:     Not affected
+Vulnerability L1tf:              Not affected
+Vulnerability Mds:               Not affected
+Vulnerability Meltdown:          Not affected
+Vulnerability Mmio stale data:   Not affected
+Vulnerability Retbleed:          Not affected
+Vulnerability Spec store bypass: Mitigation; Speculative Store Bypass disabled via prctl
+Vulnerability Spectre v1:        Mitigation; usercopy/swapgs barriers and __user pointer sanitization
+Vulnerability Spectre v2:        Mitigation; Enhanced IBRS, IBPB conditional, RSB filling, PBRSB-eIBRS SW sequence
+Vulnerability Srbds:             Not affected
+Vulnerability Tsx async abort:   Not affected
+
+Processor Information
+	Socket Designation: U3E1
+	Type: Central Processor
+	Family: Core i7
+	Manufacturer: Intel(R) Corporation
+	ID: A2 06 0B 00 FF FB EB BF
+	Signature: Type 0, Family 6, Model 186, Stepping 2
+	Flags:
+		FPU (Floating-point unit on-chip)
+		VME (Virtual mode extension)
+		DE (Debugging extension)
+		PSE (Page size extension)
+		TSC (Time stamp counter)
+		MSR (Model specific registers)
+		PAE (Physical address extension)
+		MCE (Machine check exception)
+		CX8 (CMPXCHG8 instruction supported)
+		APIC (On-chip APIC hardware supported)
+		SEP (Fast system call)
+		MTRR (Memory type range registers)
+		PGE (Page global enable)
+		MCA (Machine check architecture)
+		CMOV (Conditional move instruction supported)
+		PAT (Page attribute table)
+		PSE-36 (36-bit page size extension)
+		CLFSH (CLFLUSH instruction supported)
+		DS (Debug store)
+		ACPI (ACPI supported)
+		MMX (MMX technology supported)
+		FXSR (FXSAVE and FXSTOR instructions supported)
+		SSE (Streaming SIMD extensions)
+		SSE2 (Streaming SIMD extensions 2)
+		SS (Self-snoop)
+		HTT (Multi-threading)
+		TM (Thermal monitor supported)
+		PBE (Pending break enabled)
+	Version: 13th Gen Intel(R) Core(TM) i7-1360P
+	Voltage: 0.8 V
+	External Clock: 100 MHz
+	Max Speed: 5000 MHz
+	Current Speed: 2079 MHz
+	Status: Populated, Enabled
+	L1 Cache Handle: 0x0045
+	L2 Cache Handle: 0x0046
+	L3 Cache Handle: 0x0047
+	Core Count: 12
+	Core Enabled: 12
+	Thread Count: 16
+	Characteristics:
+		64-bit capable
+		Multi-Core
+		Hardware Thread
+		Execute Protection
+		Enhanced Virtualization
+		Power/Performance Control
+
+ Compiler: /usr/bin/gcc (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0 / x86_64-linux-gnu
+ Userland: amd64
+   Kernel: 6.2.0-26-generic/x86_64
+           CONFIG_HZ=250
+           CONFIG_HZ_250=y
+           CONFIG_PREEMPTION=y
+           CONFIG_PREEMPT_BUILD=y
+           CONFIG_PREEMPT_COUNT=y
+           CONFIG_PREEMPT_DYNAMIC=y
+           CONFIG_PREEMPT_NOTIFIERS=y
+           CONFIG_PREEMPT_RCU=y
+           CONFIG_PREEMPT_VOLUNTARY=y
+
+##########################################################################
+
+DIMM configuration:
+     *-bank:0
+          description: Row of chips Synchronous 6400 MHz (0.2 ns)
+          vendor: 0x0000
+          physical id: 0
+          configured speed: 5200MT/s
+          size: 4GiB
+          width: 16 bits
+          clock: 2105MHz (0.5ns)
+     *-bank:1
+          description: Row of chips Synchronous 6400 MHz (0.2 ns)
+          vendor: 0x0000
+          physical id: 1
+          configured speed: 5200MT/s
+          size: 4GiB
+          width: 16 bits
+          clock: 2105MHz (0.5ns)
+     *-bank:2
+          description: Row of chips Synchronous 6400 MHz (0.2 ns)
+          vendor: 0x0000
+          physical id: 2
+          configured speed: 5200MT/s
+          size: 4GiB
+          width: 16 bits
+          clock: 2105MHz (0.5ns)
+     *-bank:3
+          description: Row of chips Synchronous 6400 MHz (0.2 ns)
+          vendor: 0x0000
+          physical id: 3
+          configured speed: 5200MT/s
+          size: 4GiB
+          width: 16 bits
+          clock: 2105MHz (0.5ns)
+     *-bank:4
+          description: Row of chips Synchronous 6400 MHz (0.2 ns)
+          vendor: 0x0000
+          physical id: 4
+          configured speed: 5200MT/s
+          size: 4GiB
+          width: 16 bits
+          clock: 2105MHz (0.5ns)
+     *-bank:5
+          description: Row of chips Synchronous 6400 MHz (0.2 ns)
+          vendor: 0x0000
+          physical id: 5
+          configured speed: 5200MT/s
+          size: 4GiB
+          width: 16 bits
+          clock: 2105MHz (0.5ns)
+     *-bank:6
+          description: Row of chips Synchronous 6400 MHz (0.2 ns)
+          vendor: 0x0000
+          physical id: 6
+          configured speed: 5200MT/s
+          size: 4GiB
+          width: 16 bits
+          clock: 2105MHz (0.5ns)
+     *-bank:7
+          description: Row of chips Synchronous 6400 MHz (0.2 ns)
+          vendor: 0x0000
+          physical id: 7
+          configured speed: 5200MT/s
+          size: 4GiB
+          width: 16 bits
+          clock: 2105MHz (0.5ns)
+
+cpu0/index0: 48K, level: 1, type: Data
+cpu0/index1: 32K, level: 1, type: Instruction
+cpu0/index2: 1280K, level: 2, type: Unified
+cpu0/index3: 18432K, level: 3, type: Unified
+cpu1/index0: 48K, level: 1, type: Data
+cpu1/index1: 32K, level: 1, type: Instruction
+cpu1/index2: 1280K, level: 2, type: Unified
+cpu1/index3: 18432K, level: 3, type: Unified
+cpu2/index0: 48K, level: 1, type: Data
+cpu2/index1: 32K, level: 1, type: Instruction
+cpu2/index2: 1280K, level: 2, type: Unified
+cpu2/index3: 18432K, level: 3, type: Unified
+cpu3/index0: 48K, level: 1, type: Data
+cpu3/index1: 32K, level: 1, type: Instruction
+cpu3/index2: 1280K, level: 2, type: Unified
+cpu3/index3: 18432K, level: 3, type: Unified
+cpu4/index0: 48K, level: 1, type: Data
+cpu4/index1: 32K, level: 1, type: Instruction
+cpu4/index2: 1280K, level: 2, type: Unified
+cpu4/index3: 18432K, level: 3, type: Unified
+cpu5/index0: 48K, level: 1, type: Data
+cpu5/index1: 32K, level: 1, type: Instruction
+cpu5/index2: 1280K, level: 2, type: Unified
+cpu5/index3: 18432K, level: 3, type: Unified
+cpu6/index0: 48K, level: 1, type: Data
+cpu6/index1: 32K, level: 1, type: Instruction
+cpu6/index2: 1280K, level: 2, type: Unified
+cpu6/index3: 18432K, level: 3, type: Unified
+cpu7/index0: 48K, level: 1, type: Data
+cpu7/index1: 32K, level: 1, type: Instruction
+cpu7/index2: 1280K, level: 2, type: Unified
+cpu7/index3: 18432K, level: 3, type: Unified
+cpu8/index0: 32K, level: 1, type: Data
+cpu8/index1: 64K, level: 1, type: Instruction
+cpu8/index2: 2048K, level: 2, type: Unified
+cpu8/index3: 18432K, level: 3, type: Unified
+cpu9/index0: 32K, level: 1, type: Data
+cpu9/index1: 64K, level: 1, type: Instruction
+cpu9/index2: 2048K, level: 2, type: Unified
+cpu9/index3: 18432K, level: 3, type: Unified
+cpu10/index0: 32K, level: 1, type: Data
+cpu10/index1: 64K, level: 1, type: Instruction
+cpu10/index2: 2048K, level: 2, type: Unified
+cpu10/index3: 18432K, level: 3, type: Unified
+cpu11/index0: 32K, level: 1, type: Data
+cpu11/index1: 64K, level: 1, type: Instruction
+cpu11/index2: 2048K, level: 2, type: Unified
+cpu11/index3: 18432K, level: 3, type: Unified
+cpu12/index0: 32K, level: 1, type: Data
+cpu12/index1: 64K, level: 1, type: Instruction
+cpu12/index2: 2048K, level: 2, type: Unified
+cpu12/index3: 18432K, level: 3, type: Unified
+cpu13/index0: 32K, level: 1, type: Data
+cpu13/index1: 64K, level: 1, type: Instruction
+cpu13/index2: 2048K, level: 2, type: Unified
+cpu13/index3: 18432K, level: 3, type: Unified
+cpu14/index0: 32K, level: 1, type: Data
+cpu14/index1: 64K, level: 1, type: Instruction
+cpu14/index2: 2048K, level: 2, type: Unified
+cpu14/index3: 18432K, level: 3, type: Unified
+cpu15/index0: 32K, level: 1, type: Data
+cpu15/index1: 64K, level: 1, type: Instruction
+cpu15/index2: 2048K, level: 2, type: Unified
+cpu15/index3: 18432K, level: 3, type: Unified
+
+##########################################################################
+
+Results validation:
+
+  * Measured clockspeed not lower than advertised max CPU clockspeed
+  * Background activity (%system) OK
+  * Powercap detected. Details: "sudo powercap-info -p intel-rapl"
+  * Throttling occured
+
+Status of performance related policies found below /sys:
+
+  * /sys/module/pcie_aspm/parameters/policy: default [performance] powersave powersupersave
+
+##########################################################################
+
+# Khadas Mind 1.0 / i7-1360P
+
+Tested with sbc-bench v0.9.44 on Sun, 20 Aug 2023 20:50:55 +0700.
+
+### General information:
+
+The CPU features 2 clusters of different core types:
+
+    i7-1360P, Kernel: x86_64, Userland: amd64
+    
+    CPU sysfs topology (clusters, cpufreq members, clockspeeds)
+                     cpufreq   min    max
+     CPU    cluster  policy   speed  speed   core type
+      0        0        0      400    5000   Performance
+      1        0        1      400    5000   Performance
+      2        0        2      400    5000   Performance
+      3        0        3      400    5000   Performance
+      4        0        4      400    5000   Performance
+      5        0        5      400    5000   Performance
+      6        0        6      400    5000   Performance
+      7        0        7      400    5000   Performance
+      8        0        8      400    3700   Efficiency
+      9        0        9      400    3700   Efficiency
+     10        0       10      400    3700   Efficiency
+     11        0       11      400    3700   Efficiency
+     12        0       12      400    3700   Efficiency
+     13        0       13      400    3700   Efficiency
+     14        0       14      400    3700   Efficiency
+     15        0       15      400    3700   Efficiency
+
+31820 KB available RAM
+
+### Governors/policies (performance vs. idle consumption):
+
+Original governor settings:
+
+    cpufreq-policy0: performance / 3301 MHz (performance powersave)
+    cpufreq-policy10: performance / 2600 MHz (performance powersave)
+    cpufreq-policy11: performance / 2600 MHz (performance powersave)
+    cpufreq-policy12: performance / 638 MHz (performance powersave)
+    cpufreq-policy13: performance / 2600 MHz (performance powersave)
+    cpufreq-policy14: performance / 2600 MHz (performance powersave)
+    cpufreq-policy15: performance / 2600 MHz (performance powersave)
+    cpufreq-policy1: performance / 2600 MHz (performance powersave)
+    cpufreq-policy2: performance / 4343 MHz (performance powersave)
+    cpufreq-policy3: performance / 2600 MHz (performance powersave)
+    cpufreq-policy4: performance / 3811 MHz (performance powersave)
+    cpufreq-policy5: performance / 3423 MHz (performance powersave)
+    cpufreq-policy6: performance / 3706 MHz (performance powersave)
+    cpufreq-policy7: performance / 2600 MHz (performance powersave)
+    cpufreq-policy8: performance / 400 MHz (performance powersave)
+    cpufreq-policy9: performance / 2039 MHz (performance powersave)
+
+Tuned governor settings:
+
+    cpufreq-policy0: performance / 1075 MHz
+    cpufreq-policy10: performance / 2600 MHz
+    cpufreq-policy11: performance / 2600 MHz
+    cpufreq-policy12: performance / 2600 MHz
+    cpufreq-policy13: performance / 2600 MHz
+    cpufreq-policy14: performance / 2600 MHz
+    cpufreq-policy15: performance / 2600 MHz
+    cpufreq-policy1: performance / 2741 MHz
+    cpufreq-policy2: performance / 3853 MHz
+    cpufreq-policy3: performance / 2600 MHz
+    cpufreq-policy4: performance / 3478 MHz
+    cpufreq-policy5: performance / 2600 MHz
+    cpufreq-policy6: performance / 3348 MHz
+    cpufreq-policy7: performance / 2600 MHz
+    cpufreq-policy8: performance / 400 MHz
+    cpufreq-policy9: performance / 2600 MHz
+
+Status of performance related policies found below /sys:
+
+    /sys/module/pcie_aspm/parameters/policy: default [performance] powersave powersupersave
+
+### Clockspeeds (idle vs. heated up):
+
+Before at 62.0°C:
+
+    cpu0-cpu7 (Performance): OPP: 5000, Measured: 4970 
+    cpu8-cpu15 (Efficiency): OPP: 3700, Measured: 3690 
+
+After at 82.0°C:
+
+    cpu0-cpu7 (Performance): OPP: 5000, Measured: 4986 
+    cpu8-cpu15 (Efficiency): OPP: 3700, Measured: 3690 
+
+### Performance baseline
+
+  * cpu0 (Performance): memcpy: 25389.5 MB/s, memchr: 30560.0 MB/s, memset: 24731.8 MB/s
+  * cpu8 (Efficiency): memcpy: 7165.4 MB/s, memchr: 9257.6 MB/s, memset: 8117.8 MB/s
+  * cpu0 (Performance) 16M latency: 27.34 21.84 27.56 22.00 26.56 22.73 23.19 30.48 
+  * cpu8 (Efficiency) 16M latency: 42.34 34.27 42.40 35.83 42.24 36.45 36.41 38.83 
+  * cpu0 (Performance) 128M latency: 90.93 86.37 90.33 88.11 90.51 81.06 80.37 81.29 
+  * cpu8 (Efficiency) 128M latency: 114.0 113.8 114.2 114.6 113.8 111.0 110.6 112.8 
+  * 7-zip MIPS (3 consecutive runs): 50396, 41152, 41747 (44430 avg), single-threaded: 5867
+  * `aes-256-cbc    1438828.64k  1733297.96k  1757919.91k  1769635.50k  1772008.79k  1771334.31k (Performance)`
+  * `aes-256-cbc    1010215.46k  1283383.51k  1326648.58k  1337359.70k  1341131.43k  1341521.92k (Efficiency)`
+
+### Storage devices:
+
+  * 953.9GB "WD PC SN740 SDDPTQD-1T00" SSD as /dev/nvme0: Speed 16GT/s (ok), Width x4 (ok), 0% worn out, 4 error log entries, drive temp: 55°C
+  * "Realtek Card reader" as /dev/sda: USB, Driver=usb-storage, 5000Mbps (capable of 12Mbps, 480Mbps, 5Gbps)
+  * 447.1GB "JMicron JMS583 NVMe bridge (SuperSpeed Plus / Gen3 x2)" as /dev/sdb: USB, Driver=uas, 5000Mbps (capable of 12Mbps, 480Mbps, 5Gbps)
+  * "Realtek Card reader" as /dev/sdc: USB, Driver=usb-storage, 5000Mbps (capable of 12Mbps, 480Mbps, 5Gbps)
+  * 58.6GB "Kingston Technology DataTraveler 100 G3/G4/SE9 G2/50" as /dev/sdd: USB, Driver=usb-storage, 5000Mbps (capable of 12Mbps, 480Mbps, 5Gbps)
+  * 238.5GB "JMicron JMS583" as /dev/sde: USB, Driver=uas, 10000Mbps (capable of 12Mbps, 480Mbps, 5Gbps, 10Gb/s Symmetric RX SuperSpeedPlus, 10Gb/s Symmetric TX SuperSpeedPlus)
+  * 931.5GB "Seagate RSS LLC Ultra Slim GD" as /dev/sdf: USB, Driver=uas, 5000Mbps (capable of 12Mbps, 480Mbps, 5Gbps)
+  * Winbond W25Q256 32MB SPI NOR flash, drivers in use: spi-nor/intel-spi
+
+"nvme error-log /dev/nvme0 ; smartctl -x /dev/nvme0" could be used to get further information about the reported issues.
+
+### Challenging filesystems:
+
+The following partitions are NTFS: sdb1,sde1,sdf1,nvme0n1p3,nvme0n1p4
+
+When this OS uses FUSE/userland methods to access NTFS filesystems performance
+will be significantly harmed or at least likely be bottlenecked by maxing out
+one or more CPU cores. It is highly advised when benchmarking with any NTFS to
+monitor closely CPU utilization or better switch to a 'Linux native' filesystem
+like ext4 since representing 'storage performance' a lot more than 'somewhat
+dealing with a foreign filesystem' as with NTFS.
+
+### Software versions:
+
+  * Ubuntu 22.04.3 LTS
+  * Compiler: /usr/bin/gcc (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0 / x86_64-linux-gnu
+  * OpenSSL 3.0.2, built on 15 Mar 2022 (Library: OpenSSL 3.0.2 15 Mar 2022)    
+
+### Kernel info:
+
+  * `/proc/cmdline: BOOT_IMAGE=/boot/vmlinuz-6.2.0-26-generic root=UUID=facdf161-c898-4860-ac44-74e9d68a6b7d ro quiet splash vt.handoff=7`
+  * Vulnerability Spec store bypass: Mitigation; Speculative Store Bypass disabled via prctl
+  * Vulnerability Spectre v1:        Mitigation; usercopy/swapgs barriers and __user pointer sanitization
+  * Vulnerability Spectre v2:        Mitigation; Enhanced IBRS, IBPB conditional, RSB filling, PBRSB-eIBRS SW sequence
+  * Kernel 6.2.0-26-generic / CONFIG_HZ=250

@@ -1,6 +1,6 @@
 # FriendlyElec NanoPi K1 Plus
 
-Tested with sbc-bench v0.9.56 on Mon, 27 Nov 2023 09:51:09 +0100. Full info: [http://ix.io/4MB5](http://ix.io/4MB5)
+Tested with sbc-bench v0.9.56 on Mon, 27 Nov 2023 09:51:09 +0100. Full info: [http://ix.io/4MB5](../4MB5.txt)
 
 ### General information:
 

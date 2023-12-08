@@ -1,6 +1,6 @@
 # Olimex A10-OLinuXino-LIME
 
-Tested with sbc-bench v0.9.57 on Mon, 27 Nov 2023 13:25:26 +0000. Full info: [http://ix.io/4MC0](http://ix.io/4MC0)
+Tested with sbc-bench v0.9.57 on Mon, 27 Nov 2023 13:25:26 +0000. Full info: [http://ix.io/4MC0](../4MC0.txt)
 
 ### General information:
 

@@ -1,6 +1,6 @@
 # Khadas Mind 1.0 / i7-1360P
 
-Tested with sbc-bench v0.9.44 on Sun, 20 Aug 2023 20:50:55 +0700. Full info: [http://ix.io/4E5J](http://ix.io/4E5J)
+Tested with sbc-bench v0.9.44 on Sun, 20 Aug 2023 20:50:55 +0700. Full info: [http://ix.io/4E5J](../4E5J.txt)
 
 ### General information:
 

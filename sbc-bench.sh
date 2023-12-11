@@ -2208,7 +2208,7 @@ Getx86ClusterDetails() {
 			echo "Golden Cove" >"${TempDir}/Pcores"
 			[ ${HT} -eq 1 ] && echo "0 12" || echo "0 6"
 			;;
-		i9-13900HK|i7-13700H|i5-13600K|i5-13600KF|i5-13500|i9-13905H|i9-13900HK|i9-13900H|i7-13800H|i7-1370P|i7-13700H|i7-13705H|i7-13650HX|i5-13500HX|i5-13600HX|i7-1370PE|i7-13800HE|i5-13500T|i5-13500E|i5-13500TE|i5-13500|i5-13600|i5-13600T|i5-14600K|i5-14600KF|i5-14500|i5-14500HX)
+		i9-13900HK|i7-13700H|i5-13600K|i5-13600KF|i5-13500|i9-13905H|i9-13900HK|i9-13900H|i7-13800H|i7-1370P|i7-13700H|i7-13705H|i7-13650HX|i5-13500HX|i5-13600HX|i7-1370PE|i7-13800HE|i5-13500T|i5-13500E|i5-13500TE|i5-13500|i5-13600|i5-13600T|i5-14600K|i5-14600KF|i5-14500|i5-14500HX|i5-14600|i7-1370PRE|i7-1375PRE|i7-13800HRE)
 			# Raptor Lake, 6/8 cores, 20 threads
 			echo "Gracemont" >"${TempDir}/Ecores"
 			echo "Raptor Cove" >"${TempDir}/Pcores"
@@ -2220,7 +2220,7 @@ Getx86ClusterDetails() {
 			echo "Golden Cove" >"${TempDir}/Pcores"
 			[ ${HT} -eq 1 ] && echo "0 8" || echo "0 4"
 			;;
-		i7-1360P|i5-13500H|i5-13500H|i5-13600H|i5-1340P|i5-13505H|i5-1350P|i5-1340PE|i5-13600HE|i5-1350PE)
+		i7-1360P|i5-13500H|i5-13500H|i5-13600H|i5-1340P|i5-13505H|i5-1350P|i5-1340PE|i5-13600HE|i5-1350PE|i5-1350PRE|i5-13600HRE)
 			# Raptor Lake, 4/8 cores, 16 threads
 			echo "Gracemont" >"${TempDir}/Ecores"
 			echo "Raptor Cove" >"${TempDir}/Pcores"
@@ -2250,7 +2250,7 @@ Getx86ClusterDetails() {
 			echo "Raptor Cove" >"${TempDir}/Pcores"
 			[ ${HT} -eq 1 ] && echo "0 12" || echo "0 6"
 			;;
-		*"Ultra 7 155H"*|*"Ultra 7 165H"*|*"Ultra 9 185H"*)
+		*"Ultra 7 155H"*|*"Ultra 7 165H"*|*"Ultra 7 1002H"*|*"Ultra 9 185H"*)
 			# Meteor Lake, 6/10 cores, 22 threads
 			echo "Crestmont" >"${TempDir}/Ecores"
 			echo "Redwood Cove" >"${TempDir}/Pcores"
@@ -2262,13 +2262,13 @@ Getx86ClusterDetails() {
 			echo "Golden Cove" >"${TempDir}/Pcores"
 			[ ${HT} -eq 1 ] && echo "0 8" || echo "0 4"
 			;;
-		i5-13420H|i3-1320PE|i3-13300HE)
+		i5-13420H|i3-1320PE|i3-13300HE|i3-1320PRE|i3-13300HRE)
 			# Raptor Lake, 4/4 cores, 12 threads
 			echo "Gracemont" >"${TempDir}/Ecores"
 			echo "Raptor Cove" >"${TempDir}/Pcores"
 			[ ${HT} -eq 1 ] && echo "0 8" || echo "0 4"
 			;;
-		*"Ultra 5 125H"*)
+		*"Ultra 5 125H"*|*"Ultra 5 135H"*)
 			# Meteor Lake, 4/10 cores, 18 threads
 			echo "Crestmont" >"${TempDir}/Ecores"
 			echo "Redwood Cove" >"${TempDir}/Pcores"
@@ -2280,8 +2280,14 @@ Getx86ClusterDetails() {
 			echo "Golden Cove" >"${TempDir}/Pcores"
 			[ ${HT} -eq 1 ] && echo "0 4" || echo "0 2"
 			;;
-		i3-1315U|i3-1315UE)
+		i3-1315U|i3-1315UE|i3-1315URE)
 			# Raptor Lake, 2/4 cores, 8 threads
+			echo "Gracemont" >"${TempDir}/Ecores"
+			echo "Raptor Cove" >"${TempDir}/Pcores"
+			[ ${HT} -eq 1 ] && echo "0 4" || echo "0 2"
+			;;
+		i5-1345URE|i7-1365URE|i7-1366URE)
+			# Raptor Lake, 2/8 cores, 12 threads
 			echo "Gracemont" >"${TempDir}/Ecores"
 			echo "Raptor Cove" >"${TempDir}/Pcores"
 			[ ${HT} -eq 1 ] && echo "0 4" || echo "0 2"
@@ -5105,6 +5111,7 @@ GuessARMSoC() {
 	#      Cortex-A73 / r0p1: HiSilicon Kirin 960
 	#      Cortex-A73 / r0p2: Allwinner R923, Amlogic A311D/A311D2/S922X, HiSilicon Kirin 710/970, MediaTek Helio P60T/MT6771V/MT6799/MT8183, Samsung Exynos 7885
 	#      Cortex-A75 / r2p1: Samsung Exynos 9820
+	#      Cortex-A75 / r3p1: Unisoc T610/T618/T700/T740
 	#   HiSilicon-A76 / r1p0: HiSilicon Kirin 980
 	#      Cortex-A76 / r3p0: Exynos Auto V9
 	#   HiSilicon-A76 / r3p0: HiSilicon Kirin 810/990
@@ -7052,6 +7059,7 @@ GuessSoCbySignature() {
 			# Renesas RZG2L/RZG2LC, 2 x Cortex-A55 / r2p0 / L1d 32K, L1i 32K, L2 0K, L3 256K (shared)
 			# or NXP i.MX 93, 2 x Cortex-A55 / r2p0 / L1d 32K, L1i 32K, L2 64K, L3 256K (shared)
 			# or Amlogic C308X, 2 x Cortex-A55
+			# or Exynos 5515, 2 x Cortex-A55 / r2p0
 			case "${DTCompatible}" in
 				*nxp*)
 					echo "NXP i.MX 93"
@@ -7070,6 +7078,9 @@ GuessSoCbySignature() {
 					;;
 				*c308*)
 					echo "Amlogic C308X"
+					;;
+				*5515*)
+					echo "Exynos 5515"
 					;;
 			esac
 			;;
@@ -7598,6 +7609,26 @@ GuessSoCbySignature() {
 		*A72r0p3*A72r0p3)
 			# NXP LS1028A: 2 x Cortex-A72 / r0p3 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			echo "NXP LS1028A"
+			;;
+		*A75r3p1*)
+			# Unisoc T610/T618/T700/T740: 4-6 x Cortex A55 + 2/4 x Cortex-A75 / r3p1
+			case "${DTCompatible}" in
+				*t610*)
+					echo "Unisoc T610"
+					;;
+				*t618*)
+					echo "Unisoc T618"
+					;;
+				*t700*)
+					echo "Unisoc T700"
+					;;
+				*t740*)
+					echo "Unisoc T740"
+					;;
+				*unisoc*)
+					echo "Unisoc T610/T618/T700/T740"
+					;;
+			esac
 			;;
 		*NeoverseN1r3p1*)
 			# Ampere Altra / Altra Max: 32/48/64/72/80/96/128 x Neoverse-N1 / r3p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp ssbs
@@ -9284,7 +9315,7 @@ CheckStorage() {
 					# 0x4245 -> "BE", used by at least the following brands: Lexar, PNY, ProGrade
 					Manufacturer="${Manufacturer}Lexar "
 					;;
-				0x000041/0x3432)
+				0x000041/0x3432|0x000070/0x0100)
 					# 0x3432 -> "42"
 					Manufacturer="${Manufacturer}Kingston "
 					;;

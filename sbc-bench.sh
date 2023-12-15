@@ -2251,10 +2251,10 @@ Getx86ClusterDetails() {
 			[ ${HT} -eq 1 ] && echo "0 12" || echo "0 6"
 			;;
 		*"Ultra 7 155H"*|*"Ultra 7 165H"*|*"Ultra 7 1002H"*|*"Ultra 9 185H"*)
-			# Meteor Lake, 6/10 cores, 22 threads
+			# Meteor Lake, 6/8/2 cores, 22 threads
 			echo "Crestmont" >"${TempDir}/Ecores"
 			echo "Redwood Cove" >"${TempDir}/Pcores"
-			[ ${HT} -eq 1 ] && echo "0 12" || echo "0 6"
+			[ ${HT} -eq 1 ] && echo "0 12 20" || echo "0 6 14"
 			;;
 		i5-12450HX|i5-12450H|i3-12300HL|i3-1220PE|i3-12300HE)
 			# Alder Lake, 4/4 cores, 12 threads
@@ -2269,10 +2269,10 @@ Getx86ClusterDetails() {
 			[ ${HT} -eq 1 ] && echo "0 8" || echo "0 4"
 			;;
 		*"Ultra 5 125H"*|*"Ultra 5 135H"*)
-			# Meteor Lake, 4/10 cores, 18 threads
+			# Meteor Lake, 4/8/2 cores, 18 threads
 			echo "Crestmont" >"${TempDir}/Ecores"
 			echo "Redwood Cove" >"${TempDir}/Pcores"
-			[ ${HT} -eq 1 ] && echo "0 8" || echo "0 4"
+			[ ${HT} -eq 1 ] && echo "0 8 16" || echo "0 4 12"
 			;;
 		i3-1215UL|i3-1215UE|i3-1210U|i3-1215U|i3-1215U)
 			# Alder Lake, 2/4 cores, 8 threads
@@ -2292,11 +2292,11 @@ Getx86ClusterDetails() {
 			echo "Raptor Cove" >"${TempDir}/Pcores"
 			[ ${HT} -eq 1 ] && echo "0 4" || echo "0 2"
 			;;
-		*"Ultra 5 135U"*)
-			# Meteor Lake, 2/10 cores, 14 threads
+		*"Ultra 5 125U"*|*"Ultra 5 135U"*|*"Ultra 7 155U"*|*"Ultra 7 165U"*)
+			# Meteor Lake, 2/8/2 cores, 14 threads
 			echo "Crestmont" >"${TempDir}/Ecores"
 			echo "Redwood Cove" >"${TempDir}/Pcores"
-			[ ${HT} -eq 1 ] && echo "0 4" || echo "0 2"
+			[ ${HT} -eq 1 ] && echo "0 4 12" || echo "0 2 10"
 			;;
 		*Gold*850*|*Celeron*730*)
 			# Alder Lake, 1/4 cores, 6 threads
@@ -5063,7 +5063,7 @@ GuessARMSoC() {
 	#       Cortex-A7 / r0p2: MediaTek MT6589/MT6588
 	#       Cortex-A7 / r0p3: Allwinner A31/A31s, MediaTek MT6572/MT6580/MT6582/MT6589/MT7623/MT8127/MT8135, Qualcomm MSM8610 (Snapdragon 200) / MSM8226/MSM8926 (Snapdragon 400), Samsung Exynos 5422
 	#       Cortex-A7 / r0p4: Allwinner A20, Exynos 5430, Mediatek MT6592
-	#       Cortex-A7 / r0p5: Allwinner A33/A50/MR133/R311/A80/A83T/H2+/H3/H8/R16/R328/R40/S3/T113/V3/V3s/V40/V853, Broadcom BCM2836, Freescale/NXP i.MX7D/i.MX6 ULL, HiSilicon Hi351x/Hi3796M-V100/Hi3798M-V100, HiSilicon Kirin 920/925/928, MediaTek MT6595, Microchip SAMA7G54, Qualcomm MDM9607/MSM8909, Renesas RZ/N1, Rockchip RK3126/RK3126B/RK3126C/RK3128/RK3228A/RK3229/RV1108/RV1109/RV1126, SigmaStar SSD201/SSD202D, Spreadtrum SC7731/SC8830, STMicroelectronics STM32MP157
+	#       Cortex-A7 / r0p5: Allwinner A33/A50/MR133/R311/A80/A83T/H2+/H3/H8/R16/R328/R40/R853/S3/T113/V3/V3s/V40/V851S/V851SE/V853, Broadcom BCM2836, Freescale/NXP i.MX7D/i.MX6 ULL, HiSilicon Hi351x/Hi3796M-V100/Hi3798M-V100, HiSilicon Kirin 920/925/928, MediaTek MT6595, Microchip SAMA7G54, Qualcomm MDM9607/MSM8909, Renesas RZ/N1, Rockchip RK3126/RK3126B/RK3126C/RK3128/RK3228A/RK3229/RV1108/RV1109/RV1126, SigmaStar SSD201/SSD202D, Spreadtrum SC7731/SC8830, STMicroelectronics STM32MP157
 	#       Cortex-A8 / r1p3: TI OMAP3530/AM3703
 	#       Cortex-A8 / r1p7: TI Sitara AM3517
 	#       Cortex-A8 / r2p2: Samsung Exynos 3110 (S5PC110)
@@ -5094,7 +5094,7 @@ GuessARMSoC() {
 	#      Cortex-A53 / r0p1: Exynos 5433, Qualcomm MSM8939
 	#      Cortex-A53 / r0p2: Marvell PXA1908, Mediatek MT6752/MT6738/MT6755/MT8173/MT8176, Qualcomm Snapdragon 810 (MSM8994), Samsung Exynos 7420
 	#      Cortex-A53 / r0p3: ARM Juno r1, ARM Juno r2, HiSilicon Hi3751, Kirin 620/930, Mediatek MT6735/MT8163, Nexell S5P6818, Samsung Exynos 7580, Qualcomm MSM8992 (Snapdragon 808)
-	#      Cortex-A53 / r0p4: Allwinner A100/A133/A53/A64/H313/H5/H6/H616/H618/H64/R329/R818/R923/T507/T509, Amlogic A113X/A113D/A311D/A311D2/S805X/S805Y/S905/S905X/S905D/S905W/S905L/S905L3A/S905M2/S905X2/S905Y2/S905D2/S912/S922X/T962X2, Broadcom BCM2837/BCM2709/BCM2710/RP3A0-AU (BCM2710A1), Exynos 7570/8890, HiSilicon Hi3798C-V200, HiSilicon Kirin 650/710/950/955/960/970, Marvell Armada 37x0, Mediatek MT6739WA/MT6762M/MT6765/MT6771V/MT6797/MT6797T/MT6799/MT8183/MT8735, NXP i.MX8M/i.MX8QM/LS1xx8, Qualcomm IPQ5332/MSM8937/MSM8952/MSM8953/MSM8956/MSM8976/MSM8976PRO/SDM439/SDM450, RealTek RTD129x/RTD139x, Rockchip RK3318/RK3328/RK3528/RK3562/RK3399, Samsung Exynos 7870/7885/8890/8895, Socionext LD20/SC2A11, TI K3 AM623/AM625/AM62A/AM642/AM654, Xiaomi Surge S1
+	#      Cortex-A53 / r0p4: Allwinner A100/A133/A53/A64/H313/H5/H6/H616/H618/H64/MR813/R329/R818/R923/T507/T509, Amlogic A113X/A113D/A311D/A311D2/S805X/S805Y/S905/S905X/S905D/S905W/S905L/S905L3A/S905M2/S905X2/S905Y2/S905D2/S912/S922X/T962X2, Broadcom BCM2837/BCM2709/BCM2710/RP3A0-AU (BCM2710A1), Exynos 7570/8890, HiSilicon Hi3798C-V200, HiSilicon Kirin 650/710/950/955/960/970, Marvell Armada 37x0, Mediatek MT6739WA/MT6762M/MT6765/MT6771V/MT6797/MT6797T/MT6799/MT8183/MT8735, NXP i.MX8M/i.MX8QM/LS1xx8, Qualcomm IPQ5332/MSM8937/MSM8952/MSM8953/MSM8956/MSM8976/MSM8976PRO/SDM439/SDM450, RealTek RTD129x/RTD139x, Rockchip RK3318/RK3328/RK3528/RK3562/RK3399, Samsung Exynos 7870/7885/8890/8895, Socionext LD20/SC2A11, TI K3 AM623/AM625/AM62A/AM642/AM654, Xiaomi Surge S1
 	#      Cortex-A55 / r0p1: Samsung Exynos 9810
 	#      Cortex-A55 / r1p0: Amlogic S905X3/S905D3/S905Y3/T962X3/T962E2, HiSilicon Ascend 310 / Kirin 810/980, Samsung Exynos 9820
 	#      Cortex-A55 / r2p0: Amlogic S905X4/S905C2, Allwinner A513/A523/A736/A737/T527/T736/T737, Google Tensor G1/G2, MediaTek Genio 1200 / MT8188JV/A, NXP i.MX 93, Qualcomm SM8350 (Snapdragon 888), Renesas RZG2UL/RZG2LC, Rockchip RK3566/RK3568/RK3588/RK3588s, Unisoc UMS9620
@@ -5851,6 +5851,10 @@ GuessARMSoC() {
 						;;
 				esac
 				;;
+			sun3i*)
+				# SoC ID: 0x1663
+				echo "Allwinner F1C100s/F1C100A/F1C200s/F1C500/F1C500s/F1C600/F1D100/R6${Allwinner_SID}"
+				;;
 			sun4i*)
 				# SoC ID: 0x1623
 				echo "Allwinner A10${Allwinner_SID}"
@@ -5859,11 +5863,11 @@ GuessARMSoC() {
 				# SoC ID: 0x1625
 				echo "Allwinner A10s/A13/R8${Allwinner_SID}"
 				;;
-			sun6i*)
+			sun6i*|sun8iw1*)
 				# SoC ID: 0x1633
 				echo "Allwinner A31/A31s${Allwinner_SID}"
 				;;
-			sun7iw2*)
+			sun7iw2*|sun8iw2*)
 				# SoC ID: 0x1651
 				echo "Allwinner A20${Allwinner_SID}"
 				;;
@@ -5919,11 +5923,11 @@ GuessARMSoC() {
 				;;
 			sun8iw20*)
 				# SoC ID: 0x1859
-				echo "Allwinner H133/R528/T113${Allwinner_SID}"
+				echo "Allwinner F133/H133/R528/T113${Allwinner_SID}"
 				;;
 			sun8iw21*)
 				# SoC ID: 0x1886, https://v853.docs.aw-ol.com
-				echo "Allwinner V853${Allwinner_SID}"
+				echo "Allwinner R853/V851S/V851SE/V853${Allwinner_SID}"
 				;;
 			sun9i*)
 				# SoC ID: 0x1639
@@ -6001,7 +6005,7 @@ GuessARMSoC() {
 				;;
 			sun50iw10*)
 				# SoC ID: 0x1855
-				echo "Allwinner A100/A133/A53/R818/T509${Allwinner_SID}"
+				echo "Allwinner A100/A133/A53/B810/MR813/R818/T509${Allwinner_SID}"
 				;;
 			sun50iw11*)
 				# SoC ID: 0x1851, https://r329.docs.aw-ol.com
@@ -6020,7 +6024,7 @@ GuessARMSoC() {
 				;;
 			sun*)
 				SoCGuess="$(GuessSoCbySignature)"
-				[ "X${SoCGuess}" = "X" ] && echo "unknown Allwinner SoC" || echo "${SoCGuess}${Allwinner_SID}"
+				[ "X${SoCGuess}" = "X" ] && echo "unknown Allwinner SoC${Allwinner_SID}" || echo "${SoCGuess}${Allwinner_SID}"
 				;;
 			Allwinner*)
 				SoCGuess="$(GuessSoCbySignature)"
@@ -6143,7 +6147,7 @@ GuessSoCbySignature() {
 			esac
 			;;
 		00A7r0p5)
-			# Allwinner S3/V3/V3s/V533/V833/V831/V853, 1 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
+			# Allwinner R853/S3/V3/V3s/V533/V833/V831/V851S/V851SE/V853, 1 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
 			# or maybe Microchip SAMA7G54, 1 x Cortex-A7 / r0p5
 			# or maybe Rockchip RV1108 | 1 x Cortex-A7 / r0p5
 			case "${DTCompatible}" in
@@ -6160,12 +6164,12 @@ GuessSoCbySignature() {
 					echo "Allwinner V533/V833/V831"
 					;;
 				*sun8iw21*)
-					# Allwinner V853, 1 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
-					echo "Allwinner V853"
+					# Allwinner R853/V851S/V851SE/V853, 1 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
+					echo "Allwinner R853/V851S/V851SE/V853"
 					;;
 				*allwinner*)
-					# Allwinner S3/V3/V3s/V853, 1 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
-					echo "Allwinner S3/V3/V3s/V533/V833/V831/V853"
+					# Allwinner R853/S3/V3/V3s/V533/V833/V831/V851S/V851SE/V853, 1 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
+					echo "Allwinner R853/S3/V3/V3s/V533/V833/V831/V851S/V851SE/V853"
 					;;
 				*)
 					# Microchip SAMA7G54, 1 x Cortex-A7 / r0p5
@@ -6436,7 +6440,7 @@ GuessSoCbySignature() {
 			;;
 		00A53r0p400A53r0p400A53r0p400A53r0p4|??A53r0p4??????)
 			# The boring quad Cortex-A53 done by every SoC vendor: 4 x Cortex-A53 / r0p4
-			# Allwinner A100/A133/A53/A64/H5/H6/H313/H616/R818/T507/T509, BCM2837/BCM2709, RK3318/RK3328/RK3528/RK3562, i.MX8 M, S905, S905X/S805X, S805Y, S905X/S905D/S905W/S905L/S905M2, S905X2/S905Y2/T962X2, Mediatek MT6762M/MT6765, RealTek RTD129x/RTD139x
+			# Allwinner A100/A133/A53/A64/H5/H6/H313/H616/MR813/R818/T507/T509/B810, BCM2837/BCM2709, RK3318/RK3328/RK3528/RK3562, i.MX8 M, S905, S905X/S805X, S805Y, S905X/S905D/S905W/S905L/S905M2, S905X2/S905Y2/T962X2, Mediatek MT6762M/MT6765, RealTek RTD129x/RTD139x
 			case "${DeviceName}" in
 				"Raspberry Pi Compute Module 3 Plus"*)
 					# 4 x Cortex-A53 / r0p4 / fp asimd evtstrm crc32
@@ -6519,6 +6523,9 @@ GuessSoCbySignature() {
 											*t509*)
 												echo "Allwinner T509"
 												;;
+											*b810*)
+												echo "Allwinner B810"
+												;;
 											*a100*)
 												echo "Allwinner A100"
 												;;
@@ -6527,6 +6534,9 @@ GuessSoCbySignature() {
 												;;
 											*a53*)
 												echo "Allwinner A53"
+												;;
+											*mr813*)
+												echo "Allwinner MR813"
 												;;
 											*r818*)
 												echo "Allwinner R818"
@@ -7229,8 +7239,8 @@ GuessSoCbySignature() {
 				*sun8iw18*|*r328*)
 					echo "Allwinner R328"
 					;;
-				*sun8iw20*|*h133*|*r328*|*t113*)
-					echo "Allwinner H133/R528/T113"
+				*sun8iw20*|*f133*|*h133*|*r328*|*t113*)
+					echo "Allwinner F133/H133/R528/T113"
 					;;
 				*stm32mp153*)
 					echo "STMicroelectronics STM32MP153C"

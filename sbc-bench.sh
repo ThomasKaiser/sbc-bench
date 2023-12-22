@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.9.59
+Version=0.9.60
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -1637,6 +1637,9 @@ MonitorBoard() {
 	elif [ ${#ClusterConfig[@]} -eq 1 -a -r /sys/devices/system/cpu/cpufreq/policy0/${CpuFreqToQuery} ] ; then
 		DisplayHeader="Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp${VoltageHeader}${NetioHeader}"
 		CPUs=singlecluster
+	elif [ ${#ClusterConfig[@]} -eq 3 -a -r /sys/devices/system/cpu/cpufreq/policy${ClusterConfig[0]}/${CpuFreqToQuery} -a -r /sys/devices/system/cpu/cpufreq/policy${ClusterConfig[1]}/${CpuFreqToQuery} -a -r /sys/devices/system/cpu/cpufreq/policy${ClusterConfig[2]}/${CpuFreqToQuery} ] ; then
+		DisplayHeader="Time       cpu${ClusterConfig[0]}/cpu${ClusterConfig[1]}/cpu${ClusterConfig[2]}    load %cpu %sys %usr %nice %io %irq   Temp${VoltageHeader}${NetioHeader}"
+		CPUs=triplecluster
 	elif [ -r /sys/devices/system/cpu/cpufreq/policy${ClusterConfig[1]}/${CpuFreqToQuery} ]; then
 		ClusterCount=$(( ${#ClusterConfig[@]} -1 ))
 		DisplayHeader="Time       big.LITTLE   load %cpu %sys %usr %nice %io %irq   Temp${VoltageHeader}${NetioHeader}"
@@ -1704,6 +1707,12 @@ MonitorBoard() {
 				BigFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpufreq/policy${ClusterConfig[0]}/${CpuFreqToQuery} 2>/dev/null)
 				LittleFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpufreq/policy${ClusterConfig[$ClusterCount]}/${CpuFreqToQuery} 2>/dev/null)
 				printf "%s: %4s/%4sMHz %5s %s %8s %s %s\n" "$(date "+%H:%M:%S")" "${BigFreq}" "${LittleFreq}" "${LoadAvg}" "${procStats}" "${SocTemp}°C" "${VoltageColumn}" "${NetioColumn}"
+				;;
+			triplecluster)
+				Freq0=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpufreq/policy${ClusterConfig[0]}/${CpuFreqToQuery} 2>/dev/null)
+				Freq1=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpufreq/policy${ClusterConfig[1]}/${CpuFreqToQuery} 2>/dev/null)
+				Freq2=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpufreq/policy${ClusterConfig[2]}/${CpuFreqToQuery} 2>/dev/null)
+				printf "%s: %4s/%4s/%4sMHz %5s %s %8s %s %s\n" "$(date "+%H:%M:%S")" "${Freq0}" "${Freq1}" "${Freq2}" "${LoadAvg}" "${procStats}" "${SocTemp}°C" "${VoltageColumn}" "${NetioColumn}"
 				;;
 			singlecluster)
 				CpuFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpufreq/policy0/${CpuFreqToQuery} 2>/dev/null)
@@ -2191,7 +2200,7 @@ Getx86ClusterDetails() {
 			echo "Golden Cove" >"${TempDir}/Pcores"
 			[ ${HT} -eq 1 ] && echo "0 16" || echo "0 8"
 			;;
-		i7-13700K|i7-13700KF|i7-13700F|i7-13700T|i7-13700HX|i7-13700E|i7-13700T|i7-13700|i7-13700TE)
+		i7-13700K|i7-13700KF|i7-13700F|i7-13700T|i7-13700HX|i7-13700E|i7-13700T|i7-13700|i7-13700TE|i7-14650HX)
 			# Raptor Lake, 8/8 cores, 24 threads
 			echo "Gracemont" >"${TempDir}/Ecores"
 			echo "Raptor Cove" >"${TempDir}/Pcores"
@@ -4128,7 +4137,7 @@ PrintCPUTopology() {
 				*86*)
 					# try to return microarchitecture instead of CPU name on x86 if available
 					if [[ ${CPUFetchInfo} != *Unknown* ]]; then
-						uArch="$(awk -F" " '/Microarchitecture:|uArch:/ {print $2}' <<<"${CPUFetchInfo}")"
+						uArch="$(awk -F':' '/Microarchitecture:|uArch:/ {print $2}' <<<"${CPUFetchInfo}" | sed "s/^[ \t]*//")"
 						if [ "X${uArch}" = "X" ]; then
 							CoreName="${X86CPUName}"
 						else

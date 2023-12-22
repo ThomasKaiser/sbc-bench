@@ -714,7 +714,7 @@ Frequency capping often gets confused with thermal throttling but they're really
 
 ### Silly settings
 
-This is mostly an Armbian issue: their OS images for Raspberries lack `arm_boost=1` (which is a requirement for RPi 4B with BCM2711 C0 or later to automagically increase maximum clockspeed from 1500 MHz to 1800 MHz w/o overvolting) while at the same time setting `over_voltage=2` and `arm_freq=1800` which might improve performance on early RPi 4B but often does the opposite on recent RPi 4 since with these silly settings the CPU gets overvolted, therefore heats up more quickly and is prone to throttling.
+This is mostly an Armbian issue: their OS images for Raspberries for almost two years lacked `arm_boost=1` (which is a requirement for RPi 4B with BCM2711 C0 or later to automagically increase maximum clockspeed from 1500 MHz to 1800 MHz w/o overvolting) while at the same time setting `over_voltage=2` and `arm_freq=1800` which might improve performance on early RPi 4B but often does the opposite on recent RPi 4 since with these silly settings the CPU gets overvolted, therefore heats up more quickly and is prone to throttling.
 
 ## Additional info when in review mode (WIP)
 

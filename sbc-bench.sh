@@ -1569,6 +1569,7 @@ MonitorBoard() {
 	[ -z "${CPUTopology}" ] && CPUTopology="$(PrintCPUTopology)"
 	[ -z "${CPUSignature}" ] && CPUSignature="$(GetCPUSignature)"
 	[ -z "${X86CPUName}" ] && X86CPUName="$(sed 's/ \{1,\}/ /g' <<<"${LSCPU}" | awk -F": " '/^Model name/ {print $2}' | sed -e 's/1.th Gen //' -e 's/.th Gen //' -e 's/Core(TM) //' -e 's/ Processor//' -e 's/Intel(R) Xeon(R) CPU //' -e 's/Intel(R) //' -e 's/(R)//' -e 's/CPU //' -e 's/ 0 @/ @/' -e 's/AMD //' -e 's/Authentic //' -e 's/ with .*//')"
+	[ -z "${CPUFetchInfo}" ] && CPUFetchInfo="$(GrabCPUFetchInfo)"
 	
 	if test -t 1; then
 		# when called from a terminal we print some system information first and insert
@@ -2292,7 +2293,7 @@ Getx86ClusterDetails() {
 			echo "Raptor Cove" >"${TempDir}/Pcores"
 			[ ${HT} -eq 1 ] && echo "0 4" || echo "0 2"
 			;;
-		*"Ultra 5 125U"*|*"Ultra 5 135U"*|*"Ultra 7 155U"*|*"Ultra 7 165U"*)
+		*"Ultra 5 125U"*|*"Ultra 5 134U"*|*"Ultra 5 135U"*|*"Ultra 7 155U"*|*"Ultra 7 164U"*|*"Ultra 7 165U"*)
 			# Meteor Lake, 2/8/2 cores, 14 threads
 			echo "Crestmont" >"${TempDir}/Ecores"
 			echo "Redwood Cove" >"${TempDir}/Pcores"
@@ -4125,8 +4126,15 @@ PrintCPUTopology() {
 		if [ "X${CoreName}" = "X" ]; then
 			case ${CPUArchitecture} in
 				*86*)
-					# try to return CPU type instead of core type on x86 if available
-					CoreName="${X86CPUName}"
+					# try to return microarchitecture instead of CPU name on x86 if available
+					if [[ ${CPUFetchInfo} != *Unknown* ]]; then
+						uArch="$(awk -F" " '/Microarchitecture:|uArch:/ {print $2}' <<<"${CPUFetchInfo}")"
+						if [ "X${uArch}" = "X" ]; then
+							CoreName="${X86CPUName}"
+						else
+							CoreName="${uArch}"
+						fi
+					fi
 					;;
 				*arm*|*aarch*)
 					# On ARM with older kernels core/stepping info might only be available
@@ -5063,7 +5071,7 @@ GuessARMSoC() {
 	#       Cortex-A7 / r0p2: MediaTek MT6589/MT6588
 	#       Cortex-A7 / r0p3: Allwinner A31/A31s, MediaTek MT6572/MT6580/MT6582/MT6589/MT7623/MT8127/MT8135, Qualcomm MSM8610 (Snapdragon 200) / MSM8226/MSM8926 (Snapdragon 400), Samsung Exynos 5422
 	#       Cortex-A7 / r0p4: Allwinner A20, Exynos 5430, Mediatek MT6592
-	#       Cortex-A7 / r0p5: Allwinner A33/A50/MR133/R311/A80/A83T/H2+/H3/H8/R16/R328/R40/R853/S3/T113/V3/V3s/V40/V851S/V851SE/V853, Broadcom BCM2836, Freescale/NXP i.MX7D/i.MX6 ULL, HiSilicon Hi351x/Hi3796M-V100/Hi3798M-V100, HiSilicon Kirin 920/925/928, MediaTek MT6595, Microchip SAMA7G54, Qualcomm MDM9607/MSM8909, Renesas RZ/N1, Rockchip RK3126/RK3126B/RK3126C/RK3128/RK3228A/RK3229/RV1108/RV1109/RV1126, SigmaStar SSD201/SSD202D, Spreadtrum SC7731/SC8830, STMicroelectronics STM32MP157
+	#       Cortex-A7 / r0p5: Allwinner A33/A50/A80/A83T/F133/H133/H2+/H3/H8/MR133/R16/R311/R328/R40/R528/R853/S3/T113/V3/V3s/V40/V533/V831/V833/V851S/V851SE/V853, Broadcom BCM2836, Freescale/NXP i.MX7D/i.MX6 ULL, HiSilicon Hi351x/Hi3796M-V100/Hi3798M-V100, HiSilicon Kirin 920/925/928, MediaTek MT6595, Microchip SAMA7G54, Qualcomm MDM9607/MSM8909, Renesas RZ/N1, Rockchip RK3126/RK3126B/RK3126C/RK3128/RK3228A/RK3229/RV1108/RV1109/RV1126, SigmaStar SSD201/SSD202D, Spreadtrum SC7731/SC8830, STMicroelectronics STM32MP157
 	#       Cortex-A8 / r1p3: TI OMAP3530/AM3703
 	#       Cortex-A8 / r1p7: TI Sitara AM3517
 	#       Cortex-A8 / r2p2: Samsung Exynos 3110 (S5PC110)
@@ -5106,7 +5114,7 @@ GuessARMSoC() {
 	#      Cortex-A72 / r0p0: ARM Juno r2, HiSilicon Kirin 950/955, Mediatek MT8173/MT8176, Snapdragon 650/652/653 / Qualcomm MSM8956/MSM8976/MSM8976PRO
 	#      Cortex-A72 / r0p1: Marvell Armada 8020/8040, Mediatek MT6797/MT6797T
 	#      Cortex-A72 / r0p2: HiSilicon Kunpeng 916, NXP i.MX8QM/LS2xx8A, Rockchip RK3399, Socionext LD20, 
-	#      Cortex-A72 / r0p3: Broadcom BCM2711, NXP LS1028A, NXP LX2xx0A, Marvell Armada3900-A1, Xilinx Versal, AWS Graviton -> https://tinyurl.com/y47yz2f6
+	#      Cortex-A72 / r0p3: Broadcom BCM2711, NXP LS1028A, NXP LX2xx0A, Marvell Armada3900-A1, Xilinx Versal, AWS Graviton
 	#      Cortex-A72 / r1p0: Broadcom Klondike, TI J721E (TDA4VM/DRA829V)
 	#      Cortex-A73 / r0p1: HiSilicon Kirin 960
 	#      Cortex-A73 / r0p2: Allwinner R923, Amlogic A311D/A311D2/S922X, HiSilicon Kirin 710/970, MediaTek Helio P60T/MT6771V/MT6799/MT8183, Samsung Exynos 7885
@@ -5321,8 +5329,7 @@ GuessARMSoC() {
 	# More cpuinfo: http://tessy.org/wiki/index.php?Arm#ae54e1d6 (archived at https://archive.md/nf6kL)
 	# https://github.com/pytorch/cpuinfo/tree/master/src/arm/linux/
 	#
-	# With ARMv7 SoCs (or ARMv8 SoCs booting a 32-bit kernel) dmesg output starts with a line identifying
-	# core type and stepping of cpu0:
+	# With ARMv7 SoCs (or ARMv8 SoCs booting a 32-bit kernel) dmesg output starts with a line identifying core type and stepping of cpu0:
 	# CPU: ARMv7 Processor [410fc051] revision 1 (ARMv7), cr=10c5387d  <-  Cortex-A5 / r0p1 / Amlogic S805
 	# CPU: ARMv7 Processor [410fc073] revision 3 (ARMv7), cr=10c5387d  <-  Cortex-A7 / r0p3 / Exynos 5422
 	# CPU: ARMv7 Processor [410fc072] revision 2 (ARMv7), cr=10c5387d  <-  Cortex-A7 / r0p2 / MediaTek MT6589/TMK6588
@@ -6147,7 +6154,7 @@ GuessSoCbySignature() {
 			esac
 			;;
 		00A7r0p5)
-			# Allwinner R853/S3/V3/V3s/V533/V833/V831/V851S/V851SE/V853, 1 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
+			# Allwinner R853/S3/V3/V3s/V533/V831/V833/V851S/V851SE/V853, 1 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
 			# or maybe Microchip SAMA7G54, 1 x Cortex-A7 / r0p5
 			# or maybe Rockchip RV1108 | 1 x Cortex-A7 / r0p5
 			case "${DTCompatible}" in
@@ -6160,16 +6167,16 @@ GuessSoCbySignature() {
 					echo "Allwinner S3/V3/V3s"
 					;;
 				*sun8iw19*)
-					# Allwinner V533/V833/V831, 1 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
-					echo "Allwinner V533/V833/V831"
+					# Allwinner V533/V831/V833, 1 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
+					echo "Allwinner V533/V831/V833"
 					;;
 				*sun8iw21*)
 					# Allwinner R853/V851S/V851SE/V853, 1 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
 					echo "Allwinner R853/V851S/V851SE/V853"
 					;;
 				*allwinner*)
-					# Allwinner R853/S3/V3/V3s/V533/V833/V831/V851S/V851SE/V853, 1 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
-					echo "Allwinner R853/S3/V3/V3s/V533/V833/V831/V851S/V851SE/V853"
+					# Allwinner R853/S3/V3/V3s/V533/V831/V833/V851S/V851SE/V853, 1 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
+					echo "Allwinner R853/S3/V3/V3s/V533/V831/V833/V851S/V851SE/V853"
 					;;
 				*)
 					# Microchip SAMA7G54, 1 x Cortex-A7 / r0p5
@@ -6299,7 +6306,7 @@ GuessSoCbySignature() {
 						*)
 							case "${DTCompatible}" in
 								*sun8i-r40*|*sun8i-v40*|*sun8i-a40i*|*sun8i-t3*)
-									# R40/V40/T3/A40i, 4 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
+									# Allwinner R40/V40/T3/A40i, 4 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
 									echo "Allwinner R40/V40/T3/A40i"
 									;;
 								*sun8i-h3*)
@@ -6819,7 +6826,7 @@ GuessSoCbySignature() {
 			echo "HiSilicon Ascend 310"
 			;;
 		0?A55r2p00?A55r2p00?A55r2p00?A55r2p00?A55r2p00?A55r2p00?A55r2p00?A55r2p0)
-			# Allwinner A523/A527/T523/T527/MR527, 8 x Cortex-A55 / r2p0 / at least 'aes pmull sha1 sha2' (https://browser.geekbench.com/v5/cpu/21564626)
+			# Allwinner A523/A527/MR527/R828/T523/T527, 8 x Cortex-A55 / r2p0 / at least 'aes pmull sha1 sha2' (https://browser.geekbench.com/v5/cpu/21564626)
 			# or Amlogic P1, 8 x Cortex-A55 / r2p0
 			case "${DTCompatible}" in
 				*a523*)
@@ -6831,11 +6838,17 @@ GuessSoCbySignature() {
 				*t523*)
 					echo "Allwinner T523"
 					;;
+				*mr527*)
+					echo "Allwinner MR527"
+					;;
 				*t527*)
 					echo "Allwinner T527"
 					;;
+				*r828*)
+					echo "Allwinner R828"
+					;;
 				*allwinner*|*sun55i*)
-					echo "Allwinner A523/A527/T523/T527/MR527"
+					echo "Allwinner A523/A527/MR527/R828/T523/T527"
 					;;
 			esac
 			;;
@@ -7224,7 +7237,7 @@ GuessSoCbySignature() {
 			# or Rockchip RV1109 | 2 x Cortex-A7 / r0p5
 			# or Renesas RZ/N1 | 2 x Cortex-A7 / r0p5
 			# or Allwinner R328: 2 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm (https://whycan.com/t_7497.html -> ARMv7 Processor [410fc075] revision 5 (ARMv7), cr=10c5387d)
-			# or Allwinner H113/R528/T113: 2 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm (https://forums.100ask.net/t/topic/2867 -> ARMv7 Processor [410fc075] revision 5 (ARMv7), cr=10c5387d)
+			# or Allwinner F133/H133/R528/T113: 2 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm (https://forums.100ask.net/t/topic/2867 -> ARMv7 Processor [410fc075] revision 5 (ARMv7), cr=10c5387d)
 			# or STMicroelectronics STM32MP153C: 2 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
 			case "${DTCompatible}" in
 				*rockchip*)

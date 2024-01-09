@@ -2159,9 +2159,11 @@ Getx86ClusterDetails() {
 	# U300*: 1 P core, 4 E cores, 8 MB "Smart Cache"
 	#
 	# Raptor Lake Refresh SKUs:
-	# i9: ?-8 P cores, ?-16 E cores, ?-6.0 GHz, ?-36 MB "Smart Cache"
-	# i7: ?-8 P cores, ?-12 E cores, ?-5.6 GHz, ?-33 MB "Smart Cache"
-	# i5: ?-6 P cores, ?-8 E cores, ?-5.3 GHz, ?-24 MB "Smart Cache"
+	# i9: 8 P cores, 16 E cores, 5.5-6.0 GHz, 36 MB "Smart Cache"
+	# i7: 8 P cores, 8-12 E cores, 5.2-5.6 GHz, 30-33 MB "Smart Cache"
+	# i5: 6 P cores, 4-8 E cores, 4.5-5.3 GHz, 20-24 MB "Smart Cache"
+	# i3: 4 P cores, 0 E cores, 4.4-4.7 GHz, 12 MB "Smart Cache"
+	# Core: 2 P cores, 4-8 E cores, 4.7-5.4 GHz, 10-12 MB "Smart Cache"
 
 	# Check amount of available CPU cores first and whether virtualization has been detected
 	# since when running in a virtualized environment it doesn't make sense trying to
@@ -2182,13 +2184,13 @@ Getx86ClusterDetails() {
 			echo "Sunny Cove" >"${TempDir}/Pcores"
 			[ ${HT} -eq 1 ] && echo "0 2" || echo "0 1"
 			;;
-		i9-13900K|i9-13900KF|i9-13900F|i9-13900T|i9-13900HX|i9-13950HX|i9-13980HX|i9-13900|i9-13900TE|i9-13900E|i9-14900K|i9-14900KF|i9-14900|i9-14900HX)
+		i9-13900K|i9-13900KF|i9-13900F|i9-13900T|i9-13900HX|i9-13950HX|i9-13980HX|i9-13900|i9-13900TE|i9-13900E|i9-14900K|i9-14900KF|i9-14900|i9-14900HX|i9-14900T|i9-14900F)
 			# Raptor Lake, 8/16 cores, 32 threads
 			echo "Gracemont" >"${TempDir}/Ecores"
 			echo "Raptor Cove" >"${TempDir}/Pcores"
 			[ ${HT} -eq 1 ] && echo "0 16" || echo "0 8"
 			;;
-		i7-13850HX|i7-14700K|i7-14700KF|i7-14700|i7-14700F|i7-14700HX)
+		i7-13850HX|i7-14700K|i7-14700KF|i7-14700|i7-14700F|i7-14700HX|i7-14700T)
 			# Raptor Lake, 8/12 cores, 28 threads
 			echo "Gracemont" >"${TempDir}/Ecores"
 			echo "Raptor Cove" >"${TempDir}/Pcores"
@@ -2218,7 +2220,7 @@ Getx86ClusterDetails() {
 			echo "Golden Cove" >"${TempDir}/Pcores"
 			[ ${HT} -eq 1 ] && echo "0 12" || echo "0 6"
 			;;
-		i9-13900HK|i7-13700H|i5-13600K|i5-13600KF|i5-13500|i9-13905H|i9-13900HK|i9-13900H|i7-13800H|i7-1370P|i7-13700H|i7-13705H|i7-13650HX|i5-13500HX|i5-13600HX|i7-1370PE|i7-13800HE|i5-13500T|i5-13500E|i5-13500TE|i5-13500|i5-13600|i5-13600T|i5-14600K|i5-14600KF|i5-14500|i5-14500HX|i5-14600|i7-1370PRE|i7-1375PRE|i7-13800HRE)
+		i9-13900HK|i7-13700H|i5-13600K|i5-13600KF|i5-13500|i9-13905H|i9-13900HK|i9-13900H|i7-13800H|i7-1370P|i7-13700H|i7-13705H|i7-13650HX|i5-13500HX|i5-13600HX|i7-1370PE|i7-13800HE|i5-13500T|i5-13500E|i5-13500TE|i5-13500|i5-13600|i5-13600T|i5-14600K|i5-14600KF|i5-14500|i5-14500HX|i5-14600|i7-1370PRE|i7-1375PRE|i7-13800HRE|i5-14600T|i5-14500T)
 			# Raptor Lake, 6/8 cores, 20 threads
 			echo "Gracemont" >"${TempDir}/Ecores"
 			echo "Raptor Cove" >"${TempDir}/Pcores"
@@ -2242,7 +2244,7 @@ Getx86ClusterDetails() {
 			echo "Golden Cove" >"${TempDir}/Pcores"
 			[ ${HT} -eq 1 ] && echo "0 4" || echo "0 2"
 			;;
-		i7-1355U|i7-1365U|i5-1335U|i5-1334U|i5-1345U|i7-1365UE|i5-1335UE|i5-1345UE)
+		i7-1355U|i7-1365U|i5-1335U|i5-1334U|i5-1345U|i7-1365UE|i5-1335UE|i5-1345UE|*120U*|*150U*)
 			# Raptor Lake, 2/8 cores, 12 threads
 			echo "Gracemont" >"${TempDir}/Ecores"
 			echo "Raptor Cove" >"${TempDir}/Pcores"
@@ -2254,7 +2256,7 @@ Getx86ClusterDetails() {
 			echo "Golden Cove" >"${TempDir}/Pcores"
 			[ ${HT} -eq 1 ] && echo "0 12" || echo "0 6"
 			;;
-		i5-13400|i5-13400F|i7-13620H|i5-13450HX|i5-13400|i5-13400E|i5-13400T|i5-14400|i5-14400F|i5-14450HX)
+		i5-13400|i5-13400F|i7-13620H|i5-13450HX|i5-13400|i5-13400E|i5-13400T|i5-14400|i5-14400F|i5-14450HX|i5-14400T)
 			# Raptor Lake, 6/4 cores, 16 threads
 			echo "Gracemont" >"${TempDir}/Ecores"
 			echo "Raptor Cove" >"${TempDir}/Pcores"
@@ -2290,7 +2292,7 @@ Getx86ClusterDetails() {
 			echo "Golden Cove" >"${TempDir}/Pcores"
 			[ ${HT} -eq 1 ] && echo "0 4" || echo "0 2"
 			;;
-		i3-1315U|i3-1315UE|i3-1315URE)
+		i3-1315U|i3-1315UE|i3-1315URE|*100U*)
 			# Raptor Lake, 2/4 cores, 8 threads
 			echo "Gracemont" >"${TempDir}/Ecores"
 			echo "Raptor Cove" >"${TempDir}/Pcores"

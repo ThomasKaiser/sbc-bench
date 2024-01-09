@@ -2254,7 +2254,7 @@ Getx86ClusterDetails() {
 			echo "Golden Cove" >"${TempDir}/Pcores"
 			[ ${HT} -eq 1 ] && echo "0 12" || echo "0 6"
 			;;
-		i5-13400|i5-13400F|i7-13620H|i5-13450HX|i5-13400|i5-13400E|i5-13400T|i5-14400|i5-14400F)
+		i5-13400|i5-13400F|i7-13620H|i5-13450HX|i5-13400|i5-13400E|i5-13400T|i5-14400|i5-14400F|i5-14450HX)
 			# Raptor Lake, 6/4 cores, 16 threads
 			echo "Gracemont" >"${TempDir}/Ecores"
 			echo "Raptor Cove" >"${TempDir}/Pcores"
@@ -2824,6 +2824,9 @@ InstallPrerequisits() {
 		command -v htmldoc >/dev/null 2>&1 || apt -f -qq -y --no-install-recommends install htmldoc >/dev/null 2>&1
 		command -v gnuplot >/dev/null 2>&1 || apt -f -qq -y --no-install-recommends install gnuplot-nox >/dev/null 2>&1
 	fi
+
+	# workaround for libc6-dev package missing in Radxa's debos images
+	[ -d /usr/share/doc/libc6-dev ] || apt -f -qq -y install libc6-dev >/dev/null 2>&1
 
 	# get/build tinymembench if not already there
 	[ -d "${InstallLocation}" ] || mkdir -p "${InstallLocation}"

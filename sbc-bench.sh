@@ -2138,32 +2138,33 @@ GetCoreClusters() {
 
 Getx86ClusterDetails() {
 	# Since they can't be differentiated by either CPU ID or physical_package_id get
-	# Alder/Raptor Lake E/P core clusters from ark.intel.com: https://archive.ph/TfYF2
-	# and https://archive.ph/dXja2 -- HFI might be an option in the future but only
-	# with most recent kernels: https://docs.kernel.org/x86/intel-hfi.html
-	# With different core types /sys/devices/system/cpu/cpu*/acpi_cppc/nominal_perf and
-	# most probably also cache sizes differ.
+	# Alder/Raptor/Meteor Lake E/P core clusters from ark.intel.com. HFI might be an option
+	# in the future but only with most recent kernels: https://docs.kernel.org/x86/intel-hfi.html
+	# Fortunately cache sizes do differ between E/P cores and with ACPI correctly set up
+	# /sys/devices/system/cpu/cpu*/acpi_cppc/nominal_perf should differ as well. The SKU
+	# differentiation of these hybrid CPU models follow this scheme:
 	#
-	# Alder Lake SKUs:
-	# i9: 6-8 P cores, 8-16 E cores, 4.8-5.5 GHz, 24-30 MB "Smart Cache"
-	# i7: 2-8 P cores, 4-8 E cores, 4.6-5.0 GHz, 12-25 MB "Smart Cache"
-	# i5: 4-6 P cores, 4-8 E cores, 4.2-4.9 GHz, 12-20 MB "Smart Cache"
-	# i3: 2-4 P cores, 0-8 E cores, 4.0-4.3 GHz, 10-12 MB "Smart Cache"
-	# Pentium Gold 850*, Celeron 730*: 1 P core, 4 E cores, 8 MB "Smart Cache"
+	# Alder Lake:
+	# i9: 6-8 P-cores, 8-16 E-cores, 4.8-5.5 GHz, 24-30 MB "Smart Cache"
+	# i7: 2-8 P-cores, 4-8 E-cores, 4.6-5.0 GHz, 12-25 MB "Smart Cache"
+	# i5: 4-6 P-cores, 4-8 E-cores, 4.2-4.9 GHz, 12-20 MB "Smart Cache"
+	# i3: 2-4 P-cores, 0-8 E-cores, 4.0-4.3 GHz, 10-12 MB "Smart Cache"
+	# Pentium Gold 850*, Celeron 730*: 1 P-core, 4 E-cores, 8 MB "Smart Cache"
 	#
-	# Raptor Lake SKUs:
-	# i9: 6-8 P cores, 8-16 E cores, 5.0-5.8 GHz, 24-36 MB "Smart Cache"
-	# i7: 2-8 P cores, 4-12 E cores, 4.8-5.4 GHz, 12-30 MB "Smart Cache"
-	# i5: 4-6 P cores, 4-8 E cores, 4.4-5.1 GHz, 12-24 MB "Smart Cache"
-	# i3: 1-4 P cores, 0-8 E cores, 4.1-4.6 GHz, 10-12 MB "Smart Cache"
-	# U300*: 1 P core, 4 E cores, 8 MB "Smart Cache"
+	# Raptor Lake:
+	# i9: 6-8 P-cores, 8-16 E-cores, 5.0-5.8 GHz, 24-36 MB "Smart Cache"
+	# i7: 2-8 P-cores, 4-12 E-cores, 4.8-5.4 GHz, 12-30 MB "Smart Cache"
+	# i5: 4-6 P-cores, 4-8 E-cores, 4.4-5.1 GHz, 12-24 MB "Smart Cache"
+	# i3: 1-4 P-cores, 0-8 E-cores, 4.1-4.6 GHz, 10-12 MB "Smart Cache"
+	# Processor U300*: 1 P-core, 4 E-cores, 4.3-4.4 GHz, 8 MB "Smart Cache"
 	#
-	# Raptor Lake Refresh SKUs:
-	# i9: 8 P cores, 16 E cores, 5.5-6.0 GHz, 36 MB "Smart Cache"
-	# i7: 8 P cores, 8-12 E cores, 5.2-5.6 GHz, 30-33 MB "Smart Cache"
-	# i5: 6 P cores, 4-8 E cores, 4.5-5.3 GHz, 20-24 MB "Smart Cache"
-	# i3: 4 P cores, 0 E cores, 4.4-4.7 GHz, 12 MB "Smart Cache"
-	# Core: 2 P cores, 4-8 E cores, 4.7-5.4 GHz, 10-12 MB "Smart Cache"
+	# Raptor Lake Refresh:
+	# i9: 8 P-cores, 16 E-cores, 5.5-6.0 GHz, 36 MB "Smart Cache"
+	# i7: 8 P-cores, 8-12 E-cores, 5.2-5.6 GHz, 30-33 MB "Smart Cache"
+	# i5: 6 P-cores, 4-8 E-cores, 4.5-5.3 GHz, 20-24 MB "Smart Cache"
+	# i3: 4 P-cores, 0 E-cores, 4.4-4.7 GHz, 12 MB "Smart Cache"
+	# Core: 2 P-cores, 4-8 E-cores, 4.7-5.4 GHz, 10-12 MB "Smart Cache"
+	# Processor 300*: 2 P-cores, 0 E-cores, 3.4-3.9 GHz, 6 MB "Smart Cache"
 
 	# Check amount of available CPU cores first and whether virtualization has been detected
 	# since when running in a virtualized environment it doesn't make sense trying to
@@ -2179,12 +2180,12 @@ Getx86ClusterDetails() {
 
 	case ${X86CPUName} in
 		i3-L13G4|i5-L16G7)
-			# Lakefield: 1 P core w/o HT + 4 E cores
+			# Lakefield: 1 P-core w/o HT + 4 E-cores
 			echo "Tremont" >"${TempDir}/Ecores"
 			echo "Sunny Cove" >"${TempDir}/Pcores"
 			[ ${HT} -eq 1 ] && echo "0 2" || echo "0 1"
 			;;
-		i9-13900K|i9-13900KF|i9-13900F|i9-13900T|i9-13900HX|i9-13950HX|i9-13980HX|i9-13900|i9-13900TE|i9-13900E|i9-14900K|i9-14900KF|i9-14900|i9-14900HX|i9-14900T|i9-14900F)
+		i9-13900K|i9-13900KF|i9-13900F|i9-13900T|i9-13900KS|i9-13900HX|i9-13950HX|i9-13980HX|i9-13900|i9-13900TE|i9-13900E|i9-14900K|i9-14900KF|i9-14900|i9-14900HX|i9-14900T|i9-14900F)
 			# Raptor Lake, 8/16 cores, 32 threads
 			echo "Gracemont" >"${TempDir}/Ecores"
 			echo "Raptor Cove" >"${TempDir}/Pcores"
@@ -2244,7 +2245,7 @@ Getx86ClusterDetails() {
 			echo "Golden Cove" >"${TempDir}/Pcores"
 			[ ${HT} -eq 1 ] && echo "0 4" || echo "0 2"
 			;;
-		i7-1355U|i7-1365U|i5-1335U|i5-1334U|i5-1345U|i7-1365UE|i5-1335UE|i5-1345UE|*120U*|*150U*)
+		i7-1355U|i7-1365U|i5-1335U|i5-1334U|i5-1345U|i7-1365UE|i5-1335UE|i5-1345UE|"5 120U"*|"7 150U"*)
 			# Raptor Lake, 2/8 cores, 12 threads
 			echo "Gracemont" >"${TempDir}/Ecores"
 			echo "Raptor Cove" >"${TempDir}/Pcores"
@@ -2292,7 +2293,7 @@ Getx86ClusterDetails() {
 			echo "Golden Cove" >"${TempDir}/Pcores"
 			[ ${HT} -eq 1 ] && echo "0 4" || echo "0 2"
 			;;
-		i3-1315U|i3-1315UE|i3-1315URE|*100U*)
+		i3-1315U|i3-1315UE|i3-1315URE|"3 100U"*)
 			# Raptor Lake, 2/4 cores, 8 threads
 			echo "Gracemont" >"${TempDir}/Ecores"
 			echo "Raptor Cove" >"${TempDir}/Pcores"
@@ -2322,6 +2323,9 @@ Getx86ClusterDetails() {
 			echo "Raptor Cove" >"${TempDir}/Pcores"
 			[ ${HT} -eq 1 ] && echo "0 2" || echo "0 1"
 			;;
+		13100|13100E|13100F|13100T|13100TE|14100|14100F|14100T)
+			# Raptor Lake, 4/0 cores, 8 threads
+			echo "0"
 		*)
 			# unknown CPU, try to check cache sizes since at least on currently known Intel
 			# CPUs efficiency and performance cores have differing cache sizes.
@@ -2827,7 +2831,8 @@ InstallPrerequisits() {
 		command -v gnuplot >/dev/null 2>&1 || apt -f -qq -y --no-install-recommends install gnuplot-nox >/dev/null 2>&1
 	fi
 
-	# workaround for libc6-dev package missing in Radxa's debos images
+	# workaround for libc6-dev package missing for whatever obscure reason:
+	# https://github.com/ThomasKaiser/sbc-bench/issues/86
 	[ -d /usr/share/doc/libc6-dev ] || apt -f -qq -y install libc6-dev >/dev/null 2>&1
 
 	# get/build tinymembench if not already there

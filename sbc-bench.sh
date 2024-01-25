@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.9.60
+Version=0.9.61
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -1687,14 +1687,16 @@ MonitorBoard() {
 			raspberrypi)
 				FakeFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpu0/cpufreq/${CpuFreqToQuery} 2>/dev/null)
 				RealFreq=$("${VCGENCMD}" measure_clock arm 2>/dev/null | awk -F"=" '{printf ("%0.0f",$2/1000000); }' )
-				CoreVoltage=$("${VCGENCMD}" measure_volts uncached 2>/dev/null | cut -f2 -d=)
-				[ "X${CoreVoltage}" = "X" ] && CoreVoltage=$("${VCGENCMD}" measure_volts 2>/dev/null | cut -f2 -d=)
 				if [ ${PMIC_ADC} = true ]; then
 					ADC_Readouts="$("${VCGENCMD}" pmic_read_adc 2>/dev/null)"
 					InputVoltage="$(awk -F"=" '/EXT5V_V/ {printf ("%0.2f",$2); }' <<<"${ADC_Readouts}")V"
+					CoreVoltage="$(awk -F"=" '/VDD_CORE_V/ {printf ("%0.4f",$2); }' <<<"${ADC_Readouts}")V"
+					[ "X${CoreVoltage}" = "X" ] && CoreVoltage=$("${VCGENCMD}" measure_volts 2>/dev/null | cut -f2 -d=)
 					PMIC_Whole_Consumption=$(Parse_ADC_Readouts "${ADC_Readouts}" | awk '{s+=$1*$2} END {printf "%.1f", s}')
 					printf "%s: %4s/%4sMHz %5s %s %8s %8s %6s %7s %s\n" "$(date "+%H:%M:%S")" "${FakeFreq}" "${RealFreq}" "${LoadAvg}" "${procStats}" "${SocTemp}°C" "${CoreVoltage}" "${PMIC_Whole_Consumption}W" "${InputVoltage}" "${NetioColumn}"
 				else
+					CoreVoltage=$("${VCGENCMD}" measure_volts uncached 2>/dev/null | cut -f2 -d=)
+					[ "X${CoreVoltage}" = "X" ] && CoreVoltage=$("${VCGENCMD}" measure_volts 2>/dev/null | cut -f2 -d=)
 					printf "%s: %4s/%4sMHz %5s %s %8s %8s %s\n" "$(date "+%H:%M:%S")" "${FakeFreq}" "${RealFreq}" "${LoadAvg}" "${procStats}" "${SocTemp}°C" "${CoreVoltage}" "${NetioColumn}"
 				fi
 				;;
@@ -3120,8 +3122,8 @@ InitialMonitoring() {
 		UploadServer="ix.io"
 		UploadAnswer="$( (echo -e "/proc/cpuinfo ${Version}\n\n$(uname -a) / ${DeviceName}\n" ; cat /proc/cpuinfo ; echo -e "\n${CPUTopology}\n\n${CPUSignature} / ${GuessedSoC} / ${CPUFetchGuess}$(cut -c9- <<<"${RK_NVMEM}")  ${AW_NVMEM:19:2}${AW_NVMEM:16:2}${AW_NVMEM:13:2}${AW_NVMEM:10:2} ${AW_NVMEM:31:2}${AW_NVMEM:28:2}${AW_NVMEM:25:2}${AW_NVMEM:22:2} ${AW_NVMEM:44:2}${AW_NVMEM:41:2}${AW_NVMEM:38:2}${AW_NVMEM:35:2} ${AW_NVMEM:56:2}${AW_NVMEM:53:2}${AW_NVMEM:50:2}${AW_NVMEM:47:2}\n\n${DTCompatible}\n\n${OPPTables}\n\n$(grep . /sys/devices/virtual/thermal/thermal_zone?/* 2>/dev/null)\n\n$(grep . /sys/class/hwmon/hwmon?/* 2>/dev/null)") 2>/dev/null | curl -s -F ${UploadScheme} ${UploadServer} 2>&1)"
 		case "${UploadAnswer}" in
-			*ix.io*)
-				# everything's fine
+			*ix.io/*)
+				# URL returned, so everything's fine
 				:
 				;;
 			*)
@@ -3549,11 +3551,21 @@ CheckCPUCluster() {
 				fi
 
 				if [ ${USE_VCGENCMD} = true ] ; then
-					# On RPi we query ThreadX about clockspeeds and Vcore voltage too
+					# On RPi we query ThreadX about clockspeeds and Vcore voltage too, on RPi 5
+					# we even use the ADC measurements
 					ThreadXFreq=$("${VCGENCMD}" measure_clock arm 2>/dev/null | awk -F"=" '{printf ("%0.0f",$2/1000000); }' )
 					CoreVoltage=$("${VCGENCMD}" measure_volts uncached 2>/dev/null | cut -f2 -d=)
 					[ "X${CoreVoltage}" = "X" ] && CoreVoltage=$("${VCGENCMD}" measure_volts 2>/dev/null | cut -f2 -d=)
-					echo -e "Cpufreq OPP: $(printf "%4s" ${SysfsSpeed})  ThreadX: $(printf "%4s" ${ThreadXFreq})  Measured: $(printf "%4s" ${RoundedSpeed}) @ ${CoreVoltage}${PrettyDiff}"
+					ADC_Readouts="$("${VCGENCMD}" pmic_read_adc 2>/dev/null)"
+					case $? in
+						0)
+							MeasuredCoreVoltage="$(awk -F"=" '/VDD_CORE_V/ {printf ("%0.4f",$2); }' <<<"${ADC_Readouts}")V"
+							echo -e "Cpufreq OPP: $(printf "%4s" ${SysfsSpeed})  ThreadX: $(printf "%4s" ${ThreadXFreq})  Measured: $(printf "%4s" ${RoundedSpeed}) @ ${CoreVoltage}/${MeasuredCoreVoltage}${PrettyDiff}"
+							;;
+						*)
+							echo -e "Cpufreq OPP: $(printf "%4s" ${SysfsSpeed})  ThreadX: $(printf "%4s" ${ThreadXFreq})  Measured: $(printf "%4s" ${RoundedSpeed}) @ ${CoreVoltage}${PrettyDiff}"
+							;;
+					esac
 					[ $i -eq ${MaxSpeed} ] && echo -e "OPP: $(printf "%4s" ${SysfsSpeed}), ThreadX: $(printf "%4s" ${ThreadXFreq}), Measured: $(printf "%4s" ${RoundedSpeed}) ${CpufreqPrefix}${PrettyDiff}${NC}">>"${TempDir}/cpufreq"
 				else
 					echo -e "Cpufreq OPP: $(printf "%4s" ${SysfsSpeed})    Measured: $(printf "%4s" ${RoundedSpeed}) $(printf "%27s" \(${MeasuredSpeed}))${PrettyDiff}"
@@ -5122,7 +5134,7 @@ GuessARMSoC() {
 	#      Cortex-A53 / r0p1: Exynos 5433, Qualcomm MSM8939
 	#      Cortex-A53 / r0p2: Marvell PXA1908, Mediatek MT6752/MT6738/MT6755/MT8173/MT8176, Qualcomm Snapdragon 810 (MSM8994), Samsung Exynos 7420
 	#      Cortex-A53 / r0p3: ARM Juno r1, ARM Juno r2, HiSilicon Hi3751, Kirin 620/930, Mediatek MT6735/MT8163, Nexell S5P6818, Samsung Exynos 7580, Qualcomm MSM8992 (Snapdragon 808)
-	#      Cortex-A53 / r0p4: Allwinner A100/A133/A53/A64/H313/H5/H6/H616/H618/H64/MR813/R329/R818/R923/T507/T509, Amlogic A113X/A113D/A311D/A311D2/S805X/S805Y/S905/S905X/S905D/S905W/S905L/S905L3A/S905M2/S905X2/S905Y2/S905D2/S912/S922X/T962X2, Broadcom BCM2837/BCM2709/BCM2710/RP3A0-AU (BCM2710A1), Exynos 7570/8890, HiSilicon Hi3798C-V200, HiSilicon Kirin 650/710/950/955/960/970, Marvell Armada 37x0, Mediatek MT6739WA/MT6762M/MT6765/MT6771V/MT6797/MT6797T/MT6799/MT8183/MT8735, NXP i.MX8M/i.MX8QM/LS1xx8, Qualcomm IPQ5332/MSM8937/MSM8952/MSM8953/MSM8956/MSM8976/MSM8976PRO/SDM439/SDM450, RealTek RTD129x/RTD139x, Rockchip RK3318/RK3328/RK3528/RK3562/RK3399, Samsung Exynos 7870/7885/8890/8895, Socionext LD20/SC2A11, TI K3 AM623/AM625/AM62A/AM642/AM654, Xiaomi Surge S1
+	#      Cortex-A53 / r0p4: Allwinner A100/A133/A53/A64/H313/H5/H6/H616/H618/H64/MR813/R329/R818/R923/T507/T509, Amlogic A113X/A113D/A311D/A311D2/S805X/S805Y/S905/S905X/S905D/S905W/S905L/S905L3A/S905M2/S905X2/S905Y2/S905D2/S912/S922X/T962X2, Broadcom BCM2837/BCM2709/BCM2710/RP3A0-AU (BCM2710A1), Exynos 7570/8890, HiSilicon Hi3798C-V200, HiSilicon Kirin 650/710/950/955/960/970, Marvell Armada 37x0, Mediatek MT6739WA/MT6762M/MT6765/MT6771V/MT6797/MT6797T/MT6799/MT7622B/MT8183/MT8735, NXP i.MX8M/i.MX8QM/LS1xx8, Qualcomm IPQ5332/MSM8937/MSM8952/MSM8953/MSM8956/MSM8976/MSM8976PRO/SDM439/SDM450, RealTek RTD129x/RTD139x, Rockchip RK3318/RK3328/RK3528/RK3562/RK3399, Samsung Exynos 7870/7885/8890/8895, Socionext LD20/SC2A11, TI K3 AM623/AM625/AM62A/AM642/AM654, Xiaomi Surge S1
 	#      Cortex-A55 / r0p1: Samsung Exynos 9810
 	#      Cortex-A55 / r1p0: Amlogic S905X3/S905D3/S905Y3/T962X3/T962E2, HiSilicon Ascend 310 / Kirin 810/980, Samsung Exynos 9820
 	#      Cortex-A55 / r2p0: Amlogic S905X4/S905C2, Allwinner A513/A523/A736/A737/T527/T736/T737, Google Tensor G1/G2, MediaTek Genio 1200 / MT8188JV/A, NXP i.MX 93, Qualcomm SM8350 (Snapdragon 888), RealTek RTD1619B, Renesas RZG2UL/RZG2LC, Rockchip RK3566/RK3568/RK3588/RK3588s, Unisoc UMS9620
@@ -6696,6 +6708,7 @@ GuessSoCbySignature() {
 		00A53r0p400A53r0p4)
 			# Allwinner R329, 2 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			# or Armada 3720, 2 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
+			# or MediaTek MT7622B, 2 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			# or Texas Instruments K3 AM62x, 2 x Cortex-A53 / r0p4
 			# or Texas Instruments K3 AM642, 2 x Cortex-A53 / r0p4
 			# or Texas Instruments K3 AM652, 2 x Cortex-A53 / r0p4
@@ -6717,6 +6730,9 @@ GuessSoCbySignature() {
 					;;
 				*r329*)
 					echo "Allwinner R329"
+					;;
+				*mt7622b*)
+					echo "MediaTek MT7622B"
 					;;
 			esac
 			;;
@@ -8171,6 +8187,7 @@ ProvideReviewInfo() {
 	# prerequisits: create temp dir, ensure CPU utilization and/or average load is low
 	# enough to continue, collect information, set governors to performance
 
+	[ -z "${DMESG}" ] && DMESG="$(dmesg | grep -E "Linux|pvtm|rockchip-dmc|rockchip-cpuinfo|Amlogic Meson|sun50i|pcie|mmc|leakage")"
 	CreateTempDir
 	[ -f /sys/devices/system/cpu/cpufreq/policy0/scaling_governor ] && \
 		read OriginalCPUFreqGovernor </sys/devices/system/cpu/cpufreq/policy0/scaling_governor 2>/dev/null

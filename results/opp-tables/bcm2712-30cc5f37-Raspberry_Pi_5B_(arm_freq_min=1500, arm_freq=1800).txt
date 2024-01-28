@@ -1,0 +1,5 @@
+   opp-table-threadx-0:
+      1500 MHz    720.0 mV
+      1600 MHz    770.0 mV
+      1700 MHz    820.0 mV
+      1800 MHz    870.0 mV

@@ -13,6 +13,7 @@ grep -E "http://ix.io|http://sprunge.us" ../Results.md | awk -F"http://" '{print
 		git add "${ResultFile}"
 		sleep 5
 	fi
+	sed -i -e "s|http://${REPLY}|results/${ResultFile}|" ../Results.md
 done
 
 # create compressed archive with benchmark results, cpuinfo files and opp-tables:

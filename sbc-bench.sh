@@ -223,9 +223,9 @@ Main() {
 	fi
 	unset SPACING
 	CreateTempDir
-	CheckLoadAndDmesg
 	[ -f /sys/devices/system/cpu/cpufreq/policy0/scaling_governor ] && \
 		read OriginalCPUFreqGovernor </sys/devices/system/cpu/cpufreq/policy0/scaling_governor 2>/dev/null
+	CheckLoadAndDmesg
 	BasicSetup performance >/dev/null 2>&1
 	GovernorState="$(HandleGovernors | grep -v cpufreq-policy)"
 	[ "X${GovernorState}" != "X" ] && echo -e "Status of performance related governors found below /sys (w/o cpufreq):\n${GovernorState}\n"
@@ -726,6 +726,7 @@ BashBench(){
 	# 4.4.20 / Allwinner H3:               566944214
 	# 5.0.3  / BCM2711:                    152325522
 	# 5.0.17 / Apple Firestorm:             28319838
+	# 5.2.15 / BCM2712 @ 3.0 GHz:           41210070
 
 	local i
 	StartTime=$(date +"%s%N")
@@ -911,8 +912,10 @@ PlotPerformanceGraph() {
 		exit 1
 	fi
 
-	# repeat every measurement this many times and do not measure any cpufreq below
-	Repetitions=3 # how many times should each measurement be repeated
+	# repeat every measurement at least this many times and do not measure any cpufreq below
+	MinRepetitions=3 # how many times should each measurement be repeated
+	Repetitions=$(( 1000000000 / ${QuickAndDirtyPerformance} ))
+	[ ${Repetitions} -lt ${MinRepetitions} ] && Repetitions=${MinRepetitions}
 	SkipBelow=400 # minimum cpufreq in MHz to measure
 
 	if [ -n "${OutputCurrent}" ]; then
@@ -935,19 +938,19 @@ PlotPerformanceGraph() {
 		read IdleConsumption <${NetioConsumptionFile}
 		kill ${NetioMonitoringPID} ${MonitoringPID}
 		IdleTemp=$(ReadSoCTemp)
-		echo -e "\n##########################################################################\n\nIdle temperature: ${IdleTemp}°C, idle consumption: $(( $(awk '{printf ("%0.0f",$1/10); }' <<<"${IdleConsumption}" ) * 10 ))mW" >>${ResultLog}
+		echo -e "\n##########################################################################\n\nIdle temperature: ${IdleTemp}°C, idle consumption: $(( $(awk '{printf ("%0.0f",$1/10); }' <<<"${IdleConsumption}" ) * 10 )) mW" >>${ResultLog}
 	fi
 
 	CheckNetio
 
 	# check if cpulist parameter has been provided as well:
 	if [ "X${CPUList}" = "X" ]; then
-		# -p has been used without further restrictions, we run performance test on all cores
+		# -g has been used without further restrictions, we run performance test on all cores
 		CheckPerformance "all CPU cores" $(tr -d '[:space:]' <<<${ClusterConfig[@]})
 		PlotGraph "all CPU cores" $(tr -d '[:space:]' <<<${ClusterConfig[@]})
 		RenderPDF
 	else
-		# -p with additional options has been called
+		# -g with additional options has been called
 		case ${CPUList} in
 			cores)
 				# check each core of every cluster, on RK3399 for example 0 and 4
@@ -1071,7 +1074,7 @@ CheckPerformance() {
 	Clusters="$(ls -d /sys/devices/system/cpu/cpufreq/policy[${2}])"
 
 	echo -e "\x08\x08 Done.\nChecking ${1}: \c"
-	echo -e "\nSystem health while testing through ${1}:\n" >>${MonitorLog}
+	echo -e "\nSystem health while testing through ${1} ${Repetitions} times:\n" >>${MonitorLog}
 	/bin/bash "${PathToMe}" -m $(( 30 * ${Repetitions} )) >>${MonitorLog} &
 	MonitoringPID=$!
 
@@ -1089,9 +1092,9 @@ CheckPerformance() {
 	fi
 
 	if [ ${USE_VCGENCMD} = true ] ; then
-		echo -e "Testing through ${1}:\n\nSysfs/ThreadX/Tested:  MIPS / Temp${NetioHeader}" >"${CpufreqLog}"
+		echo -e "Testing through ${1} ${Repetitions} times:\n\nSysfs/ThreadX/Tested:  MIPS / Temp${NetioHeader}" >"${CpufreqLog}"
 	else
-		echo -e "Testing through ${1}:\n\nSysfs/Tested:  MIPS / Temp${NetioHeader}" >"${CpufreqLog}"
+		echo -e "Testing through ${1} ${Repetitions} times:\n\nSysfs/Tested:  MIPS / Temp${NetioHeader}" >"${CpufreqLog}"
 	fi
 
 	# adjust min and max speeds (set max speeds on unaffected clusters to min speed)
@@ -1285,6 +1288,8 @@ RenderPDF() {
 		cat "${TempDir}/report.pdf" >"${FinalPDF}"
 		mv "${FinalPDF}" "${FinalPDF}.pdf"
 		chmod 644 "${FinalPDF}.pdf"
+		# make a copy in a permanent location since stuff in /tmp/ gets lost after reboot
+		cp "${FinalPDF}.pdf" "${HOME}/"
 		echo -e "\x08\x08 Done.\n\nPlease check ${FinalPDF}.pdf"
 	else
 		echo -e "\x08\x08 Done.\n\nSomething went wrong"
@@ -1611,7 +1616,7 @@ MonitorBoard() {
 	LastTotal=0
 
 	# check if we're in Netio consumption monitoring mode
-	[ -s "${NetioConsumptionFile}" ] && NetioHeader="     mW"
+	[ -s "${NetioConsumptionFile}" ] && NetioHeader="      mW"
 
 	# check whether input voltage can be read
 	[ "X${VoltageSensor}" != "X" ] && VoltageHeader="   DC(V)"
@@ -3552,10 +3557,12 @@ CheckCPUCluster() {
 
 				if [ ${USE_VCGENCMD} = true ] ; then
 					# On RPi we query ThreadX about clockspeeds and Vcore voltage too, on RPi 5
-					# we even use the ADC measurements
+					# we even use the ADC measurements. Also we create an OPP table on the fly
+					# derived from ThreadX config via 'measure_volts' and 'measure_clock arm':
 					ThreadXFreq=$("${VCGENCMD}" measure_clock arm 2>/dev/null | awk -F"=" '{printf ("%0.0f",$2/1000000); }' )
 					CoreVoltage=$("${VCGENCMD}" measure_volts uncached 2>/dev/null | cut -f2 -d=)
 					[ "X${CoreVoltage}" = "X" ] && CoreVoltage=$("${VCGENCMD}" measure_volts 2>/dev/null | cut -f2 -d=)
+					[ "X${OnlyCPUFreqMax}" = "XYES" ] || printf "%10s MHz %8s mV\n" ${ThreadXFreq} $(awk '{printf ("%0.1f",$1*1000); }' <<<${CoreVoltage}) >>"${TempDir}/opp-table-threadx-${1}"
 					ADC_Readouts="$("${VCGENCMD}" pmic_read_adc 2>/dev/null)"
 					case $? in
 						0)
@@ -4434,7 +4441,18 @@ LogEnvironment() {
 	[ -z "${CacheAndDIMMs}" ] || echo -e "\n##########################################################################\n${CacheAndDIMMs}" >>${ResultLog}
 
 	# Always include OPP tables
-	echo -e "${OPPTables}" >>${ResultLog}
+	if [ "X${USE_VCGENCMD}" = "Xtrue" ]; then
+		# check whether we collected RPi OPP tables when walking through the cpufreq OPP and
+		# if so include them using the usual sbc-bench format. The whole DVFS thing on RPi
+		# happens solely inside the closed source ThreadX world.
+		echo -e "\n##########################################################################" >>${ResultLog}
+		for OPPTable in $(ls "${TempDir}"/opp-table-threadx-* 2>/dev/null) ; do
+			echo -e "\n   ${OPPTable##*/}:" >>${ResultLog}
+			sort -n <"${OPPTable}" >>${ResultLog}
+		done
+	else
+		echo -e "${OPPTables}" >>${ResultLog}
+	fi
 
 	# results validation:
 	IsValid="$(ValidateResults | sed -e 's/^/  * /')"

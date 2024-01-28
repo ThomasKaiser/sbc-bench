@@ -233,6 +233,83 @@ CheckPVTMDistributionOnRK3588() {
 	done | grep -v ' |  |' | grep -v '| 0/0 |' | sed 's/,/./g' | sort -t '|' -k 3 -n
 } # CheckPVTMDistributionOnRK3588
 
+PlotOPPTables() {
+	PNGWidth=900
+
+	for OPPTable in *.dat ; do
+	# for OPPTable in bcm2712-30cc5f37-Raspberry_Pi_5B.dat; do
+		case "${OPPTable##*/}" in
+			rk*)
+				SoCName="Rockchip RK$(cut -c3-6 <<<"${OPPTable##*/}")"
+				OSInfo=" (Kernel $(cut -f2 -d'-' <<<"${OPPTable##*/}" | tr '_' ' '))"
+				DeviceName="$(cut -f3 -d'-' <<<"${OPPTable##*/}" | tr '_' ' ')"
+				;;
+			sun*)
+				SoCName="Allwinner $(cut -f2 -d'-' <<<"${OPPTable##*/}" | tr '[:lower:]' '[:upper:]')"
+				OSInfo=" (Kernel $(cut -f3 -d'-' <<<"${OPPTable##*/}" | tr '_' ' '))"
+				DeviceName="$(cut -f4 -d'-' <<<"${OPPTable##*/}" | tr '_' ' ')"
+				;;
+			amlogic*)
+				SoCName="Amlogic $(cut -f2 -d'-' <<<"${OPPTable##*/}" | tr '[:lower:]' '[:upper:]')"
+				OSInfo=" (Kernel $(cut -f3 -d'-' <<<"${OPPTable##*/}" | tr '_' ' '))"
+				DeviceName="$(cut -f4 -d'-' <<<"${OPPTable##*/}" | tr '_' ' ')"
+				;;
+			bcm*)
+				SoCName="BroadCom $(cut -f1 -d'-' <<<"${OPPTable##*/}" | tr '[:lower:]' '[:upper:]')"
+				OSInfo=" (ThreadX $(cut -f2 -d'-' <<<"${OPPTable##*/}" | tr '_' ' '))"
+				DeviceName="$(cut -f3 -d'-' <<<"${OPPTable##*/}" | tr '_' ' ')"
+				;;
+			*)
+				SoCName="$(cut -f1 -d'-' <<<"${OPPTable##*/}" | tr '[:lower:]' '[:upper:]' | sed -e 's/IMX8/NXP i.MX8/' -e 's/EXYNOS5/Exynos 5422/')"
+				OSInfo=" (Kernel $(cut -f2 -d'-' <<<"${OPPTable##*/}" | tr '_' ' '))"
+				DeviceName="$(cut -f3 -d'-' <<<"${OPPTable##*/}" | tr '_' ' ')"
+				;;
+		esac
+		case "${OPPTable##*/}" in
+			*-big.dat)
+				CoreInfo=", big cores"
+				;;
+			*-little.dat)
+				CoreInfo=", little cores"
+				;;
+			*)
+				CoreInfo=""
+				;;
+		esac
+
+		GraphTitle="$(sed 's/\.dat//' <<<"${SoCName} / ${DeviceName}${CoreInfo}${OSInfo}")"
+		echo ${GraphTitle}
+		PNGName="$(basename "${OPPTable##*/}" .dat).png"
+		CpufreqDat="$(mktemp /tmp/${0##*/}.XXXXXX)"
+		echo -e "0\t0" >"${CpufreqDat}"
+		cut -f1 -d'.' <"${OPPTable}" | awk -F" " '{print $1"\t"$3}' >>"${CpufreqDat}"
+		HighestVoltage=$(tail -n1 "${CpufreqDat}" | cut -f2)
+		LowestVoltage=$(head -n1 "${CpufreqDat}" | cut -f2)
+		YRange1=$(( LowestVoltage - 100 ))
+		YRange2=$(( HighestVoltage + 100 ))
+		HighestMHz=$(tail -n1 "${CpufreqDat}" | cut -f1)
+		LowestMHz=$(head -n2 "${CpufreqDat}" | tail -n1 | cut -f1)
+		XRange1=$(( LowestMHz - 50 ))
+		XRange2=$(( HighestMHz + 50 ))
+
+		cat <<- EOF | gnuplot
+		set title '${GraphTitle}'
+		set ylabel 'Supply voltage in mV'
+		set ytics nomirror
+		set yrange [${YRange1}:${YRange2}]
+		set xrange [${XRange1}:${XRange2}]
+		set xlabel 'CPU clockspeed in MHz'
+		set datafile sep '\t'
+		set key top left autotitle columnheader
+		set grid
+		set terminal png size ${PNGWidth}
+		set output '${PNGName}'
+		plot '${CpufreqDat}' with linespoints title 'DVFS OPP'
+		EOF
+		rm "${CpufreqDat}"
+	done
+} # PlotOPPTables
+
 # CPUUtilization7ZIP >7-zip-cpu-utilisation.md
 # CheckRAID6PerfAndAlgo >raid6-perf-and-algo.md
 # CheckRK3588sbc-bench-results

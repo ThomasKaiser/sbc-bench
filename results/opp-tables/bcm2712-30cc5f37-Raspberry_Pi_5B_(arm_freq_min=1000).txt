@@ -1,0 +1,16 @@
+   opp-table-threadx-0:
+      1000 MHz    720.0 mV
+      1100 MHz    730.0 mV
+      1200 MHz    740.0 mV
+      1300 MHz    750.0 mV
+      1400 MHz    765.0 mV
+      1500 MHz    775.0 mV
+      1600 MHz    785.0 mV
+      1700 MHz    795.0 mV
+      1800 MHz    805.0 mV
+      1900 MHz    815.0 mV
+      2000 MHz    825.0 mV
+      2100 MHz    835.0 mV
+      2200 MHz    850.0 mV
+      2300 MHz    860.0 mV
+      2400 MHz    870.0 mV

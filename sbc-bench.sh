@@ -3907,7 +3907,7 @@ RunStressNG() {
 	/bin/bash "${PathToMe}" -m 40 >>${MonitorLog} &
 	MonitoringPID=$!
 	echo -e "Executing \"stress-ng --matrix 0\" for 5 minutes:\n" >${TempLog}
-	stress-ng --matrix 0 -t 300 2>>${TempLog}
+	stress-ng --matrix 0 -t 300 >>${TempLog} 2>&1
 	kill ${MonitoringPID}
 	echo -e "\n##########################################################################\n" >>${ResultLog}
 	sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" <${TempLog} >>${ResultLog}
@@ -8706,8 +8706,8 @@ CheckKernelVersion() {
 	elif [ "X${KernelVersionDigitsOnly}" != "X${LatestKernelVersion}" ]; then
 		# kernel version at least matches a supported kernel but is not most recent one
 		BSPDisclaimer="\n${BOLD}But this version string doesn't matter since this is not an official${KernelSuffix} Linux${NC}\n${BOLD}from kernel.org.${NC} \c"
-		UsedKernelRevision=$(cut -f3 -d. <<<"${KernelVersionDigitsOnly}")
-		LatestKernelRevision=$(cut -f3 -d. <<<"${LatestKernelVersion}")
+		UsedKernelRevision=$(cut -f3 -d. <<<"${KernelVersionDigitsOnly}" | tr -c -d '[:digit:]')
+		LatestKernelRevision=$(cut -f3 -d. <<<"${LatestKernelVersion}" | tr -c -d '[:digit:]')
 		RevisionDifference=$(( ${LatestKernelRevision:-0} - ${UsedKernelRevision:-0} ))
 		if [ "X${CheckEOL}" = "X${EOLDate}" -a "X${EOLDate}" != "Xfalse" ]; then
 			# EOL date is in the past

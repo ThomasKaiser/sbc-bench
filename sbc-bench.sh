@@ -1337,7 +1337,7 @@ GetTempSensor() {
 						TempSource="${TempDir}/soctemp"
 					else
 						TempSource="$(mktemp /tmp/soctemp.XXXXXX)"
-						trap 'rm -f \"${TempSource}\" ; exit 0' 0
+						trap "rm -f \"${TempSource}\" ; exit 0" 0
 					fi
 					ThermalZone="$(GetThermalZone "${NodeGuess}")"
 					ln -fs ${ThermalZone}/temp ${TempSource}
@@ -1372,7 +1372,7 @@ GetTempSensor() {
 			TempSource="${TempDir}/soctemp"
 		else
 			TempSource="$(mktemp /tmp/soctemp.XXXXXX)"
-			trap 'rm -f \"${TempSource}\" ; exit 0' 0
+			trap "rm -f \"${TempSource}\" ; exit 0" 0
 		fi
 
 		# check platform
@@ -1497,7 +1497,7 @@ CheckNetio() {
 			export NetioConsumptionFile
 			/bin/bash "${PathToMe}" -N ${NetioDevice} ${NetioSocket} ${NetioConsumptionFile} >/dev/null 2>&1 &
 			NetioMonitoringPID=$!
-			trap 'kill ${NetioMonitoringPID} ; rm -rf \"${TempDir}\" ; exit 0' 0
+			trap "kill ${NetioMonitoringPID} ; rm -rf \"${TempDir}\" ; exit 0" 0
 		fi
 	fi
 } # CheckNetio
@@ -1978,7 +1978,7 @@ CreateTempDir() {
 	fi
 	export TempDir
 	# delete $TempDir by default but not if in extensive mode:
-	[ "X${MODE}" = "Xextensive" ] || trap 'rm -rf \"${TempDir}\" ; exit 0' 0
+	[ "X${MODE}" = "Xextensive" ] || trap "rm -rf \"${TempDir}\" ; exit 0" 0
 } # CreateTempDir
 
 CheckLoadAndDmesg() {
@@ -8562,7 +8562,7 @@ ProvideReviewInfo() {
 } # ProvideReviewInfo
 
 FinalReporting() {
-	trap 'rm -rf \"${TempDir}\" ; exit 0' 0
+	trap "rm -rf \"${TempDir}\" ; exit 0" 0
 	echo -e "\n\nCleaning up...\c"
 	kill ${NetioMonitoringPID} ${MonitoringPID} 2>/dev/null
 	SwapNow="$(awk -F" " '{print $4}' </proc/swaps | grep -v -i Used | awk '{s+=$1} END {printf "%.0f", s}')"
@@ -9042,7 +9042,7 @@ PrintBSPWarning() {
 PrintKernelInfo() {
 	# Kernel info: version number and vendor/BSP check
 	CreateTempDir
-	trap 'rm -rf \"${TempDir}\" ; exit 0' 0
+	trap "rm -rf \"${TempDir}\" ; exit 0" 0
 	curl -s -q --connect-timeout 10 https://raw.githubusercontent.com/endoflife-date/endoflife.date/master/products/linuxkernel.md \
 		>"${TempDir}/linuxkernel.md"
 	BasicSetup nochange >/dev/null 2>&1

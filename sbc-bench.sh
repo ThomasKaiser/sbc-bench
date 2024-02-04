@@ -201,8 +201,9 @@ Main() {
 				exit 0
 				;;
 			*)
-				# ignore invalid flags
-				:
+				# invalid flags
+				DisplayUsage
+				exit 1
 				;;
 			esac
 	done
@@ -920,7 +921,7 @@ PlotPerformanceGraph() {
 	MinRepetitions=3 # how many times should each measurement be repeated
 	Repetitions=$(( 1000000000 / ${QuickAndDirtyPerformance} ))
 	[ ${Repetitions} -lt ${MinRepetitions} ] && Repetitions=${MinRepetitions}
-	SkipBelow=400 # minimum cpufreq in MHz to measure
+	SkipBelow=${MinKHz:-600000} # minimum cpufreq in KHz to measure
 
 	if [ "X${OutputCurrents[*]}" != "X" ]; then
 		# We are in Netio monitoring mode, so measure idle consumption first,
@@ -1120,8 +1121,8 @@ CheckPerformance() {
 	# On ARM usually little cores are the cores with lower numbers. 
 	BiggestCluster="$(sort -n -r <<<${Clusters} | head -n1)"
 	for i in $((tr " " "\n" <${BiggestCluster}/scaling_available_frequencies ; tr " " "\n" <${BiggestCluster}/scaling_boost_frequencies) 2>/dev/null | sort -n | uniq | sed '/^[[:space:]]*$/d') ; do
-		# skip measuring cpufreq OPPs below $SkipBelow MHz
-		if [ $i -lt ${SkipBelow}000 ]; then
+		# skip measuring cpufreq OPPs below $SkipBelow KHz
+		if [ $i -lt ${SkipBelow} ]; then
 			continue
 		fi
 		# try to set this speed on all affected cpufreq policies
@@ -7880,7 +7881,7 @@ GuessSoCbySignature() {
 			# Kendryte K510: Dual-core 64-bit RISC-V https://canaan.io/product/kendryte-k510
 			grep -q k510 <<<"${DTCompatible}" && echo "Kendryte K510"
 			;;
-		*thead,c908*thead,c908)
+		*thead,c908*thead,c908|*rv64imafdcvxthead*)
 			# Kendryte K230: Dual-core 64-bit RISC-V https://canaan.io/product/kendryte-k230
 			echo "Kendryte K230"
 			;;
@@ -8919,6 +8920,14 @@ CheckKernelVersion() {
 					;;
 			esac
 			;;
+		5.10.4)
+			case ${GuessedSoC} in
+				*K230*)
+					# Kendryte K230
+					PrintBSPWarning Kendryte
+					;;
+			esac
+			;;		
 		5.10.66|5.10.72|5.10.110)
 			case ${GuessedSoC} in
 				*Rockchip*)
@@ -9028,7 +9037,7 @@ PrintBSPWarning() {
 			echo -e "${BOLD}vendor kernel. See https://tinyurl.com/y8k3af73 and https://tinyurl.com/ywtfec7n${NC}"
 			echo -e "${BOLD}for details.${NC}"
 			;;
-		Ingenic|MediaTek|Nexell|Nvidia|NXP|Phytium|Qualcomm|RealTek|Samsung|StarFive|T-Head|Unisoc)
+		Ingenic|Kendryte|MediaTek|Nexell|Nvidia|NXP|Phytium|Qualcomm|RealTek|Samsung|StarFive|T-Head|Unisoc)
 			echo -e "${BOLD}This device runs a $1 vendor/BSP kernel.${NC}"
 			;;
 		Rockchip)

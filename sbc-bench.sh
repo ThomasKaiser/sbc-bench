@@ -56,7 +56,7 @@ Main() {
 				# check storage, only for testing, will disappear later
 				if test -t 1; then
 					ncolors=$(tput colors)
-					if test -n "$ncolors" && test $ncolors -ge 8; then
+					if [ -n "${ncolors}" ] && [ "${ncolors}" -ge 8 ]; then
 						BOLD="$(tput bold)"
 						NC='\033[0m' # No Color
 						LGREEN='\033[1;32m'
@@ -118,16 +118,16 @@ Main() {
 			g)
 				# graph performance chart instead of doing standard 7-zip benchmarks, thereby
 				# walking through different cpufreq OPP. An additional parameter in taskset's
-				# --cpu-list format can be provided, eg. '-p 0' to graph only cpu0 or '-p 4'
+				# --cpu-list format can be provided, eg. '-g 0' to graph only cpu0 or '-g 4'
 				# to graph only cpu4 (which might be an A72 on big.LITTLE systems). Mixing
-				# CPUs from different clusters (e.g. '-p 0,4' on a RK3399) will result in
+				# CPUs from different clusters (e.g. '-g 0,4' on a RK3399) will result in
 				# garbage since big and little cores have other cpufreq OPP.
 				# 3 special modes exist: cores, clusters and all.
-				# * '-p cores' will test single-threaded through cluster's cores (0 and 4 on
+				# * '-g cores' will test single-threaded through cluster's cores (0 and 4 on
 				#   RK3399, 0 and 2 on S922X and so on)
-				# * '-p clusters' tests all cores of each cluster (0-3 and 4-5 on RK3399,
+				# * '-g clusters' tests all cores of each cluster (0-3 and 4-5 on RK3399,
 				#   0-1 and 2-5 on S922X and so on)
-				# * '-p all' performs both tests from above and then runs the test on all
+				# * '-g all' performs both tests from above and then runs the test on all
 				#   cores as well. This will take ages.
 				PlotCpufreqOPPs=yes
 				CPUList=${2}
@@ -181,7 +181,7 @@ Main() {
 				# proceeds.
 				MODE="pts"
 				shift
-				PTSArguments="$@"
+				PTSArguments="$*"
 				;;
 			N)
 				# internal Netio monitor mode. Do not use this unless you really know
@@ -285,7 +285,7 @@ CheckTerminal() {
 	# Check if we're outputting to a terminal. If yes try to use bold and colors for messages
 	if test -t 1; then
 		ncolors=$(tput colors)
-		if test -n "$ncolors" && test $ncolors -ge 8; then
+		if [ -n "${ncolors}" ] && [ "${ncolors}" -ge 8 ]; then
 			BOLD="$(tput bold)"
 			NC='\033[0m' # No Color
 			LGREEN='\033[1;32m'
@@ -922,7 +922,7 @@ PlotPerformanceGraph() {
 	[ ${Repetitions} -lt ${MinRepetitions} ] && Repetitions=${MinRepetitions}
 	SkipBelow=400 # minimum cpufreq in MHz to measure
 
-	if [ -n "${OutputCurrent}" ]; then
+	if [ "X${OutputCurrents[*]}" != "X" ]; then
 		# We are in Netio monitoring mode, so measure idle consumption first,
 		# set all governors and PCIe ASPM to lowest clockspeed / powersave
 		HandleGovernors powersave
@@ -950,8 +950,8 @@ PlotPerformanceGraph() {
 	# check if cpulist parameter has been provided as well:
 	if [ "X${CPUList}" = "X" ]; then
 		# -g has been used without further restrictions, we run performance test on all cores
-		CheckPerformance "all CPU cores" $(tr -d '[:space:]' <<<${ClusterConfig[@]})
-		PlotGraph "all CPU cores" $(tr -d '[:space:]' <<<${ClusterConfig[@]})
+		CheckPerformance "all CPU cores" "$(tr -d '[:space:]' <<<"${ClusterConfig[@]}")"
+		PlotGraph "all CPU cores" "$(tr -d '[:space:]' <<<"${ClusterConfig[@]}")"
 		RenderPDF
 	else
 		# -g with additional options has been called
@@ -1017,8 +1017,8 @@ PlotPerformanceGraph() {
 				fi
 				if [ ${#ClusterConfig[@]} -gt 1 ]; then
 					# more than one CPU cluster, we test using all cores simultaneously
-					CheckPerformance "all CPU cores" $(tr -d '[:space:]' <<<${ClusterConfig[@]})
-					PlotGraph "all CPU cores" $(tr -d '[:space:]' <<<${ClusterConfig[@]})
+					CheckPerformance "all CPU cores" "$(tr -d '[:space:]' <<<"${ClusterConfig[@]}")"
+					PlotGraph "all CPU cores" "$(tr -d '[:space:]' <<<"${ClusterConfig[@]}")"
 				fi
 				RenderPDF
 				;;
@@ -1053,7 +1053,7 @@ CheckPerformance() {
 	# * $2 policy cores: the cores that need to be adjusted when measuring, e.g. "0" for
 	#   cpu0, "4" for cpu4 or for example on an RK3399 "04" to handle both cpu clusters
 	#   at the same time
-	# * $3 taskset options as provided via the -p switch when calling sbc-bench
+	# * $3 taskset options as provided via the -g switch when calling sbc-bench
 
 	local i
 
@@ -1102,7 +1102,8 @@ CheckPerformance() {
 	fi
 
 	# adjust min and max speeds (set max speeds on unaffected clusters to min speed)
-	for Cluster in $(ls -d /sys/devices/system/cpu/cpufreq/policy?); do
+	for Cluster in /sys/devices/system/cpu/cpufreq/policy? ; do
+		[[ -e "${Cluster}" ]] || break
 		echo userspace >${Cluster}/scaling_governor
 		read MinSpeed <${Cluster}/cpuinfo_min_freq
 		read MaxSpeed <${Cluster}/cpuinfo_max_freq
@@ -1125,7 +1126,8 @@ CheckPerformance() {
 		fi
 		# try to set this speed on all affected cpufreq policies
 		if [ "X${3}" = "X" ]; then
-			for Cluster in $(ls -d /sys/devices/system/cpu/cpufreq/policy?); do
+			for Cluster in /sys/devices/system/cpu/cpufreq/policy? ; do
+				[[ -e "${Cluster}" ]] || break
 				[ -f ${Cluster}/scaling_setspeed ] && echo ${i} >${Cluster}/scaling_setspeed
 			done
 		else
@@ -1160,7 +1162,7 @@ CheckPerformance() {
 		fi
 
 		echo -n "" >"${TempDir}/plotvalues"
-		for check in $(seq 1 ${Repetitions}) ; do
+		for _check in $(seq 1 ${Repetitions}) ; do
 			# run 7-zip benchmark
 			${TasksetOptions} "${SevenZip}" b ${SevenZIPOptions} >"${TempLog}" 2>/dev/null
 			if [ -s "${NetioConsumptionFile}" ]; then
@@ -1488,14 +1490,14 @@ CheckNetio() {
 			exit 1
 		else
 			# check current reading of the socket we're supposed to be plugged into
-			OutputCurrent=($(grep '^<Current>' <<<"${XMLOutput}" | sed -e 's/\(<[^<][^<]*>\)//g' | tr '\n' ' '))
-			if [ ${OutputCurrent[$(( ${NetioSocket} - 1 ))]} -eq 0 ] && [ "X${MODE}" != "Xunattended" ]; then
+			OutputCurrents=($(grep '^<Current>' <<<"${XMLOutput}" | sed -e 's/\(<[^<][^<]*>\)//g' | tr '\n' ' '))
+			if [ ${OutputCurrents[$(( ${NetioSocket} - 1 ))]} -eq 0 ] && [ "X${MODE}" != "Xunattended" ]; then
 				echo -e "\nWarning: socket ${NetioSocket} of Netio device ${NetioDevice} provides zero current.\n"
 			fi
 			NetioConsumptionFile="${TempDir}/netio.current"
 			[ -f "${NetioConsumptionFile}" ] || echo -n 0 >"${NetioConsumptionFile}"
 			export NetioConsumptionFile
-			/bin/bash "${PathToMe}" -N ${NetioDevice} ${NetioSocket} ${NetioConsumptionFile} >/dev/null 2>&1 &
+			/bin/bash "${PathToMe}" -N "${NetioDevice}" "${NetioSocket}" "${NetioConsumptionFile}" >/dev/null 2>&1 &
 			NetioMonitoringPID=$!
 			trap "kill ${NetioMonitoringPID} ; rm -rf \"${TempDir}\" ; exit 0" 0
 		fi
@@ -1977,6 +1979,13 @@ CreateTempDir() {
 		exit 1
 	fi
 	export TempDir
+
+	# Create temporary files
+	TempLog="${TempDir}/temp.log"
+	ResultLog="${TempDir}/results.log"
+	MonitorLog="${TempDir}/monitor.log"
+	touch "${TempLog}" "${ResultLog}" "${MonitorLog}"
+
 	# delete $TempDir by default but not if in extensive mode:
 	[ "X${MODE}" = "Xextensive" ] || trap "rm -rf \"${TempDir}\" ; exit 0" 0
 } # CreateTempDir
@@ -2020,7 +2029,8 @@ CheckLoadAndDmesg() {
 	# switch to performance cpufreq governor in standard operation modes since this helps
 	# lowering load and CPU utilization in less time
 	if [ -d /sys/devices/system/cpu/cpufreq/policy0 ] && [ "X${NOTUNING}" != "Xyes" ]; then
-		for Cluster in $(ls -d /sys/devices/system/cpu/cpufreq/policy?); do
+		for Cluster in /sys/devices/system/cpu/cpufreq/policy? ; do
+			[[ -e "${Cluster}" ]] || break
 			[ -w ${Cluster}/scaling_governor ] && echo performance >${Cluster}/scaling_governor 2>/dev/null
 		done
 	fi
@@ -2360,7 +2370,7 @@ Getx86ClusterDetails() {
 
 ParseOPPTables() {
 	# TODO: parse/process opp-peak-kBps values
-	[ -d /sys/firmware/devicetree/base ] && DVFS="$(ls -d /sys/firmware/devicetree/base/* | grep -E "opp-|opp_" | grep -E -- "-table|_table" | sort -n)"
+	[ -d /sys/firmware/devicetree/base ] && DVFS="$(for OPPTable in /sys/firmware/devicetree/base/*opp* ; do grep -q -E -- "opp-|opp_|-table|_table" <<<"${OPPTable}" && echo "${OPPTable}"; done | sort -n)"
 	if [ "X${DVFS}" = "X" ]; then
 		return
 	fi
@@ -2417,7 +2427,7 @@ ParseOPPTables() {
 } # ParseOPPTables
 
 ParseRawOPPTables() {
-	DVFS="$(ls -d /sys/firmware/devicetree/base/* | grep -E "opp-|opp_" | grep -E -- "-table|_table" | sort -n)"
+	DVFS="$(for OPPTable in /sys/firmware/devicetree/base/*opp* ; do grep -q -E -- "opp-|opp_|-table|_table" <<<"${OPPTable}" && echo "${OPPTable}"; done | sort -n)"
 	if [ "X${DVFS}" = "X" ]; then
 		return
 	fi
@@ -2435,7 +2445,8 @@ BasicSetup() {
 	# set cpufreq governor based on $1 (defaults to ondemand if not provided)
 	if [ "$1" != "nochange" ]; then
 		if [ -d /sys/devices/system/cpu/cpufreq/policy0 ]; then
-			for Cluster in $(ls -d /sys/devices/system/cpu/cpufreq/policy?); do
+			for Cluster in /sys/devices/system/cpu/cpufreq/policy? ; do
+				[[ -e "${Cluster}" ]] || break
 				[ -w ${Cluster}/scaling_governor ] && echo ${1:-ondemand} >${Cluster}/scaling_governor 2>/dev/null
 			done
 		fi
@@ -3108,12 +3119,6 @@ InitialMonitoring() {
 		EstimatedDuration=$(( ${TinymembenchDuration} + $(( $(( ${SingleThreadedDuration} + ${MultiThreadedDuration} )) / 60 )) + 3 ))
 	fi
 
-	# Create temporary files
-	TempLog="${TempDir}/temp.log"
-	ResultLog="${TempDir}/results.log"
-	MonitorLog="${TempDir}/monitor.log"
-	touch "${ResultLog}" "${MonitorLog}"
-
 	# collect CPU information
 	CPUTopology="$(PrintCPUTopology)"
 	echo -e "${CPUTopology}\n" >"${TempDir}/cpu-topology.log" &
@@ -3256,11 +3261,12 @@ InitialMonitoring() {
 	
 	# set up Netio consumption monitoring if requested. Device address and socket
 	# need to be available as Netio (environment) variable.
+	Netio="${Netio:-}"
 	if [ "X${Netio}" != "X" ]; then
 		NetioDevice="$(cut -f1 -d/ <<<"${Netio}")"
 		NetioSocket="$(cut -f2 -d/ <<<"${Netio}")"
 		XMLOutput="$(curl -q --connect-timeout 1 "http://${NetioDevice}/netio.xml" 2>/dev/null | tr '\015' '\012')"
-		OutputCurrent=($(grep '^<Current>' <<<"${XMLOutput}" | sed -e 's/\(<[^<][^<]*>\)//g' | tr '\n' ' '))
+		OutputCurrents=($(grep '^<Current>' <<<"${XMLOutput}" | sed -e 's/\(<[^<][^<]*>\)//g' | tr '\n' ' '))
 		InputVoltage=$(grep '^<Voltage>' <<<"${XMLOutput}" | sed -e 's/\(<[^<][^<]*>\)//g')
 		Frequency=$(grep '^<Frequency>' <<<"${XMLOutput}" | sed -e 's/\(<[^<][^<]*>\)//g')
 		NetioModel=$(grep '^<Model>' <<<"${XMLOutput}" | sed -e 's/\(<[^<][^<]*>\)//g')
@@ -3357,8 +3363,8 @@ CheckClockspeedsAndSensors() {
 			# 2nd check after most demanding benchmark has been run.
 			echo -e "\x08\x08 Done.\nChecking cpufreq OPP again...\c"
 			echo -e "\nTesting maximum cpufreq again, still under full load. System health now:\n" >>"${ResultLog}"
-			grep 'Time' "${MonitorLog}" | tail -n 1 >"${TempDir}/systemhealth.now" >>"${ResultLog}"
-			grep ':' "${MonitorLog}" | tail -n 1 >>"${TempDir}/systemhealth.now" >>"${ResultLog}"
+			grep 'Time' "${MonitorLog}" | tail -n 1 >>"${ResultLog}"
+			grep ':' "${MonitorLog}" | tail -n 1 >>"${ResultLog}"
 			OnlyCPUFreqMax=YES
 		else
 			echo -e "\x08\x08 Done.\nChecking cpufreq OPP...\c"
@@ -3493,7 +3499,8 @@ CheckTimeInState() {
 	# https://www.raspberrypi.org/forums/viewtopic.php?f=63&t=217056#p1334921
 
 	if [ -f /sys/devices/system/cpu/cpufreq/policy0/stats/time_in_state ]; then
-		for StatFile in $(ls /sys/devices/system/cpu/cpufreq/policy?/stats/time_in_state) ; do
+		for StatFile in /sys/devices/system/cpu/cpufreq/policy?/stats/time_in_state ; do
+			[[ -e "${StatFile}" ]] || break
 			case ${1} in
 				before)
 					# reset statistics if possible
@@ -4145,7 +4152,7 @@ CreateGBResultsTable() {
 		printf "%10s" "${o%.*}" | sed 's/all-/all /g'
 	done
 	echo ""
-	for i in $(seq 1 $(wc -l <${ResultList}) ); do
+	for i in $(seq 1 $(wc -l <"${ResultList}") ); do
 		for o in *.lst ; do
 			case $o in
 				0*)
@@ -4452,7 +4459,8 @@ LogEnvironment() {
 		# if so include them using the usual sbc-bench format. The whole DVFS thing on RPi
 		# happens solely inside the closed source ThreadX world.
 		echo -e "\n##########################################################################" >>"${ResultLog}"
-		for OPPTable in $(ls "${TempDir}"/opp-table-threadx-* 2>/dev/null) ; do
+		for OPPTable in "${TempDir}"/opp-table-threadx-* ; do
+			[[ -e "${OPPTable}" ]] || break
 			echo -e "\n   ${OPPTable##*/}:" >>"${ResultLog}"
 			sort -n <"${OPPTable}" >>"${ResultLog}"
 		done
@@ -8239,6 +8247,7 @@ ProvideReviewInfo() {
 	InstallPrerequisits
 	[ "X${RunBenchmarks}" = "XTRUE" ] && InstallCpuminer
 	InitialMonitoring
+	CheckNetio
 	unset SPACING
 	OperatingSystem="$(GetOSRelease)"
 
@@ -8439,7 +8448,7 @@ ProvideReviewInfo() {
 	[ -z "${KernelInfo}" ] || echo -e "\n${KernelInfo}" >>"${TempDir}/review"
 
 	# if in NetIO mode then measure idle consumption walking through available governors and PCIe ASPM
-	if [ -n "${OutputCurrent}" ]; then
+	if [ "X${OutputCurrents[*]}" != "X" ]; then
 		CountOfGovernors=$(wc -l <<<"${GovernorState}")
 		[ "X${RunBenchmarks}" = "XTRUE" ] || echo -e "\x08\x08 Done."
 		echo -e "Now measuring idle consumption ($(( 2 + ${CountOfGovernors} * 2 )) more minutes)...\c"
@@ -8456,14 +8465,11 @@ ProvideReviewInfo() {
 		else
 			echo -e "\n### Idle consumption (measured with Netio ${NetioModel}, FW v${Firmware}):\n" >>"${TempDir}/review"
 			echo -e "  * everything set to powersave: ${IdleConsumption} mW" >>"${TempDir}/review"
-			FormerIdleConsumption=${IdleConsumption}
 			find /sys -name "*governor" | grep -E -v '/sys/module|cpuidle|watchdog' | sort -n | while read ; do
 				if [ -w "${REPLY}" ]; then
 					echo performance >"${REPLY}"
 					sleep 120
 					read IdleConsumption <${NetioConsumptionFile}
-					ConsumptionDiff=$(( ${IdleConsumption} - ${FormerIdleConsumption} ))
-					FormerIdleConsumption=${IdleConsumption}
 					echo -e "  * ${REPLY%/*} set to performance: ${IdleConsumption} mW" >>"${TempDir}/review"
 				else
 					echo -e "  * Not able to set ${REPLY%/*} to performance" >>"${TempDir}/review"
@@ -8541,7 +8547,7 @@ ProvideReviewInfo() {
 	EOF
 
 	# Now switch to monitoring mode, report consumption if Netio powermeter is available
-	if [ -n "${OutputCurrent}" ]; then
+	if [ "X${OutputCurrents[*]}" != "X" ]; then
 		# We are in Netio monitoring mode as such provide consumption info as well
 		/bin/bash "${PathToMe}" -N ${NetioDevice} ${NetioSocket} ${NetioConsumptionFile} "4.8" "30" >/dev/null 2>&1 &
 		NetioMonitoringPID=$!
@@ -9279,7 +9285,8 @@ CheckStorage() {
 	done
 
 	# MMC devices
-	for StorageDevice in $(ls /dev/mmcblk? 2>/dev/null) ; do
+	for StorageDevice in /dev/mmcblk? ; do
+		[[ -e "${StorageDevice}" ]] || break
 		unset DeviceName DeviceInfo DeviceWarning DevizeSize DeviceType DmesgInfo AdditionalInfo CountOfProblems TuningProblems Manufacturer
 		if [ -x /sys/block/${StorageDevice##*/}/device ]; then
 			cd /sys/block/${StorageDevice##*/}/device || return 1
@@ -9308,6 +9315,7 @@ CheckStorage() {
 			# mmc_ssr=00000000030000000400900014050a00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 			# mmc_type=SD
 
+			declare mmc_serial mmc_manfid mmc_oemid mmc_date mmc_type mmc_hwrev mmc_fwrev
 			eval $(grep . * 2>/dev/null | grep -v uevent | sed -e 's/:/=/' -e 's/^/mmc_/' -e 's/\ //g')
 
 			# Rely on human readable real storage sizes and not marketing 'sizes':
@@ -9557,7 +9565,8 @@ CheckStorage() {
 } # CheckStorage
 
 CheckMTD() {
-	for StorageDevice in $(ls /dev/mtd? 2>/dev/null) ; do
+	for StorageDevice in /dev/mtd? ; do
+		[[ -e "${StorageDevice}" ]] || break
 		UdevInfo="$(udevadm info -a -n ${StorageDevice} 2>/dev/null)"
 		DevicePath="$(awk -F"'" '/looking at device/ {print $2}' <<<"${UdevInfo}")"
 		Driver="$(awk -F'"' '/DRIVERS==/ {print $2}' <<<"${UdevInfo}" | sed '/^$/d' | tr '\n' '/' | sed 's/\/$//')"
@@ -9696,8 +9705,9 @@ GetDiskSize() {
 	# (e.g. "Model Number: KXG50ZNV256G NVMe TOSHIBA 256GB") or the capacity reported
 	# by lsblk if lsblk lists the device
 
+	local disksize
 	grep -q " ${1##*/}" <<<"${LSBLK}" || return
-	local disksize=$(awk -F" " "/ ${1##*/}/ {print \$1}" <<<"${LSBLK}" | head -n1)
+	disksize=$(awk -F" " "/ ${1##*/}/ {print \$1}" <<<"${LSBLK}" | head -n1)
 	# return disk size only if not '0B'
 	[ "X${disksize}" != "X0B" ] && echo "${disksize}B "
 } # GetDiskSize

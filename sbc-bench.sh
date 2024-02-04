@@ -8451,24 +8451,23 @@ ProvideReviewInfo() {
 	if [ "X${OutputCurrents[*]}" != "X" ]; then
 		CountOfGovernors=$(wc -l <<<"${GovernorState}")
 		[ "X${RunBenchmarks}" = "XTRUE" ] || echo -e "\x08\x08 Done."
-		echo -e "Now measuring idle consumption ($(( 2 + ${CountOfGovernors} * 2 )) more minutes)...\c"
+		echo -e "Now measuring idle consumption ($(( 3 + ${CountOfGovernors} * 3 )) more minutes)...\c"
 		NetioConsumptionFile="${TempDir}/netio.current"
 		echo -n $(( $(awk '{printf ("%0.0f",$1/10); }' <<<"${OutputCurrent[$(( ${NetioSocket} - 1 ))]}" ) * 10 )) >"${NetioConsumptionFile}"
 		export NetioConsumptionFile
-		HandleGovernors powersave
+		HandleGovernors powersave >/dev/null 2>&1
+		HandlePolicies powersave >/dev/null 2>&1
 		/bin/bash "${PathToMe}" -N ${NetioDevice} ${NetioSocket} ${NetioConsumptionFile} "1.8" "55" >/dev/null 2>&1 &
 		NetioMonitoringPID=$!
-		sleep 120
+		sleep 180
 		read IdleConsumption <${NetioConsumptionFile}
-		if [ ${CountOfGovernors} -eq 1 ]; then
-			echo -e "\n### Idle consumption (measured with Netio ${NetioModel}, FW v${Firmware}): ${IdleConsumption} mW" >>"${TempDir}/review"
-		else
-			echo -e "\n### Idle consumption (measured with Netio ${NetioModel}, FW v${Firmware}):\n" >>"${TempDir}/review"
-			echo -e "  * everything set to powersave: ${IdleConsumption} mW" >>"${TempDir}/review"
+		echo -e "\n### Idle consumption (measured with Netio ${NetioModel}, FW v${Firmware}):\n" >>"${TempDir}/review"
+		echo -e "  * everything set to powersave: ${IdleConsumption} mW" >>"${TempDir}/review"
+		if [ ${CountOfGovernors} -gt 1 ]; then
 			find /sys -name "*governor" | grep -E -v '/sys/module|cpuidle|watchdog' | sort -n | while read ; do
 				if [ -w "${REPLY}" ]; then
 					echo performance >"${REPLY}"
-					sleep 120
+					sleep 180
 					read IdleConsumption <${NetioConsumptionFile}
 					echo -e "  * ${REPLY%/*} set to performance: ${IdleConsumption} mW" >>"${TempDir}/review"
 				else
@@ -8478,7 +8477,7 @@ ProvideReviewInfo() {
 		fi
 		if [ -w /sys/module/pcie_aspm/parameters/policy ] && [ -d /sys/bus/pci_express ]; then
 			echo performance >/sys/module/pcie_aspm/parameters/policy
-			sleep 120
+			sleep 180
 			read IdleConsumption <${NetioConsumptionFile}
 			echo -e "  * /sys/module/pcie_aspm/parameters/policy set to performance: ${IdleConsumption} mW" >>"${TempDir}/review"
 		fi
@@ -8505,6 +8504,9 @@ ProvideReviewInfo() {
 		# throttling check and routine waiting for the board to cool down since otherwise the
 		# next monitoring step will report throttling even if none happens from now on.
 		[ "X${ThrottlingWarning}" != "X" ] && snore 5
+		# temporary switch to performance when in Netio mode since otherwise the prior idle
+		# measurements will result in the following check never finishing
+		[ "X${OutputCurrents[*]}" != "X" ] && HandleGovernors performance >/dev/null 2>&1
 		if [ -r /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq ]; then
 			CpuFreqToQuery=cpuinfo_cur_freq
 		elif [ -r /sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq ]; then
@@ -8531,6 +8533,7 @@ ProvideReviewInfo() {
 				echo ""
 			fi
 		fi
+		[ "X${OutputCurrents[*]}" != "X" ] && HandlePolicies performance >/dev/null 2>&1
 	fi
 
 	# drop caches

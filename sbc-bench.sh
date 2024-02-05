@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.9.62
+Version=0.9.63
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -865,7 +865,7 @@ HandlePolicies() {
 	[ -z "${DMESG}" ] && DMESG="$(dmesg | grep pcie)"
 
 	# process policies
-	SysFSPolicies="$(find /sys -name "*policy" | grep -E -v 'hotplug|cpufreq|thermal_zone|apparmor|hostap|/sys/kernel|/sys/devices/pci|mobile_lpm_|xmit_hash_|fr_policy')"
+	SysFSPolicies="$(find /sys -name "*policy" | grep -E -v 'hotplug|cpufreq|thermal_zone|apparmor|hostap|/sys/kernel|/sys/devices/pci|mobile_lpm_|xmit_hash_|fr_policy|selinux')"
 	if [ "X${SysFSPolicies}" = "X" ]; then
 		# skip if no policies found
 		return
@@ -1902,11 +1902,8 @@ CheckOSRelease() {
 	OperatingSystem="$(GetOSRelease)"
 
 	# Display warning when not executing on Debian Stretch/Buster/Bullseye/Bookworm or Ubuntu Bionic/Focal/Jammy
-	command -v lsb_release >/dev/null 2>&1 || apt -f -qq -y install lsb-release >/dev/null 2>&1
-	command -v lsb_release >/dev/null 2>&1 && \
-		Distro=$(lsb_release -c 2>/dev/null | awk -F" " '{print $2}' | tr '[:upper:]' '[:lower:]')
-	case ${Distro} in
-		stretch|buster|bullseye|bookworm|bionic|focal|jammy|lunar)
+	case ${OperatingSystem,,} in
+		*stretch*|*buster*|*bullseye*|*bookworm*|*bionic*|*focal*|*jammy*|*lunar*|*thirty*|"fedora linux 3"*)
 			:
 			;;
 		*)
@@ -1925,11 +1922,8 @@ CheckOSReleaseForReview() {
 	OperatingSystem="$(GetOSRelease)"
 
 	# Display warning when not executing on Debian Stretch/Buster/Bullseye or Ubuntu Bionic/Focal/Jammy
-	command -v lsb_release >/dev/null 2>&1 || apt -f -qq -y install lsb-release >/dev/null 2>&1
-	command -v lsb_release >/dev/null 2>&1 && \
-		Distro=$(lsb_release -c 2>/dev/null | awk -F" " '{print $2}' | tr '[:upper:]' '[:lower:]')
-	case ${Distro} in
-		precise|quantal|raring|saucy|trusty|utopic|vivid|wily|xenial|yakkety|zesty|artful|bionic|cosmic|disco|eoan|focal|groovy|hirsute|impish|jessie|lenny|squeeze|wheezy|stretch|buster)
+	case ${OperatingSystem,,} in
+		*precise*|*quantal*|*raring*|*saucy*|*trusty*|*utopic*|*vivid*|*wily*|*xenial*|*yakkety*|*zesty*|*artful*|*bionic*|*cosmic*|*disco*|*eoan*|*focal*|*groovy*|*hirsute*|*impish*|*jessie*|*lenny*|*squeeze*|*wheezy*|*stretch*|*buster*|"fedora linux 2"*|"fedora linux 30"*|"fedora linux 31"*|"fedora linux 32"*|"fedora linux 33"*|"fedora linux 34"*|"fedora linux 35"*|"fedora linux 36"*|"fedora linux 37"*)
 			# only inform/ask user if $MODE != unattended
 			if [ "X${MODE}" != "Xunattended" ]; then
 				echo -e "${LRED}${BOLD}WARNING: This tool is meant to assist with device reviews but ${OperatingSystem} seems a bit too old for this.${NC}"
@@ -1942,6 +1936,8 @@ CheckOSReleaseForReview() {
 
 GetOSRelease() {
 	# try to get human friendly OS release name
+	UBUNTU_CODENAME="$(awk -F"=" '/UBUNTU_CODENAME/ {print $2}' /etc/os-release 2>/dev/null)"
+	[ "X${UBUNTU_CODENAME}" = "X" ] && UbuntuSuffix=" (${UBUNTU_CODENAME})"
 	OS="$(hostnamectl 2>/dev/null | awk -F": " '/Operating System:/ {print $2}')"
 	if [ "X${OS}" = "X" ] && [ -f /etc/os-release ]; then
 		OS="$(awk -F'"' '/^PRETTY_NAME/ {print $2}' </etc/os-release)"
@@ -1960,14 +1956,15 @@ GetOSRelease() {
 			# the operating system's own files (which will happen sooner or later anyway
 			# just by updating Debian/Ubuntu once the base-files package gets updated):
 			apt-get -f -qq -y --reinstall install base-files >/dev/null 2>&1
-			hostnamectl | awk -F": " '/Operating System:/ {print $2}'
+			OS="$(hostnamectl | awk -F": " '/Operating System:/ {print $2}')"
+			echo "${OS}${UbuntuSuffix}"
 			;;
 		"")
 			echo "n/a"
 			;;
 		*)
 			grep -q -i Gentoo <<<"${OS}" && read OS </etc/gentoo-release
-			echo "${OS}"
+			echo "${OS}${UbuntuSuffix}"
 			;;
 	esac
 } # GetOSRelease
@@ -2612,8 +2609,8 @@ BasicSetup() {
 
 CheckMissingPackages() {
 	# check for missing packages and construct installation string with list of needed packages
-	case ${OperatingSystem} in
-		"Arch Linux"*|*manjaro*|*Manjaro*)
+	case ${OperatingSystem,,} in
+		"arch linux"*|*manjaro*)
 			# Arch/Manjaro
 			command -v pacman >/dev/null 2>&1
 			if [ $? -eq 0 ]; then
@@ -2625,7 +2622,19 @@ CheckMissingPackages() {
 				echo -e "echo \c"
 			fi	
 			;;
-		*SUSE*|*suse*|*Suse*)
+		*fedora*)
+			command -v dnf >/dev/null 2>&1
+			if [ $? -eq 0 ]; then
+				# Fedora
+				echo -e "dnf install -q -y \c"
+				command -v gcc >/dev/null 2>&1 || dnf group install -y -q "C Development Tools and Libraries" >/dev/null 2>&1
+				command -v sensors >/dev/null 2>&1 || echo -e "lm_sensors \c"
+				command -v lsb_release >/dev/null 2>&1 || echo -e "redhat-lsb-core \c"
+			else
+				echo -e "echo \c"
+			fi
+			;;
+		*suse*)
 			command -v zypper >/dev/null 2>&1
 			if [ $? -eq 0 ]; then
 				# Some Suse variant with zypper present
@@ -2666,15 +2675,13 @@ CheckMissingPackages() {
 	[ $? -ne 0 ] && [ -d /sys/devices/virtual/powercap ] && echo -e "powercap-utils \c"
 	command -v strings >/dev/null 2>&1 || echo -e "binutils \c"
 	command -v uptime >/dev/null 2>&1 || echo -e "procps \c"
+	command -v wget >/dev/null 2>&1 || echo -e "wget \c"
+	command -v links >/dev/null 2>&1 || echo -e "links \c"
 	if [ "${ExecuteStockfish}" = "yes" ]; then
 		command -v g++ >/dev/null 2>&1 || echo -e "g++ \c"
 	fi
 	if [ "X${MODE}" = "Xextensive" ]; then
 		command -v decode-dimms >/dev/null 2>&1 || echo -e "i2c-tools \c"
-	fi
-	if [ "X${MODE}" = "Xgb" ]; then
-		command -v wget >/dev/null 2>&1 || echo -e "wget \c"
-		command -v links >/dev/null 2>&1 || echo -e "links \c"
 	fi
 	if [ "X${REVIEWMODE}" = "Xtrue" ]; then
 		command -v lspci >/dev/null 2>&1 || echo -e "pciutils \c"
@@ -2821,7 +2828,7 @@ InstallPrerequisits() {
 	fi
 	
 	# add needed repository and install all necessary packages in a batch
-	grep -E -q "sensors|gcc|git|sysstat|openssl|curl|dmidecode|i2c|lshw|binutils|procps|p7zip|wget|links|powercap|g++|pciutils|usbutils|mmc-utils|stress-ng|smartmontools|udev|bsdmainutils" <<<"${MissingPackages}"
+	grep -E -q "sensors|gcc|git|sysstat|openssl|curl|dmidecode|i2c|lshw|binutils|procps|p7zip|wget|links|powercap|g++|pciutils|usbutils|mmc-utils|stress-ng|smartmontools|udev|bsdmainutils|redhat-lsb-core" <<<"${MissingPackages}"
 	if [ $? -eq 0 ]; then
 		echo -e "\x08\x08 ${MissingPackages}...\c"
 		add-apt-repository -y universe >/dev/null 2>&1
@@ -2970,6 +2977,7 @@ InstallCpuminer() {
 		zypper install -y automake autoconf pkg-config libcurl4-openssl-dev libjansson-dev libssl-dev libgmp-dev make g++ zlib1g-dev >/dev/null 2>&1
 		apt-get -f -qq -y install automake autoconf pkg-config libcurl4-openssl-dev libjansson-dev libssl-dev libgmp-dev make g++ zlib1g-dev >/dev/null 2>&1
 		pacman --noconfirm -Sq automake autoconf pkg-config libcurl4-openssl-dev libjansson-dev libssl-dev libgmp-dev make g++ zlib1g-dev >/dev/null 2>&1
+		dnf install -q -y openssl-devel curl-devel zlib-devel >/dev/null 2>&1
 		if [ -d "${InstallLocation}/cpuminer-multi/.git" ]; then
 			cd "${InstallLocation}/cpuminer-multi/" || exit 1 && git pull >/dev/null 2>&1 && make clean >/dev/null 2>&1
 		else
@@ -3163,7 +3171,8 @@ InitialMonitoring() {
 	fi
 
 	# get distribution info
-	command -v lsb_release >/dev/null 2>&1 && (lsb_release -a 2>/dev/null | grep -v "n/a") >>"${ResultLog}"
+	command -v lsb_release >/dev/null 2>&1 && (lsb_release -a 2>/dev/null | grep -v "n/a") >>"${ResultLog}" || \
+		echo -e "Description:\t${OS}" >>"${ResultLog}"
 	ARCH=$(dpkg --print-architecture 2>/dev/null) || \
 		ARCH=$(awk -F'"' '/^CARCH/ {print $2}' /etc/makepkg.conf 2>/dev/null) || \
 		ARCH="$(uname -m)"
@@ -8245,12 +8254,12 @@ ProvideReviewInfo() {
 	fi
 
 	GetTempSensor
+	OperatingSystem="$(GetOSRelease)"
 	InstallPrerequisits
 	[ "X${RunBenchmarks}" = "XTRUE" ] && InstallCpuminer
 	InitialMonitoring
 	CheckNetio
 	unset SPACING
-	OperatingSystem="$(GetOSRelease)"
 
 	if [ "X${RunBenchmarks}" = "XTRUE" ]; then
 		CheckClockspeedsAndSensors
@@ -8671,6 +8680,9 @@ CheckKernelVersion() {
 	# 6.1.0-rpi6-rpi-v8
 	grep -q -E 'rpi.-rpi' <<<"$1" && return
 
+	# Fedora kernels also follow an own release scheme and not mainline's
+	grep -q -E '\.fc3|\.fc4' <<<"$1" && return
+
 	# skip this whole check on x86 and in aarch64 VMs where usually distro kernels are
 	# used that follow an own release schedule
 	case "${CPUArchitecture}" in
@@ -8679,7 +8691,7 @@ CheckKernelVersion() {
 			;;
 		aarch64)
 			case ${VirtWhat} in
-				kvm|oracle|parallels|vmware|wsl|xen)
+				kvm|oracle|parallels|vmware|wsl|xen|qemu)
 					return
 					;;
 			esac

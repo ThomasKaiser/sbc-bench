@@ -1937,7 +1937,7 @@ CheckOSReleaseForReview() {
 GetOSRelease() {
 	# try to get human friendly OS release name
 	UBUNTU_CODENAME="$(awk -F"=" '/UBUNTU_CODENAME/ {print $2}' /etc/os-release 2>/dev/null)"
-	[ "X${UBUNTU_CODENAME}" = "X" ] && UbuntuSuffix=" (${UBUNTU_CODENAME})"
+	[ "X${UBUNTU_CODENAME}" = "X" ] || UbuntuSuffix=" (${UBUNTU_CODENAME})"
 	OS="$(hostnamectl 2>/dev/null | awk -F": " '/Operating System:/ {print $2}')"
 	if [ "X${OS}" = "X" ] && [ -f /etc/os-release ]; then
 		OS="$(awk -F'"' '/^PRETTY_NAME/ {print $2}' </etc/os-release)"

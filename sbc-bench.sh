@@ -1732,7 +1732,7 @@ MonitorBoard() {
 				printf "%s: %4sMHz %5s %s %8s %s %s\n" "$(date "+%H:%M:%S")" "${CpuFreq}" "${LoadAvg}" "${procStats}" "${SocTemp}°C" "${VoltageColumn}" "${NetioColumn}"
 				;;
 			notavailable)
-				printf "%s: n/a MHz %7s %s %8s %s %s\n" "$(date "+%H:%M:%S")" "${LoadAvg}" "${procStats}" "${SocTemp}°C" "${VoltageColumn}" "${NetioColumn}"
+				printf "%s:  n/aMHz %7s %s %8s %s %s\n" "$(date "+%H:%M:%S")" "${LoadAvg}" "${procStats}" "${SocTemp}°C" "${VoltageColumn}" "${NetioColumn}"
 				;;
 		esac
 		snore ${SleepInterval}
@@ -2614,10 +2614,26 @@ CheckMissingPackages() {
 			# Arch/Manjaro
 			command -v pacman >/dev/null 2>&1
 			if [ $? -eq 0 ]; then
-				# Arch/Manjaro
+				# Arch/Manjaro: check whether packages need updates and suggest to run a
+				# 'pacman -Syu' manually before continuing. Simply installing packages on
+				# a highly outdated Arch install ended with all programs refusing to run
+				# due to 'error while loading shared libraries: libcrypto.so.1.1: cannot
+				# open shared object file: No such file or directory'
+				packages="$(pacman -S -u --print-format %n,%v | sort -n)"
+				count_of_packages=$(wc -l <<<"${packages}")
+				if [ ${count_of_packages:-0} -gt 1 ]; then
+					echo -e "\x08Aborting. ${count_of_packages} packages need updates first:\n\n${packages}\n\nPlease run \"pacman -Syu\" before trying again." >&2
+					echo "stop"
+					return 1
+				fi
 				echo -e "pacman --noconfirm -Syq \c"
 				command -v gcc >/dev/null 2>&1 || echo -e "gcc make base-devel \c"
-				command -v sensors >/dev/null 2>&1 || echo -e "lm-sensors \c"
+				command -v sensors >/dev/null 2>&1
+				if [ $? -ne 0 ]; then
+					# package name seems to have changed so try both variants
+					pacman -Si lm_sensors >/dev/null 2>&1 && echo -e "lm_sensors \c"
+					pacman -Si lm-sensors >/dev/null 2>&1 && echo -e "lm-sensors \c"
+				fi
 			else
 				echo -e "echo \c"
 			fi	
@@ -2627,7 +2643,7 @@ CheckMissingPackages() {
 			if [ $? -eq 0 ]; then
 				# Fedora
 				echo -e "dnf install -q -y \c"
-				command -v gcc >/dev/null 2>&1 || dnf group install -y -q "C Development Tools and Libraries" >/dev/null 2>&1
+				command -v gcc >/dev/null 2>&1 || dnf group install -y -q "C Development Tools and Libraries" >/dev/null 2>"${TempDir}/packages.log"
 				command -v sensors >/dev/null 2>&1 || echo -e "lm_sensors \c"
 				command -v lsb_release >/dev/null 2>&1 || echo -e "redhat-lsb-core \c"
 			else
@@ -2639,7 +2655,7 @@ CheckMissingPackages() {
 			if [ $? -eq 0 ]; then
 				# Some Suse variant with zypper present
 				echo -e "zypper install -y \c"
-				command -v gcc >/dev/null 2>&1 || zypper install -y -t pattern devel_basis
+				command -v gcc >/dev/null 2>&1 || zypper install -y -t pattern devel_basis >/dev/null 2>"${TempDir}/packages.log"
 				command -v sensors >/dev/null 2>&1 || echo -e "sensors \c"
 			else
 				echo -e "echo \c"
@@ -2647,10 +2663,10 @@ CheckMissingPackages() {
 			;;
 		*)
 			# other distro, let's check for apt
-			command -v apt >/dev/null 2>&1
+			command -v apt-get >/dev/null 2>&1
 			if [ $? -eq 0 ]; then
 				# Debian/Ubuntu/Linux Mint
-				echo -e "apt -f -qq -y install \c"
+				echo -e "apt-get -f -qq -y install \c"
 				command -v gcc >/dev/null 2>&1 || echo -e "gcc make build-essential \c"
 				command -v sensors >/dev/null 2>&1 || echo -e "lm-sensors \c"
 				command -v powercap-info >/dev/null 2>&1
@@ -2691,8 +2707,15 @@ CheckMissingPackages() {
 			apt-cache show mmc-utils >/dev/null 2>&1 && echo -e "mmc-utils \c"
 		fi
 		command -v smartctl >/dev/null 2>&1 || echo -e "smartmontools \c"
-		command -v stress-ng >/dev/null 2>&1 || echo -e "stress-ng \c"
 		command -v udevadm >/dev/null 2>&1 || echo -e "udev \c"
+		case ${OperatingSystem,,} in
+			"arch linux"*|*manjaro*)
+				command -v stress >/dev/null 2>&1 || echo -e "stress \c"
+				;;
+			*)
+				command -v stress-ng >/dev/null 2>&1 || echo -e "stress-ng \c"
+				;;
+		esac
 	fi
 } # CheckMissingPackages
 
@@ -2822,6 +2845,7 @@ InstallPrerequisits() {
 
 	# Determine missing packages and install them with a single command
 	MissingPackages="$(CheckMissingPackages | sed 's/\ $//')"
+	[ "X${MissingPackages}" = "Xstop" ] && exit 1
 	SevenZip=$(command -v 7zr || command -v 7za)
 	if [ -z "${SevenZip}" ]; then
 		MissingPackages="${MissingPackages} p7zip"
@@ -2832,7 +2856,7 @@ InstallPrerequisits() {
 	if [ $? -eq 0 ]; then
 		echo -e "\x08\x08 ${MissingPackages}...\c"
 		add-apt-repository -y universe >/dev/null 2>&1
-		${MissingPackages} >"${TempDir}/packages.log" 2>&1
+		${MissingPackages} >/dev/null 2>>"${TempDir}/packages.log"
 		if [ $? -eq 100 ]; then
 			# apt cache might be too outdated so update and try again
 			echo -e "\x08\x08 Updating APT cache...\c"
@@ -2847,7 +2871,7 @@ InstallPrerequisits() {
 				echo -e "\x08\x08 Installing packages...\c"
 			fi
 			${MissingPackages} >/dev/null 2>&1
-		elif [ $? -ne 0 ]; then
+		elif [ $? -ne 0 ] && [ -s "${TempDir}/packages.log" ]; then
 			echo -e "\x08\x08 Something went wrong:\n"
 			cat "${TempDir}/packages.log"
 			echo -e "\nTrying to continue...\c"
@@ -2856,7 +2880,7 @@ InstallPrerequisits() {
 
 	SevenZip=$(command -v 7zr || command -v 7za)
 	if [ -z "${SevenZip}" ]; then
-		echo -e "\x08\x08 Failed. ${LRED}${BOLD}No 7-zip binary found and could not be installed. Aborting${NC}" >&2
+		echo -e "\x08\x08\x08 failed. ${LRED}${BOLD}No 7-zip binary found and could not be installed. Aborting${NC}" >&2
 		exit 1
 	fi
 
@@ -3176,7 +3200,7 @@ InitialMonitoring() {
 
 	# get distribution info
 	command -v lsb_release >/dev/null 2>&1 && (lsb_release -a 2>/dev/null | grep -v "n/a") >>"${ResultLog}" || \
-		echo -e "Description:\t${OS}" >>"${ResultLog}"
+		echo -e "Description:\t${OperatingSystem}" >>"${ResultLog}"
 	ARCH=$(dpkg --print-architecture 2>/dev/null) || \
 		ARCH=$(awk -F'"' '/^CARCH/ {print $2}' /etc/makepkg.conf 2>/dev/null) || \
 		ARCH="$(uname -m)"
@@ -3925,16 +3949,25 @@ RunCpuminerBenchmark() {
 } # RunCpuminerBenchmark
 
 RunStressNG() {
+	case ${OperatingSystem,,} in
+		"arch linux"*|*manjaro*)
+			StressCommand="stress --cpu ${CPUCores} --io ${CPUCores} --vm ${CPUCores} --vm-bytes 128M"
+			;;
+		*)
+			StressCommand="stress-ng --matrix 0"
+			;;
+	esac
+
 	if [ "X${REVIEWMODE}" = "Xtrue" ]; then
 		echo -e "\x08\x08 Done.\nThrottling test: heating up the device, 5 more minutes to wait...\c"
 	else
-		echo -e "\x08\x08 Done.\nExecuting stress-ng. 5 more minutes to wait...\c"
+		echo -e "\x08\x08 Done.\nExecuting ${StressCommand%% *}. 5 more minutes to wait...\c"
 	fi
-	echo -e "\nSystem health while running stress-ng:\n" >>"${MonitorLog}"
+	echo -e "\nSystem health while running ${StressCommand%% *}:\n" >>"${MonitorLog}"
 	/bin/bash "${PathToMe}" -m 40 >>"${MonitorLog}" &
 	MonitoringPID=$!
-	echo -e "Executing \"stress-ng --matrix 0\" for 5 minutes:\n" >"${TempLog}"
-	stress-ng --matrix 0 -t 300 >>"${TempLog}" 2>&1
+	echo -e "Executing \"${StressCommand}\" for 5 minutes:\n" >"${TempLog}"
+	${StressCommand} -t 300 >>"${TempLog}" 2>&1
 	kill ${MonitoringPID}
 	echo -e "\n##########################################################################\n" >>"${ResultLog}"
 	sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" <"${TempLog}" >>"${ResultLog}"

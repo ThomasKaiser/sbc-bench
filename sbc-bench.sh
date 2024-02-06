@@ -2653,6 +2653,8 @@ CheckMissingPackages() {
 				echo -e "apt -f -qq -y install \c"
 				command -v gcc >/dev/null 2>&1 || echo -e "gcc make build-essential \c"
 				command -v sensors >/dev/null 2>&1 || echo -e "lm-sensors \c"
+				command -v powercap-info >/dev/null 2>&1
+				[ $? -ne 0 ] && [ -d /sys/devices/virtual/powercap ] && echo -e "powercap-utils \c"
 				# Check for hexdump only on Rockchip and Allwinner platforms where NVMEM is
 				# readable. In Debian based distros the tool is part of bsdmainutils package,
 				# no idea about other distros.
@@ -2671,8 +2673,6 @@ CheckMissingPackages() {
 	command -v iostat >/dev/null 2>&1 || echo -e "sysstat \c"
 	command -v lshw >/dev/null 2>&1 || echo -e "lshw \c"
 	command -v openssl >/dev/null 2>&1 || echo -e "openssl \c"
-	command -v powercap-info >/dev/null 2>&1
-	[ $? -ne 0 ] && [ -d /sys/devices/virtual/powercap ] && echo -e "powercap-utils \c"
 	command -v strings >/dev/null 2>&1 || echo -e "binutils \c"
 	command -v uptime >/dev/null 2>&1 || echo -e "procps \c"
 	command -v wget >/dev/null 2>&1 || echo -e "wget \c"
@@ -2832,7 +2832,7 @@ InstallPrerequisits() {
 	if [ $? -eq 0 ]; then
 		echo -e "\x08\x08 ${MissingPackages}...\c"
 		add-apt-repository -y universe >/dev/null 2>&1
-		${MissingPackages} >/dev/null 2>&1
+		${MissingPackages} >"${TempDir}/packages.log" 2>&1
 		if [ $? -eq 100 ]; then
 			# apt cache might be too outdated so update and try again
 			echo -e "\x08\x08 Updating APT cache...\c"
@@ -2847,12 +2847,16 @@ InstallPrerequisits() {
 				echo -e "\x08\x08 Installing packages...\c"
 			fi
 			${MissingPackages} >/dev/null 2>&1
+		elif [ $? -ne 0 ]; then
+			echo -e "\x08\x08 Something went wrong:\n"
+			cat "${TempDir}/packages.log"
+			echo -e "\nTrying to continue...\c"
 		fi
 	fi
 
 	SevenZip=$(command -v 7zr || command -v 7za)
 	if [ -z "${SevenZip}" ]; then
-		echo -e "${LRED}${BOLD}No 7-zip binary found and could not be installed. Aborting${NC}" >&2
+		echo -e "\x08\x08 Failed. ${LRED}${BOLD}No 7-zip binary found and could not be installed. Aborting${NC}" >&2
 		exit 1
 	fi
 

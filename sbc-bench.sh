@@ -20,7 +20,7 @@ Main() {
 		# ThreadX on the VC via vcgencmd to get real information
 		# Double check via device-tree compatible string:
 		[ -f /proc/device-tree/compatible ] && \
-			strings /proc/device-tree/compatible 2>/dev/null | grep -q raspberrypi
+			grep -q raspberrypi /proc/device-tree/compatible
 		if [ $? -eq 0 ]; then
 			USE_VCGENCMD=true
 		else
@@ -1544,7 +1544,7 @@ MonitorNetio() {
 
 PrintCPUInfo() {
 	BasicSetup nochange
-	[ -z "${DTCompatible}" ] && DTCompatible="$(strings /proc/device-tree/compatible 2>/dev/null)"
+	[ -z "${DTCompatible}" ] && [ -r /proc/device-tree/compatible ] && read -r DTCompatible </proc/device-tree/compatible 2>/dev/null
 	[ -z "${LSCPU}" ] && LSCPU="$(lscpu)"
 	[ -z "${CPUArchitecture}" ] && CPUArchitecture="$(awk -F" " '/^Architecture/ {print $2}' <<<"${LSCPU}")"
 	[ -z "${VoltageSensor}" ] && VoltageSensor="$(GetVoltageSensor)"
@@ -1574,7 +1574,7 @@ PrintCPUInfo() {
 MonitorBoard() {
 	BasicSetup nochange
 	[ -z "${TempSource}" ] && GetTempSensor
-	[ -z "${DTCompatible}" ] && DTCompatible="$(strings /proc/device-tree/compatible 2>/dev/null)"
+	[ -z "${DTCompatible}" ] && [ -r /proc/device-tree/compatible ] && read -r DTCompatible </proc/device-tree/compatible 2>/dev/null
 	[ -z "${LSCPU}" ] && LSCPU="$(lscpu)"
 	[ -z "${CPUArchitecture}" ] && CPUArchitecture="$(awk -F" " '/^Architecture/ {print $2}' <<<"${LSCPU}")"
 	[ -z "${VoltageSensor}" ] && VoltageSensor="$(GetVoltageSensor)"
@@ -1903,14 +1903,14 @@ CheckOSRelease() {
 
 	# Display warning when not executing on Debian Stretch/Buster/Bullseye/Bookworm or Ubuntu Bionic/Focal/Jammy
 	case ${OperatingSystem,,} in
-		*stretch*|*buster*|*bullseye*|*bookworm*|*bionic*|*focal*|*jammy*|*lunar*|*thirty*|"fedora linux 3"*)
+		*stretch*|*buster*|*bullseye*|*bookworm*|*bionic*|*focal*|*jammy*|*lunar*|*thirty*|"fedora linux 3"*|"rocky linux 9"*)
 			:
 			;;
 		*)
 			# only inform/ask user if $MODE != unattended
 			if [ "X${MODE}" != "Xunattended" ]; then
 				echo -e "${LRED}${BOLD}WARNING: This tool is meant to run only on Debian Stretch, Buster, Bullseye, Bookworm or Ubuntu Bionic, Focal, Jammy, Lunar.${NC}\n"
-				echo -e "When executed on ${BOLD}${OperatingSystem}${NC} results are partially meaningless.\nPress [ctrl]-[c] to stop or ${BOLD}[enter]${NC} to continue.\c"
+				echo -e "When executed on ${BOLD}${OperatingSystem}${NC} results are partially meaningless.\nSee https://github.com/ThomasKaiser/sbc-bench/issues/81 for reasons.\nPress [ctrl]-[c] to stop or ${BOLD}[enter]${NC} to continue.\c"
 				read
 			fi
 			;;
@@ -2642,10 +2642,37 @@ CheckMissingPackages() {
 			command -v dnf >/dev/null 2>&1
 			if [ $? -eq 0 ]; then
 				# Fedora
+				packages="$(dnf check-update 2>/dev/null | grep "[0-9]\.")"
+				count_of_packages=$(wc -l <<<"${packages}")
+				if [ ${count_of_packages:-0} -gt 1 ]; then
+					echo -e "\x08Aborting. ${count_of_packages} packages need updates first:\n\n${packages}\n\nPlease run \"dnf update -y\" before trying again." >&2
+					echo "stop"
+					return 1
+				fi
 				echo -e "dnf install -q -y \c"
 				command -v gcc >/dev/null 2>&1 || dnf group install -y -q "C Development Tools and Libraries" >/dev/null 2>"${TempDir}/packages.log"
 				command -v sensors >/dev/null 2>&1 || echo -e "lm_sensors \c"
 				command -v lsb_release >/dev/null 2>&1 || echo -e "redhat-lsb-core \c"
+			else
+				echo -e "echo \c"
+			fi
+			;;
+		*"rocky linux"*)
+			command -v dnf >/dev/null 2>&1
+			if [ $? -eq 0 ]; then
+				# Rocky Linux
+				packages="$(dnf check-update 2>/dev/null | grep "[0-9]\.")"
+				count_of_packages=$(wc -l <<<"${packages}")
+				if [ ${count_of_packages:-0} -gt 1 ]; then
+					echo -e "\x08Aborting. ${count_of_packages} packages need updates first:\n\n${packages}\n\nPlease run \"dnf update -y\" before trying again." >&2
+					echo "stop"
+					return 1
+				fi
+				# check whether "Extra Packages for Enterprise Linux" repo needs to be activated
+				dnf repolist | grep -q ^epel || dnf install -q -y epel-release
+				echo -e "dnf install -q -y \c"
+				command -v gcc >/dev/null 2>&1 || dnf group install -y -q "Development Tools" >/dev/null 2>"${TempDir}/packages.log"
+				command -v sensors >/dev/null 2>&1 || echo -e "lm_sensors \c"
 			else
 				echo -e "echo \c"
 			fi
@@ -2689,7 +2716,6 @@ CheckMissingPackages() {
 	command -v iostat >/dev/null 2>&1 || echo -e "sysstat \c"
 	command -v lshw >/dev/null 2>&1 || echo -e "lshw \c"
 	command -v openssl >/dev/null 2>&1 || echo -e "openssl \c"
-	command -v strings >/dev/null 2>&1 || echo -e "binutils \c"
 	command -v uptime >/dev/null 2>&1 || echo -e "procps \c"
 	command -v wget >/dev/null 2>&1 || echo -e "wget \c"
 	command -v links >/dev/null 2>&1 || echo -e "links \c"
@@ -2902,13 +2928,18 @@ InstallPrerequisits() {
 	fi
 	if [ ! -x "${InstallLocation}"/tinymembench/tinymembench ]; then
 		echo -e "\x08\x08\x08, tinymembench...\c"
-		cd "${InstallLocation}" || exit 1
-		git clone https://github.com/nuumio/tinymembench >/dev/null 2>&1
-		if [ $? -ne 0 ]; then
-			echo -e "\n\n${LRED}${BOLD}Temporary Github problem. Not able to download tinymembench. Please try again later.${NC}" >&2
-			exit 1
+		if [ -d "${InstallLocation}"/tinymembench ]; then
+			cd "${InstallLocation}"/tinymembench || exit 1
+			git pull >/dev/null 2>&1
+		else
+			cd "${InstallLocation}" || exit 1
+			git clone https://github.com/nuumio/tinymembench >/dev/null 2>&1
+			if [ $? -ne 0 ]; then
+				echo -e "\n\n${LRED}${BOLD}Temporary Github problem. Not able to download tinymembench. Please try again later.${NC}" >&2
+				exit 1
+			fi
+			cd tinymembench || exit 1
 		fi
-		cd tinymembench || exit 1
 		make >/dev/null 2>&1
 		if [ ! -x "${InstallLocation}"/tinymembench/tinymembench ]; then
 			echo -e "${LRED}${BOLD}Not able to build necessary tools. Aborting.${NC}\nMost probably gcc and make packages are missing." >&2
@@ -3160,7 +3191,7 @@ InitialMonitoring() {
 	CPUTopology="$(PrintCPUTopology)"
 	echo -e "${CPUTopology}\n" >"${TempDir}/cpu-topology.log" &
 	CPUSignature="$(GetCPUSignature)"
-	DTCompatible="$(strings /proc/device-tree/compatible 2>/dev/null)"
+	[ -r /proc/device-tree/compatible ] && read -r DTCompatible </proc/device-tree/compatible 2>/dev/null
 	OPPTables="$(ParseOPPTables)"
 	# try to identify ARM/RISC-V/Loongson SoCs
 	[ "${CPUArchitecture}" = "x86_64" ] && GuessedSoC="n/a" || GuessedSoC="$(GuessARMSoC)"
@@ -3187,7 +3218,7 @@ InitialMonitoring() {
 	fi
 
 	# Log version and device info
-	read HostName </etc/hostname 2>/dev/null
+	[ -r /etc/hostname ] && read HostName </etc/hostname 2>/dev/null
 	if [ "X${MODE}" = "Xunattended" ] || [ "X${MODE}" = "Xextensive" ] || [ "X${MODE}" = "Xpts" ] || [ "X${MODE}" = "Xgb" ]; then
 		echo -e "sbc-bench v${Version} ${DeviceName:-$HostName} ${MODE} ($(date -R))\n" | sed 's/  / /g' >"${ResultLog}"
 	elif [ "X${REVIEWMODE}" = "Xtrue" ] && [ "X${NOTUNING}" != "Xyes" ]; then
@@ -4538,19 +4569,11 @@ LogEnvironment() {
 } # LogEnvironment
 
 ValidateResults() {
-	# function that checks whether benchmark scores have been invalidated by the following
-	# events:
-	#
-	# Bogus clockspeeds [x]
-	# Swapping happened [x]
-	# if swapping happened check type of swap and warn when on HDD, SD card or MMC [x]
-	# Silly settings (for example: arm_boost not set on RPi4, zswap on top of zram) [x]
-	# Too much background activity [x]
-	# oom-killer invocations [x]
-	# Inappropriate settings for benchmarking
-	# Powercapping on Intel [x]
-	# Thermal throttling happened [x]
-	# Frequency capping happened [x]
+	# function that checks whether benchmark scores have been invalidated
+
+	# check 7-zip version (only 16.02 is ok to compare with results list)
+	Valid7Zip="$(grep '^p7zip Version' "${ResultLog}" | head -n1 | awk -F" " '{print $3}')"
+	[ "X${Valid7Zip}" = "X16.02" ] || echo -e "${LRED}${BOLD}Distro uses problematic 7-zip version ${Valid7Zip}${NC} -> http://tinyurl.com/ukcktbsm"
 
 	# report significant mismatches between measured and 'advertised' clockspeeds from
 	# 1st measurement prior to benchmarking (to rule out later possible throttling effects)
@@ -7073,7 +7096,14 @@ GuessSoCbySignature() {
 		00A72r0p300A72r0p300A72r0p300A72r0p3)
 			# BCM2711, 4 x Cortex-A72 / r0p3 / fp asimd evtstrm crc32 (running 32-bit: half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm crc32)
 			# or Marvell Armada3900-A1, 4 x Cortex-A72 / r0p3 / https://community.cisco.com/t5/wireless/catalyst-9130ax-ap-booting-into-wnc-linux-instead-of-ios-xe/td-p/4460181
-			grep -E -q 'raspberrypi|bcm283' <<<"${DTCompatible}" && echo "BCM2711${BCM2711}" || echo "Marvell Armada3900-A1"
+			case "${DTCompatible}" in
+				*raspberrypi*|*bcm283*|*bcm2711*)
+					echo "BCM2711${BCM2711}"
+					;;
+				*marvell*|*3900*)
+					echo "Marvell Armada3900-A1"
+					;;
+			esac
 			;;
 		*A76r4p1*A76r4p1*A76r4p1*A76r4p1)
 			# BCM2712, 4 x Cortex-A76 / r4p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp
@@ -8717,8 +8747,8 @@ CheckKernelVersion() {
 	# 6.1.0-rpi6-rpi-v8
 	grep -q -E 'rpi.-rpi' <<<"$1" && return
 
-	# Fedora kernels also follow an own release scheme and not mainline's
-	grep -q -E '\.fc3|\.fc4' <<<"$1" && return
+	# Fedora/Rockylinux kernels also follow an own release scheme and not mainline's
+	grep -q -E '\.fc3|\.fc4|\.el9' <<<"$1" && return
 
 	# skip this whole check on x86 and in aarch64 VMs where usually distro kernels are
 	# used that follow an own release schedule
@@ -9115,7 +9145,7 @@ PrintKernelInfo() {
 	BasicSetup nochange >/dev/null 2>&1
 	KernelVersion="$(uname -r)"
 	ShortKernelVersion="$(awk -F"." '{print $1"."$2}' <<<"${KernelVersion}")"
-	[ -z "${DTCompatible}" ] && DTCompatible="$(strings /proc/device-tree/compatible 2>/dev/null)"
+	[ -z "${DTCompatible}" ] && [ -r /proc/device-tree/compatible ] && read -r DTCompatible </proc/device-tree/compatible 2>/dev/null
 	[ -z "${LSCPU}" ] && LSCPU="$(lscpu)"
 	[ -z "${CPUArchitecture}" ] && CPUArchitecture="$(awk -F" " '/^Architecture/ {print $2}' <<<"${LSCPU}")"
 	[ -z "${VoltageSensor}" ] && VoltageSensor="$(GetVoltageSensor)"

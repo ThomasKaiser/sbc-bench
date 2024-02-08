@@ -7,6 +7,7 @@ Main() {
 	export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/vc/bin
 	PathToMe="$( cd "$(dirname "$0")" || exit 1 ; pwd -P )/${0##*/}"
 	unset LC_ALL LC_MESSAGES LC_NUMERIC LANGUAGE LANG 2>/dev/null # prevent localisation of decimal points and similar stuff
+	NO_COLOR="${NO_COLOR:-}"
 
 	# use colours and bold when outputting to a terminal
 	CheckTerminal
@@ -20,7 +21,7 @@ Main() {
 		# ThreadX on the VC via vcgencmd to get real information
 		# Double check via device-tree compatible string:
 		[ -f /proc/device-tree/compatible ] && \
-			grep -q raspberrypi /proc/device-tree/compatible
+			grep -a -q raspberrypi /proc/device-tree/compatible
 		if [ $? -eq 0 ]; then
 			USE_VCGENCMD=true
 		else
@@ -54,15 +55,6 @@ Main() {
 				;;
 			S)
 				# check storage, only for testing, will disappear later
-				if test -t 1; then
-					ncolors=$(tput colors)
-					if [ -n "${ncolors}" ] && [ "${ncolors}" -ge 8 ]; then
-						BOLD="$(tput bold)"
-						NC='\033[0m' # No Color
-						LGREEN='\033[1;32m'
-						LRED='\e[0;91m'
-					fi
-				fi
 				DMESG="$(dmesg | grep "mmc")"
 				SMARTDrives="$(ls /dev/sd* /dev/nvme* 2>/dev/null)"
 				if [ "X${SMARTDrives}" != "X" ]; then
@@ -284,9 +276,10 @@ Main() {
 
 CheckTerminal() {
 	# Check if we're outputting to a terminal. If yes try to use bold and colors for messages
+	# unless NO_COLOR is exported by the user and set to 1: https://no-color.org
 	if test -t 1; then
 		ncolors=$(tput colors)
-		if [ -n "${ncolors}" ] && [ "${ncolors}" -ge 8 ]; then
+		if [ -n "${ncolors}" ] && [ "${ncolors}" -ge 8 ] && [ "X${NO_COLOR}" != "X1" ]; then
 			BOLD="$(tput bold)"
 			NC='\033[0m' # No Color
 			LGREEN='\033[1;32m'
@@ -1544,7 +1537,7 @@ MonitorNetio() {
 
 PrintCPUInfo() {
 	BasicSetup nochange
-	[ -z "${DTCompatible}" ] && [ -r /proc/device-tree/compatible ] && read -r DTCompatible </proc/device-tree/compatible 2>/dev/null
+	[ -z "${DTCompatible}" ] && [ -r /proc/device-tree/compatible ] && DTCompatible="$(tr "\000" "\n" </proc/device-tree/compatible 2>/dev/null)"
 	[ -z "${LSCPU}" ] && LSCPU="$(lscpu)"
 	[ -z "${CPUArchitecture}" ] && CPUArchitecture="$(awk -F" " '/^Architecture/ {print $2}' <<<"${LSCPU}")"
 	[ -z "${VoltageSensor}" ] && VoltageSensor="$(GetVoltageSensor)"
@@ -1574,7 +1567,7 @@ PrintCPUInfo() {
 MonitorBoard() {
 	BasicSetup nochange
 	[ -z "${TempSource}" ] && GetTempSensor
-	[ -z "${DTCompatible}" ] && [ -r /proc/device-tree/compatible ] && read -r DTCompatible </proc/device-tree/compatible 2>/dev/null
+	[ -z "${DTCompatible}" ] && [ -r /proc/device-tree/compatible ] && DTCompatible="$(tr "\000" "\n" </proc/device-tree/compatible 2>/dev/null)"
 	[ -z "${LSCPU}" ] && LSCPU="$(lscpu)"
 	[ -z "${CPUArchitecture}" ] && CPUArchitecture="$(awk -F" " '/^Architecture/ {print $2}' <<<"${LSCPU}")"
 	[ -z "${VoltageSensor}" ] && VoltageSensor="$(GetVoltageSensor)"
@@ -1909,8 +1902,8 @@ CheckOSRelease() {
 		*)
 			# only inform/ask user if $MODE != unattended
 			if [ "X${MODE}" != "Xunattended" ]; then
-				echo -e "${LRED}${BOLD}WARNING: This tool is meant to run only on Debian Stretch, Buster, Bullseye, Bookworm or Ubuntu Bionic, Focal, Jammy, Lunar.${NC}\n"
-				echo -e "When executed on ${BOLD}${OperatingSystem}${NC} results are partially meaningless.\nSee https://github.com/ThomasKaiser/sbc-bench/issues/81 for reasons.\nPress [ctrl]-[c] to stop or ${BOLD}[enter]${NC} to continue.\c"
+				echo -e "${LRED}${BOLD}WARNING: This tool is meant to run only recent Debian, Fedora, Ubuntu or Rocky Linux distros.${NC}\n"
+				echo -e "When executed on ${BOLD}${OperatingSystem}${NC} results are partially meaningless.\nSee https://github.com/ThomasKaiser/sbc-bench/issues/81 for one reason.\n\nPress [ctrl]-[c] to stop or ${BOLD}[enter]${NC} to continue.\c"
 				read
 			fi
 			;;
@@ -1923,7 +1916,7 @@ CheckOSReleaseForReview() {
 
 	# Display warning when not executing on Debian Stretch/Buster/Bullseye or Ubuntu Bionic/Focal/Jammy
 	case ${OperatingSystem,,} in
-		*precise*|*quantal*|*raring*|*saucy*|*trusty*|*utopic*|*vivid*|*wily*|*xenial*|*yakkety*|*zesty*|*artful*|*bionic*|*cosmic*|*disco*|*eoan*|*focal*|*groovy*|*hirsute*|*impish*|*jessie*|*lenny*|*squeeze*|*wheezy*|*stretch*|*buster*|"fedora linux 2"*|"fedora linux 30"*|"fedora linux 31"*|"fedora linux 32"*|"fedora linux 33"*|"fedora linux 34"*|"fedora linux 35"*|"fedora linux 36"*|"fedora linux 37"*)
+		*precise*|*quantal*|*raring*|*saucy*|*trusty*|*utopic*|*vivid*|*wily*|*xenial*|*yakkety*|*zesty*|*artful*|*bionic*|*cosmic*|*disco*|*eoan*|*focal*|*groovy*|*hirsute*|*impish*|*jessie*|*lenny*|*squeeze*|*wheezy*|*stretch*|*buster*|"fedora linux 2"*|"fedora linux 3"[1-7]*)
 			# only inform/ask user if $MODE != unattended
 			if [ "X${MODE}" != "Xunattended" ]; then
 				echo -e "${LRED}${BOLD}WARNING: This tool is meant to assist with device reviews but ${OperatingSystem} seems a bit too old for this.${NC}"
@@ -2622,7 +2615,7 @@ CheckMissingPackages() {
 				packages="$(pacman -S -u --print-format %n,%v | sort -n)"
 				count_of_packages=$(wc -l <<<"${packages}")
 				if [ ${count_of_packages:-0} -gt 1 ]; then
-					echo -e "\x08Aborting. ${count_of_packages} packages need updates first:\n\n${packages}\n\nPlease run \"pacman -Syu\" before trying again." >&2
+					echo -e "\x08Aborting. ${count_of_packages} packages need updates first (or reboot due to updated kernel):\n\n${packages}\n\nPlease run \"pacman -Syu\" before trying again." >&2
 					echo "stop"
 					return 1
 				fi
@@ -2645,7 +2638,7 @@ CheckMissingPackages() {
 				packages="$(dnf check-update 2>/dev/null | grep "[0-9]\.")"
 				count_of_packages=$(wc -l <<<"${packages}")
 				if [ ${count_of_packages:-0} -gt 1 ]; then
-					echo -e "\x08Aborting. ${count_of_packages} packages need updates first:\n\n${packages}\n\nPlease run \"dnf update -y\" before trying again." >&2
+					echo -e "\x08Aborting. ${count_of_packages} packages need updates first (or reboot due to updated kernel):\n\n${packages}\n\nPlease run \"dnf update -y\" before trying again." >&2
 					echo "stop"
 					return 1
 				fi
@@ -2664,7 +2657,7 @@ CheckMissingPackages() {
 				packages="$(dnf check-update 2>/dev/null | grep "[0-9]\.")"
 				count_of_packages=$(wc -l <<<"${packages}")
 				if [ ${count_of_packages:-0} -gt 1 ]; then
-					echo -e "\x08Aborting. ${count_of_packages} packages need updates first:\n\n${packages}\n\nPlease run \"dnf update -y\" before trying again." >&2
+					echo -e "\x08Aborting. ${count_of_packages} packages need updates first (or reboot due to updated kernel):\n\n${packages}\n\nPlease run \"dnf update -y\" before trying again." >&2
 					echo "stop"
 					return 1
 				fi
@@ -3191,7 +3184,7 @@ InitialMonitoring() {
 	CPUTopology="$(PrintCPUTopology)"
 	echo -e "${CPUTopology}\n" >"${TempDir}/cpu-topology.log" &
 	CPUSignature="$(GetCPUSignature)"
-	[ -r /proc/device-tree/compatible ] && read -r DTCompatible </proc/device-tree/compatible 2>/dev/null
+	[ -r /proc/device-tree/compatible ] && DTCompatible="$(tr "\000" "\n" </proc/device-tree/compatible 2>/dev/null)"
 	OPPTables="$(ParseOPPTables)"
 	# try to identify ARM/RISC-V/Loongson SoCs
 	[ "${CPUArchitecture}" = "x86_64" ] && GuessedSoC="n/a" || GuessedSoC="$(GuessARMSoC)"
@@ -9145,7 +9138,7 @@ PrintKernelInfo() {
 	BasicSetup nochange >/dev/null 2>&1
 	KernelVersion="$(uname -r)"
 	ShortKernelVersion="$(awk -F"." '{print $1"."$2}' <<<"${KernelVersion}")"
-	[ -z "${DTCompatible}" ] && [ -r /proc/device-tree/compatible ] && read -r DTCompatible </proc/device-tree/compatible 2>/dev/null
+	[ -z "${DTCompatible}" ] && [ -r /proc/device-tree/compatible ] && DTCompatible="$(tr "\000" "\n" </proc/device-tree/compatible 2>/dev/null)"
 	[ -z "${LSCPU}" ] && LSCPU="$(lscpu)"
 	[ -z "${CPUArchitecture}" ] && CPUArchitecture="$(awk -F" " '/^Architecture/ {print $2}' <<<"${LSCPU}")"
 	[ -z "${VoltageSensor}" ] && VoltageSensor="$(GetVoltageSensor)"

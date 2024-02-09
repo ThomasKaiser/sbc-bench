@@ -214,7 +214,7 @@ Main() {
 	if [ "X${MODE}" = "Xpts" ] || [ "X${MODE}" = "Xgb" ]; then
 		:
 	elif [ "X${REVIEWMODE}" = "Xtrue" ]; then
-		CheckOSReleaseForReview
+		CheckOSRelease ForReview
 	else
 		CheckOSRelease
 	fi
@@ -761,7 +761,7 @@ HandleGovernors() {
 	# use colours and bold when outputting to a terminal
 	[ -z "${BOLD}" ] && CheckTerminal
 
-	Governors="$(find /sys -name "*governor" | grep -E -v '/sys/module|cpuidle|watchdog')"
+	Governors="$(find /sys -name "*governor" 2>/dev/null | grep -E -v '/sys/module|cpuidle|watchdog')"
 	if [ "X${Governors}" = "X" ] || [ "${CPUArchitecture}" = "x86_64" ]; then
 		# skip if no governors found or on x86 where lots of cpufreq governors are
 		# listed to no avail since the actual work is done layers below.
@@ -858,7 +858,7 @@ HandlePolicies() {
 	[ -z "${DMESG}" ] && DMESG="$(dmesg | grep pcie)"
 
 	# process policies
-	SysFSPolicies="$(find /sys -name "*policy" | grep -E -v 'hotplug|cpufreq|thermal_zone|apparmor|hostap|/sys/kernel|/sys/devices/pci|mobile_lpm_|xmit_hash_|fr_policy|selinux')"
+	SysFSPolicies="$(find /sys -name "*policy" 2>/dev/null | grep -E -v 'hotplug|cpufreq|thermal_zone|apparmor|hostap|/sys/kernel|/sys/devices/pci|mobile_lpm_|xmit_hash_|fr_policy|selinux')"
 	if [ "X${SysFSPolicies}" = "X" ]; then
 		# skip if no policies found
 		return
@@ -1894,38 +1894,27 @@ CheckOSRelease() {
 	# check OS
 	OperatingSystem="$(GetOSRelease)"
 
-	# Display warning when not executing on Debian Stretch/Buster/Bullseye/Bookworm or Ubuntu Bionic/Focal/Jammy
+	# Display warning when not executed on recent Debian, Fedora, Ubuntu or Rocky Linux distros
 	case ${OperatingSystem,,} in
-		*stretch*|*buster*|*bullseye*|*bookworm*|*bionic*|*focal*|*jammy*|*lunar*|*thirty*|"fedora linux 3"*|"rocky linux 9"*)
+		*buster*|*bullseye*|*bookworm*|*focal*|*jammy*|*mantic*|*noble*|*thirty*|"fedora linux 3"[8-9]*|"rocky linux 9"*)
 			:
 			;;
 		*)
 			# only inform/ask user if $MODE != unattended
 			if [ "X${MODE}" != "Xunattended" ]; then
-				echo -e "${LRED}${BOLD}WARNING: This tool is meant to run only recent Debian, Fedora, Ubuntu or Rocky Linux distros.${NC}\n"
-				echo -e "When executed on ${BOLD}${OperatingSystem}${NC} results are partially meaningless.\nSee https://github.com/ThomasKaiser/sbc-bench/issues/81 for one reason.\n\nPress [ctrl]-[c] to stop or ${BOLD}[enter]${NC} to continue.\c"
-				read
+				if [ "${1}" = "ForReview" ]; then
+					echo -e "${LRED}${BOLD}WARNING: This tool is meant to assist with device reviews but ${OperatingSystem} seems a bit too old for this.${NC}\n"
+					echo -e "Press [ctrl]-[c] to stop or ${BOLD}[enter]${NC} to continue.\c"
+					read
+				else
+					echo -e "${LRED}${BOLD}WARNING: This tool is meant to run only on recent Debian, Fedora, Ubuntu or Rocky Linux distros.${NC}\n"
+					echo -e "When executed on ${BOLD}${OperatingSystem}${NC} results are partially meaningless.\nSee https://github.com/ThomasKaiser/sbc-bench/issues/81 for one reason.\n\nPress [ctrl]-[c] to stop or ${BOLD}[enter]${NC} to continue.\c"
+					read
+				fi
 			fi
 			;;
 	esac
 } # CheckOSRelease
-
-CheckOSReleaseForReview() {
-	# check OS to issue a warning if OS is too old for a review
-	OperatingSystem="$(GetOSRelease)"
-
-	# Display warning when not executing on Debian Stretch/Buster/Bullseye or Ubuntu Bionic/Focal/Jammy
-	case ${OperatingSystem,,} in
-		*precise*|*quantal*|*raring*|*saucy*|*trusty*|*utopic*|*vivid*|*wily*|*xenial*|*yakkety*|*zesty*|*artful*|*bionic*|*cosmic*|*disco*|*eoan*|*focal*|*groovy*|*hirsute*|*impish*|*jessie*|*lenny*|*squeeze*|*wheezy*|*stretch*|*buster*|"fedora linux 2"*|"fedora linux 3"[1-7]*)
-			# only inform/ask user if $MODE != unattended
-			if [ "X${MODE}" != "Xunattended" ]; then
-				echo -e "${LRED}${BOLD}WARNING: This tool is meant to assist with device reviews but ${OperatingSystem} seems a bit too old for this.${NC}"
-				echo -e "Press [ctrl]-[c] to stop or ${BOLD}[enter]${NC} to continue.\c"
-				read
-			fi
-			;;
-	esac
-} # CheckOSReleaseForReview
 
 GetOSRelease() {
 	# try to get human friendly OS release name
@@ -2346,7 +2335,7 @@ Getx86ClusterDetails() {
 			if [ -d /sys/devices/system/cpu/cpu0/cache ] ; then
 				local i
 				for i in $(seq 0 $(( ${CPUCores} - 1 )) ) ; do
-					ThisCache="$(find /sys/devices/system/cpu/cpu${i}/cache -name size | sort -V | while read ; do echo -n "$(cat "${REPLY}")" ; done)"
+					ThisCache="$(find /sys/devices/system/cpu/cpu${i}/cache -name size 2>/dev/null | sort -V | while read ; do echo -n "$(cat "${REPLY}")" ; done)"
 					if [ "X${ThisCache}" != "X${LastCache}" ]; then
 						echo "${i}"
 						LastCache="${ThisCache}"
@@ -2368,7 +2357,7 @@ ParseOPPTables() {
 	echo -e "\n##########################################################################"
 
 	# report I2C accessible microvolt readings first
-	Measurements="$(find /sys/devices/platform -name microvolts | grep -i i2c)"
+	Measurements="$(find /sys/devices/platform -name microvolts 2>/dev/null | grep -i i2c)"
 	if [ "X${Measurements}" != "X" ]; then
 		echo ""
 		echo "${Measurements}" | while read ; do
@@ -2393,7 +2382,7 @@ ParseOPPTables() {
 	for OPPTable in ${DVFS}; do
 		read OPPTableName <"${OPPTable}/name"
 		echo -e "\n   ${OPPTableName}:"
-		find "${OPPTable}" -type d -name "opp*" | grep "${OPPTableName}/" | sort | while read ; do
+		find "${OPPTable}" -type d -name "opp*" 2>/dev/null | grep "${OPPTableName}/" | sort | while read ; do
 			[ -f "${REPLY}/opp-hz" ] && OPPHz="$(printf "%d\n" 0x$(od --endian=big -x <"${REPLY}/opp-hz" | cut -c9- | tr -d ' ') | awk '{printf ("%0.0f",$1/1000000); }')" || OPPHz=""
 			if [ -f "${REPLY}/opp-microvolt" ]; then
 				OPPVolt="$(printf "%d\n" 0x$(od --endian=big -x <"${REPLY}/opp-microvolt" | cut -c9- | tr -d ' ' | cut -c-8 | head -n1))"
@@ -2426,7 +2415,7 @@ ParseRawOPPTables() {
 	for OPPTable in ${DVFS}; do
 		ls -laR "${OPPTable}"
 		echo ""
-		find "${OPPTable}" -type f | while read file ; do
+		find "${OPPTable}" -type f 2>/dev/null | while read file ; do
 			echo -e "${file}\t$(od --endian=big -x <"${file}" | cut -c9- | tr -d ' ')"
 		done
 	done
@@ -4288,7 +4277,7 @@ PrintCPUTopology() {
 } # PrintCPUTopology
 
 CheckMemoryDevfreqTransitions() {
-	Transitions="$(find /sys/devices/platform -name trans_stat | grep -E "memory|dmc|ddr")"
+	Transitions="$(find /sys/devices/platform -name trans_stat 2>/dev/null | grep -E "memory|dmc|ddr")"
 	if [ "X${Transitions}" = "X" ]; then
 		return
 	fi
@@ -4566,6 +4555,7 @@ ValidateResults() {
 
 	# check 7-zip version (only 16.02 is ok to compare with results list)
 	Valid7Zip="$(grep '^p7zip Version' "${ResultLog}" | head -n1 | awk -F" " '{print $3}')"
+	[ -z "${Valid7Zip}" ] && Valid7Zip="$(grep '^7-Zip ' "${ResultLog}" | head -n1 | awk -F" " '{print $3}')"
 	[ "X${Valid7Zip}" = "X16.02" ] || echo -e "${LRED}${BOLD}Distro uses problematic 7-zip version ${Valid7Zip}${NC} -> http://tinyurl.com/ukcktbsm"
 
 	# report significant mismatches between measured and 'advertised' clockspeeds from
@@ -5166,8 +5156,8 @@ CacheAndDIMMDetails() {
 	if [ ${#ClusterConfig[@]} -gt 1 ] || [ "${CPUArchitecture}" = "riscv64" ]; then
 		# only output individual cache sizes from sysfs on RISC-V or if more than 1 CPU
 		# cluster (since otherwise lscpu already reported the full picture)
-		find /sys/devices/system/cpu -name "cache" -type d | sort -V | while read ; do
-			find "${REPLY}" -name size -type f | while read ; do
+		find /sys/devices/system/cpu -name "cache" -type d 2>/dev/null | sort -V | while read ; do
+			find "${REPLY}" -name size -type f 2>/dev/null | while read ; do
 				echo -e "\n${REPLY}: $(cat ${REPLY})\c"
 				[ -f ${REPLY%/*}/level ] && echo -e ", level: $(cat ${REPLY%/*}/level)\c"
 				[ -f ${REPLY%/*}/type ] && echo -e ", type: $(cat ${REPLY%/*}/type)\c"
@@ -8534,7 +8524,7 @@ ProvideReviewInfo() {
 		echo -e "\n### Idle consumption (measured with Netio ${NetioModel}, FW v${Firmware}):\n" >>"${TempDir}/review"
 		echo -e "  * everything set to powersave: ${IdleConsumption} mW" >>"${TempDir}/review"
 		if [ ${CountOfGovernors} -gt 1 ]; then
-			find /sys -name "*governor" | grep -E -v '/sys/module|cpuidle|watchdog' | sort -n | while read ; do
+			find /sys -name "*governor" 2>/dev/null | grep -E -v '/sys/module|cpuidle|watchdog' | sort -n | while read ; do
 				if [ -w "${REPLY}" ]; then
 					echo performance >"${REPLY}"
 					sleep 180
@@ -9164,6 +9154,17 @@ CheckPCIe() {
 	# downgraded or not. With NVMe devices try to query SMART data to report drive health,
 	# with other PCIe devices report driver (for example to spot the 'famous' RealTek NIC
 	# performance issues that go away once the appropriate driver is loaded)
+	#
+	# TODO: print RTL8111 revision based on lspci output since everything prior to G sucks:
+	# http://tinyurl.com/3jcashvt
+	#
+	# rev 01 -> RTL8111C
+	# rev 03 -> RTL8111D
+	# rev 06 -> RTL8111E
+	# rev 07 -> RTL8111F
+	# rev 0a -> ?
+	# rev 0c -> RTL8111G
+	# rev 15 -> RTL8111H
 	#
 	# If $1 is "nvme" then try to update smartmontools device database if needed and report
 	# also NVMe devices found on the PCIe buses

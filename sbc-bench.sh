@@ -30,9 +30,10 @@ Main() {
 	else
 		USE_VCGENCMD=false
 	fi
-	
+
 	ProcCPUFile="${CPUINFOFILE:-/proc/cpuinfo}"
 	[ -r "${ProcCPUFile}" ] && ProcCPU="$(cat "${ProcCPUFile}")"
+	[ -r /etc/os-release ] && source /etc/os-release
 
 	# check in which mode we're supposed to run
 	while getopts 'uSchjkmtTrRsgNPG' c ; do
@@ -317,8 +318,8 @@ UpdateMe() {
 
 	# Only try to update git projects if git is already installed
 	command -v git >/dev/null 2>&1 || exit 0
-	
-	for GitProject in mhz ramspeed tinymembench cpuminer-multi cpufetch ; do
+
+	for GitProject in mhz ramspeed tinymembench cpuminer-multi cpufetch p7zip ; do
 		if [ -x "${InstallLocation}/${GitProject}" ]; then
 			if [ -r "${InstallLocation}/${GitProject}/.git/config" ]; then
 				GitURL="$(awk -F" = " '/url = / {print $2}' "${InstallLocation}/${GitProject}/.git/config")"
@@ -779,7 +780,7 @@ HandleGovernors() {
 		fi
 		return
 	fi
-	
+
 	# process governors:
 	echo "${Governors}" | while read ; do
 		read Governor <"${REPLY}"
@@ -1068,7 +1069,7 @@ CheckPerformance() {
 		TasksetOptions=""
 		SevenZIPOptions=""
 	fi
-	
+
 	Clusters="$(ls -d /sys/devices/system/cpu/cpufreq/policy[${2}])"
 
 	echo -e "\x08\x08 Done.\nChecking ${1}: \c"
@@ -1109,7 +1110,7 @@ CheckPerformance() {
 		read MaxSpeed <${Cluster}/cpuinfo_max_freq
 		echo ${MinSpeed} >${Cluster}/scaling_setspeed
 	done
-	
+
 	# now walk through higher cluster since this is supposed to provide more cpufreq OPP.
 	# On ARM usually little cores are the cores with lower numbers. 
 	BiggestCluster="$(sort -n -r <<<${Clusters} | head -n1)"
@@ -1187,11 +1188,11 @@ PlotGraph() {
 	# * $2 policy cores: the cores that need to be adjusted when measuring, e.g. "0" for
 	#   cpu0, "4" for cpu4 or for example on an RK3399 "04" to handle both cpu clusters
 	#   at the same time
-	
+
 	# create random filename for graph png
 	GraphPNG="$(mktemp ${TempDir}/graph.XXXXXX)"
 	mv "${GraphPNG}" "${GraphPNG}.png"	
-	
+
 	# adjust y axis range by highest value
 	MaxMIPS=$(awk '{print $2}' <"${CpufreqDat}" | sort -n | tail -n1)
 	MaxTemp=$(awk '{print $3}' <"${CpufreqDat}" | sort -n | tail -n1)
@@ -1230,7 +1231,7 @@ PlotGraph() {
 	# plot PNG with gnuplot
 	PNGWidth=900
 	PNGHeight=450
-	
+
 	cat <<- EOF | gnuplot-nox
 	set title '${DeviceName}: ${1}'
 	set ylabel '${YLabel}'
@@ -1268,7 +1269,7 @@ RenderPDF() {
 		<h3>sbc-bench v${Version} - ${DeviceName} - $(date)</h3>
 		sbc-bench has been called with <code>-g ${CPUList}</code>
 	EOF
-	
+
 	ls -r --time=atime "${TempDir}"/*.png | while read Graph ; do
 		echo -e "<img src=\"${Graph}\">" >>${TempDir}/report.html
 	done
@@ -1281,7 +1282,7 @@ RenderPDF() {
 	EOF
 
 	htmldoc --charset utf-8 --headfootfont helvetica-oblique --headfootsize 7 --header ..c --tocheader . --firstpage c1 --quiet --browserwidth 900 --pagemode outline --fontsize 8 --format pdf14 --bodyfont helvetica --bottom 1cm --pagelayout single --left 2.5cm --right 2cm --top 1.7cm --linkstyle plain --linkcolor blue --textcolor black --bodycolor white --links --size 210x297mm --portrait --compression=9 --jpeg=95 --webpage -f "${TempDir}/report.pdf" "${TempDir}/report.html"
-	
+
 	if [ -s "${TempDir}/report.pdf" ]; then
 		PDFName="sbc-bench-v${Version}-$(tr ' ' '-' <<<"${DeviceName,,}")-${CPUList}"
 		FinalPDF="$(mktemp "/tmp/${PDFName}".XXXXXX)"
@@ -1575,7 +1576,7 @@ MonitorBoard() {
 	[ -z "${CPUSignature}" ] && CPUSignature="$(GetCPUSignature)"
 	[ -z "${X86CPUName}" ] && X86CPUName="$(sed 's/ \{1,\}/ /g' <<<"${LSCPU}" | awk -F": " '/^Model name/ {print $2}' | sed -e 's/1.th Gen //' -e 's/.th Gen //' -e 's/Core(TM) //' -e 's/ Processor//' -e 's/Intel(R) Xeon(R) CPU //' -e 's/Intel(R) //' -e 's/(R)//' -e 's/CPU //' -e 's/ 0 @/ @/' -e 's/AMD //' -e 's/Authentic //' -e 's/ with .*//')"
 	[ -z "${CPUFetchInfo}" ] && CPUFetchInfo="$(GrabCPUFetchInfo)"
-	
+
 	if test -t 1; then
 		# when called from a terminal we print some system information first and insert
 		# empty line + header every 15 lines. On x86 include cpufetch info if available
@@ -1918,11 +1919,10 @@ CheckOSRelease() {
 
 GetOSRelease() {
 	# try to get human friendly OS release name
-	UBUNTU_CODENAME="$(awk -F"=" '/UBUNTU_CODENAME/ {print $2}' /etc/os-release 2>/dev/null)"
 	[ "X${UBUNTU_CODENAME}" = "X" ] || UbuntuSuffix=" (${UBUNTU_CODENAME})"
 	OS="$(hostnamectl 2>/dev/null | awk -F": " '/Operating System:/ {print $2}')"
-	if [ "X${OS}" = "X" ] && [ -f /etc/os-release ]; then
-		OS="$(awk -F'"' '/^PRETTY_NAME/ {print $2}' </etc/os-release)"
+	if [ "X${OS}" = "X" ] && [ "X${PRETTY_NAME}" != "X" ]; then
+		OS="${PRETTY_NAME}"
 	fi
 	case "${OS}" in
 		Armbian*|"Orange Pi"*)
@@ -2854,11 +2854,16 @@ InstallPrerequisits() {
 	# Determine missing packages and install them with a single command
 	MissingPackages="$(CheckMissingPackages | sed 's/\ $//')"
 	[ "X${MissingPackages}" = "Xstop" ] && exit 1
-	SevenZip=$(command -v 7zr || command -v 7za)
-	if [ -z "${SevenZip}" ]; then
-		MissingPackages="${MissingPackages} p7zip"
+	[ "X${UBUNTU_CODENAME}" != "X" ] && UBUNTU_MAJOR_VERSION="${VERSION_ID%.*}"
+	if [ ${UBUNTU_MAJOR_VERSION:-0} -lt 24 ]; then
+		# On Ubuntus prior to Noble and all other distros search for p7zip in $PATH and
+		# if not found add p7zip to list of packages to be installed
+		SevenZip=$(command -v 7zr || command -v 7za)
+		if [ -z "${SevenZip}" ]; then
+			MissingPackages="${MissingPackages} p7zip"
+		fi
 	fi
-	
+
 	# add needed repository and install all necessary packages in a batch
 	grep -E -q "sensors|gcc|git|sysstat|openssl|curl|dmidecode|i2c|lshw|binutils|procps|p7zip|wget|links|powercap|g++|pciutils|usbutils|mmc-utils|stress-ng|smartmontools|udev|bsdmainutils|redhat-lsb-core" <<<"${MissingPackages}"
 	if [ $? -eq 0 ]; then
@@ -2886,7 +2891,15 @@ InstallPrerequisits() {
 		fi
 	fi
 
-	SevenZip=$(command -v 7zr || command -v 7za)
+	if [ ${UBUNTU_MAJOR_VERSION:-0} -lt 24 ]; then
+		# On Ubuntus prior to Noble and all other distros search for p7zip in $PATH
+		SevenZip=$(command -v 7zr || command -v 7za)
+	else
+		# On Ubuntu 24.x onwards build/use p7zip 16.02 on our own
+		InstallOldP7zip
+		[ -x "${InstallLocation}/p7zip/bin/7za" ] && SevenZip="${InstallLocation}/p7zip/bin/7za"
+	fi
+
 	if [ -z "${SevenZip}" ]; then
 		echo -e "\x08\x08\x08 failed. ${LRED}${BOLD}No 7-zip binary found and could not be installed. Aborting${NC}" >&2
 		exit 1
@@ -3004,6 +3017,26 @@ InstallPrerequisits() {
 		InstallCpuminer
 	fi
 } # InstallPrerequisits
+
+InstallOldP7zip() {
+	if [ ! -x "${InstallLocation}/p7zip/bin/7za" ]; then
+		echo -e "\x08\x08\x08, p7zip...\c"
+		cd "${InstallLocation}" || exit 1
+		if [ -d "${InstallLocation}/p7zip/.git" ]; then
+			cd "${InstallLocation}/p7zip/" || exit 1 && git pull >/dev/null 2>&1
+		else
+			git clone https://github.com/ThomasKaiser/p7zip >/dev/null 2>&1
+		fi
+		if [ $? -ne 0 ]; then
+			echo -e "\n\n${LRED}${BOLD}Temporary Github problem. Not able to download p7zip 16.02. Please try again later.${NC}" >&2
+			exit 1
+		fi
+		cd "${InstallLocation}/p7zip/" || exit 1 && make clean >/dev/null 2>&1 && make -j${CPUCores} INSTALL=install CC=gcc CXX=g++ OPTFLAGS='-O3' >/dev/null 2>&1
+	fi
+	if [ ! -x "${InstallLocation}"/p7zip/bin/7za ]; then
+		echo -e "\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08 (can't build p7zip 16.02)  \c"
+	fi
+} # InstallOldP7zip
 
 InstallCpuminer() {
 	# get/(re)build cpuminer if not already there or based on tkinjo1985 version
@@ -3156,7 +3189,7 @@ InitialMonitoring() {
 	BenchmarkStartTime=$(date +"%s")
 	# empty caches
 	echo 3 >/proc/sys/vm/drop_caches
-	
+
 	# q&d performance assessment to estimate duration
 	QuickAndDirtyPerformance="$(BashBench)"
 	TinymembenchDuration=$(( $(( 3 + $(( ${QuickAndDirtyPerformance} / 300000000 )) )) * ${#ClusterConfig[@]} ))
@@ -3221,7 +3254,7 @@ InitialMonitoring() {
 	# Log Raspberry OS info if available
 	[ -f /etc/apt/sources.list.d/raspi.list ] && \
 		echo "Build system:   $(grep -v '#' /etc/apt/sources.list.d/raspi.list | head -n1 | sed 's/deb //')" >>"${ResultLog}"
-	
+
 	# Log Build system info if available
 	if [ -r /etc/radxa_image_fingerprint ]; then
 		# Radxa's rbuild
@@ -3309,7 +3342,7 @@ InitialMonitoring() {
 		echo -e "\nUptime:$(uptime),  ${InitialTemp}°C,  ${QuickAndDirtyPerformance}\n\n$(iostat | grep -E -v "^loop|boot0|boot1|mtdblock")\n\n$(free -h)\n\n$(swapon -s)\n" | sed '/^$/N;/^\n$/D' >>"${ResultLog}"
 	fi
 	ShowZswapStats 2>/dev/null >>"${ResultLog}"
-	
+
 	# set up Netio consumption monitoring if requested. Device address and socket
 	# need to be available as Netio (environment) variable.
 	Netio="${Netio:-}"
@@ -3504,7 +3537,7 @@ CheckClockspeedsAndSensors() {
 	if [ "X${LMSensorsOutput}" != "X" ]; then
 		echo -e "\n##########################################################################\n" >>"${ResultLog}"
 		echo -e "Hardware sensors:\n\n${LMSensorsOutput}" >>"${ResultLog}"
-	
+
 		# if temperature sensors can be read from disks, report them
 		SmartCtl="$(command -v smartctl 2>/dev/null)"
 		Disks="$(ls /dev/sd? /dev/nvme? 2>/dev/null | sort)"
@@ -3800,7 +3833,7 @@ Run7ZipBenchmark() {
 	echo -e "\n##########################################################################" >>"${ResultLog}"
 	cat "${TempLog}" >>"${ResultLog}"
 	ZipScoreSingleThreaded=$(awk -F" " '/^Tot:/ {print $4}' "${TempLog}" | sort -n | tail -n1)
-	
+
 	if [ ${CPUCores} -gt 1 ]; then
 		# run multi-threaded test only if there's more than one CPU core
 		echo -e "\nSystem health while running 7-zip multi core benchmark:\n" >>"${MonitorLog}"
@@ -4315,7 +4348,7 @@ SummarizeResults() {
 
 	# Prepare benchmark results
 	echo -e "\n##########################################################################\n" >>"${ResultLog}"
-	
+
 	# add thermal info if available
 	if [ "X${TempInfo}" != "X" ]; then
 		echo -e "${TempInfo}\n" >>"${ResultLog}"
@@ -4323,7 +4356,7 @@ SummarizeResults() {
 
 	# include monitoring (filter out broken thermal readouts)
 	sed 's/  0°C$/ --/' <"${MonitorLog}" >>"${ResultLog}"
-	
+
 	# add throttling info if available
 	if [ -f "${TempDir}/throttling_info.txt" ]; then
 		echo -e "\n##########################################################################" >>"${ResultLog}"
@@ -5598,7 +5631,7 @@ GuessARMSoC() {
 	RockchipGuess="$(awk -F': ' '/rockchip-cpuinfo cpuinfo: SoC/ {print $3}' <<<"${DMESG}" | head -n1)"
 	AmlogicGuess="Amlogic Meson$(grep -i " detected$" <<<"${DMESG}" | awk -F"Amlogic Meson" '/Amlogic Meson/ {print $2}' | head -n1)"
 	AMLS4Guess="$(awk -F"= " '/cpu_version: chip version/ {print $2}' <<<"${DMESG}")"
-	
+
 	if [ "X${RockchipGuess}" != "X" ] && [ "X${RockchipGuess}" != "X0" ]; then
 		# use Rockchip SoC info from dmesg output
 		if [ "X${RK_NVMEM}" != "X" ] && [ "${RockchipGuess:0:4}" = "3588" ]; then
@@ -8266,7 +8299,7 @@ ProvideReviewInfo() {
 	# * warning if uneven count of DIMMs
 	# * ThreadX version, UEFI/BIOS version
 	# * coherent_pool size
-	
+
 	echo "Starting to examine hardware/software for review purposes..."
 
 	# ensure other sbc-bench instances are terminated
@@ -8457,7 +8490,7 @@ ProvideReviewInfo() {
 	elif [ "X${PCIeStatus}" = "X" ]; then
 		echo -e "\n### Storage devices:\n\n${StorageStatus}" >>"${TempDir}/review"
 	fi
-	
+
 	# In preparation of before/after diff remove sane drive temperatures to keep only "unhealthy drive temp"
 	StorageStatus="$(echo "${StorageStatus}" | awk -F", drive temp: " '{print $1"X"}' | sed -e 's/X$//' -e '/^$/d' | grep -v smartctl)"
 
@@ -8708,7 +8741,7 @@ CheckKernelVersion() {
 	# Major challenge: identify those smelly vendor BSP kernels that show a version
 	# number similar to an official LTS kernel but are in reality forward ported since
 	# ages and can't be trusted AT ALL.
-	
+
 	# check whether endoflife data has been downloaded, if not return
 	[ -r "${TempDir}/linuxkernel.md" ] || return
 
@@ -8753,9 +8786,9 @@ CheckKernelVersion() {
 	LastReleaseCycle="$(grep -A1 "^releases:$" "${TempDir}/linuxkernel.md" | awk -F'"' '/releaseCycle:/ {print $2}')"
 	CheckRelease=$(echo -e "${LastReleaseCycle}\n${ShortKernelVersion}" | sort -n | head -n1)
 	[ "${CheckRelease}" = "${LastReleaseCycle}" ] && return
-	
+
 	KernelVersionDigitsOnly=$(cut -f1 -d- <<<"$1")
-	
+
 	# parse LTS kernel info, in Nov 2023 this looks like this for example with 5.10:
 	# releaseCycle: "5.10"
 	# lts: true

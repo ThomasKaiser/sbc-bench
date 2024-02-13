@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.9.63
+Version=0.9.64
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -223,6 +223,8 @@ Main() {
 	CreateTempDir
 	[ -f /sys/devices/system/cpu/cpufreq/policy0/scaling_governor ] && \
 		read OriginalCPUFreqGovernor </sys/devices/system/cpu/cpufreq/policy0/scaling_governor 2>/dev/null
+	[ "${OriginalCPUFreqGovernor}" = "ondemand" ] && \
+		io_is_busy=( $(find /sys/devices/system/cpu/cpufreq -name io_is_busy | while read ; do cat "${REPLY}"; done) )
 	CheckLoadAndDmesg
 	BasicSetup performance >/dev/null 2>&1
 	GovernorState="$(HandleGovernors | grep -v cpufreq-policy)"
@@ -1334,7 +1336,7 @@ GetTempSensor() {
 						TempSource="${TempDir}/soctemp"
 					else
 						TempSource="$(mktemp /tmp/soctemp.XXXXXX)"
-						trap "rm -f \"${TempSource}\" ; exit 0" 0
+						trap 'rm -f "${TempSource}" ; exit 0' 0
 					fi
 					ThermalZone="$(GetThermalZone "${NodeGuess}")"
 					ln -fs ${ThermalZone}/temp ${TempSource}
@@ -1369,7 +1371,7 @@ GetTempSensor() {
 			TempSource="${TempDir}/soctemp"
 		else
 			TempSource="$(mktemp /tmp/soctemp.XXXXXX)"
-			trap "rm -f \"${TempSource}\" ; exit 0" 0
+			trap 'rm -f "${TempSource}" ; exit 0' 0
 		fi
 
 		# check platform
@@ -1494,7 +1496,7 @@ CheckNetio() {
 			export NetioConsumptionFile
 			/bin/bash "${PathToMe}" -N "${NetioDevice}" "${NetioSocket}" "${NetioConsumptionFile}" >/dev/null 2>&1 &
 			NetioMonitoringPID=$!
-			trap "kill ${NetioMonitoringPID} ; rm -rf \"${TempDir}\" ; exit 0" 0
+			trap 'kill ${NetioMonitoringPID} ; rm -rf "${TempDir}" ; exit 0' 0
 		fi
 	fi
 } # CheckNetio
@@ -1909,7 +1911,7 @@ CheckOSRelease() {
 					read
 				else
 					echo -e "${LRED}${BOLD}WARNING: This tool is meant to run only on recent Debian, Fedora, Ubuntu or Rocky Linux distros.${NC}\n"
-					echo -e "When executed on ${BOLD}${OperatingSystem}${NC} results are partially meaningless.\nSee https://github.com/ThomasKaiser/sbc-bench/issues/81 for one reason.\n\nPress [ctrl]-[c] to stop or ${BOLD}[enter]${NC} to continue.\c"
+					echo -e "When executed on ${BOLD}${OperatingSystem}${NC} results might be partially meaningless.\nPlease see https://github.com/ThomasKaiser/sbc-bench/issues/81 for reasons.\n\nPress [ctrl]-[c] to stop or ${BOLD}[enter]${NC} to continue.\c"
 					read
 				fi
 			fi
@@ -1939,7 +1941,7 @@ GetOSRelease() {
 			# just by updating Debian/Ubuntu once the base-files package gets updated):
 			apt-get -f -qq -y --reinstall install base-files >/dev/null 2>&1
 			OS="$(hostnamectl | awk -F": " '/Operating System:/ {print $2}')"
-			echo "${OS}${UbuntuSuffix}"
+			grep -q "${UBUNTU_CODENAME}" <<<"${OS}" && echo "${OS}" || echo "${OS}${UbuntuSuffix}"
 			;;
 		"")
 			echo "n/a"
@@ -1967,7 +1969,7 @@ CreateTempDir() {
 	touch "${TempLog}" "${ResultLog}" "${MonitorLog}"
 
 	# delete $TempDir by default but not if in extensive mode:
-	[ "X${MODE}" = "Xextensive" ] || trap "rm -rf \"${TempDir}\" ; exit 0" 0
+	[ "X${MODE}" = "Xextensive" ] || trap 'rm -rf "${TempDir}" ; exit 0' 0
 } # CreateTempDir
 
 CheckLoadAndDmesg() {
@@ -2608,6 +2610,11 @@ CheckMissingPackages() {
 					echo "stop"
 					return 1
 				fi
+				if [[ $(pacman -Q linux | cut -d" " -f2) > $(uname -r) ]]; then
+					echo -e "\x08Aborting. Kernel version mismatch: $(pacman -Q linux | cut -d" " -f2) installed but $(uname -r | cut -f1 -d"-") running\nPlease reboot before trying again." >&2
+					echo "stop"
+					return 1
+				fi
 				echo -e "pacman --noconfirm -Syq \c"
 				command -v gcc >/dev/null 2>&1 || echo -e "gcc make base-devel \c"
 				command -v sensors >/dev/null 2>&1
@@ -2699,7 +2706,6 @@ CheckMissingPackages() {
 	command -v lshw >/dev/null 2>&1 || echo -e "lshw \c"
 	command -v openssl >/dev/null 2>&1 || echo -e "openssl \c"
 	command -v uptime >/dev/null 2>&1 || echo -e "procps \c"
-	command -v wget >/dev/null 2>&1 || echo -e "wget \c"
 	command -v links >/dev/null 2>&1 || echo -e "links \c"
 	if [ "${ExecuteStockfish}" = "yes" ]; then
 		command -v g++ >/dev/null 2>&1 || echo -e "g++ \c"
@@ -2792,7 +2798,7 @@ CheckGB() {
 			FirstOfflineCPU=1
 			GBVersion="5.5" # latest version for this platform
 			;;
-		arm*)
+		arm*|aarch64)
 			DLSuffix="LinuxARMPreview"
 			GBBinaryName="geekbench${GBVersion:0:1}"
 			FirstOfflineCPU=0
@@ -2822,7 +2828,7 @@ CheckGB() {
 		# try to download version ${GBVersion}.${i}
 		TryoutURL="https://cdn.geekbench.com/${GBDir}.tar.gz"
 		Downloadfile="${InstallLocation}/${GBDir}.tar.gz"
-		[ -f "${Downloadfile}" ] || wget -q -O "${Downloadfile}" "${TryoutURL}" 2>/dev/null
+		[ -f "${Downloadfile}" ] || curl -f -O -L -s -q --connect-timeout 10 "${TryoutURL}" 2>/dev/null
 		if [ -s "${Downloadfile}" ]; then
 			# tarball could be downloaded, proceed with untar/remove
 			echo -e "\x08\x08\x08, geekbench ${GBVersion}.${i}...\c"
@@ -2856,46 +2862,66 @@ InstallPrerequisits() {
 	[ "X${MissingPackages}" = "Xstop" ] && exit 1
 	[ "X${UBUNTU_CODENAME}" != "X" ] && UBUNTU_MAJOR_VERSION="${VERSION_ID%.*}"
 	if [ ${UBUNTU_MAJOR_VERSION:-0} -lt 24 ]; then
-		# On Ubuntus prior to Noble and all other distros search for p7zip in $PATH and
+		# On Ubuntus prior to 24.04 and all other distros search for p7zip in $PATH and
 		# if not found add p7zip to list of packages to be installed
-		SevenZip=$(command -v 7zr || command -v 7za)
+		SevenZip=$(command -v 7za || command -v 7zr)
 		if [ -z "${SevenZip}" ]; then
 			MissingPackages="${MissingPackages} p7zip"
 		fi
 	fi
 
-	# add needed repository and install all necessary packages in a batch
-	grep -E -q "sensors|gcc|git|sysstat|openssl|curl|dmidecode|i2c|lshw|binutils|procps|p7zip|wget|links|powercap|g++|pciutils|usbutils|mmc-utils|stress-ng|smartmontools|udev|bsdmainutils|redhat-lsb-core" <<<"${MissingPackages}"
-	if [ $? -eq 0 ]; then
-		echo -e "\x08\x08 ${MissingPackages}...\c"
-		add-apt-repository -y universe >/dev/null 2>&1
-		${MissingPackages} >/dev/null 2>>"${TempDir}/packages.log"
-		if [ $? -eq 100 ]; then
-			# apt cache might be too outdated so update and try again
-			echo -e "\x08\x08 Updating APT cache...\c"
-			AptMessage="$(apt update 2>&1)"
-			MissingPubKeys="$(tr "N" "\n" <<<"${AptMessage}" | awk -F" " '/^O_PUBKEY/ {print $2}' | sort | uniq | tr "\n" " ")"
-			if [ "X${MissingPubKeys}" != "X" ]; then
-				# try to add missing public keys and retry (Ubuntu's key server also has Debian keys)
-				echo -e "\x08\x08 Try to add missing public keys ${MissingPubKeys}...\c"
-				apt-key adv --keyserver keyserver.ubuntu.com --recv-keys ${MissingPubKeys} >/dev/null 2>&1
-				echo -e "\x08\x08 Updating APT cache again...\c"
-				apt update >/dev/null 2>&1
-				echo -e "\x08\x08 Installing packages...\c"
+	# add universe repository if needed and install all necessary packages in a batch
+	case "${MissingPackages}" in
+		*install|*"install -q -y"|*"install -y"|*"Syq")
+			# no packages to be installed
+			echo -e "\x08distro packages already installed...\c"
+			;;
+		*)
+			echo -e "\x08\x08 ${MissingPackages}...\c"
+			[ -r /etc/apt/sources.list ] && grep -v '^#' /etc/apt/sources.list | grep -q universe || add-apt-repository -y universe >/dev/null 2>&1
+			${MissingPackages} >/dev/null 2>>"${TempDir}/packages.log"
+			if [ $? -eq 100 ]; then
+				# apt cache might be too outdated so update and try again
+				echo -e "\x08\x08 Updating APT cache...\c"
+				AptMessage="$(apt update 2>&1)"
+				MissingPubKeys="$(tr "N" "\n" <<<"${AptMessage}" | awk -F" " '/^O_PUBKEY/ {print $2}' | sort | uniq | tr "\n" " ")"
+				if [ "X${MissingPubKeys}" != "X" ]; then
+					# try to add missing public keys and retry (Ubuntu's key server also has Debian keys)
+					echo -e "\x08\x08 Try to add missing public keys ${MissingPubKeys}...\c"
+					apt-key adv --keyserver keyserver.ubuntu.com --recv-keys ${MissingPubKeys} >/dev/null 2>&1
+					echo -e "\x08\x08 Updating APT cache again...\c"
+					apt update >/dev/null 2>&1
+					echo -e "\x08\x08 Installing packages...\c"
+				fi
+				${MissingPackages} >/dev/null 2>&1
+			elif [ $? -ne 0 ] && [ -s "${TempDir}/packages.log" ]; then
+				echo -e "\x08\x08 Something went wrong:\n"
+				cat "${TempDir}/packages.log"
+				echo -e "\nTrying to continue...\c"
 			fi
-			${MissingPackages} >/dev/null 2>&1
-		elif [ $? -ne 0 ] && [ -s "${TempDir}/packages.log" ]; then
-			echo -e "\x08\x08 Something went wrong:\n"
-			cat "${TempDir}/packages.log"
-			echo -e "\nTrying to continue...\c"
-		fi
-	fi
+			;;
+	esac
 
 	if [ ${UBUNTU_MAJOR_VERSION:-0} -lt 24 ]; then
-		# On Ubuntus prior to Noble and all other distros search for p7zip in $PATH
-		SevenZip=$(command -v 7zr || command -v 7za)
+		# On Ubuntus prior to 24.04 and all other distros search for p7zip in $PATH
+		SevenZip=$(command -v 7za || command -v 7zr)
+		# Validate 7-zip version (only 16.02 allows for comparable scores with results from years ago)
+		if [ -x "${SevenZip}" ]; then
+			Output7Zip="$("${SevenZip}" lalala 2>&1)"
+			Valid7Zip="$(grep '^p7zip Version' <<<"${Output7Zip}" | head -n1 | awk -F" " '{print $3}')"
+			[ -z "${Valid7Zip}" ] && Valid7Zip="$(grep '^7-Zip ' <<<"${Output7Zip}" | head -n1 | awk -F" " '{print $3}')"
+			if [ "X${Valid7Zip}" != "X16.02" ]; then
+				# try to install/build p7zip 16.02 with Debian (security) patches applied. If this fails still
+				# use distro provided 7-zip binary (results validation will hint on problematic version later)
+				if [ ! -x "${InstallLocation}/p7zip/bin/7za" ]; then
+					grep -q "p7zip" <<<"${MissingPackages}" && echo -e "\x08\x08\x08 ${Valid7Zip}...\c"
+					InstallOldP7zip
+				fi
+				[ -x "${InstallLocation}/p7zip/bin/7za" ] && SevenZip="${InstallLocation}/p7zip/bin/7za"
+			fi
+		fi
 	else
-		# On Ubuntu 24.x onwards build/use p7zip 16.02 on our own
+		# On Ubuntu 24.x onwards directly build/use p7zip 16.02 on our own
 		InstallOldP7zip
 		[ -x "${InstallLocation}/p7zip/bin/7za" ] && SevenZip="${InstallLocation}/p7zip/bin/7za"
 	fi
@@ -3020,7 +3046,7 @@ InstallPrerequisits() {
 
 InstallOldP7zip() {
 	if [ ! -x "${InstallLocation}/p7zip/bin/7za" ]; then
-		echo -e "\x08\x08\x08, p7zip...\c"
+		echo -e "\x08\x08\x08, p7zip 16.02...\c"
 		cd "${InstallLocation}" || exit 1
 		if [ -d "${InstallLocation}/p7zip/.git" ]; then
 			cd "${InstallLocation}/p7zip/" || exit 1 && git pull >/dev/null 2>&1
@@ -3077,7 +3103,7 @@ InstallStockfish() {
 	if [ ! -x "${InstallLocation}/Stockfish-sf_15/src/stockfish" ]; then
 		echo -e "\x08\x08\x08, stockfish...\c"
 		cd "${InstallLocation}" || exit 1
-		wget -q -O "${InstallLocation}/sf_15.tar.gz" https://github.com/official-stockfish/Stockfish/archive/refs/tags/sf_15.tar.gz 2>/dev/null
+		curl -f -L -s -q --connect-timeout 10 "https://github.com/official-stockfish/Stockfish/archive/refs/tags/sf_15.tar.gz" >"${InstallLocation}/sf_15.tar.gz" 2>/dev/null
 		[ -s "${InstallLocation}/sf_15.tar.gz" ] && tar xf sf_15.tar.gz
 		[ -d "${InstallLocation}/Stockfish-sf_15/src" ] && cd "${InstallLocation}/Stockfish-sf_15/src" || exit 1
 
@@ -3164,7 +3190,7 @@ DownloadNeuralNet() {
 		# download neural network if missing
 		if [ ! -f "${NeuralNetwork}" ]; then
 			echo -e "\x08\x08\x08, stockfish NN...\c"
-			wget -q -O "${NeuralNetwork}" "https://tests.stockfishchess.org/api/nn/${NeuralNetwork}" 2>/dev/null
+			curl -f -O -L -s -q --connect-timeout 10 "https://tests.stockfishchess.org/api/nn/${NeuralNetwork}" 2>/dev/null
 		fi
 
 		# check neural network
@@ -4562,9 +4588,9 @@ LogEnvironment() {
 	fi
 
 	# results validation:
-	IsValid="$(ValidateResults | sed -e 's/^/  * /')"
 	echo -e "\n##########################################################################\n"
-	echo -e "Results validation:\n\n${IsValid}\n" | sed "s,\x1B\[[0-9;]*[a-zA-Z],,g"
+	IsValid="$(ValidateResults | sed -e 's/^/  * /')"
+	[ -n "${IsValid}" ] && echo -e "Results validation:\n\n${IsValid}\n" | sed "s,\x1B\[[0-9;]*[a-zA-Z],,g"
 
 	# add performance relevant governors/policies to results if available:
 	GovernorStateNow="$(HandleGovernors | grep -v cpufreq-policy)"
@@ -4589,7 +4615,7 @@ ValidateResults() {
 	# check 7-zip version (only 16.02 is ok to compare with results list)
 	Valid7Zip="$(grep '^p7zip Version' "${ResultLog}" | head -n1 | awk -F" " '{print $3}')"
 	[ -z "${Valid7Zip}" ] && Valid7Zip="$(grep '^7-Zip ' "${ResultLog}" | head -n1 | awk -F" " '{print $3}')"
-	[ "X${Valid7Zip}" = "X16.02" ] || echo -e "${LRED}${BOLD}Distro uses problematic 7-zip version ${Valid7Zip}${NC} -> http://tinyurl.com/ukcktbsm"
+	[ "X${Valid7Zip}" = "X16.02" ] || [ "X${Valid7Zip}" = "X" ] || echo -e "${LRED}${BOLD}Distro uses problematic 7-zip version ${Valid7Zip}${NC} -> http://tinyurl.com/ukcktbsm"
 
 	# report significant mismatches between measured and 'advertised' clockspeeds from
 	# 1st measurement prior to benchmarking (to rule out later possible throttling effects)
@@ -4933,9 +4959,10 @@ UploadResults() {
 				grep ' Score ' "${TempLog2}"
 				;;
 		esac
-		echo -e "\n${CompareURL}\n\nResults validation:\n\n${IsValid}"
+		echo -e "\n${CompareURL}\n"
+		[ "X${IsValid}" != "X" ] && echo -e "${BOLD}Results validation:${NC}\n\n${IsValid}\n"
 	elif [ "X${REVIEWMODE}" = "Xtrue" ] && [ "X${NOTUNING}" != "Xyes" ]; then
-		[ "X${IsValid}" != "X" ] && echo -e "Results validation:\n\n${IsValid}"
+		[ "X${IsValid}" != "X" ] && echo -e "${BOLD}Results validation:${NC}\n\n${IsValid}\n"
 	fi
 	case ${UploadURL} in
 		http*)
@@ -8316,6 +8343,8 @@ ProvideReviewInfo() {
 	CreateTempDir
 	[ -f /sys/devices/system/cpu/cpufreq/policy0/scaling_governor ] && \
 		read OriginalCPUFreqGovernor </sys/devices/system/cpu/cpufreq/policy0/scaling_governor 2>/dev/null
+	[ "${OriginalCPUFreqGovernor}" = "ondemand" ] && \
+		io_is_busy=( $(find /sys/devices/system/cpu/cpufreq -name io_is_busy | while read ; do cat "${REPLY}"; done) )
 	GovernorState="$(HandleGovernors)"
 	[ "X${RunBenchmarks}" = "XTRUE" ] && CheckLoadAndDmesg || echo ""
 
@@ -8650,7 +8679,7 @@ ProvideReviewInfo() {
 	fi
 
 	echo "sbc-bench review mode started" >/dev/kmsg
-	trap "FinalReporting ; exit 0" 0 1 2 3 15
+	trap 'FinalReporting ; exit 0' 0 1 2 3 15
 	unset ThrottlingWarning ThrottlingCheck SwapWarning
 	rm "${TempDir}"/*time_in_state* "${TempDir}/throttling_info.txt" 2>/dev/null
 	SwapBefore="$(awk -F" " '{print $4}' </proc/swaps | grep -v -i Used | awk '{s+=$1} END {printf "%.0f", s}')"
@@ -8664,7 +8693,7 @@ ProvideReviewInfo() {
 } # ProvideReviewInfo
 
 FinalReporting() {
-	trap "rm -rf \"${TempDir}\" ; exit 0" 0
+	trap 'rm -rf "${TempDir}" ; exit 0' 0
 	echo -e "\n\nCleaning up...\c"
 	kill ${NetioMonitoringPID} ${MonitoringPID} 2>/dev/null
 	SwapNow="$(awk -F" " '{print $4}' </proc/swaps | grep -v -i Used | awk '{s+=$1} END {printf "%.0f", s}')"
@@ -8727,7 +8756,8 @@ FinalReporting() {
 	# output execution validation, fake ClusterConfig to get definitive throttling warning
 	ClusterConfig=(0)
 	IsValid="$(ValidateResults review | sed -e 's/^/  * /')"
-	echo -e "Results validation:\n\n${IsValid}${NC}\n${ThrottlingDetails}"
+	[ "X${IsValid}" != "X" ] && echo -e "${BOLD}Results validation:${NC}\n\n${IsValid}\n"
+	echo -e "${ThrottlingDetails}"
 
 	CheckAgeOfScript
 
@@ -9155,7 +9185,7 @@ PrintBSPWarning() {
 PrintKernelInfo() {
 	# Kernel info: version number and vendor/BSP check
 	CreateTempDir
-	trap "rm -rf \"${TempDir}\" ; exit 0" 0
+	trap 'rm -rf "${TempDir}" ; exit 0' 0
 	curl -s -q --connect-timeout 10 https://raw.githubusercontent.com/endoflife-date/endoflife.date/master/products/linuxkernel.md \
 		>"${TempDir}/linuxkernel.md"
 	BasicSetup nochange >/dev/null 2>&1

@@ -723,3 +723,7 @@ This is mostly an Armbian issue: their OS images for Raspberries for almost two 
 ### NTFS filesystems
 
 When Linux is using FUSE/userland methods to access NTFS filesystems performance will be significantly harmed or at least on majority of SBCs likely be bottlenecked by maxing out one or more CPU cores. It is highly advised when benchmarking with any NTFS to monitor closely CPU utilization or better switch to a 'Linux native' filesystem like ext4 since representing 'storage performance' a lot more than 'somewhat dealing with a foreign filesystem' as with NTFS.
+
+### io\_is\_busy
+
+When `ondemand` cpufreq governor is used it is important to tweak some of these governor's settings, especially `io_is_busy`. If this is set to `0` (default) then in case of pure I/O loads CPU clockspeeds aren't ramped up as quickly as needed or sometimes at all. As such I/O performance generally suffers, sometimes significantly. See [here](https://github.com/radxa/kernel/commit/55f540ce97a3d19330abea8a0afc0052ab2644ef#commitcomment-79484235) for example which difference that might make.

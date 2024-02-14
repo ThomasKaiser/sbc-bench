@@ -8,6 +8,7 @@ Main() {
 	PathToMe="$( cd "$(dirname "$0")" || exit 1 ; pwd -P )/${0##*/}"
 	unset LC_ALL LC_MESSAGES LC_NUMERIC LANGUAGE LANG 2>/dev/null # prevent localisation of decimal points and similar stuff
 	NO_COLOR="${NO_COLOR:-}"
+	Netio="${Netio:-}"
 
 	# use colours and bold when outputting to a terminal
 	CheckTerminal
@@ -41,8 +42,24 @@ Main() {
 			m)
 				# monitoring mode
 				SleepInterval=${2:-5}
+				if [ -n "${Netio}" ] && [ -z "${NetioConsumptionFile}" ]; then
+					QueryNetioDevice
+					if [ "X${OutputCurrents[*]}" != "X" ]; then
+						# We are in Netio monitoring mode as such provide consumption info as well
+						echo -e "Power monitoring on socket ${NetioSocket} of ${NetioName} (Netio ${NetioModel}, FW v${Firmware}, XML API v${XmlVer}, ${InputVoltage}V @ ${Frequency}Hz)\n"
+						CreateTempDir
+						NetioConsumptionFile="${TempDir}/netio.current"
+						echo -n $(( $(awk '{printf ("%0.0f",$1/10); }' <<<"${OutputCurrent[$(( ${NetioSocket} - 1 ))]}" ) * 10 )) >"${NetioConsumptionFile}"
+						export NetioConsumptionFile
+						NetioInterval=$(LC_ALL=C awk '{printf ("%0.1f",$1/2); }' <<<"${SleepInterval}")
+						NetioSamples=$(( SleepInterval * 3 ))
+						/bin/bash "${PathToMe}" -N ${NetioDevice} ${NetioSocket} ${NetioConsumptionFile} "${NetioInterval}" "${NetioSamples}" >/dev/null 2>&1 &
+						NetioMonitoringPID=$!
+					fi
+				fi
 				MonitorMode=TRUE
 				MonitorBoard
+				[ -n "${Netio}" ] && [ -z "${NetioConsumptionFile}" ] && kill ${NetioMonitoringPID} >/dev/null 2>&1
 				exit 0
 				;;
 			c)
@@ -624,21 +641,7 @@ GetCoreType() {
 		riscv*)
 			# TODO: newer kernels now expose more information so we could use this:
 			# (mvendorid corresponds to manufacturer's JEDEC ID)
-			#
-			# AX45MP core in Renesas RZ/Five (R9A07G043)
-			# mvendorid	: 0x31e (Andes)
-			# marchid	: 0x8000000000008a45
-			# mimpid	: 0x500
-			#
-			# SiFive U74 cores in JH7110
-			# mvendorid	: 0x489 (SiFive)
-			# marchid	: 0x8000000000000007
-			# mimpid	: 0x4210427
-			#
-			# C920 cores in Sophgo SG2042
-			# mvendorid	: 0x5b7 (T-Head)
-			# marchid	: 0x0
-			# mimpid	: 0x0
+			# https://gist.github.com/ThomasKaiser/14002f473d354360bf6d87c652c209aa
 
 			# relying on uarch doesn't work with older RISC-V kernels since missing
 			grep -q '^uarch' <<< "${ProcCPU}"
@@ -1936,12 +1939,10 @@ GetOSRelease() {
 			# build system. They simply overwrite the PRETTY_NAME definition in Debian's
 			# and Ubuntu's /etc/os-release file with some nonsense that will break certain
 			# 3rd party installation routines and confuse users. But that's what you get
-			# when a project is driven by 'ignorance and stupidity'. Fix that by restoring
-			# the operating system's own files (which will happen sooner or later anyway
-			# just by updating Debian/Ubuntu once the base-files package gets updated):
-			apt-get -f -qq -y --reinstall install base-files >/dev/null 2>&1
-			OS="$(hostnamectl | awk -F": " '/Operating System:/ {print $2}')"
-			grep -q "${UBUNTU_CODENAME}" <<<"${OS}" && echo "${OS}" || echo "${OS}${UbuntuSuffix}"
+			# when a project is driven by 'ignorance and stupidity'. The fix to restore
+			# the distro's base-files package doesn't work any more since Armbian hobbyists
+			# once again replace distro packages with their own.
+			grep -q "${UBUNTU_CODENAME}" <<<"${OS}" && echo "Ubuntu ${VERSION} tampered by ${OS}" || echo "Debian ${VERSION} tampered by ${OS}"
 			;;
 		"")
 			echo "n/a"
@@ -2145,28 +2146,7 @@ Getx86ClusterDetails() {
 	# Fortunately cache sizes do differ between E/P cores and with ACPI correctly set up
 	# /sys/devices/system/cpu/cpu*/acpi_cppc/nominal_perf should differ as well. The SKU
 	# differentiation of these hybrid CPU models follow this scheme:
-	#
-	# Alder Lake:
-	# i9: 6-8 P-cores, 8-16 E-cores, 4.8-5.5 GHz, 24-30 MB "Smart Cache"
-	# i7: 2-8 P-cores, 4-8 E-cores, 4.6-5.0 GHz, 12-25 MB "Smart Cache"
-	# i5: 4-6 P-cores, 4-8 E-cores, 4.2-4.9 GHz, 12-20 MB "Smart Cache"
-	# i3: 2-4 P-cores, 0-8 E-cores, 4.0-4.3 GHz, 10-12 MB "Smart Cache"
-	# Pentium Gold 850*, Celeron 730*: 1 P-core, 4 E-cores, 8 MB "Smart Cache"
-	#
-	# Raptor Lake:
-	# i9: 6-8 P-cores, 8-16 E-cores, 5.0-5.8 GHz, 24-36 MB "Smart Cache"
-	# i7: 2-8 P-cores, 4-12 E-cores, 4.8-5.4 GHz, 12-30 MB "Smart Cache"
-	# i5: 4-6 P-cores, 4-8 E-cores, 4.4-5.1 GHz, 12-24 MB "Smart Cache"
-	# i3: 1-4 P-cores, 0-8 E-cores, 4.1-4.6 GHz, 10-12 MB "Smart Cache"
-	# Processor U300*: 1 P-core, 4 E-cores, 4.3-4.4 GHz, 8 MB "Smart Cache"
-	#
-	# Raptor Lake Refresh:
-	# i9: 8 P-cores, 16 E-cores, 5.5-6.0 GHz, 36 MB "Smart Cache"
-	# i7: 8 P-cores, 8-12 E-cores, 5.2-5.6 GHz, 30-33 MB "Smart Cache"
-	# i5: 6 P-cores, 4-8 E-cores, 4.5-5.3 GHz, 20-24 MB "Smart Cache"
-	# i3: 4 P-cores, 0 E-cores, 4.4-4.7 GHz, 12 MB "Smart Cache"
-	# Core: 2 P-cores, 4-8 E-cores, 4.7-5.4 GHz, 10-12 MB "Smart Cache"
-	# Processor 300*: 2 P-cores, 0 E-cores, 3.4-3.9 GHz, 6 MB "Smart Cache"
+	# https://gist.github.com/ThomasKaiser/91ce41d44da14b577b3681bd09075a03
 
 	# Check amount of available CPU cores first and whether virtualization has been detected
 	# since when running in a virtualized environment it doesn't make sense trying to
@@ -2936,10 +2916,6 @@ InstallPrerequisits() {
 		command -v gnuplot >/dev/null 2>&1 || apt -f -qq -y --no-install-recommends install gnuplot-nox >/dev/null 2>&1
 	fi
 
-	# workaround for libc6-dev package missing for whatever obscure reason:
-	# https://github.com/ThomasKaiser/sbc-bench/issues/86
-	[ -d /usr/share/doc/libc6-dev ] || apt -f -qq -y install libc6-dev >/dev/null 2>&1
-
 	# get/build tinymembench if not already there
 	[ -d "${InstallLocation}" ] || mkdir -p "${InstallLocation}"
 	if [ -f "${InstallLocation}/tinymembench/.git/config" ]; then
@@ -3238,7 +3214,7 @@ InitialMonitoring() {
 	[ "${CPUArchitecture}" = "x86_64" ] && GuessedSoC="n/a" || GuessedSoC="$(GuessARMSoC)"
 
 	# upload raw /proc/cpuinfo contents and device-tree compatible entry to ix.io
-	ping -c1 ix.io >/dev/null 2>&1
+	ping -c1 -w2 ix.io >/dev/null 2>&1
 	if [ $? -eq 0 ] && [ "X${ProcCPUFile}" = "X/proc/cpuinfo" ]; then
 		UploadScheme="f:1=<-"
 		UploadServer="ix.io"
@@ -3250,12 +3226,12 @@ InitialMonitoring() {
 				;;
 			*)
 				# something's wrong, e.g. "down for a while due to DDOS. thanks, buddy!" in early Nov. 2023
-				ping -c1 sprunge.us >/dev/null 2>&1 && UploadScheme="sprunge=<-" ; UploadServer="sprunge.us"
+				ping -c1 -w2 sprunge.us >/dev/null 2>&1 && UploadScheme="sprunge=<-" ; UploadServer="sprunge.us"
 				;;
 		esac
 	else
 		# upload location fallback to sprunge.us if possible
-		ping -c1 sprunge.us >/dev/null 2>&1 && UploadScheme="sprunge=<-" ; UploadServer="sprunge.us"
+		ping -c1 -w2 sprunge.us >/dev/null 2>&1 && UploadScheme="sprunge=<-" ; UploadServer="sprunge.us"
 	fi
 
 	# Log version and device info
@@ -3371,8 +3347,19 @@ InitialMonitoring() {
 
 	# set up Netio consumption monitoring if requested. Device address and socket
 	# need to be available as Netio (environment) variable.
-	Netio="${Netio:-}"
 	if [ "X${Netio}" != "X" ]; then
+		QueryNetioDevice
+		echo -e "\nPower monitoring on socket ${NetioSocket} of ${NetioName} (Netio ${NetioModel}, FW v${Firmware}, XML API v${XmlVer}, ${InputVoltage}V @ ${Frequency}Hz) " >>"${ResultLog}"
+	fi
+
+	# log benchmark start in dmesg output
+	echo "sbc-bench started" >/dev/kmsg
+
+	# get status of swap devices to spot swapping activity ruining benchmark scores
+	SwapBefore="$(awk -F" " '{print $4}' </proc/swaps | grep -v -i Used | awk '{s+=$1} END {printf "%.0f", s}')"
+} # InitialMonitoring
+
+QueryNetioDevice() {
 		NetioDevice="$(cut -f1 -d/ <<<"${Netio}")"
 		NetioSocket="$(cut -f2 -d/ <<<"${Netio}")"
 		XMLOutput="$(curl -q --connect-timeout 1 "http://${NetioDevice}/netio.xml" 2>/dev/null | tr '\015' '\012')"
@@ -3383,15 +3370,7 @@ InitialMonitoring() {
 		NetioName=$(grep '^<DeviceName>' <<<"${XMLOutput}" | sed -e 's/\(<[^<][^<]*>\)//g')
 		Firmware=$(grep '^<Version>' <<<"${XMLOutput}" | sed -e 's/\(<[^<][^<]*>\)//g')
 		XmlVer=$(grep '^<XmlVer>' <<<"${XMLOutput}" | sed -e 's/\(<[^<][^<]*>\)//g')
-		echo -e "\nPower monitoring on socket ${NetioSocket} of ${NetioName} (Netio ${NetioModel}, FW v${Firmware}, XML API v${XmlVer}, ${InputVoltage}V @ ${Frequency}Hz) " >>"${ResultLog}"
-	fi
-
-	# log benchmark start in dmesg output
-	echo "sbc-bench started" >/dev/kmsg
-
-	# get status of swap devices to spot swapping activity ruining benchmark scores
-	SwapBefore="$(awk -F" " '{print $4}' </proc/swaps | grep -v -i Used | awk '{s+=$1} END {printf "%.0f", s}')"
-} # InitialMonitoring
+} # QueryNetioDevice
 
 GetVoltageSensor() {
 	case "${DTCompatible}" in
@@ -3603,7 +3582,7 @@ CoresOnline() {
 
 CheckTimeInState() {
 	# Check cpufreq statistics prior and after benchmark to detect throttling (won't work
-	# with all kernels and especially not on the RPi since RPi Trading people are cheating.
+	# with all kernels and especially not on the RPi since RPi Ltd. people are cheating.
 	# Cpufreq support via sysfs is bogus and with latest ThreadX (firmware) update they
 	# even cheat wrt querying the 'firmware' via 'vcgencmd get_throttled':
 	# https://www.raspberrypi.org/forums/viewtopic.php?f=63&t=217056#p1334921
@@ -4812,6 +4791,10 @@ ValidateResults() {
 			fi
 		fi
 	fi
+
+	# ondemand governor used by distro but inappropriate settings on at least some cores,
+	# report only when in review mode
+	# echo -e "${LRED}${BOLD}io_is_busy not set to 1 on all cores${NC} -> http://tinyurl.com/44pbmw79"
 } # ValidateResults
 
 ListSwapDevices() {
@@ -5131,34 +5114,7 @@ ReportCpufreqStatistics() {
 Parse_ADC_Readouts() {
 	# this function tries to multiply all amperage and voltage values spitten out by the
 	# RPi 5B PMIC ADCs. Querying ThreadX via 'vcgencmd pmic_read_adc' will result in
-	# something like this:
-	#
-	#  3V7_WL_SW_A current(0)=0.00390372A
-	#    3V3_SYS_A current(1)=0.05562801A
-	#    1V8_SYS_A current(2)=0.16493220A
-	#   DDR_VDD2_A current(3)=0.02049453A
-	#   DDR_VDDQ_A current(4)=0.00000000A
-	#    1V1_SYS_A current(5)=0.18152300A
-	#    0V8_SYS_A current(6)=0.32693650A
-	#   VDD_CORE_A current(7)=0.71440000A
-	#   3V3_DAC_A current(17)=0.48840000A
-	#   3V3_ADC_A current(18)=0.42735000A
-	#   1V1_SYS_A current(16)=5.55555000A
-	#      HDMI_A current(22)=0.02344320A
-	#     3V7_WL_SW_V volt(8)=3.71462400V
-	#       3V3_SYS_V volt(9)=3.31096100V
-	#      1V8_SYS_V volt(10)=1.79926600V
-	#     DDR_VDD2_V volt(11)=1.11355200V
-	#     DDR_VDDQ_V volt(12)=0.60842430V
-	#      1V1_SYS_V volt(13)=1.10622600V
-	#      0V8_SYS_V volt(14)=0.80476110V
-	#     VDD_CORE_V volt(15)=0.72097620V
-	#      3V3_DAC_V volt(20)=3.30768900V
-	#      3V3_ADC_V volt(21)=3.30494200V
-	#      1V1_SYS_V volt(19)=0.79765500V
-	#         HDMI_V volt(23)=5.10004000V
-	#        EXT5V_V volt(24)=5.09602000V
-	#         BATT_V volt(25)=0.00683760V
+	# something like this: https://gist.github.com/ThomasKaiser/f98c6f97a2f82d85791cbaf6cebf10b8
 
 	grep current <<<"${1}" | while read ; do
 		PowerRail="${REPLY%_A*}"
@@ -5230,418 +5186,18 @@ CacheAndDIMMDetails() {
 GuessARMSoC() {
 	# function that tries to guess ARM SoC names correctly
 	#
-	# ARM core types/steppings this function deals with:
-	#
-	#      APM X-Gene / r0p0: APM 883208-X1
-	#      APM X-Gene / r3p2: APM Emag 8180
-	#  Apple Icestorm / r1p1: Apple M1
-	# Apple Firestorm / r1p1: Apple M1
-	#  Apple Icestorm / r2p0: Apple M1 Pro
-	# Apple Firestorm / r2p0: Apple M1 Pro
-	#  Apple Blizzard / r1p0: Apple M2
-	# Apple Avalanche / r1p0: Apple M2
-	#    ARM11 MPCore / r0p5: PLX NAS7820
-	#         ARM1176 / r0p7: Broadcom BCM2835
-	#      Brahma B53 / r0p0: Broadcom BCM4908 (and tons of others since Broadcom hasn't updated stepping information)
-	#       Cortex-A5 / r0p1: Actions ATM8029, Amlogic S805, Qualcomm MSM8625Q
-	#       Cortex-A7 / r0p1: ARM Versatile Express V2P-CA15-CA7
-	#       Cortex-A7 / r0p2: MediaTek MT6589/MT6588
-	#       Cortex-A7 / r0p3: Allwinner A31/A31s, MediaTek MT6572/MT6580/MT6582/MT6589/MT7623/MT8127/MT8135, Qualcomm MSM8610 (Snapdragon 200) / MSM8226/MSM8926 (Snapdragon 400), Samsung Exynos 5422
-	#       Cortex-A7 / r0p4: Allwinner A20, Exynos 5430, Mediatek MT6592
-	#       Cortex-A7 / r0p5: Allwinner A33/A50/A80/A83T/F133/H133/H2+/H3/H8/MR133/R16/R311/R328/R40/R528/R853/S3/T113/V3/V3s/V40/V533/V831/V833/V851S/V851SE/V853, Broadcom BCM2836, Freescale/NXP i.MX7D/i.MX6 ULL, HiSilicon Hi351x/Hi3796M-V100/Hi3798M-V100, HiSilicon Kirin 920/925/928, MediaTek MT6595, Microchip SAMA7G54, Qualcomm MDM9607/MSM8909, Renesas RZ/N1, Rockchip RK3126/RK3126B/RK3126C/RK3128/RK3228A/RK3229/RV1108/RV1109/RV1126, SigmaStar SSD201/SSD202D, Spreadtrum SC7731/SC8830, STMicroelectronics STM32MP157
-	#       Cortex-A8 / r1p3: TI OMAP3530/AM3703
-	#       Cortex-A8 / r1p7: TI Sitara AM3517
-	#       Cortex-A8 / r2p2: Samsung Exynos 3110 (S5PC110)
-	#       Cortex-A8 / r2p5: Freescale/NXP i.MX515
-	#       Cortex-A8 / r3p2: Allwinner A10, TI DM3730/AM335x/DM385
-	#       Cortex-A9 / r1p0: Nvidia Tegra 2
-	#       Cortex-A9 / r1p2: TI OMAP 4460
-	#       Cortex-A9 / r1p3: TI OMAP 4430
-	#       Cortex-A9 / r2p1: Samsung Exynos 4210, Comcerto 2000 AKA FreeScale/NXP QorIQ LS1024A -> https://github.com/Bonstra/c2000doc
-	#       Cortex-A9 / r2p9: Nvidia Tegra 3
-	#       Cortex-A9 / r2p10: Freescale/NXP i.MX6 Dual/Quad, TI OMAP4470
-	#       Cortex-A9 / r3p0: Amlogic 8726-MX, Calxeda Highbank, Cyclone V FPGA SoC, Marvell PXA988, Mediatek MT5880, Nexell S5P4418, Rockchip RK3066/RK3188, Samsung Exynos 4412, ST Micro STiH415/STiH416, Xilinx Zynq 7000S
-	#       Cortex-A9 / r4p1: Amlogic S802/S812, Freescale/NXP i.MX6SLL, HiSilicon Hi3520D-V300/Hi6620, Marvell Armada 375/38x, MStar Infinity2, Triductor TR6560
-	#      Cortex-A15 / r0p4: Samsung Exynos 5 Dual 5250
-	#      Cortex-A15 / r2p1: ARM Versatile Express V2P-CA15-CA7
-	#      Cortex-A15 / r2p2: TI Sitara AM572x
-	#      Cortex-A15 / r2p3: Samsung Exynos 5422
-	#      Cortex-A15 / r2p4: AnnapurnaLabs Alpine
-	#      Cortex-A15 / r3p2: MediaTek MT8135, Renesas R8A7790
-	#      Cortex-A15 / r3p3: Exynos 5430, HiSilicon Kirin 920/925/928, Nvidia Tegra K1 (Tegra124)
-	#      Cortex-A15 / r4p0: Allwinner A80
-	#      Cortex-A17 / r0p0: MediaTek MT5890/MT6595
-	#      Cortex-A17 / r0p1: Rockchip RK3288
-	#      Cortex-A35 / r0p1: Mediatek MT8167B/MT6799
-	#      Cortex-A35 / r0p2: NXP i.MX8QXP, Rockchip RK1808/RK3308/RK3326/PX30/PX30S
-	#      Cortex-A35 / r1p0: Amlogic C302X/C305X/S805X2/S905Y4/S905W2
-	#      Cortex-A53 / r0p0: ARM Juno r0, Qualcomm Snapdragon 410 (MSM8916)
-	#      Cortex-A53 / r0p1: Exynos 5433, Qualcomm MSM8939
-	#      Cortex-A53 / r0p2: Marvell PXA1908, Mediatek MT6752/MT6738/MT6755/MT8173/MT8176, Qualcomm Snapdragon 810 (MSM8994), Samsung Exynos 7420
-	#      Cortex-A53 / r0p3: ARM Juno r1, ARM Juno r2, HiSilicon Hi3751, Kirin 620/930, Mediatek MT6735/MT8163, Nexell S5P6818, Samsung Exynos 7580, Qualcomm MSM8992 (Snapdragon 808)
-	#      Cortex-A53 / r0p4: Allwinner A100/A133/A53/A64/H313/H5/H6/H616/H618/H64/MR813/R329/R818/R923/T507/T509, Amlogic A113X/A113D/A311D/A311D2/S805X/S805Y/S905/S905X/S905D/S905W/S905L/S905L3A/S905M2/S905X2/S905Y2/S905D2/S912/S922X/T962X2, Broadcom BCM2837/BCM2709/BCM2710/RP3A0-AU (BCM2710A1), Exynos 7570/8890, HiSilicon Hi3798C-V200, HiSilicon Kirin 650/710/950/955/960/970, Marvell Armada 37x0, Mediatek MT6739WA/MT6762M/MT6765/MT6771V/MT6797/MT6797T/MT6799/MT7622B/MT8183/MT8735, NXP i.MX8M/i.MX8QM/LS1xx8, Qualcomm IPQ5332/MSM8937/MSM8952/MSM8953/MSM8956/MSM8976/MSM8976PRO/SDM439/SDM450, RealTek RTD129x/RTD139x, Rockchip RK3318/RK3328/RK3528/RK3562/RK3399, Samsung Exynos 7870/7885/8890/8895, Socionext LD20/SC2A11, TI K3 AM623/AM625/AM62A/AM642/AM654, Xiaomi Surge S1
-	#      Cortex-A55 / r0p1: Samsung Exynos 9810
-	#      Cortex-A55 / r1p0: Amlogic S905X3/S905D3/S905Y3/T962X3/T962E2, HiSilicon Ascend 310 / Kirin 810/980, Samsung Exynos 9820
-	#      Cortex-A55 / r2p0: Amlogic S905X4/S905C2, Allwinner A513/A523/A736/A737/T527/T736/T737, Google Tensor G1/G2, MediaTek Genio 1200 / MT8188JV/A, NXP i.MX 93, Qualcomm SM8350 (Snapdragon 888), RealTek RTD1619B, Renesas RZG2UL/RZG2LC, Rockchip RK3566/RK3568/RK3588/RK3588s, Unisoc UMS9620
-	#      Cortex-A57 / r0p0: ARM Juno r0
-	#      Cortex-A57 / r1p0: Exynos 5433/7420
-	#      Cortex-A57 / r1p1: ARM Juno r1, Nvidia Tegra TX1, Snapdragon 810 / MSM8994/MSM8994V
-	#      Cortex-A57 / r1p2: AMD Opteron A1100, Qualcomm MSM8992 (Snapdragon 808)
-	#      Cortex-A57 / r1p3: Baikal-M, Nvidia Jetson TX2, Renesas R8A7795/R8A7796/R8A77965
-	#      Cortex-A72 / r0p0: ARM Juno r2, HiSilicon Kirin 950/955, Mediatek MT8173/MT8176, Snapdragon 650/652/653 / Qualcomm MSM8956/MSM8976/MSM8976PRO
-	#      Cortex-A72 / r0p1: Marvell Armada 8020/8040, Mediatek MT6797/MT6797T
-	#      Cortex-A72 / r0p2: HiSilicon Kunpeng 916, NXP i.MX8QM/LS2xx8A, Rockchip RK3399, Socionext LD20, 
-	#      Cortex-A72 / r0p3: Broadcom BCM2711, NXP LS1028A, NXP LX2xx0A, Marvell Armada3900-A1, Xilinx Versal, AWS Graviton
-	#      Cortex-A72 / r1p0: Broadcom Klondike, TI J721E (TDA4VM/DRA829V)
-	#      Cortex-A73 / r0p1: HiSilicon Kirin 960
-	#      Cortex-A73 / r0p2: Allwinner R923, Amlogic A311D/A311D2/S922X, HiSilicon Kirin 710/970, MediaTek Helio P60T/MT6771V/MT6799/MT8183, Samsung Exynos 7885
-	#      Cortex-A75 / r2p1: Samsung Exynos 9820
-	#      Cortex-A75 / r3p1: Unisoc T610/T618/T700/T740
-	#   HiSilicon-A76 / r1p0: HiSilicon Kirin 980
-	#      Cortex-A76 / r3p0: Exynos Auto V9
-	#   HiSilicon-A76 / r3p0: HiSilicon Kirin 810/990
-	#   HiSilicon-A76 / r3p1: HiSilicon Kirin 990
-	#      Cortex-A76 / r4p0: Allwinner A736/T736, Google Tensor G1, Rockchip RK3588/RK3588s, Unisoc UMS9620
-	#      Cortex-A76 / r4p1: Amlogic S928X, Broadcom BCM2712/Muskoka
-	#      Cortex-A77 / r1p0: HiSilicon Kirin 9000, Qualcomm QRB5165 (Snapdragon 865)
-	#      Cortex-A78 / r1p0: MediaTek Genio 1200 / MT8188JV/A, Qualcomm SM8350 (Snapdragon 888)
-	#      Cortex-A78 / r1p1: Google Tensor G2
-	#    Cortex-A78AE / r0p1: Nvidia Jetson Orin NX / AGX Orin
-	#  HiSilicon-A710 / r2p2: HiSilicon Kirin 9000s
-	#     Cortex-A78C / r0p0: Qualcomm Snapdragon 8cx Gen 3
-	#       Cortex-X1 / r1p0: Google Tensor G1/G2, Qualcomm SM8350 (Snapdragon 888)
-	#      Cortex-X1C / r0p0: Qualcomm Snapdragon 8cx Gen 3
-	#     Cortex-A510 / r0p2: Qualcomm Snapdragon 8 Gen1
-	#     Cortex-A510 / r0p3: Qualcomm Snapdragon 8+ Gen1
-	#     Cortex-A510 / r1p1: Google Tensor G3, HiSilicon Kirin 9000s, Snapdragon 8 Gen 2
-	#     Cortex-A520 / r0p1: Snapdragon 8 Gen 3
-	#     Cortex-A710 / r2p0: Qualcomm Snapdragon 8 Gen1, Snapdragon 8+ Gen1, Snapdragon 8 Gen 2
-	#     Cortex-A715 / r1p0: Google Tensor G3, Snapdragon 8 Gen 2
-	#     Cortex-A720 / r0p1: Snapdragon 8 Gen 3
-	#       Cortex-X2 / r2p0: Qualcomm Snapdragon 8 Gen1, Snapdragon 8+ Gen1
-	#       Cortex-X3 / r1p0: Snapdragon 8 Gen 2
-	#       Cortex-X4 / r0p1: Snapdragon 8 Gen 3
-	#       Exynos-m1 / r1p1: Samsung Exynos 8890
-	#       Exynos-m1 / r4p0: Samsung Exynos 8895
-	#       Exynos-m3 / r1p0: Samsung Exynos 9810
-	#       Exynos-m4 / r1p0: Samsung Exynos 9820
-	#   Kryo 3XX Gold / r6p13: Qualcomm Snapdragon 845
-	# Kryo 3XX Silver / r7p12: Qualcomm Snapdragon 845
-	#     Neoverse-N1 / r3p1: Ampere Altra, AWS Graviton2
-	#     Neoverse-N2 / r0p0: Marvell Octeon 10, YiTian 710
-	#     Neoverse-V1 / r1p1: AWS Graviton3
-	#     Neoverse-V2 / r0p0: Nvidia Grace
-	#   NVidia Carmel / r0p0: Nvidia Tegra Xavier
-	#   NVidia Denver / r0p0: Nvidia Tegra K1 (Tegra132)
-	# NVidia Denver 2 / r0p0: Nvidia Jetson TX2
-	# Marvell 88FR131 / r2p1: Marvell Kirkwood 88F6281
-	#     Marvell PJ4 / r0p5: Marvell Armada 510
-	#     Marvell PJ4 / r1p1: Marvell Armada 370/XP
-	# Marvell PJ4B-MP / r2p2: Marvell PJ4Bv7
-	#  Phytium FTC660 / r1p1: Phytium FT-1500A
-	#  Phytium FTC662 / r1p2: Phytium FT-2000+/64
-	#  Phytium FTC663 / r1p3: Phytium FT-2000/4 / FT2000A / D2000/8 / FT2500
-	# Qualcomm Falkor / r10p1: Qualcomm MSM8998 (Snapdragon 835)
-	# Qualcomm Falkor / r10p2: Qualcomm SDM662 (Snapdragon 622)
-	#  Qualcomm Krait / r0p2: Qualcomm APQ8064A
-	#  Qualcomm Krait / r1p0: Qualcomm MSM8960 (Snapdragon S4 Plus), Qualcomm APQ8064 (Snapdragon S4 Pro), Qualcomm APQ8064T (Snapdragon 600)
-	#  Qualcomm Krait / r1p4: Qualcomm MSM8627
-	#  Qualcomm Krait / r2p0: Qualcomm IPQ806x/MSM8974 (Snapdragon 800)
-	#  Qualcomm Krait / r2p1: Qualcomm MSM8974PRO (Snapdragon 801)
-	#   Qualcomm Kryo / r1p2: Qualcomm MSM8996 (Snapdragon 820)
-	#   Qualcomm Kryo / r2p1: Qualcomm MSM8996pro (Snapdragon 821)
-	#   Qualcomm Kryo / r13p14: Qualcomm Snapdragon 7c, Qualcomm Snapdragon 855/865
-	#   Qualcomm Kryo / r15p15: Qualcomm Snapdragon 7c
-	# Qualcomm Kryo V2 / r10p4: Qualcomm SDM662 (Snapdragon 622), Qualcomm MSM8998 (Snapdragon 835)
-	#    TaiShan v110 / r1p0: HiSilicon Kunpeng 920
-	#    TaiShan v120 / r2p2: HiSilicon Kirin 9000s
-	#   ThunderX 88XX / r1p1: ThunderX CN8890
-	#  ThunderX2 99xx / r0p1: Cavium ThunderX2 CN9980
+	# ARM core types/steppings this function deals with as of early 2024:
+	# https://gist.github.com/ThomasKaiser/1fef6a6a09b07d48632ca99ec075a1df
 	#
 	# For a rough performance estimate wrt different Cortex ARMv8 cores see:
 	# https://www.cnx-software.com/2021/12/10/starfive-dubhe-64-bit-risc-v-core-12nm-2-ghz-processors/#comment-588823
 	#
-	# Recent Rockchip BSP kernels include something like this in dmesg output: rockchip-cpuinfo cpuinfo: SoC : 35880000
-	# 35280000 --> Hlink H28K
-	# 35281000 --> Hlink H28K
-	# 35661000 --> Quartz64, RK3566 EVB2 LP4X V10 Board, Firefly RK3566-ROC-PC
-	# 35662000 --> EmbedFire LubanCat-Zero, RK3566 BOX DEMO V10 ANDROID Board, Radxa Zero 3, Rock 3C, Radxa CM3,
-	#              Orange Pi 3B, Orange Pi CM4
-	# 35681000 --> only early RK3568 devices showed this silicon revision (e.g. Firefly RK3568-ROC-PC/AIO-3568J,
-	#              Radxa E25)
-	# 35682000 --> AIO-3568J HDMI, CPdevice Spring2 Plus Board, Firefly RK3568-ROC-PC HDMI, Forlinx OK3568-C Board,
-	#              FriendlyElec NanoPi R3S, FriendlyElec NanoPi R5C, FriendlyElec NanoPi R5S, Hardkernel ODROID-M1
-	#              HINLINK H66K, HINLINK H68K, Magewell Pro Convert NDI, Mrkaio M68S, OWLVisionTech rk3568 opc Board,
-	#              Radxa Rock3A, Radxa ROCK 3 Model, Radxa ROCK3 Model A, Rockemd R68K 2.5G, SMARTFLY YY3568 Board
-	# 35880000 --> 9Tripod X3588S Board, Firefly ITX-3588J HDMI(Linux), Firefly ROC-RK3588S-PC HDMI(Linux),
-	#              FriendlyElec NanoPC-T6, FriendlyElec NanoPi R6C, FriendlyElec NanoPi R6S, HINLINK OWL H88K Board,
-	#              Khadas Edge2, Mekotronics R58X-4G (RK3588 EDGE LP4x V1.2 BlueBerry Board), Mixtile Blade 3 v1.0.1,
-	#              Orange Pi 5, Orange Pi 5B, Orange Pi 5 Plus, Radxa ROCK 5A, Radxa ROCK 5B, RK3588 EDGE LP4x V1.0
-	#              BlueBerry Board, RK3588 MINIPC-MIZHUO LP4x V1.0 BlueBerry Board, RK3588S CoolPi 4B Board, RK3588
-	#              Shaggy013 LP4x V1.2 H96_Max_v58 Board, Rockchip RK3588 EVB4 LP4 V10 Board, Rockchip RK3588 EVB7
-	#              LP4 V10 Board, Rockchip RK3588-EVB-KS-T1 LP4 V10 Board, Rockchip RK3588 MINI PC V11 Board
-	#              Rockchip RK3588 OWL H88K Board, Rockchip RK3588 TOYBRICK X10 Board
-	# 35881000 --> Orange Pi 5, Orange Pi 5B, Orange Pi 5 Plus, Firefly ROC-RK3588S-PC V12 MIPI, Firefly AIO-3588Q MIPI101,
-	#              FriendlyElec NanoPi R6C
+	# As for the logic wrt Rockchip and Amlogic BSP kernel output parsing see here please:
+	# https://gist.github.com/ThomasKaiser/f28027f182ff9ae7bfa60065c950be75
 	#
-	# RK 'open source' SoCs according to https://github.com/rockchip-linux/kernel/blob/develop-5.10/drivers/soc/rockchip/rockchip-cpuinfo.c (at least RV1108 and RK3306/RK3528/RK3588[s] missing)
-	# PX30, PX30S, RK3126, RK3126B, RK3126C, RK3128, RK3288, RK3288W, RK3308, RK3308B, RK3308BS, RK3566, RK3568, RV1103, RV1106, RV1109 and RV1126
+	# MIDR_EL1 related stuff: https://gist.github.com/ThomasKaiser/d99228ac986378c41f4f8e6bc3f5cb70
 	#
-	# Amlogic: dmesg | grep 'soc soc0:' (mainline Linux: drivers/soc/amlogic/meson-gx-socinfo.c)
-	# Amlogic Meson8 (S802) RevC (19 - 0:27ED) detected <-- Tronsmart S82
-	# Amlogic Meson8b (S805) RevA (1b - 0:B72) detected <-- ODROID-C1 / S805-onecloud / Endless Computers Endless Mini / TRONFY MXQ S805
-	# Amlogic Meson8m2 (S812) RevA (1d - 0:74E) detected <-- Akaso M8S / Tronsmart MXIII Plus
-	# Amlogic Meson GXBB (S905) Revision 1f:b (0:1) Detected <-- ODROID-C2
-	# Amlogic Meson GXBB (S905) Revision 1f:c (0:1) Detected <-- ODROID-C2
-	# Amlogic Meson GXBB (S905) Revision 1f:b (12:1) Detected <-- Beelink Mini MX / Amlogic Meson GXBB P201 Development Board
-	# Amlogic Meson GXBB (S905) Revision 1f:c (13:1) Detected <-- Beelink Mini MX / NanoPi K2 / NEXBOX A95X / Tronsmart Vega S95 Telos/Meta / WeTek Play 2 / Amlogic Meson GXBB P200 Development Board / Amlogic Meson GXBB P201 Development Board
-	# Amlogic Meson GXBB (S905H) Revision 1f:c (23:1) Detected <-- Amlogic Meson GXBB P201 Development Board
-	# Amlogic Meson GXL (S905X) Revision 21:a (82:2) Detected <-- Khadas VIM / NEXBOX A95X (S905X) / Tanix TX3 Mini / ZTE B860H / Amlogic Meson GXL (S905X) P212 Development Board
-	# Amlogic Meson GXL (S905D) Revision 21:b (0:2) Detected <-- Amlogic Meson GXL (S905W) P281 Development Board
-	# Amlogic Meson GXL (S905D) Revision 21:b (2:2) Detected <-- MeCool KI Pro, Phicomm N1, Amlogic Meson GXL (S905D) P231 Development Board
-	# Amlogic Meson GXL (Unknown) Revision 21:b (2:2) Detected <-- Phicomm N1
-	# Amlogic Meson GXL (S905X) Revision 21:b (82:2) Detected <-- Libre Computer AML-S905X-CC / NEXBOX A95X (S905X) / Tanix TX3 Mini / Amlogic Meson GXL (S905X) P212 Development Board / Amlogic Meson GXL (S905W) P281 Development Board
-	# Amlogic Meson GXL (S905W) Revision 21:b (a2:2) Detected <-- Tanix TX3 Mini / X96W Smart TV Box / Amlogic Meson GXL (S905X) P212 Development Board, Amlogic Meson GXL (S905W) P281 Development Board
-	# Amlogic Meson GXL (S905L) Revision 21:b (c2:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board
-	# Amlogic Meson GXL (S905M2) Revision 21:b (e2:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board
-	# Amlogic Meson GXL (S905X) Revision 21:c (84:2) Detected <-- Khadas VIM / Rureka / Amlogic Meson GXL (S905X) P212 Development Board
-	# Amlogic Meson GXL (Unknown) Revision 21:c (84:2) Detected <-- Khadas VIM
-	# Amlogic Meson GXL (S905L) Revision 21:c (c2:2) Detected <-- PiBox by wdmomo, Amlogic Meson GXL (S905X) P212 Development Board
-	# Amlogic Meson GXL (Unknown) Revision 21:c (c2:2) Detected <-- S905L on "PiBox by wdmomo"
-	# Amlogic Meson GXL (S905L) Revision 21:c (c4:2) Detected <-- Nexbox A95X, Amlogic Meson GXL (S905X) P212 Development Board
-	# Amlogic Meson GXL (S905M2) Revision 21:c (e2:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board
-	# Amlogic Meson GXL (Unknown) Revision 21:c (e2:2) Detected <-- Khadas VIM
-	# Amlogic Meson GXL (S905D) Revision 21:d (0:2) Detected <-- Tanix TX3 Mini / Amlogic Meson GXL (S905W) P281 Development Board
-	# Amlogic Meson GXL (Unknown) Revision 21:d (4:2) Detected <-- Phicomm N1, Amlogic Meson GXL (S905D) P230 Development Board
-	# Amlogic Meson GXL (S905D) Revision 21:d (4:2) Detected <-- Phicomm N1 / Amlogic Meson GXL (S905D) P231 Development Board
-	# Amlogic Meson GXL (S805X) Revision 21:d (34:2) Detected <-- Libre Computer AML-S805X-AC / Amlogic Meson GXL (S905X) P212 Development Board
-	# Amlogic Meson GXL (S905X) Revision 21:d (84:2) Detected <-- Khadas VIM / Libre Computer AML-S905X-CC / ZTE B860H / Fiberhome HG680P / Amlogic Meson GXL (S905X) P212 Development Board
-	# Amlogic Meson GXL (S905X) Revision 21:d (85:2) Detected <-- Libre Computer AML-S905X-CC
-	# Amlogic Meson GXL (S905X) Revision 21:e (85:2) Detected <-- Khadas VIM / Vermax UHD 300X / Nexbox A95X / Amlogic Meson GXL (S905X) P212 Development Board
-	# Amlogic Meson GXL (S905W) Revision 21:d (a4:2) Detected <-- Tanix TX3 Mini / Amlogic Meson GXL (S905X) P212 Development Board / Amlogic Meson GXL (S905W) P281 Development Board
-	# Amlogic Meson GXL (Unknown) Revision 21:d (a4:2) Detected <-- Khadas VIM / Tanix TX3 Mini / JetHome JetHub J80 / Amlogic Meson GXL (S905X) P212 Development Board / Amlogic Meson GXL (S905W) P281 Development Board
-	# Amlogic Meson GXL (S905L) Revision 21:d (c4:2) Detected <-- X96 mini, Amlogic Meson GXL (S905X) P212 Development Board
-	# Amlogic Meson GXL (S905M2) Revision 21:d (e4:2) Detected <-- Oranth Tanix TX3 Mini, Amlogic Meson GXL (S905X) P212 Development Board / Amlogic Meson GXL (S905W) P281 Development Board
-	# Amlogic Meson GXL (S905W) Revision 21:e (a5:2) Detected <-- Tanix TX3 Mini / JetHome JetHub J80 / Amlogic Meson GXL (S905X) P212 Development Board / Amlogic Meson GXL (S905W) P281 Development Board
-	# Amlogic Meson GXL (S905L) Revision 21:e (c2:2) Detected <-- NEXBOX A95X (S905X)
-	# Amlogic Meson GXL (S905L) Revision 21:e (c5:2) Detected <-- Amlogic Meson GXL (S905X) P212 Development Board
-	# Amlogic Meson GXM (Unknown) Revision 22:a (82:2) Detected <-- Amlogic Meson GXM (S912) Q201 Development Board
-	# Amlogic Meson GXM (S912) Revision 22:a (82:2) Detected <-- Beelink GT1 / Beelink GT1 Ultimate / Octopus Planet / Libre Computer AML-S912-PC / Khadas VIM2 / MeCool KIII Pro / Tanix TX9 Pro / Tronsmart Vega S96 / T95Z Plus / Vontar X92 / Amlogic Meson GXM (S912) Q200 Development Board / Amlogic Meson GXM (S912) Q201 Development Board
-	# Amlogic Meson GXM (S912) Revision 22:b (82:2) Detected <-- Beelink GT1 / Tronsmart Vega S96 / Octopus Planet / Sunvell T95Z Plus / Amlogic Meson GXM (S912) Q201 Development Board
-	# Amlogic Meson AXG (Unknown) Revision 25:b (43:2) Detected <-- JetHome JetHub J100
-	# Amlogic Meson AXG (Unknown) Revision 25:c (43:2) Detected <-- JetHome JetHub J100
-	# Amlogic Meson GXLX (Unknown) Revision 26:a (c1:2) Detected <-- Amlogic Meson GXL (S905W) P281 Development Board
-	# Amlogic Meson GXLX (Unknown) Revision 26:e (c1:2) Detected <-- IPBS9505-S905L2, Amlogic Meson GXL (S905X) P212 Development Board
-	# Amlogic Meson G12A (Unknown) Revision 28:b (30:2) Detected <-- S905Y2 on Radxa Zero
-	# Amlogic Meson G12A (Unknown) Revision 28:c (30:2) Detected <-- S905Y2 on Radxa Zero
-	# Amlogic Meson G12A (S905Y2) Revision 28:b (30:2) Detected <-- S905Y2 on Radxa Zero
-	# Amlogic Meson G12A (S905X2) Revision 28:b (40:2) Detected <-- Shenzhen Amediatech Technology Co. / Ltd X96 Max / SEI Robotics SEI510 / Amlogic Meson G12A U200 Development Board
-	# Amlogic Meson G12A (S905X2) Revision 28:c (40:2) Detected <-- ZTE B860H V5, SEI Robotics SEI500TR, X96 Max
-	# Amlogic Meson G12A (Unknown) Revision 28:b (70:2) Detected <-- Amlogic Meson G12A U200 Development Board / Skyworth E900V22C
-	# Amlogic Meson G12A (Unknown) Revision 28:c (70:2) Detected <-- Amlogic Meson G12A U200 Development Board / China Mobile M401A / Skyworth E900V22C
-	# Amlogic Meson G12B (S922X) Revision 29:a (40:2) Detected <-- ODROID-N2 / Beelink GT-King Pro
-	# Amlogic Meson G12B (A311D) Revision 29:b (10:2) Detected <-- Khadas VIM3 / Radxa Zero 2 / UnionPi Tiger / Bananapi CM4/M2S / Libre Computer AML-A311D-CC
-	# Amlogic Meson G12B (S922X) Revision 29:b (40:2) Detected <-- Beelink GT-King Pro, Ugoos AM6
-	# Amlogic Meson G12B (A311D) Revision 29:c (10:0) Detected <-- Orbbec Zora P1
-	# Amlogic Meson G12B (S922X) Revision 29:c (40:2) Detected <-- ODROID-N2+ ('S922X-B')
-	# Amlogic Meson Unknown (Unknown) Revision 2a:e (c5:2) Detected <-- Amlogic Meson GXL (S905L2) X7 5G Tv Box / Amlogic Meson GXL (S905X) P212 Development Board
-	# Amlogic Meson SM1 (S905D3) Revision 2b:b (1:2) Detected <-- AMedia X96 Max+/Air / HK1 Box/Vontar X3 / SEI Robotics SEI610 / X96 Max Plus Q1 / AIS DEV3
-	# Amlogic Meson SM1 (Unknown) Revision 2b:b (1:2) Detected <-- Shenzhen Amediatech Technology Co. Ltd X96 Air / AMedia X96 Max+ / SEI Robotics SEI610 / HK1 Box/Vontar X3
-	# Amlogic Meson SM1 (S905D3) Revision 2b:c (4:2) Detected <-- Khadas VIM3L / https://www.spinics.net/lists/arm-kernel/msg848718.html
-	# Amlogic Meson SM1 (S905X3) Revision 2b:c (10:2) Detected <-- AMedia X96 Max+ / H96 Max X3 / ODROID-C4 / ODROID-HC4 / HK1 Box/Vontar X3 / SEI Robotics SEI610 / Shenzhen Amediatech Technology Co. Ltd X96 Max/Air / Shenzhen CYX Industrial Co. Ltd A95XF3-AIR / Sinovoip BANANAPI-M5 / M2 Pro / Skyworth LB2004-A4091 / Tanix TX3 (QZ) / Ugoos X3 / AI-Speaker DEV3
-	# Amlogic Meson SM1 (Unknown) Revision 2b:c (10:2) Detected <-- Khadas VIM3L / HK1 Box/Vontar X3
-	# Amlogic Meson SM1 (Unknown) Revision 2b:b (18:2) Detected <-- Shenzhen Amediatech Technology Co. Ltd X96 Air / HK1 Box/Vontar X3
-	# Amlogic Meson SM1 (Unknown) Revision 2b:b (40:2) Detected <-- Khadas VIM3L
-	# Amlogic Meson SM1 (Unknown) Revision 2b:c (81:2) Detected <-- AMedia X96 Max+, X96 Air / H96 Max X3 / A95XF3-AIR
-	# Amlogic Meson SC2 (S905X4/C2) Revision 32:b (2:2) Detected <-- Akari AX810 / Advan AT01
-	# Amlogic Meson SC2 (S905X4/C2) Revision 32:d (2:1) Detected <-- Ugoos X4
-	#
-	# With T7/A311D2 the string 'soc soc0:' is missing in Amlogic's 5.4 BSP kernel, instead it's
-	# just 'Amlogic Meson T7 (A311D2) Revision 36:b (1:3) Detected' in dmesg output. 5.4 BSP
-	# kernel for S4 (S905Y4/S805X2) changes this into 'cpu_version: chip version = 37:B - 3:4'
-	#
-	# SoC IDs listed by Amlogic reference designs (ID pattern pretty obvious):
-	# - P200 Development Board (GXBB):
-	#   - S905: 1f:c (13:1)
-	# - P201 Development Board (GXBB):
-	#   - S905: 1f:c (13:1)
-	#   - S905H: 1f:c (23:1)
-	# - P212 Development Board (GXL):
-	#   - S905X: 21:a (82:2), 21:b (82:2), 21:c (84:2), 21:d (84:2)
-	#   - S905W: 21:b (a2:2), 21:e (a5:2)
-	#   - S905L: 21:b (c2:2), 21:c (c4:2), 21:d (c4:2), 21:e (c5:2)
-	#   - S905M2: 21:b (e2:2), 21:d (e4:2)
-	#   - Unknown: 21:d (a4:2), 2a:e (c5:2), 26:e (c1:2)
-	# - P281 Development Board (GXL):
-	#   - S905X: 21:b (82:2)
-	#   - S905D: 21:d (0:2)
-	#   - S905W: 21:e (a5:2)
-	#   - S905W: 21:d (a4:2)
-	#   - Unknown: 21:d (a4:2)
-	# - Q200 Development Board (GXM):
-	#   - S912: 22:a (82:2)
-	# - Q201 Development Board (GXM):
-	#   - S912: 22:a (82:2), 22:b (82:2)
-	#   - Unknown: 22:a (82:2)
-	# - U200 Development Board (G12A):
-	#   - Unknown: 28:b (70:2), 28:c (70:2)
-	#
-	# For certain older Amlogic SoC families also look here: https://github.com/ophub/amlogic-s9xxx-armbian/blob/main/build-armbian/armbian-files/common-files/etc/model_database.conf
-	#
-	# If /proc/cpuinfo Hardware field is 'Amlogic' then chars 1-8 of 'AmLogic Serial'
-	# and if not present 'Serial' have special meaning as it's the 'chip id':
-	# S905X:   '21:a (82:2)' / 210a820094e04a851342e1d007989aa7
-	# S912:    '22:a (82:2)' / 220a82006da41365fedf301742726826
-	# S922X:   '29:c (40:2)' / 290c4000012b1500000639314e315350
-	# A311D2:  '36:b (1:3)'  / 360b010300000000081d810911605690
-	# S905Y4:  '37:B - 3:4'  / 370b030400000000122d90041dc3d900
-	#
-	# Chars 1-2: meson family: 21=GXL, 22=GXM, 2b=SM1, 29=G12B, 36=T7 and so on, see below
-	# Chars 3-4: SoC revision: SoCs start with RevA, then RevB and so on (0a, 0b, 0c and so on)
-	# Chars 5-6: SKU differentiation: see GXL case construct below starting at '21??3*')
-	#
-	# https://github.com/CoreELEC/bl301/blob/1b435f3e20160d50fc01c3ef616f1dbd9ff26be8/arch/arm/include/asm/cpu_id.h#L21-L42
-	# https://www.kernel.org/doc/Documentation/devicetree/bindings/arm/amlogic.txt
-	# Amlogic chip ids: https://github.com/CoreELEC/linux-amlogic/blob/ab1ab097d1a7b01d644d09625c9e4c7e31e35fb4/arch/arm64/kernel/cpuinfo.c#L135-L158
-	# More cpuinfo: http://tessy.org/wiki/index.php?Arm#ae54e1d6 (archived at https://archive.md/nf6kL)
-	# https://github.com/pytorch/cpuinfo/tree/master/src/arm/linux/
-	#
-	# With ARMv7 SoCs (or ARMv8 SoCs booting a 32-bit kernel) dmesg output starts with a line identifying core type and stepping of cpu0:
-	# CPU: ARMv7 Processor [410fc051] revision 1 (ARMv7), cr=10c5387d  <-  Cortex-A5 / r0p1 / Amlogic S805
-	# CPU: ARMv7 Processor [410fc073] revision 3 (ARMv7), cr=10c5387d  <-  Cortex-A7 / r0p3 / Exynos 5422
-	# CPU: ARMv7 Processor [410fc072] revision 2 (ARMv7), cr=10c5387d  <-  Cortex-A7 / r0p2 / MediaTek MT6589/TMK6588
-	# CPU: ARMv7 Processor [410fc073] revision 3 (ARMv7), cr=50c5387d  <-  Cortex-A7 / r0p3 / Banana Pi M2 (Allwinner A31s), Odroid XU4 (Exynos 5422)
-	# CPU: ARMv7 Processor [410fc074] revision 4 (ARMv7), cr=10c5387d  <-  Cortex-A7 / r0p4 / Allwinner A20: Banana Pi
-	# CPU: ARMv7 Processor [410fc074] revision 4 (ARMv7), cr=50c5387d  <-  Cortex-A7 / r0p4 / Allwinner A20: Banana Pi, Banana Pi Pro, Cubieboard 2, Cubietruck, Lamobo R1, Lime 2, OLinuXino-A20, pcDuino3 Nano
-	# CPU: ARMv7 Processor [410fc075] revision 5 (ARMv7), cr=10c5387d  <-  Cortex-A7 / r0p5 / Beelink X2, Orange Pi+ 2E, Orange Pi One, Orange Pi PC, Orange Pi PC +, Orange Pi Zero, rk322x-box, BCM2836 (BCM2709), Generic RK322x TV Box board, Nexbox A95X R1, Rockchip RV1108 MINIEVB V10, Firefly Core-RV1126-JD4 Board
-	# CPU: ARMv7 Processor [410fc075] revision 5 (ARMv7), cr=10c53c7d  <-  Cortex-A7 / r0p5 / HiSilicon Hi351x, Freescale/NXP i.MX7D, Freescale i.MX6 ULL, BCM2836 (BCM2709), Qualcomm MDM9607 (Snapdragon X5 LTE Modem)
-	# CPU: ARMv7 Processor [410fc075] revision 5 (ARMv7), cr=30c5387d  <-  Cortex-A7 / r0p5 / Renesas RZ/N1S
-	# CPU: ARMv7 Processor [410fc075] revision 5 (ARMv7), cr=50c5387d  <-  Cortex-A7 / r0p5 / Banana Pi M2+, Banana Pi M2U, Banana Pi M2 Zero, Banana Pi M3, Beelink X2, Cubietruck+, NanoPi Air, NanoPi Duo, NanoPi Duo2, NanoPi M1, NanoPi Neo, NanoPi R1, Orange Pi+, Orange Pi+ 2E, Orange Pi Lite, Orange Pi One, Orange Pi PC, Orange Pi PC +, Orange Pi R1, Orange Pi Zero, Orange Pi Zero LTS, Orange Pi Zero Plus 2, PineCube, ZeroPi
-	# CPU: ARMv7 Processor [410fc075] revision 5 (ARMv7), cr=70c5387d  <-  Cortex-A7 / r0p5 / STMicroelectronics STM32MP157C-DK2 Discovery Board
-	# CPU: ARMv7 Processor [410fc0d1] revision 1 (ARMv7), cr=10c5387d  <-  Cortex-A17 / r0p1 / RK3288
-	# CPU: ARMv7 Processor [410fd034] revision 4 (ARMv7), cr=10c5383d  <-  Cortex-A53 / r0p4 / Raspberry Pi 3 Model B Rev 1.2 (BCM2837/BCM2709)
-	# CPU: ARMv7 Processor [410fd083] revision 3 (ARMv7), cr=30c5383d  <-  Cortex-A72 / r0p3 / BCM2711
-	# CPU: ARMv7 Processor [411fc087] revision 7 (ARMv7), cr=10c53c7f  <-  Cortex-A8 / r1p7 / TI Sitara AM3517
-	# CPU: ARMv7 Processor [411fc092] revision 2 (ARMv7), cr=10c5387f  <-  Cortex-A9 / r1p2 / TI OMAP 4460
-	# CPU: ARMv7 Processor [412fc091] revision 1 (ARMv7), cr=10c5387d  <-  Cortex-A9 / r2p1 / NXP QorIQ LS1024A
-	# CPU: ARMv7 Processor [412fc09a] revision 10 (ARMv7), cr=10c5387d <-  Cortex-A9 / r2p10 / Freescale/NXP i.MX6
-	# CPU: ARMv7 Processor [412fc0f2] revision 2 (ARMv7), cr=10c5387d  <-  Cortex-A15 / r2p2 / TI Sitara AM572x
-	# CPU: ARMv7 Processor [413fc082] revision 2 (ARMv7), cr=10c53c7f  <-  Cortex-A8 / r3p2 / Beagleboard-xm
-	# CPU: ARMv7 Processor [413fc082] revision 2 (ARMv7), cr=50c5387d  <-  Cortex-A8 / r3p2 / Allwinner A10
-	# CPU: ARMv7 Processor [413fc090] revision 0 (ARMv7), cr=10c5387d  <-  Cortex-A9 / r3p0 / RK3066 / RK3188 / Cyclone V FPGA SoC / Exynos 4412
-	# CPU: ARMv7 Processor [413fc090] revision 0 (ARMv7), cr=10c53c7f  <-  Cortex-A9 / r3p0 / Amlogic 8726-MX
-	# CPU: ARMv7 Processor [413fc090] revision 0 (ARMv7), cr=50c5387d  <-  Cortex-A9 / r3p0 / Calxeda Highbank
-	# CPU: ARMv7 Processor [413fc0f2] revision 2 (ARMv7), cr=10c5347d  <-  Cortex-A15 / r3p2 / Renesas R8A7790 SoC
-	# CPU: ARMv7 Processor [414fc091] revision 1 (ARMv7), cr=10c5387d  <-  Cortex-A9 / r4p1 / Amlogic S812
-	# CPU: ARMv7 Processor [414fc091] revision 1 (ARMv7), cr=10c53c7d  <-  Cortex-A9 / r4p1 / Marvell Armada 385 Development Board / Freescale/NXP i.MX6SLL (Kindle Paperwhite 4)
-	# CPU: ARMv7 Processor [414fc091] revision 1 (ARMv7), cr=18c5387d  <-  Cortex-A9 / r4p1 / Triductor TR6560
-	# CPU: ARMv7 Processor [414fc091] revision 1 (ARMv7), cr=50c5387d  <-  Cortex-A9 / r4p1 / Armada 375/38x
-	# CPU: ARMv7 Processor [511f04d0] revision 0 (ARMv7), cr=10c5387d  <-  Qualcomm Krait / r1p0 / Qualcomm  MSM8960 (Snapdragon S4 Plus)
-	# CPU: ARMv7 Processor [512f04d0] revision 0 (ARMv7), cr=10c5787d  <-  Qualcomm Krait / r2p0 / Qualcomm IPQ806x
-	# CPU: ARMv6-compatible processor [410fb767] revision 7 (ARMv7), cr=00c5387d <- ARM1176 / r0p7: Broadcom BCM2835/BCM2708
-	#
-	# (MIDR_EL1: https://archive.ph/q80BH –– for vendor and core ID see GetARMCore
-	# function above, e.g. Vendor ID 41 is ARM, 48 is HiSilicon, 51 Qualcomm and so on)
-	#
-	# 410fc051
-	#   |  | |
-	#   |  | +- 1       -> p1
-	#   |  +--- 41/c05  -> Cortex-A5 / r0p1
-	#   +------ 0       -> r0
-	#
-	# 410fc074
-	#   |  | +- 4       -> p4
-	#   |  +--- 41/c07  -> Cortex-A7 / r0p4
-	#   +------ 0       -> r0
-	#
-	# 412fc09a
-	#   |  | +- a (hex) -> p10
-	#   |  +--- 41/c09  -> Cortex-A9 / r2p10
-	#   +------ 2       -> r2
-	#
-	# 410fc0d1
-	#   |  | +- 1       -> p1
-	#   |  +--- 41/c0d  -> Cortex-A17 / r0p1
-	#   +------ 0       -> r0
-	#
-	# 481fd010
-	#   |  | +- 0       -> p0
-	#   |  +--- 48/d01  -> HiSilicon TaiShan v110 / r1p0
-	#   +------ 1       -> r1
-	#
-	# 511f04d0
-	#   |  | +- 0       -> p0
-	#   |  +--- 51/04d  -> Qualcomm Krait / r1p0
-	#   +------ 1       -> r1
-	#
-	# With ARMv8 cores some 4.x (BSP) kernels expose type of cpu0 like this in dmesg output:
-	# 4.9.280-sun50iw9: Boot CPU: AArch64 Processor [410fd034] <- Cortex-A53 / r0p4
-	#  4.9.272-meson64: Boot CPU: AArch64 Processor [411fd050] <- Cortex-A55 / r1p0 (S905X3)
-	#   4.4.213-rk3399: Boot CPU: AArch64 Processor [410fd034] <- Cortex-A53 / r0p4
-	#      4.9.140-l4t: Boot CPU: AArch64 Processor [4e0f0040] <- NVidia Carmel / r0p0 (Nvidia Tegra Xavier)
-	#      4.9.0-yocto: Boot CPU: AArch64 Processor [411fd073] <- Cortex-A57 / r1p3 (Renesas R8A7795/R-Car H3)
-	#
-	# ...while starting with later 4.1x kernels and 5.x it looks like this:
-	# Booting Linux on physical CPU 0x0000000000 [0x411fd040]  <- Cortex-A35 / r1p0 (Amlogic S905Y4)
-	# Booting Linux on physical CPU 0x0000000000 [0x410fd030]  <- Cortex-A53 / r0p0 (Snapdragon 410 / MSM8916)
-	# Booting Linux on physical CPU 0x0000000000 [0x410fd032]  <- Cortex-A53 / r0p2 (Snapdragon 810 / MSM8994)
-	# Booting Linux on physical CPU 0x0000000000 [0x410fd034]  <- Cortex-A53 / r0p4
-	# Booting Linux on physical CPU 0x0000000000 [0x411fd050]  <- Cortex-A55 / r1p0 (S905X3)
-	# Booting Linux on physical CPU 0x0000000000 [0x412fd050]  <- Cortex-A55 / r2p0 (RK3566/RK3568 or RK3588/RK3588s or S905X4/S905C2)
-	# Booting Linux on physical CPU 0x0000000000 [0x411fd071]  <- Cortex-A57 / r1p1 (Tegra TX1)
-	# Booting Linux on physical CPU 0x0000000000 [0x411fd072]  <- Cortex-A57 / r1p2 (AMD Opteron A1100)
-	# Booting Linux on physical CPU 0x0000000000 [0x410fd083]  <- Cortex-A72 / r0p3 (BCM2711 or LX2xx0A or Marvell Armada3900-A1 or AWS Graviton or Xilinx Versal)
-	# Booting Linux on physical CPU 0x0000080000 [0x481fd010]  <- HiSilicon TaiShan v110 / r1p0
-	# Booting Linux on physical CPU 0x0000000000 [0x51df805e]  <- Qualcomm Kryo 4XX Silver / r13p14 (Snapdragon 8cx)
-	# Booting Linux on physical CPU 0x0000000000 [0x413fd0c1]  <- Neoverse-N1 / r3p1 (Ampere Altra)
-	# Booting Linux on physical CPU 0x0000000000 [0x411fd401]  <- Neoverse-V1 / r1p1 (AWS Graviton3)
-	# Booting Linux on physical CPU 0x0000000000 [0x410fd421]  <- Cortex-A78AE / r0p1 (Nvidia Jetson Orin NX / AGX Orin)
-	# Booting Linux on physical CPU 0x0000000000 [0x611f0221]  <- Apple Icestorm / r1p1 (Apple M1)
-	# Booting Linux on physical CPU 0x0000000000 [0x611f0320]  <- Apple Blizzard / r1p0 (Apple M2)
-	#
-	# Additional ARMv8 cores show up in dmesg output like this (always exposing MIDR_EL1 except for 5.4 kernels, e.g. Amlogic's for S4/T7):
-	# CPU4: Booted secondary processor [410fd082]                <- Cortex-A72 / r0p2 (RK3399 or i.MX8QM or Kunpeng-916 or LD20 or LS2088A)
-	# CPU2: Booted secondary processor 0x0000000100 [0x410fd092] <- Cortex-A73 / r0p2 (S922X/A311D)
-	# CPU7: Booted secondary processor 0x0000000700 [0x51df804e] <- Qualcomm Kryo 4XX Gold / r13p14 (Snapdragon 8cx)
-	# CPU7: Booted secondary processor 0x0000010103 [0x611f0330] <- Apple Avalanche / r1p0 (Apple M2)
-	#
-	# If the kernel is recent enough MIDR_EL1 can be read out at runtime per core via
-	# /sys/devices/system/cpu/cpuN/regs/identification/midr_el1
-	#
-	# Allwinner SoCs feature something called a SID (Security ID) which should be available with
-	# mainline kernel as /sys/bus/nvmem/devices/sunxi-sid0/nvmem. From the first bytes the SoC
-	# model might be detectable once the SIDs are known. Unfortunately information in linux-sunxi
-	# wiki is/was a bit sparse and outdated: https://linux-sunxi.org/SID_Register_Guide
-	# The following list is based on linux-sunxi wiki contents and complemented with own checks
-	# (crawling through sbc-bench submissions and conducting tests on own devices).
-	#
-	# SoCs are sorted by chip ID, starting with 'old scheme':
-	#
-	# A10 (1623)      162367*              --> 1623*
-	# A10s (1625)     162541*              \__ following the old ID scheme it's
-	# A13/R8 (1625)   162541*, 162542*     /   simply 1625* for all A10s/A13/R8
-	# A31/A31s (1633) 16524251, 16554144   --> with these SoCs the SID is stored in the PMIC
-	#                                          (AXP221 or AXP221s, most probably their chip
-	#                                          IDs are 1652 and 1655, see also R40 below)
-	# A20 (1651)      165165*, 165166*     --> 1651*
-	# R40/V40 (1701)  16554153             --> that's 1st part of Serial number on all BPi-M2
-	#                                          Ultra/Berry which both rely on AXP221s
-	#
-	# new SID scheme (SID not starting with chip ID any longer)
-	#
-	# A33/R16 (1667)  0461872a
-	# A83T (1673)     32c0040?: 32c00401 (87%), 32c00403 (13%)
-	# H2+ (1680)      02c00?42: 02c00042 (79%), 02c00142 (11%), 02c00242 (0.4%)
-	# H3 (1680)       02c00?81: 02c00081 (91%), 02c00181 (9%)
-	# V3s (1681)      12c00000
-	# S3 (1681)       12c00001
-	# A64 (1689)      92c00?ba: 92c000ba, 92c001ba <- https://archive.ph/mpiHO#selection-317.39-317.74 / https://archive.ph/CM9Oy#selection-1279.39-1279.74
-	# H64 (1689)      92c000bb
-	# R40/V40 (1701)  12c00017
-	# H5 (1718)       82800001
-	# H6 (1728)       82c0000?: 82c00001 (40%), 82c00007 (60%)
-	# H616 (1823)     32c05000 (OPi Zero 2)
-	# H618 (1823)     33802000 (OPi Zero 2W)
+	# Allwinner SID related stuff: https://gist.github.com/ThomasKaiser/05a0ec1685ee19b3713640b06431d2b7
 
 	# If in simulation mode (-m and CPUINFOFILE set) skip all SoC vendor specific detection
 	# mechanisms (dmesg, nvmem)
@@ -6885,7 +6441,7 @@ GuessSoCbySignature() {
 			# technically another quad core A53 but in this case the cores are Broadcom's Brahma-B53.
 			# Broadcom used these cores in a bunch of SoCs, usually with ARMv8 Crypto Extensions but
 			# sometimes they're not active or licensed (applies to early VideoCore SoCs between 2017
-			# and 2018). Stepping was always r0p0.
+			# and 2018). Stepping was always r0p0: http://tinyurl.com/yt85tt78
 			case "${DTCompatible}" in
 				*brcm,bcm4908*)
 					# Broadcom BCM4908: 4 x Brahma B53 / r0p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
@@ -9443,25 +8999,7 @@ CheckStorage() {
 			# correctly. Should be double checked against https://tinyurl.com/29c8393f or
 			# https://gurumeditation.org/1342/sd-memory-card-register-decoder/
 			#
-			# Looks like this for example:
-			#
-			# mmc_cid=035344534c3038478049e841e30106dd
-			# mmc_csd=400e00325b5900003b377f800a4040af
-			# mmc_date=06/2016
-			# mmc_dsr=0x404
-			# mmc_erase_size=512
-			# mmc_fwrev=0x0
-			# mmc_hwrev=0x8
-			# mmc_manfid=0x000003
-			# mmc_name=SL08G
-			# mmc_ocr=0x00200000
-			# mmc_oemid=0x5344
-			# mmc_preferred_erase_size=4194304
-			# mmc_rca=0xaaaa
-			# mmc_scr=0235800100000000
-			# mmc_serial=0x49e841e3
-			# mmc_ssr=00000000030000000400900014050a00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-			# mmc_type=SD
+			# Looks like this for example: https://gist.github.com/ThomasKaiser/97770ef60a94e19df3c270506209e70f
 
 			declare mmc_serial mmc_manfid mmc_oemid mmc_date mmc_type mmc_hwrev mmc_fwrev
 			eval $(grep . * 2>/dev/null | grep -v uevent | sed -e 's/:/=/' -e 's/^/mmc_/' -e 's/\ //g')

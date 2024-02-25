@@ -485,6 +485,8 @@ GetARMCore() {
 	41/d80:Cortex-A520
 	41/d81:Cortex-A720
 	41/d82:Cortex-X4
+	41/d84:Neoverse-V3
+	41/d8e:Neoverse-N3
 	42:Broadcom
 	42/00f:Broadcom Brahma B15
 	42/100:Broadcom Brahma B53
@@ -616,6 +618,8 @@ GetARMCore() {
 	69/689:Intel PXA31x
 	69/b11:Intel SA1110
 	69/c12:Intel IPX1200
+	6d:Microsoft
+	6d/d49:Azure Cobalt 100
 	70:Phytium
 	70/303:Phytium FTC310
 	70/660:Phytium FTC660
@@ -3373,7 +3377,7 @@ QueryNetioDevice() {
 } # QueryNetioDevice
 
 GetVoltageSensor() {
-	case "${DTCompatible}" in
+	case "${DTCompatible,,}" in
 		*nanopi-r6s*)
 			# NanoPi R6S running with Rockchip's 5.10 BSP kernel?
 			if [ -f /sys/devices/iio_sysfs_trigger/subsystem/devices/iio\:device0/in_voltage2_raw ]; then
@@ -3430,7 +3434,7 @@ GetInputVoltage() {
 			awk '{printf ("%0.2f",$1/172.5); }' <"${1}" | sed 's/,/./'
 			;;
 		in_voltage2_raw)
-			case "${DTCompatible}" in
+			case "${DTCompatible,,}" in
 				*nanopi-r6s*)
 					# NanoPi R6S running with Rockchip's 5.10 BSP kernel
 					awk '{printf ("%0.2f",$1/206.2); }' <"${1}" | sed 's/,/./'
@@ -4792,9 +4796,12 @@ ValidateResults() {
 		fi
 	fi
 
-	# ondemand governor used by distro but inappropriate settings on at least some cores,
-	# report only when in review mode
-	# echo -e "${LRED}${BOLD}io_is_busy not set to 1 on all cores${NC} -> http://tinyurl.com/44pbmw79"
+	# ondemand governor used by distro but inappropriate settings on at least some cores
+	if [ "X$1" = "Xreview" ] && [ "${OriginalCPUFreqGovernor}" = "ondemand" ] && [ -n "${io_is_busy[@]}" ]; then
+		grep -q 0 <<<"${io_is_busy[@]}" && echo -e "${LRED}${BOLD}ondemand cpufreq governor used by distro but io_is_busy not set to 1 on all cores${NC} -> http://tinyurl.com/44pbmw79"
+	elif [ "X$1" = "Xreview" ] && [ "${OriginalCPUFreqGovernor}" = "ondemand" ] && [ -z "${io_is_busy[@]}" ]; then
+		echo -e "${LRED}${BOLD}ondemand cpufreq governor used by distro but io_is_busy not active${NC} -> http://tinyurl.com/44pbmw79"
+	fi
 } # ValidateResults
 
 ListSwapDevices() {
@@ -5867,7 +5874,7 @@ GuessSoCbySignature() {
 							echo "Allwinner A10"
 							;;
 						*)
-							case "${DTCompatible}" in
+							case "${DTCompatible,,}" in
 								*sun4i*)
 									# Allwinner A10, 1 x Cortex-A8 / r3p2 / half thumb fastmult vfp edsp neon vfpv3 tls vfpd32
 									echo "Allwinner A10"
@@ -5890,7 +5897,7 @@ GuessSoCbySignature() {
 			# Allwinner R853/S3/V3/V3s/V533/V831/V833/V851S/V851SE/V853, 1 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
 			# or maybe Microchip SAMA7G54, 1 x Cortex-A7 / r0p5
 			# or maybe Rockchip RV1108 | 1 x Cortex-A7 / r0p5
-			case "${DTCompatible}" in
+			case "${DTCompatible,,}" in
 				*rockchip*)
 					# Rockchip RV1108 | 1 x Cortex-A7 / r0p5
 					echo "Rockchip RV1108"
@@ -5919,7 +5926,7 @@ GuessSoCbySignature() {
 			;;
 		??A9r3p0??A9r3p0??A9r3p0??A9r3p0)
 			# RK3188 or Exynos 4412 or Nexell S5P4418, 4 x Cortex-A9 / r3p0 / half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpd32
-			case "${DTCompatible}" in
+			case "${DTCompatible,,}" in
 				*s5p4418*)
 					echo "Nexell S5P4418"
 					;;
@@ -5935,7 +5942,7 @@ GuessSoCbySignature() {
 			# AML8726-MX, 2 x Cortex-A9 / r3p0 / half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpd32
 			# or RK3066, 2 x Cortex-A9 / r3p0 / swp half thumb fastmult vfp edsp neon vfpv3 / https://lore.kernel.org/all/CAAFQd5CN_xvkdD+Bf9A+Mc+_jVxtdOKosrYH_8bNNHkGQw7eGA@mail.gmail.com/T/
 			# or ST Micro STiH415, 2 x Cortex-A9 / r3p0 / swp half thumb fastmult vfp edsp neon vfpv3 tls
-			case "${DTCompatible}" in
+			case "${DTCompatible,,}" in
 				*amlogic*)
 					echo "Amlogic AML8726-MX"
 					;;
@@ -5951,7 +5958,7 @@ GuessSoCbySignature() {
 			# Mediatek MT5880, 1 x Cortex-A9 / r3p0 / swp half thumb fastmult vfp edsp vfpv3 vfpv3d16
 			# or ST Micro STiH415: 1 x Cortex-A9 / r3p0 / swp half thumb fastmult vfp edsp neon vfpv3 tls
 			# or Xilinx Zynq 7000S:  1 x Cortex-A9 / r3p0 / half thumb fastmult vfp edsp neon vfpv3 tls vfpd32
-			case "${DTCompatible}" in
+			case "${DTCompatible,,}" in
 				*mt5880*)
 					echo "Mediatek MT5880"
 					;;
@@ -5970,7 +5977,7 @@ GuessSoCbySignature() {
 		00A7r0p500A7r0p500A7r0p500A7r0p5)
 			# Allwinner sun8i: could be Allwinner H3/H2+, R40/V40/T3/A40i or A33/R16 or A50/MR133/R311 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
 			# or Spreadtrum SC7731/SC8830 or Rockchip RV1126/RK3126/RK3126B/RK3126C/RK3128
-			case "${DTCompatible}" in
+			case "${DTCompatible,,}" in
 				*rv1126*)
 					# Rockchip RV1126 | 4 x Cortex-A7 / r0p5
 					echo "Rockchip RV1126"
@@ -6037,7 +6044,7 @@ GuessSoCbySignature() {
 							echo "Allwinner R40/V40"
 							;;
 						*)
-							case "${DTCompatible}" in
+							case "${DTCompatible,,}" in
 								*sun8i-r40*|*sun8i-v40*|*sun8i-a40i*|*sun8i-t3*)
 									# Allwinner R40/V40/T3/A40i, 4 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
 									echo "Allwinner R40/V40/T3/A40i"
@@ -6068,7 +6075,7 @@ GuessSoCbySignature() {
 			;;
 		00A7r0p5000000)
 			# Allwinner sun8i running with 3.x BSP kernel: could be Allwinner H3/H2+, R40/V40 or A33/R16 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
-			case "${DTCompatible}" in
+			case "${DTCompatible,,}" in
 				*sun8i*)
 					# kernel 3.10 with device-tree support
 					echo "Allwinner R40/V40"
@@ -6092,7 +6099,7 @@ GuessSoCbySignature() {
 			# Actions ATM8029, 4 x Cortex-A5 / r0p1 / ?
 			# Amlogic S805/M805, 4 x Cortex-A5 / r0p1 / half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpv4 vfpd32 (3.10: swp half thumb fastmult vfp edsp neon vfpv3 tls vfpv4)
 			# or Qualcomm MSM8625Q: 4 x Cortex-A5 / r0p1 / scp half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpv4
-			case "${DTCompatible}" in
+			case "${DTCompatible,,}" in
 				*amlogic*)
 					echo "Amlogic S805"
 					;;
@@ -6120,7 +6127,7 @@ GuessSoCbySignature() {
 		*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A72r0p0*A72r0p0*A72r0p0*A72r0p0)
 			# Snapdragon 652/653 / MSM8976/MSM8976PRO: 4 x Cortex-A53 / r0p4 + 4 x Cortex-A72 / r0p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			# or HiSilicon 950/955: 4 x Cortex-A53 / r0p4 + 4 x Cortex-A72 / r0p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32
-			case "${DTCompatible}" in
+			case "${DTCompatible,,}" in
 				*hisilicon*|*950*|*955)
 					echo "HiSilicon Kirin 950/955"
 					;;
@@ -6163,7 +6170,7 @@ GuessSoCbySignature() {
 			;;
 		*Qualcomm4XXSilver*Qualcomm4XXSilver*Qualcomm4XXSilver*Qualcomm4XXSilver*Qualcomm4XXGold*Qualcomm4XXGold*Qualcomm4XXGold*Qualcomm4XXGold*)
 			# Qualcomm Snapdragon 7c+ Gen 3 (SC7280) or QCM6490: 4 x Kryo 468 Silver + 3 x Kryo 468 Gold + 1 x Kryo 468 Gold Plus
-			case "${DTCompatible}" in
+			case "${DTCompatible,,}" in
 				*qcm6490*)
 					echo "Qualcomm QCM6490"
 					;;
@@ -6200,7 +6207,7 @@ GuessSoCbySignature() {
 			# or HiSilicon Kirin 710: 4 x Cortex-A53 / r0p4 + 4 x Cortex-A73 / r0p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			# or HiSilicon Kirin 970: 4 x Cortex-A53 / r0p4 + 4 x Cortex-A73 / r0p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			# or Allwinner R923: 4 x Cortex-A53 / r0p4 + 4 x Cortex-A73 / r0p2
-			case "${DTCompatible}" in
+			case "${DTCompatible,,}" in
 				*710*)
 					echo "HiSilicon Kirin 710"
 					;;
@@ -6249,7 +6256,7 @@ GuessSoCbySignature() {
 						# S905: 4 x Cortex-A53 / r0p4 / fp asimd evtstrm crc32
 						echo "Amlogic S905"
 					else
-						case "${DTCompatible}" in
+						case "${DTCompatible,,}" in
 							*allwinner*)
 								# 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 								case "${Allwinner_SID:7:8}" in
@@ -6272,7 +6279,7 @@ GuessSoCbySignature() {
 										echo "Allwinner H618"
 										;;
 									*)
-										case "${DTCompatible}" in
+										case "${DTCompatible,,}" in
 											*h618*|*orangepi-zero3*|*orangepi-zero2w*)
 												echo "Allwinner H618"
 												;;
@@ -6329,7 +6336,7 @@ GuessSoCbySignature() {
 								esac
 								;;
 							*amlogic*)
-								case "${DTCompatible}" in
+								case "${DTCompatible,,}" in
 									*axg*)
 										# AXG: A113X, A113D, 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 										echo "Amlogic A113X/A113D"
@@ -6442,7 +6449,7 @@ GuessSoCbySignature() {
 			# Broadcom used these cores in a bunch of SoCs, usually with ARMv8 Crypto Extensions but
 			# sometimes they're not active or licensed (applies to early VideoCore SoCs between 2017
 			# and 2018). Stepping was always r0p0: http://tinyurl.com/yt85tt78
-			case "${DTCompatible}" in
+			case "${DTCompatible,,}" in
 				*brcm,bcm4908*)
 					# Broadcom BCM4908: 4 x Brahma B53 / r0p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
 					echo "Broadcom BCM4908"
@@ -6456,7 +6463,7 @@ GuessSoCbySignature() {
 			# or Texas Instruments K3 AM62x, 2 x Cortex-A53 / r0p4
 			# or Texas Instruments K3 AM642, 2 x Cortex-A53 / r0p4
 			# or Texas Instruments K3 AM652, 2 x Cortex-A53 / r0p4
-			case "${DTCompatible}" in
+			case "${DTCompatible,,}" in
 				*armada37*)
 					echo "Marvell Armada 3720"
 					;;
@@ -6483,7 +6490,7 @@ GuessSoCbySignature() {
 		00A53r0p4)
 			# Armada 3710, 1 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			# or Texas Instruments K3 AM62x, 1 x Cortex-A53 / r0p4
-			case "${DTCompatible}" in
+			case "${DTCompatible,,}" in
 				*armada37*)
 					echo "Marvell Armada 3710"
 					;;
@@ -6508,7 +6515,7 @@ GuessSoCbySignature() {
 			# or Xiaomi Surge S1: 8 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			# or Sophgo BM1684: 8 x Cortex-A53 / r0p4
 			# or Qualcomm APQ8053: 8 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
-			case "${DTCompatible}" in
+			case "${DTCompatible,,}" in
 				*amlogic*)
 					echo "Amlogic S912"
 					;;
@@ -6577,7 +6584,7 @@ GuessSoCbySignature() {
 		0?A55r2p00?A55r2p00?A55r2p00?A55r2p00?A55r2p00?A55r2p00?A55r2p00?A55r2p0)
 			# Allwinner A523/A527/MR527/R828/T523/T527, 8 x Cortex-A55 / r2p0 / at least 'aes pmull sha1 sha2' (https://browser.geekbench.com/v5/cpu/21564626)
 			# or Amlogic P1, 8 x Cortex-A55 / r2p0
-			case "${DTCompatible}" in
+			case "${DTCompatible,,}" in
 				*a523*)
 					echo "Allwinner A523"
 					;;
@@ -6644,7 +6651,7 @@ GuessSoCbySignature() {
 			# Armada 375/38x, 2 x Cortex-A9 / r4p1 / swp half thumb fastmult vfp edsp neon vfpv3 tls
 			# or MStar Infinity2: 2 Cortex-A9 / r4p1 / half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpd32
 			# or Triductor TR6560: 2 x Cortex-A9 / r4p1
-			case "${DTCompatible}" in
+			case "${DTCompatible,,}" in
 				*armada*)
 					echo "Marvell Armada 375/38x"
 					;;
@@ -6678,13 +6685,13 @@ GuessSoCbySignature() {
 			;;
 		??A73r?p???A73r?p???A73r?p???A73r?p?)
 			# Qualcomm IPQ9574, 4 x Cortex-A73
-			# or Synaptics VS680, 4 x Cortex-A73
+			# or Synaptics VS680 (also called SenaryTech SN3680), 4 x Cortex-A73
 			# or MediaTek MT7988A (Filogic 880), 4 x Cortex-A73
-			case "${DTCompatible}" in
+			case "${DTCompatible,,}" in
 				*qualcomm*|*9574*)
 					echo "Qualcomm IPQ9574"
 					;;
-				*synaptics*|*vs680*)
+				*synaptics*|*syna,*|*vs680*|*senarytech*|*sn3680*)
 					echo "Synaptics VS680"
 					;;
 				*880*|*mt7988*)
@@ -6695,7 +6702,7 @@ GuessSoCbySignature() {
 		00A72r0p300A72r0p300A72r0p300A72r0p3)
 			# BCM2711, 4 x Cortex-A72 / r0p3 / fp asimd evtstrm crc32 (running 32-bit: half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm crc32)
 			# or Marvell Armada3900-A1, 4 x Cortex-A72 / r0p3 / https://community.cisco.com/t5/wireless/catalyst-9130ax-ap-booting-into-wnc-linux-instead-of-ios-xe/td-p/4460181
-			case "${DTCompatible}" in
+			case "${DTCompatible,,}" in
 				*raspberrypi*|*bcm283*|*bcm2711*)
 					echo "BCM2711${BCM2711}"
 					;;
@@ -6740,7 +6747,7 @@ GuessSoCbySignature() {
 		00A35r0p200A35r0p200A35r0p200A35r0p2)
 			# RK3308/RK3326/PX30/PX30S, 4 x Cortex-A35 / r0p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			# or i.MX8QXP, 4 x Cortex-A35 / r0p2 / https://gist.github.com/stravs/f82c8a0af276b2d1e6b57235d048f027
-			case "${DTCompatible}" in
+			case "${DTCompatible,,}" in
 				*rk3308*)
 					echo "Rockchip RK3308"
 					;;
@@ -6767,7 +6774,7 @@ GuessSoCbySignature() {
 			;;
 		*A35r*A35r*A35r*A35r???)
 			# RK quad-core A35 with yet unknown details (stepping/flags)
-			case "${DTCompatible}" in
+			case "${DTCompatible,,}" in
 				*rk3308b*)
 					echo "Rockchip RK3308B"
 					;;
@@ -6789,7 +6796,7 @@ GuessSoCbySignature() {
 		0?A55r2p00?A55r2p00?A55r2p00?A55r2p0??A76r4p0??A76r4p0??A76r4p0??A76r4p0)
 			# RK3588, 4 x Cortex-A55 / r2p0 + 2 x Cortex-A76 / r4p0 / + 2 x Cortex-A76 / r4p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp asimdrdm lrcpc dcpop asimddp
 			# or Unisoc UMS9620, 4 x Cortex-A55 / r2p0 + 3 x Cortex-A76 / r4p0 / + 1 x Cortex-A76 / r4p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp asimdrdm lrcpc dcpop asimddp
-			case "${DTCompatible}" in
+			case "${DTCompatible,,}" in
 				*ums9620*)
 					echo "Unisoc UMS9620"
 					;;
@@ -6825,7 +6832,7 @@ GuessSoCbySignature() {
 		00A35r1p000A35r1p0)
 			# Amlogic C302X or C305X, 2 x Cortex-A35 / r1p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			# or Nuvoton MA35D1, 2 x Cortex-A35 / r1p0
-			case "${DTCompatible}" in
+			case "${DTCompatible,,}" in
 				*c302*)
 					echo "Amlogic C302X"
 					;;
@@ -6847,7 +6854,7 @@ GuessSoCbySignature() {
 		00A55r2p000A55r2p000A55r2p000A55r2p0)
 			# Allwinner A513, Amlogic S905X4/S905C2, RealTek RTD1619B or Rockchip RK3566/RK3568
 			# 4 x Cortex-A55 / r2p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp asimdrdm lrcpc dcpop asimddp
-			case "${DTCompatible}" in
+			case "${DTCompatible,,}" in
 				*amlogic*)
 					echo "Amlogic S905X4/S905C2"
 					;;
@@ -6873,7 +6880,7 @@ GuessSoCbySignature() {
 			# or NXP i.MX 93, 2 x Cortex-A55 / r2p0 / L1d 32K, L1i 32K, L2 64K, L3 256K (shared)
 			# or Amlogic C308X, 2 x Cortex-A55
 			# or Exynos 5515, 2 x Cortex-A55 / r2p0
-			case "${DTCompatible}" in
+			case "${DTCompatible,,}" in
 				*nxp*)
 					echo "NXP i.MX 93"
 					;;
@@ -6900,7 +6907,7 @@ GuessSoCbySignature() {
 		*A55r2p0)
 			# Renesas RZG2L/RZG2LC/RZG2UL, 1 x Cortex-A55 / r2p0 / L1d 32K, L1i 32K, L2 0K, L3 256K (shared)
 			# or NXP i.MX 93, 1 x Cortex-A55 / r2p0 / L1d 32K, L1i 32K, L2 64K, L3 256K (shared)
-			case "${DTCompatible}" in
+			case "${DTCompatible,,}" in
 				*nxp*)
 					echo "NXP i.MX 93"
 					;;
@@ -6957,7 +6964,7 @@ GuessSoCbySignature() {
 		00A72r1p000A72r1p0)
 			# TI J721E (TDA4VM/DRA829V): 2 x Cortex-A72 / r1p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			# or BroadCom Klondike: 2 x Cortex-A72 / r1p0 / with at least 'aes pmull sha1 sha2' https://browser.geekbench.com/v4/cpu/search?page=1&q=broadcom+klondike&utf8=✓
-			case "${DTCompatible}" in
+			case "${DTCompatible,,}" in
 				*721*|*ti*)
 					echo "TI J721E"
 					;;
@@ -6994,7 +7001,7 @@ GuessSoCbySignature() {
 			# or Allwinner R328: 2 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm (https://whycan.com/t_7497.html -> ARMv7 Processor [410fc075] revision 5 (ARMv7), cr=10c5387d)
 			# or Allwinner F133/H133/R528/T113: 2 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm (https://forums.100ask.net/t/topic/2867 -> ARMv7 Processor [410fc075] revision 5 (ARMv7), cr=10c5387d)
 			# or STMicroelectronics STM32MP153C: 2 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
-			case "${DTCompatible}" in
+			case "${DTCompatible,,}" in
 				*rockchip*)
 					echo "Rockchip RV1109"
 					;;
@@ -7042,7 +7049,7 @@ GuessSoCbySignature() {
 		*A57r1p3*)
 			# Jetson TX2, 1-4 x Cortex-A57 / r1p3 + 0-2 x Denver 2 / r0p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			# or Renesas R-Car family: 2-4 x Cortex-A57 / r1p3 + 0-4 Cortex-A53 / r0p4 / https://jira.automotivelinux.org/browse/SPEC-2614?focusedCommentId=20987&page=com.atlassian.jira.plugin.system.issuetabpanels%3Acomment-tabpanel
-			case "${DTCompatible}" in
+			case "${DTCompatible,,}" in
 				*r8a7795*)
 					echo "Renesas R8A7795/R-Car H3"
 					;;
@@ -7112,7 +7119,7 @@ GuessSoCbySignature() {
 			# or MT6589: 4 x Cortex-A7 / r0p3 / swp half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpv4 idiva idivt
 			# or MT8127: 4 x Cortex-A7 / r0p3 / swp half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpv4 idiva idivt
 			# or Qualcomm MSM8226/MSM8926 (Snapdragon 400): 4 x Cortex-A7 / r0p3 / swp half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt
-			case "${DTCompatible}" in
+			case "${DTCompatible,,}" in
 				*mt6580*)
 					echo "Mediatek MT6580"
 					;;
@@ -7139,7 +7146,7 @@ GuessSoCbySignature() {
 		*A7r0p3*A7r0p3)
 			# Mediatek MT6572: 2 x Cortex-A7 / r0p3 / swp half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpv4 idiva idivt
 			# or Qualcomm MSM8610 (Snapdragon 200): 2 x Cortex-A7 / r0p3 / swp half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt
-			case "${DTCompatible}" in
+			case "${DTCompatible,,}" in
 				*mt6572*)
 					echo "Mediatek MT6572"
 					;;
@@ -7156,7 +7163,7 @@ GuessSoCbySignature() {
 			# Nexell S5P6818, 8 x Cortex-A53 / r0p3 / fp asimd aes pmull sha1 sha2 crc32
 			# or HiSilicon Kirin 620/930, 8 x Cortex-A53 / r0p3 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			# or Samsung Exynos 7580, 4 or 8 x Cortex-A53 / r0p3 / fp asimd aes pmull sha1 sha2 crc32 wp half thumb fastmult vfp edsp neon vfpv3 tlsi vfpv4 idiva idivt
-			case "${DTCompatible}" in
+			case "${DTCompatible,,}" in
 				*hi6220*|*hi6210*)
 					echo "HiSilicon Kirin 620"
 					;;
@@ -7175,7 +7182,7 @@ GuessSoCbySignature() {
 			# Mediatek MT6735: 4 x Cortex-A53 / r0p3 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm sha2 (booting 32-bit)
 			# or Mediatek MT8163: 4 x Cortex-A53 / r0p3 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt lpae evtstrm aes pmull sha1 sha2 crc32
 			# or HiSilicon Hi3751: 4 x Cortex-A53 / r0p3 / swp half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt (booting 32-bit kernel)
-			case "${DTCompatible}" in
+			case "${DTCompatible,,}" in
 				*mt6735*)
 					echo "Mediatek MT6735"
 					;;
@@ -7390,7 +7397,7 @@ GuessSoCbySignature() {
 			;;
 		*A75r3p1*)
 			# Unisoc T610/T618/T700/T740: 4-6 x Cortex A55 + 2/4 x Cortex-A75 / r3p1
-			case "${DTCompatible}" in
+			case "${DTCompatible,,}" in
 				*t610*)
 					echo "Unisoc T610"
 					;;
@@ -7684,6 +7691,11 @@ GuessSoCbySignature() {
 		0?IngenicV4.15FPUV0.00?IngenicV4.15FPUV0.0)
 			# Ingenic JZ4780: dual-core MIPS32
 			echo "Ingenic JZ4780"
+			;;
+		*Azure100r?p?*)
+			# Microsoft Azure Cobalt 100, based on Neoverse-N2 r0p0
+			# https://lore.kernel.org/linux-arm-kernel/b99a7196-011e-4f08-83ec-e63a690ab919@linux.microsoft.com/T/
+			echo "Azure Cobalt 100"
 			;;
 	esac
 } # GuessSoCbySignature
@@ -8599,6 +8611,9 @@ CheckKernelVersion() {
 				*Unisoc*)
 					PrintBSPWarning Unisoc
 					;;
+				*Synaptics*)
+					PrintBSPWarning Synaptics
+					;;
 			esac
 			;;
 		5.10.4)
@@ -8718,7 +8733,7 @@ PrintBSPWarning() {
 			echo -e "${BOLD}vendor kernel. See https://tinyurl.com/y8k3af73 and https://tinyurl.com/ywtfec7n${NC}"
 			echo -e "${BOLD}for details.${NC}"
 			;;
-		Ingenic|Kendryte|MediaTek|Nexell|Nvidia|NXP|Phytium|Qualcomm|RealTek|Samsung|StarFive|T-Head|Unisoc)
+		Ingenic|Kendryte|MediaTek|Nexell|Nvidia|NXP|Phytium|Qualcomm|RealTek|Samsung|StarFive|Synaptics|T-Head|Unisoc)
 			echo -e "${BOLD}This device runs a $1 vendor/BSP kernel.${NC}"
 			;;
 		Rockchip)
@@ -8866,6 +8881,7 @@ CheckStorage() {
 	command -v timeout >/dev/null 2>&1 && SmartCtl="timeout 15 ${SmartCtl}"
 
 	# grab info about block devices
+	udevadm settle
 	[ -z "${LSBLK}" ] && LSBLK="$(LC_ALL="C" lsblk -l -o SIZE,NAME,FSTYPE,LABEL,MOUNTPOINT 2>&1)"
 
 	for StorageDevice in $(ls /dev/sd? /dev/nvme? /dev/vd? 2>/dev/null | sort) ; do
@@ -8986,6 +9002,7 @@ CheckStorage() {
 		else
 			echo -e "  * ${DevizeSize}${DeviceName%%*( )}: ${DeviceInfo}${LnkSta}${AdditionalSMARTInfo}${AdditionalInfo}${DriveTemp}"
 		fi
+		[ -n "${LetsBenchmark}" ] && snore 0.1 && echo -e "    \c" >&2 && GetBenchmarkPartition "${StorageDevice}" 600000 >&2
 	done
 
 	# MMC devices
@@ -9197,6 +9214,7 @@ CheckStorage() {
 				echo -e "  * ${FlashSize}\"${Manufacturer}${mmc_name}\" ${DeviceType}${AdditionalInfo} as ${StorageDevice}: date ${mmc_date}, manfid/oemid: ${mmc_manfid}/${mmc_oemid}, hw/fw rev: ${mmc_hwrev}/${mmc_fwrev}"
 			fi
 		fi
+		[ -n "${LetsBenchmark}" ] && snore 0.1 && echo -e "    \c" >&2 && GetBenchmarkPartition "${StorageDevice}" 120000 >&2
 	done
 
 	# MTD devices: partitions appear as single mtd devices so different logic is needed
@@ -9249,6 +9267,22 @@ CheckStorage() {
 		rm "${TempDir}/check-smart"
 	fi
 } # CheckStorage
+
+GetBenchmarkPartition() {
+	# function that gets a block device as $1 and minimum free blocks as $2 and returns
+	# whether benchmarking in a reasonable way is possible or not and if possible prints
+	# the best suited partition (e.g. on spinning rust due to ZBR outer partitions are
+	# faster than inner)
+	echo lalala $2
+} # GetBenchmarkPartition
+
+BenchmarkDrives() {
+	# function that takes a list of suited partitions generated in review mode and
+	# tests sequential and in case it's worth to check (not on spinning rust) also random
+	# I/O
+	# TODO: check SMART attribute 199 before/after to spot cabling problems
+	:
+} # BenchmarkDrives
 
 CheckMTD() {
 	for StorageDevice in /dev/mtd? ; do

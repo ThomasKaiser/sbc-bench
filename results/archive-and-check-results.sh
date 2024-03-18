@@ -4,16 +4,16 @@
 # To be executed from results dir. It also does some quick validation of
 # collected results afterwards.
 
-grep -E "http://ix.io|http://sprunge.us" ../Results.md | awk -F"http://" '{print $2}' | cut -f1 -d')' | while read ; do
+grep -E "https://ix.io|https://sprunge.us" ../Results.md | awk -F"https://" '{print $2}' | cut -f1 -d')' | while read ; do
 	ResultFile="${REPLY##*/}.txt"
 	if [ -f "${ResultFile}" ]; then
-		grep -q "^tinymembench" "${ResultFile}" || (wget -q -O "${ResultFile}" "http://${REPLY}" ; sleep 5)
+		grep -q "^tinymembench" "${ResultFile}" || (wget -q -O "${ResultFile}" "https://${REPLY}" ; sleep 5)
 	else
-		wget -O "${ResultFile}" "http://${REPLY}"
+		wget -O "${ResultFile}" "https://${REPLY}"
 		git add "${ResultFile}"
 		sleep 5
 	fi
-	sed -i -e "s|http://${REPLY}|results/${ResultFile}|" ../Results.md
+	sed -i -e "s|https://${REPLY}|results/${ResultFile}|" ../Results.md
 done
 
 # create compressed archive with benchmark results, cpuinfo files and opp-tables:
@@ -110,14 +110,14 @@ echo "  * [clockspeed](#clockspeed)" >>../Sorted-Results.md
 echo -e "\n## 7-zip MIPS multi-threaded\n" >>../Sorted-Results.md
 echo "| Device / details | Clockspeed | Kernel | Distro | *7-zip multi* | 7-zip single | AES | memcpy | memset | kH/s |" >>../Sorted-Results.md
 echo "| ----- | :--------: | :----: | :----: | ----: | ------: | ------: | -----: | -----: | ---: |" >>../Sorted-Results.md
-grep -E "results/|http://ix.io|http://sprunge.us" ../Results.md | grep "^|" | sed 's/\*\*//g'| sort -r -t '|' -k 6 -n \
+grep -E "results/|https://ix.io|https://sprunge.us" ../Results.md | grep "^|" | sed 's/\*\*//g'| sort -r -t '|' -k 6 -n \
 	| awk -F"|" '{print "|"$2"|"$3"|"$4"|"$5"|**"$6"**|"$7"|"$8"|"$9"|"$10"|"$11"|"}' | sed -e 's/|\*\* /| \*\*/' -e 's/ \*\*|/\*\* |/' >>../Sorted-Results.md
 
 # sorted by 7-zip single-threaded score:
 echo -e "\n[(back to top of the page)](#sbc-bench-results-sorted)\n\n## 7-zip MIPS single-threaded\n" >>../Sorted-Results.md
 echo "| Device / details | Clockspeed | Kernel | Distro | 7-zip multi | *7-zip single* | AES | memcpy | memset | kH/s |" >>../Sorted-Results.md
 echo "| ----- | :--------: | :----: | :----: | ----: | ------: | ------: | -----: | -----: | ---: |" >>../Sorted-Results.md
-grep -E "results/|http://ix.io|http://sprunge.us" ../Results.md | grep "^|" | sed 's/\*\*//g'| sort -r -t '|' -k 7 -n \
+grep -E "results/|https://ix.io|https://sprunge.us" ../Results.md | grep "^|" | sed 's/\*\*//g'| sort -r -t '|' -k 7 -n \
 	| awk -F"|" '{print "|"$2"|"$3"|"$4"|"$5"|"$6"|**"$7"**|"$8"|"$9"|"$10"|"$11"|"}' | sed -e 's/|\*\* /| \*\*/' -e 's/ \*\*|/\*\* |/' >>../Sorted-Results.md
 
 # sorted by openssl speed -elapsed -evp aes-256-cbc:
@@ -125,27 +125,27 @@ echo -e "\n[(back to top of the page)](#sbc-bench-results-sorted)\n\n## openssl 
 echo -e "(For an in-depth explanation of ARMv8 AES scores see [here](ARMv8-Crypto-Extensions.md))\n" >>../Sorted-Results.md
 echo "| Device / details | Clockspeed | Kernel | Distro | 7-zip multi | 7-zip single | *AES* | memcpy | memset | kH/s |" >>../Sorted-Results.md
 echo "| ----- | :--------: | :----: | :----: | ----: | ------: | ------: | -----: | -----: | ---: |" >>../Sorted-Results.md
-grep -E "results/|http://ix.io|http://sprunge.us" ../Results.md | grep "^|" | sed 's/\*\*//g'| sort -r -t '|' -k 8 -n \
+grep -E "results/|https://ix.io|https://sprunge.us" ../Results.md | grep "^|" | sed 's/\*\*//g'| sort -r -t '|' -k 8 -n \
 	| awk -F"|" '{print "|"$2"|"$3"|"$4"|"$5"|"$6"|"$7"|**"$8"**|"$9"|"$10"|"$11"|"}' | sed -e 's/|\*\* /| \*\*/' -e 's/ \*\*|/\*\* |/' >>../Sorted-Results.md
 
 # sorted by memcpy:
 echo -e "\n[(back to top of the page)](#sbc-bench-results-sorted)\n\n## memcpy\n" >>../Sorted-Results.md
 echo "| Device / details | Clockspeed | Kernel | Distro | 7-zip multi | 7-zip single | AES | *memcpy* | memset | kH/s |" >>../Sorted-Results.md
 echo "| ----- | :--------: | :----: | :----: | ----: | ------: | ------: | -----: | -----: | ---: |" >>../Sorted-Results.md
-grep -E "results/|http://ix.io|http://sprunge.us" ../Results.md | grep "^|" | sed 's/\*\*//g'| sort -r -t '|' -k 9 -n \
+grep -E "results/|https://ix.io|https://sprunge.us" ../Results.md | grep "^|" | sed 's/\*\*//g'| sort -r -t '|' -k 9 -n \
 	| awk -F"|" '{print "|"$2"|"$3"|"$4"|"$5"|"$6"|"$7"|"$8"|**"$9"**|"$10"|"$11"|"}' | sed -e 's/|\*\* /| \*\*/' -e 's/ \*\*|/\*\* |/' >>../Sorted-Results.md
 
 # sorted by memset:
 echo -e "\n[(back to top of the page)](#sbc-bench-results-sorted)\n\n## memset\n" >>../Sorted-Results.md
 echo "| Device / details | Clockspeed | Kernel | Distro | 7-zip multi | 7-zip single | AES | memcpy | *memset* | kH/s |" >>../Sorted-Results.md
 echo "| ----- | :--------: | :----: | :----: | ----: | ------: | ------: | -----: | -----: | ---: |" >>../Sorted-Results.md
-grep -E "results/|http://ix.io|http://sprunge.us" ../Results.md | grep "^|" | sed 's/\*\*//g'| sort -r -t '|' -k 10 -n \
+grep -E "results/|https://ix.io|https://sprunge.us" ../Results.md | grep "^|" | sed 's/\*\*//g'| sort -r -t '|' -k 10 -n \
 	| awk -F"|" '{print "|"$2"|"$3"|"$4"|"$5"|"$6"|"$7"|"$8"|"$9"|**"$10"**|"$11"|"}' | sed -e 's/|\*\* /| \*\*/' -e 's/ \*\*|/\*\* |/' >>../Sorted-Results.md
 
 # sorted by clockspeed:
 echo -e "\n[(back to top of the page)](#sbc-bench-results-sorted)\n\n## clockspeed\n" >>../Sorted-Results.md
 echo "| Device / details | *Clockspeed* | Kernel | Distro | 7-zip multi | 7-zip single | AES | memcpy | memset | kH/s |" >>../Sorted-Results.md
 echo "| ----- | :--------: | :----: | :----: | ----: | ------: | ------: | -----: | -----: | ---: |" >>../Sorted-Results.md
-grep -E "results/|http://ix.io|http://sprunge.us" ../Results.md | grep "^|" | sed 's/\*\*//g'| sort -r -t '|' -k 3 -n | grep MHz \
+grep -E "results/|https://ix.io|https://sprunge.us" ../Results.md | grep "^|" | sed 's/\*\*//g'| sort -r -t '|' -k 3 -n | grep MHz \
 	| awk -F"|" '{print "|"$2"|**"$3"**|"$4"|"$5"|"$6"|"$7"|"$8"|"$9"|"$10"|"$11"|"}' | sed -e 's/|\*\* /| \*\*/' -e 's/ MHz \*\*|/\*\* MHz|/' >>../Sorted-Results.md
 echo -e "\n[(back to top of the page)](#sbc-bench-results-sorted)" >>../Sorted-Results.md

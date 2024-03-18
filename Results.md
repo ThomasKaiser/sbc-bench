@@ -168,6 +168,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Raspberry Pi 400 (BCM2711)](results/2Cyi.txt) | 1800 MHz | 5.4 | Raspberry Pi OS Buster | 6550 | 1903 | 77890 | 2680 | 3110 | - |
 | [Raspberry Pi 5 B (BCM2712)](results/Au3jaA.txt) | 2400 MHz | 6.1 | Bookworm arm64 | 11010 | 3196 | 1367740 | 5270 | 14060 | 15.39 |
 | [Raspberry Pi 5 B (BCM2712)](results/8acvqG.txt) | 3000 MHz | 6.1 | Bookworm arm64 | 12930 | 3791 | 1709720 | 5160 | 16350 | 19.25 |
+| [Raspberry Pi 5 B (BCM2712)](results/r05W17.txt) | 3000 MHz | 6.6 | Bookworm arm64 | 13400 | 3900 | 1709400 | 5900 | 17290 | 19.28 |
 | [Renegade (RK3328)](results/1iFx.txt) | 1400 MHz | 4.4 | Stretch arm64 | 3710 | 1069 | 644200 | 1565 | 7435 | 3.92 |
 | [RK3228A TV Box](results/3M9F.txt) | 1200 MHz | 4.4 | Buster armhf | 2310 | 710 | 23070 | 410 | 1230 | - |
 | [RK3568-ROC-PC](results/3Rsg.txt) | 1960 MHz | 4.19 | Bullseye arm64 | 5040 | 1424 | 912800 | 3130 | 6240 | - |

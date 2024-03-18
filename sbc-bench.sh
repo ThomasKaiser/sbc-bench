@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.9.64
+Version=0.9.65
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -9,6 +9,8 @@ Main() {
 	unset LC_ALL LC_MESSAGES LC_NUMERIC LANGUAGE LANG 2>/dev/null # prevent localisation of decimal points and similar stuff
 	NO_COLOR="${NO_COLOR:-}"
 	Netio="${Netio:-}"
+	Smartpower="${Smartpower:-}"
+	Linpack="${Linpack:-}"
 
 	# use colours and bold when outputting to a terminal
 	CheckTerminal
@@ -588,6 +590,7 @@ GetARMCore() {
 	61/037:Apple Everest A16
 	61/038:Apple Blizzard M2Max
 	61/039:Apple Avalanche M2Max
+	61/046:Apple Sawtooth M11
 	61/048:Apple Sawtooth M3Max
 	61/049:Apple Everest M3Max
 	00/000:Virtualized Apple Silicon
@@ -3661,6 +3664,9 @@ CheckCPUCluster() {
 					CpufreqPrefix=""
 				fi
 
+				# Check whether Linpack reliability measurement should be done as well (aarch64 only)
+				[ -x "${Linpack}/xhpl64" ] && [ -r "${Linpack}/HPL.dat" ] && [ "$(uname -m)" = "aarch64" ] && LinpackResult="   ($(MeasureWithLinpack))" || LinpackResult=""
+
 				if [ ${USE_VCGENCMD} = true ] ; then
 					# On RPi we query ThreadX about clockspeeds and Vcore voltage too, on RPi 5
 					# we even use the ADC measurements. Also we create an OPP table on the fly
@@ -3673,15 +3679,15 @@ CheckCPUCluster() {
 					case $? in
 						0)
 							MeasuredCoreVoltage="$(awk -F"=" '/VDD_CORE_V/ {printf ("%0.4f",$2); }' <<<"${ADC_Readouts}")V"
-							echo -e "Cpufreq OPP: $(printf "%4s" ${SysfsSpeed})  ThreadX: $(printf "%4s" ${ThreadXFreq})  Measured: $(printf "%4s" ${RoundedSpeed}) @ ${CoreVoltage}/${MeasuredCoreVoltage}${PrettyDiff}"
+							echo -e "Cpufreq OPP: $(printf "%4s" ${SysfsSpeed})  ThreadX: $(printf "%4s" ${ThreadXFreq})  Measured: $(printf "%4s" ${RoundedSpeed}) @ ${CoreVoltage}/${MeasuredCoreVoltage}${PrettyDiff}${LinpackResult}"
 							;;
 						*)
-							echo -e "Cpufreq OPP: $(printf "%4s" ${SysfsSpeed})  ThreadX: $(printf "%4s" ${ThreadXFreq})  Measured: $(printf "%4s" ${RoundedSpeed}) @ ${CoreVoltage}${PrettyDiff}"
+							echo -e "Cpufreq OPP: $(printf "%4s" ${SysfsSpeed})  ThreadX: $(printf "%4s" ${ThreadXFreq})  Measured: $(printf "%4s" ${RoundedSpeed}) @ ${CoreVoltage}${PrettyDiff}${LinpackResult}"
 							;;
 					esac
 					[ $i -eq ${MaxSpeed} ] && echo -e "OPP: $(printf "%4s" ${SysfsSpeed}), ThreadX: $(printf "%4s" ${ThreadXFreq}), Measured: $(printf "%4s" ${RoundedSpeed}) ${CpufreqPrefix}${PrettyDiff}${NC}">>"${TempDir}/cpufreq"
 				else
-					echo -e "Cpufreq OPP: $(printf "%4s" ${SysfsSpeed})    Measured: $(printf "%4s" ${RoundedSpeed}) $(printf "%27s" \(${MeasuredSpeed}))${PrettyDiff}"
+					echo -e "Cpufreq OPP: $(printf "%4s" ${SysfsSpeed})    Measured: $(printf "%4s" ${RoundedSpeed}) $(printf "%27s" \(${MeasuredSpeed}))${PrettyDiff}${LinpackResult}"
 					[ $i -eq ${MaxSpeed} ] && echo -e "OPP: $(printf "%4s" ${SysfsSpeed}), Measured: $(printf "%4s" ${RoundedSpeed}) ${CpufreqPrefix}${PrettyDiff}${NC}">>"${TempDir}/cpufreq"
 				fi
 			fi
@@ -3710,6 +3716,24 @@ CheckCPUCluster() {
 		echo -e "Measured: $(printf "%4s" ${RoundedSpeed})">>"${TempDir}/cpufreq"
 	fi
 } # CheckCPUCluster
+
+MeasureWithLinpack() {
+	# function that chdirs into ${Linpack}, then runs xhpl64 and provides the resulting
+	# Gflops number when passing or FAILED otherwise.
+	# https://github.com/raspberrypi/firmware/issues/1876#issuecomment-2002634934
+	cd "${Linpack}" || return 1
+	LinpackResult="$("./xhpl64" 2>&1)"
+	grep -q "PASSED" <<<"${LinpackResult}"
+	case $? in
+		0)
+			awk -F' ' '/^WR02R2L2/ {print $7}' <<<"${LinpackResult}"
+			;;
+		*)
+			echo "FAILED"
+			;;
+	esac
+	cd "${OLDPWD}" || return 1
+} # MeasureWithLinpack
 
 CheckAllCores() {
 	for i in $(seq 0 $(( ${CPUCores} -1 )) ) ; do
@@ -4112,6 +4136,10 @@ RunPTS() {
 	fi
 } # RunPTS
 
+BoostGB() {
+	snore 1 && for i in $(pgrep geekbench) ; do renice -20 "${i}" >/dev/null 2>&1 ; done
+} # BoostGB
+
 RunGB() {
 	# executing geekbench5 in a sane and monitored environment
 	echo -e "\x08\x08 Done.\nExecuting Geekbench...\n"
@@ -4137,6 +4165,7 @@ RunGB() {
 					fi
 				done
 				echo -e "\n${BOLD}Executing on cores ${FirstCore}-${LastCore}${NC}\n"
+				BoostGB &
 				taskset -c ${FirstCore}-${LastCore} "${GBBinary}" 2>&1 | tee "${TempLog}"
 				ResultsURL="$(awk -F"https" '/browser.geekbench.com/ {print $2}' <"${TempLog}" | head -n1)"
 				if [ "X${ResultsURL}" = "X" ]; then
@@ -4186,12 +4215,14 @@ RunGB() {
 	/bin/bash "${PathToMe}" -m ${MonitorInterval} >>"${MonitorLog}" &
 	MonitoringPID=$!
 	echo -e "\n${BOLD}Executing on all cores 1st time${NC}\n"
+	BoostGB &
 	"${GBBinary}" 2>&1 | tee "${TempLog}"
 	echo ""
 	GBFullString="$(awk -F" : " "/^Geekbench ${GBVersion}./ {print \$1}" "${TempLog}")"
 	GBSystemInfo="$(grep -A25 "Gathering system information" "${TempLog}" | tail -n +2 | grep -B25 " Size ")"
 	TempLog2="${TempDir}/temp2.log"
 	echo -e "${BOLD}Executing on all cores 2nd time${NC}\n"
+	BoostGB &
 	"${GBBinary}" 2>&1 | tee "${TempLog2}"
 	kill ${MonitoringPID}
 	ResultsURL="$(awk -F"https" '/browser.geekbench.com/ {print $2}' <"${TempLog}" | head -n1)"
@@ -4957,8 +4988,8 @@ UploadResults() {
 	case ${UploadURL} in
 		http*)
 			# uploading results worked, check sanity of results and environment
-			echo " ${UploadURL} |" >>"${ResultLog}"
-			echo -e "\nFull results uploaded to ${UploadURL}\c"
+			echo " ${UploadURL} |" | sed 's/http:/https:/' >>"${ResultLog}"
+			echo -e "\nFull results uploaded to ${UploadURL}\c" | sed 's/http:/https:/'
 			# check whether benchmark ran into a sane environment (no throttling and no swapping)
 			if [ ${IOWaitAvg:-0} -le 2 ] && [ ${IOWaitMax:-0} -le 5 ] && [ ${SysMax:-0} -le 5 ] && [ ! -f "${TempDir}/throttling_info.txt" ]; then
 				# in case it's not x86/x64 then also suggest adding results to official list
@@ -6275,7 +6306,7 @@ GuessSoCbySignature() {
 									32c050*)
 										echo "Allwinner H616"
 										;;
-									33*)
+									3380*)
 										echo "Allwinner H618"
 										;;
 									*)
@@ -6330,6 +6361,9 @@ GuessSoCbySignature() {
 												;;
 											*r818*)
 												echo "Allwinner R818"
+												;;
+											*h700*)
+												echo "Allwinner H700"
 												;;
 										esac
 										;;
@@ -6791,6 +6825,8 @@ GuessSoCbySignature() {
 			# (most recent steppings are pure assumption since announced in 2023)
 			# Why A53/A72 still in 2024? Since last ARM cores able to boot a 32-bit
 			# ARMv8l kernel (32-bit userlands consume way less memory compared to 64-bit)
+			# The RK3576J variant can run isolated operating systems on each CPU cluster:
+			# https://twitter.com/BG5USN/status/1767000716709609521
 			echo "Rockchip RK3576"
 			;;
 		0?A55r2p00?A55r2p00?A55r2p00?A55r2p0??A76r4p0??A76r4p0??A76r4p0??A76r4p0)
@@ -7615,7 +7651,7 @@ GuessSoCbySignature() {
 			;;
 		*A78Cr0p0*A78Cr0p0*A78Cr0p0*A78Cr0p0*X1Cr0p0*X1Cr0p0*X1Cr0p0*X1Cr0p0|360X1Cr0p0360X1Cr0p0360X1Cr0p0360X1Cr0p0360X1Cr0p0360X1Cr0p0360X1Cr0p0360X1Cr0p0)
 			# Qualcomm Snapdragon 8cx Gen 3 : 4 x Cortex-A78C / r0p0 + 4 x Cortex-X1C / r0p0 / fp asimd aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp ilrcpc flagm
-			# When running Windows on this thing in WSL2 (Windows Subsystem for Linux 2) all 8 cores are presented as Cortex-X1C and from within Linux it's impossible
+			# When running Linux on this thing in WSL2 (Windows Subsystem for Linux 2) all 8 cores are presented as Cortex-X1C and from within Linux it's impossible
 			# to assign single-threaded tasks to an A78C since they end up on an X1C anyway: https://github.com/ThomasKaiser/sbc-bench/issues/58#issuecomment-1374900303
 			echo "Qualcomm Snapdragon 8cx Gen 3"
 			;;
@@ -8181,7 +8217,7 @@ ProvideReviewInfo() {
 	[ "X${RunBenchmarks}" = "XTRUE" ] && UploadResults 2>/dev/null || UploadResults >/dev/null 2>&1
 	case "${UploadURL}" in
 		http*)
-			echo -e "\n\n\n\n# ${DeviceName:-$HostName}\n\nTested with sbc-bench v${Version} on $(date -R). Full info: [${UploadURL}](${UploadURL})"
+			echo -e "\n\n\n\n# ${DeviceName:-$HostName}\n\nTested with sbc-bench v${Version} on $(date -R). Full info: [${UploadURL}](${UploadURL})" | sed 's/http:/https:/'
 			tail -n +4 "${TempDir}/review"
 			;;
 		*)
@@ -8683,10 +8719,10 @@ CheckKernelVersion() {
 			esac
 			;;
 		"5.15.94")
-			# At least used with Android 13 builds for A133: https://browser.geekbench.com/v5/cpu/21947495.gb5
+			# At least used with Android 13 and OpenWRT builds for A133/T527: https://browser.geekbench.com/v5/cpu/21947495.gb5 / https://browser.geekbench.com/v6/cpu/2610471.gb6
 			case ${GuessedSoC} in
 				Allwinner*)
-					# though there's a small chance users of flippy/unifreq kernels on older Allwinner SoCs are affected print BSP warning
+					# though there's a small chance users of flippy/unifreq kernels on older Allwinner SoCs are affected
 					PrintBSPWarning Allwinner
 					;;
 			esac
@@ -9038,6 +9074,7 @@ CheckStorage() {
 
 			# Only add manufacturer info if really unique. Partially misleading since counterfeit
 			# cards were and still are an issue: https://www.bunniestudios.com/blog/?page_id=1022
+			# Also newer manfids (based on JEDEC vendor IDs) are broken by design: https://archive.ph/x2kpx
 			case "${mmc_manfid}/${mmc_oemid}" in
 				0x0000df/0x0118)
 					# Despite the weird 0x0000df manufacturer ID this seems to be a legit soldered
@@ -9155,8 +9192,8 @@ CheckStorage() {
 					Manufacturer="${Manufacturer}Foresee "
 					;;
 				0x00009b/0x0100)
-					# Found on Lichee Pi4 as 'Y2P128': https://i.postimg.cc/gjQj5bgC/emmc-on-lichee-pi4.jpg
-					:
+					# https://en.wikipedia.org/wiki/Yangtze_Memory_Technologies
+					Manufacturer="${Manufacturer}YMTC "
 					;;
 				0x00009f/0x5449)
 					# 0x5449 -> "TI", found with maybe counterfeit Kingston SDC10G2 (name:SD16G): https://wiki.kobol.io/helios4/sdcard/#kingston-mobile-card-microsdhc-16gb

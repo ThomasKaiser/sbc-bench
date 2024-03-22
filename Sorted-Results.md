@@ -36,7 +36,7 @@
 | [Intel N100](results/4vxM.txt) | 3400 MHz | 6.1 | Lunar amd64 | **14150** | 4073 | 1232790 | 11600 | 12270 | 36.24 |
 | [AMD Seattle (Opteron A1100)](results/4Kqn.txt) | 2000 MHz | 4.15 | Bionic arm64 | **14080** | 2006 | 720710 | 3020 | 9530 | - |
 | [Jetson Orin Nano](results/4vy7.txt) | 1510 MHz | 5.10 | Focal arm64 | **13650** | 2153 | 854400 | 6730 | 20240 | 20.68 |
-| [Raspberry Pi 5 B (BCM2712)](results/r05W17.txt) | 3000 MHz | 6.6 | Bookworm arm64 | **13400** | 3900 | 1709400 | 5900 | 17290 | 19.28 |
+| [Raspberry Pi 5 B (BCM2712)](results/frdzAn.txt) | 3000 MHz | 6.6 | Bookworm arm64 | **13410** | 3916 | 1710590 | 5900 | 17370 | 19.28 |
 | [Jetson Xavier NX](results/3YWp.txt) | 1890 MHz | 4.9 | Bionic arm64 | **13230** | 2201 | 706280 | 9190 | 18480 | - |
 | [Intel N95](results/4xwq.txt) | 3400 MHz | 5.15 | Jammy amd64 | **13070** | 3993 | 1232880 | 9710 | 8730 | 34.60 |
 | [Qualcomm Snapdragon 7c](results/4Lyf.txt) | 2550/1800 MHz | 6.6 | Bookworm arm64 | **13040** | 3113 | 1455700 | 6710 | 14880 | - |
@@ -46,6 +46,7 @@
 | [Pentium G4600](results/2jVw.txt) | 3600 MHz | 4.19 | Buster amd64 | **11810** | 4448 | 984820 | 15120 | 33380 | 21.88 |
 | [Pentium N6005](results/4BtC.txt) | 3300/2000 MHz | 5.15 | Jammy amd64 | **11510** | 3369 | 923550 | 9650 | 10280 | 22.18 |
 | [Celeron N5105](results/3Qf7.txt) | 2900/2000 MHz | 5.13 | Focal amd64 | **11450** | 3059 | 811760 | 7710 | 9290 | 21.79 |
+| [Raspberry Pi 5 B (BCM2712)](results/1ULtUe.txt) | 2400 MHz | 6.6 | Bookworm arm64 | **11410** | 3270 | 1368000 | 6070 | 14830 | 15.42 |
 | [Loongson-3A5000-HV](results/4dzX.txt) | 2500 MHz | 4.19 | Loongnix 20 loongarch64 | **11120** | 2990 | 116900 | 6930 | 19170 | - |
 | [Raspberry Pi 5 B (BCM2712)](results/Au3jaA.txt) | 2400 MHz | 6.1 | Bookworm arm64 | **11010** | 3196 | 1367740 | 5270 | 14060 | 15.39 |
 | [Celeron N5100](results/3IlQ.txt) | 2800/1100 MHz | 5.13 | Focal amd64 | **10550** | 3088 | 783800 | 7750 | 8090 | 19.22 |
@@ -165,6 +166,7 @@
 | [x5-Z8300](results/1lgD.txt) | 1420 MHz | 4.9 | Stretch amd64 | **3900** | 950 | 178010 | 2380 | 2380 | 7.81 |
 | [Tronsmart MXIII Plus (S812)](results/3S5U.txt) | 1560 MHz | 5.10 | Buster armhf | **3880** | 1113 | 42570 | 1470 | 3430 | - |
 | [NanoPi K2 (Amlogic S905)](results/3Qve.txt) | 1480 MHz | 5.10 | Bullseye arm64 | **3880** | 1154 | 51490 | 1850 | 3790 | - |
+| [Lichee Pi 4A (T-Head TH1520)](results/fUCnrY.txt) | 1500 MHz | 5.10 | Bookworm riscv64 | **3880** | 1129 | 33260 | 3290 | 11160 | - |
 | [Khadas VIM1 (Amlogic S905X)](results/4bee.txt) | 1415 MHz | 5.1 | Buster arm64 | **3860** | 1136 | 660160 | 1940 | 5900 | - |
 | [NanoPi K2 (Amlogic S905)](results/1iT1.txt) | 1480 MHz | 4.14 | Stretch arm64 | **3850** | 1095 | 50370 | 1660 | 3870 | 4.61 |
 | [Celeron N3350](results/4rJj.txt) | 2400 MHz | 6.0 | Bullseye amd64 | **3810** | 2034 | 446170 | 5190 | 5700 | - |
@@ -251,7 +253,7 @@
 | [Huaqin P6410<br />(2 x Ampere Altra Max)](results/4kiu.txt) | 3000 MHz | 5.4 | Focal arm64 | 430860 | **4211** | 1710010 | 13310 | 47970 | - |
 | [Intel N100](results/4vxM.txt) | 3400 MHz | 6.1 | Lunar amd64 | 14150 | **4073** | 1232790 | 11600 | 12270 | 36.24 |
 | [Intel N95](results/4xwq.txt) | 3400 MHz | 5.15 | Jammy amd64 | 13070 | **3993** | 1232880 | 9710 | 8730 | 34.60 |
-| [Raspberry Pi 5 B (BCM2712)](results/r05W17.txt) | 3000 MHz | 6.6 | Bookworm arm64 | 13400 | **3900** | 1709400 | 5900 | 17290 | 19.28 |
+| [Raspberry Pi 5 B (BCM2712)](results/frdzAn.txt) | 3000 MHz | 6.6 | Bookworm arm64 | 13410 | **3916** | 1710590 | 5900 | 17370 | 19.28 |
 | [Qualcomm QRB5165](results/49kx.txt) | 2840/2410/1790 MHz | 4.19 | Focal arm64 | 18860 | **3898** | 1598490 | 14470 | 23910 | 25.56 |
 | [Ampere Altra M96-28](results/4zGI.txt) | 2800 MHz | 5.15 | Jammy arm64 | 249380 | **3858** | 1596110 | 10130 | 44750 | - |
 | [Hetzner CAX11 (Ampere Altra)](results/4HdL.txt) | 3000 MHz | 5.15 | Jammy arm64 | 8060 | **3842** | 1705600 | 11250 | 47670 | 11.44 |
@@ -260,6 +262,7 @@
 | [Pentium N6005](results/4BtC.txt) | 3300/2000 MHz | 5.15 | Jammy amd64 | 11510 | **3369** | 923550 | 9650 | 10280 | 22.18 |
 | [Ryzen R1505G](results/4HYd.txt) | 3270 MHz | 6.1 | Bookworm amd64 | 9080 | **3327** | 886980 | 10520 | 8160 | 18.14 |
 | [MT8395 Genio 1200](results/4Kvg.txt) | 2200/2000 MHz | 5.15 | Jammy arm64 | 18130 | **3298** | 1240850 | 14200 | 19000 | 27.60 |
+| [Raspberry Pi 5 B (BCM2712)](results/1ULtUe.txt) | 2400 MHz | 6.6 | Bookworm arm64 | 11410 | **3270** | 1368000 | 6070 | 14830 | 15.42 |
 | [Raspberry Pi 5 B (BCM2712)](results/Au3jaA.txt) | 2400 MHz | 6.1 | Bookworm arm64 | 11010 | **3196** | 1367740 | 5270 | 14060 | 15.39 |
 | [Jetson AGX Orin](results/4ax9.txt) | 2200 MHz | 5.10 | Focal arm64 | 39450 | **3187** | 1242940 | 10600 | 30350 | 59.96 |
 | [Radxa ROCK 5B (RK3588)](results/41BH.txt) | 2350/1830 MHz | 5.10 | Focal arm64 | 16450 | **3146** | 1337540 | 10830 | 29220 | 25.31 |
@@ -392,6 +395,7 @@
 | [NanoPi K2 (Amlogic S905)](results/3Qve.txt) | 1480 MHz | 5.10 | Bullseye arm64 | 3880 | **1154** | 51490 | 1850 | 3790 | - |
 | [Khadas VIM1S (S905Y4)](results/4bbv.txt) | 2000 MHz | 5.4 | Jammy arm64 | 4000 | **1148** | 436540 | 1970 | 7530 | - |
 | [Khadas VIM1 (Amlogic S905X)](results/4bee.txt) | 1415 MHz | 5.1 | Buster arm64 | 3860 | **1136** | 660160 | 1940 | 5900 | - |
+| [Lichee Pi 4A (T-Head TH1520)](results/fUCnrY.txt) | 1500 MHz | 5.10 | Bookworm riscv64 | 3880 | **1129** | 33260 | 3290 | 11160 | - |
 | [ODROID-C2 (Amlogic S905)](results/1ixI.txt) | 1750 MHz | 3.14 | Xenial arm64 | 4070 | **1128** | 48500 | 1750 | 3100 | - |
 | [Tronsmart S82 (Amlogic S802)](results/41ML.txt) | 1600 MHz | 5.14 | Focal armhf | 3640 | **1114** | 43150 | 500 | 3200 | - |
 | [Tronsmart MXIII Plus (S812)](results/3S5U.txt) | 1560 MHz | 5.10 | Buster armhf | 3880 | **1113** | 42570 | 1470 | 3430 | - |
@@ -475,9 +479,9 @@
 
 | Device / details | Clockspeed | Kernel | Distro | 7-zip multi | 7-zip single | *AES* | memcpy | memset | kH/s |
 | ----- | :--------: | :----: | :----: | ----: | ------: | ------: | -----: | -----: | ---: |
+| [Raspberry Pi 5 B (BCM2712)](results/frdzAn.txt) | 3000 MHz | 6.6 | Bookworm arm64 | 13410 | 3916 | **1710590** | 5900 | 17370 | 19.28 |
 | [Huaqin P6410<br />(2 x Ampere Altra Max)](results/4kiu.txt) | 3000 MHz | 5.4 | Focal arm64 | 430860 | 4211 | **1710010** | 13310 | 47970 | - |
 | [Raspberry Pi 5 B (BCM2712)](results/8acvqG.txt) | 3000 MHz | 6.1 | Bookworm arm64 | 12930 | 3791 | **1709720** | 5160 | 16350 | 19.25 |
-| [Raspberry Pi 5 B (BCM2712)](results/r05W17.txt) | 3000 MHz | 6.6 | Bookworm arm64 | 13400 | 3900 | **1709400** | 5900 | 17290 | 19.28 |
 | [Hetzner CAX11 (Ampere Altra)](results/4HdL.txt) | 3000 MHz | 5.15 | Jammy arm64 | 8060 | 3842 | **1705600** | 11250 | 47670 | 11.44 |
 | [Qualcomm Snapdragon 8cx Gen 3](results/4xwT.txt) | 3000/2440 MHz | 6.3 | Lunar arm64 | 35370 | 4312 | **1686160** | 17500 | 41780 | 42.76 |
 | [Qualcomm Snapdragon 8cx Gen 3 (WSL2)](results/4kEp.txt) | 2980/? MHz | 5.15 | Jammy arm64 | 33600 | 4789 | **1679480** | 21010 | 41540 | 50.65 |
@@ -486,6 +490,7 @@
 | [Ampere Altra Q80-26](results/4zkJ.txt) | 2600 MHz | 5.15 | Jammy arm64 | 214390 | 3748 | **1482190** | 11685 | 41560 | 316.50 |
 | [Qualcomm Snapdragon 7c](results/4Lyf.txt) | 2550/1800 MHz | 6.6 | Bookworm arm64 | 13040 | 3113 | **1455700** | 6710 | 14880 | - |
 | [Intel i3-N305](results/4qpr.txt) | 3800 MHz | 5.19 | Jammy amd64 | 20000 | 4398 | **1377280** | 9950 | 8990 | 41.43 |
+| [Raspberry Pi 5 B (BCM2712)](results/1ULtUe.txt) | 2400 MHz | 6.6 | Bookworm arm64 | 11410 | 3270 | **1368000** | 6070 | 14830 | 15.42 |
 | [Raspberry Pi 5 B (BCM2712)](results/Au3jaA.txt) | 2400 MHz | 6.1 | Bookworm arm64 | 11010 | 3196 | **1367740** | 5270 | 14060 | 15.39 |
 | [ODROID-N2+ (Amlogic S922X)](results/3DtN.txt) | 2400/2015 MHz | 5.14 | Impish arm64 | 9790 | 2253 | **1366930** | 4300 | 7480 | - |
 | [ODROID-N2+ (Amlogic S922X)](results/3R1a.txt) | 2400/2015 MHz | 5.10 | Focal arm64 | 9680 | 2372 | **1366730** | 4030 | 7120 | - |
@@ -663,6 +668,7 @@
 | [Raspberry Pi 4 B (BCM2711)](results/3F9C.txt) | 1800 MHz | 5.10 | Raspberry Pi OS Buster arm64 | 5760 | 1741 | **36240** | 2240 | 3120 | 9.46 |
 | [Raspberry Pi 3 B (BCM2837)](results/4hOP.txt) | 1200 MHz | 5.15 | Raspbian Sid | 2970 | 977 | **36230** | 1110 | 1700 | 2.89 |
 | [Celeron J1900](results/4hKV.txt) | 2415/1333 MHz | 5.4 | Focal amd64 | 6560 | 1806 | **34900** | 3780 | 3390 | - |
+| [Lichee Pi 4A (T-Head TH1520)](results/fUCnrY.txt) | 1500 MHz | 5.10 | Bookworm riscv64 | 3880 | 1129 | **33260** | 3290 | 11160 | - |
 | [SBC2D70 (SSD202D)](results/3N1U.txt) | 1700 MHz | 5.16 | Sid armhf | 1960 | 1094 | **33120** | 770 | 3190 | - |
 | [Akaso M8S (S812)](results/3R3N.txt) | 1200 MHz | 5.10 | Buster armhf | 3050 | 885 | **32120** | 1160 | 3330 | - |
 | [Celeron N2830](results/4pEc.txt) | 2160 MHz | 5.19 | Jammy amd64 | 2760 | 1664 | **31270** | 3780 | 3520 | 6.10 |
@@ -737,7 +743,8 @@
 | [Loongson-3A5000-HV](results/4dzX.txt) | 2500 MHz | 4.19 | Loongnix 20 loongarch64 | 11120 | 2990 | 116900 | **6930** | 19170 | - |
 | [Jetson Orin Nano](results/4vy7.txt) | 1510 MHz | 5.10 | Focal arm64 | 13650 | 2153 | 854400 | **6730** | 20240 | 20.68 |
 | [Qualcomm Snapdragon 7c](results/4Lyf.txt) | 2550/1800 MHz | 6.6 | Bookworm arm64 | 13040 | 3113 | 1455700 | **6710** | 14880 | - |
-| [Raspberry Pi 5 B (BCM2712)](results/r05W17.txt) | 3000 MHz | 6.6 | Bookworm arm64 | 13400 | 3900 | 1709400 | **5900** | 17290 | 19.28 |
+| [Raspberry Pi 5 B (BCM2712)](results/1ULtUe.txt) | 2400 MHz | 6.6 | Bookworm arm64 | 11410 | 3270 | 1368000 | **6070** | 14830 | 15.42 |
+| [Raspberry Pi 5 B (BCM2712)](results/frdzAn.txt) | 3000 MHz | 6.6 | Bookworm arm64 | 13410 | 3916 | 1710590 | **5900** | 17370 | 19.28 |
 | [Celeron J4105](results/1qb0.txt) | 2400/1500 MHz | 4.15 | Bionic amd64 | 8960 | 2274 | 697080 | **5620** | 7650 | 19.13 |
 | [Pentium J5005](results/21rE.txt) | 2700/1500 MHz | 5.0 | Bionic amd64 | 9230 | 2455 | 778360 | **5530** | 7130 | 20.74 |
 | [Celeron J4105](results/1qal.txt) | 2400/1500 MHz | 4.15 | Bionic amd64 | 9020 | 2290 | 697100 | **5500** | 7410 | 19.07 |
@@ -793,6 +800,7 @@
 | [T-HEAD C910 RVB-ICE](results/41AB.txt) | 1200 MHz | 5.10 | Sid riscv64 | 1760 | 1007 | 26930 | **3340** | 6470 | - |
 | [ODROID-M1 (RK3568)](results/4ijy.txt) | 2060 MHz | 5.18 | Bullseye arm64 | 5430 | 1567 | 961090 | **3310** | 5960 | 7.76 |
 | [ODROID-C4 (S905X3)](results/2kaS.txt) | 2010 MHz | 4.9 | Focal arm64 | 5450 | 1459 | 941590 | **3310** | 6270 | 7.71 |
+| [Lichee Pi 4A (T-Head TH1520)](results/fUCnrY.txt) | 1500 MHz | 5.10 | Bookworm riscv64 | 3880 | 1129 | 33260 | **3290** | 11160 | - |
 | [Quartz64-A (RK3566)](results/4qJF.txt) | 1890 MHz | 6.2 | Jammy arm64 | 4980 | 1457 | 884590 | **3240** | 6100 | 6.98 |
 | [x5-Z8350](results/2Jdb.txt) | 1920/1680 MHz | 5.4 | Focal amd64 | 4790 | 1454 | 237230 | **3170** | 2960 | 9.38 |
 | [Radxa ROCK 3A (RK3568)](results/40TX.txt) | 2000 MHz | 5.18 | Bullseye arm64 | 5110 | 1450 | 935920 | **3150** | 6250 | 7.58 |
@@ -953,13 +961,14 @@
 | [Loongson-3A5000-HV](results/4dzX.txt) | 2500 MHz | 4.19 | Loongnix 20 loongarch64 | 11120 | 2990 | 116900 | 6930 | **19170** | - |
 | [MT8395 Genio 1200](results/4Kvg.txt) | 2200/2000 MHz | 5.15 | Jammy arm64 | 18130 | 3298 | 1240850 | 14200 | **19000** | 27.60 |
 | [Jetson Xavier NX](results/3YWp.txt) | 1890 MHz | 4.9 | Bionic arm64 | 13230 | 2201 | 706280 | 9190 | **18480** | - |
-| [Raspberry Pi 5 B (BCM2712)](results/r05W17.txt) | 3000 MHz | 6.6 | Bookworm arm64 | 13400 | 3900 | 1709400 | 5900 | **17290** | 19.28 |
+| [Raspberry Pi 5 B (BCM2712)](results/frdzAn.txt) | 3000 MHz | 6.6 | Bookworm arm64 | 13410 | 3916 | 1710590 | 5900 | **17370** | 19.28 |
 | [H270-T70<br />(2 x ThunderX CN8890)](results/3N5c.txt) | 2000 Mhz | 5.16 | Sid arm64 | 107180 | 1826 | 340750 | 4180 | **17130** | - |
 | [Raspberry Pi 5 B (BCM2712)](results/8acvqG.txt) | 3000 MHz | 6.1 | Bookworm arm64 | 12930 | 3791 | 1709720 | 5160 | **16350** | 19.25 |
 | [Honeycomb LX2 (NXP LX2160A)](results/3Y4f.txt) | 2200 MHz | 5.16 | Fedora 35 aarch64 | 30690 | 2288 | 1251710 | 5050 | **16220** | 46.09 |
 | [Phytium D2000<br />(2 x SO-DIMM)](results/446h.txt) | 2300 MHz | 5.19 | Jammy arm64 | 16670 | 2252 | 828130 | 3480 | **16110** | - |
 | [Celeron 5205U](results/4eiM.txt) | 1900 MHz | 5.15 | Jammy amd64 | 4060 | 2171 | 521090 | 7350 | **16020** | 11.20 |
 | [Qualcomm Snapdragon 7c](results/4Lyf.txt) | 2550/1800 MHz | 6.6 | Bookworm arm64 | 13040 | 3113 | 1455700 | 6710 | **14880** | - |
+| [Raspberry Pi 5 B (BCM2712)](results/1ULtUe.txt) | 2400 MHz | 6.6 | Bookworm arm64 | 11410 | 3270 | 1368000 | 6070 | **14830** | 15.42 |
 | [Lichee Pi 4A (T-Head TH1520)](results/4xYE.txt) | 1990 MHz | 5.10 | Bookworm riscv64 | 5260 | 1592 | 43820 | 4350 | **14760** | - |
 | [Phytium<br />FT-2000/4<br />(1 x SO-DIMM)](results/4ioj.txt) | 2600 MHz | 5.15 | Bullseye arm64 | 10020 | 2755 | 936740 | 3760 | **14540** | - |
 | [Amazon a1.xlarge](results/2iFY.txt) | 2300 MHz | 4.15 | Bionic arm64 | 8610 | 2406 | 1297960 | 4280 | **14220** | - |
@@ -972,6 +981,7 @@
 | [Jetson Nano](results/3Ufc.txt) | 2000 MHz | 4.9 | Bionic arm64 | 6260 | 1977 | 717500 | 4100 | **11760** | 8.72 |
 | [Khadas VIM4 (A311D2)](results/4cHh.txt) | 2200/2010 MHz | 5.4 | Jammy arm64 | 12120 | 2067 | 1254540 | 8180 | **11680** | - |
 | [Khadas VIM4 (A311D2)](results/3Wvv.txt) | 2200/1970 MHz | 5.4 | Focal arm64 | 12090 | 2081 | 1253200 | 7810 | **11600** | - |
+| [Lichee Pi 4A (T-Head TH1520)](results/fUCnrY.txt) | 1500 MHz | 5.10 | Bookworm riscv64 | 3880 | 1129 | 33260 | 3290 | **11160** | - |
 | [Pentium N6005](results/4BtC.txt) | 3300/2000 MHz | 5.15 | Jammy amd64 | 11510 | 3369 | 923550 | 9650 | **10280** | 22.18 |
 | [HummingBoard Pulse i.MX8M Quad](results/27FC.txt) | 1500 MHz | 4.19 | Buster arm64 | 4330 | 1201 | 695540 | 2230 | **9900** | - |
 | [AMD Seattle (Opteron A1100)](results/4Kqn.txt) | 2000 MHz | 4.15 | Bionic arm64 | 14080 | 2006 | 720710 | 3020 | **9530** | - |
@@ -1172,7 +1182,7 @@
 | [Pentium N6005](results/4BtC.txt) | **3300/2000** MHz| 5.15 | Jammy amd64 | 11510 | 3369 | 923550 | 9650 | 10280 | 22.18 |
 | [Ryzen R1505G](results/4HYd.txt) | **3270** MHz| 6.1 | Bookworm amd64 | 9080 | 3327 | 886980 | 10520 | 8160 | 18.14 |
 | [Apple M1 Pro](results/443N.txt) | **3030/2060** MHz| 5.18 | Gentoo 2.8 arm64 | 43800 | 5010 | 1064450 | 27110 | 71910 | 48.28 |
-| [Raspberry Pi 5 B (BCM2712)](results/r05W17.txt) | **3000** MHz| 6.6 | Bookworm arm64 | 13400 | 3900 | 1709400 | 5900 | 17290 | 19.28 |
+| [Raspberry Pi 5 B (BCM2712)](results/frdzAn.txt) | **3000** MHz| 6.6 | Bookworm arm64 | 13410 | 3916 | 1710590 | 5900 | 17370 | 19.28 |
 | [Raspberry Pi 5 B (BCM2712)](results/8acvqG.txt) | **3000** MHz| 6.1 | Bookworm arm64 | 12930 | 3791 | 1709720 | 5160 | 16350 | 19.25 |
 | [Qualcomm Snapdragon 8cx Gen 3](results/4xwT.txt) | **3000/2440** MHz| 6.3 | Lunar arm64 | 35370 | 4312 | 1686160 | 17500 | 41780 | 42.76 |
 | [Huaqin P6410<br />(2 x Ampere Altra Max)](results/4kiu.txt) | **3000** MHz| 5.4 | Focal arm64 | 430860 | 4211 | 1710010 | 13310 | 47970 | - |
@@ -1197,6 +1207,7 @@
 | [Celeron J1900](results/4hKV.txt) | **2415/1333** MHz| 5.4 | Focal amd64 | 6560 | 1806 | 34900 | 3780 | 3390 | - |
 | [x7-Z8700](results/4iDX.txt) | **2400** MHz| 5.15 | Bullseye amd64 | 6580 | 1784 | 296680 | 3510 | 3580 | - |
 | [Raspberry Pi 5 B (BCM2712)](results/Au3jaA.txt) | **2400** MHz| 6.1 | Bookworm arm64 | 11010 | 3196 | 1367740 | 5270 | 14060 | 15.39 |
+| [Raspberry Pi 5 B (BCM2712)](results/1ULtUe.txt) | **2400** MHz| 6.6 | Bookworm arm64 | 11410 | 3270 | 1368000 | 6070 | 14830 | 15.42 |
 | [Orange Pi 5 (RK3588)](results/4D0a.txt) | **2400/1800** MHz| 5.10 | Jammy arm64 | 16780 | 2689 | 1366590 | 12800 | 29900 | - |
 | [ODROID-N2+ (Amlogic S922X)](results/4rWn.txt) | **2400/2015** MHz| 6.1 | Bullseye arm64 | 9710 | 2373 | 1366180 | 4220 | 7720 | - |
 | [ODROID-N2+ (Amlogic S922X)](results/3R1a.txt) | **2400/2015** MHz| 5.10 | Focal arm64 | 9680 | 2372 | 1366730 | 4030 | 7120 | - |
@@ -1319,6 +1330,7 @@
 | [Raspberry Pi 4 B (BCM2711)](results/1MFf.txt) | **1500** MHz| 4.19 | Raspbian Buster | 5500 | 1606 | 64860 | 2460 | 3170 | - |
 | [ODROID-C1 (Amlogic S805)](results/4eg5.txt) | **1500** MHz| 5.19 | Jammy armhf | 3010 | 878 | 29260 | 390 | 2910 | - |
 | [Milk-V Mars CM (JH7110)](results/4K7E.txt) | **1500** MHz| 5.15 | Bookworm riscv64 | 4110 | 1195 | 25070 | 930 | 830 | - |
+| [Lichee Pi 4A (T-Head TH1520)](results/fUCnrY.txt) | **1500** MHz| 5.10 | Bookworm riscv64 | 3880 | 1129 | 33260 | 3290 | 11160 | - |
 | [HummingBoard Pulse i.MX8M Quad](results/27FC.txt) | **1500** MHz| 4.19 | Buster arm64 | 4330 | 1201 | 695540 | 2230 | 9900 | - |
 | [NanoPi K2 (Amlogic S905)](results/3Qve.txt) | **1480** MHz| 5.10 | Bullseye arm64 | 3880 | 1154 | 51490 | 1850 | 3790 | - |
 | [NanoPi K2 (Amlogic S905)](results/1iT1.txt) | **1480** MHz| 4.14 | Stretch arm64 | 3850 | 1095 | 50370 | 1660 | 3870 | 4.61 |

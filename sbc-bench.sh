@@ -9203,6 +9203,9 @@ CheckStorage() {
 				0x0000ad*|0x000090/0x014a)
 					Manufacturer="${Manufacturer}SK Hynix "
 					;;
+				0x0000ea/0x010e)
+					Manufacturer="${Manufacturer}SiliconGo "
+					;;
 				0x0000fe*)
 					Manufacturer="${Manufacturer}Micron-Numonyx "
 					;;

@@ -593,6 +593,7 @@ GetARMCore() {
 	61/046:Apple Sawtooth M11
 	61/048:Apple Sawtooth M3Max
 	61/049:Apple Everest M3Max
+	61/000:Virtualized Apple Silicon
 	00/000:Virtualized Apple Silicon
 	66:Faraday
 	66/526:Faraday FA526
@@ -7588,7 +7589,7 @@ GuessSoCbySignature() {
 			# When running bare metal M1 and M2 SoCs differ by flags/features:
 			# M1: 'fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 asimddp sha512 asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp flagm2 frint'
 			# M2: 'fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 asimddp sha512 asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp flagm2 frint i8mm bf16 bti ecv'
-			# Inside Hypervisor.Framework VMs all ID values are set to 0 and on M2 SoCs VMs only see M1 CPU flags/features.
+			# Inside Hypervisor.Framework guests on M1/M2 hosts all ID values are set to 0 (0x61/0x0 r0p0 on M3) and on M2/M3 SoCs VMs only see M1 CPU flags/features.
 			grep -q -E 'fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 asimddp sha512 asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp flagm2 frint|fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 asimddp sha512 asimdfhm dit uscat ilrcpc flagm sb paca pacg dcpodp flagm2 frint' <<< "${ProcCPU}" && echo "Apple Silicon"
 			;;
 		*thead,c906|10)

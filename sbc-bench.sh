@@ -3123,7 +3123,7 @@ InstallStockfish() {
 				ARCH=armv7-neon
 				;;
 			aarch*)
-				grep -q apple <<<"${DTCompatible}" && ARCH=apple-silicon || ARCH=armv8
+				grep -q apple <<<"${DTCompatible,,}" && ARCH=apple-silicon || ARCH=armv8
 				;;
 			riscv64)
 				ARCH=riscv64
@@ -5259,13 +5259,13 @@ GuessARMSoC() {
 		if [ "X${RK_NVMEM}" != "X" ] && [ "${RockchipGuess:0:4}" = "3588" ]; then
 			case "${RK_NVMEM:28:2}" in
 				21)
-					echo "Rockchip RK3588 (${RockchipGuess})"
+					echo "Rockchip RK3588 (${RockchipGuess} / ${RK_NVMEM})"
 					;;
 				33)
-					echo "Rockchip RK3588s (${RockchipGuess})"
+					echo "Rockchip RK3588s (${RockchipGuess} / ${RK_NVMEM})"
 					;;
 				*)
-					echo "Rockchip RK3588/RK3588s (${RockchipGuess})"
+					echo "Rockchip RK3588/RK3588s (${RockchipGuess} / ${RK_NVMEM})"
 					;;
 			esac
 		else
@@ -5307,19 +5307,19 @@ GuessARMSoC() {
 				# RK3588/RK3588s, normal order: 52 4b 35 88 -> RK3588
 				case "${RK_NVMEM:28:2}" in
 					21)
-						echo "Rockchip RK3588"
+						echo "Rockchip RK3588 / ${RK_NVMEM}"
 						;;
 					33)
-						echo "Rockchip RK3588s"
+						echo "Rockchip RK3588s / ${RK_NVMEM}"
 						;;
 					*)
-						echo "Rockchip RK3588/RK3588s"
+						echo "Rockchip RK3588/RK3588s / ${RK_NVMEM}"
 						;;
 				esac
 				;;
 			*)
 				# normal order: 52 4b 35 28 -> RK3528, also affects RK3566, RK3568
-				echo "Rockchip RK${RK_NVMEM:16:2}${RK_NVMEM:19:2}"
+				echo "Rockchip RK${RK_NVMEM:16:2}${RK_NVMEM:19:2} / ${RK_NVMEM}"
 				;;
 		esac
 	elif [ "X${AmlogicGuess}" != "XAmlogic Meson" ]; then
@@ -6146,7 +6146,7 @@ GuessSoCbySignature() {
 		20A9r4p120A9r4p120A9r4p120A9r4p1|2A9222)
 			# Amlogic S802/S812: 4 x Cortex-A9 / r4p1 / half thumb fastmult vfp edsp thumbee neon vfpv3 tls vfpd32
 			# or HiSilicon Hi6620: 4 x Cortex-A9 / r4p1 / swp half thumb fastmult vfp edsp thumbee neon vfpv3
-			grep -q -i amlogic <<<"${DTCompatible}" && echo "Amlogic S802/S812" || echo "HiSilicon Hi6620"
+			grep -q -i amlogic <<<"${DTCompatible,,}" && echo "Amlogic S802/S812" || echo "HiSilicon Hi6620"
 			;;
 		*A57r0p0*A57r0p0*A53r0p0*A53r0p0*A53r0p0*A53r0p0)
 			# ARM Juno: 2 x Cortex-A57 / r0p0 + 4 x Cortex-A53 / r0p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32
@@ -6610,7 +6610,7 @@ GuessSoCbySignature() {
 			;;
 		*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A73r0p1*A73r0p1*A73r0p1*A73r0p1)
 			# HiSilicon Kirin 960: 4 x Cortex-A53 / r0p4 + 4 x Cortex-A73 / r0p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32
-			grep -q hisilicon <<<"${DTCompatible}" && echo "HiSilicon Kirin 960"
+			grep -q hisilicon <<<"${DTCompatible,,}" && echo "HiSilicon Kirin 960"
 			;;
 		*A55r1p0*A55r1p0*A55r1p0*A55r1p0*A55r1p0*A55r1p0*A55r1p0*A55r1p0)
 			# HiSilicon Ascend 310, 8 x Cortex-A55 / r1p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp asimdrdm lrcpc dcpop asimddp
@@ -6676,11 +6676,11 @@ GuessSoCbySignature() {
 			;;
 		*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A76r4p?*A76r4p?)
 			# Allwinner A736/T736, 6 x Cortex-A55 / r2p0 + 2 x Cortex-A76 / r4p?
-			grep -E -q 'allwinner|sun60i|a736|t736' <<<"${DTCompatible}" && echo "Allwinner A736/T736"
+			grep -E -q 'allwinner|sun60i|a736|t736' <<<"${DTCompatible,,}" && echo "Allwinner A736/T736"
 			;;
 		*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A78*A78)
 			# Allwinner A737/T737, 6 x Cortex-A55 / r2p0 + 2 x Cortex-A78
-			grep -E -q 'allwinner|a737|t737|' <<<"${DTCompatible}" && echo "Allwinner A737/T737"
+			grep -E -q 'allwinner|a737|t737|' <<<"${DTCompatible,,}" && echo "Allwinner A737/T737"
 			;;
 		0A9r4p10A9r4p1|0?A9r4p10?A9r4p1)
 			# Armada 375/38x, 2 x Cortex-A9 / r4p1 / swp half thumb fastmult vfp edsp neon vfpv3 tls
@@ -6841,30 +6841,30 @@ GuessSoCbySignature() {
 					if [ "X${RK_NVMEM}" != "X" ]; then
 						case "${RK_NVMEM:28:2}" in
 							21)
-								echo "Rockchip RK3588"
+								echo "Rockchip RK3588 / ${RK_NVMEM}"
 								;;
 							33)
-								echo "Rockchip RK3588s"
+								echo "Rockchip RK3588s / ${RK_NVMEM}"
 								;;
 							*)
-								echo "Rockchip RK3588/RK3588s"
+								echo "Rockchip RK${RK_NVMEM:16:2}${RK_NVMEM:19:2}/RK3588s / ${RK_NVMEM}"
 								;;
 						esac
 					elif [ -f /sys/devices/system/cpu/cpufreq/policy7/cpuinfo_max_freq ]; then
 						# According to this site RK3588M is limited to 2.1 GHz
 						# https://techacute.com/rockchip-launched-flagship-smart-vehicle-solution-rk3588m-with-360-panoramic-view-function/
 						read MaxRK3588Freq </sys/devices/system/cpu/cpufreq/policy7/cpuinfo_max_freq
-						[ ${MaxRK3588Freq:-0} -eq 2100000 ] && echo "Rockchip RK3588M" || echo "Rockchip RK3588/RK3588s"
+						[ ${MaxRK3588Freq:-0} -eq 2100000 ] && echo "Rockchip RK3588M / ${RK_NVMEM}" || echo "Rockchip RK3588/RK3588s / ${RK_NVMEM}"
 					else
-						echo "Rockchip RK3588/RK3588s"
+						echo "Rockchip RK3588/RK3588s / ${RK_NVMEM}"
 					fi
 					;;
 			esac
 			;;
 		0?A55r2p00?A55r2p00?A55r2p00?A55r2p0*A76r4p0??A76r4p0)
-			# RK3582, assumed to be a stripped down RK3588 variant with two A76 removed (and gpu/rkvdec according to some Github comments)
-			# https://www.cnx-software.com/2023/10/13/orange-pi-5-5b-and-5-plus-sbc-32gb-ram/#comment-611080
-			grep -q "rk3582" <<<"${DTCompatible}" && echo "Rockchip RK3582"
+			# RK3582 is a RK3588S2 binning variant with slower NPU and potentially lacking GPU and/or one big cluster
+			# https://dl.radxa.com/rock5/5c/docs/hw/datasheet/Rockchip%20RK3582%20Datasheet%20V1.1-20230221.pdf
+			grep -q "rk358" <<<"${DTCompatible,,}" && echo "Rockchip RK3582 / ${RK_NVMEM}"
 			;;
 		00A35r1p000A35r1p0)
 			# Amlogic C302X or C305X, 2 x Cortex-A35 / r1p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32
@@ -6965,7 +6965,7 @@ GuessSoCbySignature() {
 		*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A72r0p2*A72r0p2)
 			# RK3399, 4 x Cortex-A53 / r0p4 + 2 x Cortex-A72 / r0p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32 (32-bit 4.4 BSP kernel: half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt lpae evtstrm aes pmull sha1 sha2 crc32)
 			# or maybe NXP i.MX8QM, 4 x Cortex-A53 / r0p4 + 2 x Cortex-A72 / r0p2
-			grep -q rockchip <<<"${DTCompatible}" && echo "Rockchip RK3399" || echo "NXP i.MX8QM"
+			grep -q rockchip <<<"${DTCompatible,,}" && echo "Rockchip RK3399" || echo "NXP i.MX8QM"
 			;;
 		*A53r0p2*A53r0p2*A53r0p2*A53r0p2*A72r0p0*A72r0p0)
 			# Mediatek MT8176: 4 x Cortex-A53 / r0p2 + 2 x Cortex-A72 / r0p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32
@@ -6984,7 +6984,7 @@ GuessSoCbySignature() {
 			# Mediatek MT6738: 4 x Cortex-A53 / r0p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			# or Marvell PXA1908: 4 x Cortex-A53 / r0p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32 half thumb fastmult edsp tls vfp vfpv3 vfpv4 neon idiva idivt
 			# (at least with vendor's 3.14 kernel CPU cores are sent offline when idle so detection of all cores might fail)
-			grep -q mt6738 <<<"${DTCompatible}" && echo "Mediatek MT6738" || echo "Marvell PXA1908"
+			grep -q mt6738 <<<"${DTCompatible,,}" && echo "Mediatek MT6738" || echo "Marvell PXA1908"
 			;;
 		*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A72r0p1*A72r0p1)
 			# Mediatek MT6797/MT6797T: 4 x Cortex-A53 / r0p4 + 4 x Cortex-A53 / r0p4 + 2 x Cortex-A72 / r0p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32
@@ -7023,13 +7023,13 @@ GuessSoCbySignature() {
 				*)
 					# RK3229/RK3228A, 4 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
 					# or maybe Rockchip RV1126 | 4 x Cortex-A7 / r0p5
-					grep -q "rk322" <<<"${DTCompatible}" && echo "Rockchip RK3229/RK3228A" || echo "Rockchip RV1126"
+					grep -q "rk322" <<<"${DTCompatible,,}" && echo "Rockchip RK3229/RK3228A" || echo "Rockchip RV1126"
 					;;
 			esac
 			;;
 		*A7r0p5*A7r0p5*A7r0p5)
 			# RK3506, 3 x Cortex-A7 / r0p5 (stepping is assumption)
-			grep -q rk3506 <<<"${DTCompatible}" && echo "Rockchip RK3506"
+			grep -q rk3506 <<<"${DTCompatible,,}" && echo "Rockchip RK3506"
 			;;
 		*A7r0p5*A7r0p5)
 			# SigmaStar SSD201/SSD202D | 2 x Cortex-A7 / r0p5 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
@@ -7246,7 +7246,7 @@ GuessSoCbySignature() {
 		*A9r2p10*A9r2p10)
 			# NXP i.MX6 Dual | 2 x Cortex-A9 / r2p10 / swp half thumb fastmult vfp edsp thumbee neon vfpv3
 			# or TI OMAP4470: 2 x Cortex-A9 / r2p10 / swp half thumb fastmult vfp edsp thumbee neon vfpv3
-			grep -q "imx6" <<<"${DTCompatible}" && echo "NXP i.MX6 Dual" || echo "TI OMAP4470"
+			grep -q "imx6" <<<"${DTCompatible,,}" && echo "NXP i.MX6 Dual" || echo "TI OMAP4470"
 			;;
 		??A9r2p1??A9r2p1)
 			# FreeScale/NXP QorIQ LS1024A | 2 x Cortex-A9 / r2p1 / swp half thumb fastmult vfp edsp thumbee neon vfpv3 tls
@@ -7418,7 +7418,7 @@ GuessSoCbySignature() {
 		*A72r0p3*A72r0p3*A72r0p3*A72r0p3*A72r0p3*A72r0p3*A72r0p3*A72r0p3*A72r0p3*A72r0p3*A72r0p3*A72r0p3*A72r0p3*A72r0p3*A72r0p3*A72r0p3)
 			# NXP LX2160A: 16 x Cortex-A72 / r0p3 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			# or AWS Graviton, 16 x Cortex-A72 / r0p3 / fp asimd evtstrm aes pmull sha1 sha2 crc32 / L1d: 32K, L1i: 48K, L2: 2048K
-			grep -q -E "nxp|lx2160" <<<"${DTCompatible}" && echo "NXP LX2160A" || echo "AWS Graviton"
+			grep -q -E "nxp|lx2160" <<<"${DTCompatible,,}" && echo "NXP LX2160A" || echo "AWS Graviton"
 			;;
 		36?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p336?A72r0p3)
 			# NXP LX2080A: 8 x Cortex-A72 / r0p3 / fp asimd evtstrm aes pmull sha1 sha2 crc32
@@ -7598,7 +7598,7 @@ GuessSoCbySignature() {
 			;;
 		*rv64i2p0m2p0a2p0f2p0d2p0c2p0xv50p0*rv64i2p0m2p0a2p0f2p0d2p0c2p0xv50p0)
 			# Kendryte K510: Dual-core 64-bit RISC-V https://canaan.io/product/kendryte-k510
-			grep -q k510 <<<"${DTCompatible}" && echo "Kendryte K510"
+			grep -q k510 <<<"${DTCompatible,,}" && echo "Kendryte K510"
 			;;
 		*thead,c908*thead,c908|*rv64imafdcvxthead*)
 			# Kendryte K230: Dual-core 64-bit RISC-V https://canaan.io/product/kendryte-k230
@@ -7606,7 +7606,7 @@ GuessSoCbySignature() {
 			;;
 		*thead,c910*thead,c910|1?1?|10rv64imafdcsu10rv64imafdcsu)
 			# T-Head C910: Dual-core XuanTieISA (compatible with RISC-V 64GC) https://www.t-head.cn/product/c910?lang=en
-			grep -q c910 <<<"${DTCompatible}" && echo "T-Head C910"
+			grep -q c910 <<<"${DTCompatible,,}" && echo "T-Head C910"
 			;;
 		??rv64imafdcvsu??rv64imafdcvsu??rv64imafdcvsu??rv64imafdcvsu)
 			# T-Head TH1520: quad-core T-Head C910 https://occ.t-head.cn/wujian600?id=4080405462988689408
@@ -7802,14 +7802,14 @@ IdentifyAllwinnerARMv8() {
 	# quad core SoCs based on presence of PMIC, USB3 and maybe clockspeeds
 
 	# check device-tree compatible strings
-	grep -q h616 <<<"${DTCompatible}" && echo "Allwinner H616/H313"
-	grep -q t507 <<<"${DTCompatible}" && echo "Allwinner T507"
-	grep -q h313 <<<"${DTCompatible}" && echo "Allwinner H313"
-	grep -q pine-h64 <<<"${DTCompatible}" && echo "Allwinner H6"
-	grep -q h64 <<<"${DTCompatible}" && echo "Allwinner H64"
-	grep -q h6 <<<"${DTCompatible}" && echo "Allwinner H6"
-	grep -q h5 <<<"${DTCompatible}" && echo "Allwinner H5"
-	grep -q a64 <<<"${DTCompatible}" && echo "Allwinner A64"
+	grep -q h616 <<<"${DTCompatible,,}" && echo "Allwinner H616/H313"
+	grep -q t507 <<<"${DTCompatible,,}" && echo "Allwinner T507"
+	grep -q h313 <<<"${DTCompatible,,}" && echo "Allwinner H313"
+	grep -q pine-h64 <<<"${DTCompatible,,}" && echo "Allwinner H6"
+	grep -q h64 <<<"${DTCompatible,,}" && echo "Allwinner H64"
+	grep -q h6 <<<"${DTCompatible,,}" && echo "Allwinner H6"
+	grep -q h5 <<<"${DTCompatible,,}" && echo "Allwinner H5"
+	grep -q a64 <<<"${DTCompatible,,}" && echo "Allwinner A64"
 
 	# Check for USB3 first, mainline kernel:
 	grep -q "xhci" /proc/interrupts && echo "Allwinner H6"

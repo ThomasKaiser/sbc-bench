@@ -5259,13 +5259,13 @@ GuessARMSoC() {
 		if [ "X${RK_NVMEM}" != "X" ] && [ "${RockchipGuess:0:4}" = "3588" ]; then
 			case "${RK_NVMEM:28:2}" in
 				21)
-					echo "Rockchip RK3588 (${RockchipGuess} / ${RK_NVMEM})"
+					echo "Rockchip RK3588 (${RockchipGuess} / ${RK_NVMEM:16:42})"
 					;;
 				33)
-					echo "Rockchip RK3588s (${RockchipGuess} / ${RK_NVMEM})"
+					echo "Rockchip RK3588s (${RockchipGuess} / ${RK_NVMEM:16:42})"
 					;;
 				*)
-					echo "Rockchip RK3588/RK3588s (${RockchipGuess} / ${RK_NVMEM})"
+					echo "Rockchip RK3588/RK3588s (${RockchipGuess} / ${RK_NVMEM:16:42})"
 					;;
 			esac
 		else
@@ -5307,19 +5307,19 @@ GuessARMSoC() {
 				# RK3588/RK3588s, normal order: 52 4b 35 88 -> RK3588
 				case "${RK_NVMEM:28:2}" in
 					21)
-						echo "Rockchip RK3588 / ${RK_NVMEM}"
+						echo "Rockchip RK3588 / ${RK_NVMEM:16:42}"
 						;;
 					33)
-						echo "Rockchip RK3588s / ${RK_NVMEM}"
+						echo "Rockchip RK3588s / ${RK_NVMEM:16:42}"
 						;;
 					*)
-						echo "Rockchip RK3588/RK3588s / ${RK_NVMEM}"
+						echo "Rockchip RK3588/RK3588s / ${RK_NVMEM:16:42}"
 						;;
 				esac
 				;;
 			*)
-				# normal order: 52 4b 35 28 -> RK3528, also affects RK3566, RK3568
-				echo "Rockchip RK${RK_NVMEM:16:2}${RK_NVMEM:19:2} / ${RK_NVMEM}"
+				# normal order: 52 4b 35 28 -> RK3528, also affects RK3566, RK3568, RK3582, RK3583
+				echo "Rockchip RK${RK_NVMEM:16:2}${RK_NVMEM:19:2} / ${RK_NVMEM:16:42}"
 				;;
 		esac
 	elif [ "X${AmlogicGuess}" != "XAmlogic Meson" ]; then
@@ -6832,6 +6832,7 @@ GuessSoCbySignature() {
 			;;
 		0?A55r2p00?A55r2p00?A55r2p00?A55r2p0??A76r4p0??A76r4p0??A76r4p0??A76r4p0)
 			# RK3588, 4 x Cortex-A55 / r2p0 + 2 x Cortex-A76 / r4p0 / + 2 x Cortex-A76 / r4p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp asimdrdm lrcpc dcpop asimddp
+			# or RK3582/RK3583 which are chips not fully passing QA where one of the two A76 clusters is hidden by default even if fully functional and might have been brought back by a DT overlay
 			# or Unisoc UMS9620, 4 x Cortex-A55 / r2p0 + 3 x Cortex-A76 / r4p0 / + 1 x Cortex-A76 / r4p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp asimdrdm lrcpc dcpop asimddp
 			case "${DTCompatible,,}" in
 				*ums9620*)
@@ -6839,24 +6840,28 @@ GuessSoCbySignature() {
 					;;
 				*)
 					if [ "X${RK_NVMEM}" != "X" ]; then
-						case "${RK_NVMEM:28:2}" in
-							21)
-								echo "Rockchip RK3588 / ${RK_NVMEM}"
-								;;
-							33)
-								echo "Rockchip RK3588s / ${RK_NVMEM}"
-								;;
-							*)
-								echo "Rockchip RK${RK_NVMEM:16:2}${RK_NVMEM:19:2}/RK3588s / ${RK_NVMEM}"
-								;;
-						esac
+						if [ "${RK_NVMEM:16:2}${RK_NVMEM:19:2}" = "3588" ]; then
+							case "${RK_NVMEM:28:2}" in
+								21)
+									echo "Rockchip RK3588 / ${RK_NVMEM:16:42}"
+									;;
+								33)
+									echo "Rockchip RK3588s / ${RK_NVMEM:16:42}"
+									;;
+								*)
+									echo "Rockchip RK3588/RK3588s / ${RK_NVMEM:16:42}"
+									;;
+							esac
+						else
+							echo "Rockchip RK${RK_NVMEM:16:2}${RK_NVMEM:19:2} / ${RK_NVMEM:16:42}"
+						fi
 					elif [ -f /sys/devices/system/cpu/cpufreq/policy7/cpuinfo_max_freq ]; then
 						# According to this site RK3588M is limited to 2.1 GHz
 						# https://techacute.com/rockchip-launched-flagship-smart-vehicle-solution-rk3588m-with-360-panoramic-view-function/
 						read MaxRK3588Freq </sys/devices/system/cpu/cpufreq/policy7/cpuinfo_max_freq
-						[ ${MaxRK3588Freq:-0} -eq 2100000 ] && echo "Rockchip RK3588M / ${RK_NVMEM}" || echo "Rockchip RK3588/RK3588s / ${RK_NVMEM}"
+						[ ${MaxRK3588Freq:-0} -eq 2100000 ] && echo "Rockchip RK3588M / ${RK_NVMEM:16:42}" || echo "Rockchip RK3588/RK3588s / ${RK_NVMEM:16:42}"
 					else
-						echo "Rockchip RK3588/RK3588s / ${RK_NVMEM}"
+						echo "Rockchip RK3588/RK3588s / ${RK_NVMEM:16:42}"
 					fi
 					;;
 			esac
@@ -6864,7 +6869,7 @@ GuessSoCbySignature() {
 		0?A55r2p00?A55r2p00?A55r2p00?A55r2p0*A76r4p0??A76r4p0)
 			# RK3582 is a RK3588S2 binning variant with slower NPU and potentially lacking GPU and/or one big cluster
 			# https://dl.radxa.com/rock5/5c/docs/hw/datasheet/Rockchip%20RK3582%20Datasheet%20V1.1-20230221.pdf
-			grep -q "rk358" <<<"${DTCompatible,,}" && echo "Rockchip RK3582 / ${RK_NVMEM}"
+			grep -q "rk358" <<<"${DTCompatible,,}" && echo "Rockchip RK3582 / ${RK_NVMEM:16:42}"
 			;;
 		00A35r1p000A35r1p0)
 			# Amlogic C302X or C305X, 2 x Cortex-A35 / r1p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32

@@ -643,7 +643,7 @@ GetCoreType() {
 	case ${CPUArchitecture} in
 		arm*|aarch*)
 			if [ -n "${ARMTypes}" ]; then
-				GetARMCore "${ARMTypes[$(( $1 * 2 ))]}" "${ARMTypes[$(( $(( $1 * 2 )) + 1 ))]}"
+				GetARMCore "${ARMTypes[$(( $1 * 2 ))]}" "${ARMTypes[$(( $(( $1 * 2 )) + 1 ))]}" | tail -n1
 			fi
 			;;
 		riscv*)
@@ -5798,8 +5798,14 @@ GuessARMSoC() {
 				# SoC ID: 0x1890
 				echo "Allwinner A523/A527/T523/T527/MR527${Allwinner_SID}"
 				;;
+			sun55iw5*)
+				echo "Allwinner TV301${Allwinner_SID}"
+				;;
 			sun60iw1*)
 				echo "Allwinner A736/T736${Allwinner_SID}"
+				;;
+			sun60iw2*)
+				echo "Allwinner A733${Allwinner_SID}"
 				;;
 			sun*)
 				SoCGuess="$(GuessSoCbySignature)"
@@ -6304,11 +6310,17 @@ GuessSoCbySignature() {
 									82c000*)
 										echo "Allwinner H6"
 										;;
+									32c05c*)
+										echo "Allwinner H313"
+										;;
 									32c050*)
 										echo "Allwinner H616"
 										;;
-									3380*)
+									33802*)
 										echo "Allwinner H618"
+										;;
+									33806*)
+										echo "Allwinner H700"
 										;;
 									*)
 										case "${DTCompatible,,}" in
@@ -6675,8 +6687,15 @@ GuessSoCbySignature() {
 			echo "HiSilicon Kirin 810"
 			;;
 		*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A76r4p?*A76r4p?)
-			# Allwinner A736/T736, 6 x Cortex-A55 / r2p0 + 2 x Cortex-A76 / r4p?
-			grep -E -q 'allwinner|sun60i|a736|t736' <<<"${DTCompatible,,}" && echo "Allwinner A736/T736"
+			# Allwinner A733/A736/T736, 6 x Cortex-A55 / r2p0 + 2 x Cortex-A76 / r4p?
+			case "${DTCompatible,,}" in
+				*sun60iw1*|*a736*|*t736*)
+					echo "Allwinner A736/T736"
+					;;
+				*sun60iw2*|*a733*)
+					echo "Allwinner A733"
+					;;
+			esac
 			;;
 		*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A78*A78)
 			# Allwinner A737/T737, 6 x Cortex-A55 / r2p0 + 2 x Cortex-A78
@@ -7594,6 +7613,7 @@ GuessSoCbySignature() {
 			# When running bare metal M1 and M2 SoCs differ by flags/features:
 			# M1: 'fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 asimddp sha512 asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp flagm2 frint'
 			# M2: 'fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 asimddp sha512 asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp flagm2 frint i8mm bf16 bti ecv'
+			# M3: Based on comparing 'sysctl -A | grep "hw.optional.arm.FEAT_"' output in macOS CPU features/flag seem to be identical to M2
 			# Inside Hypervisor.Framework guests on M1/M2 hosts all ID values are set to 0 (0x61/0x0 r0p0 on M3) and on M2/M3 SoCs VMs only see M1 CPU flags/features.
 			grep -q -E 'fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 asimddp sha512 asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp flagm2 frint|fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 asimddp sha512 asimdfhm dit uscat ilrcpc flagm sb paca pacg dcpodp flagm2 frint' <<< "${ProcCPU}" && echo "Apple Silicon"
 			;;
@@ -7727,8 +7747,8 @@ GuessSoCbySignature() {
 			echo "MediaTek MT8188JV/A"
 			;;
 		*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A78r1p0*A78r1p0*A78r1p0*A78r1p0)
-			# MediaTek Genio 1200: 4 x Cortex-A55 / r2p0 + 4 x Cortex-A78 / r1p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp
-			echo "MediaTek Genio 1200"
+			# MediaTek Genio 1200 (MT8395): 4 x Cortex-A55 / r2p0 + 4 x Cortex-A78 / r1p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp
+			echo "MediaTek Genio 1200 (MT8395)"
 			;;
 		0?IngenicV4.15FPUV0.00?IngenicV4.15FPUV0.0)
 			# Ingenic JZ4780: dual-core MIPS32
@@ -8724,8 +8744,9 @@ CheckKernelVersion() {
 					;;
 			esac
 			;;
-		"5.15.94")
-			# At least used with Android 13 and OpenWRT builds for A133/T527: https://browser.geekbench.com/v5/cpu/21947495.gb5 / https://browser.geekbench.com/v6/cpu/2610471.gb6
+		"5.15.41"|"5.15.94"|"5.15.123"|"5.15.151")
+			# At least used with Android 13 and OpenWRT builds for A133/T527: https://browser.geekbench.com/v5/cpu/21947495.gb5 / https://browser.geekbench.com/v6/cpu/2610471.gb6 /
+			# https://bbs.aw-ol.com/topic/5060/syterkit-启动-t527-失败 / https://github.com/chainsx/linux-t527/blob/main/Makefile
 			case ${GuessedSoC} in
 				Allwinner*)
 					# though there's a small chance users of flippy/unifreq kernels on older Allwinner SoCs are affected

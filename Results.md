@@ -10,7 +10,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 
 *The below table is also available sorted: [7-zip multi-threaded](Sorted-Results.md#7-zip-mips-multi-threaded), [7-zip single-threaded](Sorted-Results.md#7-zip-mips-single-threaded), [aes-256-cbc](Sorted-Results.md#openssl-speed--elapsed--evp-aes-256-cbc), [memcpy](Sorted-Results.md#memcpy), [memset](Sorted-Results.md#memset) and [clockspeed](Sorted-Results.md#clockspeed).*
 
-*ROCK 5B, Orange Pi 5, RK3568-ROC-PC and Khadas VIM4 numbers are preliminary since software support situation for RK3588/RK3588s and A311D2 is still in a very early stage. Same applies to all RISC-V numbers and [Apple M1 Pro](https://github.com/ThomasKaiser/sbc-bench/issues/47#issue-1300572558). Please also note that with RK35xx devices so far [measured clockspeeds differ from what's defined in device-tree due to PVTM](https://github.com/ThomasKaiser/Knowledge/blob/master/articles/Quick_Preview_of_ROCK_5B.md#pvtm) and also that all these RK35xx based devices perform more or less identical [or only differ by PVTM (silicon lottery) and settings](https://github.com/ThomasKaiser/sbc-bench/issues/75#issuecomment-1672817171).*
+*ROCK 5B, ROCK 5C Lite, Orange Pi 5, RK3568-ROC-PC and Khadas VIM4 numbers are preliminary since software support situation for RK358x and A311D2 is still in a very early stage. Same applies to all RISC-V numbers and [Apple M1 Pro](https://github.com/ThomasKaiser/sbc-bench/issues/47#issue-1300572558). Please also note that with RK35xx devices so far [measured clockspeeds differ from what's defined in device-tree due to PVTM](https://github.com/ThomasKaiser/Knowledge/blob/master/articles/Quick_Preview_of_ROCK_5B.md#pvtm) and also that all these RK35xx based devices perform more or less identical [or only differ by PVTM (silicon lottery) and settings](https://github.com/ThomasKaiser/sbc-bench/issues/75#issuecomment-1672817171).*
 
 | Device / details | Clockspeed | Kernel | Distro | 7-zip multi | 7-zip single | AES | memcpy | memset | kH/s |
 | ----- | :--------: | :----: | :----: | ----: | ------: | ------: | -----: | -----: | ---: |
@@ -137,6 +137,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Quartz64-A (RK3566)](results/4qJF.txt) | 1890 MHz | 6.2 | Jammy arm64 | 4980 | 1457 | 884590 | 3240 | 6100 | 6.98 |
 | [Radxa ROCK 3A (RK3568)](results/40TX.txt) | 2000 MHz | 5.18 | Bullseye arm64 | 5110 | 1450 | 935920 | 3150 | 6250 | 7.58 |
 | [Radxa ROCK 5B (RK3588)](results/41BH.txt) | 2350/1830 MHz | 5.10 | Focal arm64 | 16450 | 3146 | 1337540 | 10830 | 29220 | 25.31 |
+| [Radxa ROCK 5C Lite (RK3582)](results/c9ZIGh.txt) | 2250/1800 MHz | 5.10 | Bullseye arm64 | 11070 | 3105 | 1278210 | 12400 | 29580 | 15.15 |
 | [Radxa Rock Pi 4 (RK3399)](results/21fX.txt) | 2000/1500 MHz | 5.3 | Bionic arm64 | 6910 | 1817 | 1147370 | 3660 | 8310 | 10.71 |
 | [Radxa Rock Pi 4 (RK3399)](results/3Q2q.txt) | 2000/1500 MHz | 5.10 | Focal arm64 | 6900 | 1899 | 1146500 | 3430 | 8260 | - |
 | [Radxa Rock Pi S (RK3308)](results/4sNe.txt) | 1300 MHz | 6.1 | Jammy arm64 | 2540 | 732 | 282030 | 820 | 1870 | - |

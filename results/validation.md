@@ -237,5 +237,6 @@
 | [4zkJ](4zkJ.txt) | v0.9.42 ADLINK AVA Developer Platform E | 0%/0% | 93Gi/91Gi | X | X | X | X | 0% | 0% | [check log](4zkJ.txt) |
 | [8acvqG](8acvqG.txt) | v0.9.61 Raspberry Pi 5 Model B Rev 1.0 | 0%/0% | 4.0Gi/3.8Gi | X | X | X | X | 2% | 0% | [check log](8acvqG.txt) |
 | [Au3jaA](Au3jaA.txt) | v0.9.61 Raspberry Pi 5 Model B Rev 1.0 | 0%/0% | 4.0Gi/3.8Gi | X | X | X | X | 2% | 0% | [check log](Au3jaA.txt) |
+| [c9ZIGh](c9ZIGh.txt) | v0.9.65 Radxa ROCK 5C | 0%/0% | 3.8Gi/3.6Gi | X | X | X | X | 1% | 0% | [check log](c9ZIGh.txt) |
 | [fUCnrY](fUCnrY.txt) | v0.9.65 T-HEAD Light Lichee Pi 4A confi | 0%/0% | 15Gi/14Gi | X | X | X | X | <span style=color:red> 5%</span> | 0% | [check log](fUCnrY.txt) |
 | [frdzAn](frdzAn.txt) | v0.9.65 Raspberry Pi 5 Model B Rev 1.0 | 0%/0% | 4.0Gi/3.8Gi | X | X | X | X | 1% | 0% | [check log](frdzAn.txt) |

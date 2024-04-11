@@ -2671,8 +2671,9 @@ CheckMissingPackages() {
 			if [ $? -eq 0 ]; then
 				# Debian/Ubuntu/Linux Mint
 				echo -e "apt-get -f -qq -y install \c"
-				command -v gcc >/dev/null 2>&1 || echo -e "gcc make build-essential \c"
-				command -v sensors >/dev/null 2>&1 || echo -e "lm-sensors \c"
+				for dpkg in gcc make build-essential lm-sensors ; do
+					dpkg -s ${dpkg} >/dev/null 2>&1 || echo -e "${dpkg} \c"
+				done
 				command -v powercap-info >/dev/null 2>&1
 				[ $? -ne 0 ] && [ -d /sys/devices/virtual/powercap ] && echo -e "powercap-utils \c"
 				# Check for hexdump only on Rockchip and Allwinner platforms where NVMEM is
@@ -5268,6 +5269,8 @@ GuessARMSoC() {
 					echo "Rockchip RK3588/RK3588s (${RockchipGuess} / ${RK_NVMEM:16:42})"
 					;;
 			esac
+		elif [ "X${RK_NVMEM}" != "X" ]; then
+			echo "Rockchip RK${RockchipGuess:0:4} (${RockchipGuess} / ${RK_NVMEM:16:42})" | sed 's| RK3588| RK3588/RK3588s|'
 		else
 			echo "Rockchip RK${RockchipGuess:0:4} (${RockchipGuess})" | sed 's| RK3588| RK3588/RK3588s|'
 		fi

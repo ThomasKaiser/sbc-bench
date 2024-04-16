@@ -3389,7 +3389,7 @@ GetVoltageSensor() {
 				echo /sys/devices/iio_sysfs_trigger/subsystem/devices/iio\:device0/in_voltage2_raw
 			fi
 			;;
-		*rock-5b*)
+		*rock-5b*|*rock-5-itx*)
 			# Rock 5B running with Rockchip's 5.10 BSP kernel?
 			if [ -f /sys/devices/iio_sysfs_trigger/subsystem/devices/iio\:device0/in_voltage6_raw ]; then
 				echo /sys/devices/iio_sysfs_trigger/subsystem/devices/iio\:device0/in_voltage6_raw
@@ -3436,7 +3436,7 @@ GetInputVoltage() {
 	case ${1##*/} in
 		in_voltage6_raw)
 			# Rock 5B running with Rockchip's 5.10 BSP kernel
-			awk '{printf ("%0.2f",$1/172.5); }' <"${1}" | sed 's/,/./'
+			awk '{printf ("%0.2f",$1/173.5); }' <"${1}" | sed 's/,/./'
 			;;
 		in_voltage2_raw)
 			case "${DTCompatible,,}" in
@@ -7939,7 +7939,7 @@ GrabCPUFetchInfo() {
 				LogoArea=${FirstLine%%Part*}
 				;;
 		esac
-		cut -c$((${#LogoArea} + 1))- <<<"${CPUFetchOutput}" | sed -e '/^$/d'
+		cut -c$((${#LogoArea} + 1))- <<<"${CPUFetchOutput}" | sed -e '/^$/d' | grep -v "Peak Performance:"
 	else
 		echo "Unknown"
 	fi
@@ -8878,7 +8878,7 @@ CheckPCIe() {
 	[ -z "${LSBLK}" ] && LSBLK="$(LC_ALL="C" lsblk -l -o SIZE,NAME,FSTYPE,LABEL,MOUNTPOINT 2>&1)"
 
 	lspci -Q -mm 2>/dev/null | grep controller | while read ; do
-		unset DeviceWarning DevizeSize AdditionalInfo AdditionalSMARTInfo RawDiskTemp DriveTemp
+		unset DeviceWarning DevizeSize AdditionalInfo AdditionalSMARTInfo RawDiskTemp DriveTemp PercentageUsed
 		BusAddress="$(awk -F" " '{print $1}' <<<"${REPLY}")"
 		ControllerType="$(awk -F'"' '{print $2}' <<<"${REPLY}")"
 		case "${ControllerType}" in
@@ -8951,7 +8951,7 @@ CheckStorage() {
 	[ -z "${LSBLK}" ] && LSBLK="$(LC_ALL="C" lsblk -l -o SIZE,NAME,FSTYPE,LABEL,MOUNTPOINT 2>&1)"
 
 	for StorageDevice in $(ls /dev/sd? /dev/nvme? /dev/vd? 2>/dev/null | sort) ; do
-		unset DeviceName DeviceInfo DeviceWarning DevizeSize AdditionalInfo AdditionalSMARTInfo ProductName VendorName SpeedInfo SupportedSpeeds RawDiskTemp DriveTemp LnkSta
+		unset DeviceName DeviceInfo DeviceWarning DevizeSize AdditionalInfo AdditionalSMARTInfo ProductName VendorName SpeedInfo SupportedSpeeds RawDiskTemp DriveTemp LnkSta PercentageUsed
 
 		UdevInfo="$(udevadm info -a -n ${StorageDevice} 2>/dev/null)"
 		Driver="$(awk -F'"' '/DRIVERS==/ {print $2}' <<<"${UdevInfo}" | grep -E 'uas|usb-storage|ahci|nvme|virtio-')"

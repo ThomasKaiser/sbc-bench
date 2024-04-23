@@ -33,6 +33,7 @@
 | [Khadas Edge2 (RK3588s)](results/4a5U.txt) | 2260/1800 MHz | 5.10 | Jammy arm64 | **16470** | 3096 | 1287490 | 10860 | 29110 | - |
 | [Radxa ROCK 5B (RK3588)](results/41BH.txt) | 2350/1830 MHz | 5.10 | Focal arm64 | **16450** | 3146 | 1337540 | 10830 | 29220 | 25.31 |
 | [Phytium D2000<br />(1 x SO-DIMM)](results/445T.txt) | 2300 MHz | 5.19 | Jammy arm64 | **16390** | 2220 | 827090 | 2820 | 6490 | - |
+| [Radxa ROCK 5A (RK3588)](results/C6zgdP.txt)| ~2290 | 5.10 | Bullseye arm64 | **15630** | 3015 | 1302120 | 9170 | 27080 | 23.42 |
 | [Intel N100](results/4vxM.txt) | 3400 MHz | 6.1 | Lunar amd64 | **14150** | 4073 | 1232790 | 11600 | 12270 | 36.24 |
 | [AMD Seattle (Opteron A1100)](results/4Kqn.txt) | 2000 MHz | 4.15 | Bionic arm64 | **14080** | 2006 | 720710 | 3020 | 9530 | - |
 | [Jetson Orin Nano](results/4vy7.txt) | 1510 MHz | 5.10 | Focal arm64 | **13650** | 2153 | 854400 | 6730 | 20240 | 20.68 |
@@ -273,6 +274,7 @@
 | [Celeron N4500](results/3HUU.txt) | 2800/1100 MHz | 5.13 | Impish amd64 | 6300 | **3091** | 783840 | 8100 | 8350 | - |
 | [Celeron N5100](results/3IlQ.txt) | 2800/1100 MHz | 5.13 | Focal amd64 | 10550 | **3088** | 783800 | 7750 | 8090 | 19.22 |
 | [Celeron N5105](results/3Qf7.txt) | 2900/2000 MHz | 5.13 | Focal amd64 | 11450 | **3059** | 811760 | 7710 | 9290 | 21.79 |
+| [Radxa ROCK 5A (RK3588)](results/C6zgdP.txt)| ~2290 | 5.10 | Bullseye arm64 | 15630 | **3015** | 1302120 | 9170 | 27080 | 23.42 |
 | [Loongson-3A5000-HV](results/4dzX.txt) | 2500 MHz | 4.19 | Loongnix 20 loongarch64 | 11120 | **2990** | 116900 | 6930 | 19170 | - |
 | [Ryzen R1606G](results/2tQQ.txt) | 2600/1400 MHz | 5.4 | Focal amd64 | 7970 | **2854** | 700780 | 8230 | 5970 | 16.45 |
 | [Phytium<br />FT-2000/4<br />(1 x SO-DIMM)](results/4ioj.txt) | 2600 MHz | 5.15 | Bullseye arm64 | 10020 | **2755** | 936740 | 3760 | 14540 | - |
@@ -501,6 +503,7 @@
 | [Khadas VIM3 (Amlogic A311D)](results/4o1A.txt) | 2400/2015 MHz | 6.0 | Bullseye arm64 | 9650 | 2379 | **1366300** | 5080 | 9240 | - |
 | [ODROID-N2+ (Amlogic S922X)](results/4rWn.txt) | 2400/2015 MHz | 6.1 | Bullseye arm64 | 9710 | 2373 | **1366180** | 4220 | 7720 | - |
 | [Radxa ROCK 5B (RK3588)](results/41BH.txt) | 2350/1830 MHz | 5.10 | Focal arm64 | 16450 | 3146 | **1337540** | 10830 | 29220 | 25.31 |
+| [Radxa ROCK 5A (RK3588)](results/C6zgdP.txt)| ~2290 | 5.10 | Bullseye arm64 | 15630 | 3015 | **1302120** | 9170 | 27080 | 23.42 |
 | [Amazon a1.xlarge](results/2iFY.txt) | 2300 MHz | 4.15 | Bionic arm64 | 8610 | 2406 | **1297960** | 4280 | 14220 | - |
 | [Khadas Edge2 (RK3588s)](results/4a5U.txt) | 2260/1800 MHz | 5.10 | Jammy arm64 | 16470 | 3096 | **1287490** | 10860 | 29110 | - |
 | [Radxa ROCK 5C Lite (RK3582)](results/c9ZIGh.txt) | 2250/1800 MHz | 5.10 | Bullseye arm64 | 11070 | 3105 | **1278210** | 12400 | 29580 | 15.15 |
@@ -737,6 +740,7 @@
 | [Intel N95](results/4xwq.txt) | 3400 MHz | 5.15 | Jammy amd64 | 13070 | 3993 | 1232880 | **9710** | 8730 | 34.60 |
 | [Pentium N6005](results/4BtC.txt) | 3300/2000 MHz | 5.15 | Jammy amd64 | 11510 | 3369 | 923550 | **9650** | 10280 | 22.18 |
 | [Jetson Xavier NX](results/3YWp.txt) | 1890 MHz | 4.9 | Bionic arm64 | 13230 | 2201 | 706280 | **9190** | 18480 | - |
+| [Radxa ROCK 5A (RK3588)](results/C6zgdP.txt)| ~2290 | 5.10 | Bullseye arm64 | 15630 | 3015 | 1302120 | **9170** | 27080 | 23.42 |
 | [Ryzen R1606G](results/2tQQ.txt) | 2600/1400 MHz | 5.4 | Focal amd64 | 7970 | 2854 | 700780 | **8230** | 5970 | 16.45 |
 | [Khadas VIM4 (A311D2)](results/4cHh.txt) | 2200/2010 MHz | 5.4 | Jammy arm64 | 12120 | 2067 | 1254540 | **8180** | 11680 | - |
 | [Celeron N4500](results/3HUU.txt) | 2800/1100 MHz | 5.13 | Impish amd64 | 6300 | 3091 | 783840 | **8100** | 8350 | - |
@@ -960,6 +964,7 @@
 | [Radxa ROCK 5C Lite (RK3582)](results/c9ZIGh.txt) | 2250/1800 MHz | 5.10 | Bullseye arm64 | 11070 | 3105 | 1278210 | 12400 | **29580** | 15.15 |
 | [Radxa ROCK 5B (RK3588)](results/41BH.txt) | 2350/1830 MHz | 5.10 | Focal arm64 | 16450 | 3146 | 1337540 | 10830 | **29220** | 25.31 |
 | [Khadas Edge2 (RK3588s)](results/4a5U.txt) | 2260/1800 MHz | 5.10 | Jammy arm64 | 16470 | 3096 | 1287490 | 10860 | **29110** | - |
+| [Radxa ROCK 5A (RK3588)](results/C6zgdP.txt)| ~2290 | 5.10 | Bullseye arm64 | 15630 | 3015 | 1302120 | 9170 | **27080** | 23.42 |
 | [Qualcomm QRB5165](results/49kx.txt) | 2840/2410/1790 MHz | 4.19 | Focal arm64 | 18860 | 3898 | 1598490 | 14470 | **23910** | 25.56 |
 | [Jetson Xavier AGX](results/4ebH.txt) | 2250 MHz | 4.9 | Bionic arm64 | 21590 | 2742 | 853250 | 10910 | **22520** | 26.57 |
 | [Jetson Orin Nano](results/4vy7.txt) | 1510 MHz | 5.10 | Focal arm64 | 13650 | 2153 | 854400 | 6730 | **20240** | 20.68 |

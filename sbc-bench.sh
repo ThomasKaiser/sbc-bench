@@ -1950,7 +1950,7 @@ GetOSRelease() {
 			# when a project is driven by 'ignorance and stupidity'. The fix to restore
 			# the distro's base-files package doesn't work any more since Armbian hobbyists
 			# once again replace distro packages with their own.
-			grep -q "${UBUNTU_CODENAME}" <<<"${OS}" && echo "Ubuntu ${VERSION} tampered by ${OS}" || echo "Debian ${VERSION} tampered by ${OS}"
+			grep -q "${UBUNTU_CODENAME:-sucks}" <<<"${OS}" && echo "Ubuntu ${VERSION} tampered by ${OS}" || echo "Debian ${VERSION} tampered by ${OS}"
 			;;
 		"")
 			echo "n/a"
@@ -4830,9 +4830,9 @@ ValidateResults() {
 	fi
 
 	# ondemand governor used by distro but inappropriate settings on at least some cores
-	if [ "X$1" = "Xreview" ] && [ "${OriginalCPUFreqGovernor}" = "ondemand" ] && [ -n "${io_is_busy[@]}" ]; then
+	if [ "X$1" = "Xreview" ] && [ "${OriginalCPUFreqGovernor}" = "ondemand" ] && [[ -n "${io_is_busy[@]}" ]]; then
 		grep -q 0 <<<"${io_is_busy[@]}" && echo -e "${LRED}${BOLD}ondemand cpufreq governor used by distro but io_is_busy not set to 1 on all cores${NC} -> http://tinyurl.com/44pbmw79"
-	elif [ "X$1" = "Xreview" ] && [ "${OriginalCPUFreqGovernor}" = "ondemand" ] && [ -z "${io_is_busy[@]}" ]; then
+	elif [ "X$1" = "Xreview" ] && [ "${OriginalCPUFreqGovernor}" = "ondemand" ] && [[ -z "${io_is_busy[@]}" ]]; then
 		echo -e "${LRED}${BOLD}ondemand cpufreq governor used by distro but io_is_busy not active${NC} -> http://tinyurl.com/44pbmw79"
 	fi
 } # ValidateResults
@@ -8849,6 +8849,25 @@ PrintKernelInfo() {
 	echo ""
 } # PrintKernelInfo
 
+GetASPMSettings() {
+	case "${1}" in
+		*"ASPM L1 Enabled"*)
+			ASPMSettings="$(awk -F':\t' '/LnkCtl:/ {print $2}' <<<"${PCIeDetails}")"
+			case "${1}" in
+				*L1SubCap*)
+					ASPMSettings="${ASPMSettings}$(grep -A1 L1SubCap <<<"${PCIeDetails}" | grep -v "L1SubCtl1" | sed  -e 's/L1SubCap://'  -e 's/\t//g' | tr '\n' ' ' | sed 's/ \{1,\}/ /g')"
+					ASPMSettings="${ASPMSettings}$(grep -A1 L1SubCtl1 <<<"${PCIeDetails}" | grep -v "L1SubCtl2" | sed  -e 's/L1SubCtl1://'  -e 's/\t//g' | tr '\n' ' ' | sed 's/ \{1,\}/ /g')"
+					ASPMSettings="${ASPMSettings}$(grep L1SubCtl2 <<<"${PCIeDetails}" | sed  -e 's/L1SubCtl2://'  -e 's/\t//g' | tr '\n' ' ' | sed 's/ \{1,\}/ /g')"
+					;;
+			esac
+			;;
+		*)
+			ASPMSettings="ASPM Disabled"
+			;;
+	esac
+	echo "${ASPMSettings}"
+} # GetASPMSettings
+
 CheckPCIe() {
 	# Examine devices on the PCI buses. Report link width/speed and whether those are
 	# downgraded or not. With NVMe devices try to query SMART data to report drive health,
@@ -8895,6 +8914,7 @@ CheckPCIe() {
 					# only report devices for which a link state can be determined
 					if [ "X${ControllerType}" = "XNon-Volatile memory controller" ]; then
 						# only report NVMe devices when $1 is nvme
+						ASPMSettings="$(GetASPMSettings "${PCIeDetails}")"
 						if [ "$1" = "nvme" ]; then
 							# omit driver information since it's nvme anyway
 							unset AdditionalInfo
@@ -8907,15 +8927,15 @@ CheckPCIe() {
 								DevizeSize="$(GetDiskSize "/dev/${NVMeDevice##*/}" "${DeviceName}")"
 								if [ "X${DeviceWarning}" = "XTRUE" ]; then
 									echo -e "smartctl -x /dev/${NVMeDevice##*/} ; \c" >>"${TempDir}/check-smart"
-									echo -e "  * ${LRED}${DevizeSize}${DeviceName}: ${LnkSta}${AdditionalSMARTInfo}${AdditionalInfo}${DriveTemp}${NC}"
+									echo -e "  * ${LRED}${DevizeSize}${DeviceName}: ${LnkSta}${AdditionalSMARTInfo}${AdditionalInfo}${DriveTemp}, ${ASPMSettings}${NC}"
 								else
-									echo -e "  * ${DevizeSize}${DeviceName}: ${LnkSta}${AdditionalSMARTInfo}${AdditionalInfo}${DriveTemp}"
+									echo -e "  * ${DevizeSize}${DeviceName}: ${LnkSta}${AdditionalSMARTInfo}${AdditionalInfo}${DriveTemp}, ${ASPMSettings}"
 								fi
 							fi
 						fi
 					else
 						AdditionalInfo=", driver in use: $(awk -F": " '/Kernel driver in use:/ {print $2}' <<<"${PCIeDetails}" | head -n1)"
-						echo -e "  * ${DeviceName}: ${LnkSta}${AdditionalInfo}"
+						echo -e "  * ${DeviceName}: ${LnkSta}${AdditionalInfo}, ${ASPMSettings}"
 					fi
 				fi
 				;;
@@ -8951,7 +8971,7 @@ CheckStorage() {
 	[ -z "${LSBLK}" ] && LSBLK="$(LC_ALL="C" lsblk -l -o SIZE,NAME,FSTYPE,LABEL,MOUNTPOINT 2>&1)"
 
 	for StorageDevice in $(ls /dev/sd? /dev/nvme? /dev/vd? 2>/dev/null | sort) ; do
-		unset DeviceName DeviceInfo DeviceWarning DevizeSize AdditionalInfo AdditionalSMARTInfo ProductName VendorName SpeedInfo SupportedSpeeds RawDiskTemp DriveTemp LnkSta PercentageUsed
+		unset DeviceName DeviceInfo DeviceWarning DevizeSize AdditionalInfo AdditionalSMARTInfo ProductName VendorName SpeedInfo SupportedSpeeds RawDiskTemp DriveTemp LnkSta PercentageUsed ASPMSettings
 
 		UdevInfo="$(udevadm info -a -n ${StorageDevice} 2>/dev/null)"
 		Driver="$(awk -F'"' '/DRIVERS==/ {print $2}' <<<"${UdevInfo}" | grep -E 'uas|usb-storage|ahci|nvme|virtio-')"
@@ -8966,6 +8986,8 @@ CheckStorage() {
 				BusAddress="$(awk -F'"' '/ATTR{address}/ {print $2}' <<<"${UdevInfo}" | head -n1)"
 				PCIeDetails="$(lspci -vv -s "${BusAddress}" 2>/dev/null)"
 				LnkSta="$(awk -F"\t" '/LnkSta:/ {print $4}' <<<"${PCIeDetails}" | awk -F", " '{print $1", "$2}' | head -n1)"
+				ASPMSettings="$(GetASPMSettings "${PCIeDetails}")"
+				[[ -n "${ASPMSettings}" ]] && ASPMSettings=", ${ASPMSettings}"
 				CheckSMARTData "${StorageDevice}" "${Driver}"
 				;;
 			usb-storage|uas)
@@ -9064,9 +9086,9 @@ CheckStorage() {
 		DevizeSize="$(GetDiskSize "${StorageDevice}" "${DeviceName}")"
 		if [ "X${DeviceWarning}" = "XTRUE" ]; then
 			echo -e "smartctl -x ${StorageDevice} ; \c" >>"${TempDir}/check-smart"
-			echo -e "  * ${LRED}${DevizeSize}${DeviceName%%*( )}: ${DeviceInfo}${LnkSta}${AdditionalSMARTInfo}${AdditionalInfo}${DriveTemp}${NC}"
+			echo -e "  * ${LRED}${DevizeSize}${DeviceName%%*( )}: ${DeviceInfo}${LnkSta}${AdditionalSMARTInfo}${AdditionalInfo}${DriveTemp}${ASPMSettings}${NC}"
 		else
-			echo -e "  * ${DevizeSize}${DeviceName%%*( )}: ${DeviceInfo}${LnkSta}${AdditionalSMARTInfo}${AdditionalInfo}${DriveTemp}"
+			echo -e "  * ${DevizeSize}${DeviceName%%*( )}: ${DeviceInfo}${LnkSta}${AdditionalSMARTInfo}${AdditionalInfo}${DriveTemp}${ASPMSettings}"
 		fi
 		[ -n "${LetsBenchmark}" ] && snore 0.1 && echo -e "    \c" >&2 && GetBenchmarkPartition "${StorageDevice}" 600000 >&2
 	done

@@ -4835,6 +4835,27 @@ ValidateResults() {
 	elif [ "X$1" = "Xreview" ] && [ "${OriginalCPUFreqGovernor}" = "ondemand" ] && [[ -z "${io_is_busy[@]}" ]]; then
 		echo -e "${LRED}${BOLD}ondemand cpufreq governor used by distro but io_is_busy not active${NC} -> http://tinyurl.com/44pbmw79"
 	fi
+
+	# check DT settings on big.LITTLE ARM designs for scheduler relevant stuff:
+	if [ -d /proc/device-tree/cpus ] && [ ${#ClusterConfig[@]} -ne 1 ]; then
+		capacitydmipsmhz=$(find /proc/device-tree/cpus -name capacity-dmips-mhz | wc -l)
+		if [ ${capacitydmipsmhz} -eq 0 ]; then
+			echo "${LRED}${BOLD}${#ClusterConfig[@]} different clusters but capacity-dmips-mhz property not set${NC}"
+		elif [ ${capacitydmipsmhz} -ne ${CPUCores} ]; then
+			echo "${LRED}${BOLD}${#ClusterConfig[@]} different clusters and ${CPUCores} cores but capacity-dmips-mhz property only set on ${capacitydmipsmhz}${NC}"
+		fi
+		if [ "${OriginalCPUFreqGovernor}" = "schedutil" ]; then
+			dynamicpowercoefficient=$(find /proc/device-tree/cpus -name dynamic-power-coefficient | wc -l)
+			schedenergycosts=$(find /proc/device-tree/cpus -name sched-energy-costs | wc -l)
+			if [ ${dynamicpowercoefficient} -eq 0 ] && [ ${schedenergycosts} -eq 0 ]; then
+				echo "${LRED}${BOLD}${OriginalCPUFreqGovernor} cpufreq governor configured but neither dynamic-power-coefficient nor sched-energy-costs defined${NC}"
+			elif [ ${dynamicpowercoefficient} -ne ${CPUCores} ]; then
+				echo "${OriginalCPUFreqGovernor} cpufreq governor configured: ${CPUCores} cores available vs. only ${dynamicpowercoefficient} dynamic-power-coefficient DT nodes"
+			elif [ ${schedenergycosts} -ne ${CPUCores} ]; then
+				echo "${OriginalCPUFreqGovernor} cpufreq governor configured: ${CPUCores} cores available vs. only ${schedenergycosts} sched-energy-costs DT nodes"
+			fi
+		fi
+	fi
 } # ValidateResults
 
 ListSwapDevices() {

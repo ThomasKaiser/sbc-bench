@@ -239,7 +239,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Celeron N5105](results/3Qf7.txt) | 2900/2000 MHz | 5.13 | Focal amd64 | 11450 | 3059 | 811760 | 7710 | 9290 | 21.79 |
 | [Pentium G4600](results/2jVw.txt) | 3600 MHz | 4.19 | Buster amd64 | 11810 | 4448 | 984820 | 15120 | 33380 | 21.88 |
 | [Intel N95](results/4xwq.txt) | 3400 MHz | 5.15 | Jammy amd64 | 13070 | 3993 | 1232880 | 9710 | 8730 | 34.60 |
-| [Intel N100](results/4vxM.txt) | 3400 MHz | 6.1 | Lunar amd64 | 14150 | 4073 | 1232790 | 11600 | 12270 | 36.24 |
+| [Intel N100](results/uHzXI7.txt) | 3400 MHz | 6.1 | Lunar amd64 | 14090 | 3910 | 1232550 | 10920 | 11231 | 37.13 |
 | [Intel i3-N305](results/4qpr.txt) | 3800 MHz | 5.19 | Jammy amd64 | 20000 | 4398 | 1377280 | 9950 | 8990 | 41.43 |
 
 &ast; Number obtained with cryptodev (Marvell's CESA).

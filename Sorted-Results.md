@@ -34,7 +34,7 @@
 | [Radxa ROCK 5B (RK3588)](results/41BH.txt) | 2350/1830 MHz | 5.10 | Focal arm64 | **16450** | 3146 | 1337540 | 10830 | 29220 | 25.31 |
 | [Phytium D2000<br />(1 x SO-DIMM)](results/445T.txt) | 2300 MHz | 5.19 | Jammy arm64 | **16390** | 2220 | 827090 | 2820 | 6490 | - |
 | [Radxa ROCK 5A (RK3588)](results/C6zgdP.txt)| ~2290 | 5.10 | Bullseye arm64 | **15630** | 3015 | 1302120 | 9170 | 27080 | 23.42 |
-| [Intel N100](results/4vxM.txt) | 3400 MHz | 6.1 | Lunar amd64 | **14150** | 4073 | 1232790 | 11600 | 12270 | 36.24 |
+| [Intel N100](results/uHzXI7.txt) | 3400 MHz | 6.1 | Lunar amd64 | **14090** | 3910 | 1232550 | 10920 | 11231 | 37.13 |
 | [AMD Seattle (Opteron A1100)](results/4Kqn.txt) | 2000 MHz | 4.15 | Bionic arm64 | **14080** | 2006 | 720710 | 3020 | 9530 | - |
 | [Jetson Orin Nano](results/4vy7.txt) | 1510 MHz | 5.10 | Focal arm64 | **13650** | 2153 | 854400 | 6730 | 20240 | 20.68 |
 | [Raspberry Pi 5 B (BCM2712)](results/frdzAn.txt) | 3000 MHz | 6.6 | Bookworm arm64 | **13410** | 3916 | 1710590 | 5900 | 17370 | 19.28 |
@@ -253,9 +253,9 @@
 | [Intel i3-N305](results/4qpr.txt) | 3800 MHz | 5.19 | Jammy amd64 | 20000 | **4398** | 1377280 | 9950 | 8990 | 41.43 |
 | [Qualcomm Snapdragon 8cx Gen 3](results/4xwT.txt) | 3000/2440 MHz | 6.3 | Lunar arm64 | 35370 | **4312** | 1686160 | 17500 | 41780 | 42.76 |
 | [Huaqin P6410<br />(2 x Ampere Altra Max)](results/4kiu.txt) | 3000 MHz | 5.4 | Focal arm64 | 430860 | **4211** | 1710010 | 13310 | 47970 | - |
-| [Intel N100](results/4vxM.txt) | 3400 MHz | 6.1 | Lunar amd64 | 14150 | **4073** | 1232790 | 11600 | 12270 | 36.24 |
 | [Intel N95](results/4xwq.txt) | 3400 MHz | 5.15 | Jammy amd64 | 13070 | **3993** | 1232880 | 9710 | 8730 | 34.60 |
 | [Raspberry Pi 5 B (BCM2712)](results/frdzAn.txt) | 3000 MHz | 6.6 | Bookworm arm64 | 13410 | **3916** | 1710590 | 5900 | 17370 | 19.28 |
+| [Intel N100](results/uHzXI7.txt) | 3400 MHz | 6.1 | Lunar amd64 | 14090 | **3910** | 1232550 | 10920 | 11231 | 37.13 |
 | [Qualcomm QRB5165](results/49kx.txt) | 2840/2410/1790 MHz | 4.19 | Focal arm64 | 18860 | **3898** | 1598490 | 14470 | 23910 | 25.56 |
 | [Ampere Altra M96-28](results/4zGI.txt) | 2800 MHz | 5.15 | Jammy arm64 | 249380 | **3858** | 1596110 | 10130 | 44750 | - |
 | [Hetzner CAX11 (Ampere Altra)](results/4HdL.txt) | 3000 MHz | 5.15 | Jammy arm64 | 8060 | **3842** | 1705600 | 11250 | 47670 | 11.44 |
@@ -514,7 +514,7 @@
 | [Jetson AGX Orin](results/4ax9.txt) | 2200 MHz | 5.10 | Focal arm64 | 39450 | 3187 | **1242940** | 10600 | 30350 | 59.96 |
 | [MT8395 Genio 1200](results/4Kvg.txt) | 2200/2000 MHz | 5.15 | Jammy arm64 | 18130 | 3298 | **1240850** | 14200 | 19000 | 27.60 |
 | [Intel N95](results/4xwq.txt) | 3400 MHz | 5.15 | Jammy amd64 | 13070 | 3993 | **1232880** | 9710 | 8730 | 34.60 |
-| [Intel N100](results/4vxM.txt) | 3400 MHz | 6.1 | Lunar amd64 | 14150 | 4073 | **1232790** | 11600 | 12270 | 36.24 |
+| [Intel N100](results/uHzXI7.txt) | 3400 MHz | 6.1 | Lunar amd64 | 14090 | 3910 | **1232550** | 10920 | 11231 | 37.13 |
 | [Hugsun X99 (RK3399)](results/2ICt.txt) | 2088/1800 MHz | 5.9 | Focal arm64 | 7710 | 1927 | **1184306** | 2270 | 5970 | - |
 | [Radxa Rock Pi 4 (RK3399)](results/21fX.txt) | 2000/1500 MHz | 5.3 | Bionic arm64 | 6910 | 1817 | **1147370** | 3660 | 8310 | 10.71 |
 | [Radxa Rock Pi 4 (RK3399)](results/3Q2q.txt) | 2000/1500 MHz | 5.10 | Focal arm64 | 6900 | 1899 | **1146500** | 3430 | 8260 | - |
@@ -727,8 +727,8 @@
 | [Orange Pi 5 (RK3588)](results/4D0a.txt) | 2400/1800 MHz | 5.10 | Jammy arm64 | 16780 | 2689 | 1366590 | **12800** | 29900 | - |
 | [Radxa ROCK 5C Lite (RK3582)](results/c9ZIGh.txt) | 2250/1800 MHz | 5.10 | Bullseye arm64 | 11070 | 3105 | 1278210 | **12400** | 29580 | 15.15 |
 | [Ampere Altra Q80-26](results/4zkJ.txt) | 2600 MHz | 5.15 | Jammy arm64 | 214390 | 3748 | 1482190 | **11685** | 41560 | 316.50 |
-| [Intel N100](results/4vxM.txt) | 3400 MHz | 6.1 | Lunar amd64 | 14150 | 4073 | 1232790 | **11600** | 12270 | 36.24 |
 | [Hetzner CAX11 (Ampere Altra)](results/4HdL.txt) | 3000 MHz | 5.15 | Jammy arm64 | 8060 | 3842 | 1705600 | **11250** | 47670 | 11.44 |
+| [Intel N100](results/uHzXI7.txt) | 3400 MHz | 6.1 | Lunar amd64 | 14090 | 3910 | 1232550 | **10920** | 11231 | 37.13 |
 | [Jetson Xavier AGX](results/4ebH.txt) | 2250 MHz | 4.9 | Bionic arm64 | 21590 | 2742 | 853250 | **10910** | 22520 | 26.57 |
 | [Khadas Edge2 (RK3588s)](results/4a5U.txt) | 2260/1800 MHz | 5.10 | Jammy arm64 | 16470 | 3096 | 1287490 | **10860** | 29110 | - |
 | [Radxa ROCK 5B (RK3588)](results/41BH.txt) | 2350/1830 MHz | 5.10 | Focal arm64 | 16450 | 3146 | 1337540 | **10830** | 29220 | 25.31 |
@@ -987,10 +987,10 @@
 | [Clearfog CX (NXP LX2160A)](results/4ju5.txt) | 2000 MHz | 5.10 | Focal arm64 | 25260 | 2236 | 1136690 | 4460 | **12500** | - |
 | [i.MX8MPlus EVK](results/4hx0.txt) | 1800 MHz | 5.15 | Focal arm64 | 4990 | 1348 | 837680 | 2740 | **12420** | 7.02 |
 | [Macchiatobin (Armada 8040)](results/4zcm.txt) | 1600 MHz | 5.10 | Buster arm64 | 5720 | 1739 | 909420 | 4510 | **12270** | 7.91 |
-| [Intel N100](results/4vxM.txt) | 3400 MHz | 6.1 | Lunar amd64 | 14150 | 4073 | 1232790 | 11600 | **12270** | 36.24 |
 | [Jetson Nano](results/3Ufc.txt) | 2000 MHz | 4.9 | Bionic arm64 | 6260 | 1977 | 717500 | 4100 | **11760** | 8.72 |
 | [Khadas VIM4 (A311D2)](results/4cHh.txt) | 2200/2010 MHz | 5.4 | Jammy arm64 | 12120 | 2067 | 1254540 | 8180 | **11680** | - |
 | [Khadas VIM4 (A311D2)](results/3Wvv.txt) | 2200/1970 MHz | 5.4 | Focal arm64 | 12090 | 2081 | 1253200 | 7810 | **11600** | - |
+| [Intel N100](results/uHzXI7.txt) | 3400 MHz | 6.1 | Lunar amd64 | 14090 | 3910 | 1232550 | 10920 | **11231** | 37.13 |
 | [Lichee Pi 4A (T-Head TH1520)](results/fUCnrY.txt) | 1500 MHz | 5.10 | Bookworm riscv64 | 3880 | 1129 | 33260 | 3290 | **11160** | - |
 | [Pentium N6005](results/4BtC.txt) | 3300/2000 MHz | 5.15 | Jammy amd64 | 11510 | 3369 | 923550 | 9650 | **10280** | 22.18 |
 | [HummingBoard Pulse i.MX8M Quad](results/27FC.txt) | 1500 MHz | 4.19 | Buster arm64 | 4330 | 1201 | 695540 | 2230 | **9900** | - |
@@ -1188,7 +1188,7 @@
 | [Intel i3-N305](results/4qpr.txt) | **3800** MHz| 5.19 | Jammy amd64 | 20000 | 4398 | 1377280 | 9950 | 8990 | 41.43 |
 | [Pentium G4600](results/2jVw.txt) | **3600** MHz| 4.19 | Buster amd64 | 11810 | 4448 | 984820 | 15120 | 33380 | 21.88 |
 | [Intel N95](results/4xwq.txt) | **3400** MHz| 5.15 | Jammy amd64 | 13070 | 3993 | 1232880 | 9710 | 8730 | 34.60 |
-| [Intel N100](results/4vxM.txt) | **3400** MHz| 6.1 | Lunar amd64 | 14150 | 4073 | 1232790 | 11600 | 12270 | 36.24 |
+| [Intel N100](results/uHzXI7.txt) | **3400** MHz| 6.1 | Lunar amd64 | 14090 | 3910 | 1232550 | 10920 | 11231 | 37.13 |
 | [Pentium N6005](results/4BtC.txt) | **3300/2000** MHz| 5.15 | Jammy amd64 | 11510 | 3369 | 923550 | 9650 | 10280 | 22.18 |
 | [Ryzen R1505G](results/4HYd.txt) | **3270** MHz| 6.1 | Bookworm amd64 | 9080 | 3327 | 886980 | 10520 | 8160 | 18.14 |
 | [Apple M1 Pro](results/443N.txt) | **3030/2060** MHz| 5.18 | Gentoo 2.8 arm64 | 43800 | 5010 | 1064450 | 27110 | 71910 | 48.28 |

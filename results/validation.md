@@ -224,7 +224,6 @@
 | [4vNB](4vNB.txt) | v0.9.41 ATOPNUC ATOPNUC AG40 / Celeron | 0%/0% | 3.7Gi/3.3Gi | X | X | X | X | 1% | 0% | [check log](4vNB.txt) |
 | [4vVG](4vVG.txt) | v0.9.41 Raspberry Pi Model B Rev 2 | 0%/0% | 476Mi/397Mi | X | X | X | X | 4% | 1% | [check log](4vVG.txt) |
 | [4vfU](4vfU.txt) | v0.9.41 Rockchip RK3288 Asus Tinker Boa | 0%/0% | 2.0Gi/1.8Gi | X | X | X | X | 2% | 2% | [check log](4vfU.txt) |
-| [4vxM](4vxM.txt) | v0.9.41 AZW EQ / N100 | 0%/0% | 15Gi/14Gi | X | X | X | X | 1% | 0% | [check log](4vxM.txt) |
 | [4vy7](4vy7.txt) | v0.9.41 NVIDIA Orin Nano Developer Kit | 0%/0% | 6.3Gi/5.4Gi | X | X | X | X | 3% | 2% | [check log](4vy7.txt) |
 | [4wYE](4wYE.txt) | v0.9.41 Sophgo Mango | 0%/0% | 125Gi/124Gi | X | X | X | X | <span style=color:red>**72%**</span> | 0% | [check log](4wYE.txt) |
 | [4xOY](4xOY.txt) | v0.9.41 StarFive VisionFive V2 | 0%/0% | 7.7Gi/7.4Gi | X | X | X | X | 1% | 0% | [check log](4xOY.txt) |
@@ -241,3 +240,4 @@
 | [c9ZIGh](c9ZIGh.txt) | v0.9.65 Radxa ROCK 5C | 0%/0% | 3.8Gi/3.6Gi | X | X | X | X | 1% | 0% | [check log](c9ZIGh.txt) |
 | [fUCnrY](fUCnrY.txt) | v0.9.65 T-HEAD Light Lichee Pi 4A confi | 0%/0% | 15Gi/14Gi | X | X | X | X | <span style=color:red> 5%</span> | 0% | [check log](fUCnrY.txt) |
 | [frdzAn](frdzAn.txt) | v0.9.65 Raspberry Pi 5 Model B Rev 1.0 | 0%/0% | 4.0Gi/3.8Gi | X | X | X | X | 1% | 0% | [check log](frdzAn.txt) |
+| [uHzXI7](uHzXI7.txt) | v0.9.65 ADL-N / N100 | 0%/0% | 7.5Gi/6.3Gi | X | X | X | X | 1% | 0% | |

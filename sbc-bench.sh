@@ -6927,8 +6927,17 @@ GuessSoCbySignature() {
 				*amlogic*)
 					echo "Amlogic C3 SoC"
 					;;
-				*nuvoton*|*ma35d1*)
+				*ma35h0*)
+					echo "Nuvoton MA35H0"
+					;;
+				*ma35d0*)
+					echo "Nuvoton MA35D0"
+					;;
+				*ma35d1*)
 					echo "Nuvoton MA35D1"
+					;;
+				*nuvoton*)
+					echo "Nuvoton MA35xx"
 					;;
 			esac
 			;;

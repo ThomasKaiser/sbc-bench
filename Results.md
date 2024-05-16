@@ -23,6 +23,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Apple M1 Pro](results/443N.txt) | 3030/2060 MHz | 5.18 | Gentoo 2.8 arm64 | 43800 | 5010 | 1064450 | 27110 | 71910 | 48.28 |
 | [Banana Pi (Allwinner A20)](results/3PLr.txt) | 960 MHz | 5.10 | Bullseye armhf | 1040 | 542 | 18640 | 440 | 2020 | - |
 | [BeagleBone AI-64 (TI J721E)](results/4DLw.txt) | 2000 MHz | 5.10 | Bookworm arm64 | 3470 | 1872 | 1130390 | 2660 | 8710 | - |
+| [BPi F3 (SpacemiT K1)](results/8to7qX.txt) | 1600 MHz | 6.1 | Bianbu Mantic riscv64 | 6750 | 978 | 27260 | 2620 | 7180 | - |
 | [BPi M2U (Allwinner R40)](results/4kmM.txt) | 1200 MHz | 6.0 | Bullseye armhf | 2690 | 767 | 23320 | 780 | 3010 | - |
 | [BPi M4 (RTD1395)](results/1Dt1.txt) | 1400 MHz | 4.9 | Bionic arm64 | 3500 | - | 651460 | 1010 | 4360 | 5.48 |
 | [BPi R2 (MT7623)](results/4dO7.txt) | 1300 MHz | 4.19 | Focal armhf | 2990 | 854 | 25260 | 1550 | 3220 | - |
@@ -239,7 +240,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Celeron N5105](results/3Qf7.txt) | 2900/2000 MHz | 5.13 | Focal amd64 | 11450 | 3059 | 811760 | 7710 | 9290 | 21.79 |
 | [Pentium G4600](results/2jVw.txt) | 3600 MHz | 4.19 | Buster amd64 | 11810 | 4448 | 984820 | 15120 | 33380 | 21.88 |
 | [Intel N95](results/4xwq.txt) | 3400 MHz | 5.15 | Jammy amd64 | 13070 | 3993 | 1232880 | 9710 | 8730 | 34.60 |
-| [Intel N100](results/uHzXI7.txt) | 3400 MHz | 6.1 | Lunar amd64 | 14090 | 3910 | 1232550 | 10920 | 11231 | 37.13 |
+| [Intel N100](results/uHzXI7.txt) | 3400 MHz | 6.1 | Jammy amd64 | 14090 | 3910 | 1232550 | 10920 | 11231 | 37.13 |
 | [Intel i3-N305](results/4qpr.txt) | 3800 MHz | 5.19 | Jammy amd64 | 20000 | 4398 | 1377280 | 9950 | 8990 | 41.43 |
 
 &ast; Number obtained with cryptodev (Marvell's CESA).

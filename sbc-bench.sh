@@ -7696,6 +7696,10 @@ GuessSoCbySignature() {
 				echo "Renesas RZ/Five R9A07G043"
 			fi
 			;;
+		*rv64imafdcv_sscofpmf_sstc_svpbmt_zicbom_zicboz_zicbop_zihintpause*rv64imafdcv_sscofpmf_sstc_svpbmt_zicbom_zicboz_zicbop_zihintpause*rv64imafdcv_sscofpmf_sstc_svpbmt_zicbom_zicboz_zicbop_zihintpause*rv64imafdcv_sscofpmf_sstc_svpbmt_zicbom_zicboz_zicbop_zihintpause04rv64imafdcv_sscofpmf_sstc_svpbmt_zicbom_zicboz_zicbop_zihintpause04rv64imafdcv_sscofpmf_sstc_svpbmt_zicbom_zicboz_zicbop_zihintpause04rv64imafdcv_sscofpmf_sstc_svpbmt_zicbom_zicboz_zicbop_zihintpause04rv64imafdcv_sscofpmf_sstc_svpbmt_zicbom_zicboz_zicbop_zihintpause)
+			# SpacemiT K1
+			echo "SpacemiT K1"
+			;;
 		0?Qualcomm3XXSilver0?Qualcomm3XXSilver0?Qualcomm3XXSilver0?Qualcomm3XXSilver0?Qualcomm3XXGold0?Qualcomm3XXGold0?Qualcomm3XXGold0?Qualcomm3XXGold)
 			# Qualcomm Snapdragon 845 / SDM845: 4 x Qualcomm Kryo 3XX Silver / r7p12 + 4 x Qualcomm Kryo 3XX Gold / r6p13 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop
 			echo "Qualcomm Snapdragon 845"
@@ -8801,6 +8805,13 @@ CheckKernelVersion() {
 					;;
 			esac
 			;;
+		6.1.*)
+			case ${GuessedSoC} in
+				SpacemiT*)
+					PrintBSPWarning SpacemiT
+					;;
+			esac
+			;;
 		*)
 			case ${GuessedSoC} in
 				*S928X*)
@@ -8829,7 +8840,7 @@ PrintBSPWarning() {
 			echo -e "${BOLD}vendor kernel. See https://tinyurl.com/y8k3af73 and https://tinyurl.com/ywtfec7n${NC}"
 			echo -e "${BOLD}for details.${NC}"
 			;;
-		Ingenic|Kendryte|MediaTek|Nexell|Nvidia|NXP|Phytium|Qualcomm|RealTek|Samsung|StarFive|Synaptics|T-Head|Unisoc)
+		Ingenic|Kendryte|MediaTek|Nexell|Nvidia|NXP|Phytium|Qualcomm|RealTek|Samsung|SpacemiT|StarFive|Synaptics|T-Head|Unisoc)
 			echo -e "${BOLD}This device runs a $1 vendor/BSP kernel.${NC}"
 			;;
 		Rockchip)

@@ -5284,16 +5284,19 @@ GuessARMSoC() {
 					echo "Rockchip RK3588 (${RockchipGuess} / ${RK_NVMEM:16:42})"
 					;;
 				33)
-					echo "Rockchip RK3588s (${RockchipGuess} / ${RK_NVMEM:16:42})"
+					echo "Rockchip RK3588S (${RockchipGuess} / ${RK_NVMEM:16:42})"
+					;;
+				53)
+					echo "Rockchip RK3588S2 (${RockchipGuess} / ${RK_NVMEM:16:42})"
 					;;
 				*)
-					echo "Rockchip RK3588/RK3588s (${RockchipGuess} / ${RK_NVMEM:16:42})"
+					echo "Rockchip RK3588/RK3588S/RK3588S2 (${RockchipGuess} / ${RK_NVMEM:16:42})"
 					;;
 			esac
 		elif [ "X${RK_NVMEM}" != "X" ]; then
-			echo "Rockchip RK${RockchipGuess:0:4} (${RockchipGuess} / ${RK_NVMEM:16:42})" | sed 's| RK3588| RK3588/RK3588s|'
+			echo "Rockchip RK${RockchipGuess:0:4} (${RockchipGuess} / ${RK_NVMEM:16:42})" | sed 's| RK3588| RK3588/RK3588S/RK3588S2|'
 		else
-			echo "Rockchip RK${RockchipGuess:0:4} (${RockchipGuess})" | sed 's| RK3588| RK3588/RK3588s|'
+			echo "Rockchip RK${RockchipGuess:0:4} (${RockchipGuess})" | sed 's| RK3588| RK3588/RK3588S/RK3588S2|'
 		fi
 	elif [ "X${RK_NVMEM}" != "X" ]; then
 		# use Rockchip NVMEM available below /sys/bus/nvmem/devices/rockchip* to parse SoC model from there
@@ -5328,16 +5331,19 @@ GuessARMSoC() {
 				esac
 				;;
 			"35 88")
-				# RK3588/RK3588s, normal order: 52 4b 35 88 -> RK3588
+				# RK3588/RK3588S/RK3588S2, normal order: 52 4b 35 88 -> RK3588
 				case "${RK_NVMEM:28:2}" in
 					21)
 						echo "Rockchip RK3588 / ${RK_NVMEM:16:42}"
 						;;
 					33)
-						echo "Rockchip RK3588s / ${RK_NVMEM:16:42}"
+						echo "Rockchip RK3588S / ${RK_NVMEM:16:42}"
+						;;
+					53)
+						echo "Rockchip RK3588S2 / ${RK_NVMEM:16:42}"
 						;;
 					*)
-						echo "Rockchip RK3588/RK3588s / ${RK_NVMEM:16:42}"
+						echo "Rockchip RK3588/RK3588S/RK3588S2 / ${RK_NVMEM:16:42}"
 						;;
 				esac
 				;;
@@ -6889,10 +6895,13 @@ GuessSoCbySignature() {
 									echo "Rockchip RK3588 / ${RK_NVMEM:16:42}"
 									;;
 								33)
-									echo "Rockchip RK3588s / ${RK_NVMEM:16:42}"
+									echo "Rockchip RK3588S / ${RK_NVMEM:16:42}"
+									;;
+								53)
+									echo "Rockchip RK3588S2 / ${RK_NVMEM:16:42}"
 									;;
 								*)
-									echo "Rockchip RK3588/RK3588s / ${RK_NVMEM:16:42}"
+									echo "Rockchip RK3588/RK3588S/RK3588S2 / ${RK_NVMEM:16:42}"
 									;;
 							esac
 						else
@@ -6902,9 +6911,9 @@ GuessSoCbySignature() {
 						# According to this site RK3588M is limited to 2.1 GHz
 						# https://techacute.com/rockchip-launched-flagship-smart-vehicle-solution-rk3588m-with-360-panoramic-view-function/
 						read MaxRK3588Freq </sys/devices/system/cpu/cpufreq/policy7/cpuinfo_max_freq
-						[ ${MaxRK3588Freq:-0} -eq 2100000 ] && echo "Rockchip RK3588M / ${RK_NVMEM:16:42}" || echo "Rockchip RK3588/RK3588s / ${RK_NVMEM:16:42}"
+						[ ${MaxRK3588Freq:-0} -eq 2100000 ] && echo "Rockchip RK3588M / ${RK_NVMEM:16:42}" || echo "Rockchip RK3588/RK3588S/RK3588S2 / ${RK_NVMEM:16:42}"
 					else
-						echo "Rockchip RK3588/RK3588s / ${RK_NVMEM:16:42}"
+						echo "Rockchip RK3588/RK3588S/RK3588S2 / ${RK_NVMEM:16:42}"
 					fi
 					;;
 			esac

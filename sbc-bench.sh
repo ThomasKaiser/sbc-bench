@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.9.65
+Version=0.9.66
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -3191,6 +3191,32 @@ DownloadNeuralNet() {
 	fi
 } # DownloadNeuralNet
 
+function parse_yaml {
+   local prefix=$2
+   local s='[[:space:]]*' w='[a-zA-Z0-9_]*' fs=$(echo @|tr @ '\034')
+   sed -ne "s|,$s\]$s\$|]|" \
+        -e ":1;s|^\($s\)\($w\)$s:$s\[$s\(.*\)$s,$s\(.*\)$s\]|\1\2: [\3]\n\1  - \4|;t1" \
+        -e "s|^\($s\)\($w\)$s:$s\[$s\(.*\)$s\]|\1\2:\n\1  - \3|;p" $1 | \
+   sed -ne "s|,$s}$s\$|}|" \
+        -e ":1;s|^\($s\)-$s{$s\(.*\)$s,$s\($w\)$s:$s\(.*\)$s}|\1- {\2}\n\1  \3: \4|;t1" \
+        -e    "s|^\($s\)-$s{$s\(.*\)$s}|\1-\n\1  \2|;p" | \
+   sed -ne "s|^\($s\):|\1|" \
+        -e "s|^\($s\)-$s[\"']\(.*\)[\"']$s\$|\1$fs$fs\2|p" \
+        -e "s|^\($s\)-$s\(.*\)$s\$|\1$fs$fs\2|p" \
+        -e "s|^\($s\)\($w\)$s:$s[\"']\(.*\)[\"']$s\$|\1$fs\2$fs\3|p" \
+        -e "s|^\($s\)\($w\)$s:$s\(.*\)$s\$|\1$fs\2$fs\3|p" | \
+   awk -F$fs '{
+      indent = length($1)/2;
+      vname[indent] = $2;
+      for (i in vname) {if (i > indent) {delete vname[i]; idx[i]=0}}
+      if(length($2)== 0){  vname[indent]= ++idx[indent] };
+      if (length($3) > 0) {
+         vn=""; for (i=0; i<indent; i++) { vn=(vn)(vname[i])("_")}
+         printf("%s%s%s=\"%s\"\n", "'$prefix'",vn, vname[indent], $3);
+      }
+   }'
+}
+
 InitialMonitoring() {
 	# download Linux kernel end-of-life data
 	curl -s -q --connect-timeout 10 https://raw.githubusercontent.com/endoflife-date/endoflife.date/master/products/linuxkernel.md \
@@ -3270,7 +3296,13 @@ InitialMonitoring() {
 	if [ -r /etc/radxa_image_fingerprint ]; then
 		# Radxa's rbuild
 		. /etc/radxa_image_fingerprint
-		echo "Build system:   Radxa rbuild ${RBUILD_REVISION}, ${RBUILD_COMMAND#* }, ${RBUILD_UBOOT} ${RBUILD_UBOOT_VERSION}, $(awk -F" " '{print $2" "$3" "$4}' <<<"${RBUILD_BUILD_DATE}")" >>"${ResultLog}"
+		if [ ${FINGERPRINT_VERSION:-1} -eq 2 ]; then
+			# new format, we need to parse ${RSDK_CONFIG}
+			eval "$(parse_yaml "${RSDK_CONFIG}")" 2>/dev/null
+			sed -e 's/{//' -e 's/\}//' -e 's/^/Build system:   Radxa rbuild: /' <<<"${metadata} suite: ${metadata_suite}" >>"${ResultLog}"
+		else
+			echo "Build system:   Radxa rbuild ${RBUILD_REVISION}, ${RBUILD_COMMAND#* }, ${RBUILD_UBOOT} ${RBUILD_UBOOT_VERSION}, $(awk -F" " '{print $2" "$3" "$4}' <<<"${RBUILD_BUILD_DATE}")" >>"${ResultLog}"
+		fi
 	elif [ -r /etc/fenix-release ]; then
 		# Khadas' Fenix (mostly based on an old Armbian fork)
 		# they put image build information in /proc/cmdline like e.g.
@@ -4540,6 +4572,12 @@ LogEnvironment() {
 		tail -n +2 <<<"${DTCompatible}" | sed -e 's/^/           /'
 	fi
 
+	# Check Rockchip boot environment (may only work on Radxa images)
+	RKBootEnvironment="$(GetRKBootEnvironment)"
+	if [ "X${RKBootEnvironment}" != "X" ]; then
+		echo -e " Boot env: ${RKBootEnvironment}"
+	fi
+
 	# Log compiler version if not in Geekbench mode
 	if [ "X${MODE}" != "Xgb" ]; then
 		GCC_Info="$(${GCC} -v 2>&1 | grep -E "^Target|^Configured")"
@@ -4624,6 +4662,12 @@ LogEnvironment() {
 		sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" <<<"${PolicyStateNow}"	| sed -e 's/^/  * /'
 	fi
 } # LogEnvironment
+
+GetRKBootEnvironment() {
+	if grep -q androidboot.fwver /proc/cmdline ; then
+		awk -F"androidboot.fwver=" '{print $2}' </proc/cmdline | awk -F" " '{print $1}' | sed 's/,/, /g'
+	fi
+} # GetRKBootEnvironment
 
 ValidateResults() {
 	# function that checks whether benchmark scores have been invalidated
@@ -8235,6 +8279,11 @@ ProvideReviewInfo() {
 	grep -i "^ Compiler:" "${ResultLog}" | sed -e 's/^/  */' >>"${TempDir}/review"
 	openssl version | awk -F" " '{print "  * "$1" "$2", built on "$3" "$4" "$5" "$6" "$7" "$8" "$9" "$10" "$11" "$12" "$13" "$14" "$15}' >>"${TempDir}/review"
 	[ -z "${ThreadXVersion}" ] || echo -e "  * ThreadX: $(tail -n1 <<<"${ThreadXVersion}" | cut -d' ' -f2) / $(head -n1 <<<"${ThreadXVersion}")" >>"${TempDir}/review"
+	# Check Rockchip boot environment (may only work on Radxa images)
+	RKBootEnvironment="$(GetRKBootEnvironment)"
+	if [ "X${RKBootEnvironment}" != "X" ]; then
+		echo -e "  * Boot environment: ${RKBootEnvironment}" >>"${TempDir}/review"
+	fi
 
 	# Kernel relevant settings / versions
 	echo -e "\n### Kernel info:\n" >>"${TempDir}/review"

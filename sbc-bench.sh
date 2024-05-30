@@ -488,6 +488,8 @@ GetARMCore() {
 	41/d81:Cortex-A720
 	41/d82:Cortex-X4
 	41/d84:Neoverse-V3
+	41/d85:Cortex-X925
+	41/d87:Cortex-A725
 	41/d8e:Neoverse-N3
 	42:Broadcom
 	42/00f:Broadcom Brahma B15

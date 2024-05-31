@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.9.66
+Version=0.9.67
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -3263,12 +3263,14 @@ InitialMonitoring() {
 				;;
 			*)
 				# something's wrong, e.g. "down for a while due to DDOS. thanks, buddy!" in early Nov. 2023
-				ping -c1 -w2 sprunge.us >/dev/null 2>&1 && UploadScheme="sprunge=<-" ; UploadServer="sprunge.us"
+				# ping -c1 -w2 sprunge.us >/dev/null 2>&1 && UploadScheme="sprunge=<-" ; UploadServer="sprunge.us"
+				ping -c1 -w2 0x0.st >/dev/null 2>&1 && UploadScheme='file=@-' ; UploadServer="0x0.st"
 				;;
 		esac
 	else
-		# upload location fallback to sprunge.us if possible
-		ping -c1 -w2 sprunge.us >/dev/null 2>&1 && UploadScheme="sprunge=<-" ; UploadServer="sprunge.us"
+		# upload location fallback to 0x0.st if possible
+		# ping -c1 -w2 sprunge.us >/dev/null 2>&1 && UploadScheme="sprunge=<-" ; UploadServer="sprunge.us"
+		ping -c1 -w2 0x0.st >/dev/null 2>&1 && UploadScheme='file=@-' ; UploadServer="0x0.st"
 	fi
 
 	# Log version and device info

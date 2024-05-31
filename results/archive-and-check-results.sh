@@ -4,7 +4,7 @@
 # To be executed from results dir. It also does some quick validation of
 # collected results afterwards.
 
-grep -E "https://ix.io|https://sprunge.us" ../Results.md | awk -F"https://" '{print $2}' | cut -f1 -d')' | while read ; do
+grep -E "https://ix.io|https://sprunge.us|https://0x0.st" ../Results.md | awk -F"https://" '{print $2}' | cut -f1 -d')' | sed 's/\.bin//' | while read ; do
 	ResultFile="${REPLY##*/}.txt"
 	if [ -f "${ResultFile}" ]; then
 		grep -q "^tinymembench" "${ResultFile}" || (wget -q -O "${ResultFile}" "https://${REPLY}" ; sleep 5)

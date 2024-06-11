@@ -8051,6 +8051,14 @@ ProvideReviewInfo() {
 	# * ThreadX version, UEFI/BIOS version
 	# * coherent_pool size
 
+	# Warn if ExecuteCommand env is set since this will be executed instead of waiting
+	if [ "X${ExecuteCommand}" != "X" ]; then
+		echo -e "${LRED}${BOLD}WARNING: ExecuteCommand is set to \"${ExecuteCommand}\"${NC}\n"
+		echo -e "Press [ctrl]-[c] to stop or ${BOLD}[enter]${NC} to continue.\c"
+		read
+		echo ""
+	fi
+
 	echo "Starting to examine hardware/software for review purposes..."
 
 	# ensure other sbc-bench instances are terminated
@@ -8390,16 +8398,6 @@ ProvideReviewInfo() {
 	# drop caches
 	echo 3 >/proc/sys/vm/drop_caches
 
-	# device now ready for benchmarking
-	cat <<- EOF
-	
-	All known settings adjusted for performance. Device now ready for benchmarking.
-	Once finished stop with [ctrl]-[c] to get info about throttling, frequency cap
-	and too high background activity all potentially invalidating benchmark scores.
-	All changes with storage and PCIe devices as well as suspicious dmesg contents
-	will be reported too.
-	EOF
-
 	# Now switch to monitoring mode, report consumption if Netio powermeter is available
 	if [ "X${OutputCurrents[*]}" != "X" ]; then
 		# We are in Netio monitoring mode as such provide consumption info as well
@@ -8416,9 +8414,26 @@ ProvideReviewInfo() {
 	export SPACING=yes
 	/bin/bash "${PathToMe}" -m 60 >"${MonitorLog}" &
 	MonitoringPID=$!
-	echo ""
-	snore 1
-	tail -f "${MonitorLog}"
+
+	if [ "X${ExecuteCommand}" = "X" ]; then
+		cat <<- EOF
+		
+		All known settings adjusted for performance. Device now ready for benchmarking.
+		Once finished stop with [ctrl]-[c] to get info about throttling, frequency cap
+		and too high background activity all potentially invalidating benchmark scores.
+		All changes with storage and PCIe devices as well as suspicious dmesg contents
+		will be reported too.
+		
+		EOF
+		snore 1
+		tail -f "${MonitorLog}"
+	else
+		echo -e "\nNow executing \"${ExecuteCommand}\"\n"
+		${ExecuteCommand}
+		echo -e "\n"
+		cat "${MonitorLog}"
+		exit 0
+	fi
 } # ProvideReviewInfo
 
 FinalReporting() {

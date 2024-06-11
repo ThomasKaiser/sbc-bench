@@ -316,6 +316,12 @@ If `$MaxKHz` is exported prior to benchmark execution (e.g. by `MODE=extensive M
 
 If `$CPUINFOFILE` is exported prior to benchmark execution then SoC guessing and similar stuff happens not based on `/proc/cpuinfo` but on the supplied file that obviously needs to have a compatible format.
 
+### ExecuteCommand environment variable
+
+If `$ExecuteCommand` is exported prior to review mode (`-r`/`-R`) then instead of `sbc-bench` waiting/monitoring external benchmark executions it will execute whatever will be exported. So if you want to do a simple throttling test using `stress-ng` for example you would execute `ExecuteCommand="stress-ng --cpu 0 -t 60m" sbc-bench.sh -R` and check the output for throttling afterwards.
+
+Though with such a goal in mind the better approach is running not stressors but benchmarks like `7-zip` or `cpuminer` for a while since dropping scores over time are essentially a throttling indicator and this way you can spot other areas of throttling too (e.g. memory controller on recent Intel designs exceeding thermal tresholds lower than those for cpufreq throttling).
+
 ## Interpreting results
 
 The whole point of `sbc-bench` being started in the first place was trying to replace the casual 'fire and forget' benchmarking done by SBC reviewers with a controlled execution of benchmarks in a fully monitored environment to get an idea why benchmark scores are as they are. A lot of stuff can go wrong! And in 'fire and forget' mode almost always unnoticed.

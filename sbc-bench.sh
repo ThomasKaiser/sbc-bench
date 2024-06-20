@@ -520,6 +520,7 @@ GetARMCore() {
 	48/d40:HiSilicon-A76
 	48/d41:HiSilicon-A77
 	48/d42:HiSilicon-A710
+	00/d02:HiSilicon-1910
 	49:Infineon
 	4d:Motorola/Freescale
 	4e:NVidia
@@ -6560,6 +6561,10 @@ GuessSoCbySignature() {
 								# Qualcomm IPQ5332, 4 x Cortex-A53 / r0p4
 								echo "Qualcomm IPQ5332"
 								;;
+							*msm8917*|*425*)
+								# Qualcomm Snapdragon 425 (MSM8917), 4 x Cortex-A53 / r0p4 / fp asimd aes pmull sha1 sha2 crc32
+								echo "Qualcomm Snapdragon 425 (MSM8917)"
+								;;
 							*7570*)
 								# Exynos 7570, 4 x Cortex-A53 / r0p4 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt lpae evtstrm aes pmull sha1 sha2 crc32
 								echo "Exynos 7570"
@@ -6758,6 +6763,10 @@ GuessSoCbySignature() {
 			# https://youtu.be/SCRIFe0uaac?feature=shared&t=32
 			# The 'A710' like cores use HiSilicon's own 48/d42 ID and all the big cores are SMT capable
 			echo "HiSilicon Kirin 9000s"
+			;;
+		*HiSilicon1910*|*HiSilicon-1910*)
+			# HiSilicon Hi1910: https://www.cnx-software.com/2024/06/20/orange-pi-kunpeng-pro-sbc-features-a-quad-core-huawei-cpu-with-an-8-tops-ai-accelerator/#comments
+			echo "HiSilicon Hi1910"
 			;;
 		*A55r1p0*A55r1p0*A55r1p0*A55r1p0*A55r1p0*A55r1p0*A76r3p0*A76r3p0)
 			# HiSilicon Kirin 810, 6 x Cortex-A55 / r1p0 + 2 x HiSilicon-A76 / r3p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp asimdrdm lrcpc dcpop asimddp
@@ -8430,7 +8439,7 @@ ProvideReviewInfo() {
 	else
 		echo -e "\nNow executing \"${ExecuteCommand}\"\n"
 		${ExecuteCommand}
-		echo -e "\n"
+		echo -e "\n\007\007\007"
 		cat "${MonitorLog}"
 		exit 0
 	fi

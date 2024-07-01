@@ -1986,7 +1986,7 @@ CreateTempDir() {
 
 CheckLoadAndDmesg() {
 	# Check if kernel ring buffer contains boot messages. These help identifying HW.
-	DMESG="$(dmesg | grep -E "Linux|pvtm|rockchip-dmc|rockchip-cpuinfo|Amlogic Meson|sun50i|pcie|mmc|leakage")"
+	DMESG="$(dmesg | grep -E "Linux|pvtm|rockchip-dmc|rockchip-cpuinfo|Amlogic Meson|sun50i|pcie|mmc|leakage|rk3566t")"
 	grep -q -E '] Booting Linux|] Linux version ' <<<"${DMESG}"
 	case $? in
 		1)
@@ -5322,6 +5322,7 @@ GuessARMSoC() {
 	[ "X${AW_NVMEM}" != "X" ] && Allwinner_SID=" (SID: ${AW_NVMEM:19:2}${AW_NVMEM:16:2}${AW_NVMEM:13:2}${AW_NVMEM:10:2})" || Allwinner_SID=""
 	HardwareInfo="$(awk -F': ' '/^Hardware/ {print $2}' <<< "${ProcCPU}" | tail -n1)"
 	RockchipGuess="$(awk -F': ' '/rockchip-cpuinfo cpuinfo: SoC/ {print $3}' <<<"${DMESG}" | head -n1)"
+	grep -q 'soc_is_rk3566t: 00000001' <<<"${DMESG}" && RK3566T="T" || RK3566T=""
 	AmlogicGuess="Amlogic Meson$(grep -i " detected$" <<<"${DMESG}" | awk -F"Amlogic Meson" '/Amlogic Meson/ {print $2}' | head -n1)"
 	AMLS4Guess="$(awk -F"= " '/cpu_version: chip version/ {print $2}' <<<"${DMESG}")"
 
@@ -5343,9 +5344,9 @@ GuessARMSoC() {
 					;;
 			esac
 		elif [ "X${RK_NVMEM}" != "X" ]; then
-			echo "Rockchip RK${RockchipGuess:0:4} (${RockchipGuess} / ${RK_NVMEM:16:42})" | sed 's| RK3588| RK3588/RK3588S/RK3588S2|'
+			echo "Rockchip RK${RockchipGuess:0:4}${RK3566T} (${RockchipGuess} / ${RK_NVMEM:16:42})" | sed 's| RK3588| RK3588/RK3588S/RK3588S2|'
 		else
-			echo "Rockchip RK${RockchipGuess:0:4} (${RockchipGuess})" | sed 's| RK3588| RK3588/RK3588S/RK3588S2|'
+			echo "Rockchip RK${RockchipGuess:0:4}${RK3566T} (${RockchipGuess})" | sed 's| RK3588| RK3588/RK3588S/RK3588S2|'
 		fi
 	elif [ "X${RK_NVMEM}" != "X" ]; then
 		# use Rockchip NVMEM available below /sys/bus/nvmem/devices/rockchip* to parse SoC model from there
@@ -5398,7 +5399,7 @@ GuessARMSoC() {
 				;;
 			*)
 				# normal order: 52 4b 35 28 -> RK3528, also affects RK3566, RK3568, RK3582, RK3583
-				echo "Rockchip RK${RK_NVMEM:16:2}${RK_NVMEM:19:2} / ${RK_NVMEM:16:42}"
+				echo "Rockchip RK${RK_NVMEM:16:2}${RK_NVMEM:19:2}${RK3566T} / ${RK_NVMEM:16:42}"
 				;;
 		esac
 	elif [ "X${AmlogicGuess}" != "XAmlogic Meson" ]; then
@@ -7862,6 +7863,10 @@ GuessSoCbySignature() {
 			# https://lore.kernel.org/linux-arm-kernel/b99a7196-011e-4f08-83ec-e63a690ab919@linux.microsoft.com/T/
 			echo "Azure Cobalt 100"
 			;;
+		*00A53r0p401A53r0p402A53r0p403A53r0p414A53r0p415A53r0p416A53r0p417A53r0p4*)
+			# Sophon BM1684X/SG2300x: 8 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
+			echo "Sophon BM1684X/SG2300x"
+			;;
 	esac
 } # GuessSoCbySignature
 
@@ -8080,7 +8085,7 @@ ProvideReviewInfo() {
 	# prerequisits: create temp dir, ensure CPU utilization and/or average load is low
 	# enough to continue, collect information, set governors to performance
 
-	[ -z "${DMESG}" ] && DMESG="$(dmesg | grep -E "Linux|pvtm|rockchip-dmc|rockchip-cpuinfo|Amlogic Meson|sun50i|pcie|mmc|leakage")"
+	[ -z "${DMESG}" ] && DMESG="$(dmesg | grep -E "Linux|pvtm|rockchip-dmc|rockchip-cpuinfo|Amlogic Meson|sun50i|pcie|mmc|leakage|rk3566t")"
 	CreateTempDir
 	[ -f /sys/devices/system/cpu/cpufreq/policy0/scaling_governor ] && \
 		read OriginalCPUFreqGovernor </sys/devices/system/cpu/cpufreq/policy0/scaling_governor 2>/dev/null
@@ -8801,6 +8806,13 @@ CheckKernelVersion() {
 					;;
 			esac
 			;;
+		5.10.0*)
+			case ${GuessedSoC} in
+				Sophon*)
+					PrintBSPWarning Sophon
+					;;
+			esac
+			;;
 		5.10.4)
 			case ${GuessedSoC} in
 				*K230*)
@@ -8926,7 +8938,7 @@ PrintBSPWarning() {
 			echo -e "${BOLD}vendor kernel. See https://tinyurl.com/y8k3af73 and https://tinyurl.com/ywtfec7n${NC}"
 			echo -e "${BOLD}for details.${NC}"
 			;;
-		Ingenic|Kendryte|MediaTek|Nexell|Nvidia|NXP|Phytium|Qualcomm|RealTek|Samsung|SpacemiT|StarFive|Synaptics|T-Head|Unisoc)
+		Ingenic|Kendryte|MediaTek|Nexell|Nvidia|NXP|Phytium|Qualcomm|RealTek|Samsung|Sophon|SpacemiT|StarFive|Synaptics|T-Head|Unisoc)
 			echo -e "${BOLD}This device runs a $1 vendor/BSP kernel.${NC}"
 			;;
 		Rockchip)

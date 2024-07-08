@@ -8864,7 +8864,7 @@ CheckKernelVersion() {
 					;;
 			esac
 			;;
-		"5.15.78"|"5.15.119")
+		"5.15.78"|"5.15.119"|"5.15.137")
 			# New Amlogic SDK released with 5.15.78, supports at least T7, S4, SM1 and G12B.
 			# Kernel version 5.15.119 some images were using is the result of version string
 			# cosmetics over at ophub/flippy/unifreq
@@ -9076,6 +9076,13 @@ CheckPCIe() {
 						AdditionalInfo=", driver in use: $(awk -F": " '/Kernel driver in use:/ {print $2}' <<<"${PCIeDetails}" | head -n1)"
 						echo -e "  * ${DeviceName}: ${LnkSta}${AdditionalInfo}, ${ASPMSettings}"
 					fi
+				else
+					# if no LnkSta can be determined then check whether DeviceName property
+					# exists and if true report in brackets
+					AdditionalInfo="driver in use: $(awk -F": " '/Kernel driver in use:/ {print $2}' <<<"${PCIeDetails}" | head -n1)"
+					unset GenericDeviceName
+					GenericDeviceName="$(awk -F": " '/DeviceName:/ {print $2}' <<<"${PCIeDetails}")"
+					grep -q "onboard" <<<"${GenericDeviceName,,}" && echo -e "  * ${DeviceName} (${GenericDeviceName}): ${AdditionalInfo}"
 				fi
 				;;
 		esac

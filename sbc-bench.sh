@@ -7763,8 +7763,8 @@ GuessSoCbySignature() {
 				echo "Renesas RZ/Five R9A07G043"
 			fi
 			;;
-		*rv64imafdcv_sscofpmf_sstc_svpbmt_zicbom_zicboz_zicbop_zihintpause*rv64imafdcv_sscofpmf_sstc_svpbmt_zicbom_zicboz_zicbop_zihintpause*rv64imafdcv_sscofpmf_sstc_svpbmt_zicbom_zicboz_zicbop_zihintpause*rv64imafdcv_sscofpmf_sstc_svpbmt_zicbom_zicboz_zicbop_zihintpause04rv64imafdcv_sscofpmf_sstc_svpbmt_zicbom_zicboz_zicbop_zihintpause04rv64imafdcv_sscofpmf_sstc_svpbmt_zicbom_zicboz_zicbop_zihintpause04rv64imafdcv_sscofpmf_sstc_svpbmt_zicbom_zicboz_zicbop_zihintpause04rv64imafdcv_sscofpmf_sstc_svpbmt_zicbom_zicboz_zicbop_zihintpause)
-			# SpacemiT K1
+		*rv64imafdcv_sscofpmf_sstc_svpbmt_zicbom_zicboz_zicbop_zihintpause*rv64imafdcv_sscofpmf_sstc_svpbmt_zicbom_zicboz_zicbop_zihintpause*rv64imafdcv_sscofpmf_sstc_svpbmt_zicbom_zicboz_zicbop_zihintpause*rv64imafdcv_sscofpmf_sstc_svpbmt_zicbom_zicboz_zicbop_zihintpause*rv64imafdcv_sscofpmf_sstc_svpbmt_zicbom_zicboz_zicbop_zihintpause*rv64imafdcv_sscofpmf_sstc_svpbmt_zicbom_zicboz_zicbop_zihintpause*rv64imafdcv_sscofpmf_sstc_svpbmt_zicbom_zicboz_zicbop_zihintpause*rv64imafdcv_sscofpmf_sstc_svpbmt_zicbom_zicboz_zicbop_zihintpause)
+			# SpacemiT K1: 8 x SpacemiT X60 cores https://www.spacemit.com/en/spacemit-x60-core/
 			echo "SpacemiT K1"
 			;;
 		0?Qualcomm3XXSilver0?Qualcomm3XXSilver0?Qualcomm3XXSilver0?Qualcomm3XXSilver0?Qualcomm3XXGold0?Qualcomm3XXGold0?Qualcomm3XXGold0?Qualcomm3XXGold)
@@ -9040,7 +9040,7 @@ CheckPCIe() {
 		BusAddress="$(awk -F" " '{print $1}' <<<"${REPLY}")"
 		ControllerType="$(awk -F'"' '{print $2}' <<<"${REPLY}")"
 		case "${ControllerType}" in
-			"Encryption"*|"VGA compatible"*|"Serial bus"*|"Communication"*|"Signal processing"*|"Memory"*)
+			"Encryption"*|"Serial bus"*|"Communication"*|"Signal processing"*|"Memory"*)
 				# ignore since internal mainboard components
 				:
 				;;

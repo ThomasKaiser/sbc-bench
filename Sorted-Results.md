@@ -80,6 +80,7 @@
 | [NanoPi Fire3 (Nexell S5P6818)](results/1jjm.txt) | 1400 MHz | 4.14 | Bionic arm64 | **7440** | 1052 | 653000 | 1560 | 4600 | 10.96 |
 | [NanoPi Fire3 (Nexell S5P6818)](results/1jiU.txt) | 1380 MHz | 4.14 | Stretch arm64 | **7420** | 1038 | 645400 | 1520 | 4570 | 8.53 |
 | [NanoPi Fire3 (Nexell S5P6818)](results/3ZxU.txt) | 1400 MHz | 4.14 | Focal arm64 | **7350** | 1093 | 652640 | 1530 | 4590 | 11.18 |
+| [Milk-V Jupiter (K1)](results/X904.txt.bin) | 1800 MHz | 6.1 | Mantic riscv64 | **7090** | 1020 | 30700 | 2900 | 7230 | - |
 | [RockPro64 (RK3399)](results/2yIx.txt) | 2010/1510 MHz | 5.8 | Bullseye arm64 | **7000** | 1833 | 1144950 | 3690 | 8360 | 11.08 |
 | [Celeron J3455](results/1m5p.txt) | 2300/1500 MHz | 4.17 | Stretch amd64 | **7000** | 2037 | 429660 | 4090 | 4050 | 17.26 |
 | [NanoPi NEO4 (RK3399)](results/3GmR.txt) | 2016/1512 MHz | 5.10 | Focal arm64 | **6970** | 1906 | 1145030 | 2450 | 6190 | 11.36 |
@@ -424,6 +425,7 @@
 | [Rock64 (RK3328)](results/1iZj.txt) | 1400 MHz | 4.4 | Stretch arm64 | 3590 | **1030** | 643700 | 1320 | 5640 | 4.40 |
 | [Orange Pi PC 2 (Allwinner H5)](results/3MQJ.txt) | 1370 MHz | 5.10 | Focal arm64 | 3500 | **1023** | 637410 | 1070 | 3680 | - |
 | [NanoPi K1 Plus (Allwinner H5)](results/3N7H.txt) | 1370 MHz | 5.10 | Focal arm64 | 3520 | **1022** | 638880 | 1070 | 3680 | 5.50 |
+| [Milk-V Jupiter (K1)](results/X904.txt.bin) | 1800 MHz | 6.1 | Mantic riscv64 | 7090 | **1020** | 30700 | 2900 | 7230 | - |
 | [Libre Computer AML-S912-PC](results/40cj.txt) | 1415/1000 MHz | 5.15 | Bullseye arm64 | 5980 | **1012** | 659290 | 1650 | 5170 | - |
 | [T-HEAD C910 RVB-ICE](results/41AB.txt) | 1200 MHz | 5.10 | Sid riscv64 | 1760 | **1007** | 26930 | 3340 | 6470 | - |
 | [Raspberry Pi Zero 2 (RP3A0)](results/3DeL.txt) | 1200 MHz | 5.10 | Raspberry Pi OS Buster | 3640 | **1007** | 36300 | 1320 | 1790 | - |
@@ -684,6 +686,7 @@
 | [Akaso M8S (S812)](results/3R3N.txt) | 1200 MHz | 5.10 | Buster armhf | 3050 | 885 | **32120** | 1160 | 3330 | - |
 | [Celeron N2830](results/4pEc.txt) | 2160 MHz | 5.19 | Jammy amd64 | 2760 | 1664 | **31270** | 3780 | 3520 | 6.10 |
 | [Celeron N2807](results/4z3s.txt) | 2165 MHz | 5.10 | Bullseye) amd64 | 3070 | 1766 | **31250** | 3600 | 3110 | 6.09 |
+| [Milk-V Jupiter (K1)](results/X904.txt.bin) | 1800 MHz | 6.1 | Mantic riscv64 | 7090 | 1020 | **30700** | 2900 | 7230 | - |
 | [Raspberry Pi Zero 2 (RP3A0)](results/3E85.txt) | 1000 MHz | 5.10 | Raspberry Pi OS Buster | 3030 | 838 | **29860** | 1300 | 1570 | - |
 | [ODROID-C1 (Amlogic S805)](results/4eg5.txt) | 1500 MHz | 5.19 | Jammy armhf | 3010 | 878 | **29260** | 390 | 2910 | - |
 | [TRONFY MXQ (Amlogic S805)](results/3MiR.txt) | 1536 MHz | 5.10 | Focal armhf | 3100 | 897 | **29080** | 980 | 2990 | - |
@@ -826,6 +829,7 @@
 | [AMD Seattle (Opteron A1100)](results/4Kqn.txt) | 2000 MHz | 4.15 | Bionic arm64 | 14080 | 2006 | 720710 | **3020** | 9530 | - |
 | [NanoPi R5S (RK3568)](results/4jfZ.txt) | 1960 MHz | 6.1 | Bullseye arm64 | 5030 | 1482 | 914340 | **2990** | 5970 | 7.33 |
 | [Quartz64-A (RK3566)](results/3rUb.txt) | 1810 MHz | 5.13 | Buster arm64 | 4840 | 1353 | 845490 | **2980** | 7650| - |
+| [Milk-V Jupiter (K1)](results/X904.txt.bin) | 1800 MHz | 6.1 | Mantic riscv64 | 7090 | 1020 | 30700 | **2900** | 7230 | - |
 | [Atom E3825](results/4kFQ.txt) | 1330 MHz | 5.10 | Bullseye amd64 | 1950 | 1109 | 165840 | **2890** | 2890 | - |
 | [Khadas Edge (RK3399)](results/1uar.txt) | 2000/1500 MHz | 4.4 | Stretch arm64 | 6600 | 1703 | 1127780 | **2860** | 4880 | 8.85 |
 | [Atom E3826](results/44pd.txt) | 1460 MHz | 5.18 | Jammy amd64 | 2140 | 1112 | 182190 | **2840** | 2760 | - |
@@ -1037,6 +1041,7 @@
 | [Renegade (RK3328)](results/1iFx.txt) | 1400 MHz | 4.4 | Stretch arm64 | 3710 | 1069 | 644200 | 1565 | **7435** | 3.92 |
 | [Celeron J4105](results/1qal.txt) | 2400/1500 MHz | 4.15 | Bionic amd64 | 9020 | 2290 | 697100 | 5500 | **7410** | 19.07 |
 | [Khadas VIM3 (Amlogic A311D)](results/3R2Z.txt) | 2400/2015 MHz | 5.10 | Bullseye arm64 | 9650 | 2376 | 1366350 | 4850 | **7380** | - |
+| [Milk-V Jupiter (K1)](results/X904.txt.bin) | 1800 MHz | 6.1 | Mantic riscv64 | 7090 | 1020 | 30700 | 2900 | **7230** | - |
 | [BPi F3 (SpacemiT K1)](results/8to7qX.txt) | 1600 MHz | 6.1 | Bianbu Mantic riscv64 | 6750 | 978 | 27260 | 2620 | **7180** | - |
 | [Pentium J5005](results/21rE.txt) | 2700/1500 MHz | 5.0 | Bionic amd64 | 9230 | 2455 | 778360 | 5530 | **7130** | 20.74 |
 | [ODROID-N2+ (Amlogic S922X)](results/3R1a.txt) | 2400/2015 MHz | 5.10 | Focal arm64 | 9680 | 2372 | 1366730 | 4030 | **7120** | - |
@@ -1327,6 +1332,7 @@
 | [NanoPC T4 (RK3399)](results/1iZq.txt) | **1800/1400** MHz| 4.17 | Stretch arm64 | 6380 | 1741 | 1022600 | 4160 | 9000 | 9.36 |
 | [NanoPC T4 (RK3399)](results/1iWU.txt) | **1800/1400** MHz| 4.17 | Stretch arm64 | 6230 | 1756 | 1023600 | 4100 | 9060 | 10.30 |
 | [NanoPC T4 (RK3399)](results/1iFz.txt) | **1800/1400** MHz| 4.17 | Stretch arm64 | 6250 | 1809 | 1022500 | 4100 | 9000 | 8.24 |
+| [Milk-V Jupiter (K1)](results/X904.txt.bin) | **1800** MHz| 6.1 | Mantic riscv64 | 7090 | 1020 | 30700 | 2900 | 7230 | - |
 | [MangoPi Mcore (Allwinner H616)](results/4bSf.txt) | **1800** MHz| 5.19 | Jammy arm64 | 4100 | 1218 | 840270 | 990 | 2380 | - |
 | [Nintendo Switch (Tegra X1)](results/1Rnj.txt) | **1780** MHz| 4.9 | Fedora 30 arm-64 | 6170 | 1719 | 642670 | 2500 | 3570 | - |
 | [ODROID-C2 (Amlogic S905)](results/1ixI.txt) | **1750** MHz| 3.14 | Xenial arm64 | 4070 | 1128 | 48500 | 1750 | 3100 | - |

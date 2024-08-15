@@ -2852,7 +2852,36 @@ InstallPrerequisits() {
 	# Determine missing packages and install them with a single command
 	MissingPackages="$(CheckMissingPackages | sed 's/\ $//')"
 	[ "X${MissingPackages}" = "Xstop" ] && exit 1
-	[ "X${UBUNTU_CODENAME}" != "X" ] && UBUNTU_MAJOR_VERSION="${VERSION_ID%.*}"
+	if [ "X${UBUNTU_CODENAME}" != "X" ]; then
+		# Silly workaround for distros like Bianbu that fully base on Ubuntu releases but
+		# 'misuse' $VERSION_ID for their own versioning scheme
+		case "${UBUNTU_CODENAME,,}" in
+			impish)
+				UBUNTU_MAJOR_VERSION=21
+				;;
+			jammy)
+				UBUNTU_MAJOR_VERSION=22
+				;;
+			kinetic)
+				UBUNTU_MAJOR_VERSION=22
+				;;
+			lunar)
+				UBUNTU_MAJOR_VERSION=23
+				;;
+			mantic)
+				UBUNTU_MAJOR_VERSION=23
+				;;
+			noble)
+				UBUNTU_MAJOR_VERSION=24
+				;;
+			oracular)
+				UBUNTU_MAJOR_VERSION=24
+				;;
+			*)
+				UBUNTU_MAJOR_VERSION="${VERSION_ID%.*}"
+				;;
+		esac
+	fi
 	if [ ${UBUNTU_MAJOR_VERSION:-0} -lt 24 ]; then
 		# On Ubuntus prior to 24.04 and all other distros search for p7zip in $PATH and
 		# if not found add p7zip to list of packages to be installed
@@ -6761,7 +6790,7 @@ GuessSoCbySignature() {
 			;;
 		*A510r1p1*A510r1p1*A510r1p1*A510r1p1*A710r2p2*A710r2p2*A710r2p2*TaiShanv120r2p2)
 			# HiSilicon Kirin 9000s: 4 x Cortex-A510 / r1p1 + 3 x HiSilicon-A710 / r2p2 + 1 x TaiShan v120 / r2p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 sve asimdfhm dit ilrcpc flagm ssbs sb pacg dcpodp flagm2 frint svei8mm i8mm bti
-			# https://youtu.be/SCRIFe0uaac?feature=shared&t=32
+			# https://github.com/Dr-Noob/cpufetch/issues/259
 			# The 'A710' like cores use HiSilicon's own 48/d42 ID and all the big cores are SMT capable
 			echo "HiSilicon Kirin 9000s"
 			;;

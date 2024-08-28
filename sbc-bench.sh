@@ -5905,7 +5905,7 @@ GuessARMSoC() {
 				;;
 			sun55iw3*)
 				# SoC ID: 0x1890
-				echo "Allwinner A523/A527/T523/T527/MR527${Allwinner_SID}"
+				echo "Allwinner A523/A527/H728/MR527/T523/T527/R828${Allwinner_SID}"
 				;;
 			sun55iw5*)
 				echo "Allwinner TV301${Allwinner_SID}"
@@ -6742,7 +6742,7 @@ GuessSoCbySignature() {
 			echo "HiSilicon Ascend 310"
 			;;
 		0?A55r2p00?A55r2p00?A55r2p00?A55r2p00?A55r2p00?A55r2p00?A55r2p00?A55r2p0)
-			# Allwinner A523/A527/MR527/R828/T523/T527, 8 x Cortex-A55 / r2p0 / at least 'aes pmull sha1 sha2' (https://browser.geekbench.com/v5/cpu/21564626)
+			# Allwinner A523/A527/H728/MR527/T523/T527/R828, 8 x Cortex-A55 / r2p0 / at least 'aes pmull sha1 sha2' (https://browser.geekbench.com/v5/cpu/21564626)
 			# or Amlogic P1, 8 x Cortex-A55 / r2p0
 			case "${DTCompatible,,}" in
 				*a523*)
@@ -6750,6 +6750,9 @@ GuessSoCbySignature() {
 					;;
 				*a527*)
 					echo "Allwinner A527"
+					;;
+				*h728*)
+					echo "Allwinner H728"
 					;;
 				*t523*)
 					echo "Allwinner T523"
@@ -6764,7 +6767,7 @@ GuessSoCbySignature() {
 					echo "Allwinner R828"
 					;;
 				*allwinner*|*sun55i*)
-					echo "Allwinner A523/A527/MR527/R828/T523/T527"
+					echo "Allwinner A523/A527/H728/MR527/T523/T527/R828"
 					;;
 			esac
 			;;
@@ -6803,8 +6806,8 @@ GuessSoCbySignature() {
 			# The big cores are marketed/documented as Cortex-A76 by HiSilicon but instead of the usual ARM core ID 0x41/0xd0b they have 0x48/0xd40
 			echo "HiSilicon Kirin 810"
 			;;
-		*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A76r4p?*A76r4p?)
-			# Allwinner A733/A736/T736, 6 x Cortex-A55 / r2p0 + 2 x Cortex-A76 / r4p?
+		*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A76r4p1*A76r4p1)
+			# Allwinner A733/A736/T736, 6 x Cortex-A55 / r2p0 + 2 x Cortex-A76 / r4p1 / https://browser.geekbench.com/v6/cpu/7327650
 			case "${DTCompatible,,}" in
 				*sun60iw1*|*a736*|*t736*)
 					echo "Allwinner A736/T736"
@@ -7795,6 +7798,14 @@ GuessSoCbySignature() {
 		*rv64imafdcv_sscofpmf_sstc_svpbmt_zicbom_zicboz_zicbop_zihintpause*rv64imafdcv_sscofpmf_sstc_svpbmt_zicbom_zicboz_zicbop_zihintpause*rv64imafdcv_sscofpmf_sstc_svpbmt_zicbom_zicboz_zicbop_zihintpause*rv64imafdcv_sscofpmf_sstc_svpbmt_zicbom_zicboz_zicbop_zihintpause*rv64imafdcv_sscofpmf_sstc_svpbmt_zicbom_zicboz_zicbop_zihintpause*rv64imafdcv_sscofpmf_sstc_svpbmt_zicbom_zicboz_zicbop_zihintpause*rv64imafdcv_sscofpmf_sstc_svpbmt_zicbom_zicboz_zicbop_zihintpause*rv64imafdcv_sscofpmf_sstc_svpbmt_zicbom_zicboz_zicbop_zihintpause)
 			# SpacemiT K1: 8 x SpacemiT X60 cores https://www.spacemit.com/en/spacemit-x60-core/
 			echo "SpacemiT K1"
+			;;
+		??eswin,eic770x??eswin,eic770x??eswin,eic770x??eswin,eic770x)
+			# Eswin EIC7700X: 4 x RV64GC https://www.eswincomputing.com/en/bocupload/2024/06/19/17187920991529ene8q.pdf
+			echo "Eswin EIC7700X"
+			;;
+		??eswin,eic770x??eswin,eic770x??eswin,eic770x??eswin,eic770x??eswin,eic770x??eswin,eic770x??eswin,eic770x??eswin,eic770x)
+			# Eswin EIC7702X: 8 x RV64GC https://www.eswincomputing.com/en/bocupload/2024/06/19/1718792113959fd7u8.pdf
+			echo "Eswin EIC7702X"
 			;;
 		0?Qualcomm3XXSilver0?Qualcomm3XXSilver0?Qualcomm3XXSilver0?Qualcomm3XXSilver0?Qualcomm3XXGold0?Qualcomm3XXGold0?Qualcomm3XXGold0?Qualcomm3XXGold)
 			# Qualcomm Snapdragon 845 / SDM845: 4 x Qualcomm Kryo 3XX Silver / r7p12 + 4 x Qualcomm Kryo 3XX Gold / r6p13 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop

@@ -1435,7 +1435,7 @@ GetTempSensor() {
 						TempInfo="Thermal source: /sys/devices/platform/a20-tp-hwmon/ (${ThermalSource})"
 				else
 					ThermalNodeGuess=$(cat /sys/devices/virtual/thermal/thermal_zone?/type 2>/dev/null | grep -E -i "aml_thermal|cpu|soc" | tail -n1)
-					HWMonNodeGuess=$(cat /sys/class/hwmon/hwmon?/name 2>/dev/null | grep -E -i "120e0000|cpu-hwmon" | tail -n1)
+					HWMonNodeGuess=$(cat /sys/class/hwmon/hwmon?/name 2>/dev/null | grep -E -i "120e0000|cpu-hwmon|pvt" | tail -n1)
 					if [ "X${ThermalNodeGuess}" != "X" ]; then
 						# let's use this thermal node
 						ThermalZone="$(GetThermalZone "${ThermalNodeGuess}")"

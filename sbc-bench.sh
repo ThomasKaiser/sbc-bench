@@ -1477,12 +1477,21 @@ GetThermalZone() {
 
 GetHWNode() {
 	# get hwmon node for specific name string ($1)
+	local label
 	for node in /sys/class/hwmon/hwmon* ; do
 		grep -q "${1}" <"${node}/name"
 		case $? in
 			0)
-				echo ${node}
-				return
+				case "${1}" in
+					pvt)
+						read label <"${node}/label" 2>/dev/null || return
+						[ "X${label}" = "Xpvt0" ] && echo "${node}"
+						;;
+					*)
+						echo "${node}"
+						return
+						;;
+				esac
 				;;
 		esac
 	done

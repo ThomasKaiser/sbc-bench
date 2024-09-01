@@ -23,7 +23,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Apple M1 Pro](results/443N.txt) | 3030/2060 MHz | 5.18 | Gentoo 2.8 arm64 | 43800 | 5010 | 1064450 | 27110 | 71910 | 48.28 |
 | [Banana Pi (Allwinner A20)](results/3PLr.txt) | 960 MHz | 5.10 | Bullseye armhf | 1040 | 542 | 18640 | 440 | 2020 | - |
 | [BeagleBone AI-64 (TI J721E)](results/4DLw.txt) | 2000 MHz | 5.10 | Bookworm arm64 | 3470 | 1872 | 1130390 | 2660 | 8710 | - |
-| [BPi F3 (SpacemiT K1)](results/8to7qX.txt) | 1600 MHz | 6.1 | Bianbu Mantic riscv64 | 6750 | 978 | 27260 | 2620 | 7180 | - |
+| [BPi F3 (SpacemiT K1)](results/8to7qX.txt) | 1600 MHz | 6.1 | Mantic riscv64 | 6750 | 978 | 27260 | 2620 | 7180 | - |
 | [BPi M2U (Allwinner R40)](results/4kmM.txt) | 1200 MHz | 6.0 | Bullseye armhf | 2690 | 767 | 23320 | 780 | 3010 | - |
 | [BPi M4 (RTD1395)](results/1Dt1.txt) | 1400 MHz | 4.9 | Bionic arm64 | 3500 | - | 651460 | 1010 | 4360 | 5.48 |
 | [BPi R2 (MT7623)](results/4dO7.txt) | 1300 MHz | 4.19 | Focal armhf | 2990 | 854 | 25260 | 1550 | 3220 | - |
@@ -78,6 +78,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Milk-V Pioneer (SG2042)](results/4wYE.txt) | 2000 MHz | 6.1 | Kinetic riscv64 | 59820 | 1622 | 43500 | 3620 | 4760 | - |
 | [MT6580 K9M1](results/466y.txt) | 1300 MHz | 5.19 | Sid armhf | 2930 | 860 | 25300 | 1250 | 3300 | - |
 | [MT8395 Genio 1200](results/4Kvg.txt) | 2200/2000 MHz | 5.15 | Jammy arm64 | 18130 | 3298 | 1240850 | 14200 | 19000 | 27.60 |
+| [M1-MuseBook (SpacemiT K1)](results/Xv06.txt) | 1600 MHz | 6.1 | Mantic riscv64 | 6510 | 1025 | 27220 | 2570 | 6470 | - |
 | [NanoPC T3+ (Nexell S5P6818)](results/1iyp.txt) | 1400 MHz | 4.4 | **Xenial armhf** | 6400 | 943 | 651000 | 1650 | 3700 | - |
 | [NanoPC T3+ (Nexell S5P6818)](results/1iRJ.txt) | 1400 MHz | 4.14 | Bionic arm64 | 7480 | 1053 | 652600 | 1440 | 4540 | 10.99 |
 | [NanoPC T4 (RK3399)](results/1iFz.txt) | 1800/1400 MHz | 4.17 | Stretch arm64 | 6250 | 1809 | 1022500 | 4100 | 9000 | 8.24 |

@@ -1,0 +1,629 @@
+sbc-bench v0.9.67 SiPEED LPi3A Board (Mon, 09 Sep 2024 20:31:38 -0500)
+
+Distributor ID:	Bianbu
+Description:	Bianbu 1.0.14
+Release:	1.0.14
+Codename:	mantic
+
+/usr/bin/gcc (Ubuntu 13.2.0-4ubuntu3-bb2) 13.2.0
+
+Uptime: 20:31:38 up 3 days,  8:10,  4 users,  load average: 3.41, 3.01, 4.82,  °C,  319515023
+
+Linux 6.1.15 (k1) 	2024年09月09日 	_riscv64_	(8 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+           1.48    0.01    0.10    0.02    0.00   98.39
+
+Device             tps    kB_read/s    kB_wrtn/s    kB_dscd/s    kB_read    kB_wrtn    kB_dscd
+mmcblk0           1.52         7.54        17.01         5.71    2176610    4908160    1648668
+mmcblk2           0.00         0.03         0.00         0.00       9462          0          0
+nvme0n1           0.55         2.16         4.11         0.00     622231    1187096          0
+
+               total        used        free      shared  buff/cache   available
+Mem:           7.6Gi       1.0Gi       6.4Gi        28Mi       346Mi       6.6Gi
+Swap:             0B          0B          0B
+
+##########################################################################
+
+Checking cpufreq OPP (rv64imafdcv_sscofpmf_sstc_svpbmt_zicbom_zicboz_zicbop_zihintpause):
+
+Cpufreq OPP: 1600    Measured: 1597 (1597.796/1597.776/1597.633)
+Cpufreq OPP: 1228    Measured: 1226 (1226.563/1226.532/1226.391)
+Cpufreq OPP: 1000    Measured:  997    (997.764/997.739/997.624)
+Cpufreq OPP:  819    Measured:  816    (816.988/816.977/816.748)
+Cpufreq OPP:  614    Measured:  612    (612.256/612.078/611.841)
+
+##########################################################################
+
+Hardware sensors:
+
+cluster0_thermal-virtual-0
+temp1:        +39.0 C  (crit = +115.0 C)
+
+top_thermal-virtual-0
+temp1:        +37.0 C  
+
+cluster1_thermal-virtual-0
+temp1:        +38.0 C  (crit = +115.0 C)
+
+gpu_thermal-virtual-0
+temp1:        +37.0 C  
+
+/dev/nvme0:	45°C
+
+##########################################################################
+
+Executing benchmark on cpu0 (rv64imafdcv_sscofpmf_sstc_svpbmt_zicbom_zicboz_zicbop_zihintpause):
+
+tinymembench v0.4.9-nuumio (simple benchmark for memory throughput and latency)
+
+CFLAGS: 
+bandwidth test min repeats (-b): 2
+bandwidth test max repeats (-B): 3
+bandwidth test mem realloc (-M): no      (-m for realloc)
+      latency test repeats (-l): 3
+        latency test count (-c): 1000000
+
+==========================================================================
+== Memory bandwidth tests                                               ==
+==                                                                      ==
+== Note 1: 1MB = 1000000 bytes                                          ==
+== Note 2: Test result is the best of repeated runs. Number of repeats  ==
+==         is shown in brackets                                         ==
+== Note 3: Results for 'copy' tests show how many bytes can be          ==
+==         copied per second (adding together read and writen           ==
+==         bytes would have provided twice higher numbers)              ==
+== Note 4: 2-pass copy means that we are using a small temporary buffer ==
+==         to first fetch data into it, and only then write it to the   ==
+==         destination (source -> L1 cache, L1 cache -> destination)    ==
+== Note 5: If sample standard deviation exceeds 0.1%, it is shown in    ==
+==         brackets                                                     ==
+==========================================================================
+
+ C copy backwards                                 :   2438.6 MB/s (3, 0.2%)
+ C copy backwards (32 byte blocks)                :    645.5 MB/s (2)
+ C copy backwards (64 byte blocks)                :   2713.9 MB/s (3, 0.2%)
+ C copy                                           :   2755.4 MB/s (3)
+ C copy prefetched (32 bytes step)                :   2751.2 MB/s (3, 0.5%)
+ C copy prefetched (64 bytes step)                :   2749.8 MB/s (3, 1.0%)
+ C 2-pass copy                                    :   2623.2 MB/s (2)
+ C 2-pass copy prefetched (32 bytes step)         :   2613.9 MB/s (2)
+ C 2-pass copy prefetched (64 bytes step)         :   2615.0 MB/s (3, 0.1%)
+ C scan 8                                         :    327.9 MB/s (2)
+ C scan 16                                        :    968.2 MB/s (2)
+ C scan 32                                        :   1578.5 MB/s (2)
+ C scan 64                                        :   3087.6 MB/s (2)
+ C fill                                           :   6770.6 MB/s (2)
+ C fill (shuffle within 16 byte blocks)           :   6782.8 MB/s (3, 0.2%)
+ C fill (shuffle within 32 byte blocks)           :    657.9 MB/s (2)
+ C fill (shuffle within 64 byte blocks)           :    658.3 MB/s (2)
+ ---
+ libc memcpy copy                                 :   2397.3 MB/s (3, 2.2%)
+ libc memchr scan                                 :   2041.0 MB/s (3, 1.8%)
+ libc memset fill                                 :   5218.6 MB/s (3, 0.7%)
+
+==========================================================================
+== Memory latency test                                                  ==
+==                                                                      ==
+== Average time is measured for random memory accesses in the buffers   ==
+== of different sizes. The larger is the buffer, the more significant   ==
+== are relative contributions of TLB, L1/L2 cache misses and SDRAM      ==
+== accesses. For extremely large buffer sizes we are expecting to see   ==
+== page table walk with several requests to SDRAM for almost every      ==
+== memory access (though 64MiB is not nearly large enough to experience ==
+== this effect to its fullest).                                         ==
+==                                                                      ==
+== Note 1: All the numbers are representing extra time, which needs to  ==
+==         be added to L1 cache latency. The cycle timings for L1 cache ==
+==         latency can be usually found in the processor documentation. ==
+== Note 2: Dual random read means that we are simultaneously performing ==
+==         two independent memory accesses at a time. In the case if    ==
+==         the memory subsystem can't handle multiple outstanding       ==
+==         requests, dual random read has the same timings as two       ==
+==         single reads performed one after another.                    ==
+==========================================================================
+
+block size : single random read / dual random read
+      1024 :    0.2 ns          /     0.1 ns 
+      2048 :    0.2 ns          /     0.2 ns 
+      4096 :    0.2 ns          /     0.2 ns 
+      8192 :    0.3 ns          /     0.3 ns 
+     16384 :    0.3 ns          /     0.3 ns 
+     32768 :    0.6 ns          /     0.5 ns 
+     65536 :   11.4 ns          /    17.1 ns 
+    131072 :   19.4 ns          /    25.0 ns 
+    262144 :   24.3 ns          /    29.7 ns 
+    524288 :   46.0 ns          /    65.7 ns 
+   1048576 :  120.8 ns          /   178.8 ns 
+   2097152 :  168.3 ns          /   222.2 ns 
+   4194304 :  195.2 ns          /   237.6 ns 
+   8388608 :  235.0 ns          /   270.6 ns 
+  16777216 :  268.4 ns          /   298.9 ns 
+  33554432 :  293.9 ns          /   340.5 ns 
+  67108864 :  320.5 ns          /   397.3 ns 
+
+##########################################################################
+
+Executing ramlat on cpu0 (rv64imafdcv_sscofpmf_sstc_svpbmt_zicbom_zicboz_zicbop_zihintpause), results in ns:
+
+       size:  1x32  2x32  1x64  2x64 1xPTR 2xPTR 4xPTR 8xPTR
+         4k: 1.974 2.000 1.897 1.895 1.263 1.263 2.544 5.129 
+         8k: 1.957 1.957 1.879 1.878 1.252 1.252 2.544 5.127 
+        16k: 1.957 1.959 1.879 1.879 1.260 1.253 2.552 5.128 
+        32k: 1.969 1.965 1.885 1.886 1.257 1.257 2.551 5.139 
+        64k: 18.35 23.33 18.14 23.67 18.09 24.05 36.99 58.26 
+       128k: 25.04 25.64 24.94 25.19 24.30 24.85 39.24 73.65 
+       256k: 25.15 27.74 25.15 25.32 24.37 24.99 33.05 77.41 
+       512k: 115.0 126.8 115.3 126.7 113.3 122.7 147.3 219.6 
+      1024k: 210.2 219.0 209.6 217.3 208.4 212.0 224.2 433.8 
+      2048k: 216.5 222.7 217.4 226.2 214.4 220.4 232.2 488.5 
+      4096k: 218.4 224.9 217.6 225.0 216.4 222.5 238.3 505.3 
+      8192k: 258.5 267.0 257.5 266.8 256.1 264.4 270.9 564.0 
+     16384k: 295.4 309.2 295.2 308.6 293.3 305.5 312.3 565.6 
+     32768k: 302.4 315.0 304.6 314.2 304.4 313.3 328.7 573.4 
+     65536k: 308.5 320.3 308.1 320.3 308.0 318.6 338.5 562.4 
+    131072k: 315.8 326.2 313.2 326.7 313.9 325.0 355.6 563.4 
+
+##########################################################################
+
+Executing benchmark twice on cluster 0 (rv64imafdcv_sscofpmf_sstc_svpbmt_zicbom_zicboz_zicbop_zihintpause)
+
+OpenSSL 3.0.10, built on 1 Aug 2023 (Library: OpenSSL 3.0.10 1 Aug 2023)
+type             16 bytes     64 bytes    256 bytes   1024 bytes   8192 bytes  16384 bytes
+aes-256-cbc      22528.63k    26039.21k    26925.16k    27285.16k    27264.94k    27339.43k
+aes-256-cbc      22614.91k    25932.57k    27012.52k    27194.51k    27312.13k    27333.97k
+
+##########################################################################
+
+Executing benchmark single-threaded on cpu0 (rv64imafdcv_sscofpmf_sstc_svpbmt_zicbom_zicboz_zicbop_zihintpause)
+
+7-Zip (a) 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,8 CPUs LE)
+
+LE
+CPU Freq: 64000000 64000000 - - - - - - -
+
+RAM size:    7829 MB,  # CPU hardware threads:   8
+RAM usage:    435 MB,  # Benchmark threads:      1
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:        684   100    666    665  |      15839   100   1353   1352
+23:        650   100    663    663  |      15380   100   1332   1331
+24:        616   100    664    663  |      14826   100   1302   1302
+25:        582   100    665    665  |      13939   100   1241   1241
+----------------------------------  | ------------------------------
+Avr:             100    664    664  |              100   1307   1306
+Tot:             100    986    985
+
+##########################################################################
+
+Executing benchmark 3 times multi-threaded on CPUs 0-7
+
+7-Zip (a) 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,8 CPUs LE)
+
+LE
+CPU Freq: 64000000 64000000 - - - - - - -
+
+RAM size:    7829 MB,  # CPU hardware threads:   8
+RAM usage:   1765 MB,  # Benchmark threads:      8
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       3828   651    572   3725  |     118716   795   1273  10126
+23:       3665   665    561   3735  |     115797   794   1262  10021
+24:       3548   674    566   3816  |     112535   793   1246   9877
+25:       2728   520    600   3115  |     109663   794   1230   9760
+----------------------------------  | ------------------------------
+Avr:             628    575   3598  |              794   1253   9946
+Tot:             711    914   6772
+
+7-Zip (a) 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,8 CPUs LE)
+
+LE
+CPU Freq: 64000000 - - - - 256000000 - - -
+
+RAM size:    7829 MB,  # CPU hardware threads:   8
+RAM usage:   1765 MB,  # Benchmark threads:      8
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       3593   600    583   3496  |     118951   796   1275  10146
+23:       3644   663    560   3714  |     115825   795   1261  10023
+24:       3510   666    567   3775  |     112874   795   1246   9907
+25:       3312   664    570   3782  |     109720   794   1230   9765
+----------------------------------  | ------------------------------
+Avr:             648    570   3692  |              795   1253   9960
+Tot:             721    912   6826
+
+7-Zip (a) 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,8 CPUs LE)
+
+LE
+CPU Freq: - - - - - - - - -
+
+RAM size:    7829 MB,  # CPU hardware threads:   8
+RAM usage:   1765 MB,  # Benchmark threads:      8
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       3574   592    588   3477  |     118598   795   1273  10116
+23:       3677   672    557   3747  |     116103   796   1263  10047
+24:       3432   652    566   3691  |     113055   796   1247   9923
+25:       3336   665    573   3810  |     109646   794   1230   9758
+----------------------------------  | ------------------------------
+Avr:             645    571   3681  |              795   1253   9961
+Tot:             720    912   6821
+
+Compression: 3598,3692,3681
+Decompression: 9946,9960,9961
+Total: 6772,6826,6821
+
+##########################################################################
+
+Executing "stress-ng --matrix 0" for 5 minutes:
+
+stress-ng: info:  [267312] setting to a 5 mins, 0 secs run per stressor
+stress-ng: info:  [267312] dispatching hogs: 8 matrix
+stress-ng: info:  [267312] skipped: 0
+stress-ng: info:  [267312] passed: 8: matrix (8)
+stress-ng: info:  [267312] failed: 0
+stress-ng: info:  [267312] metrics untrustworthy: 0
+stress-ng: info:  [267312] successful run completed in 5 mins, 0.03 secs
+
+##########################################################################
+
+Testing maximum cpufreq again, still under full load. System health now:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+20:48:30: 1600MHz 10.09 100%   0%  99%   0%   0%   0%      °C  
+
+Checking cpufreq OPP (rv64imafdcv_sscofpmf_sstc_svpbmt_zicbom_zicboz_zicbop_zihintpause):
+
+Cpufreq OPP: 1600    Measured: 1597 (1597.707/1597.605/1597.421)
+
+##########################################################################
+
+Hardware sensors:
+
+cluster0_thermal-virtual-0
+temp1:        +50.0 C  (crit = +115.0 C)
+
+top_thermal-virtual-0
+temp1:        +47.0 C  
+
+cluster1_thermal-virtual-0
+temp1:        +51.0 C  (crit = +115.0 C)
+
+gpu_thermal-virtual-0
+temp1:        +47.0 C  
+
+/dev/nvme0:	47°C
+
+##########################################################################
+
+System health while running tinymembench:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+20:32:03: 1600MHz  3.35   1%   0%   1%   0%   0%   0%      °C  
+20:32:13: 1600MHz  3.37  12%   0%  12%   0%   0%   0%      °C  
+20:32:23: 1600MHz  3.31  12%   0%  12%   0%   0%   0%      °C  
+20:32:34: 1600MHz  3.27  14%   0%  12%   1%   0%   0%      °C  
+20:32:44: 1600MHz  3.38  25%   1%  12%  11%   0%   0%      °C  
+
+System health while running ramlat:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+20:32:54: 1600MHz  3.32   1%   0%   1%   0%   0%   0%      °C  
+20:32:57: 1600MHz  3.29  12%   0%  12%   0%   0%   0%      °C  
+20:33:00: 1600MHz  3.29  12%   0%  12%   0%   0%   0%      °C  
+20:33:03: 1600MHz  3.27  12%   0%  12%   0%   0%   0%      °C  
+20:33:06: 1600MHz  3.27  12%   0%  12%   0%   0%   0%      °C  
+20:33:09: 1600MHz  3.33  12%   0%  12%   0%   0%   0%      °C  
+20:33:13: 1600MHz  3.30  13%   0%  12%   0%   0%   0%      °C  
+20:33:16: 1600MHz  3.30  12%   0%  12%   0%   0%   0%      °C  
+20:33:19: 1600MHz  3.28  12%   0%  12%   0%   0%   0%      °C  
+20:33:22: 1600MHz  3.28  12%   0%  12%   0%   0%   0%      °C  
+20:33:25: 1600MHz  3.26  12%   0%  12%   0%   0%   0%      °C  
+20:33:28: 1600MHz  3.23  12%   0%  12%   0%   0%   0%      °C  
+
+System health while running OpenSSL benchmark:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+20:33:30: 1600MHz  3.23   1%   0%   1%   0%   0%   0%      °C  
+20:33:46: 1600MHz  3.18  12%   0%  12%   0%   0%   0%      °C  
+20:34:02: 1600MHz  3.13  12%   0%  12%   0%   0%   0%      °C  
+
+System health while running 7-zip single core benchmark:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+20:34:06: 1600MHz  3.13   1%   0%   1%   0%   0%   0%      °C  
+20:34:16: 1600MHz  3.11  12%   0%  12%   0%   0%   0%      °C  
+20:34:26: 1600MHz  3.09  12%   0%  12%   0%   0%   0%      °C  
+20:34:36: 1600MHz  3.08  12%   0%  12%   0%   0%   0%      °C  
+20:34:46: 1600MHz  3.06  12%   0%  12%   0%   0%   0%      °C  
+20:34:57: 1600MHz  3.05  12%   0%  12%   0%   0%   0%      °C  
+20:35:07: 1600MHz  3.05  12%   0%  12%   0%   0%   0%      °C  
+20:35:17: 1600MHz  3.04  12%   0%  12%   0%   0%   0%      °C  
+20:35:27: 1600MHz  3.03  12%   0%  12%   0%   0%   0%      °C  
+20:35:37: 1600MHz  3.03  12%   0%  12%   0%   0%   0%      °C  
+20:35:47: 1600MHz  3.10  12%   0%  12%   0%   0%   0%      °C  
+20:35:57: 1600MHz  3.09  12%   0%  12%   0%   0%   0%      °C  
+20:36:07: 1600MHz  3.07  12%   0%  12%   0%   0%   0%      °C  
+20:36:17: 1600MHz  3.06  12%   0%  12%   0%   0%   0%      °C  
+20:36:27: 1600MHz  3.05  12%   0%  12%   0%   0%   0%      °C  
+20:36:37: 1600MHz  3.28  12%   0%  12%   0%   0%   0%      °C  
+20:36:47: 1600MHz  3.29  12%   0%  12%   0%   0%   0%      °C  
+
+System health while running 7-zip multi core benchmark:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+20:36:52: 1600MHz  3.99   1%   0%   1%   0%   0%   0%      °C  
+20:37:03: 1600MHz  4.99  85%   1%  84%   0%   0%   0%      °C  
+20:37:17: 1600MHz  5.76  94%   0%  93%   0%   0%   0%      °C  
+20:37:27: 1600MHz  5.73  83%   2%  80%   0%   0%   0%      °C  
+20:37:40: 1600MHz  6.83  99%   0%  99%   0%   0%   0%      °C  
+20:37:51: 1600MHz  7.55  76%   2%  74%   0%   0%   0%      °C  
+20:38:05: 1600MHz  8.15  87%   2%  85%   0%   0%   0%      °C  
+20:38:15: 1600MHz  8.63  86%   0%  86%   0%   0%   0%      °C  
+20:38:26: 1600MHz  9.06  59%   2%  56%   0%   0%   0%      °C  
+20:38:36: 1600MHz  9.13  73%   1%  71%   0%   0%   0%      °C  
+20:38:46: 1600MHz  9.25  66%   1%  64%   0%   0%   0%      °C  
+20:38:56: 1600MHz  9.20  55%   1%  53%   0%   0%   0%      °C  
+20:39:10: 1600MHz  9.18  70%   2%  67%   0%   0%   0%      °C  
+20:39:21: 1600MHz  8.87  91%   0%  90%   0%   0%   0%      °C  
+20:39:31: 1600MHz  9.03  76%   0%  75%   0%   0%   0%      °C  
+20:39:45: 1600MHz  9.26  94%   0%  93%   0%   0%   0%      °C  
+20:39:59: 1600MHz  9.34  84%   1%  82%   0%   0%   0%      °C  
+20:40:09: 1600MHz  9.55  94%   0%  94%   0%   0%   0%      °C  
+20:40:20: 1600MHz  9.62  79%   2%  77%   0%   0%   0%      °C  
+20:40:34: 1600MHz  9.76  84%   2%  82%   0%   0%   0%      °C  
+20:40:44: 1600MHz  9.32  82%   0%  82%   0%   0%   0%      °C  
+20:40:55: 1600MHz  9.35  77%   2%  74%   0%   0%   0%      °C  
+20:41:05: 1600MHz  9.44  89%   2%  86%   0%   0%   0%      °C  
+20:41:15: 1600MHz  9.46  81%   2%  79%   0%   0%   0%      °C  
+20:41:30: 1600MHz  9.53  81%   2%  78%   0%   0%   0%      °C  
+20:41:40: 1600MHz  9.86  93%   0%  92%   0%   0%   0%      °C  
+20:41:50: 1600MHz  9.58  76%   1%  75%   0%   0%   0%      °C  
+20:42:04: 1600MHz  9.65  92%   0%  91%   0%   0%   0%      °C  
+20:42:14: 1600MHz  9.95  85%   2%  83%   0%   0%   0%      °C  
+20:42:28: 1600MHz  9.96  97%   0%  97%   0%   0%   0%      °C  
+20:42:38: 1600MHz 10.18  77%   1%  75%   0%   0%   0%      °C  
+20:42:48: 1600MHz  9.91  84%   2%  81%   0%   0%   0%      °C  
+20:43:02: 1600MHz  9.92  95%   0%  95%   0%   0%   0%      °C  
+20:43:12: 1600MHz  9.18  68%   2%  66%   0%   0%   0%      °C  
+20:43:22: 1600MHz  9.38  83%   2%  80%   0%   0%   0%      °C  
+20:43:32: 1600MHz  9.55  85%   2%  82%   0%   0%   0%      °C  
+20:43:42: 1600MHz  9.70  81%   2%  79%   0%   0%   0%      °C  
+20:43:56: 1600MHz  9.78  93%   1%  92%   0%   0%   0%      °C  
+
+System health while running stress-ng:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+20:44:04: 1600MHz  9.95   1%   0%   1%   0%   0%   0%      °C  
+20:44:48: 1600MHz 10.17 100%   0%  99%   0%   0%   0%      °C  
+20:45:33: 1600MHz 10.23 100%   0%  99%   0%   0%   0%      °C  
+20:46:17: 1600MHz 10.15 100%   0%  99%   0%   0%   0%      °C  
+20:47:01: 1600MHz 10.15 100%   0%  99%   0%   0%   0%      °C  
+20:47:45: 1600MHz 10.11 100%   0%  99%   0%   0%   0%      °C  
+20:48:30: 1600MHz 10.09 100%   0%  99%   0%   0%   0%      °C  
+
+##########################################################################
+
+Linux 6.1.15 (k1) 	2024年09月09日 	_riscv64_	(8 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+           1.71    0.01    0.10    0.02    0.00   98.16
+
+Device             tps    kB_read/s    kB_wrtn/s    kB_dscd/s    kB_read    kB_wrtn    kB_dscd
+mmcblk0           1.52         7.72        16.96         5.69    2236126    4913140    1648668
+mmcblk2           0.00         0.03         0.00         0.00       9462          0          0
+nvme0n1           0.55         2.15         4.10         0.00     622231    1187096          0
+
+               total        used        free      shared  buff/cache   available
+Mem:           7.6Gi       1.0Gi       6.3Gi        28Mi       406Mi       6.6Gi
+Swap:             0B          0B          0B
+
+CPU sysfs topology (clusters, cpufreq members, clockspeeds)
+                 cpufreq   min    max
+ CPU    cluster  policy   speed  speed   core type
+  0        0        0      614    1600   rv64imafdcv_sscofpmf_sstc_svpbmt_zicbom_zicboz_zicbop_zihintpause
+  1        0        0      614    1600   rv64imafdcv_sscofpmf_sstc_svpbmt_zicbom_zicboz_zicbop_zihintpause
+  2        0        0      614    1600   rv64imafdcv_sscofpmf_sstc_svpbmt_zicbom_zicboz_zicbop_zihintpause
+  3        0        0      614    1600   rv64imafdcv_sscofpmf_sstc_svpbmt_zicbom_zicboz_zicbop_zihintpause
+  4        0        0      614    1600   rv64imafdcv_sscofpmf_sstc_svpbmt_zicbom_zicboz_zicbop_zihintpause
+  5        0        0      614    1600   rv64imafdcv_sscofpmf_sstc_svpbmt_zicbom_zicboz_zicbop_zihintpause
+  6        0        0      614    1600   rv64imafdcv_sscofpmf_sstc_svpbmt_zicbom_zicboz_zicbop_zihintpause
+  7        0        0      614    1600   rv64imafdcv_sscofpmf_sstc_svpbmt_zicbom_zicboz_zicbop_zihintpause
+
+Architecture:        riscv64
+Byte Order:          Little Endian
+CPU(s):              8
+On-line CPU(s) list: 0-7
+Model name:          Spacemit(R) X60
+Thread(s) per core:  1
+Core(s) per socket:  8
+Socket(s):           1
+CPU(s) scaling MHz:  100%
+CPU max MHz:         1600.0000
+CPU min MHz:         614.4000
+L1d cache:           256 KiB (8 instances)
+L1i cache:           256 KiB (8 instances)
+L2 cache:            1 MiB (2 instances)
+
+SoC guess: SpacemiT K1
+DT compat: spacemit,k1-x
+ Compiler: /usr/bin/gcc (Ubuntu 13.2.0-4ubuntu3-bb2) 13.2.0 / riscv64-linux-gnu
+ Userland: riscv64
+   Kernel: 6.1.15/riscv64
+           CONFIG_HZ=250
+           CONFIG_HZ_250=y
+           CONFIG_PREEMPTION=y
+           CONFIG_PREEMPT=y
+           CONFIG_PREEMPT_BUILD=y
+           CONFIG_PREEMPT_COUNT=y
+           CONFIG_PREEMPT_RCU=y
+
+##########################################################################
+
+Kernel 6.1.15 is not latest 6.1.109 LTS that was released on 2024-09-08.
+
+See https://endoflife.date/linux for details. It is somewhat likely that
+a lot of exploitable vulnerabilities exist for this kernel as well as many
+unfixed bugs.
+
+But this version string doesn't matter since this is not an official LTS Linux
+from kernel.org. This device runs a SpacemiT vendor/BSP kernel.
+
+##########################################################################
+
+cpu0/index0: 32K, level: 1, type: Instruction
+cpu0/index1: 32K, level: 1, type: Data
+cpu0/index2: 512K, level: 2, type: Unified
+cpu1/index0: 32K, level: 1, type: Instruction
+cpu1/index1: 32K, level: 1, type: Data
+cpu1/index2: 512K, level: 2, type: Unified
+cpu2/index0: 32K, level: 1, type: Instruction
+cpu2/index1: 32K, level: 1, type: Data
+cpu2/index2: 512K, level: 2, type: Unified
+cpu3/index0: 32K, level: 1, type: Instruction
+cpu3/index1: 32K, level: 1, type: Data
+cpu3/index2: 512K, level: 2, type: Unified
+cpu4/index0: 32K, level: 1, type: Instruction
+cpu4/index1: 32K, level: 1, type: Data
+cpu4/index2: 512K, level: 2, type: Unified
+cpu5/index0: 32K, level: 1, type: Instruction
+cpu5/index1: 32K, level: 1, type: Data
+cpu5/index2: 512K, level: 2, type: Unified
+cpu6/index0: 32K, level: 1, type: Instruction
+cpu6/index1: 32K, level: 1, type: Data
+cpu6/index2: 512K, level: 2, type: Unified
+cpu7/index0: 32K, level: 1, type: Instruction
+cpu7/index1: 32K, level: 1, type: Data
+cpu7/index2: 512K, level: 2, type: Unified
+
+##########################################################################
+
+Results validation:
+
+  * Measured clockspeed not lower than advertised max CPU clockspeed
+  * Background activity (%system) OK
+  * Too much other background activity: 0% avg, 13% max -> https://tinyurl.com/mr2wy5uv
+
+Status of performance related policies found below /sys:
+
+  * /sys/module/pcie_aspm/parameters/policy: default [performance] powersave powersupersave
+
+##########################################################################
+
+/sys/kernel/debug/clk/clk_summary diff between all governors set to powersave and performance:
+
+                                   enable  prepare  protect                                duty  hardware
+     clock                          count    count    count        rate   accuracy phase  cycle    enable
+  -------------------------------------------------------------------------------------------------------
+44a45,46
+>           cpu_c1_pclk                 0        0        0  1600000000          0     0  50000         Y
+>              cpu_c1_ace_clk           0        0        0   800000000          0     0  50000         Y
+45a48,50
+>           cpu_c0_core_clk             0        0        0  1600000000          0     0  50000         Y
+>              cpu_c0_tcm_clk           0        0        0   800000000          0     0  50000         Y
+>              cpu_c0_ace_clk           0        0        0   800000000          0     0  50000         Y
+180,184d184
+<           cpu_c0_core_clk             0        0        0   614400000          0     0  50000         Y
+<              cpu_c0_tcm_clk           0        0        0   307200000          0     0  50000         Y
+<              cpu_c0_ace_clk           0        0        0   307200000          0     0  50000         Y
+<           cpu_c1_pclk                 0        0        0   614400000          0     0  50000         Y
+<              cpu_c1_ace_clk           0        0        0   307200000          0     0  50000         Y
+
+##########################################################################
+
+# SiPEED LPi3A Board
+
+Tested with sbc-bench v0.9.67 on Mon, 09 Sep 2024 20:49:05 -0500.
+
+### General information:
+
+    spacemit socs K1-6370 rev C, SpacemiT K1, Kernel: riscv64, Userland: riscv64
+    
+    CPU sysfs topology (clusters, cpufreq members, clockspeeds)
+                     cpufreq   min    max
+     CPU    cluster  policy   speed  speed   core type
+      0        0        0      614    1600   rv64imafdcv_sscofpmf_sstc_svpbmt_zicbom_zicboz_zicbop_zihintpause
+      1        0        0      614    1600   rv64imafdcv_sscofpmf_sstc_svpbmt_zicbom_zicboz_zicbop_zihintpause
+      2        0        0      614    1600   rv64imafdcv_sscofpmf_sstc_svpbmt_zicbom_zicboz_zicbop_zihintpause
+      3        0        0      614    1600   rv64imafdcv_sscofpmf_sstc_svpbmt_zicbom_zicboz_zicbop_zihintpause
+      4        0        0      614    1600   rv64imafdcv_sscofpmf_sstc_svpbmt_zicbom_zicboz_zicbop_zihintpause
+      5        0        0      614    1600   rv64imafdcv_sscofpmf_sstc_svpbmt_zicbom_zicboz_zicbop_zihintpause
+      6        0        0      614    1600   rv64imafdcv_sscofpmf_sstc_svpbmt_zicbom_zicboz_zicbop_zihintpause
+      7        0        0      614    1600   rv64imafdcv_sscofpmf_sstc_svpbmt_zicbom_zicboz_zicbop_zihintpause
+
+7829 KB available RAM
+
+### Governors/policies (performance vs. idle consumption):
+
+Original governor settings:
+
+    cpufreq-policy0: performance / 1600 MHz (conservative ondemand userspace powersave performance schedutil / 614 819 1000 1229 1600)
+
+Tuned governor settings:
+
+    cpufreq-policy0: performance / 1600 MHz
+
+Status of performance related policies found below /sys:
+
+    /sys/module/pcie_aspm/parameters/policy: default [performance] powersave powersupersave
+
+### Clockspeeds (idle vs. heated up):
+
+Before:
+
+    cpu0 (rv64imafdcv_sscofpmf_sstc_svpbmt_zicbom_zicboz_zicbop_zihintpause): OPP: 1600, Measured: 1597 
+
+After:
+
+    cpu0 (rv64imafdcv_sscofpmf_sstc_svpbmt_zicbom_zicboz_zicbop_zihintpause): OPP: 1600, Measured: 1597 
+
+### Performance baseline
+
+  * memcpy: 2397.3 MB/s, memchr: 2041.0 MB/s, memset: 5218.6 MB/s
+  * 16M latency: 295.4 309.2 295.2 308.6 293.3 305.5 312.3 565.6 
+  * 128M latency: 315.8 326.2 313.2 326.7 313.9 325.0 355.6 563.4 
+  * 7-zip MIPS (3 consecutive runs): 6772, 6826, 6821 (6810 avg), single-threaded: 985
+  * `aes-256-cbc      22528.63k    26039.21k    26925.16k    27285.16k    27264.94k    27339.43k`
+  * `aes-256-cbc      22614.91k    25932.57k    27012.52k    27194.51k    27312.13k    27333.97k`
+
+### Storage devices:
+
+  * 238.5GB "SKHynix_HFS256GDE9X081N" SSD as /dev/nvme0: Speed 5GT/s (downgraded), Width x2 (downgraded), 0% worn out, drive temp: 47°C, ASPM Disabled
+  * 29.7GB "SanDisk SD32G" UHS SDR104 SD card as /dev/mmcblk0: date 07/2023, manfid/oemid: 0x000003/0x5344, hw/fw rev: 0x8/0x5
+  * 29.1GB "AT3SFB" HS400 Enhanced strobe eMMC 5.1 card as /dev/mmcblk2: date 03/2024, manfid/oemid: 0x0000ec/0x2900, hw/fw rev: 0x0/0x0903100000000000
+
+### Software versions:
+
+  * Bianbu 1.0.14 (mantic)
+  * Compiler: /usr/bin/gcc (Ubuntu 13.2.0-4ubuntu3-bb2) 13.2.0 / riscv64-linux-gnu
+  * OpenSSL 3.0.10, built on 1 Aug 2023 (Library: OpenSSL 3.0.10 1 Aug 2023)    
+
+### Kernel info:
+
+  * `/proc/cmdline: earlycon=sbi earlyprintk quiet splash plymouth.ignore-serial-consoles plymouth.prefer-fbcon console=ttyS0,115200 loglevel=8 clk_ignore_unused swiotlb=65536 rdinit=/init workqueue.default_affinity_scope=system root=/dev/mmcblk0p6 rootwait rootfstype=ext4`
+  * Kernel 6.1.15 / CONFIG_HZ=250
+
+Kernel 6.1.15 is not latest 6.1.109 LTS that was released on 2024-09-08.
+
+See https://endoflife.date/linux for details. It is somewhat likely that
+a lot of exploitable vulnerabilities exist for this kernel as well as many
+unfixed bugs.
+
+But this version string doesn't matter since this is not an official LTS Linux
+from kernel.org. This device runs a SpacemiT vendor/BSP kernel.

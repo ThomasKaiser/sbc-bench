@@ -90,6 +90,7 @@
 | [Radxa Rock Pi 4 (RK3399)](results/21fX.txt) | 2000/1500 MHz | 5.3 | Bionic arm64 | **6910** | 1817 | 1147370 | 3660 | 8310 | 10.71 |
 | [Radxa Rock Pi 4 (RK3399)](results/3Q2q.txt) | 2000/1500 MHz | 5.10 | Focal arm64 | **6900** | 1899 | 1146500 | 3430 | 8260 | - |
 | [OrangePi 4 (RK3399)](results/4Kau.txt) | 2010/1510 MHz | 6.1 | Bookworm arm64 | **6880** | 1891 | 1145840 | 3490 | 8430 | - |
+| [Lichee Pi 3A (SpacemiT K1)](results/XxZl.txt) | 1600 MHz | 6.1 | Mantic riscv64 | **6810** | 985 | 27340 | 2400 | 5220 | - |
 | [ODROID-XU4 (Exynos 5422)](results/1ixL.txt) | 1900/1400 MHz | 3.10 | Jessie armhf | **6750** | - | 68200 | 2200 | 4800 | - |
 | [NanoPi NEO4 (RK3399)](results/1p3T.txt) | 2000/1500 MHz | 4.19 | Stretch arm64 | **6750** | 1814 | 1139850 | 2370 | 6110 | 8.84 |
 | [BPi F3 (SpacemiT K1)](results/8to7qX.txt) | 1600 MHz | 6.1 | Mantic riscv64 | **6750** | 978 | 27260 | 2620 | 7180 | - |
@@ -443,6 +444,7 @@
 | [Rock64 (RK3328)](results/1iH4.txt) | 1300 MHz | 4.18 | Bionic arm64 | 3530 | **996** | 605250 | 1340 | 5770 | 4.65 |
 | [Ugoos UT2 (RK3188)](results/408h.txt) | 1560 MHz | 5.10 | Jammy armhf | 3320 | **994** | 43250 | 320 | 2020 | - |
 | [Khadas VIM2 (Amlogic S912)](results/1iJ7.txt) | 1415/1000 MHz | 4.17 | Bionic arm64 | 5450 | **993** | 659600 | 1920 | 5920 | 8.59 |
+| [Lichee Pi 3A (SpacemiT K1)](results/XxZl.txt) | 1600 MHz | 6.1 | Mantic riscv64 | 6810 | **985** | 27340 | 2400 | 5220 | - |
 | [Orange Pi Prime (Allwinner H5)](results/2kTH.txt) | 1370 MHz | 5.4 | Buster | 3590 | **984** | 637980 | 1180 | 3540 | - |
 | [BPi F3 (SpacemiT K1)](results/8to7qX.txt) | 1600 MHz | 6.1 | Mantic riscv64 | 6750 | **978** | 27260 | 2620 | 7180 | - |
 | [Raspberry Pi 3 B (BCM2837)](results/4hOP.txt) | 1200 MHz | 5.15 | Raspbian Sid | 2970 | **977** | 36230 | 1110 | 1700 | 2.89 |
@@ -703,6 +705,7 @@
 | [TRONFY MXQ (Amlogic S805)](results/3MiR.txt) | 1536 MHz | 5.10 | Focal armhf | 3100 | 897 | **29080** | 980 | 2990 | - |
 | [Lime A10 (Allwinner A10)](results/1j1L.txt) | 910 MHz | 4.14 | Stretch armhf | 550 | 550 | **28250** | 440 | 1300 | - |
 | [AMD E-450 APU](results/4hwl.txt) | 1650 MHz | 5.15 | Jammy amd64 | 2430 | 1258 | **27450** | 1710 | 1740 | - |
+| [Lichee Pi 3A (SpacemiT K1)](results/XxZl.txt) | 1600 MHz | 6.1 | Mantic riscv64 | 6810 | 985 | **27340** | 2400 | 5220 | - |
 | [BPi F3 (SpacemiT K1)](results/8to7qX.txt) | 1600 MHz | 6.1 | Mantic riscv64 | 6750 | 978 | **27260** | 2620 | 7180 | - |
 | [M1-MuseBook (SpacemiT K1)](results/Xv06.txt) | 1600 MHz | 6.1 | Mantic riscv64 | 6510 | 1025 | **27220** | 2570 | 6470 | - |
 | [Cubox-i4<br />(NXP i.MX6)](results/4132.txt) | 980 MHz | 5.15 | Jammy armhf | 2360 | 657 | **27000** | 340 | 340 | - |
@@ -866,6 +869,7 @@
 | [Raspberry Pi 4 B (BCM2711)](results/1MFf.txt) | 1500 MHz | 4.19 | Raspbian Buster | 5500 | 1606 | 64860 | **2460** | 3170 | - |
 | [NanoPi NEO4 (RK3399)](results/3GmR.txt) | 2016/1512 MHz | 5.10 | Focal arm64 | 6970 | 1906 | 1145030 | **2450** | 6190 | 11.36 |
 | [Radxa Zero 3W (RK3566)](results/4L4k.txt) | 1600 MHz | 5.10 | Jammy arm64 | 4000 | 1155 | 750970 | **2400** | 5580 | 5.75 |
+| [Lichee Pi 3A (SpacemiT K1)](results/XxZl.txt) | 1600 MHz | 6.1 | Mantic riscv64 | 6810 | 985 | 27340 | **2400** | 5220 | - |
 | [x5-Z8300](results/1lgD.txt) | 1420 MHz | 4.9 | Stretch amd64 | 3900 | 950 | 178010 | **2380** | 2380 | 7.81 |
 | [Nintendo Switch (Tegra X1)](results/3Di2.txt) | 2060 MHz | 4.9 | Bionic arm64 | 6720 | 1901 | 746680 | **2370** | 3670 | 9.25 |
 | [NanoPi NEO4 (RK3399)](results/1p3T.txt) | 2000/1500 MHz | 4.19 | Stretch arm64 | 6750 | 1814 | 1139850 | **2370** | 6110 | 8.84 |
@@ -1099,6 +1103,7 @@
 | [Celeron N4020](results/4vNB.txt) | 2800 MHz | 5.15 | Bookworm amd64 | 4680 | 2577 | 780770 | 5480 | **5390** | - |
 | [Radxa Zero (S905Y2)](results/3JCm.txt) | 1800 MHz | 5.10 | Bullseye arm64 | 4580 | 1353 | 838360 | 1600 | **5360** | 7.13 |
 | [Celeron N4100](results/1uTS.txt) | 2300/1100 MHz | 4.15 | Bionic amd64 | 8510 | 2222 | 669350 | 4750 | **5240** | 18.33 |
+| [Lichee Pi 3A (SpacemiT K1)](results/XxZl.txt) | 1600 MHz | 6.1 | Mantic riscv64 | 6810 | 985 | 27340 | 2400 | **5220** | - |
 | [Pentium J4205](results/1m5t.txt) | 2560/1500 MHz | 4.17 | Stretch amd64 | 7570 | 2146 | 480640 | 5070 | **5170** | 18.82 |
 | [Libre Computer AML-S912-PC](results/40cj.txt) | 1415/1000 MHz | 5.15 | Bullseye arm64 | 5980 | 1012 | 659290 | 1650 | **5170** | - |
 | [ODROID-HC4 (S905X3)](results/3Na5.txt) | 2100 MHz | 5.10 | Buster arm64 | 5730 | 1672 | 980970 | 3540 | **5150** | - |
@@ -1365,6 +1370,7 @@
 | [Radxa Zero 3W (RK3566)](results/4L4k.txt) | **1600** MHz| 5.10 | Jammy arm64 | 4000 | 1155 | 750970 | 2400 | 5580 | 5.75 |
 | [Macchiatobin (Armada 8040)](results/4zcm.txt) | **1600** MHz| 5.10 | Buster arm64 | 5720 | 1739 | 909420 | 4510 | 12270 | 7.91 |
 | [M1-MuseBook (SpacemiT K1)](results/Xv06.txt) | **1600** MHz| 6.1 | Mantic riscv64 | 6510 | 1025 | 27220 | 2570 | 6470 | - |
+| [Lichee Pi 3A (SpacemiT K1)](results/XxZl.txt) | **1600** MHz| 6.1 | Mantic riscv64 | 6810 | 985 | 27340 | 2400 | 5220 | - |
 | [Helios4<br />(Armada 388)](results/1jCy.txt) | **1600** MHz| 4.14 | Stretch armhf | 2210 | 1215 | 42500 &ast;98560 | 910 | 4840 | - |
 | [Clearfog A1<br />(Armada 388)](results/4d1U.txt) | **1600** MHz| 5.15 | Bullseye armhf | 2230 | 1239 | 44080 | 910 | 5060 | - |
 | [BPi F3 (SpacemiT K1)](results/8to7qX.txt) | **1600** MHz| 6.1 | Mantic riscv64 | 6750 | 978 | 27260 | 2620 | 7180 | - |

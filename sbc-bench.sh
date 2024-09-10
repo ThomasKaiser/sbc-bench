@@ -2329,6 +2329,12 @@ Getx86ClusterDetails() {
 			# Raptor Lake, 4/0 cores, 8 threads
 			echo "0"
 			;;
+		*226V*|*228V*|*236V*|*238V*|*256V*|*258V*|*266V*|*268V*|*288V*)
+			# Lunar Lake, 4/4 cores, 8 threads
+			echo "Skymont" >"${TempDir}/Ecores"
+			echo "Lion Cove" >"${TempDir}/Pcores"
+			echo "0 4"
+			;;
 		*)
 			# unknown CPU, try to check cache sizes since at least on currently known Intel
 			# CPUs efficiency and performance cores have differing cache sizes.

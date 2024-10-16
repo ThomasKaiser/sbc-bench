@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.9.67
+Version=0.9.68
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -517,6 +517,7 @@ GetARMCore() {
 	48:HiSilicon
 	48/d01:TaiShan v110
 	48/d02:TaiShan v120
+	48/d03:TaiShan v130
 	48/d40:HiSilicon-A76
 	48/d41:HiSilicon-A77
 	48/d42:HiSilicon-A710
@@ -2335,6 +2336,18 @@ Getx86ClusterDetails() {
 			echo "Lion Cove" >"${TempDir}/Pcores"
 			echo "0 4"
 			;;
+		*"Ultra 5 245K"*)
+			# Arrow Lake, 6/8 cores, 14 threads
+			echo "Skymont" >"${TempDir}/Ecores"
+			echo "Lion Cove" >"${TempDir}/Pcores"
+			echo "0 6"
+			;;
+		*"Ultra 7 265K"*|*"Ultra 9 285K"*)
+			# Arrow Lake, 8 P cores, 12/16 E cores, 20/24 threads
+			echo "Skymont" >"${TempDir}/Ecores"
+			echo "Lion Cove" >"${TempDir}/Pcores"
+			echo "0 8"
+			;;
 		*)
 			# unknown CPU, try to check cache sizes since at least on currently known Intel
 			# CPUs efficiency and performance cores have differing cache sizes.
@@ -3295,27 +3308,12 @@ InitialMonitoring() {
 	# try to identify ARM/RISC-V/Loongson SoCs
 	[ "${CPUArchitecture}" = "x86_64" ] && GuessedSoC="n/a" || GuessedSoC="$(GuessARMSoC)"
 
-	# upload raw /proc/cpuinfo contents and device-tree compatible entry to ix.io
-	ping -c1 -w2 ix.io >/dev/null 2>&1
+	# upload raw /proc/cpuinfo contents to 0x0.st
+	ping -c1 -w2 0x0.st >/dev/null 2>&1
 	if [ $? -eq 0 ] && [ "X${ProcCPUFile}" = "X/proc/cpuinfo" ]; then
-		UploadScheme="f:1=<-"
-		UploadServer="ix.io"
-		UploadAnswer="$( (echo -e "/proc/cpuinfo ${Version}\n\n$(uname -a) / ${DeviceName}\n" ; cat /proc/cpuinfo ; echo -e "\n${CPUTopology}\n\n${CPUSignature} / ${GuessedSoC} / ${CPUFetchGuess}$(cut -c9- <<<"${RK_NVMEM}")  ${AW_NVMEM:19:2}${AW_NVMEM:16:2}${AW_NVMEM:13:2}${AW_NVMEM:10:2} ${AW_NVMEM:31:2}${AW_NVMEM:28:2}${AW_NVMEM:25:2}${AW_NVMEM:22:2} ${AW_NVMEM:44:2}${AW_NVMEM:41:2}${AW_NVMEM:38:2}${AW_NVMEM:35:2} ${AW_NVMEM:56:2}${AW_NVMEM:53:2}${AW_NVMEM:50:2}${AW_NVMEM:47:2}\n\n${DTCompatible}\n\n${OPPTables}\n\n$(grep . /sys/devices/virtual/thermal/thermal_zone?/* 2>/dev/null)\n\n$(grep . /sys/class/hwmon/hwmon?/* 2>/dev/null)") 2>/dev/null | curl -s -F ${UploadScheme} ${UploadServer} 2>&1)"
-		case "${UploadAnswer}" in
-			*ix.io/*)
-				# URL returned, so everything's fine
-				:
-				;;
-			*)
-				# something's wrong, e.g. "down for a while due to DDOS. thanks, buddy!" in early Nov. 2023
-				# ping -c1 -w2 sprunge.us >/dev/null 2>&1 && UploadScheme="sprunge=<-" ; UploadServer="sprunge.us"
-				ping -c1 -w2 0x0.st >/dev/null 2>&1 && UploadScheme='file=@-' ; UploadServer="0x0.st"
-				;;
-		esac
-	else
-		# upload location fallback to 0x0.st if possible
-		# ping -c1 -w2 sprunge.us >/dev/null 2>&1 && UploadScheme="sprunge=<-" ; UploadServer="sprunge.us"
-		ping -c1 -w2 0x0.st >/dev/null 2>&1 && UploadScheme='file=@-' ; UploadServer="0x0.st"
+		UploadScheme='file=@-'
+		UploadServer='0x0.st'
+		UploadAnswer="$( (echo -e "/proc/cpuinfo ${Version}\n\n$(uname -a) / ${DeviceName}\n" ; grep -v -i "serial" /proc/cpuinfo ) 2>/dev/null | curl -s -A 'sbc-bench' -F ${UploadScheme} ${UploadServer} 2>&1)"
 	fi
 
 	# Log version and device info
@@ -4561,6 +4559,11 @@ SummarizeResults() {
 } # SummarizeResults
 
 LogEnvironment() {
+	# if /proc/cpuinfo has been uploaded include link
+	if [ "X${UploadAnswer}" != "X" ]; then
+		echo -e "\n  cpuinfo: ${UploadAnswer}\c"
+	fi
+
 	# Log processor info if available and we're not running virtualized:
 	if [ "X${VirtWhat}" = "X" ] || [ "X${VirtWhat}" = "Xnone" ] || [ "X${DMIProductName}" = "XApple Virtualization Generic Platform" ]; then
 		command -v dmidecode >/dev/null 2>&1 && \
@@ -4651,9 +4654,10 @@ LogEnvironment() {
 	ShortKernelVersion="$(awk -F"." '{print $1"."$2}' <<<"${KernelVersion}")"
 	if [ -r /proc/self/smaps ]; then
 		KernelPageSize="$(awk -F" " '/KernelPageSize/ {print $2$3}' /proc/self/smaps 2>/dev/null | head -n1)"
-		[ "${KernelPageSize}" != "4kB" ] && PageSize=" (${KernelPageSize})" || PageSize=""
+		[ "${KernelPageSize}" != "4kB" ] && PageSize="Page size: ${KernelPageSize}\n" || PageSize=""
 	fi
-	echo -e "   Kernel: ${KernelVersion}/${CPUArchitecture}${PageSize}${VirtOrContainer}"
+	echo -e "${PageSize}   Kernel: ${KernelVersion}/${CPUArchitecture}${VirtOrContainer}"
+
 	# kernel config
 	KernelConfig="/boot/config-${KernelVersion}"
 	if [ -f "${KernelConfig}" ] ; then
@@ -5049,8 +5053,8 @@ HumanReadableSize() {
 
 UploadResults() {
 	# upload results to ix.io and replace multiple empty lines with one. 2nd try if 1st does not succeed
-	UploadURL=$(sed '/^$/N;/^\n$/D' <"${ResultLog}" | sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" | curl -s -F ${UploadScheme} ${UploadServer} 2>/dev/null || \
-		sed '/^$/N;/^\n$/D' <"${ResultLog}" | sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" | curl -s -F ${UploadScheme} ${UploadServer})
+	UploadURL=$(sed '/^$/N;/^\n$/D' <"${ResultLog}" | sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" | curl -s -A 'sbc-bench' -F ${UploadScheme} ${UploadServer} 2>/dev/null || \
+		sed '/^$/N;/^\n$/D' <"${ResultLog}" | sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" | curl -s -A 'sbc-bench' -F ${UploadScheme} ${UploadServer})
 
 	# Display benchmark results if not in PTS, GB or preview mode
 	if [ "X${MODE}" != "Xpts" ] && [ "X${MODE}" != "Xgb" ] && [ "X${REVIEWMODE}" != "Xtrue" ]; then
@@ -6342,20 +6346,13 @@ GuessSoCbySignature() {
 			esac
 			;;
 		*QualcommOryon*)
-			# Qualcomm Snapdragon X Elite (X1E80100): 8 x Oryon + 4 x Oryon or variants
-			# https://browser.geekbench.com/v6/cpu/3327362.gb6 is in conflict with https://browser.geekbench.com/v6/cpu/3326512.gb6
-			# wrt stepping: "ARM implementer 81 architecture 8 variant 1 part 1 revision 1" vs. "ARMv8 (64-bit) Family 8 Model 1 Revision 201"
-			# The former is r1p1, the latter r2p1. But maybe it's different steppings since it's also said the clusters would consist of two
-			# different core types: https://lore.kernel.org/linux-arm-msm/b165d2cd-e8da-4f6d-9ecf-14df2b803614@linaro.org/
+			# Qualcomm Snapdragon X Elite (X1E80100): 4 x Oryon r2p1 + 8 x Oryon + r1p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp flagm2 frint i8mm bf16 rng ecv afp rpres
 			case ${CPUCores} in
 				12)
-					echo "Qualcomm Snapdragon X Elite (X1E80100)"
+					echo "Qualcomm Snapdragon X Elite"
 					;;
-				10)
-					echo "Qualcomm SC8370/SC8370XP"
-					;;
-				8)
-					echo "Qualcomm SC8350/SC8350X"
+				8|10)
+					echo "Qualcomm Snapdragon X Plus"
 					;;
 			esac
 			;;
@@ -6602,6 +6599,10 @@ GuessSoCbySignature() {
 								# Texas Instruments K3 AM654, 4 x Cortex-A53 / r0p4
 								echo "Texas Instruments K3 AM654"
 								;;
+							*am67a*)
+								# Texas Instruments AM67A, 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
+								echo "Texas Instruments AM67A"
+								;;
 							*ipq5332*)
 								# Qualcomm IPQ5332, 4 x Cortex-A53 / r0p4
 								echo "Qualcomm IPQ5332"
@@ -6810,7 +6811,12 @@ GuessSoCbySignature() {
 			# HiSilicon Kirin 9000s: 4 x Cortex-A510 / r1p1 + 3 x HiSilicon-A710 / r2p2 + 1 x TaiShan v120 / r2p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 sve asimdfhm dit ilrcpc flagm ssbs sb pacg dcpodp flagm2 frint svei8mm i8mm bti
 			# https://github.com/Dr-Noob/cpufetch/issues/259
 			# The 'A710' like cores use HiSilicon's own 48/d42 ID and all the big cores are SMT capable
-			echo "HiSilicon Kirin 9000s"
+			echo "HiSilicon Kirin 9000s/9000WL"
+			;;
+		*A510*A510*A510*A510*A710*A710*A710*TaiShanv130r2p0)
+			# HiSilicon Kirin 9010/T91: 4 x Cortex-A510 + 3 x HiSilicon-A710 + 1 x TaiShan v130 / r2p0 / https://www.computerbase.de/2024-09/in-huaweis-12-zoll-tablets-details-zum-neuen-kirin-t91-soc-mit-8-kernen/
+			# The 'A710' like cores still use HiSilicon's own 48/d42 ID and all the big cores are SMT capable
+			echo "HiSilicon Kirin 9010/T91"
 			;;
 		*HiSilicon1910*|*HiSilicon-1910*)
 			# HiSilicon Hi1910: https://www.cnx-software.com/2024/06/20/orange-pi-kunpeng-pro-sbc-features-a-quad-core-huawei-cpu-with-an-8-tops-ai-accelerator/#comments
@@ -7719,6 +7725,10 @@ GuessSoCbySignature() {
 					;;
 			esac
 			;;
+		*NeoverseV2r0p1*)
+			# Google Axion:  Neoverse-V2 / r0p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 sve asimdfhm dit uscat ilrcpc flagm sb paca pacg dcpodp sve2 sveaes svepmull svebitperm svesha3 svesm4 flagm2 frint svei8mm svebf16 i8mm bf16 dgh rng bti
+			echo "Google Axion"
+			;;
 		*AppleM1r0p0*AppleM1r0p0*AppleM1r0p0*AppleM1r0p0*AppleM1*AppleM1*AppleM1*AppleM1*|*AppleM1r1p1*AppleM1r1p1*AppleM1r1p1*AppleM1r1p1*AppleM1r1p1*AppleM1r1p1*AppleM1r1p1*AppleM1r1p1)
 			# Apple M1: 4 x Apple Icestorm / r1p1 + 4 x Apple Firestorm / r1p1 / https://gist.github.com/z4yx/13520bd2beef49019b1b7436e3b95ddd
 			# or 4 x Apple Icestorm / r0p0 + 4 x Apple Firestorm / ? / https://bench.cr.yp.to/computers.html
@@ -7867,6 +7877,10 @@ GuessSoCbySignature() {
 		*A510r1p1*A510r1p1*A510r1p1*A510r1p1*A715r1p0*A715r1p0*A715r1p0*A715r1p0)
 			# Google Tensor G3: 4 x Cortex-A510 / r1p1 + 4 x Cortex-A715 / r1p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 sve asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp sve2 sveaes svepmull svebitperm svesha3 svesm4 flagm2 frint svei8mm svebf16 i8mm bti mte mte3
 			echo "Google Tensor G3"
+			;;
+		*A55r2p0*A55r2p0*A76*A76*A76*A76|*A76*A76*A76*A76*A55r2p0*A55r2p0)
+			# SiEngine SE1000, 2 x Cortex-A55 / r2p0 + 4 x Cortex-A76 / https://browser.geekbench.com/v6/cpu/2500810
+			grep -E -q 'siengine|se1000|' <<<"${DTCompatible,,}" && echo "SiEngine SE1000"
 			;;
 		0?Loongson3A10000?Loongson3A10000?Loongson3A10000?Loongson3A1000)
 			# Loongson 3A1000: 4 x Loongson-3 V0.5 FPU V0.1 https://github.com/ThomasKaiser/sbc-bench/blob/master/results/cpuinfo/Loongson-3A1000.cpuinfo
@@ -8917,6 +8931,9 @@ CheckKernelVersion() {
 				*T-Head*)
 					PrintBSPWarning T-Head
 					;;
+				*SiEngine*)
+					PrintBSPWarning SiEngine
+					;;
 			esac
 			;;
 		"5.15.78"|"5.15.119"|"5.15.137")
@@ -8960,6 +8977,10 @@ CheckKernelVersion() {
 			;;
 		6.1.*)
 			case ${GuessedSoC} in
+				*Rockchip*)
+					# RK 6.1 BSP in different flavours
+					PrintBSPWarning RockchipGKI
+					;;
 				SpacemiT*)
 					PrintBSPWarning SpacemiT
 					;;
@@ -8993,7 +9014,7 @@ PrintBSPWarning() {
 			echo -e "${BOLD}vendor kernel. See https://tinyurl.com/y8k3af73 and https://tinyurl.com/ywtfec7n${NC}"
 			echo -e "${BOLD}for details.${NC}"
 			;;
-		Ingenic|Kendryte|MediaTek|Nexell|Nvidia|NXP|Phytium|Qualcomm|RealTek|Samsung|Sophon|SpacemiT|StarFive|Synaptics|T-Head|Unisoc)
+		Ingenic|Kendryte|MediaTek|Nexell|Nvidia|NXP|Phytium|Qualcomm|RealTek|Samsung|SiEngine|Sophon|SpacemiT|StarFive|Synaptics|T-Head|Unisoc)
 			echo -e "${BOLD}This device runs a $1 vendor/BSP kernel.${NC}"
 			;;
 		Rockchip)

@@ -47,6 +47,7 @@
 | [Khadas VIM4 (A311D2)](results/4cHh.txt) | 2200/2010 MHz | 5.4 | Jammy arm64 | **12120** | 2067 | 1254540 | 8180 | 11680 | - |
 | [Khadas VIM4 (A311D2)](results/3Wvv.txt) | 2200/1970 MHz | 5.4 | Focal arm64 | **12090** | 2081 | 1253200 | 7810 | 11600 | - |
 | [Pentium G4600](results/2jVw.txt) | 3600 MHz | 4.19 | Buster amd64 | **11810** | 4448 | 984820 | 15120 | 33380 | 21.88 |
+| [Radxa Fogwise AirBox (SG2300X)](results/XUSc.txt) | 2300 MHz | 5.4 | Focal arm64 | **11580** | 1712 | 1075090 | 1870 | 9210 | - |
 | [Pentium N6005](results/4BtC.txt) | 3300/2000 MHz | 5.15 | Jammy amd64 | **11510** | 3369 | 923550 | 9650 | 10280 | 22.18 |
 | [Celeron N5105](results/3Qf7.txt) | 2900/2000 MHz | 5.13 | Focal amd64 | **11450** | 3059 | 811760 | 7710 | 9290 | 21.79 |
 | [Raspberry Pi 5 B (BCM2712)](results/1ULtUe.txt) | 2400 MHz | 6.6 | Bookworm arm64 | **11410** | 3270 | 1368000 | 6070 | 14830 | 15.42 |
@@ -355,6 +356,7 @@
 | [Nintendo Switch (Tegra X1)](results/1Rnj.txt) | 1780 MHz | 4.9 | Fedora 30 arm-64 | 6170 | **1719** | 642670 | 2500 | 3570 | - |
 | [NanoPi NEO4 (RK3399)](results/1oim.txt) | 2000/1500 MHz | 4.4| Stretch arm64 | 6520 | **1718** | 1123190 | 2280 | 4770 | 8.83 |
 | [Tinkerboard (RK3288)](results/3X9q.txt) | 1800 MHz | 5.10 | Buster armhf | 5770 | **1713** | 67060 | 1540 | 4110 | - |
+| [Radxa Fogwise AirBox (SG2300X)](results/XUSc.txt) | 2300 MHz | 5.4 | Focal arm64 | 11580 | **1712** | 1075090 | 1870 | 9210 | - |
 | [NanoPi NEO4 (RK3399)](results/1oho.txt) | 2000/1500 MHz | 4.4| Stretch arm64 | 6510 | **1703** | 1128860 | 2260 | 4770 | 8.71 |
 | [Khadas Edge (RK3399)](results/1uar.txt) | 2000/1500 MHz | 4.4 | Stretch arm64 | 6600 | **1703** | 1127780 | 2860 | 4880 | 8.85 |
 | [Tinkerboard (RK3288)](results/3Lir.txt) | 1800 MHz | 4.4 | Buster armhf | 5440 | **1693** | 66300 | 1340 | 3510 | - |
@@ -552,6 +554,7 @@
 | [NanoPi NEO4 (RK3399)](results/1oim.txt) | 2000/1500 MHz | 4.4| Stretch arm64 | 6520 | 1718 | **1123190** | 2280 | 4770 | 8.83 |
 | [NanoPi NEO4 (RK3399)](results/1oib.txt) | 2000/1500 MHz | 4.4| Stretch arm64 | 6030 | 1343 | **1121380** | 2230 | 4770 | 8.57 |
 | [ODROID-N2 (Amlogic S922X)](results/3MuT.txt) | 2000/1900 MHz | 5.10 | Buster arm64 | 9090 | 2012 | **1085350** | 4260 | 9080 | - |
+| [Radxa Fogwise AirBox (SG2300X)](results/XUSc.txt) | 2300 MHz | 5.4 | Focal arm64 | 11580 | 1712 | **1075090** | 1870 | 9210 | - |
 | [Apple M1 Pro](results/443N.txt) | 3030/2060 MHz | 5.18 | Gentoo 2.8 arm64 | 43800 | 5010 | **1064450** | 27110 | 71910 | 48.28 |
 | [ODROID-N2 (Amlogic S922X)](results/1BsF.txt) | 1800/1900 MHz | 4.9 | Bionic arm64 | 8140 | 1669 | **1024680** | 4120 | 8610 | 11.39 |
 | [NanoPC T4 (RK3399)](results/1iWU.txt) | 1800/1400 MHz | 4.17 | Stretch arm64 | 6230 | 1756 | **1023600** | 4100 | 9060 | 10.30 |
@@ -891,6 +894,7 @@
 | [Khadas VIM1S (S905Y4)](results/4bbv.txt) | 2000 MHz | 5.4 | Jammy arm64 | 4000 | 1148 | 436540 | **1970** | 7530 | - |
 | [Khadas VIM1 (Amlogic S905X)](results/4bee.txt) | 1415 MHz | 5.1 | Buster arm64 | 3860 | 1136 | 660160 | **1940** | 5900 | - |
 | [Khadas VIM2 (Amlogic S912)](results/1iJ7.txt) | 1415/1000 MHz | 4.17 | Bionic arm64 | 5450 | 993 | 659600 | **1920** | 5920 | 8.59 |
+| [Radxa Fogwise AirBox (SG2300X)](results/XUSc.txt) | 2300 MHz | 5.4 | Focal arm64 | 11580 | 1712 | 1075090 | **1870** | 9210 | - |
 | [NanoPi K2 (Amlogic S905)](results/3Qve.txt) | 1480 MHz | 5.10 | Bullseye arm64 | 3880 | 1154 | 51490 | **1850** | 3790 | - |
 | [Le Potato (Amlogic S905X)](results/1iSQ.txt) | 1410 MHz | 4.18 | Stretch arm64 | 3780 | 1057 | 657200 | **1810** | 5730 | 3.92 |
 | [ODROID-C2 (Amlogic S905)](results/1ixI.txt) | 1750 MHz | 3.14 | Xenial arm64 | 4070 | 1128 | 48500 | **1750** | 3100 | - |
@@ -1032,6 +1036,7 @@
 | [Khadas VIM3 (Amlogic A311D)](results/1MFD.txt) | 2200/1800 MHz | 4.9 | Bionic arm64 | 8600 | 2026 | 1256910 | 4980 | **9300** | 13.12 |
 | [Celeron N5105](results/3Qf7.txt) | 2900/2000 MHz | 5.13 | Focal amd64 | 11450 | 3059 | 811760 | 7710 | **9290** | 21.79 |
 | [Khadas VIM3 (Amlogic A311D)](results/4o1A.txt) | 2400/2015 MHz | 6.0 | Bullseye arm64 | 9650 | 2379 | 1366300 | 5080 | **9240** | - |
+| [Radxa Fogwise AirBox (SG2300X)](results/XUSc.txt) | 2300 MHz | 5.4 | Focal arm64 | 11580 | 1712 | 1075090 | 1870 | **9210** | - |
 | [ODROID-N2 (Amlogic S922X)](results/3MuT.txt) | 2000/1900 MHz | 5.10 | Buster arm64 | 9090 | 2012 | 1085350 | 4260 | **9080** | - |
 | [NanoPC T4 (RK3399)](results/1iWU.txt) | 1800/1400 MHz | 4.17 | Stretch arm64 | 6230 | 1756 | 1023600 | 4100 | **9060** | 10.30 |
 | [NanoPC T4 (RK3399)](results/1iZq.txt) | 1800/1400 MHz | 4.17 | Stretch arm64 | 6380 | 1741 | 1022600 | 4160 | **9000** | 9.36 |
@@ -1270,6 +1275,7 @@
 | [Celeron J4105](results/1qal.txt) | **2400/1500** MHz| 4.15 | Bionic amd64 | 9020 | 2290 | 697100 | 5500 | 7410 | 19.07 |
 | [Qualcomm Snapdragon 835](results/4fdD.txt) | **2360/1900** MHz| 6.1 | Jammy arm64 | 9800 | 2474 | 883330 | 9720 | 14070 | 12.58 |
 | [Radxa ROCK 5B (RK3588)](results/41BH.txt) | **2350/1830** MHz| 5.10 | Focal arm64 | 16450 | 3146 | 1337540 | 10830 | 29220 | 25.31 |
+| [Radxa Fogwise AirBox (SG2300X)](results/XUSc.txt) | **2300** MHz| 5.4 | Focal arm64 | 11580 | 1712 | 1075090 | 1870 | 9210 | - |
 | [Phytium D2000<br />(2 x SO-DIMM)](results/446h.txt) | **2300** MHz| 5.19 | Jammy arm64 | 16670 | 2252 | 828130 | 3480 | 16110 | - |
 | [Phytium D2000<br />(1 x SO-DIMM)](results/445T.txt) | **2300** MHz| 5.19 | Jammy arm64 | 16390 | 2220 | 827090 | 2820 | 6490 | - |
 | [Celeron N4100](results/1uTS.txt) | **2300/1100** MHz| 4.15 | Bionic amd64 | 8510 | 2222 | 669350 | 4750 | 5240 | 18.33 |

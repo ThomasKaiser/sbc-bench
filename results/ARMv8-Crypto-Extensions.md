@@ -116,6 +116,8 @@ Crawling through [sbc-bench results collection](../Results.md) comparing +70 dif
 | [UMS9620](4yFl.txt) | 2000 | 936310 | 468 |
 | [S905X3](2kaS.txt) | 2010 | 941590 | 468 |
 | [S905X3](3TQ2.txt) | 2100 | 981940 | 467 |
+| Ampere-1a | | | |
+| [AmpereOne A192-32X](XUpQ.txt) | 3200 | 1823250 | 570 |
 | Cortex-A72 | | | |
 | [Armada 8040](4zcm.txt) | 1600 | 909420 | 568 |
 | [RK3399](1iWU.txt) | 1800 | 1023600 | 568 |

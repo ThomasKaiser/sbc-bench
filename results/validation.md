@@ -242,6 +242,7 @@
 | [X904](X904.txt) | v0.9.67 Milk-V | 0%/0% | 15Gi/14Gi | X | X | X | X | 2% | 0% | |
 | [XObB](XObB.txt) | v0.9.67 / N100 | 0%/0% | 7.5Gi/6.5Gi | X | X | X | X | 2% | 0% | |
 | [XUSc](XUSc.txt) | v0.9.68 Radxa AICore BM1684x IO Board | 0%/0% | 3.0Gi/2.7Gi | X | X | X | X | 1% | 0% | |
+| [XUpQ](XUpQ.txt) | v0.9.68 Supermicro Super Server | 0%/0% | 510Gi/472Gi | X | X | X | X | 3% | 0% | |
 | [Xv06](Xv06.txt) | v0.9.67 M1-MUSE-BOOK | 0%/0% | 15Gi/14Gi | X | X | X | X | 3% | 0% | |
 | [XxZl](XxZl.txt) | v0.9.67 SiPEED LPi3A Board | 0%/0% | 7.6Gi/6.6Gi | X | X | X | X | 2% | 0% | |
 | [XyIw](XyIw.txt) | v0.9.67 RK3588 OPi 5 Max | 0%/0% | 7.7Gi/7.1Gi | X | X | X | X | 1% | 0% | [check log](XyIw.txt) |

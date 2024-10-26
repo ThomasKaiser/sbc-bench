@@ -7729,6 +7729,11 @@ GuessSoCbySignature() {
 			# Google Axion:  Neoverse-V2 / r0p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 sve asimdfhm dit uscat ilrcpc flagm sb paca pacg dcpodp sve2 sveaes svepmull svebitperm svesha3 svesm4 flagm2 frint svei8mm svebf16 i8mm bf16 dgh rng bti
 			echo "Google Axion"
 			;;
+		*Ampere-1ar0p0*)
+			# AmpereOne A96-37X-A192-32X: 96-192 Ampere-1a / r0p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp flagm2 frint i8mm bf16 rng bti ecv
+			CoresPerSocket=$(awk -F":" '/ per socket/ {print $2}' <<<"${LSCPU}" | tr -c -d '[:digit:]') # naive/silly assumption only single socket systems exist
+			echo "AmpereOne A${CoresPerSocket}"
+			;;
 		*AppleM1r0p0*AppleM1r0p0*AppleM1r0p0*AppleM1r0p0*AppleM1*AppleM1*AppleM1*AppleM1*|*AppleM1r1p1*AppleM1r1p1*AppleM1r1p1*AppleM1r1p1*AppleM1r1p1*AppleM1r1p1*AppleM1r1p1*AppleM1r1p1)
 			# Apple M1: 4 x Apple Icestorm / r1p1 + 4 x Apple Firestorm / r1p1 / https://gist.github.com/z4yx/13520bd2beef49019b1b7436e3b95ddd
 			# or 4 x Apple Icestorm / r0p0 + 4 x Apple Firestorm / ? / https://bench.cr.yp.to/computers.html
@@ -7933,8 +7938,8 @@ GuessSoCbySignature() {
 			echo "Azure Cobalt 100"
 			;;
 		*00A53r0p401A53r0p402A53r0p403A53r0p414A53r0p415A53r0p416A53r0p417A53r0p4*)
-			# Sophon BM1684X/SG2300x: 8 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
-			echo "Sophon BM1684X/SG2300x"
+			# Sophon BM1684X/SG2300X: 8 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
+			echo "Sophon BM1684X/SG2300X"
 			;;
 	esac
 } # GuessSoCbySignature
@@ -7942,7 +7947,7 @@ GuessSoCbySignature() {
 GetCPUSignature() {
 	case ${CPUArchitecture} in
 		arm*|aarch*|riscv*|mips*|loongarch*)
-			sed -e '1,/^ CPU/ d' -e 's/Cortex-//' -e 's/HiSilicon-//' -e 's/Phytium //' <<<"${CPUTopology}" | while read ; do
+			sed -e '1,/^ CPU/ d' -e 's/Cortex-//' -e 's/HiSilicon-//' -e 's/Phytium //' -e 's/Ampere //' <<<"${CPUTopology}" | while read ; do
 				echo -e "$(awk -F" " '{print $2$3$6$8$9$10}' <<<"${REPLY}" | sed -e 's/-//g' -e 's/\///g')\c"
 			done
 			;;

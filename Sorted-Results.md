@@ -13,6 +13,7 @@
 
 | Device / details | Clockspeed | Kernel | Distro | *7-zip multi* | 7-zip single | AES | memcpy | memset | kH/s |
 | ----- | :--------: | :----: | :----: | ----: | ------: | ------: | -----: | -----: | ---: |
+| [AmpereOne A192-32X](results/XUpQ.txt) | 3200 MHz | 6.8 | Noble arm64 | **741530** | 4781 | 1823250 | 14860 | 36441 | 323.76 |
 | [Huaqin P6410<br />(2 x Ampere Altra Max)](results/4kiu.txt) | 3000 MHz | 5.4 | Focal arm64 | **430860** | 4211 | 1710010 | 13310 | 47970 | - |
 | [Ampere Altra M96-28](results/4zGI.txt) | 2800 MHz | 5.15 | Jammy arm64 | **249380** | 3858 | 1596110 | 10130 | 44750 | - |
 | [Ampere Altra Q80-26](results/4zkJ.txt) | 2600 MHz | 5.15 | Jammy arm64 | **214390** | 3748 | 1482190 | 11685 | 41560 | 316.50 |
@@ -258,6 +259,7 @@
 | ----- | :--------: | :----: | :----: | ----: | ------: | ------: | -----: | -----: | ---: |
 | [Apple M1 Pro](results/443N.txt) | 3030/2060 MHz | 5.18 | Gentoo 2.8 arm64 | 43800 | **5010** | 1064450 | 27110 | 71910 | 48.28 |
 | [Qualcomm Snapdragon 8cx Gen 3 (WSL2)](results/4kEp.txt) | 2980/? MHz | 5.15 | Jammy arm64 | 33600 | **4789** | 1679480 | 21010 | 41540 | 50.65 |
+| [AmpereOne A192-32X](results/XUpQ.txt) | 3200 MHz | 6.8 | Noble arm64 | 741530 | **4781** | 1823250 | 14860 | 36441 | 323.76 |
 | [Pentium G4600](results/2jVw.txt) | 3600 MHz | 4.19 | Buster amd64 | 11810 | **4448** | 984820 | 15120 | 33380 | 21.88 |
 | [Intel i3-N305](results/4qpr.txt) | 3800 MHz | 5.19 | Jammy amd64 | 20000 | **4398** | 1377280 | 9950 | 8990 | 41.43 |
 | [Qualcomm Snapdragon 8cx Gen 3](results/4xwT.txt) | 3000/2440 MHz | 6.3 | Lunar arm64 | 35370 | **4312** | 1686160 | 17500 | 41780 | 42.76 |
@@ -501,6 +503,7 @@
 
 | Device / details | Clockspeed | Kernel | Distro | 7-zip multi | 7-zip single | *AES* | memcpy | memset | kH/s |
 | ----- | :--------: | :----: | :----: | ----: | ------: | ------: | -----: | -----: | ---: |
+| [AmpereOne A192-32X](results/XUpQ.txt) | 3200 MHz | 6.8 | Noble arm64 | 741530 | 4781 | **1823250** | 14860 | 36441 | 323.76 |
 | [Raspberry Pi 5 B (BCM2712)](results/frdzAn.txt) | 3000 MHz | 6.6 | Bookworm arm64 | 13410 | 3916 | **1710590** | 5900 | 17370 | 19.28 |
 | [Huaqin P6410<br />(2 x Ampere Altra Max)](results/4kiu.txt) | 3000 MHz | 5.4 | Focal arm64 | 430860 | 4211 | **1710010** | 13310 | 47970 | - |
 | [Raspberry Pi 5 B (BCM2712)](results/8acvqG.txt) | 3000 MHz | 6.1 | Bookworm arm64 | 12930 | 3791 | **1709720** | 5160 | 16350 | 19.25 |
@@ -748,6 +751,7 @@
 | [Qualcomm Snapdragon 8cx Gen 3 (WSL2)](results/4kEp.txt) | 2980/? MHz | 5.15 | Jammy arm64 | 33600 | 4789 | 1679480 | **21010** | 41540 | 50.65 |
 | [Qualcomm Snapdragon 8cx Gen 3](results/4xwT.txt) | 3000/2440 MHz | 6.3 | Lunar arm64 | 35370 | 4312 | 1686160 | **17500** | 41780 | 42.76 |
 | [Pentium G4600](results/2jVw.txt) | 3600 MHz | 4.19 | Buster amd64 | 11810 | 4448 | 984820 | **15120** | 33380 | 21.88 |
+| [AmpereOne A192-32X](results/XUpQ.txt) | 3200 MHz | 6.8 | Noble arm64 | 741530 | 4781 | 1823250 | **14860** | 36441 | 323.76 |
 | [Qualcomm QRB5165](results/49kx.txt) | 2840/2410/1790 MHz | 4.19 | Focal arm64 | 18860 | 3898 | 1598490 | **14470** | 23910 | 25.56 |
 | [MT8395 Genio 1200](results/4Kvg.txt) | 2200/2000 MHz | 5.15 | Jammy arm64 | 18130 | 3298 | 1240850 | **14200** | 19000 | 27.60 |
 | [Huaqin P6410<br />(2 x Ampere Altra Max)](results/4kiu.txt) | 3000 MHz | 5.4 | Focal arm64 | 430860 | 4211 | 1710010 | **13310** | 47970 | - |
@@ -994,6 +998,7 @@
 | [Qualcomm Snapdragon 8cx Gen 3](results/4xwT.txt) | 3000/2440 MHz | 6.3 | Lunar arm64 | 35370 | 4312 | 1686160 | 17500 | **41780** | 42.76 |
 | [Ampere Altra Q80-26](results/4zkJ.txt) | 2600 MHz | 5.15 | Jammy arm64 | 214390 | 3748 | 1482190 | 11685 | **41560** | 316.50 |
 | [Qualcomm Snapdragon 8cx Gen 3 (WSL2)](results/4kEp.txt) | 2980/? MHz | 5.15 | Jammy arm64 | 33600 | 4789 | 1679480 | 21010 | **41540** | 50.65 |
+| [AmpereOne A192-32X](results/XUpQ.txt) | 3200 MHz | 6.8 | Noble arm64 | 741530 | 4781 | 1823250 | 14860 | **36441** | 323.76 |
 | [Pentium G4600](results/2jVw.txt) | 3600 MHz | 4.19 | Buster amd64 | 11810 | 4448 | 984820 | 15120 | **33380** | 21.88 |
 | [Jetson AGX Orin](results/4ax9.txt) | 2200 MHz | 5.10 | Focal arm64 | 39450 | 3187 | 1242940 | 10600 | **30350** | 59.96 |
 | [Orange Pi 5 (RK3588)](results/4D0a.txt) | 2400/1800 MHz | 5.10 | Jammy arm64 | 16780 | 2689 | 1366590 | 12800 | **29900** | - |
@@ -1237,6 +1242,7 @@
 | [Intel N100](results/uHzXI7.txt) | **3400** MHz| 6.1 | Jammy amd64 | 14090 | 3910 | 1232550 | 10920 | 11231 | 37.13 |
 | [Pentium N6005](results/4BtC.txt) | **3300/2000** MHz| 5.15 | Jammy amd64 | 11510 | 3369 | 923550 | 9650 | 10280 | 22.18 |
 | [Ryzen R1505G](results/4HYd.txt) | **3270** MHz| 6.1 | Bookworm amd64 | 9080 | 3327 | 886980 | 10520 | 8160 | 18.14 |
+| [AmpereOne A192-32X](results/XUpQ.txt) | **3200** MHz| 6.8 | Noble arm64 | 741530 | 4781 | 1823250 | 14860 | 36441 | 323.76 |
 | [Apple M1 Pro](results/443N.txt) | **3030/2060** MHz| 5.18 | Gentoo 2.8 arm64 | 43800 | 5010 | 1064450 | 27110 | 71910 | 48.28 |
 | [Raspberry Pi 5 B (BCM2712)](results/frdzAn.txt) | **3000** MHz| 6.6 | Bookworm arm64 | 13410 | 3916 | 1710590 | 5900 | 17370 | 19.28 |
 | [Raspberry Pi 5 B (BCM2712)](results/8acvqG.txt) | **3000** MHz| 6.1 | Bookworm arm64 | 12930 | 3791 | 1709720 | 5160 | 16350 | 19.25 |

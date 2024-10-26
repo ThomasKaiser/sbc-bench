@@ -20,6 +20,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [AMedia X96 Max+ (S905X3)](results/3QOj.txt) | 2100 MHz | 5.15 | Focal arm64 | 5270 | 1330 | 981830 | 2630 | 5150 | - |
 | [Ampere Altra M96-28](results/4zGI.txt) | 2800 MHz | 5.15 | Jammy arm64 | 249380 | 3858 | 1596110 | 10130 | 44750 | - |
 | [Ampere Altra Q80-26](results/4zkJ.txt) | 2600 MHz | 5.15 | Jammy arm64 | 214390 | 3748 | 1482190 | 11685 | 41560 | 316.50 |
+| [AmpereOne A192-32X](results/XUpQ.txt) | 3200 MHz | 6.8 | Noble arm64 | 741530 | 4781 | 1823250 | 14860 | 36441 | 323.76 |
 | [Apple M1 Pro](results/443N.txt) | 3030/2060 MHz | 5.18 | Gentoo 2.8 arm64 | 43800 | 5010 | 1064450 | 27110 | 71910 | 48.28 |
 | [Banana Pi (Allwinner A20)](results/3PLr.txt) | 960 MHz | 5.10 | Bullseye armhf | 1040 | 542 | 18640 | 440 | 2020 | - |
 | [BeagleBone AI-64 (TI J721E)](results/4DLw.txt) | 2000 MHz | 5.10 | Bookworm arm64 | 3470 | 1872 | 1130390 | 2660 | 8710 | - |

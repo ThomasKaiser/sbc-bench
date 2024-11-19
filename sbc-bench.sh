@@ -9479,7 +9479,11 @@ CheckStorage() {
 					# or as "Kingston Canvas Select Plus, SDCS2/32GB" "SD32G", date 10/2020, hw/fw rev: 0x6/0x1
 					Manufacturer="${Manufacturer}Texas Instruments "
 					;;
-				0x0000ad*|0x000090/0x014a)
+				0x0000ad/0x4c53)
+					# 0x4c53 -> "LS", used by both Amazon Basics and Raspberry Pi Ltd.
+					Manufacturer="${Manufacturer}Longsys "
+					;;
+				0x000090/0x014a)
 					Manufacturer="${Manufacturer}SK Hynix "
 					;;
 				0x0000ea/0x010e)

@@ -6839,8 +6839,16 @@ GuessSoCbySignature() {
 			esac
 			;;
 		*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A78*A78)
-			# Allwinner A737/T737, 6 x Cortex-A55 / r2p0 + 2 x Cortex-A78
-			grep -E -q 'allwinner|a737|t737|' <<<"${DTCompatible,,}" && echo "Allwinner A737/T737"
+			# Allwinner A737/T737, 6 x Cortex-A55 / r2p0 + 2 x Cortex-A78, appeared on some Allwinner roadmap: https://www.cnx-software.com/2023/09/04/allwinner-2023-2024-roadmap-reveals-a736-a737-arm-cortex-a78-a76-processors/
+			# on some later Allwinner roadmap A736/T736 disappeared and an A838 was shown: https://www.cnx-software.com/2024/12/06/allwinner-a733-octa-core-cortex-a76-a55-ai-soc-supports-up-to-16gb-ram-for-android-15-tablets-and-laptops/#comment-635134
+			case "${DTCompatible,,}" in
+				*a736*|*t736*)
+					echo "Allwinner A736/T736"
+					;;
+				*a838*)
+					echo "Allwinner A838"
+					;;
+			esac
 			;;
 		0A9r4p10A9r4p1|0?A9r4p10?A9r4p1)
 			# Armada 375/38x, 2 x Cortex-A9 / r4p1 / swp half thumb fastmult vfp edsp neon vfpv3 tls
@@ -7870,6 +7878,10 @@ GuessSoCbySignature() {
 		*A520r0p1*A520r0p1*A720r0p1*A720r0p1*A720r0p1*A720r0p1*A720r0p1*X4r0p1)
 			# Qualcomm Snapdragon 8 Gen 3: 2 x Cortex-A520 / r0p1 + 5 x Cortex-A720 / r0p1 + 1 x Cortex-X4 / r0p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp flagm2 frint i8mm bf16 dgh bti ecv afp
 			echo "Qualcomm Snapdragon 8 Gen 3"
+			;;
+		*A520*A520*A520*A520*A720r0p1*A720r0p1*A720r0p1*A720r0p1*A720r0p1*A720r0p1*A720r0p1*A720r0p1|*A720r0p1*A720r0p1*A720r0p1*A720r0p1*A720r0p1*A720r0p1*A720r0p1*A720r0p1*A520*A520*A520*A520)
+			# Cix Tech P1 / CP8180: 4 x Cortex-A520 + 8 x Cortex-A720 / r0p1
+			echo "Cix CP8180"
 			;;
 		*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A76r4p0*A76r4p0*X1r1p0*X1r1p0)
 			# Google Tensor G1: 4 x Cortex-A55 / r2p0 + 2 x Cortex-A76 / r4p0 + 2 x Cortex-X1 / r1p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp
@@ -8956,9 +8968,10 @@ CheckKernelVersion() {
 					;;
 			esac
 			;;
-		"5.15.41"|"5.15.94"|"5.15.123"|"5.15.151")
+		"5.15.41"|"5.15.94"|"5.15.123"|"5.15.151"|"6.6.30")
 			# At least used with Android 13 and OpenWRT builds for A133/T527: https://browser.geekbench.com/v5/cpu/21947495.gb5 / https://browser.geekbench.com/v6/cpu/2610471.gb6 /
 			# https://bbs.aw-ol.com/topic/5060/syterkit-启动-t527-失败 / https://github.com/chainsx/linux-t527/blob/main/Makefile
+			# A733: https://browser.geekbench.com/v6/cpu/9253840.gb6
 			case ${GuessedSoC} in
 				Allwinner*)
 					# though there's a small chance users of flippy/unifreq kernels on older Allwinner SoCs are affected
@@ -9802,16 +9815,19 @@ CheckSMARTData() {
 				SMARTData="$(${SmartCtl} -a ${DeviceToCheck} 2>/dev/null)"
 				DeviceName="\"$(awk -F": " "/^Model Number:/ {print \$2}" <<<"${SMARTData}" | sed 's/^ *//g')\" SSD as ${DeviceToCheck}${DeviceAddition}"
 				PercentageUsed="$(awk -F": " "/^Percentage Used:/ {print \$2}" <<<"${SMARTData}" | sed -e 's/^ *//g' -e 's/%//')"
+				[ ${PercentageUsed} ] || PercentageUsed=0
 
-				if [ ${PercentageUsed:-0} -gt 75 ]; then
+				if [ ${PercentageUsed} -gt 75 ]; then
 					AdditionalSMARTInfo="${AdditionalSMARTInfo}, ${BOLD}${PercentageUsed}% worn out${NC}${LRED}"
 				else
 					AdditionalSMARTInfo="${AdditionalSMARTInfo}, ${PercentageUsed}% worn out"
 				fi
 				MediaErrors=$(awk -F": " "/^Media and Data Integrity Errors:/ {print \$2}" <<<"${SMARTData}" | sed 's/^ *//g')
-				[ ${MediaErrors:-0} -gt 0 ] && AdditionalSMARTInfo="${AdditionalSMARTInfo}, ${BOLD}${MediaErrors} media errors${NC}${LRED}"
+				[ ${MediaErrors} ] || MediaErrors=0
+				[ ${MediaErrors} -gt 0 ] && AdditionalSMARTInfo="${AdditionalSMARTInfo}, ${BOLD}${MediaErrors} media errors${NC}${LRED}"
 				ErrorLogEntries=$(awk -F": " "/^Error Information Log Entries:/ {print \$2}" <<<"${SMARTData}" | sed 's/^ *//g')
-				if [ ${ErrorLogEntries:-0} -gt 0 ]; then
+				[ ${ErrorLogEntries} ] || ErrorLogEntries=0
+				if [ ${ErrorLogEntries} -gt 0 ]; then
 					AdditionalSMARTInfo="${AdditionalSMARTInfo}, ${BOLD}${ErrorLogEntries} error log entries${NC}${LRED}"
 					grep -q "/dev/nvme" <<<"${DeviceToCheck}" && echo -e "nvme error-log ${DeviceToCheck} ; \c" >>"${TempDir}/check-smart"
 				fi
@@ -9830,7 +9846,7 @@ CheckSMARTData() {
 					AdditionalSMARTInfo="${AdditionalSMARTInfo}, ${BOLD}SMART health: **FAILED**${NC}${LRED}"
 					DeviceWarning=TRUE
 				fi
-				if [ ${PercentageUsed:-0} -gt 75 ] || [ ${MediaErrors:-0} -gt 0 ] || [ ${ErrorLogEntries:-0} -gt 0 ]; then
+				if [ ${PercentageUsed} -gt 75 ] || [ ${MediaErrors} -gt 0 ] || [ ${ErrorLogEntries} -gt 0 ]; then
 					DeviceWarning=TRUE
 				fi
 				;;

@@ -514,6 +514,7 @@ GetARMCore() {
 	44/a11:DEC SA1100
 	46:Fujitsu
 	46/001:A64FX
+	46/003:MONAKA
 	48:HiSilicon
 	48/d01:TaiShan v110
 	48/d02:TaiShan v120
@@ -7880,8 +7881,8 @@ GuessSoCbySignature() {
 			echo "Qualcomm Snapdragon 8 Gen 3"
 			;;
 		*A520*A520*A520*A520*A720r0p1*A720r0p1*A720r0p1*A720r0p1*A720r0p1*A720r0p1*A720r0p1*A720r0p1|*A720r0p1*A720r0p1*A720r0p1*A720r0p1*A720r0p1*A720r0p1*A720r0p1*A720r0p1*A520*A520*A520*A520)
-			# Cix Tech P1 / CP8180: 4 x Cortex-A520 + 8 x Cortex-A720 / r0p1
-			echo "Cix CP8180"
+			# Cix Tech P1 / CP8180/CD8180: 4 x Cortex-A520 + 8 x Cortex-A720 / r0p1
+			echo "CIX CD8180"
 			;;
 		*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A76r4p0*A76r4p0*X1r1p0*X1r1p0)
 			# Google Tensor G1: 4 x Cortex-A55 / r2p0 + 2 x Cortex-A76 / r4p0 + 2 x Cortex-X1 / r1p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp
@@ -9214,9 +9215,9 @@ CheckStorage() {
 		unset DeviceName DeviceInfo DeviceWarning DevizeSize AdditionalInfo AdditionalSMARTInfo ProductName VendorName SpeedInfo SupportedSpeeds RawDiskTemp DriveTemp LnkSta PercentageUsed ASPMSettings
 
 		UdevInfo="$(udevadm info -a -n ${StorageDevice} 2>/dev/null)"
-		Driver="$(awk -F'"' '/DRIVERS==/ {print $2}' <<<"${UdevInfo}" | grep -E 'uas|usb-storage|ahci|nvme|virtio-')"
+		Driver="$(awk -F'"' '/DRIVERS==/ {print $2}' <<<"${UdevInfo}" | grep -E 'uas|usb-storage|ahci|nvme|virtio-|sas')"
 		case "${Driver}" in
-			ahci|ahci-*|*-ahci|sata_*|sata-*|*-sata|*pata|pata*)
+			ahci|ahci-*|*-ahci|sata_*|sata-*|*-sata|*pata|pata*|*sas)
 				# (S)ATA attached, we need to also take care about other driver names like
 				# ahci-mvebu, ahci-sunxi, sata_promise, tegra-ahci, xgene-ahci and so on
 				CheckSMARTData "${StorageDevice}" ahci

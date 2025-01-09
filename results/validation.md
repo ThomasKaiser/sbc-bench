@@ -15,7 +15,6 @@
 | [1MFD](1MFD.txt) | v0.6.7 Khadas VIM3 | 0%/0.7% | 1.9G/1.6G | X | X | X | X | 2% | 0% | |
 | [1MFf](1MFf.txt) | v0.6.7 Raspberry Pi 4 Model B Rev 1.1 | 0.1%/0.2% | 3.8Gi/3.6Gi | X | X | X | X | 3% | 0% | [check log](1MFf.txt) |
 | [1Rnj](1Rnj.txt) | v0.6.8 icosa | 0.1%/0% | 3.4Gi/2.6Gi | X | X | X | X | 4% | <span style=color:red> 6%</span> | |
-| [1ULtUe](1ULtUe.txt) | v0.9.65 Raspberry Pi 5 Model B Rev 1.0 | 0%/0% | 4.0Gi/3.8Gi | X | X | X | X | 1% | 0% | [check log](1ULtUe.txt) |
 | [1iFf](1iFf.txt) | v0.4 Raspberry Pi 2 B+ (BCM2836) | 0%/0.7% | 976M/872M | X | X | X | X | 2% | 0% | |
 | [1iFm](1iFm.txt) | v0.4 Rock64 (RK3328) | 0%/1.5% | 1.9G/1.6G | X | X | X | X | 2% | 0% | |
 | [1iFp](1iFp.txt) | v0.4 RockPro64 (RK3399) | 0%/0.7% | 3.8G/3.6G | X | X | X | X | 0% | 1% | |
@@ -235,6 +234,7 @@
 | [4zcm](4zcm.txt) | v0.9.42 Marvell 8040 MACCHIATOBin Doubl | 0%/0% | 3.8Gi/3.3Gi | X | X | X | X | 2% | 0% | [check log](4zcm.txt) |
 | [4zkJ](4zkJ.txt) | v0.9.42 ADLINK AVA Developer Platform E | 0%/0% | 93Gi/91Gi | X | X | X | X | 0% | 0% | [check log](4zkJ.txt) |
 | [5pv8oh](5pv8oh.txt) | v0.9.65 Radxa ROCK 5C | 0%/0% | 3.8Gi/3.5Gi | X | X | X | X | 2% | 0% | [check log](5pv8oh.txt) |
+| [8-NK](8-NK.txt) | v0.9.68 Raspberry Pi 5 Model B Rev 1.1 | 0%/0% | 15Gi/15Gi | X | X | X | X | 1% | 0% | [check log](8-NK.txt) |
 | [8acvqG](8acvqG.txt) | v0.9.61 Raspberry Pi 5 Model B Rev 1.0 | 0%/0% | 4.0Gi/3.8Gi | X | X | X | X | 2% | 0% | [check log](8acvqG.txt) |
 | [8to7qX](8to7qX.txt) | v0.9.65 spacemit k1-x deb1 board | 0%/0% | 3.7Gi/3.5Gi | X | X | X | X | 3% | 3% | |
 | [Au3jaA](Au3jaA.txt) | v0.9.61 Raspberry Pi 5 Model B Rev 1.0 | 0%/0% | 4.0Gi/3.8Gi | X | X | X | X | 2% | 0% | [check log](Au3jaA.txt) |

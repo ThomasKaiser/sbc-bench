@@ -180,7 +180,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Raspberry Pi 4 B (BCM2711)](results/3VME.txt) | 1800 MHz | 5.15 | Jammy armhf | 6300 | 1844 | 82750 | 1190 | 3110 | - |
 | [Raspberry Pi 400 (BCM2711)](results/2Cyi.txt) | 1800 MHz | 5.4 | Raspberry Pi OS Buster | 6550 | 1903 | 77890 | 2680 | 3110 | - |
 | [Raspberry Pi 5 B (BCM2712)](results/Au3jaA.txt) | 2400 MHz | 6.1 | Bookworm arm64 | 11010 | 3196 | 1367740 | 5270 | 14060 | 15.39 |
-| [Raspberry Pi 5 B (BCM2712)](results/1ULtUe.txt) | 2400 MHz | 6.6 | Bookworm arm64 | 11410 | 3270 | 1368000 | 6070 | 14830 | 15.42 |
+| [Raspberry Pi 5 B (BCM2712)](results/8-NK.txt) | 2400 MHz | 6.6 | Bookworm arm64 | 11830 | 3305 | 1368160 | 6025 | 9985 | 15.42 |
 | [Raspberry Pi 5 B (BCM2712)](results/8acvqG.txt) | 3000 MHz | 6.1 | Bookworm arm64 | 12930 | 3791 | 1709720 | 5160 | 16350 | 19.25 |
 | [Raspberry Pi 5 B (BCM2712)](results/frdzAn.txt) | 3000 MHz | 6.6 | Bookworm arm64 | 13410 | 3916 | 1710590 | 5900 | 17370 | 19.28 |
 | [Renegade (RK3328)](results/1iFx.txt) | 1400 MHz | 4.4 | Stretch arm64 | 3710 | 1069 | 644200 | 1565 | 7435 | 3.92 |

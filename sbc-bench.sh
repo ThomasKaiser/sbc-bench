@@ -48,15 +48,36 @@ Main() {
 					QueryNetioDevice
 					if [ "X${OutputCurrents[*]}" != "X" ]; then
 						# We are in Netio monitoring mode as such provide consumption info as well
-						echo -e "Power monitoring on socket ${NetioSocket} of ${NetioName} (Netio ${NetioModel}, FW v${Firmware}, XML API v${XmlVer}, ${InputVoltage}V @ ${Frequency}Hz)\n"
 						CreateTempDir
 						NetioConsumptionFile="${TempDir}/netio.current"
-						echo -n $(( $(awk '{printf ("%0.0f",$1/10); }' <<<"${OutputCurrent[$(( ${NetioSocket} - 1 ))]}" ) * 10 )) >"${NetioConsumptionFile}"
 						export NetioConsumptionFile
 						NetioInterval=$(LC_ALL=C awk '{printf ("%0.1f",$1/2); }' <<<"${SleepInterval}")
 						NetioSamples=$(( SleepInterval * 3 ))
-						/bin/bash "${PathToMe}" -N ${NetioDevice} ${NetioSocket} ${NetioConsumptionFile} "${NetioInterval}" "${NetioSamples}" >/dev/null 2>&1 &
-						NetioMonitoringPID=$!
+						case ${NetioSocket} in
+							all)
+								if [ ${NumOutputs} -eq 1 ]; then
+									NetioSocket=1
+									echo -e "Power monitoring on socket ${NetioSocket} of ${NetioName} (Netio ${NetioModel}, FW v${Firmware}, XML API v${XmlVer}, ${InputVoltage}V @ ${Frequency}Hz)\n"
+									echo -n $(( $(awk '{printf ("%0.0f",$1/10); }' <<<"${OutputCurrent[$(( ${NetioSocket} - 1 ))]}" ) * 10 )) >"${NetioConsumptionFile}"
+								else
+									echo -e "Power monitoring on all sockets of ${NetioName} (Netio ${NetioModel}, FW v${Firmware}, XML API v${XmlVer}, ${InputVoltage}V @ ${Frequency}Hz)\n"
+									echo -n "${OutputCurrents[*]}" >"${NetioConsumptionFile}"
+								fi
+								;;
+							1|2|3|4)
+								if [ ${NetioSocket} -gt ${NumOutputs} ]; then
+									echo -e "Power monitoring on socket ${NetioSocket} of ${NetioName} not possible since ${NetioModel} has only ${NumOutputs} port\n"
+									unset NetioConsumptionFile
+								else
+									echo -e "Power monitoring on socket ${NetioSocket} of ${NetioName} (Netio ${NetioModel}, FW v${Firmware}, XML API v${XmlVer}, ${InputVoltage}V @ ${Frequency}Hz)\n"
+									echo -n $(( $(awk '{printf ("%0.0f",$1/10); }' <<<"${OutputCurrent[$(( ${NetioSocket} - 1 ))]}" ) * 10 )) >"${NetioConsumptionFile}"
+								fi
+								;;
+						esac
+						if [ -s "${NetioConsumptionFile}" ]; then
+							/bin/bash "${PathToMe}" -N ${NetioDevice} ${NetioSocket} ${NetioConsumptionFile} "${NetioInterval}" "${NetioSamples}" >/dev/null 2>&1 &
+							NetioMonitoringPID=$!
+						fi
 					fi
 				fi
 				MonitorMode=TRUE
@@ -1545,23 +1566,41 @@ MonitorNetio() {
 		XMLOutput="$(curl -q --connect-timeout 1 "http://${NetioDevice}/netio.xml" 2>/dev/null | tr '\015' '\012')"
 		InputVoltage=$(grep '^<Voltage>' <<<"${XMLOutput}" | sed -e 's/\(<[^<][^<]*>\)//g')
 		OutputCurrents=($(grep '^<Current>' <<<"${XMLOutput}" | sed -e 's/\(<[^<][^<]*>\)//g' | tr '\n' ' '))
-		OutputCurrent=${OutputCurrents[$(( ${NetioSocket} - 1 ))]}
 		OutputPowerFactors=($(grep '^<PowerFactor>' <<<"${XMLOutput}" | sed -e 's/\(<[^<][^<]*>\)//g' | tr '\n' ' '))
-		OutputPowerFactor=${OutputPowerFactors[$(( ${NetioSocket} - 1 ))]}
+		NumOutputs=$(grep '^<NumOutputs>' <<<"${XMLOutput}" | sed -e 's/\(<[^<][^<]*>\)//g')
+
+		case ${NetioSocket} in
+			all)
+				# we need to process all Netio sockets
+				echo -n "" >"${ConsumptionFile}"
+				for i in $(seq 1 ${NumOutputs}); do
+					AverageConsumption=$(GetAverageConsumption $i)
+					echo -e "${AverageConsumption} \c" >>"${ConsumptionFile}"
+				done
+				;;
+			1|2|3|4)
+				AverageConsumption=$(GetAverageConsumption ${NetioSocket})
+				echo -n $(( $(awk '{printf ("%0.0f",$1/10); }' <<<"${AverageConsumption}" ) * 10 )) >"${ConsumptionFile}"
+				;;
+		esac
+		snore ${SleepInterval}
+	done
+} # MonitorNetio
+
+GetAverageConsumption() {
+		OutputCurrent=${OutputCurrents[$(( $1 - 1 ))]}
+		OutputPowerFactor=${OutputPowerFactors[$(( $1 - 1 ))]}
 		Consumption=$(awk -F" " '{printf ("%0.0f",$1*$2*$3); }' <<<"${InputVoltage} ${OutputCurrent} ${OutputPowerFactor}")
 		
 		# create a file consisting of $CountofSamples entries with last consumption readouts so we
 		# can generate an average value based this and $SleepInterval
-		touch ${TempDir}/netio-socket-${NetioSocket}
-		PriorValues="$(tail -n${CountofSamples} ${TempDir}/netio-socket-${NetioSocket})"
-		echo -e "${PriorValues}\n${Consumption}" | sed '/^[[:space:]]*$/d' >${TempDir}/netio-socket-${NetioSocket}
-		CountOfEntries="$(wc -l <${TempDir}/netio-socket-${NetioSocket})"
-		SumOfEntries=$(awk '{s+=$1} END {printf "%.0f", s}' <${TempDir}/netio-socket-${NetioSocket})
-		AverageConsumption=$(( ${SumOfEntries} / ${CountOfEntries} ))
-		echo -n $(( $(awk '{printf ("%0.0f",$1/10); }' <<<"${AverageConsumption}" ) * 10 )) >"${ConsumptionFile}"
-		snore ${SleepInterval}
-	done
-} # MonitorNetio
+		touch ${TempDir}/netio-socket-$1
+		PriorValues="$(tail -n${CountofSamples} ${TempDir}/netio-socket-$1)"
+		echo -e "${PriorValues}\n${Consumption}" | sed '/^[[:space:]]*$/d' >${TempDir}/netio-socket-$1
+		CountOfEntries="$(wc -l <${TempDir}/netio-socket-$1)"
+		SumOfEntries=$(awk '{s+=$1} END {printf "%.0f", s}' <${TempDir}/netio-socket-$1)
+		echo $(( ${SumOfEntries} / ${CountOfEntries} ))
+} # GetAverageConsumption
 
 PrintCPUInfo() {
 	BasicSetup nochange
@@ -1643,7 +1682,13 @@ MonitorBoard() {
 	LastTotal=0
 
 	# check if we're in Netio consumption monitoring mode
-	[ -s "${NetioConsumptionFile}" ] && NetioHeader="      mW"
+	if [ -s "${NetioConsumptionFile}" ]; then
+		if [ "X${NetioSocket}" = "Xall" ]; then
+			NetioHeader="          mW     mW     mW     mW"
+		else
+			NetioHeader="      mW"
+		fi
+	fi
 
 	# check whether input voltage can be read
 	[ "X${VoltageSensor}" != "X" ] && VoltageHeader="   DC(V)"
@@ -1712,7 +1757,11 @@ MonitorBoard() {
 
 		if [ -s "${NetioConsumptionFile}" ]; then
 			read ConsumptionNow <"${NetioConsumptionFile}"
-			NetioColumn="  $(printf "%5s" ${ConsumptionNow})"
+			if [ "X${NetioSocket}" = "Xall" ]; then
+				NetioColumn="  $(printf "%7s" ${ConsumptionNow})"
+			else
+				NetioColumn="  $(printf "%5s" ${ConsumptionNow})"
+			fi
 		fi
 
 		case ${CPUs} in
@@ -3459,6 +3508,7 @@ QueryNetioDevice() {
 		NetioName=$(grep '^<DeviceName>' <<<"${XMLOutput}" | sed -e 's/\(<[^<][^<]*>\)//g')
 		Firmware=$(grep '^<Version>' <<<"${XMLOutput}" | sed -e 's/\(<[^<][^<]*>\)//g')
 		XmlVer=$(grep '^<XmlVer>' <<<"${XMLOutput}" | sed -e 's/\(<[^<][^<]*>\)//g')
+		NumOutputs=$(grep '^<NumOutputs>' <<<"${XMLOutput}" | sed -e 's/\(<[^<][^<]*>\)//g')
 } # QueryNetioDevice
 
 GetVoltageSensor() {

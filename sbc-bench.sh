@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.9.68
+Version=0.9.69
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -287,12 +287,12 @@ Main() {
 		elif [ "X${MODE}" = "Xgb" ]; then
 			RunGB
 		else
-			RunOpenSSLBenchmark "128 192 256"
-			Run7ZipBenchmark
+			[ "X${NotReadyYet}" != "Xyes" ] && RunOpenSSLBenchmark "128 192 256"
+			[ "X${NotReadyYet}" != "Xyes" ] && Run7ZipBenchmark
 			if [ "${ExecuteCpuminer}" = "yes" ] || [ "X${MODE}" = "Xextensive" ]; then
 				if [ -x "${InstallLocation}"/cpuminer-multi/cpuminer ]; then
 					ExecuteCpuminer=yes
-					RunCpuminerBenchmark
+					[ "X${NotReadyYet}" != "Xyes" ] && RunCpuminerBenchmark
 				else
 					ExecuteCpuminer=no
 					echo -e "\x08\x08 Done.\n(${InstallLocation}/cpuminer-multi/cpuminer missing or not executable)...\c"
@@ -301,7 +301,7 @@ Main() {
 			if [ "${ExecuteStockfish}" = "yes" ] || [ "X${MODE}" = "Xextensive" ]; then
 				if [ -x "${InstallLocation}/Stockfish-sf_15/src/stockfish" ]; then
 					ExecuteStockfish=yes
-					RunStockfishBenchmark
+					[ "X${NotReadyYet}" != "Xyes" ] && RunStockfishBenchmark
 				else
 					ExecuteStockfish=no
 					echo -e "\x08\x08 Done.\n(${InstallLocation}/Stockfish-sf_15/src/stockfish missing or not executable)...\c"
@@ -3135,7 +3135,7 @@ InstallPrerequisits() {
 
 	# if called with -c or as 'sbc-bench neon' or with MODE=extensive we also use cpuminer
 	if [ "${ExecuteCpuminer}" = "yes" ] || [ "X${MODE}" = "Xextensive" ]; then
-		InstallCpuminer
+		[ "X${NotReadyYet}" != "Xyes" ] && InstallCpuminer
 	fi
 } # InstallPrerequisits
 
@@ -8251,7 +8251,7 @@ ProvideReviewInfo() {
 	GetTempSensor
 	OperatingSystem="$(GetOSRelease)"
 	InstallPrerequisits
-	[ "X${RunBenchmarks}" = "XTRUE" ] && InstallCpuminer
+	[ "X${RunBenchmarks}" = "XTRUE" ] && [ "X${NotReadyYet}" != "Xyes" ] && InstallCpuminer
 	InitialMonitoring
 	CheckNetio
 	unset SPACING
@@ -8264,14 +8264,14 @@ ProvideReviewInfo() {
 		[ "X${NOTUNING}" != "Xyes" ] && [ -f /sys/devices/system/cpu/cpufreq/policy0/scaling_governor ] && CheckTimeInState before
 		RunTinyMemBench
 		RunRamlat
-		RunOpenSSLBenchmark 256
-		Run7ZipBenchmark
+		[ "X${NotReadyYet}" != "Xyes" ] && RunOpenSSLBenchmark 256
+		[ "X${NotReadyYet}" != "Xyes" ] && Run7ZipBenchmark
 		if [ -x "${InstallLocation}/Stockfish-sf_15/src/stockfish" ]; then
 			ExecuteStockfish=yes
-			RunStockfishBenchmark
+			[ "X${NotReadyYet}" != "Xyes" ] && RunStockfishBenchmark
 		elif [ -x "${InstallLocation}"/cpuminer-multi/cpuminer ]; then
 			ExecuteCpuminer=yes
-			RunCpuminerBenchmark
+			[ "X${NotReadyYet}" != "Xyes" ] && RunCpuminerBenchmark
 		else
 			RunStressNG
 		fi
@@ -10079,8 +10079,9 @@ DisplayUsage() {
 	echo -e " ${0##*/} ${BOLD}-T${NC} [\$degree] runs thermal test heating up to this value"
 	echo -e " ${0##*/} ${BOLD}-u${NC} update sbc-bench to latest version from Github\n"
 	echo -e " The environment variable ${BOLD}MODE${NC} can be set to either ${BOLD}extensive${NC} or ${BOLD}unattended${NC}"
-	echo -e " prior to benchmark execution. Exporting ${BOLD}MaxKHz${NC} will also be honored, see here"
-	echo -e " for details: https://github.com/ThomasKaiser/sbc-bench#unattended-execution\n"
+	echo -e " prior to benchmark execution. Also ${BOLD}MaxKHz${NC}, ${BOLD}ExecuteCommand${NC} and ${BOLD}NotReadyYet${NC}"
+	echo -e " are environment variables with a special meaning. See here for more details:"
+	echo -e " https://github.com/ThomasKaiser/sbc-bench#unattended-execution\n"
 	echo -e " With a Netio powermeter accessible you can export ${BOLD}Netio=address/socket${NC}" to
 	echo -e " sbc-bench defining address and socket this device is plugged into. Requires"
 	echo -e " XML API enabled and read-only access w/o password. Use this ${BOLD}only${NC} with ${BOLD}-g${NC} to"

@@ -312,6 +312,10 @@ If `$MaxKHz` is exported prior to benchmark execution (e.g. by `MODE=extensive M
 
     cat /sys/devices/system/cpu/cpufreq/policy?/scaling_available_frequencies
 
+### NotReadyYet environment variable
+
+If `NotReadyYet=yes` is exported prior to calling `sbc-bench` in review mode all benchmarks generating potentially misleading scores will be skipped. This is useful in situations where devices are in early bring-up stage where insights are needed but benchmark scores invalid since improving constantly over time due to optimizations vendor/community are still applying.
+
 ### CPUINFOFILE environment variable
 
 If `$CPUINFOFILE` is exported prior to benchmark execution then SoC guessing and similar stuff happens not based on `/proc/cpuinfo` but on the supplied file that obviously needs to have a compatible format.

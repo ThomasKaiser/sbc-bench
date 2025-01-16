@@ -1717,6 +1717,9 @@ MonitorBoard() {
 	elif [ ${#ClusterConfig[@]} -eq 3 ] && [ -r /sys/devices/system/cpu/cpufreq/policy${ClusterConfig[0]}/${CpuFreqToQuery} ] && [ -r /sys/devices/system/cpu/cpufreq/policy${ClusterConfig[1]}/${CpuFreqToQuery} ] && [ -r /sys/devices/system/cpu/cpufreq/policy${ClusterConfig[2]}/${CpuFreqToQuery} ] ; then
 		DisplayHeader="Time       cpu${ClusterConfig[0]}/cpu${ClusterConfig[1]}/cpu${ClusterConfig[2]}    load %cpu %sys %usr %nice %io %irq   Temp${VoltageHeader}${NetioHeader}"
 		CPUs=triplecluster
+	elif [ ${#ClusterConfig[@]} -eq 5 ] && [ -r /sys/devices/system/cpu/cpufreq/policy${ClusterConfig[0]}/${CpuFreqToQuery} ] && [ -r /sys/devices/system/cpu/cpufreq/policy${ClusterConfig[1]}/${CpuFreqToQuery} ] && [ -r /sys/devices/system/cpu/cpufreq/policy${ClusterConfig[2]}/${CpuFreqToQuery} ] ; then
+		DisplayHeader="Time       cpu${ClusterConfig[0]}/cpu${ClusterConfig[1]}/cpu${ClusterConfig[2]}/cpu${ClusterConfig[3]}/cpu${ClusterConfig[4]}    load %cpu %sys %usr %nice %io %irq   Temp${VoltageHeader}${NetioHeader}"
+		CPUs=cd8180
 	elif [ -r /sys/devices/system/cpu/cpufreq/policy${ClusterConfig[1]}/${CpuFreqToQuery} ]; then
 		ClusterCount=$(( ${#ClusterConfig[@]} -1 ))
 		DisplayHeader="Time       big.LITTLE   load %cpu %sys %usr %nice %io %irq   Temp${VoltageHeader}${NetioHeader}"
@@ -1796,6 +1799,14 @@ MonitorBoard() {
 				Freq1=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpufreq/policy${ClusterConfig[1]}/${CpuFreqToQuery} 2>/dev/null)
 				Freq2=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpufreq/policy${ClusterConfig[2]}/${CpuFreqToQuery} 2>/dev/null)
 				printf "%s: %4s/%4s/%4sMHz %5s %s %8s %s %s\n" "$(date "+%H:%M:%S")" "${Freq0}" "${Freq1}" "${Freq2}" "${LoadAvg}" "${procStats}" "${SocTemp}°C" "${VoltageColumn}" "${NetioColumn}"
+				;;
+			cd8180)
+				Freq0=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpufreq/policy${ClusterConfig[0]}/${CpuFreqToQuery} 2>/dev/null)
+				Freq1=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpufreq/policy${ClusterConfig[1]}/${CpuFreqToQuery} 2>/dev/null)
+				Freq2=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpufreq/policy${ClusterConfig[2]}/${CpuFreqToQuery} 2>/dev/null)
+				Freq3=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpufreq/policy${ClusterConfig[3]}/${CpuFreqToQuery} 2>/dev/null)
+				Freq4=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpufreq/policy${ClusterConfig[4]}/${CpuFreqToQuery} 2>/dev/null)
+				printf "%s: %4s/%4s/%4s/%4s/%4sMHz %5s %s %8s %s %s\n" "$(date "+%H:%M:%S")" "${Freq0}" "${Freq1}" "${Freq2}" "${Freq3}" "${Freq4}" "${LoadAvg}" "${procStats}" "${SocTemp}°C" "${VoltageColumn}" "${NetioColumn}"
 				;;
 			singlecluster)
 				CpuFreq=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpufreq/policy0/${CpuFreqToQuery} 2>/dev/null)
@@ -5362,7 +5373,7 @@ CacheAndDIMMDetails() {
 					sed -i "s/^          slot: ${Pattern}$/          configured speed: ${Insertion}/g" "${TempDir}/dimms"
 				fi
 			done
-			echo -e "\nDIMM configuration:"
+			echo -e "\nRAM configuration:"
 			cat "${TempDir}/dimms"
 		fi
 	fi
@@ -7930,8 +7941,8 @@ GuessSoCbySignature() {
 			# Qualcomm Snapdragon 8 Gen 3: 2 x Cortex-A520 / r0p1 + 5 x Cortex-A720 / r0p1 + 1 x Cortex-X4 / r0p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp flagm2 frint i8mm bf16 dgh bti ecv afp
 			echo "Qualcomm Snapdragon 8 Gen 3"
 			;;
-		*A520*A520*A520*A520*A720r0p1*A720r0p1*A720r0p1*A720r0p1*A720r0p1*A720r0p1*A720r0p1*A720r0p1|*A720r0p1*A720r0p1*A720r0p1*A720r0p1*A720r0p1*A720r0p1*A720r0p1*A720r0p1*A520*A520*A520*A520)
-			# Cix Tech P1 / CP8180/CD8180: 4 x Cortex-A520 + 8 x Cortex-A720 / r0p1
+		00A720r0p101A520r0p101A520r0p101A520r0p101A520r0p105A720r0p105A720r0p107A720r0p107A720r0p109A720r0p109A720r0p109A720r0p1)
+			# Cix Tech P1 / CP8180/CD8180: 1 x x Cortex-A720 / r0p1 + 4 x Cortex-A520 / r0p1 + 7 x Cortex-A720 / r0p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 sve asimdfhm dit uscat ilrcpc flagm sb paca pacg dcpodp sve2 sveaes svepmull svebitperm svesha3 svesm4 flagm2 frint svei8mm svebf16 i8mm bf16 dgh bti mte ecv afp mte3 wfxt
 			echo "CIX CD8180"
 			;;
 		*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A76r4p0*A76r4p0*X1r1p0*X1r1p0)
@@ -8382,7 +8393,7 @@ ProvideReviewInfo() {
 			fi
 			ZIPResults="$(awk -F" " '/^Total:/ {print $2}' "${ResultLog}" | sed -e 's/,/, /g' -e 's/, $//')"
 			[ "X${ZIPResults}" != "X" ] && echo -e "  * 7-zip MIPS (${RunHowManyTimes} consecutive runs): ${ZIPResults} (${ZipScore} avg), single-threaded: ${ZipScoreSingleThreaded}" >>"${TempDir}/review"
-			OpenSSLResults="$(grep '^aes-256-cbc' "${OpenSSLLog}")"
+			[ -f  "${OpenSSLLog}" ] && OpenSSLResults="$(grep '^aes-256-cbc' "${OpenSSLLog}")"
 			[ "X${OpenSSLResults}" != "X" ] && echo -e "${OpenSSLResults}" | sed -e 's/^/  * `/' -e 's/$/`/' >>"${TempDir}/review"
 		fi
 	fi

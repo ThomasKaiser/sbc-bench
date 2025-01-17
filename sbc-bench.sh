@@ -1458,7 +1458,7 @@ GetTempSensor() {
 						TempInfo="Thermal source: /sys/devices/platform/a20-tp-hwmon/ (${ThermalSource})"
 				else
 					ThermalNodeGuess=$(cat /sys/devices/virtual/thermal/thermal_zone?/type 2>/dev/null | grep -E -i "aml_thermal|cpu|soc" | tail -n1)
-					HWMonNodeGuess=$(cat /sys/class/hwmon/hwmon?/name 2>/dev/null | grep -E -i "120e0000|cpu-hwmon|pvt" | tail -n1)
+					HWMonNodeGuess=$(cat /sys/class/hwmon/hwmon?/name 2>/dev/null | grep -E -i "120e0000|pvt|acpitz|cpu-hwmon" | tail -n1)
 					if [ "X${ThermalNodeGuess}" != "X" ]; then
 						# let's use this thermal node
 						ThermalZone="$(GetThermalZone "${ThermalNodeGuess}")"
@@ -1717,7 +1717,7 @@ MonitorBoard() {
 	elif [ ${#ClusterConfig[@]} -eq 3 ] && [ -r /sys/devices/system/cpu/cpufreq/policy${ClusterConfig[0]}/${CpuFreqToQuery} ] && [ -r /sys/devices/system/cpu/cpufreq/policy${ClusterConfig[1]}/${CpuFreqToQuery} ] && [ -r /sys/devices/system/cpu/cpufreq/policy${ClusterConfig[2]}/${CpuFreqToQuery} ] ; then
 		DisplayHeader="Time       cpu${ClusterConfig[0]}/cpu${ClusterConfig[1]}/cpu${ClusterConfig[2]}    load %cpu %sys %usr %nice %io %irq   Temp${VoltageHeader}${NetioHeader}"
 		CPUs=triplecluster
-	elif [ ${#ClusterConfig[@]} -eq 5 ] && [ -r /sys/devices/system/cpu/cpufreq/policy${ClusterConfig[0]}/${CpuFreqToQuery} ] && [ -r /sys/devices/system/cpu/cpufreq/policy${ClusterConfig[1]}/${CpuFreqToQuery} ] && [ -r /sys/devices/system/cpu/cpufreq/policy${ClusterConfig[2]}/${CpuFreqToQuery} ] ; then
+	elif [ ${#ClusterConfig[@]} -eq 5 ] && [ -r /sys/devices/system/cpu/cpufreq/policy${ClusterConfig[0]}/${CpuFreqToQuery} ] && [ -r /sys/devices/system/cpu/cpufreq/policy${ClusterConfig[1]}/${CpuFreqToQuery} ] && [ -r /sys/devices/system/cpu/cpufreq/policy${ClusterConfig[2]}/${CpuFreqToQuery} ] && [ -r /sys/devices/system/cpu/cpufreq/policy${ClusterConfig[3]}/${CpuFreqToQuery} ] && [ -r /sys/devices/system/cpu/cpufreq/policy${ClusterConfig[4]}/${CpuFreqToQuery} ] ; then
 		DisplayHeader="Time       cpu${ClusterConfig[0]}/cpu${ClusterConfig[1]}/cpu${ClusterConfig[2]}/cpu${ClusterConfig[3]}/cpu${ClusterConfig[4]}    load %cpu %sys %usr %nice %io %irq   Temp${VoltageHeader}${NetioHeader}"
 		CPUs=cd8180
 	elif [ -r /sys/devices/system/cpu/cpufreq/policy${ClusterConfig[1]}/${CpuFreqToQuery} ]; then
@@ -7942,8 +7942,8 @@ GuessSoCbySignature() {
 			echo "Qualcomm Snapdragon 8 Gen 3"
 			;;
 		00A720r0p101A520r0p101A520r0p101A520r0p101A520r0p105A720r0p105A720r0p107A720r0p107A720r0p109A720r0p109A720r0p109A720r0p1)
-			# Cix Tech P1 / CP8180/CD8180: 1 x x Cortex-A720 / r0p1 + 4 x Cortex-A520 / r0p1 + 7 x Cortex-A720 / r0p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 sve asimdfhm dit uscat ilrcpc flagm sb paca pacg dcpodp sve2 sveaes svepmull svebitperm svesha3 svesm4 flagm2 frint svei8mm svebf16 i8mm bf16 dgh bti mte ecv afp mte3 wfxt
-			echo "CIX CD8180"
+			# Cix Tech P1 / CP8180/CD8180: 1 x Cortex-A720 / r0p1 + 4 x Cortex-A520 / r0p1 + 7 x Cortex-A720 / r0p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 sve asimdfhm dit uscat ilrcpc flagm sb paca pacg dcpodp sve2 sveaes svepmull svebitperm svesha3 svesm4 flagm2 frint svei8mm svebf16 i8mm bf16 dgh bti mte ecv afp mte3 wfxt
+			echo "Cix P1/CD8180"
 			;;
 		*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A76r4p0*A76r4p0*X1r1p0*X1r1p0)
 			# Google Tensor G1: 4 x Cortex-A55 / r2p0 + 2 x Cortex-A76 / r4p0 + 2 x Cortex-X1 / r1p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp
@@ -8329,7 +8329,8 @@ ProvideReviewInfo() {
 	elif [ ${#ClusterConfig[@]} -gt 1 ] && [ ${#ClusterConfig[@]} -eq ${#ClusterConfigByCoreType[@]} ]; then
 		echo -e "The CPU features ${#ClusterConfig[@]} clusters of different core types:\n" >>"${TempDir}/review"
 	elif [ ${#ClusterConfig[@]} -gt 1 ]; then
-		echo -e "The CPU features ${#ClusterConfig[@]} clusters consisting of ${#ClusterConfigByCoreType[@]} different core types:\n" >>"${TempDir}/review"
+		CountOfCoreTypes=$(awk 'f;/core type/{f=1}' <<<"${OriginalCPUInfo}" | awk -F" " '{print $6$8}' | sort | uniq | wc -l)
+		echo -e "The CPU features ${#ClusterConfig[@]} clusters consisting of ${CountOfCoreTypes} different core types:\n" >>"${TempDir}/review"
 	fi
 	sed -e 's/^/    /' <<<"${OriginalCPUInfo}" >>"${TempDir}/review"
 

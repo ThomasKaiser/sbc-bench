@@ -7941,7 +7941,7 @@ GuessSoCbySignature() {
 			# Qualcomm Snapdragon 8 Gen 3: 2 x Cortex-A520 / r0p1 + 5 x Cortex-A720 / r0p1 + 1 x Cortex-X4 / r0p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp flagm2 frint i8mm bf16 dgh bti ecv afp
 			echo "Qualcomm Snapdragon 8 Gen 3"
 			;;
-		00A720r0p101A520r0p101A520r0p101A520r0p101A520r0p105A720r0p105A720r0p107A720r0p107A720r0p109A720r0p109A720r0p109A720r0p1)
+		*A720r0p1*A520r0p1*A520r0p1*A520r0p1*A520r0p1*A720r0p1*A720r0p1*A720r0p1*A720r0p1*A720r0p1*A720r0p1*A720r0p1|*A520r0p1*A520r0p1*A520r0p1*A520r0p1*A720r0p1*A720r0p1*A720r0p1*A720r0p1*A720r0p1*A720r0p1*A720r0p1*A720r0p1)
 			# Cix Tech P1 / CP8180/CD8180: 1 x Cortex-A720 / r0p1 + 4 x Cortex-A520 / r0p1 + 7 x Cortex-A720 / r0p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 sve asimdfhm dit uscat ilrcpc flagm sb paca pacg dcpodp sve2 sveaes svepmull svebitperm svesha3 svesm4 flagm2 frint svei8mm svebf16 i8mm bf16 dgh bti mte ecv afp mte3 wfxt
 			echo "Cix P1/CD8180"
 			;;
@@ -9031,7 +9031,7 @@ CheckKernelVersion() {
 					;;
 			esac
 			;;
-		"5.15.41"|"5.15.94"|"5.15.123"|"5.15.151"|"6.6.30")
+		"5.15.41"|"5.15.94"|"5.15.123"|"5.15.147"|"5.15.151"|"6.6.30")
 			# At least used with Android 13 and OpenWRT builds for A133/T527: https://browser.geekbench.com/v5/cpu/21947495.gb5 / https://browser.geekbench.com/v6/cpu/2610471.gb6 /
 			# https://bbs.aw-ol.com/topic/5060/syterkit-启动-t527-失败 / https://github.com/chainsx/linux-t527/blob/main/Makefile
 			# A733: https://browser.geekbench.com/v6/cpu/9253840.gb6

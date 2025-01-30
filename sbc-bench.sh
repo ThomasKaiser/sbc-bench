@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.9.69
+Version=0.9.70
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -1457,7 +1457,7 @@ GetTempSensor() {
 					read ThermalSource </sys/devices/platform/a20-tp-hwmon/name 2>/dev/null && \
 						TempInfo="Thermal source: /sys/devices/platform/a20-tp-hwmon/ (${ThermalSource})"
 				else
-					ThermalNodeGuess=$(cat /sys/devices/virtual/thermal/thermal_zone?/type 2>/dev/null | grep -E -i "aml_thermal|cpu|soc" | tail -n1)
+					ThermalNodeGuess=$(cat /sys/devices/virtual/thermal/thermal_zone?/type 2>/dev/null | grep -E -i "aml_thermal|cpu|soc|thermal-zone4" | tail -n1)
 					HWMonNodeGuess=$(cat /sys/class/hwmon/hwmon?/name 2>/dev/null | grep -E -i "120e0000|pvt|acpitz|cpu-hwmon" | tail -n1)
 					if [ "X${ThermalNodeGuess}" != "X" ]; then
 						# let's use this thermal node
@@ -1655,6 +1655,8 @@ MonitorBoard() {
 	else
 		ClusterConfigByCoreType=($(GetCoreClusters))
 		ClusterConfig=($(GetRelevantCPUClusters))
+		# ugly hack for Cix CD8180
+		[ "${ClusterConfig[*]}" = "0 1 5 7 9" ] && ClusterConfig=( 0 1 5 7 9 11 )
 		if [ -f "${TempDir}/Pcores" ]; then
 			read PCores <"${TempDir}/Pcores"
 			read ECores <"${TempDir}/Ecores"
@@ -1717,7 +1719,7 @@ MonitorBoard() {
 	elif [ ${#ClusterConfig[@]} -eq 3 ] && [ -r /sys/devices/system/cpu/cpufreq/policy${ClusterConfig[0]}/${CpuFreqToQuery} ] && [ -r /sys/devices/system/cpu/cpufreq/policy${ClusterConfig[1]}/${CpuFreqToQuery} ] && [ -r /sys/devices/system/cpu/cpufreq/policy${ClusterConfig[2]}/${CpuFreqToQuery} ] ; then
 		DisplayHeader="Time       cpu${ClusterConfig[0]}/cpu${ClusterConfig[1]}/cpu${ClusterConfig[2]}    load %cpu %sys %usr %nice %io %irq   Temp${VoltageHeader}${NetioHeader}"
 		CPUs=triplecluster
-	elif [ ${#ClusterConfig[@]} -eq 5 ] && [ -r /sys/devices/system/cpu/cpufreq/policy${ClusterConfig[0]}/${CpuFreqToQuery} ] && [ -r /sys/devices/system/cpu/cpufreq/policy${ClusterConfig[1]}/${CpuFreqToQuery} ] && [ -r /sys/devices/system/cpu/cpufreq/policy${ClusterConfig[2]}/${CpuFreqToQuery} ] && [ -r /sys/devices/system/cpu/cpufreq/policy${ClusterConfig[3]}/${CpuFreqToQuery} ] && [ -r /sys/devices/system/cpu/cpufreq/policy${ClusterConfig[4]}/${CpuFreqToQuery} ] ; then
+	elif [ ${#ClusterConfig[@]} -ge 5 ] && [ -r /sys/devices/system/cpu/cpufreq/policy${ClusterConfig[0]}/${CpuFreqToQuery} ] && [ -r /sys/devices/system/cpu/cpufreq/policy${ClusterConfig[1]}/${CpuFreqToQuery} ] && [ -r /sys/devices/system/cpu/cpufreq/policy${ClusterConfig[2]}/${CpuFreqToQuery} ] && [ -r /sys/devices/system/cpu/cpufreq/policy${ClusterConfig[3]}/${CpuFreqToQuery} ] && [ -r /sys/devices/system/cpu/cpufreq/policy${ClusterConfig[4]}/${CpuFreqToQuery} ] ; then
 		DisplayHeader="Time       cpu${ClusterConfig[0]}/cpu${ClusterConfig[1]}/cpu${ClusterConfig[2]}/cpu${ClusterConfig[3]}/cpu${ClusterConfig[4]}    load %cpu %sys %usr %nice %io %irq   Temp${VoltageHeader}${NetioHeader}"
 		CPUs=cd8180
 	elif [ -r /sys/devices/system/cpu/cpufreq/policy${ClusterConfig[1]}/${CpuFreqToQuery} ]; then
@@ -2058,7 +2060,7 @@ CreateTempDir() {
 CheckLoadAndDmesg() {
 	# Check if kernel ring buffer contains boot messages. These help identifying HW.
 	DMESG="$(dmesg | grep -E "Linux|pvtm|rockchip-dmc|rockchip-cpuinfo|Amlogic Meson|sun50i|pcie|mmc|leakage|rk3566t")"
-	grep -q -E '] Booting Linux|] Linux version ' <<<"${DMESG}"
+	grep -q -E '] Booting Linux|]Booting Linux|] Linux version ' <<<"${DMESG}"
 	case $? in
 		1)
 			grep -q "sunxi" <<<"${DMESG}"
@@ -2664,6 +2666,8 @@ BasicSetup() {
 
 	ClusterConfigByCoreType=($(GetCoreClusters))
 	ClusterConfig=($(GetRelevantCPUClusters))
+	# ugly hack for Cix CD8180
+	[ "${ClusterConfig[*]}" = "0 1 5 7 9" ] && ClusterConfig=( 0 1 5 7 9 11 )
 	if [ -f "${TempDir}/Pcores" ]; then
 		read PCores <"${TempDir}/Pcores"
 		read ECores <"${TempDir}/Ecores"
@@ -3848,14 +3852,14 @@ CheckCPUCluster() {
 				CpuToCheck=0
 				;;
 			*)
-				CpuToCheck=$(( $1 + 1 ))
+				[ $(( ${CPUCores} - ${1} )) -eq 1 ] && CpuToCheck=${1} || CpuToCheck=$(( ${1} + 1 ))
 				;;
 		esac
 		taskset -c ${CpuToCheck} "${InstallLocation}"/mhz/mhz 1 1000000 >/dev/null
 		MeasuredSpeed=$(taskset -c ${CpuToCheck} "${InstallLocation}"/mhz/mhz 3 1000000 | awk -F" cpu_MHz=" '{print $2}' | awk -F" " '{print $1}' | sort -r -n | tr '\n' '/' | sed 's|/$||')
 		SpeedSum=$(tr '/' '\n' <<<"${MeasuredSpeed}" | tr -d '.' | awk '{s+=$1} END {printf "%.0f", s}')
 		RoundedSpeed=$(( ${SpeedSum} / 3000 ))
-		echo -e "No cpufreq support available. Measured on cpu${CpuToCheck}: ${RoundedSpeed} MHz (${MeasuredSpeed})"
+		echo -e "No cpufreq support.  Measured: ${RoundedSpeed} (${MeasuredSpeed})"
 		echo -e "Measured: $(printf "%4s" ${RoundedSpeed})">>"${TempDir}/cpufreq"
 	fi
 } # CheckCPUCluster
@@ -4590,14 +4594,14 @@ SummarizeResults() {
 			fi
 		else
 			# no cpufreq support, we check first measured value and use it if available
-			MeasuredClockspeedStart=$(awk -F": " '/No cpufreq support available. Measured on cpu/ {print $2}' <"${ResultLog}" | cut -f1 -d' ' | head -n 1)
+			MeasuredClockspeedStart=$(awk -F": " '/No cpufreq support. Measured/ {print $2}' <"${ResultLog}" | cut -f1 -d' ' | head -n 1)
 			if [ "X${MeasuredClockspeedStart}" = "X" ]; then
 				MHz="no cpufreq support"
 			else
 				# slightly round up measured clockspeed
 				MHz="~$(( $(awk '{printf ("%0.0f",$1/10+0.5); }' <<<"${MeasuredClockspeedStart}") * 10 )) MHz"
 				# check additionally for throttling
-				MeasuredClockspeedFinished=$(awk -F": " '/No cpufreq support available. Measured on cpu/ {print $2}' <"${ResultLog}" | cut -f1 -d' ' | tail -n1)
+				MeasuredClockspeedFinished=$(awk -F": " '/No cpufreq support. Measured/ {print $2}' <"${ResultLog}" | cut -f1 -d' ' | tail -n1)
 				MeasuredDifference=$(( 100 * MeasuredClockspeedStart / MeasuredClockspeedFinished ))
 				if [ ${MeasuredDifference:-100} -gt 103 ]; then
 					# if measured clockspeed differs by more than 3% comparing begin and end of
@@ -7718,8 +7722,8 @@ GuessSoCbySignature() {
 			# for AWS vs. 3/3+ GHz for Altra while reviews mentioned little less). Altra Max (Mystique)
 			# could be identified by its smaller L3 cache.
 			if [ -r "${ResultLog}" ]; then
-				grep -q 'No cpufreq support available. Measured on cpu' "${ResultLog}" && \
-					MeasuredClockspeed=$(awk -F": " '/No cpufreq support available. Measured on cpu/ {print $2}' <"${ResultLog}" | cut -f1 -d' ' | head -n 1) || \
+				grep -q 'No cpufreq support. Measured' "${ResultLog}" && \
+					MeasuredClockspeed=$(awk -F": " '/No cpufreq support. Measured/ {print $2}' <"${ResultLog}" | cut -f1 -d' ' | head -n 1) || \
 					MeasuredClockspeed=$(grep -A2 "^Checking cpufreq OPP" "${ResultLog}" | awk -F" " '/Measured/ {print $5}' | sort -r | head -n1)
 			fi
 			ProcessorInfo="$(dmidecode -t processor 2>/dev/null | grep -E -v -i "^#|^Handle|Serial|O.E.M.|1234567|SMBIOS|: Not |Unknown|OUT OF SPEC|00 00 00 00 00 00 00 00|: None")"

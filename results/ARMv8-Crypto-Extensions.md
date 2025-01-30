@@ -157,9 +157,7 @@ Crawling through [sbc-bench results collection](../Results.md) comparing +70 dif
 | [Ampere Altra Q80](4zkJ.txt) | 2600 | 1482190 | 570 |
 | [Ampere Altra M96](4zGI.txt) | 2800 | 1596110 | 570 |
 | [Ampere Altra Max](4kiu.txt) | 3000 | 1710010 | 570 |
-| Cortex-A510 | | | |
-| [Snapdragon 8 Gen1](4pgq.txt) | 1515 | 1405500 | 928 |
 | Cortex-A520 | | | |
-| [Cix CD8180](88mL.txt) | 1800 | 520630 | 289 |
+| [Cix CD8180](88LE.txt) | 1800 | 520990 | 289 |
 | Cortex-A720 | | | |
-| [Cix CD8180](88mL.txt) | 2600 | 1458330 | 561 |
+| [Cix CD8180](88LE.txt) | 2600 | 1458410 | 561 |

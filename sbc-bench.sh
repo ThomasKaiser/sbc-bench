@@ -553,8 +553,7 @@ GetARMCore() {
 	50:APM
 	50/000:APM X-Gene
 	51:Qualcomm
-	51/001:Qualcomm Oryon 1
-	51/002:Qualcomm Oryon 2
+	51/001:Qualcomm Oryon X1
 	51/00f:Qualcomm Scorpion
 	51/02d:Qualcomm Scorpion
 	51/04d:Qualcomm Krait
@@ -4594,14 +4593,14 @@ SummarizeResults() {
 			fi
 		else
 			# no cpufreq support, we check first measured value and use it if available
-			MeasuredClockspeedStart=$(awk -F": " '/No cpufreq support. Measured/ {print $2}' <"${ResultLog}" | cut -f1 -d' ' | head -n 1)
+			MeasuredClockspeedStart=$(awk -F": " '/No cpufreq support.  Measured/ {print $2}' <"${ResultLog}" | cut -f1 -d' ' | head -n 1)
 			if [ "X${MeasuredClockspeedStart}" = "X" ]; then
 				MHz="no cpufreq support"
 			else
 				# slightly round up measured clockspeed
 				MHz="~$(( $(awk '{printf ("%0.0f",$1/10+0.5); }' <<<"${MeasuredClockspeedStart}") * 10 )) MHz"
 				# check additionally for throttling
-				MeasuredClockspeedFinished=$(awk -F": " '/No cpufreq support. Measured/ {print $2}' <"${ResultLog}" | cut -f1 -d' ' | tail -n1)
+				MeasuredClockspeedFinished=$(awk -F": " '/No cpufreq support.  Measured/ {print $2}' <"${ResultLog}" | cut -f1 -d' ' | tail -n1)
 				MeasuredDifference=$(( 100 * MeasuredClockspeedStart / MeasuredClockspeedFinished ))
 				if [ ${MeasuredDifference:-100} -gt 103 ]; then
 					# if measured clockspeed differs by more than 3% comparing begin and end of
@@ -6411,8 +6410,8 @@ GuessSoCbySignature() {
 					;;
 			esac
 			;;
-		*QualcommOryon*)
-			# Qualcomm Snapdragon X Elite (X1E80100): 4 x Oryon r2p1 + 8 x Oryon + r1p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp flagm2 frint i8mm bf16 rng ecv afp rpres
+		*QualcommOryonX1*)
+			# Qualcomm Snapdragon X Elite (X1E80100): 4 x Oryon X1 r2p1 + 8 x Oryon X1 r1p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp flagm2 frint i8mm bf16 rng ecv afp rpres
 			case ${CPUCores} in
 				12)
 					echo "Qualcomm Snapdragon X Elite"
@@ -7722,8 +7721,8 @@ GuessSoCbySignature() {
 			# for AWS vs. 3/3+ GHz for Altra while reviews mentioned little less). Altra Max (Mystique)
 			# could be identified by its smaller L3 cache.
 			if [ -r "${ResultLog}" ]; then
-				grep -q 'No cpufreq support. Measured' "${ResultLog}" && \
-					MeasuredClockspeed=$(awk -F": " '/No cpufreq support. Measured/ {print $2}' <"${ResultLog}" | cut -f1 -d' ' | head -n 1) || \
+				grep -q 'No cpufreq support.  Measured' "${ResultLog}" && \
+					MeasuredClockspeed=$(awk -F": " '/No cpufreq support.  Measured/ {print $2}' <"${ResultLog}" | cut -f1 -d' ' | head -n 1) || \
 					MeasuredClockspeed=$(grep -A2 "^Checking cpufreq OPP" "${ResultLog}" | awk -F" " '/Measured/ {print $5}' | sort -r | head -n1)
 			fi
 			ProcessorInfo="$(dmidecode -t processor 2>/dev/null | grep -E -v -i "^#|^Handle|Serial|O.E.M.|1234567|SMBIOS|: Not |Unknown|OUT OF SPEC|00 00 00 00 00 00 00 00|: None")"
@@ -9281,7 +9280,7 @@ CheckStorage() {
 		unset DeviceName DeviceInfo DeviceWarning DevizeSize AdditionalInfo AdditionalSMARTInfo ProductName VendorName SpeedInfo SupportedSpeeds RawDiskTemp DriveTemp LnkSta PercentageUsed ASPMSettings
 
 		UdevInfo="$(udevadm info -a -n ${StorageDevice} 2>/dev/null)"
-		Driver="$(awk -F'"' '/DRIVERS==/ {print $2}' <<<"${UdevInfo}" | grep -E 'uas|usb-storage|ahci|nvme|virtio-|sas')"
+		Driver="$(awk -F'"' '/DRIVERS==/ {print $2}' <<<"${UdevInfo}" | grep -E 'uas|usb-storage|ahci|nvme|virtio-|sas|mptspi')"
 		case "${Driver}" in
 			ahci|ahci-*|*-ahci|sata_*|sata-*|*-sata|*pata|pata*|*sas)
 				# (S)ATA attached, we need to also take care about other driver names like
@@ -9386,6 +9385,13 @@ CheckStorage() {
 			virtio-*)
 				# virtual disk
 				DeviceName="Virtual disk"
+				AdditionalInfo="${StorageDevice}, Driver=${Driver}"
+				;;
+			mptspi)
+				# (emulated) SCSI
+				DiskVendor="$(awk -F'"' '/ATTRS{vendor}/ {print $2}' <<<"${UdevInfo}" | head -n1)"
+				DiskModel="$(awk -F'"' '/ATTRS{model}/ {print $2}' <<<"${UdevInfo}" | head -n1)"
+				DeviceName="$(sed -e 's/  */ /g' -e 's/ $//' <<<"${DiskVendor} ${DiskModel}")"
 				AdditionalInfo="${StorageDevice}, Driver=${Driver}"
 				;;
 		esac

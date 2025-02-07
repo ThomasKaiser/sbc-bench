@@ -1,0 +1,695 @@
+sbc-bench v0.9.70 SiFive HiFive Premier P550 (Thu, 06 Feb 2025 19:35:37 +0000)
+
+Distributor ID:	Ubuntu
+Description:	Ubuntu 24.04.1 LTS
+Release:	24.04
+Codename:	noble
+
+Device Info:
+	Manufacturer: Unknown
+	Product Name: Unknown Product
+
+BIOS/UEFI:
+	Vendor: U-Boot
+	Version: 2024.01
+	Release Date: 01/01/2024
+	BIOS Revision: 24.1
+
+/usr/bin/gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0
+
+Uptime: 19:35:38 up 1 day,  1:13,  2 users,  load average: 1.98, 2.69, 3.38,  °C,  225668764
+
+Linux 6.6.21-9-premier (ubuntu) 	02/06/25 	_riscv64_	(4 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+          53.66    0.12    1.16    0.05    0.00   45.02
+
+Device             tps    kB_read/s    kB_wrtn/s    kB_dscd/s    kB_read    kB_wrtn    kB_dscd
+mmcblk0          20.65        91.95       593.87         0.00    8347121   53912873          0
+
+               total        used        free      shared  buff/cache   available
+Mem:            15Gi       787Mi        14Gi       1.7Mi       294Mi        14Gi
+Swap:             0B          0B          0B
+
+##########################################################################
+
+Checking cpufreq OPP (eswin,eic770x):
+
+Cpufreq OPP: 1400    Measured: 1397 (1397.688/1397.616/1397.544)
+Cpufreq OPP: 1300    Measured: 1297 (1297.809/1297.611/1297.296)
+Cpufreq OPP: 1200    Measured: 1197 (1197.641/1197.641/1197.534)
+Cpufreq OPP: 1000    Measured:  997    (997.854/997.829/997.791)
+Cpufreq OPP:  900    Measured:  897    (897.896/897.828/897.690)
+Cpufreq OPP:  800    Measured:  797    (797.753/797.742/797.692)
+Cpufreq OPP:  700    Measured:  697    (697.866/697.848/697.795)
+Cpufreq OPP:  600    Measured:  597    (597.855/597.718/597.490)
+Cpufreq OPP:  500    Measured:  497    (497.851/497.813/497.782)
+Cpufreq OPP:  400    Measured:  397    (397.842/397.817/397.690)
+Cpufreq OPP:  200    Measured:  197    (197.720/197.708/197.680)     (-1.5%)
+Cpufreq OPP:  100    Measured:   93       (93.933/93.898/93.894)     (-7.0%)
+Cpufreq OPP:   24    Measured:   21       (21.905/21.805/21.773)    (-12.5%)
+
+##########################################################################
+
+Hardware sensors:
+
+ina226-i2c-4-44
+in0:         1000.00 uV (crit min =  +0.00 V, crit max =  +0.00 V)
+in1:          11.94 V  (crit min =  +0.00 V, crit max =  +0.00 V)
+power1:        7.12 W  (crit =   0.00 W)
+curr1:       598.00 mA 
+
+pvt-isa-0000
+CPU Core Voltage:     775.00 mV 
+CPU Core Low-Vt:      362.00 mV 
+CPU Core UltraLow-Vt: 485.00 mV 
+CPU Core Standard-Vt: 279.00 mV 
+CPU Core Temperature:  +42.2 C    sensor = CPU diode
+
+eswin_fan_control-isa-0000
+FAN:         3000000000 RPM
+
+pac1934-i2c-4-10
+in1:           4.97 V  (avg =  +4.97 V)
+in2:         793.00 mV (avg =  +0.80 V)
+in3:         799.00 mV (avg =  +0.80 V)
+in4:         412.00 mV (avg =  +0.41 V)
+power1:        2.50 W  
+power2:        1.50 W  
+power3:       20.67 mW 
+power4:        0.00 W  
+energy1:      67.04 kJ
+energy2:      26.75 kJ
+energy3:      15.81 kJ
+energy4:       0.00 J
+curr1:       502.00 mA (avg =  +0.55 A)
+curr2:         1.89 A  (avg =  +1.86 A)
+curr3:        25.00 mA (avg =  +0.18 A)
+curr4:         0.00 A  (avg =  +0.00 A)
+
+pvt-isa-0000
+CPU Core Voltage:     789.00 mV 
+CPU Core Low-Vt:      369.00 mV 
+CPU Core UltraLow-Vt: 497.00 mV 
+CPU Core Standard-Vt: 286.00 mV 
+CPU Core Temperature:  +40.8 C    sensor = CPU diode
+
+##########################################################################
+
+Executing benchmark on cpu0 (eswin,eic770x):
+
+tinymembench v0.4.9-nuumio (simple benchmark for memory throughput and latency)
+
+CFLAGS: 
+bandwidth test min repeats (-b): 2
+bandwidth test max repeats (-B): 3
+bandwidth test mem realloc (-M): no      (-m for realloc)
+      latency test repeats (-l): 3
+        latency test count (-c): 1000000
+
+==========================================================================
+== Memory bandwidth tests                                               ==
+==                                                                      ==
+== Note 1: 1MB = 1000000 bytes                                          ==
+== Note 2: Test result is the best of repeated runs. Number of repeats  ==
+==         is shown in brackets                                         ==
+== Note 3: Results for 'copy' tests show how many bytes can be          ==
+==         copied per second (adding together read and writen           ==
+==         bytes would have provided twice higher numbers)              ==
+== Note 4: 2-pass copy means that we are using a small temporary buffer ==
+==         to first fetch data into it, and only then write it to the   ==
+==         destination (source -> L1 cache, L1 cache -> destination)    ==
+== Note 5: If sample standard deviation exceeds 0.1%, it is shown in    ==
+==         brackets                                                     ==
+==========================================================================
+
+ C copy backwards                                 :   1144.1 MB/s (3, 5.0%)
+ C copy backwards (32 byte blocks)                :   1705.7 MB/s (3, 3.7%)
+ C copy backwards (64 byte blocks)                :   2179.2 MB/s (3, 2.8%)
+ C copy                                           :   2727.1 MB/s (3, 4.5%)
+ C copy prefetched (32 bytes step)                :   2794.2 MB/s (3, 3.5%)
+ C copy prefetched (64 bytes step)                :   2784.4 MB/s (3, 2.8%)
+ C 2-pass copy                                    :   1457.0 MB/s (3, 2.6%)
+ C 2-pass copy prefetched (32 bytes step)         :   1028.3 MB/s (3, 2.9%)
+ C 2-pass copy prefetched (64 bytes step)         :   1027.2 MB/s (3, 1.9%)
+ C scan 8                                         :    570.6 MB/s (3, 0.5%)
+ C scan 16                                        :   1088.7 MB/s (3, 2.4%)
+ C scan 32                                        :   2270.7 MB/s (3, 1.4%)
+ C scan 64                                        :   4333.6 MB/s (3, 2.9%)
+ C fill                                           :  10086.9 MB/s (3, 0.1%)
+ C fill (shuffle within 16 byte blocks)           :  10078.1 MB/s (2)
+ C fill (shuffle within 32 byte blocks)           :  10084.9 MB/s (2)
+ C fill (shuffle within 64 byte blocks)           :  10088.6 MB/s (2)
+ ---
+ libc memcpy copy                                 :   1146.8 MB/s (3, 1.4%)
+ libc memchr scan                                 :   2595.3 MB/s (3, 1.6%)
+ libc memset fill                                 :  10087.9 MB/s (3, 0.1%)
+
+==========================================================================
+== Memory latency test                                                  ==
+==                                                                      ==
+== Average time is measured for random memory accesses in the buffers   ==
+== of different sizes. The larger is the buffer, the more significant   ==
+== are relative contributions of TLB, L1/L2 cache misses and SDRAM      ==
+== accesses. For extremely large buffer sizes we are expecting to see   ==
+== page table walk with several requests to SDRAM for almost every      ==
+== memory access (though 64MiB is not nearly large enough to experience ==
+== this effect to its fullest).                                         ==
+==                                                                      ==
+== Note 1: All the numbers are representing extra time, which needs to  ==
+==         be added to L1 cache latency. The cycle timings for L1 cache ==
+==         latency can be usually found in the processor documentation. ==
+== Note 2: Dual random read means that we are simultaneously performing ==
+==         two independent memory accesses at a time. In the case if    ==
+==         the memory subsystem can't handle multiple outstanding       ==
+==         requests, dual random read has the same timings as two       ==
+==         single reads performed one after another.                    ==
+==========================================================================
+
+block size : single random read / dual random read, [MADV_NOHUGEPAGE]
+      1024 :    0.0 ns          /     0.0 ns 
+      2048 :    0.0 ns          /     0.0 ns 
+      4096 :    0.0 ns          /     0.0 ns 
+      8192 :    0.0 ns          /     0.0 ns 
+     16384 :    0.0 ns          /     0.0 ns 
+     32768 :    0.1 ns          /     0.0 ns 
+     65536 :    3.5 ns          /     5.0 ns 
+    131072 :    5.4 ns          /     7.0 ns 
+    262144 :   11.9 ns          /    16.6 ns 
+    524288 :   21.0 ns          /    28.5 ns 
+   1048576 :   28.2 ns          /    34.0 ns 
+   2097152 :   36.4 ns          /    36.9 ns 
+   4194304 :   69.0 ns          /    93.0 ns 
+   8388608 :  131.0 ns          /   176.8 ns 
+  16777216 :  167.0 ns          /   210.9 ns 
+  33554432 :  187.5 ns          /   227.9 ns 
+  67108864 :  200.9 ns          /   242.8 ns 
+
+block size : single random read / dual random read, [MADV_HUGEPAGE]
+      1024 :    0.0 ns          /     0.0 ns 
+      2048 :    0.0 ns          /     0.0 ns 
+      4096 :    0.0 ns          /     0.0 ns 
+      8192 :    0.0 ns          /     0.0 ns 
+     16384 :    0.0 ns          /     0.0 ns 
+     32768 :    0.0 ns          /     0.0 ns 
+     65536 :    3.4 ns          /     5.1 ns 
+    131072 :    5.1 ns          /     6.8 ns 
+    262144 :    6.9 ns          /     8.1 ns 
+    524288 :   16.3 ns          /    21.1 ns 
+   1048576 :   22.2 ns          /    24.8 ns 
+   2097152 :   29.5 ns          /    25.9 ns 
+   4194304 :   55.7 ns          /    65.0 ns 
+   8388608 :  115.6 ns          /   153.6 ns 
+  16777216 :  144.6 ns          /   178.4 ns 
+  33554432 :  161.2 ns          /   186.3 ns 
+  67108864 :  174.2 ns          /   195.5 ns 
+
+##########################################################################
+
+Executing ramlat on cpu0 (eswin,eic770x), results in ns:
+
+       size:  1x32  2x32  1x64  2x64 1xPTR 2xPTR 4xPTR 8xPTR
+         4k: 3.697 3.670 3.581 3.579 2.148 2.147 2.862 5.726 
+         8k: 3.667 3.669 3.583 3.579 2.148 2.148 2.863 5.725 
+        16k: 3.668 3.670 3.579 3.579 2.147 2.147 2.864 5.726 
+        32k: 3.673 3.670 3.581 3.582 2.149 2.150 2.865 5.729 
+        64k: 10.12 11.54 10.02 11.55 9.303 10.76 13.17 25.60 
+       128k: 10.12 11.55 10.03 11.61 9.316 10.89 13.36 25.80 
+       256k: 22.39 21.36 22.26 21.28 21.72 20.76 22.21 29.21 
+       512k: 30.77 29.80 30.68 29.68 30.59 29.42 37.03 55.31 
+      1024k: 34.51 34.29 34.39 33.89 34.01 33.85 51.98 85.22 
+      2048k: 41.25 39.43 44.31 38.73 40.84 38.70 67.21 101.7 
+      4096k: 96.49 90.53 90.34 89.18 90.91 87.24 117.7 136.6 
+      8192k: 175.7 175.5 175.7 174.7 175.3 168.8 196.3 204.2 
+     16384k: 196.9 198.6 195.6 197.9 196.0 195.6 245.3 253.8 
+     32768k: 207.4 210.5 207.1 210.0 206.5 208.7 275.7 293.3 
+     65536k: 209.5 213.3 209.3 212.7 208.6 211.1 282.0 300.7 
+    131072k: 216.0 218.5 214.7 218.3 214.3 216.5 290.4 307.5 
+
+##########################################################################
+
+Executing benchmark twice on cluster 0 (eswin,eic770x)
+
+OpenSSL 3.0.13, built on 30 Jan 2024 (Library: OpenSSL 3.0.13 30 Jan 2024)
+type             16 bytes     64 bytes    256 bytes   1024 bytes   8192 bytes  16384 bytes
+aes-256-cbc      28831.30k    35987.39k    38302.46k    38979.24k    39176.87k    39190.53k
+aes-256-cbc      29289.48k    36157.80k    38354.09k    39000.41k    39190.53k    39195.99k
+
+##########################################################################
+
+Executing benchmark single-threaded on cpu0 (eswin,eic770x)
+
+7-Zip (a) 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,4 CPUs LE)
+
+LE
+CPU Freq: - - - 64000000 128000000 256000000 512000000 1024000000 -
+
+RAM size:   15999 MB,  # CPU hardware threads:   4
+RAM usage:    435 MB,  # Benchmark threads:      1
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       1409   100   1372   1371  |      18007   100   1538   1538
+23:       1319   100   1345   1345  |      17753   100   1537   1537
+24:       1263   100   1360   1358  |      17494   100   1536   1536
+25:       1215   100   1388   1388  |      17066   100   1519   1519
+----------------------------------  | ------------------------------
+Avr:             100   1366   1365  |              100   1533   1532
+Tot:             100   1449   1449
+
+##########################################################################
+
+Executing benchmark 3 times multi-threaded on CPUs 0-3
+
+7-Zip (a) 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,4 CPUs LE)
+
+LE
+CPU Freq: 64000000 64000000 - 64000000 - - - - -
+
+RAM size:   15999 MB,  # CPU hardware threads:   4
+RAM usage:    882 MB,  # Benchmark threads:      4
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       4323   320   1314   4206  |      70686   399   1511   6031
+23:       4289   336   1302   4370  |      69332   399   1505   5999
+24:       4210   346   1309   4527  |      68091   398   1502   5977
+25:       4145   356   1330   4733  |      66637   398   1488   5931
+----------------------------------  | ------------------------------
+Avr:             339   1314   4459  |              399   1502   5984
+Tot:             369   1408   5222
+
+7-Zip (a) 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,4 CPUs LE)
+
+LE
+CPU Freq: - - 64000000 - 128000000 256000000 - - -
+
+RAM size:   15999 MB,  # CPU hardware threads:   4
+RAM usage:    882 MB,  # Benchmark threads:      4
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       4405   324   1321   4285  |      70597   399   1510   6023
+23:       4285   335   1302   4366  |      69139   397   1505   5982
+24:       4213   346   1310   4530  |      68243   399   1501   5991
+25:       4151   357   1329   4740  |      66511   397   1489   5919
+----------------------------------  | ------------------------------
+Avr:             341   1316   4480  |              398   1502   5979
+Tot:             369   1409   5230
+
+7-Zip (a) 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,4 CPUs LE)
+
+LE
+CPU Freq: 64000000 64000000 - - - - 512000000 - 2048000000
+
+RAM size:   15999 MB,  # CPU hardware threads:   4
+RAM usage:    882 MB,  # Benchmark threads:      4
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       4395   325   1317   4276  |      70545   398   1511   6019
+23:       4263   334   1299   4344  |      69283   398   1506   5995
+24:       4196   345   1307   4512  |      68159   399   1501   5983
+25:       4135   356   1326   4722  |      66798   399   1491   5945
+----------------------------------  | ------------------------------
+Avr:             340   1312   4464  |              398   1502   5985
+Tot:             369   1407   5225
+
+Compression: 4459,4480,4464
+Decompression: 5984,5979,5985
+Total: 5222,5230,5225
+
+##########################################################################
+
+Executing "stress-ng --matrix 0" for 5 minutes:
+
+stress-ng: info:  [232886] setting to a 5 mins, 0 secs run per stressor
+stress-ng: info:  [232886] dispatching hogs: 4 matrix
+stress-ng: info:  [232886] skipped: 0
+stress-ng: info:  [232886] passed: 4: matrix (4)
+stress-ng: info:  [232886] failed: 0
+stress-ng: info:  [232886] metrics untrustworthy: 0
+stress-ng: info:  [232886] successful run completed in 5 mins, 0.01 secs
+
+##########################################################################
+
+Testing maximum cpufreq again, still under full load. System health now:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+19:49:21: 1400MHz  4.05 100%   0%  99%   0%   0%   0%      °C  
+
+Checking cpufreq OPP (eswin,eic770x):
+
+Cpufreq OPP: 1400    Measured: 1397 (1397.761/1397.618/1397.565)
+
+##########################################################################
+
+Hardware sensors:
+
+ina226-i2c-4-44
+in0:         1000.00 uV (crit min =  +0.00 V, crit max =  +0.00 V)
+in1:          11.94 V  (crit min =  +0.00 V, crit max =  +0.00 V)
+power1:        7.38 W  (crit =   0.00 W)
+curr1:       618.00 mA 
+
+pvt-isa-0000
+CPU Core Voltage:     775.00 mV 
+CPU Core Low-Vt:      362.00 mV 
+CPU Core UltraLow-Vt: 484.00 mV 
+CPU Core Standard-Vt: 279.00 mV 
+CPU Core Temperature:  +44.1 C    sensor = CPU diode
+
+eswin_fan_control-isa-0000
+FAN:         3000000000 RPM
+
+pac1934-i2c-4-10
+in1:           4.97 V  (avg =  +4.97 V)
+in2:         793.00 mV (avg =  +0.80 V)
+in3:         800.00 mV (avg =  +0.80 V)
+in4:         409.00 mV (avg =  +0.41 V)
+power1:        3.81 W  
+power2:        1.54 W  
+power3:      680.59 mW 
+power4:        0.00 W  
+energy1:      67.04 kJ
+energy2:      26.75 kJ
+energy3:      15.81 kJ
+energy4:       0.00 J
+curr1:       765.00 mA (avg =  +0.69 A)
+curr2:         1.94 A  (avg =  +1.97 A)
+curr3:       849.00 mA (avg =  +0.89 A)
+curr4:         0.00 A  (avg =  +0.00 A)
+
+pvt-isa-0000
+CPU Core Voltage:     790.00 mV 
+CPU Core Low-Vt:      369.00 mV 
+CPU Core UltraLow-Vt: 496.00 mV 
+CPU Core Standard-Vt: 287.00 mV 
+CPU Core Temperature:  +43.1 C    sensor = CPU diode
+
+##########################################################################
+
+System health while running tinymembench:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+19:36:41: 1400MHz  1.41  54%   1%  53%   0%   0%   0%      °C  
+19:36:51: 1400MHz  1.35  25%   0%  25%   0%   0%   0%      °C  
+19:37:01: 1400MHz  1.29  25%   0%  25%   0%   0%   0%      °C  
+19:37:11: 1400MHz  1.25  25%   0%  25%   0%   0%   0%      °C  
+19:37:22: 1400MHz  1.21  25%   0%  25%   0%   0%   0%      °C  
+19:37:32: 1400MHz  1.18  25%   0%  24%   0%   0%   0%      °C  
+19:37:42: 1400MHz  1.15  25%   0%  24%   0%   0%   0%      °C  
+
+System health while running ramlat:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+19:37:45: 1400MHz  1.14  54%   1%  53%   0%   0%   0%      °C  
+19:37:48: 1400MHz  1.14  25%   0%  25%   0%   0%   0%      °C  
+19:37:51: 1400MHz  1.12  25%   0%  25%   0%   0%   0%      °C  
+19:37:54: 1400MHz  1.11  25%   0%  25%   0%   0%   0%      °C  
+19:37:57: 1400MHz  1.11  25%   0%  25%   0%   0%   0%      °C  
+19:38:00: 1400MHz  1.11  25%   0%  24%   0%   0%   0%      °C  
+19:38:03: 1400MHz  1.10  25%   0%  24%   0%   0%   0%      °C  
+19:38:06: 1400MHz  1.10  25%   0%  25%   0%   0%   0%      °C  
+19:38:10: 1400MHz  1.09  25%   0%  24%   0%   0%   0%      °C  
+19:38:13: 1400MHz  1.09  25%   1%  24%   0%   0%   0%      °C  
+
+System health while running OpenSSL benchmark:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+19:38:15: 1400MHz  1.08  54%   1%  53%   0%   0%   0%      °C  
+19:38:31: 1400MHz  1.06  25%   0%  25%   0%   0%   0%      °C  
+19:38:47: 1400MHz  1.05  25%   0%  25%   0%   0%   0%      °C  
+
+System health while running 7-zip single core benchmark:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+19:38:51: 1400MHz  1.04  54%   1%  53%   0%   0%   0%      °C  
+19:39:00: 1400MHz  1.04  25%   0%  24%   0%   0%   0%      °C  
+19:39:08: 1400MHz  1.03  25%   0%  24%   0%   0%   0%      °C  
+19:39:16: 1400MHz  1.03  25%   0%  24%   0%   0%   0%      °C  
+19:39:24: 1400MHz  1.02  25%   0%  24%   0%   0%   0%      °C  
+19:39:32: 1400MHz  1.02  25%   0%  24%   0%   0%   0%      °C  
+19:39:40: 1400MHz  1.02  26%   1%  24%   0%   0%   0%      °C  
+19:39:48: 1400MHz  1.02  25%   0%  24%   0%   0%   0%      °C  
+19:39:56: 1400MHz  1.01  25%   0%  24%   0%   0%   0%      °C  
+19:40:04: 1400MHz  1.01  25%   0%  24%   0%   0%   0%      °C  
+19:40:12: 1400MHz  1.01  25%   0%  24%   0%   0%   0%      °C  
+19:40:20: 1400MHz  1.01  25%   0%  24%   0%   0%   0%      °C  
+19:40:28: 1400MHz  1.01  25%   0%  24%   0%   0%   0%      °C  
+
+System health while running 7-zip multi core benchmark:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+19:40:31: 1400MHz  1.01  54%   1%  53%   0%   0%   0%      °C  
+19:40:48: 1400MHz  1.60  93%   0%  93%   0%   0%   0%      °C  
+19:41:04: 1400MHz  2.28  92%   0%  91%   0%   0%   0%      °C  
+19:41:22: 1400MHz  2.66  94%   1%  92%   0%   0%   0%      °C  
+19:41:39: 1400MHz  2.75  87%   1%  85%   0%   0%   0%      °C  
+19:41:55: 1400MHz  3.37  90%   1%  89%   0%   0%   0%      °C  
+19:42:13: 1400MHz  3.43  94%   0%  93%   0%   0%   0%      °C  
+19:42:29: 1400MHz  3.75  92%   0%  91%   0%   0%   0%      °C  
+19:42:46: 1400MHz  3.81  89%   0%  88%   0%   0%   0%      °C  
+19:43:03: 1400MHz  3.78  94%   1%  92%   0%   0%   0%      °C  
+19:43:22: 1400MHz  3.55  85%   0%  84%   0%   0%   0%      °C  
+19:43:40: 1400MHz  3.73  95%   0%  94%   0%   0%   0%      °C  
+19:43:58: 1400MHz  3.87  92%   1%  91%   0%   0%   0%      °C  
+19:44:14: 1400MHz  3.77  87%   1%  85%   0%   0%   0%      °C  
+
+System health while running stress-ng:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+19:44:30: 1400MHz  3.90  54%   1%  53%   0%   0%   0%      °C  
+19:45:12: 1400MHz  3.95 100%   0%  99%   0%   0%   0%      °C  
+19:45:53: 1400MHz  3.98 100%   0%  99%   0%   0%   0%      °C  
+19:46:35: 1400MHz  4.04 100%   0%  99%   0%   0%   0%      °C  
+19:47:16: 1400MHz  4.06 100%   0%  99%   0%   0%   0%      °C  
+19:47:58: 1400MHz  4.03 100%   0%  99%   0%   0%   0%      °C  
+19:48:39: 1400MHz  4.01 100%   0%  99%   0%   0%   0%      °C  
+19:49:21: 1400MHz  4.05 100%   0%  99%   0%   0%   0%      °C  
+
+##########################################################################
+
+dmesg output while running the benchmarks:
+
+[90838.487448] pac193x 4-0010: get command:31 value error
+[90839.673414] pac193x 4-0010: get command:31 value error
+[90840.852925] pac193x 4-0010: get command:31 value error
+[90842.031743] pac193x 4-0010: get command:31 value error
+[90843.229049] pac193x 4-0010: get command:31 value error
+[90844.412395] pac193x 4-0010: get command:31 value error
+
+##########################################################################
+
+Linux 6.6.21-9-premier (ubuntu) 	02/06/25 	_riscv64_	(4 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+          53.81    0.11    1.16    0.05    0.00   44.87
+
+Device             tps    kB_read/s    kB_wrtn/s    kB_dscd/s    kB_read    kB_wrtn    kB_dscd
+mmcblk0          20.47        91.32       588.55         0.00    8366373   53921837          0
+
+               total        used        free      shared  buff/cache   available
+Mem:            15Gi       802Mi        14Gi       1.7Mi       314Mi        14Gi
+Swap:             0B          0B          0B
+
+CPU sysfs topology (clusters, cpufreq members, clockspeeds)
+                 cpufreq   min    max
+ CPU    cluster  policy   speed  speed   core type
+  0        0        0       24    1400   eswin,eic770x
+  1        0        0       24    1400   eswin,eic770x
+  2        0        0       24    1400   eswin,eic770x
+  3        0        0       24    1400   eswin,eic770x
+
+Architecture:        riscv64
+Byte Order:          Little Endian
+CPU(s):              4
+On-line CPU(s) list: 0-3
+
+  cpuinfo: http://0x0.st/8PT7.txt
+
+Processor Information
+	Type: Central Processor
+	Version: rv64imafdc_zba_zbb
+	Status: Unpopulated
+
+SoC guess: Eswin EIC7700X
+DT compat: sifive,hifive-premier-p550
+           eswin,eic7700
+ Compiler: /usr/bin/gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0 / riscv64-linux-gnu
+ Userland: riscv64
+   Kernel: 6.6.21-9-premier/riscv64
+           CONFIG_HZ=250
+           CONFIG_HZ_250=y
+           CONFIG_PREEMPTION=y
+           CONFIG_PREEMPT_BUILD=y
+           CONFIG_PREEMPT_COUNT=y
+           CONFIG_PREEMPT_DYNAMIC=y
+           CONFIG_PREEMPT_NOTIFIERS=y
+           CONFIG_PREEMPT_RCU=y
+           CONFIG_PREEMPT_VOLUNTARY=y
+
+##########################################################################
+
+   opp-table0:
+        24 MHz    800.0 mV
+       100 MHz    800.0 mV
+       200 MHz    800.0 mV
+       400 MHz    800.0 mV
+       500 MHz    800.0 mV
+       600 MHz    800.0 mV
+       700 MHz    800.0 mV
+       800 MHz    800.0 mV
+       900 MHz    800.0 mV
+      1000 MHz    800.0 mV
+      1200 MHz    800.0 mV
+      1300 MHz    800.0 mV
+      1400 MHz    800.0 mV
+
+##########################################################################
+
+Results validation:
+
+  * Measured clockspeed not lower than advertised max CPU clockspeed
+  * Background activity (%system) OK
+  * No throttling
+
+Status of performance related policies found below /sys:
+
+  * /sys/module/pcie_aspm/parameters/policy: default [performance] powersave powersupersave
+
+##########################################################################
+
+/sys/kernel/debug/clk/clk_summary diff between all governors set to powersave and performance:
+
+                                   enable  prepare  protect                                duty  hardware
+     clock                          count    count    count        rate   accuracy phase  cycle    enable
+  -------------------------------------------------------------------------------------------------------
+4a5,27
+>     mux_u_cpu_root_3mux1_gfree        0        0        0  1400000000          0     0  50000         Y
+>        gate_clk_cpu_trace_clk_3       0        0        0  1400000000          0     0  50000         Y
+>           clk_cpu_trace_clk_3         0        0        0  1400000000          0     0  50000         Y
+>        gate_clk_cpu_trace_clk_2       0        0        0  1400000000          0     0  50000         Y
+>           clk_cpu_trace_clk_2         0        0        0  1400000000          0     0  50000         Y
+>        gate_clk_cpu_trace_clk_1       0        0        0  1400000000          0     0  50000         Y
+>           clk_cpu_trace_clk_1         0        0        0  1400000000          0     0  50000         Y
+>        gate_clk_cpu_trace_clk_0       0        0        0  1400000000          0     0  50000         Y
+>           clk_cpu_trace_clk_0         0        0        0  1400000000          0     0  50000         Y
+>        gate_clk_cpu_ext_src_core_clk_3       0        0        0  1400000000          0     0  50000         Y
+>           clk_cpu_ext_src_core_clk_3       0        0        0  1400000000          0     0  50000         Y
+>        gate_clk_cpu_ext_src_core_clk_2       0        0        0  1400000000          0     0  50000         Y
+>           clk_cpu_ext_src_core_clk_2       0        0        0  1400000000          0     0  50000         Y
+>        gate_clk_cpu_ext_src_core_clk_1       0        0        0  1400000000          0     0  50000         Y
+>           clk_cpu_ext_src_core_clk_1       0        0        0  1400000000          0     0  50000         Y
+>        gate_clk_cpu_ext_src_core_clk_0       0        0        0  1400000000          0     0  50000         Y
+>           clk_cpu_ext_src_core_clk_0       0        0        0  1400000000          0     0  50000         Y
+>        fixed_factor_u_cpu_div2        0        0        0   700000000          0     0  50000         Y
+>           mux_u_cpu_aclk_2mux1_gfree       0        0        0   700000000          0     0  50000         Y
+>              gate_clk_cpu_clk         0        0        0   700000000          0     0  50000         Y
+>                 clk_cpu_clk           0        0        0   700000000          0     0  50000         Y
+>              gate_clk_cpu_trace_com_clk       0        0        0   700000000          0     0  50000         Y
+>                 clk_cpu_trace_com_clk       0        0        0   700000000          0     0  50000         Y
+393,415d415
+<     mux_u_cpu_root_3mux1_gfree        0        0        0    24000000          0     0  50000         Y
+<        gate_clk_cpu_trace_clk_3       0        0        0    24000000          0     0  50000         Y
+<           clk_cpu_trace_clk_3         0        0        0    24000000          0     0  50000         Y
+<        gate_clk_cpu_trace_clk_2       0        0        0    24000000          0     0  50000         Y
+<           clk_cpu_trace_clk_2         0        0        0    24000000          0     0  50000         Y
+<        gate_clk_cpu_trace_clk_1       0        0        0    24000000          0     0  50000         Y
+<           clk_cpu_trace_clk_1         0        0        0    24000000          0     0  50000         Y
+<        gate_clk_cpu_trace_clk_0       0        0        0    24000000          0     0  50000         Y
+<           clk_cpu_trace_clk_0         0        0        0    24000000          0     0  50000         Y
+<        gate_clk_cpu_ext_src_core_clk_3       0        0        0    24000000          0     0  50000         Y
+<           clk_cpu_ext_src_core_clk_3       0        0        0    24000000          0     0  50000         Y
+<        gate_clk_cpu_ext_src_core_clk_2       0        0        0    24000000          0     0  50000         Y
+<           clk_cpu_ext_src_core_clk_2       0        0        0    24000000          0     0  50000         Y
+<        gate_clk_cpu_ext_src_core_clk_1       0        0        0    24000000          0     0  50000         Y
+<           clk_cpu_ext_src_core_clk_1       0        0        0    24000000          0     0  50000         Y
+<        gate_clk_cpu_ext_src_core_clk_0       0        0        0    24000000          0     0  50000         Y
+<           clk_cpu_ext_src_core_clk_0       0        0        0    24000000          0     0  50000         Y
+<        fixed_factor_u_cpu_div2        0        0        0    12000000          0     0  50000         Y
+<           mux_u_cpu_aclk_2mux1_gfree       0        0        0    12000000          0     0  50000         Y
+<              gate_clk_cpu_clk         0        0        0    12000000          0     0  50000         Y
+<                 clk_cpu_clk           0        0        0    12000000          0     0  50000         Y
+<              gate_clk_cpu_trace_com_clk       0        0        0    12000000          0     0  50000         Y
+<                 clk_cpu_trace_com_clk       0        0        0    12000000          0     0  50000         Y
+
+##########################################################################
+
+# SiFive HiFive Premier P550
+
+Tested with sbc-bench v0.9.70 on Thu, 06 Feb 2025 19:49:36 +0000.
+
+### General information:
+
+    Eswin EIC7700X, Kernel: riscv64, Userland: riscv64
+    
+    CPU sysfs topology (clusters, cpufreq members, clockspeeds)
+                     cpufreq   min    max
+     CPU    cluster  policy   speed  speed   core type
+      0        0        0       24    1400   eswin,eic770x
+      1        0        0       24    1400   eswin,eic770x
+      2        0        0       24    1400   eswin,eic770x
+      3        0        0       24    1400   eswin,eic770x
+
+15999 KB available RAM
+
+### Governors/policies (performance vs. idle consumption):
+
+Original governor settings:
+
+    cpufreq-policy0: performance / 1400 MHz (conservative ondemand userspace powersave performance schedutil / 24 100 200 400 500 600 700 800 900 1000 1200 1300 1400)
+
+Tuned governor settings:
+
+    cpufreq-policy0: performance / 1400 MHz
+
+Status of performance related policies found below /sys:
+
+    /sys/module/pcie_aspm/parameters/policy: default [performance] powersave powersupersave
+
+### Clockspeeds (idle vs. heated up):
+
+Before:
+
+    cpu0 (eswin,eic770x): OPP: 1400, Measured: 1397 
+
+After:
+
+    cpu0 (eswin,eic770x): OPP: 1400, Measured: 1397 
+
+### Performance baseline
+
+  * memcpy: 1146.8 MB/s, memchr: 2595.3 MB/s, memset: 10087.9 MB/s
+  * 16M latency: 196.9 198.6 195.6 197.9 196.0 195.6 245.3 253.8 
+  * 128M latency: 216.0 218.5 214.7 218.3 214.3 216.5 290.4 307.5 
+  * 7-zip MIPS (3 consecutive runs): 5222, 5230, 5225 (5220 avg), single-threaded: 1449
+  * `aes-256-cbc      28831.30k    35987.39k    38302.46k    38979.24k    39176.87k    39190.53k`
+  * `aes-256-cbc      29289.48k    36157.80k    38354.09k    39000.41k    39190.53k    39195.99k`
+
+### Storage devices:
+
+  * 116.5GB "Samsung DUTB42" HS400 eMMC 5.1 card as /dev/mmcblk0: date 04/2024, manfid/oemid: 0x000015/0x0100, hw/fw rev: 0x0/0x0200000000000000
+
+### Software versions:
+
+  * Ubuntu 24.04.1 LTS (noble)
+  * Compiler: /usr/bin/gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0 / riscv64-linux-gnu
+  * OpenSSL 3.0.13, built on 30 Jan 2024 (Library: OpenSSL 3.0.13 30 Jan 2024)    
+
+### Kernel info:
+
+  * `/proc/cmdline: BOOT_IMAGE=/boot/vmlinuz-6.6.21-9-premier root=UUID=42713e07-4e13-4248-b7b9-7147d117e059 ro efi=debug earlycon=sbi clk_ignore_unused`
+  * Kernel 6.6.21-9-premier / CONFIG_HZ=250

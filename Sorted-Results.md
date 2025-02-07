@@ -140,7 +140,7 @@
 | [Khadas VIM2 (Amlogic S912)](results/1iJ7.txt) | 1415/1000 MHz | 4.17 | Bionic arm64 | **5450** | 993 | 659600 | 1920 | 5920 | 8.59 |
 | [Tinkerboard (RK3288)](results/3Lir.txt) | 1800 MHz | 4.4 | Buster armhf | **5440** | 1693 | 66300 | 1340 | 3510 | - |
 | [ODROID-M1 (RK3568)](results/4ijy.txt) | 2060 MHz | 5.18 | Bullseye arm64 | **5430** | 1567 | 961090 | 3310 | 5960 | 7.76 |
-| [Eswin EIC7700X](results/Xyfg) | 1400 MHz | 6.6 | Trixie riscv64 | **5390** | 1485 | 49340 | 4570 | 8700 | - |
+| [Eswin EIC7700X](results/Xyfg.txt) | 1400 MHz | 6.6 | Trixie riscv64 | **5390** | 1485 | 49340 | 4570 | 8700 | - |
 | [Tinkerboard (RK3288)](results/1iSX.txt) | 1730 MHz | 4.14 | Stretch armhf | **5350** | 1563 | 66600 | 1480 | 3900 | - |
 | [AMedia X96 Max+ (S905X3)](results/3QOj.txt) | 2100 MHz | 5.15 | Focal arm64 | **5270** | 1330 | 981830 | 2630 | 5150 | - |
 | [Lichee Pi 4A (T-Head TH1520)](results/4xYE.txt) | 1990 MHz | 5.10 | Bookworm riscv64 | **5260** | 1592 | 43820 | 4350 | 14760 | - |
@@ -379,7 +379,7 @@
 | [Jetson Nano](results/4rLX.txt) | 1480 MHz | 4.9 | Bullseye arm64 | 5260 | **1578** | 531940 | 3730 | 8870 | - |
 | [ODROID-M1 (RK3568)](results/4ijy.txt) | 2060 MHz | 5.18 | Bullseye arm64 | 5430 | **1567** | 961090 | 3310 | 5960 | 7.76 |
 | [Tinkerboard (RK3288)](results/1iSX.txt) | 1730 MHz | 4.14 | Stretch armhf | 5350 | **1563** | 66600 | 1480 | 3900 | - |
-| [Eswin EIC7700X](results/Xyfg) | 1400 MHz | 6.6 | Trixie riscv64 | 5390 | **1485** | 49340 | 4570 | 8700 | - |
+| [Eswin EIC7700X](results/Xyfg.txt) | 1400 MHz | 6.6 | Trixie riscv64 | 5390 | **1485** | 49340 | 4570 | 8700 | - |
 | [NanoPi R5S (RK3568)](results/4jfZ.txt) | 1960 MHz | 6.1 | Bullseye arm64 | 5030 | **1482** | 914340 | 2990 | 5970 | 7.33 |
 | [ODROID-C4 (S905X3)](results/2kaS.txt) | 2010 MHz | 4.9 | Focal arm64 | 5450 | **1459** | 941590 | 3310 | 6270 | 7.71 |
 | [Quartz64-A (RK3566)](results/4qJF.txt) | 1890 MHz | 6.2 | Jammy arm64 | 4980 | **1457** | 884590 | 3240 | 6100 | 6.98 |
@@ -679,7 +679,7 @@
 | [Raspberry Pi 4 B (BCM2711)](results/1MFf.txt) | 1500 MHz | 4.19 | Raspbian Buster | 5500 | 1606 | **64860** | 2460 | 3170 | - |
 | [NanoPi K2 (Amlogic S905)](results/3Qve.txt) | 1480 MHz | 5.10 | Bullseye arm64 | 3880 | 1154 | **51490** | 1850 | 3790 | - |
 | [NanoPi K2 (Amlogic S905)](results/1iT1.txt) | 1480 MHz | 4.14 | Stretch arm64 | 3850 | 1095 | **50370** | 1660 | 3870 | 4.61 |
-| [Eswin EIC7700X](results/Xyfg) | 1400 MHz | 6.6 | Trixie riscv64 | 5390 | 1485 | **49340** | 4570 | 8700 | - |
+| [Eswin EIC7700X](results/Xyfg.txt) | 1400 MHz | 6.6 | Trixie riscv64 | 5390 | 1485 | **49340** | 4570 | 8700 | - |
 | [ODROID-C2 (Amlogic S905)](results/1ixI.txt) | 1750 MHz | 3.14 | Xenial arm64 | 4070 | 1128 | **48500** | 1750 | 3100 | - |
 | [Clearfog A1<br />(Armada 388)](results/4d1U.txt) | 1600 MHz | 5.15 | Bullseye armhf | 2230 | 1239 | **44080** | 910 | 5060 | - |
 | [Lichee Pi 4A (T-Head TH1520)](results/4xYE.txt) | 1990 MHz | 5.10 | Bookworm riscv64 | 5260 | 1592 | **43820** | 4350 | 14760 | - |
@@ -802,7 +802,7 @@
 | [Khadas VIM3 (Amlogic A311D)](results/3R2Z.txt) | 2400/2015 MHz | 5.10 | Bullseye arm64 | 9650 | 2376 | 1366350 | **4850** | 7380 | - |
 | [Celeron N4100](results/1uTS.txt) | 2300/1100 MHz | 4.15 | Bionic amd64 | 8510 | 2222 | 669350 | **4750** | 5240 | 18.33 |
 | [Pentium N4200](results/1ngq.txt) | 2560/1100 MHz | 4.14 | Bionic amd64 | 7469 | 1976 | 468008 | **4682** | 4997 | 18.75 |
-| [Eswin EIC7700X](results/Xyfg) | 1400 MHz | 6.6 | Trixie riscv64 | 5390 | 1485 | 49340 | **4570** | 8700 | - |
+| [Eswin EIC7700X](results/Xyfg.txt) | 1400 MHz | 6.6 | Trixie riscv64 | 5390 | 1485 | 49340 | **4570** | 8700 | - |
 | [Macchiatobin (Armada 8040)](results/4zcm.txt) | 1600 MHz | 5.10 | Buster arm64 | 5720 | 1739 | 909420 | **4510** | 12270 | 7.91 |
 | [Clearfog CX (NXP LX2160A)](results/4ju5.txt) | 2000 MHz | 5.10 | Focal arm64 | 25260 | 2236 | 1136690 | **4460** | 12500 | - |
 | [Atom E3950](results/4dd5.txt) | 2000 MHz | 5.15 | Jammy amd64 | 6440 | 1636 | 374800 | **4400** | 4840 | - |
@@ -1050,7 +1050,7 @@
 | [Jetson Nano](results/4rLX.txt) | 1480 MHz | 4.9 | Bullseye arm64 | 5260 | 1578 | 531940 | 3730 | **8870** | - |
 | [Intel N95](results/4xwq.txt) | 3400 MHz | 5.15 | Jammy amd64 | 13070 | 3993 | 1232880 | 9710 | **8730** | 34.60 |
 | [BeagleBone AI-64 (TI J721E)](results/4DLw.txt) | 2000 MHz | 5.10 | Bookworm arm64 | 3470 | 1872 | 1130390 | 2660 | **8710** | - |
-| [Eswin EIC7700X](results/Xyfg) | 1400 MHz | 6.6 | Trixie riscv64 | 5390 | 1485 | 49340 | 4570 | **8700** | - |
+| [Eswin EIC7700X](results/Xyfg.txt) | 1400 MHz | 6.6 | Trixie riscv64 | 5390 | 1485 | 49340 | 4570 | **8700** | - |
 | [ODROID-N2 (Amlogic S922X)](results/1BsF.txt) | 1800/1900 MHz | 4.9 | Bionic arm64 | 8140 | 1669 | 1024680 | 4120 | **8610** | 11.39 |
 | [RockPro64 (RK3399)](results/1iFp.txt) | 1800/1400 MHz | 4.18 | Stretch arm64 | 6300 | 1755 | 1021500 | 3650 | **8450** | 8.20 |
 | [RockPro64 (RK3399)](results/2sZH.txt) | 2010/1510 MHz | 5.4 | Focal arm64 | 6920 | 1826 | 1145300 | 3700 | **8430** | 11.55 |
@@ -1420,7 +1420,7 @@
 | [NanoPi Fire3 (Nexell S5P6818)](results/1jjm.txt) | **1400** MHz| 4.14 | Bionic arm64 | 7440 | 1052 | 653000 | 1560 | 4600 | 10.96 |
 | [NanoPC T3+ (Nexell S5P6818)](results/1iyp.txt) | **1400** MHz| 4.4 | Xenial armhf | 6400 | 943 | 651000 | 1650 | 3700 | - |
 | [NanoPC T3+ (Nexell S5P6818)](results/1iRJ.txt) | **1400** MHz| 4.14 | Bionic arm64 | 7480 | 1053 | 652600 | 1440 | 4540 | 10.99 |
-| [Eswin EIC7700X](results/Xyfg) | **1400** MHz| 6.6 | Trixie riscv64 | 5390 | 1485 | 49340 | 4570 | 8700 | - |
+| [Eswin EIC7700X](results/Xyfg.txt) | **1400** MHz| 6.6 | Trixie riscv64 | 5390 | 1485 | 49340 | 4570 | 8700 | - |
 | [BPi M4 (RTD1395)](results/1Dt1.txt) | **1400** MHz| 4.9 | Bionic arm64 | 3500 | - | 651460 | 1010 | 4360 | 5.48 |
 | [RK3318 BOX](results/4kor.txt) | **1390** MHz| 6.0 | Jammy arm64 | 3200 | 867 | 644750 | 700 | 2460 | - |
 | [NanoPi Fire3 (Nexell S5P6818)](results/1jiU.txt) | **1380** MHz| 4.14 | Stretch arm64 | 7420 | 1038 | 645400 | 1520 | 4570 | 8.53 |

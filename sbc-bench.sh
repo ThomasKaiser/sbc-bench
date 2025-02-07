@@ -7994,7 +7994,7 @@ GuessSoCbySignature() {
 			[ "X${ModelName}" != "X" ] && echo "${ModelName}"
 			;;
 		*A55*A55*A55*A55*A76r4p1|*A76r4p1*A55*A55*A55*A55r?p?)
-			# Amlogic S928X, 4 x Cortex-A55 + 1 x Cortex-A76 / r4p1: https://browser.geekbench.com/v5/cpu/compare/19788026?baseline=20656779
+			# Amlogic S928X, 1 x Cortex-A76 / r4p1 + 4 x Cortex-A55: https://browser.geekbench.com/v5/cpu/compare/19788026?baseline=20656779
 			echo "Amlogic S928X"
 			;;
 		*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A78r1p0*A78r1p0)

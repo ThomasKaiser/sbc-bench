@@ -246,6 +246,7 @@
 | [Xv06](Xv06.txt) | v0.9.67 M1-MUSE-BOOK | 0%/0% | 15Gi/14Gi | X | X | X | X | 3% | 0% | |
 | [XxZl](XxZl.txt) | v0.9.67 SiPEED LPi3A Board | 0%/0% | 7.6Gi/6.6Gi | X | X | X | X | 2% | 0% | |
 | [XyIw](XyIw.txt) | v0.9.67 RK3588 OPi 5 Max | 0%/0% | 7.7Gi/7.1Gi | X | X | X | X | 1% | 0% | [check log](XyIw.txt) |
+| [Xyfg](Xyfg.txt) | v0.9.67 ESWIN EIC7700 | 0%/0% | 9.7Gi/9.1Gi | X | X | X | X | 1% | 0% | [check log](Xyfg.txt) |
 | [c9ZIGh](c9ZIGh.txt) | v0.9.66 Radxa ROCK 5C | 0%/0% | 3.8Gi/3.6Gi | X | X | X | X | 1% | 0% | [check log](c9ZIGh.txt) |
 | [fUCnrY](fUCnrY.txt) | v0.9.65 T-HEAD Light Lichee Pi 4A confi | 0%/0% | 15Gi/14Gi | X | X | X | X | <span style=color:red> 5%</span> | 0% | [check log](fUCnrY.txt) |
 | [frdzAn](frdzAn.txt) | v0.9.65 Raspberry Pi 5 Model B Rev 1.0 | 0%/0% | 4.0Gi/3.8Gi | X | X | X | X | 1% | 0% | [check log](frdzAn.txt) |

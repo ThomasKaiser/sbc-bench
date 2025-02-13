@@ -6410,6 +6410,10 @@ GuessSoCbySignature() {
 					;;
 			esac
 			;;
+		*QualcommOryonX1r4p4*QualcommOryonX1r3p4*)
+			# Qualcomm Snapdragon 8 Elite (SM8750-AB): 6 x Oryon X1 r4p4 + 2 x Oryon X1 r3p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp flagm2 frint i8mm bf16 rng bti ecv afp rpres
+			echo "Qualcomm Snapdragon 8 Elite (SM8750-AB)"
+			;;
 		*QualcommOryonX1*)
 			# Qualcomm Snapdragon X Elite (X1E80100): 4 x Oryon X1 r2p1 + 8 x Oryon X1 r1p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp flagm2 frint i8mm bf16 rng ecv afp rpres
 			case ${CPUCores} in

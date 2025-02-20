@@ -167,13 +167,14 @@ If those 7-zip MIPS apply only to a few selected use cases as performance indica
   * 7-zip allows to spot different thermal throttling strategies for example [throttling the memory controller instead of or in addition to CPU cores on certain platforms](https://www.cnx-software.com/2024/03/09/minix-z100-0db-review-fanless-intel-n100-mini-pc-ubuntu-22-04/#comment-616408)
   * the multi-core test is also nice to spot internal CPU/SoC bottlenecks and/or scheduler improvements
 
-A good example for the latter is Odroid XU4, three times tested with different kernel and OS versions (Stretch, Bionic and Focal which all build packages with different GCC versions). Memory performance remained the same (for a way to quickly check this see [included script snippets](results/.snippets-for-insights.sh)) but for whatever reasons only the *multi-threaded* performance fluctuated over time:
+A good example for the latter is Odroid XU4, four times tested with different kernel and OS versions (Stretch, Bionic, Focal and Bookworm which all build packages with different GCC versions). Memory performance remained the same (for a way to quickly check this see [included script snippets](results/.snippets-for-insights.sh)) but for whatever reasons only the *multi-threaded* performance fluctuated over time:
 
 | Kernel / Compiler | 7-zip single | 7-zip multi | CPU utilisation compression | CPU utilisation decompression |
 | ----: | :----: |  :----: | :----: | :----: |
 | [Kernel 4.9 / GCC 6.3](results/1iWL.txt) | 1622 | 6370 | 64% | 78% |
 | [Kernel 4.14 / GCC 7.3](results/1iLy.txt) | 1633 | 7100 | 64% | 78% |
 | [Kernel 5.4 / GCC 9.3](results/3GnC.txt) | 1604 | 8980 | 94% | 84% |
+| [Kernel 6.6 / GCC 12.2](results/8ctH.txt) | 1604 | 8980 | 92% | 77% |
 
 Smells like a scheduler problem with kernel 4.x. Only more detailed tests with more kernel/GCC combinations or switching to [Active Benchmarking](https://www.brendangregg.com/activebenchmarking.html) could really tell.
 

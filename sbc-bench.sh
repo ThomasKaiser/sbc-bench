@@ -7576,8 +7576,8 @@ GuessSoCbySignature() {
 			echo "Phytium E2000S"
 			;;
 		*FTC862r0p0*FTC862r0p0*FTC862r0p0*FTC862r0p0*FTC862r0p0*FTC862r0p0*FTC862r0p0*FTC862r0p0)
-			# Phytium D3000/8: 8 x Phytium FTC862 / r0p0 / https://browser.geekbench.com/v6/cpu/3447903.gb6
-			echo "Phytium D3000"
+			# Phytium D3000/8: 8 x Phytium FTC862 / r0p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop sha3 sm3 sm4 asimddp sha512
+			echo "Phytium D3000/8"
 			;;
 		*A57r1p2*A57r1p2*A57r1p2*A57r1p2*A57r1p2*A57r1p2*A57r1p2*A57r1p2)
 			# AMD Opteron A1100: 8 x Cortex-A57 / r1p2 / https://bugzilla-attachments.redhat.com/attachment.cgi?id=1475897

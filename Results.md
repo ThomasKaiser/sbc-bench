@@ -119,6 +119,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [ODROID-XU4 (Exynos 5422)](results/1ixL.txt) | 1900/1400 MHz | 3.10 | **Jessie** armhf | 6750 | - | 68200 | 2200 | 4800 | - |
 | [ODROID-XU4 (Exynos 5422)](results/1iWL.txt) | 2000/1400 MHz | 4.9 | Stretch armhf | 6400 | 1622 | 72075 | 2230 | 4850 | - |
 | [ODROID-XU4 (Exynos 5422)](results/3GnC.txt) | 2000/1400 MHz | 5.4 | Focal armhf | 8980 | 1604 | 72020 | 2280 | 4910 | - |
+| [ODROID-XU4 (Exynos 5422)](results/8ctH.txt) | 2000/1400 MHz | 6.6 | Bookworm armhf | 8730 | 1706 | 71690 | 2270 | 4820 | - |
 | [Olimex A20-Lime2](results/4rRV.txt) | 960 MHz | 5.10 | Bullseye armhf | 1080 | 589 | 18630 | 430 | 2020 | 0.87 |
 | [Orange Pi PC+ (Allwinner H3)](results/3MQV.txt) | 1370 MHz | 5.10 | Focal armhf | 3060 | 879 | 26590 | 890 | 3450 | - |
 | [Orange Pi PC 2 (Allwinner H5)](results/3MQJ.txt) | 1370 MHz | 5.10 | Focal arm64 | 3500 | 1023 | 637410 | 1070 | 3680 | - |

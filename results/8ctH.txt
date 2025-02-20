@@ -1,0 +1,1634 @@
+sbc-bench v0.9.70 Hardkernel ODROID HC2 (Thu, 20 Feb 2025 09:10:37 +0100)
+
+Distributor ID:	Debian
+Description:	Armbian 25.2.1 bookworm
+Release:	12
+Codename:	bookworm
+Build system:   https://github.com/armbian/build, 25.2.1, Odroid XU4, odroidxu4, odroidxu4
+
+/usr/bin/gcc (Debian 12.2.0-14) 12.2.0
+
+Uptime: 09:10:37 up 6 min,  2 users,  load average: 1.08, 0.80, 0.37,  15.0°C,  240022864
+
+Linux 6.6.75-current-odroidxu4 (odroidxu4) 	02/20/25 	_armv7l_	(8 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+           7.40    0.01    3.32    0.79    0.00   88.49
+
+Device             tps    kB_read/s    kB_wrtn/s    kB_dscd/s    kB_read    kB_wrtn    kB_dscd
+mmcblk2          38.41       942.17       586.93         0.00     371969     231720          0
+
+               total        used        free      shared  buff/cache   available
+Mem:           1.9Gi       194Mi       1.8Gi        35Mi        94Mi       1.8Gi
+Swap:             0B          0B          0B
+
+##########################################################################
+
+Checking cpufreq OPP for cpu0-cpu3 (Cortex-A7):
+
+Cpufreq OPP: 1400    Measured: 1396 (1396.711/1396.373/1396.373)
+Cpufreq OPP: 1300    Measured: 1296 (1296.855/1296.806/1296.541)
+Cpufreq OPP: 1200    Measured: 1196 (1196.942/1196.897/1196.652)
+Cpufreq OPP: 1100    Measured: 1096 (1097.002/1096.904/1096.778)
+Cpufreq OPP: 1000    Measured:  996    (997.111/996.514/996.069)
+Cpufreq OPP:  900    Measured:  897    (897.361/897.178/897.064)
+Cpufreq OPP:  800    Measured:  797    (797.607/797.546/797.252)
+Cpufreq OPP:  700    Measured:  697    (697.633/697.402/697.375)
+Cpufreq OPP:  600    Measured:  597    (597.723/597.655/597.472)
+Cpufreq OPP:  500    Measured:  497    (497.637/497.612/496.871)
+Cpufreq OPP:  400    Measured:  397    (397.849/397.753/397.591)
+Cpufreq OPP:  300    Measured:  298    (298.177/298.055/297.881)
+Cpufreq OPP:  200    Measured:  198    (198.141/198.131/198.108)
+
+Checking cpufreq OPP for cpu4-cpu7 (Cortex-A15):
+
+Cpufreq OPP: 2000    Measured: 1995 (1995.822/1995.772/1995.622)
+Cpufreq OPP: 1900    Measured: 1895 (1895.902/1895.902/1895.878)
+Cpufreq OPP: 1800    Measured: 1796 (1796.448/1796.043/1796.043)
+Cpufreq OPP: 1700    Measured: 1696 (1696.245/1696.181/1696.181)
+Cpufreq OPP: 1600    Measured: 1596 (1596.412/1596.392/1596.312)
+Cpufreq OPP: 1500    Measured: 1496 (1496.511/1496.511/1496.474)
+Cpufreq OPP: 1400    Measured: 1396 (1396.807/1396.667/1396.562)
+Cpufreq OPP: 1300    Measured: 1296 (1296.913/1296.865/1296.848)
+Cpufreq OPP: 1200    Measured: 1196 (1196.957/1196.943/1196.913)
+Cpufreq OPP: 1100    Measured: 1097 (1097.063/1097.063/1097.009)
+Cpufreq OPP: 1000    Measured:  997    (997.232/997.207/997.207)
+Cpufreq OPP:  900    Measured:  897    (897.338/897.327/897.327)
+Cpufreq OPP:  800    Measured:  797    (797.524/797.514/797.455)
+Cpufreq OPP:  700    Measured:  697    (697.606/697.588/697.588)
+Cpufreq OPP:  600    Measured:  597    (597.788/597.780/597.728)
+Cpufreq OPP:  500    Measured:  497    (497.931/497.893/497.818)
+Cpufreq OPP:  400    Measured:  398    (398.037/398.017/398.002)
+Cpufreq OPP:  300    Measured:  298    (298.186/298.167/298.119)
+Cpufreq OPP:  200    Measured:  198    (198.428/198.357/198.052)
+
+##########################################################################
+
+Executing benchmark on cpu0 (Cortex-A7):
+
+tinymembench v0.4.9-nuumio (simple benchmark for memory throughput and latency)
+
+CFLAGS: 
+bandwidth test min repeats (-b): 2
+bandwidth test max repeats (-B): 3
+bandwidth test mem realloc (-M): no      (-m for realloc)
+      latency test repeats (-l): 3
+        latency test count (-c): 1000000
+
+==========================================================================
+== Memory bandwidth tests                                               ==
+==                                                                      ==
+== Note 1: 1MB = 1000000 bytes                                          ==
+== Note 2: Test result is the best of repeated runs. Number of repeats  ==
+==         is shown in brackets                                         ==
+== Note 3: Results for 'copy' tests show how many bytes can be          ==
+==         copied per second (adding together read and writen           ==
+==         bytes would have provided twice higher numbers)              ==
+== Note 4: 2-pass copy means that we are using a small temporary buffer ==
+==         to first fetch data into it, and only then write it to the   ==
+==         destination (source -> L1 cache, L1 cache -> destination)    ==
+== Note 5: If sample standard deviation exceeds 0.1%, it is shown in    ==
+==         brackets                                                     ==
+==========================================================================
+
+ C copy backwards                                 :    218.7 MB/s (3, 1.0%)
+ C copy backwards (32 byte blocks)                :    291.4 MB/s (2)
+ C copy backwards (64 byte blocks)                :    295.5 MB/s (2)
+ C copy                                           :    295.4 MB/s (2)
+ C copy prefetched (32 bytes step)                :    538.9 MB/s (2)
+ C copy prefetched (64 bytes step)                :    673.2 MB/s (2)
+ C 2-pass copy                                    :    284.7 MB/s (2)
+ C 2-pass copy prefetched (32 bytes step)         :    385.1 MB/s (2)
+ C 2-pass copy prefetched (64 bytes step)         :    423.8 MB/s (2)
+ C scan 8                                         :    176.8 MB/s (2)
+ C scan 16                                        :    265.2 MB/s (2)
+ C scan 32                                        :    362.7 MB/s (3, 0.4%)
+ C scan 64                                        :    393.5 MB/s (2)
+ C fill                                           :    802.5 MB/s (3, 0.1%)
+ C fill (shuffle within 16 byte blocks)           :    803.3 MB/s (2)
+ C fill (shuffle within 32 byte blocks)           :    497.9 MB/s (2)
+ C fill (shuffle within 64 byte blocks)           :    481.7 MB/s (2)
+ ---
+ libc memcpy copy                                 :    325.2 MB/s (2)
+ libc memchr scan                                 :    397.8 MB/s (2)
+ libc memset fill                                 :    797.9 MB/s (2)
+ ---
+ NEON read                                        :    519.4 MB/s (2)
+ NEON read prefetched (32 bytes step)             :    933.0 MB/s (2)
+ NEON read prefetched (64 bytes step)             :    992.8 MB/s (3, 0.2%)
+ NEON read 2 data streams                         :    465.5 MB/s (2)
+ NEON read 2 data streams prefetched (32 bytes step) :    954.1 MB/s (2)
+ NEON read 2 data streams prefetched (64 bytes step) :    993.8 MB/s (2)
+ NEON copy                                        :    289.8 MB/s (2)
+ NEON copy prefetched (32 bytes step)             :    675.7 MB/s (2)
+ NEON copy prefetched (64 bytes step)             :    698.9 MB/s (2)
+ NEON unrolled copy                               :    288.6 MB/s (2)
+ NEON unrolled copy prefetched (32 bytes step)    :    442.5 MB/s (2)
+ NEON unrolled copy prefetched (64 bytes step)    :    656.5 MB/s (3, 0.1%)
+ NEON copy backwards                              :    276.1 MB/s (2)
+ NEON copy backwards prefetched (32 bytes step)   :    668.2 MB/s (2)
+ NEON copy backwards prefetched (64 bytes step)   :    695.3 MB/s (2)
+ NEON 2-pass copy                                 :    290.4 MB/s (3, 0.1%)
+ NEON 2-pass copy prefetched (32 bytes step)      :    411.3 MB/s (2)
+ NEON 2-pass copy prefetched (64 bytes step)      :    438.6 MB/s (2)
+ NEON unrolled 2-pass copy                        :    265.4 MB/s (2)
+ NEON unrolled 2-pass copy prefetched (32 bytes step) :    368.9 MB/s (2)
+ NEON unrolled 2-pass copy prefetched (64 bytes step) :    403.0 MB/s (2)
+ NEON fill                                        :    801.4 MB/s (3)
+ NEON fill backwards                              :    800.7 MB/s (2)
+ VFP copy                                         :    290.5 MB/s (2)
+ VFP 2-pass copy                                  :    265.5 MB/s (2)
+ ARM fill (STRD)                                  :    796.8 MB/s (2)
+ ARM fill (STM with 8 registers)                  :    802.1 MB/s (2)
+ ARM fill (STM with 4 registers)                  :    803.4 MB/s (3, 0.2%)
+ ARM copy prefetched (incr pld)                   :    656.4 MB/s (2)
+ ARM copy prefetched (wrap pld)                   :    655.1 MB/s (2)
+ ARM 2-pass copy prefetched (incr pld)            :    410.1 MB/s (2)
+ ARM 2-pass copy prefetched (wrap pld)            :    391.5 MB/s (2)
+
+==========================================================================
+== Memory latency test                                                  ==
+==                                                                      ==
+== Average time is measured for random memory accesses in the buffers   ==
+== of different sizes. The larger is the buffer, the more significant   ==
+== are relative contributions of TLB, L1/L2 cache misses and SDRAM      ==
+== accesses. For extremely large buffer sizes we are expecting to see   ==
+== page table walk with several requests to SDRAM for almost every      ==
+== memory access (though 64MiB is not nearly large enough to experience ==
+== this effect to its fullest).                                         ==
+==                                                                      ==
+== Note 1: All the numbers are representing extra time, which needs to  ==
+==         be added to L1 cache latency. The cycle timings for L1 cache ==
+==         latency can be usually found in the processor documentation. ==
+== Note 2: Dual random read means that we are simultaneously performing ==
+==         two independent memory accesses at a time. In the case if    ==
+==         the memory subsystem can't handle multiple outstanding       ==
+==         requests, dual random read has the same timings as two       ==
+==         single reads performed one after another.                    ==
+==========================================================================
+
+block size : single random read / dual random read
+      1024 :    0.0 ns          /     0.0 ns 
+      2048 :    0.0 ns          /     0.0 ns 
+      4096 :    0.0 ns          /     0.0 ns 
+      8192 :    0.0 ns          /     0.0 ns 
+     16384 :    0.0 ns          /     0.0 ns 
+     32768 :    0.1 ns          /     0.0 ns 
+     65536 :    4.3 ns          /     7.5 ns 
+    131072 :    6.7 ns          /    10.8 ns 
+    262144 :    8.3 ns          /    12.3 ns 
+    524288 :   30.4 ns          /    51.9 ns 
+   1048576 :   78.0 ns          /   119.6 ns 
+   2097152 :  117.0 ns          /   157.5 ns 
+   4194304 :  137.6 ns          /   172.5 ns 
+   8388608 :  149.2 ns          /   180.3 ns 
+  16777216 :  157.7 ns          /   187.3 ns 
+  33554432 :  166.2 ns          /   199.3 ns 
+  67108864 :  179.0 ns          /   222.5 ns 
+
+Executing benchmark on cpu4 (Cortex-A15):
+
+tinymembench v0.4.9-nuumio (simple benchmark for memory throughput and latency)
+
+CFLAGS: 
+bandwidth test min repeats (-b): 2
+bandwidth test max repeats (-B): 3
+bandwidth test mem realloc (-M): no      (-m for realloc)
+      latency test repeats (-l): 3
+        latency test count (-c): 1000000
+
+==========================================================================
+== Memory bandwidth tests                                               ==
+==                                                                      ==
+== Note 1: 1MB = 1000000 bytes                                          ==
+== Note 2: Test result is the best of repeated runs. Number of repeats  ==
+==         is shown in brackets                                         ==
+== Note 3: Results for 'copy' tests show how many bytes can be          ==
+==         copied per second (adding together read and writen           ==
+==         bytes would have provided twice higher numbers)              ==
+== Note 4: 2-pass copy means that we are using a small temporary buffer ==
+==         to first fetch data into it, and only then write it to the   ==
+==         destination (source -> L1 cache, L1 cache -> destination)    ==
+== Note 5: If sample standard deviation exceeds 0.1%, it is shown in    ==
+==         brackets                                                     ==
+==========================================================================
+
+ C copy backwards                                 :   1175.5 MB/s (2)
+ C copy backwards (32 byte blocks)                :   1206.6 MB/s (2)
+ C copy backwards (64 byte blocks)                :   2310.4 MB/s (3, 1.7%)
+ C copy                                           :   2519.3 MB/s (2)
+ C copy prefetched (32 bytes step)                :   2835.8 MB/s (3, 1.2%)
+ C copy prefetched (64 bytes step)                :   2855.4 MB/s (2)
+ C 2-pass copy                                    :   2095.9 MB/s (2)
+ C 2-pass copy prefetched (32 bytes step)         :   2130.4 MB/s (2)
+ C 2-pass copy prefetched (64 bytes step)         :   2149.1 MB/s (3, 1.1%)
+ C scan 8                                         :    745.8 MB/s (2)
+ C scan 16                                        :   1417.4 MB/s (2)
+ C scan 32                                        :   2314.2 MB/s (3, 0.2%)
+ C scan 64                                        :   2550.8 MB/s (2)
+ C fill                                           :   4826.5 MB/s (3, 0.6%)
+ C fill (shuffle within 16 byte blocks)           :   1837.5 MB/s (2)
+ C fill (shuffle within 32 byte blocks)           :   1838.1 MB/s (2)
+ C fill (shuffle within 64 byte blocks)           :   1916.7 MB/s (2)
+ ---
+ libc memcpy copy                                 :   2271.2 MB/s (2)
+ libc memchr scan                                 :   3001.4 MB/s (2)
+ libc memset fill                                 :   4815.9 MB/s (3, 0.5%)
+ ---
+ NEON read                                        :   3534.3 MB/s (2)
+ NEON read prefetched (32 bytes step)             :   4448.8 MB/s (2)
+ NEON read prefetched (64 bytes step)             :   4462.2 MB/s (2)
+ NEON read 2 data streams                         :   3589.1 MB/s (3, 1.5%)
+ NEON read 2 data streams prefetched (32 bytes step) :   4531.7 MB/s (2)
+ NEON read 2 data streams prefetched (64 bytes step) :   4540.4 MB/s (2)
+ NEON copy                                        :   2777.4 MB/s (2)
+ NEON copy prefetched (32 bytes step)             :   3094.7 MB/s (2)
+ NEON copy prefetched (64 bytes step)             :   3087.9 MB/s (2)
+ NEON unrolled copy                               :   2353.3 MB/s (2)
+ NEON unrolled copy prefetched (32 bytes step)    :   3374.6 MB/s (2)
+ NEON unrolled copy prefetched (64 bytes step)    :   3398.4 MB/s (2)
+ NEON copy backwards                              :   1242.2 MB/s (2)
+ NEON copy backwards prefetched (32 bytes step)   :   1435.8 MB/s (2)
+ NEON copy backwards prefetched (64 bytes step)   :   1434.7 MB/s (2)
+ NEON 2-pass copy                                 :   2076.1 MB/s (2)
+ NEON 2-pass copy prefetched (32 bytes step)      :   2306.7 MB/s (3, 1.0%)
+ NEON 2-pass copy prefetched (64 bytes step)      :   2307.8 MB/s (3, 0.6%)
+ NEON unrolled 2-pass copy                        :   1424.4 MB/s (2)
+ NEON unrolled 2-pass copy prefetched (32 bytes step) :   1760.4 MB/s (2)
+ NEON unrolled 2-pass copy prefetched (64 bytes step) :   1777.0 MB/s (2)
+ NEON fill                                        :   4835.4 MB/s (3, 0.4%)
+ NEON fill backwards                              :   1847.5 MB/s (3, 2.3%)
+ VFP copy                                         :   2431.7 MB/s (2)
+ VFP 2-pass copy                                  :   1339.7 MB/s (2)
+ ARM fill (STRD)                                  :   4854.9 MB/s (3, 0.5%)
+ ARM fill (STM with 8 registers)                  :   4854.5 MB/s (3, 1.2%)
+ ARM fill (STM with 4 registers)                  :   4862.5 MB/s (3, 0.2%)
+ ARM copy prefetched (incr pld)                   :   3080.6 MB/s (2)
+ ARM copy prefetched (wrap pld)                   :   2902.6 MB/s (2)
+ ARM 2-pass copy prefetched (incr pld)            :   1698.9 MB/s (2)
+ ARM 2-pass copy prefetched (wrap pld)            :   1665.2 MB/s (2)
+
+==========================================================================
+== Memory latency test                                                  ==
+==                                                                      ==
+== Average time is measured for random memory accesses in the buffers   ==
+== of different sizes. The larger is the buffer, the more significant   ==
+== are relative contributions of TLB, L1/L2 cache misses and SDRAM      ==
+== accesses. For extremely large buffer sizes we are expecting to see   ==
+== page table walk with several requests to SDRAM for almost every      ==
+== memory access (though 64MiB is not nearly large enough to experience ==
+== this effect to its fullest).                                         ==
+==                                                                      ==
+== Note 1: All the numbers are representing extra time, which needs to  ==
+==         be added to L1 cache latency. The cycle timings for L1 cache ==
+==         latency can be usually found in the processor documentation. ==
+== Note 2: Dual random read means that we are simultaneously performing ==
+==         two independent memory accesses at a time. In the case if    ==
+==         the memory subsystem can't handle multiple outstanding       ==
+==         requests, dual random read has the same timings as two       ==
+==         single reads performed one after another.                    ==
+==========================================================================
+
+block size : single random read / dual random read
+      1024 :    0.0 ns          /     0.0 ns 
+      2048 :    0.0 ns          /     0.0 ns 
+      4096 :    0.0 ns          /     0.2 ns 
+      8192 :    0.0 ns          /     0.0 ns 
+     16384 :    0.0 ns          /     0.3 ns 
+     32768 :    0.1 ns          /     0.0 ns 
+     65536 :    4.5 ns          /     7.0 ns 
+    131072 :    7.0 ns          /     9.2 ns 
+    262144 :   10.1 ns          /    12.1 ns 
+    524288 :   12.2 ns          /    13.8 ns 
+   1048576 :   15.5 ns          /    15.1 ns 
+   2097152 :   33.7 ns          /    41.0 ns 
+   4194304 :   95.6 ns          /   141.0 ns 
+   8388608 :  132.8 ns          /   178.6 ns 
+  16777216 :  151.3 ns          /   194.7 ns 
+  33554432 :  166.5 ns          /   213.8 ns 
+  67108864 :  175.8 ns          /   228.7 ns 
+
+##########################################################################
+
+Executing ramlat on cpu0 (Cortex-A7), results in ns:
+
+       size:  1x32  2x32  1x64  2x64 1xPTR 2xPTR 4xPTR 8xPTR
+         4k: 2.191 2.176 2.347 2.438 2.176 2.232 3.007 6.003 
+         8k: 2.149 2.149 2.328 2.373 2.148 2.149 2.954 5.999 
+        16k: 2.149 2.149 2.328 2.373 2.149 2.149 2.956 6.002 
+        32k: 5.405 5.699 5.421 5.970 5.331 5.944 10.34 20.04 
+        64k: 9.041 12.39 9.316 12.96 8.993 12.37 21.85 45.00 
+       128k: 10.01 13.21 10.12 13.74 9.925 13.10 24.54 51.25 
+       256k: 14.59 20.36 14.71 20.87 14.63 20.14 36.92 75.47 
+       512k: 41.13 49.22 41.22 50.60 48.64 50.41 97.16 179.7 
+      1024k: 121.5 121.6 122.2 122.7 121.6 126.4 224.0 422.7 
+      2048k: 155.1 151.2 155.1 153.2 155.3 152.4 275.9 523.3 
+      4096k: 159.9 156.7 159.5 158.5 159.6 159.7 288.8 548.8 
+      8192k: 159.8 162.1 159.7 163.4 159.9 164.5 292.8 559.3 
+     16384k: 164.6 166.9 163.8 168.2 163.7 168.0 305.8 576.4 
+     32768k: 165.3 168.5 165.3 170.2 165.2 170.1 304.6 578.4 
+     65536k: 163.5 168.5 163.4 170.8 167.1 171.6 301.8 572.7 
+    131072k: 173.5 180.8 173.0 178.6 172.6 177.1 308.1 574.7 
+
+Executing ramlat on cpu4 (Cortex-A15), results in ns:
+
+       size:  1x32  2x32  1x64  2x64 1xPTR 2xPTR 4xPTR 8xPTR
+         4k: 2.010 2.005 2.130 2.130 2.005 2.005 2.476 4.009 
+         8k: 2.005 2.007 2.139 2.130 2.005 2.005 2.241 4.009 
+        16k: 2.005 2.005 2.130 2.130 2.006 2.005 2.320 4.009 
+        32k: 4.606 4.345 4.600 4.506 4.603 4.910 7.962 13.25 
+        64k: 9.155 9.383 9.012 9.269 9.150 10.49 17.93 35.08 
+       128k: 11.29 11.27 11.31 11.31 11.28 13.68 24.00 49.02 
+       256k: 15.55 15.73 15.66 15.83 15.54 16.41 24.45 49.37 
+       512k: 15.49 15.64 15.53 15.71 15.45 16.31 25.82 49.07 
+      1024k: 17.57 16.32 15.79 15.82 15.64 16.44 25.30 49.42 
+      2048k: 55.33 51.93 54.11 52.09 54.01 53.03 60.26 87.40 
+      4096k: 146.8 135.5 146.8 135.7 146.9 138.4 132.1 174.1 
+      8192k: 173.8 170.0 171.9 169.9 171.9 169.1 167.1 198.1 
+     16384k: 174.9 175.7 175.0 175.7 174.9 174.2 175.2 202.0 
+     32768k: 187.7 187.6 186.4 187.8 186.3 184.1 187.4 203.6 
+     65536k: 184.1 185.7 184.4 186.0 184.0 182.5 189.0 203.7 
+    131072k: 188.5 189.9 188.6 190.1 188.3 185.5 189.4 206.7 
+
+##########################################################################
+
+Executing benchmark on each cluster individually
+
+OpenSSL 3.0.15, built on 3 Sep 2024 (Library: OpenSSL 3.0.15 3 Sep 2024)
+type             16 bytes     64 bytes    256 bytes   1024 bytes   8192 bytes  16384 bytes
+aes-256-cbc      18328.72k    24574.98k    26494.81k    27027.11k    27164.67k    27131.90k (Cortex-A7)
+aes-256-cbc      56995.94k    66654.31k    70749.70k    71856.13k    71903.91k    71685.46k (Cortex-A15)
+
+##########################################################################
+
+Executing benchmark single-threaded on cpu0 (Cortex-A7)
+
+7-Zip (a) [32] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,32 bits,8 CPUs LE)
+
+LE
+CPU Freq: 32000000 32000000 21333333 32000000 42666666 85333333 170666666 341333333 1024000000
+
+RAM size:    1987 MB,  # CPU hardware threads:   8
+RAM usage:    435 MB,  # Benchmark threads:      1
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:        711    99    697    693  |      13010    99   1117   1111
+23:        665    99    683    678  |      12770    99   1112   1105
+24:        644    99    698    693  |      12520    99   1105   1099
+25:        622    99    715    710  |      12232    99   1095   1089
+----------------------------------  | ------------------------------
+Avr:              99    699    694  |               99   1107   1101
+Tot:              99    903    897
+
+Executing benchmark single-threaded on cpu4 (Cortex-A15)
+
+7-Zip (a) [32] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,32 bits,8 CPUs LE)
+
+LE
+CPU Freq: 32000000 64000000 32000000 64000000 64000000 256000000 256000000 512000000 2048000000
+
+RAM size:    1987 MB,  # CPU hardware threads:   8
+RAM usage:    435 MB,  # Benchmark threads:      1
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       1483   100   1449   1443  |      23464   100   2010   2003
+23:       1372   100   1404   1398  |      23025   100   1999   1993
+24:       1325   100   1431   1425  |      22529   100   1984   1978
+25:       1274   100   1461   1455  |      21904   100   1956   1950
+----------------------------------  | ------------------------------
+Avr:             100   1436   1430  |              100   1987   1981
+Tot:             100   1712   1706
+
+##########################################################################
+
+Executing benchmark 3 times multi-threaded on CPUs 0-7
+
+7-Zip (a) [32] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,32 bits,8 CPUs LE)
+
+LE
+CPU Freq: 32000000 32000000 32000000 32000000 64000000 128000000 512000000 512000000 2048000000
+
+RAM size:    1987 MB,  # CPU hardware threads:   8
+RAM usage:   1765 MB,  # Benchmark threads:      8
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       7708   761    985   7499  |     125895   670   1603  10738
+23:       6592   692    971   6717  |     123650   672   1593  10700
+24:       6671   742    966   7173  |     120150   669   1577  10545
+25:       6334   738    981   7232  |     109302   619   1571   9727
+----------------------------------  | ------------------------------
+Avr:             733    976   7155  |              657   1586  10428
+Tot:             695   1281   8792
+
+7-Zip (a) [32] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,32 bits,8 CPUs LE)
+
+LE
+CPU Freq: 64000000 64000000 64000000 64000000 64000000 128000000 256000000 512000000 2048000000
+
+RAM size:    1987 MB,  # CPU hardware threads:   8
+RAM usage:   1765 MB,  # Benchmark threads:      8
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       7642   748    994   7435  |     117016   615   1624   9981
+23:       6982   737    965   7114  |     123496   671   1593  10687
+24:       6292   697    971   6766  |     120426   670   1577  10570
+25:       6463   748    987   7380  |     111698   636   1564   9941
+----------------------------------  | ------------------------------
+Avr:             732    979   7174  |              648   1589  10295
+Tot:             690   1284   8734
+
+7-Zip (a) [32] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,32 bits,8 CPUs LE)
+
+LE
+CPU Freq: 64000000 32000000 64000000 64000000 128000000 256000000 512000000 1024000000 2048000000
+
+RAM size:    1987 MB,  # CPU hardware threads:   8
+RAM usage:   1765 MB,  # Benchmark threads:      8
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       7362   720    995   7162  |     126131   670   1606  10758
+23:       6498   690    960   6621  |     123575   672   1592  10694
+24:       6691   752    957   7195  |     110782   614   1584   9723
+25:       6481   744    995   7400  |     109580   622   1568   9752
+----------------------------------  | ------------------------------
+Avr:             726    977   7095  |              644   1587  10232
+Tot:             685   1282   8663
+
+Compression: 7155,7174,7095
+Decompression: 10428,10295,10232
+Total: 8792,8734,8663
+
+##########################################################################
+
+** cpuminer-multi 1.3.7 by tpruvot@github **
+BTC donation address: 1FhDPLPpw18X4srecguG3MxJYe4a1JsZnd (tpruvot)
+
+[2025-02-20 09:27:37] 8 miner threads started, using 'scrypt' algorithm.
+[2025-02-20 09:27:38] CPU #4: 1.53 kH/s
+[2025-02-20 09:27:38] CPU #6: 1.60 kH/s
+[2025-02-20 09:27:38] CPU #5: 1.50 kH/s
+[2025-02-20 09:27:38] CPU #7: 1.32 kH/s
+[2025-02-20 09:27:38] CPU #0: 0.61 kH/s
+[2025-02-20 09:27:38] CPU #1: 0.61 kH/s
+[2025-02-20 09:27:38] CPU #2: 0.61 kH/s
+[2025-02-20 09:27:38] CPU #3: 0.61 kH/s
+[2025-02-20 09:27:41] Total: 8.60 kH/s
+[2025-02-20 09:27:42] Total: 8.65 kH/s
+[2025-02-20 09:27:46] CPU #5: 1.64 kH/s
+[2025-02-20 09:27:46] CPU #4: 1.64 kH/s
+[2025-02-20 09:27:47] CPU #6: 1.64 kH/s
+[2025-02-20 09:27:47] CPU #1: 0.61 kH/s
+[2025-02-20 09:27:47] CPU #2: 0.61 kH/s
+[2025-02-20 09:27:47] CPU #3: 0.61 kH/s
+[2025-02-20 09:27:47] CPU #7: 1.64 kH/s
+[2025-02-20 09:27:47] Total: 8.99 kH/s
+[2025-02-20 09:27:47] CPU #0: 0.60 kH/s
+[2025-02-20 09:27:52] Total: 8.97 kH/s
+[2025-02-20 09:27:52] CPU #5: 1.63 kH/s
+[2025-02-20 09:27:52] CPU #4: 1.63 kH/s
+[2025-02-20 09:27:57] CPU #6: 1.63 kH/s
+[2025-02-20 09:27:57] CPU #2: 0.61 kH/s
+[2025-02-20 09:27:57] CPU #0: 0.60 kH/s
+[2025-02-20 09:27:57] CPU #3: 0.61 kH/s
+[2025-02-20 09:27:57] CPU #7: 1.63 kH/s
+[2025-02-20 09:27:57] Total: 8.95 kH/s
+[2025-02-20 09:27:57] CPU #1: 0.60 kH/s
+[2025-02-20 09:28:02] Total: 8.92 kH/s
+[2025-02-20 09:28:02] CPU #5: 1.62 kH/s
+[2025-02-20 09:28:02] CPU #4: 1.63 kH/s
+[2025-02-20 09:28:07] CPU #6: 1.63 kH/s
+[2025-02-20 09:28:07] CPU #1: 0.61 kH/s
+[2025-02-20 09:28:07] CPU #0: 0.60 kH/s
+[2025-02-20 09:28:07] CPU #2: 0.61 kH/s
+[2025-02-20 09:28:07] CPU #3: 0.61 kH/s
+[2025-02-20 09:28:07] CPU #7: 1.63 kH/s
+[2025-02-20 09:28:07] Total: 8.93 kH/s
+[2025-02-20 09:28:12] Total: 8.93 kH/s
+[2025-02-20 09:28:12] CPU #5: 1.63 kH/s
+[2025-02-20 09:28:12] CPU #4: 1.63 kH/s
+[2025-02-20 09:28:17] CPU #6: 1.63 kH/s
+[2025-02-20 09:28:17] CPU #0: 0.61 kH/s
+[2025-02-20 09:28:17] CPU #1: 0.61 kH/s
+[2025-02-20 09:28:17] CPU #2: 0.61 kH/s
+[2025-02-20 09:28:17] CPU #3: 0.61 kH/s
+[2025-02-20 09:28:17] CPU #7: 1.62 kH/s
+[2025-02-20 09:28:17] Total: 8.92 kH/s
+[2025-02-20 09:28:22] Total: 8.92 kH/s
+[2025-02-20 09:28:22] CPU #5: 1.62 kH/s
+[2025-02-20 09:28:22] CPU #4: 1.62 kH/s
+[2025-02-20 09:28:27] CPU #6: 1.61 kH/s
+[2025-02-20 09:28:27] CPU #0: 0.60 kH/s
+[2025-02-20 09:28:27] CPU #3: 0.60 kH/s
+[2025-02-20 09:28:27] CPU #2: 0.61 kH/s
+[2025-02-20 09:28:27] CPU #7: 1.62 kH/s
+[2025-02-20 09:28:27] Total: 8.89 kH/s
+[2025-02-20 09:28:27] CPU #1: 0.60 kH/s
+[2025-02-20 09:28:32] Total: 8.91 kH/s
+[2025-02-20 09:28:32] CPU #5: 1.63 kH/s
+[2025-02-20 09:28:32] CPU #4: 1.62 kH/s
+[2025-02-20 09:28:37] CPU #6: 1.63 kH/s
+[2025-02-20 09:28:37] CPU #0: 0.61 kH/s
+[2025-02-20 09:28:37] CPU #1: 0.61 kH/s
+[2025-02-20 09:28:37] CPU #3: 0.61 kH/s
+[2025-02-20 09:28:37] CPU #2: 0.61 kH/s
+[2025-02-20 09:28:37] CPU #7: 1.62 kH/s
+[2025-02-20 09:28:37] Total: 8.92 kH/s
+[2025-02-20 09:28:42] Total: 8.92 kH/s
+[2025-02-20 09:28:42] CPU #5: 1.63 kH/s
+[2025-02-20 09:28:42] CPU #4: 1.62 kH/s
+[2025-02-20 09:28:47] CPU #6: 1.62 kH/s
+[2025-02-20 09:28:47] CPU #0: 0.61 kH/s
+[2025-02-20 09:28:47] CPU #1: 0.61 kH/s
+[2025-02-20 09:28:47] CPU #3: 0.61 kH/s
+[2025-02-20 09:28:47] CPU #2: 0.61 kH/s
+[2025-02-20 09:28:47] CPU #7: 1.62 kH/s
+[2025-02-20 09:28:47] Total: 8.92 kH/s
+[2025-02-20 09:28:52] Total: 8.92 kH/s
+[2025-02-20 09:28:52] CPU #5: 1.63 kH/s
+[2025-02-20 09:28:52] CPU #4: 1.62 kH/s
+[2025-02-20 09:28:57] CPU #6: 1.62 kH/s
+[2025-02-20 09:28:57] CPU #0: 0.61 kH/s
+[2025-02-20 09:28:57] CPU #3: 0.61 kH/s
+[2025-02-20 09:28:57] CPU #2: 0.61 kH/s
+[2025-02-20 09:28:57] CPU #7: 1.62 kH/s
+[2025-02-20 09:28:57] Total: 8.92 kH/s
+[2025-02-20 09:28:57] CPU #1: 0.60 kH/s
+[2025-02-20 09:29:02] Total: 8.90 kH/s
+[2025-02-20 09:29:02] CPU #5: 1.62 kH/s
+[2025-02-20 09:29:02] CPU #4: 1.62 kH/s
+[2025-02-20 09:29:07] CPU #6: 1.62 kH/s
+[2025-02-20 09:29:07] CPU #0: 0.60 kH/s
+[2025-02-20 09:29:07] CPU #1: 0.60 kH/s
+[2025-02-20 09:29:07] CPU #3: 0.60 kH/s
+[2025-02-20 09:29:07] CPU #2: 0.61 kH/s
+[2025-02-20 09:29:07] CPU #7: 1.61 kH/s
+[2025-02-20 09:29:07] Total: 8.90 kH/s
+[2025-02-20 09:29:12] Total: 8.90 kH/s
+[2025-02-20 09:29:12] CPU #5: 1.62 kH/s
+[2025-02-20 09:29:12] CPU #4: 1.62 kH/s
+[2025-02-20 09:29:17] CPU #6: 1.63 kH/s
+[2025-02-20 09:29:17] CPU #0: 0.61 kH/s
+[2025-02-20 09:29:17] CPU #1: 0.61 kH/s
+[2025-02-20 09:29:17] CPU #2: 0.61 kH/s
+[2025-02-20 09:29:17] CPU #3: 0.61 kH/s
+[2025-02-20 09:29:17] CPU #7: 1.62 kH/s
+[2025-02-20 09:29:17] Total: 8.92 kH/s
+[2025-02-20 09:29:22] Total: 8.92 kH/s
+[2025-02-20 09:29:22] CPU #5: 1.63 kH/s
+[2025-02-20 09:29:22] CPU #4: 1.62 kH/s
+[2025-02-20 09:29:27] CPU #6: 1.63 kH/s
+[2025-02-20 09:29:27] CPU #0: 0.60 kH/s
+[2025-02-20 09:29:27] CPU #3: 0.60 kH/s
+[2025-02-20 09:29:27] CPU #2: 0.61 kH/s
+[2025-02-20 09:29:27] CPU #7: 1.62 kH/s
+[2025-02-20 09:29:27] Total: 8.92 kH/s
+[2025-02-20 09:29:27] CPU #1: 0.59 kH/s
+[2025-02-20 09:29:32] Total: 8.92 kH/s
+[2025-02-20 09:29:32] CPU #5: 1.63 kH/s
+[2025-02-20 09:29:32] CPU #4: 1.62 kH/s
+[2025-02-20 09:29:37] CPU #6: 1.63 kH/s
+[2025-02-20 09:29:37] CPU #0: 0.60 kH/s
+[2025-02-20 09:29:37] CPU #1: 0.61 kH/s
+[2025-02-20 09:29:37] CPU #3: 0.61 kH/s
+[2025-02-20 09:29:37] CPU #2: 0.61 kH/s
+[2025-02-20 09:29:37] CPU #7: 1.62 kH/s
+[2025-02-20 09:29:37] Total: 8.92 kH/s
+[2025-02-20 09:29:42] Total: 8.92 kH/s
+[2025-02-20 09:29:42] CPU #5: 1.63 kH/s
+[2025-02-20 09:29:42] CPU #4: 1.62 kH/s
+[2025-02-20 09:29:47] CPU #6: 1.63 kH/s
+[2025-02-20 09:29:47] CPU #0: 0.61 kH/s
+[2025-02-20 09:29:47] CPU #1: 0.61 kH/s
+[2025-02-20 09:29:47] CPU #3: 0.61 kH/s
+[2025-02-20 09:29:47] CPU #2: 0.61 kH/s
+[2025-02-20 09:29:47] CPU #7: 1.62 kH/s
+[2025-02-20 09:29:47] Total: 8.92 kH/s
+[2025-02-20 09:29:52] Total: 8.90 kH/s
+[2025-02-20 09:29:52] CPU #5: 1.62 kH/s
+[2025-02-20 09:29:52] CPU #4: 1.61 kH/s
+[2025-02-20 09:29:57] CPU #6: 1.62 kH/s
+[2025-02-20 09:29:57] CPU #0: 0.60 kH/s
+[2025-02-20 09:29:57] CPU #3: 0.61 kH/s
+[2025-02-20 09:29:57] CPU #2: 0.61 kH/s
+[2025-02-20 09:29:57] CPU #7: 1.62 kH/s
+[2025-02-20 09:29:57] Total: 8.90 kH/s
+[2025-02-20 09:29:57] CPU #1: 0.60 kH/s
+[2025-02-20 09:30:02] Total: 8.89 kH/s
+[2025-02-20 09:30:02] CPU #5: 1.62 kH/s
+[2025-02-20 09:30:02] CPU #4: 1.62 kH/s
+[2025-02-20 09:30:07] CPU #6: 1.63 kH/s
+[2025-02-20 09:30:07] CPU #0: 0.61 kH/s
+[2025-02-20 09:30:07] CPU #1: 0.61 kH/s
+[2025-02-20 09:30:07] CPU #2: 0.61 kH/s
+[2025-02-20 09:30:07] CPU #3: 0.61 kH/s
+[2025-02-20 09:30:07] CPU #7: 1.62 kH/s
+[2025-02-20 09:30:07] Total: 8.91 kH/s
+[2025-02-20 09:30:12] Total: 8.92 kH/s
+[2025-02-20 09:30:12] CPU #5: 1.63 kH/s
+[2025-02-20 09:30:12] CPU #4: 1.62 kH/s
+[2025-02-20 09:30:17] CPU #6: 1.63 kH/s
+[2025-02-20 09:30:17] CPU #0: 0.61 kH/s
+[2025-02-20 09:30:17] CPU #1: 0.61 kH/s
+[2025-02-20 09:30:17] CPU #2: 0.61 kH/s
+[2025-02-20 09:30:17] CPU #3: 0.61 kH/s
+[2025-02-20 09:30:17] CPU #7: 1.62 kH/s
+[2025-02-20 09:30:17] Total: 8.92 kH/s
+[2025-02-20 09:30:22] Total: 8.92 kH/s
+[2025-02-20 09:30:22] CPU #5: 1.63 kH/s
+[2025-02-20 09:30:22] CPU #4: 1.62 kH/s
+[2025-02-20 09:30:27] CPU #6: 1.62 kH/s
+[2025-02-20 09:30:27] CPU #0: 0.61 kH/s
+[2025-02-20 09:30:27] CPU #2: 0.61 kH/s
+[2025-02-20 09:30:27] CPU #3: 0.61 kH/s
+[2025-02-20 09:30:27] CPU #7: 1.62 kH/s
+[2025-02-20 09:30:27] Total: 8.92 kH/s
+[2025-02-20 09:30:27] CPU #1: 0.60 kH/s
+[2025-02-20 09:30:32] Total: 8.92 kH/s
+[2025-02-20 09:30:32] CPU #5: 1.62 kH/s
+[2025-02-20 09:30:32] CPU #4: 1.62 kH/s
+[2025-02-20 09:30:37] CPU #6: 1.62 kH/s
+[2025-02-20 09:30:37] CPU #0: 0.60 kH/s
+[2025-02-20 09:30:37] CPU #1: 0.60 kH/s
+[2025-02-20 09:30:37] CPU #3: 0.60 kH/s
+[2025-02-20 09:30:37] CPU #2: 0.61 kH/s
+[2025-02-20 09:30:37] CPU #7: 1.61 kH/s
+[2025-02-20 09:30:37] Total: 8.90 kH/s
+[2025-02-20 09:30:42] Total: 8.90 kH/s
+[2025-02-20 09:30:42] CPU #5: 1.62 kH/s
+[2025-02-20 09:30:42] CPU #4: 1.62 kH/s
+[2025-02-20 09:30:47] CPU #6: 1.62 kH/s
+[2025-02-20 09:30:47] CPU #0: 0.61 kH/s
+[2025-02-20 09:30:47] CPU #1: 0.61 kH/s
+[2025-02-20 09:30:47] CPU #3: 0.61 kH/s
+[2025-02-20 09:30:47] CPU #2: 0.61 kH/s
+[2025-02-20 09:30:47] CPU #7: 1.62 kH/s
+[2025-02-20 09:30:47] Total: 8.92 kH/s
+[2025-02-20 09:30:52] Total: 8.92 kH/s
+[2025-02-20 09:30:52] CPU #5: 1.63 kH/s
+[2025-02-20 09:30:52] CPU #4: 1.62 kH/s
+[2025-02-20 09:30:57] CPU #6: 1.62 kH/s
+[2025-02-20 09:30:57] CPU #0: 0.60 kH/s
+[2025-02-20 09:30:57] CPU #3: 0.61 kH/s
+[2025-02-20 09:30:57] CPU #2: 0.61 kH/s
+[2025-02-20 09:30:57] CPU #7: 1.62 kH/s
+[2025-02-20 09:30:57] Total: 8.92 kH/s
+[2025-02-20 09:30:57] CPU #1: 0.60 kH/s
+[2025-02-20 09:31:02] Total: 8.90 kH/s
+[2025-02-20 09:31:02] CPU #5: 1.62 kH/s
+[2025-02-20 09:31:02] CPU #4: 1.62 kH/s
+[2025-02-20 09:31:07] CPU #6: 1.62 kH/s
+[2025-02-20 09:31:07] CPU #0: 0.61 kH/s
+[2025-02-20 09:31:07] CPU #1: 0.61 kH/s
+[2025-02-20 09:31:07] CPU #2: 0.61 kH/s
+[2025-02-20 09:31:07] CPU #3: 0.61 kH/s
+[2025-02-20 09:31:07] CPU #7: 1.62 kH/s
+[2025-02-20 09:31:07] Total: 8.91 kH/s
+[2025-02-20 09:31:12] Total: 8.92 kH/s
+[2025-02-20 09:31:12] CPU #5: 1.63 kH/s
+[2025-02-20 09:31:12] CPU #4: 1.62 kH/s
+[2025-02-20 09:31:17] CPU #6: 1.61 kH/s
+[2025-02-20 09:31:17] CPU #0: 0.59 kH/s
+[2025-02-20 09:31:17] CPU #1: 0.60 kH/s
+[2025-02-20 09:31:17] CPU #3: 0.60 kH/s
+[2025-02-20 09:31:17] CPU #2: 0.60 kH/s
+[2025-02-20 09:31:17] CPU #7: 1.60 kH/s
+[2025-02-20 09:31:17] Total: 8.84 kH/s
+[2025-02-20 09:31:22] Total: 8.78 kH/s
+[2025-02-20 09:31:22] CPU #5: 1.60 kH/s
+[2025-02-20 09:31:22] CPU #4: 1.60 kH/s
+[2025-02-20 09:31:27] CPU #6: 1.61 kH/s
+[2025-02-20 09:31:27] CPU #0: 0.59 kH/s
+[2025-02-20 09:31:27] CPU #3: 0.60 kH/s
+[2025-02-20 09:31:27] CPU #2: 0.60 kH/s
+[2025-02-20 09:31:27] CPU #7: 1.60 kH/s
+[2025-02-20 09:31:27] Total: 8.78 kH/s
+[2025-02-20 09:31:27] CPU #1: 0.59 kH/s
+[2025-02-20 09:31:32] Total: 8.80 kH/s
+[2025-02-20 09:31:32] CPU #5: 1.61 kH/s
+[2025-02-20 09:31:32] CPU #4: 1.61 kH/s
+[2025-02-20 09:31:37] CPU #6: 1.61 kH/s
+[2025-02-20 09:31:37] CPU #0: 0.59 kH/s
+[2025-02-20 09:31:37] CPU #1: 0.60 kH/s
+[2025-02-20 09:31:37] CPU #3: 0.60 kH/s
+[2025-02-20 09:31:37] CPU #2: 0.60 kH/s
+[2025-02-20 09:31:37] CPU #7: 1.60 kH/s
+[2025-02-20 09:31:37] Total: 8.82 kH/s
+[2025-02-20 09:31:42] Total: 8.80 kH/s
+[2025-02-20 09:31:42] CPU #5: 1.61 kH/s
+[2025-02-20 09:31:42] CPU #4: 1.61 kH/s
+[2025-02-20 09:31:47] CPU #6: 1.61 kH/s
+[2025-02-20 09:31:47] CPU #0: 0.59 kH/s
+[2025-02-20 09:31:47] CPU #1: 0.60 kH/s
+[2025-02-20 09:31:47] CPU #3: 0.60 kH/s
+[2025-02-20 09:31:47] CPU #2: 0.60 kH/s
+[2025-02-20 09:31:47] CPU #7: 1.61 kH/s
+[2025-02-20 09:31:47] Total: 8.82 kH/s
+[2025-02-20 09:31:52] Total: 8.80 kH/s
+[2025-02-20 09:31:52] CPU #5: 1.61 kH/s
+[2025-02-20 09:31:52] CPU #4: 1.61 kH/s
+[2025-02-20 09:31:57] CPU #6: 1.61 kH/s
+[2025-02-20 09:31:57] CPU #0: 0.59 kH/s
+[2025-02-20 09:31:57] CPU #3: 0.60 kH/s
+[2025-02-20 09:31:57] CPU #2: 0.60 kH/s
+[2025-02-20 09:31:57] CPU #7: 1.60 kH/s
+[2025-02-20 09:31:57] Total: 8.81 kH/s
+[2025-02-20 09:31:57] CPU #1: 0.59 kH/s
+[2025-02-20 09:32:02] Total: 8.82 kH/s
+[2025-02-20 09:32:02] CPU #5: 1.61 kH/s
+[2025-02-20 09:32:02] CPU #4: 1.61 kH/s
+[2025-02-20 09:32:07] CPU #6: 1.61 kH/s
+[2025-02-20 09:32:07] CPU #0: 0.60 kH/s
+[2025-02-20 09:32:07] CPU #1: 0.60 kH/s
+[2025-02-20 09:32:07] CPU #3: 0.60 kH/s
+[2025-02-20 09:32:07] CPU #2: 0.60 kH/s
+[2025-02-20 09:32:07] CPU #7: 1.60 kH/s
+[2025-02-20 09:32:07] Total: 8.82 kH/s
+[2025-02-20 09:32:12] Total: 8.80 kH/s
+[2025-02-20 09:32:12] CPU #5: 1.61 kH/s
+[2025-02-20 09:32:12] CPU #4: 1.61 kH/s
+[2025-02-20 09:32:17] CPU #6: 1.61 kH/s
+[2025-02-20 09:32:17] CPU #0: 0.60 kH/s
+[2025-02-20 09:32:17] CPU #1: 0.60 kH/s
+[2025-02-20 09:32:17] CPU #3: 0.60 kH/s
+[2025-02-20 09:32:17] CPU #2: 0.60 kH/s
+[2025-02-20 09:32:17] CPU #7: 1.61 kH/s
+[2025-02-20 09:32:17] Total: 8.83 kH/s
+[2025-02-20 09:32:22] Total: 8.83 kH/s
+[2025-02-20 09:32:22] CPU #5: 1.61 kH/s
+[2025-02-20 09:32:22] CPU #4: 1.61 kH/s
+[2025-02-20 09:32:27] CPU #6: 1.61 kH/s
+[2025-02-20 09:32:27] CPU #0: 0.59 kH/s
+[2025-02-20 09:32:27] CPU #3: 0.60 kH/s
+[2025-02-20 09:32:27] CPU #2: 0.60 kH/s
+[2025-02-20 09:32:27] CPU #7: 1.61 kH/s
+[2025-02-20 09:32:27] Total: 8.83 kH/s
+[2025-02-20 09:32:27] CPU #1: 0.59 kH/s
+[2025-02-20 09:32:32] Total: 8.83 kH/s
+[2025-02-20 09:32:32] CPU #5: 1.61 kH/s
+[2025-02-20 09:32:32] CPU #4: 1.61 kH/s
+[2025-02-20 09:32:37] CPU #6: 1.61 kH/s
+[2025-02-20 09:32:37] CPU #0: 0.59 kH/s
+[2025-02-20 09:32:37] CPU #1: 0.60 kH/s
+[2025-02-20 09:32:37] CPU #3: 0.60 kH/s
+[2025-02-20 09:32:37] CPU #2: 0.60 kH/s
+[2025-02-20 09:32:37] CPU #7: 1.61 kH/s
+[2025-02-20 09:32:37] Total: 8.82 kH/s
+
+Total Scores: 8.99,8.97,8.95,8.93,8.92,8.91,8.90,8.89,8.84,8.83,8.82,8.81,8.80,8.78
+
+##########################################################################
+
+Testing maximum cpufreq again, still under full load. System health now:
+
+Time       big.LITTLE   load %cpu %sys %usr %nice %io %irq   Temp
+09:32:04: 1900/1200MHz  8.05 100%   0%  99%   0%   0%   0%  61.0°C  
+
+Checking cpufreq OPP for cpu0-cpu3 (Cortex-A7):
+
+Cpufreq OPP: 1400    Measured: 1396 (1396.859/1396.609/1396.449)
+
+Checking cpufreq OPP for cpu4-cpu7 (Cortex-A15):
+
+Cpufreq OPP: 2000    Measured: 1995 (1995.772/1995.722/1995.647)
+
+##########################################################################
+
+DRAM clock transitions since last boot (1726310 ms ago):
+
+/sys/devices/platform/soc/10c20000.memory-controller/devfreq/10c20000.memory-controller:
+
+     From  :   To
+           : 165000000 206000000 275000000 413000000 543000000 633000000 728000000 825000000   time(ms)
+  165000000:         0         6         4         8         9         0         0        29    128620
+  206000000:         4         0         1         3         0         0         0        10      1990
+  275000000:         7         3         0         2         1         0         0        10      2760
+  413000000:        15         3         3         0         8         0         0        26      6880
+  543000000:         7         1         3         5         0         0         0        14      4710
+  633000000:         0         0         0         0         0         0         0         0         0
+  728000000:         0         0         0         0         0         0         0         0         0
+* 825000000:        23         5        12        37        12         0         0         0     27280
+Total transition : 271
+
+##########################################################################
+
+Thermal source: /sys/devices/virtual/thermal/thermal_zone0/ (cpu0-thermal)
+
+System health while running tinymembench:
+
+Time       big.LITTLE   load %cpu %sys %usr %nice %io %irq   Temp
+09:13:07: 2000/1400MHz  1.00  11%   3%   7%   0%   0%   0%  14.0°C  
+09:13:27: 2000/1400MHz  1.06  12%   0%  12%   0%   0%   0%  13.0°C  
+09:13:47: 2000/1400MHz  1.05  12%   0%  12%   0%   0%   0%  13.0°C  
+09:14:08: 2000/1400MHz  1.03  12%   0%  12%   0%   0%   0%  14.0°C  
+09:14:28: 2000/1400MHz  1.02  12%   0%  12%   0%   0%   0%  13.0°C  
+09:14:48: 2000/1400MHz  1.02  12%   0%  12%   0%   0%   0%  22.0°C  
+09:15:08: 2000/1400MHz  1.01  12%   0%  12%   0%   0%   0%  29.0°C  
+09:15:29: 2000/1400MHz  1.07  12%   0%  12%   0%   0%   0%  26.0°C  
+09:15:49: 2000/1400MHz  1.05  12%   0%  12%   0%   0%   0%  28.0°C  
+09:16:09: 2000/1400MHz  1.04  12%   0%  12%   0%   0%   0%  24.0°C  
+
+System health while running ramlat:
+
+Time       big.LITTLE   load %cpu %sys %usr %nice %io %irq   Temp
+09:16:28: 2000/1400MHz  1.03  12%   2%   8%   0%   0%   0%  18.0°C  
+09:16:34: 2000/1400MHz  1.02  12%   0%  12%   0%   0%   0%  14.0°C  
+09:16:40: 2000/1400MHz  1.02  12%   0%  12%   0%   0%   0%  14.0°C  
+09:16:46: 2000/1400MHz  1.02  12%   0%  12%   0%   0%   0%  14.0°C  
+09:16:52: 2000/1400MHz  1.02  12%   0%  12%   0%   0%   0%  14.0°C  
+09:16:58: 2000/1400MHz  1.01  12%   0%  12%   0%   0%   0%  14.0°C  
+09:17:04: 2000/1400MHz  1.01  14%   1%  12%   0%   0%   0%  14.0°C  
+09:17:10: 2000/1400MHz  1.01  12%   0%  12%   0%   0%   0%  20.0°C  
+09:17:17: 2000/1400MHz  1.01  12%   0%  12%   0%   0%   0%  20.0°C  
+09:17:23: 2000/1400MHz  1.01  12%   0%  12%   0%   0%   0%  20.0°C  
+09:17:29: 2000/1400MHz  1.01  12%   0%  12%   0%   0%   0%  20.0°C  
+09:17:35: 2000/1400MHz  1.01  12%   0%  12%   0%   0%   0%  22.0°C  
+09:17:41: 2000/1400MHz  1.00  12%   0%  12%   0%   0%   0%  21.0°C  
+
+System health while running OpenSSL benchmark:
+
+Time       big.LITTLE   load %cpu %sys %usr %nice %io %irq   Temp
+09:17:47: 2000/1400MHz  1.00  12%   2%   9%   0%   0%   0%  17.0°C  
+09:18:04: 2000/1400MHz  1.00  12%   0%  12%   0%   0%   0%  12.0°C  
+09:18:20: 2000/1400MHz  1.00  12%   0%  12%   0%   0%   0%  31.0°C  
+
+System health while running 7-zip single core benchmark:
+
+Time       big.LITTLE   load %cpu %sys %usr %nice %io %irq   Temp
+09:18:24: 2000/1400MHz  1.00  12%   2%   9%   0%   0%   0%  18.0°C  
+09:18:38: 2000/1400MHz  1.00  12%   0%  12%   0%   0%   0%  13.0°C  
+09:18:52: 2000/1400MHz  1.00  12%   0%  12%   0%   0%   0%  12.0°C  
+09:19:06: 2000/1400MHz  1.00  12%   0%  12%   0%   0%   0%  12.0°C  
+09:19:20: 2000/1400MHz  1.00  12%   0%  12%   0%   0%   0%  12.0°C  
+09:19:34: 2000/1400MHz  1.00  12%   0%  11%   0%   0%   0%  12.0°C  
+09:19:49: 2000/1400MHz  1.07  12%   0%  11%   0%   0%   0%  12.0°C  
+09:20:03: 2000/1400MHz  1.05  12%   0%  12%   0%   0%   0%  12.0°C  
+09:20:17: 2000/1400MHz  1.04  12%   0%  11%   0%   0%   0%  13.0°C  
+09:20:31: 2000/1400MHz  1.03  12%   0%  11%   0%   0%   0%  12.0°C  
+09:20:45: 2000/1400MHz  1.02  12%   0%  11%   0%   0%   0%  12.0°C  
+09:20:59: 2000/1400MHz  1.02  12%   0%  12%   0%   0%   0%  12.0°C  
+09:21:14: 2000/1400MHz  1.01  12%   0%  12%   0%   0%   0%  12.0°C  
+09:21:28: 2000/1400MHz  1.01  12%   0%  12%   0%   0%   0%  28.0°C  
+09:21:42: 2000/1400MHz  1.01  12%   0%  12%   0%   0%   0%  28.0°C  
+09:21:56: 2000/1400MHz  1.00  12%   0%  11%   0%   0%   0%  26.0°C  
+09:22:10: 2000/1400MHz  1.08  12%   0%  11%   0%   0%   0%  27.0°C  
+09:22:24: 2000/1400MHz  1.07  12%   0%  11%   0%   0%   0%  26.0°C  
+09:22:39: 2000/1400MHz  1.05  12%   0%  11%   0%   0%   0%  28.0°C  
+
+System health while running 7-zip multi core benchmark:
+
+Time       big.LITTLE   load %cpu %sys %usr %nice %io %irq   Temp
+09:22:44: 2000/1400MHz  1.05  12%   2%   9%   0%   0%   0%  26.0°C  
+09:22:56: 2000/1400MHz  1.60  89%   2%  87%   0%   0%   0%  51.0°C  
+09:23:07: 2000/1400MHz  3.33  79%   1%  77%   0%   0%   0%  49.0°C  
+09:23:18: 2000/1400MHz  4.05  95%   1%  93%   0%   0%   0%  54.0°C  
+09:23:30: 2000/1400MHz  4.60  74%   4%  69%   0%   0%   0%  52.0°C  
+09:23:42: 2000/1400MHz  5.49  95%   2%  92%   0%   0%   0%  55.0°C  
+09:23:52: 2000/1400MHz  5.66  64%   4%  59%   0%   0%   0%  52.0°C  
+09:24:03: 2000/1400MHz  6.41  99%   4%  93%   0%   0%   0%  49.0°C  
+09:24:13: 2000/1400MHz  6.87  84%   3%  80%   0%   0%   0%  54.0°C  
+09:24:23: 2000/1400MHz  6.65  59%   0%  58%   0%   0%   0%  41.0°C  
+09:24:34: 2000/1400MHz  7.08  92%   1%  89%   0%   0%   0%  55.0°C  
+09:24:44: 2000/1400MHz  7.06  70%   1%  68%   0%   0%   0%  44.0°C  
+09:24:56: 2000/1400MHz  7.28  98%   2%  95%   0%   0%   0%  57.0°C  
+09:25:07: 2000/1400MHz  7.37  72%   3%  67%   0%   0%   0%  55.0°C  
+09:25:21: 2000/1400MHz  7.61  91%   2%  87%   0%   0%   0%  56.0°C  
+09:25:32: 2000/1400MHz  7.40  68%   4%  63%   0%   0%   0%  55.0°C  
+09:25:42: 2000/1400MHz  7.79  98%   4%  93%   0%   0%   0%  51.0°C  
+09:25:53: 2000/1400MHz  7.83  86%   3%  82%   0%   0%   0%  56.0°C  
+09:26:04: 2000/1400MHz  7.29  66%   1%  63%   0%   0%   0%  52.0°C  
+09:26:15: 2000/1400MHz  7.70  95%   0%  94%   0%   0%   0%  57.0°C  
+09:26:25: 2000/1400MHz  7.38  74%   3%  70%   0%   0%   0%  50.0°C  
+09:26:36: 2000/1400MHz  7.15  92%   0%  91%   0%   0%   0%  56.0°C  
+09:26:47: 2000/1400MHz  7.59  75%   4%  69%   0%   0%   0%  55.0°C  
+09:26:57: 2000/1400MHz  7.73  95%   4%  89%   0%   0%   0%  56.0°C  
+09:27:08: 2000/1400MHz  7.71  60%   3%  55%   0%   0%   0%  52.0°C  
+09:27:18: 2000/1400MHz  8.07  98%   4%  92%   0%   0%   0%  55.0°C  
+09:27:29: 2000/1400MHz  8.20  88%   4%  83%   0%   0%   0%  55.0°C  
+
+System health while running cpuminer:
+
+Time       big.LITTLE   load %cpu %sys %usr %nice %io %irq   Temp
+09:27:42: 1900/1300MHz  7.77  27%   2%  24%   0%   0%   0%  60.0°C  
+09:28:24: 1900/1300MHz  7.93 100%   0%  99%   0%   0%   0%  61.0°C  
+09:29:08: 1900/1300MHz  7.97 100%   0%  99%   0%   0%   0%  61.0°C  
+09:29:52: 1900/1300MHz  8.02 100%   0%  99%   0%   0%   0%  62.0°C  
+09:30:36: 1900/1300MHz  8.05 100%   0%  99%   0%   0%   0%  61.0°C  
+09:31:20: 1800/1300MHz  8.10 100%   0%  99%   0%   0%   0%  61.0°C  
+09:32:04: 1900/1200MHz  8.05 100%   0%  99%   0%   0%   0%  61.0°C  
+
+##########################################################################
+
+Throttling statistics (time spent on each cpufreq OPP) for CPUs 0-3 (Cortex-A7):
+
+1400 MHz:  878.17 sec
+1300 MHz:  278.78 sec
+1200 MHz:   15.46 sec
+1100 MHz:       0 sec
+1000 MHz:       0 sec
+ 900 MHz:       0 sec
+ 800 MHz:       0 sec
+ 700 MHz:       0 sec
+ 600 MHz:       0 sec
+ 500 MHz:       0 sec
+ 400 MHz:       0 sec
+ 300 MHz:       0 sec
+ 200 MHz:       0 sec
+
+Throttling statistics (time spent on each cpufreq OPP) for CPUs 4-7 (Cortex-A15):
+
+2000 MHz:  878.15 sec
+1900 MHz:  278.78 sec
+1800 MHz:   15.47 sec
+1700 MHz:       0 sec
+1600 MHz:       0 sec
+1500 MHz:       0 sec
+1400 MHz:       0 sec
+1300 MHz:       0 sec
+1200 MHz:       0 sec
+1100 MHz:       0 sec
+1000 MHz:       0 sec
+ 900 MHz:       0 sec
+ 800 MHz:       0 sec
+ 700 MHz:       0 sec
+ 600 MHz:       0 sec
+ 500 MHz:       0 sec
+ 400 MHz:       0 sec
+ 300 MHz:       0 sec
+ 200 MHz:       0 sec
+
+##########################################################################
+
+Linux 6.6.75-current-odroidxu4 (odroidxu4) 	02/20/25 	_armv7l_	(8 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+          37.30    0.01    2.19    0.18    0.00   60.31
+
+Device             tps    kB_read/s    kB_wrtn/s    kB_dscd/s    kB_read    kB_wrtn    kB_dscd
+mmcblk2           9.53       252.38       134.38         0.00     435717     232000          0
+
+               total        used        free      shared  buff/cache   available
+Mem:           1.9Gi       196Mi       1.7Gi        35Mi       133Mi       1.7Gi
+Swap:             0B          0B          0B
+
+CPU sysfs topology (clusters, cpufreq members, clockspeeds)
+                 cpufreq   min    max
+ CPU    cluster  policy   speed  speed   core type
+  0        1        0      200    1400   Cortex-A7 / r0p3
+  1        1        0      200    1400   Cortex-A7 / r0p3
+  2        1        0      200    1400   Cortex-A7 / r0p3
+  3        1        0      200    1400   Cortex-A7 / r0p3
+  4        0        4      200    2000   Cortex-A15 / r2p3
+  5        0        4      200    2000   Cortex-A15 / r2p3
+  6        0        4      200    2000   Cortex-A15 / r2p3
+  7        0        4      200    2000   Cortex-A15 / r2p3
+
+Architecture:                         armv7l
+Byte Order:                           Little Endian
+CPU(s):                               8
+On-line CPU(s) list:                  0-7
+Vendor ID:                            ARM
+Model name:                           Cortex-A7
+Model:                                3
+Thread(s) per core:                   1
+Core(s) per socket:                   4
+Socket(s):                            1
+Stepping:                             r0p3
+CPU(s) scaling MHz:                   100%
+CPU max MHz:                          1400.0000
+CPU min MHz:                          200.0000
+BogoMIPS:                             120.00
+Flags:                                half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
+Model name:                           Cortex-A15
+Model:                                3
+Thread(s) per core:                   1
+Core(s) per socket:                   4
+Socket(s):                            1
+Stepping:                             r2p3
+CPU(s) scaling MHz:                   100%
+CPU max MHz:                          2000.0000
+CPU min MHz:                          200.0000
+BogoMIPS:                             120.00
+Flags:                                half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm
+Vulnerability Gather data sampling:   Not affected
+Vulnerability Itlb multihit:          Not affected
+Vulnerability L1tf:                   Not affected
+Vulnerability Mds:                    Not affected
+Vulnerability Meltdown:               Not affected
+Vulnerability Mmio stale data:        Not affected
+Vulnerability Reg file data sampling: Not affected
+Vulnerability Retbleed:               Not affected
+Vulnerability Spec rstack overflow:   Not affected
+Vulnerability Spec store bypass:      Not affected
+Vulnerability Spectre v1:             Mitigation; __user pointer sanitization
+Vulnerability Spectre v2:             Vulnerable: Unprivileged eBPF enabled
+Vulnerability Srbds:                  Not affected
+Vulnerability Tsx async abort:        Not affected
+
+  cpuinfo: http://0x0.st/8cr-.txt
+SoC guess: Exynos 5422
+DT compat: hardkernel,odroid-xu4
+           samsung,exynos5800
+           samsung,exynos5
+ Compiler: /usr/bin/gcc (Debian 12.2.0-14) 12.2.0 / arm-linux-gnueabihf
+ Userland: arm
+   Kernel: 6.6.75-current-odroidxu4/armv7l
+           CONFIG_HZ=100
+           CONFIG_HZ_100=y
+           CONFIG_HZ_FIXED=0
+           CONFIG_PREEMPTION=y
+           CONFIG_PREEMPT=y
+           CONFIG_PREEMPT_BUILD=y
+           CONFIG_PREEMPT_COUNT=y
+           CONFIG_PREEMPT_RCU=y
+
+##########################################################################
+
+   opp-table-0:
+       200 MHz    900.0 mV
+       300 MHz    900.0 mV
+       400 MHz    900.0 mV
+       500 MHz    900.0 mV
+       600 MHz    900.0 mV
+       700 MHz    900.0 mV
+       800 MHz    900.0 mV
+       900 MHz   1000.0 mV
+      1000 MHz   1000.0 mV
+      1100 MHz   1000.0 mV
+      1200 MHz   1000.0 mV
+      1300 MHz   1100.0 mV
+      1400 MHz   1100.0 mV
+      1500 MHz   1100.0 mV
+      1600 MHz   1250.0 mV
+      1700 MHz   1250.0 mV
+      1800 MHz   1237.5 mV
+      1900 MHz   1262.5 mV
+      2000 MHz   1312.5 mV
+
+   opp-table-1:
+       200 MHz    900.0 mV
+       300 MHz    900.0 mV
+       400 MHz   1000.0 mV
+       500 MHz   1000.0 mV
+       600 MHz   1000.0 mV
+       700 MHz   1000.0 mV
+       800 MHz   1100.0 mV
+       900 MHz   1100.0 mV
+      1000 MHz   1100.0 mV
+      1100 MHz   1250.0 mV
+      1200 MHz   1250.0 mV
+      1300 MHz   1250.0 mV
+      1400 MHz   1275.0 mV
+
+   opp-table-10:
+        66 MHz       -
+       133 MHz       -
+       178 MHz       -
+       266 MHz       -
+
+   opp-table-11:
+        75 MHz       -
+       150 MHz       -
+       200 MHz       -
+       300 MHz       -
+
+   opp-table-12:
+        83 MHz       -
+       111 MHz       -
+       133 MHz       -
+       166 MHz       -
+
+   opp-table-13:
+       120 MHz       -
+       200 MHz       -
+
+   opp-table-14:
+       120 MHz       -
+       200 MHz       -
+       300 MHz       -
+
+   opp-table-15:
+       150 MHz       -
+       200 MHz       -
+       300 MHz       -
+
+   opp-table-16:
+        84 MHz       -
+       167 MHz       -
+       222 MHz       -
+       333 MHz       -
+       666 MHz       -
+
+   opp-table-17:
+       165 MHz    875.0 mV
+       206 MHz    875.0 mV
+       275 MHz    875.0 mV
+       413 MHz    887.5 mV
+       543 MHz    937.5 mV
+       633 MHz   1012.5 mV
+       728 MHz   1037.5 mV
+       825 MHz   1050.0 mV
+
+   opp-table-2:
+        89 MHz    925.0 mV
+       133 MHz    950.0 mV
+       177 MHz    950.0 mV
+       266 MHz    950.0 mV
+       532 MHz   1000.0 mV
+
+   opp-table-3:
+        67 MHz       -
+        74 MHz       -
+        83 MHz       -
+       111 MHz       -
+
+   opp-table-4:
+       111 MHz       -
+       222 MHz       -
+
+   opp-table-5:
+        75 MHz       -
+       120 MHz       -
+       200 MHz       -
+
+   opp-table-6:
+        83 MHz       -
+       111 MHz       -
+       166 MHz       -
+       222 MHz       -
+       333 MHz       -
+
+   opp-table-7:
+        89 MHz       -
+       133 MHz       -
+       178 MHz       -
+       266 MHz       -
+
+   opp-table-8:
+        67 MHz       -
+
+   opp-table-9:
+        83 MHz       -
+       111 MHz       -
+       166 MHz       -
+       222 MHz       -
+       333 MHz       -
+
+##########################################################################
+
+Results validation:
+
+  * Measured clockspeed not lower than advertised max CPU clockspeed
+  * Background activity (%system) OK
+  * Throttling occured -> https://tinyurl.com/4ky59sys
+
+Status of performance related governors found below /sys (w/o cpufreq):
+
+  * bus-wcore: performance / 532 MHz (userspace powersave performance simple_ondemand / 89 133 177 266 532)
+  * 10c20000.memory-controller: performance / 825 MHz (userspace powersave performance simple_ondemand / 165 206 275 413 543 633 728 825)
+
+##########################################################################
+
+/sys/kernel/debug/clk/clk_summary diff between all governors set to powersave and performance:
+
+                                   enable  prepare  protect                                duty  hardware                            connection
+     clock                          count    count    count        rate   accuracy phase  cycle    enable   consumer                         id
+  ---------------------------------------------------------------------------------------------------------------------------------------------
+131,133c131,133
+<     fout_kpll                        0       0        0        600000000   0          0     50000      ?      deviceless                      no_connection_id         
+<        mout_kpll                     0       0        0        600000000   0          0     50000      Y         deviceless                      no_connection_id         
+<           kfcclk                     0       0        0        600000000   0          0     50000      Y            cpu0                            no_connection_id         
+---
+>     fout_kpll                        0       0        0        1400000000  0          0     50000      ?      deviceless                      no_connection_id         
+>        mout_kpll                     0       0        0        1400000000  0          0     50000      Y         deviceless                      no_connection_id         
+>           kfcclk                     0       0        0        1400000000  0          0     50000      Y            cpu0                            no_connection_id         
+136,139c136,139
+<           sclk_kpll                  0       0        0        150000000   0          0     50000      Y            deviceless                      no_connection_id         
+<           mout_kfc                   0       0        0        600000000   0          0     50000      Y            deviceless                      no_connection_id         
+<              div_kfc                 0       0        0        600000000   0          0     50000      Y               deviceless                      no_connection_id         
+<     fout_bpll                        2       2        0        165000000   0          0     50000      ?      10c20000.memory-controller      fout_bpll                
+---
+>           sclk_kpll                  0       0        0        350000000   0          0     50000      Y            deviceless                      no_connection_id         
+>           mout_kfc                   0       0        0        1400000000  0          0     50000      Y            deviceless                      no_connection_id         
+>              div_kfc                 0       0        0        1400000000  0          0     50000      Y               deviceless                      no_connection_id         
+>     fout_bpll                        2       2        0        825000000   0          0     50000      ?      10c20000.memory-controller      fout_bpll                
+141c141
+<        mout_bpll                     3       3        0        165000000   0          0     50000      Y         10c20000.memory-controller      mout_bpll                
+---
+>        mout_bpll                     3       3        0        825000000   0          0     50000      Y         10c20000.memory-controller      mout_bpll                
+143c143
+<           mout_mclk_cdrex            1       1        0        165000000   0          0     50000      Y            10c20000.memory-controller      mout_mclk_cdrex          
+---
+>           mout_mclk_cdrex            1       1        0        825000000   0          0     50000      Y            10c20000.memory-controller      mout_mclk_cdrex          
+145,166c145,166
+<              dout_pclk_core_mem      0       0        0        41250000    0          0     50000      Y               deviceless                      no_connection_id         
+<              dout_sclk_cdrex         1       1        0        165000000   0          0     50000      Y               deviceless                      no_connection_id         
+<                 clkm_phy1            0       0        0        165000000   0          0     50000      N                  deviceless                      no_connection_id         
+<                 clkm_phy0            0       0        0        165000000   0          0     50000      N                  deviceless                      no_connection_id         
+<                 dout_clk2x_phy0      1       1        0        165000000   0          0     50000      Y                  deviceless                      no_connection_id         
+<                    dout_aclk_cdrex1  1       1        0        82500000    0          0     50000      Y                     deviceless                      no_connection_id         
+<                       aclk_ppmu_drex0_0 0       0        0        82500000    0          0     50000      Y                        deviceless                      no_connection_id         
+<                       aclk_ppmu_drex0_1 0       0        0        82500000    0          0     50000      Y                        deviceless                      no_connection_id         
+<                       aclk_ppmu_drex1_0 0       0        0        82500000    0          0     50000      Y                        deviceless                      no_connection_id         
+<                       aclk_ppmu_drex1_1 0       0        0        82500000    0          0     50000      Y                        deviceless                      no_connection_id         
+<                       dout_pclk_cdrex 4       4        0        20625000    0          0     50000      Y                        deviceless                      no_connection_id         
+<                          pclk_ppmu_drex0_0 1       1        0        20625000    0          0     50000      Y                           10d00000.ppmu                   ppmu                     
+<                                                                                                                                    deviceless                      no_connection_id         
+<                          pclk_ppmu_drex0_1 1       1        0        20625000    0          0     50000      Y                           10d10000.ppmu                   ppmu                     
+<                                                                                                                                    deviceless                      no_connection_id         
+<                          pclk_ppmu_drex1_0 1       1        0        20625000    0          0     50000      Y                           10d60000.ppmu                   ppmu                     
+<                                                                                                                                    deviceless                      no_connection_id         
+<                          pclk_ppmu_drex1_1 1       1        0        20625000    0          0     50000      Y                           10d70000.ppmu                   ppmu                     
+<                                                                                                                                    deviceless                      no_connection_id         
+<                    dout_cclk_drex0   0       0        0        82500000    0          0     50000      Y                     deviceless                      no_connection_id         
+<                       dout_pclk_drex0 0       0        0        20625000    0          0     50000      Y                        deviceless                      no_connection_id         
+<                       dout_pclk_drex1 0       0        0        20625000    0          0     50000      Y                        deviceless                      no_connection_id         
+---
+>              dout_pclk_core_mem      0       0        0        206250000   0          0     50000      Y               deviceless                      no_connection_id         
+>              dout_sclk_cdrex         1       1        0        825000000   0          0     50000      Y               deviceless                      no_connection_id         
+>                 clkm_phy1            0       0        0        825000000   0          0     50000      N                  deviceless                      no_connection_id         
+>                 clkm_phy0            0       0        0        825000000   0          0     50000      N                  deviceless                      no_connection_id         
+>                 dout_clk2x_phy0      1       1        0        825000000   0          0     50000      Y                  deviceless                      no_connection_id         
+>                    dout_aclk_cdrex1  1       1        0        412500000   0          0     50000      Y                     deviceless                      no_connection_id         
+>                       aclk_ppmu_drex0_0 0       0        0        412500000   0          0     50000      Y                        deviceless                      no_connection_id         
+>                       aclk_ppmu_drex0_1 0       0        0        412500000   0          0     50000      Y                        deviceless                      no_connection_id         
+>                       aclk_ppmu_drex1_0 0       0        0        412500000   0          0     50000      Y                        deviceless                      no_connection_id         
+>                       aclk_ppmu_drex1_1 0       0        0        412500000   0          0     50000      Y                        deviceless                      no_connection_id         
+>                       dout_pclk_cdrex 4       4        0        103125000   0          0     50000      Y                        deviceless                      no_connection_id         
+>                          pclk_ppmu_drex0_0 1       1        0        103125000   0          0     50000      Y                           10d00000.ppmu                   ppmu                     
+>                                                                                                                                    deviceless                      no_connection_id         
+>                          pclk_ppmu_drex0_1 1       1        0        103125000   0          0     50000      Y                           10d10000.ppmu                   ppmu                     
+>                                                                                                                                    deviceless                      no_connection_id         
+>                          pclk_ppmu_drex1_0 1       1        0        103125000   0          0     50000      Y                           10d60000.ppmu                   ppmu                     
+>                                                                                                                                    deviceless                      no_connection_id         
+>                          pclk_ppmu_drex1_1 1       1        0        103125000   0          0     50000      Y                           10d70000.ppmu                   ppmu                     
+>                                                                                                                                    deviceless                      no_connection_id         
+>                    dout_cclk_drex0   0       0        0        412500000   0          0     50000      Y                     deviceless                      no_connection_id         
+>                       dout_pclk_drex0 0       0        0        103125000   0          0     50000      Y                        deviceless                      no_connection_id         
+>                       dout_pclk_drex1 0       0        0        103125000   0          0     50000      Y                        deviceless                      no_connection_id         
+170c170
+<              dout_aclk266_g2d        2       2        0        66500000    0          0     50000      Y               bus-g2d-acp                     no_connection_id         
+---
+>              dout_aclk266_g2d        2       2        0        266000000   0          0     50000      Y               bus-g2d-acp                     no_connection_id         
+173,176c173,176
+<                 mout_sw_aclk266_g2d  1       1        0        66500000    0          0     50000      Y                  deviceless                      no_connection_id         
+<                    mout_user_aclk266_g2d 1       1        0        66500000    0          0     50000      Y                     deviceless                      no_connection_id         
+<                       aclk266_g2d    2       3        0        66500000    0          0     50000      Y                        deviceless                      no_connection_id         
+<                          mdma0       0       1        0        66500000    0          0     50000      N                           10800000.dma-controller         apb_pclk                 
+---
+>                 mout_sw_aclk266_g2d  1       1        0        266000000   0          0     50000      Y                  deviceless                      no_connection_id         
+>                    mout_user_aclk266_g2d 1       1        0        266000000   0          0     50000      Y                     deviceless                      no_connection_id         
+>                       aclk266_g2d    2       3        0        266000000   0          0     50000      Y                        deviceless                      no_connection_id         
+>                          mdma0       0       1        0        266000000   0          0     50000      N                           10800000.dma-controller         apb_pclk                 
+178c178
+<                          sss         2       2        0        66500000    0          0     50000      Y                           10830000.sss                    secss                    
+---
+>                          sss         2       2        0        266000000   0          0     50000      Y                           10830000.sss                    secss                    
+181c181
+<                          smmu_mdma0  0       0        0        66500000    0          0     50000      N                           deviceless                      no_connection_id         
+---
+>                          smmu_mdma0  0       0        0        266000000   0          0     50000      N                           deviceless                      no_connection_id         
+183c183
+<              dout_aclk266            1       1        0        88666667    0          0     50000      Y               bus-gen                         no_connection_id         
+---
+>              dout_aclk266            1       1        0        266000000   0          0     50000      Y               bus-gen                         no_connection_id         
+186,189c186,189
+<                 mout_sw_aclk266      0       0        0        88666667    0          0     50000      Y                  deviceless                      no_connection_id         
+<                    mout_user_aclk266 0       0        0        88666667    0          0     50000      Y                     deviceless                      no_connection_id         
+<                       mdma1          0       0        0        88666667    0          0     50000      N                        deviceless                      no_connection_id         
+<                       rotator        0       0        0        88666667    0          0     50000      N                        11d40000.sysmmu                 master                   
+---
+>                 mout_sw_aclk266      0       0        0        266000000   0          0     50000      Y                  deviceless                      no_connection_id         
+>                    mout_user_aclk266 0       0        0        266000000   0          0     50000      Y                     deviceless                      no_connection_id         
+>                       mdma1          0       0        0        266000000   0          0     50000      N                        deviceless                      no_connection_id         
+>                       rotator        0       0        0        266000000   0          0     50000      N                        11d40000.sysmmu                 master                   
+191,193c191,193
+<                       dout_gen_blk   0       0        0        44333334    0          0     50000      Y                        deviceless                      no_connection_id         
+<                          smmu_mdma1  0       0        0        44333334    0          0     50000      N                           deviceless                      no_connection_id         
+<                          smmu_rotator 0       0        0        44333334    0          0     50000      N                           11d40000.sysmmu                 sysmmu                   
+---
+>                       dout_gen_blk   0       0        0        133000000   0          0     50000      Y                        deviceless                      no_connection_id         
+>                          smmu_mdma1  0       0        0        133000000   0          0     50000      N                           deviceless                      no_connection_id         
+>                          smmu_rotator 0       0        0        133000000   0          0     50000      N                           11d40000.sysmmu                 sysmmu                   
+196c196
+<              dout_aclk400_wcore      1       1        0        88666667    0          0     50000      Y               bus-wcore                       no_connection_id         
+---
+>              dout_aclk400_wcore      1       1        0        532000000   0          0     50000      Y               bus-wcore                       no_connection_id         
+338c338
+<              dout_aclk300_gscl       2       2        0        150000000   0          0     50000      Y               bus-gscl-scaler                 no_connection_id         
+---
+>              dout_aclk300_gscl       2       2        0        300000000   0          0     50000      Y               bus-gscl-scaler                 no_connection_id         
+341,344c341,344
+<                 mout_sw_aclk300_gscl 1       1        0        150000000   0          0     50000      Y                  deviceless                      no_connection_id         
+<                    mout_user_aclk300_gscl 1       1        0        150000000   0          0     50000      Y                     deviceless                      no_connection_id         
+<                       dout_gscl_blk_300 0       0        0        75000000    0          0     50000      Y                        deviceless                      no_connection_id         
+<                          smmu_gscl1  0       0        0        75000000    0          0     50000      N                           13e90000.sysmmu                 sysmmu                   
+---
+>                 mout_sw_aclk300_gscl 1       1        0        300000000   0          0     50000      Y                  deviceless                      no_connection_id         
+>                    mout_user_aclk300_gscl 1       1        0        300000000   0          0     50000      Y                     deviceless                      no_connection_id         
+>                       dout_gscl_blk_300 0       0        0        150000000   0          0     50000      Y                        deviceless                      no_connection_id         
+>                          smmu_gscl1  0       0        0        150000000   0          0     50000      N                           13e90000.sysmmu                 sysmmu                   
+346c346
+<                          smmu_gscl0  0       0        0        75000000    0          0     50000      N                           13e80000.sysmmu                 sysmmu                   
+---
+>                          smmu_gscl0  0       0        0        150000000   0          0     50000      N                           13e80000.sysmmu                 sysmmu                   
+348,349c348,349
+<                       aclk300_gscl   1       1        0        150000000   0          0     50000      Y                        deviceless                      no_connection_id         
+<                          gscl1       0       0        0        150000000   0          0     50000      N                           13e90000.sysmmu                 master                   
+---
+>                       aclk300_gscl   1       1        0        300000000   0          0     50000      Y                        deviceless                      no_connection_id         
+>                          gscl1       0       0        0        300000000   0          0     50000      N                           13e90000.sysmmu                 master                   
+351c351
+<                          gscl0       0       0        0        150000000   0          0     50000      N                           13e80000.sysmmu                 master                   
+---
+>                          gscl0       0       0        0        300000000   0          0     50000      N                           13e80000.sysmmu                 master                   
+354c354
+<              dout_aclk300_disp1      2       2        0        120000000   0          0     50000      Y               bus-disp1-fimd                  no_connection_id         
+---
+>              dout_aclk300_disp1      2       2        0        200000000   0          0     50000      Y               bus-disp1-fimd                  no_connection_id         
+357,360c357,360
+<                 mout_sw_aclk300_disp1 1       1        0        120000000   0          0     50000      Y                  deviceless                      no_connection_id         
+<                    mout_user_aclk300_disp1 1       1        0        120000000   0          0     50000      Y                     deviceless                      no_connection_id         
+<                       aclk300_disp1  1       1        0        120000000   0          0     50000      Y                        deviceless                      no_connection_id         
+<                          fimd1       0       0        0        120000000   0          0     50000      N                           14680000.sysmmu                 master                   
+---
+>                 mout_sw_aclk300_disp1 1       1        0        200000000   0          0     50000      Y                  deviceless                      no_connection_id         
+>                    mout_user_aclk300_disp1 1       1        0        200000000   0          0     50000      Y                     deviceless                      no_connection_id         
+>                       aclk300_disp1  1       1        0        200000000   0          0     50000      Y                        deviceless                      no_connection_id         
+>                          fimd1       0       0        0        200000000   0          0     50000      N                           14680000.sysmmu                 master                   
+364c364
+<              dout_aclk300_jpeg       1       1        0        75000000    0          0     50000      Y               bus-jpeg                        no_connection_id         
+---
+>              dout_aclk300_jpeg       1       1        0        300000000   0          0     50000      Y               bus-jpeg                        no_connection_id         
+367,370c367,370
+<                 mout_sw_aclk300_jpeg 0       0        0        75000000    0          0     50000      Y                  deviceless                      no_connection_id         
+<                    mout_user_aclk300_jpeg 0       0        0        75000000    0          0     50000      Y                     deviceless                      no_connection_id         
+<                       aclk300_jpeg   0       0        0        75000000    0          0     50000      N                        deviceless                      no_connection_id         
+<                          jpeg2       0       0        0        75000000    0          0     50000      N                           11f20000.sysmmu                 master                   
+---
+>                 mout_sw_aclk300_jpeg 0       0        0        300000000   0          0     50000      Y                  deviceless                      no_connection_id         
+>                    mout_user_aclk300_jpeg 0       0        0        300000000   0          0     50000      Y                     deviceless                      no_connection_id         
+>                       aclk300_jpeg   0       0        0        300000000   0          0     50000      N                        deviceless                      no_connection_id         
+>                          jpeg2       0       0        0        300000000   0          0     50000      N                           11f20000.sysmmu                 master                   
+372c372
+<                          jpeg        0       0        0        75000000    0          0     50000      N                           11f10000.sysmmu                 master                   
+---
+>                          jpeg        0       0        0        300000000   0          0     50000      N                           11f10000.sysmmu                 master                   
+375c375
+<              dout_aclk400_disp1      1       1        0        120000000   0          0     50000      Y               bus-disp1                       no_connection_id         
+---
+>              dout_aclk400_disp1      1       1        0        300000000   0          0     50000      Y               bus-disp1                       no_connection_id         
+378,379c378,379
+<                 mout_sw_aclk400_disp1 0       0        0        120000000   0          0     50000      Y                  deviceless                      no_connection_id         
+<                    mout_user_aclk400_disp1 0       0        0        120000000   0          0     50000      Y                     deviceless                      no_connection_id         
+---
+>                 mout_sw_aclk400_disp1 0       0        0        300000000   0          0     50000      Y                  deviceless                      no_connection_id         
+>                    mout_user_aclk400_disp1 0       0        0        300000000   0          0     50000      Y                     deviceless                      no_connection_id         
+401c401
+<              dout_aclk200_fsys2      2       2        0        75000000    0          0     50000      Y               bus-fsys2                       no_connection_id         
+---
+>              dout_aclk200_fsys2      2       2        0        200000000   0          0     50000      Y               bus-fsys2                       no_connection_id         
+404,408c404,408
+<                 mout_sw_aclk200_fsys2 1       1        0        75000000    0          0     50000      Y                  deviceless                      no_connection_id         
+<                    mout_user_aclk200_fsys2 1       1        0        75000000    0          0     50000      Y                     deviceless                      no_connection_id         
+<                       aclk200_fsys2  2       2        0        75000000    0          0     50000      Y                        deviceless                      no_connection_id         
+<                          sromc       0       0        0        75000000    0          0     50000      Y                           deviceless                      no_connection_id         
+<                          mmc2        1       1        0        75000000    0          0     50000      Y                           12220000.mmc                    biu                      
+---
+>                 mout_sw_aclk200_fsys2 1       1        0        200000000   0          0     50000      Y                  deviceless                      no_connection_id         
+>                    mout_user_aclk200_fsys2 1       1        0        200000000   0          0     50000      Y                     deviceless                      no_connection_id         
+>                       aclk200_fsys2  2       2        0        200000000   0          0     50000      Y                        deviceless                      no_connection_id         
+>                          sromc       0       0        0        200000000   0          0     50000      Y                           deviceless                      no_connection_id         
+>                          mmc2        1       1        0        200000000   0          0     50000      Y                           12220000.mmc                    biu                      
+410,411c410,411
+<                          mmc1        0       0        0        75000000    0          0     50000      N                           deviceless                      no_connection_id         
+<                          mmc0        1       1        0        75000000    0          0     50000      Y                           12200000.mmc                    biu                      
+---
+>                          mmc1        0       0        0        200000000   0          0     50000      N                           deviceless                      no_connection_id         
+>                          mmc0        1       1        0        200000000   0          0     50000      Y                           12200000.mmc                    biu                      
+413c413
+<                          ufs         0       0        0        75000000    0          0     50000      N                           deviceless                      no_connection_id         
+---
+>                          ufs         0       0        0        200000000   0          0     50000      N                           deviceless                      no_connection_id         
+444c444
+<              dout_aclk333_g2d        1       1        0        83250000    0          0     50000      Y               bus-g2d                         no_connection_id         
+---
+>              dout_aclk333_g2d        1       1        0        333000000   0          0     50000      Y               bus-g2d                         no_connection_id         
+447,450c447,450
+<                 mout_sw_aclk333_g2d  0       0        0        83250000    0          0     50000      Y                  deviceless                      no_connection_id         
+<                    mout_user_aclk333_g2d 0       0        0        83250000    0          0     50000      Y                     deviceless                      no_connection_id         
+<                       aclk333_g2d    0       0        0        83250000    0          0     50000      N                        deviceless                      no_connection_id         
+<                          g2d         0       0        0        83250000    0          0     50000      N                           10a70000.sysmmu                 master                   
+---
+>                 mout_sw_aclk333_g2d  0       0        0        333000000   0          0     50000      Y                  deviceless                      no_connection_id         
+>                    mout_user_aclk333_g2d 0       0        0        333000000   0          0     50000      Y                     deviceless                      no_connection_id         
+>                       aclk333_g2d    0       0        0        333000000   0          0     50000      N                        deviceless                      no_connection_id         
+>                          g2d         0       0        0        333000000   0          0     50000      N                           10a70000.sysmmu                 master                   
+453c453
+<                          smmu_g2d    0       0        0        83250000    0          0     50000      N                           10a70000.sysmmu                 sysmmu                   
+---
+>                          smmu_g2d    0       0        0        333000000   0          0     50000      N                           10a70000.sysmmu                 sysmmu                   
+457c457
+<              dout_aclk333            2       2        0        83250000    0          0     50000      Y               bus-mfc                         no_connection_id         
+---
+>              dout_aclk333            2       2        0        333000000   0          0     50000      Y               bus-mfc                         no_connection_id         
+460,463c460,463
+<                 mout_sw_aclk333      1       1        0        83250000    0          0     50000      Y                  deviceless                      no_connection_id         
+<                    mout_user_aclk333 1       1        0        83250000    0          0     50000      Y                     deviceless                      no_connection_id         
+<                       dout_mfc_blk   0       0        0        20812500    0          0     50000      Y                        deviceless                      no_connection_id         
+<                          smmu_mfcr   0       0        0        20812500    0          0     50000      N                           11210000.sysmmu                 sysmmu                   
+---
+>                 mout_sw_aclk333      1       1        0        333000000   0          0     50000      Y                  deviceless                      no_connection_id         
+>                    mout_user_aclk333 1       1        0        333000000   0          0     50000      Y                     deviceless                      no_connection_id         
+>                       dout_mfc_blk   0       0        0        83250000    0          0     50000      Y                        deviceless                      no_connection_id         
+>                          smmu_mfcr   0       0        0        83250000    0          0     50000      N                           11210000.sysmmu                 sysmmu                   
+465c465
+<                          smmu_mfcl   0       0        0        20812500    0          0     50000      N                           11200000.sysmmu                 sysmmu                   
+---
+>                          smmu_mfcl   0       0        0        83250000    0          0     50000      N                           11200000.sysmmu                 sysmmu                   
+467,468c467,468
+<                       aclk333        1       1        0        83250000    0          0     50000      Y                        deviceless                      no_connection_id         
+<                          mfc         0       0        0        83250000    0          0     50000      N                           11210000.sysmmu                 master                   
+---
+>                       aclk333        1       1        0        333000000   0          0     50000      Y                        deviceless                      no_connection_id         
+>                          mfc         0       0        0        333000000   0          0     50000      N                           11210000.sysmmu                 master                   
+472c472
+<              dout_aclk100_noc        1       1        0        83250000    0          0     50000      Y               bus-noc                         no_connection_id         
+---
+>              dout_aclk100_noc        1       1        0        111000000   0          0     50000      Y               bus-noc                         no_connection_id         
+475,476c475,476
+<                 mout_sw_aclk100_noc  0       0        0        83250000    0          0     50000      Y                  deviceless                      no_connection_id         
+<                    mout_user_aclk100_noc 0       0        0        83250000    0          0     50000      Y                     deviceless                      no_connection_id         
+---
+>                 mout_sw_aclk100_noc  0       0        0        111000000   0          0     50000      Y                  deviceless                      no_connection_id         
+>                    mout_user_aclk100_noc 0       0        0        111000000   0          0     50000      Y                     deviceless                      no_connection_id         
+478c478
+<              dout_aclk400_mscl       1       1        0        83250000    0          0     50000      Y               bus-mscl                        no_connection_id         
+---
+>              dout_aclk400_mscl       1       1        0        666000000   0          0     50000      Y               bus-mscl                        no_connection_id         
+484c484
+<              dout_pclk200_fsys       1       1        0        111000000   0          0     50000      Y               bus-fsys-apb                    no_connection_id         
+---
+>              dout_pclk200_fsys       1       1        0        222000000   0          0     50000      Y               bus-fsys-apb                    no_connection_id         
+487,488c487,488
+<                 mout_sw_pclk200_fsys 0       0        0        111000000   0          0     50000      Y                  deviceless                      no_connection_id         
+<                    mout_user_pclk200_fsys 0       0        0        111000000   0          0     50000      Y                     deviceless                      no_connection_id         
+---
+>                 mout_sw_pclk200_fsys 0       0        0        222000000   0          0     50000      Y                  deviceless                      no_connection_id         
+>                    mout_user_pclk200_fsys 0       0        0        222000000   0          0     50000      Y                     deviceless                      no_connection_id         
+564c564
+<              dout_aclk166            1       1        0        83250000    0          0     50000      Y               bus-jpeg-apb                    no_connection_id         
+---
+>              dout_aclk166            1       1        0        166500000   0          0     50000      Y               bus-jpeg-apb                    no_connection_id         
+567,571c567,571
+<                 mout_sw_aclk166      0       0        0        83250000    0          0     50000      Y                  deviceless                      no_connection_id         
+<                    mout_user_aclk166 0       0        0        83250000    0          0     50000      Y                     deviceless                      no_connection_id         
+<                       aclk166        0       0        0        83250000    0          0     50000      N                        deviceless                      no_connection_id         
+<                          dout_jpg_blk 0       0        0        41625000    0          0     50000      Y                           deviceless                      no_connection_id         
+<                             smmu_jpeg2 0       0        0        41625000    0          0     50000      N                              11f20000.sysmmu                 sysmmu                   
+---
+>                 mout_sw_aclk166      0       0        0        166500000   0          0     50000      Y                  deviceless                      no_connection_id         
+>                    mout_user_aclk166 0       0        0        166500000   0          0     50000      Y                     deviceless                      no_connection_id         
+>                       aclk166        0       0        0        166500000   0          0     50000      N                        deviceless                      no_connection_id         
+>                          dout_jpg_blk 0       0        0        83250000    0          0     50000      Y                           deviceless                      no_connection_id         
+>                             smmu_jpeg2 0       0        0        83250000    0          0     50000      N                              11f20000.sysmmu                 sysmmu                   
+573c573
+<                             smmu_jpeg 0       0        0        41625000    0          0     50000      N                              11f10000.sysmmu                 sysmmu                   
+---
+>                             smmu_jpeg 0       0        0        83250000    0          0     50000      N                              11f10000.sysmmu                 sysmmu                   
+575,577c575,577
+<     fout_apll                        0       0        0        600000000   0          0     50000      ?      deviceless                      no_connection_id         
+<        mout_apll                     0       0        0        600000000   0          0     50000      Y         deviceless                      no_connection_id         
+<           armclk                     0       0        0        600000000   0          0     50000      Y            cpu4                            no_connection_id         
+---
+>     fout_apll                        0       0        0        2000000000  0          0     50000      ?      deviceless                      no_connection_id         
+>        mout_apll                     0       0        0        2000000000  0          0     50000      Y         deviceless                      no_connection_id         
+>           armclk                     0       0        0        2000000000  0          0     50000      Y            cpu4                            no_connection_id         
+580,583c580,583
+<           sclk_apll                  0       0        0        150000000   0          0     50000      Y            deviceless                      no_connection_id         
+<           mout_cpu                   0       0        0        600000000   0          0     50000      Y            deviceless                      no_connection_id         
+<              div_arm                 0       0        0        600000000   0          0     50000      Y               deviceless                      no_connection_id         
+<                 armclk2              0       0        0        600000000   0          0     50000      Y                  deviceless                      no_connection_id         
+---
+>           sclk_apll                  0       0        0        500000000   0          0     50000      Y            deviceless                      no_connection_id         
+>           mout_cpu                   0       0        0        2000000000  0          0     50000      Y            deviceless                      no_connection_id         
+>              div_arm                 0       0        0        2000000000  0          0     50000      Y               deviceless                      no_connection_id         
+>                 armclk2              0       0        0        2000000000  0          0     50000      Y                  deviceless                      no_connection_id         
+
+##########################################################################
+
+# Hardkernel ODROID XU4
+
+Tested with sbc-bench v0.9.70 on Thu, 20 Feb 2025 09:32:52 +0100.
+
+### General information:
+
+    Information courtesy of cpufetch:
+    
+    SoC:                 Samsung Exynos (Flattened Device Tree)
+    CPU 1:
+      Microarchitecture: Cortex-A7
+      Max Frequency:     1.400 GHz
+      Cores:             4 cores
+      Features:          NEON
+    CPU 2:
+      Microarchitecture: Cortex-A15
+      Max Frequency:     2.000 GHz
+      Cores:             4 cores
+      Features:          NEON
+    
+The CPU features 2 clusters of different core types:
+
+    Samsung Exynos EXYNOS5800 rev 1, Exynos 5422, Kernel: armv7l, Userland: armhf
+    
+    CPU sysfs topology (clusters, cpufreq members, clockspeeds)
+                     cpufreq   min    max
+     CPU    cluster  policy   speed  speed   core type
+      0        1        0      200    1400   Cortex-A7 / r0p3
+      1        1        0      200    1400   Cortex-A7 / r0p3
+      2        1        0      200    1400   Cortex-A7 / r0p3
+      3        1        0      200    1400   Cortex-A7 / r0p3
+      4        0        4      200    2000   Cortex-A15 / r2p3
+      5        0        4      200    2000   Cortex-A15 / r2p3
+      6        0        4      200    2000   Cortex-A15 / r2p3
+      7        0        4      200    2000   Cortex-A15 / r2p3
+
+1987 KB available RAM
+
+### Governors/policies (performance vs. idle consumption):
+
+Original governor settings:
+
+    bus-wcore: simple_ondemand / 89 MHz (userspace powersave performance simple_ondemand / 89 133 177 266 532)
+    cpufreq-policy0: ondemand / 1400 MHz (powersave userspace conservative ondemand performance schedutil / 200 300 400 500 600 700 800 900 1000 1100 1200 1300 1400)
+    cpufreq-policy4: ondemand / 2000 MHz (powersave userspace conservative ondemand performance schedutil / 200 300 400 500 600 700 800 900 1000 1100 1200 1300 1400 1500 1600 1700 1800 1900 2000)
+    10c20000.memory-controller: simple_ondemand / 543 MHz (userspace powersave performance simple_ondemand / 165 206 275 413 543 633 728 825)
+
+Tuned governor settings:
+
+    bus-wcore: performance / 532 MHz
+    cpufreq-policy0: performance / 1400 MHz
+    cpufreq-policy4: performance / 2000 MHz
+    10c20000.memory-controller: performance / 825 MHz
+
+### Clockspeeds (idle vs. heated up):
+
+Before at 15.0°C:
+
+    cpu0-cpu3 (Cortex-A7): OPP: 1400, Measured: 1396 
+    cpu4-cpu7 (Cortex-A15): OPP: 2000, Measured: 1995 
+
+After at 52.0°C (throttled):
+
+    cpu0-cpu3 (Cortex-A7): OPP: 1400, Measured: 1396 
+    cpu4-cpu7 (Cortex-A15): OPP: 2000, Measured: 1995 
+
+### Performance baseline
+
+  * cpu0 (Cortex-A7): memcpy: 325.2 MB/s, memchr: 397.8 MB/s, memset: 797.9 MB/s
+  * cpu4 (Cortex-A15): memcpy: 2271.2 MB/s, memchr: 3001.4 MB/s, memset: 4815.9 MB/s
+  * cpu0 (Cortex-A7) 16M latency: 164.6 166.9 163.8 168.2 163.7 168.0 305.8 576.4 
+  * cpu4 (Cortex-A15) 16M latency: 174.9 175.7 175.0 175.7 174.9 174.2 175.2 202.0 
+  * cpu0 (Cortex-A7) 128M latency: 173.5 180.8 173.0 178.6 172.6 177.1 308.1 574.7 
+  * cpu4 (Cortex-A15) 128M latency: 188.5 189.9 188.6 190.1 188.3 185.5 189.4 206.7 
+  * 7-zip MIPS (3 consecutive runs): 8792, 8734, 8663 (8730 avg), single-threaded: 1706
+  * `aes-256-cbc      18328.72k    24574.98k    26494.81k    27027.11k    27164.67k    27131.90k (Cortex-A7)`
+  * `aes-256-cbc      56995.94k    66654.31k    70749.70k    71856.13k    71903.91k    71685.46k (Cortex-A15)`
+
+### Storage devices:
+
+  * "JMicron JMS578 SATA 6Gb/s bridge" as /dev/sda: USB, Driver=uas, 5Gbps (capable of 12Mbps, 480Mbps, 5Gbps)
+  * 29.7GB "SanDisk SP32G" UHS SDR104 SD card as /dev/mmcblk2: date 03/2020, manfid/oemid: 0x000003/0x5344, hw/fw rev: 0x8/0x0
+
+### Software versions:
+
+  * Debian 12 (bookworm) tampered by Armbian 25.2.1 bookworm
+  * Build scripts: https://github.com/armbian/build, 25.2.1, Odroid XU4, odroidxu4, odroidxu4
+  * Compiler: /usr/bin/gcc (Debian 12.2.0-14) 12.2.0 / arm-linux-gnueabihf
+  * OpenSSL 3.0.15, built on 3 Sep 2024 (Library: OpenSSL 3.0.15 3 Sep 2024)    
+
+### Kernel info:
+
+  * `/proc/cmdline: splash=verbose console=ttySAC2,115200n8 console=tty1 consoleblank=0 loglevel=1 root=UUID=9ad0337c-4fe8-4162-9918-517aa758d00c rootfstype=ext4 rootwait rw  smsc95xx.macaddr=00:1e:06:61:7a:55 governor=performance hdmi_tx_amp_lvl=31 hdmi_tx_lvl_ch0=3 hdmi_tx_lvl_ch1=3 hdmi_tx_lvl_ch2=3 hdmi_tx_emp_lvl=6 hdmi_clk_amp_lvl=31 hdmi_tx_res=0 HPD=true vout=hdmi usb-storage.quirks= `
+  * Vulnerability Spectre v1:             Mitigation; __user pointer sanitization
+  * Vulnerability Spectre v2:             Vulnerable: Unprivileged eBPF enabled
+  * Kernel 6.6.75-current-odroidxu4 / CONFIG_HZ=100

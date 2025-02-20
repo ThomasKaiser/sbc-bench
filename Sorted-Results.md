@@ -69,6 +69,7 @@
 | [Celeron J4105](results/1qal.txt) | 2400/1500 MHz | 4.15 | Bionic amd64 | **9020** | 2290 | 697100 | 5500 | 7410 | 19.07 |
 | [ODROID-XU4 (Exynos 5422)](results/3GnC.txt) | 2000/1400 MHz | 5.4 | Focal armhf | **8980** | 1604 | 72020 | 2280 | 4910 | - |
 | [Celeron J4105](results/1qb0.txt) | 2400/1500 MHz | 4.15 | Bionic amd64 | **8960** | 2274 | 697080 | 5620 | 7650 | 19.13 |
+| [ODROID-XU4 (Exynos 5422)](results/8ctH.txt) | 2000/1400 MHz | 6.6 | Bookworm armhf | **8730** | 1706 | 71690 | 2270 | 4820 | - |
 | [Amazon a1.xlarge](results/2iFY.txt) | 2300 MHz | 4.15 | Bionic arm64 | **8610** | 2406 | 1297960 | 4280 | 14220 | - |
 | [Khadas VIM3 (Amlogic A311D)](results/1MFD.txt) | 2200/1800 MHz | 4.9 | Bionic arm64 | **8600** | 2026 | 1256910 | 4980 | 9300 | 13.12 |
 | [Celeron N4100](results/1uTS.txt) | 2300/1100 MHz | 4.15 | Bionic amd64 | **8510** | 2222 | 669350 | 4750 | 5240 | 18.33 |
@@ -359,6 +360,7 @@
 | [NanoPi NEO4 (RK3399)](results/1oim.txt) | 2000/1500 MHz | 4.4| Stretch arm64 | 6520 | **1718** | 1123190 | 2280 | 4770 | 8.83 |
 | [Tinkerboard (RK3288)](results/3X9q.txt) | 1800 MHz | 5.10 | Buster armhf | 5770 | **1713** | 67060 | 1540 | 4110 | - |
 | [Radxa Fogwise AirBox (SG2300X)](results/XUSc.txt) | 2300 MHz | 5.4 | Focal arm64 | 11580 | **1712** | 1075090 | 1870 | 9210 | - |
+| [ODROID-XU4 (Exynos 5422)](results/8ctH.txt) | 2000/1400 MHz | 6.6 | Bookworm armhf | 8730 | **1706** | 71690 | 2270 | 4820 | - |
 | [NanoPi NEO4 (RK3399)](results/1oho.txt) | 2000/1500 MHz | 4.4| Stretch arm64 | 6510 | **1703** | 1128860 | 2260 | 4770 | 8.71 |
 | [Khadas Edge (RK3399)](results/1uar.txt) | 2000/1500 MHz | 4.4 | Stretch arm64 | 6600 | **1703** | 1127780 | 2860 | 4880 | 8.85 |
 | [Tinkerboard (RK3288)](results/3Lir.txt) | 1800 MHz | 4.4 | Buster armhf | 5440 | **1693** | 66300 | 1340 | 3510 | - |
@@ -670,6 +672,7 @@
 | [Raspberry Pi 4 B (BCM2711)](results/3N94.txt) | 1800 MHz | 5.10 | Raspberry Pi OS Bullseye | 5940 | 1738 | **77670** | 2310 | 2690 | - |
 | [ODROID-XU4 (Exynos 5422)](results/1iWL.txt) | 2000/1400 MHz | 4.9 | Stretch armhf | 6400 | 1622 | **72075** | 2230 | 4850 | - |
 | [ODROID-XU4 (Exynos 5422)](results/3GnC.txt) | 2000/1400 MHz | 5.4 | Focal armhf | 8980 | 1604 | **72020** | 2280 | 4910 | - |
+| [ODROID-XU4 (Exynos 5422)](results/8ctH.txt) | 2000/1400 MHz | 6.6 | Bookworm armhf | 8730 | 1706 | **71690** | 2270 | 4820 | - |
 | [ODROID-XU4 (Exynos 5422)](results/1ixL.txt) | 1900/1400 MHz | 3.10 | Jessie armhf | 6750 | - | **68200** | 2200 | 4800 | - |
 | [Tinkerboard (RK3288)](results/3X9q.txt) | 1800 MHz | 5.10 | Buster armhf | 5770 | 1713 | **67060** | 1540 | 4110 | - |
 | [Tinkerboard (RK3288)](results/1iSX.txt) | 1730 MHz | 4.14 | Stretch armhf | 5350 | 1563 | **66600** | 1480 | 3900 | - |
@@ -885,6 +888,7 @@
 | [ODROID-XU4 (Exynos 5422)](results/3GnC.txt) | 2000/1400 MHz | 5.4 | Focal armhf | 8980 | 1604 | 72020 | **2280** | 4910 | - |
 | [NanoPi NEO4 (RK3399)](results/1oim.txt) | 2000/1500 MHz | 4.4| Stretch arm64 | 6520 | 1718 | 1123190 | **2280** | 4770 | 8.83 |
 | [x5-Z8300](results/4j4o.txt) | 1840 MHz | 5.15 | Jammy amd64 | 4430 | 1368 | 227030 | **2270** | 2380 | 8.84 |
+| [ODROID-XU4 (Exynos 5422)](results/8ctH.txt) | 2000/1400 MHz | 6.6 | Bookworm armhf | 8730 | 1706 | 71690 | **2270** | 4820 | - |
 | [Hugsun X99 (RK3399)](results/2ICt.txt) | 2088/1800 MHz | 5.9 | Focal arm64 | 7710 | 1927 | 1184306 | **2270** | 5970 | - |
 | [NanoPi NEO4 (RK3399)](results/1oho.txt) | 2000/1500 MHz | 4.4| Stretch arm64 | 6510 | 1703 | 1128860 | **2260** | 4770 | 8.71 |
 | [Raspberry Pi 4 B (BCM2711)](results/3F9C.txt) | 1800 MHz | 5.10 | Raspberry Pi OS Buster arm64 | 5760 | 1741 | 36240 | **2240** | 3120 | 9.46 |
@@ -1131,6 +1135,7 @@
 | [Helios4<br />(Armada 388)](results/1jCy.txt) | 1600 MHz | 4.14 | Stretch armhf | 2210 | 1215 | 42500 &ast;98560 | 910 | **4840** | - |
 | [Atom E3950](results/4dd5.txt) | 2000 MHz | 5.15 | Jammy amd64 | 6440 | 1636 | 374800 | 4400 | **4840** | - |
 | [RockPro64 (RK3399)](results/1iFZ.txt) | 1800/1400 MHz | 4.4 | Stretch armhf | 6250 | 1809 | 1000150 | 2000 | **4835** | - |
+| [ODROID-XU4 (Exynos 5422)](results/8ctH.txt) | 2000/1400 MHz | 6.6 | Bookworm armhf | 8730 | 1706 | 71690 | 2270 | **4820** | - |
 | [ODROID-XU4 (Exynos 5422)](results/1ixL.txt) | 1900/1400 MHz | 3.10 | Jessie armhf | 6750 | - | 68200 | 2200 | **4800** | - |
 | [NanoPi NEO4 (RK3399)](results/1oim.txt) | 2000/1500 MHz | 4.4| Stretch arm64 | 6520 | 1718 | 1123190 | 2280 | **4770** | 8.83 |
 | [NanoPi NEO4 (RK3399)](results/1oib.txt) | 2000/1500 MHz | 4.4| Stretch arm64 | 6030 | 1343 | 1121380 | 2230 | **4770** | 8.57 |
@@ -1315,6 +1320,7 @@
 | [Radxa Rock Pi 4 (RK3399)](results/3Q2q.txt) | **2000/1500** MHz| 5.10 | Focal arm64 | 6900 | 1899 | 1146500 | 3430 | 8260 | - |
 | [Radxa Rock Pi 4 (RK3399)](results/21fX.txt) | **2000/1500** MHz| 5.3 | Bionic arm64 | 6910 | 1817 | 1147370 | 3660 | 8310 | 10.71 |
 | [Radxa ROCK 3A (RK3568)](results/40TX.txt) | **2000** MHz| 5.18 | Bullseye arm64 | 5110 | 1450 | 935920 | 3150 | 6250 | 7.58 |
+| [ODROID-XU4 (Exynos 5422)](results/8ctH.txt) | **2000/1400** MHz| 6.6 | Bookworm armhf | 8730 | 1706 | 71690 | 2270 | 4820 | - |
 | [ODROID-XU4 (Exynos 5422)](results/3GnC.txt) | **2000/1400** MHz| 5.4 | Focal armhf | 8980 | 1604 | 72020 | 2280 | 4910 | - |
 | [ODROID-XU4 (Exynos 5422)](results/1iWL.txt) | **2000/1400** MHz| 4.9 | Stretch armhf | 6400 | 1622 | 72075 | 2230 | 4850 | - |
 | [ODROID-N2 (Amlogic S922X)](results/3MuT.txt) | **2000/1900** MHz| 5.10 | Buster arm64 | 9090 | 2012 | 1085350 | 4260 | 9080 | - |

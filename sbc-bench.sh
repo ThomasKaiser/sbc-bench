@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.9.70
+Version=0.9.71
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -512,6 +512,7 @@ GetARMCore() {
 	41/d85:Cortex-X925
 	41/d87:Cortex-A725
 	41/d8e:Neoverse-N3
+	41/d8f:Cortex-A320
 	42:Broadcom
 	42/00f:Broadcom Brahma B15
 	42/100:Broadcom Brahma B53
@@ -2814,6 +2815,9 @@ CheckMissingPackages() {
 				command -v stress-ng >/dev/null 2>&1 || echo -e "stress-ng \c"
 				;;
 		esac
+	fi
+	if [ ${USE_VCGENCMD} = true ]; then
+		command -v bc >/dev/null 2>&1 || echo -e "bc \c"
 	fi
 } # CheckMissingPackages
 
@@ -5287,20 +5291,18 @@ CheckForThrottling() {
 			# Check for throttling/undervoltage on Raspberry Pi
 			grep -q '1400/1200MHz' "${MonitorLog}" && Warning="ATTENTION: Silent throttling has occured. Check the log for details."
 			if [ ${USE_VCGENCMD} = true ] ; then
-				Health="$(LC_ALL=C perl -e "printf \"%19b\n\", $("${VCGENCMD}" get_throttled | cut -f2 -d=)" 2>/dev/null | tr -d '[:blank:]')"
-				# https://forum.armbian.com/topic/7763-benchmarking-cpus/?do=findComment&comment=59042
-				HealthLength=$(wc -c <<<"${Health}")
-				[ ${HealthLength} -eq 19 ] && Health="0${Health}"
+				GetThrottled="$("${VCGENCMD}" get_throttled | cut -f2 -d=)"
+				grep -q X <<<"${GetThrottled^^}" && Health="$(echo "obase=2; ibase=16; ${GetThrottled^^}" | bc | cut -c5-)"
 				case ${Health} in
-					10*)
-						Warning="ATTENTION: Frequency capping to 600 MHz${SwapWarning} has occured. Check the log for details."
+					??1*)
+						Warning="ATTENTION: Frequency capping${SwapWarning} has occured. Check the log for details."
 						ReportRPiHealth ${Health} >>"${TempDir}/throttling_info.txt"
 						;;
-					01*)
+					01*|1*)
 						Warning="ATTENTION: Throttling${SwapWarning} has occured. Check the log for details."
 						ReportRPiHealth ${Health} >>"${TempDir}/throttling_info.txt"
 						;;
-					11*)
+					011*|1?1*)
 						Warning="ATTENTION: Throttling and frequency capping${SwapWarning} has occured. Check the log for details."
 						ReportRPiHealth ${Health} >>"${TempDir}/throttling_info.txt"
 						;;
@@ -5349,14 +5351,17 @@ Parse_ADC_Readouts() {
 
 ReportRPiHealth() {
 	# Displaying the 'vcgencmd get_throttled' output in an understandable way
-	echo -e "\nQuerying ThreadX on RPi for thermal or undervoltage issues:\n\n${1}"
+	# https://github.com/tedder/documentation/blob/master/raspbian/applications/vcgencmd.md#get_throttled
+	echo -e "\nQuerying firmware on RPi for thermal or undervoltage issues:\n\n${1}"
 	cat <<-EOF
-	|||             |||_ under-voltage
-	|||             ||_ currently throttled
-	|||             |_ arm frequency capped
-	|||_ under-voltage has occurred since last reboot
-	||_ throttling has occurred since last reboot
-	|_ arm frequency capped has occurred since last reboot
+	||||            ||||_ Under-voltage detected
+	||||            |||_ Arm frequency capped
+	||||            ||_ Currently throttled
+	||||            |_ Soft temperature limit active
+	||||_ Under-voltage has occurred since last reboot
+	|||_ Arm frequency capping has occurred since last reboot
+	||_ Throttling has occurred since last reboot
+	|_ Soft temperature limit has occurred since last reboot
 	EOF
 } # ReportRPiHealth
 

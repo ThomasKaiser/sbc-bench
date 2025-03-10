@@ -508,9 +508,12 @@ GetARMCore() {
 	41/d80:Cortex-A520
 	41/d81:Cortex-A720
 	41/d82:Cortex-X4
+	41/d83:Neoverse-V3AE
 	41/d84:Neoverse-V3
 	41/d85:Cortex-X925
 	41/d87:Cortex-A725
+	41/d88:Cortex-A520AE
+	41/d89:Cortex-A720AE
 	41/d8e:Neoverse-N3
 	41/d8f:Cortex-A320
 	42:Broadcom
@@ -1657,6 +1660,8 @@ MonitorBoard() {
 		ClusterConfig=($(GetRelevantCPUClusters))
 		# ugly hack for Cix CD8180
 		[ "${ClusterConfig[*]}" = "0 1 5 7 9" ] && ClusterConfig=( 0 1 5 7 9 11 )
+		# ugly hack for Qualcomm X1E001DE
+		grep -q X1E001DE <<<"${LSCPU}" && ClusterConfig=( 0 4 )
 		if [ -f "${TempDir}/Pcores" ]; then
 			read PCores <"${TempDir}/Pcores"
 			read ECores <"${TempDir}/Ecores"
@@ -2668,6 +2673,8 @@ BasicSetup() {
 	ClusterConfig=($(GetRelevantCPUClusters))
 	# ugly hack for Cix CD8180
 	[ "${ClusterConfig[*]}" = "0 1 5 7 9" ] && ClusterConfig=( 0 1 5 7 9 11 )
+	# ugly hack for Qualcomm X1E001DE
+	grep -q X1E001DE <<<"${LSCPU}" && ClusterConfig=( 0 4 )
 	if [ -f "${TempDir}/Pcores" ]; then
 		read PCores <"${TempDir}/Pcores"
 		read ECores <"${TempDir}/Ecores"
@@ -6415,12 +6422,16 @@ GuessSoCbySignature() {
 					;;
 			esac
 			;;
-		*QualcommOryonX1r4p4*QualcommOryonX1r3p4*)
+		*OryonX1r4p4*OryonX1r3p4*)
 			# Qualcomm Snapdragon 8 Elite (SM8750-AB): 6 x Oryon X1 r4p4 + 2 x Oryon X1 r3p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp flagm2 frint i8mm bf16 rng bti ecv afp rpres
 			echo "Qualcomm Snapdragon 8 Elite (SM8750-AB)"
 			;;
-		*QualcommOryonX1*)
+		*OryonX1r2p1*OryonX1r2p1*OryonX1r2p1*OryonX1r2p1*OryonX1r1p1*OryonX1r1p1*OryonX1r1p1*OryonX1r1p1*OryonX1r1p1*OryonX1r1p1*OryonX1r1p1*OryonX1r1p1)
 			# Qualcomm Snapdragon X Elite (X1E80100): 4 x Oryon X1 r2p1 + 8 x Oryon X1 r1p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp flagm2 frint i8mm bf16 rng ecv afp rpres
+			echo "Qualcomm Snapdragon X Elite"
+			;;
+		*OryonX1r2*|*OryonX1r1*)
+			# Qualcomm Snapdragon X Elite or Plus
 			case ${CPUCores} in
 				12)
 					echo "Qualcomm Snapdragon X Elite"
@@ -8033,7 +8044,7 @@ GuessSoCbySignature() {
 GetCPUSignature() {
 	case ${CPUArchitecture} in
 		arm*|aarch*|riscv*|mips*|loongarch*)
-			sed -e '1,/^ CPU/ d' -e 's/Cortex-//' -e 's/HiSilicon-//' -e 's/Phytium //' -e 's/Ampere //' <<<"${CPUTopology}" | while read ; do
+			sed -e '1,/^ CPU/ d' -e 's/Cortex-//' -e 's/HiSilicon-//' -e 's/Phytium //' -e 's/Ampere //'  -e 's/Qualcomm //' <<<"${CPUTopology}" | while read ; do
 				echo -e "$(awk -F" " '{print $2$3$6$8$9$10}' <<<"${REPLY}" | sed -e 's/-//g' -e 's/\///g')\c"
 			done
 			;;

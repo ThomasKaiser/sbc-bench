@@ -141,6 +141,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Qualcomm Snapdragon 835](results/4fdD.txt) | 2360/1900 MHz | 6.1 | Jammy arm64 | 9800 | 2474 | 883330 | 9720 | 14070 | 12.58 |
 | [Qualcomm Snapdragon 8cx Gen 3 (WSL2)](results/4kEp.txt) | 2980/? MHz | 5.15 | Jammy arm64 | 33600 | 4789 | 1679480 | 21010 | 41540 | 50.65 |
 | [Qualcomm Snapdragon 8cx Gen 3](results/4xwT.txt) | 3000/2440 MHz | 6.3 | Lunar arm64 | 35370 | 4312 | 1686160 | 17500 | 41780 | 42.76 |
+| [Qualcomm X1E001DE](results/8SAz.txt) | 4130 | 6.14 | Oracular arm64 | 65320 | 6110 | 2215310 | 35650 | 100220 | 75.49 |
 | [Quartz64-A (RK3566)](results/3rUb.txt) | 1810 MHz | 5.13 | Buster arm64 | 4840 | 1353 | 845490 | 2980 | 7650| - |
 | [Quartz64-A (RK3566)](results/4qJF.txt) | 1890 MHz | 6.2 | Jammy arm64 | 4980 | 1457 | 884590 | 3240 | 6100 | 6.98 |
 | [Radxa Fogwise AirBox (SG2300X)](results/XUSc.txt) | 2300 MHz | 5.4 | Focal arm64 | 11580 | 1712 | 1075090 | 1870 | 9210 | - |

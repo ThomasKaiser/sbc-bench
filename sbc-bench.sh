@@ -557,7 +557,7 @@ GetARMCore() {
 	50:APM
 	50/000:APM X-Gene
 	51:Qualcomm
-	51/001:Qualcomm Oryon X1
+	51/001:Qualcomm Oryon-X1
 	51/00f:Qualcomm Scorpion
 	51/02d:Qualcomm Scorpion
 	51/04d:Qualcomm Krait
@@ -1660,8 +1660,8 @@ MonitorBoard() {
 		ClusterConfig=($(GetRelevantCPUClusters))
 		# ugly hack for Cix CD8180
 		[ "${ClusterConfig[*]}" = "0 1 5 7 9" ] && ClusterConfig=( 0 1 5 7 9 11 )
-		# ugly hack for Qualcomm X1E001DE
-		grep -q X1E001DE <<<"${LSCPU}" && ClusterConfig=( 0 4 )
+		# ugly hack for Qualcomm X1E80100/X1E001DE
+		grep -q -E "X1E80100|X1E001DE" <<<"${LSCPU}" && ClusterConfig=( 0 4 8 )
 		if [ -f "${TempDir}/Pcores" ]; then
 			read PCores <"${TempDir}/Pcores"
 			read ECores <"${TempDir}/Ecores"
@@ -2673,8 +2673,8 @@ BasicSetup() {
 	ClusterConfig=($(GetRelevantCPUClusters))
 	# ugly hack for Cix CD8180
 	[ "${ClusterConfig[*]}" = "0 1 5 7 9" ] && ClusterConfig=( 0 1 5 7 9 11 )
-	# ugly hack for Qualcomm X1E001DE
-	grep -q X1E001DE <<<"${LSCPU}" && ClusterConfig=( 0 4 )
+	# ugly hack for Qualcomm X1E80100/X1E001DE
+	grep -q -E "X1E80100|X1E001DE" <<<"${LSCPU}" && ClusterConfig=( 0 4 8 )
 	if [ -f "${TempDir}/Pcores" ]; then
 		read PCores <"${TempDir}/Pcores"
 		read ECores <"${TempDir}/Ecores"

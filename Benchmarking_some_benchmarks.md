@@ -6,9 +6,9 @@ Let's look a bit closer at some popular passive benchmarks...
 
 ## Dhrystone / DMIPS / DMIPS/MHz
 
-DMIPS are 'Dhrystone MIPS', the single-threaded score of the Dhrystone benchmark developed 1984 (four decades ago!) as an improvement over the older MIPS metric ('million instructions per second' which became kinda pointless back then with the 'RISC vs. CISC' battle).
+DMIPS are 'Dhrystone MIPS', the single-threaded score of the Dhrystone benchmark developed 1984 (over four decades ago!) as an improvement over the older MIPS metric ('million instructions per second' which became kinda pointless back then with the 'RISC vs. CISC' battle).
 
-Written in the programming languages popular back then (FORTRAN, PL/1, SAL, ALGOL 68, and Pascal) and suited for the single-core CPUs of that time (almost every modern MCU is outperforming now) Dhrystone results do not represent **anything** that runs on today's computers. DMIPS since decades are misleading for the following reasons ([quoted from Wikipedia](https://en.wikipedia.org/wiki/Dhrystone#Shortcomings) and an [ARM White Paper](https://wiki.cdot.senecacollege.ca/wiki/Dhrystone_howto)):
+Written in the programming languages popular back then (FORTRAN, PL/1, SAL, ALGOL 68 and Pascal) and suited for the single-core CPUs of that time (almost every modern MCU is outperforming now) Dhrystone results do not represent **anything** that runs on today's computers. DMIPS since decades are misleading for the following reasons ([quoted from Wikipedia](https://en.wikipedia.org/wiki/Dhrystone#Shortcomings) and an [ARM White Paper](https://wiki.cdot.senecacollege.ca/wiki/Dhrystone_howto)):
 
   * Dhrystone features unusual code that is not usually representative of modern real-life programs.
   * Dhrystone is susceptible to compiler optimizations. For example, it does a lot of string copying in an attempt to measure string copying performance. However, the strings in Dhrystone are of known constant length and their starts are aligned on natural boundaries, two characteristics usually absent from real programs. Therefore, an optimizer can replace a string copy with a sequence of word moves without any loops, which will be much faster. This optimization consequently overstates system performance, sometimes by more than 30%.
@@ -219,3 +219,11 @@ Does this only affect 3.6.0 vs. 4.0.0 so that we at least can rely on Blender 3.
 </details>
 
 As usual: scores generated with different software versions can't be compared!
+
+## Geekbench 6
+
+TBC
+
+Multi score is a joke: https://github.com/geerlingguy/sbc-reviews/issues/52#issuecomment-2452250408
+
+Cross-platform is a joke: https://github.com/geerlingguy/sbc-reviews/issues/47#issuecomment-2249701607

@@ -162,5 +162,5 @@ Crawling through [sbc-bench results collection](../Results.md) comparing +70 dif
 | Cortex-A720 | | | |
 | [Cix CD8180](88LE.txt) | 2600 | 1458410 | 561 |
 | Oryon X1 | | | |
-| [Snapdragon X1E001DE](8SAz.txt) | 3800 | 2008280 | 528 |
-| [Snapdragon X1E001DE](8SAz.txt) | 4130 | 2215310 | 536 |
+| [Snapdragon X1E001DE](8SWL.txt) | 3800 | 2015260 | 530 |
+| [Snapdragon X1E001DE](8SWL.txt) | 4300 | 2274190 | 529 |

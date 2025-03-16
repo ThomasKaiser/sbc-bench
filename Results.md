@@ -72,6 +72,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Lichee Pi 4A (T-Head TH1520)](results/4xYE.txt) | 1990 MHz | 5.10 | Bookworm riscv64 | 5260 | 1592 | 43820 | 4350 | 14760 | - |
 | [Lime A10 (Allwinner A10)](results/1j1L.txt) | 910 MHz | 4.14 | Stretch armhf | 550 | 550 | 28250 | 440 | 1300 | - |
 | [Loongson-3A5000-HV](results/4dzX.txt) | 2500 MHz | 4.19 | Loongnix 20 loongarch64 | 11120 | 2990 | 116900 | 6930 | 19170 | - |
+| [Luckfox Omni3576+Core3576 (RK3576)](results/8Qwk.txt) | 2208/2016 MHz | 6.1 | Bookworm arm64 | 11300 | 2031 | 1205280 | 4680 | 15770 | 17.57 |
 | [Macchiatobin (Armada 8040)](results/4zcm.txt) | 1600 MHz | 5.10 | Buster arm64 | 5720 | 1739 | 909420 | 4510 | 12270 | 7.91 |
 | [MangoPi Mcore (Allwinner H616)](results/4bSf.txt) | 1800 MHz | 5.19 | Jammy arm64 | 4100 | 1218 | 840270 | 990 | 2380 | - |
 | [Marvell PXA1908](results/46hs.txt) | 1245 MHz | 3.14 | Bullseye arm64 | 3180 | 951 | 581840 | 740 | 2220 | - |

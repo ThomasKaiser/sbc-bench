@@ -235,6 +235,7 @@
 | [4zkJ](4zkJ.txt) | v0.9.42 ADLINK AVA Developer Platform E | 0%/0% | 93Gi/91Gi | X | X | X | X | 0% | 0% | [check log](4zkJ.txt) |
 | [5pv8oh](5pv8oh.txt) | v0.9.65 Radxa ROCK 5C | 0%/0% | 3.8Gi/3.5Gi | X | X | X | X | 2% | 0% | [check log](5pv8oh.txt) |
 | [8-NK](8-NK.txt) | v0.9.68 Raspberry Pi 5 Model B Rev 1.1 | 0%/0% | 15Gi/15Gi | X | X | X | X | 1% | 0% | [check log](8-NK.txt) |
+| [8Qwk](8Qwk.txt) | v0.9.71 Luckfox Omni3576 | 0%/0% | 7.7Gi/7.5Gi | X | X | X | X | 2% | 0% | [check log](8Qwk.txt) |
 | [8SWL](8SWL.txt) | v0.9.71 Qualcomm Technologies, Inc. X1E | 0%/0% | 30Gi/26Gi | X | X | X | X | 1% | 0% | [check log](8SWL.txt) |
 | [8acvqG](8acvqG.txt) | v0.9.61 Raspberry Pi 5 Model B Rev 1.0 | 0%/0% | 4.0Gi/3.8Gi | X | X | X | X | 2% | 0% | [check log](8acvqG.txt) |
 | [8ctH](8ctH.txt) | v0.9.70 Hardkernel ODROID HC2 | 0%/0% | 1.9Gi/1.7Gi | X | X | X | X | 4% | 0% | [check log](8ctH.txt) |

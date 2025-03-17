@@ -53,6 +53,7 @@
 | [Radxa Fogwise AirBox (SG2300X)](results/XUSc.txt) | 2300 MHz | 5.4 | Focal arm64 | **11580** | 1712 | 1075090 | 1870 | 9210 | - |
 | [Pentium N6005](results/4BtC.txt) | 3300/2000 MHz | 5.15 | Jammy amd64 | **11510** | 3369 | 923550 | 9650 | 10280 | 22.18 |
 | [Celeron N5105](results/3Qf7.txt) | 2900/2000 MHz | 5.13 | Focal amd64 | **11450** | 3059 | 811760 | 7710 | 9290 | 21.79 |
+| [Luckfox Core3576 (RK3576)](results/8Qwk.txt) | 2120/1980 MHz | 6.1 | Bookworm arm64 | **11300** | 2031 | 1205280 | 4680 | 15770 | 17.57 |
 | [Radxa ROCK 5C Lite (RK3582)](results/c9ZIGh.txt) | 2250/1790 MHz | 6.1 | Bookworm arm64 | **11160** | 3094 | 1279430 | 12410 | 29620 | 14.00 |
 | [Loongson-3A5000-HV](results/4dzX.txt) | 2500 MHz | 4.19 | Loongnix 20 loongarch64 | **11120** | 2990 | 116900 | 6930 | 19170 | - |
 | [Raspberry Pi 5 B (BCM2712)](results/Au3jaA.txt) | 2400 MHz | 6.1 | Bookworm arm64 | **11010** | 3196 | 1367740 | 5270 | 14060 | 15.39 |
@@ -323,6 +324,7 @@
 | [Khadas VIM4 (A311D2)](results/4cHh.txt) | 2200/2010 MHz | 5.4 | Jammy arm64 | 12120 | **2067** | 1254540 | 8180 | 11680 | - |
 | [Celeron J3455](results/1m5p.txt) | 2300/1500 MHz | 4.17 | Stretch amd64 | 7000 | **2037** | 429660 | 4090 | 4050 | 17.26 |
 | [Celeron N3350](results/4rJj.txt) | 2400 MHz | 6.0 | Bullseye amd64 | 3810 | **2034** | 446170 | 5190 | 5700 | - |
+| [Luckfox Core3576 (RK3576)](results/8Qwk.txt) | 2120/1980 MHz | 6.1 | Bookworm arm64 | 11300 | **2031** | 1205280 | 4680 | 15770 | 17.57 |
 | [Khadas VIM3 (Amlogic A311D)](results/1MFD.txt) | 2200/1800 MHz | 4.9 | Bionic arm64 | 8600 | **2026** | 1256910 | 4980 | 9300 | 13.12 |
 | [ODROID-N2 (Amlogic S922X)](results/3MuT.txt) | 2000/1900 MHz | 5.10 | Buster arm64 | 9090 | **2012** | 1085350 | 4260 | 9080 | - |
 | [AMD Seattle (Opteron A1100)](results/4Kqn.txt) | 2000 MHz | 4.15 | Bionic arm64 | 14080 | **2006** | 720710 | 3020 | 9530 | - |
@@ -544,6 +546,7 @@
 | [Intel N95](results/4xwq.txt) | 3400 MHz | 5.15 | Jammy amd64 | 13070 | 3993 | **1232880** | 9710 | 8730 | 34.60 |
 | [Intel N100](results/uHzXI7.txt) | 3400 MHz | 6.1 | Jammy amd64 | 14090 | 3910 | **1232550** | 10920 | 11231 | 37.13 |
 | [Radxa X4 (N100)](results/XObB.txt) | 3400 MHz | 6.8 | Noble amd64 | 8010 | 3580 | **1231100** | 8140 | 7970 | 21.40 |
+| [Luckfox Core3576 (RK3576)](results/8Qwk.txt) | 2120/1980 MHz | 6.1 | Bookworm arm64 | 11300 | 2031 | **1205280** | 4680 | 15770 | 17.57 |
 | [Hugsun X99 (RK3399)](results/2ICt.txt) | 2088/1800 MHz | 5.9 | Focal arm64 | 7710 | 1927 | **1184306** | 2270 | 5970 | - |
 | [Radxa Rock Pi 4 (RK3399)](results/21fX.txt) | 2000/1500 MHz | 5.3 | Bionic arm64 | 6910 | 1817 | **1147370** | 3660 | 8310 | 10.71 |
 | [Radxa Rock Pi 4 (RK3399)](results/3Q2q.txt) | 2000/1500 MHz | 5.10 | Focal arm64 | 6900 | 1899 | **1146500** | 3430 | 8260 | - |
@@ -809,6 +812,7 @@
 | [Khadas VIM3 (Amlogic A311D)](results/3R2Z.txt) | 2400/2015 MHz | 5.10 | Bullseye arm64 | 9650 | 2376 | 1366350 | **4850** | 7380 | - |
 | [Celeron N4100](results/1uTS.txt) | 2300/1100 MHz | 4.15 | Bionic amd64 | 8510 | 2222 | 669350 | **4750** | 5240 | 18.33 |
 | [Pentium N4200](results/1ngq.txt) | 2560/1100 MHz | 4.14 | Bionic amd64 | 7469 | 1976 | 468008 | **4682** | 4997 | 18.75 |
+| [Luckfox Core3576 (RK3576)](results/8Qwk.txt) | 2120/1980 MHz | 6.1 | Bookworm arm64 | 11300 | 2031 | 1205280 | **4680** | 15770 | 17.57 |
 | [Eswin EIC7700X](results/Xyfg.txt) | 1400 MHz | 6.6 | Trixie riscv64 | 5390 | 1485 | 49340 | **4570** | 8700 | - |
 | [Macchiatobin (Armada 8040)](results/4zcm.txt) | 1600 MHz | 5.10 | Buster arm64 | 5720 | 1739 | 909420 | **4510** | 12270 | 7.91 |
 | [Clearfog CX (NXP LX2160A)](results/4ju5.txt) | 2000 MHz | 5.10 | Focal arm64 | 25260 | 2236 | 1136690 | **4460** | 12500 | - |
@@ -1029,6 +1033,7 @@
 | [Honeycomb LX2 (NXP LX2160A)](results/3Y4f.txt) | 2200 MHz | 5.16 | Fedora 35 aarch64 | 30690 | 2288 | 1251710 | 5050 | **16220** | 46.09 |
 | [Phytium D2000<br />(2 x SO-DIMM)](results/446h.txt) | 2300 MHz | 5.19 | Jammy arm64 | 16670 | 2252 | 828130 | 3480 | **16110** | - |
 | [Celeron 5205U](results/4eiM.txt) | 1900 MHz | 5.15 | Jammy amd64 | 4060 | 2171 | 521090 | 7350 | **16020** | 11.20 |
+| [Luckfox Core3576 (RK3576)](results/8Qwk.txt) | 2120/1980 MHz | 6.1 | Bookworm arm64 | 11300 | 2031 | 1205280 | 4680 | **15770** | 17.57 |
 | [Qualcomm Snapdragon 7c](results/4Lyf.txt) | 2550/1800 MHz | 6.6 | Bookworm arm64 | 13040 | 3113 | 1455700 | 6710 | **14880** | - |
 | [Lichee Pi 4A (T-Head TH1520)](results/4xYE.txt) | 1990 MHz | 5.10 | Bookworm riscv64 | 5260 | 1592 | 43820 | 4350 | **14760** | - |
 | [Phytium<br />FT-2000/4<br />(1 x SO-DIMM)](results/4ioj.txt) | 2600 MHz | 5.15 | Bullseye arm64 | 10020 | 2755 | 936740 | 3760 | **14540** | - |
@@ -1311,6 +1316,7 @@
 | [Honeycomb LX2 (NXP LX2160A)](results/3Y4f.txt) | **2200** MHz| 5.16 | Fedora 35 aarch64 | 30690 | 2288 | 1251710 | 5050 | 16220 | 46.09 |
 | [Celeron N2807](results/4z3s.txt) | **2165** MHz| 5.10 | Bullseye) amd64 | 3070 | 1766 | 31250 | 3600 | 3110 | 6.09 |
 | [Celeron N2830](results/4pEc.txt) | **2160** MHz| 5.19 | Jammy amd64 | 2760 | 1664 | 31270 | 3780 | 3520 | 6.10 |
+| [Luckfox Core3576 (RK3576)](results/8Qwk.txt) | **2120/1980** MHz| 6.1 | Bookworm arm64 | 11300 | 2031 | 1205280 | 4680 | 15770 | 17.57 |
 | [ODROID-HC4 (S905X3)](results/3Na5.txt) | **2100** MHz| 5.10 | Buster arm64 | 5730 | 1672 | 980970 | 3540 | 5150 | - |
 | [ODROID-C4 (S905X3)](results/3TQ2.txt) | **2100** MHz| 5.10 | Buster arm64 | 5770 | 1679 | 981940 | 3540 | 5150 | - |
 | [AMedia X96 Max+ (S905X3)](results/3QOj.txt) | **2100** MHz| 5.15 | Focal arm64 | 5270 | 1330 | 981830 | 2630 | 5150 | - |

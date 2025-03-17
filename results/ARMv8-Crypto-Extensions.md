@@ -96,6 +96,7 @@ Crawling through [sbc-bench results collection](../Results.md) comparing +70 dif
 | [RK3399](2ICt.txt) | 1800| 839360 | 466 |
 | [Allwinner H6](26Ph.txt) | 1800 | 839870 | 466 |
 | [Allwinner H616](4bSf.txt) | 1800 | 840275 | 467 |
+| [RK3576](8Qwk.txt) | 1980 | 925450 | 467 |
 | [RK3528](4I93.txt) | 2000 | 933630 | 467 |
 | [A311D](3VfL.txt) | 2010 | 940425 | 467 |
 | [A311D2](3Wq0.txt) | 2010 | 941040 | 468 |
@@ -126,6 +127,7 @@ Crawling through [sbc-bench results collection](../Results.md) comparing +70 dif
 | [LX2160A](4ju5.txt) | 2000 | 1136690 | 568 |
 | [RK3399](2yIx.txt) | 2010 | 1144950 | 569 |
 | [RK3399](2ICt.txt) | 2088 | 1184306 | 567 |
+| [RK3576](8Qwk.txt) | 2120 | 1205280 | 567 |
 | [LX2160A](3Y4f.txt) | 2200 | 1251710 | 569 |
 | [Amazon a1.xlarge](2iFY.txt) | 2300 | 1297960 | 564 |
 | Cortex-A73 | | | |

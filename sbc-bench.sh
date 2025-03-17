@@ -6768,6 +6768,8 @@ GuessSoCbySignature() {
 			# or NXP QorIQ LS1088: 8 x Cortex-A53 / r0p4 / https://bench.cr.yp.to/computers.html
 			# or Samsung Exynos 7870: 8 x Cortex-A53 / r0p4 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt lpae evtstrm aes pmull sha1 sha2 crc32
 			# or HiSilicon Kirin 650: 8 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
+			# or Hisilicon Kirin 659: 8 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull crc32
+			# or Qualcomm SDM435 (MSM8940): 8 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
 			# or Qualcomm SDM439 / Snapdragon 439: 8 x Cortex-A53 / r0p4 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt lpae evtstrm aes pmull sha1 sha2 crc32
 			# or Qualcomm SDM450 / Snapdragon 450: 8 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			# or Qualcomm MSM8937 / Snapdragon 430: 8 x Cortex-A53 / r0p4 / half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva idivt vfpd32 lpae evtstrm aes pmull sha1 sha2 crc32 (booting 32-bit)
@@ -6775,6 +6777,7 @@ GuessSoCbySignature() {
 			# or Qualcomm MSM8953: 8 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			# or Xiaomi Surge S1: 8 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			# or Sophgo BM1684: 8 x Cortex-A53 / r0p4
+			# or Sophon BM1684X/SG2300X: 8 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
 			# or Qualcomm APQ8053: 8 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			case "${DTCompatible,,}" in
 				*amlogic*)
@@ -6783,8 +6786,14 @@ GuessSoCbySignature() {
 				*7870*)
 					echo "Samsung Exynos 7870"
 					;;
-				*hisilicon*|*hi6250*)
+				*hi6250*|*650*)
 					echo "HiSilicon Kirin 650"
+					;;
+				*659*)
+					echo "Hisilicon Kirin 659"
+					;;
+				*435*|*msm8940*)
+					echo "Qualcomm Snapdragon 435 (MSM8940)"
 					;;
 				*msm8937*|*430*)
 					echo "Qualcomm Snapdragon 430"
@@ -6805,7 +6814,13 @@ GuessSoCbySignature() {
 					echo "Xiaomi Surge S1"
 					;;
 				*bm1684x*)
-					echo "Sophgo BM1684X"
+					echo "Sophon BM1684X"
+					;;
+				*sg2300x*)
+					echo "Sophon SG2300X"
+					;;
+				*sophon*)
+					echo "Sophon BM1684X/SG2300X"
 					;;
 				*bm1684*)
 					echo "Sophgo BM1684"
@@ -7075,8 +7090,7 @@ GuessSoCbySignature() {
 			esac
 			;;
 		*A53r0p4*A53r0p4*A53r0p4*A53r0p4*A72r1p0*A72r1p0*A72r1p0*A72r1p0)
-			# RK3576, 4 x Cortex-A53 / r0p4 + 4 x Cortex-A72 / r1p0 https://archive.ph/7lkym
-			# (most recent steppings are pure assumption since announced in 2023)
+			# RK3576, 4 x Cortex-A53 / r0p4 + 4 x Cortex-A72 / r1p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
 			# Why A53/A72 still in 2024? Since last ARM cores able to boot a 32-bit
 			# ARMv8l kernel (32-bit userlands consume way less memory compared to 64-bit)
 			# The RK3576J variant can run isolated operating systems on each CPU cluster:
@@ -7677,6 +7691,10 @@ GuessSoCbySignature() {
 			# Samsung Exynos 9820: 4 x Cortex A55 / r1p0 + 2 x Cortex-A75 / r2p1 + 2 x Exynos-m4 / r1p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm dcpop asimddp
 			echo "Samsung Exynos 9820"
 			;;
+		*A55r1p0*A55r1p0*A55r1p0*A55r1p0*A75r3p0*A75r3p0)
+			# MediaTek MT6779V/CV (CPH2205): 6 x Cortex A55 / r1p0 + 2 x Cortex-A75 / r3p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp
+			echo "MediaTek MT6779V/CV"
+			;;
 		*A76r3p0*A76r3p0*A76r3p0*A76r3p0*A76r3p0*A76r3p0*A76r3p0*A76r3p0)
 			# Samsung Exynos Auto V9: 8 x Cortex-A76 / r3p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop
 			echo "Samsung Exynos Auto V9"
@@ -8033,10 +8051,6 @@ GuessSoCbySignature() {
 			# Microsoft Azure Cobalt 100, based on Neoverse-N2 r0p0
 			# https://lore.kernel.org/linux-arm-kernel/b99a7196-011e-4f08-83ec-e63a690ab919@linux.microsoft.com/T/
 			echo "Azure Cobalt 100"
-			;;
-		*00A53r0p401A53r0p402A53r0p403A53r0p414A53r0p415A53r0p416A53r0p417A53r0p4*)
-			# Sophon BM1684X/SG2300X: 8 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
-			echo "Sophon BM1684X/SG2300X"
 			;;
 	esac
 } # GuessSoCbySignature

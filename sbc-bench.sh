@@ -619,6 +619,8 @@ GetARMCore() {
 	61/037:Apple Everest A16
 	61/038:Apple Blizzard M2Max
 	61/039:Apple Avalanche M2Max
+	61/044:Apple Sawtooth M3Pro
+	61/045:Apple Sawtooth M3Pro
 	61/046:Apple Sawtooth M11
 	61/048:Apple Sawtooth M3Max
 	61/049:Apple Everest M3Max
@@ -6412,10 +6414,13 @@ GuessSoCbySignature() {
 			echo "Qualcomm SM8150 (Snapdragon 855)"
 			;;
 		*Qualcomm4XXSilver*Qualcomm4XXSilver*Qualcomm4XXSilver*Qualcomm4XXSilver*Qualcomm4XXGold*Qualcomm4XXGold*Qualcomm4XXGold*Qualcomm4XXGold*)
-			# Qualcomm Snapdragon 7c+ Gen 3 (SC7280) or QCM6490: 4 x Kryo 468 Silver + 3 x Kryo 468 Gold + 1 x Kryo 468 Gold Plus
+			# Qualcomm Snapdragon 7c+ Gen 3 (SC7280) or QCM6490/QCS6490: 4 x Kryo 468 Silver + 3 x Kryo 468 Gold + 1 x Kryo 468 Gold Plus
 			case "${DTCompatible,,}" in
 				*qcm6490*)
 					echo "Qualcomm QCM6490"
+					;;
+				*qcs6490*)
+					echo "Qualcomm QCS6490"
 					;;
 				*sc7280*)
 					echo "Qualcomm Snapdragon 7c+ Gen 3 (SC7280)"
@@ -6935,18 +6940,6 @@ GuessSoCbySignature() {
 					;;
 				*sun60iw2*|*a733*)
 					echo "Allwinner A733"
-					;;
-			esac
-			;;
-		*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A78*A78)
-			# Allwinner A737/T737, 6 x Cortex-A55 / r2p0 + 2 x Cortex-A78, appeared on some Allwinner roadmap: https://www.cnx-software.com/2023/09/04/allwinner-2023-2024-roadmap-reveals-a736-a737-arm-cortex-a78-a76-processors/
-			# on some later Allwinner roadmap A736/T736 disappeared and an A838 was shown: https://www.cnx-software.com/2024/12/06/allwinner-a733-octa-core-cortex-a76-a55-ai-soc-supports-up-to-16gb-ram-for-android-15-tablets-and-laptops/#comment-635134
-			case "${DTCompatible,,}" in
-				*a736*|*t736*)
-					echo "Allwinner A736/T736"
-					;;
-				*a838*)
-					echo "Allwinner A838"
 					;;
 			esac
 			;;
@@ -7887,8 +7880,9 @@ GuessSoCbySignature() {
 			# M1: 'fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 asimddp sha512 asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp flagm2 frint'
 			# M2: 'fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 asimddp sha512 asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp flagm2 frint i8mm bf16 bti ecv'
 			# M3: Based on comparing 'sysctl -A | grep "hw.optional.arm.FEAT_"' output in macOS CPU features/flag seem to be identical to M2
-			# Inside Hypervisor.Framework guests on M1/M2 hosts all ID values are set to 0 (0x61/0x0 r0p0 on M3) and on M2/M3 SoCs VMs only see M1 CPU flags/features.
-			grep -q -E 'fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 asimddp sha512 asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp flagm2 frint|fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 asimddp sha512 asimdfhm dit uscat ilrcpc flagm sb paca pacg dcpodp flagm2 frint' <<< "${ProcCPU}" && echo "Apple Silicon"
+			# virtualized on M4: 'fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 asimddp sha512 asimdfhm dit uscat ilrcpc flagm sb paca pacg dcpodp flagm2 frint bf16 afp'
+			# Inside Hypervisor.Framework guests on M1/M2 hosts all ID values are set to 0 (0x61/0x0 r0p0 on M3/M4) and on M2/M3 SoCs VMs only see M1 CPU flags/features.
+			echo "Apple Silicon"
 			;;
 		*thead,c906|10)
 			# Allwinner D1: single T-Head C906 core
@@ -7982,8 +7976,9 @@ GuessSoCbySignature() {
 			# Qualcomm Snapdragon 8 Gen 3: 2 x Cortex-A520 / r0p1 + 5 x Cortex-A720 / r0p1 + 1 x Cortex-X4 / r0p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp flagm2 frint i8mm bf16 dgh bti ecv afp
 			echo "Qualcomm Snapdragon 8 Gen 3"
 			;;
-		*A720r0p1*A520r0p1*A520r0p1*A520r0p1*A520r0p1*A720r0p1*A720r0p1*A720r0p1*A720r0p1*A720r0p1*A720r0p1*A720r0p1|*A520r0p1*A520r0p1*A520r0p1*A520r0p1*A720r0p1*A720r0p1*A720r0p1*A720r0p1*A720r0p1*A720r0p1*A720r0p1*A720r0p1)
+		*A720r0p1*A520r0p1*A520r0p1*A520r0p1*A520r0p1*A720r0p1*A720r0p1*A720r0p1*A720r0p1*A720r0p1*A720r0p1*A720r0p1|A720r0p1*A720r0p1*A720r0p1*A720r0p1*A720r0p1*A720r0p1*A720r0p1*A720r0p1)
 			# Cix Tech P1 / CP8180/CD8180: 1 x Cortex-A720 / r0p1 + 4 x Cortex-A520 / r0p1 + 7 x Cortex-A720 / r0p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 sve asimdfhm dit uscat ilrcpc flagm sb paca pacg dcpodp sve2 sveaes svepmull svebitperm svesha3 svesm4 flagm2 frint svei8mm svebf16 i8mm bf16 dgh bti mte ecv afp mte3 wfxt
+			# with some firmware versions the little cores are gone
 			echo "Cix P1/CD8180"
 			;;
 		*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A76r4p0*A76r4p0*X1r1p0*X1r1p0)
@@ -8038,6 +8033,22 @@ GuessSoCbySignature() {
 		*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A78r1p0*A78r1p0)
 			# MediaTek MT8188JV/A: 6 x Cortex-A55 / r2p0 + 2 x Cortex-A78 / r1p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp
 			echo "MediaTek MT8188JV/A"
+			;;
+		*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A78*A78)
+			# Snapdragon 695 5G (SM6375): 6 x Cortex-A55 / r2p0 + 2 x Cortex-A78 / r1p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp
+			# or Allwinner A737/T737, 6 x Cortex-A55 / r2p0 + 2 x Cortex-A78, appeared on some Allwinner roadmap: https://www.cnx-software.com/2023/09/04/allwinner-2023-2024-roadmap-reveals-a736-a737-arm-cortex-a78-a76-processors/
+			# on some later Allwinner roadmap A736/T736 disappeared and an A838 was shown: https://www.cnx-software.com/2024/12/06/allwinner-a733-octa-core-cortex-a76-a55-ai-soc-supports-up-to-16gb-ram-for-android-15-tablets-and-laptops/#comment-635134
+			case "${DTCompatible,,}" in
+				*695*|*sm6375*)
+					echo "Snapdragon 695 5G (SM6375)"
+					;;
+				*a736*|*t736*)
+					echo "Allwinner A736/T736"
+					;;
+				*a838*)
+					echo "Allwinner A838"
+					;;
+			esac
 			;;
 		*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A78r1p0*A78r1p0*A78r1p0*A78r1p0)
 			# MediaTek Genio 1200 (MT8395): 4 x Cortex-A55 / r2p0 + 4 x Cortex-A78 / r1p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp
@@ -9068,7 +9079,7 @@ CheckKernelVersion() {
 					;;
 			esac
 			;;
-		"5.15.41"|"5.15.94"|"5.15.123"|"5.15.147"|"5.15.151"|"6.6.30")
+		"5.15.41"|"5.15.94"|"5.15.123"|"5.15.147"|"5.15.151"|"6.6.30"|"6.6.57")
 			# At least used with Android 13 and OpenWRT builds for A133/T527: https://browser.geekbench.com/v5/cpu/21947495.gb5 / https://browser.geekbench.com/v6/cpu/2610471.gb6 /
 			# https://bbs.aw-ol.com/topic/5060/syterkit-启动-t527-失败 / https://github.com/chainsx/linux-t527/blob/main/Makefile
 			# A733: https://browser.geekbench.com/v6/cpu/9253840.gb6

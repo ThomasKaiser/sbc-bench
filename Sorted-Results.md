@@ -922,8 +922,8 @@
 | [Renegade (RK3328)](results/1iFx.txt) | 1400 MHz | 4.4 | Stretch arm64 | 3710 | 1069 | 644200 | **1565** | 7435 | 3.92 |
 | [NanoPi Fire3 (Nexell S5P6818)](results/1jjm.txt) | 1400 MHz | 4.14 | Bionic arm64 | 7440 | 1052 | 653000 | **1560** | 4600 | 10.96 |
 | [BPi R2 (MT7623)](results/4dO7.txt) | 1300 MHz | 4.19 | Focal armhf | 2990 | 854 | 25260 | **1550** | 3220 | - |
-| [Tinkerboard (RK3288)](results/3X9q.txt) | 1800 MHz | 5.10 | Buster armhf | 5770 | 1713 | 67060 | **1540** | 4110 | - |
 | [TinkerBoard S (RK3288)](results/4vfU.txt) | 1800 MHz | 6.1 | Jammy armhf | 5560 | 1672 | 65800 | **1540** | 4150 | - |
+| [Tinkerboard (RK3288)](results/3X9q.txt) | 1800 MHz | 5.10 | Buster armhf | 5770 | 1713 | 67060 | **1540** | 4110 | - |
 | [NanoPi Fire3 (Nexell S5P6818)](results/3ZxU.txt) | 1400 MHz | 4.14 | Focal arm64 | 7350 | 1093 | 652640 | **1530** | 4590 | 11.18 |
 | [NanoPi Fire3 (Nexell S5P6818)](results/1jiU.txt) | 1380 MHz | 4.14 | Stretch arm64 | 7420 | 1038 | 645400 | **1520** | 4570 | 8.53 |
 | [Orange Pi Zero 3 (Allwinner H618)](results/4CPF.txt) | 1510 MHz | 6.1 | Jammy arm64 | 4020 | 1165 | 705330 | **1510** | 6010 | 6.02 |
@@ -1367,14 +1367,13 @@
 | [x5-Z8300](results/4j4o.txt) | **1840** MHz| 5.15 | Jammy amd64 | 4430 | 1368 | 227030 | 2270 | 2380 | 8.84 |
 | [Atom Z3735F](results/4r54.txt) | **1830** MHz| 5.15 | Jammy amd64 | 4510 | 1437 | 227900 | 3020 | 2780 | - |
 | [Quartz64-A (RK3566)](results/3rUb.txt) | **1810** MHz| 5.13 | Buster arm64 | 4840 | 1353 | 845490 | 2980 | 7650| - |
-| [i.MX8MPlus EVK](results/4hx0.txt) | **1800** MHz| 5.15 | Focal arm64 | 4990 | 1348 | 837680 | 2740 | 12420 | 7.02 |
+| [TinkerBoard S (RK3288)](results/4vfU.txt) | **1800** MHz| 6.1 | Jammy armhf | 5560 | 1672 | 65800 | 1540 | 4150 | - |
 | [Tinkerboard (RK3288)](results/3X9q.txt) | **1800** MHz| 5.10 | Buster armhf | 5770 | 1713 | 67060 | 1540 | 4110 | - |
 | [Tinkerboard (RK3288)](results/3Lir.txt) | **1800** MHz| 4.4 | Buster armhf | 5440 | 1693 | 66300 | 1340 | 3510 | - |
-| [TinkerBoard S (RK3288)](results/4vfU.txt) | **1800** MHz| 6.1 | Jammy armhf | 5560 | 1672 | 65800 | 1540 | 4150 | - |
 | [RockPro64 (RK3399)](results/1ub9.txt) | **1800/1400** MHz| 4.4 | Stretch arm64 | 6420 | 1673 | 1018480 | 3720 | 8400 | 8.24 |
 | [RockPro64 (RK3399)](results/1lBC.txt) | **1800/1400** MHz| 4.4 | Stretch arm64 | 6140 | 1580 | 1015600 | 2770 | 4850 | 8.14 |
-| [RockPro64 (RK3399)](results/1iFp.txt) | **1800/1400** MHz| 4.18 | Stretch arm64 | 6300 | 1755 | 1021500 | 3650 | 8450 | 8.20 |
 | [RockPro64 (RK3399)](results/1iFZ.txt) | **1800/1400** MHz| 4.4 | Stretch armhf | 6250 | 1809 | 1000150 | 2000 | 4835 | - |
+| [RockPro64 (RK3399)](results/1iFp.txt) | **1800/1400** MHz| 4.18 | Stretch arm64 | 6300 | 1755 | 1021500 | 3650 | 8450 | 8.20 |
 | [Raspberry Pi 400 (BCM2711)](results/2Cyi.txt) | **1800** MHz| 5.4 | Raspberry Pi OS Buster | 6550 | 1903 | 77890 | 2680 | 3110 | - |
 | [Raspberry Pi 4 B (BCM2711)](results/3VME.txt) | **1800** MHz| 5.15 | Jammy armhf | 6300 | 1844 | 82750 | 1190 | 3110 | - |
 | [Raspberry Pi 4 B (BCM2711)](results/3OBF.txt) | **1800** MHz| 5.10 | Raspberry Pi OS Bullseye arm64 | 5790 | 1769 | 36260 | 2330 | 3120 | 8.74 |
@@ -1391,6 +1390,7 @@
 | [NanoPC T4 (RK3399)](results/1iFz.txt) | **1800/1400** MHz| 4.17 | Stretch arm64 | 6250 | 1809 | 1022500 | 4100 | 9000 | 8.24 |
 | [Milk-V Jupiter (SpacemiT K1)](results/X904.txt) | **1800** MHz| 6.1 | Mantic riscv64 | 7090 | 1020 | 30700 | 2900 | 7230 | - |
 | [MangoPi Mcore (Allwinner H616)](results/4bSf.txt) | **1800** MHz| 5.19 | Jammy arm64 | 4100 | 1218 | 840270 | 990 | 2380 | - |
+| [i.MX8MPlus EVK](results/4hx0.txt) | **1800** MHz| 5.15 | Focal arm64 | 4990 | 1348 | 837680 | 2740 | 12420 | 7.02 |
 | [Nintendo Switch (Tegra X1)](results/1Rnj.txt) | **1780** MHz| 4.9 | Fedora 30 arm-64 | 6170 | 1719 | 642670 | 2500 | 3570 | - |
 | [ODROID-C2 (Amlogic S905)](results/1ixI.txt) | **1750** MHz| 3.14 | Xenial arm64 | 4070 | 1128 | 48500 | 1750 | 3100 | - |
 | [Tinkerboard (RK3288)](results/1iSX.txt) | **1730** MHz| 4.14 | Stretch armhf | 5350 | 1563 | 66600 | 1480 | 3900 | - |
@@ -1429,9 +1429,9 @@
 | [Khadas VIM2 (Amlogic S912)](results/1iJ7.txt) | **1415/1000** MHz| 4.17 | Bionic arm64 | 5450 | 993 | 659600 | 1920 | 5920 | 8.59 |
 | [Khadas VIM1 (Amlogic S905X)](results/4bee.txt) | **1415** MHz| 5.1 | Buster arm64 | 3860 | 1136 | 660160 | 1940 | 5900 | - |
 | [Le Potato (Amlogic S905X)](results/1iSQ.txt) | **1410** MHz| 4.18 | Stretch arm64 | 3780 | 1057 | 657200 | 1810 | 5730 | 3.92 |
-| [Rock64 (RK3328)](results/1iwz.txt) | **1400** MHz| 4.4 | Stretch armhf | 3620 | 1006 | 624000 | 1430 | 3620 | - |
 | [Rock64 (RK3328)](results/1iZj.txt) | **1400** MHz| 4.4 | Stretch arm64 | 3590 | 1030 | 643700 | 1320 | 5640 | 4.40 |
 | [Rock64 (RK3328)](results/1iYK.txt) | **1400** MHz| 4.4 | Stretch arm64 | 3580 | 1032 | 644380 | 1330 | 5680 | 4.63 |
+| [Rock64 (RK3328)](results/1iwz.txt) | **1400** MHz| 4.4 | Stretch armhf | 3620 | 1006 | 624000 | 1430 | 3620 | - |
 | [Rock64 (RK3328)](results/1iFm.txt) | **1400** MHz| 4.4 | Stretch arm64 | 3610 | 1034 | 644250 | 1330 | 5700 | 3.85 |
 | [Renegade (RK3328)](results/1iFx.txt) | **1400** MHz| 4.4 | Stretch arm64 | 3710 | 1069 | 644200 | 1565 | 7435 | 3.92 |
 | [NanoPi Fire3 (Nexell S5P6818)](results/3ZxU.txt) | **1400** MHz| 4.14 | Focal arm64 | 7350 | 1093 | 652640 | 1530 | 4590 | 11.18 |
@@ -1458,9 +1458,9 @@
 | [BPi R2 (MT7623)](results/4dO7.txt) | **1300** MHz| 4.19 | Focal armhf | 2990 | 854 | 25260 | 1550 | 3220 | - |
 | [Marvell PXA1908](results/46hs.txt) | **1245** MHz| 3.14 | Bullseye arm64 | 3180 | 951 | 581840 | 740 | 2220 | - |
 | [T-HEAD C910 RVB-ICE](results/41AB.txt) | **1200** MHz| 5.10 | Sid riscv64 | 1760 | 1007 | 26930 | 3340 | 6470 | - |
+| [RK3228A TV Box](results/3M9F.txt) | **1200** MHz| 4.4 | Buster armhf | 2310 | 710 | 23070 | 410 | 1230 | - |
 | [Raspberry Pi Zero 2 (RP3A0)](results/3DeL.txt) | **1200** MHz| 5.10 | Raspberry Pi OS Buster | 3640 | 1007 | 36300 | 1320 | 1790 | - |
 | [Raspberry Pi 3 B (BCM2837)](results/4hOP.txt) | **1200** MHz| 5.15 | Raspbian Sid | 2970 | 977 | 36230 | 1110 | 1700 | 2.89 |
-| [RK3228A TV Box](results/3M9F.txt) | **1200** MHz| 4.4 | Buster armhf | 2310 | 710 | 23070 | 410 | 1230 | - |
 | [EspressoBin (Armada 3720)](results/1lCe.txt) | **1200** MHz| 4.18 | Stretch arm64 | 1630 | 869 | 544240 | 1000 | 2400 | 1.82 |
 | [BPi M2U (Allwinner R40)](results/4kmM.txt) | **1200** MHz| 6.0 | Bullseye armhf | 2690 | 767 | 23320 | 780 | 3010 | - |
 | [Akaso M8S (S812)](results/3R3N.txt) | **1200** MHz| 5.10 | Buster armhf | 3050 | 885 | 32120 | 1160 | 3330 | - |

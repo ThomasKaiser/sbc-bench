@@ -48,7 +48,7 @@ This tool therefore focuses on a controlled environment and intensive monitoring
 
 ## Execution
 
-You need Debian Stretch/Buster/Bullseye/Bookworm or Ubuntu Bionic/Focal/Jammy. Older variants are not supported (due to distro packages being way too outdated). Then it's
+You need Debian Stretch/Buster/Bullseye/Bookworm or Ubuntu Bionic/Focal/Jammy/Noble. Older variants are not supported (due to distro packages being way too outdated). Then it's
 
     wget https://raw.githubusercontent.com/ThomasKaiser/sbc-bench/master/sbc-bench.sh
     sudo /bin/bash ./sbc-bench.sh -c
@@ -160,7 +160,7 @@ A nice example is comparing two ARMv8 server designs: [32 Neoverse-N1 cores (Ama
 If those 7-zip MIPS apply only to a few selected use cases as performance indicator why are they used in sbc-bench?
 
   * 7-zip's multi-threaded benchmark is that demanding that it can be used to check for power supply issues and thermal/throttling (that's why it's executed 3 times in a row)
-  * Results are not _that much_ affected by compiler version which allows to compare scores made in different years with different OS versions (confirmed with Debian Stretch/Buster/Bullseye and Ubuntu Bionic/Focal/Jammy or in other words: GCC 6.3 - 10.2). Majority of kitchen-sink benchmarks [overly depend on compiler version / settings](https://www.brendangregg.com/blog/2014-05-02/compilers-love-messing-with-benchmarks.html) and as such usually it makes comparing results from different years pointless
+  * Results are not _that much_ affected by compiler version which allows to compare scores made in different years with different OS versions (confirmed with Debian Stretch/Buster/Bullseye and Ubuntu Bionic/Focal/Jammy/Noble or in other words: GCC 6.3 - 14). Majority of kitchen-sink benchmarks [overly depend on compiler version / settings](https://www.brendangregg.com/blog/2014-05-02/compilers-love-messing-with-benchmarks.html) and as such usually it makes comparing results from different years pointless
   * Also the benchmark is not known to perform completely different when built for ARMv6, ARMv7 oder ARMv8 (the infamous `sysbench cpu` benchmark on the other hand ['performs' 10-15 times better on a 64-bit Raspbian](https://forums.raspberrypi.com/viewtopic.php?p=1536679&sid=8ddda8e0d980ef2fdf495f176a92c1ec#p1536679) which is _not_ related to 64-bit vs. 32-bit but just due to ARMv8 ISA having a `divide` instruction)
   * To be able to get comparable scores spanning different years/libs/compilers submitted results are cherry picked to ensure 7-zip version being 16.02 or lower since [on some platforms more recent 7-zip versions perform way better](https://github.com/ThomasKaiser/sbc-bench/issues/81). Starting with v0.9.64 sbc-bench tries to build p7zip 16.02 when a higher version is detected.
   * Unlike many other kitchen-sink benchmarks RAM access / memory performance matters (`sysbench cpu` for example runs completely inside CPU caches). With this benchmark it's easy to spot memory performance issues like [this](https://github.com/armbian/build/issues/1744) (after switching bootloaders DDR4 RAM got clocked with just 333 instead of the former 1056 MHz). It's one of the 'cheapest' tools for regression testing but unfortunately not widely used there

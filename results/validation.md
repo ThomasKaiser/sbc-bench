@@ -240,6 +240,7 @@
 | [8Qwk](8Qwk.txt) | v0.9.71 Luckfox Omni3576 | 0%/0% | 7.7Gi/7.5Gi | X | X | X | X | 2% | 0% | [check log](8Qwk.txt) |
 | [8SWL](8SWL.txt) | v0.9.71 Qualcomm Technologies, Inc. X1E | 0%/0% | 30Gi/26Gi | X | X | X | X | 1% | 0% | [check log](8SWL.txt) |
 | [8to7qX](8to7qX.txt) | v0.9.65 spacemit k1-x deb1 board | 0%/0% | 3.7Gi/3.5Gi | X | X | X | X | 3% | 3% | |
+| [8WlQ](8WlQ.txt) | v0.9.71 Thundercomm, Inc. Rubik Pi C649 | 0%/0% | 7.2Gi/6.7Gi | X | X | X | X | 2% | 0% | |
 | [Au3jaA](Au3jaA.txt) | v0.9.61 Raspberry Pi 5 Model B Rev 1.0 | 0%/0% | 4.0Gi/3.8Gi | X | X | X | X | 2% | 0% | [check log](Au3jaA.txt) |
 | [C6zgdP](C6zgdP.txt) | v0.9.65 Radxa ROCK 5A | 0%/0% | 15Gi/15Gi | X | X | X | X | 1% | 0% | [check log](C6zgdP.txt) |
 | [c9ZIGh](c9ZIGh.txt) | v0.9.66 Radxa ROCK 5C | 0%/0% | 3.8Gi/3.6Gi | X | X | X | X | 1% | 0% | [check log](c9ZIGh.txt) |

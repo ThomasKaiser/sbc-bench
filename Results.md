@@ -204,6 +204,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [RockPro64 (RK3399)](results/1iFp.txt) | 1800/1400 MHz | 4.18 | Stretch arm64 | 6300 | 1755 | 1021500 | 3650 | 8450 | 8.20 |
 | [RockPro64 (RK3399)](results/2sZH.txt) | 2010/1510 MHz | 5.4 | Focal arm64 | 6920 | 1826 | 1145300 | 3700 | 8430 | 11.55 |
 | [RockPro64 (RK3399)](results/2yIx.txt) | 2010/1510 MHz | 5.8 | Bullseye arm64 | 7000 | 1833 | 1144950 | 3690 | 8360 | 11.08 |
+| [Rubik Pi 3 (QCS6490)](results/8WlQ.txt) | 2700/2400/2000 MHz | 6.6 | Trixie arm64 | 17920 | 3871 | 1539030 | 7020 | 17230 | 27.50 |
 | [Star64 (JH7110)](results/4tjq.txt) | 1500 MHz | 5.15 | Sid riscv64 | 3970 | 1175 | 24990 | 820 | 770 | - |
 | [SBC2D70 (SSD202D)](results/3N1U.txt) | 1700 MHz | 5.16 | Sid armhf | 1960 | 1094 | 33120 | 770 | 3190 | - |
 | [T-HEAD C910 RVB-ICE](results/41AB.txt) | 1200 MHz | 5.10 | Sid riscv64 | 1760 | 1007 | 26930 | 3340 | 6470 | - |

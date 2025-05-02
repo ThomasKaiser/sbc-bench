@@ -2114,9 +2114,10 @@ CheckLoadAndDmesg() {
 		echo -e "\nAverage load and/or CPU utilization too high (too much background activity). Waiting...\n"
 		/bin/bash "${PathToMe}" -m 5 >"${TempDir}/wait-for-loadavg.log" &
 		MonitoringPID=$!
+		trap 'kill ${MonitoringPID} ; rm -rf "${TempDir}" ; exit 0' 0
 		while [ $AvgLoad1Min -ge 10 ] && [ ${CPUSum:-100} -ge 10 ]; do
 			snore 5
-			CPUutilization="$(awk -F" " '/^[0-9]/ {print $4}' <"${TempDir}/wait-for-loadavg.log" | sed 's/%//' | tail -n6)"
+			CPUutilization="$(awk -F"MHz " '/^[0-9]/ {print $2}' <"${TempDir}/wait-for-loadavg.log" | awk -F" " '{print $3}' | sed 's/%//' | tail -n6)"
 			LogLength=$(wc -l <<<"${CPUutilization}")
 			if [ ${LogLength} -gt 5 ]; then
 				CPUSum="$(awk '{s+=$1} END {printf "%.0f", s}' <<<"${CPUutilization}")"
@@ -2159,8 +2160,9 @@ GetCPUClusters() {
 	# For example on RK3588 with 4 x A55 and 4 x A76 the latter are two clusters behaving
 	# differently wrt clockspeeds due to PVTM (see below at GetCoreClusters function
 	# that reports all cores of same type as single cluster)
-	if [ "X${VirtWhat}" != "X" ] && [ "X${VirtWhat}" != "Xnone" ]; then
-		# in virtualized environments we only check cpu0
+	if [ "X${VirtWhat}" != "X" ] && [ "X${VirtWhat}" != "Xnone" ] && [ "X${VirtWhat}" != "Xvm-other" ]; then
+		# in virtualized environments we only check cpu0, vm-other is now also excluded, see 
+		# https://github.com/ThomasKaiser/sbc-bench/issues/116#issuecomment-2845868929 for details
 		echo "0"
 	else
 		case ${CPUArchitecture} in
@@ -6413,14 +6415,16 @@ GuessSoCbySignature() {
 			# Qualcomm SM8150 / Snapdragon 855: 4 x Qualcomm Kryo 4XX Silver / r13p14 + 4 x Qualcomm Kryo 4XX Gold / r13p14  / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp asimdrdm lrcpc dcpop asimddp
 			echo "Qualcomm SM8150 (Snapdragon 855)"
 			;;
-		*Qualcomm4XXSilver*Qualcomm4XXSilver*Qualcomm4XXSilver*Qualcomm4XXSilver*Qualcomm4XXGold*Qualcomm4XXGold*Qualcomm4XXGold*Qualcomm4XXGold*)
+		*Qualcomm4XXSilver*Qualcomm4XXSilver*Qualcomm4XXSilver*Qualcomm4XXSilver*Qualcomm4XXGold*Qualcomm4XXGold*Qualcomm4XXGold*Qualcomm4XXGold*|00A55r2p000A55r2p000A55r2p000A55r2p004A78r1p104A78r1p104A78r1p107A78r1p1)
 			# Qualcomm Snapdragon 7c+ Gen 3 (SC7280) or QCM6490/QCS6490: 4 x Kryo 468 Silver + 3 x Kryo 468 Gold + 1 x Kryo 468 Gold Plus
+			# Though it seems Qualcomm is using this time not their masqueraded Kryo names but directly ARM's core names (at least with QCS6490):
+			# QCS6490: 4 x Cortex-A55 / r2p0 + 4 x Cortex-A78 / r1p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp
 			case "${DTCompatible,,}" in
-				*qcm6490*)
-					echo "Qualcomm QCM6490"
-					;;
 				*qcs6490*)
 					echo "Qualcomm QCS6490"
+					;;
+				*qcm6490*)
+					echo "Qualcomm QCM6490/QCS6490"
 					;;
 				*sc7280*)
 					echo "Qualcomm Snapdragon 7c+ Gen 3 (SC7280)"
@@ -7932,7 +7936,7 @@ GuessSoCbySignature() {
 			;;
 		*rv64imafdcv_sscofpmf_sstc_svpbmt_zicbom_zicboz_zicbop_zihintpause*rv64imafdcv_sscofpmf_sstc_svpbmt_zicbom_zicboz_zicbop_zihintpause*rv64imafdcv_sscofpmf_sstc_svpbmt_zicbom_zicboz_zicbop_zihintpause*rv64imafdcv_sscofpmf_sstc_svpbmt_zicbom_zicboz_zicbop_zihintpause*rv64imafdcv_sscofpmf_sstc_svpbmt_zicbom_zicboz_zicbop_zihintpause*rv64imafdcv_sscofpmf_sstc_svpbmt_zicbom_zicboz_zicbop_zihintpause*rv64imafdcv_sscofpmf_sstc_svpbmt_zicbom_zicboz_zicbop_zihintpause*rv64imafdcv_sscofpmf_sstc_svpbmt_zicbom_zicboz_zicbop_zihintpause)
 			# SpacemiT K1: 8 x SpacemiT X60 cores https://www.spacemit.com/en/spacemit-x60-core/
-			echo "SpacemiT K1"
+			echo "SpacemiT K1/M1"
 			;;
 		??eswin,eic770x??eswin,eic770x??eswin,eic770x??eswin,eic770x)
 			# Eswin EIC7700X: 4 x RV64GC https://www.eswincomputing.com/en/bocupload/2024/06/19/17187920991529ene8q.pdf

@@ -135,6 +135,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Phytium<br />FT-2000/4<br />(1 x SO-DIMM)](results/4ioj.txt) | 2600 MHz | 5.15 | Bullseye arm64 | 10020 | 2755 | 936740 | 3760 | 14540 | - |
 | [Phytium D2000<br />(1 x SO-DIMM)](results/445T.txt) | 2300 MHz | 5.19 | Jammy arm64 | 16390 | 2220 | 827090 | 2820 | 6490 | - |
 | [Phytium D2000<br />(2 x SO-DIMM)](results/446h.txt) | 2300 MHz | 5.19 | Jammy arm64 | 16670 | 2252 | 828130 | 3480 | 16110 | - |
+| [Phytium D3000/8](results/84GG.txt) | 2500 MHz | 6.6 | Deepin 23.1 arm64 | 28070 | 3617 | 1425820 | 15090 | 39810 | 33.03 |
 | [PineH64 (Allwinner H6)](results/1jEr.txt) | 1800 MHz | 4.18 | Stretch arm64 | 4650 | 1274 | 836900 | 1380 | 5530 | 5.62 |
 | [PineH64 (Allwinner H6)](results/26Ph.txt) | 1800 MHz | 5.4 | Buster arm64 | 4710 | 1293 | 839870 | 1420 | 5560 | 7.10 |
 | [Qualcomm QRB5165](results/49kx.txt) | 2840/2410/1790 MHz | 4.19 | Focal arm64 | 18860 | 3898 | 1598490 | 14470 | 23910 | 25.56 |

@@ -25,6 +25,7 @@
 | [Qualcomm Snapdragon 8cx Gen 3](results/4xwT.txt) | 3000/2440 MHz | 6.3 | Lunar arm64 | **35370** | 4312 | 1686160 | 17500 | 41780 | 42.76 |
 | [Qualcomm Snapdragon 8cx Gen 3 (WSL2)](results/4kEp.txt) | 2980/? MHz | 5.15 | Jammy arm64 | **33600** | 4789 | 1679480 | 21010 | 41540 | 50.65 |
 | [Honeycomb LX2 (NXP LX2160A)](results/3Y4f.txt) | 2200 MHz | 5.16 | Fedora 35 aarch64 | **30690** | 2288 | 1251710 | 5050 | 16220 | 46.09 |
+| [Phytium D3000/8](results/84GG.txt) | 2500 MHz | 6.6 | Deepin 23.1 arm64 | **28070** | 3617 | 1425820 | 15090 | 39810 | 33.03 |
 | [Clearfog CX (NXP LX2160A)](results/4ju5.txt) | 2000 MHz | 5.10 | Focal arm64 | **25260** | 2236 | 1136690 | 4460 | 12500 | - |
 | [Jetson Xavier AGX](results/4ebH.txt) | 2250 MHz | 4.9 | Bionic arm64 | **21590** | 2742 | 853250 | 10910 | 22520 | 26.57 |
 | [Intel i3-N305](results/4qpr.txt) | 3800 MHz | 5.19 | Jammy amd64 | **20000** | 4398 | 1377280 | 9950 | 8990 | 41.43 |
@@ -278,6 +279,7 @@
 | [Hetzner CAX11 (Ampere Altra)](results/4HdL.txt) | 3000 MHz | 5.15 | Jammy arm64 | 8060 | **3842** | 1705600 | 11250 | 47670 | 11.44 |
 | [Raspberry Pi 5 B (BCM2712)](results/8acvqG.txt) | 3000 MHz | 6.1 | Bookworm arm64 | 12930 | **3791** | 1709720 | 5160 | 16350 | 19.25 |
 | [Ampere Altra Q80-26](results/4zkJ.txt) | 2600 MHz | 5.15 | Jammy arm64 | 214390 | **3748** | 1482190 | 11685 | 41560 | 316.50 |
+| [Phytium D3000/8](results/84GG.txt) | 2500 MHz | 6.6 | Deepin 23.1 arm64 | 28070 | **3617** | 1425820 | 15090 | 39810 | 33.03 |
 | [Radxa X4 (N100)](results/XObB.txt) | 3400 MHz | 6.8 | Noble amd64 | 8010 | **3580** | 1231100 | 8140 | 7970 | 21.40 |
 | [Pentium N6005](results/4BtC.txt) | 3300/2000 MHz | 5.15 | Jammy amd64 | 11510 | **3369** | 923550 | 9650 | 10280 | 22.18 |
 | [Ryzen R1505G](results/4HYd.txt) | 3270 MHz | 6.1 | Bookworm amd64 | 9080 | **3327** | 886980 | 10520 | 8160 | 18.14 |
@@ -524,6 +526,7 @@
 | [Rubik Pi 3 (QCS6490)](results/8WlQ.txt) | 2700/2400/2000 MHz | 6.6 | Trixie arm64 | 17920 | 3871 | **1539030** | 7020 | 17230 | 27.50 |
 | [Ampere Altra Q80-26](results/4zkJ.txt) | 2600 MHz | 5.15 | Jammy arm64 | 214390 | 3748 | **1482190** | 11685 | 41560 | 316.50 |
 | [Qualcomm Snapdragon 7c](results/4Lyf.txt) | 2550/1800 MHz | 6.6 | Bookworm arm64 | 13040 | 3113 | **1455700** | 6710 | 14880 | - |
+| [Phytium D3000/8](results/84GG.txt) | 2500 MHz | 6.6 | Deepin 23.1 arm64 | 28070 | 3617 | **1425820** | 15090 | 39810 | 33.03 |
 | [Intel i3-N305](results/4qpr.txt) | 3800 MHz | 5.19 | Jammy amd64 | 20000 | 4398 | **1377280** | 9950 | 8990 | 41.43 |
 | [Raspberry Pi 5 B (BCM2712)](results/8-NK.txt) | 2400 MHz | 6.6 | Bookworm arm64 | 11830 | 3305 | **1368160** | 6025 | 9985 | 15.42 |
 | [Raspberry Pi 5 B (BCM2712)](results/Au3jaA.txt) | 2400 MHz | 6.1 | Bookworm arm64 | 11010 | 3196 | **1367740** | 5270 | 14060 | 15.39 |
@@ -764,6 +767,7 @@
 | [Qualcomm Snapdragon 8cx Gen 3 (WSL2)](results/4kEp.txt) | 2980/? MHz | 5.15 | Jammy arm64 | 33600 | 4789 | 1679480 | **21010** | 41540 | 50.65 |
 | [Qualcomm Snapdragon 8cx Gen 3](results/4xwT.txt) | 3000/2440 MHz | 6.3 | Lunar arm64 | 35370 | 4312 | 1686160 | **17500** | 41780 | 42.76 |
 | [Pentium G4600](results/2jVw.txt) | 3600 MHz | 4.19 | Buster amd64 | 11810 | 4448 | 984820 | **15120** | 33380 | 21.88 |
+| [Phytium D3000/8](results/84GG.txt) | 2500 MHz | 6.6 | Deepin 23.1 arm64 | 28070 | 3617 | 1425820 | **15090** | 39810 | 33.03 |
 | [AmpereOne A192-32X](results/XUpQ.txt) | 3200 MHz | 6.8 | Noble arm64 | 741530 | 4781 | 1823250 | **14860** | 36441 | 323.76 |
 | [Qualcomm QRB5165](results/49kx.txt) | 2840/2410/1790 MHz | 4.19 | Focal arm64 | 18860 | 3898 | 1598490 | **14470** | 23910 | 25.56 |
 | [MT8395 Genio 1200](results/4Kvg.txt) | 2200/2000 MHz | 5.15 | Jammy arm64 | 18130 | 3298 | 1240850 | **14200** | 19000 | 27.60 |
@@ -1015,6 +1019,7 @@
 | [Qualcomm Snapdragon 8cx Gen 3](results/4xwT.txt) | 3000/2440 MHz | 6.3 | Lunar arm64 | 35370 | 4312 | 1686160 | 17500 | **41780** | 42.76 |
 | [Ampere Altra Q80-26](results/4zkJ.txt) | 2600 MHz | 5.15 | Jammy arm64 | 214390 | 3748 | 1482190 | 11685 | **41560** | 316.50 |
 | [Qualcomm Snapdragon 8cx Gen 3 (WSL2)](results/4kEp.txt) | 2980/? MHz | 5.15 | Jammy arm64 | 33600 | 4789 | 1679480 | 21010 | **41540** | 50.65 |
+| [Phytium D3000/8](results/84GG.txt) | 2500 MHz | 6.6 | Deepin 23.1 arm64 | 28070 | 3617 | 1425820 | 15090 | **39810** | 33.03 |
 | [AmpereOne A192-32X](results/XUpQ.txt) | 3200 MHz | 6.8 | Noble arm64 | 741530 | 4781 | 1823250 | 14860 | **36441** | 323.76 |
 | [Pentium G4600](results/2jVw.txt) | 3600 MHz | 4.19 | Buster amd64 | 11810 | 4448 | 984820 | 15120 | **33380** | 21.88 |
 | [Jetson AGX Orin](results/4ax9.txt) | 2200 MHz | 5.10 | Focal arm64 | 39450 | 3187 | 1242940 | 10600 | **30350** | 59.96 |
@@ -1287,6 +1292,7 @@
 | [Pentium N4200](results/1ngq.txt) | **2560/1100** MHz| 4.14 | Bionic amd64 | 7469 | 1976 | 468008 | 4682 | 4997 | 18.75 |
 | [Pentium J4205](results/1m5t.txt) | **2560/1500** MHz| 4.17 | Stretch amd64 | 7570 | 2146 | 480640 | 5070 | 5170 | 18.82 |
 | [Qualcomm Snapdragon 7c](results/4Lyf.txt) | **2550/1800** MHz| 6.6 | Bookworm arm64 | 13040 | 3113 | 1455700 | 6710 | 14880 | - |
+| [Phytium D3000/8](results/84GG.txt) | **2500** MHz| 6.6 | Deepin 23.1 arm64 | 28070 | 3617 | 1425820 | 15090 | 39810 | 33.03 |
 | [Loongson-3A5000-HV](results/4dzX.txt) | **2500** MHz| 4.19 | Loongnix 20 loongarch64 | 11120 | 2990 | 116900 | 6930 | 19170 | - |
 | [Celeron J1900](results/4hKV.txt) | **2415/1333** MHz| 5.4 | Focal amd64 | 6560 | 1806 | 34900 | 3780 | 3390 | - |
 | [x7-Z8700](results/4iDX.txt) | **2400** MHz| 5.15 | Bullseye amd64 | 6580 | 1784 | 296680 | 3510 | 3580 | - |

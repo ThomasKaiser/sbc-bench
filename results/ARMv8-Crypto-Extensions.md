@@ -40,6 +40,8 @@ It all boils down to type of ARM core and CPU clockspeed since the ratio between
 
 Amazon's Graviton/Graviton2 ARM CPUs and Neoverse-N1 cores score identical to A72/A73/A76/A77/A78 and the custom FTC663 core inside the [Feiteng D2000 CPU](https://en.wikipedia.org/wiki/FeiTeng_(processor)#Future_processors) performs identical to an A57 ([another hint wrt similarity](https://github.com/martin-frbg/OpenBLAS/blob/b3b4672c30f613c0043ad0557d33a34ffa3bbd0d/kernel/arm64/KERNEL.FT2000)). NVidia's Carmel core performs marginally better than Cortex-A57 (~374, the Jetson Xavier NX numbers below). Qualcomm's Kryo Silver cores are based on A55 and perform exactly the same here while Qualcomm's Qualcomm Falkor V1 behaves like Cortex-A72 and onwards.
 
+And there's an interesting anomaly: the A55 r2p0 in Qualcomm's QCS6490 show a 570 ratio and not 467 as older A55 (though also r2p0).
+
 ### Implications
 
 Encryption/decryption performance with real-world tasks is an entirely different thing than looking at these results from a synthetic benchmark that runs completly inside the CPU cores/caches. Real performance with real use cases might look really different (e.g. full disk encryption or performance as a VPN gateway).
@@ -113,6 +115,7 @@ Crawling through [sbc-bench results collection](../Results.md) comparing +70 dif
 | [S905X3](3Vdt.txt) | 1908 | 890730 | 466 |
 | [RK3568](3Ug9.txt) | 1930 | 898610 | 465 |
 | [RK3568](3UXa.txt) | 1950 | 911730 | 467 |
+| [Qualcomm QCS6490](8WlQ.txt) | 1800 | 913300 | 570 |
 | [Genio 1200](4Kvg.txt) | 2000 | 935000 | 468 |
 | [UMS9620](4yFl.txt) | 2000 | 936310 | 468 |
 | [S905X3](2kaS.txt) | 2010 | 941590 | 468 |
@@ -150,10 +153,13 @@ Crawling through [sbc-bench results collection](../Results.md) comparing +70 dif
 | [Genio 1200](4Kvg.txt) | 2200 | 1240850 | 564 |
 | [NVIDIA Orin](4ax9.txt) | 2200 | 1242940 | 565 |
 | [Snapdragon 8cx Gen 3](4xwT.txt) | 2420 | 1365680 | 564 |
+| [Qualcomm QCS6490](8WlQ.txt) | 2700 | 1539030 | 570 |
 | Cortex-X1C | | | |
 | [Snapdragon 8cx Gen 3](4xwT.txt) | 2990 | 1686160 | 564 |
 | Qualcomm Falkor V1 | | | |
 | [Snapdragon 835](4fea.txt) | 2360 | 1342240 | 569 |
+| Phytium FTC862 | | | |
+| [Phytium D3000](84GG.txt) | 2500 | 1425820 | 570 |
 | Neoverse-N1 | | | |
 | [Amazon m6g.8xlarge](2FrG.txt) | 2500 | 1424770 | 570 |
 | [Ampere Altra Q80](4zkJ.txt) | 2600 | 1482190 | 570 |

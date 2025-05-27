@@ -109,6 +109,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [ODROID-C2 (Amlogic S905)](results/1ixI.txt) | 1750 MHz | 3.14 | **Xenial** arm64 | 4070 | 1128 | 48500 | 1750 | 3100 | - |
 | [ODROID-C4 (S905X3)](results/2kaS.txt) | 2010 MHz | 4.9 | Focal arm64 | 5450 | 1459 | 941590 | 3310 | 6270 | 7.71 |
 | [ODROID-C4 (S905X3)](results/3TQ2.txt) | 2100 MHz | 5.10 | Buster arm64 | 5770 | 1679 | 981940 | 3540 | 5150 | - |
+| [ODROID-C5 (S905X5M)](results/8x6l.txt) | 2500 MHz | 5.15 | Jammy arm64 | 7130 | 1928 | 1172920 | 5100 | 12070 | - |
 | [ODROID-HC4 (S905X3)](results/3Na5.txt) | 2100 MHz | 5.10 | Buster arm64 | 5730 | 1672 | 980970 | 3540 | 5150 | - |
 | [ODROID-M1 (RK3568)](results/3Ug9.txt) | 1930 MHz | 4.19 | Focal arm64 | 5010 | 1450 | 898610 | 3070 | 6220 | 7.14 |
 | [ODROID-M1 (RK3568)](results/4ijy.txt) | 2060 MHz | 5.18 | Bullseye arm64 | 5430 | 1567 | 961090 | 3310 | 5960 | 7.76 |

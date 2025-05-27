@@ -7173,6 +7173,9 @@ GuessSoCbySignature() {
 			# Allwinner A513, Amlogic S905X4/S905C2, RealTek RTD1619B or Rockchip RK3566/RK3568
 			# 4 x Cortex-A55 / r2p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp asimdrdm lrcpc dcpop asimddp
 			case "${DTCompatible,,}" in
+				*s7d*|*s905x5m*)
+					echo "Amlogic S905X5M"
+					;;
 				*amlogic*)
 					echo "Amlogic S905X4/S905C2"
 					;;
@@ -9068,7 +9071,7 @@ CheckKernelVersion() {
 					;;
 			esac
 			;;
-		"5.15.78"|"5.15.119"|"5.15.137")
+		"5.15.78"|"5.15.119"|"5.15.137"|"5.15.153")
 			# New Amlogic SDK released with 5.15.78, supports at least T7, S4, SM1 and G12B.
 			# Kernel version 5.15.119 some images were using is the result of version string
 			# cosmetics over at ophub/flippy/unifreq

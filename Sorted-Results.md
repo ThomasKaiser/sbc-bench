@@ -59,6 +59,7 @@
 | [Radxa ROCK 5C Lite (RK3582)](results/c9ZIGh.txt) | 2250/1790 MHz | 6.1 | Bookworm arm64 | **11160** | 3094 | 1279430 | 12410 | 29620 | 14.00 |
 | [Loongson-3A5000-HV](results/4dzX.txt) | 2500 MHz | 4.19 | Loongnix 20 loongarch64 | **11120** | 2990 | 116900 | 6930 | 19170 | - |
 | [Raspberry Pi 5 B (BCM2712)](results/Au3jaA.txt) | 2400 MHz | 6.1 | Bookworm arm64 | **11010** | 3196 | 1367740 | 5270 | 14060 | 15.39 |
+| [Radxa ROCK 4D (RK3576)](results/8g-p.txt) | 2230/2040 MHz | 6.1 | Bookworm arm64 | **10830** | 1771 | 1267790 | 5210 | 15450 | 18.27 |
 | [Celeron N5100](results/3IlQ.txt) | 2800/1100 MHz | 5.13 | Focal amd64 | **10550** | 3088 | 783800 | 7750 | 8090 | 19.22 |
 | [Phytium<br />FT-2000/4<br />(1 x SO-DIMM)](results/4ioj.txt) | 2600 MHz | 5.15 | Bullseye arm64 | **10020** | 2755 | 936740 | 3760 | 14540 | - |
 | [Qualcomm Snapdragon 835](results/4fdD.txt) | 2360/1900 MHz | 6.1 | Jammy arm64 | **9800** | 2474 | 883330 | 9720 | 14070 | 12.58 |
@@ -356,6 +357,7 @@
 | [NanoPC T4 (RK3399)](results/1iFz.txt) | 1800/1400 MHz | 4.17 | Stretch arm64 | 6250 | **1809** | 1022500 | 4100 | 9000 | 8.24 |
 | [Celeron J1900](results/4hKV.txt) | 2415/1333 MHz | 5.4 | Focal amd64 | 6560 | **1806** | 34900 | 3780 | 3390 | - |
 | [x7-Z8700](results/4iDX.txt) | 2400 MHz | 5.15 | Bullseye amd64 | 6580 | **1784** | 296680 | 3510 | 3580 | - |
+| [Radxa ROCK 4D (RK3576)](results/8g-p.txt) | 2230/2040 MHz | 6.1 | Bookworm arm64 | 10830 | **1771** | 1267790 | 5210 | 15450 | 18.27 |
 | [Raspberry Pi 4 B (BCM2711)](results/3OBF.txt) | 1800 MHz | 5.10 | Raspberry Pi OS Bullseye arm64 | 5790 | **1769** | 36260 | 2330 | 3120 | 8.74 |
 | [Celeron N2807](results/4z3s.txt) | 2165 MHz | 5.10 | Bullseye) amd64 | 3070 | **1766** | 31250 | 3600 | 3110 | 6.09 |
 | [NanoPC T4 (RK3399)](results/1iWU.txt) | 1800/1400 MHz | 4.17 | Stretch arm64 | 6230 | **1756** | 1023600 | 4100 | 9060 | 10.30 |
@@ -545,6 +547,7 @@
 | [Amazon a1.xlarge](results/2iFY.txt) | 2300 MHz | 4.15 | Bionic arm64 | 8610 | 2406 | **1297960** | 4280 | 14220 | - |
 | [Khadas Edge2 (RK3588s)](results/4a5U.txt) | 2260/1800 MHz | 5.10 | Jammy arm64 | 16470 | 3096 | **1287490** | 10860 | 29110 | - |
 | [Radxa ROCK 5C Lite (RK3582)](results/c9ZIGh.txt) | 2250/1790 MHz | 6.1 | Bookworm arm64 | 11160 | 3094 | **1279430** | 12410 | 29620 | 14.00 |
+| [Radxa ROCK 4D (RK3576)](results/8g-p.txt) | 2230/2040 MHz | 6.1 | Bookworm arm64 | 10830 | 1771 | **1267790** | 5210 | 15450 | 18.27 |
 | [Khadas VIM3 (Amlogic A311D)](results/1MFD.txt) | 2200/1800 MHz | 4.9 | Bionic arm64 | 8600 | 2026 | **1256910** | 4980 | 9300 | 13.12 |
 | [Khadas VIM4 (A311D2)](results/4cHh.txt) | 2200/2010 MHz | 5.4 | Jammy arm64 | 12120 | 2067 | **1254540** | 8180 | 11680 | - |
 | [Khadas VIM4 (A311D2)](results/3Wvv.txt) | 2200/1970 MHz | 5.4 | Focal arm64 | 12090 | 2081 | **1253200** | 7810 | 11600 | - |
@@ -813,6 +816,7 @@
 | [Celeron J4105](results/1qal.txt) | 2400/1500 MHz | 4.15 | Bionic amd64 | 9020 | 2290 | 697100 | **5500** | 7410 | 19.07 |
 | [Celeron N4020](results/4vNB.txt) | 2800 MHz | 5.15 | Bookworm amd64 | 4680 | 2577 | 780770 | **5480** | 5390 | - |
 | [Raspberry Pi 5 B (BCM2712)](results/Au3jaA.txt) | 2400 MHz | 6.1 | Bookworm arm64 | 11010 | 3196 | 1367740 | **5270** | 14060 | 15.39 |
+| [Radxa ROCK 4D (RK3576)](results/8g-p.txt) | 2230/2040 MHz | 6.1 | Bookworm arm64 | 10830 | 1771 | 1267790 | **5210** | 15450 | 18.27 |
 | [Celeron N3350](results/4rJj.txt) | 2400 MHz | 6.0 | Bullseye amd64 | 3810 | 2034 | 446170 | **5190** | 5700 | - |
 | [Raspberry Pi 5 B (BCM2712)](results/8acvqG.txt) | 3000 MHz | 6.1 | Bookworm arm64 | 12930 | 3791 | 1709720 | **5160** | 16350 | 19.25 |
 | [Celeron J4125](results/4hau.txt) | 2700/2000 MHz | 5.15 | Jammy amd64 | 7620 | 2367 | 751360 | **5110** | 5960 | 18.30 |
@@ -1048,6 +1052,7 @@
 | [Phytium D2000<br />(2 x SO-DIMM)](results/446h.txt) | 2300 MHz | 5.19 | Jammy arm64 | 16670 | 2252 | 828130 | 3480 | **16110** | - |
 | [Celeron 5205U](results/4eiM.txt) | 1900 MHz | 5.15 | Jammy amd64 | 4060 | 2171 | 521090 | 7350 | **16020** | 11.20 |
 | [Luckfox Core3576 (RK3576)](results/8Qwk.txt) | 2120/1980 MHz | 6.1 | Bookworm arm64 | 11300 | 2031 | 1205280 | 4680 | **15770** | 17.57 |
+| [Radxa ROCK 4D (RK3576)](results/8g-p.txt) | 2230/2040 MHz | 6.1 | Bookworm arm64 | 10830 | 1771 | 1267790 | 5210 | **15450** | 18.27 |
 | [Qualcomm Snapdragon 7c](results/4Lyf.txt) | 2550/1800 MHz | 6.6 | Bookworm arm64 | 13040 | 3113 | 1455700 | 6710 | **14880** | - |
 | [Lichee Pi 4A (T-Head TH1520)](results/4xYE.txt) | 1990 MHz | 5.10 | Bookworm riscv64 | 5260 | 1592 | 43820 | 4350 | **14760** | - |
 | [Phytium<br />FT-2000/4<br />(1 x SO-DIMM)](results/4ioj.txt) | 2600 MHz | 5.15 | Bullseye arm64 | 10020 | 2755 | 936740 | 3760 | **14540** | - |
@@ -1326,6 +1331,7 @@
 | [Khadas Edge2 (RK3588s)](results/4a5U.txt) | **2260/1800** MHz| 5.10 | Jammy arm64 | 16470 | 3096 | 1287490 | 10860 | 29110 | - |
 | [Radxa ROCK 5C Lite (RK3582)](results/c9ZIGh.txt) | **2250/1790** MHz| 6.1 | Bookworm arm64 | 11160 | 3094 | 1279430 | 12410 | 29620 | 14.00 |
 | [Jetson Xavier AGX](results/4ebH.txt) | **2250** MHz| 4.9 | Bionic arm64 | 21590 | 2742 | 853250 | 10910 | 22520 | 26.57 |
+| [Radxa ROCK 4D (RK3576)](results/8g-p.txt) | **2230/2040** MHz| 6.1 | Bookworm arm64 | 10830 | 1771 | 1267790 | 5210 | 15450 | 18.27 |
 | [MT8395 Genio 1200](results/4Kvg.txt) | **2200/2000** MHz| 5.15 | Jammy arm64 | 18130 | 3298 | 1240850 | 14200 | 19000 | 27.60 |
 | [Khadas VIM4 (A311D2)](results/4cHh.txt) | **2200/2010** MHz| 5.4 | Jammy arm64 | 12120 | 2067 | 1254540 | 8180 | 11680 | - |
 | [Khadas VIM4 (A311D2)](results/3Wvv.txt) | **2200/1970** MHz| 5.4 | Focal arm64 | 12090 | 2081 | 1253200 | 7810 | 11600 | - |

@@ -102,6 +102,7 @@ Crawling through [sbc-bench results collection](../Results.md) comparing +70 dif
 | [RK3528](4I93.txt) | 2000 | 933630 | 467 |
 | [A311D](3VfL.txt) | 2010 | 940425 | 467 |
 | [A311D2](3Wq0.txt) | 2010 | 941040 | 468 |
+| [RK3576](8g-p.txt) | 2040 | 952220 | 467 |
 | Cortex-A55 | | | |
 | [RK3588](3XzI.txt) | 915 | 427750 | 467 |
 | [RK3566](45X1.txt) | 1750 |  818550 | 467 |
@@ -132,6 +133,7 @@ Crawling through [sbc-bench results collection](../Results.md) comparing +70 dif
 | [RK3399](2ICt.txt) | 2088 | 1184306 | 567 |
 | [RK3576](8Qwk.txt) | 2120 | 1205280 | 567 |
 | [LX2160A](3Y4f.txt) | 2200 | 1251710 | 569 |
+| [RK3576](8g-p.txt) | 2230 | 1267790 | 569 |
 | [Amazon a1.xlarge](2iFY.txt) | 2300 | 1297960 | 564 |
 | Cortex-A73 | | | |
 | [S922X](1BsF.txt) | 1800 | 1024680 | 569 |

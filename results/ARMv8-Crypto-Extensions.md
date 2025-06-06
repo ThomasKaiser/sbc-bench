@@ -34,13 +34,12 @@ _ARMv8 Crypto Extensions_ are not a classic 'crypto engine' running at a fixed c
 It all boils down to type of ARM core and CPU clockspeed since the ratio between openssl score and CPU clockspeed is fixed in the following way (using sbc-bench result collection):
 
   * Cortex-A35: ~217, an A35 running at 1000 MHz will produce an ~217000k aes-256-cbc score (or ~434000k at 2000 MHz)
+  * Cortex-A520: ~290, an A520 running at 1000 MHz will produce an ~290000k aes-256-cbc score (or ~580000k at 2000 MHz)
   * Cortex-A57: ~359, an A57 running at 1000 MHz will produce an ~359000k aes-256-cbc score (or ~718000k at 2000 MHz)
   * Cortex-A53/A55: ~467, A53/A55 running at 1000 MHz will produce an ~467000k aes-256-cbc score (or ~935000k at 2000 MHz)
-  * Cortex-A72/A73/A76/A77/A78/X1: ~570, A72/A73/A76 running at 1000 MHz will produce an ~570000k aes-256-cbc score (or ~1140000k at 2000 MHz)
+  * Cortex-A72/A73/A76/A77/A78/X1: ~570, A72/A73/A76/A77/A78/X1 running at 1000 MHz will produce an ~570000k aes-256-cbc score (or ~1140000k at 2000 MHz)
 
 Amazon's Graviton/Graviton2 ARM CPUs and Neoverse-N1 cores score identical to A72/A73/A76/A77/A78 and the custom FTC663 core inside the [Feiteng D2000 CPU](https://en.wikipedia.org/wiki/FeiTeng_(processor)#Future_processors) performs identical to an A57 ([another hint wrt similarity](https://github.com/martin-frbg/OpenBLAS/blob/b3b4672c30f613c0043ad0557d33a34ffa3bbd0d/kernel/arm64/KERNEL.FT2000)). NVidia's Carmel core performs marginally better than Cortex-A57 (~374, the Jetson Xavier NX numbers below). Qualcomm's Kryo Silver cores are based on A55 and perform exactly the same here while Qualcomm's Qualcomm Falkor V1 behaves like Cortex-A72 and onwards.
-
-And there's an interesting anomaly: the A55 r2p0 in Qualcomm's QCS6490 show a 570 ratio and not 467 as older A55 (though also r2p0).
 
 ### Implications
 
@@ -52,7 +51,7 @@ All of this **only** applies to ARM SoCs with _ARMv8 Crypto Extensions_ licensed
 
 ### Numbers the aforementioned conclusions are based on
 
-Crawling through [sbc-bench results collection](../Results.md) comparing +70 different SoCs/CPUs from various vendors at various clockspeeds using OpenSSL versions 1.1.0f (25 May 2017) through 3.0.11 (19 Sep 2023) shows always the same relation between openssl score and clockspeed for those four core families (right column is OpenSSL's aes-256-cbc score divided through clockspeed in MHz):
+Crawling through [sbc-bench results collection](../Results.md) comparing ~100 different SoCs/CPUs from various vendors at various clockspeeds using OpenSSL versions 1.1.0f (25 May 2017) through 3.0.16 (11 Feb 2025) shows always the same relation between openssl score and clockspeed for the known core families (right column is OpenSSL's aes-256-cbc score divided through clockspeed in MHz):
 
 | ARM core | MHz | aes-256-cbc | score/mhz |
 | :----: | ----:  | :----:  | :----:  |
@@ -116,7 +115,7 @@ Crawling through [sbc-bench results collection](../Results.md) comparing +70 dif
 | [S905X3](3Vdt.txt) | 1908 | 890730 | 466 |
 | [RK3568](3Ug9.txt) | 1930 | 898610 | 465 |
 | [RK3568](3UXa.txt) | 1950 | 911730 | 467 |
-| [Qualcomm QCS6490](8WlQ.txt) | 1800 | 913300 | 570 |
+| [Qualcomm QCS6490](8WlQ.txt) | 1950 | 913300 | 468 |
 | [Genio 1200](4Kvg.txt) | 2000 | 935000 | 468 |
 | [UMS9620](4yFl.txt) | 2000 | 936310 | 468 |
 | [S905X3](2kaS.txt) | 2010 | 941590 | 468 |

@@ -436,6 +436,7 @@ GetARMCore() {
 	# and https://github.com/Dr-Noob/cpufetch/blob/master/src/arm/uarch.c
 	# and https://github.com/pytorch/cpuinfo/blob/main/src/arm/linux/midr.c
 	# and https://github.com/hrw/arm-socs-table/blob/main/data/cpu_cores.yml
+	# Lots of information wrt HiSilicon parts: https://jia.je/kb/en/hardware/huawei.html / https://archive.ph/GRzzq
 	grep "${1}/${2}:" <<<"41:Arm
 	41/810:ARM810
 	41/920:ARM920
@@ -544,9 +545,13 @@ GetARMCore() {
 	48/d01:TaiShan v110
 	48/d02:TaiShan v120
 	48/d03:TaiShan v130
+	48/d05:HiSilicon-d05
+	48/d06:HiSilicon-HIP12
+	48/d23:HiSilicon-d23
 	48/d40:HiSilicon-A76
 	48/d41:HiSilicon-A77
 	48/d42:HiSilicon-A710
+	48/d46:HiSilicon-d46
 	00/d02:HiSilicon-1910
 	49:Infineon
 	4d:Motorola/Freescale
@@ -6926,6 +6931,10 @@ GuessSoCbySignature() {
 			# HiSilicon Kirin 9010/T91: 4 x Cortex-A510 + 3 x HiSilicon-A710 + 1 x TaiShan v130 / r2p0 / https://www.computerbase.de/2024-09/in-huaweis-12-zoll-tablets-details-zum-neuen-kirin-t91-soc-mit-8-kernen/
 			# The 'A710' like cores still use HiSilicon's own 48/d42 ID and all the big cores are SMT capable
 			echo "HiSilicon Kirin 9010/T91"
+			;;
+		*HiSilicond05*|*HiSilicon-d05*)
+			# HiSilicon Kirin 9020: 4 x little cores + 3 x SMT capable middle cores + 1 x capable big core / https://www.notebookcheck.com/HiSilicon-Kirin-9020-Prozessor-Benchmarks-und-Specs.953635.0.html
+			echo "HiSilicon Kirin 9020"
 			;;
 		*HiSilicon1910*|*HiSilicon-1910*)
 			# HiSilicon Hi1910: https://www.cnx-software.com/2024/06/20/orange-pi-kunpeng-pro-sbc-features-a-quad-core-huawei-cpu-with-an-8-tops-ai-accelerator/#comments

@@ -39,6 +39,7 @@
 | [Radxa ROCK 5C (RK3588S2)](results/5pv8oh.txt) | 2280/1780 MHz | 6.1 | Bookworm arm64 | **16400** | 3174 | 1300440 | 12280 | 29750 | 21.04 |
 | [Phytium D2000<br />(1 x SO-DIMM)](results/445T.txt) | 2300 MHz | 5.19 | Jammy arm64 | **16390** | 2220 | 827090 | 2820 | 6490 | - |
 | [Orange Pi 5 Max (RK3588)](results/XyIw.txt) | 2280/1800 MHz | 6.1 | Bullseye arm64 | **15960** | 2994 | 1300330 | 12140 | 27900 | 23.64 |
+| [ODROID-M2 (RK3588S2)](results/8ENy.txt) | 2250/1800 MHz | 5.10 | Focal arm64 | **15950** | 2989 | 1284070 | 13630 | 29330 | - |
 | [Radxa ROCK 5A (RK3588)](results/C6zgdP.txt)| ~2290 | 5.10 | Bullseye arm64 | **15630** | 3015 | 1302120 | 9170 | 27080 | 23.42 |
 | [Intel N100](results/uHzXI7.txt) | 3400 MHz | 6.1 | Jammy amd64 | **14090** | 3910 | 1232550 | 10920 | 11231 | 37.13 |
 | [AMD Seattle (Opteron A1100)](results/4Kqn.txt) | 2000 MHz | 4.15 | Bionic arm64 | **14080** | 2006 | 720710 | 3020 | 9530 | - |
@@ -300,6 +301,7 @@
 | [Radxa ROCK 5A (RK3588)](results/C6zgdP.txt)| ~2290 | 5.10 | Bullseye arm64 | 15630 | **3015** | 1302120 | 9170 | 27080 | 23.42 |
 | [Orange Pi 5 Max (RK3588)](results/XyIw.txt) | 2280/1800 MHz | 6.1 | Bullseye arm64 | 15960 | **2994** | 1300330 | 12140 | 27900 | 23.64 |
 | [Loongson-3A5000-HV](results/4dzX.txt) | 2500 MHz | 4.19 | Loongnix 20 loongarch64 | 11120 | **2990** | 116900 | 6930 | 19170 | - |
+| [ODROID-M2 (RK3588S2)](results/8ENy.txt) | 2250/1800 MHz | 5.10 | Focal arm64 | 15950 | **2989** | 1284070 | 13630 | 29330 | - |
 | [Ryzen R1606G](results/2tQQ.txt) | 2600/1400 MHz | 5.4 | Focal amd64 | 7970 | **2854** | 700780 | 8230 | 5970 | 16.45 |
 | [Phytium<br />FT-2000/4<br />(1 x SO-DIMM)](results/4ioj.txt) | 2600 MHz | 5.15 | Bullseye arm64 | 10020 | **2755** | 936740 | 3760 | 14540 | - |
 | [Jetson Xavier AGX](results/4ebH.txt) | 2250 MHz | 4.9 | Bionic arm64 | 21590 | **2742** | 853250 | 10910 | 22520 | 26.57 |
@@ -546,6 +548,7 @@
 | [Orange Pi 5 Max (RK3588)](results/XyIw.txt) | 2280/1800 MHz | 6.1 | Bullseye arm64 | 15960 | 2994 | **1300330** | 12140 | 27900 | 23.64 |
 | [Amazon a1.xlarge](results/2iFY.txt) | 2300 MHz | 4.15 | Bionic arm64 | 8610 | 2406 | **1297960** | 4280 | 14220 | - |
 | [Khadas Edge2 (RK3588s)](results/4a5U.txt) | 2260/1800 MHz | 5.10 | Jammy arm64 | 16470 | 3096 | **1287490** | 10860 | 29110 | - |
+| [ODROID-M2 (RK3588S2)](results/8ENy.txt) | 2250/1800 MHz | 5.10 | Focal arm64 | 15950 | 2989 | **1284070** | 13630 | 29330 | - |
 | [Radxa ROCK 5C Lite (RK3582)](results/c9ZIGh.txt) | 2250/1790 MHz | 6.1 | Bookworm arm64 | 11160 | 3094 | **1279430** | 12410 | 29620 | 14.00 |
 | [Radxa ROCK 4D (RK3576)](results/8g-p.txt) | 2230/2040 MHz | 6.1 | Bookworm arm64 | 10830 | 1771 | **1267790** | 5210 | 15450 | 18.27 |
 | [Khadas VIM3 (Amlogic A311D)](results/1MFD.txt) | 2200/1800 MHz | 4.9 | Bionic arm64 | 8600 | 2026 | **1256910** | 4980 | 9300 | 13.12 |
@@ -777,6 +780,7 @@
 | [AmpereOne A192-32X](results/XUpQ.txt) | 3200 MHz | 6.8 | Noble arm64 | 741530 | 4781 | 1823250 | **14860** | 36441 | 323.76 |
 | [Qualcomm QRB5165](results/49kx.txt) | 2840/2410/1790 MHz | 4.19 | Focal arm64 | 18860 | 3898 | 1598490 | **14470** | 23910 | 25.56 |
 | [MT8395 Genio 1200](results/4Kvg.txt) | 2200/2000 MHz | 5.15 | Jammy arm64 | 18130 | 3298 | 1240850 | **14200** | 19000 | 27.60 |
+| [ODROID-M2 (RK3588S2)](results/8ENy.txt) | 2250/1800 MHz | 5.10 | Focal arm64 | 15950 | 2989 | 1284070 | **13630** | 29330 | - |
 | [Huaqin P6410<br />(2 x Ampere Altra Max)](results/4kiu.txt) | 3000 MHz | 5.4 | Focal arm64 | 430860 | 4211 | 1710010 | **13310** | 47970 | - |
 | [Orange Pi 5 (RK3588)](results/4D0a.txt) | 2400/1800 MHz | 5.10 | Jammy arm64 | 16780 | 2689 | 1366590 | **12800** | 29900 | - |
 | [Radxa ROCK 5C Lite (RK3582)](results/c9ZIGh.txt) | 2250/1790 MHz | 6.1 | Bookworm arm64 | 11160 | 3094 | 1279430 | **12410** | 29620 | 14.00 |
@@ -1034,6 +1038,7 @@
 | [Orange Pi 5 (RK3588)](results/4D0a.txt) | 2400/1800 MHz | 5.10 | Jammy arm64 | 16780 | 2689 | 1366590 | 12800 | **29900** | - |
 | [Radxa ROCK 5C (RK3588S2)](results/5pv8oh.txt) | 2280/1780 MHz | 6.1 | Bookworm arm64 | 16400 | 3174 | 1300440 | 12280 | **29750** | 21.04 |
 | [Radxa ROCK 5C Lite (RK3582)](results/c9ZIGh.txt) | 2250/1790 MHz | 6.1 | Bookworm arm64 | 11160 | 3094 | 1279430 | 12410 | **29620** | 14.00 |
+| [ODROID-M2 (RK3588S2)](results/8ENy.txt) | 2250/1800 MHz | 5.10 | Focal arm64 | 15950 | 2989 | 1284070 | 13630 | **29330** | - |
 | [Radxa ROCK 5B (RK3588)](results/41BH.txt) | 2350/1830 MHz | 5.10 | Focal arm64 | 16450 | 3146 | 1337540 | 10830 | **29220** | 25.31 |
 | [Khadas Edge2 (RK3588s)](results/4a5U.txt) | 2260/1800 MHz | 5.10 | Jammy arm64 | 16470 | 3096 | 1287490 | 10860 | **29110** | - |
 | [Orange Pi 5 Max (RK3588)](results/XyIw.txt) | 2280/1800 MHz | 6.1 | Bullseye arm64 | 15960 | 2994 | 1300330 | 12140 | **27900** | 23.64 |
@@ -1330,6 +1335,7 @@
 | [Orange Pi 5 Max (RK3588)](results/XyIw.txt) | **2280/1800** MHz| 6.1 | Bullseye arm64 | 15960 | 2994 | 1300330 | 12140 | 27900 | 23.64 |
 | [Khadas Edge2 (RK3588s)](results/4a5U.txt) | **2260/1800** MHz| 5.10 | Jammy arm64 | 16470 | 3096 | 1287490 | 10860 | 29110 | - |
 | [Radxa ROCK 5C Lite (RK3582)](results/c9ZIGh.txt) | **2250/1790** MHz| 6.1 | Bookworm arm64 | 11160 | 3094 | 1279430 | 12410 | 29620 | 14.00 |
+| [ODROID-M2 (RK3588S2)](results/8ENy.txt) | **2250/1800** MHz| 5.10 | Focal arm64 | 15950 | 2989 | 1284070 | 13630 | 29330 | - |
 | [Jetson Xavier AGX](results/4ebH.txt) | **2250** MHz| 4.9 | Bionic arm64 | 21590 | 2742 | 853250 | 10910 | 22520 | 26.57 |
 | [Radxa ROCK 4D (RK3576)](results/8g-p.txt) | **2230/2040** MHz| 6.1 | Bookworm arm64 | 10830 | 1771 | 1267790 | 5210 | 15450 | 18.27 |
 | [MT8395 Genio 1200](results/4Kvg.txt) | **2200/2000** MHz| 5.15 | Jammy arm64 | 18130 | 3298 | 1240850 | 14200 | 19000 | 27.60 |

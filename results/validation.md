@@ -238,6 +238,7 @@
 | [84GG](84GG.txt) | v0.9.71 phytium D3000 unattended | 0%/0% | 31Gi/30Gi | X | X | X | X | 1% | 0% | |
 | [8acvqG](8acvqG.txt) | v0.9.61 Raspberry Pi 5 Model B Rev 1.0 | 0%/0% | 4.0Gi/3.8Gi | X | X | X | X | 2% | 0% | [check log](8acvqG.txt) |
 | [8ctH](8ctH.txt) | v0.9.70 Hardkernel ODROID HC2 | 0%/0% | 1.9Gi/1.7Gi | X | X | X | X | 4% | 0% | [check log](8ctH.txt) |
+| [8ENy](8ENy.txt) | v0.9.71 Hardkernel ODROID-M2 | 0%/0% | 15Gi/14Gi | X | X | X | X | 1% | 0% | [check log](8ENy.txt) |
 | [8g-p](8g-p.txt) | v0.9.71 Radxa ROCK 4D SPI | 0%/0% | 7.8Gi/7.5Gi | X | X | X | X | 2% | 0% | [check log](8g-p.txt) |
 | [8Qwk](8Qwk.txt) | v0.9.71 Luckfox Omni3576 | 0%/0% | 7.7Gi/7.5Gi | X | X | X | X | 2% | 0% | [check log](8Qwk.txt) |
 | [8SWL](8SWL.txt) | v0.9.71 Qualcomm Technologies, Inc. X1E | 0%/0% | 30Gi/26Gi | X | X | X | X | 1% | 0% | [check log](8SWL.txt) |

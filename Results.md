@@ -113,6 +113,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [ODROID-HC4 (S905X3)](results/3Na5.txt) | 2100 MHz | 5.10 | Buster arm64 | 5730 | 1672 | 980970 | 3540 | 5150 | - |
 | [ODROID-M1 (RK3568)](results/3Ug9.txt) | 1930 MHz | 4.19 | Focal arm64 | 5010 | 1450 | 898610 | 3070 | 6220 | 7.14 |
 | [ODROID-M1 (RK3568)](results/4ijy.txt) | 2060 MHz | 5.18 | Bullseye arm64 | 5430 | 1567 | 961090 | 3310 | 5960 | 7.76 |
+| [ODROID-M2 (RK3588S2)](results/8ENy.txt) | 2250/1800 MHz | 5.10 | Focal arm64 | 15950 | 2989 | 1284070 | 13630 | 29330 | - |
 | [ODROID-N2 (Amlogic S922X)](results/1BsF.txt) | 1800/1900 MHz | 4.9 | Bionic arm64 | 8140 | 1669 | 1024680 | 4120 | 8610 | 11.39 |
 | [ODROID-N2 (Amlogic S922X)](results/3MuT.txt) | 2000/1900 MHz | 5.10 | Buster arm64 | 9090 | 2012 | 1085350 | 4260 | 9080 | - |
 | [ODROID-N2+ (Amlogic S922X)](results/3R1a.txt) | 2400/2015 MHz | 5.10 | Focal arm64 | 9680 | 2372 | 1366730 | 4030 | 7120 | - |

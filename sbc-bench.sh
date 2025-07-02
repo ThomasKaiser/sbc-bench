@@ -5870,7 +5870,7 @@ GuessARMSoC() {
 				;;
 			sun8iw15*)
 				# SoC ID: 0x1755
-				echo "Allwinner A50/MR133/R311${Allwinner_SID}"
+				echo "Allwinner A50/MR133/R311/B300${Allwinner_SID}"
 				;;
 			sun8iw16*)
 				# SoC ID: 0x1816
@@ -5927,10 +5927,12 @@ GuessARMSoC() {
 				echo "Allwinner A80${Allwinner_SID}"
 				;;
 			sun20iw1*)
+				# SoC ID: 0x1859
 				# https://d1.docs.aw-ol.com / https://d1s.docs.aw-ol.com
 				echo "Allwinner D1${Allwinner_SID}"
 				;;
-			sun20iw2*)
+			sun20iw3*)
+				# SoC ID: 0x1883
 				# https://r128.docs.aw-ol.com
 				echo "Allwinner R128${Allwinner_SID}"
 				;;
@@ -6006,7 +6008,7 @@ GuessARMSoC() {
 				;;
 			sun50iw12*)
 				# SoC ID: 0x1860
-				echo "Allwinner TV303${Allwinner_SID}"
+				echo "Allwinner TV303/H713${Allwinner_SID}"
 				;;
 			sun55iw3*)
 				# SoC ID: 0x1890
@@ -6015,11 +6017,19 @@ GuessARMSoC() {
 			sun55iw5*)
 				echo "Allwinner TV301${Allwinner_SID}"
 				;;
+			sun55iw6*)
+				# SoC ID: 0x1909
+				echo "Allwinner T536/MR536${Allwinner_SID}"
+				;;
 			sun60iw1*)
 				echo "Allwinner A736/T736${Allwinner_SID}"
 				;;
 			sun60iw2*)
+				# SoC ID: 0x1903
 				echo "Allwinner A733${Allwinner_SID}"
+				;;
+			sun65iw1*)
+				echo "Allwinner A537${Allwinner_SID}"
 				;;
 			sun*)
 				SoCGuess="$(GuessSoCbySignature)"
@@ -7049,6 +7059,10 @@ GuessSoCbySignature() {
 			# Mediatek MT6799: 4 x Cortex-A35 / r0p1 + 4 x Cortex-A53 / r0p4 + 2 x Cortex-A73 / r0p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 			echo "Mediatek MT6799"
 			;;
+		*A53r0p4*A73r1p0*A73r1p0)
+			# Allwinner A537: 6 x Cortex-A53 / r0p4 + 2 x Cortex-A73 / r1p0 / https://browser.geekbench.com/v6/cpu/9620734
+			echo "Allwinner A537"
+			;;
 		00A35r0p200A35r0p2)
 			# RK1808, 2 x Cortex-A35 / r0p2 / https://patchwork.kernel.org/project/linux-arm-kernel/patch/20210516230551.12469-6-afaerber@suse.de/#24199353
 			echo "Rockchip RK1808"
@@ -7996,6 +8010,10 @@ GuessSoCbySignature() {
 			# Cix Tech P1 / CP8180/CD8180: 1 x Cortex-A720 / r0p1 + 4 x Cortex-A520 / r0p1 + 7 x Cortex-A720 / r0p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 sve asimdfhm dit uscat ilrcpc flagm sb paca pacg dcpodp sve2 sveaes svepmull svebitperm svesha3 svesm4 flagm2 frint svei8mm svebf16 i8mm bf16 dgh bti mte ecv afp mte3 wfxt
 			# with some firmware versions the little cores are gone
 			echo "Cix P1/CD8180"
+			;;
+		*A720r0p1*A720r0p1*A720r0p1*A720r0p1*X4r0p1*X4r0p1*X4r0p1*X4r0p1)
+			# MediaTek Dimensity 9300: 4 x Cortex-A720 / r0p1 + 4 x Cortex-X4 / r0p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 sve asimdfhm dit uscat ilrcpc flagm ssbs sb dcpodp sve2 sveaes svepmull svebitperm svesha3 svesm4 flagm2 frint svei8mm svebf16 i8mm bf16 dgh bti mte ecv afp mte3 wfxt
+			echo "MediaTek Dimensity 9300"
 			;;
 		*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A76r4p0*A76r4p0*X1r1p0*X1r1p0)
 			# Google Tensor G1: 4 x Cortex-A55 / r2p0 + 2 x Cortex-A76 / r4p0 + 2 x Cortex-X1 / r1p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp

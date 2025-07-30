@@ -1,6 +1,6 @@
 #!/bin/bash
 
-Version=0.9.71
+Version=0.9.72
 InstallLocation=/usr/local/src # change to /tmp if you want tools to be deleted after reboot
 
 Main() {
@@ -3072,8 +3072,8 @@ InstallPrerequisits() {
 	# get/build tinymembench if not already there
 	[ -d "${InstallLocation}" ] || mkdir -p "${InstallLocation}"
 	if [ -f "${InstallLocation}/tinymembench/.git/config" ]; then
-		# exchange abandoned ssvb version with v0.4.9-nuumio
-		grep -q github.com/ssvb/tinymembench "${InstallLocation}/tinymembench/.git/config" && \
+		# exchange abandoned ssvb/nuumio repos with archived nuumio fork (forked again to be safe this time, see #121)
+		grep -q -E 'ssvb|nuumio' "${InstallLocation}/tinymembench/.git/config" && \
 			rm -rf "${InstallLocation}/tinymembench"
 	fi
 	if [ ! -x "${InstallLocation}"/tinymembench/tinymembench ]; then
@@ -3083,7 +3083,7 @@ InstallPrerequisits() {
 			git pull >/dev/null 2>&1
 		else
 			cd "${InstallLocation}" || exit 1
-			git clone https://github.com/nuumio/tinymembench >/dev/null 2>&1
+			git clone https://github.com/ThomasKaiser/tinymembench >/dev/null 2>&1
 			if [ $? -ne 0 ]; then
 				echo -e "\n\n${LRED}${BOLD}Temporary Github problem. Not able to download tinymembench. Please try again later.${NC}" >&2
 				exit 1
@@ -6022,14 +6022,21 @@ GuessARMSoC() {
 				echo "Allwinner T536/MR536${Allwinner_SID}"
 				;;
 			sun60iw1*)
-				echo "Allwinner A736/T736${Allwinner_SID}"
+				# Abandoned
+				echo "Allwinner A736${Allwinner_SID}"
 				;;
 			sun60iw2*)
 				# SoC ID: 0x1903
-				echo "Allwinner A733${Allwinner_SID}"
+				echo "Allwinner A733/T736${Allwinner_SID}"
 				;;
 			sun65iw1*)
-				echo "Allwinner A537${Allwinner_SID}"
+				echo "Allwinner A537/A333${Allwinner_SID}"
+				;;
+			sun251iw1*)
+				echo "Allwinner H135/H136/H137${Allwinner_SID}"
+				;;
+			sun300iw1*)
+				echo "Allwinner V821${Allwinner_SID}"
 				;;
 			sun*)
 				SoCGuess="$(GuessSoCbySignature)"
@@ -6957,12 +6964,19 @@ GuessSoCbySignature() {
 			;;
 		*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A76r4p1*A76r4p1)
 			# Allwinner A733/A736/T736, 6 x Cortex-A55 / r2p0 + 2 x Cortex-A76 / r4p1 / https://browser.geekbench.com/v6/cpu/7327650
+			# sun60iw1 is said to be abandoned and the T736 product name moved into sun60iw2 category
 			case "${DTCompatible,,}" in
-				*sun60iw1*|*a736*|*t736*)
-					echo "Allwinner A736/T736"
+				*sun60iw1*|*a736*)
+					echo "Allwinner A736"
 					;;
-				*sun60iw2*|*a733*)
+				*t736*)
+					echo "Allwinner T736"
+					;;
+				*a733*)
 					echo "Allwinner A733"
+					;;
+				*sun60iw2*)
+					echo "Allwinner A733/T736"
 					;;
 			esac
 			;;
@@ -7062,6 +7076,10 @@ GuessSoCbySignature() {
 		*A53r0p4*A73r1p0*A73r1p0)
 			# Allwinner A537: 6 x Cortex-A53 / r0p4 + 2 x Cortex-A73 / r1p0 / https://browser.geekbench.com/v6/cpu/9620734
 			echo "Allwinner A537"
+			;;
+		*A53r0p4*A73r1p0)
+			# Allwinner A333: 4 x Cortex-A53 / r0p4 + 1 x Cortex-A73 / r1p0 / https://browser.geekbench.com/v6/cpu/12146577
+			echo "Allwinner A333"
 			;;
 		00A35r0p200A35r0p2)
 			# RK1808, 2 x Cortex-A35 / r0p2 / https://patchwork.kernel.org/project/linux-arm-kernel/patch/20210516230551.12469-6-afaerber@suse.de/#24199353
@@ -8076,8 +8094,8 @@ GuessSoCbySignature() {
 				*695*|*sm6375*)
 					echo "Snapdragon 695 5G (SM6375)"
 					;;
-				*a736*|*t736*)
-					echo "Allwinner A736/T736"
+				*a737*|*t737*)
+					echo "Allwinner A737/T737"
 					;;
 				*a838*)
 					echo "Allwinner A838"
@@ -9113,10 +9131,10 @@ CheckKernelVersion() {
 					;;
 			esac
 			;;
-		"5.15.41"|"5.15.94"|"5.15.123"|"5.15.147"|"5.15.151"|"6.6.30"|"6.6.57")
+		"5.15.41"|"5.15.94"|"5.15.123"|"5.15.147"|"5.15.151"|"6.6.30"|"6.6.57"|"6.6.77")
 			# At least used with Android 13 and OpenWRT builds for A133/T527: https://browser.geekbench.com/v5/cpu/21947495.gb5 / https://browser.geekbench.com/v6/cpu/2610471.gb6 /
 			# https://bbs.aw-ol.com/topic/5060/syterkit-启动-t527-失败 / https://github.com/chainsx/linux-t527/blob/main/Makefile
-			# A733: https://browser.geekbench.com/v6/cpu/9253840.gb6
+			# A733: https://browser.geekbench.com/v6/cpu/9253840.gb6, A333: https://browser.geekbench.com/v6/cpu/12146577.gb6
 			case ${GuessedSoC} in
 				Allwinner*)
 					# though there's a small chance users of flippy/unifreq kernels on older Allwinner SoCs are affected

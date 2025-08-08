@@ -1,0 +1,675 @@
+sbc-bench v0.9.72 Framework Desktop (AMD Ryzen AI Max 300 Series) A6 / RYZEN AI MAX+ 395 w/ Radeon 8060S (Thu, 07 Aug 2025 09:46:56 -0500)
+
+Description:	Fedora Linux 43 (Workstation Edition Prerelease)
+
+Device Info:
+	Manufacturer: Framework
+	Product Name: Desktop (AMD Ryzen AI Max 300 Series)
+	Version: A6
+	SKU Number: FRANMFCP06
+	Family: Desktop
+
+BIOS/UEFI:
+	Vendor: INSYDE Corp.
+	Version: 03.00
+	Release Date: 06/13/2025
+	BIOS Revision: 3.0
+
+/usr/sbin/gcc (GCC) 15.1.1 20250719 (Red Hat 15.1.1-5)
+
+Uptime: 09:46:56 up 16:10,  4 users,  load average: 0.66, 0.33, 0.12,  °C,  17975716
+
+               total        used        free      shared  buff/cache   available
+Mem:           125Gi       2.6Gi       123Gi       3.4Mi       430Mi       122Gi
+Swap:          8.0Gi          0B       8.0Gi
+
+Filename				Type		Size		Used		Priority
+/dev/zram0                              partition	8388604		0		100
+
+##########################################################################
+
+AMD Ryzen detected. For power limits visit https://github.com/FlyGoat/RyzenAdj
+
+Checking cpufreq OPP:
+
+Cpufreq OPP: 5187    Measured: 5134 (5134.943/5134.582/5134.222)
+Cpufreq OPP:  625    Measured: 5134 (5134.943/5134.943/5134.479)   (+721.4%)
+
+##########################################################################
+
+Executing benchmark on cpu0:
+
+tinymembench v0.4.9-nuumio (simple benchmark for memory throughput and latency)
+
+CFLAGS: 
+bandwidth test min repeats (-b): 2
+bandwidth test max repeats (-B): 3
+bandwidth test mem realloc (-M): no      (-m for realloc)
+      latency test repeats (-l): 3
+        latency test count (-c): 1000000
+
+==========================================================================
+== Memory bandwidth tests                                               ==
+==                                                                      ==
+== Note 1: 1MB = 1000000 bytes                                          ==
+== Note 2: Test result is the best of repeated runs. Number of repeats  ==
+==         is shown in brackets                                         ==
+== Note 3: Results for 'copy' tests show how many bytes can be          ==
+==         copied per second (adding together read and writen           ==
+==         bytes would have provided twice higher numbers)              ==
+== Note 4: 2-pass copy means that we are using a small temporary buffer ==
+==         to first fetch data into it, and only then write it to the   ==
+==         destination (source -> L1 cache, L1 cache -> destination)    ==
+== Note 5: If sample standard deviation exceeds 0.1%, it is shown in    ==
+==         brackets                                                     ==
+==========================================================================
+
+ C copy backwards                                 :  26529.9 MB/s (3, 1.4%)
+ C copy backwards (32 byte blocks)                :  26530.4 MB/s (2)
+ C copy backwards (64 byte blocks)                :  26522.5 MB/s (2)
+ C copy                                           :  26679.7 MB/s (2)
+ C copy prefetched (32 bytes step)                :  28500.2 MB/s (3, 1.3%)
+ C copy prefetched (64 bytes step)                :  27603.3 MB/s (2)
+ C 2-pass copy                                    :  25368.6 MB/s (3, 0.1%)
+ C 2-pass copy prefetched (32 bytes step)         :  22971.3 MB/s (3, 0.9%)
+ C 2-pass copy prefetched (64 bytes step)         :  19594.0 MB/s (3, 3.4%)
+ C scan 8                                         :   5063.9 MB/s (2)
+ C scan 16                                        :  10125.9 MB/s (2)
+ C scan 32                                        :  20000.1 MB/s (2)
+ C scan 64                                        :  37230.6 MB/s (3, 0.6%)
+ C fill                                           :  50650.8 MB/s (3, 0.4%)
+ C fill (shuffle within 16 byte blocks)           :  50519.7 MB/s (3, 0.2%)
+ C fill (shuffle within 32 byte blocks)           :  50253.6 MB/s (2)
+ C fill (shuffle within 64 byte blocks)           :  50574.3 MB/s (2)
+ ---
+ libc memcpy copy                                 :  36252.2 MB/s (3, 0.2%)
+ libc memchr scan                                 :  76121.1 MB/s (2)
+ libc memset fill                                 :  65521.7 MB/s (3, 0.2%)
+ ---
+ MOVSB copy                                       :  50332.0 MB/s (3, 0.2%)
+ MOVSD copy                                       :  50336.4 MB/s (2)
+ STOSB fill                                       :  57840.3 MB/s (2)
+ SSE2 copy                                        :  28044.1 MB/s (2)
+ SSE2 nontemporal copy                            :  47761.4 MB/s (2)
+ SSE2 copy prefetched (32 bytes step)             :  29894.3 MB/s (3, 0.1%)
+ SSE2 copy prefetched (64 bytes step)             :  29871.7 MB/s (2)
+ SSE2 nontemporal copy prefetched (32 bytes step) :  48117.2 MB/s (2)
+ SSE2 nontemporal copy prefetched (64 bytes step) :  47489.3 MB/s (2)
+ SSE2 2-pass copy                                 :  27786.5 MB/s (2)
+ SSE2 2-pass copy prefetched (32 bytes step)      :  29444.2 MB/s (2)
+ SSE2 2-pass copy prefetched (64 bytes step)      :  29283.7 MB/s (2)
+ SSE2 2-pass nontemporal copy                     :   4677.7 MB/s (3, 1.0%)
+ SSE2 fill                                        :  58574.2 MB/s (3, 0.1%)
+ SSE2 nontemporal fill                            :  58480.9 MB/s (3, 0.4%)
+
+==========================================================================
+== Memory latency test                                                  ==
+==                                                                      ==
+== Average time is measured for random memory accesses in the buffers   ==
+== of different sizes. The larger is the buffer, the more significant   ==
+== are relative contributions of TLB, L1/L2 cache misses and SDRAM      ==
+== accesses. For extremely large buffer sizes we are expecting to see   ==
+== page table walk with several requests to SDRAM for almost every      ==
+== memory access (though 64MiB is not nearly large enough to experience ==
+== this effect to its fullest).                                         ==
+==                                                                      ==
+== Note 1: All the numbers are representing extra time, which needs to  ==
+==         be added to L1 cache latency. The cycle timings for L1 cache ==
+==         latency can be usually found in the processor documentation. ==
+== Note 2: Dual random read means that we are simultaneously performing ==
+==         two independent memory accesses at a time. In the case if    ==
+==         the memory subsystem can't handle multiple outstanding       ==
+==         requests, dual random read has the same timings as two       ==
+==         single reads performed one after another.                    ==
+==========================================================================
+
+block size : single random read / dual random read, [MADV_NOHUGEPAGE]
+      1024 :    0.0 ns          /     0.0 ns 
+      2048 :    0.0 ns          /     0.0 ns 
+      4096 :    0.0 ns          /     0.0 ns 
+      8192 :    0.0 ns          /     0.0 ns 
+     16384 :    0.0 ns          /     0.0 ns 
+     32768 :    0.0 ns          /     0.0 ns 
+     65536 :    0.5 ns          /     0.8 ns 
+    131072 :    1.3 ns          /     1.6 ns 
+    262144 :    1.7 ns          /     1.9 ns 
+    524288 :    2.3 ns          /     2.4 ns 
+   1048576 :    3.9 ns          /     4.1 ns 
+   2097152 :    9.0 ns          /     8.7 ns 
+   4194304 :   10.0 ns          /    10.3 ns 
+   8388608 :   13.0 ns          /    10.9 ns 
+  16777216 :   27.2 ns          /    11.5 ns 
+  33554432 :   57.6 ns          /    43.6 ns 
+  67108864 :   86.6 ns          /   123.4 ns 
+
+block size : single random read / dual random read, [MADV_HUGEPAGE]
+      1024 :    0.0 ns          /     0.0 ns 
+      2048 :    0.0 ns          /     0.0 ns 
+      4096 :    0.0 ns          /     0.0 ns 
+      8192 :    0.0 ns          /     0.0 ns 
+     16384 :    0.0 ns          /     0.0 ns 
+     32768 :    0.0 ns          /     0.0 ns 
+     65536 :    0.5 ns          /     0.8 ns 
+    131072 :    1.2 ns          /     1.6 ns 
+    262144 :    1.6 ns          /     1.9 ns 
+    524288 :    1.8 ns          /     1.9 ns 
+   1048576 :    2.1 ns          /     2.1 ns 
+   2097152 :    7.0 ns          /     7.5 ns 
+   4194304 :    7.8 ns          /     9.1 ns 
+   8388608 :    9.5 ns          /     9.6 ns 
+  16777216 :    8.7 ns          /     9.8 ns 
+  33554432 :   10.1 ns          /    12.3 ns 
+  67108864 :   79.2 ns          /   116.6 ns 
+
+##########################################################################
+
+Executing ramlat on cpu0, results in ns:
+
+       size:  1x32  2x32  1x64  2x64 1xPTR 2xPTR 4xPTR 8xPTR
+         4k: 0.783 0.782 0.964 0.963 0.780 0.780 0.780 0.780 
+         8k: 0.780 0.780 0.962 0.962 0.779 0.780 0.780 0.780 
+        16k: 0.779 0.780 0.962 0.962 0.779 0.779 0.781 0.780 
+        32k: 0.780 0.780 0.962 0.963 0.780 0.780 0.780 0.780 
+        64k: 2.684 2.643 2.865 2.825 2.674 2.679 2.706 2.765 
+       128k: 2.754 2.913 2.959 3.006 2.764 2.923 2.980 2.808 
+       256k: 2.764 3.047 2.953 3.183 2.782 2.968 3.027 2.993 
+       512k: 4.032 4.015 4.208 4.214 4.033 4.023 4.080 4.029 
+      1024k: 5.746 5.437 5.833 5.643 5.631 5.430 5.705 5.812 
+      2048k: 10.56 9.525 10.63 9.767 10.47 9.958 10.22 10.63 
+      4096k: 11.20 10.30 11.31 10.63 11.17 10.88 10.90 11.13 
+      8192k: 11.55 10.77 11.58 10.99 11.43 11.13 11.17 11.34 
+     16384k: 14.40 11.95 13.21 12.02 13.06 12.15 12.12 12.69 
+     32768k: 43.68 32.54 43.51 31.83 44.07 46.71 56.44 62.50 
+     65536k: 121.5 102.0 118.0 97.72 119.2 129.7 137.2 144.1 
+    131072k: 133.3 135.7 128.9 134.6 127.8 137.8 143.0 145.7 
+
+##########################################################################
+
+Executing benchmark twice on cluster 0
+
+OpenSSL 3.5.1, built on 1 Jul 2025 (Library: OpenSSL 3.5.1 1 Jul 2025)
+type             16 bytes     64 bytes    256 bytes   1024 bytes   8192 bytes  16384 bytes
+aes-256-cbc    1210971.86k  1360321.81k  1401286.49k  1412290.56k  1415004.16k  1414135.81k
+aes-256-cbc    1212328.85k  1360229.25k  1401537.45k  1412318.55k  1415446.53k  1415637.67k
+
+##########################################################################
+
+Executing benchmark single-threaded on cpu0
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,32 CPUs x64)
+
+x64
+CPU Freq: - - - - - - - - -
+
+RAM size:  128077 MB,  # CPU hardware threads:  32
+RAM usage:    435 MB,  # Benchmark threads:      1
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       9978   100   9729   9707  |      65511   100   5600   5593
+23:       7324   100   7475   7463  |      65220   100   5654   5646
+24:       5445   100   5864   5855  |      64618   100   5681   5673
+25:       4612   100   5275   5267  |      63875   100   5694   5685
+----------------------------------  | ------------------------------
+Avr:             100   7086   7073  |              100   5657   5649
+Tot:             100   6372   6361
+
+##########################################################################
+
+Executing benchmark 3 times multi-threaded on CPUs 0-31
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,32 CPUs x64)
+
+x64
+CPU Freq: - - - - - - - - -
+
+RAM size:  128077 MB,  # CPU hardware threads:  32
+RAM usage:   7060 MB,  # Benchmark threads:     32
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:     148108  2877   5008 144080  |    1518958  3125   4145 129535
+23:     138999  2845   4978 141624  |    1482149  3131   4097 128252
+24:     133780  2840   5065 143840  |    1417811  3121   3987 124445
+25:     125486  2792   5131 143275  |    1350086  3058   3929 120149
+----------------------------------  | ------------------------------
+Avr:            2839   5045 143205  |             3109   4039 125595
+Tot:            2974   4542 134400
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,32 CPUs x64)
+
+x64
+CPU Freq: - - - - - - - - -
+
+RAM size:  128077 MB,  # CPU hardware threads:  32
+RAM usage:   7060 MB,  # Benchmark threads:     32
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:     148267  2848   5064 144234  |    1467252  3130   3998 125126
+23:     137913  2816   4991 140518  |    1448959  3132   4003 125380
+24:     132210  2808   5062 142152  |    1421382  3133   3982 124759
+25:     126332  2817   5121 144241  |    1377095  3128   3919 122552
+----------------------------------  | ------------------------------
+Avr:            2822   5059 142786  |             3131   3976 124454
+Tot:            2976   4517 133620
+
+7-Zip (a) [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,32 CPUs x64)
+
+x64
+CPU Freq: - - - - - - - - -
+
+RAM size:  128077 MB,  # CPU hardware threads:  32
+RAM usage:   7060 MB,  # Benchmark threads:     32
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:     149237  2892   5021 145178  |    1455660  3114   3986 124137
+23:     136615  2772   5022 139194  |    1448913  3130   4006 125376
+24:     133051  2819   5075 143057  |    1418444  3126   3983 124501
+25:     125595  2795   5130 143400  |    1380584  3128   3927 122863
+----------------------------------  | ------------------------------
+Avr:            2819   5062 142707  |             3125   3976 124219
+Tot:            2972   4519 133463
+
+Compression: 143205,142786,142707
+Decompression: 125595,124454,124219
+Total: 134400,133620,133463
+
+##########################################################################
+
+Executing "stress-ng --matrix 0" for 5 minutes:
+
+stress-ng: info:  [56620] setting to a 5 mins run per stressor
+stress-ng: info:  [56620] dispatching hogs: 32 matrix
+stress-ng: info:  [56620] skipped: 0
+stress-ng: info:  [56620] passed: 32: matrix (32)
+stress-ng: info:  [56620] failed: 0
+stress-ng: info:  [56620] metrics untrustworthy: 0
+stress-ng: info:  [56620] successful run completed in 5 mins
+
+##########################################################################
+
+Testing maximum cpufreq again, still under full load. System health now:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+09:55:50: 4027MHz 31.95  99%   0%  99%   0%   0%   0%      °C  
+
+Checking cpufreq OPP:
+
+Cpufreq OPP: 5187    Measured: 5135 (5136.230/5134.531/5134.428)
+
+##########################################################################
+
+System health while running tinymembench:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+09:47:07: 5115MHz  0.72   0%   0%   0%   0%   0%   0%      °C  
+09:47:17: 5048MHz  0.76   3%   0%   3%   0%   0%   0%      °C  
+09:47:27: 5107MHz  0.80   3%   0%   3%   0%   0%   0%      °C  
+09:47:37: 5124MHz  0.83   3%   0%   3%   0%   0%   0%      °C  
+09:47:47: 5134MHz  0.86   3%   0%   3%   0%   0%   0%      °C  
+09:47:58: 5081MHz  0.88   3%   0%   3%   0%   0%   0%      °C  
+09:48:08: 5135MHz  0.90   3%   0%   3%   0%   0%   0%      °C  
+
+System health while running ramlat:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+09:48:10: 5132MHz  0.91   0%   0%   0%   0%   0%   0%      °C  
+09:48:14: 5139MHz  0.91   3%   0%   3%   0%   0%   0%      °C  
+09:48:17: 5139MHz  0.91   3%   0%   3%   0%   0%   0%      °C  
+09:48:20: 5135MHz  0.92   3%   0%   3%   0%   0%   0%      °C  
+09:48:23: 5135MHz  0.92   3%   0%   3%   0%   0%   0%      °C  
+09:48:26: 5134MHz  0.93   3%   0%   3%   0%   0%   0%      °C  
+09:48:29: 5135MHz  0.93   3%   0%   3%   0%   0%   0%      °C  
+09:48:32: 5135MHz  0.93   3%   0%   3%   0%   0%   0%      °C  
+09:48:35: 5139MHz  0.94   3%   0%   3%   0%   0%   0%      °C  
+09:48:38: 5135MHz  0.94   3%   0%   3%   0%   0%   0%      °C  
+
+System health while running OpenSSL benchmark:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+09:48:38: 5087MHz  0.94   0%   0%   0%   0%   0%   0%      °C  
+09:48:54:  625MHz  0.96   3%   0%   3%   0%   0%   0%      °C  
+09:49:10:  625MHz  0.97   3%   0%   3%   0%   0%   0%      °C  
+
+System health while running 7-zip single core benchmark:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+09:49:14: 5059MHz  0.97   0%   0%   0%   0%   0%   0%      °C  
+09:49:19: 5107MHz  0.97   3%   0%   3%   0%   0%   0%      °C  
+09:49:24: 5135MHz  1.06   3%   0%   3%   0%   0%   0%      °C  
+09:49:29: 5135MHz  1.05   3%   0%   3%   0%   0%   0%      °C  
+09:49:34: 5143MHz  1.05   3%   0%   3%   0%   0%   0%      °C  
+
+System health while running 7-zip multi core benchmark:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+09:49:39: 4815MHz  3.85   0%   0%   0%   0%   0%   0%      °C  
+09:49:49: 4332MHz  7.66  93%   0%  92%   0%   0%   0%      °C  
+09:49:59: 4763MHz 12.04  70%   0%  69%   0%   0%   0%      °C  
+09:50:10: 4303MHz 15.11  90%   0%  89%   0%   0%   0%      °C  
+09:50:20: 4771MHz 15.22  84%   0%  83%   0%   0%   0%      °C  
+09:50:30: 4896MHz 18.20  77%   0%  76%   0%   0%   0%      °C  
+09:50:40: 4314MHz 20.33  93%   0%  93%   0%   0%   0%      °C  
+09:50:51: 4332MHz 22.44  81%   0%  81%   0%   0%   0%      °C  
+09:51:02: 4333MHz 21.71  78%   0%  77%   0%   0%   0%      °C  
+
+System health while running stress-ng:
+
+Time        CPU    load %cpu %sys %usr %nice %io %irq   Temp
+09:51:06: 4051MHz 22.77   0%   0%   0%   0%   0%   0%      °C  
+09:51:47: 4043MHz 27.27  99%   0%  99%   0%   0%   0%      °C  
+09:52:27: 4039MHz 29.58 100%   0%  99%   0%   0%   0%      °C  
+09:53:08: 4028MHz 30.76 100%   0%  99%   0%   0%   0%      °C  
+09:53:48: 4039MHz 31.42 100%   0%  99%   0%   0%   0%      °C  
+09:54:29: 4035MHz 31.70 100%   0%  99%   0%   0%   0%      °C  
+09:55:10: 4032MHz 31.90 100%   0%  99%   0%   0%   0%      °C  
+09:55:50: 4027MHz 31.95  99%   0%  99%   0%   0%   0%      °C  
+
+##########################################################################
+
+dmesg output while running the benchmarks:
+
+[58779.939794] sched: DL replenish lagged too much
+
+##########################################################################
+
+               total        used        free      shared  buff/cache   available
+Mem:           125Gi       2.2Gi       123Gi       3.4Mi       561Mi       122Gi
+Swap:          8.0Gi          0B       8.0Gi
+
+Filename				Type		Size		Used		Priority
+/dev/zram0                              partition	8388604		0		100
+
+CPU sysfs topology (clusters, cpufreq members, clockspeeds)
+                 cpufreq   min    max
+ CPU    cluster  policy   speed  speed   core type
+  0        0        0      625    5188       -
+  1        0        1      625    5188       -
+  2        0        2      625    5188       -
+  3        0        3      625    5188       -
+  4        0        4      625    5188       -
+  5        0        5      625    5188       -
+  6        0        6      625    5188       -
+  7        0        7      625    5188       -
+  8        0        8      625    5188       -
+  9        0        9      625    5188       -
+ 10        0       10      625    5188       -
+ 11        0       11      625    5188       -
+ 12        0       12      625    5188       -
+ 13        0       13      625    5188       -
+ 14        0       14      625    5188       -
+ 15        0       15      625    5188       -
+ 16        0       16      625    5188       -
+ 17        0       17      625    5188       -
+ 18        0       18      625    5188       -
+ 19        0       19      625    5188       -
+ 20        0       20      625    5188       -
+ 21        0       21      625    5188       -
+ 22        0       22      625    5188       -
+ 23        0       23      625    5188       -
+ 24        0       24      625    5188       -
+ 25        0       25      625    5188       -
+ 26        0       26      625    5188       -
+ 27        0       27      625    5188       -
+ 28        0       28      625    5188       -
+ 29        0       29      625    5188       -
+ 30        0       30      625    5188       -
+ 31        0       31      625    5188       -
+
+Architecture:                            x86_64
+CPU op-mode(s):                          32-bit, 64-bit
+Address sizes:                           48 bits physical, 48 bits virtual
+Byte Order:                              Little Endian
+CPU(s):                                  32
+On-line CPU(s) list:                     0-31
+Vendor ID:                               AuthenticAMD
+Model name:                              AMD RYZEN AI MAX+ 395 w/ Radeon 8060S
+CPU family:                              26
+Model:                                   112
+Thread(s) per core:                      2
+Core(s) per socket:                      16
+Socket(s):                               1
+Stepping:                                0
+Frequency boost:                         enabled
+CPU(s) scaling MHz:                      53%
+CPU max MHz:                             5187.5000
+CPU min MHz:                             625.0000
+BogoMIPS:                                5988.54
+Flags:                                   fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm constant_tsc rep_good amd_lbr_v2 nopl xtopology nonstop_tsc cpuid extd_apicid aperfmperf rapl pni pclmulqdq monitor ssse3 fma cx16 sse4_1 sse4_2 movbe popcnt aes xsave avx f16c rdrand lahf_lm cmp_legacy svm extapic cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw ibs skinit wdt tce topoext perfctr_core perfctr_nb bpext perfctr_llc mwaitx cpuid_fault cpb cat_l3 cdp_l3 hw_pstate ssbd mba perfmon_v2 ibrs ibpb stibp ibrs_enhanced vmmcall fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid cqm rdt_a avx512f avx512dq rdseed adx smap avx512ifma clflushopt clwb avx512cd sha_ni avx512bw avx512vl xsaveopt xsavec xgetbv1 xsaves cqm_llc cqm_occup_llc cqm_mbm_total cqm_mbm_local user_shstk avx_vnni avx512_bf16 clzero irperf xsaveerptr rdpru wbnoinvd cppc arat npt lbrv svm_lock nrip_save tsc_scale vmcb_clean flushbyasid decodeassists pausefilter pfthreshold avic v_vmsave_vmload vgif x2avic v_spec_ctrl vnmi avx512vbmi umip pku ospke avx512_vbmi2 gfni vaes vpclmulqdq avx512_vnni avx512_bitalg avx512_vpopcntdq rdpid bus_lock_detect movdiri movdir64b overflow_recov succor smca fsrm avx512_vp2intersect flush_l1d amd_lbr_pmc_freeze
+Virtualization:                          AMD-V
+L1d cache:                               768 KiB (16 instances)
+L1i cache:                               512 KiB (16 instances)
+L2 cache:                                16 MiB (16 instances)
+L3 cache:                                64 MiB (2 instances)
+NUMA node(s):                            1
+NUMA node0 CPU(s):                       0-31
+Vulnerability Gather data sampling:      Not affected
+Vulnerability Ghostwrite:                Not affected
+Vulnerability Indirect target selection: Not affected
+Vulnerability Itlb multihit:             Not affected
+Vulnerability L1tf:                      Not affected
+Vulnerability Mds:                       Not affected
+Vulnerability Meltdown:                  Not affected
+Vulnerability Mmio stale data:           Not affected
+Vulnerability Old microcode:             Not affected
+Vulnerability Reg file data sampling:    Not affected
+Vulnerability Retbleed:                  Not affected
+Vulnerability Spec rstack overflow:      Mitigation; IBPB on VMEXIT only
+Vulnerability Spec store bypass:         Mitigation; Speculative Store Bypass disabled via prctl
+Vulnerability Spectre v1:                Mitigation; usercopy/swapgs barriers and __user pointer sanitization
+Vulnerability Spectre v2:                Mitigation; Enhanced / Automatic IBRS; IBPB conditional; STIBP always-on; PBRSB-eIBRS Not affected; BHI Not affected
+Vulnerability Srbds:                     Not affected
+Vulnerability Tsa:                       Not affected
+Vulnerability Tsx async abort:           Not affected
+
+  cpuinfo: http://0x0.st/8hU8.txt
+
+Processor Information
+	Socket Designation: FP11LPDDR5x
+	Type: Central Processor
+	Family: Zen
+	Manufacturer: Advanced Micro Devices, Inc.
+	ID: 00 0F B7 00 FF FB 8B 17
+	Signature: Family 26, Model 112, Stepping 0
+	Flags:
+		FPU (Floating-point unit on-chip)
+		VME (Virtual mode extension)
+		DE (Debugging extension)
+		PSE (Page size extension)
+		TSC (Time stamp counter)
+		MSR (Model specific registers)
+		PAE (Physical address extension)
+		MCE (Machine check exception)
+		CX8 (CMPXCHG8 instruction supported)
+		APIC (On-chip APIC hardware supported)
+		SEP (Fast system call)
+		MTRR (Memory type range registers)
+		PGE (Page global enable)
+		MCA (Machine check architecture)
+		CMOV (Conditional move instruction supported)
+		PAT (Page attribute table)
+		PSE-36 (36-bit page size extension)
+		CLFSH (CLFLUSH instruction supported)
+		MMX (MMX technology supported)
+		FXSR (FXSAVE and FXSTOR instructions supported)
+		SSE (Streaming SIMD extensions)
+		SSE2 (Streaming SIMD extensions 2)
+		HTT (Multi-threading)
+	Version: AMD RYZEN AI MAX+ 395 w/ Radeon 8060S          
+	Voltage: 1.2 V
+	External Clock: 100 MHz
+	Max Speed: 5150 MHz
+	Current Speed: 3000 MHz
+	Status: Populated, Enabled
+	Upgrade: Other
+	L1 Cache Handle: 0x0005
+	L2 Cache Handle: 0x0006
+	L3 Cache Handle: 0x0007
+	Asset Tag: AMD FWTS
+	Part Number: AMD FWTS
+	Core Count: 16
+	Core Enabled: 16
+	Thread Count: 32
+	Characteristics:
+		64-bit capable
+		Multi-Core
+		Hardware Thread
+		Execute Protection
+		Enhanced Virtualization
+		Power/Performance Control
+
+ Compiler: /usr/sbin/gcc (GCC) 15.1.1 20250719 (Red Hat 15.1.1-5) / x86_64-redhat-linux
+ Userland: x86_64
+   Kernel: 6.17.0-0.rc0.250804gd2eedaa3909b.10.fc43.x86_64/x86_64
+           CONFIG_HZ=1000
+           CONFIG_HZ_1000=y
+           CONFIG_PREEMPTION=y
+           CONFIG_PREEMPT_BUILD=y
+           CONFIG_PREEMPT_COUNT=y
+           CONFIG_PREEMPT_DYNAMIC=y
+           CONFIG_PREEMPT_LAZY=y
+           CONFIG_PREEMPT_NOTIFIERS=y
+           CONFIG_PREEMPT_RCU=y
+
+##########################################################################
+
+Results validation:
+
+  * Measured clockspeed not lower than advertised max CPU clockspeed
+  * No swapping
+  * Background activity (%system) OK
+
+Status of performance related policies found below /sys:
+
+  * /sys/module/pcie_aspm/parameters/policy: default [performance] powersave powersupersave
+
+##########################################################################
+
+# Framework Desktop (AMD Ryzen AI Max 300 Series) A6 / RYZEN AI MAX+ 395 w/ Radeon 8060S
+
+Tested with sbc-bench v0.9.72 on Thu, 07 Aug 2025 09:56:09 -0500.
+
+### General information:
+
+    Information courtesy of cpufetch:
+    
+    Name:                AMD RYZEN AI MAX+ 395 w/ Radeon 8060S 
+    Microarchitecture:   Zen 5
+    Technology:          4nm
+    Max Frequency:       5.187 GHz
+    Cores:               16 cores (32 threads)
+    AVX:                 AVX,AVX2,AVX512
+    FMA:                 FMA3
+    L1i Size:            32KB (512KB Total)
+    L1d Size:            48KB (768KB Total)
+    L2 Size:             1MB (16MB Total)
+    L3 Size:             32MB (64MB Total)
+    
+    RYZEN AI MAX+ 395 w/ Radeon 8060S, Kernel: x86_64
+    
+    CPU sysfs topology (clusters, cpufreq members, clockspeeds)
+                     cpufreq   min    max
+     CPU    cluster  policy   speed  speed   core type
+      0        0        0      625    5188       -
+      1        0        1      625    5188       -
+      2        0        2      625    5188       -
+      3        0        3      625    5188       -
+      4        0        4      625    5188       -
+      5        0        5      625    5188       -
+      6        0        6      625    5188       -
+      7        0        7      625    5188       -
+      8        0        8      625    5188       -
+      9        0        9      625    5188       -
+     10        0       10      625    5188       -
+     11        0       11      625    5188       -
+     12        0       12      625    5188       -
+     13        0       13      625    5188       -
+     14        0       14      625    5188       -
+     15        0       15      625    5188       -
+     16        0       16      625    5188       -
+     17        0       17      625    5188       -
+     18        0       18      625    5188       -
+     19        0       19      625    5188       -
+     20        0       20      625    5188       -
+     21        0       21      625    5188       -
+     22        0       22      625    5188       -
+     23        0       23      625    5188       -
+     24        0       24      625    5188       -
+     25        0       25      625    5188       -
+     26        0       26      625    5188       -
+     27        0       27      625    5188       -
+     28        0       28      625    5188       -
+     29        0       29      625    5188       -
+     30        0       30      625    5188       -
+     31        0       31      625    5188       -
+
+128077 KB available RAM
+
+### Policies (performance vs. idle consumption):
+
+Status of performance related policies found below /sys:
+
+    /sys/module/pcie_aspm/parameters/policy: default [performance] powersave powersupersave
+
+### Clockspeeds (idle vs. heated up):
+
+Before:
+
+    cpu0: OPP: 5187, Measured: 5134 
+
+After:
+
+    cpu0: OPP: 5187, Measured: 5135 
+
+### Performance baseline
+
+  * memcpy: 36252.2 MB/s, memchr: 76121.1 MB/s, memset: 65521.7 MB/s
+  * 16M latency: 14.40 11.95 13.21 12.02 13.06 12.15 12.12 12.69 
+  * 128M latency: 133.3 135.7 128.9 134.6 127.8 137.8 143.0 145.7 
+  * 7-zip MIPS (3 consecutive runs): 134400, 133620, 133463 (133830 avg), single-threaded: 6361
+  * `aes-256-cbc    1210971.86k  1360321.81k  1401286.49k  1412290.56k  1415004.16k  1414135.81k`
+  * `aes-256-cbc    1212328.85k  1360229.25k  1401537.45k  1412318.55k  1415446.53k  1415637.67k`
+
+### PCIe and storage devices:
+
+  * Realtek RTL8126 5GbE: Speed 8GT/s, Width x1, driver in use: r8169, 
+  * AMD Strix Halo [Radeon Graphics / Radeon 8050S Graphics / Radeon 8060S Graphics]: Speed 16GT/s, Width x16, driver in use: amdgpu, ASPM Disabled
+  * AMD Strix Halo USB 3.1 xHCI: Speed 16GT/s, Width x16, driver in use: xhci_hcd, ASPM Disabled
+  * AMD Strix Halo USB 3.1 xHCI: Speed 16GT/s, Width x16, driver in use: xhci_hcd, ASPM Disabled
+  * AMD Strix Halo USB 3.1 xHCI: Speed 16GT/s, Width x16, driver in use: xhci_hcd, ASPM Disabled
+  * AMD Strix Halo USB 3.1 xHCI: Speed 16GT/s, Width x16, driver in use: xhci_hcd, ASPM Disabled
+  * AMD Strix Halo USB4 Host Router: Speed 16GT/s, Width x16, driver in use: thunderbolt, ASPM Disabled
+  * AMD Strix Halo USB4 Host Router: Speed 16GT/s, Width x16, driver in use: thunderbolt, ASPM Disabled
+  * 931.5GB "WD_BLACK SN7100 1TB" SSD as /dev/nvme0: Speed 16GT/s, Width x4, 0% worn out, drive temp: 43°C, ASPM Disabled
+
+### Swap configuration:
+
+  * /dev/zram0: 8G (0K used, lzo-rle, 4K streams, 80B data, 12K compressed,  total)
+
+### Software versions:
+
+  * Fedora Linux 43 (Workstation Edition Prerelease)
+  * Compiler: /usr/sbin/gcc (GCC) 15.1.1 20250719 (Red Hat 15.1.1-5) / x86_64-redhat-linux
+  * OpenSSL 3.5.1, built on 1 Jul 2025 (Library: OpenSSL 3.5.1 1 Jul 2025)    
+
+### Kernel info:
+
+  * `/proc/cmdline: BOOT_IMAGE=(hd0,gpt2)/vmlinuz-6.17.0-0.rc0.250804gd2eedaa3909b.10.fc43.x86_64 root=UUID=7138d111-30d8-4fe0-af64-0d8cf3b01c3c ro rootflags=subvol=root rhgb quiet amdgpu.gttsize=108000 amdttm.pages_limit=27648000 amdttm.page_pool_size =27648000`
+  * Vulnerability Spec rstack overflow:      Mitigation; IBPB on VMEXIT only
+  * Vulnerability Spec store bypass:         Mitigation; Speculative Store Bypass disabled via prctl
+  * Vulnerability Spectre v1:                Mitigation; usercopy/swapgs barriers and __user pointer sanitization
+  * Kernel 6.17.0-0.rc0.250804gd2eedaa3909b.10.fc43.x86_64 / CONFIG_HZ=1000

@@ -7972,6 +7972,10 @@ GuessSoCbySignature() {
 				echo "Sophon SG2042"
 			fi
 			;;
+		10rv64imafdvcsu)
+			# Sophgo SG2000/SG2002, 1 x c906 https://raw.githubusercontent.com/ThomasKaiser/sbc-bench/master/results/cpuinfo/Sophgo-SG2000-5.10.4.cpuinfo
+			echo "Sophgo SG2000/SG2002"
+			;;
 		*rv64imafdc)
 			# Renesas RZ/Five R9A07G043: single Andes AX45MP core
 			if [ ${CPUCores} -eq 1 ]; then

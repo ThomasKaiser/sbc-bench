@@ -240,6 +240,7 @@
 | [8ctH](8ctH.txt) | v0.9.70 Hardkernel ODROID HC2 | 0%/0% | 1.9Gi/1.7Gi | X | X | X | X | 4% | 0% | [check log](8ctH.txt) |
 | [8ENy](8ENy.txt) | v0.9.71 Hardkernel ODROID-M2 | 0%/0% | 15Gi/14Gi | X | X | X | X | 1% | 0% | [check log](8ENy.txt) |
 | [8g-p](8g-p.txt) | v0.9.71 Radxa ROCK 4D SPI | 0%/0% | 7.8Gi/7.5Gi | X | X | X | X | 2% | 0% | [check log](8g-p.txt) |
+| [8gl6](8gl6.txt) | v0.9.71 Milk-V DuoS | 0%/0% | 486Mi/429Mi | X | X | X | X | <span style=color:red> 7%</span> | 0% | |
 | [8Qwk](8Qwk.txt) | v0.9.71 Luckfox Omni3576 | 0%/0% | 7.7Gi/7.5Gi | X | X | X | X | 2% | 0% | [check log](8Qwk.txt) |
 | [8SWL](8SWL.txt) | v0.9.71 Qualcomm Technologies, Inc. X1E | 0%/0% | 30Gi/26Gi | X | X | X | X | 1% | 0% | [check log](8SWL.txt) |
 | [8to7qX](8to7qX.txt) | v0.9.65 spacemit k1-x deb1 board | 0%/0% | 3.7Gi/3.5Gi | X | X | X | X | 3% | 3% | |

@@ -76,6 +76,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Macchiatobin (Armada 8040)](results/4zcm.txt) | 1600 MHz | 5.10 | Buster arm64 | 5720 | 1739 | 909420 | 4510 | 12270 | 7.91 |
 | [MangoPi Mcore (Allwinner H616)](results/4bSf.txt) | 1800 MHz | 5.19 | Jammy arm64 | 4100 | 1218 | 840270 | 990 | 2380 | - |
 | [Marvell PXA1908](results/46hs.txt) | 1245 MHz | 3.14 | Bullseye arm64 | 3180 | 951 | 581840 | 740 | 2220 | - |
+| [Milk-V DuoS (SG2000)](results/8gl6.txt) | 1050 MHz | 5.10 | Trixie riscv64 | 530 | 529 | 12120 | 1380 | 3520 | - |
 | [Milk-V Jupiter (SpacemiT K1)](results/X904.txt) | 1800 MHz | 6.1 | Mantic riscv64 | 7090 | 1020 | 30700 | 2900 | 7230 | - |
 | [Milk-V Mars CM (JH7110)](results/4K7E.txt) | 1500 MHz | 5.15 | Bookworm riscv64 | 4110 | 1195 | 25070 | 930 | 830 | - |
 | [Milk-V Pioneer (SG2042)](results/4wYE.txt) | 2000 MHz | 6.1 | Kinetic riscv64 | 59820 | 1622 | 43500 | 3620 | 4760 | - |

@@ -1,0 +1,8 @@
+/proc/cpuinfo 0.9.71
+
+Linux duos 5.10.4-20240527-2+ #1 Sat Jun 1 14:15:39 UTC 2024 riscv64 GNU/Linux / Milk-V DuoS
+
+processor	: 0
+hart		: 0
+isa		: rv64imafdvcsu
+mmu		: sv39

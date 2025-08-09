@@ -253,6 +253,7 @@
 | [Cubietruck (Allwinner A20)](results/3Naw.txt) | 960 MHz | 5.10 | Bullseye armhf | **1030** | 541 | 18640 | 440 | 2010 | - |
 | [Kendryte K510](results/41Qa.txt) | 790 MHz | 4.17 | Sid riscv64 | **690** | 402 | 7410 | 280 | 440 | - |
 | [Lime A10 (Allwinner A10)](results/1j1L.txt) | 910 MHz | 4.14 | Stretch armhf | **550** | 550 | 28250 | 440 | 1300 | - |
+| [Milk-V DuoS (SG2000)](results/8gl6.txt) | 1050 MHz | 5.10 | Trixie riscv64 | **530** | 529 | 12120 | 1380 | 3520 | - |
 | [Raspberry Pi B (BCM2835)](results/4vVG.txt) | 1000 MHz | 6.1 | Raspberry Pi OS Bullseye | **480** | 481 | 16900 | 490 | 2220 | - |
 | [Raspberry Pi Zero (BCM2835)](results/3Njz.txt) | 1000 MHz | 5.10 | Bullseye armv6l/armhf | **460** | 460 | 17060 | 430 | 1670 | - |
 | [Raspberry Pi Zero (BCM2835)](results/1niO.txt) | 1000 MHz | 4.14 | Raspbian Stretch | **450** | 450 | 16820 | 400 | 1590 | - |
@@ -502,6 +503,7 @@
 | [Banana Pi (Allwinner A20)](results/3PLr.txt) | 960 MHz | 5.10 | Bullseye armhf | 1040 | **542** | 18640 | 440 | 2020 | - |
 | [Cubietruck (Allwinner A20)](results/3Naw.txt) | 960 MHz | 5.10 | Bullseye armhf | 1030 | **541** | 18640 | 440 | 2010 | - |
 | [Raspberry Pi Zero 2 (RP3A0)](results/3Dfo.txt) | 600 MHz | 5.10 | Raspberry Pi OS Buster | 1900 | **529** | 18150 | 1040 | 1130 | - |
+| [Milk-V DuoS (SG2000)](results/8gl6.txt) | 1050 MHz | 5.10 | Trixie riscv64 | 530 | **529** | 12120 | 1380 | 3520 | - |
 | [Raspberry Pi B (BCM2835)](results/4vVG.txt) | 1000 MHz | 6.1 | Raspberry Pi OS Bullseye | 480 | **481** | 16900 | 490 | 2220 | - |
 | [Raspberry Pi Zero (BCM2835)](results/3Njz.txt) | 1000 MHz | 5.10 | Bullseye armv6l/armhf | 460 | **460** | 17060 | 430 | 1670 | - |
 | [Raspberry Pi Zero (BCM2835)](results/1niO.txt) | 1000 MHz | 4.14 | Raspbian Stretch | 450 | **450** | 16820 | 400 | 1590 | - |
@@ -761,6 +763,7 @@
 | [Raspberry Pi B (BCM2835)](results/4vVG.txt) | 1000 MHz | 6.1 | Raspberry Pi OS Bullseye | 480 | 481 | **16900** | 490 | 2220 | - |
 | [Raspberry Pi Zero (BCM2835)](results/1niO.txt) | 1000 MHz | 4.14 | Raspbian Stretch | 450 | 450 | **16820** | 400 | 1590 | - |
 | [Raspberry Pi 2 B+ (BCM2836)](results/3MGs.txt) | 900 MHz | 5.10 | Raspberry Pi OS Bullseye | 2150 | 620 | **16500** | 1000 | 1180 | - |
+| [Milk-V DuoS (SG2000)](results/8gl6.txt) | 1050 MHz | 5.10 | Trixie riscv64 | 530 | 529 | **12120** | 1380 | 3520 | - |
 | [Raspberry Pi B (BCM2835)](results/3MGN.txt) | 700 MHz | 5.10 | Raspberry Pi OS Bullseye | 320 | 320 | **11630** | 360 | 1420 | - |
 | [ClockworkPi R-01 (Allwinner D1)](results/40BJ.txt) | 1000 MHz | 5.4 | Focal riscv64 | 450 | 450 | **9040** | 1220 | 2640 | - |
 | [Kendryte K510](results/41Qa.txt) | 790 MHz | 4.17 | Sid riscv64 | 690 | 402 | **7410** | 280 | 440 | - |
@@ -955,6 +958,7 @@
 | [PineH64 (Allwinner H6)](results/26Ph.txt) | 1800 MHz | 5.4 | Buster arm64 | 4710 | 1293 | 839870 | **1420** | 5560 | 7.10 |
 | [Atom N270](results/461n.txt) | 1600 MHz | 4.19 | Buster i386 | 1220 | 824 | 18760 | **1420** | 2840 | - |
 | [PineH64 (Allwinner H6)](results/1jEr.txt) | 1800 MHz | 4.18 | Stretch arm64 | 4650 | 1274 | 836900 | **1380** | 5530 | 5.62 |
+| [Milk-V DuoS (SG2000)](results/8gl6.txt) | 1050 MHz | 5.10 | Trixie riscv64 | 530 | 529 | 12120 | **1380** | 3520 | - |
 | [Rock64 (RK3328)](results/1iHo.txt) | 1300 MHz | 4.4 | Stretch arm64 | 3430 | 952 | 601000 | **1350** | 5680 | 3.64 |
 | [Tinkerboard (RK3288)](results/3Lir.txt) | 1800 MHz | 4.4 | Buster armhf | 5440 | 1693 | 66300 | **1340** | 3510 | - |
 | [Rock64 (RK3328)](results/1iHB.txt) | 1300 MHz | 4.18 | Stretch arm64 | 3560 | 1002 | 603800 | **1340** | 5770 | 3.80 |
@@ -1196,6 +1200,7 @@
 | [x7-Z8700](results/4iDX.txt) | 2400 MHz | 5.15 | Bullseye amd64 | 6580 | 1784 | 296680 | 3510 | **3580** | - |
 | [Nintendo Switch (Tegra X1)](results/1Rnj.txt) | 1780 MHz | 4.9 | Fedora 30 arm-64 | 6170 | 1719 | 642670 | 2500 | **3570** | - |
 | [Orange Pi Prime (Allwinner H5)](results/2kTH.txt) | 1370 MHz | 5.4 | Buster | 3590 | 984 | 637980 | 1180 | **3540** | - |
+| [Milk-V DuoS (SG2000)](results/8gl6.txt) | 1050 MHz | 5.10 | Trixie riscv64 | 530 | 529 | 12120 | 1380 | **3520** | - |
 | [Celeron N2830](results/4pEc.txt) | 2160 MHz | 5.19 | Jammy amd64 | 2760 | 1664 | 31270 | 3780 | **3520** | 6.10 |
 | [Tinkerboard (RK3288)](results/3Lir.txt) | 1800 MHz | 4.4 | Buster armhf | 5440 | 1693 | 66300 | 1340 | **3510** | - |
 | [Orange Pi PC+ (Allwinner H3)](results/3MQV.txt) | 1370 MHz | 5.10 | Focal armhf | 3060 | 879 | 26590 | 890 | **3450** | - |
@@ -1495,6 +1500,7 @@
 | [BPi M2U (Allwinner R40)](results/4kmM.txt) | **1200** MHz| 6.0 | Bullseye armhf | 2690 | 767 | 23320 | 780 | 3010 | - |
 | [Akaso M8S (S812)](results/3R3N.txt) | **1200** MHz| 5.10 | Buster armhf | 3050 | 885 | 32120 | 1160 | 3330 | - |
 | [Teres-I<br />(Allwinner A64)](results/1tJg.txt) | **1050** MHz| 4.19 | Stretch arm64 | 2785 | 780 | 491590 | 1080 | 2820 | - |
+| [Milk-V DuoS (SG2000)](results/8gl6.txt) | **1050** MHz| 5.10 | Trixie riscv64 | 530 | 529 | 12120 | 1380 | 3520 | - |
 | [Raspberry Pi Zero 2 (RP3A0)](results/3E85.txt) | **1000** MHz| 5.10 | Raspberry Pi OS Buster | 3030 | 838 | 29860 | 1300 | 1570 | - |
 | [Raspberry Pi Zero (BCM2835)](results/3Njz.txt) | **1000** MHz| 5.10 | Bullseye armv6l/armhf | 460 | 460 | 17060 | 430 | 1670 | - |
 | [Raspberry Pi Zero (BCM2835)](results/1niO.txt) | **1000** MHz| 4.14 | Raspbian Stretch | 450 | 450 | 16820 | 400 | 1590 | - |

@@ -41,6 +41,7 @@
 | [Orange Pi 5 Max (RK3588)](results/XyIw.txt) | 2280/1800 MHz | 6.1 | Bullseye arm64 | **15960** | 2994 | 1300330 | 12140 | 27900 | 23.64 |
 | [ODROID-M2 (RK3588S2)](results/8ENy.txt) | 2250/1800 MHz | 5.10 | Focal arm64 | **15950** | 2989 | 1284070 | 13630 | 29330 | - |
 | [Radxa ROCK 5A (RK3588)](results/C6zgdP.txt)| ~2290 | 5.10 | Bullseye arm64 | **15630** | 3015 | 1302120 | 9170 | 27080 | 23.42 |
+| [AAEON BOXER-8654AI (Orin NX)](results/87lq.txt) | 1730 MHz | 5.15 | Jammy arm64 | **14820** | 2379 | 973830 | 6920 | 20470 | - |
 | [Intel N100](results/uHzXI7.txt) | 3400 MHz | 6.1 | Jammy amd64 | **14090** | 3910 | 1232550 | 10920 | 11231 | 37.13 |
 | [AMD Seattle (Opteron A1100)](results/4Kqn.txt) | 2000 MHz | 4.15 | Bionic arm64 | **14080** | 2006 | 720710 | 3020 | 9530 | - |
 | [Jetson Orin Nano](results/4vy7.txt) | 1510 MHz | 5.10 | Focal arm64 | **13650** | 2153 | 854400 | 6730 | 20240 | 20.68 |
@@ -313,6 +314,7 @@
 | [Pentium J5005](results/21rE.txt) | 2700/1500 MHz | 5.0 | Bionic amd64 | 9230 | **2455** | 778360 | 5530 | 7130 | 20.74 |
 | [Amazon a1.xlarge](results/2iFY.txt) | 2300 MHz | 4.15 | Bionic arm64 | 8610 | **2406** | 1297960 | 4280 | 14220 | - |
 | [Khadas VIM3 (Amlogic A311D)](results/4o1A.txt) | 2400/2015 MHz | 6.0 | Bullseye arm64 | 9650 | **2379** | 1366300 | 5080 | 9240 | - |
+| [AAEON BOXER-8654AI (Orin NX)](results/87lq.txt) | 1730 MHz | 5.15 | Jammy arm64 | 14820 | **2379** | 973830 | 6920 | 20470 | - |
 | [Khadas VIM3 (Amlogic A311D)](results/3R2Z.txt) | 2400/2015 MHz | 5.10 | Bullseye arm64 | 9650 | **2376** | 1366350 | 4850 | 7380 | - |
 | [ODROID-N2+ (Amlogic S922X)](results/4rWn.txt) | 2400/2015 MHz | 6.1 | Bullseye arm64 | 9710 | **2373** | 1366180 | 4220 | 7720 | - |
 | [ODROID-N2+ (Amlogic S922X)](results/3R1a.txt) | 2400/2015 MHz | 5.10 | Focal arm64 | 9680 | **2372** | 1366730 | 4030 | 7120 | - |
@@ -596,6 +598,7 @@
 | [ODROID-C4 (S905X3)](results/3TQ2.txt) | 2100 MHz | 5.10 | Buster arm64 | 5770 | 1679 | **981940** | 3540 | 5150 | - |
 | [AMedia X96 Max+ (S905X3)](results/3QOj.txt) | 2100 MHz | 5.15 | Focal arm64 | 5270 | 1330 | **981830** | 2630 | 5150 | - |
 | [ODROID-HC4 (S905X3)](results/3Na5.txt) | 2100 MHz | 5.10 | Buster arm64 | 5730 | 1672 | **980970** | 3540 | 5150 | - |
+| [AAEON BOXER-8654AI (Orin NX)](results/87lq.txt) | 1730 MHz | 5.15 | Jammy arm64 | 14820 | 2379 | **973830** | 6920 | 20470 | - |
 | [ODROID-M1 (RK3568)](results/4ijy.txt) | 2060 MHz | 5.18 | Bullseye arm64 | 5430 | 1567 | **961090** | 3310 | 5960 | 7.76 |
 | [ODROID-C4 (S905X3)](results/2kaS.txt) | 2010 MHz | 4.9 | Focal arm64 | 5450 | 1459 | **941590** | 3310 | 6270 | 7.71 |
 | [Phytium<br />FT-2000/4<br />(1 x SO-DIMM)](results/4ioj.txt) | 2600 MHz | 5.15 | Bullseye arm64 | 10020 | 2755 | **936740** | 3760 | 14540 | - |
@@ -814,6 +817,7 @@
 | [Celeron 5205U](results/4eiM.txt) | 1900 MHz | 5.15 | Jammy amd64 | 4060 | 2171 | 521090 | **7350** | 16020 | 11.20 |
 | [Rubik Pi 3 (QCS6490)](results/8WlQ.txt) | 2700/2400/2000 MHz | 6.6 | Trixie arm64 | 17920 | 3871 | 1539030 | **7020** | 17230 | 27.50 |
 | [Loongson-3A5000-HV](results/4dzX.txt) | 2500 MHz | 4.19 | Loongnix 20 loongarch64 | 11120 | 2990 | 116900 | **6930** | 19170 | - |
+| [AAEON BOXER-8654AI (Orin NX)](results/87lq.txt) | 1730 MHz | 5.15 | Jammy arm64 | 14820 | 2379 | 973830 | **6920** | 20470 | - |
 | [Jetson Orin Nano](results/4vy7.txt) | 1510 MHz | 5.10 | Focal arm64 | 13650 | 2153 | 854400 | **6730** | 20240 | 20.68 |
 | [Qualcomm Snapdragon 7c](results/4Lyf.txt) | 2550/1800 MHz | 6.6 | Bookworm arm64 | 13040 | 3113 | 1455700 | **6710** | 14880 | - |
 | [Raspberry Pi 5 B (BCM2712)](results/8-NK.txt) | 2400 MHz | 6.6 | Bookworm arm64 | 11830 | 3305 | 1368160 | **6025** | 9985 | 15.42 |
@@ -1049,6 +1053,7 @@
 | [Radxa ROCK 5A (RK3588)](results/C6zgdP.txt)| ~2290 | 5.10 | Bullseye arm64 | 15630 | 3015 | 1302120 | 9170 | **27080** | 23.42 |
 | [Qualcomm QRB5165](results/49kx.txt) | 2840/2410/1790 MHz | 4.19 | Focal arm64 | 18860 | 3898 | 1598490 | 14470 | **23910** | 25.56 |
 | [Jetson Xavier AGX](results/4ebH.txt) | 2250 MHz | 4.9 | Bionic arm64 | 21590 | 2742 | 853250 | 10910 | **22520** | 26.57 |
+| [AAEON BOXER-8654AI (Orin NX)](results/87lq.txt) | 1730 MHz | 5.15 | Jammy arm64 | 14820 | 2379 | 973830 | 6920 | **20470** | - |
 | [Jetson Orin Nano](results/4vy7.txt) | 1510 MHz | 5.10 | Focal arm64 | 13650 | 2153 | 854400 | 6730 | **20240** | 20.68 |
 | [Loongson-3A5000-HV](results/4dzX.txt) | 2500 MHz | 4.19 | Loongnix 20 loongarch64 | 11120 | 2990 | 116900 | 6930 | **19170** | - |
 | [MT8395 Genio 1200](results/4Kvg.txt) | 2200/2000 MHz | 5.15 | Jammy arm64 | 18130 | 3298 | 1240850 | 14200 | **19000** | 27.60 |
@@ -1429,6 +1434,7 @@
 | [Nintendo Switch (Tegra X1)](results/1Rnj.txt) | **1780** MHz| 4.9 | Fedora 30 arm-64 | 6170 | 1719 | 642670 | 2500 | 3570 | - |
 | [ODROID-C2 (Amlogic S905)](results/1ixI.txt) | **1750** MHz| 3.14 | Xenial arm64 | 4070 | 1128 | 48500 | 1750 | 3100 | - |
 | [Tinkerboard (RK3288)](results/1iSX.txt) | **1730** MHz| 4.14 | Stretch armhf | 5350 | 1563 | 66600 | 1480 | 3900 | - |
+| [AAEON BOXER-8654AI (Orin NX)](results/87lq.txt) | **1730** MHz| 5.15 | Jammy arm64 | 14820 | 2379 | 973830 | 6920 | 20470 | - |
 | [SBC2D70 (SSD202D)](results/3N1U.txt) | **1700** MHz| 5.16 | Sid armhf | 1960 | 1094 | 33120 | 770 | 3190 | - |
 | [AMD E-450 APU](results/4hwl.txt) | **1650** MHz| 5.15 | Jammy amd64 | 2430 | 1258 | 27450 | 1710 | 1740 | - |
 | [Tronsmart S82 (Amlogic S802)](results/41ML.txt) | **1600** MHz| 5.14 | Focal armhf | 3640 | 1114 | 43150 | 500 | 3200 | - |

@@ -14,6 +14,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 
 | Device / details | Clockspeed | Kernel | Distro | 7-zip multi | 7-zip single | AES | memcpy | memset | kH/s |
 | ----- | :--------: | :----: | :----: | ----: | ------: | ------: | -----: | -----: | ---: |
+| [AAEON BOXER-8654AI (Orin NX)](results/87lq.txt) | 1730 MHz | 5.15 | Jammy arm64 | 14820 | 2379 | 973830 | 6920 | 20470 | - |
 | [Akaso M8S (S812)](results/3R3N.txt) | 1200 MHz | 5.10 | Buster armhf | 3050 | 885 | 32120 | 1160 | 3330 | - |
 | [Amazon a1.xlarge](results/2iFY.txt) | 2300 MHz | 4.15 | Bionic arm64 | 8610 | 2406 | 1297960 | 4280 | 14220 | - |
 | [AMD Seattle (Opteron A1100)](results/4Kqn.txt) | 2000 MHz | 4.15 | Bionic arm64 | 14080 | 2006 | 720710 | 3020 | 9530 | - |

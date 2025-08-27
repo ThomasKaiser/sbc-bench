@@ -1,6 +1,4 @@
-Full results uploaded to https://0x0.st/87lq.txt
- 
-# AAEON BOXER-8654AI_RefKit` platform
+# AAEON BOXER-8654AI RefKit
  
 Tested with sbc-bench v0.9.72 on Sun, 03 Aug 2025 12:15:38 +0200. Full info: [https://0x0.st/87lq.txt](../87lq.txt)
  

@@ -150,6 +150,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Qualcomm X1E001DE](results/8SWL.txt) | 4300/3800 MHz | 6.14 | Oracular arm64 | 66120 | 5603 | 2274190 | 38360 | 110410 | 76.85 |
 | [Quartz64-A (RK3566)](results/3rUb.txt) | 1810 MHz | 5.13 | Buster arm64 | 4840 | 1353 | 845490 | 2980 | 7650| - |
 | [Quartz64-A (RK3566)](results/4qJF.txt) | 1890 MHz | 6.2 | Jammy arm64 | 4980 | 1457 | 884590 | 3240 | 6100 | 6.98 |
+| [Radxa Cubie A5E (A527)](results/Kojb.txt) | 1800/1415 MHz | 5.15 | Bookworm arm64 | 8830 | 1517 | 841880 | 2710 | 5570 | 12.32 |
 | [Radxa Fogwise AirBox (SG2300X)](results/XUSc.txt) | 2300 MHz | 5.4 | Focal arm64 | 11580 | 1712 | 1075090 | 1870 | 9210 | - |
 | [Radxa ROCK 3A (RK3568)](results/40TX.txt) | 2000 MHz | 5.18 | Bullseye arm64 | 5110 | 1450 | 935920 | 3150 | 6250 | 7.58 |
 | [Radxa ROCK 4D (RK3576)](results/8g-p.txt) | 2230/2040 MHz | 6.1 | Bookworm arm64 | 10830 | 1771 | 1267790 | 5210 | 15450 | 18.27 |

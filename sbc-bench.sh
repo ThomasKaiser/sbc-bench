@@ -6888,14 +6888,14 @@ GuessSoCbySignature() {
 			# HiSilicon Ascend 310, 8 x Cortex-A55 / r1p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp asimdrdm lrcpc dcpop asimddp
 			echo "HiSilicon Ascend 310"
 			;;
-		0?A55r2p00?A55r2p00?A55r2p00?A55r2p00?A55r2p00?A55r2p00?A55r2p00?A55r2p0)
+		0?A55r2p00?A55r2p00?A55r2p00?A55r2p0??A55r2p0??A55r2p0??A55r2p0??A55r2p0)
 			# Allwinner A523/A527/H728/MR527/T523/T527/R828, 8 x Cortex-A55 / r2p0 / at least 'aes pmull sha1 sha2' (https://browser.geekbench.com/v5/cpu/21564626)
 			# or Amlogic P1, 8 x Cortex-A55 / r2p0
 			case "${DTCompatible,,}" in
 				*a523*)
 					echo "Allwinner A523"
 					;;
-				*a527*)
+				*a527*|*cubie-a5e*)
 					echo "Allwinner A527"
 					;;
 				*h728*)
@@ -6972,7 +6972,7 @@ GuessSoCbySignature() {
 				*t736*)
 					echo "Allwinner T736"
 					;;
-				*a733*)
+				*a733*|*cubie-a7a*|*cubie-a7z*)
 					echo "Allwinner A733"
 					;;
 				*sun60iw2*)

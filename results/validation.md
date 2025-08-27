@@ -252,6 +252,7 @@
 | [c9ZIGh](c9ZIGh.txt) | v0.9.66 Radxa ROCK 5C | 0%/0% | 3.8Gi/3.6Gi | X | X | X | X | 1% | 0% | [check log](c9ZIGh.txt) |
 | [frdzAn](frdzAn.txt) | v0.9.65 Raspberry Pi 5 Model B Rev 1.0 | 0%/0% | 4.0Gi/3.8Gi | X | X | X | X | 1% | 0% | [check log](frdzAn.txt) |
 | [fUCnrY](fUCnrY.txt) | v0.9.65 T-HEAD Light Lichee Pi 4A confi | 0%/0% | 15Gi/14Gi | X | X | X | X | <span style=color:red> 5%</span> | 0% | [check log](fUCnrY.txt) |
+| [Kojb](Kojb.txt) | v0.9.72 sun55iw3 | 0%/0% | 3.8Gi/3.7Gi | X | X | X | X | 2% | 0% | [check log](Kojb.txt) |
 | [uHzXI7](uHzXI7.txt) | v0.9.65 ADL-N / N100 | 0%/0% | 7.5Gi/6.3Gi | X | X | X | X | 1% | 0% | |
 | [X904](X904.txt) | v0.9.67 Milk-V | 0%/0% | 15Gi/14Gi | X | X | X | X | 2% | 0% | |
 | [XObB](XObB.txt) | v0.9.67 / N100 | 0%/0% | 7.5Gi/6.5Gi | X | X | X | X | 2% | 0% | |

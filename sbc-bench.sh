@@ -515,8 +515,12 @@ GetARMCore() {
 	41/d87:Cortex-A725
 	41/d88:Cortex-A520AE
 	41/d89:Cortex-A720AE
+	41/d8a:C1-Nano
+	41/d8b:C1-Pro
+	41/d8c:C1-Ultra
 	41/d8e:Neoverse-N3
 	41/d8f:Cortex-A320
+	41/d90:C1-Premium
 	42:Broadcom
 	42/00f:Broadcom Brahma B15
 	42/100:Broadcom Brahma B53

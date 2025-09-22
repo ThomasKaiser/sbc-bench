@@ -246,7 +246,7 @@ Main() {
 	# ensure other sbc-bench instances are terminated
 	for PID in $( (pgrep -f "${PathToMe}" ; jobs -p) | sort | uniq -u) ; do
 		if [ ${PID} -ne $$ ]; then
-			kill ${PID} 2>/dev/null
+			kill ${PID} >/dev/null 2>&1
 		fi
 	done
 
@@ -988,7 +988,7 @@ PlotPerformanceGraph() {
 
 		snore 240
 		read IdleConsumption <"${NetioConsumptionFile}"
-		kill ${NetioMonitoringPID} ${MonitoringPID}
+		kill ${NetioMonitoringPID} ${MonitoringPID} >/dev/null 2>&1
 		IdleTemp=$(ReadSoCTemp)
 		echo -e "\n##########################################################################\n\nIdle temperature: ${IdleTemp}°C, idle consumption: $(( $(awk '{printf ("%0.0f",$1/10); }' <<<"${IdleConsumption}" ) * 10 )) mW" >>"${ResultLog}"
 	fi
@@ -1556,7 +1556,7 @@ CheckNetio() {
 			export NetioConsumptionFile
 			/bin/bash "${PathToMe}" -N "${NetioDevice}" "${NetioSocket}" "${NetioConsumptionFile}" >/dev/null 2>&1 &
 			NetioMonitoringPID=$!
-			trap 'kill ${NetioMonitoringPID} ; rm -rf "${TempDir}" ; exit 0' 0
+			trap 'kill ${NetioMonitoringPID} >/dev/null 2>&1 ; rm -rf "${TempDir}" ; exit 0' 0
 		fi
 	fi
 } # CheckNetio
@@ -1902,7 +1902,7 @@ TempTest() {
 					SocTemp=$(ReadSoCTemp | cut -f1 -d'.')
 				done
 				echo -e "Heating SoC from current ${TargetTemp}°C to ${TargetTemp}°C. This may take some time...\c"
-				kill ${MinerPID} ${MonitoringPID}
+				kill ${MinerPID} ${MonitoringPID} >/dev/null 2>&1
 			else
 				echo -e "Skipping heating up the SoC since already at ${SocTemp}°C\n" >>"${MonitorLog}"
 				echo -e "No need to heat the SoC to ${TargetTemp}°C since already at ${SocTemp}°C...\c"
@@ -1920,7 +1920,7 @@ TempTest() {
 					SocTemp=$(ReadSoCTemp | cut -f1 -d'.')
 				done
 				echo -e "Waiting for the SoC cooling down from current ${SocTemp}°C to ${TargetTemp}°C. This may take some time...\c"
-				kill ${MonitoringPID}
+				kill ${MonitoringPID} >/dev/null 2>&1
 			else
 				echo -e "No need to wait for the SoC chilling since already at ${SocTemp}°C\n" >>"${MonitorLog}"
 				echo -e "No need to wait for the SoC chilling since already at ${SocTemp}°C...\c"
@@ -2123,7 +2123,7 @@ CheckLoadAndDmesg() {
 		echo -e "\nAverage load and/or CPU utilization too high (too much background activity). Waiting...\n"
 		/bin/bash "${PathToMe}" -m 5 >"${TempDir}/wait-for-loadavg.log" &
 		MonitoringPID=$!
-		trap 'kill ${MonitoringPID} ; rm -rf "${TempDir}" ; exit 0' 0
+		trap 'kill ${MonitoringPID} >/dev/null 2>&1 ; rm -rf "${TempDir}" ; exit 0' 0
 		while [ $AvgLoad1Min -ge 10 ] && [ ${CPUSum:-100} -ge 10 ]; do
 			snore 5
 			CPUutilization="$(awk -F"MHz " '/^[0-9]/ {print $2}' <"${TempDir}/wait-for-loadavg.log" | awk -F" " '{print $3}' | sed 's/%//' | tail -n6)"
@@ -2136,7 +2136,7 @@ CheckLoadAndDmesg() {
 			echo -e "Too busy for benchmarking:$(uptime),  cpu: $(tail -n1 <<<"${CPUutilization}")%"
 			AvgLoad1Min=$(awk -F" " '{print $1*100}' < /proc/loadavg)
 		done
-		kill ${MonitoringPID}
+		kill ${MonitoringPID} >/dev/null 2>&1
 	fi
 	echo ""
 } # CheckLoadAndDmesg
@@ -2353,6 +2353,12 @@ Getx86ClusterDetails() {
 			echo "Redwood Cove" >"${TempDir}/Pcores"
 			[ ${HT} -eq 1 ] && echo "0 12 20" || echo "0 6 14"
 			;;
+		*"Ultra 9 285H"*|*"Ultra 7 265H"*|*"Ultra 7 265H"*|*"Ultra 7 255H"*)
+			# Arrow Lake, 6/8/2 cores, 22 threads
+			echo "Skymont" >"${TempDir}/Ecores"
+			echo "Lion Cove" >"${TempDir}/Pcores"
+			echo "0 6 14"
+			;;
 		i5-12450HX|i5-12450H|i3-12300HL|i3-1220PE|i3-12300HE)
 			# Alder Lake, 4/4 cores, 12 threads
 			echo "Gracemont" >"${TempDir}/Ecores"
@@ -2370,6 +2376,12 @@ Getx86ClusterDetails() {
 			echo "Crestmont" >"${TempDir}/Ecores"
 			echo "Redwood Cove" >"${TempDir}/Pcores"
 			[ ${HT} -eq 1 ] && echo "0 8 16" || echo "0 4 12"
+			;;
+		*"Ultra 5 235H"*|*"Ultra 5 225H"*)
+			# Arrow Lake, 4/8/2 cores, 14 threads
+			echo "Skymont" >"${TempDir}/Ecores"
+			echo "Lion Cove" >"${TempDir}/Pcores"
+			echo "0 4 12"
 			;;
 		i3-1215UL|i3-1215UE|i3-1210U|i3-1215U)
 			# Alder Lake, 2/4 cores, 8 threads
@@ -2389,11 +2401,17 @@ Getx86ClusterDetails() {
 			echo "Raptor Cove" >"${TempDir}/Pcores"
 			[ ${HT} -eq 1 ] && echo "0 4" || echo "0 2"
 			;;
-		*"Ultra 5 125U"*|*"Ultra 5 134U"*|*"Ultra 5 135U"*|*"Ultra 7 155U"*|*"Ultra 7 164U"*|*"Ultra 7 165U"*)
-			# Meteor Lake, 2/8/2 cores, 14 threads
+		*"Ultra 5 125U"*|*"Ultra 5 134U"*|*"Ultra 5 135U"*|*"Ultra 7 155U"*|*"Ultra 7 164U"*|*"Ultra 7 165U"*|*"Ultra 5 235UA"*)
+			# Meteor Lake, 2/8/2 cores, 14 threads, the 'Ultra 5 235UA' is marketed as Arrow Lake but contains Meteor Lake cores
 			echo "Crestmont" >"${TempDir}/Ecores"
 			echo "Redwood Cove" >"${TempDir}/Pcores"
 			[ ${HT} -eq 1 ] && echo "0 4 12" || echo "0 2 10"
+			;;
+		*"Ultra 7 265U"*|*"Ultra 7 255U"*|*"Ultra 5 235U"*|*"Ultra 5 225U"*)
+			# Arrow Lake, 2/8/2 cores, 12 threads
+			echo "Skymont" >"${TempDir}/Ecores"
+			echo "Lion Cove" >"${TempDir}/Pcores"
+			echo "0 2 10"
 			;;
 		*Gold*850*|*Celeron*730*)
 			# Alder Lake, 1/4 cores, 6 threads
@@ -2417,13 +2435,13 @@ Getx86ClusterDetails() {
 			echo "Lion Cove" >"${TempDir}/Pcores"
 			echo "0 4"
 			;;
-		*"Ultra 5 245K"*)
+		*"Ultra 5 245K"*|*"Ultra 5 245HX"*|*"Ultra 5 235HX"*)
 			# Arrow Lake, 6/8 cores, 14 threads
 			echo "Skymont" >"${TempDir}/Ecores"
 			echo "Lion Cove" >"${TempDir}/Pcores"
 			echo "0 6"
 			;;
-		*"Ultra 7 265K"*|*"Ultra 9 285K"*)
+		*"Ultra 7 265K"*|*"Ultra 9 285K"*|*"Ultra 9 285HX"*|*"Ultra 9 275HX"*|*"Ultra 7 265HX"*|*"Ultra 7 255HX"*)
 			# Arrow Lake, 8 P cores, 12/16 E cores, 20/24 threads
 			echo "Skymont" >"${TempDir}/Ecores"
 			echo "Lion Cove" >"${TempDir}/Pcores"
@@ -3730,8 +3748,9 @@ CheckClockspeedsAndSensors() {
 			for Disk in ${Disks} ; do
 				case ${Disk} in
 					/dev/sd*)
-						DiskTemp="$(${SmartCtl} -a ${Disk} | awk -F" " '/Temperature/ {print $10" "$2}' | head -n1 | sed -e 's/_/ /g' -e 's/^ *//g')"
-						[ "X${DiskTemp}" != "X" ] && echo -e "${Disk}:\t${DiskTemp}"
+						SMARTInfo="$(${SmartCtl} -a ${Disk})"
+						DiskTemp="$(awk -F" " '/Temperature/ {print $10" "$2}' <<<"${SMARTInfo}" | head -n1 | sed -e 's/_/ /g' -e 's/^ *//g')"
+						[ "X${DiskTemp}" != "X" ] && [ "X${DiskTemp}" != "XDrive" ] && [ "X${DiskTemp}" != "X0" ] && echo -e "${Disk}:\t${DiskTemp}"
 						;;
 					/dev/nvme*)
 						echo -e "${Disk}:\t$(${SmartCtl} -a ${Disk} | awk -F" " '/Temperature:/ {print $2" "$3}' | head -n1)"
@@ -6445,17 +6464,22 @@ GuessSoCbySignature() {
 			# Qualcomm Snapdragon 7c+ Gen 3 (SC7280) or QCM6490/QCS6490: 4 x Kryo 468 Silver + 3 x Kryo 468 Gold + 1 x Kryo 468 Gold Plus
 			# Though it seems Qualcomm is using this time not their masqueraded Kryo names but directly ARM's core names (at least with QCS6490):
 			# QCS6490: 4 x Cortex-A55 / r2p0 + 4 x Cortex-A78 / r1p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp
-			case "${DTCompatible,,}" in
-				*qcs6490*)
-					echo "Qualcomm QCS6490"
-					;;
-				*qcm6490*)
-					echo "Qualcomm QCM6490/QCS6490"
-					;;
-				*sc7280*)
-					echo "Qualcomm Snapdragon 7c+ Gen 3 (SC7280)"
-					;;
-			esac
+			DMIModel="$(grep 6490 <<<"${LSCPU}" | head -n1)"
+			if [ -n "${DMIModel}" ]; then
+				awk -F" " '{print "Qualcomm "$6}' <<<"${DMIModel}"
+			else
+				case "${DTCompatible,,}" in
+					*qcs6490*)
+						echo "Qualcomm QCS6490"
+						;;
+					*qcm6490*)
+						echo "Qualcomm QCM6490/QCS6490"
+						;;
+					*sc7280*)
+						echo "Qualcomm Snapdragon 7c+ Gen 3 (SC7280)"
+						;;
+				esac
+			fi
 			;;
 		*OryonX1r4p4*OryonX1r3p4*)
 			# Qualcomm Snapdragon 8 Elite (SM8750-AB): 6 x Oryon X1 r4p4 + 2 x Oryon X1 r3p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp flagm2 frint i8mm bf16 rng bti ecv afp rpres
@@ -8611,7 +8635,7 @@ ProvideReviewInfo() {
 			read IdleConsumption <${NetioConsumptionFile}
 			echo -e "  * /sys/module/pcie_aspm/parameters/policy set to performance: ${IdleConsumption} mW" >>"${TempDir}/review"
 		fi
-		kill ${NetioMonitoringPID} 2>/dev/null
+		kill ${NetioMonitoringPID} >/dev/null 2>&1
 		echo -e "\x08\x08 Done."
 	fi
 
@@ -8710,7 +8734,7 @@ ProvideReviewInfo() {
 FinalReporting() {
 	trap 'rm -rf "${TempDir}" ; exit 0' 0
 	echo -e "\n\nCleaning up...\c"
-	kill ${NetioMonitoringPID} ${MonitoringPID} 2>/dev/null
+	kill ${NetioMonitoringPID} ${MonitoringPID} >/dev/null 2>&1
 	SwapNow="$(awk -F" " '{print $4}' </proc/swaps | grep -v -i Used | awk '{s+=$1} END {printf "%.0f", s}')"
 	[ ${SwapNow:-0} -gt ${SwapBefore:-0} ] && SwapWarning=" and swapping" || SwapWarning=""
 	CheckTimeInState after
@@ -9385,7 +9409,7 @@ CheckStorage() {
 		unset DeviceName DeviceInfo DeviceWarning DevizeSize AdditionalInfo AdditionalSMARTInfo ProductName VendorName SpeedInfo SupportedSpeeds RawDiskTemp DriveTemp LnkSta PercentageUsed ASPMSettings
 
 		UdevInfo="$(udevadm info -a -n ${StorageDevice} 2>/dev/null)"
-		Driver="$(awk -F'"' '/DRIVERS==/ {print $2}' <<<"${UdevInfo}" | grep -E 'uas|usb-storage|ahci|nvme|virtio-|sas|mptspi')"
+		Driver="$(awk -F'"' '/DRIVERS==/ {print $2}' <<<"${UdevInfo}" | grep -E 'uas|usb-storage|ahci|nvme|virtio-|sas|mptspi|ufshcd')"
 		case "${Driver}" in
 			ahci|ahci-*|*-ahci|sata_*|sata-*|*-sata|*pata|pata*|*sas)
 				# (S)ATA attached, we need to also take care about other driver names like
@@ -9499,6 +9523,20 @@ CheckStorage() {
 				DeviceName="$(sed -e 's/  */ /g' -e 's/ $//' <<<"${DiskVendor} ${DiskModel}")"
 				AdditionalInfo="${StorageDevice}, Driver=${Driver}"
 				;;
+			ufshcd*)
+				# UFS
+				DiskVendor="$(awk -F'"' '/ATTRS{vendor}/ {print $2}' <<<"${UdevInfo}" | head -n1)"
+				DiskModel="$(awk -F'"' '/ATTRS{model}/ {print $2}' <<<"${UdevInfo}" | head -n1)"
+				SmartCtl="$(command -v smartctl 2>/dev/null)"
+				SMARTInfo="$(${SmartCtl} -i ${StorageDevice} 2>/dev/null)"
+				UFSSpec="$(awk -F" " '/^Compliance/ {print $2}' <<< "${SMARTInfo}")"
+				if [ -n "${UFSSpec}" ]; then
+					DeviceName="$(sed -e 's/  */ /g' -e 's/ $//' <<<"${DiskVendor} ${DiskModel}") ${UFSSpec} compliant UFS module"
+				else
+					DeviceName="$(sed -e 's/  */ /g' -e 's/ $//' <<<"${DiskVendor} ${DiskModel}") UFS module"
+				fi
+				AdditionalInfo="${StorageDevice}, Driver=${Driver}"
+				;;
 		esac
 
 		DevizeSize="$(GetDiskSize "${StorageDevice}" "${DeviceName}")"
@@ -9506,7 +9544,15 @@ CheckStorage() {
 			echo -e "smartctl -x ${StorageDevice} ; \c" >>"${TempDir}/check-smart"
 			echo -e "  * ${LRED}${DevizeSize}${DeviceName%%*( )}: ${DeviceInfo}${LnkSta}${AdditionalSMARTInfo}${AdditionalInfo}${DriveTemp}${ASPMSettings}${NC}"
 		else
-			echo -e "  * ${DevizeSize}${DeviceName%%*( )}: ${DeviceInfo}${LnkSta}${AdditionalSMARTInfo}${AdditionalInfo}${DriveTemp}${ASPMSettings}"
+			case ${DevizeSize} in
+				?"MB "|"")
+					# ignore irrelevant UFS pseudo devices
+					:
+					;;
+				*)
+					echo -e "  * ${DevizeSize}${DeviceName%%*( )}: ${DeviceInfo}${LnkSta}${AdditionalSMARTInfo}${AdditionalInfo}${DriveTemp}${ASPMSettings}"
+					;;
+			esac
 		fi
 		[ -n "${LetsBenchmark}" ] && snore 0.1 && echo -e "    \c" >&2 && GetBenchmarkPartition "${StorageDevice}" 600000 >&2
 	done

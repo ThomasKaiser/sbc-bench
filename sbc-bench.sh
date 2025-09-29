@@ -2500,29 +2500,35 @@ ParseOPPTables() {
 	fi
 
 	for OPPTable in ${DVFS}; do
+		# only parse OPP tables with provided opp-microvolt properties
 		read OPPTableName <"${OPPTable}/name"
-		echo -e "\n   ${OPPTableName}:"
-		find "${OPPTable}" -type d -name "opp*" 2>/dev/null | grep "${OPPTableName}/" | sort | while read ; do
-			[ -f "${REPLY}/opp-hz" ] && OPPHz="$(printf "%d\n" 0x$(od --endian=big -x <"${REPLY}/opp-hz" | cut -c9- | tr -d ' ') | awk '{printf ("%0.0f",$1/1000000); }')" || OPPHz=""
-			if [ -f "${REPLY}/opp-microvolt" ]; then
-				OPPVolt="$(printf "%d\n" 0x$(od --endian=big -x <"${REPLY}/opp-microvolt" | cut -c9- | tr -d ' ' | cut -c-8 | head -n1))"
-				if [ -f "${REPLY}/opp-supported-hw" ]; then
-					OPPSupportedHW="$(od --endian=big -x <"${REPLY}/opp-supported-hw" | cut -c9- | sed 's/0000 //g' | head -n1)"
-					[ "X${OPPHz}" != "X" ] && printf "%10s MHz %8s mV (%s)\n" ${OPPHz} $(awk '{printf ("%0.1f",$1/1000); }' <<<"${OPPVolt}") "${OPPSupportedHW}"
+		VoltsProvided="$(find "${OPPTable}" -name "opp-microvolt")"
+		if [ -n "${VoltsProvided}" ]; then
+			echo -e "\n   ${OPPTableName}:"
+			find "${OPPTable}" -type d -name "opp*" 2>/dev/null | grep "${OPPTableName}/" | sort | while read ; do
+				[ -f "${REPLY}/opp-hz" ] && OPPHz="$(printf "%d\n" 0x$(od --endian=big -x <"${REPLY}/opp-hz" | cut -c9- | tr -d ' ') | awk '{printf ("%0.0f",$1/1000000); }')" || OPPHz=""
+				if [ -f "${REPLY}/opp-microvolt" ]; then
+					OPPVolt="$(printf "%d\n" 0x$(od --endian=big -x <"${REPLY}/opp-microvolt" | cut -c9- | tr -d ' ' | cut -c-8 | head -n1))"
+					if [ -f "${REPLY}/opp-supported-hw" ]; then
+						OPPSupportedHW="$(od --endian=big -x <"${REPLY}/opp-supported-hw" | cut -c9- | sed 's/0000 //g' | head -n1)"
+						[ "X${OPPHz}" != "X" ] && printf "%10s MHz %8s mV (%s)\n" ${OPPHz} $(awk '{printf ("%0.1f",$1/1000); }' <<<"${OPPVolt}") "${OPPSupportedHW}"
+					else
+						[ "X${OPPHz}" != "X" ] && printf "%10s MHz %8s mV\n" ${OPPHz} $(awk '{printf ("%0.1f",$1/1000); }' <<<"${OPPVolt}")
+					fi
+				elif [ -f "${REPLY}/opp-microvolt-speed0" ]; then
+					printf "%10s MHz " ${OPPHz}
+					for SpeedBin in $(ls "${REPLY}"/opp-microvolt-speed* | sort -n) ; do
+						OPPVolt="$(printf "%d\n" 0x$(od --endian=big -x <"${SpeedBin}" | cut -c9- | tr -d ' ' | cut -c-8 | head -n1))"
+						[ "X${OPPHz}" != "X" ] && printf "%8s mV" $(awk '{printf ("%0.1f",$1/1000); }' <<<"${OPPVolt}")
+					done
+					echo ""
 				else
-					[ "X${OPPHz}" != "X" ] && printf "%10s MHz %8s mV\n" ${OPPHz} $(awk '{printf ("%0.1f",$1/1000); }' <<<"${OPPVolt}")
+					printf "%10s MHz       -\n" ${OPPHz}
 				fi
-			elif [ -f "${REPLY}/opp-microvolt-speed0" ]; then
-				printf "%10s MHz " ${OPPHz}
-				for SpeedBin in $(ls "${REPLY}"/opp-microvolt-speed* | sort -n) ; do
-					OPPVolt="$(printf "%d\n" 0x$(od --endian=big -x <"${SpeedBin}" | cut -c9- | tr -d ' ' | cut -c-8 | head -n1))"
-					[ "X${OPPHz}" != "X" ] && printf "%8s mV" $(awk '{printf ("%0.1f",$1/1000); }' <<<"${OPPVolt}")
-				done
-				echo ""
-			else
-				printf "%10s MHz       -\n" ${OPPHz}
-			fi
-		done | sort -n
+			done | sort -n
+		else
+			echo -e "\n   ${OPPTableName}:   (no microvolt properties provided)\n"
+		fi
 	done
 } # ParseOPPTables
 
@@ -2886,7 +2892,7 @@ CheckGB() {
 	# 'Geekbench 6' and not 'Geekbench 6.0' which makes version string guessing a bit
 	# tricky
 	GBBlogContents="$(links -dump "https://www.geekbench.com/blog/")"
-	NewMajorVersion="$(grep "Geekbench [567]$" <<<"${GBBlogContents}" | head -n1 | awk -F" " '{print $2}').0"
+	NewMajorVersion="$(grep "Geekbench [567]$" <<<"${GBBlogContents}" | head -n1 | sed 's/*//' | awk -F" " '{print $2}').0"
 	LatestMinorVersion="$(awk -F" " '/ Geekbench [567].[0-9]/ {print $2}' <<<"${GBBlogContents}" | head -n1)"
 	GBVersion="$(echo -e "${NewMajorVersion}\n${LatestMinorVersion}" | sort -V | tail -n1)"
 

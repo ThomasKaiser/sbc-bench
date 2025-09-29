@@ -32,6 +32,7 @@
 | [Qualcomm QRB5165](results/49kx.txt) | 2840/2410/1790 MHz | 4.19 | Focal arm64 | **18860** | 3898 | 1598490 | 14470 | 23910 | 25.56 |
 | [MT8395 Genio 1200](results/4Kvg.txt) | 2200/2000 MHz | 5.15 | Jammy arm64 | **18130** | 3298 | 1240850 | 14200 | 19000 | 27.60 |
 | [Rubik Pi 3 (QCS6490)](results/8WlQ.txt) | 2700/2400/2000 MHz | 6.6 | Trixie arm64 | **17920** | 3871 | 1539030 | 7020 | 17230 | 27.50 |
+| [Radxa Dragon Q6A (QCS6490)](results/.txt) | 2700/2400/1950 MHz | 6.16 | Noble arm64 | **17400** | 3840 | 1522730 | 8404 | 19660 | 26.31 |
 | [Orange Pi 5 (RK3588)](results/4D0a.txt) | 2400/1800 MHz | 5.10 | Jammy arm64 | **16780** | 2689 | 1366590 | 12800 | 29900 | - |
 | [Phytium D2000<br />(2 x SO-DIMM)](results/446h.txt) | 2300 MHz | 5.19 | Jammy arm64 | **16670** | 2252 | 828130 | 3480 | 16110 | - |
 | [Khadas Edge2 (RK3588s)](results/4a5U.txt) | 2260/1800 MHz | 5.10 | Jammy arm64 | **16470** | 3096 | 1287490 | 10860 | 29110 | - |
@@ -283,6 +284,7 @@
 | [Rubik Pi 3 (QCS6490)](results/8WlQ.txt) | 2700/2400/2000 MHz | 6.6 | Trixie arm64 | 17920 | **3871** | 1539030 | 7020 | 17230 | 27.50 |
 | [Ampere Altra M96-28](results/4zGI.txt) | 2800 MHz | 5.15 | Jammy arm64 | 249380 | **3858** | 1596110 | 10130 | 44750 | - |
 | [Hetzner CAX11 (Ampere Altra)](results/4HdL.txt) | 3000 MHz | 5.15 | Jammy arm64 | 8060 | **3842** | 1705600 | 11250 | 47670 | 11.44 |
+| [Radxa Dragon Q6A (QCS6490)](results/.txt) | 2700/2400/1950 MHz | 6.16 | Noble arm64 | 17400 | **3840** | 1522730 | 8404 | 19660 | 26.31 |
 | [Raspberry Pi 5 B (BCM2712)](results/8acvqG.txt) | 3000 MHz | 6.1 | Bookworm arm64 | 12930 | **3791** | 1709720 | 5160 | 16350 | 19.25 |
 | [Ampere Altra Q80-26](results/4zkJ.txt) | 2600 MHz | 5.15 | Jammy arm64 | 214390 | **3748** | 1482190 | 11685 | 41560 | 316.50 |
 | [Phytium D3000/8](results/84GG.txt) | 2500 MHz | 6.6 | Deepin 23.1 arm64 | 28070 | **3617** | 1425820 | 15090 | 39810 | 33.03 |
@@ -536,6 +538,7 @@
 | [Qualcomm QRB5165](results/49kx.txt) | 2840/2410/1790 MHz | 4.19 | Focal arm64 | 18860 | 3898 | **1598490** | 14470 | 23910 | 25.56 |
 | [Ampere Altra M96-28](results/4zGI.txt) | 2800 MHz | 5.15 | Jammy arm64 | 249380 | 3858 | **1596110** | 10130 | 44750 | - |
 | [Rubik Pi 3 (QCS6490)](results/8WlQ.txt) | 2700/2400/2000 MHz | 6.6 | Trixie arm64 | 17920 | 3871 | **1539030** | 7020 | 17230 | 27.50 |
+| [Radxa Dragon Q6A (QCS6490)](results/.txt) | 2700/2400/1950 MHz | 6.16 | Noble arm64 | 17400 | 3840 | **1522730** | 8404 | 19660 | 26.31 |
 | [Ampere Altra Q80-26](results/4zkJ.txt) | 2600 MHz | 5.15 | Jammy arm64 | 214390 | 3748 | **1482190** | 11685 | 41560 | 316.50 |
 | [Qualcomm Snapdragon 7c](results/4Lyf.txt) | 2550/1800 MHz | 6.6 | Bookworm arm64 | 13040 | 3113 | **1455700** | 6710 | 14880 | - |
 | [Phytium D3000/8](results/84GG.txt) | 2500 MHz | 6.6 | Deepin 23.1 arm64 | 28070 | 3617 | **1425820** | 15090 | 39810 | 33.03 |
@@ -810,6 +813,7 @@
 | [Pentium N6005](results/4BtC.txt) | 3300/2000 MHz | 5.15 | Jammy amd64 | 11510 | 3369 | 923550 | **9650** | 10280 | 22.18 |
 | [Jetson Xavier NX](results/3YWp.txt) | 1890 MHz | 4.9 | Bionic arm64 | 13230 | 2201 | 706280 | **9190** | 18480 | - |
 | [Radxa ROCK 5A (RK3588)](results/C6zgdP.txt)| ~2290 | 5.10 | Bullseye arm64 | 15630 | 3015 | 1302120 | **9170** | 27080 | 23.42 |
+| [Radxa Dragon Q6A (QCS6490)](results/.txt) | 2700/2400/1950 MHz | 6.16 | Noble arm64 | 17400 | 3840 | 1522730 | **8404** | 19660 | 26.31 |
 | [Ryzen R1606G](results/2tQQ.txt) | 2600/1400 MHz | 5.4 | Focal amd64 | 7970 | 2854 | 700780 | **8230** | 5970 | 16.45 |
 | [Khadas VIM4 (A311D2)](results/4cHh.txt) | 2200/2010 MHz | 5.4 | Jammy arm64 | 12120 | 2067 | 1254540 | **8180** | 11680 | - |
 | [Radxa X4 (N100)](results/XObB.txt) | 3400 MHz | 6.8 | Noble amd64 | 8010 | 3580 | 1231100 | **8140** | 7970 | 21.40 |
@@ -1059,6 +1063,7 @@
 | [Jetson Xavier AGX](results/4ebH.txt) | 2250 MHz | 4.9 | Bionic arm64 | 21590 | 2742 | 853250 | 10910 | **22520** | 26.57 |
 | [AAEON BOXER-8654AI (Orin NX)](results/87lq.txt) | 1730 MHz | 5.15 | Jammy arm64 | 14820 | 2379 | 973830 | 6920 | **20470** | - |
 | [Jetson Orin Nano](results/4vy7.txt) | 1510 MHz | 5.10 | Focal arm64 | 13650 | 2153 | 854400 | 6730 | **20240** | 20.68 |
+| [Radxa Dragon Q6A (QCS6490)](results/.txt) | 2700/2400/1950 MHz | 6.16 | Noble arm64 | 17400 | 3840 | 1522730 | 8404 | **19660** | 26.31 |
 | [Loongson-3A5000-HV](results/4dzX.txt) | 2500 MHz | 4.19 | Loongnix 20 loongarch64 | 11120 | 2990 | 116900 | 6930 | **19170** | - |
 | [MT8395 Genio 1200](results/4Kvg.txt) | 2200/2000 MHz | 5.15 | Jammy arm64 | 18130 | 3298 | 1240850 | 14200 | **19000** | 27.60 |
 | [Jetson Xavier NX](results/3YWp.txt) | 1890 MHz | 4.9 | Bionic arm64 | 13230 | 2201 | 706280 | 9190 | **18480** | - |
@@ -1313,6 +1318,7 @@
 | [Celeron N4020](results/4vNB.txt) | **2800** MHz| 5.15 | Bookworm amd64 | 4680 | 2577 | 780770 | 5480 | 5390 | - |
 | [Ampere Altra M96-28](results/4zGI.txt) | **2800** MHz| 5.15 | Jammy arm64 | 249380 | 3858 | 1596110 | 10130 | 44750 | - |
 | [Rubik Pi 3 (QCS6490)](results/8WlQ.txt) | **2700/2400/2000** MHz| 6.6 | Trixie arm64 | 17920 | 3871 | 1539030 | 7020 | 17230 | 27.50 |
+| [Radxa Dragon Q6A (QCS6490)](results/.txt) | **2700/2400/1950** MHz| 6.16 | Noble arm64 | 17400 | 3840 | 1522730 | 8404 | 19660 | 26.31 |
 | [Pentium J5005](results/21rE.txt) | **2700/1500** MHz| 5.0 | Bionic amd64 | 9230 | 2455 | 778360 | 5530 | 7130 | 20.74 |
 | [Celeron J4125](results/4hau.txt) | **2700/2000** MHz| 5.15 | Jammy amd64 | 7620 | 2367 | 751360 | 5110 | 5960 | 18.30 |
 | [Ryzen R1606G](results/2tQQ.txt) | **2600/1400** MHz| 5.4 | Focal amd64 | 7970 | 2854 | 700780 | 8230 | 5970 | 16.45 |

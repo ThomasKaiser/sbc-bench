@@ -563,6 +563,7 @@ GetARMCore() {
 	4e/000:NVidia Denver
 	4e/003:NVidia Denver 2
 	4e/004:NVidia Carmel
+	4e/010:NVidia Olympus
 	50:APM
 	50/000:APM X-Gene
 	51:Qualcomm
@@ -703,17 +704,11 @@ GetCoreType() {
 			esac
 			;;
 		loongarch*)
-			ModelName="$(awk -F": " '/^model name/ {print $2}' <<< "${ProcCPU}" | sed -n $(( $1 + 1 ))p)"
+			ModelName="$(awk -F": " 'tolower($0) ~ /^model name/ {print $2}' <<< "${ProcCPU}" | sed -n $(( $1 + 1 ))p)"
 			case ${ModelName} in
-				*3?5000*)
-					echo "LA464"
-					;;
-				*3?6000*)
-					echo "LA664"
-					;;
 				"")
 					# fallback to cpu model if existing
-					grep -q 'cpu model' <<< "${ProcCPU}" && awk -F": " '/^cpu model/ {print $2}' <<< "${ProcCPU}" | sed -n $(( $1 + 1 ))p
+					grep -i -q 'cpu model' <<< "${ProcCPU}" && awk -F": " 'tolower($0) ~ /^cpu model/ {print $2}' <<< "${ProcCPU}" | sed -n $(( $1 + 1 ))p
 					;;
 				*\(*)
 					# we use just the part in brackets: Loongson-3A R4 (Loongson-3A4000) @ 1500MHz
@@ -5046,27 +5041,6 @@ ValidateResults() {
 	elif [ "X$1" = "Xreview" ] && [ "${OriginalCPUFreqGovernor}" = "ondemand" ] && [[ -z "${io_is_busy[@]}" ]]; then
 		echo -e "${LRED}${BOLD}ondemand cpufreq governor used by distro but io_is_busy not active${NC} -> http://tinyurl.com/44pbmw79"
 	fi
-
-	# check DT settings on big.LITTLE ARM designs for scheduler relevant stuff:
-	if [ -d /proc/device-tree/cpus ] && [ ${#ClusterConfig[@]} -ne 1 ]; then
-		capacitydmipsmhz=$(find /proc/device-tree/cpus -name capacity-dmips-mhz | wc -l)
-		if [ ${capacitydmipsmhz} -eq 0 ]; then
-			echo "${LRED}${BOLD}${#ClusterConfig[@]} different clusters but capacity-dmips-mhz property not set${NC}"
-		elif [ ${capacitydmipsmhz} -ne ${CPUCores} ]; then
-			echo "${LRED}${BOLD}${#ClusterConfig[@]} different clusters and ${CPUCores} cores but capacity-dmips-mhz property only set on ${capacitydmipsmhz}${NC}"
-		fi
-		if [ "${OriginalCPUFreqGovernor}" = "schedutil" ]; then
-			dynamicpowercoefficient=$(find /proc/device-tree/cpus -name dynamic-power-coefficient | wc -l)
-			schedenergycosts=$(find /proc/device-tree/cpus -name sched-energy-costs | wc -l)
-			if [ ${dynamicpowercoefficient} -eq 0 ] && [ ${schedenergycosts} -eq 0 ]; then
-				echo "${LRED}${BOLD}${OriginalCPUFreqGovernor} cpufreq governor configured but neither dynamic-power-coefficient nor sched-energy-costs defined${NC}"
-			elif [ ${dynamicpowercoefficient} -ne ${CPUCores} ]; then
-				echo "${OriginalCPUFreqGovernor} cpufreq governor configured: ${CPUCores} cores available vs. only ${dynamicpowercoefficient} dynamic-power-coefficient DT nodes"
-			elif [ ${schedenergycosts} -ne ${CPUCores} ]; then
-				echo "${OriginalCPUFreqGovernor} cpufreq governor configured: ${CPUCores} cores available vs. only ${schedenergycosts} sched-energy-costs DT nodes"
-			fi
-		fi
-	fi
 } # ValidateResults
 
 ListSwapDevices() {
@@ -8021,11 +7995,11 @@ GuessSoCbySignature() {
 			echo "SpacemiT K1/M1"
 			;;
 		??eswin,eic770x??eswin,eic770x??eswin,eic770x??eswin,eic770x)
-			# Eswin EIC7700X: 4 x RV64GC https://www.eswincomputing.com/en/bocupload/2024/06/19/17187920991529ene8q.pdf
+			# Eswin EIC7700X: 4 x P550/RV64GC https://www.eswincomputing.com/en/bocupload/2024/06/19/17187920991529ene8q.pdf
 			echo "Eswin EIC7700X"
 			;;
 		??eswin,eic770x??eswin,eic770x??eswin,eic770x??eswin,eic770x??eswin,eic770x??eswin,eic770x??eswin,eic770x??eswin,eic770x)
-			# Eswin EIC7702X: 8 x RV64GC https://www.eswincomputing.com/en/bocupload/2024/06/19/1718792113959fd7u8.pdf
+			# Eswin EIC7702X: 8 x P550/RV64GC https://raw.githubusercontent.com/ThomasKaiser/sbc-bench/master/results/cpuinfo/Eswin-EIC7702X-6.6.92-eic7x-2025.07.cpuinfo
 			echo "Eswin EIC7702X"
 			;;
 		0?Qualcomm3XXSilver0?Qualcomm3XXSilver0?Qualcomm3XXSilver0?Qualcomm3XXSilver0?Qualcomm3XXGold0?Qualcomm3XXGold0?Qualcomm3XXGold0?Qualcomm3XXGold)
@@ -8063,9 +8037,10 @@ GuessSoCbySignature() {
 			echo "Qualcomm Snapdragon 8 Gen 3"
 			;;
 		*A720r0p1*A520r0p1*A520r0p1*A520r0p1*A520r0p1*A720r0p1*A720r0p1*A720r0p1*A720r0p1*A720r0p1*A720r0p1*A720r0p1|A720r0p1*A720r0p1*A720r0p1*A720r0p1*A720r0p1*A720r0p1*A720r0p1*A720r0p1)
-			# Cix Tech P1 / CP8180/CD8180: 1 x Cortex-A720 / r0p1 + 4 x Cortex-A520 / r0p1 + 7 x Cortex-A720 / r0p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 sve asimdfhm dit uscat ilrcpc flagm sb paca pacg dcpodp sve2 sveaes svepmull svebitperm svesha3 svesm4 flagm2 frint svei8mm svebf16 i8mm bf16 dgh bti mte ecv afp mte3 wfxt
+			# Cix Tech P1 / CP8180/CD8180/CD8160: 1 x Cortex-A720 / r0p1 + 4 x Cortex-A520 / r0p1 + 7 x Cortex-A720 / r0p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 sve asimdfhm dit uscat ilrcpc flagm sb paca pacg dcpodp sve2 sveaes svepmull svebitperm svesha3 svesm4 flagm2 frint svei8mm svebf16 i8mm bf16 dgh bti mte ecv afp mte3 wfxt
 			# with some firmware versions the little cores are gone
-			echo "Cix P1/CD8180"
+			BIOSModelName="$(awk -F":" 'tolower($0) ~ /^bios model name/ {print $2}' <<<"${LSCPU}" | tail -n1)"
+			grep -q -i "cix p1" <<<"${BIOSModelName}" && awk -F" " '{print "Cix P1/"$3}' <<<"${BIOSModelName}"
 			;;
 		*A720r0p1*A720r0p1*A720r0p1*A720r0p1*X4r0p1*X4r0p1*X4r0p1*X4r0p1)
 			# MediaTek Dimensity 9300: 4 x Cortex-A720 / r0p1 + 4 x Cortex-X4 / r0p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 sve asimdfhm dit uscat ilrcpc flagm ssbs sb dcpodp sve2 sveaes svepmull svebitperm svesha3 svesm4 flagm2 frint svei8mm svebf16 i8mm bf16 dgh bti mte ecv afp mte3 wfxt
@@ -8112,9 +8087,19 @@ GuessSoCbySignature() {
 			# With SMT support: with SCHED_SMT enabled CPU appears as 4c/8t, without as 8c/8t? https://lkml.org/lkml/2023/6/14/397
 			echo "Loongson-3A6000"
 			;;
-		*Loongson3?6000*Loongson3?6000*Loongson3?6000*Loongson3?6000)
+		*Loongson3A6000*Loongson3A6000*Loongson3A6000*Loongson3A6000*)
 			# Loongson-3A6000 variants with more cores
 			[ "X${ModelName}" != "X" ] && echo "${ModelName}"
+			;;
+		*Loongson3C6000*Loongson3C6000*Loongson3C6000*Loongson3C6000*)
+			# Loongson-3C6000: 32 x LoongArch / loongarch32r, loongarch32s, loongarch64 / cpucfg lam ual fpu lsx lasx crc32 complex crypto lspw lvz lbt_x86 lbt_arm lbt_mips https://github.com/ThomasKaiser/sbc-bench/blob/master/results/cpuinfo/Loongson-3C6000-6.12.cpuinfo
+			if [ "X${ModelName}" != "X" ]; then
+				if [ ${CPUCores} -gt 32 ]; then
+					echo "$(( ${CPUCores} / 32 )) x ${ModelName}"
+				else
+					echo "${ModelName}"
+				fi
+			fi
 			;;
 		*A55*A55*A55*A55*A76r4p1|*A76r4p1*A55*A55*A55*A55r?p?)
 			# Amlogic S928X, 1 x Cortex-A76 / r4p1 + 4 x Cortex-A55: https://browser.geekbench.com/v5/cpu/compare/19788026?baseline=20656779

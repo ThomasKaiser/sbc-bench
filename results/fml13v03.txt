@@ -1,0 +1,1079 @@
+sbc-bench v0.9.72 DeepComputing FML13V03 (Sun, 12 Oct 2025 13:02:47 +0800)
+
+Distributor ID:	Ubuntu
+Description:	Ubuntu 24.04 LTS  v1.0.15009
+Release:	24.04
+Codename:	noble
+
+Device Info:
+	Manufacturer: Unknown
+	Product Name: Unknown Product
+
+BIOS/UEFI:
+	Vendor: U-Boot
+	Version: 2024.01
+	Release Date: 01/01/2024
+	BIOS Revision: 24.1
+
+/usr/bin/gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0
+
+Uptime: 13:02:47 up 25 min,  2 users,  load average: 0.52, 3.05, 3.15,  48.1°C,  189642028
+
+Linux 6.6.92-eic7x-2025.07 (roma) 	10/12/2025 	_riscv64_	(8 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+          43.02    0.01    3.19    0.03    0.00   53.75
+
+Device             tps    kB_read/s    kB_wrtn/s    kB_dscd/s    kB_read    kB_wrtn    kB_dscd
+nvme0n1          18.04       455.86       286.06         0.00     687340     431317          0
+
+               total        used        free      shared  buff/cache   available
+Mem:            14Gi       1.3Gi        13Gi        15Mi       262Mi        13Gi
+Swap:          2.0Gi          0B       2.0Gi
+
+Filename				Type		Size		Used		Priority
+/dev/nvme0n1p2                          partition	2095668		0		-2
+
+##########################################################################
+
+Checking cpufreq OPP for cpu0-cpu3 (eswin,eic770x):
+
+Cpufreq OPP: 1800    Measured: 1797 (1797.248/1797.066/1797.066)
+Cpufreq OPP: 1700    Measured: 1697 (1697.343/1697.325/1697.199)
+Cpufreq OPP: 1600    Measured: 1597 (1597.245/1597.105/1596.767)
+Cpufreq OPP: 1500    Measured: 1497 (1497.251/1497.129/1496.796)
+Cpufreq OPP: 1400    Measured: 1397 (1397.456/1397.380/1397.334)
+Cpufreq OPP:  900    Measured:  897    (897.626/897.495/897.445)
+Cpufreq OPP:  800    Measured:  797    (797.717/797.687/797.389)
+Cpufreq OPP:  700    Measured:  697    (697.745/697.647/697.434)
+
+Checking cpufreq OPP for cpu4-cpu7 (eswin,eic770x):
+
+Cpufreq OPP: 1800    Measured: 1796 (1797.147/1796.199/1795.856)
+Cpufreq OPP: 1700    Measured: 1696 (1696.515/1696.263/1696.101)
+Cpufreq OPP: 1600    Measured: 1596 (1597.165/1596.886/1596.587)
+Cpufreq OPP: 1500    Measured: 1496 (1496.603/1496.166/1495.677)
+Cpufreq OPP: 1400    Measured: 1396 (1396.953/1396.663/1396.404)
+Cpufreq OPP:  900    Measured:  897    (897.535/897.445/897.404)
+Cpufreq OPP:  800    Measured:  797    (797.458/797.190/797.160)
+Cpufreq OPP:  700    Measured:  697    (697.548/697.426/697.418)
+
+##########################################################################
+
+Hardware sensors:
+
+cros_ec-isa-0000
+GXT310:       +43.7 C  
+Battery:      +31.3 C  
+
+eswin_fan_control-isa-0000
+FAN:         6614 RPM
+
+CROS_USBPD_CHARGER1-isa-0000
+in0:          19.52 V  
+curr1:            N/A  (max =  +2.25 A)
+
+tps549d22-i2c-5-10
+:              1.05 V  
+
+cros_ec_bat.23.auto-isa-0000
+in0:          17.49 V  
+temp:         +31.4 C  
+curr1:         0.00 A  (avg =  +0.00 A)
+
+tps549d22-i2c-1-10
+:              1.05 V  
+
+pvt-isa-0000
+DDR Core Voltage:     884.00 mV 
+DDR Core Low-Vt:      409.00 mV 
+DDR Core UltraLow-Vt: 507.00 mV 
+DDR Core Standard-Vt: 335.00 mV 
+DDR Core Temperature:  +48.6 C    sensor = CPU diode
+
+dummy_pvt-isa-0000
+SoC Voltage:     888.00 mV 
+SoC Low-Vt:           N/A  
+SoC UltraLow-Vt:      N/A  
+SoC Standard-Vt:      N/A  
+SoC Temperature:  +48.1 C    sensor = CPU diode
+
+nvme-pci-0100
+Composite:    +54.9 C  (low  = -273.1 C, high = +89.8 C)
+                       (crit = +94.8 C)
+Sensor 1:     +53.9 C  (low  = -273.1 C, high = +65261.8 C)
+Sensor 2:     +41.9 C  (low  = -273.1 C, high = +65261.8 C)
+
+iwlwifi_1-virtual-0
+temp1:        +39.0 C  
+
+tmp102-i2c-6-48
+temp1:        +45.1 C  (high = +160.0 C, hyst = +150.0 C)
+
+CROS_USBPD_CHARGER0-isa-0000
+in0:           0.00 V  
+curr1:            N/A  (max =  +1.50 A)
+
+tmp102-i2c-3-48
+temp1:        +46.3 C  (high = +160.0 C, hyst = +150.0 C)
+
+pvt-isa-0000
+DDR Core Voltage:     890.00 mV 
+DDR Core Low-Vt:      405.00 mV 
+DDR Core UltraLow-Vt: 509.00 mV 
+DDR Core Standard-Vt: 331.00 mV 
+DDR Core Temperature:  +45.2 C    sensor = CPU diode
+
+dummy_pvt-isa-0000
+SoC Voltage:     887.00 mV 
+SoC Low-Vt:           N/A  
+SoC UltraLow-Vt:      N/A  
+SoC Standard-Vt:      N/A  
+SoC Temperature:  +45.9 C    sensor = CPU diode
+
+/dev/nvme0:	55°C
+
+##########################################################################
+
+Executing benchmark on cpu0 (eswin,eic770x):
+
+tinymembench v0.4.9-nuumio (simple benchmark for memory throughput and latency)
+
+CFLAGS: 
+bandwidth test min repeats (-b): 2
+bandwidth test max repeats (-B): 3
+bandwidth test mem realloc (-M): no      (-m for realloc)
+      latency test repeats (-l): 3
+        latency test count (-c): 1000000
+
+==========================================================================
+== Memory bandwidth tests                                               ==
+==                                                                      ==
+== Note 1: 1MB = 1000000 bytes                                          ==
+== Note 2: Test result is the best of repeated runs. Number of repeats  ==
+==         is shown in brackets                                         ==
+== Note 3: Results for 'copy' tests show how many bytes can be          ==
+==         copied per second (adding together read and writen           ==
+==         bytes would have provided twice higher numbers)              ==
+== Note 4: 2-pass copy means that we are using a small temporary buffer ==
+==         to first fetch data into it, and only then write it to the   ==
+==         destination (source -> L1 cache, L1 cache -> destination)    ==
+== Note 5: If sample standard deviation exceeds 0.1%, it is shown in    ==
+==         brackets                                                     ==
+==========================================================================
+
+ C copy backwards                                 :   4798.7 MB/s (3, 1.8%)
+ C copy backwards (32 byte blocks)                :   4829.6 MB/s (3, 0.2%)
+ C copy backwards (64 byte blocks)                :   4842.7 MB/s (3, 0.2%)
+ C copy                                           :   4845.9 MB/s (2)
+ C copy prefetched (32 bytes step)                :   4863.3 MB/s (2)
+ C copy prefetched (64 bytes step)                :   4865.2 MB/s (2)
+ C 2-pass copy                                    :   3868.3 MB/s (2)
+ C 2-pass copy prefetched (32 bytes step)         :   3864.2 MB/s (3, 1.3%)
+ C 2-pass copy prefetched (64 bytes step)         :   3864.5 MB/s (3, 0.1%)
+ C scan 8                                         :    894.0 MB/s (3, 0.4%)
+ C scan 16                                        :   1786.7 MB/s (2)
+ C scan 32                                        :   3573.1 MB/s (2)
+ C scan 64                                        :   7033.4 MB/s (2)
+ C fill                                           :   7481.1 MB/s (3, 0.3%)
+ C fill (shuffle within 16 byte blocks)           :   7437.7 MB/s (2)
+ C fill (shuffle within 32 byte blocks)           :   7466.4 MB/s (3, 0.1%)
+ C fill (shuffle within 64 byte blocks)           :   7443.1 MB/s (2)
+ ---
+ libc memcpy copy                                 :   4849.1 MB/s (3, 0.2%)
+ libc memchr scan                                 :   3569.9 MB/s (2)
+ libc memset fill                                 :   7464.5 MB/s (3)
+
+==========================================================================
+== Memory latency test                                                  ==
+==                                                                      ==
+== Average time is measured for random memory accesses in the buffers   ==
+== of different sizes. The larger is the buffer, the more significant   ==
+== are relative contributions of TLB, L1/L2 cache misses and SDRAM      ==
+== accesses. For extremely large buffer sizes we are expecting to see   ==
+== page table walk with several requests to SDRAM for almost every      ==
+== memory access (though 64MiB is not nearly large enough to experience ==
+== this effect to its fullest).                                         ==
+==                                                                      ==
+== Note 1: All the numbers are representing extra time, which needs to  ==
+==         be added to L1 cache latency. The cycle timings for L1 cache ==
+==         latency can be usually found in the processor documentation. ==
+== Note 2: Dual random read means that we are simultaneously performing ==
+==         two independent memory accesses at a time. In the case if    ==
+==         the memory subsystem can't handle multiple outstanding       ==
+==         requests, dual random read has the same timings as two       ==
+==         single reads performed one after another.                    ==
+==========================================================================
+
+block size : single random read / dual random read, [MADV_NOHUGEPAGE]
+      1024 :    0.0 ns          /     0.0 ns 
+      2048 :    0.0 ns          /     0.0 ns 
+      4096 :    0.0 ns          /     0.0 ns 
+      8192 :    0.0 ns          /     0.0 ns 
+     16384 :    0.0 ns          /     0.0 ns 
+     32768 :    0.1 ns          /     0.0 ns 
+     65536 :    2.7 ns          /     3.9 ns 
+    131072 :    4.1 ns          /     5.3 ns 
+    262144 :   10.0 ns          /    13.8 ns 
+    524288 :   16.3 ns          /    22.2 ns 
+   1048576 :   22.4 ns          /    26.4 ns 
+   2097152 :   30.5 ns          /    30.2 ns 
+   4194304 :   70.4 ns          /    94.6 ns 
+   8388608 :  122.5 ns          /   164.8 ns 
+  16777216 :  154.2 ns          /   193.1 ns 
+  33554432 :  172.3 ns          /   207.4 ns 
+  67108864 :  184.2 ns          /   220.4 ns 
+
+block size : single random read / dual random read, [MADV_HUGEPAGE]
+      1024 :    0.0 ns          /     0.0 ns 
+      2048 :    0.0 ns          /     0.0 ns 
+      4096 :    0.0 ns          /     0.0 ns 
+      8192 :    0.0 ns          /     0.0 ns 
+     16384 :    0.1 ns          /     0.0 ns 
+     32768 :    0.0 ns          /     0.0 ns 
+     65536 :    2.6 ns          /     3.9 ns 
+    131072 :    3.9 ns          /     5.2 ns 
+    262144 :    5.4 ns          /     6.1 ns 
+    524288 :   12.9 ns          /    16.4 ns 
+   1048576 :   17.7 ns          /    19.3 ns 
+   2097152 :   24.8 ns          /    20.4 ns 
+   4194304 :   54.7 ns          /    72.7 ns 
+   8388608 :  111.8 ns          /   147.3 ns 
+  16777216 :  139.6 ns          /   168.6 ns 
+  33554432 :  152.6 ns          /   175.1 ns 
+  67108864 :  163.8 ns          /   182.3 ns 
+
+Executing benchmark on cpu4 (eswin,eic770x):
+
+tinymembench v0.4.9-nuumio (simple benchmark for memory throughput and latency)
+
+CFLAGS: 
+bandwidth test min repeats (-b): 2
+bandwidth test max repeats (-B): 3
+bandwidth test mem realloc (-M): no      (-m for realloc)
+      latency test repeats (-l): 3
+        latency test count (-c): 1000000
+
+==========================================================================
+== Memory bandwidth tests                                               ==
+==                                                                      ==
+== Note 1: 1MB = 1000000 bytes                                          ==
+== Note 2: Test result is the best of repeated runs. Number of repeats  ==
+==         is shown in brackets                                         ==
+== Note 3: Results for 'copy' tests show how many bytes can be          ==
+==         copied per second (adding together read and writen           ==
+==         bytes would have provided twice higher numbers)              ==
+== Note 4: 2-pass copy means that we are using a small temporary buffer ==
+==         to first fetch data into it, and only then write it to the   ==
+==         destination (source -> L1 cache, L1 cache -> destination)    ==
+== Note 5: If sample standard deviation exceeds 0.1%, it is shown in    ==
+==         brackets                                                     ==
+==========================================================================
+
+ C copy backwards                                 :   4741.4 MB/s (3, 0.3%)
+ C copy backwards (32 byte blocks)                :   4752.8 MB/s (3, 0.2%)
+ C copy backwards (64 byte blocks)                :   4765.1 MB/s (3, 0.2%)
+ C copy                                           :   4745.3 MB/s (3, 0.1%)
+ C copy prefetched (32 bytes step)                :   4763.1 MB/s (2)
+ C copy prefetched (64 bytes step)                :   4761.2 MB/s (2)
+ C 2-pass copy                                    :   3812.0 MB/s (3, 0.3%)
+ C 2-pass copy prefetched (32 bytes step)         :   3810.5 MB/s (2)
+ C 2-pass copy prefetched (64 bytes step)         :   3806.7 MB/s (3, 0.4%)
+ C scan 8                                         :    881.9 MB/s (2)
+ C scan 16                                        :   1763.1 MB/s (3, 0.1%)
+ C scan 32                                        :   3527.2 MB/s (2)
+ C scan 64                                        :   6943.3 MB/s (2)
+ C fill                                           :   6944.1 MB/s (3, 0.2%)
+ C fill (shuffle within 16 byte blocks)           :   6918.6 MB/s (3, 2.4%)
+ C fill (shuffle within 32 byte blocks)           :   6993.8 MB/s (3, 0.3%)
+ C fill (shuffle within 64 byte blocks)           :   6962.2 MB/s (2)
+ ---
+ libc memcpy copy                                 :   4737.1 MB/s (2)
+ libc memchr scan                                 :   3521.9 MB/s (2)
+ libc memset fill                                 :   6913.4 MB/s (2)
+
+==========================================================================
+== Memory latency test                                                  ==
+==                                                                      ==
+== Average time is measured for random memory accesses in the buffers   ==
+== of different sizes. The larger is the buffer, the more significant   ==
+== are relative contributions of TLB, L1/L2 cache misses and SDRAM      ==
+== accesses. For extremely large buffer sizes we are expecting to see   ==
+== page table walk with several requests to SDRAM for almost every      ==
+== memory access (though 64MiB is not nearly large enough to experience ==
+== this effect to its fullest).                                         ==
+==                                                                      ==
+== Note 1: All the numbers are representing extra time, which needs to  ==
+==         be added to L1 cache latency. The cycle timings for L1 cache ==
+==         latency can be usually found in the processor documentation. ==
+== Note 2: Dual random read means that we are simultaneously performing ==
+==         two independent memory accesses at a time. In the case if    ==
+==         the memory subsystem can't handle multiple outstanding       ==
+==         requests, dual random read has the same timings as two       ==
+==         single reads performed one after another.                    ==
+==========================================================================
+
+block size : single random read / dual random read, [MADV_NOHUGEPAGE]
+      1024 :    0.0 ns          /     0.0 ns 
+      2048 :    0.0 ns          /     0.0 ns 
+      4096 :    0.0 ns          /     0.0 ns 
+      8192 :    0.0 ns          /     0.0 ns 
+     16384 :    0.0 ns          /     0.0 ns 
+     32768 :    0.1 ns          /     0.0 ns 
+     65536 :    2.8 ns          /     3.9 ns 
+    131072 :    4.3 ns          /     5.4 ns 
+    262144 :    9.8 ns          /    13.9 ns 
+    524288 :   17.4 ns          /    23.0 ns 
+   1048576 :   23.1 ns          /    27.2 ns 
+   2097152 :   29.4 ns          /    28.9 ns 
+   4194304 :   54.7 ns          /    68.6 ns 
+   8388608 :  115.5 ns          /   157.7 ns 
+  16777216 :  151.8 ns          /   193.2 ns 
+  33554432 :  172.3 ns          /   209.3 ns 
+  67108864 :  185.7 ns          /   223.2 ns 
+
+block size : single random read / dual random read, [MADV_HUGEPAGE]
+      1024 :    0.0 ns          /     0.0 ns 
+      2048 :    0.0 ns          /     0.0 ns 
+      4096 :    0.0 ns          /     0.0 ns 
+      8192 :    0.0 ns          /     0.0 ns 
+     16384 :    0.1 ns          /     0.0 ns 
+     32768 :    0.1 ns          /     0.0 ns 
+     65536 :    2.7 ns          /     3.9 ns 
+    131072 :    4.0 ns          /     5.3 ns 
+    262144 :    5.7 ns          /     6.4 ns 
+    524288 :   13.1 ns          /    16.9 ns 
+   1048576 :   17.8 ns          /    19.9 ns 
+   2097152 :   24.3 ns          /    20.8 ns 
+   4194304 :   42.1 ns          /    38.4 ns 
+   8388608 :  104.1 ns          /   139.1 ns 
+  16777216 :  134.7 ns          /   168.2 ns 
+  33554432 :  152.4 ns          /   176.8 ns 
+  67108864 :  165.0 ns          /   184.8 ns 
+
+##########################################################################
+
+Executing benchmark on each cluster individually
+
+OpenSSL 3.0.13, built on 30 Jan 2024 (Library: OpenSSL 3.0.13 30 Jan 2024)
+type             16 bytes     64 bytes    256 bytes   1024 bytes   8192 bytes  16384 bytes
+aes-256-cbc      37028.54k    46267.99k    49204.65k    50033.32k    50383.53k    50402.65k (eswin,eic770x)
+aes-256-cbc      37347.37k    46391.55k    49263.27k    50114.90k    50345.30k    50348.03k (eswin,eic770x)
+
+##########################################################################
+
+Executing benchmark single-threaded on cpu0 (eswin,eic770x)
+
+7-Zip (a) 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,8 CPUs LE)
+
+LE
+CPU Freq: 64000000 - - 64000000 128000000 256000000 - - 2048000000
+
+RAM size:   14682 MB,  # CPU hardware threads:   8
+RAM usage:    435 MB,  # Benchmark threads:      1
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       1682   100   1638   1637  |      23257   100   1986   1986
+23:       1552   100   1582   1582  |      22890   100   1982   1981
+24:       1472   100   1583   1583  |      22467   100   1973   1972
+25:       1406   100   1606   1605  |      21928   100   1952   1952
+----------------------------------  | ------------------------------
+Avr:             100   1602   1602  |              100   1973   1973
+Tot:             100   1788   1787
+
+Executing benchmark single-threaded on cpu4 (eswin,eic770x)
+
+7-Zip (a) 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,8 CPUs LE)
+
+LE
+CPU Freq: 32000000 32000000 - - 128000000 - - - 2048000000
+
+RAM size:   14682 MB,  # CPU hardware threads:   8
+RAM usage:    435 MB,  # Benchmark threads:      1
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       1585   100   1543   1542  |      22826   100   1955   1949
+23:       1321   100   1346   1346  |      22575   100   1954   1954
+24:       1259   100   1358   1354  |      22153   100   1945   1945
+25:       1209   100   1383   1380  |      21439   100   1909   1908
+----------------------------------  | ------------------------------
+Avr:             100   1407   1406  |              100   1941   1939
+Tot:             100   1674   1672
+
+##########################################################################
+
+Executing benchmark 3 times multi-threaded on CPUs 0-7
+
+7-Zip (a) 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,8 CPUs LE)
+
+LE
+CPU Freq: 64000000 - - - - - - 1024000000 2048000000
+
+RAM size:   14682 MB,  # CPU hardware threads:   8
+RAM usage:   1765 MB,  # Benchmark threads:      8
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       6226   651    930   6058  |     173693   776   1910  14815
+23:       5241   678    788   5341  |     147441   717   1779  12759
+24:       4740   652    782   5097  |     131986   673   1720  11584
+25:       4104   580    807   4686  |     140298   722   1729  12486
+----------------------------------  | ------------------------------
+Avr:             640    827   5295  |              722   1785  12911
+Tot:             681   1306   9103
+
+7-Zip (a) 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,8 CPUs LE)
+
+LE
+CPU Freq: 64000000 - - - 128000000 - - 1024000000 -
+
+RAM size:   14682 MB,  # CPU hardware threads:   8
+RAM usage:   1765 MB,  # Benchmark threads:      8
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       5878   656    871   5718  |     177740   791   1917  15160
+23:       5491   721    776   5595  |     152641   718   1840  13209
+24:       4491   611    790   4829  |     157079   754   1829  13787
+25:       4126   582    810   4711  |     130272   687   1688  11594
+----------------------------------  | ------------------------------
+Avr:             643    812   5213  |              737   1819  13437
+Tot:             690   1315   9325
+
+7-Zip (a) 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+p7zip Version 16.02 (locale=C,Utf16=off,HugeFiles=on,64 bits,8 CPUs LE)
+
+LE
+CPU Freq: 64000000 64000000 - 64000000 128000000 - - 1024000000 -
+
+RAM size:   14682 MB,  # CPU hardware threads:   8
+RAM usage:   1765 MB,  # Benchmark threads:      8
+
+                       Compressing  |                  Decompressing
+Dict     Speed Usage    R/U Rating  |      Speed Usage    R/U Rating
+         KiB/s     %   MIPS   MIPS  |      KiB/s     %   MIPS   MIPS
+
+22:       6529   692    918   6352  |     176490   785   1918  15054
+23:       5420   682    810   5523  |     166775   768   1880  14432
+24:       5472   692    851   5884  |     155361   760   1795  13636
+25:       4816   672    819   5499  |     135388   697   1729  12049
+----------------------------------  | ------------------------------
+Avr:             684    850   5815  |              752   1830  13793
+Tot:             718   1340   9804
+
+Compression: 5295,5213,5815
+Decompression: 12911,13437,13793
+Total: 9103,9325,9804
+
+##########################################################################
+
+Executing "stress-ng --matrix 0" for 5 minutes:
+
+stress-ng: info:  [18117] setting to a 5 mins, 0 secs run per stressor
+stress-ng: info:  [18117] dispatching hogs: 8 matrix
+stress-ng: info:  [18117] skipped: 0
+stress-ng: info:  [18117] passed: 8: matrix (8)
+stress-ng: info:  [18117] failed: 0
+stress-ng: info:  [18117] metrics untrustworthy: 0
+stress-ng: info:  [18117] successful run completed in 5 mins, 0.02 secs
+
+##########################################################################
+
+Testing maximum cpufreq again, still under full load. System health now:
+
+Time       big.LITTLE   load %cpu %sys %usr %nice %io %irq   Temp
+13:19:01: 1800/1800MHz  8.12  99%   0%  99%   0%   0%   0%  51.7°C  
+
+Checking cpufreq OPP for cpu0-cpu3 (eswin,eic770x):
+
+Cpufreq OPP: 1800    Measured: 1797 (1797.510/1797.329/1796.622)
+
+Checking cpufreq OPP for cpu4-cpu7 (eswin,eic770x):
+
+Cpufreq OPP: 1800    Measured: 1796 (1797.107/1796.602/1795.493)
+
+##########################################################################
+
+Hardware sensors:
+
+cros_ec-isa-0000
+GXT310:       +44.2 C  
+Battery:      +31.2 C  
+
+eswin_fan_control-isa-0000
+FAN:         7334 RPM
+
+CROS_USBPD_CHARGER1-isa-0000
+in0:          19.52 V  
+curr1:            N/A  (max =  +2.25 A)
+
+tps549d22-i2c-5-10
+:              1.05 V  
+
+cros_ec_bat.23.auto-isa-0000
+in0:          17.49 V  
+temp:         +31.3 C  
+curr1:         0.00 A  (avg =  +0.00 A)
+
+tps549d22-i2c-1-10
+:              1.05 V  
+
+pvt-isa-0000
+DDR Core Voltage:     885.00 mV 
+DDR Core Low-Vt:      408.00 mV 
+DDR Core UltraLow-Vt: 506.00 mV 
+DDR Core Standard-Vt: 334.00 mV 
+DDR Core Temperature:  +49.9 C    sensor = CPU diode
+
+dummy_pvt-isa-0000
+SoC Voltage:     888.00 mV 
+SoC Low-Vt:           N/A  
+SoC UltraLow-Vt:      N/A  
+SoC Standard-Vt:      N/A  
+SoC Temperature:  +49.7 C    sensor = CPU diode
+
+nvme-pci-0100
+Composite:    +51.9 C  (low  = -273.1 C, high = +89.8 C)
+                       (crit = +94.8 C)
+Sensor 1:     +51.9 C  (low  = -273.1 C, high = +65261.8 C)
+Sensor 2:     +41.9 C  (low  = -273.1 C, high = +65261.8 C)
+
+iwlwifi_1-virtual-0
+temp1:        +40.0 C  
+
+tmp102-i2c-6-48
+temp1:        +46.6 C  (high = +160.0 C, hyst = +150.0 C)
+
+CROS_USBPD_CHARGER0-isa-0000
+in0:           0.00 V  
+curr1:            N/A  (max =  +1.50 A)
+
+tmp102-i2c-3-48
+temp1:        +48.1 C  (high = +160.0 C, hyst = +150.0 C)
+
+pvt-isa-0000
+DDR Core Voltage:     891.00 mV 
+DDR Core Low-Vt:      404.00 mV 
+DDR Core UltraLow-Vt: 508.00 mV 
+DDR Core Standard-Vt: 331.00 mV 
+DDR Core Temperature:  +46.8 C    sensor = CPU diode
+
+dummy_pvt-isa-0000
+SoC Voltage:     887.00 mV 
+SoC Low-Vt:           N/A  
+SoC UltraLow-Vt:      N/A  
+SoC Standard-Vt:      N/A  
+SoC Temperature:  +47.2 C    sensor = CPU diode
+
+/dev/nvme0:	52°C
+
+##########################################################################
+
+Thermal source: /sys/class/hwmon/hwmon0/ (pvt)
+
+System health while running tinymembench:
+
+Time       big.LITTLE   load %cpu %sys %usr %nice %io %irq   Temp
+13:04:12: 1800/1800MHz  1.04  44%   3%  41%   0%   0%   0%  49.2°C  
+13:04:32: 1800/1800MHz  1.03  12%   0%  12%   0%   0%   0%  49.0°C  
+13:04:52: 1800/1800MHz  1.02  12%   0%  12%   0%   0%   0%  49.0°C  
+13:05:12: 1800/1800MHz  1.01  12%   0%  12%   0%   0%   0%  49.0°C  
+13:05:33: 1800/1800MHz  1.01  12%   0%  12%   0%   0%   0%  49.5°C  
+
+System health while running OpenSSL benchmark:
+
+Time       big.LITTLE   load %cpu %sys %usr %nice %io %irq   Temp
+13:05:50: 1800/1800MHz  1.01  42%   2%  39%   0%   0%   0%  49.0°C  
+13:06:07: 1800/1800MHz  1.00  13%   0%  12%   0%   0%   0%  48.6°C  
+13:06:23: 1800/1800MHz  1.08  12%   0%  12%   0%   0%   0%  48.6°C  
+
+System health while running 7-zip single core benchmark:
+
+Time       big.LITTLE   load %cpu %sys %usr %nice %io %irq   Temp
+13:06:26: 1800/1800MHz  1.08  42%   2%  39%   0%   0%   0%  48.8°C  
+13:06:37: 1800/1800MHz  1.06  12%   0%  12%   0%   0%   0%  49.0°C  
+13:06:48: 1800/1800MHz  1.05  12%   0%  12%   0%   0%   0%  48.6°C  
+13:07:00: 1800/1800MHz  1.04  12%   0%  12%   0%   0%   0%  49.0°C  
+13:07:11: 1800/1800MHz  1.03  12%   0%  12%   0%   0%   0%  47.9°C  
+13:07:22: 1800/1800MHz  1.03  12%   0%  12%   0%   0%   0%  48.8°C  
+13:07:33: 1800/1800MHz  1.02  12%   0%  12%   0%   0%   0%  48.8°C  
+13:07:44: 1800/1800MHz  1.02  12%   0%  12%   0%   0%   0%  48.8°C  
+13:07:55: 1800/1800MHz  1.02  12%   0%  12%   0%   0%   0%  48.8°C  
+13:08:06: 1800/1800MHz  1.01  12%   0%  12%   0%   0%   0%  48.1°C  
+13:08:18: 1800/1800MHz  1.01  12%   0%  11%   0%   0%   0%  47.7°C  
+13:08:29: 1800/1800MHz  1.01  12%   1%  11%   0%   0%   0%  48.1°C  
+13:08:40: 1800/1800MHz  1.01  12%   0%  11%   0%   0%   0%  48.8°C  
+13:08:51: 1800/1800MHz  1.00  12%   1%  11%   0%   0%   0%  48.4°C  
+13:09:02: 1800/1800MHz  1.00  12%   1%  11%   0%   0%   0%  48.8°C  
+13:09:13: 1800/1800MHz  1.00  12%   1%  11%   0%   0%   0%  47.7°C  
+
+System health while running 7-zip multi core benchmark:
+
+Time       big.LITTLE   load %cpu %sys %usr %nice %io %irq   Temp
+13:09:18: 1800/1800MHz  1.08  39%   2%  36%   0%   0%   0%  49.0°C  
+13:09:29: 1800/1800MHz  2.15  85%   4%  80%   0%   0%   0%  50.4°C  
+13:09:40: 1800/1800MHz  2.89  92%   4%  87%   0%   0%   0%  49.0°C  
+13:09:51: 1800/1800MHz  3.53  94%   3%  90%   0%   0%   0%  51.5°C  
+13:10:01: 1800/1800MHz  4.08  75%  12%  62%   0%   0%   0%  50.4°C  
+13:10:16: 1800/1800MHz  4.86  85%   4%  80%   0%   0%   0%  50.1°C  
+13:10:26: 1800/1800MHz  5.45  72%   6%  65%   0%   0%   0%  50.1°C  
+13:10:37: 1800/1800MHz  6.58  94%  11%  82%   0%   0%   0%  50.4°C  
+13:10:47: 1800/1800MHz  6.41  66%  10%  56%   0%   0%   0%  49.5°C  
+13:11:00: 1800/1800MHz  6.14  62%   6%  55%   0%   0%   0%  50.4°C  
+13:11:10: 1800/1800MHz  5.83  77%   5%  71%   0%   0%   0%  50.1°C  
+13:11:21: 1800/1800MHz  6.16  90%   0%  89%   0%   0%   0%  50.1°C  
+13:11:35: 1800/1800MHz  5.81  95%   7%  87%   0%   0%   0%  50.6°C  
+13:11:46: 1800/1800MHz  5.84  82%   4%  77%   0%   0%   0%  50.4°C  
+13:12:01: 1800/1800MHz  5.61  77%   6%  71%   0%   0%   0%  49.9°C  
+13:12:11: 1800/1800MHz  6.00  79%   7%  72%   0%   0%   0%  50.6°C  
+13:12:21: 1800/1800MHz  6.16  88%  18%  70%   0%   0%   0%  49.2°C  
+13:12:31: 1800/1800MHz  6.13  62%   6%  56%   0%   0%   0%  49.0°C  
+13:12:43: 1800/1800MHz  6.21  75%   2%  72%   0%   0%   0%  50.6°C  
+13:12:53: 1800/1800MHz  6.24  71%   5%  65%   0%   0%   0%  49.9°C  
+13:13:03: 1800/1800MHz  6.51  92%   0%  91%   0%   0%   0%  49.5°C  
+13:13:18: 1800/1800MHz  7.11  92%   4%  87%   0%   0%   0%  50.4°C  
+13:13:28: 1800/1800MHz  7.29  86%   6%  80%   0%   0%   0%  50.4°C  
+13:13:40: 1800/1800MHz  6.95  92%   5%  86%   0%   0%   0%  50.8°C  
+13:13:51: 1800/1800MHz  6.68  76%   7%  68%   0%   0%   0%  50.8°C  
+13:14:01: 1800/1800MHz  7.02  91%  14%  76%   0%   0%   0%  50.1°C  
+13:14:16: 1800/1800MHz  7.01  77%  10%  67%   0%   0%   0%  50.6°C  
+
+System health while running stress-ng:
+
+Time       big.LITTLE   load %cpu %sys %usr %nice %io %irq   Temp
+13:14:26: 1800/1800MHz  7.45  45%   3%  42%   0%   0%   0%  50.8°C  
+13:15:12: 1800/1800MHz  7.79 100%   0%  99%   0%   0%   0%  51.7°C  
+13:15:58: 1800/1800MHz  7.98  99%   0%  99%   0%   0%   0%  52.3°C  
+13:16:44: 1800/1800MHz  8.03  99%   0%  99%   0%   0%   0%  52.8°C  
+13:17:30: 1800/1800MHz  8.06  99%   0%  99%   0%   0%   0%  51.5°C  
+13:18:16: 1800/1800MHz  8.07 100%   0%  99%   0%   0%   0%  52.3°C  
+13:19:01: 1800/1800MHz  8.12  99%   0%  99%   0%   0%   0%  51.7°C  
+
+##########################################################################
+
+dmesg output while running the benchmarks:
+
+[ 1513.511908] cluster0 keep high voltage, target rate 1700000000
+[ 1518.937632] cluster0 keep high voltage, target rate 1600000000
+[ 1523.764153] cluster0 keep high voltage, target rate 1500000000
+[ 1528.775422] cluster0 keep high voltage, target rate 1400000000
+[ 1534.000918] cluster0 keep high voltage, target rate 900000000
+[ 1539.263864] cluster0 keep high voltage, target rate 800000000
+[ 1544.113772] cluster0 keep high voltage, target rate 700000000
+[ 1549.375467] cluster0 keep high voltage, target rate 1800000000
+[ 1554.717016] cluster1 keep high voltage, target rate 1700000000
+[ 1560.155469] cluster1 keep high voltage, target rate 1600000000
+[ 1564.988980] cluster1 keep high voltage, target rate 1500000000
+[ 1570.010986] cluster1 keep high voltage, target rate 1400000000
+[ 1575.238849] cluster1 keep high voltage, target rate 900000000
+[ 1580.521537] cluster1 keep high voltage, target rate 800000000
+[ 1585.365757] cluster1 keep high voltage, target rate 700000000
+[ 1590.604265] cluster1 keep high voltage, target rate 1800000000
+
+##########################################################################
+
+Linux 6.6.92-eic7x-2025.07 (roma) 	10/12/2025 	_riscv64_	(8 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+          48.77    0.01    2.89    0.02    0.00   48.31
+
+Device             tps    kB_read/s    kB_wrtn/s    kB_dscd/s    kB_read    kB_wrtn    kB_dscd
+nvme0n1          11.54       280.48       174.87         0.00     704656     439317          0
+
+               total        used        free      shared  buff/cache   available
+Mem:            14Gi       1.4Gi        12Gi        15Mi       281Mi        12Gi
+Swap:          2.0Gi          0B       2.0Gi
+
+Filename				Type		Size		Used		Priority
+/dev/nvme0n1p2                          partition	2095668		0		-2
+
+CPU sysfs topology (clusters, cpufreq members, clockspeeds)
+                 cpufreq   min    max
+ CPU    cluster  policy   speed  speed   core type
+  0        0        0      700    1800   eswin,eic770x
+  1        0        0      700    1800   eswin,eic770x
+  2        0        0      700    1800   eswin,eic770x
+  3        0        0      700    1800   eswin,eic770x
+  4        0        4      700    1800   eswin,eic770x
+  5        0        4      700    1800   eswin,eic770x
+  6        0        4      700    1800   eswin,eic770x
+  7        0        4      700    1800   eswin,eic770x
+
+Architecture:        riscv64
+Byte Order:          Little Endian
+CPU(s):              8
+On-line CPU(s) list: 0-7
+NUMA node(s):        2
+NUMA node0 CPU(s):   0-3
+NUMA node1 CPU(s):   4-7
+
+  cpuinfo: User agent not allowed.
+
+Processor Information
+	Type: Central Processor
+	Version: rv64imafdc_zba_zbb
+	Status: Unpopulated
+
+SoC guess: Eswin EIC7702X
+DT compat: deepcomputing,fml13v03
+           sifive,hifive-unmatched-a00
+           sifive,fu740-c000
+           sifive,fu740
+           eswin,eic7700
+ Compiler: /usr/bin/gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0 / riscv64-linux-gnu
+ Userland: riscv64
+   Kernel: 6.6.92-eic7x-2025.07/riscv64
+           CONFIG_HZ=250
+           CONFIG_HZ_250=y
+           CONFIG_PREEMPT_COUNT=y
+           CONFIG_PREEMPT_NOTIFIERS=y
+           CONFIG_PREEMPT_VOLUNTARY=y
+           CONFIG_PREEMPT_VOLUNTARY_BUILD=y
+
+##########################################################################
+
+cpu0/index0: 32K, level: 1, type: Instruction
+cpu0/index1: 32K, level: 1, type: Data
+cpu0/index2: 256K, level: 2, type: Unified
+cpu0/index3: 4096K, level: 3, type: Unified
+cpu1/index0: 32K, level: 1, type: Instruction
+cpu1/index1: 32K, level: 1, type: Data
+cpu1/index2: 256K, level: 2, type: Unified
+cpu1/index3: 4096K, level: 3, type: Unified
+cpu2/index0: 32K, level: 1, type: Instruction
+cpu2/index1: 32K, level: 1, type: Data
+cpu2/index2: 256K, level: 2, type: Unified
+cpu2/index3: 4096K, level: 3, type: Unified
+cpu3/index0: 32K, level: 1, type: Instruction
+cpu3/index1: 32K, level: 1, type: Data
+cpu3/index2: 256K, level: 2, type: Unified
+cpu3/index3: 4096K, level: 3, type: Unified
+cpu4/index0: 32K, level: 1, type: Instruction
+cpu4/index1: 32K, level: 1, type: Data
+cpu4/index2: 256K, level: 2, type: Unified
+cpu4/index3: 4096K, level: 3, type: Unified
+cpu5/index0: 32K, level: 1, type: Instruction
+cpu5/index1: 32K, level: 1, type: Data
+cpu5/index2: 256K, level: 2, type: Unified
+cpu5/index3: 4096K, level: 3, type: Unified
+cpu6/index0: 32K, level: 1, type: Instruction
+cpu6/index1: 32K, level: 1, type: Data
+cpu6/index2: 256K, level: 2, type: Unified
+cpu6/index3: 4096K, level: 3, type: Unified
+cpu7/index0: 32K, level: 1, type: Instruction
+cpu7/index1: 32K, level: 1, type: Data
+cpu7/index2: 256K, level: 2, type: Unified
+cpu7/index3: 4096K, level: 3, type: Unified
+
+##########################################################################
+
+   opp-table-d0:
+
+   opp-table-d1:
+
+   opp-table:
+
+   opp-table:
+
+   opp-table:
+
+   opp-table:
+
+   opp-table:
+
+   opp-table:
+
+   opp-table:
+
+##########################################################################
+
+Results validation:
+
+  * Measured clockspeed not lower than advertised max CPU clockspeed
+  * No swapping
+  * Too much background activity (%system): 3% avg, 18% max -> https://tinyurl.com/mr2wy5uv
+  * No throttling
+  * 2 different clusters but capacity-dmips-mhz property not set
+
+Status of performance related governors found below /sys (w/o cpufreq):
+
+  * soc:video-decoder0@50100000: performance / 800 MHz (userspace performance simple_ondemand / 200 229 267 320 400 533 800)
+  * soc:video-decoder1@70100000: performance / 800 MHz (userspace performance simple_ondemand / 200 229 267 320 400 533 800)
+  * soc:video-encoder@50110000: performance / 800 MHz (userspace performance simple_ondemand / 200 229 267 320 400 533 800)
+  * soc:video-encoder@70110000: performance / 800 MHz (userspace performance simple_ondemand / 200 229 267 320 400 533 800)
+  * 51c00000.eswin-npu: performance / 1500 MHz (userspace performance simple_ondemand / 520 750 1040 1500)
+  * 71c00000.eswin-npu: performance / 1500 MHz (userspace performance simple_ondemand / 520 750 1040 1500)
+  * 50140000.g2d: performance / 1040 MHz (userspace performance simple_ondemand / 260 520 693 1040)
+  * 51400000.gpu: performance / 800 MHz (userspace performance simple_ondemand / 200 400 800)
+  * 52280400.dsp_subsys:es_dsp@0: performance / 1040 MHz (userspace performance simple_ondemand / 520 1040)
+  * 52280400.dsp_subsys:es_dsp@1: performance / 1040 MHz (userspace performance simple_ondemand / 520 1040)
+  * 52280400.dsp_subsys:es_dsp@2: performance / 1040 MHz (userspace performance simple_ondemand / 520 1040)
+  * 52280400.dsp_subsys:es_dsp@3: performance / 1040 MHz (userspace performance simple_ondemand / 520 1040)
+  * 70140000.g2d: performance / 1040 MHz (userspace performance simple_ondemand / 260 520 693 1040)
+  * 72280400.dsp_subsys:es_dsp@0: performance / 1040 MHz (userspace performance simple_ondemand / 520 1040)
+  * 72280400.dsp_subsys:es_dsp@1: performance / 1040 MHz (userspace performance simple_ondemand / 520 1040)
+  * 72280400.dsp_subsys:es_dsp@2: performance / 1040 MHz (userspace performance simple_ondemand / 520 1040)
+  * 72280400.dsp_subsys:es_dsp@3: performance / 1040 MHz (userspace performance simple_ondemand / 520 1040)
+
+Status of performance related policies found below /sys:
+
+  * /sys/module/pcie_aspm/parameters/policy: default [performance] powersave powersupersave
+
+##########################################################################
+
+/sys/kernel/debug/clk/clk_summary diff between all governors set to powersave and performance:
+
+                                   enable  prepare  protect                                duty  hardware                            connection
+     clock                          count    count    count        rate   accuracy phase  cycle    enable   consumer                         id
+  ---------------------------------------------------------------------------------------------------------------------------------------------
+4,21c4,21
+<  d1_clk_pll_cpu                      0       0        0        700000000   0          0     50000      Y   deviceless                      no_connection_id         
+<     d1_mux_u_cpu_root_3mux1_gfree    0       0        0        700000000   0          0     50000      Y      deviceless                      no_connection_id         
+<        d1_gate_clk_cpu_trace_clk_3   0       0        0        700000000   0          0     50000      Y         deviceless                      no_connection_id         
+<           d1_clk_cpu_trace_clk_3     0       0        0        700000000   0          0     50000      Y            deviceless                      no_connection_id         
+<        d1_gate_clk_cpu_trace_clk_2   0       0        0        700000000   0          0     50000      Y         deviceless                      no_connection_id         
+<           d1_clk_cpu_trace_clk_2     0       0        0        700000000   0          0     50000      Y            deviceless                      no_connection_id         
+<        d1_gate_clk_cpu_trace_clk_1   0       0        0        700000000   0          0     50000      Y         deviceless                      no_connection_id         
+<           d1_clk_cpu_trace_clk_1     0       0        0        700000000   0          0     50000      Y            deviceless                      no_connection_id         
+<        d1_gate_clk_cpu_trace_clk_0   0       0        0        700000000   0          0     50000      Y         deviceless                      no_connection_id         
+<           d1_clk_cpu_trace_clk_0     0       0        0        700000000   0          0     50000      Y            deviceless                      no_connection_id         
+<        d1_gate_clk_cpu_ext_src_core_clk_3 0       0        0        700000000   0          0     50000      Y         deviceless                      no_connection_id         
+<           d1_clk_cpu_ext_src_core_clk_3 0       0        0        700000000   0          0     50000      Y            deviceless                      no_connection_id         
+<        d1_gate_clk_cpu_ext_src_core_clk_2 0       0        0        700000000   0          0     50000      Y         deviceless                      no_connection_id         
+<           d1_clk_cpu_ext_src_core_clk_2 0       0        0        700000000   0          0     50000      Y            deviceless                      no_connection_id         
+<        d1_gate_clk_cpu_ext_src_core_clk_1 0       0        0        700000000   0          0     50000      Y         deviceless                      no_connection_id         
+<           d1_clk_cpu_ext_src_core_clk_1 0       0        0        700000000   0          0     50000      Y            deviceless                      no_connection_id         
+<        d1_gate_clk_cpu_ext_src_core_clk_0 0       0        0        700000000   0          0     50000      Y         deviceless                      no_connection_id         
+<           d1_clk_cpu_ext_src_core_clk_0 0       0        0        700000000   0          0     50000      Y            cpu4                            no_connection_id         
+---
+>  d1_clk_pll_cpu                      0       0        0        1800000000  0          0     50000      Y   deviceless                      no_connection_id         
+>     d1_mux_u_cpu_root_3mux1_gfree    0       0        0        1800000000  0          0     50000      Y      deviceless                      no_connection_id         
+>        d1_gate_clk_cpu_trace_clk_3   0       0        0        1800000000  0          0     50000      Y         deviceless                      no_connection_id         
+>           d1_clk_cpu_trace_clk_3     0       0        0        1800000000  0          0     50000      Y            deviceless                      no_connection_id         
+>        d1_gate_clk_cpu_trace_clk_2   0       0        0        1800000000  0          0     50000      Y         deviceless                      no_connection_id         
+>           d1_clk_cpu_trace_clk_2     0       0        0        1800000000  0          0     50000      Y            deviceless                      no_connection_id         
+>        d1_gate_clk_cpu_trace_clk_1   0       0        0        1800000000  0          0     50000      Y         deviceless                      no_connection_id         
+>           d1_clk_cpu_trace_clk_1     0       0        0        1800000000  0          0     50000      Y            deviceless                      no_connection_id         
+>        d1_gate_clk_cpu_trace_clk_0   0       0        0        1800000000  0          0     50000      Y         deviceless                      no_connection_id         
+>           d1_clk_cpu_trace_clk_0     0       0        0        1800000000  0          0     50000      Y            deviceless                      no_connection_id         
+>        d1_gate_clk_cpu_ext_src_core_clk_3 0       0        0        1800000000  0          0     50000      Y         deviceless                      no_connection_id         
+>           d1_clk_cpu_ext_src_core_clk_3 0       0        0        1800000000  0          0     50000      Y            deviceless                      no_connection_id         
+>        d1_gate_clk_cpu_ext_src_core_clk_2 0       0        0        1800000000  0          0     50000      Y         deviceless                      no_connection_id         
+>           d1_clk_cpu_ext_src_core_clk_2 0       0        0        1800000000  0          0     50000      Y            deviceless                      no_connection_id         
+>        d1_gate_clk_cpu_ext_src_core_clk_1 0       0        0        1800000000  0          0     50000      Y         deviceless                      no_connection_id         
+>           d1_clk_cpu_ext_src_core_clk_1 0       0        0        1800000000  0          0     50000      Y            deviceless                      no_connection_id         
+>        d1_gate_clk_cpu_ext_src_core_clk_0 0       0        0        1800000000  0          0     50000      Y         deviceless                      no_connection_id         
+>           d1_clk_cpu_ext_src_core_clk_0 0       0        0        1800000000  0          0     50000      Y            cpu4                            no_connection_id         
+24,29c24,29
+<        d1_fixed_factor_u_cpu_div2    0       0        0        350000000   0          0     50000      Y         deviceless                      no_connection_id         
+<           d1_mux_u_cpu_aclk_2mux1_gfree 0       0        0        350000000   0          0     50000      Y            deviceless                      no_connection_id         
+<              d1_gate_clk_cpu_clk     0       0        0        350000000   0          0     50000      Y               deviceless                      no_connection_id         
+<                 d1_clk_cpu_clk       0       0        0        350000000   0          0     50000      Y                  deviceless                      no_connection_id         
+<              d1_gate_clk_cpu_trace_com_clk 0       0        0        350000000   0          0     50000      Y               deviceless                      no_connection_id         
+<                 d1_clk_cpu_trace_com_clk 0       0        0        350000000   0          0     50000      Y                  deviceless                      no_connection_id         
+---
+>        d1_fixed_factor_u_cpu_div2    0       0        0        900000000   0          0     50000      Y         deviceless                      no_connection_id         
+>           d1_mux_u_cpu_aclk_2mux1_gfree 0       0        0        900000000   0          0     50000      Y            deviceless                      no_connection_id         
+>              d1_gate_clk_cpu_clk     0       0        0        900000000   0          0     50000      Y               deviceless                      no_connection_id         
+>                 d1_clk_cpu_clk       0       0        0        900000000   0          0     50000      Y                  deviceless                      no_connection_id         
+>              d1_gate_clk_cpu_trace_com_clk 0       0        0        900000000   0          0     50000      Y               deviceless                      no_connection_id         
+>                 d1_clk_cpu_trace_com_clk 0       0        0        900000000   0          0     50000      Y                  deviceless                      no_connection_id         
+588,599c588,599
+<  d0_clk_pll_cpu                      0       0        0        700000000   0          0     50000      Y   deviceless                      no_connection_id         
+<     d0_mux_u_cpu_root_3mux1_gfree    0       0        0        700000000   0          0     50000      Y      deviceless                      no_connection_id         
+<        d0_gate_clk_cpu_trace_clk_3   0       0        0        700000000   0          0     50000      Y         deviceless                      no_connection_id         
+<           d0_clk_cpu_trace_clk_3     0       0        0        700000000   0          0     50000      Y            deviceless                      no_connection_id         
+<        d0_gate_clk_cpu_trace_clk_2   0       0        0        700000000   0          0     50000      Y         deviceless                      no_connection_id         
+<           d0_clk_cpu_trace_clk_2     0       0        0        700000000   0          0     50000      Y            deviceless                      no_connection_id         
+<        d0_gate_clk_cpu_trace_clk_1   0       0        0        700000000   0          0     50000      Y         deviceless                      no_connection_id         
+<           d0_clk_cpu_trace_clk_1     0       0        0        700000000   0          0     50000      Y            deviceless                      no_connection_id         
+<        d0_gate_clk_cpu_trace_clk_0   0       0        0        700000000   0          0     50000      Y         deviceless                      no_connection_id         
+<           d0_clk_cpu_trace_clk_0     0       0        0        700000000   0          0     50000      Y            deviceless                      no_connection_id         
+<        d0_gate_clk_cpu_ext_src_core_clk_3 0       0        0        700000000   0          0     50000      Y         deviceless                      no_connection_id         
+<           d0_clk_cpu_ext_src_core_clk_3 0       0        0        700000000   0          0     50000      Y            cpu0                            no_connection_id         
+---
+>  d0_clk_pll_cpu                      0       0        0        1800000000  0          0     50000      Y   deviceless                      no_connection_id         
+>     d0_mux_u_cpu_root_3mux1_gfree    0       0        0        1800000000  0          0     50000      Y      deviceless                      no_connection_id         
+>        d0_gate_clk_cpu_trace_clk_3   0       0        0        1800000000  0          0     50000      Y         deviceless                      no_connection_id         
+>           d0_clk_cpu_trace_clk_3     0       0        0        1800000000  0          0     50000      Y            deviceless                      no_connection_id         
+>        d0_gate_clk_cpu_trace_clk_2   0       0        0        1800000000  0          0     50000      Y         deviceless                      no_connection_id         
+>           d0_clk_cpu_trace_clk_2     0       0        0        1800000000  0          0     50000      Y            deviceless                      no_connection_id         
+>        d0_gate_clk_cpu_trace_clk_1   0       0        0        1800000000  0          0     50000      Y         deviceless                      no_connection_id         
+>           d0_clk_cpu_trace_clk_1     0       0        0        1800000000  0          0     50000      Y            deviceless                      no_connection_id         
+>        d0_gate_clk_cpu_trace_clk_0   0       0        0        1800000000  0          0     50000      Y         deviceless                      no_connection_id         
+>           d0_clk_cpu_trace_clk_0     0       0        0        1800000000  0          0     50000      Y            deviceless                      no_connection_id         
+>        d0_gate_clk_cpu_ext_src_core_clk_3 0       0        0        1800000000  0          0     50000      Y         deviceless                      no_connection_id         
+>           d0_clk_cpu_ext_src_core_clk_3 0       0        0        1800000000  0          0     50000      Y            cpu0                            no_connection_id         
+602,613c602,613
+<        d0_gate_clk_cpu_ext_src_core_clk_2 0       0        0        700000000   0          0     50000      Y         deviceless                      no_connection_id         
+<           d0_clk_cpu_ext_src_core_clk_2 0       0        0        700000000   0          0     50000      Y            deviceless                      no_connection_id         
+<        d0_gate_clk_cpu_ext_src_core_clk_1 0       0        0        700000000   0          0     50000      Y         deviceless                      no_connection_id         
+<           d0_clk_cpu_ext_src_core_clk_1 0       0        0        700000000   0          0     50000      Y            deviceless                      no_connection_id         
+<        d0_gate_clk_cpu_ext_src_core_clk_0 0       0        0        700000000   0          0     50000      Y         deviceless                      no_connection_id         
+<           d0_clk_cpu_ext_src_core_clk_0 0       0        0        700000000   0          0     50000      Y            deviceless                      no_connection_id         
+<        d0_fixed_factor_u_cpu_div2    0       0        0        350000000   0          0     50000      Y         deviceless                      no_connection_id         
+<           d0_mux_u_cpu_aclk_2mux1_gfree 0       0        0        350000000   0          0     50000      Y            deviceless                      no_connection_id         
+<              d0_gate_clk_cpu_clk     0       0        0        350000000   0          0     50000      Y               deviceless                      no_connection_id         
+<                 d0_clk_cpu_clk       0       0        0        350000000   0          0     50000      Y                  deviceless                      no_connection_id         
+<              d0_gate_clk_cpu_trace_com_clk 0       0        0        350000000   0          0     50000      Y               deviceless                      no_connection_id         
+<                 d0_clk_cpu_trace_com_clk 0       0        0        350000000   0          0     50000      Y                  deviceless                      no_connection_id         
+---
+>        d0_gate_clk_cpu_ext_src_core_clk_2 0       0        0        1800000000  0          0     50000      Y         deviceless                      no_connection_id         
+>           d0_clk_cpu_ext_src_core_clk_2 0       0        0        1800000000  0          0     50000      Y            deviceless                      no_connection_id         
+>        d0_gate_clk_cpu_ext_src_core_clk_1 0       0        0        1800000000  0          0     50000      Y         deviceless                      no_connection_id         
+>           d0_clk_cpu_ext_src_core_clk_1 0       0        0        1800000000  0          0     50000      Y            deviceless                      no_connection_id         
+>        d0_gate_clk_cpu_ext_src_core_clk_0 0       0        0        1800000000  0          0     50000      Y         deviceless                      no_connection_id         
+>           d0_clk_cpu_ext_src_core_clk_0 0       0        0        1800000000  0          0     50000      Y            deviceless                      no_connection_id         
+>        d0_fixed_factor_u_cpu_div2    0       0        0        900000000   0          0     50000      Y         deviceless                      no_connection_id         
+>           d0_mux_u_cpu_aclk_2mux1_gfree 0       0        0        900000000   0          0     50000      Y            deviceless                      no_connection_id         
+>              d0_gate_clk_cpu_clk     0       0        0        900000000   0          0     50000      Y               deviceless                      no_connection_id         
+>                 d0_clk_cpu_clk       0       0        0        900000000   0          0     50000      Y                  deviceless                      no_connection_id         
+>              d0_gate_clk_cpu_trace_com_clk 0       0        0        900000000   0          0     50000      Y               deviceless                      no_connection_id         
+>                 d0_clk_cpu_trace_com_clk 0       0        0        900000000   0          0     50000      Y                  deviceless                      no_connection_id         
+806c806
+<           d0_clk_clk_sys_cfg         21      21       0        200000000   0          0     50000      Y            deviceless                      no_connection_id         
+---
+>           d0_clk_clk_sys_cfg         22      22       0        200000000   0          0     50000      Y            deviceless                      no_connection_id         
+856,857c856,857
+<              d0_gate_lsp_ssi1_pclk   0       0        0        200000000   0          0     50000      N               deviceless                      no_connection_id         
+<                 d0_clk_lsp_ssi1_pclk 0       0        0        200000000   0          0     50000      Y                  50814000.spi                    no_connection_id         
+---
+>              d0_gate_lsp_ssi1_pclk   1       1        0        200000000   0          0     50000      Y               deviceless                      no_connection_id         
+>                 d0_clk_lsp_ssi1_pclk 1       1        0        200000000   0          0     50000      Y                  50814000.spi                    no_connection_id         
+
+##########################################################################
+
+# DeepComputing FML13V03
+
+Tested with sbc-bench v0.9.72 on Sun, 12 Oct 2025 13:19:37 +0800.
+
+### General information:
+
+The CPU features 2 clusters of same core type:
+
+    Eswin EIC7702X, Kernel: riscv64, Userland: riscv64
+    
+    CPU sysfs topology (clusters, cpufreq members, clockspeeds)
+                     cpufreq   min    max
+     CPU    cluster  policy   speed  speed   core type
+      0        0        0      700    1800   eswin,eic770x
+      1        0        0      700    1800   eswin,eic770x
+      2        0        0      700    1800   eswin,eic770x
+      3        0        0      700    1800   eswin,eic770x
+      4        0        4      700    1800   eswin,eic770x
+      5        0        4      700    1800   eswin,eic770x
+      6        0        4      700    1800   eswin,eic770x
+      7        0        4      700    1800   eswin,eic770x
+
+14682 KB available RAM
+
+### Governors/policies (performance vs. idle consumption):
+
+Original governor settings:
+
+    cpufreq-policy0: performance / 1800 MHz (conservative ondemand userspace powersave performance schedutil / 700 800 900 1400 1500 1600 1700 1800)
+    cpufreq-policy4: performance / 1800 MHz (conservative ondemand userspace powersave performance schedutil / 700 800 900 1400 1500 1600 1700 1800)
+    soc:video-decoder0@50100000: performance / 800 MHz (userspace performance simple_ondemand / 200 229 267 320 400 533 800)
+    soc:video-decoder1@70100000: performance / 800 MHz (userspace performance simple_ondemand / 200 229 267 320 400 533 800)
+    soc:video-encoder@50110000: performance / 800 MHz (userspace performance simple_ondemand / 200 229 267 320 400 533 800)
+    soc:video-encoder@70110000: performance / 800 MHz (userspace performance simple_ondemand / 200 229 267 320 400 533 800)
+    51c00000.eswin-npu: performance / 1500 MHz (userspace performance simple_ondemand / 520 750 1040 1500)
+    71c00000.eswin-npu: performance / 1500 MHz (userspace performance simple_ondemand / 520 750 1040 1500)
+    50140000.g2d: performance / 1040 MHz (userspace performance simple_ondemand / 260 520 693 1040)
+    51400000.gpu: performance / 800 MHz (userspace performance simple_ondemand / 200 400 800)
+    52280400.dsp_subsys:es_dsp@0: performance / 1040 MHz (userspace performance simple_ondemand / 520 1040)
+    52280400.dsp_subsys:es_dsp@1: performance / 1040 MHz (userspace performance simple_ondemand / 520 1040)
+    52280400.dsp_subsys:es_dsp@2: performance / 1040 MHz (userspace performance simple_ondemand / 520 1040)
+    52280400.dsp_subsys:es_dsp@3: performance / 1040 MHz (userspace performance simple_ondemand / 520 1040)
+    70140000.g2d: performance / 1040 MHz (userspace performance simple_ondemand / 260 520 693 1040)
+    72280400.dsp_subsys:es_dsp@0: performance / 1040 MHz (userspace performance simple_ondemand / 520 1040)
+    72280400.dsp_subsys:es_dsp@1: performance / 1040 MHz (userspace performance simple_ondemand / 520 1040)
+    72280400.dsp_subsys:es_dsp@2: performance / 1040 MHz (userspace performance simple_ondemand / 520 1040)
+    72280400.dsp_subsys:es_dsp@3: performance / 1040 MHz (userspace performance simple_ondemand / 520 1040)
+
+Tuned governor settings:
+
+    cpufreq-policy0: performance / 1800 MHz
+    cpufreq-policy4: performance / 1800 MHz
+    soc:video-decoder0@50100000: performance / 800 MHz
+    soc:video-decoder1@70100000: performance / 800 MHz
+    soc:video-encoder@50110000: performance / 800 MHz
+    soc:video-encoder@70110000: performance / 800 MHz
+    51c00000.eswin-npu: performance / 1500 MHz
+    71c00000.eswin-npu: performance / 1500 MHz
+    50140000.g2d: performance / 1040 MHz
+    51400000.gpu: performance / 800 MHz
+    52280400.dsp_subsys:es_dsp@0: performance / 1040 MHz
+    52280400.dsp_subsys:es_dsp@1: performance / 1040 MHz
+    52280400.dsp_subsys:es_dsp@2: performance / 1040 MHz
+    52280400.dsp_subsys:es_dsp@3: performance / 1040 MHz
+    70140000.g2d: performance / 1040 MHz
+    72280400.dsp_subsys:es_dsp@0: performance / 1040 MHz
+    72280400.dsp_subsys:es_dsp@1: performance / 1040 MHz
+    72280400.dsp_subsys:es_dsp@2: performance / 1040 MHz
+    72280400.dsp_subsys:es_dsp@3: performance / 1040 MHz
+
+Status of performance related policies found below /sys:
+
+    /sys/module/pcie_aspm/parameters/policy: default [performance] powersave powersupersave
+
+### Clockspeeds (idle vs. heated up):
+
+Before at 48.1°C:
+
+    cpu0-cpu3 (eswin,eic770x): OPP: 1800, Measured: 1797 
+    cpu4-cpu7 (eswin,eic770x): OPP: 1800, Measured: 1796 
+
+After at 52.1°C:
+
+    cpu0-cpu3 (eswin,eic770x): OPP: 1800, Measured: 1797 
+    cpu4-cpu7 (eswin,eic770x): OPP: 1800, Measured: 1796 
+
+### Performance baseline
+
+  * cpu0 (eswin,eic770x): memcpy: 4849.1 MB/s, memchr: 3569.9 MB/s, memset: 7464.5 MB/s
+  * cpu4 (eswin,eic770x): memcpy: 4737.1 MB/s, memchr: 3521.9 MB/s, memset: 6913.4 MB/s
+  * cpu0 (eswin,eic770x) 16M latency: 
+  * cpu4 (eswin,eic770x) 16M latency: 
+  * cpu0 (eswin,eic770x) 128M latency: 
+  * cpu4 (eswin,eic770x) 128M latency: 
+  * 7-zip MIPS (3 consecutive runs): 9103, 9325, 9804 (9410 avg), single-threaded: 1787
+  * `aes-256-cbc      37028.54k    46267.99k    49204.65k    50033.32k    50383.53k    50402.65k (eswin,eic770x)`
+  * `aes-256-cbc      37347.37k    46391.55k    49263.27k    50114.90k    50345.30k    50348.03k (eswin,eic770x)`
+
+### PCIe and storage devices:
+
+  * Intel Wi-Fi 6 AX200: Speed 5GT/s, Width x1, driver in use: iwlwifi, ASPM L1 Enabled; RCB 64 bytes, Disabled- CommClk+
+ASPM L1 Enabled; RCB 64 bytes, Disabled- CommClk+ PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2+ ASPM_L1.1+ L1_PM_Substates+ PortCommonModeRestoreTime=10us PortTPowerOnTime=1000us -- PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2+ ASPM_L1.1+ L1_PM_Substates+ PortCommonModeRestoreTime=30us PortTPowerOnTime=18us  PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2- ASPM_L1.1- T_CommonMode=0us LTR1.2_Threshold=1016832ns -- PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2- ASPM_L1.1- T_CommonMode=0us LTR1.2_Threshold=54272ns  T_PwrOn=1000us T_PwrOn=18us 
+  * 476.9GB "ZHITAI TiPlus7100 512GB" SSD as /dev/nvme0: Speed 8GT/s (downgraded), Width x4, 0% worn out, drive temp: 53°C, ASPM L1 Enabled; RCB 64 bytes, Disabled- CommClk+ PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2+ ASPM_L1.1+ L1_PM_Substates+ PortCommonModeRestoreTime=10us PortTPowerOnTime=1000us  PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2- ASPM_L1.1- T_CommonMode=0us LTR1.2_Threshold=1016832ns  T_PwrOn=1000us 
+
+### Swap configuration:
+
+  * /dev/nvme0n1p2: 2.0G (0K used)
+
+### Software versions:
+
+  * Ubuntu 24.04 LTS  v1.0.15009 (noble)
+  * Compiler: /usr/bin/gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0 / riscv64-linux-gnu
+  * OpenSSL 3.0.13, built on 30 Jan 2024 (Library: OpenSSL 3.0.13 30 Jan 2024)    
+
+### Kernel info:
+
+  * `/proc/cmdline: BOOT_IMAGE=/boot/vmlinuz-6.6.92-eic7x-2025.07 root=UUID=31e38c8c-d8f2-48bd-9a86-071e2d2299f1 ro quiet splash console=tty0 console=ttys0,115200n8 earlycon=sbi console=ttyS0,115200n8 clk_ignore_unused cma_pernuma=0x20000000 disable_bypass=false no_console_suspend firmware_class.path=/lib/firmware/eic7x/`
+  * Kernel 6.6.92-eic7x-2025.07 / CONFIG_HZ=250
+ |
+

@@ -66,6 +66,7 @@
 | [Celeron N5100](results/3IlQ.txt) | 2800/1100 MHz | 5.13 | Focal amd64 | **10550** | 3088 | 783800 | 7750 | 8090 | 19.22 |
 | [Phytium<br />FT-2000/4<br />(1 x SO-DIMM)](results/4ioj.txt) | 2600 MHz | 5.15 | Bullseye arm64 | **10020** | 2755 | 936740 | 3760 | 14540 | - |
 | [Qualcomm Snapdragon 835](results/4fdD.txt) | 2360/1900 MHz | 6.1 | Jammy arm64 | **9800** | 2474 | 883330 | 9720 | 14070 | 12.58 |
+| [DC-ROMA (EIC7702X)](results/fml13v03.txt ) | 1800 MHz | 6.6 | Noble riscv64 | **9800** | 1787 | 50380 | 4850 | 7460 | - |
 | [ODROID-N2+ (Amlogic S922X)](results/3DtN.txt) | 2400/2015 MHz | 5.14 | Impish arm64 | **9790** | 2253 | 1366930 | 4300 | 7480 | - |
 | [ODROID-N2+ (Amlogic S922X)](results/4rWn.txt) | 2400/2015 MHz | 6.1 | Bullseye arm64 | **9710** | 2373 | 1366180 | 4220 | 7720 | - |
 | [ODROID-N2+ (Amlogic S922X)](results/3R1a.txt) | 2400/2015 MHz | 5.10 | Focal arm64 | **9680** | 2372 | 1366730 | 4030 | 7120 | - |
@@ -364,6 +365,7 @@
 | [RockPro64 (RK3399)](results/1iFZ.txt) | 1800/1400 MHz | 4.4 | Stretch armhf | 6250 | **1809** | 1000150 | 2000 | 4835 | - |
 | [NanoPC T4 (RK3399)](results/1iFz.txt) | 1800/1400 MHz | 4.17 | Stretch arm64 | 6250 | **1809** | 1022500 | 4100 | 9000 | 8.24 |
 | [Celeron J1900](results/4hKV.txt) | 2415/1333 MHz | 5.4 | Focal amd64 | 6560 | **1806** | 34900 | 3780 | 3390 | - |
+| [DC-ROMA (EIC7702X)](results/fml13v03.txt ) | 1800 MHz | 6.6 | Noble riscv64 | 9800 | **1787** | 50380 | 4850 | 7460 | - |
 | [x7-Z8700](results/4iDX.txt) | 2400 MHz | 5.15 | Bullseye amd64 | 6580 | **1784** | 296680 | 3510 | 3580 | - |
 | [Radxa ROCK 4D (RK3576)](results/8g-p.txt) | 2230/2040 MHz | 6.1 | Bookworm arm64 | 10830 | **1771** | 1267790 | 5210 | 15450 | 18.27 |
 | [Raspberry Pi 4 B (BCM2711)](results/3OBF.txt) | 1800 MHz | 5.10 | Raspberry Pi OS Bullseye arm64 | 5790 | **1769** | 36260 | 2330 | 3120 | 8.74 |
@@ -713,6 +715,7 @@
 | [Raspberry Pi 4 B (BCM2711)](results/3EgS.txt) | 1500 MHz | 5.10 | Raspberry Pi OS Buster | 5750 | 1661 | **64930** | 2550 | 3430 | - |
 | [Raspberry Pi 4 B (BCM2711)](results/1MFf.txt) | 1500 MHz | 4.19 | Raspbian Buster | 5500 | 1606 | **64860** | 2460 | 3170 | - |
 | [NanoPi K2 (Amlogic S905)](results/3Qve.txt) | 1480 MHz | 5.10 | Bullseye arm64 | 3880 | 1154 | **51490** | 1850 | 3790 | - |
+| [DC-ROMA (EIC7702X)](results/fml13v03.txt ) | 1800 MHz | 6.6 | Noble riscv64 | 9800 | 1787 | **50380** | 4850 | 7460 | - |
 | [NanoPi K2 (Amlogic S905)](results/1iT1.txt) | 1480 MHz | 4.14 | Stretch arm64 | 3850 | 1095 | **50370** | 1660 | 3870 | 4.61 |
 | [Eswin EIC7700X](results/Xyfg.txt) | 1400 MHz | 6.6 | Trixie riscv64 | 5390 | 1485 | **49340** | 4570 | 8700 | - |
 | [ODROID-C2 (Amlogic S905)](results/1ixI.txt) | 1750 MHz | 3.14 | Xenial arm64 | 4070 | 1128 | **48500** | 1750 | 3100 | - |
@@ -844,6 +847,7 @@
 | [Honeycomb LX2 (NXP LX2160A)](results/3Y4f.txt) | 2200 MHz | 5.16 | Fedora 35 aarch64 | 30690 | 2288 | 1251710 | **5050** | 16220 | 46.09 |
 | [Khadas VIM3 (Amlogic A311D)](results/1MFD.txt) | 2200/1800 MHz | 4.9 | Bionic arm64 | 8600 | 2026 | 1256910 | **4980** | 9300 | 13.12 |
 | [Khadas VIM3 (Amlogic A311D)](results/3R2Z.txt) | 2400/2015 MHz | 5.10 | Bullseye arm64 | 9650 | 2376 | 1366350 | **4850** | 7380 | - |
+| [DC-ROMA (EIC7702X)](results/fml13v03.txt ) | 1800 MHz | 6.6 | Noble riscv64 | 9800 | 1787 | 50380 | **4850** | 7460 | - |
 | [Celeron N4100](results/1uTS.txt) | 2300/1100 MHz | 4.15 | Bionic amd64 | 8510 | 2222 | 669350 | **4750** | 5240 | 18.33 |
 | [Pentium N4200](results/1ngq.txt) | 2560/1100 MHz | 4.14 | Bionic amd64 | 7469 | 1976 | 468008 | **4682** | 4997 | 18.75 |
 | [Luckfox Core3576 (RK3576)](results/8Qwk.txt) | 2120/1980 MHz | 6.1 | Bookworm arm64 | 11300 | 2031 | 1205280 | **4680** | 15770 | 17.57 |
@@ -1128,6 +1132,7 @@
 | [NanoPi M4v2 (RK3399)](results/3MAK.txt) | 2015/1510 MHz | 5.10 | Bullseye arm64 | 6680 | 1855 | 921980 | 3110 | **7640** | - |
 | [Khadas VIM1S (S905Y4)](results/4bbv.txt) | 2000 MHz | 5.4 | Jammy arm64 | 4000 | 1148 | 436540 | 1970 | **7530** | - |
 | [ODROID-N2+ (Amlogic S922X)](results/3DtN.txt) | 2400/2015 MHz | 5.14 | Impish arm64 | 9790 | 2253 | 1366930 | 4300 | **7480** | - |
+| [DC-ROMA (EIC7702X)](results/fml13v03.txt ) | 1800 MHz | 6.6 | Noble riscv64 | 9800 | 1787 | 50380 | 4850 | **7460** | - |
 | [Renegade (RK3328)](results/1iFx.txt) | 1400 MHz | 4.4 | Stretch arm64 | 3710 | 1069 | 644200 | 1565 | **7435** | 3.92 |
 | [Celeron J4105](results/1qal.txt) | 2400/1500 MHz | 4.15 | Bionic amd64 | 9020 | 2290 | 697100 | 5500 | **7410** | 19.07 |
 | [Khadas VIM3 (Amlogic A311D)](results/3R2Z.txt) | 2400/2015 MHz | 5.10 | Bullseye arm64 | 9650 | 2376 | 1366350 | 4850 | **7380** | - |
@@ -1443,6 +1448,7 @@
 | [Milk-V Jupiter (SpacemiT K1)](results/X904.txt) | **1800** MHz| 6.1 | Mantic riscv64 | 7090 | 1020 | 30700 | 2900 | 7230 | - |
 | [MangoPi Mcore (Allwinner H616)](results/4bSf.txt) | **1800** MHz| 5.19 | Jammy arm64 | 4100 | 1218 | 840270 | 990 | 2380 | - |
 | [i.MX8MPlus EVK](results/4hx0.txt) | **1800** MHz| 5.15 | Focal arm64 | 4990 | 1348 | 837680 | 2740 | 12420 | 7.02 |
+| [DC-ROMA (EIC7702X)](results/fml13v03.txt ) | **1800** MHz| 6.6 | Noble riscv64 | 9800 | 1787 | 50380 | 4850 | 7460 | - |
 | [Nintendo Switch (Tegra X1)](results/1Rnj.txt) | **1780** MHz| 4.9 | Fedora 30 arm-64 | 6170 | 1719 | 642670 | 2500 | 3570 | - |
 | [ODROID-C2 (Amlogic S905)](results/1ixI.txt) | **1750** MHz| 3.14 | Xenial arm64 | 4070 | 1128 | 48500 | 1750 | 3100 | - |
 | [Tinkerboard (RK3288)](results/1iSX.txt) | **1730** MHz| 4.14 | Stretch armhf | 5350 | 1563 | 66600 | 1480 | 3900 | - |

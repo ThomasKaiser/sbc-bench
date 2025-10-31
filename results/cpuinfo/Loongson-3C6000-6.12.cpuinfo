@@ -1,0 +1,513 @@
+system type		: generic-loongson-machine
+
+processor		: 0
+package			: 0
+core			: 0
+global_id		: 0
+CPU Family		: Loongson-64bit
+Model Name		: Loongson-3C6000
+CPU Revision		: 0x10
+FPU Revision		: 0x00
+CPU MHz			: 2200.00
+BogoMIPS		: 4400.00
+TLB Entries		: 2112
+Address Sizes		: 48 bits physical, 48 bits virtual
+ISA			: loongarch32r loongarch32s loongarch64
+Features		: cpucfg lam ual fpu lsx lasx crc32 complex crypto lspw lvz lbt_x86 lbt_arm lbt_mips
+Hardware Watchpoint	: yes, iwatch count: 8, dwatch count: 4
+
+processor		: 1
+package			: 0
+core			: 1
+global_id		: 1
+CPU Family		: Loongson-64bit
+Model Name		: Loongson-3C6000
+CPU Revision		: 0x10
+FPU Revision		: 0x00
+CPU MHz			: 2200.00
+BogoMIPS		: 4400.00
+TLB Entries		: 2112
+Address Sizes		: 48 bits physical, 48 bits virtual
+ISA			: loongarch32r loongarch32s loongarch64
+Features		: cpucfg lam ual fpu lsx lasx crc32 complex crypto lspw lvz lbt_x86 lbt_arm lbt_mips
+Hardware Watchpoint	: yes, iwatch count: 8, dwatch count: 4
+
+processor		: 2
+package			: 0
+core			: 2
+global_id		: 2
+CPU Family		: Loongson-64bit
+Model Name		: Loongson-3C6000
+CPU Revision		: 0x10
+FPU Revision		: 0x00
+CPU MHz			: 2200.00
+BogoMIPS		: 4400.00
+TLB Entries		: 2112
+Address Sizes		: 48 bits physical, 48 bits virtual
+ISA			: loongarch32r loongarch32s loongarch64
+Features		: cpucfg lam ual fpu lsx lasx crc32 complex crypto lspw lvz lbt_x86 lbt_arm lbt_mips
+Hardware Watchpoint	: yes, iwatch count: 8, dwatch count: 4
+
+processor		: 3
+package			: 0
+core			: 3
+global_id		: 3
+CPU Family		: Loongson-64bit
+Model Name		: Loongson-3C6000
+CPU Revision		: 0x10
+FPU Revision		: 0x00
+CPU MHz			: 2200.00
+BogoMIPS		: 4400.00
+TLB Entries		: 2112
+Address Sizes		: 48 bits physical, 48 bits virtual
+ISA			: loongarch32r loongarch32s loongarch64
+Features		: cpucfg lam ual fpu lsx lasx crc32 complex crypto lspw lvz lbt_x86 lbt_arm lbt_mips
+Hardware Watchpoint	: yes, iwatch count: 8, dwatch count: 4
+
+processor		: 4
+package			: 0
+core			: 4
+global_id		: 4
+CPU Family		: Loongson-64bit
+Model Name		: Loongson-3C6000
+CPU Revision		: 0x10
+FPU Revision		: 0x00
+CPU MHz			: 2200.00
+BogoMIPS		: 4400.00
+TLB Entries		: 2112
+Address Sizes		: 48 bits physical, 48 bits virtual
+ISA			: loongarch32r loongarch32s loongarch64
+Features		: cpucfg lam ual fpu lsx lasx crc32 complex crypto lspw lvz lbt_x86 lbt_arm lbt_mips
+Hardware Watchpoint	: yes, iwatch count: 8, dwatch count: 4
+
+processor		: 5
+package			: 0
+core			: 5
+global_id		: 5
+CPU Family		: Loongson-64bit
+Model Name		: Loongson-3C6000
+CPU Revision		: 0x10
+FPU Revision		: 0x00
+CPU MHz			: 2200.00
+BogoMIPS		: 4400.00
+TLB Entries		: 2112
+Address Sizes		: 48 bits physical, 48 bits virtual
+ISA			: loongarch32r loongarch32s loongarch64
+Features		: cpucfg lam ual fpu lsx lasx crc32 complex crypto lspw lvz lbt_x86 lbt_arm lbt_mips
+Hardware Watchpoint	: yes, iwatch count: 8, dwatch count: 4
+
+processor		: 6
+package			: 0
+core			: 6
+global_id		: 6
+CPU Family		: Loongson-64bit
+Model Name		: Loongson-3C6000
+CPU Revision		: 0x10
+FPU Revision		: 0x00
+CPU MHz			: 2200.00
+BogoMIPS		: 4400.00
+TLB Entries		: 2112
+Address Sizes		: 48 bits physical, 48 bits virtual
+ISA			: loongarch32r loongarch32s loongarch64
+Features		: cpucfg lam ual fpu lsx lasx crc32 complex crypto lspw lvz lbt_x86 lbt_arm lbt_mips
+Hardware Watchpoint	: yes, iwatch count: 8, dwatch count: 4
+
+processor		: 7
+package			: 0
+core			: 7
+global_id		: 7
+CPU Family		: Loongson-64bit
+Model Name		: Loongson-3C6000
+CPU Revision		: 0x10
+FPU Revision		: 0x00
+CPU MHz			: 2200.00
+BogoMIPS		: 4400.00
+TLB Entries		: 2112
+Address Sizes		: 48 bits physical, 48 bits virtual
+ISA			: loongarch32r loongarch32s loongarch64
+Features		: cpucfg lam ual fpu lsx lasx crc32 complex crypto lspw lvz lbt_x86 lbt_arm lbt_mips
+Hardware Watchpoint	: yes, iwatch count: 8, dwatch count: 4
+
+processor		: 8
+package			: 0
+core			: 8
+global_id		: 8
+CPU Family		: Loongson-64bit
+Model Name		: Loongson-3C6000
+CPU Revision		: 0x10
+FPU Revision		: 0x00
+CPU MHz			: 2200.00
+BogoMIPS		: 4400.00
+TLB Entries		: 2112
+Address Sizes		: 48 bits physical, 48 bits virtual
+ISA			: loongarch32r loongarch32s loongarch64
+Features		: cpucfg lam ual fpu lsx lasx crc32 complex crypto lspw lvz lbt_x86 lbt_arm lbt_mips
+Hardware Watchpoint	: yes, iwatch count: 8, dwatch count: 4
+
+processor		: 9
+package			: 0
+core			: 9
+global_id		: 9
+CPU Family		: Loongson-64bit
+Model Name		: Loongson-3C6000
+CPU Revision		: 0x10
+FPU Revision		: 0x00
+CPU MHz			: 2200.00
+BogoMIPS		: 4400.00
+TLB Entries		: 2112
+Address Sizes		: 48 bits physical, 48 bits virtual
+ISA			: loongarch32r loongarch32s loongarch64
+Features		: cpucfg lam ual fpu lsx lasx crc32 complex crypto lspw lvz lbt_x86 lbt_arm lbt_mips
+Hardware Watchpoint	: yes, iwatch count: 8, dwatch count: 4
+
+processor		: 10
+package			: 0
+core			: 10
+global_id		: 10
+CPU Family		: Loongson-64bit
+Model Name		: Loongson-3C6000
+CPU Revision		: 0x10
+FPU Revision		: 0x00
+CPU MHz			: 2200.00
+BogoMIPS		: 4400.00
+TLB Entries		: 2112
+Address Sizes		: 48 bits physical, 48 bits virtual
+ISA			: loongarch32r loongarch32s loongarch64
+Features		: cpucfg lam ual fpu lsx lasx crc32 complex crypto lspw lvz lbt_x86 lbt_arm lbt_mips
+Hardware Watchpoint	: yes, iwatch count: 8, dwatch count: 4
+
+processor		: 11
+package			: 0
+core			: 11
+global_id		: 11
+CPU Family		: Loongson-64bit
+Model Name		: Loongson-3C6000
+CPU Revision		: 0x10
+FPU Revision		: 0x00
+CPU MHz			: 2200.00
+BogoMIPS		: 4400.00
+TLB Entries		: 2112
+Address Sizes		: 48 bits physical, 48 bits virtual
+ISA			: loongarch32r loongarch32s loongarch64
+Features		: cpucfg lam ual fpu lsx lasx crc32 complex crypto lspw lvz lbt_x86 lbt_arm lbt_mips
+Hardware Watchpoint	: yes, iwatch count: 8, dwatch count: 4
+
+processor		: 12
+package			: 0
+core			: 12
+global_id		: 12
+CPU Family		: Loongson-64bit
+Model Name		: Loongson-3C6000
+CPU Revision		: 0x10
+FPU Revision		: 0x00
+CPU MHz			: 2200.00
+BogoMIPS		: 4400.00
+TLB Entries		: 2112
+Address Sizes		: 48 bits physical, 48 bits virtual
+ISA			: loongarch32r loongarch32s loongarch64
+Features		: cpucfg lam ual fpu lsx lasx crc32 complex crypto lspw lvz lbt_x86 lbt_arm lbt_mips
+Hardware Watchpoint	: yes, iwatch count: 8, dwatch count: 4
+
+processor		: 13
+package			: 0
+core			: 13
+global_id		: 13
+CPU Family		: Loongson-64bit
+Model Name		: Loongson-3C6000
+CPU Revision		: 0x10
+FPU Revision		: 0x00
+CPU MHz			: 2200.00
+BogoMIPS		: 4400.00
+TLB Entries		: 2112
+Address Sizes		: 48 bits physical, 48 bits virtual
+ISA			: loongarch32r loongarch32s loongarch64
+Features		: cpucfg lam ual fpu lsx lasx crc32 complex crypto lspw lvz lbt_x86 lbt_arm lbt_mips
+Hardware Watchpoint	: yes, iwatch count: 8, dwatch count: 4
+
+processor		: 14
+package			: 0
+core			: 14
+global_id		: 14
+CPU Family		: Loongson-64bit
+Model Name		: Loongson-3C6000
+CPU Revision		: 0x10
+FPU Revision		: 0x00
+CPU MHz			: 2200.00
+BogoMIPS		: 4400.00
+TLB Entries		: 2112
+Address Sizes		: 48 bits physical, 48 bits virtual
+ISA			: loongarch32r loongarch32s loongarch64
+Features		: cpucfg lam ual fpu lsx lasx crc32 complex crypto lspw lvz lbt_x86 lbt_arm lbt_mips
+Hardware Watchpoint	: yes, iwatch count: 8, dwatch count: 4
+
+processor		: 15
+package			: 0
+core			: 15
+global_id		: 15
+CPU Family		: Loongson-64bit
+Model Name		: Loongson-3C6000
+CPU Revision		: 0x10
+FPU Revision		: 0x00
+CPU MHz			: 2200.00
+BogoMIPS		: 4400.00
+TLB Entries		: 2112
+Address Sizes		: 48 bits physical, 48 bits virtual
+ISA			: loongarch32r loongarch32s loongarch64
+Features		: cpucfg lam ual fpu lsx lasx crc32 complex crypto lspw lvz lbt_x86 lbt_arm lbt_mips
+Hardware Watchpoint	: yes, iwatch count: 8, dwatch count: 4
+
+processor		: 16
+package			: 0
+core			: 16
+global_id		: 16
+CPU Family		: Loongson-64bit
+Model Name		: Loongson-3C6000
+CPU Revision		: 0x10
+FPU Revision		: 0x00
+CPU MHz			: 2200.00
+BogoMIPS		: 4400.00
+TLB Entries		: 2112
+Address Sizes		: 48 bits physical, 48 bits virtual
+ISA			: loongarch32r loongarch32s loongarch64
+Features		: cpucfg lam ual fpu lsx lasx crc32 complex crypto lspw lvz lbt_x86 lbt_arm lbt_mips
+Hardware Watchpoint	: yes, iwatch count: 8, dwatch count: 4
+
+processor		: 17
+package			: 0
+core			: 17
+global_id		: 17
+CPU Family		: Loongson-64bit
+Model Name		: Loongson-3C6000
+CPU Revision		: 0x10
+FPU Revision		: 0x00
+CPU MHz			: 2200.00
+BogoMIPS		: 4400.00
+TLB Entries		: 2112
+Address Sizes		: 48 bits physical, 48 bits virtual
+ISA			: loongarch32r loongarch32s loongarch64
+Features		: cpucfg lam ual fpu lsx lasx crc32 complex crypto lspw lvz lbt_x86 lbt_arm lbt_mips
+Hardware Watchpoint	: yes, iwatch count: 8, dwatch count: 4
+
+processor		: 18
+package			: 0
+core			: 18
+global_id		: 18
+CPU Family		: Loongson-64bit
+Model Name		: Loongson-3C6000
+CPU Revision		: 0x10
+FPU Revision		: 0x00
+CPU MHz			: 2200.00
+BogoMIPS		: 4400.00
+TLB Entries		: 2112
+Address Sizes		: 48 bits physical, 48 bits virtual
+ISA			: loongarch32r loongarch32s loongarch64
+Features		: cpucfg lam ual fpu lsx lasx crc32 complex crypto lspw lvz lbt_x86 lbt_arm lbt_mips
+Hardware Watchpoint	: yes, iwatch count: 8, dwatch count: 4
+
+processor		: 19
+package			: 0
+core			: 19
+global_id		: 19
+CPU Family		: Loongson-64bit
+Model Name		: Loongson-3C6000
+CPU Revision		: 0x10
+FPU Revision		: 0x00
+CPU MHz			: 2200.00
+BogoMIPS		: 4400.00
+TLB Entries		: 2112
+Address Sizes		: 48 bits physical, 48 bits virtual
+ISA			: loongarch32r loongarch32s loongarch64
+Features		: cpucfg lam ual fpu lsx lasx crc32 complex crypto lspw lvz lbt_x86 lbt_arm lbt_mips
+Hardware Watchpoint	: yes, iwatch count: 8, dwatch count: 4
+
+processor		: 20
+package			: 0
+core			: 20
+global_id		: 20
+CPU Family		: Loongson-64bit
+Model Name		: Loongson-3C6000
+CPU Revision		: 0x10
+FPU Revision		: 0x00
+CPU MHz			: 2200.00
+BogoMIPS		: 4400.00
+TLB Entries		: 2112
+Address Sizes		: 48 bits physical, 48 bits virtual
+ISA			: loongarch32r loongarch32s loongarch64
+Features		: cpucfg lam ual fpu lsx lasx crc32 complex crypto lspw lvz lbt_x86 lbt_arm lbt_mips
+Hardware Watchpoint	: yes, iwatch count: 8, dwatch count: 4
+
+processor		: 21
+package			: 0
+core			: 21
+global_id		: 21
+CPU Family		: Loongson-64bit
+Model Name		: Loongson-3C6000
+CPU Revision		: 0x10
+FPU Revision		: 0x00
+CPU MHz			: 2200.00
+BogoMIPS		: 4400.00
+TLB Entries		: 2112
+Address Sizes		: 48 bits physical, 48 bits virtual
+ISA			: loongarch32r loongarch32s loongarch64
+Features		: cpucfg lam ual fpu lsx lasx crc32 complex crypto lspw lvz lbt_x86 lbt_arm lbt_mips
+Hardware Watchpoint	: yes, iwatch count: 8, dwatch count: 4
+
+processor		: 22
+package			: 0
+core			: 22
+global_id		: 22
+CPU Family		: Loongson-64bit
+Model Name		: Loongson-3C6000
+CPU Revision		: 0x10
+FPU Revision		: 0x00
+CPU MHz			: 2200.00
+BogoMIPS		: 4400.00
+TLB Entries		: 2112
+Address Sizes		: 48 bits physical, 48 bits virtual
+ISA			: loongarch32r loongarch32s loongarch64
+Features		: cpucfg lam ual fpu lsx lasx crc32 complex crypto lspw lvz lbt_x86 lbt_arm lbt_mips
+Hardware Watchpoint	: yes, iwatch count: 8, dwatch count: 4
+
+processor		: 23
+package			: 0
+core			: 23
+global_id		: 23
+CPU Family		: Loongson-64bit
+Model Name		: Loongson-3C6000
+CPU Revision		: 0x10
+FPU Revision		: 0x00
+CPU MHz			: 2200.00
+BogoMIPS		: 4400.00
+TLB Entries		: 2112
+Address Sizes		: 48 bits physical, 48 bits virtual
+ISA			: loongarch32r loongarch32s loongarch64
+Features		: cpucfg lam ual fpu lsx lasx crc32 complex crypto lspw lvz lbt_x86 lbt_arm lbt_mips
+Hardware Watchpoint	: yes, iwatch count: 8, dwatch count: 4
+
+processor		: 24
+package			: 0
+core			: 24
+global_id		: 24
+CPU Family		: Loongson-64bit
+Model Name		: Loongson-3C6000
+CPU Revision		: 0x10
+FPU Revision		: 0x00
+CPU MHz			: 2200.00
+BogoMIPS		: 4400.00
+TLB Entries		: 2112
+Address Sizes		: 48 bits physical, 48 bits virtual
+ISA			: loongarch32r loongarch32s loongarch64
+Features		: cpucfg lam ual fpu lsx lasx crc32 complex crypto lspw lvz lbt_x86 lbt_arm lbt_mips
+Hardware Watchpoint	: yes, iwatch count: 8, dwatch count: 4
+
+processor		: 25
+package			: 0
+core			: 25
+global_id		: 25
+CPU Family		: Loongson-64bit
+Model Name		: Loongson-3C6000
+CPU Revision		: 0x10
+FPU Revision		: 0x00
+CPU MHz			: 2200.00
+BogoMIPS		: 4400.00
+TLB Entries		: 2112
+Address Sizes		: 48 bits physical, 48 bits virtual
+ISA			: loongarch32r loongarch32s loongarch64
+Features		: cpucfg lam ual fpu lsx lasx crc32 complex crypto lspw lvz lbt_x86 lbt_arm lbt_mips
+Hardware Watchpoint	: yes, iwatch count: 8, dwatch count: 4
+
+processor		: 26
+package			: 0
+core			: 26
+global_id		: 26
+CPU Family		: Loongson-64bit
+Model Name		: Loongson-3C6000
+CPU Revision		: 0x10
+FPU Revision		: 0x00
+CPU MHz			: 2200.00
+BogoMIPS		: 4400.00
+TLB Entries		: 2112
+Address Sizes		: 48 bits physical, 48 bits virtual
+ISA			: loongarch32r loongarch32s loongarch64
+Features		: cpucfg lam ual fpu lsx lasx crc32 complex crypto lspw lvz lbt_x86 lbt_arm lbt_mips
+Hardware Watchpoint	: yes, iwatch count: 8, dwatch count: 4
+
+processor		: 27
+package			: 0
+core			: 27
+global_id		: 27
+CPU Family		: Loongson-64bit
+Model Name		: Loongson-3C6000
+CPU Revision		: 0x10
+FPU Revision		: 0x00
+CPU MHz			: 2200.00
+BogoMIPS		: 4400.00
+TLB Entries		: 2112
+Address Sizes		: 48 bits physical, 48 bits virtual
+ISA			: loongarch32r loongarch32s loongarch64
+Features		: cpucfg lam ual fpu lsx lasx crc32 complex crypto lspw lvz lbt_x86 lbt_arm lbt_mips
+Hardware Watchpoint	: yes, iwatch count: 8, dwatch count: 4
+
+processor		: 28
+package			: 0
+core			: 28
+global_id		: 28
+CPU Family		: Loongson-64bit
+Model Name		: Loongson-3C6000
+CPU Revision		: 0x10
+FPU Revision		: 0x00
+CPU MHz			: 2200.00
+BogoMIPS		: 4400.00
+TLB Entries		: 2112
+Address Sizes		: 48 bits physical, 48 bits virtual
+ISA			: loongarch32r loongarch32s loongarch64
+Features		: cpucfg lam ual fpu lsx lasx crc32 complex crypto lspw lvz lbt_x86 lbt_arm lbt_mips
+Hardware Watchpoint	: yes, iwatch count: 8, dwatch count: 4
+
+processor		: 29
+package			: 0
+core			: 29
+global_id		: 29
+CPU Family		: Loongson-64bit
+Model Name		: Loongson-3C6000
+CPU Revision		: 0x10
+FPU Revision		: 0x00
+CPU MHz			: 2200.00
+BogoMIPS		: 4400.00
+TLB Entries		: 2112
+Address Sizes		: 48 bits physical, 48 bits virtual
+ISA			: loongarch32r loongarch32s loongarch64
+Features		: cpucfg lam ual fpu lsx lasx crc32 complex crypto lspw lvz lbt_x86 lbt_arm lbt_mips
+Hardware Watchpoint	: yes, iwatch count: 8, dwatch count: 4
+
+processor		: 30
+package			: 0
+core			: 30
+global_id		: 30
+CPU Family		: Loongson-64bit
+Model Name		: Loongson-3C6000
+CPU Revision		: 0x10
+FPU Revision		: 0x00
+CPU MHz			: 2200.00
+BogoMIPS		: 4400.00
+TLB Entries		: 2112
+Address Sizes		: 48 bits physical, 48 bits virtual
+ISA			: loongarch32r loongarch32s loongarch64
+Features		: cpucfg lam ual fpu lsx lasx crc32 complex crypto lspw lvz lbt_x86 lbt_arm lbt_mips
+Hardware Watchpoint	: yes, iwatch count: 8, dwatch count: 4
+
+processor		: 31
+package			: 0
+core			: 31
+global_id		: 31
+CPU Family		: Loongson-64bit
+Model Name		: Loongson-3C6000
+CPU Revision		: 0x10
+FPU Revision		: 0x00
+CPU MHz			: 2200.00
+BogoMIPS		: 4400.00
+TLB Entries		: 2112
+Address Sizes		: 48 bits physical, 48 bits virtual
+ISA			: loongarch32r loongarch32s loongarch64
+Features		: cpucfg lam ual fpu lsx lasx crc32 complex crypto lspw lvz lbt_x86 lbt_arm lbt_mips
+Hardware Watchpoint	: yes, iwatch count: 8, dwatch count: 4

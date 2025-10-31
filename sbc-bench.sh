@@ -6980,7 +6980,7 @@ GuessSoCbySignature() {
 				*t736*)
 					echo "Allwinner T736"
 					;;
-				*a733*|*cubie-a7a*|*cubie-a7z*)
+				*a733*|*cubie-a7a*|*cubie-a7z*|*orangepi-4-pro*)
 					echo "Allwinner A733"
 					;;
 				*sun60iw2*)
@@ -9104,6 +9104,10 @@ CheckKernelVersion() {
 		5.10.*)
 			# some SDKs/BSPs based on this version: Nvidia Jetson AGX Orin, Rockchip RK3399/RK3528/RK356x/RK3588/
 			case ${GuessedSoC} in
+				Allwinner*)
+					# Allwinner in 2025 ships the T153 BSP with a 5.10.198 kernel, LMAO
+					PrintBSPWarning Allwinner
+					;;
 				"Nvidia Jetson AGX Orin")
 					PrintBSPWarning Nvidia
 					;;
@@ -9139,7 +9143,7 @@ CheckKernelVersion() {
 					;;
 			esac
 			;;
-		"5.15.78"|"5.15.119"|"5.15.137"|"5.15.153")
+		"5.15.78"|"5.15.119"|"5.15.137"|"5.15.147"|"5.15.153")
 			# New Amlogic SDK released with 5.15.78, supports at least T7, S4, SM1 and G12B.
 			# Kernel version 5.15.119 some images were using is the result of version string
 			# cosmetics over at ophub/flippy/unifreq

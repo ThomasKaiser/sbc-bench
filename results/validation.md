@@ -11,6 +11,7 @@
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | ----: | ----: | :---: |
 | [1BsF](1BsF.txt) | v0.6.2 Hardkernel ODROID-N2 | 0%/0.1% | 3.6G/3.5G | X | X | X | X | 2% | 0% | |
 | [1Dt1](1Dt1.txt) | v0.6.6 Realtek\_Lion\_Skin\_1GB | 0%/0% | 570M/313M | X | X | X | | 3% | 2% | |
+| [1ET4](1ET4.txt) | v0.9.72 Micro Computer | 0%/0% | 62Gi/60Gi | X | X | X | X | 2% | 0% | |
 | [1HnC](1HnC.txt) | v0.6.6 x5-Z8350 | 0%/0% | 1.9G/1.6G | X | X | X | X | 2% | 0% | |
 | [1iFf](1iFf.txt) | v0.4 Raspberry Pi 2 B+ (BCM2836) | 0%/0.7% | 976M/872M | X | X | X | X | 2% | 0% | |
 | [1iFm](1iFm.txt) | v0.4 Rock64 (RK3328) | 0%/1.5% | 1.9G/1.6G | X | X | X | X | 2% | 0% | |
@@ -237,6 +238,7 @@
 | [8-NK](8-NK.txt) | v0.9.68 Raspberry Pi 5 Model B Rev 1.1 | 0%/0% | 15Gi/15Gi | X | X | X | X | 1% | 0% | [check log](8-NK.txt) |
 | [84GG](84GG.txt) | v0.9.71 phytium D3000 unattended | 0%/0% | 31Gi/30Gi | X | X | X | X | 1% | 0% | |
 | [87lq](87lq.txt) | v0.9.72 AAEON BOXER-8654AI\_RefKit` pla | 0%/0% | 7.4Gi/6.4Gi | X | X | X | X | 0% | 0% | [check log](87lq.txt) |
+| [88LE](88LE.txt) | v0.9.70 Radxa Orion O6 | 0%/0% | 14Gi/13Gi | X | X | X | X | 0% | 0% | [check log](88LE.txt) |
 | [8acvqG](8acvqG.txt) | v0.9.61 Raspberry Pi 5 Model B Rev 1.0 | 0%/0% | 4.0Gi/3.8Gi | X | X | X | X | 2% | 0% | [check log](8acvqG.txt) |
 | [8ctH](8ctH.txt) | v0.9.70 Hardkernel ODROID HC2 | 0%/0% | 1.9Gi/1.7Gi | X | X | X | X | 4% | 0% | [check log](8ctH.txt) |
 | [8ENy](8ENy.txt) | v0.9.71 Hardkernel ODROID-M2 | 0%/0% | 15Gi/14Gi | X | X | X | X | 1% | 0% | [check log](8ENy.txt) |

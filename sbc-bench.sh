@@ -6081,14 +6081,24 @@ GuessARMSoC() {
 				esac
 				;;
 			*)
-				# guess SoC based on CPU topology
-				SoCGuess="$(GuessSoCbySignature)"
-				if [ "X${SoCGuess}" != "X" ] && [ "X${VirtWhat}" != "X" ] && [ "X${VirtWhat}" != "Xnone" ]; then
-					# add virtualization disclaimer
-					echo "${SoCGuess}${Allwinner_SID} / guessing impossible since running in ${VirtWhat}"
-				else
-					echo "${SoCGuess:-n/a}${Allwinner_SID}"
-				fi
+				# Check some SMBIOS table entries first since on some modern SoCs (e.g. Cix
+				# P1) order and count of CPU cores varies wildly depending on UEFI settings
+				BIOSModelName="$(awk -F":" 'tolower($0) ~ /^bios model name/ {print $2}' <<<"${LSCPU}" | tail -n1)"
+				case "${BIOSModelName,,}" in
+					*"cix p1"*)
+						awk -F" " '{print "Cix P1/"$3}' <<<"${BIOSModelName}"
+						;;
+					*)
+						# guess SoC based on CPU topology
+						SoCGuess="$(GuessSoCbySignature)"
+						if [ "X${SoCGuess}" != "X" ] && [ "X${VirtWhat}" != "X" ] && [ "X${VirtWhat}" != "Xnone" ]; then
+							# add virtualization disclaimer
+							echo "${SoCGuess}${Allwinner_SID} / guessing impossible since running in ${VirtWhat}"
+						else
+							echo "${SoCGuess:-n/a}${Allwinner_SID}"
+						fi
+						;;
+				esac
 				;;
 		esac
 	fi

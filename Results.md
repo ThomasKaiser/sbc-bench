@@ -82,6 +82,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Milk-V Jupiter (SpacemiT K1)](results/X904.txt) | 1800 MHz | 6.1 | Mantic riscv64 | 7090 | 1020 | 30700 | 2900 | 7230 | - |
 | [Milk-V Mars CM (JH7110)](results/4K7E.txt) | 1500 MHz | 5.15 | Bookworm riscv64 | 4110 | 1195 | 25070 | 930 | 830 | - |
 | [Milk-V Pioneer (SG2042)](results/4wYE.txt) | 2000 MHz | 6.1 | Kinetic riscv64 | 59820 | 1622 | 43500 | 3620 | 4760 | - |
+| [Minisforum MS-R1 (CP8180)](results/1ET4.txt) | 2600 MHz | 6.6 | Bookworm arm64 | 32980 | 3899 | 1458360 | 17950 | 48830 | 42.91 |
 | [MT6580 K9M1](results/466y.txt) | 1300 MHz | 5.19 | Sid armhf | 2930 | 860 | 25300 | 1250 | 3300 | - |
 | [MT8395 Genio 1200](results/4Kvg.txt) | 2200/2000 MHz | 5.15 | Jammy arm64 | 18130 | 3298 | 1240850 | 14200 | 19000 | 27.60 |
 | [M1-MuseBook (SpacemiT K1)](results/Xv06.txt) | 1600 MHz | 6.1 | Mantic riscv64 | 6510 | 1025 | 27220 | 2570 | 6470 | - |
@@ -154,6 +155,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Radxa Cubie A5E (A527)](results/Kojb.txt) | 1800/1415 MHz | 5.15 | Bookworm arm64 | 8830 | 1517 | 841880 | 2710 | 5570 | 12.32 |
 | [Radxa Dragon Q6A (QCS6490)](results/.txt) | 2700/2400/1950 MHz | 6.16 | Noble arm64 | 17400 | 3840 | 1522730 | 8404 | 19660 | 26.31 |
 | [Radxa Fogwise AirBox (SG2300X)](results/XUSc.txt) | 2300 MHz | 5.4 | Focal arm64 | 11580 | 1712 | 1075090 | 1870 | 9210 | - |
+| [Radxa Orion O6 (CD8180)](results/88LE.txt) | 2600 MHz | 6.1 | Bookworm arm64 | 32690 | 3945 | 1458420 | 16880 | 48030 | 43.01 |
 | [Radxa ROCK 3A (RK3568)](results/40TX.txt) | 2000 MHz | 5.18 | Bullseye arm64 | 5110 | 1450 | 935920 | 3150 | 6250 | 7.58 |
 | [Radxa ROCK 4D (RK3576)](results/8g-p.txt) | 2230/2040 MHz | 6.1 | Bookworm arm64 | 10830 | 1771 | 1267790 | 5210 | 15450 | 18.27 |
 | [Radxa ROCK 5A (RK3588)](results/C6zgdP.txt)| ~2290 | 5.10 | Bullseye arm64 | 15630 | 3015 | 1302120 | 9170 | 27080 | 23.42 |

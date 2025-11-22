@@ -17,6 +17,7 @@
 | [Huaqin P6410<br />(2 x Ampere Altra Max)](results/4kiu.txt) | 3000 MHz | 5.4 | Focal arm64 | **430860** | 4211 | 1710010 | 13310 | 47970 | - |
 | [Ampere Altra M96-28](results/4zGI.txt) | 2800 MHz | 5.15 | Jammy arm64 | **249380** | 3858 | 1596110 | 10130 | 44750 | - |
 | [Ampere Altra Q80-26](results/4zkJ.txt) | 2600 MHz | 5.15 | Jammy arm64 | **214390** | 3748 | 1482190 | 11685 | 41560 | 316.50 |
+| [Dell FCM1253 (GB10)](results/fcm1253.txt) | 3900/2800 MHz | 6.14 | Noble arm64 | **114920** | 6704 | 27000 | 27100 | 63400 | 160.82 |
 | [H270-T70<br />(2 x ThunderX CN8890)](results/3N5c.txt) | 2000 Mhz | 5.16 | Sid arm64 | **107180** | 1826 | 340750 | 4180 | 17130 | - |
 | [Qualcomm X1E001DE](results/8SWL.txt) | 4300/3800 MHz | 6.14 | Oracular arm64 | **66120** | 5603 | 2274190 | 38360 | 110410 | 76.85 |
 | [Milk-V Pioneer (SG2042)](results/4wYE.txt) | 2000 MHz | 6.1 | Kinetic riscv64 | **59820** | 1622 | 43500 | 3620 | 4760 | - |
@@ -272,6 +273,7 @@
 
 | Device / details | Clockspeed | Kernel | Distro | 7-zip multi | *7-zip single* | AES | memcpy | memset | kH/s |
 | ----- | :--------: | :----: | :----: | ----: | ------: | ------: | -----: | -----: | ---: |
+| [Dell FCM1253 (GB10)](results/fcm1253.txt) | 3900/2800 MHz | 6.14 | Noble arm64 | 114920 | **6704** | 27000 | 27100 | 63400 | 160.82 |
 | [Qualcomm X1E001DE](results/8SWL.txt) | 4300/3800 MHz | 6.14 | Oracular arm64 | 66120 | **5603** | 2274190 | 38360 | 110410 | 76.85 |
 | [Apple M1 Pro](results/443N.txt) | 3030/2060 MHz | 5.18 | Gentoo 2.8 arm64 | 43800 | **5010** | 1064450 | 27110 | 71910 | 48.28 |
 | [Qualcomm Snapdragon 8cx Gen 3 (WSL2)](results/4kEp.txt) | 2980/? MHz | 5.15 | Jammy arm64 | 33600 | **4789** | 1679480 | 21010 | 41540 | 50.65 |
@@ -758,6 +760,7 @@
 | [Lichee Pi 3A (SpacemiT K1)](results/XxZl.txt) | 1600 MHz | 6.1 | Mantic riscv64 | 6810 | 985 | **27340** | 2400 | 5220 | - |
 | [BPi F3 (SpacemiT K1)](results/8to7qX.txt) | 1600 MHz | 6.1 | Mantic riscv64 | 6750 | 978 | **27260** | 2620 | 7180 | - |
 | [M1-MuseBook (SpacemiT K1)](results/Xv06.txt) | 1600 MHz | 6.1 | Mantic riscv64 | 6510 | 1025 | **27220** | 2570 | 6470 | - |
+| [Dell FCM1253 (GB10)](results/fcm1253.txt) | 3900/2800 MHz | 6.14 | Noble arm64 | 114920 | 6704 | **27000** | 27100 | 63400 | 160.82 |
 | [Cubox-i4<br />(NXP i.MX6)](results/4132.txt) | 980 MHz | 5.15 | Jammy armhf | 2360 | 657 | **27000** | 340 | 340 | - |
 | [T-HEAD C910 RVB-ICE](results/41AB.txt) | 1200 MHz | 5.10 | Sid riscv64 | 1760 | 1007 | **26930** | 3340 | 6470 | - |
 | [NanoPi M1 Plus (Allwinner H3)](results/3N2z.txt) | 1370 MHz | 4.19 | Bionic armhf | 3030 | 881 | **26660** | 830 | 3450 | - |
@@ -794,6 +797,7 @@
 | ----- | :--------: | :----: | :----: | ----: | ------: | ------: | -----: | -----: | ---: |
 | [Qualcomm X1E001DE](results/8SWL.txt) | 4300/3800 MHz | 6.14 | Oracular arm64 | 66120 | 5603 | 2274190 | **38360** | 110410 | 76.85 |
 | [Apple M1 Pro](results/443N.txt) | 3030/2060 MHz | 5.18 | Gentoo 2.8 arm64 | 43800 | 5010 | 1064450 | **27110** | 71910 | 48.28 |
+| [Dell FCM1253 (GB10)](results/fcm1253.txt) | 3900/2800 MHz | 6.14 | Noble arm64 | 114920 | 6704 | 27000 | **27100** | 63400 | 160.82 |
 | [Qualcomm Snapdragon 8cx Gen 3 (WSL2)](results/4kEp.txt) | 2980/? MHz | 5.15 | Jammy arm64 | 33600 | 4789 | 1679480 | **21010** | 41540 | 50.65 |
 | [Minisforum MS-R1 (CP8180)](results/1ET4.txt) | 2600 MHz | 6.6 | Bookworm arm64 | 32980 | 3899 | 1458360 | **17950** | 48830 | 42.91 |
 | [Qualcomm Snapdragon 8cx Gen 3](results/4xwT.txt) | 3000/2440 MHz | 6.3 | Lunar arm64 | 35370 | 4312 | 1686160 | **17500** | 41780 | 42.76 |
@@ -1053,6 +1057,7 @@
 | ----- | :--------: | :----: | :----: | ----: | ------: | ------: | -----: | -----: | ---: |
 | [Qualcomm X1E001DE](results/8SWL.txt) | 4300/3800 MHz | 6.14 | Oracular arm64 | 66120 | 5603 | 2274190 | 38360 | **110410** | 76.85 |
 | [Apple M1 Pro](results/443N.txt) | 3030/2060 MHz | 5.18 | Gentoo 2.8 arm64 | 43800 | 5010 | 1064450 | 27110 | **71910** | 48.28 |
+| [Dell FCM1253 (GB10)](results/fcm1253.txt) | 3900/2800 MHz | 6.14 | Noble arm64 | 114920 | 6704 | 27000 | 27100 | **63400** | 160.82 |
 | [Minisforum MS-R1 (CP8180)](results/1ET4.txt) | 2600 MHz | 6.6 | Bookworm arm64 | 32980 | 3899 | 1458360 | 17950 | **48830** | 42.91 |
 | [Radxa Orion O6 (CD8180)](results/88LE.txt) | 2600 MHz | 6.1 | Bookworm arm64 | 32690 | 3945 | 1458420 | 16880 | **48030** | 43.01 |
 | [Huaqin P6410<br />(2 x Ampere Altra Max)](results/4kiu.txt) | 3000 MHz | 5.4 | Focal arm64 | 430860 | 4211 | 1710010 | 13310 | **47970** | - |
@@ -1311,6 +1316,7 @@
 | Device / details | *Clockspeed* | Kernel | Distro | 7-zip multi | 7-zip single | AES | memcpy | memset | kH/s |
 | ----- | :--------: | :----: | :----: | ----: | ------: | ------: | -----: | -----: | ---: |
 | [Qualcomm X1E001DE](results/8SWL.txt) | **4300/3800** MHz| 6.14 | Oracular arm64 | 66120 | 5603 | 2274190 | 38360 | 110410 | 76.85 |
+| [Dell FCM1253 (GB10)](results/fcm1253.txt) | **3900/2800** MHz| 6.14 | Noble arm64 | 114920 | 6704 | 27000 | 27100 | 63400 | 160.82 |
 | [Intel i3-N305](results/4qpr.txt) | **3800** MHz| 5.19 | Jammy amd64 | 20000 | 4398 | 1377280 | 9950 | 8990 | 41.43 |
 | [Pentium G4600](results/2jVw.txt) | **3600** MHz| 4.19 | Buster amd64 | 11810 | 4448 | 984820 | 15120 | 33380 | 21.88 |
 | [Radxa X4 (N100)](results/XObB.txt) | **3400** MHz| 6.8 | Noble amd64 | 8010 | 3580 | 1231100 | 8140 | 7970 | 21.40 |

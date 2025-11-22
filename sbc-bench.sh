@@ -6088,6 +6088,9 @@ GuessARMSoC() {
 					*"cix p1"*)
 						awk -F" " '{print "Cix P1/"$3}' <<<"${BIOSModelName}"
 						;;
+					*"gb10"*)
+						echo "Nvidia GB10"
+						;;
 					*)
 						# guess SoC based on CPU topology
 						SoCGuess="$(GuessSoCbySignature)"
@@ -7894,6 +7897,10 @@ GuessSoCbySignature() {
 					echo "Nvidia Grace"
 					;;
 			esac
+			;;
+		?0A725r0p1*1A725r0p1*2A725r0p1*3A725r0p1*4A725r0p1*5X925r0p1*6X925r0p1*7X925r0p1*8X925r0p1*9X925r0p1*10A725r0p1*11A725r0p1*12A725r0p1*13A725r0p1*14A725r0p1*15X925r0p1*16X925r0p1*17X925r0p1*18X925r0p1*19X925r0p1)
+			# Nvidia GB10: 10 x Cortex-A725 / r0p1 + 10 x Cortex-X925 / r0p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 sve asimdfhm dit uscat ilrcpc flagm sb paca pacg dcpodp sve2 sveaes svepmull svebitperm svesha3 svesm4 flagm2 frint svei8mm svebf16 i8mm bf16 dgh bti ecv afp wfxt
+			echo "Nvidia GB10"
 			;;
 		*NeoverseV2r0p1*)
 			# Google Axion:  Neoverse-V2 / r0p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 sve asimdfhm dit uscat ilrcpc flagm sb paca pacg dcpodp sve2 sveaes svepmull svebitperm svesha3 svesm4 flagm2 frint svei8mm svebf16 i8mm bf16 dgh rng bti

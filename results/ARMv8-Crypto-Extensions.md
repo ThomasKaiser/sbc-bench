@@ -170,6 +170,10 @@ Crawling through [sbc-bench results collection](../Results.md) comparing ~100 di
 | [Cix CD8180](88LE.txt) | 1800 | 520990 | 289 |
 | Cortex-A720 | | | |
 | [Cix CD8180](88LE.txt) | 2600 | 1458410 | 561 |
+| Cortex-A725 | | | |
+| [NVidia GB10](fcm1253.txt) | 2800 | 1572260 | 562 |
+| Cortex-X925 | | | |
+| [NVidia GB10](fcm1253.txt) | 3900 | 2221400 | 570 |
 | Oryon X1 | | | |
 | [Snapdragon X1E001DE](8SWL.txt) | 3800 | 2015260 | 530 |
 | [Snapdragon X1E001DE](8SWL.txt) | 4300 | 2274190 | 529 |

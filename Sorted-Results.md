@@ -210,6 +210,7 @@
 | [Rock64 (RK3328)](results/1iYK.txt) | 1400 MHz | 4.4 | Stretch arm64 | **3580** | 1032 | 644380 | 1330 | 5680 | 4.63 |
 | [Rock64 (RK3328)](results/1iHB.txt) | 1300 MHz | 4.18 | Stretch arm64 | **3560** | 1002 | 603800 | 1340 | 5770 | 3.80 |
 | [Orange Pi Zero 2 (Allwinner H616)](results/4knM.txt) | 1510 MHz | 4.9 | Buster arm64 | **3550** | 1067 | 703300 | 1190 | 2820 | 5.01 |
+| [VisionFive V2 Lite (JH7110S)](results/uHzXI6.txt) | 1250 MHz | 6.12 | Noble riscv64 | **3530** | 1016 | 19970 | 790 | 820 | - |
 | [Rock64 (RK3328)](results/1iH4.txt) | 1300 MHz | 4.18 | Bionic arm64 | **3530** | 996 | 605250 | 1340 | 5770 | 4.65 |
 | [NanoPi K1 Plus (Allwinner H5)](results/3N7H.txt) | 1370 MHz | 5.10 | Focal arm64 | **3520** | 1022 | 638880 | 1070 | 3680 | 5.50 |
 | [Orange Pi PC 2 (Allwinner H5)](results/3MQJ.txt) | 1370 MHz | 5.10 | Focal arm64 | **3500** | 1023 | 637410 | 1070 | 3680 | - |
@@ -470,6 +471,7 @@
 | [Orange Pi PC 2 (Allwinner H5)](results/3MQJ.txt) | 1370 MHz | 5.10 | Focal arm64 | 3500 | **1023** | 637410 | 1070 | 3680 | - |
 | [NanoPi K1 Plus (Allwinner H5)](results/3N7H.txt) | 1370 MHz | 5.10 | Focal arm64 | 3520 | **1022** | 638880 | 1070 | 3680 | 5.50 |
 | [Milk-V Jupiter (SpacemiT K1)](results/X904.txt) | 1800 MHz | 6.1 | Mantic riscv64 | 7090 | **1020** | 30700 | 2900 | 7230 | - |
+| [VisionFive V2 Lite (JH7110S)](results/uHzXI6.txt) | 1250 MHz | 6.12 | Noble riscv64 | 3530 | **1016** | 19970 | 790 | 820 | - |
 | [Libre Computer AML-S912-PC](results/40cj.txt) | 1415/1000 MHz | 5.15 | Bullseye arm64 | 5980 | **1012** | 659290 | 1650 | 5170 | - |
 | [T-HEAD C910 RVB-ICE](results/41AB.txt) | 1200 MHz | 5.10 | Sid riscv64 | 1760 | **1007** | 26930 | 3340 | 6470 | - |
 | [Raspberry Pi Zero 2 (RP3A0)](results/3DeL.txt) | 1200 MHz | 5.10 | Raspberry Pi OS Buster | 3640 | **1007** | 36300 | 1320 | 1790 | - |
@@ -774,6 +776,7 @@
 | [BPi M2U (Allwinner R40)](results/4kmM.txt) | 1200 MHz | 6.0 | Bullseye armhf | 2690 | 767 | **23320** | 780 | 3010 | - |
 | [RK3228A TV Box](results/3M9F.txt) | 1200 MHz | 4.4 | Buster armhf | 2310 | 710 | **23070** | 410 | 1230 | - |
 | [Atom N2800](results/4nt8.txt) | 1860 MHz | 5.15 | Bullseye amd64 | 2970 | 1006 | **21780** | 2050 | 1570 | - |
+| [VisionFive V2 Lite (JH7110S)](results/uHzXI6.txt) | 1250 MHz | 6.12 | Noble riscv64 | 3530 | 1016 | **19970** | 790 | 820 | - |
 | [Atom N270](results/461n.txt) | 1600 MHz | 4.19 | Buster i386 | 1220 | 824 | **18760** | 1420 | 2840 | - |
 | [Cubietruck (Allwinner A20)](results/3Naw.txt) | 960 MHz | 5.10 | Bullseye armhf | 1030 | 541 | **18640** | 440 | 2010 | - |
 | [Banana Pi (Allwinner A20)](results/3PLr.txt) | 960 MHz | 5.10 | Bullseye armhf | 1040 | 542 | **18640** | 440 | 2020 | - |
@@ -1029,6 +1032,7 @@
 | [NanoPi M1 Plus (Allwinner H3)](results/3N2z.txt) | 1370 MHz | 4.19 | Bionic armhf | 3030 | 881 | 26660 | **830** | 3450 | - |
 | [Star64 (JH7110)](results/4tjq.txt) | 1500 MHz | 5.15 | Sid riscv64 | 3970 | 1175 | 24990 | **820** | 770 | - |
 | [Radxa Rock Pi S (RK3308)](results/4sNe.txt) | 1300 MHz | 6.1 | Jammy arm64 | 2540 | 732 | 282030 | **820** | 1870 | - |
+| [VisionFive V2 Lite (JH7110S)](results/uHzXI6.txt) | 1250 MHz | 6.12 | Noble riscv64 | 3530 | 1016 | 19970 | **790** | 820 | - |
 | [BPi M2U (Allwinner R40)](results/4kmM.txt) | 1200 MHz | 6.0 | Bullseye armhf | 2690 | 767 | 23320 | **780** | 3010 | - |
 | [SBC2D70 (SSD202D)](results/3N1U.txt) | 1700 MHz | 5.16 | Sid armhf | 1960 | 1094 | 33120 | **770** | 3190 | - |
 | [Marvell PXA1908](results/46hs.txt) | 1245 MHz | 3.14 | Bullseye arm64 | 3180 | 951 | 581840 | **740** | 2220 | - |
@@ -1304,6 +1308,7 @@
 | [Raspberry Pi 2 B+ (BCM2836)](results/1iFf.txt) | 900 MHz | 4.14 | Debian Stretch | 2070 | 592 | 17450 | 615 | **1175** | - |
 | [Raspberry Pi Zero 2 (RP3A0)](results/3Dfo.txt) | 600 MHz | 5.10 | Raspberry Pi OS Buster | 1900 | 529 | 18150 | 1040 | **1130** | - |
 | [Milk-V Mars CM (JH7110)](results/4K7E.txt) | 1500 MHz | 5.15 | Bookworm riscv64 | 4110 | 1195 | 25070 | 930 | **830** | - |
+| [VisionFive V2 Lite (JH7110S)](results/uHzXI6.txt) | 1250 MHz | 6.12 | Noble riscv64 | 3530 | 1016 | 19970 | 790 | **820** | - |
 | [VisionFive V2 (JH7110)](results/4xOY.txt) | 1500 MHz | 5.15 | Sid riscv64 | 4180 | 1197 | 25080 | 880 | **770** | - |
 | [Star64 (JH7110)](results/4tjq.txt) | 1500 MHz | 5.15 | Sid riscv64 | 3970 | 1175 | 24990 | 820 | **770** | - |
 | [Kendryte K510](results/41Qa.txt) | 790 MHz | 4.17 | Sid riscv64 | 690 | 402 | 7410 | 280 | **440** | - |
@@ -1533,6 +1538,7 @@
 | [Orange Pi Plus 2 (Allwinner H3)](results/1iX4.txt) | **1300** MHz| 4.14 | Stretch armhf | 2890 | 812 | 25250 | 830 | 3240 | - |
 | [MT6580 K9M1](results/466y.txt) | **1300** MHz| 5.19 | Sid armhf | 2930 | 860 | 25300 | 1250 | 3300 | - |
 | [BPi R2 (MT7623)](results/4dO7.txt) | **1300** MHz| 4.19 | Focal armhf | 2990 | 854 | 25260 | 1550 | 3220 | - |
+| [VisionFive V2 Lite (JH7110S)](results/uHzXI6.txt) | **1250** MHz| 6.12 | Noble riscv64 | 3530 | 1016 | 19970 | 790 | 820 | - |
 | [Marvell PXA1908](results/46hs.txt) | **1245** MHz| 3.14 | Bullseye arm64 | 3180 | 951 | 581840 | 740 | 2220 | - |
 | [T-HEAD C910 RVB-ICE](results/41AB.txt) | **1200** MHz| 5.10 | Sid riscv64 | 1760 | 1007 | 26930 | 3340 | 6470 | - |
 | [RK3228A TV Box](results/3M9F.txt) | **1200** MHz| 4.4 | Buster armhf | 2310 | 710 | 23070 | 410 | 1230 | - |

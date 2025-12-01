@@ -229,7 +229,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Tronsmart MXIII Plus (S812)](results/3S5U.txt) | 1560 MHz | 5.10 | Buster armhf | 3880 | 1113 | 42570 | 1470 | 3430 | - |
 | [Tronsmart S82 (Amlogic S802)](results/41ML.txt) | 1600 MHz | 5.14 | Focal armhf | 3640 | 1114 | 43150 | 500 | 3200 | - |
 | [Ugoos UT2 (RK3188)](results/408h.txt) | 1560 MHz | 5.10 | Jammy armhf | 3320 | 994 | 43250 | 320 | 2020 | - |
-| [VisionFive V2 (JH7110)](results/4xOY.txt) | 1500 MHz | 5.15 | Sid riscv64 | 4180 | 1197 | 25080 | 880 | 770 | - |
+| [VisionFive V2 (JH7110)](results/4xOY.txt) | 1500 MHz | 6.12 | Noble riscv64 | 4170 | 1199 | 23990 | 860 | 830 | - |
 | [VisionFive V2 Lite (JH7110S)](results/uHzXI6.txt) | 1250 MHz | 6.12 | Noble riscv64 | 3530 | 1016 | 19970 | 790 | 820 | - |
 | [Atom N270](results/461n.txt) | 1600 MHz | 4.19 | Buster i386 | 1220 | 824 | 18760 | 1420 | 2840 | - |
 | [Atom E3825](results/4kFQ.txt) | 1330 MHz | 5.10 | Bullseye amd64 | 1950 | 1109 | 165840 | 2890 | 2890 | - |

@@ -485,12 +485,14 @@ GetARMCore() {
 	41/d0d:Cortex-A77
 	41/d0e:Cortex-A76AE
 	41/d13:Cortex-R52
+	41/d14:Cortex-R82AE
 	41/d15:Cortex-R82
 	41/d16:Cortex-R52+
 	41/d20:Cortex-M23
 	41/d21:Cortex-M33
 	41/d22:Cortex-M55
 	41/d23:Cortex-M85
+	41/d24:Cortex-M52
 	41/d40:Neoverse-V1
 	41/d41:Cortex-A78
 	41/d42:Cortex-A78AE

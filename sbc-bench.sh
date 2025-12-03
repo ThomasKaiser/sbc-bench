@@ -437,6 +437,9 @@ GetARMCore() {
 	# and https://github.com/pytorch/cpuinfo/blob/main/src/arm/linux/midr.c
 	# and https://github.com/hrw/arm-socs-table/blob/main/data/cpu_cores.yml
 	# Lots of information wrt HiSilicon parts: https://jia.je/kb/en/hardware/huawei.html / https://archive.ph/GRzzq
+	# For Apple parts the following ressources may be helpful:
+	# https://github.com/apple-oss-distributions/xnu/blob/main/osfmk/arm/cpuid.h
+	# https://asahilinux.org/docs/hw/soc/soc-codenames/#socs
 	grep "${1}/${2}:" <<<"41:Arm
 	41/810:ARM810
 	41/920:ARM920
@@ -627,15 +630,25 @@ GetARMCore() {
 	61/033:Apple Avalanche M2
 	61/034:Apple Blizzard M2Pro
 	61/035:Apple Avalanche M2Pro
-	61/036:Apple Sawtooth A16
-	61/037:Apple Everest A16
 	61/038:Apple Blizzard M2Max
 	61/039:Apple Avalanche M2Max
+	61/040:Apple Sawtooth A16
+	61/041:Apple Everest A16
+	61/042:Apple Sawtooth M3
+	61/043:Apple Everest M3
 	61/044:Apple Sawtooth M3Pro
-	61/045:Apple Sawtooth M3Pro
+	61/045:Apple Everest M3Pro
 	61/046:Apple Sawtooth M11
 	61/048:Apple Sawtooth M3Max
 	61/049:Apple Everest M3Max
+	61/050:Apple Sawtooth A17Pro
+	61/051:Apple Everest A17Pro
+	61/052:Apple Efficiency M4
+	61/053:Apple Performance M4
+	61/054:Apple Efficiency M4Pro
+	61/055:Apple Performance M4Pro
+	61/058:Apple Efficiency M4Max
+	61/059:Apple Performance M4Max
 	61/000:Virtualized Apple Silicon
 	00/000:Virtualized Apple Silicon
 	66:Faraday
@@ -677,7 +690,9 @@ GetARMCore() {
 	70/862:Phytium FTC862
 	c0:Ampere
 	c0/ac3:Ampere Ampere-1
-	c0/ac4:Ampere Ampere-1a" | cut -f2 -d:
+	c0/ac4:Ampere Ampere-1a
+	c0/ac5:Ampere Ampere-1b
+	c0/ac7:Ampere Ampere-1c" | cut -f2 -d:
 } # GetARMCore
 
 GetCoreType() {

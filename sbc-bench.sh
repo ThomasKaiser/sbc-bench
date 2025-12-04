@@ -39,7 +39,7 @@ Main() {
 	[ -r /etc/os-release ] && source /etc/os-release
 
 	# check in which mode we're supposed to run
-	while getopts 'uSchjkmtTrRsgNPG' c ; do
+	while getopts 'uSchjkmMtTrRsgNPG' c ; do
 		case ${c} in
 			m)
 				# monitoring mode
@@ -84,6 +84,10 @@ Main() {
 				MonitorBoard
 				[ -n "${Netio}" ] && [ -z "${NetioConsumptionFile}" ] && kill ${NetioMonitoringPID} >/dev/null 2>&1
 				exit 0
+				;;
+			M)
+				# Memory controller throttling Test
+				MemoryThrottlingTest=yes
 				;;
 			c)
 				# Run Cpuminer test (NEON/SSE/AVX)
@@ -278,6 +282,10 @@ Main() {
 	CheckTimeInState before
 	if [ "${PlotCpufreqOPPs}" = "yes" ]; then
 		PlotPerformanceGraph
+	elif [ "${MemoryThrottlingTest}" = "yes" ]; then
+		RunOpenSSLBenchmark 256
+		ExecuteCpuminer=yes && RunCpuminerBenchmark
+		RunOpenSSLBenchmark 256
 	else
 		CheckNetio
 		[ "X${MODE}" = "Xpts" ] || [ "X${MODE}" = "Xgb" ] || RunTinyMemBench
@@ -10273,6 +10281,7 @@ DisplayUsage() {
 	echo -e " ${0##*/} ${BOLD}-j${NC} Jeff Geerling mode. Don't use if you're not him"
 	echo -e " ${0##*/} ${BOLD}-k${NC} Kernel info: version number and vendor/BSP check"
 	echo -e " ${0##*/} ${BOLD}-m${NC} [\$seconds] provides CLI monitoring (5 sec default interval)"
+	echo -e " ${0##*/} ${BOLD}-M${NC} Memory controller throttling test"
 	echo -e " ${0##*/} ${BOLD}-P${NC} Phoronix mode, ensures benchmark is properly monitored"
 	echo -e " ${0##*/} ${BOLD}-r${NC} Review mode: generate insights via benchmarking"
 	echo -e " ${0##*/} ${BOLD}-R${NC} Review mode w/o baseline benchmarks for further testing"

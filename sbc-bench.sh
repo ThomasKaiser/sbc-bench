@@ -659,6 +659,9 @@ GetARMCore() {
 	61/059:Apple Performance M4Max
 	61/000:Virtualized Apple Silicon
 	00/000:Virtualized Apple Silicon
+	63:ARM China
+	63/132:Star-MC1
+	63/d25:Star-MC3
 	66:Faraday
 	66/526:Faraday FA526
 	66/626:Faraday FA626
@@ -6697,6 +6700,10 @@ GuessSoCbySignature() {
 								# RK3328, 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
 								echo "Rockchip RK3328"
 								;;
+							*rv1126b*)
+								# RV1126B, 4 x Cortex-A53 / r0p4 / fp asimd evtstrm aes pmull sha1 sha2 crc32
+								echo "Rockchip RV1126B"
+								;;
 							*rk3528*)
 								# RK3528, 4 x Cortex-A53 / r0p4 / https://github.com/LubanCat/u-boot/blob/b36e944afbe275808a3d88575991417bae5e569f/arch/arm/dts/rk3528.dtsi#L76-L114
 								echo "Rockchip RK3528"
@@ -6937,30 +6944,46 @@ GuessSoCbySignature() {
 		0?A55r2p00?A55r2p00?A55r2p00?A55r2p0??A55r2p0??A55r2p0??A55r2p0??A55r2p0)
 			# Allwinner A523/A527/H728/MR527/T523/T527/R828, 8 x Cortex-A55 / r2p0 / at least 'aes pmull sha1 sha2' (https://browser.geekbench.com/v5/cpu/21564626)
 			# or Amlogic P1, 8 x Cortex-A55 / r2p0
-			case "${DTCompatible,,}" in
-				*a523*)
+			case "${Allwinner_SID:7:8}" in
+				02c05200)
 					echo "Allwinner A523"
 					;;
-				*a527*|*cubie-a5e*)
+				0300ff10)
 					echo "Allwinner A527"
 					;;
-				*h728*)
-					echo "Allwinner H728"
-					;;
-				*t523*)
-					echo "Allwinner T523"
-					;;
-				*mr527*)
-					echo "Allwinner MR527"
-					;;
-				*t527*)
+				03005f30)
 					echo "Allwinner T527"
 					;;
-				*r828*)
-					echo "Allwinner R828"
+				0300ff00)
+					echo "Allwinner H728"
 					;;
-				*allwinner*|*sun55i*)
-					echo "Allwinner A523/A527/H728/MR527/T523/T527/R828"
+				*)
+					case "${DTCompatible,,}" in
+						*a523*)
+							echo "Allwinner A523"
+							;;
+						*a527*|*cubie-a5e*)
+							echo "Allwinner A527"
+							;;
+						*h728*)
+							echo "Allwinner H728"
+							;;
+						*t523*)
+							echo "Allwinner T523"
+							;;
+						*mr527*)
+							echo "Allwinner MR527"
+							;;
+						*t527*)
+							echo "Allwinner T527"
+							;;
+						*r828*)
+							echo "Allwinner R828"
+							;;
+						*allwinner*|*sun55i*)
+							echo "Allwinner A523/A527/H728/MR527/T523/T527/R828"
+							;;
+					esac
 					;;
 			esac
 			;;

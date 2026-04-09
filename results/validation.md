@@ -12,6 +12,7 @@
 | [1BsF](1BsF.txt) | v0.6.2 Hardkernel ODROID-N2 | 0%/0.1% | 3.6G/3.5G | X | X | X | X | 2% | 0% | |
 | [1Dt1](1Dt1.txt) | v0.6.6 Realtek\_Lion\_Skin\_1GB | 0%/0% | 570M/313M | X | X | X | | 3% | 2% | |
 | [1ET4](1ET4.txt) | v0.9.72 Micro Computer | 0%/0% | 62Gi/60Gi | X | X | X | X | 2% | 0% | |
+| [1ET5](1ET5.txt) | v0.9.72 MetaComputing SA MC FML13V04 | 0%/0% | 14Gi/13Gi | X | X | X | X | 0% | 0% | |
 | [1HnC](1HnC.txt) | v0.6.6 x5-Z8350 | 0%/0% | 1.9G/1.6G | X | X | X | X | 2% | 0% | |
 | [1iFf](1iFf.txt) | v0.4 Raspberry Pi 2 B+ (BCM2836) | 0%/0.7% | 976M/872M | X | X | X | X | 2% | 0% | |
 | [1iFm](1iFm.txt) | v0.4 Rock64 (RK3328) | 0%/1.5% | 1.9G/1.6G | X | X | X | X | 2% | 0% | |

@@ -27,6 +27,7 @@
 | [Qualcomm Snapdragon 8cx Gen 3 (WSL2)](results/4kEp.txt) | 2980/? MHz | 5.15 | Jammy arm64 | **33600** | 4789 | 1679480 | 21010 | 41540 | 50.65 |
 | [Minisforum MS-R1 (CP8180)](results/1ET4.txt) | 2600 MHz | 6.6 | Bookworm arm64 | **32980** | 3899 | 1458360 | 17950 | 48830 | 42.91 |
 | [Radxa Orion O6 (CD8180)](results/88LE.txt) | 2600 MHz | 6.1 | Bookworm arm64 | **32690** | 3945 | 1458420 | 16880 | 48030 | 43.01 |
+| [MetaComputing FML13V04](results/1ET5.txt) | 2600 | 6.6 | Plucky arm64 | **31950** | 3827 | 1457320 | 17290 | 47500 | 44.72 |
 | [Honeycomb LX2 (NXP LX2160A)](results/3Y4f.txt) | 2200 MHz | 5.16 | Fedora 35 aarch64 | **30690** | 2288 | 1251710 | 5050 | 16220 | 46.09 |
 | [Phytium D3000/8](results/84GG.txt) | 2500 MHz | 6.6 | Deepin 23.1 arm64 | **28070** | 3617 | 1425820 | 15090 | 39810 | 33.03 |
 | [Clearfog CX (NXP LX2160A)](results/4ju5.txt) | 2000 MHz | 5.10 | Focal arm64 | **25260** | 2236 | 1136690 | 4460 | 12500 | - |
@@ -293,6 +294,7 @@
 | [Ampere Altra M96-28](results/4zGI.txt) | 2800 MHz | 5.15 | Jammy arm64 | 249380 | **3858** | 1596110 | 10130 | 44750 | - |
 | [Hetzner CAX11 (Ampere Altra)](results/4HdL.txt) | 3000 MHz | 5.15 | Jammy arm64 | 8060 | **3842** | 1705600 | 11250 | 47670 | 11.44 |
 | [Radxa Dragon Q6A (QCS6490)](results/.txt) | 2700/2400/1950 MHz | 6.16 | Noble arm64 | 17400 | **3840** | 1522730 | 8404 | 19660 | 26.31 |
+| [MetaComputing FML13V04](results/1ET5.txt) | 2600 | 6.6 | Plucky arm64 | 31950 | **3827** | 1457320 | 17290 | 47500 | 44.72 |
 | [Raspberry Pi 5 B (BCM2712)](results/8acvqG.txt) | 3000 MHz | 6.1 | Bookworm arm64 | 12930 | **3791** | 1709720 | 5160 | 16350 | 19.25 |
 | [Ampere Altra Q80-26](results/4zkJ.txt) | 2600 MHz | 5.15 | Jammy arm64 | 214390 | **3748** | 1482190 | 11685 | 41560 | 316.50 |
 | [Phytium D3000/8](results/84GG.txt) | 2500 MHz | 6.6 | Deepin 23.1 arm64 | 28070 | **3617** | 1425820 | 15090 | 39810 | 33.03 |
@@ -552,6 +554,7 @@
 | [Ampere Altra Q80-26](results/4zkJ.txt) | 2600 MHz | 5.15 | Jammy arm64 | 214390 | 3748 | **1482190** | 11685 | 41560 | 316.50 |
 | [Radxa Orion O6 (CD8180)](results/88LE.txt) | 2600 MHz | 6.1 | Bookworm arm64 | 32690 | 3945 | **1458420** | 16880 | 48030 | 43.01 |
 | [Minisforum MS-R1 (CP8180)](results/1ET4.txt) | 2600 MHz | 6.6 | Bookworm arm64 | 32980 | 3899 | **1458360** | 17950 | 48830 | 42.91 |
+| [MetaComputing FML13V04](results/1ET5.txt) | 2600 | 6.6 | Plucky arm64 | 31950 | 3827 | **1457320** | 17290 | 47500 | 44.72 |
 | [Qualcomm Snapdragon 7c](results/4Lyf.txt) | 2550/1800 MHz | 6.6 | Bookworm arm64 | 13040 | 3113 | **1455700** | 6710 | 14880 | - |
 | [Phytium D3000/8](results/84GG.txt) | 2500 MHz | 6.6 | Deepin 23.1 arm64 | 28070 | 3617 | **1425820** | 15090 | 39810 | 33.03 |
 | [Intel i3-N305](results/4qpr.txt) | 3800 MHz | 5.19 | Jammy amd64 | 20000 | 4398 | **1377280** | 9950 | 8990 | 41.43 |
@@ -804,6 +807,7 @@
 | [Qualcomm Snapdragon 8cx Gen 3 (WSL2)](results/4kEp.txt) | 2980/? MHz | 5.15 | Jammy arm64 | 33600 | 4789 | 1679480 | **21010** | 41540 | 50.65 |
 | [Minisforum MS-R1 (CP8180)](results/1ET4.txt) | 2600 MHz | 6.6 | Bookworm arm64 | 32980 | 3899 | 1458360 | **17950** | 48830 | 42.91 |
 | [Qualcomm Snapdragon 8cx Gen 3](results/4xwT.txt) | 3000/2440 MHz | 6.3 | Lunar arm64 | 35370 | 4312 | 1686160 | **17500** | 41780 | 42.76 |
+| [MetaComputing FML13V04](results/1ET5.txt) | 2600 | 6.6 | Plucky arm64 | 31950 | 3827 | 1457320 | **17290** | 47500 | 44.72 |
 | [Radxa Orion O6 (CD8180)](results/88LE.txt) | 2600 MHz | 6.1 | Bookworm arm64 | 32690 | 3945 | 1458420 | **16880** | 48030 | 43.01 |
 | [Pentium G4600](results/2jVw.txt) | 3600 MHz | 4.19 | Buster amd64 | 11810 | 4448 | 984820 | **15120** | 33380 | 21.88 |
 | [Phytium D3000/8](results/84GG.txt) | 2500 MHz | 6.6 | Deepin 23.1 arm64 | 28070 | 3617 | 1425820 | **15090** | 39810 | 33.03 |
@@ -1066,6 +1070,7 @@
 | [Radxa Orion O6 (CD8180)](results/88LE.txt) | 2600 MHz | 6.1 | Bookworm arm64 | 32690 | 3945 | 1458420 | 16880 | **48030** | 43.01 |
 | [Huaqin P6410<br />(2 x Ampere Altra Max)](results/4kiu.txt) | 3000 MHz | 5.4 | Focal arm64 | 430860 | 4211 | 1710010 | 13310 | **47970** | - |
 | [Hetzner CAX11 (Ampere Altra)](results/4HdL.txt) | 3000 MHz | 5.15 | Jammy arm64 | 8060 | 3842 | 1705600 | 11250 | **47670** | 11.44 |
+| [MetaComputing FML13V04](results/1ET5.txt) | 2600 | 6.6 | Plucky arm64 | 31950 | 3827 | 1457320 | 17290 | **47500** | 44.72 |
 | [Ampere Altra M96-28](results/4zGI.txt) | 2800 MHz | 5.15 | Jammy arm64 | 249380 | 3858 | 1596110 | 10130 | **44750** | - |
 | [Qualcomm Snapdragon 8cx Gen 3](results/4xwT.txt) | 3000/2440 MHz | 6.3 | Lunar arm64 | 35370 | 4312 | 1686160 | 17500 | **41780** | 42.76 |
 | [Ampere Altra Q80-26](results/4zkJ.txt) | 2600 MHz | 5.15 | Jammy arm64 | 214390 | 3748 | 1482190 | 11685 | **41560** | 316.50 |

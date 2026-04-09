@@ -1,8 +1,8 @@
-# ARMv8 Crypto Extensions
+# ARM's Crypto Extensions
 
 ### Basics
 
-SoC vendors who license ARMv8 cores (usually 64-bit capable) can decide between certain optional features: for example cryptographic acceleration called ['ARMv8 Cryptography Extensions'](https://developer.arm.com/documentation/ddi0500/e/CJHDEBAF).
+SoC vendors who license ARMv8/ARMv9 cores (usually 64-bit capable) can decide between certain optional features: for example cryptographic acceleration called ['Cryptography Extensions'](https://developer.arm.com/documentation/ddi0500/e/CJHDEBAF).
 
 Usually SoC vendors do, the only known exceptions are early Cortex-A53 SoCs like Qualcomm's Snapdragon 410, Amlogic's very first 64-bit SoC S905 (used only on ODROID-C2 and NanoPi K2), Phytium's FTC662 core and BroadCom's SoCs powering all 64-bit capable Raspberry Pis except BCM2712: those lack any crypto acceleration and perform way lower than all other 64-bit ARM SoCs in this area.
 
@@ -27,7 +27,7 @@ If the kernel has been built correctly, availability of accelerated cryptography
 
 The results are '1000s of bytes per second processed' and we'll focus from now on only on most right column since not affected by initialization overhead (16K chunk size with a `1144575.32k` score in the example above). 
 
-_ARMv8 Crypto Extensions_ are not a classic 'crypto engine' running at a fixed clock (like Marvell's CESA for example) but scale linearly with clockspeed. Also with the openssl benchmark it doesn't matter how DRAM configuration/performance looks like since the whole benchmark runs inside CPU caches and while OpenSSL uses userspace crypto the scores are identical regardless whether userland is `armhf` or `arm64` (see Samsung/Nexell S5P6818 numbers below). Distro used as well as OpenSSL version also don't seem to matter.
+_ARM's Crypto Extensions_ are not a classic 'crypto engine' running at a fixed clock (like Marvell's CESA for example) but scale linearly with clockspeed. Also with the openssl benchmark it doesn't matter how DRAM configuration/performance looks like since the whole benchmark runs inside CPU caches and while OpenSSL uses userspace crypto the scores are identical regardless whether userland is `armhf` or `arm64` (see Samsung/Nexell S5P6818 numbers below). Distro used as well as OpenSSL version also don't seem to matter.
 
 ### Scores predictable based on CPU core and clockspeed
 
@@ -37,7 +37,7 @@ It all boils down to type of ARM core and CPU clockspeed since the ratio between
   * Cortex-A520: ~290, an A520 running at 1000 MHz will produce an ~290000k aes-256-cbc score (or ~580000k at 2000 MHz)
   * Cortex-A57: ~359, an A57 running at 1000 MHz will produce an ~359000k aes-256-cbc score (or ~718000k at 2000 MHz)
   * Cortex-A53/A55: ~467, A53/A55 running at 1000 MHz will produce an ~467000k aes-256-cbc score (or ~935000k at 2000 MHz)
-  * Cortex-A72/A73/A76/A77/A78/X1: ~570, A72/A73/A76/A77/A78/X1 running at 1000 MHz will produce an ~570000k aes-256-cbc score (or ~1140000k at 2000 MHz)
+  * Cortex-A72/A73/A76/A77/A78/N1/X1/A720/A725/A925: ~570, running at 1000 MHz will produce an ~570000k aes-256-cbc score (or ~1140000k at 2000 MHz)
 
 Amazon's Graviton/Graviton2 ARM CPUs and Neoverse-N1 cores score identical to A72/A73/A76/A77/A78 and the custom FTC663 core inside the [Feiteng D2000 CPU](https://en.wikipedia.org/wiki/FeiTeng_(processor)#Future_processors) performs identical to an A57 ([another hint wrt similarity](https://github.com/martin-frbg/OpenBLAS/blob/b3b4672c30f613c0043ad0557d33a34ffa3bbd0d/kernel/arm64/KERNEL.FT2000)). NVidia's Carmel core performs marginally better than Cortex-A57 (~374, the Jetson Xavier NX numbers below). Qualcomm's Kryo Silver cores are based on A55 and perform exactly the same here while Qualcomm's Qualcomm Falkor V1 behaves like Cortex-A72 and onwards.
 
@@ -45,9 +45,9 @@ Amazon's Graviton/Graviton2 ARM CPUs and Neoverse-N1 cores score identical to A7
 
 Encryption/decryption performance with real-world tasks is an entirely different thing than looking at these results from a synthetic benchmark that runs completly inside the CPU cores/caches. Real performance with real use cases might look really different (e.g. full disk encryption or performance as a VPN gateway).
 
-The `openssl speed -elapsed -evp aes-256-cbc` test is still more of a check whether crypto acceleration is available than a benchmark for real-world crypto performance. But if and only if ARMv8 Crypto Extensions have been licensed by an ARM SoC vendor simple conclusions can be drawn since there exists a fixed correlation between core type, clockspeed and `aes-256-cbc` score. So if we know that a new SoC features e.g. A55 cores, cheats with reported clockspeeds and we're not able to [measure clockspeeds](https://github.com/wtarreau/mhz) then we can use the openssl benchmark to guess real CPU clockspeeds. Vice versa should work too but it's better to [look up the CPU ID](https://github.com/ThomasKaiser/sbc-bench/blob/21d544d73c2055e42c71d980d78635766b005c73/sbc-bench.sh#L139-L282) instead.
+The `openssl speed -elapsed -evp aes-256-cbc` test is still more of a check whether crypto acceleration is available than a benchmark for real-world crypto performance. But if and only if ARM's Crypto Extensions have been licensed by an ARM SoC vendor simple conclusions can be drawn since there exists a fixed correlation between core type, clockspeed and `aes-256-cbc` score. So if we know that a new SoC features e.g. A55 cores, cheats with reported clockspeeds and we're not able to [measure clockspeeds](https://github.com/wtarreau/mhz) then we can use the openssl benchmark to guess real CPU clockspeeds. Vice versa should work too but it's better to [look up the CPU ID](https://github.com/ThomasKaiser/sbc-bench/blob/77abf716a9e1eca2a78b80341896a6b8027c3bd8/sbc-bench.sh#L452-L706) instead.
 
-All of this **only** applies to ARM SoCs with _ARMv8 Crypto Extensions_ licensed. Since otherwise scores thrown out by `openssl` depend heavily on compiler version/settings and even different code paths. Check out ODROID-C2 and RPi 4 'AES-256 (16 KB)' scores in [official results list](../Results.md): with C2 'modern OS' outperforms higher CPU clock and with RPi 4 comparing armhf userland (32-bit) and arm64 (64-bit) is even more telling since `openssl` reports less than 50% of 'AES performance' when running 64-bit compared to 32-bit since different code paths: generic C with 64-bit vs. optimized assembler routines with 32-bit.
+All of this **only** applies to ARM SoCs with _ARM's Crypto Extensions_ licensed. Since otherwise scores thrown out by `openssl` depend heavily on compiler version/settings and even different code paths. Check out ODROID-C2 and RPi 4 'AES-256 (16 KB)' scores in [official results list](../Results.md): with C2 'modern OS' outperforms higher CPU clock and with RPi 4 comparing armhf userland (32-bit) and arm64 (64-bit) is even more telling since `openssl` reports less than 50% of 'AES performance' when running 64-bit compared to 32-bit since different code paths: generic C with 64-bit vs. optimized assembler routines with 32-bit.
 
 ### Numbers the aforementioned conclusions are based on
 

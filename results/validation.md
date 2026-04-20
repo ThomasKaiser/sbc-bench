@@ -12,7 +12,7 @@
 | [1BsF](1BsF.txt) | v0.6.2 Hardkernel ODROID-N2 | 0%/0.1% | 3.6G/3.5G | X | X | X | X | 2% | 0% | |
 | [1Dt1](1Dt1.txt) | v0.6.6 Realtek\_Lion\_Skin\_1GB | 0%/0% | 570M/313M | X | X | X | | 3% | 2% | |
 | [1ET4](1ET4.txt) | v0.9.72 Micro Computer | 0%/0% | 62Gi/60Gi | X | X | X | X | 2% | 0% | |
-| [1ET5](1ET5.txt) | v0.9.72 MetaComputing SA MC FML13V04 | 0%/0% | 14Gi/13Gi | X | X | X | X | 0% | 0% | |
+| [1ET5](1ET5.txt) | v0.9.72 MetaComputing SA MC FML13V04 Bo | 0%/0% | 14Gi/13Gi | X | X | X | X | 0% | 0% | |
 | [1HnC](1HnC.txt) | v0.6.6 x5-Z8350 | 0%/0% | 1.9G/1.6G | X | X | X | X | 2% | 0% | |
 | [1iFf](1iFf.txt) | v0.4 Raspberry Pi 2 B+ (BCM2836) | 0%/0.7% | 976M/872M | X | X | X | X | 2% | 0% | |
 | [1iFm](1iFm.txt) | v0.4 Rock64 (RK3328) | 0%/1.5% | 1.9G/1.6G | X | X | X | X | 2% | 0% | |
@@ -253,6 +253,7 @@
 | [Au3jaA](Au3jaA.txt) | v0.9.61 Raspberry Pi 5 Model B Rev 1.0 | 0%/0% | 4.0Gi/3.8Gi | X | X | X | X | 2% | 0% | [check log](Au3jaA.txt) |
 | [C6zgdP](C6zgdP.txt) | v0.9.65 Radxa ROCK 5A | 0%/0% | 15Gi/15Gi | X | X | X | X | 1% | 0% | [check log](C6zgdP.txt) |
 | [c9ZIGh](c9ZIGh.txt) | v0.9.66 Radxa ROCK 5C | 0%/0% | 3.8Gi/3.6Gi | X | X | X | X | 1% | 0% | [check log](c9ZIGh.txt) |
+| [e900v22c](e900v22c.txt) | v0.9.72 SKYWORTH E900V22C | 0%/0% | 1.9Gi/1.5Gi | X | X | X | X | 2% | 0% | |
 | [fcm1253](fcm1253.txt) | v0.9.72 Dell Inc. Dell Pro Max with GB1 | 0%/0% | 119Gi/116Gi | X | X | X | X | 3% | 0% | |
 | [frdzAn](frdzAn.txt) | v0.9.65 Raspberry Pi 5 Model B Rev 1.0 | 0%/0% | 4.0Gi/3.8Gi | X | X | X | X | 1% | 0% | [check log](frdzAn.txt) |
 | [fUCnrY](fUCnrY.txt) | v0.9.65 T-HEAD Light Lichee Pi 4A confi | 0%/0% | 15Gi/14Gi | X | X | X | X | <span style=color:red> 5%</span> | 0% | [check log](fUCnrY.txt) |

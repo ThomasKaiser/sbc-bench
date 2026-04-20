@@ -169,6 +169,7 @@
 | [ODROID-M1 (RK3568)](results/3Ug9.txt) | 1930 MHz | 4.19 | Focal arm64 | **5010** | 1450 | 898610 | 3070 | 6220 | 7.14 |
 | [i.MX8MPlus EVK](results/4hx0.txt) | 1800 MHz | 5.15 | Focal arm64 | **4990** | 1348 | 837680 | 2740 | 12420 | 7.02 |
 | [Quartz64-A (RK3566)](results/4qJF.txt) | 1890 MHz | 6.2 | Jammy arm64 | **4980** | 1457 | 884590 | 3240 | 6100 | 6.98 |
+| [Skyworth E900V22C (S905L3A)](results/e900v22c.txt) | 1910 MHz | 6.12 | Jammy arm64 | **4880** | 1392 | 890170 | 2010 | 7870 | - |
 | [Quartz64-A (RK3566)](results/3rUb.txt) | 1810 MHz | 5.13 | Buster arm64 | **4840** | 1353 | 845490 | 2980 | 7650| - |
 | [x5-Z8350](results/2Jdb.txt) | 1920/1680 MHz | 5.4 | Focal amd64 | **4790** | 1454 | 237230 | 3170 | 2960 | 9.38 |
 | [Athlon II X3 420e](results/4eOo.txt) | 2600 MHz | 4.19 | Buster amd64 | **4780** | 2566 | 98840 | 4120 | 3870 | - |
@@ -424,6 +425,7 @@
 | [RK3568-ROC-PC](results/3Rsg.txt) | 1960 MHz | 4.19 | Bullseye arm64 | 5040 | **1424** | 912800 | 3130 | 6240 | - |
 | [Khadas VIM3L (S905D3)](results/3Vdt.txt) | 1900 MHz | 5.16 | Bullseye arm64 | 5110 | **1403** | 890730 | 3700 | 5140 | - |
 | [Khadas VIM3L (S905D3)](results/26Wy.txt) | 1900 MHz | 4.9 | Bionic arm64 | 5160 | **1399** | 892110 | 3670 | 6360 | 7.29 |
+| [Skyworth E900V22C (S905L3A)](results/e900v22c.txt) | 1910 MHz | 6.12 | Jammy arm64 | 4880 | **1392** | 890170 | 2010 | 7870 | - |
 | [Hlink H28K (RK3528)](results/4I93.txt) | 2000 Mhz | 5.10 | Jammy arm64 | 4680 | **1388** | 933630 | 2090 | 7650 | 6.48 |
 | [x5-Z8300](results/4j4o.txt) | 1840 MHz | 5.15 | Jammy amd64 | 4430 | **1368** | 227030 | 2270 | 2380 | 8.84 |
 | [Radxa Zero (S905Y2)](results/3JCm.txt) | 1800 MHz | 5.10 | Bullseye arm64 | 4580 | **1353** | 838360 | 1600 | 5360 | 7.13 |
@@ -632,6 +634,7 @@
 | [ODROID-M1 (RK3568)](results/3Ug9.txt) | 1930 MHz | 4.19 | Focal arm64 | 5010 | 1450 | **898610** | 3070 | 6220 | 7.14 |
 | [Khadas VIM3L (S905D3)](results/26Wy.txt) | 1900 MHz | 4.9 | Bionic arm64 | 5160 | 1399 | **892110** | 3670 | 6360 | 7.29 |
 | [Khadas VIM3L (S905D3)](results/3Vdt.txt) | 1900 MHz | 5.16 | Bullseye arm64 | 5110 | 1403 | **890730** | 3700 | 5140 | - |
+| [Skyworth E900V22C (S905L3A)](results/e900v22c.txt) | 1910 MHz | 6.12 | Jammy arm64 | 4880 | 1392 | **890170** | 2010 | 7870 | - |
 | [Ryzen R1505G](results/4HYd.txt) | 3270 MHz | 6.1 | Bookworm amd64 | 9080 | 3327 | **886980** | 10520 | 8160 | 18.14 |
 | [Quartz64-A (RK3566)](results/4qJF.txt) | 1890 MHz | 6.2 | Jammy arm64 | 4980 | 1457 | **884590** | 3240 | 6100 | 6.98 |
 | [Qualcomm Snapdragon 835](results/4fdD.txt) | 2360/1900 MHz | 6.1 | Jammy arm64 | 9800 | 2474 | **883330** | 9720 | 14070 | 12.58 |
@@ -964,6 +967,7 @@
 | [ODROID-XU4 (Exynos 5422)](results/1ixL.txt) | 1900/1400 MHz | 3.10 | Jessie armhf | 6750 | - | 68200 | **2200** | 4800 | - |
 | [Hlink H28K (RK3528)](results/4I93.txt) | 2000 Mhz | 5.10 | Jammy arm64 | 4680 | 1388 | 933630 | **2090** | 7650 | 6.48 |
 | [Atom N2800](results/4nt8.txt) | 1860 MHz | 5.15 | Bullseye amd64 | 2970 | 1006 | 21780 | **2050** | 1570 | - |
+| [Skyworth E900V22C (S905L3A)](results/e900v22c.txt) | 1910 MHz | 6.12 | Jammy arm64 | 4880 | 1392 | 890170 | **2010** | 7870 | - |
 | [RockPro64 (RK3399)](results/1iFZ.txt) | 1800/1400 MHz | 4.4 | Stretch armhf | 6250 | 1809 | 1000150 | **2000** | 4835 | - |
 | [Khadas VIM1S (S905Y4)](results/4bbv.txt) | 2000 MHz | 5.4 | Jammy arm64 | 4000 | 1148 | 436540 | **1970** | 7530 | - |
 | [Khadas VIM1 (Amlogic S905X)](results/4bee.txt) | 1415 MHz | 5.1 | Buster arm64 | 3860 | 1136 | 660160 | **1940** | 5900 | - |
@@ -1149,6 +1153,7 @@
 | [Ryzen R1505G](results/4HYd.txt) | 3270 MHz | 6.1 | Bookworm amd64 | 9080 | 3327 | 886980 | 10520 | **8160** | 18.14 |
 | [Celeron N5100](results/3IlQ.txt) | 2800/1100 MHz | 5.13 | Focal amd64 | 10550 | 3088 | 783800 | 7750 | **8090** | 19.22 |
 | [Radxa X4 (N100)](results/XObB.txt) | 3400 MHz | 6.8 | Noble amd64 | 8010 | 3580 | 1231100 | 8140 | **7970** | 21.40 |
+| [Skyworth E900V22C (S905L3A)](results/e900v22c.txt) | 1910 MHz | 6.12 | Jammy arm64 | 4880 | 1392 | 890170 | 2010 | **7870** | - |
 | [ODROID-N2+ (Amlogic S922X)](results/4rWn.txt) | 2400/2015 MHz | 6.1 | Bullseye arm64 | 9710 | 2373 | 1366180 | 4220 | **7720** | - |
 | [Quartz64-A (RK3566)](results/3rUb.txt) | 1810 MHz | 5.13 | Buster arm64 | 4840 | 1353 | 845490 | 2980 | **7650**| - |
 | [Hlink H28K (RK3528)](results/4I93.txt) | 2000 Mhz | 5.10 | Jammy arm64 | 4680 | 1388 | 933630 | 2090 | **7650** | 6.48 |
@@ -1441,6 +1446,7 @@
 | [ODROID-M1 (RK3568)](results/3Ug9.txt) | **1930** MHz| 4.19 | Focal arm64 | 5010 | 1450 | 898610 | 3070 | 6220 | 7.14 |
 | [x5-Z8350](results/2Jdb.txt) | **1920/1680** MHz| 5.4 | Focal amd64 | 4790 | 1454 | 237230 | 3170 | 2960 | 9.38 |
 | [x5-Z8350](results/1HnC.txt) | **1920/1680** MHz| 4.15 | Bionic amd64 | 4710 | 1272 | 207640 | 2740 | 3140 | - |
+| [Skyworth E900V22C (S905L3A)](results/e900v22c.txt) | **1910** MHz| 6.12 | Jammy arm64 | 4880 | 1392 | 890170 | 2010 | 7870 | - |
 | [ODROID-XU4 (Exynos 5422)](results/1ixL.txt) | **1900/1400** MHz| 3.10 | Jessie armhf | 6750 | - | 68200 | 2200 | 4800 | - |
 | [Khadas VIM3L (S905D3)](results/3Vdt.txt) | **1900** MHz| 5.16 | Bullseye arm64 | 5110 | 1403 | 890730 | 3700 | 5140 | - |
 | [Khadas VIM3L (S905D3)](results/26Wy.txt) | **1900** MHz| 4.9 | Bionic arm64 | 5160 | 1399 | 892110 | 3670 | 6360 | 7.29 |

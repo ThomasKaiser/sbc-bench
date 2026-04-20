@@ -220,6 +220,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Rubik Pi 3 (QCS6490)](results/8WlQ.txt) | 2700/2400/2000 MHz | 6.6 | Trixie arm64 | 17920 | 3871 | 1539030 | 7020 | 17230 | 27.50 |
 | [Star64 (JH7110)](results/4tjq.txt) | 1500 MHz | 5.15 | Sid riscv64 | 3970 | 1175 | 24990 | 820 | 770 | - |
 | [SBC2D70 (SSD202D)](results/3N1U.txt) | 1700 MHz | 5.16 | Sid armhf | 1960 | 1094 | 33120 | 770 | 3190 | - |
+| [Skyworth E900V22C (S905L3A)](results/e900v22c.txt) | 1910 MHz | 6.12 | Jammy arm64 | 4880 | 1392 | 890170 | 2010 | 7870 | - | |
 | [T-HEAD C910 RVB-ICE](results/41AB.txt) | 1200 MHz | 5.10 | Sid riscv64 | 1760 | 1007 | 26930 | 3340 | 6470 | - |
 | [Teres-I<br />(Allwinner A64)](results/1tJg.txt) | 1050 MHz | 4.19 | Stretch arm64 | 2785 | 780 | 491590 | 1080 | 2820 | - |
 | [Tinkerboard (RK3288)](results/1iSX.txt) | 1730 MHz | 4.14 | Stretch armhf | 5350 | 1563 | 66600 | 1480 | 3900 | - |

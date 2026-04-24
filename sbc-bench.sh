@@ -2025,7 +2025,7 @@ CheckOSRelease() {
 
 	# Display warning when not executed on recent Debian, Fedora, Ubuntu or Rocky Linux distros
 	case ${OperatingSystem,,} in
-		*buster*|*bullseye*|*bookworm*|*focal*|*jammy*|*mantic*|*noble*|*thirty*|"fedora linux 3"[8-9]*|"rocky linux 9"*)
+		*buster*|*bullseye*|*bookworm*|*trixie*|*focal*|*jammy*|*noble*|*resolute*|"fedora linux 3"[8-9]*|"fedora linux 4"*|"rocky linux 9"*|"rocky linux 10"*)
 			:
 			;;
 		*)
@@ -3039,6 +3039,15 @@ InstallPrerequisits() {
 				;;
 			oracular)
 				UBUNTU_MAJOR_VERSION=24
+				;;
+			plucky)
+				UBUNTU_MAJOR_VERSION=25
+				;;
+			questing)
+				UBUNTU_MAJOR_VERSION=25
+				;;
+			resolute)
+				UBUNTU_MAJOR_VERSION=26
 				;;
 			*)
 				UBUNTU_MAJOR_VERSION="${VERSION_ID%.*}"

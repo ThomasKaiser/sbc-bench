@@ -935,7 +935,7 @@ HandlePolicies() {
 	[ -z "${DMESG}" ] && DMESG="$(dmesg | grep pcie)"
 
 	# process policies
-	SysFSPolicies="$(find /sys -name "*policy" 2>/dev/null | grep -E -v 'hotplug|cpufreq|thermal_zone|apparmor|hostap|/sys/kernel|/sys/devices/pci|mobile_lpm_|xmit_hash_|fr_policy|selinux')"
+	SysFSPolicies="$(find /sys -name "*policy" 2>/dev/null | grep -E -v 'hotplug|cpufreq|thermal_zone|apparmor|hostap|/sys/kernel|/sys/devices/pci|mobile_lpm_|xmit_hash_|fr_policy|selinux|geometry_descriptor')"
 	if [ "X${SysFSPolicies}" = "X" ]; then
 		# skip if no policies found
 		return

@@ -108,6 +108,7 @@ Crawling through [sbc-bench results collection](../Results.md) comparing ~100 di
 | [Snapdragon 845](4dJV.txt) | 1760 | 824640 | 469 |
 | [RK3588s](3XTA.txt) | 1780 | 830640 | 467 |
 | [QRB5165](49kx.txt) | 1790 | 837220 | 468 |
+| [Allwinner A733](rca7s.txt) | 1800 | 838120 | 467 |
 | [Snapdragon 7c](4xEW.txt) | 1800 | 840140 | 467 |
 | [RK3566](3rUb.txt) | 1810 | 845490 | 469 |
 | [RK3588s](3XYo.txt) | 1815 | 846760 | 467 |
@@ -141,6 +142,7 @@ Crawling through [sbc-bench results collection](../Results.md) comparing ~100 di
 | [A311D](3VfL.txt) | 2400 | 1365900 | 569 |
 | Cortex-A76 | | | |
 | [RK3588](3XzI.txt) | 985 | 560200 | 569 |
+| [Allwinner A733](rca7s.txt) | 2000 | 1141110 | 570 |
 | [UMS9620](4yFl.txt) | 2210 | 1258230 | 569 |
 | [RK3588s](3XYo.txt) | 2330 | 1325370 | 569 |
 | [BCM2712](4HDw.txt) | 2400 | 1367990 | 570 |

@@ -9232,7 +9232,7 @@ CheckKernelVersion() {
 					;;
 			esac
 			;;
-		"5.15.41"|"5.15.94"|"5.15.123"|"5.15.147"|"5.15.151"|"6.6.30"|"6.6.57"|"6.6.77")
+		"5.15.41"|"5.15.94"|"5.15.123"|"5.15.147"|"5.15.151"|"6.6.30"|"6.6.57"|"6.6.77"|"6.6.98"*)
 			# At least used with Android 13 and OpenWRT builds for A133/T527: https://browser.geekbench.com/v5/cpu/21947495.gb5 / https://browser.geekbench.com/v6/cpu/2610471.gb6 /
 			# https://bbs.aw-ol.com/topic/5060/syterkit-启动-t527-失败 / https://github.com/chainsx/linux-t527/blob/main/Makefile
 			# A733: https://browser.geekbench.com/v6/cpu/9253840.gb6, A333: https://browser.geekbench.com/v6/cpu/12146577.gb6

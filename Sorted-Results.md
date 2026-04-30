@@ -242,6 +242,7 @@
 | [Celeron N2830](results/4pEc.txt) | 2160 MHz | 5.19 | Jammy amd64 | **2760** | 1664 | 31270 | 3780 | 3520 | 6.10 |
 | [BPi M2U (Allwinner R40)](results/4kmM.txt) | 1200 MHz | 6.0 | Bullseye armhf | **2690** | 767 | 23320 | 780 | 3010 | - |
 | [Radxa Rock Pi S (RK3308)](results/4sNe.txt) | 1300 MHz | 6.1 | Jammy arm64 | **2540** | 732 | 282030 | 820 | 1870 | - |
+| [Radxa Cubie A7S (A733)](results/rca7s.txt) | 6.6 | Trixie arm64 | 11280 | **2480** | 1141110 | 6900 | 8500 | 16.87 ||
 | [AMD E-450 APU](results/4hwl.txt) | 1650 MHz | 5.15 | Jammy amd64 | **2430** | 1258 | 27450 | 1710 | 1740 | - |
 | [Cubox-i4<br />(NXP i.MX6)](results/4132.txt) | 980 MHz | 5.15 | Jammy armhf | **2360** | 657 | 27000 | 340 | 340 | - |
 | [RK3228A TV Box](results/3M9F.txt) | 1200 MHz | 4.4 | Buster armhf | **2310** | 710 | 23070 | 410 | 1230 | - |
@@ -276,6 +277,7 @@
 
 | Device / details | Clockspeed | Kernel | Distro | 7-zip multi | *7-zip single* | AES | memcpy | memset | kH/s |
 | ----- | :--------: | :----: | :----: | ----: | ------: | ------: | -----: | -----: | ---: |
+| [Radxa Cubie A7S (A733)](results/rca7s.txt) | 6.6 | Trixie arm64 | 11280 | 2480 | **1141110** | 6900 | 8500 | 16.87 ||
 | [Dell FCM1253 (GB10)](results/fcm1253.txt) | 3900/2800 MHz | 6.14 | Noble arm64 | 114920 | **6704** | 27000 | 27100 | 63400 | 160.82 |
 | [Qualcomm X1E001DE](results/8SWL.txt) | 4300/3800 MHz | 6.14 | Oracular arm64 | 66120 | **5603** | 2274190 | 38360 | 110410 | 76.85 |
 | [Apple M1 Pro](results/443N.txt) | 3030/2060 MHz | 5.18 | Gentoo 2.8 arm64 | 43800 | **5010** | 1064450 | 27110 | 71910 | 48.28 |
@@ -797,6 +799,7 @@
 | [Raspberry Pi B (BCM2835)](results/3MGN.txt) | 700 MHz | 5.10 | Raspberry Pi OS Bullseye | 320 | 320 | **11630** | 360 | 1420 | - |
 | [ClockworkPi R-01 (Allwinner D1)](results/40BJ.txt) | 1000 MHz | 5.4 | Focal riscv64 | 450 | 450 | **9040** | 1220 | 2640 | - |
 | [Kendryte K510](results/41Qa.txt) | 790 MHz | 4.17 | Sid riscv64 | 690 | 402 | **7410** | 280 | 440 | - |
+| [Radxa Cubie A7S (A733)](results/rca7s.txt) | 6.6 | Trixie arm64 | 11280 | 2480 | 1141110 | **6900** | 8500 | 16.87 ||
 
 [(back to top of the page)](#sbc-bench-results-sorted)
 
@@ -838,6 +841,7 @@
 | [Pentium N6005](results/4BtC.txt) | 3300/2000 MHz | 5.15 | Jammy amd64 | 11510 | 3369 | 923550 | **9650** | 10280 | 22.18 |
 | [Jetson Xavier NX](results/3YWp.txt) | 1890 MHz | 4.9 | Bionic arm64 | 13230 | 2201 | 706280 | **9190** | 18480 | - |
 | [Radxa ROCK 5A (RK3588)](results/C6zgdP.txt)| ~2290 | 5.10 | Bullseye arm64 | 15630 | 3015 | 1302120 | **9170** | 27080 | 23.42 |
+| [Radxa Cubie A7S (A733)](results/rca7s.txt) | 6.6 | Trixie arm64 | 11280 | 2480 | 1141110 | 6900 | **8500** | 16.87 ||
 | [Radxa Dragon Q6A (QCS6490)](results/.txt) | 2700/2400/1950 MHz | 6.16 | Noble arm64 | 17400 | 3840 | 1522730 | **8404** | 19660 | 26.31 |
 | [Ryzen R1606G](results/2tQQ.txt) | 2600/1400 MHz | 5.4 | Focal amd64 | 7970 | 2854 | 700780 | **8230** | 5970 | 16.45 |
 | [Khadas VIM4 (A311D2)](results/4cHh.txt) | 2200/2010 MHz | 5.4 | Jammy arm64 | 12120 | 2067 | 1254540 | **8180** | 11680 | - |
@@ -1302,6 +1306,7 @@
 | [Raspberry Pi 3 B+ (BCM2837B0)](results/1iGz.txt) | OC/normal | 4.14 | Raspbian Stretch | 3130 | 843 | 36620 | 1230 | **1780** | - |
 | [AMD E-450 APU](results/4hwl.txt) | 1650 MHz | 5.15 | Jammy amd64 | 2430 | 1258 | 27450 | 1710 | **1740** | - |
 | [Raspberry Pi 3 B (BCM2837)](results/4hOP.txt) | 1200 MHz | 5.15 | Raspbian Sid | 2970 | 977 | 36230 | 1110 | **1700** | 2.89 |
+| [Radxa Cubie A7S (A733)](results/rca7s.txt) | 6.6 | Trixie arm64 | 11280 | 2480 | 1141110 | 6900 | 8500 | **16.87** ||
 | [Raspberry Pi Zero (BCM2835)](results/3Njz.txt) | 1000 MHz | 5.10 | Bullseye armv6l/armhf | 460 | 460 | 17060 | 430 | **1670** | - |
 | [Raspberry Pi 3 B+ (BCM2837B0)](results/1iI5.txt) | original | 4.9 | Raspbian Stretch | 3600 | 1076 | 42700 | 1230 | **1640** | - |
 | [Raspberry Pi 3 B+ (BCM2837B0)](results/1isD.txt) | with fan | 4.14 | Raspbian Stretch | 3670 | 1046 | 42600 | 1120 | **1600** | - |

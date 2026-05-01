@@ -63,6 +63,7 @@
 | [Pentium N6005](results/4BtC.txt) | 3300/2000 MHz | 5.15 | Jammy amd64 | **11510** | 3369 | 923550 | 9650 | 10280 | 22.18 |
 | [Celeron N5105](results/3Qf7.txt) | 2900/2000 MHz | 5.13 | Focal amd64 | **11450** | 3059 | 811760 | 7710 | 9290 | 21.79 |
 | [Luckfox Core3576 (RK3576)](results/8Qwk.txt) | 2120/1980 MHz | 6.1 | Bookworm arm64 | **11300** | 2031 | 1205280 | 4680 | 15770 | 17.57 |
+| [Radxa Cubie A7S (A733)](results/rca7s.txt) | 2000/1800 MHz | 6.6 | Trixie arm64 | **11280** | 2480 | 1141110 | 6900 | 8500 | 16.87 |
 | [Radxa ROCK 5C Lite (RK3582)](results/c9ZIGh.txt) | 2250/1790 MHz | 6.1 | Bookworm arm64 | **11160** | 3094 | 1279430 | 12410 | 29620 | 14.00 |
 | [Loongson-3A5000-HV](results/4dzX.txt) | 2500 MHz | 4.19 | Loongnix 20 loongarch64 | **11120** | 2990 | 116900 | 6930 | 19170 | - |
 | [Raspberry Pi 5 B (BCM2712)](results/Au3jaA.txt) | 2400 MHz | 6.1 | Bookworm arm64 | **11010** | 3196 | 1367740 | 5270 | 14060 | 15.39 |
@@ -242,7 +243,6 @@
 | [Celeron N2830](results/4pEc.txt) | 2160 MHz | 5.19 | Jammy amd64 | **2760** | 1664 | 31270 | 3780 | 3520 | 6.10 |
 | [BPi M2U (Allwinner R40)](results/4kmM.txt) | 1200 MHz | 6.0 | Bullseye armhf | **2690** | 767 | 23320 | 780 | 3010 | - |
 | [Radxa Rock Pi S (RK3308)](results/4sNe.txt) | 1300 MHz | 6.1 | Jammy arm64 | **2540** | 732 | 282030 | 820 | 1870 | - |
-| [Radxa Cubie A7S (A733)](results/rca7s.txt) | 6.6 | Trixie arm64 | 11280 | **2480** | 1141110 | 6900 | 8500 | 16.87 ||
 | [AMD E-450 APU](results/4hwl.txt) | 1650 MHz | 5.15 | Jammy amd64 | **2430** | 1258 | 27450 | 1710 | 1740 | - |
 | [Cubox-i4<br />(NXP i.MX6)](results/4132.txt) | 980 MHz | 5.15 | Jammy armhf | **2360** | 657 | 27000 | 340 | 340 | - |
 | [RK3228A TV Box](results/3M9F.txt) | 1200 MHz | 4.4 | Buster armhf | **2310** | 710 | 23070 | 410 | 1230 | - |
@@ -277,7 +277,6 @@
 
 | Device / details | Clockspeed | Kernel | Distro | 7-zip multi | *7-zip single* | AES | memcpy | memset | kH/s |
 | ----- | :--------: | :----: | :----: | ----: | ------: | ------: | -----: | -----: | ---: |
-| [Radxa Cubie A7S (A733)](results/rca7s.txt) | 6.6 | Trixie arm64 | 11280 | 2480 | **1141110** | 6900 | 8500 | 16.87 ||
 | [Dell FCM1253 (GB10)](results/fcm1253.txt) | 3900/2800 MHz | 6.14 | Noble arm64 | 114920 | **6704** | 27000 | 27100 | 63400 | 160.82 |
 | [Qualcomm X1E001DE](results/8SWL.txt) | 4300/3800 MHz | 6.14 | Oracular arm64 | 66120 | **5603** | 2274190 | 38360 | 110410 | 76.85 |
 | [Apple M1 Pro](results/443N.txt) | 3030/2060 MHz | 5.18 | Gentoo 2.8 arm64 | 43800 | **5010** | 1064450 | 27110 | 71910 | 48.28 |
@@ -326,6 +325,7 @@
 | [Orange Pi 5 (RK3588)](results/4D0a.txt) | 2400/1800 MHz | 5.10 | Jammy arm64 | 16780 | **2689** | 1366590 | 12800 | 29900 | - |
 | [Celeron N4020](results/4vNB.txt) | 2800 MHz | 5.15 | Bookworm amd64 | 4680 | **2577** | 780770 | 5480 | 5390 | - |
 | [Athlon II X3 420e](results/4eOo.txt) | 2600 MHz | 4.19 | Buster amd64 | 4780 | **2566** | 98840 | 4120 | 3870 | - |
+| [Radxa Cubie A7S (A733)](results/rca7s.txt) | 2000/1800 MHz | 6.6 | Trixie arm64 | 11280 | **2480** | 1141110 | 6900 | 8500 | 16.87 |
 | [Qualcomm Snapdragon 835](results/4fdD.txt) | 2360/1900 MHz | 6.1 | Jammy arm64 | 9800 | **2474** | 883330 | 9720 | 14070 | 12.58 |
 | [Pentium J5005](results/21rE.txt) | 2700/1500 MHz | 5.0 | Bionic amd64 | 9230 | **2455** | 778360 | 5530 | 7130 | 20.74 |
 | [Amazon a1.xlarge](results/2iFY.txt) | 2300 MHz | 4.15 | Bionic arm64 | 8610 | **2406** | 1297960 | 4280 | 14220 | - |
@@ -597,6 +597,7 @@
 | [RockPro64 (RK3399)](results/2sZH.txt) | 2010/1510 MHz | 5.4 | Focal arm64 | 6920 | 1826 | **1145300** | 3700 | 8430 | 11.55 |
 | [NanoPi NEO4 (RK3399)](results/3GmR.txt) | 2016/1512 MHz | 5.10 | Focal arm64 | 6970 | 1906 | **1145030** | 2450 | 6190 | 11.36 |
 | [RockPro64 (RK3399)](results/2yIx.txt) | 2010/1510 MHz | 5.8 | Bullseye arm64 | 7000 | 1833 | **1144950** | 3690 | 8360 | 11.08 |
+| [Radxa Cubie A7S (A733)](results/rca7s.txt) | 2000/1800 MHz | 6.6 | Trixie arm64 | 11280 | 2480 | **1141110** | 6900 | 8500 | 16.87 |
 | [NanoPi NEO4 (RK3399)](results/1p3T.txt) | 2000/1500 MHz | 4.19 | Stretch arm64 | 6750 | 1814 | **1139850** | 2370 | 6110 | 8.84 |
 | [Clearfog CX (NXP LX2160A)](results/4ju5.txt) | 2000 MHz | 5.10 | Focal arm64 | 25260 | 2236 | **1136690** | 4460 | 12500 | - |
 | [Khadas Edge (RK3399)](results/1rYm.txt) | 2000/1500 MHz | 4.4 | Bionic arm64 | 6550 | 1721 | **1130400** | 2810 | 4860 | 10.50 |
@@ -799,7 +800,6 @@
 | [Raspberry Pi B (BCM2835)](results/3MGN.txt) | 700 MHz | 5.10 | Raspberry Pi OS Bullseye | 320 | 320 | **11630** | 360 | 1420 | - |
 | [ClockworkPi R-01 (Allwinner D1)](results/40BJ.txt) | 1000 MHz | 5.4 | Focal riscv64 | 450 | 450 | **9040** | 1220 | 2640 | - |
 | [Kendryte K510](results/41Qa.txt) | 790 MHz | 4.17 | Sid riscv64 | 690 | 402 | **7410** | 280 | 440 | - |
-| [Radxa Cubie A7S (A733)](results/rca7s.txt) | 6.6 | Trixie arm64 | 11280 | 2480 | 1141110 | **6900** | 8500 | 16.87 ||
 
 [(back to top of the page)](#sbc-bench-results-sorted)
 
@@ -841,7 +841,6 @@
 | [Pentium N6005](results/4BtC.txt) | 3300/2000 MHz | 5.15 | Jammy amd64 | 11510 | 3369 | 923550 | **9650** | 10280 | 22.18 |
 | [Jetson Xavier NX](results/3YWp.txt) | 1890 MHz | 4.9 | Bionic arm64 | 13230 | 2201 | 706280 | **9190** | 18480 | - |
 | [Radxa ROCK 5A (RK3588)](results/C6zgdP.txt)| ~2290 | 5.10 | Bullseye arm64 | 15630 | 3015 | 1302120 | **9170** | 27080 | 23.42 |
-| [Radxa Cubie A7S (A733)](results/rca7s.txt) | 6.6 | Trixie arm64 | 11280 | 2480 | 1141110 | 6900 | **8500** | 16.87 ||
 | [Radxa Dragon Q6A (QCS6490)](results/.txt) | 2700/2400/1950 MHz | 6.16 | Noble arm64 | 17400 | 3840 | 1522730 | **8404** | 19660 | 26.31 |
 | [Ryzen R1606G](results/2tQQ.txt) | 2600/1400 MHz | 5.4 | Focal amd64 | 7970 | 2854 | 700780 | **8230** | 5970 | 16.45 |
 | [Khadas VIM4 (A311D2)](results/4cHh.txt) | 2200/2010 MHz | 5.4 | Jammy arm64 | 12120 | 2067 | 1254540 | **8180** | 11680 | - |
@@ -854,6 +853,7 @@
 | [Rubik Pi 3 (QCS6490)](results/8WlQ.txt) | 2700/2400/2000 MHz | 6.6 | Trixie arm64 | 17920 | 3871 | 1539030 | **7020** | 17230 | 27.50 |
 | [Loongson-3A5000-HV](results/4dzX.txt) | 2500 MHz | 4.19 | Loongnix 20 loongarch64 | 11120 | 2990 | 116900 | **6930** | 19170 | - |
 | [AAEON BOXER-8654AI (Orin NX)](results/87lq.txt) | 1730 MHz | 5.15 | Jammy arm64 | 14820 | 2379 | 973830 | **6920** | 20470 | - |
+| [Radxa Cubie A7S (A733)](results/rca7s.txt) | 2000/1800 MHz | 6.6 | Trixie arm64 | 11280 | 2480 | 1141110 | **6900** | 8500 | 16.87 |
 | [Jetson Orin Nano](results/4vy7.txt) | 1510 MHz | 5.10 | Focal arm64 | 13650 | 2153 | 854400 | **6730** | 20240 | 20.68 |
 | [Qualcomm Snapdragon 7c](results/4Lyf.txt) | 2550/1800 MHz | 6.6 | Bookworm arm64 | 13040 | 3113 | 1455700 | **6710** | 14880 | - |
 | [Raspberry Pi 5 B (BCM2712)](results/8-NK.txt) | 2400 MHz | 6.6 | Bookworm arm64 | 11830 | 3305 | 1368160 | **6025** | 9985 | 15.42 |
@@ -1145,6 +1145,7 @@
 | [BeagleBone AI-64 (TI J721E)](results/4DLw.txt) | 2000 MHz | 5.10 | Bookworm arm64 | 3470 | 1872 | 1130390 | 2660 | **8710** | - |
 | [Eswin EIC7700X](results/Xyfg.txt) | 1400 MHz | 6.6 | Trixie riscv64 | 5390 | 1485 | 49340 | 4570 | **8700** | - |
 | [ODROID-N2 (Amlogic S922X)](results/1BsF.txt) | 1800/1900 MHz | 4.9 | Bionic arm64 | 8140 | 1669 | 1024680 | 4120 | **8610** | 11.39 |
+| [Radxa Cubie A7S (A733)](results/rca7s.txt) | 2000/1800 MHz | 6.6 | Trixie arm64 | 11280 | 2480 | 1141110 | 6900 | **8500** | 16.87 |
 | [RockPro64 (RK3399)](results/1iFp.txt) | 1800/1400 MHz | 4.18 | Stretch arm64 | 6300 | 1755 | 1021500 | 3650 | **8450** | 8.20 |
 | [RockPro64 (RK3399)](results/2sZH.txt) | 2010/1510 MHz | 5.4 | Focal arm64 | 6920 | 1826 | 1145300 | 3700 | **8430** | 11.55 |
 | [OrangePi 4 (RK3399)](results/4Kau.txt) | 2010/1510 MHz | 6.1 | Bookworm arm64 | 6880 | 1891 | 1145840 | 3490 | **8430** | - |
@@ -1306,7 +1307,6 @@
 | [Raspberry Pi 3 B+ (BCM2837B0)](results/1iGz.txt) | OC/normal | 4.14 | Raspbian Stretch | 3130 | 843 | 36620 | 1230 | **1780** | - |
 | [AMD E-450 APU](results/4hwl.txt) | 1650 MHz | 5.15 | Jammy amd64 | 2430 | 1258 | 27450 | 1710 | **1740** | - |
 | [Raspberry Pi 3 B (BCM2837)](results/4hOP.txt) | 1200 MHz | 5.15 | Raspbian Sid | 2970 | 977 | 36230 | 1110 | **1700** | 2.89 |
-| [Radxa Cubie A7S (A733)](results/rca7s.txt) | 6.6 | Trixie arm64 | 11280 | 2480 | 1141110 | 6900 | 8500 | **16.87** ||
 | [Raspberry Pi Zero (BCM2835)](results/3Njz.txt) | 1000 MHz | 5.10 | Bullseye armv6l/armhf | 460 | 460 | 17060 | 430 | **1670** | - |
 | [Raspberry Pi 3 B+ (BCM2837B0)](results/1iI5.txt) | original | 4.9 | Raspbian Stretch | 3600 | 1076 | 42700 | 1230 | **1640** | - |
 | [Raspberry Pi 3 B+ (BCM2837B0)](results/1isD.txt) | with fan | 4.14 | Raspbian Stretch | 3670 | 1046 | 42600 | 1120 | **1600** | - |
@@ -1426,6 +1426,7 @@
 | [Radxa Rock Pi 4 (RK3399)](results/3Q2q.txt) | **2000/1500** MHz| 5.10 | Focal arm64 | 6900 | 1899 | 1146500 | 3430 | 8260 | - |
 | [Radxa Rock Pi 4 (RK3399)](results/21fX.txt) | **2000/1500** MHz| 5.3 | Bionic arm64 | 6910 | 1817 | 1147370 | 3660 | 8310 | 10.71 |
 | [Radxa ROCK 3A (RK3568)](results/40TX.txt) | **2000** MHz| 5.18 | Bullseye arm64 | 5110 | 1450 | 935920 | 3150 | 6250 | 7.58 |
+| [Radxa Cubie A7S (A733)](results/rca7s.txt) | **2000/1800** MHz| 6.6 | Trixie arm64 | 11280 | 2480 | 1141110 | 6900 | 8500 | 16.87 |
 | [ODROID-XU4 (Exynos 5422)](results/8ctH.txt) | **2000/1400** MHz| 6.6 | Bookworm armhf | 8730 | 1706 | 71690 | 2270 | 4820 | - |
 | [ODROID-XU4 (Exynos 5422)](results/3GnC.txt) | **2000/1400** MHz| 5.4 | Focal armhf | 8980 | 1604 | 72020 | 2280 | 4910 | - |
 | [ODROID-XU4 (Exynos 5422)](results/1iWL.txt) | **2000/1400** MHz| 4.9 | Stretch armhf | 6400 | 1622 | 72075 | 2230 | 4850 | - |

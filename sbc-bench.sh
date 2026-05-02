@@ -2903,7 +2903,7 @@ CheckPTS() {
 } # CheckPTS
 
 CheckGB() {
-	# try to download most recent GB version for the platform and check prerequisits
+	# try to download most recent GB 6.7/5.5 version for the platform and check prerequisits
 	TotalMem=$(free | awk -F" " '/^Mem:   / {print $7}' | tail -n1)
 	if [ ${TotalMem:-1200000} -lt 1200000 ]; then
 		echo -e "\x08\x08 \n${LRED}${BOLD}WARNING: This machine is low on memory. Likely Geekbench will be oom-killed${NC}\n"
@@ -2911,27 +2911,14 @@ CheckGB() {
 		read
 	fi
 
-	# get latest version string from blog, new major versions are advertised as e.g.
-	# 'Geekbench 6' and not 'Geekbench 6.0' which makes version string guessing a bit
-	# tricky
-	GBBlogContents="$(links -dump "https://www.geekbench.com/blog/")"
-	NewMajorVersion="$(grep "Geekbench [567]$" <<<"${GBBlogContents}" | head -n1 | sed 's/*//' | awk -F" " '{print $2}').0"
-	LatestMinorVersion="$(awk -F" " '/ Geekbench [567].[0-9]/ {print $2}' <<<"${GBBlogContents}" | head -n1)"
-	GBVersion="$(echo -e "${NewMajorVersion}\n${LatestMinorVersion}" | sort -V | tail -n1)"
-
-	case ${GBVersion} in
-		7*)
-			echo -e "\x08\x08 No support for Geekbench ${GBVersion} yet. Exiting"
-			exit 1
-			;;
-		5*|6*)
-			:
-			;;
-		*)
-			echo -e "\x08\x08 Not able to determine Geekbench version. Exiting"
-			exit 1
-			;;
-	esac
+	# As of May 2026 the whole Geekbench site has been hidden behind a Cloudflare curtain
+	# as such we can not dynamically fetch latest version any more. Given the nature of
+	# GB6 as a strange number generator instead of a proper benchmark that doesn't matter
+	# that much and we simply fetch latest 6.7 release or 5.5 on 32-bit ARM platforms.
+	# Starting with GB 6.3 the Geekbench guy is confident that upgrades with same major
+	# version do result in same (irrelevant) scores: see at the bottom of this release
+	# note: https://www.geekbench.com/blog/2026/04/geekbench-67/
+	GBVersion="6.7"
 
 	# check platform since download URLs differ:
 	# RISC-V: https://cdn.geekbench.com/Geekbench-5.4.4-LinuxRISCVPreview.tar.gz

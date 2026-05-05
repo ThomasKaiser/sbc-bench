@@ -36,6 +36,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Cubox-i4<br />(NXP i.MX6)](results/4132.txt) | 980 MHz | 5.15 | Jammy armhf | 2360 | 657 | 27000 | 340 | 340 | - |
 | [Dell FCM1253 (GB10)](results/fcm1253.txt) | 3900/2800 MHz | 6.14 | Noble arm64 | 114920 | 6704 | 27000 | 27100 | 63400 | 160.82 |
 | [DC-ROMA (EIC7702X)](results/fml13v03.txt ) | 1800 MHz | 6.6 | Noble riscv64 | 9800 | 1787 | 50380 | 4850 | 7460 | - |
+| [Flipper One rev. F0B0C1 (RK3576)](results/Xd38a.txt) | ~2310 | 7.1 | Trixie arm64 | 12350 | 2306 | 1305480 | 5110 | 15710 | 18.74 | |
 | [EspressoBin (Armada 3720)](results/1kt2.txt) | 800 MHz | 4.17 | Stretch arm64 | 1138 | 636 | 368330 | 1040 | 2490 | 1.23 |
 | [EspressoBin (Armada 3720)](results/1lCe.txt) | 1200 MHz | 4.18 | Stretch arm64 | 1630 | 869 | 544240 | 1000 | 2400 | 1.82 |
 | [Eswin EIC7700X](results/Xyfg.txt) | 1400 MHz | 6.6 | Trixie riscv64 | 5390 | 1485 | 49340 | 4570 | 8700 | - |

@@ -1403,7 +1403,7 @@ GetTempSensor() {
 				# Quick results check within few months showed the following types which
 				# smell all not that good if it's about CPU or SoC temperatures:
 				# scpi_sensors, w1_slave_temp, iio_hwmon, sun4i_ts, gpu_thermal, iwlwifi_1
-				NodeGuess=$(cat /sys/devices/virtual/thermal/thermal_zone?/type 2>/dev/null | sort -n | grep -E "cpu|soc|CPU-therm|x86_pkg_temp|thermal-fan-est|cluster0" | head -n1)
+				NodeGuess=$(cat /sys/devices/virtual/thermal/thermal_zone?/type 2>/dev/null | sort -n | grep -E "cpu|soc|CPU-therm|x86_pkg_temp|thermal-fan-est|cluster0|bigcore_thermal" | head -n1)
 				if [ "X${NodeGuess}" != "X" ]; then
 					# let's use this thermal node instead
 					if [ -d "${TempDir}" ]; then
@@ -1417,7 +1417,7 @@ GetTempSensor() {
 					if [ -f "${ThermalNode%/*}/temp1_label" ]; then
 						read TempLabel <"${ThermalNode%/*}/temp1_label"
 						case "${TempLabel}" in
-							aml_thermal|cpu|cpu_thermal*|cpu-thermal*|cpu0-thermal*|cpu0_thermal*|soc_thermal*|soc-thermal*|CPU-therm|x86_pkg_temp|k10temp|k8temp|coretemp|cluster0)
+							aml_thermal|cpu|cpu_thermal*|cpu-thermal*|cpu0-thermal*|cpu0_thermal*|soc_thermal*|soc-thermal*|CPU-therm|x86_pkg_temp|k10temp|k8temp|coretemp|cluster0|bigcore_thermal*)
 								# looks like a legit thermal sensor
 								TempInfo="Thermal source: ${ThermalZone}/ (${NodeGuess})"
 								;;

@@ -55,6 +55,7 @@
 | [Intel N95](results/4xwq.txt) | 3400 MHz | 5.15 | Jammy amd64 | **13070** | 3993 | 1232880 | 9710 | 8730 | 34.60 |
 | [Qualcomm Snapdragon 7c](results/4Lyf.txt) | 2550/1800 MHz | 6.6 | Bookworm arm64 | **13040** | 3113 | 1455700 | 6710 | 14880 | - |
 | [Raspberry Pi 5 B (BCM2712)](results/8acvqG.txt) | 3000 MHz | 6.1 | Bookworm arm64 | **12930** | 3791 | 1709720 | 5160 | 16350 | 19.25 |
+| [Flipper One (RK3576)](results/Xd38a.txt) | 2300/2100 MHz | 7.1 | Trixie arm64 | **12350** | 2306 | 1305480 | 5110 | 15710 | 18.74 |
 | [Khadas VIM4 (A311D2)](results/4cHh.txt) | 2200/2010 MHz | 5.4 | Jammy arm64 | **12120** | 2067 | 1254540 | 8180 | 11680 | - |
 | [Khadas VIM4 (A311D2)](results/3Wvv.txt) | 2200/1970 MHz | 5.4 | Focal arm64 | **12090** | 2081 | 1253200 | 7810 | 11600 | - |
 | [Raspberry Pi 5 B (BCM2712)](results/8-NK.txt) | 2400 MHz | 6.6 | Bookworm arm64 | **11830** | 3305 | 1368160 | 6025 | 9985 | 15.42 |
@@ -335,6 +336,7 @@
 | [ODROID-N2+ (Amlogic S922X)](results/4rWn.txt) | 2400/2015 MHz | 6.1 | Bullseye arm64 | 9710 | **2373** | 1366180 | 4220 | 7720 | - |
 | [ODROID-N2+ (Amlogic S922X)](results/3R1a.txt) | 2400/2015 MHz | 5.10 | Focal arm64 | 9680 | **2372** | 1366730 | 4030 | 7120 | - |
 | [Celeron J4125](results/4hau.txt) | 2700/2000 MHz | 5.15 | Jammy amd64 | 7620 | **2367** | 751360 | 5110 | 5960 | 18.30 |
+| [Flipper One (RK3576)](results/Xd38a.txt) | 2300/2100 MHz | 7.1 | Trixie arm64 | 12350 | **2306** | 1305480 | 5110 | 15710 | 18.74 |
 | [Celeron J4105](results/1qal.txt) | 2400/1500 MHz | 4.15 | Bionic amd64 | 9020 | **2290** | 697100 | 5500 | 7410 | 19.07 |
 | [Honeycomb LX2 (NXP LX2160A)](results/3Y4f.txt) | 2200 MHz | 5.16 | Fedora 35 aarch64 | 30690 | **2288** | 1251710 | 5050 | 16220 | 46.09 |
 | [Celeron J4105](results/1qb0.txt) | 2400/1500 MHz | 4.15 | Bionic amd64 | 8960 | **2274** | 697080 | 5620 | 7650 | 19.13 |
@@ -571,6 +573,7 @@
 | [Khadas VIM3 (Amlogic A311D)](results/4o1A.txt) | 2400/2015 MHz | 6.0 | Bullseye arm64 | 9650 | 2379 | **1366300** | 5080 | 9240 | - |
 | [ODROID-N2+ (Amlogic S922X)](results/4rWn.txt) | 2400/2015 MHz | 6.1 | Bullseye arm64 | 9710 | 2373 | **1366180** | 4220 | 7720 | - |
 | [Radxa ROCK 5B (RK3588)](results/41BH.txt) | 2350/1830 MHz | 5.10 | Focal arm64 | 16450 | 3146 | **1337540** | 10830 | 29220 | 25.31 |
+| [Flipper One (RK3576)](results/Xd38a.txt) | 2300/2100 MHz | 7.1 | Trixie arm64 | 12350 | 2306 | **1305480** | 5110 | 15710 | 18.74 |
 | [Radxa ROCK 5A (RK3588)](results/C6zgdP.txt)| ~2290 | 5.10 | Bullseye arm64 | 15630 | 3015 | **1302120** | 9170 | 27080 | 23.42 |
 | [Radxa ROCK 5C (RK3588S2)](results/5pv8oh.txt) | 2280/1780 MHz | 6.1 | Bookworm arm64 | 16400 | 3174 | **1300440** | 12280 | 29750 | 21.04 |
 | [Orange Pi 5 Max (RK3588)](results/XyIw.txt) | 2280/1800 MHz | 6.1 | Bullseye arm64 | 15960 | 2994 | **1300330** | 12140 | 27900 | 23.64 |
@@ -866,6 +869,7 @@
 | [Radxa ROCK 4D (RK3576)](results/8g-p.txt) | 2230/2040 MHz | 6.1 | Bookworm arm64 | 10830 | 1771 | 1267790 | **5210** | 15450 | 18.27 |
 | [Celeron N3350](results/4rJj.txt) | 2400 MHz | 6.0 | Bullseye amd64 | 3810 | 2034 | 446170 | **5190** | 5700 | - |
 | [Raspberry Pi 5 B (BCM2712)](results/8acvqG.txt) | 3000 MHz | 6.1 | Bookworm arm64 | 12930 | 3791 | 1709720 | **5160** | 16350 | 19.25 |
+| [Flipper One (RK3576)](results/Xd38a.txt) | 2300/2100 MHz | 7.1 | Trixie arm64 | 12350 | 2306 | 1305480 | **5110** | 15710 | 18.74 |
 | [Celeron J4125](results/4hau.txt) | 2700/2000 MHz | 5.15 | Jammy amd64 | 7620 | 2367 | 751360 | **5110** | 5960 | 18.30 |
 | [ODROID-C5 (S905X5M)](results/8x6l.txt) | 2500 MHz | 5.15 | Jammy arm64 | 7130 | 1928 | 1172920 | **5100** | 12070 | - |
 | [Khadas VIM3 (Amlogic A311D)](results/4o1A.txt) | 2400/2015 MHz | 6.0 | Bullseye arm64 | 9650 | 2379 | 1366300 | **5080** | 9240 | - |
@@ -1111,6 +1115,7 @@
 | [Phytium D2000<br />(2 x SO-DIMM)](results/446h.txt) | 2300 MHz | 5.19 | Jammy arm64 | 16670 | 2252 | 828130 | 3480 | **16110** | - |
 | [Celeron 5205U](results/4eiM.txt) | 1900 MHz | 5.15 | Jammy amd64 | 4060 | 2171 | 521090 | 7350 | **16020** | 11.20 |
 | [Luckfox Core3576 (RK3576)](results/8Qwk.txt) | 2120/1980 MHz | 6.1 | Bookworm arm64 | 11300 | 2031 | 1205280 | 4680 | **15770** | 17.57 |
+| [Flipper One (RK3576)](results/Xd38a.txt) | 2300/2100 MHz | 7.1 | Trixie arm64 | 12350 | 2306 | 1305480 | 5110 | **15710** | 18.74 |
 | [Radxa ROCK 4D (RK3576)](results/8g-p.txt) | 2230/2040 MHz | 6.1 | Bookworm arm64 | 10830 | 1771 | 1267790 | 5210 | **15450** | 18.27 |
 | [Qualcomm Snapdragon 7c](results/4Lyf.txt) | 2550/1800 MHz | 6.6 | Bookworm arm64 | 13040 | 3113 | 1455700 | 6710 | **14880** | - |
 | [Lichee Pi 4A (T-Head TH1520)](results/4xYE.txt) | 1990 MHz | 5.10 | Bookworm riscv64 | 5260 | 1592 | 43820 | 4350 | **14760** | - |
@@ -1392,6 +1397,7 @@
 | [Radxa Fogwise AirBox (SG2300X)](results/XUSc.txt) | **2300** MHz| 5.4 | Focal arm64 | 11580 | 1712 | 1075090 | 1870 | 9210 | - |
 | [Phytium D2000<br />(2 x SO-DIMM)](results/446h.txt) | **2300** MHz| 5.19 | Jammy arm64 | 16670 | 2252 | 828130 | 3480 | 16110 | - |
 | [Phytium D2000<br />(1 x SO-DIMM)](results/445T.txt) | **2300** MHz| 5.19 | Jammy arm64 | 16390 | 2220 | 827090 | 2820 | 6490 | - |
+| [Flipper One (RK3576)](results/Xd38a.txt) | **2300/2100** MHz| 7.1 | Trixie arm64 | 12350 | 2306 | 1305480 | 5110 | 15710 | 18.74 |
 | [Celeron N4100](results/1uTS.txt) | **2300/1100** MHz| 4.15 | Bionic amd64 | 8510 | 2222 | 669350 | 4750 | 5240 | 18.33 |
 | [Celeron J3455](results/1m5p.txt) | **2300/1500** MHz| 4.17 | Stretch amd64 | 7000 | 2037 | 429660 | 4090 | 4050 | 17.26 |
 | [Amazon a1.xlarge](results/2iFY.txt) | **2300** MHz| 4.15 | Bionic arm64 | 8610 | 2406 | 1297960 | 4280 | 14220 | - |

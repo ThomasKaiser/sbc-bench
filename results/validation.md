@@ -262,6 +262,7 @@
 | [uHzXI6](uHzXI6.txt) | v0.9.72 StarFive VisionFive 2 Lite | 0%/0% | 7.7Gi/7.5Gi | X | X | X | X | 2% | 0% | [check log](uHzXI6.txt) |
 | [uHzXI7](uHzXI7.txt) | v0.9.65 ADL-N / N100 | 0%/0% | 7.5Gi/6.3Gi | X | X | X | X | 1% | 0% | |
 | [X904](X904.txt) | v0.9.67 Milk-V | 0%/0% | 15Gi/14Gi | X | X | X | X | 2% | 0% | |
+| [Xd38a](Xd38a.txt) | v0.9.72 Flipper One rev. F0B0C1 | 0%/0% | 7.8Gi/7.0Gi | X | X | X | X | 1% | 0% | [check log](Xd38a.txt) |
 | [XObB](XObB.txt) | v0.9.67 / N100 | 0%/0% | 7.5Gi/6.5Gi | X | X | X | X | 2% | 0% | |
 | [XUpQ](XUpQ.txt) | v0.9.68 Supermicro Super Server | 0%/0% | 510Gi/472Gi | X | X | X | X | 3% | 0% | |
 | [XUSc](XUSc.txt) | v0.9.68 Radxa AICore BM1684x IO Board | 0%/0% | 3.0Gi/2.7Gi | X | X | X | X | 1% | 0% | |

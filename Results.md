@@ -39,6 +39,7 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [EspressoBin (Armada 3720)](results/1kt2.txt) | 800 MHz | 4.17 | Stretch arm64 | 1138 | 636 | 368330 | 1040 | 2490 | 1.23 |
 | [EspressoBin (Armada 3720)](results/1lCe.txt) | 1200 MHz | 4.18 | Stretch arm64 | 1630 | 869 | 544240 | 1000 | 2400 | 1.82 |
 | [Eswin EIC7700X](results/Xyfg.txt) | 1400 MHz | 6.6 | Trixie riscv64 | 5390 | 1485 | 49340 | 4570 | 8700 | - |
+| [Flipper One (RK3576)](results/Xd38a.txt) | 2300/2100 MHz | 7.1 | Trixie arm64 | 12350 | 2306 | 1305480 | 5110 | 15710 | 18.74 |
 | [H270-T70<br />(2 x ThunderX CN8890)](results/3N5c.txt) | 2000 Mhz | 5.16 | Sid arm64 | 107180 | 1826 | 340750 | 4180 | 17130 | - |
 | [Helios4<br />(Armada 388)](results/1jCy.txt) | 1600 MHz | 4.14 | Stretch armhf | 2210 | 1215 | 42500 &ast;98560 | 910 | 4840 | - |
 | [Hetzner CAX11 (Ampere Altra)](results/4HdL.txt) | 3000 MHz | 5.15 | Jammy arm64 | 8060 | 3842 | 1705600 | 11250 | 47670 | 11.44 |

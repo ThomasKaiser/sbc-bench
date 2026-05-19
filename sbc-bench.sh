@@ -581,6 +581,7 @@ GetARMCore() {
 	50/000:APM X-Gene
 	51:Qualcomm
 	51/001:Qualcomm Oryon-X1
+	51/002:Qualcomm Oryon-X2
 	51/00f:Qualcomm Scorpion
 	51/02d:Qualcomm Scorpion
 	51/04d:Qualcomm Krait
@@ -4063,7 +4064,9 @@ Run7ZipBenchmark() {
 		CPUInfo="$(GetCPUInfo 0)"
 		echo -e "\nExecuting benchmark single-threaded on cpu0${CPUInfo}" >>"${TempLog}"
 		[ -s "${NetioConsumptionFile}" ] && snore 10
+		StartTime=$(date +"%s%N")
 		taskset -c 0 "${SevenZip}" b ${DictSize} -mmt=1 >>"${TempLog}" 2>/dev/null
+		LogDuration ${StartTime} $(date +"%s%N") "7-zip single-threaded on cpu0${CPUInfo}"
 	else
 		# test each cluster individually
 		for i in $(seq 0 $(( ${#ClusterConfig[@]} -1 )) ) ; do
@@ -4072,7 +4075,9 @@ Run7ZipBenchmark() {
 				CPUInfo="$(GetCPUInfo ${ClusterConfig[$i]})"
 				echo -e "\nExecuting benchmark single-threaded on cpu${ClusterConfig[$i]}${CPUInfo}" >>"${TempLog}"
 				[ -s "${NetioConsumptionFile}" ] && snore 10
+				StartTime=$(date +"%s%N")
 				taskset -c ${ClusterConfig[$i]} "${SevenZip}" b ${DictSize} -mmt=1 >>"${TempLog}" 2>/dev/null
+				LogDuration ${StartTime} $(date +"%s%N") "7-zip single-threaded on cpu${ClusterConfig[$i]}${CPUInfo}"
 			fi
 		done
 	fi	
@@ -4095,9 +4100,11 @@ Run7ZipBenchmark() {
 		/bin/bash "${PathToMe}" -m ${MonInterval} >>"${MonitorLog}" &
 		MonitoringPID=$!
 		echo -e "Executing benchmark ${RunHowManyTimes} times multi-threaded on CPUs $(cat /sys/devices/system/cpu/online)" >>"${TempLog}"
+		StartTime=$(date +"%s%N")
 		for ((i=1;i<=RunHowManyTimes;i++)); do
 			"${SevenZip}" b ${DictSize} -mmt=${CPUCores} >>"${TempLog}" 2>/dev/null
 		done
+		LogDuration ${StartTime} $(date +"%s%N") "7-zip ${RunHowManyTimes} times multi-threaded on CPUs $(cat /sys/devices/system/cpu/online)"
 		kill ${MonitoringPID}
 		echo -e "\n##########################################################################\n" >>"${ResultLog}"
 		cat "${TempLog}" >>"${ResultLog}"
@@ -4161,16 +4168,19 @@ RunOpenSSLBenchmark() {
 		# all CPU cores have same package id, we execute openssl twice
 		CPUInfo="$(GetCPUInfo 0)"
 		echo -e "Executing benchmark twice on cluster 0${CPUInfo}\n" >>"${ResultLog}"
+		StartTime=$(date +"%s%N")
 		for bytelength in $1 ; do
 			openssl speed -elapsed -evp aes-${bytelength}-cbc 2>/dev/null
 			openssl speed -elapsed -evp aes-${bytelength}-cbc 2>/dev/null
 		done | tr '[:upper:]' '[:lower:]' >"${OpenSSLLog}"
+		LogDuration ${StartTime} $(date +"%s%N") "openssl twice on cluster 0${CPUInfo}"
 		# add both scores and divide by two to get an average
 		AES256=$(( $(awk '/^aes-256-cbc/ {print $7}' <"${OpenSSLLog}" | awk -F"." '{s+=$1} END {printf "%.0f", s}') / 2 ))
 		[ "X${MODE}" = "Xextensive" ] && openssl speed -elapsed -evp aes-256-gcm 2>/dev/null | tr '[:upper:]' '[:lower:]' >>"${OpenSSLLog}"
 	else
 		# different package ids, we walk through all clusters
 		echo -e "Executing benchmark on each cluster individually\n" >>"${ResultLog}"
+		StartTime=$(date +"%s%N")
 		for bytelength in $1 ; do
 			for i in $(seq 0 $(( ${#ClusterConfig[@]} -1 )) ) ; do
 				CoresOnline ${ClusterConfig[$i]}
@@ -4184,6 +4194,7 @@ RunOpenSSLBenchmark() {
 				fi
 			done
 		done >"${OpenSSLLog}"
+		LogDuration ${StartTime} $(date +"%s%N") "openssl on each cluster individually"
 		# check aes-256-cbc scores and choose highest for reporting
 		AES256=$(awk '/^aes-256-cbc/ {print $7}' <"${OpenSSLLog}" | awk -F"." '{print $1}' | sort -n | tail -n1)
 	fi
@@ -4221,10 +4232,12 @@ RunCpuminerBenchmark() {
 	echo -e "\nSystem health while running cpuminer:\n" >>"${MonitorLog}"
 	/bin/bash "${PathToMe}" -m 40 >>"${MonitorLog}" &
 	MonitoringPID=$!
+	StartTime=$(date +"%s%N")
 	"${InstallLocation}"/cpuminer-multi/cpuminer --benchmark --cpu-priority=2 >"${TempLog}" &
 	MinerPID=$!
 	snore 300
 	kill ${MinerPID} ${MonitoringPID}
+	LogDuration ${StartTime} $(date +"%s%N") "cpuminer"
 	echo -e "\n##########################################################################\n" >>"${ResultLog}"
 	sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" <"${TempLog}" >>"${ResultLog}"
 	# Summarized 'Total:' scores, we need to skip the 1st or even better the two first since
@@ -4260,8 +4273,10 @@ RunStressNG() {
 	/bin/bash "${PathToMe}" -m 40 >>"${MonitorLog}" &
 	MonitoringPID=$!
 	echo -e "Executing \"${StressCommand}\" for 5 minutes:\n" >"${TempLog}"
+	StartTime=$(date +"%s%N")
 	${StressCommand} -t 300 >>"${TempLog}" 2>&1
 	kill ${MonitoringPID}
+	LogDuration ${StartTime} $(date +"%s%N") "${StressCommand}"
 	echo -e "\n##########################################################################\n" >>"${ResultLog}"
 	sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" <"${TempLog}" >>"${ResultLog}"
 } # RunStressNG
@@ -4273,10 +4288,12 @@ RunStockfishBenchmark() {
 	MonitoringPID=$!
 	cd "${InstallLocation}/Stockfish-sf_15/src" || exit 1
 	echo "" >"${TempLog}"
+	StartTime=$(date +"%s%N")
 	for ((i=1;i<=RunHowManyTimes;i++)); do
 		echo -e "setoption name EvalFile value ${NeuralNetwork} \n bench 128 ${CPUCores} 24 default depth" | ./stockfish 2>>"${TempLog}" >/dev/null
 	done
 	kill ${MonitoringPID}
+	LogDuration ${StartTime} $(date +"%s%N") "stockfish"
 	echo -e "\n##########################################################################\n" >>"${ResultLog}"
 	echo -e "Executing Stockfish 15 using ${NeuralNetwork} ${RunHowManyTimes} times in a row:\n" >>"${ResultLog}"
 	sed "s,\x1B\[[0-9;]*[a-zA-Z],,g" <"${TempLog}" | sed -e '/^$/d' -e '/^============/i \ ' -e '/second/a \ ' >>"${ResultLog}"
@@ -4380,7 +4397,9 @@ RunGB() {
 				done
 				echo -e "\n${BOLD}Executing on cores ${FirstCore}-${LastCore}${NC}\n"
 				BoostGB &
+				StartTime=$(date +"%s%N")
 				taskset -c ${FirstCore}-${LastCore} "${GBBinary}" 2>&1 | tee "${TempLog}"
+				LogDuration ${StartTime} $(date +"%s%N") "geekbench ${GBVersion} on cores ${FirstCore}-${LastCore}"
 				ResultsURL="$(awk -F"https" '/browser.geekbench.com/ {print $2}' <"${TempLog}" | head -n1)"
 				if [ "X${ResultsURL}" = "X" ]; then
 					echo -e "\x08\x08 Failed...\c"
@@ -4430,14 +4449,18 @@ RunGB() {
 	MonitoringPID=$!
 	echo -e "\n${BOLD}Executing on all cores 1st time${NC}\n"
 	BoostGB &
+	StartTime=$(date +"%s%N")
 	"${GBBinary}" 2>&1 | tee "${TempLog}"
+	LogDuration ${StartTime} $(date +"%s%N") "geekbench ${GBVersion} 1st run on all cores"
 	echo ""
 	GBFullString="$(awk -F" : " "/^Geekbench ${GBVersion}./ {print \$1}" "${TempLog}")"
 	GBSystemInfo="$(grep -A25 "Gathering system information" "${TempLog}" | tail -n +2 | grep -B25 " Size ")"
 	TempLog2="${TempDir}/temp2.log"
 	echo -e "${BOLD}Executing on all cores 2nd time${NC}\n"
 	BoostGB &
+	StartTime=$(date +"%s%N")
 	"${GBBinary}" 2>&1 | tee "${TempLog2}"
+	LogDuration ${StartTime} $(date +"%s%N") "geekbench ${GBVersion} 2nd run on all cores"
 	kill ${MonitoringPID}
 	ResultsURL="$(awk -F"https" '/browser.geekbench.com/ {print $2}' <"${TempLog}" | head -n1)"
 	ResultsURL2="$(awk -F"https" '/browser.geekbench.com/ {print $2}' <"${TempLog2}" | head -n1)"
@@ -4490,6 +4513,15 @@ RunGB() {
 	fi
 	echo -e "\nGeekbench execution...\c"
 } # RunGB
+
+LogDuration() {
+	# function to log exakt benchmark duration. start and end times are $1 and $2
+	BenchDuration=$(awk '{printf ("%0.1f",($1-$2)/1000000000); }' <<<"$2 $1")
+	BenchBegin="$(date -d "@${1:0:10}" '+%H:%M:%S')"
+	BenchEnd="$(date -d "@${2:0:10}" '+%H:%M:%S')"
+	ThisDay="$(date "+%Y-%m-%d")"
+	echo "${3}: ${BenchDuration} seconds (${ThisDay}; ${BenchBegin}-${BenchEnd})" >>"${TempDir}/durations.txt"
+} # LogDuration
 
 CreateGBResultsTable() {
 	cd "${TempDir}/" || exit 1
@@ -5256,6 +5288,7 @@ UploadResults() {
 	[ -h /var/log/sbc-bench.log ] && return 1
 	[ -s /var/log/sbc-bench.log ] && echo -e "\n\n\n" >>/var/log/sbc-bench.log
 	sed '/^$/N;/^\n$/D' <"${ResultLog}" >>/var/log/sbc-bench.log
+	echo -e "\nDurations:\n\n$(cat "${TempDir}/durations.txt")" >>/var/log/sbc-bench.log
 	echo ""
 
 	# On systems running with Rockchip BSP kernel check DMC governor settings and if not
@@ -6514,6 +6547,17 @@ GuessSoCbySignature() {
 					;;
 				8|10)
 					echo "Qualcomm Snapdragon X Plus"
+					;;
+			esac
+			;;
+		*OryonX2r2p1*OryonX2r2p1*OryonX2r2p1*OryonX2r2p1*OryonX2r2p1*OryonX2r2p1*OryonX2r1p1*OryonX2r1p1*OryonX2r1p1*OryonX2r1p1*OryonX2r1p1*OryonX2r1p1*)
+			# Qualcomm Snapdragon X2 Elite
+			case ${CPUCores} in
+				18)
+					echo "Qualcomm Snapdragon X2 Elite"
+					;;
+				12)
+					echo "Qualcomm Snapdragon X2E-80-100"
 					;;
 			esac
 			;;

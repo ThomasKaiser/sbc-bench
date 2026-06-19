@@ -7320,7 +7320,7 @@ GuessSoCbySignature() {
 			echo "Amlogic S905X3"
 			;;
 		00A55r2p000A55r2p000A55r2p000A55r2p0)
-			# Allwinner A513, Amlogic S905X4/S905C2, RealTek RTD1619B or Rockchip RK3566/RK3568
+			# Allwinner A513, Amlogic S905X4/S905C2, RealTek RTD1619B or Rockchip RK3566/RK3568, RK3538/RK3539
 			# 4 x Cortex-A55 / r2p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp asimdrdm lrcpc dcpop asimddp
 			case "${DTCompatible,,}" in
 				*s7d*|*s905x5m*)
@@ -7335,8 +7335,14 @@ GuessSoCbySignature() {
 				*rk3568*)
 					echo "Rockchip RK3568"
 					;;
+				*rk3538*)
+					echo "Rockchip RK3538"
+					;;
+				*rk3539*)
+					echo "Rockchip RK3539"
+					;;
 				*rockchip*)
-					echo "Rockchip RK3566/RK3568"
+					echo "Rockchip RK3566/RK3568/RK3538/RK3539"
 					;;
 				*a513*|*allwinner*)
 					echo "Allwinner A513"
@@ -8125,6 +8131,10 @@ GuessSoCbySignature() {
 			# to assign single-threaded tasks to an A78C since they end up on an X1C anyway: https://github.com/ThomasKaiser/sbc-bench/issues/58#issuecomment-1374900303
 			echo "Qualcomm Snapdragon 8cx Gen 3 (SC8280XP)"
 			;;
+		*A78Cr0p2*A78Cr0p2*A78Cr0p2*A78Cr0p2*A78Cr0p2*A78Cr0p2*A78Cr0p2*A78Cr0p2)
+			# Qualcomm QCS9075: 8 x Cortex-A78C / r0p2 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp uscat ilrcpc flagm paca pacg
+			echo "Qualcomm QCS9075/IQ-9075"
+			;;
 		*A510r0p2*A510r0p2*A510r0p2*A510r0p2*A710r2p0*A710r2p0*A710r2p0*X2r2p0)
 			# Qualcomm Snapdragon 8 Gen1: 4 x Cortex-A510 / r0p2 + 3 Cortex-A710 / r2p0 + 1 x Cortex-X2 / r2p0 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp sha512 sve asimdfhm dit uscat ilrcpc flagm ssbs sb paca pacg dcpodp sve2 sveaes svepmull svebitperm svesha3 svesm4 flagm2 frint svei8mm svebf16 i8mm bf16 bti
 			echo "Qualcomm Snapdragon 8 Gen1"
@@ -8216,11 +8226,15 @@ GuessSoCbySignature() {
 			;;
 		*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A55r2p0*A78*A78)
 			# Snapdragon 695 5G (SM6375): 6 x Cortex-A55 / r2p0 + 2 x Cortex-A78 / r1p1 / fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp
+			# or Amlogic A311Y3: 6 x Cortex-A55 + 2 x Cortex-A78 / https://lists.infradead.org/pipermail/linux-amlogic/2026-March/026602.html
 			# or Allwinner A737/T737, 6 x Cortex-A55 / r2p0 + 2 x Cortex-A78, appeared on some Allwinner roadmap: https://www.cnx-software.com/2023/09/04/allwinner-2023-2024-roadmap-reveals-a736-a737-arm-cortex-a78-a76-processors/
 			# on some later Allwinner roadmap A736/T736 disappeared and an A838 was shown: https://www.cnx-software.com/2024/12/06/allwinner-a733-octa-core-cortex-a76-a55-ai-soc-supports-up-to-16gb-ram-for-android-15-tablets-and-laptops/#comment-635134
 			case "${DTCompatible,,}" in
 				*695*|*sm6375*)
 					echo "Snapdragon 695 5G (SM6375)"
+					;;
+				*amlogic*|*a9*|*a311y3*)
+					echo "Amlogic A311Y3"
 					;;
 				*a737*|*t737*)
 					echo "Allwinner A737/T737"
@@ -9288,10 +9302,9 @@ CheckKernelVersion() {
 					;;
 			esac
 			;;
-		6.1.*)
+		6.1.*|6.6.89|6.12.58)
 			case ${GuessedSoC} in
 				*Rockchip*)
-					# RK 6.1 BSP in different flavours
 					PrintBSPWarning RockchipGKI
 					;;
 				SpacemiT*)
@@ -9301,7 +9314,7 @@ CheckKernelVersion() {
 			;;
 		*)
 			case ${GuessedSoC} in
-				*S928X*)
+				*S928X*|*A311Y3*)
 					PrintBSPWarning Amlogic
 					;;
 			esac

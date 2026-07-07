@@ -860,7 +860,8 @@ HandleGovernors() {
 
 	# process governors:
 	echo "${Governors}" | while read ; do
-		read Governor <"${REPLY}"
+		Governor=""
+		read Governor <"${REPLY}" 2>/dev/null
 		if [ "X${Governor}" != "X" ]; then
 			SysFSNode="$(sed 's/cpufreq\//cpufreq-/' <<<"${REPLY%/*}")"
 			AvailableGovernorsSysFSNode="$(ls -d "${REPLY%/*}"/*available_governors 2>/dev/null)"
@@ -2165,6 +2166,16 @@ CheckLoadAndDmesg() {
 	echo ""
 } # CheckLoadAndDmesg
 
+CoreIsOffline() {
+	# Returns 0 if CPU core $1 is offline. Cpufreq policyN/ dirs survive hotplug
+	# (kept for fast recovery), so directory presence != usable. Reads of an all-offline
+	# policy return EBUSY. Check cpu*/online instead of just checking if dir exists.
+	local State
+	[ -f /sys/devices/system/cpu/cpu${1}/online ] || return 1
+	read State </sys/devices/system/cpu/cpu${1}/online 2>/dev/null
+	[ "${State}" = "0" ]
+} # CoreIsOffline
+
 GetRelevantCPUClusters() {
 	# If all CPU cores are of same type then just check for NUMA nodes and ignore
 	# cpufreq settings or package IDs (server SoCs like Ampere Altra or NXP LX2160A
@@ -2176,16 +2187,25 @@ GetRelevantCPUClusters() {
 	# isn't working yet while all cores share same ID, see http://ix.io/4Bc8 for example.
 
 	local ClustersByCpufreqOrPackageIDs=($(GetCPUClusters))
+	local RelevantClusters
 
 	if [ ${#ClusterConfigByCoreType[@]} -eq 1 ] && [ ${#ClustersByCpufreqOrPackageIDs[@]} -ne 2 ]; then
 		NumaNodes=$(awk -F" " '/^NUMA node[0-9]/ {print $4}' <<<"${LSCPU}" | cut -f1 -d'-' | cut -f1 -d',')
-		[ "X${NumaNodes}" = "X" ] && echo 0 || echo "${NumaNodes}"
+		[ "X${NumaNodes}" = "X" ] && RelevantClusters="0" || RelevantClusters="${NumaNodes}"
 	elif [ ${#ClustersByCpufreqOrPackageIDs[@]} -lt ${#ClusterConfigByCoreType[@]} ] ; then
 		# SoC bring-up stage, different CPU clusters are not properly defined
-		echo "${ClusterConfigByCoreType[@]}"
+		RelevantClusters="${ClusterConfigByCoreType[*]}"
 	else
-		echo "${ClustersByCpufreqOrPackageIDs[@]}"
+		RelevantClusters="${ClustersByCpufreqOrPackageIDs[*]}"
 	fi
+
+	# Skip offline cluster heads: lingering policies cause EBUSY spam and divide-by-zero
+	local Core Filtered
+	for Core in ${RelevantClusters} ; do
+		CoreIsOffline "${Core}" && continue
+		Filtered="${Filtered} ${Core}"
+	done
+	echo ${Filtered:-0}
 } # GetRelevantCPUClusters
 
 GetCPUClusters() {
@@ -2256,6 +2276,8 @@ GetCoreClusters() {
 	else
 		local i
 		for i in $(seq 0 $(( ${CPUCores} - 1 )) ) ; do
+			# Skip offline cores: not in /proc/cpuinfo, GetCPUInfo returns empty string
+			CoreIsOffline "$i" && continue
 			ThisCore="$(GetCPUInfo $i)"
 			if [ "X${ThisCore}" != "X${LastCore}" ]; then
 				echo "${i}"
@@ -4581,7 +4603,10 @@ PrintCPUTopology() {
 		fi
 		[ -f /sys/devices/system/cpu/cpu${i}/topology/physical_package_id ] && \
 			read CPUCluster </sys/devices/system/cpu/cpu${i}/topology/physical_package_id
-		if [ -d /sys/devices/system/cpu/cpufreq/policy${i} ]; then
+		if CoreIsOffline "${i}"; then
+			# Offline core: reading policy returns EBUSY, skip cpufreq info
+			CPUFreqPolicy="none"
+		elif [ -d /sys/devices/system/cpu/cpufreq/policy${i} ]; then
 			CPUFreqPolicy=${i}
 			CPUSpeedMin=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpufreq/policy${i}/cpuinfo_min_freq)
 			CPUSpeedMax=$(awk '{printf ("%0.0f",$1/1000); }' </sys/devices/system/cpu/cpufreq/policy${i}/cpuinfo_max_freq)
@@ -4679,8 +4704,9 @@ SummarizeResults() {
 				ThrottlingWarning="${LRED}${BOLD} (throttled)${NC}"
 			fi
 
-			HighestClock=$(sort -n -r /sys/devices/system/cpu/cpufreq/policy?/cpuinfo_max_freq | head -n1)
-			LowestClock=$(sort -n -r /sys/devices/system/cpu/cpufreq/policy?/cpuinfo_max_freq | tail -n1)
+			# Use cat to skip offline policies (EBUSY stops sort, clock values stay empty)
+			HighestClock=$(cat /sys/devices/system/cpu/cpufreq/policy?/cpuinfo_max_freq 2>/dev/null | sort -n -r | head -n1)
+			LowestClock=$(cat /sys/devices/system/cpu/cpufreq/policy?/cpuinfo_max_freq 2>/dev/null | sort -n -r | tail -n1)
 			ClockDifference=$(( 100000 * MeasuredClockspeedStart / HighestClock ))
 			if [ ${ClockDifference:-100} -lt 98 ] || [ ${ClockDifference:-100} -gt 102 ]; then
 				# if measured clockspeed differs by more than 2% compared to cpuinfo_max_freq

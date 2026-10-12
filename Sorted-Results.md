@@ -117,6 +117,7 @@
 | [BPi F3 (SpacemiT K1)](results/8to7qX.txt) | 1600 MHz | 6.1 | Mantic riscv64 | **6750** | 978 | 27260 | 2620 | 7180 | - |
 | [Nintendo Switch (Tegra X1)](results/3Di2.txt) | 2060 MHz | 4.9 | Bionic arm64 | **6720** | 1901 | 746680 | 2370 | 3670 | 9.25 |
 | [NanoPi M4v2 (RK3399)](results/3MAK.txt) | 2015/1510 MHz | 5.10 | Bullseye arm64 | **6680** | 1855 | 921980 | 3110 | 7640 | - |
+| [Telechips TCC8050 (Dolphin 3M)](results/i142.txt) | 1690 MHz | 5.10 | Jammy arm64 | **6620** | 1867 | 956840 | 7050 | 10140 | - |
 | [Khadas Edge (RK3399)](results/1uar.txt) | 2000/1500 MHz | 4.4 | Stretch arm64 | **6600** | 1703 | 1127780 | 2860 | 4880 | 8.85 |
 | [x7-Z8700](results/4iDX.txt) | 2400 MHz | 5.15 | Bullseye amd64 | **6580** | 1784 | 296680 | 3510 | 3580 | - |
 | [Celeron J1900](results/4hKV.txt) | 2415/1333 MHz | 5.4 | Focal amd64 | **6560** | 1806 | 34900 | 3780 | 3390 | - |
@@ -370,6 +371,7 @@
 | [Raspberry Pi 4 B (BCM2711)](results/3Gia.txt) | 1800 MHz | 5.10 | Raspberry Pi OS Buster | 6550 | **1897** | 77830 | 2780 | 3080 | - |
 | [OrangePi 4 (RK3399)](results/4Kau.txt) | 2010/1510 MHz | 6.1 | Bookworm arm64 | 6880 | **1891** | 1145840 | 3490 | 8430 | - |
 | [BeagleBone AI-64 (TI J721E)](results/4DLw.txt) | 2000 MHz | 5.10 | Bookworm arm64 | 3470 | **1872** | 1130390 | 2660 | 8710 | - |
+| [Telechips TCC8050 (Dolphin 3M)](results/i142.txt) | 1690 MHz | 5.10 | Jammy arm64 | 6620 | **1867** | 956840 | 7050 | 10140 | - |
 | [NanoPi M4v2 (RK3399)](results/3MAK.txt) | 2015/1510 MHz | 5.10 | Bullseye arm64 | 6680 | **1855** | 921980 | 3110 | 7640 | - |
 | [Raspberry Pi 4 B (BCM2711)](results/3VME.txt) | 1800 MHz | 5.15 | Jammy armhf | 6300 | **1844** | 82750 | 1190 | 3110 | - |
 | [NanoPi M4 (RK3399)](results/1lzP.txt) | 2000/1500 MHz | 4.19 | Stretch arm64 | 6400 | **1835** | 1128330 | 4080 | 8270 | 8.86 |
@@ -631,6 +633,7 @@
 | [ODROID-HC4 (S905X3)](results/3Na5.txt) | 2100 MHz | 5.10 | Buster arm64 | 5730 | 1672 | **980970** | 3540 | 5150 | - |
 | [AAEON BOXER-8654AI (Orin NX)](results/87lq.txt) | 1730 MHz | 5.15 | Jammy arm64 | 14820 | 2379 | **973830** | 6920 | 20470 | - |
 | [ODROID-M1 (RK3568)](results/4ijy.txt) | 2060 MHz | 5.18 | Bullseye arm64 | 5430 | 1567 | **961090** | 3310 | 5960 | 7.76 |
+| [Telechips TCC8050 (Dolphin 3M)](results/i142.txt) | 1690 MHz | 5.10 | Jammy arm64 | 6620 | 1867 | **956840** | 7050 | 10140 | - |
 | [ODROID-C4 (S905X3)](results/2kaS.txt) | 2010 MHz | 4.9 | Focal arm64 | 5450 | 1459 | **941590** | 3310 | 6270 | 7.71 |
 | [Phytium<br />FT-2000/4<br />(1 x SO-DIMM)](results/4ioj.txt) | 2600 MHz | 5.15 | Bullseye arm64 | 10020 | 2755 | **936740** | 3760 | 14540 | - |
 | [Radxa ROCK 3A (RK3568)](results/40TX.txt) | 2000 MHz | 5.18 | Bullseye arm64 | 5110 | 1450 | **935920** | 3150 | 6250 | 7.58 |
@@ -857,6 +860,7 @@
 | [Celeron N5100](results/3IlQ.txt) | 2800/1100 MHz | 5.13 | Focal amd64 | 10550 | 3088 | 783800 | **7750** | 8090 | 19.22 |
 | [Celeron N5105](results/3Qf7.txt) | 2900/2000 MHz | 5.13 | Focal amd64 | 11450 | 3059 | 811760 | **7710** | 9290 | 21.79 |
 | [Celeron 5205U](results/4eiM.txt) | 1900 MHz | 5.15 | Jammy amd64 | 4060 | 2171 | 521090 | **7350** | 16020 | 11.20 |
+| [Telechips TCC8050 (Dolphin 3M)](results/i142.txt) | 1690 MHz | 5.10 | Jammy arm64 | 6620 | 1867 | 956840 | **7050** | 10140 | - |
 | [Rubik Pi 3 (QCS6490)](results/8WlQ.txt) | 2700/2400/2000 MHz | 6.6 | Trixie arm64 | 17920 | 3871 | 1539030 | **7020** | 17230 | 27.50 |
 | [Loongson-3A5000-HV](results/4dzX.txt) | 2500 MHz | 4.19 | Loongnix 20 loongarch64 | 11120 | 2990 | 116900 | **6930** | 19170 | - |
 | [AAEON BOXER-8654AI (Orin NX)](results/87lq.txt) | 1730 MHz | 5.15 | Jammy arm64 | 14820 | 2379 | 973830 | **6920** | 20470 | - |
@@ -1138,6 +1142,7 @@
 | [Intel N100](results/uHzXI7.txt) | 3400 MHz | 6.1 | Jammy amd64 | 14090 | 3910 | 1232550 | 10920 | **11231** | 37.13 |
 | [Lichee Pi 4A (T-Head TH1520)](results/fUCnrY.txt) | 1500 MHz | 5.10 | Bookworm riscv64 | 3880 | 1129 | 33260 | 3290 | **11160** | - |
 | [Pentium N6005](results/4BtC.txt) | 3300/2000 MHz | 5.15 | Jammy amd64 | 11510 | 3369 | 923550 | 9650 | **10280** | 22.18 |
+| [Telechips TCC8050 (Dolphin 3M)](results/i142.txt) | 1690 MHz | 5.10 | Jammy arm64 | 6620 | 1867 | 956840 | 7050 | **10140** | - |
 | [Raspberry Pi 5 B (BCM2712)](results/8-NK.txt) | 2400 MHz | 6.6 | Bookworm arm64 | 11830 | 3305 | 1368160 | 6025 | **9985** | 15.42 |
 | [HummingBoard Pulse i.MX8M Quad](results/27FC.txt) | 1500 MHz | 4.19 | Buster arm64 | 4330 | 1201 | 695540 | 2230 | **9900** | - |
 | [AMD Seattle (Opteron A1100)](results/4Kqn.txt) | 2000 MHz | 4.15 | Bionic arm64 | 14080 | 2006 | 720710 | 3020 | **9530** | - |
@@ -1506,6 +1511,7 @@
 | [Tinkerboard (RK3288)](results/1iSX.txt) | **1730** MHz| 4.14 | Stretch armhf | 5350 | 1563 | 66600 | 1480 | 3900 | - |
 | [AAEON BOXER-8654AI (Orin NX)](results/87lq.txt) | **1730** MHz| 5.15 | Jammy arm64 | 14820 | 2379 | 973830 | 6920 | 20470 | - |
 | [SBC2D70 (SSD202D)](results/3N1U.txt) | **1700** MHz| 5.16 | Sid armhf | 1960 | 1094 | 33120 | 770 | 3190 | - |
+| [Telechips TCC8050 (Dolphin 3M)](results/i142.txt) | **1690** MHz| 5.10 | Jammy arm64 | 6620 | 1867 | 956840 | 7050 | 10140 | - |
 | [AMD E-450 APU](results/4hwl.txt) | **1650** MHz| 5.15 | Jammy amd64 | 2430 | 1258 | 27450 | 1710 | 1740 | - |
 | [Tronsmart S82 (Amlogic S802)](results/41ML.txt) | **1600** MHz| 5.14 | Focal armhf | 3640 | 1114 | 43150 | 500 | 3200 | - |
 | [Radxa Zero 3W (RK3566)](results/4L4k.txt) | **1600** MHz| 5.10 | Jammy arm64 | 4000 | 1155 | 750970 | 2400 | 5580 | 5.75 |

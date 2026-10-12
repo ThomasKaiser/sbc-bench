@@ -258,6 +258,7 @@
 | [frdzAn](frdzAn.txt) | v0.9.65 Raspberry Pi 5 Model B Rev 1.0 | 0%/0% | 4.0Gi/3.8Gi | X | X | X | X | 1% | 0% | [check log](frdzAn.txt) |
 | [fUCnrY](fUCnrY.txt) | v0.9.65 T-HEAD Light Lichee Pi 4A confi | 0%/0% | 15Gi/14Gi | X | X | X | X | <span style=color:red> 5%</span> | 0% | [check log](fUCnrY.txt) |
 | [hwhVPt7v](hwhVPt7v.txt) | v0.9.72 Radxa Dragon Q8B | 0%/0% | 7.2Gi/6.1Gi | X | X | X | X | 0% | 0% | [check log](hwhVPt7v.txt) |
+| [i142](i142.txt) | v0.9.72 Telechips TCC8050 TOPST D3-G 1. | 0%/0% | 6.9Gi/5.7Gi | X | X | X | X | 2% | 0% | |
 | [KBw_](KBw_.txt) | v0.9.72 Radxa Dragon Q6A | 0%/0% | 5.5Gi/5.1Gi | X | X | X | X | 0% | 0% | [check log](KBw_.txt) |
 | [Kojb](Kojb.txt) | v0.9.72 sun55iw3 | 0%/0% | 3.8Gi/3.7Gi | X | X | X | X | 2% | 0% | [check log](Kojb.txt) |
 | [rca7s](rca7s.txt) | v0.9.72 sun60iw2 | 0%/0% | 5.8Gi/5.5Gi | X | X | X | X | 2% | 0% | [check log](rca7s.txt) |

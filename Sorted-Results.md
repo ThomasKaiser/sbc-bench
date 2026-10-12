@@ -23,9 +23,9 @@
 | [Milk-V Pioneer (SG2042)](results/4wYE.txt) | 2000 MHz | 6.1 | Kinetic riscv64 | **59820** | 1622 | 43500 | 3620 | 4760 | - |
 | [Apple M1 Pro](results/443N.txt) | 3030/2060 MHz | 5.18 | Gentoo 2.8 arm64 | **43800** | 5010 | 1064450 | 27110 | 71910 | 48.28 |
 | [Jetson AGX Orin](results/4ax9.txt) | 2200 MHz | 5.10 | Focal arm64 | **39450** | 3187 | 1242940 | 10600 | 30350 | 59.96 |
-| [Qualcomm Snapdragon 8cx Gen 3](results/4xwT.txt) | 3000/2440 MHz | 6.3 | Lunar arm64 | **35370** | 4312 | 1686160 | 17500 | 41780 | 42.76 |
+| [Qualcomm SC8280XP](results/4xwT.txt) | 3000/2440 MHz | 6.3 | Lunar arm64 | **35370** | 4312 | 1686160 | 17500 | 41780 | 42.76 |
 | [Radxa Dragon Q8B (SC8280XP)](results/hwhVPt7v.txt) | 2500/2435 MHz | 7.0 | Resolute arm64 | **33920** | 3670 | 1410820 | 16780 | 39160 | 40.91 |
-| [Qualcomm Snapdragon 8cx Gen 3 (WSL2)](results/4kEp.txt) | 2980/? MHz | 5.15 | Jammy arm64 | **33600** | 4789 | 1679480 | 21010 | 41540 | 50.65 |
+| [Qualcomm SC8280XP (WSL2)](results/4kEp.txt) | 2980/? MHz | 5.15 | Jammy arm64 | **33600** | 4789 | 1679480 | 21010 | 41540 | 50.65 |
 | [Minisforum MS-R1 (CP8180)](results/1ET4.txt) | 2600 MHz | 6.6 | Bookworm arm64 | **32980** | 3899 | 1458360 | 17950 | 48830 | 42.91 |
 | [Radxa Orion O6 (CD8180)](results/88LE.txt) | 2600 MHz | 6.1 | Bookworm arm64 | **32690** | 3945 | 1458420 | 16880 | 48030 | 43.01 |
 | [MetaComputing FML13V04](results/1ET5.txt) | 2600 | 6.6 | Plucky arm64 | **31950** | 3827 | 1457320 | 17290 | 47500 | 44.72 |
@@ -282,11 +282,11 @@
 | [Dell FCM1253 (GB10)](results/fcm1253.txt) | 3900/2800 MHz | 6.14 | Noble arm64 | 114920 | **6704** | 27000 | 27100 | 63400 | 160.82 |
 | [Qualcomm X1E001DE](results/8SWL.txt) | 4300/3800 MHz | 6.14 | Oracular arm64 | 66120 | **5603** | 2274190 | 38360 | 110410 | 76.85 |
 | [Apple M1 Pro](results/443N.txt) | 3030/2060 MHz | 5.18 | Gentoo 2.8 arm64 | 43800 | **5010** | 1064450 | 27110 | 71910 | 48.28 |
-| [Qualcomm Snapdragon 8cx Gen 3 (WSL2)](results/4kEp.txt) | 2980/? MHz | 5.15 | Jammy arm64 | 33600 | **4789** | 1679480 | 21010 | 41540 | 50.65 |
+| [Qualcomm SC8280XP (WSL2)](results/4kEp.txt) | 2980/? MHz | 5.15 | Jammy arm64 | 33600 | **4789** | 1679480 | 21010 | 41540 | 50.65 |
 | [AmpereOne A192-32X](results/XUpQ.txt) | 3200 MHz | 6.8 | Noble arm64 | 741530 | **4781** | 1823250 | 14860 | 36441 | 323.76 |
 | [Pentium G4600](results/2jVw.txt) | 3600 MHz | 4.19 | Buster amd64 | 11810 | **4448** | 984820 | 15120 | 33380 | 21.88 |
 | [Intel i3-N305](results/4qpr.txt) | 3800 MHz | 5.19 | Jammy amd64 | 20000 | **4398** | 1377280 | 9950 | 8990 | 41.43 |
-| [Qualcomm Snapdragon 8cx Gen 3](results/4xwT.txt) | 3000/2440 MHz | 6.3 | Lunar arm64 | 35370 | **4312** | 1686160 | 17500 | 41780 | 42.76 |
+| [Qualcomm SC8280XP](results/4xwT.txt) | 3000/2440 MHz | 6.3 | Lunar arm64 | 35370 | **4312** | 1686160 | 17500 | 41780 | 42.76 |
 | [Huaqin P6410<br />(2 x Ampere Altra Max)](results/4kiu.txt) | 3000 MHz | 5.4 | Focal arm64 | 430860 | **4211** | 1710010 | 13310 | 47970 | - |
 | [Intel N95](results/4xwq.txt) | 3400 MHz | 5.15 | Jammy amd64 | 13070 | **3993** | 1232880 | 9710 | 8730 | 34.60 |
 | [Radxa Orion O6 (CD8180)](results/88LE.txt) | 2600 MHz | 6.1 | Bookworm arm64 | 32690 | **3945** | 1458420 | 16880 | 48030 | 43.01 |
@@ -553,8 +553,8 @@
 | [Huaqin P6410<br />(2 x Ampere Altra Max)](results/4kiu.txt) | 3000 MHz | 5.4 | Focal arm64 | 430860 | 4211 | **1710010** | 13310 | 47970 | - |
 | [Raspberry Pi 5 B (BCM2712)](results/8acvqG.txt) | 3000 MHz | 6.1 | Bookworm arm64 | 12930 | 3791 | **1709720** | 5160 | 16350 | 19.25 |
 | [Hetzner CAX11 (Ampere Altra)](results/4HdL.txt) | 3000 MHz | 5.15 | Jammy arm64 | 8060 | 3842 | **1705600** | 11250 | 47670 | 11.44 |
-| [Qualcomm Snapdragon 8cx Gen 3](results/4xwT.txt) | 3000/2440 MHz | 6.3 | Lunar arm64 | 35370 | 4312 | **1686160** | 17500 | 41780 | 42.76 |
-| [Qualcomm Snapdragon 8cx Gen 3 (WSL2)](results/4kEp.txt) | 2980/? MHz | 5.15 | Jammy arm64 | 33600 | 4789 | **1679480** | 21010 | 41540 | 50.65 |
+| [Qualcomm SC8280XP](results/4xwT.txt) | 3000/2440 MHz | 6.3 | Lunar arm64 | 35370 | 4312 | **1686160** | 17500 | 41780 | 42.76 |
+| [Qualcomm SC8280XP (WSL2)](results/4kEp.txt) | 2980/? MHz | 5.15 | Jammy arm64 | 33600 | 4789 | **1679480** | 21010 | 41540 | 50.65 |
 | [Qualcomm QRB5165](results/49kx.txt) | 2840/2410/1790 MHz | 4.19 | Focal arm64 | 18860 | 3898 | **1598490** | 14470 | 23910 | 25.56 |
 | [Ampere Altra M96-28](results/4zGI.txt) | 2800 MHz | 5.15 | Jammy arm64 | 249380 | 3858 | **1596110** | 10130 | 44750 | - |
 | [Rubik Pi 3 (QCS6490)](results/8WlQ.txt) | 2700/2400/2000 MHz | 6.6 | Trixie arm64 | 17920 | 3871 | **1539030** | 7020 | 17230 | 27.50 |
@@ -816,9 +816,9 @@
 | [Qualcomm X1E001DE](results/8SWL.txt) | 4300/3800 MHz | 6.14 | Oracular arm64 | 66120 | 5603 | 2274190 | **38360** | 110410 | 76.85 |
 | [Apple M1 Pro](results/443N.txt) | 3030/2060 MHz | 5.18 | Gentoo 2.8 arm64 | 43800 | 5010 | 1064450 | **27110** | 71910 | 48.28 |
 | [Dell FCM1253 (GB10)](results/fcm1253.txt) | 3900/2800 MHz | 6.14 | Noble arm64 | 114920 | 6704 | 27000 | **27100** | 63400 | 160.82 |
-| [Qualcomm Snapdragon 8cx Gen 3 (WSL2)](results/4kEp.txt) | 2980/? MHz | 5.15 | Jammy arm64 | 33600 | 4789 | 1679480 | **21010** | 41540 | 50.65 |
+| [Qualcomm SC8280XP (WSL2)](results/4kEp.txt) | 2980/? MHz | 5.15 | Jammy arm64 | 33600 | 4789 | 1679480 | **21010** | 41540 | 50.65 |
 | [Minisforum MS-R1 (CP8180)](results/1ET4.txt) | 2600 MHz | 6.6 | Bookworm arm64 | 32980 | 3899 | 1458360 | **17950** | 48830 | 42.91 |
-| [Qualcomm Snapdragon 8cx Gen 3](results/4xwT.txt) | 3000/2440 MHz | 6.3 | Lunar arm64 | 35370 | 4312 | 1686160 | **17500** | 41780 | 42.76 |
+| [Qualcomm SC8280XP](results/4xwT.txt) | 3000/2440 MHz | 6.3 | Lunar arm64 | 35370 | 4312 | 1686160 | **17500** | 41780 | 42.76 |
 | [MetaComputing FML13V04](results/1ET5.txt) | 2600 | 6.6 | Plucky arm64 | 31950 | 3827 | 1457320 | **17290** | 47500 | 44.72 |
 | [Radxa Orion O6 (CD8180)](results/88LE.txt) | 2600 MHz | 6.1 | Bookworm arm64 | 32690 | 3945 | 1458420 | **16880** | 48030 | 43.01 |
 | [Radxa Dragon Q8B (SC8280XP)](results/hwhVPt7v.txt) | 2500/2435 MHz | 7.0 | Resolute arm64 | 33920 | 3670 | 1410820 | **16780** | 39160 | 40.91 |
@@ -1088,9 +1088,9 @@
 | [Hetzner CAX11 (Ampere Altra)](results/4HdL.txt) | 3000 MHz | 5.15 | Jammy arm64 | 8060 | 3842 | 1705600 | 11250 | **47670** | 11.44 |
 | [MetaComputing FML13V04](results/1ET5.txt) | 2600 | 6.6 | Plucky arm64 | 31950 | 3827 | 1457320 | 17290 | **47500** | 44.72 |
 | [Ampere Altra M96-28](results/4zGI.txt) | 2800 MHz | 5.15 | Jammy arm64 | 249380 | 3858 | 1596110 | 10130 | **44750** | - |
-| [Qualcomm Snapdragon 8cx Gen 3](results/4xwT.txt) | 3000/2440 MHz | 6.3 | Lunar arm64 | 35370 | 4312 | 1686160 | 17500 | **41780** | 42.76 |
+| [Qualcomm SC8280XP](results/4xwT.txt) | 3000/2440 MHz | 6.3 | Lunar arm64 | 35370 | 4312 | 1686160 | 17500 | **41780** | 42.76 |
 | [Ampere Altra Q80-26](results/4zkJ.txt) | 2600 MHz | 5.15 | Jammy arm64 | 214390 | 3748 | 1482190 | 11685 | **41560** | 316.50 |
-| [Qualcomm Snapdragon 8cx Gen 3 (WSL2)](results/4kEp.txt) | 2980/? MHz | 5.15 | Jammy arm64 | 33600 | 4789 | 1679480 | 21010 | **41540** | 50.65 |
+| [Qualcomm SC8280XP (WSL2)](results/4kEp.txt) | 2980/? MHz | 5.15 | Jammy arm64 | 33600 | 4789 | 1679480 | 21010 | **41540** | 50.65 |
 | [Phytium D3000/8](results/84GG.txt) | 2500 MHz | 6.6 | Deepin 23.1 arm64 | 28070 | 3617 | 1425820 | 15090 | **39810** | 33.03 |
 | [Radxa Dragon Q8B (SC8280XP)](results/hwhVPt7v.txt) | 2500/2435 MHz | 7.0 | Resolute arm64 | 33920 | 3670 | 1410820 | 16780 | **39160** | 40.91 |
 | [AmpereOne A192-32X](results/XUpQ.txt) | 3200 MHz | 6.8 | Noble arm64 | 741530 | 4781 | 1823250 | 14860 | **36441** | 323.76 |
@@ -1358,10 +1358,10 @@
 | [Apple M1 Pro](results/443N.txt) | **3030/2060** MHz| 5.18 | Gentoo 2.8 arm64 | 43800 | 5010 | 1064450 | 27110 | 71910 | 48.28 |
 | [Raspberry Pi 5 B (BCM2712)](results/frdzAn.txt) | **3000** MHz| 6.6 | Bookworm arm64 | 13410 | 3916 | 1710590 | 5900 | 17370 | 19.28 |
 | [Raspberry Pi 5 B (BCM2712)](results/8acvqG.txt) | **3000** MHz| 6.1 | Bookworm arm64 | 12930 | 3791 | 1709720 | 5160 | 16350 | 19.25 |
-| [Qualcomm Snapdragon 8cx Gen 3](results/4xwT.txt) | **3000/2440** MHz| 6.3 | Lunar arm64 | 35370 | 4312 | 1686160 | 17500 | 41780 | 42.76 |
+| [Qualcomm SC8280XP](results/4xwT.txt) | **3000/2440** MHz| 6.3 | Lunar arm64 | 35370 | 4312 | 1686160 | 17500 | 41780 | 42.76 |
 | [Huaqin P6410<br />(2 x Ampere Altra Max)](results/4kiu.txt) | **3000** MHz| 5.4 | Focal arm64 | 430860 | 4211 | 1710010 | 13310 | 47970 | - |
 | [Hetzner CAX11 (Ampere Altra)](results/4HdL.txt) | **3000** MHz| 5.15 | Jammy arm64 | 8060 | 3842 | 1705600 | 11250 | 47670 | 11.44 |
-| [Qualcomm Snapdragon 8cx Gen 3 (WSL2)](results/4kEp.txt) | **2980/?** MHz| 5.15 | Jammy arm64 | 33600 | 4789 | 1679480 | 21010 | 41540 | 50.65 |
+| [Qualcomm SC8280XP (WSL2)](results/4kEp.txt) | **2980/?** MHz| 5.15 | Jammy arm64 | 33600 | 4789 | 1679480 | 21010 | 41540 | 50.65 |
 | [Celeron N5105](results/3Qf7.txt) | **2900/2000** MHz| 5.13 | Focal amd64 | 11450 | 3059 | 811760 | 7710 | 9290 | 21.79 |
 | [Qualcomm QRB5165](results/49kx.txt) | **2840/2410/1790** MHz| 4.19 | Focal arm64 | 18860 | 3898 | 1598490 | 14470 | 23910 | 25.56 |
 | [Celeron N5100](results/3IlQ.txt) | **2800/1100** MHz| 5.13 | Focal amd64 | 10550 | 3088 | 783800 | 7750 | 8090 | 19.22 |

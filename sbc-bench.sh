@@ -2493,6 +2493,18 @@ Getx86ClusterDetails() {
 			echo "Lion Cove" >"${TempDir}/Pcores"
 			echo "0 8"
 			;;
+		*"7 360"*|*"7 350"*|*"5 330"*|*"5 320"*|*"5 315"*|*"3 305"*)
+			# Wildcat Lake, 2 P cores, 4 uE cores
+			echo "Darkmont" >"${TempDir}/Ecores"
+			echo "Cougar Cove" >"${TempDir}/Pcores"
+			echo "0 2"
+			;;
+		*"3 304"*)
+			# Wildcat Lake, 1 P core, 4 uE cores
+			echo "Darkmont" >"${TempDir}/Ecores"
+			echo "Cougar Cove" >"${TempDir}/Pcores"
+			echo "0 1"
+			;;
 		*)
 			# unknown CPU, try to check cache sizes since at least on currently known Intel
 			# CPUs efficiency and performance cores have differing cache sizes.
@@ -2812,10 +2824,10 @@ CheckMissingPackages() {
 					echo "stop"
 					return 1
 				fi
-				echo -e "dnf install -q -y \c"
+				echo -e "dnf install -q -y --skip-unavailable \c"
 				command -v gcc >/dev/null 2>&1 || dnf group install -y -q "C Development Tools and Libraries" >/dev/null 2>"${TempDir}/packages.log"
 				command -v sensors >/dev/null 2>&1 || echo -e "lm_sensors \c"
-				command -v lsb_release >/dev/null 2>&1 || echo -e "redhat-lsb-core \c"
+				command -v lsb_release >/dev/null 2>&1 || echo -e "redhat-lsb-core lsb_release \c"
 			else
 				echo -e "echo \c"
 			fi

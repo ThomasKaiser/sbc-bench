@@ -150,8 +150,8 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Qualcomm QRB5165](results/49kx.txt) | 2840/2410/1790 MHz | 4.19 | Focal arm64 | 18860 | 3898 | 1598490 | 14470 | 23910 | 25.56 |
 | [Qualcomm Snapdragon 7c](results/4Lyf.txt) | 2550/1800 MHz | 6.6 | Bookworm arm64 | 13040 | 3113 | 1455700 | 6710 | 14880 | - |
 | [Qualcomm Snapdragon 835](results/4fdD.txt) | 2360/1900 MHz | 6.1 | Jammy arm64 | 9800 | 2474 | 883330 | 9720 | 14070 | 12.58 |
-| [Qualcomm Snapdragon 8cx Gen 3 (WSL2)](results/4kEp.txt) | 2980/? MHz | 5.15 | Jammy arm64 | 33600 | 4789 | 1679480 | 21010 | 41540 | 50.65 |
-| [Qualcomm Snapdragon 8cx Gen 3](results/4xwT.txt) | 3000/2440 MHz | 6.3 | Lunar arm64 | 35370 | 4312 | 1686160 | 17500 | 41780 | 42.76 |
+| [Qualcomm SC8280XP (WSL2)](results/4kEp.txt) | 2980/? MHz | 5.15 | Jammy arm64 | 33600 | 4789 | 1679480 | 21010 | 41540 | 50.65 |
+| [Qualcomm SC8280XP](results/4xwT.txt) | 3000/2440 MHz | 6.3 | Lunar arm64 | 35370 | 4312 | 1686160 | 17500 | 41780 | 42.76 |
 | [Qualcomm X1E001DE](results/8SWL.txt) | 4300/3800 MHz | 6.14 | Oracular arm64 | 66120 | 5603 | 2274190 | 38360 | 110410 | 76.85 |
 | [Quartz64-A (RK3566)](results/3rUb.txt) | 1810 MHz | 5.13 | Buster arm64 | 4840 | 1353 | 845490 | 2980 | 7650| - |
 | [Quartz64-A (RK3566)](results/4qJF.txt) | 1890 MHz | 6.2 | Jammy arm64 | 4980 | 1457 | 884590 | 3240 | 6100 | 6.98 |
@@ -223,8 +223,9 @@ So do **not** rely on collected numbers unless you carefully read through all th
 | [Rubik Pi 3 (QCS6490)](results/8WlQ.txt) | 2700/2400/2000 MHz | 6.6 | Trixie arm64 | 17920 | 3871 | 1539030 | 7020 | 17230 | 27.50 |
 | [Star64 (JH7110)](results/4tjq.txt) | 1500 MHz | 5.15 | Sid riscv64 | 3970 | 1175 | 24990 | 820 | 770 | - |
 | [SBC2D70 (SSD202D)](results/3N1U.txt) | 1700 MHz | 5.16 | Sid armhf | 1960 | 1094 | 33120 | 770 | 3190 | - |
-| [Skyworth E900V22C (S905L3A)](results/e900v22c.txt) | 1910 MHz | 6.12 | Jammy arm64 | 4880 | 1392 | 890170 | 2010 | 7870 | - | |
+| [Skyworth E900V22C (S905L3A)](results/e900v22c.txt) | 1910 MHz | 6.12 | Jammy arm64 | 4880 | 1392 | 890170 | 2010 | 7870 | - |
 | [T-HEAD C910 RVB-ICE](results/41AB.txt) | 1200 MHz | 5.10 | Sid riscv64 | 1760 | 1007 | 26930 | 3340 | 6470 | - |
+| [Telechips TCC8050 (Dolphin 3M)](results/i142.txt) | 1690 MHz | 5.10 | Jammy arm64 | 6620 | 1867 | 956840 | 7050 | 10140 | - |
 | [Teres-I<br />(Allwinner A64)](results/1tJg.txt) | 1050 MHz | 4.19 | Stretch arm64 | 2785 | 780 | 491590 | 1080 | 2820 | - |
 | [Tinkerboard (RK3288)](results/1iSX.txt) | 1730 MHz | 4.14 | Stretch armhf | 5350 | 1563 | 66600 | 1480 | 3900 | - |
 | [Tinkerboard (RK3288)](results/3Lir.txt) | 1800 MHz | 4.4 | Buster armhf | 5440 | 1693 | 66300 | 1340 | 3510 | - |

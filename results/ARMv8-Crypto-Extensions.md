@@ -51,7 +51,7 @@ All of this **only** applies to ARM SoCs with _ARM's Crypto Extensions_ licensed
 
 ### Numbers the aforementioned conclusions are based on
 
-Crawling through [sbc-bench results collection](../Results.md) comparing ~100 different SoCs/CPUs from various vendors at various clockspeeds using OpenSSL versions 1.1.0f (25 May 2017) through 3.0.16 (11 Feb 2025) shows always the same relation between openssl score and clockspeed for the known core families (right column is OpenSSL's aes-256-cbc score divided through clockspeed in MHz):
+Crawling through [sbc-bench results collection](../Results.md) comparing over 100 different SoCs/CPUs from various vendors at various clockspeeds using OpenSSL versions 1.1.0f (25 May 2017) through 3.0.16 (11 Feb 2025) shows always the same relation between openssl score and clockspeed for the known core families (right column is OpenSSL's aes-256-cbc score divided through clockspeed in MHz):
 
 | ARM core | MHz | aes-256-cbc | score/mhz |
 | :----: | ----:  | :----:  | :----:  |
@@ -125,6 +125,7 @@ Crawling through [sbc-bench results collection](../Results.md) comparing ~100 di
 | [AmpereOne A192-32X](XUpQ.txt) | 3200 | 1823250 | 570 |
 | Cortex-A72 | | | |
 | [Armada 8040](4zcm.txt) | 1600 | 909420 | 568 |
+| [Dolphin 3M](i142.txt) | 1690 | 956840 | 566 |
 | [RK3399](1iWU.txt) | 1800 | 1023600 | 568 |
 | [LX2160A](1ET3.txt) | 1900 | 1079480 | 568 |
 | [TI J721E](4DLw.txt) | 2000 | 1130390 | 565 |
